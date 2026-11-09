@@ -18,9 +18,6 @@
     <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="TestData\appsettings.live.json" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Senparc.Xncf.NeuCharBoxLive\Senparc.Xncf.NeuCharBoxLive.csproj" />
   </ItemGroup>
 </Project>

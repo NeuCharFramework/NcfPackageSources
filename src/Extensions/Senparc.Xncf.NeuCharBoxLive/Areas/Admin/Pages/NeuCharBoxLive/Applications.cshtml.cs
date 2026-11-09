@@ -21,18 +21,19 @@ using Senparc.Xncf.NeuCharBoxLive.Domain.Services;
 namespace Senparc.Xncf.NeuCharBoxLive.Areas.Admin.Pages.NeuCharBoxLive;
 
 /// <summary>
-/// Applications, newest first (spec 7.3). Approve makes a code labelled with the email (daily limit PerCodeDaily) and
-/// the row then shows the ready-to-copy message; Decline sets the status. The server sends no email: Leo does.
+/// Applications, newest first (spec 7.3). Approve makes a code labelled with the email (daily limit: the runtime's
+/// current PerCodeDaily) and the row then shows the ready-to-copy message; Decline sets the status. The server sends
+/// no email: Leo does.
 /// </summary>
 public class ApplicationsModel(Lazy<XncfModuleService> xncfModuleService, IApplicationStore applications, IInviteStore codes,
-    LiveOptions options) : AdminXncfModulePageModelBase(xncfModuleService)
+    ILiveRuntime runtime) : AdminXncfModulePageModelBase(xncfModuleService)
 {
     public sealed record Row(Application App, InviteCode? Code, string? Message);
 
     public IReadOnlyList<Row> Rows { get; private set; } = Array.Empty<Row>();
 
     /// <summary>The daily limit a code made on approval starts with.</summary>
-    public int PerCodeDaily => options.PerCodeDaily;
+    public int PerCodeDaily => runtime.Current.Limits.PerCodeDaily;
 
     /// <summary>The application just approved: its row is highlighted.</summary>
     [BindProperty(SupportsGet = true)]
@@ -59,7 +60,7 @@ public class ApplicationsModel(Lazy<XncfModuleService> xncfModuleService, IAppli
         if (a is null) return NotFound();
         if (a.Status != "approved" || a.CodeId is null)
         {
-            var code = await codes.CreateAsync(a.Email, options.PerCodeDaily);
+            var code = await codes.CreateAsync(a.Email, PerCodeDaily);
             if (a.Status != "approved")
             {
                 if (!await applications.TryApproveAsync(a.Id, code.Id)) await codes.SetDisabledAsync(code.Id, true);

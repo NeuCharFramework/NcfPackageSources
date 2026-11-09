@@ -32,7 +32,7 @@
         <button type="submit" class="el-button el-button--primary el-button--mini">Create code</button>
     </form>
 
-    <p class="muted lead">Newest first. Uses today count requests on usage day @Model.Today.ToString("yyyy-MM-dd") (America/New_York), what-ifs excluded.</p>
+    <p class="muted lead">Newest first. Uses today count requests on usage day @Model.Today.ToString("yyyy-MM-dd") (@Model.UsageZone), what-ifs excluded.</p>
 
     @if (Model.Codes.Count == 0)
     {

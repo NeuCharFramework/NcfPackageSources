@@ -190,30 +190,54 @@ public sealed class SseStream : IAsyncDisposable
 }
 
 /// <summary>
-/// A TestServer host as Task 10's brief builds it: AddNcbLive with a scripted model, an instant pacer on a fake clock and
-/// the default in-memory stores; the guard first, then routing and the controllers. A last terminal middleware answers
-/// 200 "fell through", so a 404 can only come from the guard or a route.
+/// A TestServer host as Task 10's brief builds it: AddNcbLive with a <see cref="StaticLiveRuntime"/> whose snapshot is on
+/// with a scripted model (<see cref="Chat"/>), an instant pacer on a fake clock and the default in-memory stores; the
+/// guard first, then routing and the controllers. A last terminal middleware answers 200 "fell through", so a 404 can
+/// only come from the guard or a route.
 /// </summary>
 public sealed class LiveHost : IAsyncDisposable
 {
     public static readonly TimeSpan Guard = TimeSpan.FromSeconds(20);
     public const string FellThrough = "fell through";
 
+    /// <summary>The model name the default snapshot plans and runs on.</summary>
+    public const string Model = Snapshots.Model;
+
+    /// <summary>The built-in origins plus the local demo (http://localhost:8765), which the CORS tests exercise.</summary>
+    public static IReadOnlyList<string> Origins { get; } = LiveCors.BuiltIns.Concat(LiveCors.Development).ToArray();
+
     public FakeTimeProvider Fake { get; } = new(new DateTimeOffset(2026, 11, 7, 15, 0, 0, TimeSpan.Zero));
     public SwitchChatClient Chat { get; } = new();
+
+    /// <summary>The runtime handed to UseRuntime (null when the test skipped it); set Current to change the snapshot.</summary>
+    public StaticLiveRuntime Runtime { get; private set; } = null!;
+
     public IHost Host { get; private set; } = null!;
     public TestServer Server { get; private set; } = null!;
     public HttpClient Client { get; private set; } = null!;
 
-    /// <param name="chat">The UseChatClient factory: the test's SwitchChatClient by default; "none" skips UseChatClient.</param>
+    /// <summary>An on snapshot: Plan and Run both <paramref name="model"/> on <paramref name="chat"/> (default <see cref="Chat"/>).</summary>
+    public LiveSnapshot OnSnapshot(IChatClient? chat = null, LiveLimits? limits = null, IReadOnlyList<string>? origins = null,
+        string model = Model) =>
+        Snapshots.On(chat ?? Chat, limits, model) with { Origins = origins ?? Origins };
+
+    /// <summary>Changes the current snapshot's limits, keeping its models and on/off state.</summary>
+    public void SetLimits(Func<LiveLimits, LiveLimits> change) => Runtime.SetLimits(change);
+
+    /// <summary>Turns live off (reason disabled) or back on, keeping the snapshot's models and limits.</summary>
+    public void SetLive(bool on) => Runtime.Current = Runtime.Current with { OffReason = on ? null : LiveOff.Disabled };
+
+    /// <param name="snapshot">The runtime's first snapshot: <see cref="OnSnapshot"/> by default; null skips UseRuntime
+    /// (AddNcbLive's default, off with no_model).</param>
     /// <param name="builder">More NcbLiveBuilder calls, e.g. UseStores.</param>
     /// <param name="afterGuard">Middleware right after the guard, where the NCF host has its own (static files, error pages).</param>
-    public static async Task<LiveHost> StartAsync(Func<LiveHost, Func<IServiceProvider, string, IChatClient?>?>? chat = null,
+    public static async Task<LiveHost> StartAsync(Func<LiveHost, LiveSnapshot?>? snapshot = null,
         Dictionary<string, string?>? config = null, Action<LiveHost, IServiceCollection>? services = null,
         Action<NcbLiveBuilder>? builder = null, Action<IApplicationBuilder>? afterGuard = null)
     {
         var h = new LiveHost();
-        Func<IServiceProvider, string, IChatClient?>? factory = chat is null ? (_, _) => h.Chat : chat(h);
+        var first = snapshot is null ? h.OnSnapshot() : snapshot(h);
+        if (first is not null) h.Runtime = new StaticLiveRuntime(first);
         var cfg = new ConfigurationBuilder().AddInMemoryCollection(config ?? new()).Build();
         h.Host = new HostBuilder()
             .ConfigureLogging(l => l.ClearProviders())
@@ -223,7 +247,7 @@ public sealed class LiveHost : IAsyncDisposable
                 {
                     s.AddNcbLive(cfg, b =>
                     {
-                        if (factory is not null) b.UseChatClient(factory);
+                        if (first is not null) b.UseRuntime(h.Runtime);
                         b.UsePacer(new InstantPacer(h.Fake.Advance)).UseTimeProvider(h.Fake);
                         builder?.Invoke(b);
                     });
@@ -244,8 +268,6 @@ public sealed class LiveHost : IAsyncDisposable
         h.Client = h.Server.CreateClient();
         return h;
     }
-
-    public static Func<LiveHost, Func<IServiceProvider, string, IChatClient?>?> NoChat => _ => null;
 
     public T Get<T>() where T : notnull => Server.Services.GetRequiredService<T>();
     public LiveOptions Opt => Get<LiveOptions>();

@@ -47,16 +47,16 @@ public class SessionEditTests
     SessionManager M;
     InviteCode Code = null!;
 
-    // What the next request's runner is built with.
-    IChatClient _chat = new ScriptedChatClient();
+    // What the next request's runner is built with (and the runtime its snapshot is read from).
+    readonly StaticLiveRuntime Runtime = new(Snapshots.On(new ScriptedChatClient()));
     IPacer _runPacer = new InstantPacer();
     ILogger<RequestRunner> _runnerLog;
 
     public SessionEditTests()
     {
         Store = new InMemoryLiveStore(Fake);
-        Meter = new TokenMeter(Store, Opt, Fake);
-        Access = new AccessService(Store, Store, Meter, Opt, Fake);
+        Meter = new TokenMeter(Store, Runtime, Fake);
+        Access = new AccessService(Store, Store, Meter, Runtime, UsageDay.Utc, Fake);
         _runnerLog = Log;
         M = Manager(Pacer);
     }
@@ -64,9 +64,9 @@ public class SessionEditTests
     /// <summary>Edits made with no request running pace their delayed frames on <paramref name="edits"/>.</summary>
     SessionManager Manager(IPacer edits) => new(Opt, Fake, Access, () =>
     {
-        var (chat, pacer, log) = (_chat, _runPacer, _runnerLog); // each runner keeps what it was built with
-        return new RequestRunner(_ => chat, Opt, pacer, Fake, Store, Meter, log);
-    }, pacer: edits);
+        var (pacer, log) = (_runPacer, _runnerLog); // each runner keeps what it was built with
+        return new RequestRunner(Opt, pacer, Fake, Store, Meter, UsageDay.Utc, log);
+    }, Runtime, UsageDay.Utc, pacer: edits);
 
     /// <summary>Each wait blocks until the test calls Release; Waits records the requested delays.</summary>
     sealed class ControlledPacer : IPacer
@@ -247,7 +247,7 @@ public class SessionEditTests
     public async Task Edit_DoesNotMeterTokensOrCountRequests()
     {
         var s = NewSession();
-        var day = UsageDay.For(Fake.GetUtcNow());
+        var day = UsageDay.Utc.For(Fake.GetUtcNow());
         var before = (await Access.CheckAsync(Code.Code)).Remaining;
         var spent = Meter.Spent(day);
 
@@ -423,7 +423,7 @@ public class SessionEditTests
         Assert.AreEqual(34 + 7.2, (double)s.Room.Get("soil.moisture")!, 1e-9);
 
         // The what-if swaps in the room from before the request (soil 34): the pending frames belong to the old room.
-        _chat = Script(SetLamp20(), Text("DONE"), Text(LampSummary));
+        Runtime.SetChat(Script(SetLamp20(), Text("DONE"), Text(LampSummary)));
         var whatIf = await M.StartWhatIfAsync(s, rid, "camera");
         Assert.IsNull(whatIf.Error, whatIf.Error);
         var room = await WaitFor(s, "room", whatIf.Rid!);
@@ -504,7 +504,7 @@ public class SessionEditTests
 
     async Task<string> Start(LiveSession s, IChatClient chat, IPacer? pacer = null)
     {
-        _chat = chat;
+        Runtime.SetChat(chat);
         if (pacer is not null) _runPacer = pacer;
         var r = await M.StartRequestAsync(s, "Look after the place");
         Assert.IsNull(r.Error, r.Error);

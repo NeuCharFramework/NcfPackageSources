@@ -42,6 +42,9 @@ public class RunnerTests
     readonly StubMeter Meter = new();
     readonly ListLogger<RequestRunner> Log = new();
     readonly LiveOptions Opt = new();
+
+    /// <summary>The limits the next request's snapshot carries.</summary>
+    LiveLimits Limits = LiveLimits.Defaults;
     LiveSession S;
     int _rids;
 
@@ -65,14 +68,17 @@ public class RunnerTests
 
     static ChatResponse SetLamp20() => Tool("set_lamp", new { brightness = 20, step = "s1" });
 
-    RequestRunner Runner(Func<string, IChatClient> chatFor, IPacer? pacer = null) =>
-        new(chatFor, Opt, pacer ?? new InstantPacer(Fake.Advance), Fake, Store, Meter, Log);
+    RequestRunner Runner(IPacer? pacer = null) =>
+        new(Opt, pacer ?? new InstantPacer(Fake.Advance), Fake, Store, Meter, UsageDay.Utc, Log);
+
+    /// <summary>The request's snapshot: plan and run on <paramref name="chat"/>, with <see cref="Limits"/>.</summary>
+    LiveSnapshot Snap(IChatClient chat) => Snapshots.On(chat, Limits);
 
     static string Says(IEnumerable<LiveEvent> ev) => string.Concat(ev.Where(e => e.Kind == "say").Select(e => Str(e.Data["delta"])));
 
     RequestRecord Request(string text = MovieText) => new($"r{++_rids}", text, S.Room.Clone(), Fake);
 
-    Task Start(IChatClient chat, RequestRecord r) => Runner(_ => chat).RunAsync(S, r, CancellationToken.None);
+    Task Start(IChatClient chat, RequestRecord r) => Runner().RunAsync(S, r, Snap(chat), CancellationToken.None);
 
     async Task<IReadOnlyList<LiveEvent>> Of(RequestRecord r) =>
         (await S.Events.WaitAfterAsync(0, TimeSpan.Zero, CancellationToken.None)).Where(e => e.Rid == r.Rid).ToList();
@@ -377,6 +383,7 @@ public class RunnerTests
     [TestMethod]
     public async Task Budget_CallsCappedAt12()
     {
+        Opt.MaxCalls = 12; // the cap under test (the default is 60)
         var turns = new List<ScriptTurn> { T(LampPlan()) };
         turns.AddRange(Enumerable.Range(0, 20).Select(_ => (ScriptTurn)((_, _) => Tool("read_soil", new { }))));
         var chat = new ScriptedChatClient(turns.ToArray());
@@ -411,7 +418,8 @@ public class RunnerTests
     [TestMethod]
     public async Task Budget_TimeRunsOutBetweenToolCalls()
     {
-        // 13 pump runs of 15 s each in one response: the 3 minutes run out after the 12th.
+        // 13 pump runs of 15 s each in one response: 3 minutes of work time run out after the 12th.
+        Opt.MaxWork = TimeSpan.FromMinutes(3); // the default is 30 minutes
         var pumps = Enumerable.Range(0, 13).Select(_ => ("run_pump", (object)new { seconds = 30, step = "s1" })).ToArray();
         var chat = Chat(SubmitPlan(Step("s1", "Water the plant", "pump", "soil")), Tools(pumps), Text("DONE"), Text("I ran the pump."));
         var ev = await RunApproved(chat);
@@ -431,7 +439,7 @@ public class RunnerTests
         await RunApproved(Chat(SubmitPlan(Step("s1", "Check the soil", "soil")), reads, Text("DONE"), Text("The soil reads 34%.")), prior);
         var chat = Chat(reads, Text("DONE"), Text("The soil sensor didn't respond."));
         var r = new RequestRecord($"r{++_rids}", prior.Text, S.Room.Clone(), Fake);
-        await Runner(_ => chat).RunWhatIfAsync(S, prior, "soil", r, CancellationToken.None).WaitAsync(Guard);
+        await Runner().RunWhatIfAsync(S, prior, "soil", r, Snap(chat), CancellationToken.None).WaitAsync(Guard);
         var ev = await Of(r);
 
         CollectionAssert.AreEqual(new[]
@@ -493,7 +501,7 @@ public class RunnerTests
         var chat = Chat(LampPlan(), SetLamp20(), Stalled);
         var pacer = new InstantPacer(Fake.Advance);
         var r = Request();
-        var run = Runner(_ => chat, pacer).RunAsync(S, r, CancellationToken.None);
+        var run = Runner(pacer).RunAsync(S, r, Snap(chat), CancellationToken.None);
         await Approve(r);
         await chat.StallStarted.WaitAsync(Guard);
         Fake.Advance(Opt.MaxWork - pacer.Total);
@@ -544,7 +552,7 @@ public class RunnerTests
         var chat = Chat(LampPlan(), SetLamp20(), Stalled);
         var pacer = new InstantPacer(Fake.Advance);
         var r = Request();
-        var run = Runner(_ => chat, pacer).RunAsync(S, r, CancellationToken.None);
+        var run = Runner(pacer).RunAsync(S, r, Snap(chat), CancellationToken.None);
         await Approve(r);
         await chat.StallStarted.WaitAsync(Guard);
         Assert.AreEqual(TimeSpan.FromMilliseconds(1200), pacer.Total);
@@ -563,7 +571,7 @@ public class RunnerTests
         var chat2 = Chat(LampPlan(), Text("DONE"), Stalled);
         var pacer2 = new InstantPacer(Fake.Advance);
         var r2 = Request();
-        var run2 = Runner(_ => chat2, pacer2).RunAsync(S, r2, CancellationToken.None);
+        var run2 = Runner(pacer2).RunAsync(S, r2, Snap(chat2), CancellationToken.None);
         await Approve(r2);
         await chat2.StallStarted.WaitAsync(Guard);
         Fake.Advance(Opt.MaxWork - pacer2.Total - TimeSpan.FromSeconds(1));
@@ -625,13 +633,11 @@ public class RunnerTests
     [TestMethod]
     public async Task PlanAndRun_UseTheirModels()
     {
-        Opt.PlanModel = "p";
-        Opt.RunModel = "r";
         var plan = Chat(Tool("read_soil", new { }), LampPlan());
         var run = Chat(SetLamp20(), Text("DONE"), Text("I set the floor lamp to 20%."));
-        IChatClient For(string id) => id switch { "p" => plan, "r" => run, _ => throw new ArgumentException(id) };
+        var snap = new LiveSnapshot(LiveLimits.Defaults, new LiveModel("p", plan), new LiveModel("r", run), LiveHost.Origins, null);
         var r = Request();
-        var t = Runner(For).RunAsync(S, r, CancellationToken.None);
+        var t = Runner().RunAsync(S, r, snap, CancellationToken.None);
         await Approve(r);
         await t.WaitAsync(Guard);
 
@@ -659,11 +665,22 @@ public class RunnerTests
     }
 
     [TestMethod]
+    public void Run_OffSnapshot_IsRefused()
+    {
+        // SessionManager answers live_off first; a runner handed an off snapshot anyway refuses before anything begins.
+        var r = Request();
+        Assert.ThrowsException<ArgumentException>(() => Runner().RunAsync(S, r, LiveSnapshot.Off(LiveOff.NoModel, LiveHost.Origins), CancellationToken.None));
+        Assert.ThrowsException<ArgumentException>(() =>
+            Runner().RunWhatIfAsync(S, r, "lamp", Request(), Snap(Chat()) with { OffReason = LiveOff.Disabled }, CancellationToken.None));
+        Assert.IsNull(S.Active, "nothing began");
+    }
+
+    [TestMethod]
     public async Task Done_RemainingTodayUsesCodeLimit()
     {
         S.Code = S.Code with { DailyLimit = 2 };
-        var day = UsageDay.For(Fake.GetUtcNow());
-        RunStart Admit(string text) => new(S.Code.Code, "home", text, false, null, Opt.RunModel, day, Fake.GetUtcNow());
+        var day = UsageDay.Utc.For(Fake.GetUtcNow());
+        RunStart Admit(string text) => new(S.Code.Code, "home", text, false, null, Snapshots.Model, day, Fake.GetUtcNow());
         var pizza = Tool("cannot_do", new { reason = "I can't order food here.", suggestions = new[] { "Dim the lamp" } });
 
         await Store.StartAsync(Admit("earlier"));
@@ -677,7 +694,7 @@ public class RunnerTests
 
         // The global cap applies too: min(10 − 3, 4 − 3) = 1.
         S.Code = S.Code with { DailyLimit = 10 };
-        Opt.GlobalDaily = 4;
+        Limits = Limits with { GlobalDaily = 4 }; // the request's snapshot's GlobalDaily
         var r2 = Request("Order a pizza");
         r2.RunId = await Store.StartAsync(Admit(r2.Text));
         await Start(Chat(Tool("cannot_do", new { reason = "I can't order food here.", suggestions = new[] { "Dim the lamp" } })), r2).WaitAsync(Guard);

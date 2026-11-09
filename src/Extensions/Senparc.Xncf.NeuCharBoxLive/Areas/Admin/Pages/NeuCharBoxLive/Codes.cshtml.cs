@@ -22,8 +22,8 @@ using Senparc.Xncf.NeuCharBoxLive.Models;
 namespace Senparc.Xncf.NeuCharBoxLive.Areas.Admin.Pages.NeuCharBoxLive;
 
 /// <summary>Invite codes (spec 7.3): list, create by hand (label and daily limit), set the limit, disable or enable.</summary>
-public class CodesModel(Lazy<XncfModuleService> xncfModuleService, IInviteStore codes, EfLiveStore store, LiveOptions options,
-    TimeProvider tp) : AdminXncfModulePageModelBase(xncfModuleService)
+public class CodesModel(Lazy<XncfModuleService> xncfModuleService, IInviteStore codes, EfLiveStore store, ILiveRuntime runtime,
+    UsageDay usageDay, TimeProvider tp) : AdminXncfModulePageModelBase(xncfModuleService)
 {
     /// <summary>Far above the global daily cap (GlobalDaily), so it never limits anything real.</summary>
     public const int MaxLimit = 1000;
@@ -31,7 +31,11 @@ public class CodesModel(Lazy<XncfModuleService> xncfModuleService, IInviteStore 
     public IReadOnlyList<InviteCode> Codes { get; private set; } = Array.Empty<InviteCode>();
     public IReadOnlyDictionary<string, int> UsesToday { get; private set; } = new Dictionary<string, int>();
     public DateOnly Today { get; private set; }
-    public int DefaultLimit => options.PerCodeDaily;
+
+    /// <summary>The time zone whose midnight starts a usage day (NcbLive:UsageTimeZone).</summary>
+    public string UsageZone => usageDay.Zone.Id;
+
+    public int DefaultLimit => runtime.Current.Limits.PerCodeDaily;
     public string? Error { get; private set; }
     public string? NewLabel { get; private set; }
     public int? NewLimit { get; private set; }
@@ -80,7 +84,7 @@ public class CodesModel(Lazy<XncfModuleService> xncfModuleService, IInviteStore 
 
     async Task LoadAsync()
     {
-        Today = UsageDay.For(tp.GetUtcNow());
+        Today = usageDay.For(tp.GetUtcNow());
         Codes = await codes.ListAsync();
         UsesToday = await store.UsesOnAsync(Today);
     }

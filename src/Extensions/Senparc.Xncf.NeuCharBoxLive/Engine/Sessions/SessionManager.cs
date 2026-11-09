@@ -26,7 +26,8 @@ namespace Senparc.Xncf.NeuCharBoxLive.Engine.Sessions;
 
 /// <summary>
 /// Rid is the new request's id, or Error is a contract kind: busy, no_request, not_waiting, bad_request, budget,
-/// global_limit or code_limit (and no_session for a session that expired after the route found it).
+/// global_limit or code_limit (and no_session for a session that expired after the route found it, live_off for a
+/// runtime that turned off after the route checked it).
 /// </summary>
 public record StartResult(string? Rid, string? Error);
 
@@ -40,7 +41,8 @@ public record AdvanceResult(string? Error, Clock? Clock);
 /// The live sessions: create (at most <see cref="SessionsPerCode"/> per code and <see cref="LiveOptions.MaxSessions"/> in
 /// all), find by id and code, start requests and what-ifs, reset, and expire after
 /// <see cref="LiveOptions.SessionIdle"/> with no call. Each request runs as a background task, not tied to the HTTP
-/// call that started it; it is cancelled only when its session expires.
+/// call that started it; it is cancelled only when its session expires. A request (or what-if) reads the runtime's
+/// snapshot once, when it starts, and runs on it to the end: its models, its limits and the model the run log names.
 /// </summary>
 public sealed class SessionManager
 {
@@ -48,6 +50,8 @@ public sealed class SessionManager
     readonly TimeProvider _tp;
     readonly AccessService _access;
     readonly Func<RequestRunner> _runners;
+    readonly ILiveRuntime _runtime;
+    readonly UsageDay _day;
     readonly ILogger<SessionManager> _log;
     readonly IPacer _pacer;
     readonly object _gate = new();
@@ -67,15 +71,18 @@ public sealed class SessionManager
     }
 
     /// <param name="runners">A new runner per request (Task 10 builds it from the container).</param>
-    /// <exception cref="InvalidOperationException">The options don't validate (<see cref="LiveOptions.Validate"/>).</exception>
-    public SessionManager(LiveOptions opt, TimeProvider tp, AccessService access, Func<RequestRunner> runners,
-        ILogger<SessionManager>? log = null, IPacer? pacer = null)
+    /// <param name="runtime">Where each request reads its snapshot. Options with <see cref="LiveOptions.Problems"/> don't
+    /// stop this constructor: AddNcbLive hands it a runtime that is always off.</param>
+    /// <param name="day">The usage day requests are admitted and logged on.</param>
+    public SessionManager(LiveOptions opt, TimeProvider tp, AccessService access, Func<RequestRunner> runners, ILiveRuntime runtime,
+        UsageDay day, ILogger<SessionManager>? log = null, IPacer? pacer = null)
     {
-        opt.Validate();
         _opt = opt;
         _tp = tp;
         _access = access;
         _runners = runners;
+        _runtime = runtime;
+        _day = day;
         _log = log ?? NullLogger<SessionManager>.Instance;
         _pacer = pacer ?? new RealPacer();
     }
@@ -171,24 +178,27 @@ public sealed class SessionManager
     }
 
     /// <summary>
-    /// Under the session's Gate: busy while a request is active, then admission (budget → global_limit → code_limit,
-    /// with the run reserved). The request is tracked and active before this returns, then runs in the background.
+    /// Under the session's Gate: busy while a request is active, live_off when the snapshot taken now is off, then
+    /// admission against that snapshot's limits (budget → global_limit → code_limit, with the run reserved under its
+    /// Run model). The request is tracked and active before this returns, then runs in the background on the snapshot.
     /// </summary>
     public async Task<StartResult> StartRequestAsync(LiveSession s, string text)
     {
+        var snap = _runtime.Current; // the request's one read: a change from here on applies to the next request
         var runner = _runners(); // first: if it can't be built, nothing is reserved
         text = (text ?? "").Trim();
         await s.Gate.WaitAsync(CancellationToken.None);
         try
         {
             if (s.Busy) return new StartResult(null, "busy");
+            if (!snap.On) return new StartResult(null, "live_off");
             if (ExpiryOf(s) is not { } ct) return new StartResult(null, "no_session");
             var now = _tp.GetUtcNow();
             var admit = await _access.AdmitRequestAsync(s.Code,
-                new RunStart(s.Code.Code, s.Scene.Id, text, false, null, _opt.RunModel, UsageDay.For(now), now));
+                new RunStart(s.Code.Code, s.Scene.Id, text, false, null, snap.Run!.Name, _day.For(now), now), snap.Limits);
             if (admit.Error is not null) return new StartResult(null, admit.Error);
             var r = new RequestRecord(NewRid(s), text, s.Room, _tp) { RunId = admit.RunId };
-            Launch(s, r, c => runner.RunAsync(s, r, c), ct);
+            Launch(s, r, c => runner.RunAsync(s, r, snap, c), ct);
             return new StartResult(r.Rid, null);
         }
         finally { s.Gate.Release(); }
@@ -196,11 +206,13 @@ public sealed class SessionManager
 
     /// <summary>
     /// "What if something fails?" on <paramref name="rid"/>: no_request when the session never had it, not_waiting
-    /// unless it is the session's what-if target, busy mid-request, bad_request for a device not in the scene, budget
-    /// once today's token budget is spent. The replay skips admission: what-ifs don't count against the request limits.
+    /// unless it is the session's what-if target, busy mid-request, bad_request for a device not in the scene, live_off
+    /// when the snapshot taken now is off, budget once today's token budget (that snapshot's) is spent. The replay skips
+    /// admission: what-ifs don't count against the request limits. It runs on that snapshot, like a request.
     /// </summary>
     public async Task<StartResult> StartWhatIfAsync(LiveSession s, string rid, string device)
     {
+        var snap = _runtime.Current;
         var runner = _runners();
         await s.Gate.WaitAsync(CancellationToken.None);
         try
@@ -211,10 +223,11 @@ public sealed class SessionManager
             if (prior is null || !ReferenceEquals(target, prior) || prior.Plan is null) return new StartResult(null, "not_waiting");
             if (s.Busy) return new StartResult(null, "busy");
             if (string.IsNullOrEmpty(device) || s.Scene.Device(device) is null) return new StartResult(null, "bad_request");
-            if (_access.BudgetSpent(UsageDay.For(_tp.GetUtcNow()))) return new StartResult(null, "budget");
+            if (!snap.On) return new StartResult(null, "live_off");
+            if (_access.BudgetSpent(_day.For(_tp.GetUtcNow()), snap.Limits)) return new StartResult(null, "budget");
             if (ExpiryOf(s) is not { } ct) return new StartResult(null, "no_session");
             var r = new RequestRecord(NewRid(s), prior.Text, s.Room, _tp) { WhatIfDevice = device };
-            Launch(s, r, c => runner.RunWhatIfAsync(s, prior, device, r, c), ct);
+            Launch(s, r, c => runner.RunWhatIfAsync(s, prior, device, r, snap, c), ct);
             return new StartResult(r.Rid, null);
         }
         finally { s.Gate.Release(); }
@@ -357,8 +370,8 @@ public sealed class SessionManager
     /// <summary>
     /// No call for SessionIdle. A running request touches the session when it starts and ends, and every approve or
     /// decline comes through Get. The longest quiet stretch inside a request is its work time plus one approval wait,
-    /// and <see cref="LiveOptions.Validate"/> keeps SessionIdle at least that long, so expiry only cancels a request
-    /// that is stuck.
+    /// and a SessionIdle shorter than that is one of <see cref="LiveOptions.Problems"/> (live stays off), so expiry only
+    /// cancels a request that is stuck.
     /// </summary>
     bool Idle(LiveSession s, DateTimeOffset now) => now - s.LastActivity >= _opt.SessionIdle;
 

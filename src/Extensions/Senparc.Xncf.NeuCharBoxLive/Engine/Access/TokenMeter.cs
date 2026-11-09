@@ -20,8 +20,9 @@ namespace Senparc.Xncf.NeuCharBoxLive.Engine.Access;
 /// <summary>
 /// The daily token kill switch (spec 4.4). A run's tokens reach the store only when it finishes, so the meter keeps two
 /// counts for the day: the store's (re-read at most every <see cref="ReadEvery"/>), and the store's at the day's first
-/// read plus every token added since. Spent once the larger reaches <see cref="LiveOptions.DailyTokenBudget"/>: the
-/// second sees runs still in flight, and taking the larger never counts a finished run twice.
+/// read plus every token added since. Spent once the larger reaches the budget (<see cref="LiveLimits.DailyTokenBudget"/>
+/// of the runtime's current snapshot, or the one a request passes from its own): the second count sees runs still in
+/// flight, and taking the larger never counts a finished run twice.
 /// </summary>
 /// <remarks>
 /// Fails closed: a store that can't be read (the module's tables don't exist before it is installed, or the database is
@@ -32,7 +33,7 @@ namespace Senparc.Xncf.NeuCharBoxLive.Engine.Access;
 /// needs a synchronisation context, so that can't deadlock.
 /// </para>
 /// </remarks>
-public sealed class TokenMeter(IRunStore runs, LiveOptions opt, TimeProvider tp, ILogger<TokenMeter>? log = null) : ITokenMeter
+public sealed class TokenMeter(IRunStore runs, ILiveRuntime runtime, TimeProvider tp, ILogger<TokenMeter>? log = null) : ITokenMeter
 {
     public static readonly TimeSpan ReadEvery = TimeSpan.FromSeconds(5);
     public static readonly TimeSpan WarnEvery = TimeSpan.FromMinutes(1);
@@ -46,15 +47,19 @@ public sealed class TokenMeter(IRunStore runs, LiveOptions opt, TimeProvider tp,
     DateTimeOffset _readAt;
     long _base, _stored, _addedToday;
 
+    /// <summary>Whether that day's tokens reached the runtime's current DailyTokenBudget.</summary>
+    public bool Spent(DateOnly day) => Spent(day, runtime.Current.Limits.DailyTokenBudget);
+
     /// <summary>
-    /// Whether that day's budget is spent. A late call for an earlier day (a request that computed its day just before
-    /// midnight) gets the current day's answer and changes nothing, so it can't roll the meter back a day.
+    /// Whether that day's tokens reached <paramref name="budget"/>. A late call for an earlier day (a request that
+    /// computed its day just before midnight) gets the current day's answer and changes nothing, so it can't roll the
+    /// meter back a day.
     /// </summary>
-    public bool Spent(DateOnly day)
+    public bool Spent(DateOnly day, long budget)
     {
         lock (_gate)
         {
-            if (_day is { } d && day < d) return SpentLocked();
+            if (_day is { } d && day < d) return SpentLocked(budget);
             var now = tp.GetUtcNow();
             if (_day != day) StartDay(day, now);
             else if (now - _readAt >= ReadEvery)
@@ -62,11 +67,11 @@ public sealed class TokenMeter(IRunStore runs, LiveOptions opt, TimeProvider tp,
                 TryRead(day, now);
                 if (_baseUnknown && !_failed) { _base = _stored; _baseUnknown = false; }
             }
-            return SpentLocked();
+            return SpentLocked(budget);
         }
     }
 
-    bool SpentLocked() => _failed || Math.Max(_stored, _base + _addedToday) >= opt.DailyTokenBudget;
+    bool SpentLocked(long budget) => _failed || Math.Max(_stored, _base + _addedToday) >= budget;
 
     /// <summary>Tokens a model call just used, on the day it was made. An earlier day's tokens are ignored.</summary>
     public void Add(DateOnly day, int tokens)

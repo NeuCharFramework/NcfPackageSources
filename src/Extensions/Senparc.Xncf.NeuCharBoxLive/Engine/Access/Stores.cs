@@ -17,7 +17,7 @@ namespace Senparc.Xncf.NeuCharBoxLive.Engine.Access;
 /// <summary>An invite code. Declared here because LiveSession holds it; Task 9's invite store returns it.</summary>
 public record InviteCode(long Id, string Code, string Label, DateTimeOffset Created, int DailyLimit, bool Disabled, int UsesTotal, DateTimeOffset? LastUsed);
 
-/// <summary>Day is the usage day (America/New_York) the run counts against.</summary>
+/// <summary>Day is the usage day (<see cref="UsageDay"/>) the run counts against; Model is the run model's name.</summary>
 public record RunStart(string Code, string Scene, string Text, bool WhatIf, string? WhatIfDevice, string Model, DateOnly Day, DateTimeOffset Started);
 
 public record RunEnd(string Outcome, string? PlanJson, string? Summary, int Calls, int PromptTokens, int CompletionTokens, long LatencyMs, DateTimeOffset Finished);
@@ -88,6 +88,11 @@ public interface IApplicationStore
 /// <summary>The daily token kill switch. Task 9 writes TokenMeter.</summary>
 public interface ITokenMeter
 {
+    /// <summary>Whether that day's tokens reached the current snapshot's DailyTokenBudget.</summary>
     bool Spent(DateOnly day);
+
+    /// <summary>Whether they reached <paramref name="budget"/>: a request checks against its own snapshot's budget.</summary>
+    bool Spent(DateOnly day, long budget);
+
     void Add(DateOnly day, int tokens);
 }

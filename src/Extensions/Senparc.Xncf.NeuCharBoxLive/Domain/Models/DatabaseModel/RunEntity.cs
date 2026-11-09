@@ -32,7 +32,7 @@ namespace Senparc.Xncf.NeuCharBoxLive.Models
         public string? WhatIfDevice { get; set; }
         public string Model { get; set; } = "";
 
-        /// <summary>The usage day (America/New_York) the run counts against.</summary>
+        /// <summary>The usage day (NcbLive:UsageTimeZone) the run counts against.</summary>
         public DateOnly Day { get; set; }
 
         public DateTime StartedUtc { get; set; }

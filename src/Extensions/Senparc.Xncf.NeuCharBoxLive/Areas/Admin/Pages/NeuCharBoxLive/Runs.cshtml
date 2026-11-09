@@ -25,7 +25,7 @@
     <partial name="_NcbLiveNav" model="@("Runs")" />
 
     <p class="lead">
-        <b>Token spend today</b> (usage day @Model.Today.ToString("yyyy-MM-dd"), America/New_York):
+        <b>Token spend today</b> (usage day @Model.Today.ToString("yyyy-MM-dd"), @Model.UsageZone):
         @N(Model.TokensToday) of @N(Model.DailyTokenBudget) tokens (DailyTokenBudget).
         <span class="muted">Finished runs only; the kill switch also counts runs still in flight.</span>
     </p>

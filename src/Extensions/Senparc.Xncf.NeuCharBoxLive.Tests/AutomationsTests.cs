@@ -45,19 +45,20 @@ public class AutomationsTests
     readonly TokenMeter Meter;
     readonly SessionManager M;
     InviteCode Code = null!;
-    IChatClient _chat = new ScriptedChatClient();
+    /// <summary>The runtime each request reads its snapshot from; set its chat client before a request.</summary>
+    readonly StaticLiveRuntime Runtime = new(Snapshots.On(new ScriptedChatClient()));
     IPacer _runPacer = new InstantPacer();
 
     public AutomationsTests()
     {
         Store = new InMemoryLiveStore(Fake);
-        Meter = new TokenMeter(Store, Opt, Fake);
-        Access = new AccessService(Store, Store, Meter, Opt, Fake);
+        Meter = new TokenMeter(Store, Runtime, Fake);
+        Access = new AccessService(Store, Store, Meter, Runtime, UsageDay.Utc, Fake);
         M = new SessionManager(Opt, Fake, Access, () =>
         {
-            var (chat, pacer) = (_chat, _runPacer); // each runner keeps what it was built with
-            return new RequestRunner(_ => chat, Opt, pacer, Fake, Store, Meter, new ListLogger<RequestRunner>());
-        }, pacer: new InstantPacer());
+            var pacer = _runPacer; // each runner keeps what it was built with
+            return new RequestRunner(Opt, pacer, Fake, Store, Meter, UsageDay.Utc, new ListLogger<RequestRunner>());
+        }, Runtime, UsageDay.Utc, pacer: new InstantPacer());
     }
 
     [TestInitialize]
@@ -154,7 +155,7 @@ public class AutomationsTests
 
     async Task<string> Start(LiveSession s, IChatClient chat, IPacer? pacer = null)
     {
-        _chat = chat;
+        Runtime.SetChat(chat);
         if (pacer is not null) _runPacer = pacer;
         var r = await M.StartRequestAsync(s, "Look after the place");
         Assert.IsNull(r.Error, r.Error);
@@ -607,8 +608,8 @@ public class AutomationsTests
     public async Task CardTextThatThrows_FailsNeitherAnEditNorAnAdvance()
     {
         var log = new ListLogger<SessionManager>();
-        var m = new SessionManager(Opt, Fake, Access, () => new RequestRunner(_ => _chat, Opt, new InstantPacer(), Fake, Store, Meter,
-            new ListLogger<RequestRunner>()), log, new InstantPacer());
+        var m = new SessionManager(Opt, Fake, Access, () => new RequestRunner(Opt, new InstantPacer(), Fake, Store, Meter, UsageDay.Utc,
+            new ListLogger<RequestRunner>()), Runtime, UsageDay.Utc, log, new InstantPacer());
         var s = m.Create(Code, "home").Session!;
         s.Room.Rules.Add(Water() with { Order = s.Room.NextOrder() });
         s.Room.Schedules.Add(Daily("sched1", "19:00", Call("set_lamp", "{}")) with { Order = s.Room.NextOrder() });
@@ -857,7 +858,7 @@ public class AutomationsTests
         StringAssert.Contains(lampChat.Calls[0].Messages[0].Text, "- off: When Soil sensor is below 30% → Water pump: run 6 s",
             "the AI sees the rule as off");
 
-        _chat = Script(Tool("set_lamp", new { brightness = 20, step = "s1" }), Text("DONE"), Text("The floor lamp didn't respond, so I couldn't dim it."));
+        Runtime.SetChat(Script(Tool("set_lamp", new { brightness = 20, step = "s1" }), Text("DONE"), Text("The floor lamp didn't respond, so I couldn't dim it.")));
         var whatIf = await M.StartWhatIfAsync(s, rid, "lamp");
         Assert.IsNull(whatIf.Error, whatIf.Error);
         await WaitFor(s, "done", whatIf.Rid!);

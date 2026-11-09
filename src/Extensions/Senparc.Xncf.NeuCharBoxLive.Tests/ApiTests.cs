@@ -70,35 +70,27 @@ public class ApiTests
     [TestMethod]
     public async Task Health_Shape()
     {
-        var made = new List<string>();
-        await using var h = await LiveHost.StartAsync(chat: host => (_, model) =>
-        {
-            lock (made) made.Add(model);
-            return host.Chat;
-        });
+        await using var h = await LiveHost.StartAsync();
         var r = await h.GetAsync("health");
         Assert.AreEqual(200, r.Code);
         Assert.IsTrue(JsonNode.DeepEquals(JsonNode.Parse("""{"ok":true,"liveEnabled":true,"scenes":["home","custom"]}"""), r.Body), r.Body?.ToJsonString());
-        await h.GetAsync("health");
-        CollectionAssert.AreEqual(new[] { "gpt-5-chat" }, made, "the factory is called once per model id, then cached");
 
-        h.Opt.DailyTokenBudget = 0; // today's budget is spent
+        h.SetLimits(l => l with { DailyTokenBudget = 0 }); // today's budget is spent
         Assert.AreEqual(false, (bool)(await h.GetAsync("health")).Body!["liveEnabled"]!);
-        h.Opt.DailyTokenBudget = 1_000_000;
-        h.Opt.Enabled = false;
+        h.SetLimits(l => l with { DailyTokenBudget = 1_000_000 });
+        h.SetLive(false);
         Assert.AreEqual(false, (bool)(await h.GetAsync("health")).Body!["liveEnabled"]!);
 
-        await using var noFactory = await LiveHost.StartAsync(chat: LiveHost.NoChat);
-        r = await noFactory.GetAsync("health");
+        await using var noRuntime = await LiveHost.StartAsync(_ => null);
+        r = await noRuntime.GetAsync("health");
         Assert.IsTrue(JsonNode.DeepEquals(JsonNode.Parse("""{"ok":true,"liveEnabled":false,"scenes":["home","custom"]}"""), r.Body), r.Body?.ToJsonString());
 
-        await using var nullClient = await LiveHost.StartAsync(chat: _ => (_, _) => null);
-        Assert.AreEqual(false, (bool)(await nullClient.GetAsync("health")).Body!["liveEnabled"]!);
-
-        // Planning and running on different models: both clients must exist.
-        await using var oneMissing = await LiveHost.StartAsync(chat: host => (_, model) => model == "run-model" ? null : host.Chat,
-            config: new() { ["NcbLive:RunModel"] = "run-model" });
-        Assert.AreEqual(false, (bool)(await oneMissing.GetAsync("health")).Body!["liveEnabled"]!);
+        // Planning and running on different models: both must be there.
+        var model = new LiveModel(LiveHost.Model, new ScriptedChatClient());
+        await using var noRun = await LiveHost.StartAsync(_ => new LiveSnapshot(LiveLimits.Defaults, model, null, LiveHost.Origins, null));
+        Assert.AreEqual(false, (bool)(await noRun.GetAsync("health")).Body!["liveEnabled"]!);
+        await using var noPlan = await LiveHost.StartAsync(_ => new LiveSnapshot(LiveLimits.Defaults, null, model, LiveHost.Origins, null));
+        Assert.AreEqual(false, (bool)(await noPlan.GetAsync("health")).Body!["liveEnabled"]!);
     }
 
     [TestMethod]
@@ -390,14 +382,14 @@ public class ApiTests
         var tooLong = new { text = new string('a', 401) };
 
         // 1. bad_code beats everything (and a missing header is bad_code too).
-        h.Opt.Enabled = false;
+        h.SetLive(false);
         AssertError(await h.PostAsync(Path("nope"), new { }, "NCB-2222-2222"), 401, "bad_code");
         AssertError(await h.PostAsync(Path("nope"), new { }), 401, "bad_code");
         AssertError(await h.PostAsync(Path(busy), new { text = "x" },
             edit: m => m.Headers.TryAddWithoutValidation("Authorization", "Basic " + c.Code)), 401, "bad_code");
-        // 2. live_off: live disabled in config.
+        // 2. live_off: live turned off in the runtime.
         AssertError(await h.PostAsync(Path("nope"), new { }, c.Code), 503, "live_off");
-        h.Opt.Enabled = true;
+        h.SetLive(true);
         // 3. no_session: unknown, or another code's session.
         AssertError(await h.PostAsync(Path("nope"), new { }, c.Code), 404, "no_session");
         AssertError(await h.PostAsync(Path(busy), new { }, other.Code), 404, "no_session");
@@ -410,17 +402,17 @@ public class ApiTests
         // 5. too_long, even while busy.
         AssertError(await h.PostAsync(Path(busy), tooLong, c.Code), 400, "too_long");
         // 6. busy beats budget and the daily limits.
-        h.Opt.DailyTokenBudget = 0;
-        h.Opt.GlobalDaily = 1;
+        h.SetLimits(l => l with { DailyTokenBudget = 0 });
+        h.SetLimits(l => l with { GlobalDaily = 1 });
         await h.Store.SetLimitAsync(c.Id, 1);
         AssertError(await h.PostAsync(Path(busy), new { text = "Dim the lamp" }, c.Code), 409, "busy");
         // 7. budget beats the daily limits.
         AssertError(await h.PostAsync(Path(idle), new { text = "Dim the lamp" }, c.Code), 429, "budget");
         // 8. global_limit beats code_limit.
-        h.Opt.DailyTokenBudget = 1_000_000;
+        h.SetLimits(l => l with { DailyTokenBudget = 1_000_000 });
         AssertError(await h.PostAsync(Path(idle), new { text = "Dim the lamp" }, c.Code), 429, "global_limit");
         // 9. code_limit: the limit changed mid-session (the session was made at 20) and applies at once.
-        h.Opt.GlobalDaily = 300;
+        h.SetLimits(l => l with { GlobalDaily = 300 });
         AssertError(await h.PostAsync(Path(idle), new { text = "Dim the lamp" }, c.Code), 429, "code_limit");
         await h.Store.SetLimitAsync(c.Id, 20);
         h.Chat.Inner = Script(CannotDo());
@@ -429,13 +421,13 @@ public class ApiTests
         Assert.IsNotNull(r1);
 
         // POST sessions: bad_code → live_off → budget → bad_request.
-        h.Opt.Enabled = false;
-        h.Opt.DailyTokenBudget = 0;
+        h.SetLive(false);
+        h.SetLimits(l => l with { DailyTokenBudget = 0 });
         AssertError(await h.PostAsync("sessions", new { scene = "mars" }, "NCB-2222-2222"), 401, "bad_code");
         AssertError(await h.PostAsync("sessions", new { scene = "mars" }, c.Code), 503, "live_off");
-        h.Opt.Enabled = true;
+        h.SetLive(true);
         AssertError(await h.PostAsync("sessions", new { scene = "mars" }, c.Code), 429, "budget");
-        h.Opt.DailyTokenBudget = 1_000_000;
+        h.SetLimits(l => l with { DailyTokenBudget = 1_000_000 });
         AssertError(await h.PostAsync("sessions", new { scene = "mars" }, c.Code), 400, "bad_request");
         AssertError(await h.PostAsync("sessions", new { }, c.Code), 400, "bad_request");
         AssertError(await h.PostAsync("sessions", "[1,2", c.Code), 400, "bad_request");
@@ -601,12 +593,12 @@ public class ApiTests
         AssertError(await h.PostAsync(Path(rid), "{\"device\"", c.Code), 400, "bad_request");
         AssertError(await h.PostAsync(Path(rid), lamp, "NCB-2222-2222"), 401, "bad_code");
         AssertError(await h.PostAsync($"sessions/nope/requests/{rid}/whatif", lamp, c.Code), 404, "no_session");
-        h.Opt.Enabled = false;
+        h.SetLive(false);
         AssertError(await h.PostAsync(Path(rid), lamp, c.Code), 503, "live_off");
-        h.Opt.Enabled = true;
-        h.Opt.DailyTokenBudget = 0;
+        h.SetLive(true);
+        h.SetLimits(l => l with { DailyTokenBudget = 0 });
         AssertError(await h.PostAsync(Path(rid), lamp, c.Code), 429, "budget");
-        h.Opt.DailyTokenBudget = 1_000_000;
+        h.SetLimits(l => l with { DailyTokenBudget = 1_000_000 });
 
         h.Chat.Inner = LampWhatIf();
         var r = await h.PostAsync(Path(rid), lamp, c.Code);
@@ -620,7 +612,7 @@ public class ApiTests
         Assert.IsFalse(replay.Any(e => e.Kind == "awaiting_approval"), "a what-if replays without asking");
         Assert.IsTrue(replay.All(e => e.Rid == wid));
         AssertError(await h.PostAsync(Path(wid), lamp, c.Code), 409, "not_waiting");
-        Assert.AreEqual(1, (await h.Store.CountTodayAsync(UsageDay.For(h.Fake.GetUtcNow()), c.Code)), "what-ifs don't count");
+        Assert.AreEqual(1, (await h.Store.CountTodayAsync(h.Get<UsageDay>().For(h.Fake.GetUtcNow()), c.Code)), "what-ifs don't count");
     }
 
     [TestMethod]
@@ -839,22 +831,31 @@ public class ApiTests
     // ---- CORS ----
 
     [TestMethod]
-    public void Cors_ExtraOrigins_OnlyOrigins()
+    public void Cors_TryNormalize_OnlyOrigins()
     {
-        CollectionAssert.AreEquivalent(new[] { "https://leozheng265.github.io", "http://localhost:8765", "https://demo.neucharbox.com" },
-            LiveCors.AllowedOrigins(new[] { "https://demo.neucharbox.com/", " ", "https://LEOZHENG265.github.io" }));
+        CollectionAssert.AreEqual(new[] { "https://leozheng265.github.io" }, LiveCors.BuiltIns.ToList());
+        CollectionAssert.AreEqual(new[] { "http://localhost:8765" }, LiveCors.Development.ToList());
+        foreach (var (raw, want) in new[] { ("https://demo.neucharbox.com/", "https://demo.neucharbox.com"),
+                     (" https://LEOZHENG265.github.io ", "https://LEOZHENG265.github.io"), ("http://localhost:8765", "http://localhost:8765") })
+        {
+            Assert.IsTrue(LiveCors.TryNormalize(raw, out var origin), raw);
+            Assert.AreEqual(want, origin, raw);
+        }
         // A wildcard would open the API to every site (CORS treats "*" as any origin); a path or scheme isn't an origin.
-        foreach (var bad in new[] { "*", "https://*.github.io", "https://demo.neucharbox.com/live", "ftp://demo.neucharbox.com", "null", "demo.neucharbox.com" })
-            Assert.ThrowsException<InvalidOperationException>(() => LiveCors.AllowedOrigins(new[] { bad }), bad);
-        var cfg = new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string?> { ["NcbLive:ExtraOrigins:0"] = "*" }).Build();
-        Assert.ThrowsException<InvalidOperationException>(() => new ServiceCollection().AddNcbLive(cfg), "AddNcbLive fails fast");
+        foreach (var bad in new[] { "*", "https://*.github.io", "https://demo.neucharbox.com/live", "ftp://demo.neucharbox.com", "null",
+                     "demo.neucharbox.com", " ", "", null!, "https://demo.neucharbox.com?x=1", "https://demo.neucharbox.com/#top",
+                     "https://user@demo.neucharbox.com" })
+        {
+            Assert.IsFalse(LiveCors.TryNormalize(bad, out var origin), bad);
+            Assert.AreEqual("", origin, bad);
+        }
     }
 
     [TestMethod]
     public async Task Cors_PreflightAndSseOrigin()
     {
-        await using var h = await LiveHost.StartAsync(config: new() { ["NcbLive:ExtraOrigins:0"] = "https://demo.neucharbox.com" });
+        // The snapshot's origins: the built-ins, the local demo and one more.
+        await using var h = await LiveHost.StartAsync(host => host.OnSnapshot(origins: LiveHost.Origins.Append("https://demo.neucharbox.com").ToArray()));
         static string[] Values(HttpResponseMessage m, string header) =>
             m.Headers.TryGetValues(header, out var v) ? v.SelectMany(x => x.Split(',')).Select(x => x.Trim()).ToArray() : Array.Empty<string>();
 
@@ -1149,14 +1150,6 @@ public class ApiTests
         Assert.AreEqual(200, (await h.GetAsync("health")).Code);
     }
 
-    // ---- startup ----
-
-    [TestMethod]
-    public async Task Startup_InvalidOptions_FailsFast()
-    {
-        // SessionManager is resolved at startup, so options that can't work together stop the host before a visitor.
-        var e = await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
-            LiveHost.StartAsync(config: new() { ["NcbLive:SessionIdle"] = "00:05:00" }));
-        StringAssert.Contains(e.Message, "NcbLive:SessionIdle");
-    }
+    // Startup with options that can't work together: RuntimeTests.ConfigProblem_HostStarts_AndHealthIsOff (the host
+    // starts with live off instead of failing).
 }

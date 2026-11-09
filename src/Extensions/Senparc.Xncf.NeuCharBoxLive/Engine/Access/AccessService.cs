@@ -21,9 +21,11 @@ public record AccessResult(bool Ok, InviteCode? Code, int Remaining, string? Err
 public record AdmitResult(string? Error, long? RunId);
 
 /// <summary>
-/// Invite codes and the daily limits (spec 7.1, global constraints). Days are usage days: midnight America/New_York.
+/// Invite codes and the daily limits (spec 7.1, global constraints). Days are usage days (<see cref="UsageDay"/>). The
+/// limits are the runtime's current ones, unless a request passes its own snapshot's.
 /// </summary>
-public sealed class AccessService(IInviteStore codes, IRunStore runs, ITokenMeter meter, LiveOptions opt, TimeProvider tp)
+public sealed class AccessService(IInviteStore codes, IRunStore runs, ITokenMeter meter, ILiveRuntime runtime, UsageDay usageDay,
+    TimeProvider tp)
 {
     static readonly AccessResult BadCode = new(false, null, 0, "bad_code");
 
@@ -40,10 +42,11 @@ public sealed class AccessService(IInviteStore codes, IRunStore runs, ITokenMete
         if (normalized.Length == 0) return BadCode;
         var code = await codes.FindAsync(normalized);
         if (code is null || code.Disabled) return BadCode;
-        var day = UsageDay.For(tp.GetUtcNow());
+        var day = usageDay.For(tp.GetUtcNow());
         var mine = await runs.CountTodayAsync(day, code.Code);
         var all = await runs.CountTodayAsync(day, null);
-        return new AccessResult(true, code, Math.Max(0, Math.Min(code.DailyLimit - mine, opt.GlobalDaily - all)), null);
+        var global = runtime.Current.Limits.GlobalDaily;
+        return new AccessResult(true, code, Math.Max(0, Math.Min(code.DailyLimit - mine, global - all)), null);
     }
 
     /// <summary>The value without a leading "Bearer" scheme (any case). Another scheme stays, so it can't match a code.</summary>
@@ -61,8 +64,10 @@ public sealed class AccessService(IInviteStore codes, IRunStore runs, ITokenMete
     /// admitted request is reserved at once: <paramref name="start"/> is logged, and the code touched, before the next
     /// admission can count, so two tabs at 19 of 20 can't both get in (nor two codes at 299 of 300).
     /// </summary>
-    public async Task<AdmitResult> AdmitRequestAsync(InviteCode c, RunStart start)
+    /// <param name="limits">The request's snapshot's limits; null reads the runtime's current ones.</param>
+    public async Task<AdmitResult> AdmitRequestAsync(InviteCode c, RunStart start, LiveLimits? limits = null)
     {
+        limits ??= runtime.Current.Limits;
         // The caller checked the code (CheckAsync) and logs the run under it: anything else is a bug, not a visitor error.
         if (c.Disabled) throw new ArgumentException($"invite code {c.Id} is disabled", nameof(c));
         if (!string.Equals(start.Code, c.Code, StringComparison.Ordinal))
@@ -70,8 +75,8 @@ public sealed class AccessService(IInviteStore codes, IRunStore runs, ITokenMete
         await _admit.WaitAsync(CancellationToken.None);
         try
         {
-            if (meter.Spent(start.Day)) return new AdmitResult("budget", null);
-            if (await runs.CountTodayAsync(start.Day, null) >= opt.GlobalDaily) return new AdmitResult("global_limit", null);
+            if (meter.Spent(start.Day, limits.DailyTokenBudget)) return new AdmitResult("budget", null);
+            if (await runs.CountTodayAsync(start.Day, null) >= limits.GlobalDaily) return new AdmitResult("global_limit", null);
             if (await runs.CountTodayAsync(start.Day, c.Code) >= c.DailyLimit) return new AdmitResult("code_limit", null);
             await codes.TouchAsync(c.Id, start.Started); // first: if it throws, no slot is left reserved without a run
             return new AdmitResult(null, await runs.StartAsync(start));
@@ -79,6 +84,10 @@ public sealed class AccessService(IInviteStore codes, IRunStore runs, ITokenMete
         finally { _admit.Release(); }
     }
 
-    /// <summary>The kill switch for that usage day. A what-if skips admission but is still refused once it trips.</summary>
-    public bool BudgetSpent(DateOnly day) => meter.Spent(day);
+    /// <summary>
+    /// The kill switch for that usage day, against <paramref name="limits"/> (a request's snapshot's) or, when null, the
+    /// runtime's current ones. A what-if skips admission but is still refused once it trips.
+    /// </summary>
+    public bool BudgetSpent(DateOnly day, LiveLimits? limits = null) =>
+        limits is null ? meter.Spent(day) : meter.Spent(day, limits.DailyTokenBudget);
 }

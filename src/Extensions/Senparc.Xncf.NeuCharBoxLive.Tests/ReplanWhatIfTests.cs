@@ -82,11 +82,11 @@ public class ReplanWhatIfTests
 
     static (string, object) RunUntil(double hours) => ("run_until", new { hours });
 
-    RequestRunner Runner(IChatClient chat) => new(_ => chat, Opt, Pacer, Fake, Store, new StubMeter(), Log);
+    RequestRunner Runner() => new(Opt, Pacer, Fake, Store, new StubMeter(), UsageDay.Utc, Log);
 
     RequestRecord Request(string text = MovieText) => new($"r{++_rids}", text, S.Room.Clone(), Fake);
 
-    Task Start(IChatClient chat, RequestRecord r) => Runner(chat).RunAsync(S, r, CancellationToken.None);
+    Task Start(IChatClient chat, RequestRecord r) => Runner().RunAsync(S, r, Snapshots.On(chat), CancellationToken.None);
 
     async Task<IReadOnlyList<LiveEvent>> Of(RequestRecord r) =>
         (await S.Events.WaitAfterAsync(0, TimeSpan.Zero, CancellationToken.None)).Where(e => e.Rid == r.Rid).ToList();
@@ -188,7 +188,7 @@ public class ReplanWhatIfTests
     RequestRecord WhatIfRecord(RequestRecord prior) => new($"r{++_rids}", prior.Text, S.Room.Clone(), Fake);
 
     Task StartWhatIf(IChatClient chat, RequestRecord prior, string device, RequestRecord r) =>
-        Runner(chat).RunWhatIfAsync(S, prior, device, r, CancellationToken.None);
+        Runner().RunWhatIfAsync(S, prior, device, r, Snapshots.On(chat), CancellationToken.None);
 
     async Task<(RequestRecord R, IReadOnlyList<LiveEvent> Ev)> WhatIf(RequestRecord prior, string device, IChatClient chat)
     {
@@ -388,7 +388,7 @@ public class ReplanWhatIfTests
         Assert.AreEqual("soil", row.Start.WhatIfDevice);
         Assert.AreEqual(MovieText, row.Start.Text);
         Assert.AreEqual("failed", row.End!.Outcome);
-        Assert.AreEqual(1, await Store.CountTodayAsync(UsageDay.For(Fake.GetUtcNow()), null));
+        Assert.AreEqual(1, await Store.CountTodayAsync(UsageDay.Utc.For(Fake.GetUtcNow()), null));
 
         // A second what-if on the same request replays it again from the same room.
         var (_, again) = await WhatIf(prior, "soil", Chat(MovieRun(), Text("DONE"), Text("The soil sensor didn't respond.")));
@@ -420,6 +420,7 @@ public class ReplanWhatIfTests
     [TestMethod]
     public async Task WhatIf_CallsCappedAt14()
     {
+        Opt.MaxCallsWhatIf = 14; // the cap under test (the default is 60)
         var prior = await MovieNight();
         var chat = new ScriptedChatClient(Enumerable.Range(0, 20).Select(_ => (ScriptTurn)((_, _) => Tool("read_soil", new { }))).ToArray());
         var (_, ev) = await WhatIf(prior, "lamp", chat);

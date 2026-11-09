@@ -49,30 +49,35 @@ public sealed class RequestRunner
     /// <summary>A commanded-only action and the read that can confirm it: the pump only through the soil rising (spec 6).</summary>
     static readonly Dictionary<string, (string Read, string Path)> ConfirmedBy = new() { ["run_pump"] = ("read_soil", "soil.moisture") };
 
-    readonly Func<string, IChatClient> _chatFor;
     readonly LiveOptions _opt;
     readonly IPacer _pacer;
     readonly TimeProvider _tp;
     readonly IRunStore _runs;
     readonly ITokenMeter _meter;
+    readonly UsageDay _day;
     readonly ILogger<RequestRunner> _log;
 
-    /// <param name="chatFor">The client for a model id. Planning uses PlanModel; the run and the summary use RunModel.</param>
-    public RequestRunner(Func<string, IChatClient> chatFor, LiveOptions opt, IPacer pacer, TimeProvider tp, IRunStore runs,
-        ITokenMeter meter, ILogger<RequestRunner> log)
+    /// <param name="day">The usage day the run log and the token meter count against.</param>
+    public RequestRunner(LiveOptions opt, IPacer pacer, TimeProvider tp, IRunStore runs, ITokenMeter meter, UsageDay day,
+        ILogger<RequestRunner> log)
     {
-        _chatFor = chatFor;
         _opt = opt;
         _pacer = pacer;
         _tp = tp;
         _runs = runs;
         _meter = meter;
+        _day = day;
         _log = log;
     }
 
-    /// <summary>Runs one request to its done event. It never throws for the request's own failures: they end in done.</summary>
-    public Task RunAsync(LiveSession s, RequestRecord r, CancellationToken ct) =>
-        new Run(this, s, r, _opt.MaxCalls).ExecuteAsync((run, c) => run.NormalAsync(c), ct);
+    /// <summary>
+    /// Runs one request to its done event on <paramref name="snap"/>, the snapshot the request started with: its Plan
+    /// model plans, its Run model runs and summarises, and its limits hold to the end, whatever the runtime says
+    /// meanwhile. It never throws for the request's own failures: they end in done.
+    /// </summary>
+    /// <exception cref="ArgumentException"><paramref name="snap"/> is off (the caller refuses with live_off first).</exception>
+    public Task RunAsync(LiveSession s, RequestRecord r, LiveSnapshot snap, CancellationToken ct) =>
+        new Run(this, s, r, snap, _opt.MaxCalls).ExecuteAsync((run, c) => run.NormalAsync(c), ct);
 
     /// <summary>
     /// "What if something fails?" (spec 3.4): the room goes back to just before <paramref name="prior"/>, the device is
@@ -80,11 +85,12 @@ public sealed class RequestRunner
     /// A what-if adds no turn and never becomes LastFinished; the runner logs its run (WhatIf, so it doesn't count).
     /// A prior with no approved plan (declined, expired, cannot_do) or an unknown device is refused: nothing replays,
     /// the room is left as it is, and the request ends error {internal} then done {failed}. Task 9 refuses both first.
+    /// The what-if runs on <paramref name="snap"/>, its own snapshot, as <see cref="RunAsync"/> does.
     /// </summary>
-    public Task RunWhatIfAsync(LiveSession s, RequestRecord prior, string device, RequestRecord r, CancellationToken ct)
+    public Task RunWhatIfAsync(LiveSession s, RequestRecord prior, string device, RequestRecord r, LiveSnapshot snap, CancellationToken ct)
     {
         r.WhatIfDevice = device;
-        return new Run(this, s, r, _opt.MaxCallsWhatIf, prior.Text).ExecuteAsync((run, c) => run.WhatIfAsync(prior, device, c), ct);
+        return new Run(this, s, r, snap, _opt.MaxCallsWhatIf, prior.Text).ExecuteAsync((run, c) => run.WhatIfAsync(prior, device, c), ct);
     }
 
     /// <summary>A re-plan card got no answer in time: the request ends expired.</summary>
@@ -95,6 +101,9 @@ public sealed class RequestRunner
     {
         readonly RequestRunner _o;
         readonly LiveOptions _opt;
+        readonly LiveLimits _limits;
+        readonly LiveModel _planModel;
+        readonly LiveModel _runModel;
         readonly LiveSession _s;
         readonly RequestRecord _r;
         readonly string _text;
@@ -125,10 +134,14 @@ public sealed class RequestRunner
         sealed record Pending(JsonObject Fact, string Read, string Path, double Baseline);
 
         /// <param name="text">The visitor's request; a what-if passes the replayed request's text.</param>
-        public Run(RequestRunner o, LiveSession s, RequestRecord r, int maxCalls, string? text = null)
+        public Run(RequestRunner o, LiveSession s, RequestRecord r, LiveSnapshot snap, int maxCalls, string? text = null)
         {
+            if (!snap.On) throw new ArgumentException($"live is off ({snap.OffReason ?? "no model"}): the request can't run", nameof(snap));
             _o = o;
             _opt = o._opt;
+            _limits = snap.Limits;
+            _planModel = snap.Plan!;
+            _runModel = snap.Run!;
             _s = s;
             _r = r;
             _text = text ?? r.Text;
@@ -164,7 +177,7 @@ public sealed class RequestRunner
             try
             {
                 _r.RunId ??= await _o._runs.StartAsync(new RunStart(_s.Code.Code, _m.Id, _text, _r.IsWhatIf, _r.WhatIfDevice,
-                    _opt.RunModel, UsageDay.For(Now), Now));
+                    _runModel.Name, _o._day.For(Now), Now));
                 outcome = await body(this, ct);
             }
             catch (BudgetExceededException e)
@@ -252,10 +265,10 @@ public sealed class RequestRunner
         {
             try
             {
-                var day = UsageDay.For(Now);
+                var day = _o._day.For(Now);
                 var mine = await _o._runs.CountTodayAsync(day, _s.Code.Code);
                 var all = await _o._runs.CountTodayAsync(day, null);
-                return Math.Max(0, Math.Min(_s.Code.DailyLimit - mine, _opt.GlobalDaily - all));
+                return Math.Max(0, Math.Min(_s.Code.DailyLimit - mine, _limits.GlobalDaily - all));
             }
             catch (Exception e)
             {
@@ -368,7 +381,7 @@ public sealed class RequestRunner
         /// <summary>The checked, guarded plan; null when the model called cannot_do (already emitted).</summary>
         async Task<ApprovedPlan?> PlanAsync(CancellationToken ct)
         {
-            var client = _o._chatFor(_opt.PlanModel);
+            var client = _planModel.Client;
             var tools = ToolCatalog.PlanTools(_m);
             var cannotDo = ToolCatalog.SchemaOf(tools.Single(t => t.Name == "cannot_do"));
             var msgs = new List<ChatMessage> { new(ChatRole.System, Prompts.PlanSystem(_m, _room, Clock())) };
@@ -376,7 +389,7 @@ public sealed class RequestRunner
             msgs.Add(new ChatMessage(ChatRole.User, _text));
             var options = new ChatOptions
             {
-                ModelId = _opt.PlanModel,
+                ModelId = _planModel.Name,
                 Tools = tools,
                 ToolMode = string.Equals(_opt.PlanToolMode, "auto", StringComparison.OrdinalIgnoreCase) ? ChatToolMode.Auto : ChatToolMode.RequireAny,
                 MaxOutputTokens = _opt.MaxCompletionTokens,
@@ -459,7 +472,7 @@ public sealed class RequestRunner
 
         async Task<ApprovedPlan> GuardPlanAsync(ApprovedPlan plan, CancellationToken ct)
         {
-            var texts = await GuardAsync("plan", plan.Steps.Select(s => s.Text).ToList(), _opt.PlanModel, _opt.MaxCompletionTokens,
+            var texts = await GuardAsync("plan", plan.Steps.Select(s => s.Text).ToList(), _planModel, _opt.MaxCompletionTokens,
                 i => Prompts.StepFallback(plan.Steps[i], _m, i + 1), _ => ToolCatalog.MaxStepText, ct);
             for (var i = 0; i < plan.Steps.Count; i++) plan.Steps[i] = plan.Steps[i] with { Text = texts[i] };
             return plan;
@@ -469,7 +482,7 @@ public sealed class RequestRunner
         {
             var texts = new List<string> { ArgValidator.Str(args["reason"])! };
             texts.AddRange(args["suggestions"]!.AsArray().Select(x => ArgValidator.Str(x)!));
-            var clean = await GuardAsync("cannot_do", texts, _opt.PlanModel, _opt.MaxCompletionTokens,
+            var clean = await GuardAsync("cannot_do", texts, _planModel, _opt.MaxCompletionTokens,
                 i => i == 0 || _m.Suggestions.Count == 0 ? Prompts.CannotDoFallback : _m.Suggestions[(i - 1) % _m.Suggestions.Count],
                 _ => int.MaxValue, ct);
             Emit(Ev.CannotDo(clean[0], clean.Skip(1).ToList()));
@@ -481,7 +494,7 @@ public sealed class RequestRunner
         public async Task RunPhaseAsync(ApprovedPlan plan, CancellationToken ct)
         {
             _tracker ??= new StepTracker(_s.Events, _r.Rid, plan);
-            var client = _o._chatFor(_opt.RunModel);
+            var client = _runModel.Client;
             var msgs = new List<ChatMessage> { new(ChatRole.System, Prompts.RunSystem(_m, _room, Clock(), plan)) };
             // A replay starts from the request and its plan: the history ends with the replayed request's own outcome.
             if (!_r.IsWhatIf) AddHistory(msgs);
@@ -490,7 +503,7 @@ public sealed class RequestRunner
             msgs.Add(new ChatMessage(ChatRole.User, Prompts.Approved));
             var options = new ChatOptions
             {
-                ModelId = _opt.RunModel,
+                ModelId = _runModel.Name,
                 Tools = ToolCatalog.RunTools(_m),
                 ToolMode = ChatToolMode.Auto,
                 MaxOutputTokens = _opt.MaxCompletionTokens,
@@ -820,12 +833,12 @@ public sealed class RequestRunner
             };
             var options = new ChatOptions
             {
-                ModelId = _opt.RunModel,
+                ModelId = _runModel.Name,
                 Tools = _faultTools,
                 ToolMode = ChatToolMode.Auto,
                 MaxOutputTokens = _opt.MaxCompletionTokens,
             };
-            var resp = await CallAsync(_o._chatFor(_opt.RunModel), msgs, options, ct);
+            var resp = await CallAsync(_runModel.Client, msgs, options, ct);
             var did = new JsonArray();
             pauses.Add(new JsonObject { ["at"] = row.At, ["fault"] = row.Text, ["results"] = did });
             foreach (var fc in CallsIn(resp))
@@ -919,7 +932,7 @@ public sealed class RequestRunner
             if (!check.Ok) return Error(check.Error!);
             var steps = check.Steps!.ToList();
             var texts = steps.Select(s => s.Text).Append(ArgValidator.Str(args["reason"])!).ToList();
-            var clean = await GuardAsync("replan", texts, _opt.RunModel, _opt.MaxCompletionTokens,
+            var clean = await GuardAsync("replan", texts, _runModel, _opt.MaxCompletionTokens,
                 i => i < steps.Count ? Prompts.StepFallback(steps[i], _m, StepNumber(steps[i].Id, i)) : Prompts.ReplanReasonFallback,
                 i => i < steps.Count ? ToolCatalog.MaxStepText : int.MaxValue, ct);
             for (var i = 0; i < steps.Count; i++) steps[i] = steps[i] with { Text = clean[i] };
@@ -1032,18 +1045,18 @@ public sealed class RequestRunner
             var untouched = FlagUntouched();
             var facts = Facts();
             if (untouched.Count > 0) facts["untouchedFailedDevice"] = string.Join(" and ", untouched.Select(d => _m.Device(d)?.Ref ?? d));
-            var client = _o._chatFor(_opt.RunModel);
+            var client = _runModel.Client;
             var msgs = new List<ChatMessage>
             {
                 new(ChatRole.System, Prompts.SummarySystem(_m)),
                 new(ChatRole.User, Prompts.SummaryInstruction(facts)),
             };
-            var options = new ChatOptions { ModelId = _opt.RunModel, MaxOutputTokens = SummaryMaxTokens };
+            var options = new ChatOptions { ModelId = _runModel.Name, MaxOutputTokens = SummaryMaxTokens };
             var say = new SayStream(delta => Emit(Ev.Say(delta)));
             // Not a servicing wait: an edit made while the summary streams applies when the request finishes.
             var text = await StreamAsync(client, msgs, options, say.Add, ct);
             say.End();
-            var guarded = (await GuardAsync("summary", new[] { text.Trim() }, _opt.RunModel, SummaryMaxTokens,
+            var guarded = (await GuardAsync("summary", new[] { text.Trim() }, _runModel, SummaryMaxTokens,
                 _ => Prompts.SummaryFallback, _ => int.MaxValue, ct))[0];
             var final = CopyGuard.TwoSentences(guarded);
             if (string.IsNullOrWhiteSpace(final)) final = Prompts.SummaryFallback;
@@ -1125,7 +1138,7 @@ public sealed class RequestRunner
         /// On a hit, one rephrase call for all the texts together; whatever still hits is stripped. A text that ends up
         /// empty, or still hits after the strip, becomes its fixed line.
         /// </summary>
-        async Task<List<string>> GuardAsync(string kind, IReadOnlyList<string> texts, string model, int maxTokens,
+        async Task<List<string>> GuardAsync(string kind, IReadOnlyList<string> texts, LiveModel model, int maxTokens,
             Func<int, string> fallback, Func<int, int> maxLen, CancellationToken ct)
         {
             var hits = texts.SelectMany(CopyGuard.Find).ToList();
@@ -1136,9 +1149,9 @@ public sealed class RequestRunner
             ChatResponse? resp = null;
             try
             {
-                resp = await CallAsync(_o._chatFor(model),
+                resp = await CallAsync(model.Client,
                     new List<ChatMessage> { new(ChatRole.User, Prompts.Rephrase(texts, Distinct(hits))) },
-                    new ChatOptions { ModelId = model, MaxOutputTokens = maxTokens }, ct);
+                    new ChatOptions { ModelId = model.Name, MaxOutputTokens = maxTokens }, ct);
             }
             catch (Exception e) when (e is BudgetExceededException or TokenBudgetSpentException or ModelCallException)
             {
@@ -1193,7 +1206,7 @@ public sealed class RequestRunner
 
         void BeforeCall()
         {
-            if (_o._meter.Spent(UsageDay.For(Now))) throw new TokenBudgetSpentException();
+            if (_o._meter.Spent(_o._day.For(Now), _limits.DailyTokenBudget)) throw new TokenBudgetSpentException();
             _budget.BeforeCall();
         }
 
@@ -1292,7 +1305,7 @@ public sealed class RequestRunner
             _budget.AddUsage(u, Estimate(Chars(sent)), Estimate(completionChars));
             var after = _budget.Usage;
             var spent = after.PromptTokens - before.PromptTokens + after.CompletionTokens - before.CompletionTokens;
-            if (spent > 0) _o._meter.Add(UsageDay.For(Now), spent);
+            if (spent > 0) _o._meter.Add(_o._day.For(Now), spent);
         }
 
         static int Estimate(int chars) => Math.Max(1, (chars + 3) / 4);

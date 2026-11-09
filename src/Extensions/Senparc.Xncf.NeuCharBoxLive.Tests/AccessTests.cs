@@ -27,20 +27,36 @@ public class AccessTests
     readonly InMemoryLiveStore Store;
     readonly LiveOptions Opt = new();
 
+    /// <summary>Usage days reset at midnight in New York here: the boundary cases below are written for it.</summary>
+    readonly UsageDay Days = NewYork();
+
+    /// <summary>The limits come from the runtime's snapshot; <see cref="Budget"/> changes them.</summary>
+    readonly StaticLiveRuntime Runtime = new(Fakes.Snapshots.On(new Fakes.ScriptedChatClient()));
+
     public AccessTests() => Store = new InMemoryLiveStore(Fake);
 
     // ---- helpers ----
 
-    DateOnly Day => UsageDay.For(Fake.GetUtcNow());
+    static UsageDay NewYork()
+    {
+        Assert.IsTrue(UsageDay.TryFromId("America/New_York", out var ny));
+        return ny;
+    }
+
+    LiveLimits Limits => Runtime.Current.Limits;
+
+    void Budget(long tokens) => Runtime.Current = Runtime.Current with { Limits = Limits with { DailyTokenBudget = tokens } };
+
+    DateOnly Day => Days.For(Fake.GetUtcNow());
 
     AccessService Access(IRunStore? runs = null, ITokenMeter? meter = null)
     {
         runs ??= Store;
-        return new AccessService(Store, runs, meter ?? new TokenMeter(runs, Opt, Fake), Opt, Fake);
+        return new AccessService(Store, runs, meter ?? new TokenMeter(runs, Runtime, Fake), Runtime, Days, Fake);
     }
 
     RunStart Run(InviteCode c, bool whatIf = false) =>
-        new(c.Code, "home", "Dim the lamp", whatIf, whatIf ? "lamp" : null, Opt.RunModel, Day, Fake.GetUtcNow());
+        new(c.Code, "home", "Dim the lamp", whatIf, whatIf ? "lamp" : null, Fakes.Snapshots.Model, Day, Fake.GetUtcNow());
 
     async Task Seed(InviteCode c, int n, bool whatIf = false)
     {
@@ -161,14 +177,35 @@ public class AccessTests
         var a = await Store.CreateAsync("a@example.com", 20);
         var b = await Store.CreateAsync("b@example.com", 20);
         var bulk = await Store.CreateAsync("bulk", 1000);
-        await Seed(bulk, Opt.GlobalDaily - 1);
+        await Seed(bulk, Limits.GlobalDaily - 1);
         var access = Access(new SlowRuns(Store), new Fakes.StubMeter());
 
         var results = await Task.WhenAll(Task.Run(() => access.AdmitRequestAsync(a, Run(a))), Task.Run(() => access.AdmitRequestAsync(b, Run(b))));
 
         Assert.AreEqual(1, results.Count(r => r.RunId is not null));
         Assert.AreEqual(1, results.Count(r => r.Error == "global_limit"));
-        Assert.AreEqual(Opt.GlobalDaily, await Store.CountTodayAsync(Day, null));
+        Assert.AreEqual(Limits.GlobalDaily, await Store.CountTodayAsync(Day, null));
+    }
+
+    /// <summary>
+    /// A request is admitted on its own snapshot's limits (SessionManager passes them); CheckAsync and an admission
+    /// without limits read the runtime's current ones.
+    /// </summary>
+    [TestMethod]
+    public async Task Admit_UsesTheLimitsPassed_ElseTheRuntimes()
+    {
+        var a = await Store.CreateAsync("a@example.com", 20);
+        var access = Access();
+        await Seed(a, 2);
+        Runtime.Current = Runtime.Current with { Limits = Limits with { GlobalDaily = 2 } };
+        Assert.AreEqual(0, (await access.CheckAsync(a.Code)).Remaining, "the runtime's GlobalDaily");
+        Assert.AreEqual("global_limit", (await access.AdmitRequestAsync(a, Run(a))).Error);
+        Assert.IsNull((await access.AdmitRequestAsync(a, Run(a), LiveLimits.Defaults)).Error, "the request's own limits");
+        Assert.AreEqual("budget", (await access.AdmitRequestAsync(a, Run(a), LiveLimits.Defaults with { DailyTokenBudget = 0 })).Error);
+        Assert.IsFalse(access.BudgetSpent(Day));
+        Assert.IsTrue(access.BudgetSpent(Day, LiveLimits.Defaults with { DailyTokenBudget = 0 }));
+        Budget(0);
+        Assert.IsTrue(access.BudgetSpent(Day), "the runtime's budget");
     }
 
     [TestMethod]
@@ -296,7 +333,7 @@ public class AccessTests
     {
         var runs = new BrokenRuns(Store);
         var log = new WarnLog();
-        var meter = new TokenMeter(runs, Opt, Fake, log);
+        var meter = new TokenMeter(runs, Runtime, Fake, log);
 
         Assert.IsTrue(meter.Spent(Day), "a failed read at the day's start counts as spent, and does not throw");
         Assert.AreEqual(1, log.Warnings);
@@ -314,7 +351,7 @@ public class AccessTests
         runs.Broken = false;
         Fake.Advance(TimeSpan.FromSeconds(6));
         Assert.IsFalse(meter.Spent(Day));
-        meter.Add(Day, Convert.ToInt32(Opt.DailyTokenBudget));
+        meter.Add(Day, Convert.ToInt32(Limits.DailyTokenBudget));
         Assert.IsTrue(meter.Spent(Day), "tokens added after recovery count against the budget");
     }
 
@@ -322,7 +359,7 @@ public class AccessTests
     public void TokenMeter_StoreUnreadableAtReread_KeepsFailingClosed()
     {
         var runs = new BrokenRuns(Store) { Broken = false };
-        var meter = new TokenMeter(runs, Opt, Fake);
+        var meter = new TokenMeter(runs, Runtime, Fake);
         Assert.IsFalse(meter.Spent(Day));
         runs.Broken = true;
         Fake.Advance(TimeSpan.FromSeconds(6));
@@ -334,10 +371,10 @@ public class AccessTests
     [TestMethod]
     public async Task TokenMeter_StorePlusAddsSinceLastRead_ReadsAtMostEvery5s()
     {
-        Opt.DailyTokenBudget = 1000;
+        Budget(1000);
         var a = await Store.CreateAsync("a@example.com", 20);
         var runs = new CountingRuns(Store);
-        var meter = new TokenMeter(runs, Opt, Fake);
+        var meter = new TokenMeter(runs, Runtime, Fake);
         await FinishWithTokens(await Store.StartAsync(Run(a)), 600, 300);
 
         Assert.IsFalse(meter.Spent(Day), "900 of 1000");
@@ -368,9 +405,9 @@ public class AccessTests
     [TestMethod]
     public async Task TokenMeter_InFlightAddsSurviveRereads()
     {
-        Opt.DailyTokenBudget = 1000;
+        Budget(1000);
         var a = await Store.CreateAsync("a@example.com", 20);
-        var meter = new TokenMeter(Store, Opt, Fake);
+        var meter = new TokenMeter(Store, Runtime, Fake);
         await FinishWithTokens(await Store.StartAsync(Run(a)), 600, 300);
         Assert.IsFalse(meter.Spent(Day), "900 logged");
 
@@ -385,7 +422,7 @@ public class AccessTests
         Assert.IsTrue(meter.Spent(Day));
 
         // When it ends its tokens are in the store too: they count once, not twice.
-        Opt.DailyTokenBudget = 1001;
+        Budget(1001);
         await FinishWithTokens(running, 80, 20);
         Fake.Advance(TimeSpan.FromSeconds(5));
         Assert.IsFalse(meter.Spent(Day), "1000, not 1100");
@@ -403,9 +440,9 @@ public class AccessTests
     [TestMethod]
     public void TokenMeter_LateCallForYesterday_DoesNotRollTheDayBack()
     {
-        Opt.DailyTokenBudget = 1000;
+        Budget(1000);
         var runs = new CountingRuns(Store);
-        var meter = new TokenMeter(runs, Opt, Fake);
+        var meter = new TokenMeter(runs, Runtime, Fake);
         Fake.SetUtcNow(DateTimeOffset.Parse("2026-11-08T05:00:01Z")); // 00:00:01 in New York
         var today = Day;
         var yesterday = today.AddDays(-1);
@@ -540,7 +577,7 @@ public class AccessTests
     [TestMethod]
     public async Task Retention_BlanksTextAfter30Days()
     {
-        var day = UsageDay.For(Fake.GetUtcNow());
+        var day = Days.For(Fake.GetUtcNow());
         var old = await Store.StartAsync(new RunStart("NCB-AAAA-2222", "home", "Movie night", false, null, "gpt-5-chat", day, Fake.GetUtcNow()));
         await Store.FinishAsync(old, new RunEnd("ok", "{\"steps\":[]}", "I dimmed the lamp.", 5, 500, 100, 900, Fake.GetUtcNow()));
         Fake.Advance(TimeSpan.FromSeconds(2));

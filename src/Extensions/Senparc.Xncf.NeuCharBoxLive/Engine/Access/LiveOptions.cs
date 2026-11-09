@@ -17,36 +17,28 @@ using Senparc.Xncf.NeuCharBoxLive.Engine.Sim;
 namespace Senparc.Xncf.NeuCharBoxLive.Engine.Access;
 
 /// <summary>
-/// The live server's limits and models, bound from config section <see cref="Section"/>; Task 12 writes these
-/// defaults into appsettings.json. The NeuChar key is never here: it comes from NEUCHAR_API_KEY only.
+/// The engine's tuning, bound from config section <see cref="Section"/>. On/off, the models, the daily limits and the
+/// allowed origins are not here: the engine reads them per request from <see cref="ILiveRuntime"/>. Settings that can't
+/// work together never stop the host: <see cref="Problems"/> names them, and live stays off until they are fixed.
 /// </summary>
 public class LiveOptions
 {
     public const string Section = "NcbLive";
 
-    public bool Enabled { get; set; } = true;
-    public string Endpoint { get; set; } = "https://www.neuchar.com/19194/";
-    public string PlanModel { get; set; } = "gpt-5-chat";
-    public string RunModel { get; set; } = "gpt-5-chat";
-
     /// <summary>"required" makes the planning call pick a tool; "auto" lets it answer in text (the runner then parses JSON).</summary>
     public string PlanToolMode { get; set; } = "required";
 
-    public int PerCodeDaily { get; set; } = 20;
-    public int GlobalDaily { get; set; } = 300;
-    public int MaxCalls { get; set; } = 12;
-    public int MaxCallsWhatIf { get; set; } = 14;
+    public int MaxCalls { get; set; } = 60;
+    public int MaxCallsWhatIf { get; set; } = 60;
     public int MaxChars { get; set; } = 400;
 
     /// <summary>Server work time per request, approval waits excluded.</summary>
-    public TimeSpan MaxWork { get; set; } = TimeSpan.FromMinutes(3);
+    public TimeSpan MaxWork { get; set; } = TimeSpan.FromMinutes(30);
 
     public int MaxCompletionTokens { get; set; } = 1500;
     public TimeSpan ApprovalWait { get; set; } = TimeSpan.FromMinutes(10);
-    public TimeSpan SessionIdle { get; set; } = TimeSpan.FromMinutes(30);
+    public TimeSpan SessionIdle { get; set; } = TimeSpan.FromMinutes(45);
     public int HistoryTurns { get; set; } = 6;
-    public long DailyTokenBudget { get; set; } = 1_000_000;
-    public string[] ExtraOrigins { get; set; } = Array.Empty<string>();
     public FastForwardPacing Pacing { get; set; } = new();
 
     /// <summary>Live sessions the server holds at once, all codes together; at the cap POST sessions is 429 global_limit.</summary>
@@ -55,21 +47,21 @@ public class LiveOptions
     /// <summary>POST access/check calls per IP in any sliding minute; over it, 429 rate.</summary>
     public int AccessCheckPerMinute { get; set; } = 30;
 
+    /// <summary>The time zone whose midnight resets the daily limits and the token budget (<see cref="UsageDay.TryFromId"/>).</summary>
+    public string UsageTimeZone { get; set; } = "UTC";
+
     /// <summary>
-    /// Throws InvalidOperationException for settings that can't work together. SessionManager calls it when it is
-    /// built, at startup.
+    /// The names of the settings that can't work (as they are, or together); empty when all is well. Never throws.
     /// </summary>
-    public void Validate()
+    public IReadOnlyList<string> Problems()
     {
-        // A request can be quiet for its work time plus one approval wait; its session must outlive that.
-        if (SessionIdle < MaxWork + ApprovalWait)
-            throw new InvalidOperationException(
-                $"{Section}:SessionIdle ({SessionIdle}) must be at least {Section}:MaxWork + {Section}:ApprovalWait " +
-                $"({MaxWork + ApprovalWait}), or a session could expire while its request waits for approval.");
-        if (MaxSessions < 1)
-            throw new InvalidOperationException($"{Section}:MaxSessions ({MaxSessions}) must be at least 1, or no session can open.");
-        if (AccessCheckPerMinute < 1)
-            throw new InvalidOperationException(
-                $"{Section}:AccessCheckPerMinute ({AccessCheckPerMinute}) must be at least 1, or no invite code can be checked.");
+        var p = new List<string>();
+        // A request can be quiet for its work time plus one approval wait; its session must outlive that, or a session
+        // could expire while its request waits for approval.
+        if (SessionIdle < MaxWork + ApprovalWait) p.Add(nameof(SessionIdle));
+        if (MaxSessions < 1) p.Add(nameof(MaxSessions));               // no session could open
+        if (AccessCheckPerMinute < 1) p.Add(nameof(AccessCheckPerMinute)); // no invite code could be checked
+        if (!UsageDay.TryFromId(UsageTimeZone, out _)) p.Add(nameof(UsageTimeZone));
+        return p;
     }
 }

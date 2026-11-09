@@ -13,8 +13,8 @@
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -29,7 +29,7 @@ namespace Senparc.Xncf.NeuCharBoxLive.Api;
 public sealed class NcbLiveBuilder
 {
     internal Action<IServiceCollection>? Stores { get; private set; }
-    internal Func<IServiceProvider, string, IChatClient?>? ChatFactory { get; private set; }
+    internal (Action<IServiceCollection> Register, Func<IServiceProvider, ILiveRuntime> Resolve)? Runtime { get; private set; }
     internal IPacer? Pacer { get; private set; }
     internal TimeProvider? Time { get; private set; }
 
@@ -48,12 +48,20 @@ public sealed class NcbLiveBuilder
     }
 
     /// <summary>
-    /// The chat client for a model id (PlanModel, RunModel), or null when there is none (no key): live is then off.
-    /// Called once per model id; the client is kept.
+    /// The runtime the engine reads its snapshot from (on/off, models, limits, origins): one <typeparamref name="TRuntime"/>
+    /// singleton, built by the container. Without a runtime, live is off (no_model) on <see cref="LiveCors.BuiltIns"/>.
     /// </summary>
-    public NcbLiveBuilder UseChatClient(Func<IServiceProvider, string, IChatClient?> factory)
+    public NcbLiveBuilder UseRuntime<TRuntime>() where TRuntime : class, ILiveRuntime
     {
-        ChatFactory = factory;
+        Runtime = (s => s.AddSingleton<TRuntime>(), sp => sp.GetRequiredService<TRuntime>());
+        return this;
+    }
+
+    /// <summary>The same, with a runtime already built (a host's fixed snapshot, or a test's <see cref="StaticLiveRuntime"/>).</summary>
+    public NcbLiveBuilder UseRuntime(ILiveRuntime instance)
+    {
+        ArgumentNullException.ThrowIfNull(instance);
+        Runtime = (_ => { }, _ => instance);
         return this;
     }
 
@@ -73,19 +81,35 @@ public sealed class NcbLiveBuilder
 public static class NcbLiveServiceCollectionExtensions
 {
     /// <summary>
-    /// The live server: LiveOptions from section NcbLive (one plain singleton instance), the stores, access, sessions,
-    /// a runner per request, the session sweep, LiveApiController and the CORS policy <see cref="LiveCors.Policy"/>.
-    /// Throws InvalidOperationException for an NcbLive:ExtraOrigins entry that isn't an origin.
+    /// The live server: LiveOptions from section NcbLive (one plain singleton instance), the runtime
+    /// (<see cref="NcbLiveBuilder.UseRuntime{TRuntime}"/>) behind ILiveRuntime, the UsageDay of NcbLive:UsageTimeZone,
+    /// the stores, access, sessions, a runner per request, the session sweep, LiveApiController and the CORS policy
+    /// <see cref="LiveCors.Policy"/>. It never throws for the options: when <see cref="LiveOptions.Problems"/> names any,
+    /// they are logged (as an error, by property name, when the runtime is first resolved) and every snapshot the engine
+    /// reads is off with <see cref="LiveOff.Config"/>.
     /// </summary>
     public static IServiceCollection AddNcbLive(this IServiceCollection s, IConfiguration cfg, Action<NcbLiveBuilder>? configure = null)
     {
         var opt = cfg.GetSection(LiveOptions.Section).Get<LiveOptions>() ?? new LiveOptions();
-        var origins = LiveCors.AllowedOrigins(opt.ExtraOrigins);
+        var problems = opt.Problems();
+        UsageDay.TryFromId(opt.UsageTimeZone, out var usageDay); // UTC when unknown (then also a problem)
         var b = new NcbLiveBuilder();
         configure?.Invoke(b);
 
         s.AddLogging();
         s.AddSingleton(opt);
+        s.AddSingleton(usageDay);
+        var (registerRuntime, resolveRuntime) = b.Runtime ?? DefaultRuntime();
+        registerRuntime(s);
+        s.AddSingleton<ILiveRuntime>(sp =>
+        {
+            var runtime = resolveRuntime(sp);
+            if (problems.Count == 0) return runtime;
+            sp.GetRequiredService<ILoggerFactory>().CreateLogger(typeof(NcbLiveServiceCollectionExtensions).FullName!).LogError(
+                "NeuCharBox Live is off: these {Section} settings can't work (as they are, or together): {Problems}. Fix them and restart.",
+                LiveOptions.Section, string.Join(", ", problems));
+            return new ConfigOffRuntime(runtime);
+        });
         // Not TryAddSingleton: in this repo Senparc.Ncf.Utility defines a type Microsoft.Extensions.DependencyInjection.Extensions, which
         // clashes with the namespace the TryAdd* extensions live in (CS0434).
         if (b.Time is { } tp) s.AddSingleton<TimeProvider>(tp);
@@ -106,29 +130,37 @@ public static class NcbLiveServiceCollectionExtensions
         s.AddSingleton<EditRateLimiter>();
         s.AddSingleton<SessionManager>();
 
-        var factory = b.ChatFactory;
-        s.AddSingleton<Func<string, IChatClient?>>(sp => new ChatClients(sp, factory).For);
-        s.AddSingleton<Func<RequestRunner>>(sp =>
-        {
-            var chat = sp.GetRequiredService<Func<string, IChatClient?>>();
-            // Routes refuse with live_off before a request starts without a client, so this never throws for a visitor.
-            IChatClient ChatFor(string model) =>
-                chat(model) ?? throw new InvalidOperationException($"no chat client for model '{model}': live is off");
-            return () => new RequestRunner(ChatFor, sp.GetRequiredService<LiveOptions>(), sp.GetRequiredService<IPacer>(),
-                sp.GetRequiredService<TimeProvider>(), sp.GetRequiredService<IRunStore>(), sp.GetRequiredService<ITokenMeter>(),
-                sp.GetRequiredService<ILogger<RequestRunner>>());
-        });
+        // A request takes its models from its snapshot (SessionManager refuses an off one with live_off first).
+        s.AddSingleton<Func<RequestRunner>>(sp => () => new RequestRunner(sp.GetRequiredService<LiveOptions>(),
+            sp.GetRequiredService<IPacer>(), sp.GetRequiredService<TimeProvider>(), sp.GetRequiredService<IRunStore>(),
+            sp.GetRequiredService<ITokenMeter>(), sp.GetRequiredService<UsageDay>(), sp.GetRequiredService<ILogger<RequestRunner>>()));
 
         s.AddHostedService<SessionSweepService>();
         s.AddControllers().AddApplicationPart(typeof(LiveApiController).Assembly);
-        s.AddCors(o => o.AddPolicy(LiveCors.Policy, p => LiveCors.Build(p, origins)));
+        // The origins are the runtime's when the policy is first built (at startup); Task 6 makes them follow the snapshot.
+        s.AddCors();
+        s.AddOptions<CorsOptions>().Configure<ILiveRuntime>((o, runtime) =>
+            o.AddPolicy(LiveCors.Policy, p => LiveCors.Build(p, runtime.Current.Origins)));
         return s;
+    }
+
+    /// <summary>No runtime given: live is off, no_model, on the built-in origins.</summary>
+    static (Action<IServiceCollection>, Func<IServiceProvider, ILiveRuntime>) DefaultRuntime()
+    {
+        var off = new StaticLiveRuntime(LiveSnapshot.Off(LiveOff.NoModel, LiveCors.BuiltIns));
+        return (_ => { }, _ => off);
+    }
+
+    /// <summary>Options with problems: every snapshot is off (config), on the runtime's own origins.</summary>
+    sealed class ConfigOffRuntime(ILiveRuntime inner) : ILiveRuntime
+    {
+        public LiveSnapshot Current => LiveSnapshot.Off(LiveOff.Config, inner.Current.Origins);
     }
 
     /// <summary>
     /// The tunnel guard, then, for /live/api, the JSON body for a 405 and CORS. Call it first, right after building the
-    /// app: nothing may run before the guard. It also builds SessionManager, so options that can't work together fail
-    /// here, not on a visitor.
+    /// app: nothing may run before the guard. It also builds SessionManager (and so the runtime), so options with
+    /// problems are logged at startup, not on a visitor's first call.
     /// </summary>
     public static IApplicationBuilder UseNcbLiveGuard(this IApplicationBuilder app)
     {
@@ -178,22 +210,5 @@ public static class NcbLiveServiceCollectionExtensions
         s.AddSingleton<IInviteStore>(sp => sp.GetRequiredService<TStore>());
         s.AddSingleton<IApplicationStore>(sp => sp.GetRequiredService<TStore>());
         s.AddSingleton<IRunStore>(sp => sp.GetRequiredService<TStore>());
-    }
-
-    /// <summary>The UseChatClient factory's client per model id, made on first use and kept (a null client too).</summary>
-    sealed class ChatClients(IServiceProvider sp, Func<IServiceProvider, string, IChatClient?>? factory)
-    {
-        readonly object _gate = new();
-        readonly Dictionary<string, IChatClient?> _made = new(StringComparer.Ordinal);
-
-        public IChatClient? For(string model)
-        {
-            if (factory is null) return null;
-            lock (_gate)
-            {
-                if (!_made.TryGetValue(model, out var c)) _made[model] = c = factory(sp, model);
-                return c;
-            }
-        }
     }
 }

@@ -19,7 +19,6 @@ using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Senparc.Xncf.NeuCharBoxLive.Engine.Access;
@@ -41,8 +40,8 @@ namespace Senparc.Xncf.NeuCharBoxLive.Api;
 [Route("live/api")]
 [TypeFilter(typeof(LiveExceptionFilter))]
 public sealed class LiveApiController(SessionManager sessions, AccessService access, ApplyRateLimiter applyLimit,
-    AccessCheckRateLimiter checkLimit, EditRateLimiter editLimit, IApplicationStore applications, LiveOptions opt, TimeProvider tp, Func<string, IChatClient?> chatFor,
-    IHostApplicationLifetime lifetime, ILogger<LiveApiController> log) : ControllerBase
+    AccessCheckRateLimiter checkLimit, EditRateLimiter editLimit, IApplicationStore applications, LiveOptions opt, TimeProvider tp,
+    ILiveRuntime runtime, UsageDay usageDay, IHostApplicationLifetime lifetime, ILogger<LiveApiController> log) : ControllerBase
 {
     /// <summary>Far above any real body (text is at most 400 characters); a larger one is bad_request.</summary>
     public const int MaxBodyBytes = 16 * 1024;
@@ -318,10 +317,11 @@ public sealed class LiveApiController(SessionManager sessions, AccessService acc
         return s.TryDecide(rid, d) is { } kind ? Error(kind) : Accepted202();
     }
 
-    /// <summary>Live is on: enabled in config, and both models have a client (a NeuChar key). The budget is separate.</summary>
-    bool LiveOn => opt.Enabled && chatFor(opt.PlanModel) is not null && chatFor(opt.RunModel) is not null;
+    /// <summary>Live is on: the runtime's current snapshot has both models and no off reason. The budget is separate.</summary>
+    bool LiveOn => runtime.Current.On;
 
-    bool BudgetSpent => access.BudgetSpent(UsageDay.For(tp.GetUtcNow()));
+    /// <summary>Today's token budget (the current snapshot's) is spent.</summary>
+    bool BudgetSpent => access.BudgetSpent(usageDay.For(tp.GetUtcNow()));
 
     /// <summary>
     /// The code check. If the store can't be read and the token meter has already failed closed for the same reason

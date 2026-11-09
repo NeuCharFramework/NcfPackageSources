@@ -66,20 +66,25 @@ namespace Senparc.Xncf.NeuCharBoxLive
 
         #endregion
 
+        /// <summary>The NeuChar deployment endpoint the interim runtime uses (Task 5 replaces it with AI Kernel models).</summary>
+        internal const string NeuCharEndpoint = "https://www.neuchar.com/19194/";
+
+        /// <summary>The model the interim runtime plans and runs on.</summary>
+        internal const string NeuCharModel = "gpt-5-chat";
+
         /// <summary>
         /// NCF calls this for every scanned module, installed or not, so the live API is registered from here (it
         /// replaced Program.cs's temporary AddNcbLive call). Before the module is installed its tables don't exist, so the
         /// token meter fails closed: <c>GET health</c> answers 200 with <c>liveEnabled:false</c> and the other routes 503
         /// <c>live_off</c> (not 500). Install and enable the module in the NCF admin before opening the tunnel. Note that
         /// uninstalling or disabling it does NOT turn live off (the live API is registered for every scanned module): the
-        /// off switches are <c>NcbLive:Enabled=false</c> or stopping the tunnel.
+        /// off switches are removing the NeuChar key (live is then off with no_model) or stopping the tunnel.
         /// </summary>
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             services.AddNcbLive(configuration, b => b
                 .UseStores<EfLiveStore>()
-                .UseChatClient((sp, model) => NeuCharChatClientFactory.Create(
-                    new(sp.GetRequiredService<LiveOptions>().Endpoint, model), ApiKeySource.Read())));
+                .UseRuntime(InterimRuntime()));
             services.AddHostedService<RetentionService>();
 
             // NCF registers this module's context under its per-database type (…_Sqlite, …_SqlServer); EfLiveStore asks
@@ -88,6 +93,19 @@ namespace Senparc.Xncf.NeuCharBoxLive
                 (NeuCharBoxLiveSenparcEntities)sp.GetRequiredService(MultipleDatabasePool.Instance.GetXncfDbContextType(GetType())));
 
             return base.AddXncfModule(services, configuration, env);
+        }
+
+        /// <summary>
+        /// Interim (removed in Task 5): one snapshot built at startup from the NeuChar key (env NEUCHAR_API_KEY), planning
+        /// and running on <see cref="NeuCharModel"/> with the default limits and the built-in origins; off with no_model
+        /// when the key is missing.
+        /// </summary>
+        static StaticLiveRuntime InterimRuntime()
+        {
+            var client = NeuCharChatClientFactory.Create(new(NeuCharEndpoint, NeuCharModel), ApiKeySource.Read());
+            if (client is null) return new StaticLiveRuntime(LiveSnapshot.Off(LiveOff.NoModel, LiveCors.BuiltIns));
+            var model = new LiveModel(NeuCharModel, client);
+            return new StaticLiveRuntime(new LiveSnapshot(LiveLimits.Defaults, model, model, LiveCors.BuiltIns, null));
         }
     }
 }

@@ -43,7 +43,8 @@ public class SessionTests
     readonly InMemoryLiveStore Store;
     readonly AccessService Access;
     readonly SessionManager M;
-    IChatClient _chat = new ScriptedChatClient();
+    /// <summary>The runtime each request reads its snapshot from; Start and WhatIf set its chat client.</summary>
+    readonly StaticLiveRuntime Runtime = new(Snapshots.On(new ScriptedChatClient()));
     ILogger<RequestRunner> _runnerLog;
     InviteCode Code = null!;
 
@@ -51,13 +52,12 @@ public class SessionTests
     {
         _runnerLog = Log;
         Store = new InMemoryLiveStore(Fake);
-        var meter = new TokenMeter(Store, Opt, Fake);
-        Access = new AccessService(Store, Store, meter, Opt, Fake);
-        M = new SessionManager(Opt, Fake, Access, () =>
-        {
-            var chat = _chat; // each runner keeps the script and logger it was built with
-            return new RequestRunner(_ => chat, Opt, new InstantPacer(Fake.Advance), Fake, Store, meter, _runnerLog);
-        }, ManagerLog);
+        var meter = new TokenMeter(Store, Runtime, Fake);
+        Access = new AccessService(Store, Store, meter, Runtime, UsageDay.Utc, Fake);
+        // Each runner keeps the logger it was built with; each request, the snapshot it started on.
+        M = new SessionManager(Opt, Fake, Access,
+            () => new RequestRunner(Opt, new InstantPacer(Fake.Advance), Fake, Store, meter, UsageDay.Utc, _runnerLog),
+            Runtime, UsageDay.Utc, ManagerLog);
     }
 
     /// <summary>Throws on every warning or error, so a runner's own catch block throws past its done.</summary>
@@ -95,7 +95,7 @@ public class SessionTests
 
     // ---- helpers ----
 
-    DateOnly Day => UsageDay.For(Fake.GetUtcNow());
+    DateOnly Day => UsageDay.Utc.For(Fake.GetUtcNow());
 
     LiveSession NewSession(InviteCode? c = null)
     {
@@ -131,7 +131,7 @@ public class SessionTests
 
     async Task<string> Start(LiveSession s, IChatClient chat, string text = "Dim the lamp")
     {
-        _chat = chat;
+        Runtime.SetChat(chat);
         var r = await M.StartRequestAsync(s, text);
         Assert.IsNull(r.Error, r.Error);
         Assert.IsNotNull(r.Rid);
@@ -162,7 +162,7 @@ public class SessionTests
 
     async Task<string> WhatIf(LiveSession s, string rid, string device = "lamp")
     {
-        _chat = LampWhatIf();
+        Runtime.SetChat(LampWhatIf());
         var w = await M.StartWhatIfAsync(s, rid, device);
         Assert.IsNull(w.Error, w.Error);
         Assert.IsNotNull(w.Rid);
@@ -186,25 +186,26 @@ public class SessionTests
     async Task Seed(int n)
     {
         for (var i = 0; i < n; i++)
-            await Store.StartAsync(new RunStart(Code.Code, "home", "earlier", false, null, Opt.RunModel, Day, Fake.GetUtcNow()));
+            await Store.StartAsync(new RunStart(Code.Code, "home", "earlier", false, null, Snapshots.Model, Day, Fake.GetUtcNow()));
     }
 
     // ---- sessions ----
 
     [TestMethod]
-    public void Session_ExpiresAfter30MinIdle()
+    public void Session_ExpiresAfterSessionIdle()
     {
         var s = NewSession();
         Assert.AreSame(s, M.Get(s.Id, Code));
         Assert.IsTrue(s.Id.Length >= 32, "an unguessable id");
         Assert.AreNotEqual(s.Id, NewSession().Id);
 
-        Fake.Advance(TimeSpan.FromMinutes(29));
-        Assert.AreSame(s, M.Get(s.Id, Code), "29 minutes idle");
-        Fake.Advance(TimeSpan.FromMinutes(29));
+        var almost = Opt.SessionIdle - TimeSpan.FromMinutes(1); // 44 of the default 45 minutes
+        Fake.Advance(almost);
+        Assert.AreSame(s, M.Get(s.Id, Code), "a minute short of SessionIdle");
+        Fake.Advance(almost);
         Assert.AreSame(s, M.Get(s.Id, Code), "every call restarts the idle clock");
-        Fake.Advance(TimeSpan.FromMinutes(30));
-        Assert.IsNull(M.Get(s.Id, Code), "30 minutes idle");
+        Fake.Advance(Opt.SessionIdle);
+        Assert.IsNull(M.Get(s.Id, Code), "SessionIdle idle");
         Assert.IsNull(M.Get(s.Id, Code));
     }
 
@@ -228,7 +229,7 @@ public class SessionTests
         var idle = NewSession();
         var used = NewSession();
         Assert.AreEqual(2, M.Count);
-        Fake.Advance(TimeSpan.FromMinutes(20));
+        Fake.Advance(Opt.SessionIdle - TimeSpan.FromMinutes(10));
         Assert.IsNotNull(M.Get(used.Id, Code));
         Fake.Advance(TimeSpan.FromMinutes(10));
 
@@ -242,7 +243,8 @@ public class SessionTests
     [TestMethod]
     public async Task Sweep_ExpiredSession_CancelsItsRequest()
     {
-        // Changed after the manager validated it, to stand for a stuck request: valid options can't idle out a live one.
+        // Shorter than MaxWork + ApprovalWait, to stand for a stuck request: valid options can't idle out a live one (with
+        // these options AddNcbLive would keep live off; the manager built by hand runs anyway).
         Opt.SessionIdle = TimeSpan.FromMinutes(5);
         var s = NewSession();
         var rid = await Start(s, Script(LampPlan()));
@@ -399,12 +401,9 @@ public class SessionTests
     {
         Assert.AreEqual(200, new LiveOptions().MaxSessions);
         Assert.AreEqual(30, new LiveOptions().AccessCheckPerMinute);
-        new LiveOptions { MaxSessions = 1, AccessCheckPerMinute = 1 }.Validate();
-        foreach (var bad in new[] { new LiveOptions { MaxSessions = 0 }, new LiveOptions { AccessCheckPerMinute = 0 } })
-        {
-            var e = Assert.ThrowsException<InvalidOperationException>(bad.Validate);
-            StringAssert.Contains(e.Message, "NcbLive:");
-        }
+        Assert.AreEqual(0, new LiveOptions { MaxSessions = 1, AccessCheckPerMinute = 1 }.Problems().Count);
+        CollectionAssert.AreEqual(new[] { "MaxSessions" }, new LiveOptions { MaxSessions = 0 }.Problems().ToList());
+        CollectionAssert.AreEqual(new[] { "AccessCheckPerMinute" }, new LiveOptions { AccessCheckPerMinute = 0 }.Problems().ToList());
     }
 
     [TestMethod]
@@ -483,7 +482,7 @@ public class SessionTests
     public async Task Session_OneActiveRequest()
     {
         var s = NewSession();
-        _chat = Script(LampPlan());
+        Runtime.SetChat(Script(LampPlan()));
         var both = await Task.WhenAll(Task.Run(() => M.StartRequestAsync(s, "Dim the lamp")), Task.Run(() => M.StartRequestAsync(s, "Close the blinds")));
 
         var won = both.Single(r => r.Error is null);
@@ -503,7 +502,7 @@ public class SessionTests
     {
         var s = NewSession();
         var release = new ManualResetEventSlim();
-        _chat = new ScriptedChatClient((_, _) => { release.Wait(Guard); return LampPlan(); });
+        Runtime.SetChat(new ScriptedChatClient((_, _) => { release.Wait(Guard); return LampPlan(); }));
 
         var r = await M.StartRequestAsync(s, "  Dim the lamp  ");
 
@@ -547,7 +546,7 @@ public class SessionTests
         await Seed(19);
         var tab1 = NewSession();
         var tab2 = NewSession();
-        _chat = Script(LampPlan()); // only one request gets to plan
+        Runtime.SetChat(Script(LampPlan())); // only one request gets to plan
 
         var both = await Task.WhenAll(Task.Run(() => M.StartRequestAsync(tab1, "Dim the lamp")), Task.Run(() => M.StartRequestAsync(tab2, "Dim the lamp")));
 
@@ -676,7 +675,7 @@ public class SessionTests
     {
         var s = NewSession();
         var a = await RunOk(s);
-        Opt.DailyTokenBudget = 1; // the run's tokens alone spend it
+        Runtime.SetLimits(l => l with { DailyTokenBudget = 1 }); // the run's tokens alone spend it
 
         Assert.AreEqual(new StartResult(null, "no_request"), await M.StartWhatIfAsync(s, "r-unknown", "lamp"), "the rid checks come first");
         Assert.AreEqual(new StartResult(null, "bad_request"), await M.StartWhatIfAsync(s, a, "toaster"));
@@ -687,7 +686,33 @@ public class SessionTests
         Assert.IsNull(s.Active);
         Assert.AreEqual(1, (await Logged(1)).Count, "no what-if run was logged");
 
-        Opt.DailyTokenBudget = new LiveOptions().DailyTokenBudget;
+        Runtime.SetLimits(_ => LiveLimits.Defaults);
+        await WhatIf(s, a);
+    }
+
+    /// <summary>
+    /// The runtime turned off after the route checked it: a request or what-if reads its own snapshot and is refused with
+    /// live_off, reserving nothing. Busy and the what-if target checks still come first.
+    /// </summary>
+    [TestMethod]
+    public async Task OffSnapshot_RefusesRequestsAndWhatIfs()
+    {
+        var s = NewSession();
+        var a = await RunOk(s);
+        var on = Runtime.Current;
+        Runtime.Current = on with { OffReason = LiveOff.Disabled };
+
+        var seq = s.Events.LastSeq;
+        Assert.AreEqual(new StartResult(null, "live_off"), await M.StartRequestAsync(s, "Close the blinds"));
+        Assert.AreEqual(new StartResult(null, "no_request"), await M.StartWhatIfAsync(s, "r-unknown", "lamp"), "the rid checks come first");
+        Assert.AreEqual(new StartResult(null, "live_off"), await M.StartWhatIfAsync(s, a, "lamp"));
+        Runtime.Current = LiveSnapshot.Off(LiveOff.NoModel, LiveHost.Origins);
+        Assert.AreEqual(new StartResult(null, "live_off"), await M.StartRequestAsync(s, "Close the blinds"));
+        Assert.AreEqual(seq, s.Events.LastSeq, "nothing started");
+        Assert.IsNull(s.Active);
+        Assert.AreEqual(1, (await Logged(1)).Count, "nothing was reserved or logged");
+
+        Runtime.Current = on;
         await WhatIf(s, a);
     }
 
@@ -722,16 +747,16 @@ public class SessionTests
     [TestMethod]
     public void Options_SessionIdleMustCoverWorkAndApproval()
     {
-        new LiveOptions().Validate();
-        new LiveOptions { SessionIdle = TimeSpan.FromMinutes(13) }.Validate(); // exactly MaxWork + ApprovalWait
+        Assert.AreEqual(0, new LiveOptions().Problems().Count);
+        Assert.AreEqual(0, new LiveOptions { SessionIdle = TimeSpan.FromMinutes(40) }.Problems().Count); // exactly MaxWork + ApprovalWait
 
-        var bad = new LiveOptions { SessionIdle = TimeSpan.FromMinutes(13) - TimeSpan.FromSeconds(1) };
-        var e = Assert.ThrowsException<InvalidOperationException>(bad.Validate);
-        StringAssert.Contains(e.Message, "NcbLive:SessionIdle");
-        StringAssert.Contains(e.Message, "ApprovalWait");
-        Assert.ThrowsException<InvalidOperationException>(() => new SessionManager(bad, Fake, Access, () => throw new NotSupportedException()));
-        Assert.ThrowsException<InvalidOperationException>(() =>
-            new SessionManager(new LiveOptions { ApprovalWait = TimeSpan.FromMinutes(40) }, Fake, Access, () => throw new NotSupportedException()));
+        var bad = new LiveOptions { SessionIdle = TimeSpan.FromMinutes(40) - TimeSpan.FromSeconds(1) };
+        CollectionAssert.AreEqual(new[] { "SessionIdle" }, bad.Problems().ToList());
+        var longWait = new LiveOptions { ApprovalWait = TimeSpan.FromMinutes(40) };
+        CollectionAssert.AreEqual(new[] { "SessionIdle" }, longWait.Problems().ToList());
+        // Neither stops the manager any more: AddNcbLive keeps live off instead (RuntimeTests).
+        foreach (var o in new[] { bad, longWait })
+            Assert.IsNotNull(new SessionManager(o, Fake, Access, () => throw new NotSupportedException(), Runtime, UsageDay.Utc));
     }
 
     [TestMethod]

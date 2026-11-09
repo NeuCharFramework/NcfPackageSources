@@ -22,11 +22,12 @@ using Senparc.Xncf.NeuCharBoxLive.Domain.Services;
 namespace Senparc.Xncf.NeuCharBoxLive.Areas.Admin.Pages.NeuCharBoxLive;
 
 /// <summary>
-/// The run log (spec 7.3): the latest <see cref="Shown"/> runs, today's token spend against DailyTokenBudget (spec 4.4),
-/// totals by model for today and all time, and <c>?handler=Csv</c>, every run as CSV for the handover cost estimate.
+/// The run log (spec 7.3): the latest <see cref="Shown"/> runs, today's token spend against the runtime's current
+/// DailyTokenBudget (spec 4.4), totals by model for today and all time, and <c>?handler=Csv</c>, every run as CSV for
+/// the handover cost estimate.
 /// </summary>
-public class RunsModel(Lazy<XncfModuleService> xncfModuleService, IRunStore runs, EfLiveStore store, LiveOptions options,
-    TimeProvider tp) : AdminXncfModulePageModelBase(xncfModuleService)
+public class RunsModel(Lazy<XncfModuleService> xncfModuleService, IRunStore runs, EfLiveStore store, ILiveRuntime runtime,
+    UsageDay usageDay, TimeProvider tp) : AdminXncfModulePageModelBase(xncfModuleService)
 {
     public const int Shown = 200;
 
@@ -39,12 +40,15 @@ public class RunsModel(Lazy<XncfModuleService> xncfModuleService, IRunStore runs
     /// <summary>TokensTodayAsync(today): finished runs only (the kill switch's meter also counts runs in flight).</summary>
     public long TokensToday { get; private set; }
 
-    public long DailyTokenBudget => options.DailyTokenBudget;
+    public long DailyTokenBudget => runtime.Current.Limits.DailyTokenBudget;
+
+    /// <summary>The time zone whose midnight starts a usage day (NcbLive:UsageTimeZone).</summary>
+    public string UsageZone => usageDay.Zone.Id;
 
     public async Task OnGetAsync()
     {
         Now = tp.GetUtcNow();
-        Today = UsageDay.For(Now);
+        Today = usageDay.For(Now);
         Rows = await runs.ListAsync(Shown);
         TokensToday = await runs.TokensTodayAsync(Today);
         TodayTotals = await store.TotalsAsync(Today);
@@ -55,7 +59,7 @@ public class RunsModel(Lazy<XncfModuleService> xncfModuleService, IRunStore runs
     {
         var csv = RunsCsv.Write(await runs.ListAsync(int.MaxValue));
         var bytes = Encoding.UTF8.GetPreamble().Concat(Encoding.UTF8.GetBytes(csv)).ToArray(); // BOM: Excel reads UTF-8
-        return File(bytes, "text/csv; charset=utf-8", $"ncb-live-runs-{UsageDay.For(tp.GetUtcNow()):yyyy-MM-dd}.csv");
+        return File(bytes, "text/csv; charset=utf-8", $"ncb-live-runs-{usageDay.For(tp.GetUtcNow()):yyyy-MM-dd}.csv");
     }
 
     /// <summary>The sum over models, or null when there is at most one model (its own row says it all).</summary>

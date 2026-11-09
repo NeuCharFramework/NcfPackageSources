@@ -17,37 +17,39 @@ using Microsoft.AspNetCore.Cors.Infrastructure;
 namespace Senparc.Xncf.NeuCharBoxLive.Api;
 
 /// <summary>
-/// The CORS policy for /live/api (spec 4.4, contract Transport): the demo's origins plus NcbLive:ExtraOrigins, the
-/// methods and headers the demo sends (Authorization and ngrok-skip-browser-warning make even GET health preflighted),
-/// and a 10-minute preflight cache. No credentials: the invite code travels in the Authorization header.
+/// The CORS policy for /live/api (spec 4.4, contract Transport): the runtime snapshot's origins, the methods and headers
+/// the demo sends (Authorization and ngrok-skip-browser-warning make even GET health preflighted), and a 10-minute
+/// preflight cache. No credentials: the invite code travels in the Authorization header.
 /// </summary>
 public static class LiveCors
 {
     public const string Policy = "NcbLive";
 
-    public static IReadOnlyList<string> Origins { get; } = new[] { "https://leozheng265.github.io", "http://localhost:8765" };
+    /// <summary>The published demo, allowed in every snapshot.</summary>
+    public static IReadOnlyList<string> BuiltIns { get; } = new[] { "https://leozheng265.github.io" };
+
+    /// <summary>The demo served from localhost while it is being worked on; a host adds it to its snapshot's origins.</summary>
+    public static IReadOnlyList<string> Development { get; } = new[] { "http://localhost:8765" };
+
     public static IReadOnlyList<string> Methods { get; } = new[] { "GET", "POST", "OPTIONS" };
     public static IReadOnlyList<string> Headers { get; } = new[] { "Authorization", "Content-Type", "Accept", "ngrok-skip-browser-warning" };
     public static readonly TimeSpan MaxAge = TimeSpan.FromSeconds(600);
 
     /// <summary>
-    /// The allowlist plus the extra origins, without a trailing slash. Throws InvalidOperationException for an extra
-    /// entry that isn't an http(s) origin: a "*" would open the API to every site.
+    /// <paramref name="raw"/> as an origin: trimmed, without a trailing slash. False (and an empty origin) for anything
+    /// that isn't an http(s) origin: a path, query, fragment or user info, or a "*", which would open the API to every
+    /// site. Never throws.
     /// </summary>
-    public static string[] AllowedOrigins(IEnumerable<string>? extra)
+    public static bool TryNormalize(string raw, out string origin)
     {
-        var list = new List<string>(Origins);
-        foreach (var raw in extra ?? Array.Empty<string>())
-        {
-            var o = (raw ?? "").Trim().TrimEnd('/');
-            if (o.Length == 0) continue;
-            if (!Uri.TryCreate(o, UriKind.Absolute, out var u) || u.Scheme is not ("http" or "https")
-                || u.AbsolutePath != "/" || u.Query.Length > 0 || u.Fragment.Length > 0 || u.UserInfo.Length > 0
-                || o.Contains('*'))
-                throw new InvalidOperationException($"NcbLive:ExtraOrigins entry '{raw}' is not an http(s) origin.");
-            list.Add(o);
-        }
-        return list.Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
+        origin = "";
+        var o = (raw ?? "").Trim().TrimEnd('/');
+        if (o.Length == 0 || o.Contains('*')) return false;
+        if (!Uri.TryCreate(o, UriKind.Absolute, out var u) || u.Scheme is not ("http" or "https")
+            || u.AbsolutePath != "/" || u.Query.Length > 0 || u.Fragment.Length > 0 || u.UserInfo.Length > 0)
+            return false;
+        origin = o;
+        return true;
     }
 
     public static void Build(CorsPolicyBuilder p, IEnumerable<string> origins) => p

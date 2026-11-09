@@ -41,18 +41,17 @@ public class AdvanceTests
     readonly BlockingPacer Pacer = new();
     SessionManager M;
     InviteCode Code = null!;
-    IChatClient _chat = new ScriptedChatClient();
+    /// <summary>The runtime each request reads its snapshot from; set its chat client before a request.</summary>
+    readonly StaticLiveRuntime Runtime = new(Snapshots.On(new ScriptedChatClient()));
 
     public AdvanceTests()
     {
         Store = new InMemoryLiveStore(Fake);
-        Meter = new TokenMeter(Store, Opt, Fake);
-        Access = new AccessService(Store, Store, Meter, Opt, Fake);
-        M = new SessionManager(Opt, Fake, Access, () =>
-        {
-            var chat = _chat;
-            return new RequestRunner(_ => chat, Opt, new InstantPacer(), Fake, Store, Meter, new ListLogger<RequestRunner>());
-        }, pacer: Pacer);
+        Meter = new TokenMeter(Store, Runtime, Fake);
+        Access = new AccessService(Store, Store, Meter, Runtime, UsageDay.Utc, Fake);
+        M = new SessionManager(Opt, Fake, Access,
+            () => new RequestRunner(Opt, new InstantPacer(), Fake, Store, Meter, UsageDay.Utc, new ListLogger<RequestRunner>()),
+            Runtime, UsageDay.Utc, pacer: Pacer);
     }
 
     /// <summary>Instant until Hold is called; then each wait blocks until Free.</summary>
@@ -116,7 +115,7 @@ public class AdvanceTests
 
     async Task<string> Start(LiveSession s, IChatClient chat)
     {
-        _chat = chat;
+        Runtime.SetChat(chat);
         var r = await M.StartRequestAsync(s, "Dim the lamp");
         Assert.IsNull(r.Error, r.Error);
         return r.Rid!;
@@ -218,14 +217,14 @@ public class AdvanceTests
         Assert.IsNull(done.Error);
         Assert.IsFalse(s.Busy);
 
-        _chat = Script(Tool("set_lamp", new { brightness = 20, step = "s1" }), Text("DONE"), Text(LampSummary));
+        Runtime.SetChat(Script(Tool("set_lamp", new { brightness = 20, step = "s1" }), Text("DONE"), Text(LampSummary)));
         var whatIf = await M.StartWhatIfAsync(s, rid, "lamp");
         Assert.IsNull(whatIf.Error, whatIf.Error);
         await WaitFor(s, "done", whatIf.Rid!);
         await Until(() => !s.Busy);
 
         Assert.IsTrue(M.Reset(s));
-        _chat = Script(LampPlan());
+        Runtime.SetChat(Script(LampPlan()));
         Assert.IsNull((await M.StartRequestAsync(s, "Dim the lamp")).Error);
     }
 
