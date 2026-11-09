@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 修正注释：配置有误不再让宿主停下，而是在启动时记录错误并关闭 Live（config）
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Hosting;
@@ -20,7 +23,8 @@ namespace Senparc.Xncf.NeuCharBoxLive.Api;
 
 /// <summary>
 /// Expires idle sessions every minute on the registered TimeProvider (SessionManager.Sweep), which also ends their SSE
-/// streams. Taking SessionManager here builds it when the host starts, so bad options stop the host at once.
+/// streams. Taking SessionManager here builds it, and so the ILiveRuntime, when the host starts: options that can't work
+/// are logged as an error right then (and live is off with config), not at the first request. They never stop the host.
 /// </summary>
 public sealed class SessionSweepService(SessionManager sessions, TimeProvider tp, ILogger<SessionSweepService> log) : BackgroundService
 {

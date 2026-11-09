@@ -25,6 +25,9 @@
     修改标识：Senparc - 20261109
     修改描述：v0.1.0-preview1 MenuName 与 Description 改走资源文件（NeuCharBoxLiveResource），英文与简体中文
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 AddXncfModule 先调用 base（DbContext 注册不会被跳过）；运行时只在 NCF 就绪后读数据库；保留清理读模块运行时；新增 LiveApiHookCheck
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Builder;
@@ -40,6 +43,7 @@ using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.Database;
 using Senparc.Xncf.NeuCharBoxLive.Domain.Services;
+using Senparc.Xncf.NeuCharBoxLive.Engine.Access;
 using Senparc.Xncf.NeuCharBoxLive.Models;
 
 namespace Senparc.Xncf.NeuCharBoxLive
@@ -90,18 +94,32 @@ namespace Senparc.Xncf.NeuCharBoxLive
         /// settings enabled with a usable model: until then <c>GET health</c> answers 200 with <c>liveEnabled:false</c> and the
         /// other routes 503 <c>live_off</c> (not 500). No restart is needed: uninstalling or closing the module turns live off
         /// within <see cref="ModuleLiveRuntime.Period"/>, and a settings save takes effect right away.
+        /// <para>
+        /// The DbContexts first: NCF swallows an exception from this method, and a module whose contexts are missing sends the
+        /// host's database check, and so the whole site, into maintenance mode. Nothing after that call can undo it, and
+        /// AddNcbLive never throws for a bad NcbLive value (live turns off with <c>config</c> instead).
+        /// </para>
         /// </summary>
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
+            // NCF's per-database contexts, then AddXncfDatabaseModule (the base type the stores ask for).
+            base.AddXncfModule(services, configuration, env);
+
             services.AddNcbLive(configuration, b => b
                 .UseStores<EfLiveStore>()
                 .UseRuntime(sp => new ModuleLiveRuntime(sp.GetRequiredService<LiveSettingsService>(),
                     sp.GetRequiredService<AiKernelChatClients>(), sp.GetRequiredService<IModuleState>(),
                     sp.GetRequiredService<IAiModelSource>(), env, () => SiteConfig.SenparcCoreSetting.EnableMultiTenant,
+                    () => SiteConfig.NcfCoreState.AllThreadXncfLoaded,
                     sp.GetRequiredService<TimeProvider>(), sp.GetRequiredService<ILogger<ModuleLiveRuntime>>())));
-            // The concrete runtime is resolved only here, for its refresh loop; everything else reads ILiveRuntime.
+            // The concrete runtime is resolved only by the module's own wiring: its refresh loop here, RetentionService (it
+            // needs the real state, not the config wrapper's) and the Settings page after a save. Visitors' routes read ILiveRuntime.
             services.AddHostedService(sp => sp.GetRequiredService<ModuleLiveRuntime>());
-            services.AddHostedService<RetentionService>();
+            services.AddHostedService(sp => new RetentionService(sp.GetRequiredService<IRunStore>(), sp.GetRequiredService<ModuleLiveRuntime>(),
+                sp.GetRequiredService<TimeProvider>(), sp.GetRequiredService<ILogger<RetentionService>>()));
+            // One error once the host has started if UseXncfModule never ran (spec 2).
+            services.AddHostedService(sp => new LiveApiHookCheck(sp.GetService<IHostApplicationLifetime>(),
+                sp.GetRequiredService<ILogger<LiveApiHookCheck>>()));
             // Not TryAddSingleton: Senparc.Ncf.Utility defines a type that clashes with its namespace here (CS0434).
             if (!services.Any(d => d.ServiceType == typeof(LiveSettingsService))) services.AddSingleton<LiveSettingsService>();
             // One client per AI Kernel model configuration, kept for the host's lifetime (the runtime resolves through it).
@@ -113,12 +131,7 @@ namespace Senparc.Xncf.NeuCharBoxLive
             if (!services.Any(d => d.ServiceType == typeof(IAiModelSource)))
                 services.AddSingleton<IAiModelSource>(sp => new AiKernelModelSource(sp.GetRequiredService<IServiceScopeFactory>()));
 
-            // NCF registers this module's context under its per-database type (…_Sqlite, …_SqlServer); EfLiveStore asks
-            // for the base type, which resolves to the one the host's DatabaseType selects.
-            services.AddScoped<NeuCharBoxLiveSenparcEntities>(sp =>
-                (NeuCharBoxLiveSenparcEntities)sp.GetRequiredService(MultipleDatabasePool.Instance.GetXncfDbContextType(GetType())));
-
-            return base.AddXncfModule(services, configuration, env);
+            return services;
         }
 
         /// <summary>

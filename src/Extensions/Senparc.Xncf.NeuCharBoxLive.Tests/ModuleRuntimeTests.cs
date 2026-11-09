@@ -13,8 +13,16 @@
     修改标识：Senparc - 20261109
     修改描述：v0.1.0-preview1 模块已关闭（module_closed）时保留设置中的额外来源；未安装与多租户仍只有内置来源
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 新增测试：NCF 未就绪时不读数据库、配置值无法转换时模块照常注册（含 DbContext）且 Live 关闭（config）、模块状态映射
+
 ----------------------------------------------------------------*/
 
+using System.Net.Http.Json;
+using System.Text.Json.Nodes;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -22,6 +30,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Time.Testing;
 using Senparc.AI;
+using Senparc.Ncf.Core.Enums;
 using Senparc.Xncf.AIKernel.Domain.Models;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.NeuCharBoxLive.Api;
@@ -91,19 +100,41 @@ public class ModuleRuntimeTests
         public IFileProvider ContentRootFileProvider { get; set; } = new NullFileProvider();
     }
 
+    /// <summary>Counts the scopes opened through it: every settings read or save opens one.</summary>
+    sealed class CountingScopes(IServiceScopeFactory inner) : IServiceScopeFactory
+    {
+        int _created;
+
+        public int Created => Volatile.Read(ref _created);
+
+        public IServiceScope CreateScope()
+        {
+            Interlocked.Increment(ref _created);
+            return inner.CreateScope();
+        }
+    }
+
     /// <summary>A runtime over fakes and a SQLite settings table; model 7 exists unless a test removes it.</summary>
     sealed class Rig : IDisposable
     {
+        volatile bool _ready = true;
+
         public Rig(string environment = "Production", bool createTables = true)
         {
             Db = new TestDb(createTables);
-            Settings = new LiveSettingsService(Db.Scopes);
+            Scopes = new CountingScopes(Db.Scopes);
+            Settings = new LiveSettingsService(Scopes);
             Models.Models[7] = Chat(7);
-            Runtime = new ModuleLiveRuntime(Settings, Clients, Module, Models, new FakeEnv(environment), () => MultiTenant, Time, Log);
+            Runtime = new ModuleLiveRuntime(Settings, Clients, Module, Models, new FakeEnv(environment), () => MultiTenant, () => Ready,
+                Time, Log);
         }
 
         public TestDb Db { get; }
+        public CountingScopes Scopes { get; }
         public LiveSettingsService Settings { get; }
+
+        /// <summary>NCF's readiness signal (its XNCF threads loaded); true unless a test says otherwise.</summary>
+        public bool Ready { get => _ready; set => _ready = value; }
         public AiKernelChatClients Clients { get; } = new();
         public FakeModuleState Module { get; } = new();
         public FakeModels Models { get; } = new();
@@ -314,6 +345,27 @@ public class ModuleRuntimeTests
         finally { await rig.Runtime.StopAsync(CancellationToken.None); }
     }
 
+    /// <summary>
+    /// Final review M5: the Settings page's save awaits the runtime's refresh, so the page it redirects to already shows the
+    /// new status (the Changed refresh runs in the background and could come after). Not started here: no Changed handler.
+    /// </summary>
+    [TestMethod]
+    public async Task SettingsPageSave_AwaitsTheRefresh_SoTheNextPageShowsTheNewStatus()
+    {
+        using var rig = new Rig();
+        var choices = new[] { new ModelChoice(7, "live-7", true) };
+        AssertOff(rig.Runtime.Current, LiveOff.Starting);
+
+        var problems = await SettingsView.SaveAsync(rig.Settings, Good() with { PerCodeDaily = 0 }, choices, refresh: rig.Runtime.RefreshAsync);
+        Assert.AreEqual(1, problems.Count);
+        Assert.AreEqual(0, rig.Module.Reads, "a refused save refreshes nothing");
+
+        problems = await SettingsView.SaveAsync(rig.Settings, Good() with { PerCodeDaily = 4 }, choices, refresh: rig.Runtime.RefreshAsync);
+        Assert.AreEqual(0, problems.Count);
+        Assert.IsTrue(rig.Runtime.Current.On, "refreshed before SaveAsync returned");
+        Assert.AreEqual(4, rig.Runtime.Current.Limits.PerCodeDaily);
+    }
+
     [TestMethod]
     public async Task Timer_RefreshesEveryFiveSeconds()
     {
@@ -338,6 +390,45 @@ public class ModuleRuntimeTests
         await rig.SaveAsync(Good());
         await Task.Delay(100);
         Assert.AreEqual(reads, rig.Module.Reads);
+    }
+
+    /// <summary>
+    /// Ruling 14: until NCF reports the site ready (its XNCF threads loaded, which a site in maintenance or not yet updated
+    /// never does), the hosted runtime reads nothing (no module state, no settings, not even after a save) and stays
+    /// starting. The first tick after NCF is ready refreshes as usual.
+    /// </summary>
+    [TestMethod]
+    public async Task NcfNotReady_ReadsNothing_StaysStarting_ThenRefreshesOnceReady()
+    {
+        using var rig = new Rig();
+        await rig.SaveAsync(Good());
+        rig.Ready = false;
+        var scopes = rig.Scopes.Created;
+        await rig.Runtime.StartAsync(CancellationToken.None);
+        try
+        {
+            for (var i = 0; i < 3; i++)
+            {
+                await Task.Delay(50);
+                rig.Time.Advance(ModuleLiveRuntime.Period);
+            }
+            await rig.SaveAsync(Good() with { PerCodeDaily = 3 }); // raises Changed
+            await Task.Delay(100);
+            Assert.AreEqual(0, rig.Module.Reads, "no module read before NCF is ready");
+            Assert.AreEqual(scopes + 1, rig.Scopes.Created, "no settings read either: the one scope is the save's own");
+            AssertOff(rig.Runtime.Current, LiveOff.Starting);
+            CollectionAssert.AreEqual(LiveCors.BuiltIns.ToList(), rig.Runtime.Current.Origins.ToList());
+
+            rig.Ready = true;
+            await LiveHost.WaitUntil(() =>
+            {
+                rig.Time.Advance(ModuleLiveRuntime.Period);
+                return Task.FromResult(rig.Runtime.Current.On);
+            }, "the first refresh once NCF is ready");
+            Assert.AreEqual(3, rig.Runtime.Current.Limits.PerCodeDaily);
+            Assert.IsTrue(rig.Module.Reads > 0);
+        }
+        finally { await rig.Runtime.StopAsync(CancellationToken.None); }
     }
 
     [TestMethod]
@@ -375,7 +466,7 @@ public class ModuleRuntimeTests
         // So is a multi-tenancy check that throws.
         using var odd = new Rig();
         var oddRuntime = new ModuleLiveRuntime(odd.Settings, odd.Clients, odd.Module, odd.Models, new FakeEnv("Production"),
-            () => throw new InvalidOperationException("no site config"), odd.Time, odd.Log);
+            () => throw new InvalidOperationException("no site config"), () => true, odd.Time, odd.Log);
         await oddRuntime.RefreshAsync();
         AssertOff(oddRuntime.Current, LiveOff.Unavailable);
     }
@@ -524,4 +615,68 @@ public class ModuleRuntimeTests
         Assert.AreEqual(saved.Limits, live.Current.Limits, "the wrapper keeps the runtime's limits");
         CollectionAssert.AreEqual(module.Current.Origins.ToList(), live.Current.Origins.ToList(), "and its origins");
     }
+
+    /// <summary>
+    /// Final review F1: a value the binder can't convert ("30m" for a TimeSpan, "sixty" for an int). NCF swallows an
+    /// exception from AddXncfModule, so throwing there would skip the module's DbContext registration and put the whole site
+    /// in maintenance mode. Instead the module registers as usual, its DbContext included, the host starts, health answers
+    /// liveEnabled:false, live is off with the config reason, and one error names the key.
+    /// </summary>
+    [DataTestMethod]
+    [DataRow("NcbLive:MaxWork", "30m")]
+    [DataRow("NcbLive:MaxCalls", "sixty")]
+    public async Task MalformedOption_ModuleStillRegisters_HostStarts_LiveOffConfig(string key, string value)
+    {
+        var config = new Dictionary<string, string?> { [key] = value };
+        var services = ModuleServices(new FakeModuleState(), new FakeModels(), config);
+        Assert.IsTrue(services.Any(d => d.ServiceType == typeof(NeuCharBoxLiveSenparcEntities)), "the module's DbContext is registered");
+
+        var logs = new ListLoggerProvider();
+        using var host = new HostBuilder()
+            .ConfigureLogging(l => l.ClearProviders().AddProvider(logs))
+            .ConfigureWebHost(w => w
+                .UseTestServer()
+                .ConfigureServices(s =>
+                {
+                    s.AddSingleton<IModuleState>(new FakeModuleState());
+                    s.AddSingleton<IAiModelSource>(new FakeModels());
+                    s.AddRouting();
+                    new Register().AddXncfModule(s, new ConfigurationBuilder().AddInMemoryCollection(config).Build(), new FakeEnv("Production"));
+                })
+                .Configure(app =>
+                {
+                    new Register().UseXncfModule(app, registerService: null!);
+                    app.UseRouting();
+                    app.UseEndpoints(e => e.MapControllers());
+                }))
+            .Build();
+        await host.StartAsync();
+        try
+        {
+            using var client = host.GetTestClient();
+            var health = await client.GetFromJsonAsync<JsonObject>("/live/api/health");
+            Assert.AreEqual(true, (bool?)health!["ok"]);
+            Assert.AreEqual(false, (bool?)health["liveEnabled"], health.ToJsonString());
+            AssertOff(host.Services.GetRequiredService<ILiveRuntime>().Current, LiveOff.Config);
+            var opt = host.Services.GetRequiredService<LiveOptions>();
+            Assert.AreEqual(new LiveOptions().MaxWork, opt.MaxWork, "the defaults, not a half-bound section");
+            Assert.AreEqual(new LiveOptions().MaxCalls, opt.MaxCalls);
+            lock (logs.Entries)
+            {
+                var errors = logs.Entries.Where(e => e.Level >= LogLevel.Error).ToList();
+                Assert.AreEqual(1, errors.Count, string.Join("\n", logs.Entries));
+                StringAssert.Contains(errors[0].Message, key, "the binder's message names the key");
+            }
+        }
+        finally { await host.StopAsync(); }
+    }
+
+    [DataTestMethod]
+    [DataRow(null, ModuleStatus.NotInstalled)]
+    [DataRow(XncfModules_State.开放, ModuleStatus.Open)]
+    [DataRow(XncfModules_State.关闭, ModuleStatus.Closed)]
+    [DataRow(XncfModules_State.新增待审核, ModuleStatus.Closed)]
+    [DataRow(XncfModules_State.更新待审核, ModuleStatus.Closed)]
+    public void StatusOf_MapsNcfModuleStates(XncfModules_State? state, ModuleStatus expected) =>
+        Assert.AreEqual(expected, XncfModuleState.StatusOf(state));
 }

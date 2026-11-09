@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261109
     修改描述：v0.1.0-preview1 隧道守卫已移除：WrongMethod_405_WithJsonBody 去掉经隧道的用例，开发者异常页改在模块分支之后
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 新增测试：模块未在服务（多租户、未安装、已关闭）时申请与邀请码检查答 503 live_off，其他关闭原因照常
+
 ----------------------------------------------------------------*/
 
 using System.Text.Json.Nodes;
@@ -569,6 +572,54 @@ public class ApiTests
         Assert.AreEqual(202, (await Apply(Form(), "198.51.100.9", remote: "192.0.2.10")).Status);
         h.Fake.Advance(TimeSpan.FromHours(1));
         Assert.AreEqual(202, (await Apply(Form(), "198.51.100.9")).Status, "a new hour");
+    }
+
+    static readonly object ApplyForm = new { email = "ada@example.com", interest = "lab", wouldTry = "Water the plant", scene = "home", website = "" };
+
+    /// <summary>
+    /// Ruling 13: while the module isn't serving (multi-tenant, not installed, closed), apply and access/check answer 503
+    /// live_off before anything else (the honeypot, the rate limits, the body), so no visitor email or text is stored.
+    /// </summary>
+    [DataTestMethod]
+    [DataRow(LiveOff.MultiTenant)]
+    [DataRow(LiveOff.NotInstalled)]
+    [DataRow(LiveOff.ModuleClosed)]
+    public async Task ApplyAndAccessCheck_LiveOff_WhileTheModuleIsNotServing(string reason)
+    {
+        await using var h = await LiveHost.StartAsync(_ => LiveSnapshot.Off(reason, LiveHost.Origins));
+        var c = await h.NewCodeAsync();
+        AssertError(await h.PostAsync("access/check", new { code = c.Code }), 503, "live_off");
+        AssertError(await h.PostAsync("access/check", "{not json"), 503, "live_off");
+        AssertError(await h.PostAsync("apply", ApplyForm), 503, "live_off");
+        AssertError(await h.PostAsync("apply", new { email = "ada@example.com", interest = "lab", website = "http://spam.example" }), 503, "live_off");
+        Assert.AreEqual(0, (await h.Get<IApplicationStore>().ListAsync()).Count, "nothing stored");
+
+        // Serving again: both answer as usual, with no restart.
+        h.Runtime.Current = h.OnSnapshot();
+        Assert.AreEqual(200, (await h.PostAsync("access/check", new { code = c.Code })).Code);
+        Assert.AreEqual(202, (await h.PostAsync("apply", ApplyForm)).Code);
+    }
+
+    /// <summary>
+    /// Ruling 13: for every other off reason the module is serving, so applications keep coming in (a hosted queue can
+    /// fill while the owner picks a model) and codes can still be checked.
+    /// </summary>
+    [DataTestMethod]
+    [DataRow(LiveOff.Disabled)]
+    [DataRow(LiveOff.NoModel)]
+    [DataRow(LiveOff.ModelMissing)]
+    [DataRow(LiveOff.ModelUnsupported)]
+    [DataRow(LiveOff.Config)]
+    [DataRow(LiveOff.Starting)]
+    [DataRow(LiveOff.Unavailable)]
+    public async Task ApplyAndAccessCheck_StayOpen_ForEveryOtherOffReason(string reason)
+    {
+        await using var h = await LiveHost.StartAsync(_ => LiveSnapshot.Off(reason, LiveHost.Origins));
+        var c = await h.NewCodeAsync();
+        Assert.AreEqual(200, (await h.PostAsync("access/check", new { code = c.Code })).Code, reason);
+        Assert.AreEqual(202, (await h.PostAsync("apply", ApplyForm)).Code, reason);
+        Assert.AreEqual(1, (await h.Get<IApplicationStore>().ListAsync()).Count, reason);
+        AssertError(await h.PostAsync("sessions", new { scene = "home" }, c.Code), 503, "live_off");
     }
 
     // ---- what-if, decide, reset ----

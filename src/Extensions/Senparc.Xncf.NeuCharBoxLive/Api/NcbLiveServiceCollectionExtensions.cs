@@ -16,6 +16,9 @@
     修改标识：Senparc - 20261109
     修改描述：v0.1.0-preview1 移除 UseNcbLiveGuard（隧道守卫）与 UseNcbLiveApiFallback，改由 LiveApiPipeline 接入；AddCors 不再注册具名策略
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 NcbLive 配置段无法绑定（如 MaxWork 为 "30m"）时用默认值并关闭 Live（config），不再抛出；旧版独立宿主的键只记一条警告；不再注册任何 CORS 服务（改用 AddMvcCore）；多租户、未安装、已关闭时保留运行时自己的关闭原因
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Configuration;
@@ -97,18 +100,41 @@ public sealed class NcbLiveBuilder
 public static class NcbLiveServiceCollectionExtensions
 {
     /// <summary>
+    /// Keys of the standalone pilot host's NcbLive section that the module no longer reads: the switch, the models, the
+    /// daily limits and the extra origins are on the Settings page, the endpoint (and its key) on the AI Kernel model.
+    /// </summary>
+    public static readonly IReadOnlyList<string> MovedKeys =
+        ["Enabled", "PlanModel", "RunModel", "Endpoint", "PerCodeDaily", "GlobalDaily", "DailyTokenBudget", "ExtraOrigins"];
+
+    /// <summary>
     /// The live server: LiveOptions from section NcbLive (one plain singleton instance), the runtime
     /// (<see cref="NcbLiveBuilder.UseRuntime{TRuntime}"/>) behind ILiveRuntime, the UsageDay of NcbLive:UsageTimeZone,
-    /// the stores, access, sessions, a runner per request, the session sweep, LiveApiController and the CORS services. It
-    /// never throws for the options: when <see cref="LiveOptions.Problems"/> names any, they are logged (as an error, by
-    /// property name, when the runtime is first resolved, at the latest by the session sweep at startup) and every snapshot
-    /// the engine reads is off with <see cref="LiveOff.Config"/>. The HTTP side (CORS, the JSON 404 and 405) is
-    /// <see cref="LiveApiPipeline.Use"/>, which the module adds from its UseXncfModule.
+    /// the stores, access, sessions, a runner per request, the session sweep and LiveApiController (MVC core only; no
+    /// CORS service of any kind: <see cref="LiveCorsMiddleware"/> has its own). It never throws for the options, so the
+    /// module's registration (its DbContexts included) always completes: a section the binder can't read (a value it can't
+    /// convert, such as "30m" for a TimeSpan) gives the defaults, and that, or <see cref="LiveOptions.Problems"/>, is
+    /// logged as an error (with the binder's message, which names the key, or by property name) when the runtime is first
+    /// resolved, at the latest by the session sweep at startup; every snapshot the engine reads is then off with
+    /// <see cref="LiveOff.Config"/>. Any <see cref="MovedKeys"/> still present are named in one warning at the same time.
+    /// The HTTP side (CORS, the JSON 404 and 405) is <see cref="LiveApiPipeline.Use"/>, which the module adds from its UseXncfModule.
     /// </summary>
     public static IServiceCollection AddNcbLive(this IServiceCollection s, IConfiguration cfg, Action<NcbLiveBuilder>? configure = null)
     {
-        var opt = cfg.GetSection(LiveOptions.Section).Get<LiveOptions>() ?? new LiveOptions();
+        LiveOptions opt;
+        string? unreadable = null;
+        try
+        {
+            opt = cfg.GetSection(LiveOptions.Section).Get<LiveOptions>() ?? new LiveOptions();
+        }
+        catch (Exception e)
+        {
+            // Never throw from here: NCF swallows an exception from AddXncfModule, and the module's registration (its
+            // DbContexts too) would stop halfway.
+            opt = new LiveOptions();
+            unreadable = e.Message;
+        }
         var problems = opt.Problems();
+        var moved = MovedKeys.Where(k => cfg.GetSection(LiveOptions.Section + ":" + k).Exists()).ToList();
         UsageDay.TryFromId(opt.UsageTimeZone, out var usageDay); // UTC when unknown (then also a problem)
         var b = new NcbLiveBuilder();
         configure?.Invoke(b);
@@ -121,11 +147,20 @@ public static class NcbLiveServiceCollectionExtensions
         s.AddSingleton<ILiveRuntime>(sp =>
         {
             var runtime = resolveRuntime(sp);
-            if (problems.Count == 0) return runtime;
-            sp.GetRequiredService<ILoggerFactory>().CreateLogger(typeof(NcbLiveServiceCollectionExtensions).FullName!).LogError(
-                "NeuCharBox Live is off: these {Section} settings can't work (as they are, or together): {Problems}. Fix them and restart.",
-                LiveOptions.Section, string.Join(", ", problems));
-            return new ConfigOffRuntime(runtime);
+            if (moved.Count == 0 && unreadable is null && problems.Count == 0) return runtime;
+            var log = sp.GetRequiredService<ILoggerFactory>().CreateLogger(typeof(NcbLiveServiceCollectionExtensions).FullName!);
+            // Names only, never values (Endpoint could carry a key).
+            if (moved.Count > 0)
+                log.LogWarning("NeuCharBox Live ignores these {Section} settings: {Keys}. They moved to the module's Settings page (switch, " +
+                    "models, daily limits, extra origins) and to the AI Kernel model (endpoint and key); remove them from the configuration.",
+                    LiveOptions.Section, string.Join(", ", moved));
+            if (unreadable is not null)
+                log.LogError("NeuCharBox Live is off: the {Section} section can't be read ({Error}), so every setting in it is at its " +
+                    "default. Fix it and restart.", LiveOptions.Section, unreadable);
+            else if (problems.Count > 0)
+                log.LogError("NeuCharBox Live is off: these {Section} settings can't work (as they are, or together): {Problems}. Fix them and restart.",
+                    LiveOptions.Section, string.Join(", ", problems));
+            return unreadable is null && problems.Count == 0 ? runtime : new ConfigOffRuntime(runtime);
         });
         // Not TryAddSingleton: in this repo Senparc.Ncf.Utility defines a type Microsoft.Extensions.DependencyInjection.Extensions, which
         // clashes with the namespace the TryAdd* extensions live in (CS0434).
@@ -153,10 +188,9 @@ public static class NcbLiveServiceCollectionExtensions
             sp.GetRequiredService<ITokenMeter>(), sp.GetRequiredService<UsageDay>(), sp.GetRequiredService<ILogger<RequestRunner>>()));
 
         s.AddHostedService<SessionSweepService>();
-        s.AddControllers().AddApplicationPart(typeof(LiveApiController).Assembly);
-        // Only so ICorsService exists (AddCors adds nothing a host already has). No named policy and no policy provider:
-        // either would touch the host's own CORS. LiveCorsMiddleware builds the policy per request from the snapshot.
-        s.AddCors();
+        // MVC core is all LiveApiController needs (it writes its own JSON). Not AddControllers: that also adds the CORS
+        // services (and API explorer, data annotations) to a host that may not have them. An NCF host has full MVC anyway.
+        s.AddMvcCore().AddApplicationPart(typeof(LiveApiController).Assembly);
         return s;
     }
 
@@ -167,10 +201,21 @@ public static class NcbLiveServiceCollectionExtensions
         return (_ => { }, _ => off);
     }
 
-    /// <summary>Options with problems: every snapshot is off (config), with the runtime's own limits and origins.</summary>
+    /// <summary>
+    /// Options with problems: every snapshot is off (config), with the runtime's own limits and origins. A runtime that says
+    /// the module isn't serving at all (<see cref="LiveOff.NotServing"/>) keeps its own reason, which says more and keeps
+    /// apply and access/check shut (Ruling 13).
+    /// </summary>
     sealed class ConfigOffRuntime(ILiveRuntime inner) : ILiveRuntime
     {
-        public LiveSnapshot Current => inner.Current with { Plan = null, Run = null, OffReason = LiveOff.Config };
+        public LiveSnapshot Current
+        {
+            get
+            {
+                var s = inner.Current;
+                return s with { Plan = null, Run = null, OffReason = LiveOff.NotServing(s.OffReason) ? s.OffReason : LiveOff.Config };
+            }
+        }
     }
 
     internal static void Forward<TStore>(IServiceCollection s) where TStore : class, IInviteStore, IApplicationStore, IRunStore

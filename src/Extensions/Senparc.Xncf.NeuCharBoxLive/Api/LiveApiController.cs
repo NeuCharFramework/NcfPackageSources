@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 模块未在服务（多租户、未安装、已关闭）时，申请与邀请码检查先答 503 live_off，不读也不存任何内容
+
 ----------------------------------------------------------------*/
 
 using System.Globalization;
@@ -71,10 +74,14 @@ public sealed class LiveApiController(SessionManager sessions, AccessService acc
         ["scenes"] = new JsonArray(ManifestLoader.LiveScenes.Select(id => (JsonNode)JsonValue.Create(id)!).ToArray()),
     });
 
-    /// <summary>AccessCheckPerMinute per IP (counted like apply) first, so a refused check reads nothing; then the code.</summary>
+    /// <summary>
+    /// live_off while the module isn't serving (<see cref="NotServing"/>); then AccessCheckPerMinute per IP (counted like
+    /// apply), so a refused check reads nothing; then the code.
+    /// </summary>
     [HttpPost("access/check")]
     public async Task<IActionResult> AccessCheck()
     {
+        if (NotServing) return Error("live_off");
         if (!checkLimit.TryAcquire(ClientIp())) return Error("rate");
         var (ok, body) = await ReadAsync<CodeBody>();
         if (!ok) return Error("bad_request");
@@ -82,10 +89,14 @@ public sealed class LiveApiController(SessionManager sessions, AccessService acc
         return a.Ok ? LiveJson.Result(200, new JsonObject { ["ok"] = true, ["remainingToday"] = a.Remaining }) : Error(a.Error!);
     }
 
-    /// <summary>The honeypot first (202, nothing stored), then 5 per IP per hour, then validation.</summary>
+    /// <summary>
+    /// live_off while the module isn't serving (<see cref="NotServing"/>: nothing is read or stored); then the honeypot
+    /// (202, nothing stored), then 5 per IP per hour, then validation.
+    /// </summary>
     [HttpPost("apply")]
     public async Task<IActionResult> Apply()
     {
+        if (NotServing) return Error("live_off");
         var (ok, f) = await ReadAsync<ApplyBody>();
         if (ok && !string.IsNullOrEmpty(f?.Website)) return Accepted202();
         if (!applyLimit.TryAcquire(ClientIp())) return Error("rate");
@@ -319,6 +330,13 @@ public sealed class LiveApiController(SessionManager sessions, AccessService acc
 
     /// <summary>Live is on: the runtime's current snapshot has both models and no off reason. The budget is separate.</summary>
     bool LiveOn => runtime.Current.On;
+
+    /// <summary>
+    /// Ruling 13: the module isn't serving at all (multi-tenant, not installed, closed; <see cref="LiveOff.NotServing"/>), so
+    /// apply and access/check answer live_off too: no visitor email or text arrives in a state where nobody runs the module
+    /// (or, multi-tenant, in whichever tenant NCF resolves). Any other off reason leaves them open.
+    /// </summary>
+    bool NotServing => LiveOff.NotServing(runtime.Current.OffReason);
 
     /// <summary>Today's token budget (the current snapshot's) is spent.</summary>
     bool BudgetSpent => access.BudgetSpent(usageDay.For(tp.GetUtcNow()));

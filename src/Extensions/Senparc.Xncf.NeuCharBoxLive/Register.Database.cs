@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 注册设置表映射
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 NeuCharBoxLiveSenparcEntities 基类型的注册移到 AddXncfDatabaseModule（随 base.AddXncfModule 一起执行）
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -54,8 +57,16 @@ namespace Senparc.Xncf.NeuCharBoxLive
             modelBuilder.ApplyConfiguration(new SettingsConfigurationMapping());
         }
 
+        /// <summary>
+        /// Called from base.AddXncfModule, right after NCF registers this module's context under its per-database type
+        /// (…_Sqlite, …_SqlServer), which Register.AddXncfModule runs first. EfLiveStore and LiveSettingsService ask for the
+        /// base type, which resolves to the one the host's DatabaseType selects.
+        /// </summary>
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
+            services.AddScoped<NeuCharBoxLiveSenparcEntities>(sp =>
+                (NeuCharBoxLiveSenparcEntities)sp.GetRequiredService(MultipleDatabasePool.Instance.GetXncfDbContextType(GetType())));
+
             //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
         }
 

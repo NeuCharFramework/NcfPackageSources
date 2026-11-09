@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 SetChat 只换模型（保留关闭原因、来源与限额）；ListLoggerProvider 移到这里供多个测试共用
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 ListLogger 同时记录传入的异常对象，供日志不带异常的测试使用
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.AI;
@@ -24,9 +27,10 @@ namespace Senparc.Xncf.NeuCharBoxLive.Tests.Fakes;
 /// <summary>Keeps every log entry in memory, so tests can count them and the test output stays quiet.</summary>
 public sealed class ListLogger<T> : ILogger<T>
 {
-    readonly List<(LogLevel Level, EventId Id, string Message)> _entries = new();
+    readonly List<(LogLevel Level, EventId Id, string Message, Exception? Exception)> _entries = new();
 
-    public IReadOnlyList<(LogLevel Level, EventId Id, string Message)> Entries { get { lock (_entries) return _entries.ToList(); } }
+    /// <summary>Every entry; Exception is the exception object passed to the logger, if any.</summary>
+    public IReadOnlyList<(LogLevel Level, EventId Id, string Message, Exception? Exception)> Entries { get { lock (_entries) return _entries.ToList(); } }
 
     public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
 
@@ -34,7 +38,7 @@ public sealed class ListLogger<T> : ILogger<T>
 
     public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
     {
-        lock (_entries) _entries.Add((logLevel, eventId, formatter(state, exception)));
+        lock (_entries) _entries.Add((logLevel, eventId, formatter(state, exception), exception));
     }
 }
 

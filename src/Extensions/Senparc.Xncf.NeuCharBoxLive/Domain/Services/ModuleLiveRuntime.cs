@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261109
     修改描述：v0.1.0-preview1 模块已关闭（module_closed）时尽力读取设置，保留其额外来源与限额；读不到时用内置来源
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 NCF 报告就绪（XNCF 线程已载入）之前，后台刷新与保存后的刷新都不读数据库，快照保持 starting
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Hosting;
@@ -26,7 +29,10 @@ namespace Senparc.Xncf.NeuCharBoxLive.Domain.Services;
 /// The module's runtime: live is on only when multi-tenancy is off, the module is installed and open in NCF, the settings
 /// enable it and choose a plan model, and the chosen AI Kernel models can be called. The snapshot is rebuilt every
 /// <see cref="Period"/> and after every settings save (<see cref="LiveSettingsService.Changed"/>) while the hosted service
-/// runs. Resolve it as <see cref="ILiveRuntime"/>, never as this type: AddNcbLive wraps it when the options have problems.
+/// runs, but only once NCF reports the site ready (Ruling 14): until then it reads nothing and stays
+/// <see cref="LiveOff.Starting"/>. Whatever serves visitors resolves it as <see cref="ILiveRuntime"/> (AddNcbLive wraps it
+/// when the options have problems); only the module's own wiring takes this type: the hosted service, RetentionService
+/// (which needs the real state, not the wrapper's) and the Settings page's refresh after a save.
 /// <para>
 /// The off reason is the first that applies: <see cref="LiveOff.MultiTenant"/>, <see cref="LiveOff.NotInstalled"/> (neither
 /// reads the module's tables, which may not exist yet or be tenant-filtered: built-in origins only),
@@ -54,8 +60,12 @@ public sealed class ModuleLiveRuntime : ILiveRuntime, IHostedService
     readonly IModuleState _module;
     readonly IAiModelSource _models;
     readonly Func<bool> _multiTenant;
+    readonly Func<bool> _ncfReady;
     readonly TimeProvider _tp;
     readonly ILogger<ModuleLiveRuntime> _log;
+
+    /// <summary>Set once <see cref="_ncfReady"/> has said true: NCF never goes back to not ready.</summary>
+    volatile bool _ready;
 
     /// <summary><see cref="LiveCors.BuiltIns"/>, plus <see cref="LiveCors.Development"/> in Development.</summary>
     readonly IReadOnlyList<string> _baseOrigins;
@@ -70,14 +80,20 @@ public sealed class ModuleLiveRuntime : ILiveRuntime, IHostedService
 
     /// <summary>Reads nothing and never throws (the session sweep resolves the runtime at startup): it starts off, <see cref="LiveOff.Starting"/>.</summary>
     /// <param name="multiTenant">Whether NCF runs multi-tenant (SiteConfig.SenparcCoreSetting.EnableMultiTenant); read on every refresh.</param>
+    /// <param name="ncfReady">
+    /// Whether NCF reports the site ready (SiteConfig.NcfCoreState.AllThreadXncfLoaded: UseNcf, or StartXncfThreads once the
+    /// host found the database Ready; false for good on a site in maintenance or not yet updated). The hosted service reads
+    /// nothing until it is true; one that throws counts as false.
+    /// </param>
     public ModuleLiveRuntime(LiveSettingsService settings, AiKernelChatClients clients, IModuleState module, IAiModelSource models,
-        IHostEnvironment env, Func<bool> multiTenant, TimeProvider tp, ILogger<ModuleLiveRuntime> log)
+        IHostEnvironment env, Func<bool> multiTenant, Func<bool> ncfReady, TimeProvider tp, ILogger<ModuleLiveRuntime> log)
     {
         _settings = settings;
         _clients = clients;
         _module = module;
         _models = models;
         _multiTenant = multiTenant;
+        _ncfReady = ncfReady;
         _tp = tp;
         _log = log;
         _baseOrigins = env?.IsDevelopment() == true ? LiveCors.BuiltIns.Concat(LiveCors.Development).ToArray() : LiveCors.BuiltIns;
@@ -87,8 +103,10 @@ public sealed class ModuleLiveRuntime : ILiveRuntime, IHostedService
     public LiveSnapshot Current => _current;
 
     /// <summary>
-    /// Rebuilds <see cref="Current"/>. Never throws for a failed read (that is <see cref="LiveOff.Unavailable"/>); only an
-    /// OperationCanceledException when <paramref name="ct"/> is cancelled, and then Current stays as it was.
+    /// Rebuilds <see cref="Current"/> now. Never throws for a failed read (that is <see cref="LiveOff.Unavailable"/>); only an
+    /// OperationCanceledException when <paramref name="ct"/> is cancelled, and then Current stays as it was. It doesn't wait
+    /// for NCF's readiness (the hosted service does): call it when the database is known to be there, as the Settings page
+    /// does right after a save.
     /// </summary>
     public async Task RefreshAsync(CancellationToken ct = default)
     {
@@ -192,7 +210,10 @@ public sealed class ModuleLiveRuntime : ILiveRuntime, IHostedService
 
     // ---- the hosted service ----
 
-    /// <summary>Starts refreshing in the background (the first right away) and on every settings save; it doesn't wait for the first.</summary>
+    /// <summary>
+    /// Starts refreshing in the background (the first right away when NCF is ready, else at the first tick after it is) and
+    /// on every settings save; it doesn't wait for the first.
+    /// </summary>
     public Task StartAsync(CancellationToken cancellationToken)
     {
         _settings.Changed += OnSettingsChanged;
@@ -214,7 +235,12 @@ public sealed class ModuleLiveRuntime : ILiveRuntime, IHostedService
         try
         {
             using var timer = new PeriodicTimer(Period, _tp);
-            do await RefreshAsync(ct).ConfigureAwait(false);
+            do
+            {
+                // Until NCF is ready the database may be missing, in maintenance or on an old schema: every read would
+                // fail (and EF log an error) every few seconds. Stay starting and ask again at the next tick.
+                if (NcfReady()) await RefreshAsync(ct).ConfigureAwait(false);
+            }
             while (await timer.WaitForNextTickAsync(ct).ConfigureAwait(false));
         }
         catch (OperationCanceledException) when (ct.IsCancellationRequested)
@@ -222,10 +248,25 @@ public sealed class ModuleLiveRuntime : ILiveRuntime, IHostedService
         }
     }
 
-    /// <summary>Off the saving thread: Changed is raised inside SaveAsync, which must not wait for (or fail with) the refresh.</summary>
-    void OnSettingsChanged() => _ = Task.Run(async () =>
+    /// <summary>NCF's readiness, kept once true. A check that throws is not ready.</summary>
+    bool NcfReady()
     {
-        try { await RefreshAsync(_stop.Token).ConfigureAwait(false); }
-        catch (OperationCanceledException) { }
-    }, CancellationToken.None);
+        if (_ready) return true;
+        try { return _ready = _ncfReady(); }
+        catch (Exception) { return false; }
+    }
+
+    /// <summary>
+    /// Off the saving thread: Changed is raised inside SaveAsync, which must not wait for (or fail with) the refresh. Before
+    /// NCF is ready a save reads nothing more either; the loop's first refresh after readiness picks it up.
+    /// </summary>
+    void OnSettingsChanged()
+    {
+        if (!NcfReady()) return;
+        _ = Task.Run(async () =>
+        {
+            try { await RefreshAsync(_stop.Token).ConfigureAwait(false); }
+            catch (OperationCanceledException) { }
+        }, CancellationToken.None);
+    }
 }

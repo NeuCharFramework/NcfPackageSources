@@ -10,10 +10,15 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 新增测试：旧版独立宿主的 NcbLive 键被忽略并只记一条警告（只列键名）；配置段无法绑定时用默认值且 Live 关闭
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Senparc.Xncf.NeuCharBoxLive.Tests.Fakes;
 using Senparc.Xncf.NeuCharBoxLive.Engine.Access;
 using Senparc.Xncf.NeuCharBoxLive.Engine.Sim;
 using Senparc.Xncf.NeuCharBoxLive.Api;
@@ -129,5 +134,82 @@ public class ConfigTests
         Assert.AreSame(sp.GetRequiredService<ContainerRuntime>(), rt);
         Assert.AreSame(sp.GetRequiredService<LiveOptions>(), ((ContainerRuntime)rt).Options);
         Assert.AreEqual(LiveOff.Starting, rt.Current.OffReason);
+    }
+
+    /// <summary>
+    /// The standalone pilot host's keys (the switch, models, endpoint, limits, extra origins) now live on the Settings page
+    /// and in AI Kernel. Any still present are ignored, named (never their values) in one warning when the runtime is first
+    /// resolved, and are not a problem: live isn't turned off for them.
+    /// </summary>
+    [TestMethod]
+    public void PilotKeys_Ignored_OneWarningNamingThem()
+    {
+        var logs = new ListLoggerProvider();
+        var cfg = Config(new()
+        {
+            ["NcbLive:Enabled"] = "true", ["NcbLive:PlanModel"] = "gpt-5-chat", ["NcbLive:Endpoint"] = "https://secret.example/19194/",
+            ["NcbLive:ExtraOrigins:0"] = "https://a.example", ["NcbLive:MaxCalls"] = "7",
+        });
+        var services = new ServiceCollection().AddNcbLive(cfg);
+        services.AddSingleton<ILoggerProvider>(logs);
+        using var sp = services.BuildServiceProvider();
+
+        Assert.AreEqual(LiveOff.NoModel, sp.GetRequiredService<ILiveRuntime>().Current.OffReason, "ignored, not a config problem");
+        Assert.AreEqual(7, sp.GetRequiredService<LiveOptions>().MaxCalls, "the rest of the section still binds");
+        lock (logs.Entries)
+        {
+            var warning = logs.Entries.Single(e => e.Level == LogLevel.Warning).Message;
+            foreach (var key in new[] { "Enabled", "PlanModel", "Endpoint", "ExtraOrigins" }) StringAssert.Contains(warning, key);
+            foreach (var absent in new[] { "RunModel", "PerCodeDaily", "GlobalDaily", "DailyTokenBudget" }) Assert.IsFalse(warning.Contains(absent), absent);
+            Assert.IsFalse(warning.Contains("secret.example") || warning.Contains("gpt-5-chat") || warning.Contains("a.example"), "names only, never values");
+            StringAssert.Contains(warning, "Settings page");
+            StringAssert.Contains(warning, "AI Kernel");
+            Assert.AreEqual(0, logs.Entries.Count(e => e.Level >= LogLevel.Error));
+        }
+        CollectionAssert.AreEquivalent(
+            new[] { "Enabled", "PlanModel", "RunModel", "Endpoint", "PerCodeDaily", "GlobalDaily", "DailyTokenBudget", "ExtraOrigins" },
+            NcbLiveServiceCollectionExtensions.MovedKeys.ToList());
+
+        // None of them: no warning.
+        var quiet = new ListLoggerProvider();
+        var plain = new ServiceCollection().AddNcbLive(Config(new() { ["NcbLive:MaxCalls"] = "7" }));
+        plain.AddSingleton<ILoggerProvider>(quiet);
+        using var plainSp = plain.BuildServiceProvider();
+        _ = plainSp.GetRequiredService<ILiveRuntime>();
+        lock (quiet.Entries) Assert.AreEqual(0, quiet.Entries.Count);
+    }
+
+    /// <summary>
+    /// A section the binder can't read (final review F1): AddNcbLive doesn't throw, LiveOptions are all the defaults, and the
+    /// snapshot is off (config) with one error carrying the binder's message (it names the key). The runtime itself is untouched.
+    /// </summary>
+    [TestMethod]
+    public void AddNcbLive_UnreadableSection_DefaultsAndLiveOffConfig_NeverThrows()
+    {
+        var logs = new ListLoggerProvider();
+        var runtime = new StaticLiveRuntime(Fakes.Snapshots.On(new Fakes.ScriptedChatClient()));
+        var services = new ServiceCollection().AddNcbLive(Config(new() { ["NcbLive:MaxWork"] = "30m", ["NcbLive:SessionIdle"] = "00:05:00" }),
+            b => b.UseRuntime(runtime));
+        services.AddSingleton<ILoggerProvider>(logs);
+        using var sp = services.BuildServiceProvider();
+
+        var o = sp.GetRequiredService<LiveOptions>();
+        Assert.AreEqual(TimeSpan.FromMinutes(30), o.MaxWork);
+        Assert.AreEqual(TimeSpan.FromMinutes(45), o.SessionIdle, "nothing of the section is half-bound");
+        var snap = sp.GetRequiredService<ILiveRuntime>().Current;
+        Assert.AreEqual(LiveOff.Config, snap.OffReason);
+        Assert.IsFalse(snap.On);
+        Assert.IsTrue(runtime.Current.On, "the runtime itself is untouched");
+        lock (logs.Entries)
+        {
+            var error = logs.Entries.Single(e => e.Level >= LogLevel.Error).Message;
+            StringAssert.Contains(error, "NcbLive:MaxWork");
+        }
+
+        // The module isn't serving at all: that reason says more than config, and keeps apply and access/check shut.
+        runtime.Current = LiveSnapshot.Off(LiveOff.MultiTenant, LiveCors.BuiltIns);
+        Assert.AreEqual(LiveOff.MultiTenant, sp.GetRequiredService<ILiveRuntime>().Current.OffReason);
+        runtime.Current = LiveSnapshot.Off(LiveOff.Disabled, LiveCors.BuiltIns);
+        Assert.AreEqual(LiveOff.Config, sp.GetRequiredService<ILiveRuntime>().Current.OffReason);
     }
 }

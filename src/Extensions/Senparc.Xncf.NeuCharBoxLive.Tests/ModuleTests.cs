@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 设置表加入后更新模型与迁移断言（SQLite、SQL Server 各多一个 AddSettings 迁移）
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 保留清理在运行时为 starting、not_installed、multi_tenant 时跳过，并在一分钟后重试
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -188,7 +191,8 @@ public class ModuleTests
     {
         var tp = new FakeTimeProvider(T0);
         var store = new CutoffRecorder { FailFirst = true };
-        using var svc = new RetentionService(store, tp, NullLogger<RetentionService>.Instance);
+        var installed = new CountingRuntime(LiveSnapshot.Off(LiveOff.Disabled, []));
+        using var svc = new RetentionService(store, installed, tp, NullLogger<RetentionService>.Instance);
         await svc.StartAsync(CancellationToken.None);
 
         await WaitFor(() => store.Cutoffs.Count >= 1, "the first pass");
@@ -206,10 +210,73 @@ public class ModuleTests
         Assert.IsFalse(svc.ExecuteTask.IsFaulted);
     }
 
+    /// <summary>
+    /// Ruling 14: no pass while the module runtime is starting (NCF not ready yet), not installed or multi-tenant: the table
+    /// may not exist yet, or reads would be tenant-filtered. A skipped pass is tried again after <see cref="RetentionService.Retry"/>,
+    /// not 6 hours later, so a site that just became ready (or a module just installed) gets its pass soon.
+    /// </summary>
+    [TestMethod]
+    public async Task RetentionService_SkipsWhileStartingNotInstalledOrMultiTenant_ThenRuns()
+    {
+        var tp = new FakeTimeProvider(T0);
+        var store = new CutoffRecorder();
+        var runtime = new CountingRuntime(LiveSnapshot.Off(LiveOff.Starting, []));
+        using var svc = new RetentionService(store, runtime, tp, NullLogger<RetentionService>.Instance);
+        await svc.StartAsync(CancellationToken.None);
+        try
+        {
+            await WaitFor(() => runtime.Reads >= 1, "the check at start");
+            Assert.AreEqual(0, store.Count, "starting: no pass");
+            foreach (var reason in new[] { LiveOff.NotInstalled, LiveOff.MultiTenant, LiveOff.Starting })
+            {
+                runtime.Snapshot = LiveSnapshot.Off(reason, []);
+                var reads = runtime.Reads;
+                await WaitFor(() =>
+                {
+                    tp.Advance(RetentionService.Retry);
+                    return runtime.Reads > reads;
+                }, "the retry for " + reason);
+                Assert.AreEqual(0, store.Count, reason);
+            }
+            Assert.IsTrue(RetentionService.Retry < RetentionService.Period);
+
+            // Installed (closed counts: the table is there): the pass runs at the next retry.
+            runtime.Snapshot = LiveSnapshot.Off(LiveOff.ModuleClosed, []);
+            await WaitFor(() =>
+            {
+                tp.Advance(RetentionService.Retry);
+                return store.Count >= 1;
+            }, "the first pass once the module is installed");
+        }
+        finally { await svc.StopAsync(CancellationToken.None); }
+        Assert.IsFalse(svc.ExecuteTask!.IsFaulted);
+    }
+
+    /// <summary>A runtime that counts how often its snapshot is read; set <see cref="Snapshot"/> to change it.</summary>
+    sealed class CountingRuntime(LiveSnapshot snapshot) : ILiveRuntime
+    {
+        int _reads;
+        volatile LiveSnapshot _snapshot = snapshot;
+
+        public int Reads => Volatile.Read(ref _reads);
+        public LiveSnapshot Snapshot { get => _snapshot; set => _snapshot = value; }
+
+        public LiveSnapshot Current
+        {
+            get
+            {
+                Interlocked.Increment(ref _reads);
+                return _snapshot;
+            }
+        }
+    }
+
     sealed class CutoffRecorder : IRunStore
     {
         public bool FailFirst;
         public readonly List<DateTimeOffset> Cutoffs = new();
+
+        public int Count { get { lock (Cutoffs) return Cutoffs.Count; } }
 
         public Task BlankTextOlderThanAsync(DateTimeOffset cutoff)
         {

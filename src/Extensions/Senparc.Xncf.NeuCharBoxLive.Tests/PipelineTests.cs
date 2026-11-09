@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261109
     修改描述：v0.1.0-preview1 新增管道测试：按 NCF 顺序搭建站点（模块的 UseXncfModule 在 UseRouting 之前），并接收原 GuardTests 中的 404 用例
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 新增 LiveApiHookCheck 测试；AddNcbLive 不注册任何 CORS 服务类型
+
 ----------------------------------------------------------------*/
 
 using System.Net;
@@ -26,6 +29,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Senparc.Xncf.NeuCharBoxLive.Api;
 using Senparc.Xncf.NeuCharBoxLive.Engine.Access;
+using Senparc.Xncf.NeuCharBoxLive.Tests.Fakes;
 
 namespace Senparc.Xncf.NeuCharBoxLive.Tests;
 
@@ -357,12 +361,90 @@ public class PipelineTests
     }
 
     /// <summary>
-    /// AddNcbLive adds CORS services only: no named policy, no policy provider of its own, and the CORS options no longer
-    /// resolve the live runtime. The host's own CORS configuration is left as it was.
+    /// Spec 2: a host that never runs the module's UseXncfModule gets one error-level line once it has started (the pipeline
+    /// is built by then), none when the branch is hooked; and the module registers the check.
     /// </summary>
     [TestMethod]
-    public void AddNcbLive_AddsNoCorsPolicy_AndLeavesTheHostsCorsAlone()
+    public async Task HookCheck_OneErrorOnceStarted_OnlyWhenTheBranchIsNotHooked()
     {
+        foreach (var hooked in new[] { false, true })
+        {
+            var log = new ListLogger<LiveApiHookCheck>();
+            using var host = new HostBuilder()
+                .ConfigureLogging(l => l.ClearProviders())
+                .ConfigureServices(s => s.AddHostedService(sp =>
+                    new LiveApiHookCheck(sp.GetRequiredService<IHostApplicationLifetime>(), log, () => hooked)))
+                .Build();
+            await host.StartAsync();
+            await host.StopAsync();
+            var errors = log.Entries.Where(e => e.Level == LogLevel.Error).ToList();
+            Assert.AreEqual(hooked ? 0 : 1, errors.Count, $"hooked: {hooked}");
+            if (!hooked)
+            {
+                Assert.AreEqual("LiveApiNotHooked", errors[0].Id.Name);
+                StringAssert.Contains(errors[0].Message, "/live/api");
+                StringAssert.Contains(errors[0].Message, "UseXncfModule");
+            }
+        }
+
+        // Not before the host has started: the check waits for ApplicationStarted.
+        var early = new ListLogger<LiveApiHookCheck>();
+        var lifetime = new StartableLifetime();
+        var check = new LiveApiHookCheck(lifetime, early, () => false);
+        await check.StartAsync(CancellationToken.None);
+        Assert.AreEqual(0, early.Entries.Count, "the pipeline may not be built yet");
+        lifetime.Start();
+        Assert.AreEqual(1, early.Entries.Count(e => e.Level == LogLevel.Error));
+        await check.StopAsync(CancellationToken.None);
+
+        var services = new ServiceCollection();
+        new Register().AddXncfModule(services, new ConfigurationBuilder().Build(), new HostEnv());
+        using var sp = services.BuildServiceProvider();
+        Assert.AreEqual(1, sp.GetServices<IHostedService>().OfType<LiveApiHookCheck>().Count(), "the module registers the check");
+    }
+
+    sealed class StartableLifetime : IHostApplicationLifetime
+    {
+        readonly CancellationTokenSource _started = new();
+
+        public CancellationToken ApplicationStarted => _started.Token;
+        public CancellationToken ApplicationStopping => CancellationToken.None;
+        public CancellationToken ApplicationStopped => CancellationToken.None;
+        public void Start() => _started.Cancel();
+        public void StopApplication() { }
+    }
+
+    sealed class HostEnv : IHostEnvironment
+    {
+        public string EnvironmentName { get; set; } = "Production";
+        public string ApplicationName { get; set; } = "Senparc.Xncf.NeuCharBoxLive.Tests";
+        public string ContentRootPath { get; set; } = AppContext.BaseDirectory;
+        public Microsoft.Extensions.FileProviders.IFileProvider ContentRootFileProvider { get; set; } =
+            new Microsoft.Extensions.FileProviders.NullFileProvider();
+    }
+
+    /// <summary>A CORS type: in a ...Cors namespace (Microsoft.AspNetCore.Cors.*, Microsoft.AspNetCore.Mvc.Cors), or generic over one.</summary>
+    static bool IsCorsType(Type? t) =>
+        t is not null && ((t.Namespace ?? "").Contains(".Cors", StringComparison.Ordinal) || t.GetGenericArguments().Any(IsCorsType));
+
+    static Type? ImplementationOf(ServiceDescriptor d) => d.IsKeyedService ? d.KeyedImplementationType : d.ImplementationType;
+
+    /// <summary>
+    /// AddNcbLive registers no CORS service type at all (no ICorsService, no policy provider, no CORS options setup, no MVC
+    /// CORS model provider): <see cref="LiveCorsMiddleware"/> evaluates its policy with a CorsService of its own. A host's
+    /// CORS configuration, and its lack of one, is left exactly as it was.
+    /// </summary>
+    [TestMethod]
+    public void AddNcbLive_RegistersNoCorsServices_AndLeavesTheHostsCorsAlone()
+    {
+        var bare = new ServiceCollection().AddNcbLive(new ConfigurationBuilder().Build());
+        CollectionAssert.AreEqual(Array.Empty<string>(),
+            bare.Where(d => IsCorsType(d.ServiceType) || IsCorsType(ImplementationOf(d)))
+                .Select(d => $"{d.ServiceType.FullName} -> {ImplementationOf(d)?.FullName ?? "(factory or instance)"}").ToList(),
+            "AddNcbLive registers no CORS service types");
+        using (var bareSp = bare.BuildServiceProvider())
+            Assert.IsNull(bareSp.GetService<ICorsService>(), "a host without CORS still has none");
+
         var resolved = 0;
         var services = new ServiceCollection();
         services.AddCors(o => o.AddPolicy("HostPolicy", p => p.WithOrigins(Evil)));
@@ -381,5 +463,6 @@ public class PipelineTests
         Assert.IsInstanceOfType<CorsService>(sp.GetRequiredService<ICorsService>());
         Assert.IsInstanceOfType<DefaultCorsPolicyProvider>(sp.GetRequiredService<ICorsPolicyProvider>());
         Assert.AreEqual(1, services.Count(d => d.ServiceType == typeof(ICorsPolicyProvider)));
+        Assert.AreEqual(1, services.Count(d => d.ServiceType == typeof(ICorsService)), "only the host's own");
     }
 }

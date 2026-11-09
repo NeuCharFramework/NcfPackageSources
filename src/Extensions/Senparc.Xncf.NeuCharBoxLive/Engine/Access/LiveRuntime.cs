@@ -8,7 +8,10 @@
     创建标识：Senparc - 20261108
 
     修改标识：Senparc - 20261108
-    修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
+    修改描述：v0.1.0-preview1 新增 ILiveRuntime、LiveSnapshot、LiveLimits、LiveOff 与 StaticLiveRuntime（引擎每个请求读取的开关、模型、限额与来源）
+
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 新增 LiveOff.NotServing（多租户、未安装、已关闭：模块未在服务，申请与邀请码检查也关闭）
 
 ----------------------------------------------------------------*/
 
@@ -57,6 +60,13 @@ public static class LiveOff
     public const string Starting = "starting", Config = "config", NotInstalled = "not_installed", ModuleClosed = "module_closed",
         MultiTenant = "multi_tenant", Disabled = "disabled", NoModel = "no_model", ModelMissing = "model_missing",
         ModelUnsupported = "model_unsupported", Unavailable = "unavailable";
+
+    /// <summary>
+    /// True for <see cref="MultiTenant"/>, <see cref="NotInstalled"/> and <see cref="ModuleClosed"/>: the module isn't serving at
+    /// all, so apply and access/check are off too (Ruling 13). Every other reason leaves them open, so applications can still
+    /// come in while, say, the owner picks a model.
+    /// </summary>
+    public static bool NotServing(string? reason) => reason is MultiTenant or NotInstalled or ModuleClosed;
 }
 
 /// <summary>A runtime that holds one snapshot; set <see cref="Current"/> to replace it.</summary>
