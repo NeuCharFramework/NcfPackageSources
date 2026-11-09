@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 新增 AiKernelChatClients 的测试（解析、缓存、四个平台的请求地址、密钥不外泄）
 
+    修改标识：Senparc - 20261108
+    修改描述：v0.1.0-preview1 OpenAI、DeepSeek 的模型名为 ModelId，即使填写了 DeploymentName
+
 ----------------------------------------------------------------*/
 
 using System.ClientModel;
@@ -145,11 +148,15 @@ public class AiKernelClientTests
         var p = Enum.Parse<AiPlatform>(platform);
         var clients = new AiKernelChatClients(() => new StepHandler(Status(HttpStatusCode.OK)));
 
+        // NeuCharAI and AzureOpenAI address a deployment: DeploymentName when there is one. OpenAI and DeepSeek name the
+        // model: ModelId, as AI Kernel sends it, even when a DeploymentName is filled in.
+        var deploymentAddressed = p is AiPlatform.NeuCharAI or AiPlatform.AzureOpenAI;
         var withDeployment = clients.Resolve(Dto(p, deployment: "dep-1", model: "model-1", id: 1));
         Assert.IsNull(withDeployment.OffReason);
         Assert.IsNotNull(withDeployment.Model);
         Assert.IsNotNull(withDeployment.Model.Client);
-        Assert.AreEqual("dep-1", withDeployment.Model.Name, "DeploymentName when there is one");
+        Assert.AreEqual(deploymentAddressed ? "dep-1" : "model-1", withDeployment.Model.Name,
+            deploymentAddressed ? "DeploymentName when there is one" : "ModelId; DeploymentName is ignored");
 
         foreach (var blank in new[] { null, "", "   " })
         {
@@ -338,6 +345,8 @@ public class AiKernelClientTests
         {
             var noName = Dto(p, deployment: "", model: "");
             bad.Add(($"{p} no deployment or model id", noName));
+            if (p is AiPlatform.OpenAI or AiPlatform.DeepSeek)
+                bad.Add(($"{p} a deployment but no model id", Dto(p, deployment: "dep-1", model: "")));
             foreach (var blank in new[] { null, "", "  " })
             {
                 var noKey = Dto(p);

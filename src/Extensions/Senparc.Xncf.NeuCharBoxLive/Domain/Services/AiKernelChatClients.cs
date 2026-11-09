@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 新增 AiKernelChatClients：支持 NeuCharAI、AzureOpenAI、OpenAI、DeepSeek 的 Chat 模型，替代 NeuChar 环境变量密钥
 
+    修改标识：Senparc - 20261108
+    修改描述：v0.1.0-preview1 OpenAI、DeepSeek 的模型名只用 ModelId（与 AI Kernel 一致），DeploymentName 只用于 NeuCharAI、AzureOpenAI
+
 ----------------------------------------------------------------*/
 
 using System.ClientModel;
@@ -39,8 +42,10 @@ public sealed record ModelResolution(LiveModel? Model, string? OffReason);
 /// <para>
 /// Fields are used the way AI Kernel's <c>AIModelService.BuildSenparcAiSetting</c> uses them: NeuCharAI and AzureOpenAI take
 /// Endpoint (NeuCharAI's gets a trailing slash, so its developer-id path survives), ApiKey and the deployment; OpenAI takes
-/// ApiKey, the model and OrganizationId (no endpoint); DeepSeek takes Endpoint, ApiKey and the model. The deployment, or the
-/// model for OpenAI and DeepSeek, is <see cref="LiveModel.Name"/>: DeploymentName when it is set, else ModelId.
+/// ApiKey, the model and OrganizationId (no endpoint); DeepSeek takes Endpoint, ApiKey and the model.
+/// <see cref="LiveModel.Name"/> (which the engine also sends as ChatOptions.ModelId) is the deployment for NeuCharAI and
+/// AzureOpenAI: DeploymentName when it is set, else ModelId. For OpenAI and DeepSeek it is the model, ModelId, as in AI
+/// Kernel; their DeploymentName is ignored.
 /// </para>
 /// <para>
 /// Every client runs on this module's transport: <see cref="ConnectRetryHandler"/> (<see cref="ConnectRetries"/> connect
@@ -124,7 +129,7 @@ public sealed class AiKernelChatClients(Func<HttpMessageHandler>? inner = null, 
     LiveModel Build(AIModelDto m)
     {
         var name = NameOf(m);
-        if (name.Length == 0) throw new ArgumentException("The model has neither a DeploymentName nor a ModelId.");
+        if (name.Length == 0) throw new ArgumentException("The model has no ModelId (nor, for NeuCharAI and AzureOpenAI, a DeploymentName).");
         var apiKey = Clean(m.ApiKey);
         if (apiKey.Length == 0) throw new ArgumentException("The model has no ApiKey.");
 
@@ -142,8 +147,14 @@ public sealed class AiKernelChatClients(Func<HttpMessageHandler>? inner = null, 
         return new LiveModel(name, chat.AsIChatClient());
     }
 
-    /// <summary>DeploymentName when it is set, else ModelId (trimmed; empty when both are blank).</summary>
-    static string NameOf(AIModelDto m) => string.IsNullOrWhiteSpace(m.DeploymentName) ? Clean(m.ModelId) : m.DeploymentName.Trim();
+    /// <summary>
+    /// The deployment for the deployment-addressed platforms (NeuCharAI, AzureOpenAI): DeploymentName when it is set, else
+    /// ModelId. The model for OpenAI and DeepSeek: ModelId, as AI Kernel sends it. Trimmed; empty when there is none.
+    /// </summary>
+    static string NameOf(AIModelDto m) =>
+        (m.AiPlatform is AiPlatform.NeuCharAI or AiPlatform.AzureOpenAI) && !string.IsNullOrWhiteSpace(m.DeploymentName)
+            ? m.DeploymentName.Trim()
+            : Clean(m.ModelId);
 
     AzureOpenAIClientOptions AzureOptions(string? apiVersion) => new(ServiceVersionOf(apiVersion))
     {
