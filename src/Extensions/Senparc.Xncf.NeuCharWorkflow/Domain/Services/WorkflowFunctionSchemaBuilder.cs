@@ -186,7 +186,7 @@ public static class WorkflowFunctionSchemaBuilder
             return !string.IsNullOrWhiteSpace(text);
         }
 
-        return node is not JsonArray array || array.Count > 0;
+        return true;
     }
 
     private static bool TryGetPropertyIgnoreCase(JsonObject obj, string name, out string key, out JsonNode node)

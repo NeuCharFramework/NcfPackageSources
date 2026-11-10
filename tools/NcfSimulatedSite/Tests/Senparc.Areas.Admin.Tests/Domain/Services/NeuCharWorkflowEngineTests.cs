@@ -1243,6 +1243,38 @@ public class NeuCharWorkflowEngineTests
         Assert.AreEqual("cpu", json["Backend"]!.GetValue<string>());
     }
 
+    [TestMethod]
+    public void MergeMissingDefaults_PreservesExplicitEmptyCheckboxListAndFillsMissingOne()
+    {
+        var merged = WorkflowFunctionSchemaBuilder.MergeMissingDefaults(
+            """{ "Individuation": [] }""",
+            new FunctionParameterInfo[]
+            {
+                new()
+                {
+                    Name = "Individuation",
+                    ParameterType = ParameterType.CheckBoxList,
+                    SelectionList = new SelectionList(SelectionType.CheckBoxList, new[]
+                    {
+                        new SelectionItem("1", "启用", "", true)
+                    })
+                },
+                new()
+                {
+                    Name = "OtherOptions",
+                    ParameterType = ParameterType.CheckBoxList,
+                    SelectionList = new SelectionList(SelectionType.CheckBoxList, new[]
+                    {
+                        new SelectionItem("2", "默认选项", "", true)
+                    })
+                }
+            });
+
+        var json = JsonNode.Parse(merged)!.AsObject();
+        Assert.AreEqual(0, json["Individuation"]!.AsArray().Count);
+        Assert.AreEqual("2", json["OtherOptions"]![0]!.GetValue<string>());
+    }
+
     private static WorkflowFunctionParameterSchema Dropdown(string name, bool required, params (string value, bool selected)[] options) =>
         new()
         {
