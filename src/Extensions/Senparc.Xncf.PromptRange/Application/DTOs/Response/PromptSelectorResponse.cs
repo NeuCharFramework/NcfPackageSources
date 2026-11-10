@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.20.8 add PromptRange selector service, UI components, and tests
 
+    修改标识：Senparc - 20261105
+    修改描述：v0.20.14 补充选择结果中的评分信息
+
 ----------------------------------------------------------------*/
 
 using System.Collections.Generic;
@@ -32,6 +35,7 @@ public class PromptSelectorItem : PromptSelectorOption
     public bool IsDraft { get; set; }
     public decimal EvalAvgScore { get; set; }
     public decimal EvalMaxScore { get; set; }
+    public decimal CurrentScore { get; set; }
     public string Content { get; set; }
 }
 
@@ -39,4 +43,11 @@ public class PromptSelectorSearchResponse
 {
     public List<PromptSelectorItem> Items { get; set; }
     public int TotalCount { get; set; }
+}
+
+public class PromptSelectorScoreItem : PromptSelectorOption
+{
+    public int Id { get; set; }
+    public string FullVersion { get; set; }
+    public decimal CurrentScore { get; set; }
 }

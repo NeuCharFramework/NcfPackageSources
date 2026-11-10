@@ -27,12 +27,6 @@
   <data name="Area.FileManager.Files" xml:space="preserve">
     <value>Gestión de archivos</value>
   </data>
-  <data name="Function.Sample.Name" xml:space="preserve">
-    <value>Función de ejemplo</value>
-  </data>
-  <data name="Function.Sample.Description" xml:space="preserve">
-    <value>Demuestra parámetros y valores de retorno de FunctionRender</value>
-  </data>
   <data name="Parameter.Sample.Name" xml:space="preserve">
     <value>Nombre||El texto anterior a la doble barra es el nombre del parámetro; el posterior es la ayuda</value>
   </data>
@@ -102,4 +96,200 @@
   <data name="Page.Random" xml:space="preserve">
     <value>Aleatorio</value>
   </data>
+  <data name="Frontend.001" xml:space="preserve">
+    <value>Subir a:||Subir a:</value>
+  </data>
+  <data name="Frontend.002" xml:space="preserve">
+    <value>Subir archivo||Subir archivo</value>
+  </data>
+  <data name="Frontend.003" xml:space="preserve">
+    <value>Hora de subida||Hora de subida</value>
+  </data>
+  <data name="Frontend.004" xml:space="preserve">
+    <value>Descargar||Descargar</value>
+  </data>
+  <data name="Frontend.005" xml:space="preserve">
+    <value>Código||Código</value>
+  </data>
+  <data name="Frontend.006" xml:space="preserve">
+    <value>Otro||Otro</value>
+  </data>
+  <data name="Frontend.007" xml:space="preserve">
+    <value>Eliminar||Eliminar</value>
+  </data>
+  <data name="Frontend.008" xml:space="preserve">
+    <value>Actualizar carpetas||Actualizar carpetas</value>
+  </data>
+  <data name="Frontend.009" xml:space="preserve">
+    <value>Cancelar||Cancelar</value>
+  </data>
+  <data name="Frontend.010" xml:space="preserve">
+    <value>Puede subir varios archivos a la vez||Puede subir varios archivos a la vez</value>
+  </data>
+  <data name="Frontend.011" xml:space="preserve">
+    <value>Nombre||Nombre</value>
+  </data>
+  <data name="Frontend.012" xml:space="preserve">
+    <value>Notas||Notas</value>
+  </data>
+  <data name="Frontend.013" xml:space="preserve">
+    <value>Notas (opcional)||Notas (opcional)</value>
+  </data>
+  <data name="Frontend.014" xml:space="preserve">
+    <value>Tamaño||Tamaño</value>
+  </data>
+  <data name="Frontend.015" xml:space="preserve">
+    <value>Módulos de extensión||Módulos de extensión</value>
+  </data>
+  <data name="Frontend.016" xml:space="preserve">
+    <value>Acciones||Acciones</value>
+  </data>
+  <data name="Frontend.017" xml:space="preserve">
+    <value>Nombre de archivo||Nombre de archivo</value>
+  </data>
+  <data name="Frontend.018" xml:space="preserve">
+    <value>Carpeta||Carpeta</value>
+  </data>
+  <data name="Frontend.019" xml:space="preserve">
+    <value>Gestor de archivos||Gestor de archivos</value>
+  </data>
+  <data name="Frontend.020" xml:space="preserve">
+    <value>Texto||Texto</value>
+  </data>
+  <data name="Frontend.021" xml:space="preserve">
+    <value>Nuevo||Nuevo</value>
+  </data>
+  <data name="Frontend.022" xml:space="preserve">
+    <value>Nueva carpeta||Nueva carpeta</value>
+  </data>
+  <data name="Frontend.023" xml:space="preserve">
+    <value>Raíz||Raíz</value>
+  </data>
+  <data name="Frontend.024" xml:space="preserve">
+    <value>Aceptar||Aceptar</value>
+  </data>
+  <data name="Frontend.025" xml:space="preserve">
+    <value>Tipo||Tipo</value>
+  </data>
+  <data name="Frontend.026" xml:space="preserve">
+    <value>Id de tabla||Id de tabla</value>
+  </data>
+  <data name="Frontend.027" xml:space="preserve">
+    <value>Ingrese el nombre de la carpeta||Ingrese el nombre de la carpeta</value>
+  </data>
+  <data name="Frontend.028" xml:space="preserve">
+    <value>Seleccionar archivo||Seleccionar archivo</value>
+  </data>
+  <data name="Frontend.029" xml:space="preserve">
+    <value>Inicio||Inicio</value>
+  </data>
+  <data name="Frontend.030" xml:space="preserve">
+    <value>Error al cargar la lista||Error al cargar la lista</value>
+  </data>
+  <data name="Frontend.031" xml:space="preserve">
+    <value>Subido correctamente||Subido correctamente</value>
+  </data>
+  <data name="Frontend.032" xml:space="preserve">
+    <value>Error al subir||Error al subir</value>
+  </data>
+  <data name="Frontend.033" xml:space="preserve">
+    <value>Modificado correctamente||Modificado correctamente</value>
+  </data>
+  <data name="Frontend.034" xml:space="preserve">
+    <value>Error al modificar||Error al modificar</value>
+  </data>
+  <data name="Frontend.035" xml:space="preserve">
+    <value>¿Confirmar la eliminación de este archivo?||¿Confirmar la eliminación de este archivo?</value>
+  </data>
+  <data name="Frontend.036" xml:space="preserve">
+    <value>Aviso||Aviso</value>
+  </data>
+  <data name="Frontend.037" xml:space="preserve">
+    <value>Confirmar||Confirmar</value>
+  </data>
+  <data name="Frontend.038" xml:space="preserve">
+    <value>Cancelar||Cancelar</value>
+  </data>
+  <data name="Frontend.039" xml:space="preserve">
+    <value>Eliminado correctamente||Eliminado correctamente</value>
+  </data>
+  <data name="Frontend.040" xml:space="preserve">
+    <value>Error al eliminar||Error al eliminar</value>
+  </data>
+  <data name="Frontend.041" xml:space="preserve">
+    <value>Creado correctamente||Creado correctamente</value>
+  </data>
+  <data name="Frontend.042" xml:space="preserve">
+    <value>Error al crear||Error al crear</value>
+  </data>
+  <data name="Frontend.043" xml:space="preserve">
+    <value>Error al subir: {0}||Error al subir: {0}</value>
+  </data>
+  <data name="Frontend.044" xml:space="preserve">
+    <value>Ingrese notas para {0}||Ingrese notas para {0}</value>
+  </data>
+  <data name="Frontend.045" xml:space="preserve">
+    <value>Inicio de FileManager||Inicio de FileManager</value>
+  </data>
+  <data name="Frontend.046" xml:space="preserve">
+    <value>Carpeta #{0}||Carpeta #{0}</value>
+  </data>
+  <data name="Frontend.047" xml:space="preserve">
+    <value>Ingrese notas para {0}||Ingrese notas para {0}</value>
+  </data>
+  <data name="Frontend.048" xml:space="preserve">
+    <value>Actualizado correctamente||Actualizado correctamente</value>
+  </data>
+  <data name="Frontend.049" xml:space="preserve">
+    <value>Error al actualizar||Error al actualizar</value>
+  </data>
+  <data name="Frontend.050" xml:space="preserve">
+    <value>¿Eliminar este archivo?||¿Eliminar este archivo?</value>
+  </data>
+  <data name="Frontend.051" xml:space="preserve">
+    <value>Seleccione un archivo para subir||Seleccione un archivo para subir</value>
+  </data>
+  <data name="Frontend.052" xml:space="preserve">
+    <value>Error al subir:||Error al subir:</value>
+  </data>
+  <data name="Frontend.053" xml:space="preserve">
+    <value>Prueba de lanzamiento de excepción, parámetros enviados: {0} {1}||Prueba de lanzamiento de excepción, parámetros enviados: {0} {1}</value>
+  </data>
+  <data name="Frontend.054" xml:space="preserve">
+    <value>El divisor no puede ser 0!||El divisor no puede ser 0!</value>
+  </data>
+  <data name="Frontend.055" xml:space="preserve">
+    <value>Operador desconocido: {0}||Operador desconocido: {0}</value>
+  </data>
+  <data name="Frontend.056" xml:space="preserve">
+    <value>Puede cargar como máximo {0} archivos a la vez.||Puede cargar como máximo {0} archivos a la vez.</value>
+  </data>
+  <data name="Frontend.057" xml:space="preserve">
+    <value>El tamaño total de una carga no puede superar {0} MB.||El tamaño total de una carga no puede superar {0} MB.</value>
+  </data>
+  <data name="Frontend.058" xml:space="preserve">
+    <value>El archivo subido no puede estar vacío.||El archivo subido no puede estar vacío.</value>
+  </data>
+  <data name="Frontend.059" xml:space="preserve">
+    <value>Un solo archivo no puede superar {0} MB.||Un solo archivo no puede superar {0} MB.</value>
+  </data>
+  <data name="Frontend.060" xml:space="preserve">
+    <value>Este tipo de archivo no está permitido. Solo se admiten formatos habituales de documento, imagen, texto y archivo comprimido.||Este tipo de archivo no está permitido. Solo se admiten formatos habituales de documento, imagen, texto y archivo comprimido.</value>
+  </data>
+  <data name="Frontend.061" xml:space="preserve">
+    <value>¡El archivo no existe!||¡El archivo no existe!</value>
+  </data>
+  <data name="Frontend.062" xml:space="preserve">
+    <value>La información de la ruta física del archivo no es válida.||La información de la ruta física del archivo no es válida.</value>
+  </data>
+  <data name="Frontend.063" xml:space="preserve">
+    <value>La ruta física del archivo está fuera de límites.||La ruta física del archivo está fuera de límites.</value>
+  </data>
+  <data name="Function.Sample.Name" xml:space="preserve">
+    <value>Función de ejemplo</value>
+  </data>
+  <data name="Function.Sample.Description" xml:space="preserve">
+    <value>Demuestra parámetros y valores de retorno de FunctionRender</value>
+  </data>
+
 </root>

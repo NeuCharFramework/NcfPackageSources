@@ -18,4 +18,5 @@
   <data name="Module.AreasBase.Description" xml:space="preserve">
     <value>Предоставляет среду выполнения для Razor Pages и связанных областей интерфейса</value>
   </data>
+
 </root>

@@ -23,6 +23,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.20.8 add PromptRange selector service, UI components, and tests
 
+    修改标识：Senparc - 20261105
+    修改描述：v0.20.14 补充 PromptCode 评分与选择相关应用服务
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -46,6 +49,7 @@ using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.response;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
+using Senparc.Xncf.PromptRange.Abstractions.References;
 
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
@@ -88,6 +92,27 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return this.GetResponseAsync<PromptSelectorSearchResponse>(
                 async (response, logger) => await _promptItemService.SearchSelectorAsync(
                     rangeId, tactic, keyword, pageIndex, pageSize, sortBy));
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public Task<AppResponseBase<List<PromptSelectorScoreItem>>> GetSelectorRangeScoresAsync(int id)
+        {
+            return this.GetResponseAsync<List<PromptSelectorScoreItem>>(
+                async (response, logger) => await _promptItemService.GetSelectorRangeScoresAsync(id));
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public Task<AppResponseBase<PromptReferenceInfo>> GetReferenceInfoAsync(int id)
+        {
+            return this.GetResponseAsync<PromptReferenceInfo>(
+                async (response, logger) => await GetService<IPromptReferenceService>().GetInfoAsync(id));
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public Task<AppResponseBase<PromptReferenceInfo>> ScoreReferenceAsync(PromptReferenceScoreRequest request)
+        {
+            return this.GetResponseAsync<PromptReferenceInfo>(
+                async (response, logger) => await GetService<IPromptReferenceService>().ScoreAsync(request.Id, request.Score));
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]

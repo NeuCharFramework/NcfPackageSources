@@ -27,12 +27,6 @@
   <data name="Area.KnowledgeBase.RecallTest" xml:space="preserve">
     <value>Prueba de recuperación</value>
   </data>
-  <data name="Function.Sample.Name" xml:space="preserve">
-    <value>Función de ejemplo</value>
-  </data>
-  <data name="Function.Sample.Description" xml:space="preserve">
-    <value>Demuestra parámetros y valores de retorno de FunctionRender</value>
-  </data>
   <data name="Parameter.Sample.Name" xml:space="preserve">
     <value>Nombre||El texto anterior a la doble barra es el nombre del parámetro; el posterior es la ayuda</value>
   </data>
@@ -84,10 +78,539 @@
   <data name="Parameter.Power.Cube.Help" xml:space="preserve">
     <value>Elevar al cubo el resultado anterior</value>
   </data>
+  <data name="Frontend.001" xml:space="preserve">
+    <value>+ Agregar propiedad||+ Agregar propiedad</value>
+  </data>
+  <data name="Frontend.002" xml:space="preserve">
+    <value>+ Agregar etiqueta||+ Agregar etiqueta</value>
+  </data>
+  <data name="Frontend.003" xml:space="preserve">
+    <value>Subir archivo||Subir archivo</value>
+  </data>
+  <data name="Frontend.004" xml:space="preserve">
+    <value>Hora de subida||Hora de subida</value>
+  </data>
+  <data name="Frontend.005" xml:space="preserve">
+    <value>pasajes recuperados||pasajes recuperados</value>
+  </data>
+  <data name="Frontend.006" xml:space="preserve">
+    <value>Más información sobre los métodos de recuperación.||Más información sobre los métodos de recuperación.</value>
+  </data>
+  <data name="Frontend.007" xml:space="preserve">
+    <value>Guardar||Guardar</value>
+  </data>
+  <data name="Frontend.008" xml:space="preserve">
+    <value>Índice invertido||Índice invertido</value>
+  </data>
+  <data name="Frontend.009" xml:space="preserve">
+    <value>Un índice invertido es una estructura para la recuperación eficiente. Se organiza por término, y cada término apunta a los documentos o páginas web que lo contienen.||Un índice invertido es una estructura para la recuperación eficiente. Se organiza por término, y cada término apunta a los documentos o páginas web que lo contienen.</value>
+  </data>
+  <data name="Frontend.010" xml:space="preserve">
+    <value>Palabras clave||Palabras clave</value>
+  </data>
+  <data name="Frontend.011" xml:space="preserve">
+    <value>Cerrar||Cerrar</value>
+  </data>
+  <data name="Frontend.012" xml:space="preserve">
+    <value>Contenido||Contenido</value>
+  </data>
+  <data name="Frontend.013" xml:space="preserve">
+    <value>Tipo de contenido||Tipo de contenido</value>
+  </data>
+  <data name="Frontend.014" xml:space="preserve">
+    <value>Eliminar||Eliminar</value>
+  </data>
+  <data name="Frontend.015" xml:space="preserve">
+    <value>Cancelar||Cancelar</value>
+  </data>
+  <data name="Frontend.016" xml:space="preserve">
+    <value>Prueba de recuperación||Prueba de recuperación</value>
+  </data>
+  <data name="Frontend.017" xml:space="preserve">
+    <value>Tasa de recuperación||Tasa de recuperación</value>
+  </data>
+  <data name="Frontend.018" xml:space="preserve">
+    <value>Nombre||Nombre</value>
+  </data>
+  <data name="Frontend.019" xml:space="preserve">
+    <value>Vectorizar||Vectorizar</value>
+  </data>
+  <data name="Frontend.020" xml:space="preserve">
+    <value>Resultado de la vectorización||Resultado de la vectorización</value>
+  </data>
+  <data name="Frontend.021" xml:space="preserve">
+    <value>Progreso de la vectorización||Progreso de la vectorización</value>
+  </data>
+  <data name="Frontend.022" xml:space="preserve">
+    <value>caracteres||caracteres</value>
+  </data>
+  <data name="Frontend.023" xml:space="preserve">
+    <value>Nombre de propiedad||Nombre de propiedad</value>
+  </data>
+  <data name="Frontend.024" xml:space="preserve">
+    <value>Gestión de propiedades||Gestión de propiedades</value>
+  </data>
+  <data name="Frontend.025" xml:space="preserve">
+    <value>Seleccionado:||Seleccionado:</value>
+  </data>
+  <data name="Frontend.026" xml:space="preserve">
+    <value>{0} filas seleccionadas||{0} filas seleccionadas</value>
+  </data>
+  <data name="Frontend.027" xml:space="preserve">
+    <value>Abrir||Abrir</value>
+  </data>
+  <data name="Frontend.028" xml:space="preserve">
+    <value>Módulos de extensión||Módulos de extensión</value>
+  </data>
+  <data name="Frontend.029" xml:space="preserve">
+    <value>Eliminar seleccionados||Eliminar seleccionados</value>
+  </data>
+  <data name="Frontend.030" xml:space="preserve">
+    <value>Buscar||Buscar</value>
+  </data>
+  <data name="Frontend.031" xml:space="preserve">
+    <value>Acciones||Acciones</value>
+  </data>
+  <data name="Frontend.032" xml:space="preserve">
+    <value>Origen de datos||Origen de datos</value>
+  </data>
+  <data name="Frontend.033" xml:space="preserve">
+    <value>Lista de archivos||Lista de archivos</value>
+  </data>
+  <data name="Frontend.034" xml:space="preserve">
+    <value>Nombre de archivo||Nombre de archivo</value>
+  </data>
+  <data name="Frontend.035" xml:space="preserve">
+    <value>Nombre de archivo||Nombre de archivo</value>
+  </data>
+  <data name="Frontend.036" xml:space="preserve">
+    <value>Tamaño del archivo||Tamaño del archivo</value>
+  </data>
+  <data name="Frontend.037" xml:space="preserve">
+    <value>Agregar||Agregar</value>
+  </data>
+  <data name="Frontend.038" xml:space="preserve">
+    <value>Nuevo archivo||Nuevo archivo</value>
+  </data>
+  <data name="Frontend.039" xml:space="preserve">
+    <value>Hora ↓||Hora ↓</value>
+  </data>
+  <data name="Frontend.040" xml:space="preserve">
+    <value>Aún no hay resultados de recuperación. Seleccione una base de conocimiento, introduzca el texto de origen y haga clic en "Probar".||Aún no hay resultados de recuperación. Seleccione una base de conocimiento, introduzca el texto de origen y haga clic en "Probar".</value>
+  </data>
+  <data name="Frontend.041" xml:space="preserve">
+    <value>Buscar||Buscar</value>
+  </data>
+  <data name="Frontend.042" xml:space="preserve">
+    <value>Contenido de la consulta||Contenido de la consulta</value>
+  </data>
+  <data name="Frontend.043" xml:space="preserve">
+    <value>Nombre de etiqueta||Nombre de etiqueta</value>
+  </data>
+  <data name="Frontend.044" xml:space="preserve">
+    <value>Gestión de etiquetas||Gestión de etiquetas</value>
+  </data>
+  <data name="Frontend.045" xml:space="preserve">
+    <value>Pruebe la recuperación de conocimiento con el texto de consulta indicado.||Pruebe la recuperación de conocimiento con el texto de consulta indicado.</value>
+  </data>
+  <data name="Frontend.046" xml:space="preserve">
+    <value>Método de recuperación||Método de recuperación</value>
+  </data>
+  <data name="Frontend.047" xml:space="preserve">
+    <value>Configuración de recuperación||Configuración de recuperación</value>
+  </data>
+  <data name="Frontend.048" xml:space="preserve">
+    <value>Detalles del pasaje||Detalles del pasaje</value>
+  </data>
+  <data name="Frontend.049" xml:space="preserve">
+    <value>Prueba||Prueba</value>
+  </data>
+  <data name="Frontend.050" xml:space="preserve">
+    <value>Fecha de alta||Fecha de alta</value>
+  </data>
+  <data name="Frontend.051" xml:space="preserve">
+    <value>Texto de origen||Texto de origen</value>
+  </data>
+  <data name="Frontend.052" xml:space="preserve">
+    <value>Base de conocimiento||Base de conocimiento</value>
+  </data>
+  <data name="Frontend.053" xml:space="preserve">
+    <value>Gestión de bases de conocimientos||Gestión de bases de conocimientos</value>
+  </data>
+  <data name="Frontend.054" xml:space="preserve">
+    <value>Lista de bases de conocimiento||Lista de bases de conocimiento</value>
+  </data>
+  <data name="Frontend.055" xml:space="preserve">
+    <value>Gestión de bases de conocimiento||Gestión de bases de conocimiento</value>
+  </data>
+  <data name="Frontend.056" xml:space="preserve">
+    <value>Confirmar||Confirmar</value>
+  </data>
+  <data name="Frontend.057" xml:space="preserve">
+    <value>Confirmar||Confirmar</value>
+  </data>
+  <data name="Frontend.058" xml:space="preserve">
+    <value>¿Eliminar esta base de conocimiento?||¿Eliminar esta base de conocimiento?</value>
+  </data>
+  <data name="Frontend.059" xml:space="preserve">
+    <value>Filtrar columnas||Filtrar columnas</value>
+  </data>
+  <data name="Frontend.060" xml:space="preserve">
+    <value>Editar||Editar</value>
+  </data>
+  <data name="Frontend.061" xml:space="preserve">
+    <value>registros||registros</value>
+  </data>
+  <data name="Frontend.062" xml:space="preserve">
+    <value>Complete el campo||Complete el campo</value>
+  </data>
+  <data name="Frontend.063" xml:space="preserve">
+    <value>Introduce una palabra clave||Introduce una palabra clave</value>
+  </data>
+  <data name="Frontend.064" xml:space="preserve">
+    <value>Introduzca texto||Introduzca texto</value>
+  </data>
+  <data name="Frontend.065" xml:space="preserve">
+    <value>Introduzca un nombre||Introduzca un nombre</value>
+  </data>
+  <data name="Frontend.066" xml:space="preserve">
+    <value>Ingrese el texto de consulta||Ingrese el texto de consulta</value>
+  </data>
+  <data name="Frontend.067" xml:space="preserve">
+    <value>Seleccione el tipo de contenido||Seleccione el tipo de contenido</value>
+  </data>
+  <data name="Frontend.068" xml:space="preserve">
+    <value>Introduzca palabras clave para buscar y seleccionar una base de conocimiento||Introduzca palabras clave para buscar y seleccionar una base de conocimiento</value>
+  </data>
+  <data name="Frontend.069" xml:space="preserve">
+    <value>Seleccionar modelo Embedding||Seleccionar modelo Embedding</value>
+  </data>
+  <data name="Frontend.070" xml:space="preserve">
+    <value>Seleccionar base de datos vectorial||Seleccionar base de datos vectorial</value>
+  </data>
+  <data name="Frontend.071" xml:space="preserve">
+    <value>Seleccionar modelo de chat||Seleccionar modelo de chat</value>
+  </data>
+  <data name="Frontend.072" xml:space="preserve">
+    <value>Seleccionar archivo||Seleccionar archivo</value>
+  </data>
+  <data name="Frontend.073" xml:space="preserve">
+    <value>Tras seleccionarlos, los archivos se cargan en la gestión de archivos. Márquelos en la lista inferior para asociarlos a la base de conocimiento actual.||Tras seleccionarlos, los archivos se cargan en la gestión de archivos. Márquelos en la lista inferior para asociarlos a la base de conocimiento actual.</value>
+  </data>
+  <data name="Frontend.074" xml:space="preserve">
+    <value>Configurar||Configurar</value>
+  </data>
+  <data name="Frontend.075" xml:space="preserve">
+    <value>Restablecer||Restablecer</value>
+  </data>
+  <data name="Frontend.076" xml:space="preserve">
+    <value>Error al cargar la lista||Error al cargar la lista</value>
+  </data>
+  <data name="Frontend.077" xml:space="preserve">
+    <value>Módulos agregados correctamente||Módulos agregados correctamente</value>
+  </data>
+  <data name="Frontend.078" xml:space="preserve">
+    <value>Error al agregar||Error al agregar</value>
+  </data>
+  <data name="Frontend.079" xml:space="preserve">
+    <value>Actualizado correctamente||Actualizado correctamente</value>
+  </data>
+  <data name="Frontend.080" xml:space="preserve">
+    <value>Error al editar||Error al editar</value>
+  </data>
+  <data name="Frontend.081" xml:space="preserve">
+    <value>Eliminado correctamente||Eliminado correctamente</value>
+  </data>
+  <data name="Frontend.082" xml:space="preserve">
+    <value>Error al eliminar||Error al eliminar</value>
+  </data>
+  <data name="Frontend.083" xml:space="preserve">
+    <value>Subido correctamente||Subido correctamente</value>
+  </data>
+  <data name="Frontend.084" xml:space="preserve">
+    <value>Error al subir||Error al subir</value>
+  </data>
+  <data name="Frontend.085" xml:space="preserve">
+    <value>Error de vectorización||Error de vectorización</value>
+  </data>
+  <data name="Frontend.086" xml:space="preserve">
+    <value>Error al cargar||Error al cargar</value>
+  </data>
+  <data name="Frontend.087" xml:space="preserve">
+    <value>Sin datos||Sin datos</value>
+  </data>
+  <data name="Frontend.088" xml:space="preserve">
+    <value>Aviso||Aviso</value>
+  </data>
   <data name="Page.EditKnowledgeBase" xml:space="preserve">
     <value>Editar base de conocimientos</value>
   </data>
   <data name="Page.CreateKnowledgeBase" xml:space="preserve">
     <value>Crear base de conocimientos</value>
   </data>
+  <data name="Frontend.089" xml:space="preserve">
+    <value>Tipo||Tipo</value>
+  </data>
+  <data name="Frontend.090" xml:space="preserve">
+    <value>Origen||Origen</value>
+  </data>
+  <data name="Frontend.091" xml:space="preserve">
+    <value>Importante||Importante</value>
+  </data>
+  <data name="Frontend.092" xml:space="preserve">
+    <value>Pendiente de revisión||Pendiente de revisión</value>
+  </data>
+  <data name="Frontend.093" xml:space="preserve">
+    <value>Demostración||Demostración</value>
+  </data>
+  <data name="Frontend.094" xml:space="preserve">
+    <value>Segmento-{0}||Segmento-{0}</value>
+  </data>
+  <data name="Frontend.095" xml:space="preserve">
+    <value>Base de conocimiento-{0}||Base de conocimiento-{0}</value>
+  </data>
+  <data name="Frontend.096" xml:space="preserve">
+    <value>Ajustes de recuperación guardados||Ajustes de recuperación guardados</value>
+  </data>
+  <data name="Frontend.097" xml:space="preserve">
+    <value>Introduzca el nombre del atributo||Introduzca el nombre del atributo</value>
+  </data>
+  <data name="Frontend.098" xml:space="preserve">
+    <value>Guardado correctamente||Guardado correctamente</value>
+  </data>
+  <data name="Frontend.099" xml:space="preserve">
+    <value>¿Eliminar esta propiedad?||¿Eliminar esta propiedad?</value>
+  </data>
+  <data name="Frontend.100" xml:space="preserve">
+    <value>Eliminado||Eliminado</value>
+  </data>
+  <data name="Frontend.101" xml:space="preserve">
+    <value>Introduzca el nombre de la etiqueta||Introduzca el nombre de la etiqueta</value>
+  </data>
+  <data name="Frontend.102" xml:space="preserve">
+    <value>¿Eliminar esta etiqueta?||¿Eliminar esta etiqueta?</value>
+  </data>
+  <data name="Frontend.103" xml:space="preserve">
+    <value>Seleccione primero una base de conocimiento||Seleccione primero una base de conocimiento</value>
+  </data>
+  <data name="Frontend.104" xml:space="preserve">
+    <value>[Ejemplo de recuperación 1]||[Ejemplo de recuperación 1]</value>
+  </data>
+  <data name="Frontend.105" xml:space="preserve">
+    <value>Recuperación de la evaluación sin conexión completada||Recuperación de la evaluación sin conexión completada</value>
+  </data>
+  <data name="Frontend.106" xml:space="preserve">
+    <value>Recuperación de la evaluación en línea completada||Recuperación de la evaluación en línea completada</value>
+  </data>
+  <data name="Frontend.107" xml:space="preserve">
+    <value>Error||Error</value>
+  </data>
+  <data name="Frontend.108" xml:space="preserve">
+    <value>Error en la vectorización. Compruebe la configuración.||Error en la vectorización. Compruebe la configuración.</value>
+  </data>
+  <data name="Frontend.109" xml:space="preserve">
+    <value>Inicio||Inicio</value>
+  </data>
+  <data name="Frontend.110" xml:space="preserve">
+    <value>Página de lista de bases de conocimiento||Página de lista de bases de conocimiento</value>
+  </data>
+  <data name="Frontend.111" xml:space="preserve">
+    <value>Id del modelo Embedding||Id del modelo Embedding</value>
+  </data>
+  <data name="Frontend.112" xml:space="preserve">
+    <value>Id de base de datos vectorial||Id de base de datos vectorial</value>
+  </data>
+  <data name="Frontend.113" xml:space="preserve">
+    <value>Id del modelo de chat||Id del modelo de chat</value>
+  </data>
+  <data name="Frontend.114" xml:space="preserve">
+    <value>Introduzca el Id del modelo Embedding||Introduzca el Id del modelo Embedding</value>
+  </data>
+  <data name="Frontend.115" xml:space="preserve">
+    <value>Ingrese el Id de la base de datos vectorial||Ingrese el Id de la base de datos vectorial</value>
+  </data>
+  <data name="Frontend.116" xml:space="preserve">
+    <value>Ingrese el Id del modelo de chat||Ingrese el Id del modelo de chat</value>
+  </data>
+  <data name="Frontend.117" xml:space="preserve">
+    <value>Editar asociación de base de conocimiento||Editar asociación de base de conocimiento</value>
+  </data>
+  <data name="Frontend.118" xml:space="preserve">
+    <value>Agregar asociación de base de conocimiento||Agregar asociación de base de conocimiento</value>
+  </data>
+  <data name="Frontend.119" xml:space="preserve">
+    <value>{0} filas seleccionadas||{0} filas seleccionadas</value>
+  </data>
+  <data name="Frontend.120" xml:space="preserve">
+    <value>Abrir||Abrir</value>
+  </data>
+  <data name="Frontend.121" xml:space="preserve">
+    <value>Número de fragmentos recuperados||Número de fragmentos recuperados</value>
+  </data>
+  <data name="Frontend.122" xml:space="preserve">
+    <value>Id de la base de conocimiento||Id de la base de conocimiento</value>
+  </data>
+  <data name="Frontend.123" xml:space="preserve">
+    <value>Entrada||Entrada</value>
+  </data>
+  <data name="Frontend.124" xml:space="preserve">
+    <value>Archivo||Archivo</value>
+  </data>
+  <data name="Frontend.125" xml:space="preserve">
+    <value>Recopilar datos externos||Recopilar datos externos</value>
+  </data>
+  <data name="Frontend.126" xml:space="preserve">
+    <value>Agregar detalles de la base de conocimiento||Agregar detalles de la base de conocimiento</value>
+  </data>
+  <data name="Frontend.127" xml:space="preserve">
+    <value>El nombre del detalle de gestión de la base de conocimiento es obligatorio||El nombre del detalle de gestión de la base de conocimiento es obligatorio</value>
+  </data>
+  <data name="Frontend.128" xml:space="preserve">
+    <value>Registro de detalles de la base de conocimiento||Registro de detalles de la base de conocimiento</value>
+  </data>
+  <data name="Frontend.129" xml:space="preserve">
+    <value>Correcto||Correcto</value>
+  </data>
+  <data name="Frontend.130" xml:space="preserve">
+    <value>Felicidades, la subida se realizó correctamente||Felicidades, la subida se realizó correctamente</value>
+  </data>
+  <data name="Frontend.131" xml:space="preserve">
+    <value>Fallido||Fallido</value>
+  </data>
+  <data name="Frontend.132" xml:space="preserve">
+    <value>Error al subir, vuelva a subir el archivo||Error al subir, vuelva a subir el archivo</value>
+  </data>
+  <data name="Frontend.133" xml:space="preserve">
+    <value>Editar detalles de la base de conocimiento||Editar detalles de la base de conocimiento</value>
+  </data>
+  <data name="Frontend.134" xml:space="preserve">
+    <value>Preparando...||Preparando...</value>
+  </data>
+  <data name="Frontend.135" xml:space="preserve">
+    <value>Agregar base de conocimiento||Agregar base de conocimiento</value>
+  </data>
+  <data name="Frontend.136" xml:space="preserve">
+    <value>El nombre de la base de conocimiento es obligatorio||El nombre de la base de conocimiento es obligatorio</value>
+  </data>
+  <data name="Frontend.137" xml:space="preserve">
+    <value>Detalles de la base de conocimiento||Detalles de la base de conocimiento</value>
+  </data>
+  <data name="Frontend.138" xml:space="preserve">
+    <value>Seleccione||Seleccione</value>
+  </data>
+  <data name="Frontend.139" xml:space="preserve">
+    <value>Archivo subido a la gestión de archivos||Archivo subido a la gestión de archivos</value>
+  </data>
+  <data name="Frontend.140" xml:space="preserve">
+    <value>Error al subir, inténtelo de nuevo||Error al subir, inténtelo de nuevo</value>
+  </data>
+  <data name="Frontend.141" xml:space="preserve">
+    <value>Editar base de conocimiento||Editar base de conocimiento</value>
+  </data>
+  <data name="Frontend.142" xml:space="preserve">
+    <value>Seleccione al menos un archivo antes de guardar||Seleccione al menos un archivo antes de guardar</value>
+  </data>
+  <data name="Frontend.143" xml:space="preserve">
+    <value>El archivo se asoció a la base de conocimiento y se escribió una entrada||El archivo se asoció a la base de conocimiento y se escribió una entrada</value>
+  </data>
+  <data name="Frontend.144" xml:space="preserve">
+    <value>Error al importar el archivo||Error al importar el archivo</value>
+  </data>
+  <data name="Frontend.145" xml:space="preserve">
+    <value>Error al importar el archivo:||Error al importar el archivo:</value>
+  </data>
+  <data name="Frontend.146" xml:space="preserve">
+    <value>Guardado||Guardado</value>
+  </data>
+  <data name="Frontend.147" xml:space="preserve">
+    <value>Base de conocimiento guardada correctamente||Base de conocimiento guardada correctamente</value>
+  </data>
+  <data name="Frontend.148" xml:space="preserve">
+    <value>Error al guardar, compruebe los datos||Error al guardar, compruebe los datos</value>
+  </data>
+  <data name="Frontend.149" xml:space="preserve">
+    <value>Error al guardar:||Error al guardar:</value>
+  </data>
+  <data name="Frontend.150" xml:space="preserve">
+    <value>¿Eliminar el archivo "{0}"? Se quitarán tanto el registro de la base de datos como el archivo físico.||¿Eliminar el archivo "{0}"? Se quitarán tanto el registro de la base de datos como el archivo físico.</value>
+  </data>
+  <data name="Frontend.151" xml:space="preserve">
+    <value>Confirmar eliminación||Confirmar eliminación</value>
+  </data>
+  <data name="Frontend.152" xml:space="preserve">
+    <value>Marque primero los archivos a eliminar||Marque primero los archivos a eliminar</value>
+  </data>
+  <data name="Frontend.153" xml:space="preserve">
+    <value>¿Eliminar los {0} archivos seleccionados? Se quitarán tanto los registros de la base de datos como los archivos físicos.||¿Eliminar los {0} archivos seleccionados? Se quitarán tanto los registros de la base de datos como los archivos físicos.</value>
+  </data>
+  <data name="Frontend.154" xml:space="preserve">
+    <value>Confirmar eliminación masiva||Confirmar eliminación masiva</value>
+  </data>
+  <data name="Frontend.155" xml:space="preserve">
+    <value>Parcialmente completado||Parcialmente completado</value>
+  </data>
+  <data name="Frontend.156" xml:space="preserve">
+    <value>Se eliminaron {0}/{1} archivos||Se eliminaron {0}/{1} archivos</value>
+  </data>
+  <data name="Frontend.157" xml:space="preserve">
+    <value>Archivo eliminado||Archivo eliminado</value>
+  </data>
+  <data name="Frontend.158" xml:space="preserve">
+    <value>Error al eliminar:||Error al eliminar:</value>
+  </data>
+  <data name="Frontend.159" xml:space="preserve">
+    <value>Confirmar vectorización||Confirmar vectorización</value>
+  </data>
+  <data name="Frontend.160" xml:space="preserve">
+    <value>Vectorizando...||Vectorizando...</value>
+  </data>
+  <data name="Frontend.161" xml:space="preserve">
+    <value>Vectorización completada||Vectorización completada</value>
+  </data>
+  <data name="Frontend.162" xml:space="preserve">
+    <value>La vectorización de la base de conocimiento "{0}" ha finalizado.||La vectorización de la base de conocimiento "{0}" ha finalizado.</value>
+  </data>
+  <data name="Frontend.163" xml:space="preserve">
+    <value>Error de procesamiento:||Error de procesamiento:</value>
+  </data>
+  <data name="Frontend.164" xml:space="preserve">
+    <value>¿Cerrar ahora?||¿Cerrar ahora?</value>
+  </data>
+  <data name="Frontend.165" xml:space="preserve">
+    <value>Prueba de lanzamiento de excepción, parámetros enviados: {0} {1}||Prueba de lanzamiento de excepción, parámetros enviados: {0} {1}</value>
+  </data>
+  <data name="Frontend.166" xml:space="preserve">
+    <value>El divisor no puede ser 0!||El divisor no puede ser 0!</value>
+  </data>
+  <data name="Frontend.167" xml:space="preserve">
+    <value>Operador desconocido: {0}||Operador desconocido: {0}</value>
+  </data>
+  <data name="Frontend.168" xml:space="preserve">
+    <value>La base de conocimiento '{0}' no tiene un modelo Embedding configurado. Seleccione primero un modelo en 'Configuración'.||La base de conocimiento '{0}' no tiene un modelo Embedding configurado. Seleccione primero un modelo en 'Configuración'.</value>
+  </data>
+  <data name="Frontend.169" xml:space="preserve">
+    <value>El ID de modelo Embedding {0} no existe.||El ID de modelo Embedding {0} no existe.</value>
+  </data>
+  <data name="Frontend.170" xml:space="preserve">
+    <value>El ID de almacén de vectores Embedding {0} no existe.||El ID de almacén de vectores Embedding {0} no existe.</value>
+  </data>
+  <data name="Frontend.171" xml:space="preserve">
+    <value>No se encontró el modelo Embedding del modelo AIKernel: {0}.||No se encontró el modelo Embedding del modelo AIKernel: {0}.</value>
+  </data>
+  <data name="Frontend.172" xml:space="preserve">
+    <value>¡Vectorización de la base de conocimiento '{0}' completada!||¡Vectorización de la base de conocimiento '{0}' completada!</value>
+  </data>
+  <data name="Frontend.173" xml:space="preserve">
+    <value>Sin datos||Sin datos</value>
+  </data>
+  <data name="Frontend.174" xml:space="preserve">
+    <value>Guardado correctamente||Guardado correctamente</value>
+  </data>
+  <data name="Function.Sample.Name" xml:space="preserve">
+    <value>Función de ejemplo</value>
+  </data>
+  <data name="Function.Sample.Description" xml:space="preserve">
+    <value>Demuestra parámetros y valores de retorno de FunctionRender</value>
+  </data>
+
 </root>

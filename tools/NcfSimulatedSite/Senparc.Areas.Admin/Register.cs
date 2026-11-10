@@ -265,6 +265,7 @@ namespace Senparc.Areas.Admin
             services.AddScoped<AdminChatTrajectoryService>();
             services.AddScoped<AdminChatTrajectoryEventService>();
             services.AddScoped<AdminChatAiService>();
+            services.AddSingleton<AdminChatRunRegistry>();
             services.AddSingleton<AdminChatMemoryStore>();
             services.AddScoped<IAdminChatMemoryStore>(provider => new AdminChatMemoryDatabaseStore(
                 provider.GetRequiredService<Senparc.Ncf.Core.Models.INcfDbData>().BaseDataContext,

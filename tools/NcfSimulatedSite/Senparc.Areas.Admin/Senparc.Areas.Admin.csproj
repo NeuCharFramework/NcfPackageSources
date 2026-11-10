@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.12.19</Version>
+		<Version>0.12.26</Version>
 		<PackageReleaseNotes>
     [2026-07-02] v0.0.2 支持流式输出并优化交互体验，优化 AgentsManager 前端界面与历史消息展示效果
     1、支持流式输出并优化交互体验
@@ -132,7 +132,33 @@
     [2026-11-03] Add bilingual Memory documentation and contextual help for Chat launchers, modes, entries, loading reports, Markdown and SystemMessage settings.
     [2026-11-03] Receive WorkspaceAgent runtime files through project references to fix mixed-configuration CI builds and publishing.
     [2026-11-03] Version embedded Admin assets with content hashes to prevent stale documentation catalogs; keep contextual help attached to Chat controls without crowding sidebar actions.
-</PackageReleaseNotes>
+    [2026-11-05] v0.12.26 完善后台上下文帮助、现代皮肤与本地语音导航
+    1、允许按明确请求保存普通人物事实，并把同一会话内的有限引用整理为待审核候选，不自动持久化助手主张
+    2、提供可复用的 PromptCode 标注、干净的聊天引用持久化、共享人工或 AI 评分和只读提示词查询
+    3、仅在存在保存意图时自动变更记忆；对延后内容和非保存请求不做写入，并严格校验抽取结果
+    4、用有限上下文解析多轮记忆保存命令；自动持久化用户陈述的证据，助手衍生变更需要审核，并避免虚构的审核动作
+    5、提供基于滑块的 PromptCode 评分、实时草稿条、独立 Range 对比和只读预览
+    6、上下文帮助对齐已审核的双语界面章节和稳定锚点，区分页面概览与控件说明，并兼容旧章节链接
+    7、调整管理端现代皮肤、布局间距和页脚交互
+    8、新增浏览器本地语音导航，菜单匹配不上传音频或文本
+    9、为 Workspace 首页提供独立样式表
+    10、Dependency update from Senparc.Ncf.AreaBase to 0.23.10
+    11、Dependency update from Senparc.Ncf.Core to 0.30.4-preview10
+    12、Dependency update from Senparc.Ncf.Mvc.UI to 0.22.7-preview11
+    13、Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
+    14、Dependency update from Senparc.Xncf.PromptRange.Abstractions to 0.3.2-preview7
+    15、Dependency update from Senparc.Xncf.Workspace to 0.2.7
+    16、Dependency update from Senparc.Xncf.FileManager to 0.8.3
+    17、Dependency update from Senparc.Ncf.XncfBase to 0.28.2
+    18、Dependency update from Senparc.Xncf.WeixinManager to 0.24.18
+    19、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
+    20、Dependency update from Senparc.Xncf.Menu to 0.14.12
+    21、Dependency update from Senparc.Xncf.SystemCore to 0.14.12
+    22、Dependency update from Senparc.Xncf.SystemManager to 0.15.12
+    23、Dependency update from Senparc.Xncf.SystemPermission to 0.15.12
+    24、Dependency update from Senparc.Xncf.Tenant to 0.15.15
+    25、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.12
+		</PackageReleaseNotes>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
 		<!--<RazorLangVersion>2.0</RazorLangVersion>-->
 		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>

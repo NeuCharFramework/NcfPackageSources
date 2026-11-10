@@ -256,6 +256,42 @@ test("workflow stepper tracks Worker, data, training, monitoring and publish ord
         ["done", "done", "done", "done", "current"]);
 });
 
+test("section navigation follows the pointer or text caret and validation results stay scrollable", () => {
+    const { app } = instance();
+    const page = fs.readFileSync(path.join(root, "Areas/Admin/Pages/AIFineTuning/Index.cshtml"), "utf8");
+    const css = fs.readFileSync(path.join(root, "wwwroot/css/Admin/AIFineTuning/index.css"), "utf8");
+    assert.deepEqual(Array.from(new Set(app.pageSections.map(section => section.step))), Array.from(app.workflowSteps));
+    for (const section of app.pageSections) {
+        assert.ok(page.includes('id="' + section.id + '"'), section.id);
+        assert.ok(page.includes('data-ft-section="' + section.id + '"'), section.id);
+        app.t(section.labelKey);
+    }
+    app.t("SectionNav");
+    assert.ok(page.includes("ft-section-rail"));
+    assert.ok(page.includes("ft-validation-prompt"));
+    assert.ok(css.includes("position: sticky"));
+    assert.ok(css.includes(".ft-validation-result pre { max-height: 280px;"));
+    assert.ok(css.includes(".ft-validation-prompt { max-height: 120px;"));
+
+    const section = {
+        id: "ft-publish",
+        classList: { add() { section.located = true; }, remove() { section.located = false; } },
+        getAttribute(name) { return name === "data-ft-section" ? "ft-publish" : "Publish"; },
+        closest(selector) { return selector === "[data-ft-section]" ? section : null; }
+    };
+    const prompt = {
+        closest(selector) {
+            if (selector.indexOf("textarea") >= 0) { return prompt; }
+            return selector === "[data-ft-section]" ? section : null;
+        }
+    };
+    app.locateFromTarget(prompt);
+    assert.equal(app.locatedStep, "Publish");
+    assert.equal(app.locatedSection, "ft-publish");
+    assert.equal(section.located, true);
+    app.scrollToSection("ft-publish");
+});
+
 test("both downloadable examples are valid distinct JSONL and downloads preserve their exact content", async () => {
     const { app, context, timers } = instance();
     let blob, clicked = false, removed = false, revoked = false;

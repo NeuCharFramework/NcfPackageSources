@@ -31,6 +31,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.17.0 add PromptRange selector service, UI components, and tests
 
+    修改标识：Senparc - 20261106
+    修改描述：注册微调密钥文件、运行时开关和本机 Worker 进程管理
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -146,6 +149,11 @@ namespace Senparc.Xncf.AIKernel
 
             services.Configure<Domain.Services.FineTuningWorkerOptions>(
                 configuration.GetSection(Domain.Services.FineTuningWorkerOptions.SectionName));
+            services.AddSingleton<Domain.Services.FineTuningSecretStore>();
+            services.AddSingleton<Domain.Services.FineTuningRuntimeSettings>();
+            services.AddSingleton<Domain.Services.FineTuningWorkerSupervisor>();
+            services.AddSingleton<IHostedService>(serviceProvider =>
+                serviceProvider.GetRequiredService<Domain.Services.FineTuningWorkerSupervisor>());
             services.Configure<ModelPreparationOptions>(
                 configuration.GetSection(ModelPreparationOptions.SectionName));
             services.AddScoped<Domain.Services.AIFineTuningWorkerService>();

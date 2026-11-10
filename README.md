@@ -97,6 +97,10 @@ The Workspace runtime project is named `Senparc.Xncf.WorkspaceAgent`, with exact
 
 The ADO pipeline builds in Release and relies on each project's `GeneratePackageOnBuild` setting to create `.nupkg` files before discovery and push. Enable Release packaging for every new published library, including abstraction contracts; a project reference alone does not generate its dependency's NuGet package.
 
+需要发布的契约项目还必须加入 CI 使用的 `src/NcfPackageSources.sln`，并启用 Release 构建映射。未登记在解决方案中的依赖可能被 MSBuild 移除父级配置，回退到 Debug，从而不生成仅在 Release 时打包的 `.nupkg`。
+
+Published contract projects must also belong to the CI solution, `src/NcfPackageSources.sln`, with Release build mappings enabled. MSBuild may remove the parent configuration from dependencies missing from the solution, causing a fallback to Debug and skipping Release-only package generation.
+
 推送前会按 MSBuild 求值后的包 ID、版本和输出目录检查 FileManager.Abstractions 与 Workspace.Abstractions 的包文件。构建或检查失败时不执行推送。修复漏发包后重新运行流水线即可补发缺失版本，已存在版本仍通过 `--skip-duplicate` 跳过。
 
 Before pushing, the pipeline checks the FileManager.Abstractions and Workspace.Abstractions package files using their evaluated MSBuild package IDs, versions and output directories. Build or validation failures prevent pushing. Rerun the pipeline to publish missing versions after fixing packaging; existing versions are skipped with `--skip-duplicate`.

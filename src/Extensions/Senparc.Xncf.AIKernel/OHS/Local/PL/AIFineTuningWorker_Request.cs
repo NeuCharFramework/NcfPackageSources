@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.17.0 enhance Agent Studio, group configuration, and task management interactions
 
+    修改标识：Senparc - 20261106
+    修改描述：接收本机 Worker 的目录、端口和自动启动配置
+
 ----------------------------------------------------------------*/
 
 using System.ComponentModel.DataAnnotations;
@@ -39,4 +42,31 @@ public sealed class AIFineTuningWorker_CreateOrEditRequest
 
     [StringLength(500)]
     public string Note { get; set; }
+
+    public bool Managed { get; set; }
+
+    [StringLength(100)]
+    public string BindHost { get; set; }
+
+    [Range(0, 65535)]
+    public int Port { get; set; } = 8091;
+
+    [StringLength(500)]
+    public string ModelsRoot { get; set; }
+
+    [StringLength(500)]
+    public string DataRoot { get; set; }
+
+    [StringLength(500)]
+    public string PythonPath { get; set; }
+
+    [StringLength(500)]
+    public string WorkerProjectPath { get; set; }
+
+    public bool AutoStart { get; set; }
+}
+
+public sealed class FineTuningEnabledRequest
+{
+    public bool Enabled { get; set; }
 }

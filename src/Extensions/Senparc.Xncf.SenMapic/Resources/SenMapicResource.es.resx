@@ -24,18 +24,6 @@
   <data name="Area.DatabaseSample" xml:space="preserve">
     <value>Ejemplo de operaciones de base de datos</value>
   </data>
-  <data name="Function.Sample.Name" xml:space="preserve">
-    <value>Función de ejemplo</value>
-  </data>
-  <data name="Function.Sample.Description" xml:space="preserve">
-    <value>Demuestra parámetros y valores de retorno de FunctionRender</value>
-  </data>
-  <data name="Function.SenMapic.Crawl.Name" xml:space="preserve">
-    <value>Rastreador web</value>
-  </data>
-  <data name="Function.SenMapic.Crawl.Description" xml:space="preserve">
-    <value>Extrae información de páginas web</value>
-  </data>
   <data name="Parameter.Sample.Name" xml:space="preserve">
     <value>Nombre||El texto anterior a la doble barra es el nombre del parámetro; el posterior es la ayuda</value>
   </data>
@@ -264,4 +252,44 @@
   <data name="Message.DeleteFailed" xml:space="preserve">
     <value>Error al eliminar</value>
   </data>
+  <data name="Frontend.001" xml:space="preserve">
+    <value>Prueba de lanzamiento de excepción, parámetros enviados: {0} {1}||Prueba de lanzamiento de excepción, parámetros enviados: {0} {1}</value>
+  </data>
+  <data name="Frontend.002" xml:space="preserve">
+    <value>El divisor no puede ser 0!||El divisor no puede ser 0!</value>
+  </data>
+  <data name="Frontend.003" xml:space="preserve">
+    <value>Operador desconocido: {0}||Operador desconocido: {0}</value>
+  </data>
+  <data name="Frontend.004" xml:space="preserve">
+    <value>Operador desconocido||Operador desconocido</value>
+  </data>
+  <data name="Frontend.005" xml:space="preserve">
+    <value>Introduzca una URL válida!||Introduzca una URL válida!</value>
+  </data>
+  <data name="Frontend.006" xml:space="preserve">
+    <value>El host de destino se resolvió en una dirección no pública. Se rechazó la conexión.||El host de destino se resolvió en una dirección no pública. Se rechazó la conexión.</value>
+  </data>
+  <data name="Frontend.007" xml:space="preserve">
+    <value>No se puede conectar con el host de destino que superó la comprobación de dirección pública.||No se puede conectar con el host de destino que superó la comprobación de dirección pública.</value>
+  </data>
+  <data name="Frontend.008" xml:space="preserve">
+    <value>No se permite acceder a la URL de destino.||No se permite acceder a la URL de destino.</value>
+  </data>
+  <data name="Frontend.009" xml:space="preserve">
+    <value>No se permite acceder a la URL de destino de la redirección.||No se permite acceder a la URL de destino de la redirección.</value>
+  </data>
+  <data name="Function.Sample.Name" xml:space="preserve">
+    <value>Función de ejemplo</value>
+  </data>
+  <data name="Function.Sample.Description" xml:space="preserve">
+    <value>Demuestra parámetros y valores de retorno de FunctionRender</value>
+  </data>
+  <data name="Function.SenMapic.Crawl.Name" xml:space="preserve">
+    <value>Rastreador web</value>
+  </data>
+  <data name="Function.SenMapic.Crawl.Description" xml:space="preserve">
+    <value>Extrae información de páginas web</value>
+  </data>
+
 </root>

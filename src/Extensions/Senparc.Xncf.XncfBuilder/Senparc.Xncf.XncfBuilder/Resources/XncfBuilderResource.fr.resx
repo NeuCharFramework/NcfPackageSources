@@ -18,35 +18,23 @@
   <data name="Module.XncfBuilder.Description" xml:space="preserve">
     <value>Génère rapidement la base et des exemples de modules XNCF à étendre dans vos applications</value>
   </data>
-  <data name="Function.XncfBuilder.AddMigration.Name" xml:space="preserve">
-    <value>Commande Add-Migration</value>
+  <data name="Function.XncfBuilder.Preview.Name" xml:space="preserve">
+    <value>Démarrer ou mettre à jour un aperçu XNCF isolé</value>
   </data>
-  <data name="Function.XncfBuilder.AddMigration.Description" xml:space="preserve">
-    <value>Exécute visuellement add-migration pour plusieurs bases ; le traitement peut durer 30 à 60 secondes</value>
+  <data name="Function.XncfBuilder.Preview.Description" xml:space="preserve">
+    <value>Validez et publiez la source XNCF actuelle, puis démarrez un aperçu isolé sans redémarrer le site actuel</value>
   </data>
-  <data name="Function.XncfBuilder.Generate.Name" xml:space="preserve">
-    <value>Générer XNCF</value>
+  <data name="Function.XncfBuilder.PreviewStatus.Name" xml:space="preserve">
+    <value>Voir l'état de l'aperçu XNCF</value>
   </data>
-  <data name="Function.XncfBuilder.Generate.Description" xml:space="preserve">
-    <value>Génère un module XNCF depuis la configuration</value>
+  <data name="Function.XncfBuilder.PreviewStatus.Description" xml:space="preserve">
+    <value>Voir les processus d'aperçu XNCF isolé gérés par ce site</value>
   </data>
-  <data name="Function.XncfBuilder.GenerateEntity.Name" xml:space="preserve">
-    <value>[IA] Générer les entités de base</value>
+  <data name="Function.XncfBuilder.StopPreview.Name" xml:space="preserve">
+    <value>Arrêter un aperçu XNCF isolé</value>
   </data>
-  <data name="Function.XncfBuilder.GenerateEntity.Description" xml:space="preserve">
-    <value>Génère des entités et méthodes conformes au DDD. À utiliser uniquement en développement après sauvegarde.</value>
-  </data>
-  <data name="Function.XncfBuilder.GenerateInterface.Name" xml:space="preserve">
-    <value>Générer les interfaces AppService</value>
-  </data>
-  <data name="Function.XncfBuilder.GenerateInterface.Description" xml:space="preserve">
-    <value>Génère le code d’interface AppService d’un module</value>
-  </data>
-  <data name="Function.XncfBuilder.InitPrompt.Name" xml:space="preserve">
-    <value>Initialiser les prompts</value>
-  </data>
-  <data name="Function.XncfBuilder.InitPrompt.Description" xml:space="preserve">
-    <value>Initialise tous les prompts requis pour la génération de code par IA</value>
+  <data name="Function.XncfBuilder.StopPreview.Description" xml:space="preserve">
+    <value>Arrêter le processus d'aperçu sélectionné et nettoyer son répertoire de publication temporaire</value>
   </data>
   <data name="Common.Yes" xml:space="preserve">
     <value>Oui</value>
@@ -92,6 +80,63 @@
   </data>
   <data name="Parameter.XncfBuilder.InstallSample" xml:space="preserve">
     <value>Installer l’exemple||</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.StartAfterBuild" xml:space="preserve">
+    <value>Lancer un aperçu indépendant après la génération||Le site principal ne redémarrera pas ; l'aperçu utilise un processus distinct et un répertoire de publication temporaire</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.ModuleProjectName" xml:space="preserve">
+    <value>Nom du projet XNCF à valider et prévisualiser||Sans .csproj, par exemple Senparc.Xncf.Sample ; ce n'est pas le nom du site temporaire</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.Port" xml:space="preserve">
+    <value>Port d'aperçu||Saisissez 0 pour attribuer automatiquement un port de bouclage ; un port personnalisé doit être compris entre 1024 et 65535</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.Timeout" xml:space="preserve">
+    <value>Délai de démarrage (secondes)||Durée maximale d'attente pour que le site d'aperçu réussisse le contrôle d'intégrité HTTP</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.Environment" xml:space="preserve">
+    <value>Environnement d'aperçu||Par défaut, XncfPreview force le SQLite local et le cache local du répertoire d'aperçu</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.IncludeOutput" xml:space="preserve">
+    <value>Afficher le journal d'aperçu||Inclure la dernière sortie du processus dans le résultat d'état</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.SessionId" xml:space="preserve">
+    <value>Session d'aperçu||Sélectionnez l'instance d'aperçu XNCF à arrêter</value>
+  </data>
+  <data name="XncfBuilder.Option.Preview.StartAfterBuild" xml:space="preserve">
+    <value>Démarrer immédiatement après la génération</value>
+  </data>
+  <data name="XncfBuilder.Option.Preview.StartAfterBuild.Help" xml:space="preserve">
+    <value>À utiliser lorsqu'aucune autre modification de code n'est nécessaire ; si l'IA doit modifier le module, démarrez ou mettez à jour l'aperçu isolé une fois toutes les écritures terminées</value>
+  </data>
+  <data name="XncfBuilder.Option.Preview.IncludeOutput" xml:space="preserve">
+    <value>Inclure les journaux récents</value>
+  </data>
+  <data name="XncfBuilder.Option.Preview.IncludeOutput.Help" xml:space="preserve">
+    <value>Afficher jusqu'aux 300 dernières lignes de sortie de chaque processus d'aperçu</value>
+  </data>
+  <data name="XncfBuilder.Preview.Running" xml:space="preserve">
+    <value>En cours d'exécution</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stopped" xml:space="preserve">
+    <value>Arrêté</value>
+  </data>
+  <data name="XncfBuilder.Preview.RequestMissing" xml:space="preserve">
+    <value>Échec du démarrage de l'aperçu : aucune option d'aperçu n'a été fournie.</value>
+  </data>
+  <data name="XncfBuilder.Preview.NoSessions" xml:space="preserve">
+    <value>Il n'y a aucune session d'aperçu XNCF isolé.</value>
+  </data>
+  <data name="XncfBuilder.Preview.SessionRequired" xml:space="preserve">
+    <value>Sélectionnez une session d'aperçu à arrêter.</value>
+  </data>
+  <data name="XncfBuilder.Preview.StartSucceeded" xml:space="preserve">
+    <value>L'aperçu XNCF isolé est en cours d'exécution ; le processus Senparc.Web actuel n'a pas été redémarré.</value>
+  </data>
+  <data name="XncfBuilder.Preview.StopSucceeded" xml:space="preserve">
+    <value>L'aperçu XNCF isolé a été arrêté et son répertoire de publication temporaire a été nettoyé.</value>
+  </data>
+  <data name="XncfBuilder.Preview.SessionNotFound" xml:space="preserve">
+    <value>La session d'aperçu est introuvable ; elle s'est peut-être déjà arrêtée.</value>
   </data>
   <data name="XncfBuilder.Option.Solution.Backup" xml:space="preserve">
     <value>Sauvegarder le .sln (recommandé)</value>
@@ -309,4 +354,113 @@
   <data name="XncfBuilder.Plugin.PluralEntityName" xml:space="preserve">
     <value>Pluriel du nom de la nouvelle entité</value>
   </data>
+  <data name="XncfBuilder.Preview.Monitor" xml:space="preserve">
+    <value>Moniteur d'aperçu XNCF</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Queued" xml:space="preserve">
+    <value>En file</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.PreparingSource" xml:space="preserve">
+    <value>Verrouiller l'instantané du code source</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Validating" xml:space="preserve">
+    <value>Valider les références de l'hôte</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Restoring" xml:space="preserve">
+    <value>Restaurer les dépendances</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Building" xml:space="preserve">
+    <value>Compilation isolée</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Verifying" xml:space="preserve">
+    <value>Vérifier les artefacts</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Starting" xml:space="preserve">
+    <value>Démarrer un nouvel aperçu</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.HealthChecking" xml:space="preserve">
+    <value>Contrôle d'intégrité</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Replacing" xml:space="preserve">
+    <value>Remplacement atomique</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Running" xml:space="preserve">
+    <value>En cours d'exécution</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Stopping" xml:space="preserve">
+    <value>Arrêt en cours</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Stopped" xml:space="preserve">
+    <value>Arrêté</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Replaced" xml:space="preserve">
+    <value>Remplacé</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Failed" xml:space="preserve">
+    <value>Échoué</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Cancelled" xml:space="preserve">
+    <value>Annulé</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Interrupted" xml:space="preserve">
+    <value>Interrompu</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.NotCreated" xml:space="preserve">
+    <value>Non créé</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.Starting" xml:space="preserve">
+    <value>Démarrage</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.HealthChecking" xml:space="preserve">
+    <value>Contrôle d'intégrité</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.Healthy" xml:space="preserve">
+    <value>Sain</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.Stopping" xml:space="preserve">
+    <value>Arrêt en cours</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.Stopped" xml:space="preserve">
+    <value>Arrêté</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.Replaced" xml:space="preserve">
+    <value>Remplacé</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.Failed" xml:space="preserve">
+    <value>Échoué</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.Interrupted" xml:space="preserve">
+    <value>Interrompu</value>
+  </data>
+  <data name="Function.XncfBuilder.AddMigration.Name" xml:space="preserve">
+    <value>Commande Add-Migration</value>
+  </data>
+  <data name="Function.XncfBuilder.AddMigration.Description" xml:space="preserve">
+    <value>Exécute visuellement add-migration pour plusieurs bases ; le traitement peut durer 30 à 60 secondes</value>
+  </data>
+  <data name="Function.XncfBuilder.Generate.Name" xml:space="preserve">
+    <value>Générer XNCF</value>
+  </data>
+  <data name="Function.XncfBuilder.Generate.Description" xml:space="preserve">
+    <value>Génère un module XNCF depuis la configuration</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateEntity.Name" xml:space="preserve">
+    <value>[IA] Générer les entités de base</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateEntity.Description" xml:space="preserve">
+    <value>Génère des entités et méthodes conformes au DDD. À utiliser uniquement en développement après sauvegarde.</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateInterface.Name" xml:space="preserve">
+    <value>Générer les interfaces AppService</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateInterface.Description" xml:space="preserve">
+    <value>Génère le code d’interface AppService d’un module</value>
+  </data>
+  <data name="Function.XncfBuilder.InitPrompt.Name" xml:space="preserve">
+    <value>Initialiser les prompts</value>
+  </data>
+  <data name="Function.XncfBuilder.InitPrompt.Description" xml:space="preserve">
+    <value>Initialise tous les prompts requis pour la génération de code par IA</value>
+  </data>
+
 </root>

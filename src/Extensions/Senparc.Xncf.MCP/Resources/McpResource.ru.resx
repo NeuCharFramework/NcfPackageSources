@@ -21,12 +21,6 @@
   <data name="Area.Home" xml:space="preserve">
     <value>Главная</value>
   </data>
-  <data name="Function.MCP.Execute.Name" xml:space="preserve">
-    <value>Выполнить MCP</value>
-  </data>
-  <data name="Function.MCP.Execute.Description" xml:space="preserve">
-    <value>Выполняет MCP; адрес модуля по умолчанию: http://localhost:5080/{Module Name}/sse</value>
-  </data>
   <data name="Parameter.MCP.ServerSelection" xml:space="preserve">
     <value>Сервер MCP||Выберите зарегистрированный сервер или введите пользовательский адрес</value>
   </data>
@@ -162,4 +156,11 @@
   <data name="Area.Extensions" xml:space="preserve">
     <value>Расширения</value>
   </data>
+  <data name="Function.MCP.Execute.Name" xml:space="preserve">
+    <value>Выполнить MCP</value>
+  </data>
+  <data name="Function.MCP.Execute.Description" xml:space="preserve">
+    <value>Выполняет MCP; адрес модуля по умолчанию: http://localhost:5080/{Module Name}/sse</value>
+  </data>
+
 </root>

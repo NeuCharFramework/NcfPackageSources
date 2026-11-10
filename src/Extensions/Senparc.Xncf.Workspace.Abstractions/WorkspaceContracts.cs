@@ -16,6 +16,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.2.0 add streamed large-file Workspace uploads with tenant-aware ownership checks
 
+    修改标识：Senparc - 20261109
+    修改描述：增加工作区用量统计与清空内容契约
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Workspace.Abstractions;
@@ -105,6 +108,16 @@ public sealed record WorkspaceCreateRequest(
     string Name,
     string OwnerType = "User",
     int? AgentTemplateId = null);
+
+/// <summary>
+/// 工作区内容用量。文件数和字节数都不包含根目录上的 .workspace.json 清单，
+/// 也不跟随符号链接。
+/// </summary>
+public sealed record WorkspaceUsageStatistics(
+    int FileCount,
+    int DirectoryCount,
+    long UsedBytes,
+    long QuotaBytes);
 
 public sealed record WorkspaceCommandRequest(
     string Command,
@@ -313,6 +326,18 @@ public interface IWorkspaceStorage
         CancellationToken cancellationToken = default);
 
     Task DeleteAsync(
+        string workspaceId,
+        CancellationToken cancellationToken = default);
+
+    Task<WorkspaceUsageStatistics> GetUsageAsync(
+        string workspaceId,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// 删除工作区里的用户内容，并重建新建时的 input、output、logs、.workspace 目录。
+    /// 保留工作区标识、清单和元数据。
+    /// </summary>
+    Task ClearContentAsync(
         string workspaceId,
         CancellationToken cancellationToken = default);
 }

@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.17.0 enhance Agent Studio, group configuration, and task management interactions
 
+    修改标识：Senparc - 20261106
+    修改描述：保存本机 Worker 的启动配置，密钥仍然不进入数据库
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -48,18 +51,24 @@ public class AIFineTuningWorker : EntityBase<int>
     [MaxLength(500)]
     public string Note { get; private set; }
 
-    public AIFineTuningWorker(string alias, string name, string endpoint, int requestTimeoutSeconds, bool enabled, string note)
+    /// <summary>
+    /// JSON launch profile for a worker started by NCF. Secrets are stored outside the database.
+    /// </summary>
+    [MaxLength(2000)]
+    public string LaunchProfileJson { get; private set; }
+
+    public AIFineTuningWorker(string alias, string name, string endpoint, int requestTimeoutSeconds, bool enabled, string note, string launchProfileJson = null)
     {
-        Apply(alias, name, endpoint, requestTimeoutSeconds, enabled, note);
+        Apply(alias, name, endpoint, requestTimeoutSeconds, enabled, note, launchProfileJson);
     }
 
-    public AIFineTuningWorker Update(string alias, string name, string endpoint, int requestTimeoutSeconds, bool enabled, string note)
+    public AIFineTuningWorker Update(string alias, string name, string endpoint, int requestTimeoutSeconds, bool enabled, string note, string launchProfileJson = null)
     {
-        Apply(alias, name, endpoint, requestTimeoutSeconds, enabled, note);
+        Apply(alias, name, endpoint, requestTimeoutSeconds, enabled, note, launchProfileJson);
         return this;
     }
 
-    private void Apply(string alias, string name, string endpoint, int requestTimeoutSeconds, bool enabled, string note)
+    private void Apply(string alias, string name, string endpoint, int requestTimeoutSeconds, bool enabled, string note, string launchProfileJson)
     {
         Alias = alias;
         Name = name;
@@ -67,5 +76,6 @@ public class AIFineTuningWorker : EntityBase<int>
         RequestTimeoutSeconds = requestTimeoutSeconds;
         Enabled = enabled;
         Note = note;
+        LaunchProfileJson = string.IsNullOrWhiteSpace(launchProfileJson) ? null : launchProfileJson;
     }
 }

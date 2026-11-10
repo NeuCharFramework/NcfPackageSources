@@ -18,35 +18,23 @@
   <data name="Module.XncfBuilder.Description" xml:space="preserve">
     <value>Genera rápidamente bases y ejemplos de módulos XNCF que pueden ampliarse en aplicaciones</value>
   </data>
-  <data name="Function.XncfBuilder.AddMigration.Name" xml:space="preserve">
-    <value>Comando Add-Migration</value>
+  <data name="Function.XncfBuilder.Preview.Name" xml:space="preserve">
+    <value>Iniciar o actualizar una vista previa aislada de XNCF</value>
   </data>
-  <data name="Function.XncfBuilder.AddMigration.Description" xml:space="preserve">
-    <value>Ejecuta add-migration visualmente para varias bases; puede tardar entre 30 y 60 segundos</value>
+  <data name="Function.XncfBuilder.Preview.Description" xml:space="preserve">
+    <value>Valide y publique el código fuente XNCF actual y, a continuación, inicie una vista previa aislada sin reiniciar el sitio actual</value>
   </data>
-  <data name="Function.XncfBuilder.Generate.Name" xml:space="preserve">
-    <value>Generar XNCF</value>
+  <data name="Function.XncfBuilder.PreviewStatus.Name" xml:space="preserve">
+    <value>Ver el estado de la vista previa de XNCF</value>
   </data>
-  <data name="Function.XncfBuilder.Generate.Description" xml:space="preserve">
-    <value>Genera un módulo XNCF desde la configuración</value>
+  <data name="Function.XncfBuilder.PreviewStatus.Description" xml:space="preserve">
+    <value>Ver los procesos de vista previa aislada de XNCF gestionados por este sitio</value>
   </data>
-  <data name="Function.XncfBuilder.GenerateEntity.Name" xml:space="preserve">
-    <value>[IA] Generar entidades de base</value>
+  <data name="Function.XncfBuilder.StopPreview.Name" xml:space="preserve">
+    <value>Detener una vista previa aislada de XNCF</value>
   </data>
-  <data name="Function.XncfBuilder.GenerateEntity.Description" xml:space="preserve">
-    <value>Genera entidades y métodos compatibles con DDD. Úselo solo en desarrollo tras hacer una copia.</value>
-  </data>
-  <data name="Function.XncfBuilder.GenerateInterface.Name" xml:space="preserve">
-    <value>Generar interfaces de AppService</value>
-  </data>
-  <data name="Function.XncfBuilder.GenerateInterface.Description" xml:space="preserve">
-    <value>Genera código de interfaz para el AppService de un módulo</value>
-  </data>
-  <data name="Function.XncfBuilder.InitPrompt.Name" xml:space="preserve">
-    <value>Inicializar prompts</value>
-  </data>
-  <data name="Function.XncfBuilder.InitPrompt.Description" xml:space="preserve">
-    <value>Inicializa todos los prompts necesarios para generar código con IA</value>
+  <data name="Function.XncfBuilder.StopPreview.Description" xml:space="preserve">
+    <value>Detener el proceso de vista previa seleccionado y limpiar su directorio de publicación temporal</value>
   </data>
   <data name="Common.Yes" xml:space="preserve">
     <value>Sí</value>
@@ -92,6 +80,63 @@
   </data>
   <data name="Parameter.XncfBuilder.InstallSample" xml:space="preserve">
     <value>Instalar ejemplo||</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.StartAfterBuild" xml:space="preserve">
+    <value>Iniciar una vista previa independiente tras generar||El sitio principal no se reiniciará; la vista previa usa un proceso independiente y un directorio de publicación temporal</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.ModuleProjectName" xml:space="preserve">
+    <value>Nombre del proyecto XNCF que se va a validar y previsualizar||Sin .csproj, por ejemplo Senparc.Xncf.Sample; no es el nombre del sitio temporal</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.Port" xml:space="preserve">
+    <value>Puerto de vista previa||Escriba 0 para asignar automáticamente un puerto de bucle invertido; un puerto personalizado debe estar entre 1024 y 65535</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.Timeout" xml:space="preserve">
+    <value>Tiempo de espera de inicio (segundos)||Tiempo máximo de espera para que el sitio de vista previa supere la comprobación de estado HTTP</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.Environment" xml:space="preserve">
+    <value>Entorno de vista previa||De forma predeterminada, XncfPreview fuerza el SQLite local y la caché local del directorio de vista previa</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.IncludeOutput" xml:space="preserve">
+    <value>Mostrar registro de vista previa||Incluir la salida reciente del proceso en el resultado de estado</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.SessionId" xml:space="preserve">
+    <value>Sesión de vista previa||Seleccione la instancia de vista previa XNCF que desea detener</value>
+  </data>
+  <data name="XncfBuilder.Option.Preview.StartAfterBuild" xml:space="preserve">
+    <value>Iniciar inmediatamente después de la generación</value>
+  </data>
+  <data name="XncfBuilder.Option.Preview.StartAfterBuild.Help" xml:space="preserve">
+    <value>Úselo cuando no hagan falta más cambios de código; si la IA va a editar el módulo, inicie o actualice la vista previa aislada después de completar todas las escrituras</value>
+  </data>
+  <data name="XncfBuilder.Option.Preview.IncludeOutput" xml:space="preserve">
+    <value>Incluir registros recientes</value>
+  </data>
+  <data name="XncfBuilder.Option.Preview.IncludeOutput.Help" xml:space="preserve">
+    <value>Mostrar hasta las últimas 300 líneas de salida de cada proceso de vista previa</value>
+  </data>
+  <data name="XncfBuilder.Preview.Running" xml:space="preserve">
+    <value>En ejecución</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stopped" xml:space="preserve">
+    <value>Detenido</value>
+  </data>
+  <data name="XncfBuilder.Preview.RequestMissing" xml:space="preserve">
+    <value>Error al iniciar la vista previa: no se proporcionaron opciones de vista previa.</value>
+  </data>
+  <data name="XncfBuilder.Preview.NoSessions" xml:space="preserve">
+    <value>No hay sesiones de vista previa aislada de XNCF.</value>
+  </data>
+  <data name="XncfBuilder.Preview.SessionRequired" xml:space="preserve">
+    <value>Seleccione una sesión de vista previa para detener.</value>
+  </data>
+  <data name="XncfBuilder.Preview.StartSucceeded" xml:space="preserve">
+    <value>La vista previa aislada de XNCF está en ejecución; el proceso Senparc.Web actual no se reinició.</value>
+  </data>
+  <data name="XncfBuilder.Preview.StopSucceeded" xml:space="preserve">
+    <value>La vista previa aislada de XNCF se detuvo y se limpió su directorio de publicación temporal.</value>
+  </data>
+  <data name="XncfBuilder.Preview.SessionNotFound" xml:space="preserve">
+    <value>No se encontró la sesión de vista previa; es posible que ya se haya detenido.</value>
   </data>
   <data name="XncfBuilder.Option.Solution.Backup" xml:space="preserve">
     <value>Respaldar el .sln (recomendado)</value>
@@ -309,4 +354,113 @@
   <data name="XncfBuilder.Plugin.PluralEntityName" xml:space="preserve">
     <value>Plural del nombre de la nueva entidad</value>
   </data>
+  <data name="XncfBuilder.Preview.Monitor" xml:space="preserve">
+    <value>Monitor de vista previa XNCF</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Queued" xml:space="preserve">
+    <value>En cola</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.PreparingSource" xml:space="preserve">
+    <value>Bloquear instantánea del código fuente</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Validating" xml:space="preserve">
+    <value>Validar referencias del host</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Restoring" xml:space="preserve">
+    <value>Restaurar dependencias</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Building" xml:space="preserve">
+    <value>Compilación aislada</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Verifying" xml:space="preserve">
+    <value>Verificar artefactos</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Starting" xml:space="preserve">
+    <value>Iniciar nueva vista previa</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.HealthChecking" xml:space="preserve">
+    <value>Control de estado</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Replacing" xml:space="preserve">
+    <value>Reemplazo atómico</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Running" xml:space="preserve">
+    <value>En ejecución</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Stopping" xml:space="preserve">
+    <value>Deteniendo</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Stopped" xml:space="preserve">
+    <value>Detenido</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Replaced" xml:space="preserve">
+    <value>Reemplazado</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Failed" xml:space="preserve">
+    <value>Fallido</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Cancelled" xml:space="preserve">
+    <value>Cancelado</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Interrupted" xml:space="preserve">
+    <value>Interrumpido</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.NotCreated" xml:space="preserve">
+    <value>No creado</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.Starting" xml:space="preserve">
+    <value>Iniciando</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.HealthChecking" xml:space="preserve">
+    <value>Control de estado</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.Healthy" xml:space="preserve">
+    <value>Saludable</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.Stopping" xml:space="preserve">
+    <value>Deteniendo</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.Stopped" xml:space="preserve">
+    <value>Detenido</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.Replaced" xml:space="preserve">
+    <value>Reemplazado</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.Failed" xml:space="preserve">
+    <value>Fallido</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.Interrupted" xml:space="preserve">
+    <value>Interrumpido</value>
+  </data>
+  <data name="Function.XncfBuilder.AddMigration.Name" xml:space="preserve">
+    <value>Comando Add-Migration</value>
+  </data>
+  <data name="Function.XncfBuilder.AddMigration.Description" xml:space="preserve">
+    <value>Ejecuta add-migration visualmente para varias bases; puede tardar entre 30 y 60 segundos</value>
+  </data>
+  <data name="Function.XncfBuilder.Generate.Name" xml:space="preserve">
+    <value>Generar XNCF</value>
+  </data>
+  <data name="Function.XncfBuilder.Generate.Description" xml:space="preserve">
+    <value>Genera un módulo XNCF desde la configuración</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateEntity.Name" xml:space="preserve">
+    <value>[IA] Generar entidades de base</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateEntity.Description" xml:space="preserve">
+    <value>Genera entidades y métodos compatibles con DDD. Úselo solo en desarrollo tras hacer una copia.</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateInterface.Name" xml:space="preserve">
+    <value>Generar interfaces de AppService</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateInterface.Description" xml:space="preserve">
+    <value>Genera código de interfaz para el AppService de un módulo</value>
+  </data>
+  <data name="Function.XncfBuilder.InitPrompt.Name" xml:space="preserve">
+    <value>Inicializar prompts</value>
+  </data>
+  <data name="Function.XncfBuilder.InitPrompt.Description" xml:space="preserve">
+    <value>Inicializa todos los prompts necesarios para generar código con IA</value>
+  </data>
+
 </root>

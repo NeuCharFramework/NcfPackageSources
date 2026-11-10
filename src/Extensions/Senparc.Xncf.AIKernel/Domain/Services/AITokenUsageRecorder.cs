@@ -15,6 +15,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.17.0 Token 用量异步持久化恢复请求租户上下文
 
+    修改标识：Senparc - 20261110
+    修改描述：主站停止时有限等待用量落库，取消信号不再中断进程退出
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http;
@@ -73,12 +76,28 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         public async Task StopAsync(CancellationToken cancellationToken)
         {
             _records.Writer.TryComplete();
-            if (_workerTask == null)
+            if (_workerTask == null || _workerTask.IsCompleted)
             {
                 return;
             }
 
-            await _workerTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+            // 关闭令牌一旦取消，WaitAsync(token) 会在后台任务尚未完成时立刻抛出，
+            // 宿主会把这次取消当成未处理异常。用量落库不能挡住进程退出。
+            var drainTimeout = TimeSpan.FromSeconds(1);
+            try
+            {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    await _workerTask.WaitAsync(drainTimeout).ConfigureAwait(false);
+                    return;
+                }
+
+                await _workerTask.WaitAsync(drainTimeout, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception ex) when (ex is TimeoutException or OperationCanceledException)
+            {
+                _logger.LogInformation("Token 用量记录尚未全部落库，主站继续退出。");
+            }
         }
 
         public void Record(AITokenUsageRecord record)

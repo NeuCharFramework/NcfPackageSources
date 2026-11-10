@@ -43,6 +43,21 @@
     修改标识：Senparc - 20261103
     修改描述：v0.12.15 完善后台聊天会话管理与排序
 
+    修改标识：Senparc - 20261105
+    修改描述：v0.12.26 后台聊天接入记忆与 Prompt 引用
+
+    修改标识：Senparc - 20261106
+    修改描述：提供会话归档与已归档列表
+
+    修改标识：Senparc - 20261106
+    修改描述：将会话未读提醒写入数据库，供同一账号跨浏览器读取
+
+    修改标识：Senparc - 20261107
+    修改描述：资产侧栏支持脚本预览，以及常见文本的编辑保存
+
+    修改标识：Senparc - 20261110
+    修改描述：工作区列表、会话绑定和名称回填都按当前账号校验所有者
+
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Domain;
@@ -200,11 +215,19 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     throw new NcfExceptionBase("只有超级管理员可以使用 Workspace。");
                 }
 
+                var ownerId = GetCurrentAdminUserInfoId();
+                if (ownerId <= 0)
+                {
+                    throw new NcfExceptionBase("当前管理员身份无效。");
+                }
+
+                var owned = WorkspaceOwnership.SelectOwned(
+                    await _workspaceStorage.ListWorkspacesAsync().ConfigureAwait(false),
+                    ownerId);
+                logger.Append($"Workspace 选项按所有者返回: OwnerId={ownerId}, Count={owned.Count}");
                 return new GetWorkspaceOptionsResponse
                 {
-                    Workspaces = (await _workspaceStorage.ListWorkspacesAsync().ConfigureAwait(false))
-                        .Select(WorkspaceOptionDto.CreateFromDescriptor)
-                        .ToList()
+                    Workspaces = owned.Select(WorkspaceOptionDto.CreateFromDescriptor).ToList()
                 };
             });
         }
@@ -265,19 +288,67 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 var file = await _workspaceStorage.ReadFileBytesAsync(
                     session.WorkspaceId,
                     relativePath,
-                    2 * 1024 * 1024).ConfigureAwait(false);
-                var contentType = ResolveWorkspaceContentType(relativePath);
-                var isText = IsWorkspaceTextContent(contentType, relativePath);
-                return new WorkspaceFilePreviewDto
-                {
-                    Path = relativePath,
-                    ContentType = contentType,
-                    Size = file.Content.LongLength,
-                    IsText = isText,
-                    Content = isText ? Encoding.UTF8.GetString(file.Content) : null,
-                    ContentBase64 = Convert.ToBase64String(file.Content)
-                };
+                    WorkspaceTextFiles.MaxEditableBytes).ConfigureAwait(false);
+                return CreateWorkspaceFilePreview(relativePath, file.Content, file.Metadata.ETag);
             });
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<WorkspaceFilePreviewDto>> SaveWorkspaceFileAsync(
+            [FromBody] SaveWorkspaceFileRequest request)
+        {
+            return await this.GetResponseAsync<AppResponseBase<WorkspaceFilePreviewDto>, WorkspaceFilePreviewDto>(async (response, logger) =>
+            {
+                if (request == null) throw new NcfExceptionBase("保存请求不能为空。");
+                WorkspaceTextEdit edit;
+                try
+                {
+                    edit = WorkspaceTextFiles.PrepareEdit(request.RelativePath, request.Content);
+                }
+                catch (ArgumentException error)
+                {
+                    throw new NcfExceptionBase(error.Message);
+                }
+
+                if (_workspaceStorage == null) throw new NcfExceptionBase("Workspace 模块尚不可用。");
+                var session = await GetWorkspaceSessionAsync(request.SessionId).ConfigureAwait(false);
+                try
+                {
+                    var result = await _workspaceStorage.WriteFileBytesAsync(
+                        session.WorkspaceId,
+                        new WorkspaceWriteFileRequest(
+                            edit.Path,
+                            edit.Content,
+                            Create: false,
+                            Overwrite: true,
+                            ExpectedETag: request.ExpectedEtag ?? string.Empty)).ConfigureAwait(false);
+                    return CreateWorkspaceFilePreview(edit.Path, edit.Content, result.Metadata.ETag);
+                }
+                catch (WorkspaceConflictException)
+                {
+                    throw new NcfExceptionBase("文件已在其他地方被修改，请重新打开后再保存。");
+                }
+                catch (FileNotFoundException)
+                {
+                    throw new NcfExceptionBase("文件不存在或已被删除，无法保存。");
+                }
+            });
+        }
+
+        private static WorkspaceFilePreviewDto CreateWorkspaceFilePreview(string path, byte[] content, string etag)
+        {
+            var contentType = WorkspaceTextFiles.ResolveContentType(path);
+            var isText = WorkspaceTextFiles.IsText(contentType);
+            return new WorkspaceFilePreviewDto
+            {
+                Path = path,
+                ContentType = contentType,
+                Size = content.LongLength,
+                IsText = isText,
+                Content = isText ? Encoding.UTF8.GetString(content) : null,
+                ContentBase64 = Convert.ToBase64String(content),
+                Etag = etag ?? string.Empty
+            };
         }
 
         private async Task<AdminChatSession> GetWorkspaceSessionAsync(int sessionId)
@@ -285,34 +356,6 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             var user = ServiceProvider.GetRequiredService<Microsoft.AspNetCore.Http.IHttpContextAccessor>().HttpContext.User;
             return await ServiceProvider.GetRequiredService<AdminChatWorkspaceAssetService>()
                 .GetSessionAsync(sessionId, user).ConfigureAwait(false);
-        }
-
-        private static string ResolveWorkspaceContentType(string relativePath)
-        {
-            return Path.GetExtension(relativePath).ToLowerInvariant() switch
-            {
-                ".html" or ".htm" => "text/html",
-                ".css" => "text/css",
-                ".js" or ".mjs" => "text/javascript",
-                ".json" or ".map" => "application/json",
-                ".svg" => "image/svg+xml",
-                ".md" => "text/markdown",
-                ".txt" or ".log" or ".xml" => "text/plain",
-                ".png" => "image/png",
-                ".jpg" or ".jpeg" => "image/jpeg",
-                ".gif" => "image/gif",
-                ".webp" => "image/webp",
-                ".ico" => "image/x-icon",
-                ".pdf" => "application/pdf",
-                _ => "application/octet-stream"
-            };
-        }
-
-        private static bool IsWorkspaceTextContent(string contentType, string relativePath)
-        {
-            return contentType.StartsWith("text/", StringComparison.OrdinalIgnoreCase)
-                || contentType is "application/json" or "text/javascript" or "image/svg+xml"
-                || string.IsNullOrEmpty(Path.GetExtension(relativePath));
         }
 
         #region 会话管理
@@ -344,9 +387,17 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                         throw new NcfExceptionBase("只有超级管理员可以使用 Workspace。");
                     }
 
-                    if (_workspaceStorage == null
-                        || await _workspaceStorage.GetAsync(workspaceId).ConfigureAwait(false) == null)
+                    var workspace = _workspaceStorage == null
+                        ? null
+                        : await _workspaceStorage.GetAsync(workspaceId).ConfigureAwait(false);
+                    if (!WorkspaceOwnership.IsOwnedBy(workspace, userId))
                     {
+                        if (workspace != null)
+                        {
+                            logger.Append(
+                                $"拒绝将会话绑定到其他管理员的 Workspace: UserId={userId}, WorkspaceId={workspaceId}, OwnerId={workspace.OwnerId}");
+                        }
+
                         throw new NcfExceptionBase("Workspace 不存在或不可用。");
                     }
                 }
@@ -582,6 +633,112 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
+        /// 将进行中的会话标记为已完成并移出左侧列表。已归档会话保持可打开、可删除。
+        /// </summary>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<StringAppResponse> ArchiveSessionAsync([FromBody] ArchiveSessionRequest request)
+        {
+            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
+            {
+                var userId = GetCurrentAdminUserInfoId();
+                if (userId <= 0)
+                {
+                    throw new NcfExceptionBase(_localizer["AdminChat.UserNotLoggedIn"]);
+                }
+
+                var sessionId = request?.SessionId ?? 0;
+                var success = await _sessionService.ArchiveSessionAsync(sessionId, userId);
+                if (!success)
+                {
+                    throw new NcfExceptionBase(_localizer["AdminChat.SessionNotFoundOrForbidden"]);
+                }
+
+                logger.Append($"归档会话: SessionId={sessionId}, UserId={userId}");
+                await PublishSyncEventAsync(userId, sessionId, "session-archived");
+                return _localizer["AdminChat.ArchiveSessionSuccess"];
+            });
+        }
+
+        /// <summary>
+        /// 将已归档会话还原到进行中的列表。
+        /// </summary>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<StringAppResponse> RestoreSessionAsync([FromBody] ArchiveSessionRequest request)
+        {
+            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
+            {
+                var userId = GetCurrentAdminUserInfoId();
+                if (userId <= 0)
+                {
+                    throw new NcfExceptionBase(_localizer["AdminChat.UserNotLoggedIn"]);
+                }
+
+                var sessionId = request?.SessionId ?? 0;
+                var success = await _sessionService.RestoreSessionAsync(sessionId, userId);
+                if (!success)
+                {
+                    throw new NcfExceptionBase(_localizer["AdminChat.SessionNotFoundOrForbidden"]);
+                }
+
+                logger.Append($"还原会话: SessionId={sessionId}, UserId={userId}");
+                await PublishSyncEventAsync(userId, sessionId, "session-restored");
+                return _localizer["AdminChat.Archive.RestoreSuccess"];
+            });
+        }
+
+        /// <summary>
+        /// 持久化当前用户某个会话的未读提醒。换浏览器后仍可从会话列表读回。
+        /// </summary>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<StringAppResponse> SetSessionUnreadAsync([FromBody] SetSessionUnreadRequest request)
+        {
+            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
+            {
+                var userId = GetCurrentAdminUserInfoId();
+                if (userId <= 0)
+                {
+                    throw new NcfExceptionBase(_localizer["AdminChat.UserNotLoggedIn"]);
+                }
+
+                var sessionId = request?.SessionId ?? 0;
+                var success = await _sessionService.SetSessionUnreadAsync(sessionId, userId, request?.Unread == true);
+                if (!success)
+                {
+                    throw new NcfExceptionBase(_localizer["AdminChat.SessionNotFoundOrForbidden"]);
+                }
+
+                logger.Append($"会话未读状态: SessionId={sessionId}, UserId={userId}, Unread={request?.Unread == true}");
+                return "saved";
+            });
+        }
+
+        /// <summary>
+        /// 获取当前用户已归档的会话，供左侧更多菜单单独查看和删除。
+        /// </summary>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<GetSessionListResponse>> GetArchivedSessionListAsync(int pageIndex = 1, int pageSize = 20)
+        {
+            return await this.GetResponseAsync<AppResponseBase<GetSessionListResponse>, GetSessionListResponse>(async (response, logger) =>
+            {
+                var userId = GetCurrentAdminUserInfoId();
+                if (userId <= 0)
+                {
+                    throw new NcfExceptionBase(_localizer["AdminChat.UserNotLoggedIn"]);
+                }
+
+                var (sessions, totalCount) = await _sessionService.GetUserArchivedSessionsAsync(userId, pageIndex, pageSize);
+                var sessionDtos = sessions.Select(AdminChatSessionDto.CreateFromEntity).ToList();
+                await AttachWorkspaceNamesAsync(sessionDtos);
+
+                return new GetSessionListResponse
+                {
+                    Sessions = sessionDtos,
+                    TotalCount = totalCount
+                };
+            });
+        }
+
+        /// <summary>
         /// 【超级管理员】按用户统计 AdminChat 使用量：仅返回各账号的会话/消息数量与最后活跃时间，不返回任何会话或消息内容。
         /// <para>普通账号仅能访问自己的会话；超级管理员（administrator 角色）通过本接口做用量监控。</para>
         /// </summary>
@@ -653,9 +810,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 return;
             }
 
-            var workspaces = await _workspaceStorage.ListWorkspacesAsync().ConfigureAwait(false);
-            var names = workspaces
-                .Where(workspace => workspace != null && !string.IsNullOrWhiteSpace(workspace.Id))
+            var ownerId = GetCurrentAdminUserInfoId();
+            var names = WorkspaceOwnership.SelectOwned(
+                    await _workspaceStorage.ListWorkspacesAsync().ConfigureAwait(false),
+                    ownerId)
                 .ToDictionary(workspace => workspace.Id, workspace => workspace.Name, StringComparer.OrdinalIgnoreCase);
             foreach (var session in items)
             {
@@ -694,11 +852,12 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 var attachments = await ServiceProvider.GetRequiredService<AdminChatAttachmentService>()
                     .ValidateAsync(session, request.Attachments);
                 var content = string.IsNullOrWhiteSpace(request.Content)
-                    ? AdminChatAttachmentService.AttachmentOnlyMessage : request.Content.Trim();
+                    ? AdminChatAttachmentService.AttachmentOnlyMessage
+                    : request.PromptReferences?.Count > 0 ? request.Content : request.Content.Trim();
                 var userMessage = await _messageService.AddMessageAsync(
                     request.SessionId,
                     ChatMessageRoleType.User,
-                    content, attachments: attachments);
+                    content, attachments: attachments, promptReferences: request.PromptReferences);
 
                 await _sessionService.UpdateLastMessageTimeAsync(request.SessionId);
 
@@ -1545,6 +1704,17 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         public bool InsertAfter { get; set; }
     }
 
+    public class ArchiveSessionRequest
+    {
+        public int SessionId { get; set; }
+    }
+
+    public class SetSessionUnreadRequest
+    {
+        public int SessionId { get; set; }
+        public bool Unread { get; set; }
+    }
+
     public class GetSessionListResponse
     {
         public List<AdminChatSessionDto> Sessions { get; set; }
@@ -1607,6 +1777,15 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         public bool IsText { get; set; }
         public string Content { get; set; }
         public string ContentBase64 { get; set; } = string.Empty;
+        public string Etag { get; set; } = string.Empty;
+    }
+
+    public class SaveWorkspaceFileRequest
+    {
+        public int SessionId { get; set; }
+        public string RelativePath { get; set; } = string.Empty;
+        public string Content { get; set; }
+        public string ExpectedEtag { get; set; } = string.Empty;
     }
 
     /// <summary>

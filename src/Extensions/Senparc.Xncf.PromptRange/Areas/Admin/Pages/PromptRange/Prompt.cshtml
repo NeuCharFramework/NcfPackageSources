@@ -336,9 +336,11 @@
                              @@input="handleEditorInput"
                              @@paste="handlePaste"
                              @@keydown="handleKeyDown"
-                             @@blur="applyHighlight"
-                             @@compositionstart="isComposing = true"
-                             @@compositionend="isComposing = false"
+                             @@keyup="handleEditorKeyUp"
+                             @@blur="handleEditorBlur"
+                             @@compositionstart="handleCompositionStart"
+                             @@compositionupdate="handleCompositionUpdate"
+                             @@compositionend="handleCompositionEnd"
                              :data-placeholder="content ? '' : (isTextToSpeechModelSelected ? '请输入待合成语音的文本' : '请输入Prompt内容')">
                         </div>
                             

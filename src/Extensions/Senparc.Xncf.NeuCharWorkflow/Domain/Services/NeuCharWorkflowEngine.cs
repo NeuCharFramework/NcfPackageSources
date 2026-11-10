@@ -37,6 +37,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.4.4 Workflow 运行协调器与定时宿主服务恢复/按租户传播租户上下文
 
+    修改标识：Senparc - 20261106
+    修改描述：Function 节点在校验和执行前补齐默认值与唯一选项
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -509,7 +512,9 @@ public sealed class NeuCharWorkflowEngine
                     return $"节点“{node.Name ?? reference.Descriptor.Name}”所属模块未安装、未加载或未开启。";
                 }
 
-                var parameterJson = node.Config?["parameters"]?.ToJsonString() ?? reference.DefaultParametersJson;
+                var parameterJson = WorkflowFunctionSchemaBuilder.MergeMissingDefaults(
+                    node.Config?["parameters"]?.ToJsonString() ?? reference.DefaultParametersJson,
+                    reference.Descriptor.Parameters);
                 var validationError = NeuCharWorkflowFunctionService.ValidateRequiredParameters(
                     reference.Descriptor.Parameters,
                     parameterJson);
@@ -1333,6 +1338,7 @@ public sealed class NeuCharWorkflowEngine
             }
             parameterNode = JsonNode.Parse(_parameterProtector.Unprotect(parameterNode.ToJsonString()))
                 ?? new JsonObject();
+            parameterNode = ApplyFunctionParameterDefaults(parameterNode, reference.Descriptor);
             var resolvedParameters = ResolveRuntimeValue(
                 parameterNode,
                 input,
@@ -1512,6 +1518,7 @@ public sealed class NeuCharWorkflowEngine
             }
         }
         parameterNode = JsonNode.Parse(_parameterProtector.Unprotect(parameterNode.ToJsonString())) ?? new JsonObject();
+        parameterNode = ApplyFunctionParameterDefaults(parameterNode, reference.Descriptor);
         var resolvedParameters = ResolveRuntimeValue(parameterNode, input, outputs, functionSelectionInputs) ?? new JsonObject();
         functionSelectionInputs[node.Id] = ExtractFunctionSelectionValues(
             resolvedParameters,
@@ -2557,9 +2564,35 @@ public sealed class NeuCharWorkflowEngine
                 descriptorCache?.TryAdd(cacheKey, descriptor);
             }
         }
-        return descriptor == null
-            ? null
-            : new ResolvedFunctionReference(descriptor, "{}");
+        if (descriptor == null)
+        {
+            return null;
+        }
+
+        var defaultParametersJson = JsonSerializer.Serialize(
+            WorkflowFunctionSchemaBuilder.BuildDefaults(
+                WorkflowFunctionSchemaBuilder.Build(descriptor)));
+        return new ResolvedFunctionReference(descriptor, defaultParametersJson);
+    }
+
+    private static JsonNode ApplyFunctionParameterDefaults(JsonNode parameterNode, NeuCharFunctionDescriptor descriptor)
+    {
+        if (descriptor?.Parameters == null || descriptor.Parameters.Count == 0)
+        {
+            return parameterNode ?? new JsonObject();
+        }
+
+        var merged = WorkflowFunctionSchemaBuilder.MergeMissingDefaults(
+            parameterNode?.ToJsonString() ?? "{}",
+            descriptor.Parameters);
+        try
+        {
+            return JsonNode.Parse(merged) ?? new JsonObject();
+        }
+        catch (JsonException)
+        {
+            return parameterNode ?? new JsonObject();
+        }
     }
 
     private async Task<T> ExecuteInFunctionScopeAsync<T>(

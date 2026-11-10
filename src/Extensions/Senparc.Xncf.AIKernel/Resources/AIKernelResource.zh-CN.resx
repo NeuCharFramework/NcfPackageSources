@@ -333,7 +333,7 @@
     <value>训练服务配置与故障排查</value>
   </data>
   <data name="FineTuning.EndpointHelp" xml:space="preserve">
-    <value>在本页创建 Worker 配置，设置别名、私有端点和请求超时（1–300 秒）。在 NCF 宿主启用 SenparcXncfAIKernel:FineTuning:Enabled，将端点主机加入 AllowedHosts，并通过 WorkerApiKeys:&lt;alias&gt; 配置与 Worker 的 NCF_WORKER_KEY 一致的密钥（至少 32 字符）。旧的 WorkerEndpoint/WorkerApiKey 不用于数据库 Worker 配置。在 Docker 中 localhost 指向容器本身，而非宿主机。本页面不输入或展示凭据。</value>
+    <value>在本页创建 Worker。可由 NCF 启动本机 Python Worker：模型目录、数据目录、端口和项目路径保存在数据库，密钥写入站点 App_Data 下仅当前用户可读的文件。环境变量 FineTuning:WorkerApiKeys:&lt;别名&gt; 仍然优先于密钥文件。本机回环地址无需加入 AllowedHosts；其他主机在保存 Worker 时写入允许列表。页面不显示密钥。Docker 中 localhost 指向容器本身。</value>
   </data>
   <data name="FineTuning.BackendHelp" xml:space="preserve">
     <value>CPU 适合小规模冒烟测试。CUDA 需要兼容的 NVIDIA GPU 和启用 CUDA 的训练服务或容器。MLX 在 macOS Apple Silicon 上原生运行；Linux Docker 容器无法使用 Apple 的 Metal/MLX 后端。请启动原生 MLX 训练服务并配置可访问的地址。可用训练方法以服务报告的能力为准，而非浏览器环境。</value>
@@ -748,7 +748,7 @@
     <value>请使用 all-linear 或逗号分隔的字面模块名，不含空格或正则表达式，最多 512 字符。</value>
   </data>
   <data name="FineTuning.Error.Disabled" xml:space="preserve">
-    <value>本地微调已禁用。请配置 SenparcXncfAIKernel:FineTuning 并启动训练服务。</value>
+    <value>本地微调已关闭。请在微调页面打开“启用本地微调”，或配置 SenparcXncfAIKernel:FineTuning:Enabled。</value>
   </data>
   <data name="FineTuning.Error.Unreachable" xml:space="preserve">
     <value>无法连接微调训练服务。请检查 WorkerEndpoint、服务状态和网络连通性。</value>
@@ -769,7 +769,7 @@
   <data name="FineTuning.AddWorker" xml:space="preserve"><value>添加 Worker</value></data>
   <data name="FineTuning.EditWorker" xml:space="preserve"><value>编辑 Worker</value></data>
   <data name="FineTuning.WorkerConfiguration" xml:space="preserve"><value>Worker 配置</value></data>
-  <data name="FineTuning.WorkerSecretNotice" xml:space="preserve"><value>API 密钥不会存储或编辑于此。请通过密钥提供程序配置 FineTuning:WorkerApiKeys:&lt;别名&gt;，并在 FineTuning:AllowedHosts 中允许端点主机。</value></data>
+  <data name="FineTuning.WorkerSecretNotice" xml:space="preserve"><value>API 密钥不会写入数据库，也不会在页面上显示。可为每个 Worker 生成独立密钥文件，或继续用环境变量 FineTuning:WorkerApiKeys:&lt;别名&gt; 覆盖。本机回环地址无需加入 AllowedHosts。</value></data>
   <data name="FineTuning.WorkerAlias" xml:space="preserve"><value>别名</value></data>
   <data name="FineTuning.WorkerName" xml:space="preserve"><value>名称</value></data>
   <data name="FineTuning.WorkerEndpoint" xml:space="preserve"><value>端点</value></data>
@@ -780,6 +780,7 @@
   <data name="FineTuning.SaveWorker" xml:space="preserve"><value>保存 Worker</value></data>
   <data name="FineTuning.WorkerSaved" xml:space="preserve"><value>Worker 已保存。</value></data>
   <data name="FineTuning.Guide.Title" xml:space="preserve"><value>从这里开始：微调操作教程</value></data>
+  <data name="FineTuning.SectionNav" xml:space="preserve"><value>页面区域</value></data>
   <data name="FineTuning.Guide.Purpose" xml:space="preserve"><value>LoRA/QLoRA 通过训练适配器调整任务行为、风格或输出格式，不替代 KnowledgeBase/RAG，不部署推理，也不会自动注册模型。</value></data>
   <data name="FineTuning.Guide.WorkerTitle" xml:space="preserve"><value>准备并连接 Worker</value></data>
   <data name="FineTuning.Guide.Worker" xml:space="preserve"><value>独立部署 CPU/CUDA 或原生 Apple Silicon Worker，准备经批准的离线模型，配置全局开关、主机白名单和别名对应密钥。在本页添加并选择 Worker 配置，先读取能力检查及不可用原因。</value></data>
@@ -819,7 +820,7 @@
   <data name="FineTuning.ValidationTitle" xml:space="preserve"><value>训练后快速验证</value></data>
   <data name="FineTuning.ValidationRunHelp" xml:space="preserve"><value>对已成功任务运行最多 8 条离线测试提示。有 manifest 时默认使用任务配置；旧任务可手动选择。选择不一致时必须确认，Worker 仍会校验所选运行时。</value></data>
   <data name="FineTuning.ValidationPromptPlaceholder" xml:space="preserve"><value>每行输入一个测试问题，例如：请用小红书风格介绍一款适合通勤的保温杯。</value></data>
-  <data name="FineTuning.ValidationLimit" xml:space="preserve"><value>最多 8 条；输出上限 16–256 tokens</value></data>
+  <data name="FineTuning.ValidationLimit" xml:space="preserve"><value>最多 8 条；输出上限 16–32,768 tokens，并受模型上下文窗口限制</value></data>
   <data name="FineTuning.RunValidation" xml:space="preserve"><value>运行验证</value></data>
   <data name="FineTuning.ValidationFailed" xml:space="preserve"><value>验证失败</value></data>
   <data name="FineTuning.ValidationPrompt" xml:space="preserve"><value>测试提示</value></data>
@@ -889,4 +890,31 @@
   <data name="FineTuning.TokensUnit" xml:space="preserve"><value>tokens</value></data>
   <data name="FineTuning.TokensPerSampleUnit" xml:space="preserve"><value>tokens/样本</value></data>
   <data name="FineTuning.TruncatedSamples" xml:space="preserve"><value>已截断</value></data>
+  <data name="FineTuning.RuntimeEnabled" xml:space="preserve"><value>启用本地微调</value></data>
+  <data name="FineTuning.RuntimeEnabledHelp" xml:space="preserve"><value>打开后 NCF 才会连接 Worker，无需重启站点。关闭会写入站点配置并在下次启动时继续生效。</value></data>
+  <data name="FineTuning.ManagedWorker" xml:space="preserve"><value>由 NCF 启动</value></data>
+  <data name="FineTuning.ManagedWorkerHelp" xml:space="preserve"><value>打开后，NCF 用本机 Python 启动这个 Worker，并在站点停止时结束它。多个 Worker 使用不同端口和各自的数据目录。</value></data>
+  <data name="FineTuning.BindHost" xml:space="preserve"><value>绑定地址</value></data>
+  <data name="FineTuning.WorkerPort" xml:space="preserve"><value>端口</value></data>
+  <data name="FineTuning.ModelsRoot" xml:space="preserve"><value>模型目录</value></data>
+  <data name="FineTuning.ModelsRootHelp" xml:space="preserve"><value>绝对路径，例如 ~/AIModels。多个 Worker 可以共用模型目录。</value></data>
+  <data name="FineTuning.DataRoot" xml:space="preserve"><value>数据目录</value></data>
+  <data name="FineTuning.DataRootHelp" xml:space="preserve"><value>留空则使用站点 App_Data 下该 Worker 的独立目录。不能与模型目录或其他 Worker 的数据目录重叠。</value></data>
+  <data name="FineTuning.PythonPath" xml:space="preserve"><value>Python 路径</value></data>
+  <data name="FineTuning.WorkerProjectPath" xml:space="preserve"><value>Worker 项目路径</value></data>
+  <data name="FineTuning.AutoStart" xml:space="preserve"><value>站点启动后自动运行</value></data>
+  <data name="FineTuning.GenerateSecret" xml:space="preserve"><value>生成密钥文件</value></data>
+  <data name="FineTuning.StartWorker" xml:space="preserve"><value>启动 Worker</value></data>
+  <data name="FineTuning.StopWorker" xml:space="preserve"><value>停止 Worker</value></data>
+  <data name="FineTuning.RefreshWorkerStatus" xml:space="preserve"><value>刷新状态</value></data>
+  <data name="FineTuning.WorkerProcess" xml:space="preserve"><value>进程</value></data>
+  <data name="FineTuning.WorkerLogs" xml:space="preserve"><value>最近日志</value></data>
+  <data name="FineTuning.LaunchCommand" xml:space="preserve"><value>启动命令</value></data>
+  <data name="FineTuning.WorkerStarted" xml:space="preserve"><value>Worker 已启动。</value></data>
+  <data name="FineTuning.WorkerStopped" xml:space="preserve"><value>Worker 已停止。</value></data>
+  <data name="FineTuning.SecretGenerated" xml:space="preserve"><value>密钥文件已生成。页面不会显示密钥内容。</value></data>
+  <data name="FineTuning.SecretAlreadyExists" xml:space="preserve"><value>密钥文件已存在，未覆盖。</value></data>
+  <data name="FineTuning.SaveBeforeLaunch" xml:space="preserve"><value>请先保存，再生成密钥并启动。</value></data>
+  <data name="FineTuning.Optional" xml:space="preserve"><value>可选</value></data>
+
 </root>

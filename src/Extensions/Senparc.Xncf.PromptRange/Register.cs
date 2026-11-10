@@ -19,6 +19,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.20.8 implement AdminChat memory storage and management system
 
+    修改标识：Senparc - 20261105
+    修改描述：v0.20.14 注册 Prompt 引用与记忆提示词相关服务
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -129,6 +132,7 @@ namespace Senparc.Xncf.PromptRange
             services.AddScoped<PromptService>();
             services.AddScoped<PromptRangeService>();
             services.AddScoped<PromptItemService>();
+            services.AddScoped<Senparc.Xncf.PromptRange.Abstractions.References.IPromptReferenceService, PromptReferenceService>();
             services.AddScoped<Senparc.Xncf.PromptRange.Abstractions.Memory.IMemoryPromptProvider, MemoryPromptProvider>();
             services.AddScoped<PromptResultService>();
             services.AddScoped<PromptResultChatService>();
@@ -157,7 +161,6 @@ namespace Senparc.Xncf.PromptRange
         }
     }
 }
-
 
 
 

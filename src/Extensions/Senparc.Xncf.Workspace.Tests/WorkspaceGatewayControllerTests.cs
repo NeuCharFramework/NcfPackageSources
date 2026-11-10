@@ -217,5 +217,13 @@ public sealed class WorkspaceGatewayControllerTests
         public Task DeleteAsync(
             string workspaceId,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<WorkspaceUsageStatistics> GetUsageAsync(
+            string workspaceId,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task ClearContentAsync(
+            string workspaceId,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 }

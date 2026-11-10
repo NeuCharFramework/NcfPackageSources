@@ -164,6 +164,19 @@
   <data name="Dashboard.TokenSpeed" xml:space="preserve"><value>Token output speed</value></data>
   <data name="Dashboard.UserSatisfaction" xml:space="preserve"><value>User satisfaction</value></data>
   <data name="Dashboard.TotalMessages" xml:space="preserve"><value>Total messages</value></data>
+  <data name="Frontend.001" xml:space="preserve"><value>This entity was deleted or does not exist!||This entity was deleted or does not exist!</value></data>
+  <data name="Frontend.002" xml:space="preserve"><value>Error: no NeuChar developer account is configured. Go to the [System management] Module, open Settings, and use [Update NeuChar cloud account information] to bind a NeuChar developer account!||Error: no NeuChar developer account is configured. Go to the [System management] Module, open Settings, and use [Update NeuChar cloud account information] to bind a NeuChar developer account!</value></data>
+  <data name="Frontend.003" xml:space="preserve"><value>AppKey or AppSecret is incorrect! Please set them again!||AppKey or AppSecret is incorrect! Please set them again!</value></data>
+  <data name="Frontend.004" xml:space="preserve"><value>The provided DeveloperId does not match the AppKey configured in the system. Check or update it and try again!||The provided DeveloperId does not match the AppKey configured in the system. Check or update it and try again!</value></data>
+  <data name="Frontend.005" xml:space="preserve"><value>Updated successfully.||Updated successfully.</value></data>
+  <data name="Frontend.006" xml:space="preserve"><value>Entity not found!||Entity not found!</value></data>
+  <data name="Frontend.007" xml:space="preserve"><value>Not supported yet: handling of model {0} in BuildSenparcAiSetting||Not supported yet: handling of model {0} in BuildSenparcAiSetting</value></data>
+  <data name="Frontend.008" xml:space="preserve"><value>Senparc.Xncf.AIKernel does not support the {0} type yet||Senparc.Xncf.AIKernel does not support the {0} type yet</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>SenparcAiSetting cannot be empty||SenparcAiSetting cannot be empty</value></data>
+  <data name="Frontend.010" xml:space="preserve"><value>Model data does not exist. Check whether it is deployed and whether you have permission!||Model data does not exist. Check whether it is deployed and whether you have permission!</value></data>
+  <data name="Frontend.011" xml:space="preserve"><value>Successfully added {0} models and updated {1} model records.||Successfully added {0} models and updated {1} model records.</value></data>
+  <data name="Frontend.012" xml:space="preserve"><value>PromptRange does not support the {0} type yet||PromptRange does not support the {0} type yet</value></data>
+  <data name="Frontend.013" xml:space="preserve"><value>At least one Chat model must be set before automatic scoring (in the AIKernel Module)||At least one Chat model must be set before automatic scoring (in the AIKernel Module)</value></data>
   <data name="Area.AIKernel.TokenMonitor" xml:space="preserve">
     <value>Token Monitor</value>
   </data>
@@ -294,7 +307,7 @@
     <value>Worker setup and troubleshooting</value>
   </data>
   <data name="FineTuning.EndpointHelp" xml:space="preserve">
-    <value>Create a Worker profile here with its alias, private endpoint and timeout (1–300 seconds). On the NCF host, enable SenparcXncfAIKernel:FineTuning:Enabled, allow the endpoint host in AllowedHosts, and set WorkerApiKeys:&lt;alias&gt; to the worker's NCF_WORKER_KEY (at least 32 characters). Legacy WorkerEndpoint/WorkerApiKey settings do not configure database profiles. In Docker, localhost refers to the container, not the host. Credentials are never entered or exposed here.</value>
+    <value>Create a worker here. NCF can start a local Python worker: model directory, data directory, port and project path are stored in the database, and the key is written to a user-only file under the site App_Data directory. FineTuning:WorkerApiKeys:&lt;alias&gt; still overrides that file. Loopback addresses do not need AllowedHosts; other hosts are added when the worker is saved. The page never shows the key. In Docker, localhost refers to the container.</value>
   </data>
   <data name="FineTuning.BackendHelp" xml:space="preserve">
     <value>CPU is suitable for small smoke tests. CUDA needs a compatible NVIDIA GPU and CUDA-enabled worker/container. MLX runs natively on macOS Apple Silicon; a Linux Docker container cannot access Apple's Metal/MLX backend. Start a native MLX worker and configure a reachable endpoint. Available methods depend on the worker's reported capabilities, not on the browser.</value>
@@ -709,7 +722,7 @@
     <value>Use all-linear or comma-separated literal module names without spaces or regex, at most 512 characters.</value>
   </data>
   <data name="FineTuning.Error.Disabled" xml:space="preserve">
-    <value>Local fine-tuning is disabled. Configure SenparcXncfAIKernel:FineTuning and start the worker.</value>
+    <value>Local fine-tuning is off. Turn it on from the fine-tuning page, or set SenparcXncfAIKernel:FineTuning:Enabled.</value>
   </data>
   <data name="FineTuning.Error.Unreachable" xml:space="preserve">
     <value>The fine-tuning worker is unreachable. Check WorkerEndpoint, worker status and network connectivity.</value>
@@ -730,7 +743,7 @@
   <data name="FineTuning.AddWorker" xml:space="preserve"><value>Add worker</value></data>
   <data name="FineTuning.EditWorker" xml:space="preserve"><value>Edit worker</value></data>
   <data name="FineTuning.WorkerConfiguration" xml:space="preserve"><value>Worker configuration</value></data>
-  <data name="FineTuning.WorkerSecretNotice" xml:space="preserve"><value>The API key is intentionally not stored or editable here. Set FineTuning:WorkerApiKeys:&lt;alias&gt; through your secret provider and allow the endpoint host in FineTuning:AllowedHosts.</value></data>
+  <data name="FineTuning.WorkerSecretNotice" xml:space="preserve"><value>API keys are not stored in the database and are never shown on this page. Generate a separate key file for each worker, or keep using FineTuning:WorkerApiKeys:&lt;alias&gt; as an override. Loopback addresses do not need AllowedHosts.</value></data>
   <data name="FineTuning.WorkerAlias" xml:space="preserve"><value>Alias</value></data>
   <data name="FineTuning.WorkerName" xml:space="preserve"><value>Name</value></data>
   <data name="FineTuning.WorkerEndpoint" xml:space="preserve"><value>Endpoint</value></data>
@@ -741,6 +754,7 @@
   <data name="FineTuning.SaveWorker" xml:space="preserve"><value>Save worker</value></data>
   <data name="FineTuning.WorkerSaved" xml:space="preserve"><value>Worker saved.</value></data>
   <data name="FineTuning.Guide.Title" xml:space="preserve"><value>Start here: fine-tuning tutorial</value></data>
+  <data name="FineTuning.SectionNav" xml:space="preserve"><value>Page sections</value></data>
   <data name="FineTuning.Guide.Purpose" xml:space="preserve"><value>LoRA/QLoRA trains an adapter to change task behavior, style or output format. It does not replace KnowledgeBase/RAG, deploy inference, or automatically register a model.</value></data>
   <data name="FineTuning.Guide.WorkerTitle" xml:space="preserve"><value>Prepare and connect a Worker</value></data>
   <data name="FineTuning.Guide.Worker" xml:space="preserve"><value>Deploy the separate CPU/CUDA or native Apple Silicon Worker, provision an approved offline model, and configure the global switch, host allowlist and alias-specific secret. Add/select a Worker profile here, then read capability reasons before proceeding.</value></data>
@@ -780,7 +794,7 @@
   <data name="FineTuning.ValidationTitle" xml:space="preserve"><value>Post-training quick validation</value></data>
   <data name="FineTuning.ValidationRunHelp" xml:space="preserve"><value>Run up to 8 offline test prompts for a successful job. The selection defaults from the task manifest when available; older jobs can be selected manually. A mismatch requires confirmation, and the Worker still verifies the selected runtime.</value></data>
   <data name="FineTuning.ValidationPromptPlaceholder" xml:space="preserve"><value>One test prompt per line, for example: Write a Xiaohongshu-style post about a commuter thermos.</value></data>
-  <data name="FineTuning.ValidationLimit" xml:space="preserve"><value>Up to 8 cases; output limit 16–256 tokens</value></data>
+  <data name="FineTuning.ValidationLimit" xml:space="preserve"><value>Up to 8 cases; output limit 16–32,768 tokens, bounded by the model context window</value></data>
   <data name="FineTuning.RunValidation" xml:space="preserve"><value>Run validation</value></data>
   <data name="FineTuning.ValidationFailed" xml:space="preserve"><value>Validation failed</value></data>
   <data name="FineTuning.ValidationPrompt" xml:space="preserve"><value>Test prompt</value></data>
@@ -850,4 +864,31 @@
   <data name="FineTuning.TokensUnit" xml:space="preserve"><value>tokens</value></data>
   <data name="FineTuning.TokensPerSampleUnit" xml:space="preserve"><value>tokens/sample</value></data>
   <data name="FineTuning.TruncatedSamples" xml:space="preserve"><value>Truncated</value></data>
+  <data name="FineTuning.RuntimeEnabled" xml:space="preserve"><value>Enable local fine-tuning</value></data>
+  <data name="FineTuning.RuntimeEnabledHelp" xml:space="preserve"><value>NCF connects to workers only after this is on. No site restart is required. Turning it off is saved and kept on the next startup.</value></data>
+  <data name="FineTuning.ManagedWorker" xml:space="preserve"><value>Start from NCF</value></data>
+  <data name="FineTuning.ManagedWorkerHelp" xml:space="preserve"><value>NCF starts this worker with local Python and stops it when the site stops. Use a distinct port and data directory for each worker.</value></data>
+  <data name="FineTuning.BindHost" xml:space="preserve"><value>Bind address</value></data>
+  <data name="FineTuning.WorkerPort" xml:space="preserve"><value>Port</value></data>
+  <data name="FineTuning.ModelsRoot" xml:space="preserve"><value>Models directory</value></data>
+  <data name="FineTuning.ModelsRootHelp" xml:space="preserve"><value>Absolute path, for example ~/AIModels. Workers may share the models directory.</value></data>
+  <data name="FineTuning.DataRoot" xml:space="preserve"><value>Data directory</value></data>
+  <data name="FineTuning.DataRootHelp" xml:space="preserve"><value>Leave empty to use a private directory under the site App_Data folder. It must not overlap the models directory or another worker's data directory.</value></data>
+  <data name="FineTuning.PythonPath" xml:space="preserve"><value>Python path</value></data>
+  <data name="FineTuning.WorkerProjectPath" xml:space="preserve"><value>Worker project path</value></data>
+  <data name="FineTuning.AutoStart" xml:space="preserve"><value>Start after the site starts</value></data>
+  <data name="FineTuning.GenerateSecret" xml:space="preserve"><value>Generate key file</value></data>
+  <data name="FineTuning.StartWorker" xml:space="preserve"><value>Start worker</value></data>
+  <data name="FineTuning.StopWorker" xml:space="preserve"><value>Stop worker</value></data>
+  <data name="FineTuning.RefreshWorkerStatus" xml:space="preserve"><value>Refresh status</value></data>
+  <data name="FineTuning.WorkerProcess" xml:space="preserve"><value>Process</value></data>
+  <data name="FineTuning.WorkerLogs" xml:space="preserve"><value>Recent logs</value></data>
+  <data name="FineTuning.LaunchCommand" xml:space="preserve"><value>Start command</value></data>
+  <data name="FineTuning.WorkerStarted" xml:space="preserve"><value>Worker started.</value></data>
+  <data name="FineTuning.WorkerStopped" xml:space="preserve"><value>Worker stopped.</value></data>
+  <data name="FineTuning.SecretGenerated" xml:space="preserve"><value>Key file created. The key is never shown on this page.</value></data>
+  <data name="FineTuning.SecretAlreadyExists" xml:space="preserve"><value>Key file already exists and was left unchanged.</value></data>
+  <data name="FineTuning.SaveBeforeLaunch" xml:space="preserve"><value>Save first, then generate a key and start the worker.</value></data>
+  <data name="FineTuning.Optional" xml:space="preserve"><value>Optional</value></data>
+
 </root>

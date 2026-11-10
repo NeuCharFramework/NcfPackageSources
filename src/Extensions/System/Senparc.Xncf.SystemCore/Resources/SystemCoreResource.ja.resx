@@ -18,4 +18,5 @@
   <data name="Module.SystemCore.Description" xml:space="preserve">
     <value>基盤構造と実行データを管理するコアモジュールです。削除せず、変更前にデータをバックアップしてください。</value>
   </data>
+
 </root>

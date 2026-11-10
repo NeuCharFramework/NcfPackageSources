@@ -164,4 +164,345 @@
   <data name="Dashboard.TokenSpeed" xml:space="preserve"><value>Velocidad de salida de tokens</value></data>
   <data name="Dashboard.UserSatisfaction" xml:space="preserve"><value>Satisfacción del usuario</value></data>
   <data name="Dashboard.TotalMessages" xml:space="preserve"><value>Mensajes totales</value></data>
+  <data name="Frontend.001" xml:space="preserve"><value>Esta entidad se eliminó o no existe!||Esta entidad se eliminó o no existe!</value></data>
+  <data name="Frontend.002" xml:space="preserve"><value>Error: no hay una cuenta de desarrollador NeuChar configurada. Vaya al Módulo [Administración del sistema], a la página de configuración, y use [Actualizar la información de la cuenta en la nube de NeuChar] para vincular una cuenta de desarrollador NeuChar.||Error: no hay una cuenta de desarrollador NeuChar configurada. Vaya al Módulo [Administración del sistema], a la página de configuración, y use [Actualizar la información de la cuenta en la nube de NeuChar] para vincular una cuenta de desarrollador NeuChar.</value></data>
+  <data name="Frontend.003" xml:space="preserve"><value>¡AppKey o AppSecret es incorrecto! ¡Vuelva a configurarlos!||¡AppKey o AppSecret es incorrecto! ¡Vuelva a configurarlos!</value></data>
+  <data name="Frontend.004" xml:space="preserve"><value>El DeveloperId proporcionado no coincide con el AppKey configurado en el sistema. ¡Compruébelo o actualícelo e inténtelo de nuevo!||El DeveloperId proporcionado no coincide con el AppKey configurado en el sistema. ¡Compruébelo o actualícelo e inténtelo de nuevo!</value></data>
+  <data name="Frontend.005" xml:space="preserve"><value>Actualizado correctamente.||Actualizado correctamente.</value></data>
+  <data name="Frontend.006" xml:space="preserve"><value>No se encontró la entidad!||No se encontró la entidad!</value></data>
+  <data name="Frontend.007" xml:space="preserve"><value>Aún no se admite: el tratamiento del modelo {0} en BuildSenparcAiSetting||Aún no se admite: el tratamiento del modelo {0} en BuildSenparcAiSetting</value></data>
+  <data name="Frontend.008" xml:space="preserve"><value>Senparc.Xncf.AIKernel todavía no admite el tipo {0}||Senparc.Xncf.AIKernel todavía no admite el tipo {0}</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>SenparcAiSetting no puede estar vacío||SenparcAiSetting no puede estar vacío</value></data>
+  <data name="Frontend.010" xml:space="preserve"><value>Los datos del modelo no existen. ¡Compruebe si está implementado y si tiene permiso!||Los datos del modelo no existen. ¡Compruebe si está implementado y si tiene permiso!</value></data>
+  <data name="Frontend.011" xml:space="preserve"><value>Se agregaron correctamente {0} modelos y se actualizó la información de {1} modelos.||Se agregaron correctamente {0} modelos y se actualizó la información de {1} modelos.</value></data>
+  <data name="Frontend.012" xml:space="preserve"><value>PromptRange todavía no admite el tipo {0}||PromptRange todavía no admite el tipo {0}</value></data>
+  <data name="Frontend.013" xml:space="preserve"><value>Debe configurar al menos un modelo de tipo Chat para la puntuación automática (en el Módulo AIKernel)||Debe configurar al menos un modelo de tipo Chat para la puntuación automática (en el Módulo AIKernel)</value></data>
+  <data name="Area.AIKernel.TokenMonitor" xml:space="preserve"><value>Monitor de Token</value></data>
+  <data name="TokenMonitor.Title" xml:space="preserve"><value>Monitor de Token</value></data>
+  <data name="TokenMonitor.TotalTokens" xml:space="preserve"><value>Tokens totales</value></data>
+  <data name="TokenMonitor.TotalCalls" xml:space="preserve"><value>Llamadas totales</value></data>
+  <data name="TokenMonitor.SuccessError" xml:space="preserve"><value>Éxito / Error</value></data>
+  <data name="TokenMonitor.AverageDuration" xml:space="preserve"><value>Duración media</value></data>
+  <data name="TokenMonitor.InputTokens" xml:space="preserve"><value>Tokens de entrada</value></data>
+  <data name="TokenMonitor.OutputTokens" xml:space="preserve"><value>Tokens de salida</value></data>
+  <data name="TokenMonitor.RunMonitor" xml:space="preserve"><value>Ejecutar con monitor</value></data>
+  <data name="TokenMonitor.Model" xml:space="preserve"><value>Modelos</value></data>
+  <data name="TokenMonitor.Prompt" xml:space="preserve"><value>Prompt</value></data>
+  <data name="TokenMonitor.Run" xml:space="preserve"><value>Ejecutar</value></data>
+  <data name="TokenMonitor.Elapsed" xml:space="preserve"><value>Transcurrido</value></data>
+  <data name="TokenMonitor.Status" xml:space="preserve"><value>Estado</value></data>
+  <data name="TokenMonitor.OutputPreview" xml:space="preserve"><value>Vista previa de la salida</value></data>
+  <data name="TokenMonitor.Source" xml:space="preserve"><value>Origen</value></data>
+  <data name="TokenMonitor.Success" xml:space="preserve"><value>Correcto</value></data>
+  <data name="TokenMonitor.Failed" xml:space="preserve"><value>Fallido</value></data>
+  <data name="TokenMonitor.Refresh" xml:space="preserve"><value>Actualizar</value></data>
+  <data name="TokenMonitor.SelectModel" xml:space="preserve"><value>Seleccione un modelo</value></data>
+  <data name="TokenMonitor.InputPrompt" xml:space="preserve"><value>Introduzca un prompt</value></data>
+  <data name="TokenMonitor.RunDone" xml:space="preserve"><value>Ejecución finalizada</value></data>
+  <data name="TokenMonitor.Running" xml:space="preserve"><value>En ejecución</value></data>
+  <data name="TokenMonitor.Completed" xml:space="preserve"><value>Completada</value></data>
+  <data name="TokenMonitor.DailyTitle" xml:space="preserve"><value>Uso de Token (últimos 7 días)</value></data>
+  <data name="TokenMonitor.ModelTitle" xml:space="preserve"><value>Uso de Token por Model</value></data>
+  <data name="TokenMonitor.ConfirmDelete" xml:space="preserve"><value>¿Eliminar este registro de uso de token?</value></data>
+  <data name="TokenMonitor.LastUsed" xml:space="preserve"><value>Último uso</value></data>
+  <data name="TokenMonitor.SearchPlaceholder" xml:space="preserve"><value>Buscar por alias del modelo</value></data>
+  <data name="TokenMonitor.Search" xml:space="preserve"><value>Buscar</value></data>
+  <data name="FineTuning.Title" xml:space="preserve"><value>Ajuste fino local del modelo</value></data>
+  <data name="FineTuning.Subtitle" xml:space="preserve"><value>Entrene adaptadores locales, revise la retroalimentación en vivo y descargue artefactos sin cambiar los registros de inferencia.</value></data>
+  <data name="FineTuning.Refresh" xml:space="preserve"><value>Actualizar / reconectar</value></data>
+  <data name="FineTuning.Connected" xml:space="preserve"><value>Conectado</value></data>
+  <data name="FineTuning.Stale" xml:space="preserve"><value>Conexión obsoleta / no disponible</value></data>
+  <data name="FineTuning.LastUpdate" xml:space="preserve"><value>Última actualización correcta</value></data>
+  <data name="FineTuning.WorkerVersion" xml:space="preserve"><value>Versión del worker</value></data>
+  <data name="FineTuning.RunningCount" xml:space="preserve"><value>En ejecución</value></data>
+  <data name="FineTuning.QueuedCount" xml:space="preserve"><value>En cola</value></data>
+  <data name="FineTuning.Unavailable" xml:space="preserve"><value>No disponible</value></data>
+  <data name="FineTuning.ConnectionError" xml:space="preserve"><value>No se puede actualizar el estado del worker; los datos mostrados pueden estar desactualizados.</value></data>
+  <data name="FineTuning.ActionError" xml:space="preserve"><value>Error</value></data>
+  <data name="FineTuning.SetupHelp" xml:space="preserve"><value>Configuración del worker y solución de problemas</value></data>
+  <data name="FineTuning.EndpointHelp" xml:space="preserve"><value>Cree un worker aquí. NCF puede iniciar un worker Python local: el directorio de modelos, el directorio de datos, el puerto y la ruta del proyecto se guardan en la base de datos, y la clave se escribe en un archivo solo para el usuario dentro del directorio App_Data del sitio. FineTuning:WorkerApiKeys:&lt;alias&gt; sigue teniendo prioridad sobre ese archivo. Las direcciones de bucle invertido no necesitan AllowedHosts; los demás hosts se añaden al guardar el worker. La página nunca muestra la clave. En Docker, localhost se refiere al contenedor.</value></data>
+  <data name="FineTuning.BackendHelp" xml:space="preserve"><value>CPU es adecuado para pruebas de humo pequeñas. CUDA necesita una GPU NVIDIA compatible y un worker o contenedor con CUDA habilitado. MLX se ejecuta de forma nativa en macOS Apple Silicon; un contenedor Docker de Linux no puede acceder al backend Metal/MLX de Apple. Inicie un worker MLX nativo y configure un endpoint accesible. Los métodos disponibles dependen de las capacidades que informe el worker, no del navegador.</value></data>
+  <data name="FineTuning.SecurityHelp" xml:space="preserve"><value>Solo los administradores globales de confianza deben gestionar el entrenamiento: los datos del worker no están aislados por inquilino. Mantenga el worker privado, elimine secretos y datos personales innecesarios antes de cargar, y revise las licencias del modelo y de los datos. Los Endpoints se gestionan en los perfiles de Worker; las claves y la lista de permitidos de endpoints permanecen en la configuración de infraestructura.</value></data>
+  <data name="FineTuning.Preflight" xml:space="preserve"><value>Capacidades de comprobación previa</value></data>
+  <data name="FineTuning.AwaitingHealth" xml:space="preserve"><value>Las capacidades del worker aún no están disponibles.</value></data>
+  <data name="FineTuning.Available" xml:space="preserve"><value>Disponible</value></data>
+  <data name="FineTuning.PreflightHelp" xml:space="preserve"><value>La disponibilidad de la capacidad no garantiza memoria suficiente ni un entrenamiento correcto. Compruebe el modelo, el backend y el método seleccionados y empiece con la prueba de humo predeterminada de 10 pasos.</value></data>
+  <data name="FineTuning.Datasets" xml:space="preserve"><value>Conjuntos de datos</value></data>
+  <data name="FineTuning.DatasetHelp" xml:space="preserve"><value>Cargue un .jsonl UTF-8 con 2–1,000,000 filas y como máximo 512 MiB. Cada línea debe contener un objeto admitido; se rechazan las líneas en blanco, los arrays JSON y los campos adicionales. El navegador valida el archivo como flujo; la validación del worker sigue siendo la definitiva. Los conjuntos de datos persisten en FileManager y en el Worker seleccionado.</value></data>
+  <data name="FineTuning.DatasetName" xml:space="preserve"><value>Nombre del conjunto de datos</value></data>
+  <data name="FineTuning.DatasetFile" xml:space="preserve"><value>Archivo JSONL UTF-8 (máximo 512 MiB)</value></data>
+  <data name="FineTuning.ReadingFile" xml:space="preserve"><value>Leyendo y validando el archivo…</value></data>
+  <data name="FineTuning.Upload" xml:space="preserve"><value>Subir conjunto de datos</value></data>
+  <data name="FineTuning.NoDatasets" xml:space="preserve"><value>Aún no hay conjuntos de datos</value></data>
+  <data name="FineTuning.Rows" xml:space="preserve"><value>Filas</value></data>
+  <data name="FineTuning.Created" xml:space="preserve"><value>Creado</value></data>
+  <data name="FineTuning.Sha256" xml:space="preserve"><value>SHA-256</value></data>
+  <data name="FineTuning.CreateJob" xml:space="preserve"><value>Configuración de entrenamiento</value></data>
+  <data name="FineTuning.JobName" xml:space="preserve"><value>Nombre de la tarea</value></data>
+  <data name="FineTuning.Model" xml:space="preserve"><value>Modelo base</value></data>
+  <data name="FineTuning.SelectModel" xml:space="preserve"><value>Seleccionar un modelo del worker</value></data>
+  <data name="FineTuning.TrainingDataset" xml:space="preserve"><value>Conjunto de datos de entrenamiento</value></data>
+  <data name="FineTuning.SelectDataset" xml:space="preserve"><value>Seleccionar un conjunto de datos cargado</value></data>
+  <data name="FineTuning.ValidationDataset" xml:space="preserve"><value>Conjunto de datos de validación reservado (opcional)</value></data>
+  <data name="FineTuning.NoValidation" xml:space="preserve"><value>División automática reservada</value></data>
+  <data name="FineTuning.Backend" xml:space="preserve"><value>Backend</value></data>
+  <data name="FineTuning.Method" xml:space="preserve"><value>Método</value></data>
+  <data name="FineTuning.ValidationHelp" xml:space="preserve"><value>Use un conjunto de datos reservado independiente. Las filas solapadas de entrenamiento y evaluación se rechazan. Si no se selecciona, el worker reserva aproximadamente el 20% de las filas distintas (al menos una), usando la seed.</value></data>
+  <data name="FineTuning.BackendUnavailable" xml:space="preserve"><value>El backend seleccionado no está disponible</value></data>
+  <data name="FineTuning.ModelBackendMismatch" xml:space="preserve"><value>El modelo seleccionado no admite este backend.</value></data>
+  <data name="FineTuning.MethodMismatch" xml:space="preserve"><value>El backend seleccionado no admite este método.</value></data>
+  <data name="FineTuning.Advanced" xml:space="preserve"><value>Parámetros avanzados (revisar antes del entrenamiento)</value></data>
+  <data name="FineTuning.SubmitJob" xml:space="preserve"><value>Crear tarea de entrenamiento</value></data>
+  <data name="FineTuning.Jobs" xml:space="preserve"><value>Trabajos de entrenamiento persistidos</value></data>
+  <data name="FineTuning.JobsHelp" xml:space="preserve"><value>Seleccione un trabajo para reconectar con el estado persistido en el servidor y reproducir los eventos de forma incremental. Los trabajos siguen en el worker cuando se cierra esta página.</value></data>
+  <data name="FineTuning.NoJobs" xml:space="preserve"><value>Aún no hay tareas de entrenamiento</value></data>
+  <data name="FineTuning.State" xml:space="preserve"><value>Estado</value></data>
+  <data name="FineTuning.Actions" xml:space="preserve"><value>Acciones</value></data>
+  <data name="FineTuning.Monitor" xml:space="preserve"><value>Monitor</value></data>
+  <data name="FineTuning.CancelJob" xml:space="preserve"><value>Cancelar tarea</value></data>
+  <data name="FineTuning.Started" xml:space="preserve"><value>Hora de inicio</value></data>
+  <data name="FineTuning.Finished" xml:space="preserve"><value>Hora de finalización</value></data>
+  <data name="FineTuning.JobId" xml:space="preserve"><value>ID de tarea</value></data>
+  <data name="FineTuning.TrainingError" xml:space="preserve"><value>Error de entrenamiento</value></data>
+  <data name="FineTuning.Steps" xml:space="preserve"><value>Paso / pasos totales</value></data>
+  <data name="FineTuning.ProgressUnknown" xml:space="preserve"><value>El progreso no está disponible hasta que el worker informe step y totalSteps; no se usa una estimación basada en el tiempo.</value></data>
+  <data name="FineTuning.CancellingHelp" xml:space="preserve"><value>Se ha solicitado la cancelación. Espere a que el worker confirme la finalización; los recursos pueden seguir en uso.</value></data>
+  <data name="FineTuning.MetricsHelp" xml:space="preserve"><value>Las métricas de recursos y el contexto de entrenamiento los informa el worker. El registro de eventos incluye índices de muestras de la división de entrenamiento, recuentos de batch/token, rangos de longitud de secuencia y recuentos de truncamiento; el texto bruto de las muestras nunca se persiste. Los valores no admitidos, ausentes o no numéricos se muestran como no disponibles, nunca como cero. El uso de CPU puede superar el 100% en varios núcleos.</value></data>
+  <data name="FineTuning.ChartTitle" xml:space="preserve"><value>Pérdida de entrenamiento, pérdida de evaluación y tasa de aprendizaje por paso de entrenamiento real</value></data>
+  <data name="FineTuning.ChartUnavailable" xml:space="preserve"><value>Los gráficos no están disponibles porque ECharts no está cargado. Las métricas y los registros siguen disponibles.</value></data>
+  <data name="FineTuning.AwaitingMetrics" xml:space="preserve"><value>Esperando métricas numéricas de los pasos de entrenamiento…</value></data>
+  <data name="FineTuning.Loss" xml:space="preserve"><value>Pérdida</value></data>
+  <data name="FineTuning.ConfigSnapshot" xml:space="preserve"><value>Instantánea de solo lectura de la configuración de entrenamiento</value></data>
+  <data name="FineTuning.Artifacts" xml:space="preserve"><value>Artefactos de entrenamiento</value></data>
+  <data name="FineTuning.DeploymentHelp" xml:space="preserve"><value>Descargue y revise el adaptador, el tokenizer y la configuración de entrenamiento. Cargue o combine el adaptador con el modelo base exacto mediante un entorno de inferencia compatible y pruébelo antes del despliegue. Los artefactos no se registran automáticamente como modelos de inferencia de AIKernel.</value></data>
+  <data name="FineTuning.NoArtifacts" xml:space="preserve"><value>Aún no hay artefactos notificados</value></data>
+  <data name="FineTuning.Download" xml:space="preserve"><value>Descargar</value></data>
+  <data name="FineTuning.Events" xml:space="preserve"><value>Registro incremental de eventos</value></data>
+  <data name="FineTuning.LogHelp" xml:space="preserve"><value>El navegador solo conserva las últimas 1,000 entradas de registro y 1,000 puntos del gráfico.</value></data>
+  <data name="FineTuning.CommandLog" xml:space="preserve"><value>Registro de comandos y eventos</value></data>
+  <data name="FineTuning.CommandLogHelp" xml:space="preserve"><value>Comandos de entrenamiento, advertencias y errores</value></data>
+  <data name="FineTuning.MetricLog" xml:space="preserve"><value>Flujo de métricas</value></data>
+  <data name="FineTuning.MetricLogHelp" xml:space="preserve"><value>Valores periódicos de GPU, pérdida, paso y tiempo</value></data>
+  <data name="FineTuning.NoMetrics" xml:space="preserve"><value>Aún no se han recibido métricas</value></data>
+  <data name="FineTuning.EventsLayoutHelp" xml:space="preserve"><value>Elija una vista en paralelo o apilada; expanda para obtener un espacio de supervisión más grande.</value></data>
+  <data name="FineTuning.EventsSideBySide" xml:space="preserve"><value>Lado a lado</value></data>
+  <data name="FineTuning.EventsStacked" xml:space="preserve"><value>Apilado</value></data>
+  <data name="FineTuning.ExpandEvents" xml:space="preserve"><value>Expandir</value></data>
+  <data name="FineTuning.RestoreEvents" xml:space="preserve"><value>Restaurar</value></data>
+  <data name="FineTuning.Replaying" xml:space="preserve"><value>Reproduciendo eventos persistidos</value></data>
+  <data name="FineTuning.Live" xml:space="preserve"><value>Cursor de eventos alcanzado</value></data>
+  <data name="FineTuning.Cursor" xml:space="preserve"><value>Cursor</value></data>
+  <data name="FineTuning.FollowLog" xml:space="preserve"><value>Seguir los últimos registros</value></data>
+  <data name="FineTuning.NoEvents" xml:space="preserve"><value>Aún no se han recibido eventos</value></data>
+  <data name="FineTuning.UploadSucceeded" xml:space="preserve"><value>Conjunto de datos cargado y validado por el worker.</value></data>
+  <data name="FineTuning.JobSubmitted" xml:space="preserve"><value>Trabajo de entrenamiento enviado. Supervise su estado real a continuación.</value></data>
+  <data name="FineTuning.CancelConfirm" xml:space="preserve"><value>¿Cancelar este trabajo en cola o en ejecución? Pueden quedar artefactos parciales. La cancelación no se completa hasta que el worker la confirme.</value></data>
+  <data name="FineTuning.Confirm" xml:space="preserve"><value>Confirmar la cancelación</value></data>
+  <data name="FineTuning.KeepTraining" xml:space="preserve"><value>Seguir entrenando</value></data>
+  <data name="FineTuning.CancelRequested" xml:space="preserve"><value>Solicitud de cancelación aceptada; espere el estado final del worker.</value></data>
+  <data name="FineTuning.State.Queued" xml:space="preserve"><value>En cola</value></data>
+  <data name="FineTuning.State.Running" xml:space="preserve"><value>En ejecución</value></data>
+  <data name="FineTuning.State.Cancelling" xml:space="preserve"><value>Cancelando</value></data>
+  <data name="FineTuning.State.Cancelled" xml:space="preserve"><value>Cancelado</value></data>
+  <data name="FineTuning.State.Succeeded" xml:space="preserve"><value>Correcto</value></data>
+  <data name="FineTuning.State.Failed" xml:space="preserve"><value>Fallido</value></data>
+  <data name="FineTuning.State.Interrupted" xml:space="preserve"><value>Interrumpido</value></data>
+  <data name="FineTuning.Metric.trainLoss" xml:space="preserve"><value>Pérdida de entrenamiento</value></data>
+  <data name="FineTuning.Metric.evalLoss" xml:space="preserve"><value>Pérdida de evaluación</value></data>
+  <data name="FineTuning.Metric.learningRate" xml:space="preserve"><value>Tasa de aprendizaje</value></data>
+  <data name="FineTuning.Metric.rss" xml:space="preserve"><value>RSS del proceso</value></data>
+  <data name="FineTuning.Metric.cpu" xml:space="preserve"><value>CPU del proceso</value></data>
+  <data name="FineTuning.Metric.gpuUtil" xml:space="preserve"><value>Uso de la GPU</value></data>
+  <data name="FineTuning.Metric.gpuMemory" xml:space="preserve"><value>Memoria de GPU utilizada</value></data>
+  <data name="FineTuning.Metric.gpuTemperature" xml:space="preserve"><value>Temperatura de la GPU</value></data>
+  <data name="FineTuning.Parameter.epochs" xml:space="preserve"><value>Épocas</value></data>
+  <data name="FineTuning.Tip.epochs" xml:space="preserve"><value>Pasadas completas por el conjunto de datos (1–100). maxSteps tiene prioridad cuando es positivo.</value></data>
+  <data name="FineTuning.Parameter.maxSteps" xml:space="preserve"><value>Pasos máximos</value></data>
+  <data name="FineTuning.Tip.maxSteps" xml:space="preserve"><value>0 usa epochs; un valor positivo limita los pasos del optimizador (hasta 1,000,000). El valor predeterminado 10 es una prueba de humo, no una ejecución de entrenamiento de producción.</value></data>
+  <data name="FineTuning.Parameter.learningRate" xml:space="preserve"><value>Tasa de aprendizaje</value></data>
+  <data name="FineTuning.Tip.learningRate" xml:space="preserve"><value>Tasa de aprendizaje del optimizador (0.00000001–0.1). Predeterminado: 0.0002.</value></data>
+  <data name="FineTuning.Parameter.batchSize" xml:space="preserve"><value>Tamaño de lote</value></data>
+  <data name="FineTuning.Tip.batchSize" xml:space="preserve"><value>Ejemplos por dispositivo y por microlote (1–64). Los valores mayores requieren más memoria.</value></data>
+  <data name="FineTuning.Parameter.gradientAccumulationSteps" xml:space="preserve"><value>Acumulación de gradiente</value></data>
+  <data name="FineTuning.Tip.gradientAccumulationSteps" xml:space="preserve"><value>Microlotes acumulados por paso del optimizador (1–1,024). El tamaño de lote efectivo aumenta sin asignar un único lote grande.</value></data>
+  <data name="FineTuning.Parameter.maxSequenceLength" xml:space="preserve"><value>Longitud máxima de la secuencia</value></data>
+  <data name="FineTuning.Tip.maxSequenceLength" xml:space="preserve"><value>Límite de Token por ejemplo (32–32,768). Los ejemplos largos pueden truncarse; los límites mayores requieren más memoria.</value></data>
+  <data name="FineTuning.Parameter.loraRank" xml:space="preserve"><value>Rango de LoRA</value></data>
+  <data name="FineTuning.Tip.loraRank" xml:space="preserve"><value>Dimensión del adaptador de bajo rango (1–256). Los rangos mayores aumentan los parámetros entrenables y el uso de memoria.</value></data>
+  <data name="FineTuning.Parameter.loraAlpha" xml:space="preserve"><value>Alpha de LoRA</value></data>
+  <data name="FineTuning.Tip.loraAlpha" xml:space="preserve"><value>Factor de escala del Adapter (1–1,024), normalmente considerado en relación con el rango de LoRA.</value></data>
+  <data name="FineTuning.Parameter.loraDropout" xml:space="preserve"><value>Dropout de LoRA</value></data>
+  <data name="FineTuning.Tip.loraDropout" xml:space="preserve"><value>Probabilidad de dropout del Adapter (0–0.9). El worker valida la compatibilidad del backend.</value></data>
+  <data name="FineTuning.Parameter.targetModules" xml:space="preserve"><value>Módulos de destino</value></data>
+  <data name="FineTuning.Tip.targetModules" xml:space="preserve"><value>Use all-linear o nombres de módulos separados por comas que admitan el modelo y el backend seleccionados (máximo 512 caracteres).</value></data>
+  <data name="FineTuning.Parameter.warmupRatio" xml:space="preserve"><value>Proporción de calentamiento</value></data>
+  <data name="FineTuning.Tip.warmupRatio" xml:space="preserve"><value>Fracción de los pasos de entrenamiento usada para el calentamiento de la tasa de aprendizaje (0–0.5).</value></data>
+  <data name="FineTuning.Parameter.weightDecay" xml:space="preserve"><value>Decaimiento de pesos</value></data>
+  <data name="FineTuning.Tip.weightDecay" xml:space="preserve"><value>Coeficiente de decaimiento de pesos del optimizador (0–1). El valor predeterminado 0 desactiva el decaimiento de pesos.</value></data>
+  <data name="FineTuning.Parameter.loggingSteps" xml:space="preserve"><value>Intervalo de registro</value></data>
+  <data name="FineTuning.Tip.loggingSteps" xml:space="preserve"><value>Pasos del optimizador entre registros de métricas de entrenamiento (1–10,000).</value></data>
+  <data name="FineTuning.Parameter.saveSteps" xml:space="preserve"><value>Intervalo de puntos de control</value></data>
+  <data name="FineTuning.Tip.saveSteps" xml:space="preserve"><value>Pasos del optimizador entre guardados de puntos de control (1–100,000). Los artefactos finales los informa por separado el worker.</value></data>
+  <data name="FineTuning.Parameter.evalSteps" xml:space="preserve"><value>Intervalo de evaluación</value></data>
+  <data name="FineTuning.Tip.evalSteps" xml:space="preserve"><value>Pasos del optimizador entre evaluaciones reservadas (1–100,000), incluida la división automática.</value></data>
+  <data name="FineTuning.Parameter.seed" xml:space="preserve"><value>Semilla aleatoria</value></data>
+  <data name="FineTuning.Tip.seed" xml:space="preserve"><value>Semilla (0–2,147,483,647). La repetibilidad sigue dependiendo del backend, el modelo y el hardware.</value></data>
+  <data name="FineTuning.Parameter.maxDurationMinutes" xml:space="preserve"><value>Duración máxima (minutos)</value></data>
+  <data name="FineTuning.Tip.maxDurationMinutes" xml:space="preserve"><value>Límite de ejecución impuesto por el worker (1–10,080 minutos), no una estimación del progreso.</value></data>
+  <data name="FineTuning.Error.InvalidResponse" xml:space="preserve"><value>El servidor devolvió una respuesta de ajuste fino no válida.</value></data>
+  <data name="FineTuning.Error.Authorization" xml:space="preserve"><value>Se requiere autenticación de administrador o se denegó el acceso. Vuelva a iniciar sesión o compruebe los permisos.</value></data>
+  <data name="FineTuning.Error.Request" xml:space="preserve"><value>La solicitud de ajuste fino falló</value></data>
+  <data name="FineTuning.Error.Cursor" xml:space="preserve"><value>El worker devolvió un cursor de eventos no válido. Vuelva a conectarse después de revisar los registros del worker.</value></data>
+  <data name="FineTuning.Error.FileType" xml:space="preserve"><value>Seleccione un archivo .jsonl.</value></data>
+  <data name="FineTuning.Error.FileSize" xml:space="preserve"><value>El archivo JSONL no debe superar 512 MiB.</value></data>
+  <data name="FineTuning.Error.FileRead" xml:space="preserve"><value>No se pudo leer el archivo. Selecciónelo de nuevo.</value></data>
+  <data name="FineTuning.Error.Utf8" xml:space="preserve"><value>El archivo no es UTF-8 válido. Convierta su codificación antes de cargarlo.</value></data>
+  <data name="FineTuning.Error.JsonLine" xml:space="preserve"><value>Objeto JSON no válido en la línea</value></data>
+  <data name="FineTuning.Error.EmptyDataset" xml:space="preserve"><value>El conjunto de datos debe contener al menos dos objetos JSON.</value></data>
+  <data name="FineTuning.Error.NotConnected" xml:space="preserve"><value>Vuelva a conectarse al worker antes de enviar.</value></data>
+  <data name="FineTuning.Error.DatasetRequired" xml:space="preserve"><value>Introduzca un nombre de conjunto de datos y seleccione un archivo JSONL válido.</value></data>
+  <data name="FineTuning.Error.JobRequired" xml:space="preserve"><value>Introduzca un nombre de trabajo y seleccione un modelo y un conjunto de datos de entrenamiento existentes.</value></data>
+  <data name="FineTuning.Error.Heldout" xml:space="preserve"><value>La validación debe usar un conjunto de datos distinto, con contenido diferente al del conjunto de entrenamiento.</value></data>
+  <data name="FineTuning.Error.Parameter" xml:space="preserve"><value>Parámetro avanzado no válido</value></data>
+  <data name="FineTuning.Error.TargetModules" xml:space="preserve"><value>Use all-linear o nombres de módulo literales separados por comas, sin espacios ni regex, como máximo 512 caracteres.</value></data>
+  <data name="FineTuning.Error.Disabled" xml:space="preserve"><value>El ajuste fino local está desactivado. Actívelo en la página de ajuste fino, o establezca SenparcXncfAIKernel:FineTuning:Enabled.</value></data>
+  <data name="FineTuning.Error.Unreachable" xml:space="preserve"><value>El worker de ajuste fino no está accesible. Compruebe WorkerEndpoint, el estado del worker y la conectividad de red.</value></data>
+  <data name="FineTuning.EventsTruncated" xml:space="preserve"><value>Los eventos más antiguos se eliminaron por el límite de retención del worker. Este es un historial parcial; consulte la exportación de métricas para los registros de entrenamiento.</value></data>
+  <data name="FineTuning.Metric.gpuAllocated" xml:space="preserve"><value>Memoria de GPU asignada por el backend</value></data>
+  <data name="FineTuning.Metric.gradNorm" xml:space="preserve"><value>Norma del gradiente</value></data>
+  <data name="FineTuning.Metric.tokensPerSecond" xml:space="preserve"><value>Rendimiento de tokens procesados</value></data>
+  <data name="FineTuning.Metric.elapsedSeconds" xml:space="preserve"><value>Tiempo transcurrido</value></data>
+  <data name="FineTuning.Metric.diskFree" xml:space="preserve"><value>Espacio libre en disco</value></data>
+  <data name="FineTuning.Metric.jobOutput" xml:space="preserve"><value>Tamaño de salida de la tarea</value></data>
+  <data name="FineTuning.Worker" xml:space="preserve"><value>Worker</value></data>
+  <data name="FineTuning.SelectWorker" xml:space="preserve"><value>Seleccionar un worker</value></data>
+  <data name="FineTuning.WorkerRequired" xml:space="preserve"><value>Seleccione un worker configurado antes de gestionar el ajuste fino.</value></data>
+  <data name="FineTuning.WorkerSecretMissing" xml:space="preserve"><value>falta el secreto</value></data>
+  <data name="FineTuning.WorkerDisabled" xml:space="preserve"><value>deshabilitado</value></data>
+  <data name="FineTuning.WorkerRoutingHelp" xml:space="preserve"><value>Los conjuntos de datos, trabajos, registros y artefactos permanecen en el worker seleccionado. Configure su secreto fuera de la base de datos.</value></data>
+  <data name="FineTuning.AddWorker" xml:space="preserve"><value>Añadir worker</value></data>
+  <data name="FineTuning.EditWorker" xml:space="preserve"><value>Editar worker</value></data>
+  <data name="FineTuning.WorkerConfiguration" xml:space="preserve"><value>Configuración de Worker</value></data>
+  <data name="FineTuning.WorkerSecretNotice" xml:space="preserve"><value>Las claves API no se almacenan en la base de datos y nunca se muestran en esta página. Genere un archivo de clave independiente para cada worker, o siga usando FineTuning:WorkerApiKeys:&lt;alias&gt; como anulación. Las direcciones de bucle invertido no necesitan AllowedHosts.</value></data>
+  <data name="FineTuning.WorkerAlias" xml:space="preserve"><value>Alias</value></data>
+  <data name="FineTuning.WorkerName" xml:space="preserve"><value>Nombre</value></data>
+  <data name="FineTuning.WorkerEndpoint" xml:space="preserve"><value>Endpoint</value></data>
+  <data name="FineTuning.RequestTimeout" xml:space="preserve"><value>Tiempo de espera de la solicitud (segundos)</value></data>
+  <data name="FineTuning.Enabled" xml:space="preserve"><value>Habilitado</value></data>
+  <data name="FineTuning.Note" xml:space="preserve"><value>Notas</value></data>
+  <data name="FineTuning.Cancel" xml:space="preserve"><value>Cancelar</value></data>
+  <data name="FineTuning.SaveWorker" xml:space="preserve"><value>Guardar worker</value></data>
+  <data name="FineTuning.WorkerSaved" xml:space="preserve"><value>Worker guardado.</value></data>
+  <data name="FineTuning.Guide.Title" xml:space="preserve"><value>Empiece aquí: tutorial de ajuste fino</value></data>
+  <data name="FineTuning.SectionNav" xml:space="preserve"><value>Secciones de la página</value></data>
+  <data name="FineTuning.Guide.Purpose" xml:space="preserve"><value>LoRA/QLoRA entrena un adaptador para cambiar el comportamiento, el estilo o el formato de salida de la tarea. No sustituye a KnowledgeBase/RAG, no despliega inferencia ni registra un modelo automáticamente.</value></data>
+  <data name="FineTuning.Guide.WorkerTitle" xml:space="preserve"><value>Preparar y conectar un Worker</value></data>
+  <data name="FineTuning.Guide.Worker" xml:space="preserve"><value>Despliegue el Worker independiente de CPU/CUDA o el Worker nativo de Apple Silicon, prepare un modelo sin conexión aprobado y configure el interruptor global, la lista de hosts permitidos y el secreto específico del alias. Añada o seleccione aquí un perfil de Worker y, antes de continuar, lea los motivos de las capacidades.</value></data>
+  <data name="FineTuning.Guide.DataTitle" xml:space="preserve"><value>Preparar conjuntos de datos independientes</value></data>
+  <data name="FineTuning.Guide.Data" xml:space="preserve"><value>Expanda los ejemplos de conjunto de datos de abajo para descargar JSONL. Sustituya las filas de demostración por datos con licencia y depurados, y cargue el entrenamiento y la validación por separado. No entrene con el conjunto de prueba final. Si no hay validación explícita, el Worker reserva aproximadamente el 20% de las filas distintas.</value></data>
+  <data name="FineTuning.Guide.TrainingTitle" xml:space="preserve"><value>Enviar una prueba de humo acotada</value></data>
+  <data name="FineTuning.Guide.Training" xml:space="preserve"><value>Asigne un nombre al trabajo y seleccione su modelo, conjuntos de datos, backend compatible y método LoRA/QLoRA. Empiece con los 10 pasos de optimizador predeterminados; expanda Parámetros avanzados para ver explicaciones y presupuestos de recursos. CPU no admite QLoRA.</value></data>
+  <data name="FineTuning.Guide.MonitorTitle" xml:space="preserve"><value>Inspeccionar el progreso real y recuperar de forma segura</value></data>
+  <data name="FineTuning.Guide.Monitor" xml:space="preserve"><value>Seleccione un trabajo para ver los pasos reales, la pérdida de entrenamiento y validación, los recursos, los registros y la configuración. Actualizar restaura el historial conservado. Una conexión obsoleta no significa que el entrenamiento se detuvo; actualice el estado del trabajo antes de reintentar un envío que agotó el tiempo. La cancelación no es pausa ni reanudación.</value></data>
+  <data name="FineTuning.Guide.PublishTitle" xml:space="preserve"><value>Evaluar antes del despliegue de inferencia</value></data>
+  <data name="FineTuning.Guide.Publish" xml:space="preserve"><value>Descargue la exportación e inspeccione su manifiesto. Succeeded significa que el proceso de entrenamiento terminó, no que la calidad fuera aceptable. Compare la base y el adaptador en tareas no usadas, con los mismos prompts y el mismo contexto RAG, despliegue un entorno de inferencia compatible y luego registre ese endpoint de inferencia en la gestión de modelos.</value></data>
+  <data name="FineTuning.Guide.ChineseDocs" xml:space="preserve"><value>Tutorial en chino</value></data>
+  <data name="FineTuning.Guide.EnglishDocs" xml:space="preserve"><value>Tutorial en inglés</value></data>
+  <data name="FineTuning.Guide.Troubleshooting" xml:space="preserve"><value>Problemas habituales y siguientes acciones</value></data>
+  <data name="FineTuning.Guide.Error.Connection" xml:space="preserve"><value>Deshabilitado / falta el secreto / error de conexión: compruebe el interruptor global Enabled, una clave válida específica del alias, AllowedHosts, el estado habilitado del perfil, el espacio de nombres de red y los registros del Worker. Reinicie NCF después de cambiar variables de entorno y luego actualice.</value></data>
+  <data name="FineTuning.Guide.Error.Dataset" xml:space="preserve"><value>Conjunto de datos rechazado: corrija la línea indicada, la forma de los campos, la codificación UTF-8 y los límites de tamaño o filas. Messages exige la chat template del tokenizer del modelo. Distintos IDs de conjunto de datos no evitan la fuga de datos; las filas de validación solapadas se rechazan.</value></data>
+  <data name="FineTuning.Guide.Error.Memory" xml:space="preserve"><value>Memoria insuficiente / pérdida inestable: revise el error real y las métricas, reduzca el tamaño de lote, la longitud de secuencia o el rank, o elija un backend cuantizado compatible. Cree un nuevo trabajo acotado después de corregir la causa; los sensores no disponibles no deben interpretarse como cero.</value></data>
+  <data name="FineTuning.Guide.Error.Interrupted" xml:space="preserve"><value>Cancelado / interrumpido / fallido: revise los puntos de control y los eventos conservados. Los trabajos activos reiniciados quedan en Interrupted, no como correctos. Esta versión no tiene reanudación automática, eliminación en línea ni despliegue automático. Defina políticas de copia de seguridad y retención antes de producción.</value></data>
+  <data name="FineTuning.Guide.DatasetExample" xml:space="preserve"><value>Ejemplos del conjunto de datos y descarga</value></data>
+  <data name="FineTuning.Guide.DatasetSchema" xml:space="preserve"><value>Cada fila usa solo prompt + completion, o solo messages. El texto no puede estar en blanco, tiene como máximo 65,536 caracteres y no contiene NUL. Messages tiene de 2–128 entradas role/content: system opcional al principio, luego user/assistant alternados y termina en assistant. No hay mensajes tool ni campos adicionales.</value></data>
+  <data name="FineTuning.Guide.SampleNotice" xml:space="preserve"><value>Estas cuatro filas distintas solo demuestran la estructura del archivo, no la calidad del modelo ni que haya datos de entrenamiento suficientes. Messages requiere una chat template de tokenizer aprobada; use prompt/completion cuando no la haya. Descargar no carga ni envía un trabajo.</value></data>
+  <data name="FineTuning.Guide.DownloadSample" xml:space="preserve"><value>Descargar ejemplo JSONL</value></data>
+  <data name="FineTuning.Guide.EffectiveBatch" xml:space="preserve"><value>Lote efectivo aproximado de un solo dispositivo (microbatch × accumulation)</value></data>
+  <data name="FineTuning.Guide.SmokeNotice" xml:space="preserve"><value>Los 10 pasos predeterminados verifican el flujo, no la calidad de producción. Un maxSteps positivo sustituye a epochs; la validación también se ejecuta en el último paso.</value></data>
+  <data name="FineTuning.Error.RowLimit" xml:space="preserve"><value>El conjunto de datos supera 1,000,000 filas.</value></data>
+  <data name="FineTuning.Error.DatasetSchema" xml:space="preserve"><value>Estructura de fila del conjunto de datos no admitida. Consulte los ejemplos de conjunto de datos; línea:</value></data>
+  <data name="FineTuning.Error.WorkerChanged" xml:space="preserve"><value>La selección de Worker cambió. Antes de reintentar, compruebe el estado del trabajo y del conjunto de datos del Worker original; su respuesta no se puede aplicar a este Worker.</value></data>
+  <data name="FineTuning.DatasetHistory" xml:space="preserve"><value>Conjuntos de datos disponibles en esta vista / total almacenados</value></data>
+  <data name="FineTuning.LoadMoreDatasets" xml:space="preserve"><value>Cargar conjuntos de datos más antiguos</value></data>
+  <data name="FineTuning.StoreChanged" xml:space="preserve"><value>La identidad de almacenamiento de este Worker cambió. Se borraron los trabajos, conjuntos de datos y cursores en caché; seleccione recursos del nuevo almacenamiento antes de continuar.</value></data>
+  <data name="FineTuning.WorkerNotReady" xml:space="preserve"><value>El Worker se está deteniendo o no está en buen estado y no puede aceptar nuevos trabajos de entrenamiento. Revise su estado y registros.</value></data>
+  <data name="FineTuning.WorkerVersionMismatch" xml:space="preserve"><value>Esta consola requiere Worker 1.1 o posterior, con paginación del catálogo e identidad de almacenamiento persistente. Actualice el Worker correspondiente antes de enviar trabajos.</value></data>
+  <data name="FineTuning.WorkerDisableHelp" xml:space="preserve"><value>Deshabilitar este perfil bloquea el acceso de administración, no el entrenamiento existente. Cancele primero los trabajos o detenga el Worker según el procedimiento del operador cuando sea necesario finalizar.</value></data>
+  <data name="FineTuning.WorkerSetupTitle" xml:space="preserve"><value>Se requiere configurar el worker</value></data>
+  <data name="FineTuning.WorkerSetupEmpty" xml:space="preserve"><value>Aún no se ha añadido ningún perfil de Worker. Despliegue el Worker de entrenamiento, configure en NCF su secreto correspondiente y el host permitido y, a continuación, use Añadir worker para definir su alias y su endpoint privado. La carga y el entrenamiento estarán disponibles tras una conexión correcta.</value></data>
+  <data name="FineTuning.WorkerSetupExisting" xml:space="preserve"><value>No hay ningún Worker seleccionable. Edite un perfil para habilitarlo y configure un secreto válido específico del alias en NCF; después, actualice. Este es un paso de configuración, no un trabajo de entrenamiento fallido.</value></data>
+  <data name="FineTuning.ValidationTitle" xml:space="preserve"><value>Validación rápida posterior al entrenamiento</value></data>
+  <data name="FineTuning.ValidationRunHelp" xml:space="preserve"><value>Ejecute hasta 8 prompts de prueba sin conexión para un trabajo correcto. La selección toma por defecto el manifiesto de la tarea cuando existe; los trabajos antiguos se pueden elegir manualmente. Una discrepancia exige confirmación, y el Worker sigue verificando el entorno de ejecución seleccionado.</value></data>
+  <data name="FineTuning.ValidationPromptPlaceholder" xml:space="preserve"><value>Un prompt de prueba por línea, por ejemplo: Escribe una publicación al estilo Xiaohongshu sobre un termo para desplazarse.</value></data>
+  <data name="FineTuning.ValidationLimit" xml:space="preserve"><value>Hasta 8 casos; límite de salida 16–32,768 tokens, limitado por la ventana de contexto del modelo</value></data>
+  <data name="FineTuning.RunValidation" xml:space="preserve"><value>Ejecutar validación</value></data>
+  <data name="FineTuning.ValidationFailed" xml:space="preserve"><value>Error de validación</value></data>
+  <data name="FineTuning.ValidationPrompt" xml:space="preserve"><value>Probar prompt</value></data>
+  <data name="FineTuning.ValidationPromptError" xml:space="preserve"><value>Introduzca 1–8 prompts de prueba, uno por línea.</value></data>
+  <data name="FineTuning.ValidationBackend" xml:space="preserve"><value>Backend de validación</value></data>
+  <data name="FineTuning.ValidationMethod" xml:space="preserve"><value>Método de validación</value></data>
+  <data name="FineTuning.BackendCpu" xml:space="preserve"><value>CPU</value></data>
+  <data name="FineTuning.BackendCuda" xml:space="preserve"><value>CUDA</value></data>
+  <data name="FineTuning.BackendMlx" xml:space="preserve"><value>MLX</value></data>
+  <data name="FineTuning.MethodLora" xml:space="preserve"><value>LoRA</value></data>
+  <data name="FineTuning.MethodQlora" xml:space="preserve"><value>QLoRA</value></data>
+  <data name="FineTuning.ValidationMismatchWarning" xml:space="preserve"><value>La selección manual difiere del manifiesto de entrenamiento</value></data>
+  <data name="FineTuning.ValidationMismatchConfirm" xml:space="preserve"><value>El backend o el método seleccionado difiere de la configuración registrada. Continúe solo si el formato del Adapter y el entorno de ejecución son compatibles.</value></data>
+  <data name="FineTuning.PartialArtifactsTitle" xml:space="preserve"><value>Estos son artefactos de entrenamiento parciales</value></data>
+  <data name="FineTuning.PartialArtifactsHelp" xml:space="preserve"><value>El trabajo no se completó correctamente. Estos archivos representan puntos de control guardados antes de un tiempo de espera o una interrupción. Revise en manifest.json los campos status, completedSteps, los detalles del error y la integridad del Adapter; no los despliegue directamente ni los trate como un modelo de entrenamiento completado.</value></data>
+  <data name="FineTuning.ControlPlaneTitle" xml:space="preserve"><value>Base de datos del plano de control y migración heredada</value></data>
+  <data name="FineTuning.ControlPlaneHelp" xml:space="preserve"><value>Sincronice de forma idempotente el historial de este Worker con la base de datos principal de NCF. Los archivos de origen SQLite, datasets y jobs nunca se eliminan; las migraciones fallidas se pueden reintentar.</value></data>
+  <data name="FineTuning.MigrateLegacy" xml:space="preserve"><value>Migrar datos heredados</value></data>
+  <data name="FineTuning.MigrationDatasets" xml:space="preserve"><value>Conjuntos de datos</value></data>
+  <data name="FineTuning.MigrationJobs" xml:space="preserve"><value>Tareas</value></data>
+  <data name="FineTuning.MigrationEvents" xml:space="preserve"><value>Eventos</value></data>
+  <data name="FineTuning.MigrationArtifacts" xml:space="preserve"><value>Artefactos</value></data>
+  <data name="FineTuning.MigrationCompleted" xml:space="preserve"><value>Migración de datos heredados completada</value></data>
+  <data name="FineTuning.DiagnosticsTitle" xml:space="preserve"><value>Diagnóstico del entorno</value></data>
+  <data name="FineTuning.RunDiagnostics" xml:space="preserve"><value>Ejecutar diagnóstico</value></data>
+  <data name="FineTuning.DiagnosticsHelp" xml:space="preserve"><value>Solo comprueba la configuración, el Worker, la disponibilidad del modelo y FileManager; no instala software ni ejecuta comandos arbitrarios.</value></data>
+  <data name="FineTuning.DiagnosticsWorker" xml:space="preserve"><value>Worker</value></data>
+  <data name="FineTuning.DiagnosticsModels" xml:space="preserve"><value>Modelos disponibles</value></data>
+  <data name="FineTuning.DiagnosticsFileManager" xml:space="preserve"><value>FileManager</value></data>
+  <data name="FineTuning.ModelPreparationTitle" xml:space="preserve"><value>Preparación segura del modelo</value></data>
+  <data name="FineTuning.ModelPreparationHelp" xml:space="preserve"><value>La búsqueda solo está disponible a través de un catálogo de proveedores de la lista de permitidos configurado por el operador. Los modelos y las revisiones seleccionados siguen pasando comprobaciones de manifiesto, tamaño, ruta e integridad antes de la descarga; no se ejecutan comandos y los tokens nunca se exponen al navegador.</value></data>
+  <data name="FineTuning.Provider" xml:space="preserve"><value>Provider</value></data>
+  <data name="FineTuning.Revision" xml:space="preserve"><value>Revision</value></data>
+  <data name="FineTuning.TargetDirectory" xml:space="preserve"><value>Directorio de destino</value></data>
+  <data name="FineTuning.CheckModel" xml:space="preserve"><value>Comprobar el modelo</value></data>
+  <data name="FineTuning.DownloadModel" xml:space="preserve"><value>Descargar modelo</value></data>
+  <data name="FineTuning.SearchModels" xml:space="preserve"><value>Buscar modelos</value></data>
+  <data name="FineTuning.ModelSearchPlaceholder" xml:space="preserve"><value>Buscar en el catálogo de proveedores configurado</value></data>
+  <data name="FineTuning.ModelSearchUnavailable" xml:space="preserve"><value>Búsqueda de modelos no disponible</value></data>
+  <data name="FineTuning.ModelSearchEmpty" xml:space="preserve"><value>Ningún modelo de la lista de permitidos coincidió con la búsqueda.</value></data>
+  <data name="FineTuning.Description" xml:space="preserve"><value>Descripción</value></data>
+  <data name="FineTuning.Action" xml:space="preserve"><value>Acciones</value></data>
+  <data name="FineTuning.ModelReady" xml:space="preserve"><value>El modelo está listo</value></data>
+  <data name="FineTuning.ModelIncomplete" xml:space="preserve"><value>Los archivos de Model están incompletos</value></data>
+  <data name="FineTuning.ModelDownloadCompleted" xml:space="preserve"><value>Descarga del modelo completada</value></data>
+  <data name="FineTuning.PauseJob" xml:space="preserve"><value>Pausar tarea</value></data>
+  <data name="FineTuning.ResumeJob" xml:space="preserve"><value>Reanudar tarea</value></data>
+  <data name="FineTuning.DeleteJob" xml:space="preserve"><value>Eliminar tarea</value></data>
+  <data name="FineTuning.DeleteConfirm" xml:space="preserve"><value>¿Eliminar este trabajo, sus puntos de control y los activos exportados? Esta acción no se puede deshacer.</value></data>
+  <data name="FineTuning.DeleteCompleted" xml:space="preserve"><value>El trabajo y sus activos se eliminaron.</value></data>
+  <data name="FineTuning.PauseRequested" xml:space="preserve"><value>Pausa solicitada; el worker guardará un punto de control en el siguiente límite seguro.</value></data>
+  <data name="FineTuning.ResumeRequested" xml:space="preserve"><value>Reanudación solicitada; el trabajo volverá a la cola.</value></data>
+  <data name="FineTuning.RuntimeInvalid" xml:space="preserve"><value>El tiempo máximo de ejecución debe ser un entero de 1 a 10,080 minutos.</value></data>
+  <data name="FineTuning.RuntimeUpdated" xml:space="preserve"><value>Tiempo máximo de ejecución actualizado.</value></data>
+  <data name="FineTuning.AverageStepDuration" xml:space="preserve"><value>Duración media del paso</value></data>
+  <data name="FineTuning.EstimatedFinish" xml:space="preserve"><value>Fin estimado</value></data>
+  <data name="FineTuning.MaxDurationMinutes" xml:space="preserve"><value>Duración máxima (minutos)</value></data>
+  <data name="FineTuning.UpdateRuntime" xml:space="preserve"><value>Actualizar el runtime</value></data>
+  <data name="FineTuning.PausedCount" xml:space="preserve"><value>En pausa</value></data>
+  <data name="FineTuning.State.Pausing" xml:space="preserve"><value>Pausando</value></data>
+  <data name="FineTuning.State.Paused" xml:space="preserve"><value>En pausa</value></data>
+  <data name="FineTuning.State.Resuming" xml:space="preserve"><value>Reanudando</value></data>
+  <data name="FineTuning.Metric.averageStepDuration" xml:space="preserve"><value>Duración media del paso</value></data>
+  <data name="FineTuning.Metric.estimatedRemaining" xml:space="preserve"><value>Restante estimado</value></data>
+  <data name="FineTuning.CurrentSamples" xml:space="preserve"><value>Muestras actuales</value></data>
+  <data name="FineTuning.SamplesUnit" xml:space="preserve"><value>muestras</value></data>
+  <data name="FineTuning.TokensUnit" xml:space="preserve"><value>tokens</value></data>
+  <data name="FineTuning.TokensPerSampleUnit" xml:space="preserve"><value>tokens/muestra</value></data>
+  <data name="FineTuning.TruncatedSamples" xml:space="preserve"><value>Truncado</value></data>
+
 </root>

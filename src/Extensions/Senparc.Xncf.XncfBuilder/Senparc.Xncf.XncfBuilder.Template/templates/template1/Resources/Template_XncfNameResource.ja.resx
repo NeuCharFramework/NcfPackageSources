@@ -102,4 +102,203 @@
   <data name="Function.EventBusRoundTrip.Timeout" xml:space="preserve">
     <value>EventBus ラウンドトリップがタイムアウトしました。ホストの EventBus 登録とこの XNCF アセンブリのスキャンを確認してください。</value>
   </data>
+  <data name="Frontend.001" xml:space="preserve">
+    <value>Colorデータベース管理||Colorデータベース管理</value>
+  </data>
+  <data name="Frontend.002" xml:space="preserve">
+    <value>拡張モジュール||拡張モジュール</value>
+  </data>
+  <data name="Frontend.003" xml:space="preserve">
+    <value>色を追加||色を追加</value>
+  </data>
+  <data name="Frontend.004" xml:space="preserve">
+    <value>更新||更新</value>
+  </data>
+  <data name="Frontend.005" xml:space="preserve">
+    <value>デバッグ情報||デバッグ情報</value>
+  </data>
+  <data name="Frontend.006" xml:space="preserve">
+    <value>デバッグ情報：||デバッグ情報：</value>
+  </data>
+  <data name="Frontend.007" xml:space="preserve">
+    <value>tableDataの長さ：||tableDataの長さ：</value>
+  </data>
+  <data name="Frontend.008" xml:space="preserve">
+    <value>Vueインスタンスは正常：||Vueインスタンスは正常：</value>
+  </data>
+  <data name="Frontend.009" xml:space="preserve">
+    <value>はい||はい</value>
+  </data>
+  <data name="Frontend.010" xml:space="preserve">
+    <value>いいえ||いいえ</value>
+  </data>
+  <data name="Frontend.011" xml:space="preserve">
+    <value>最初の項目:||最初の項目:</value>
+  </data>
+  <data name="Frontend.012" xml:space="preserve">
+    <value>簡易データ表示テスト：||簡易データ表示テスト：</value>
+  </data>
+  <data name="Frontend.013" xml:space="preserve">
+    <value>時刻:||時刻:</value>
+  </data>
+  <data name="Frontend.014" xml:space="preserve">
+    <value>表示するデータがありません！||表示するデータがありません！</value>
+  </data>
+  <data name="Frontend.015" xml:space="preserve">
+    <value>赤の値 (R)||赤の値 (R)</value>
+  </data>
+  <data name="Frontend.016" xml:space="preserve">
+    <value>緑の値 (G)||緑の値 (G)</value>
+  </data>
+  <data name="Frontend.017" xml:space="preserve">
+    <value>青の値 (B)||青の値 (B)</value>
+  </data>
+  <data name="Frontend.018" xml:space="preserve">
+    <value>色のプレビュー||色のプレビュー</value>
+  </data>
+  <data name="Frontend.019" xml:space="preserve">
+    <value>作成||作成</value>
+  </data>
+  <data name="Frontend.020" xml:space="preserve">
+    <value>更新日時||更新日時</value>
+  </data>
+  <data name="Frontend.021" xml:space="preserve">
+    <value>アクション||アクション</value>
+  </data>
+  <data name="Frontend.022" xml:space="preserve">
+    <value>編集||編集</value>
+  </data>
+  <data name="Frontend.023" xml:space="preserve">
+    <value>ランダム||ランダム</value>
+  </data>
+  <data name="Frontend.024" xml:space="preserve">
+    <value>削除||削除</value>
+  </data>
+  <data name="Frontend.025" xml:space="preserve">
+    <value>追加メモ||追加メモ</value>
+  </data>
+  <data name="Frontend.026" xml:space="preserve">
+    <value>色についての補足メモを入力してください...||色についての補足メモを入力してください...</value>
+  </data>
+  <data name="Frontend.027" xml:space="preserve">
+    <value>ランダムカラー||ランダムカラー</value>
+  </data>
+  <data name="Frontend.028" xml:space="preserve">
+    <value>キャンセル||キャンセル</value>
+  </data>
+  <data name="Frontend.029" xml:space="preserve">
+    <value>OK||OK</value>
+  </data>
+  <data name="Frontend.030" xml:space="preserve">
+    <value>色を編集||色を編集</value>
+  </data>
+  <data name="Frontend.031" xml:space="preserve">
+    <value>赤の値を設定||赤の値を設定</value>
+  </data>
+  <data name="Frontend.032" xml:space="preserve">
+    <value>赤の値は0から255の範囲です||赤の値は0から255の範囲です</value>
+  </data>
+  <data name="Frontend.033" xml:space="preserve">
+    <value>緑の値を設定||緑の値を設定</value>
+  </data>
+  <data name="Frontend.034" xml:space="preserve">
+    <value>緑の値は0から255の範囲です||緑の値は0から255の範囲です</value>
+  </data>
+  <data name="Frontend.035" xml:space="preserve">
+    <value>青の値を設定||青の値を設定</value>
+  </data>
+  <data name="Frontend.036" xml:space="preserve">
+    <value>青の値は0から255の範囲です||青の値は0から255の範囲です</value>
+  </data>
+  <data name="Frontend.037" xml:space="preserve">
+    <value>データの読み込みに失敗: {0}||データの読み込みに失敗: {0}</value>
+  </data>
+  <data name="Frontend.038" xml:space="preserve">
+    <value>操作完了||操作完了</value>
+  </data>
+  <data name="Frontend.039" xml:space="preserve">
+    <value>作成に失敗しました||作成に失敗しました</value>
+  </data>
+  <data name="Frontend.040" xml:space="preserve">
+    <value>更新失敗||更新失敗</value>
+  </data>
+  <data name="Frontend.041" xml:space="preserve">
+    <value>この色を完全に削除します。続行しますか?||この色を完全に削除します。続行しますか?</value>
+  </data>
+  <data name="Frontend.042" xml:space="preserve">
+    <value>通知||通知</value>
+  </data>
+  <data name="Frontend.043" xml:space="preserve">
+    <value>確認||確認</value>
+  </data>
+  <data name="Frontend.044" xml:space="preserve">
+    <value>キャンセル||キャンセル</value>
+  </data>
+  <data name="Frontend.045" xml:space="preserve">
+    <value>削除に失敗しました||削除に失敗しました</value>
+  </data>
+  <data name="Frontend.046" xml:space="preserve">
+    <value>削除をキャンセルしました||削除をキャンセルしました</value>
+  </data>
+  <data name="Frontend.047" xml:space="preserve">
+    <value>ランダム化失敗||ランダム化失敗</value>
+  </data>
+  <data name="Frontend.048" xml:space="preserve">
+    <value>データを取得しました||データを取得しました</value>
+  </data>
+  <data name="Frontend.049" xml:space="preserve">
+    <value>データの読み込みに失敗: {0}||データの読み込みに失敗: {0}</value>
+  </data>
+  <data name="Frontend.050" xml:space="preserve">
+    <value>リクエストパラメーターは空にできません||リクエストパラメーターは空にできません</value>
+  </data>
+  <data name="Frontend.051" xml:space="preserve">
+    <value>色を作成しました||色を作成しました</value>
+  </data>
+  <data name="Frontend.052" xml:space="preserve">
+    <value>作成に失敗：{0}||作成に失敗：{0}</value>
+  </data>
+  <data name="Frontend.053" xml:space="preserve">
+    <value>色が存在しません。||色が存在しません。</value>
+  </data>
+  <data name="Frontend.054" xml:space="preserve">
+    <value>色を更新しました||色を更新しました</value>
+  </data>
+  <data name="Frontend.055" xml:space="preserve">
+    <value>更新に失敗しました：{0}||更新に失敗しました：{0}</value>
+  </data>
+  <data name="Frontend.056" xml:space="preserve">
+    <value>色を削除しました||色を削除しました</value>
+  </data>
+  <data name="Frontend.057" xml:space="preserve">
+    <value>削除に失敗：{0}||削除に失敗：{0}</value>
+  </data>
+  <data name="Frontend.058" xml:space="preserve">
+    <value>色をランダム化しました||色をランダム化しました</value>
+  </data>
+  <data name="Frontend.059" xml:space="preserve">
+    <value>ランダム化に失敗：{0}||ランダム化に失敗：{0}</value>
+  </data>
+  <data name="Frontend.060" xml:space="preserve">
+    <value>読み込みに失敗：{0}||読み込みに失敗：{0}</value>
+  </data>
+  <data name="Frontend.061" xml:space="preserve">
+    <value>除数は0にできません！||除数は0にできません！</value>
+  </data>
+  <data name="Frontend.062" xml:space="preserve">
+    <value>不明な演算子：{0}||不明な演算子：{0}</value>
+  </data>
+  <data name="Frontend.063" xml:space="preserve">
+    <value>例外を送出するテスト。引き渡しパラメーター：{0} {1}||例外を送出するテスト。引き渡しパラメーター：{0} {1}</value>
+  </data>
+  <data name="Frontend.064" xml:space="preserve">
+    <value>赤の値は 0 から 255 の範囲にしてください||赤の値は 0 から 255 の範囲にしてください</value>
+  </data>
+  <data name="Frontend.065" xml:space="preserve">
+    <value>緑の値は 0 から 255 の範囲にしてください||緑の値は 0 から 255 の範囲にしてください</value>
+  </data>
+  <data name="Frontend.066" xml:space="preserve">
+    <value>青の値は 0 から 255 の範囲にしてください||青の値は 0 から 255 の範囲にしてください</value>
+  </data>
+
 </root>

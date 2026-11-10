@@ -16,6 +16,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.12.15 add comprehensive unit tests for AdminChatWorkspaceAssetService functionality
 
+    修改标识：Senparc - 20261105
+    修改描述：v0.12.26 持久化消息、Prompt 引用与评分
+
 ----------------------------------------------------------------*/
 using Microsoft.EntityFrameworkCore;
 using Senparc.Areas.Admin.ACL;
@@ -27,6 +30,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto;
+using Microsoft.Extensions.DependencyInjection;
+using Senparc.Xncf.PromptRange.Abstractions.References;
+using Senparc.Ncf.Core.Exceptions;
 
 namespace Senparc.Areas.Admin.Domain.Services
 {
@@ -91,8 +97,17 @@ namespace Senparc.Areas.Admin.Domain.Services
             string modelIdentifier = null,
             int? trajectoryId = null,
             int? trajectorySequence = null,
-            IReadOnlyList<AdminChatAttachment> attachments = null)
+            IReadOnlyList<AdminChatAttachment> attachments = null,
+            IReadOnlyList<PromptReference> promptReferences = null)
         {
+            if (promptReferences?.Count > 0)
+            {
+                if (roleType != ChatMessageRoleType.User)
+                    throw new ArgumentException("Only user messages may declare prompt references.");
+                var references = _serviceProvider.GetService<IPromptReferenceService>()
+                    ?? throw new InvalidOperationException("PromptRange is unavailable. Remove prompt references to send plain text.");
+                await references.ValidateAsync(content, promptReferences);
+            }
             var sequence = await GetNextSequenceAsync(sessionId);
             var message = new AdminChatMessage(
                 sessionId,
@@ -103,6 +118,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                 trajectoryId,
                 trajectorySequence);
             message.SetAttachments(attachments);
+            message.SetPromptReferences(promptReferences);
             await base.SaveObjectAsync(message);
             return message;
         }
@@ -118,6 +134,27 @@ namespace Senparc.Areas.Admin.Domain.Services
             message.SetTrajectory(trajectoryId, trajectorySequence);
             await base.SaveObjectAsync(message);
             return true;
+        }
+
+        public async Task<PromptReferenceInfo> ScorePromptReferenceWithAIAsync(int userId, int messageId, int promptItemId)
+        {
+            if (userId <= 0) throw new NcfExceptionBase("Sign in to score a prompt.");
+            var message = await GetObjectAsync(item => item.Id == messageId)
+                ?? throw new NcfExceptionBase("Message not found.");
+            var session = await _serviceProvider.GetRequiredService<AdminChatSessionService>()
+                .GetSessionByIdAsync(message.SessionId, userId);
+            if (session == null || message.RoleType != ChatMessageRoleType.User ||
+                !message.GetPromptReferences().Any(reference => reference.PromptItemId == promptItemId))
+                throw new NcfExceptionBase("Message or prompt reference is not accessible.");
+            var following = await GetObjectListAsync(1, 1,
+                item => item.SessionId == message.SessionId && item.Sequence > message.Sequence,
+                item => item.Sequence, Ncf.Core.Enums.OrderingType.Ascending);
+            var result = following.FirstOrDefault();
+            if (result?.RoleType != ChatMessageRoleType.Assistant || string.IsNullOrWhiteSpace(result.Content))
+                throw new NcfExceptionBase("This prompt reference has no completed reply to score.");
+            var provider = _serviceProvider.GetService<IPromptReferenceService>()
+                ?? throw new NcfExceptionBase("PromptRange is unavailable.");
+            return await provider.ScoreWithAIAsync(promptItemId, message.Content, result.Content);
         }
 
         /// <summary>

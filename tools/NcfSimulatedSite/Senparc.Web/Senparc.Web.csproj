@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
-		<Version>0.39.6</Version>
+		<Version>0.39.7</Version>
 		<PackageReleaseNotes>
 			[2026-07-01] v0.21.5 Dependency update from Senparc.Xncf.AgentsManager to 0.11.0-preview2
 			[2026-07-02] v0.21.5 支持流式输出并优化交互体验，升级 Senparc.AI.AgentKernel 并完成兼容性适配
@@ -73,7 +73,42 @@
 			5、Dependency update from Senparc.Ncf.Database.SqlServer to 0.20.11
 			6、Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.11
 			[2026-11-03] Receive renamed WorkspaceAgent runtime files transitively for build and publish without hard-coded output paths.
-</PackageReleaseNotes>
+			[2026-11-05] v0.39.7 Merged Developer-MAF-V3 latest code into FineTuning line (merge without conflicts)
+			1、AdminChat bilingual documentation help and event layout management
+			2、WorkspaceAgent project rename with Docker support
+			3、Added Senparc.Xncf.FileManager.Abstractions project; enhanced NuGet packaging and validation process
+			4、FineTuning line kept: CUDA device/dtype validation for model loading
+			5、补齐并校正各语言资源条目，使站点共享文案与中文基准保持一致
+			6、Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.12
+			7、Dependency update from Senparc.Ncf.Database.SqlServer to 0.20.12
+			8、Dependency update from Senparc.Ncf.Database.MySql to 0.20.12
+			9、Dependency update from Senparc.Xncf.AgentsManager to 0.19.2
+			10、Dependency update from Senparc.Xncf.AIKernel to 0.17.2
+			11、Dependency update from Senparc.Xncf.DatabaseToolkit to 0.27.11
+			12、Dependency update from Senparc.Xncf.DynamicData to 0.7.10
+			13、Dependency update from Senparc.Xncf.DesktopBridge to 0.4.10
+			14、Dependency update from Senparc.Xncf.FileManager to 0.8.3
+			15、Dependency update from Senparc.Xncf.KnowledgeBase to 0.8.2
+			16、Dependency update from Senparc.Xncf.MCP to 0.5.12
+			17、Dependency update from Senparc.Xncf.NeuCharWorkflow to 0.4.5
+			18、Dependency update from Senparc.Xncf.FirmwareUpdate to 0.4.9
+			19、Dependency update from Senparc.Xncf.PromptRange to 0.20.14
+			20、Dependency update from Senparc.Xncf.Sandbox to 0.4.2
+			21、Dependency update from Senparc.Xncf.Swagger to 0.20.10
+			22、Dependency update from Senparc.Xncf.Terminal to 0.22.12
+			23、Dependency update from Senparc.Xncf.WeixinManager to 0.24.18
+			24、Dependency update from Senparc.Xncf.XncfBuilder to 0.41.8
+			25、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
+			26、Dependency update from Senparc.Xncf.Menu to 0.14.12
+			27、Dependency update from Senparc.Xncf.SystemCore to 0.14.12
+			28、Dependency update from Senparc.Xncf.SystemManager to 0.15.12
+			29、Dependency update from Senparc.Xncf.SystemPermission to 0.15.12
+			30、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.12
+			31、Dependency update from Senparc.Areas.Admin to 0.12.26
+			32、Dependency update from Senparc.Xncf.Accounts to 0.3.12
+			33、Dependency update from Senparc.Xncf.Installer to 0.5.13
+			34、Dependency update from Template_OrgName.Xncf.Template_XncfName to 1.1.14
+		</PackageReleaseNotes>
 		<AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
 		<TypeScriptToolsVersion>4.1</TypeScriptToolsVersion>
 		<UserSecretsId>d2144151-af7a-4d50-896d-4a306e594f7b</UserSecretsId>

@@ -12,6 +12,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Module.Sandbox.MenuName" xml:space="preserve">
+    <value>Bac à sable</value>
+  </data>
+  <data name="Module.Sandbox.Description" xml:space="preserve">
+    <value>Orchestration de bacs à sable NCF avec Docker/Wasm pour créer et détruire rapidement des environnements de laboratoire</value>
+  </data>
+  <data name="Area.Menu.Home" xml:space="preserve">
+    <value>Panneau du bac à sable</value>
+  </data>
+  <data name="Area.Menu.Setup" xml:space="preserve">
+    <value>Préparation de l'environnement</value>
+  </data>
   <data name="Area.Home" xml:space="preserve">
     <value>Accueil</value>
   </data>
@@ -90,4 +102,5 @@
   <data name="Page.Random" xml:space="preserve">
     <value>Aléatoire</value>
   </data>
+
 </root>

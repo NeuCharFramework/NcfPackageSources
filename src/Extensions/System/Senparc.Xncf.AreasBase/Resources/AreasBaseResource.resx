@@ -18,4 +18,5 @@
   <data name="Module.AreasBase.Description" xml:space="preserve">
     <value>为 Razor Pages 等页面提供基础运行能力</value>
   </data>
+
 </root>

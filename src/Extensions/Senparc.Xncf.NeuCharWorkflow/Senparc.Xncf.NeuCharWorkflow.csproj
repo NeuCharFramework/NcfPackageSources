@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.4.4</Version>
+    <Version>0.4.5</Version>
     <PackageReleaseNotes>
       [2026-08-13] v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
       1、支持版本与自动保存、Webhook 触发、并行节点和执行回放
@@ -46,7 +46,15 @@
       5、完善工作流函数 Schema、文件参数和交互页面
       6、Dependency update from Senparc.Xncf.AgentsManager.Abstractions to 0.3.1
       7、Dependency update from Senparc.Xncf.NeuCharWorkflow.Abstractions to 0.3.1
-</PackageReleaseNotes>
+      [2026-11-05] v0.4.5 同步直接依赖项目版本
+      1、Dependency update from Senparc.Ncf.AreaBase to 0.23.10
+      2、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.14
+      3、Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
+      4、Dependency update from Senparc.Ncf.XncfBase to 0.28.2
+      5、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
+      6、Dependency update from Senparc.Xncf.SystemCore to 0.14.12
+      7、Dependency update from Senparc.Xncf.SystemManager to 0.15.12
+    </PackageReleaseNotes>
     <AssemblyName>Senparc.Xncf.NeuCharWorkflow</AssemblyName>
     <RootNamespace>Senparc.Xncf.NeuCharWorkflow</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>

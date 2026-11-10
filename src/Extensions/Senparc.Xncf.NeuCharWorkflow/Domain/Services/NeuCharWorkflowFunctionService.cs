@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260822
     修改描述：v0.2.0 增强工作流函数调用、任务控制与回放管理
 
+    修改标识：Senparc - 20261106
+    修改描述：执行前补齐 Function 已声明的默认值和唯一选项
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET.Helpers;
@@ -245,6 +248,7 @@ public sealed class NeuCharWorkflowFunctionService
 
         var parameterInfos = await FunctionHelper.GetFunctionParameterInfoAsync(_serviceProvider, bag, true)
             .ConfigureAwait(false);
+        parametersJson = WorkflowFunctionSchemaBuilder.MergeMissingDefaults(parametersJson, parameterInfos);
         var validationError = ValidateRequiredParameters(parameterInfos, parametersJson);
         if (validationError != null)
         {

@@ -5,9 +5,15 @@ var app = new Vue({
         return {
             workers: [],
             workerAlias: new URL(window.location.href).searchParams.get("worker") || "",
-            workerEditor: { id: 0, alias: "", name: "", endpoint: "", requestTimeoutSeconds: 30, enabled: true, note: "" },
+            workerEditor: { id: 0, alias: "", name: "", endpoint: "http://127.0.0.1:8091/", requestTimeoutSeconds: 30, enabled: true, note: "", managed: false, bindHost: "127.0.0.1", port: 8091, modelsRoot: "", dataRoot: "", pythonPath: "", workerProjectPath: "", autoStart: false },
             workerEditorVisible: false,
             workerSaveBusy: false,
+            fineTuningEnabled: false,
+            fineTuningRuntimeReady: false,
+            fineTuningRuntimeBusy: false,
+            fineTuningRuntime: { enabled: false, secretDirectory: "", settingsPath: "", allowedHosts: [], discoveredWorkerProject: "", defaultDataRoot: "" },
+            workerProcess: null,
+            workerProcessBusy: false,
             migrationBusy: false,
             migrationResult: null,
             diagnosticsBusy: false,
@@ -36,7 +42,7 @@ var app = new Vue({
             events: [],
             validation: { status: "Idle", startedUtc: null, finishedUtc: null, completed: 0, total: 0, results: [], error: null, recordedBackend: null, recordedMethod: null },
             validationPrompts: "",
-            validationMaxTokens: 128,
+            validationMaxTokens: 2048,
             validationBackend: "",
             validationMethod: "",
             validationBusy: false,
@@ -73,6 +79,22 @@ var app = new Vue({
             datasetFile: null,
             helpOpen: ["workflow"],
             workflowSteps: ["Worker", "Data", "Training", "Monitor", "Publish"],
+            pageSections: [
+                { id: "ft-worker", step: "Worker", labelKey: "Worker" },
+                { id: "ft-control-plane", step: "Worker", labelKey: "ControlPlaneTitle" },
+                { id: "ft-diagnostics", step: "Worker", labelKey: "DiagnosticsTitle" },
+                { id: "ft-model-prep", step: "Worker", labelKey: "ModelPreparationTitle" },
+                { id: "ft-preflight", step: "Worker", labelKey: "Preflight" },
+                { id: "ft-datasets", step: "Data", labelKey: "Datasets" },
+                { id: "ft-training", step: "Training", labelKey: "CreateJob" },
+                { id: "ft-jobs", step: "Monitor", labelKey: "Jobs" },
+                { id: "ft-monitor", step: "Monitor", labelKey: "Monitor" },
+                { id: "ft-publish", step: "Publish", labelKey: "Artifacts" },
+                { id: "ft-events", step: "Monitor", labelKey: "Events" }
+            ],
+            locatedStep: "",
+            locatedSection: "",
+            workflowStuck: false,
             datasetExample: "prompt",
             datasetExamples: {
                 prompt: [
@@ -212,6 +234,8 @@ var app = new Vue({
         };
         window.addEventListener("resize", this._resizeHandler);
         document.addEventListener("visibilitychange", this._visibilityHandler);
+        this.bindSectionLocator();
+        this.loadFineTuningRuntime();
         this.poll();
     },
     beforeDestroy() {
@@ -220,6 +244,7 @@ var app = new Vue({
         clearInterval(this._clockTimer);
         window.removeEventListener("resize", this._resizeHandler);
         document.removeEventListener("visibilitychange", this._visibilityHandler);
+        this.unbindSectionLocator();
         if (this._chart) { this._chart.dispose(); }
     },
     methods: {
@@ -235,6 +260,71 @@ var app = new Vue({
             if (index < current) { return "done"; }
             if (index === current) { return "current"; }
             return "upcoming";
+        },
+        bindSectionLocator() {
+            var root = this.$el && this.$el.querySelector ? this.$el.querySelector(".fine-tuning") : null;
+            if (!root || !root.addEventListener) { return; }
+            this._sectionRoot = root;
+            this._locatePointer = event => this.locateFromTarget(event.target);
+            this._locateFocus = event => {
+                var target = event.target;
+                if (!target || typeof target.closest !== "function") { return; }
+                if (!target.closest("input, textarea, select, [contenteditable='true']")) { return; }
+                this.locateFromTarget(target);
+            };
+            root.addEventListener("pointermove", this._locatePointer);
+            root.addEventListener("focusin", this._locateFocus);
+            var sentinel = root.querySelector(".ft-workflow-sentinel");
+            if (sentinel && typeof IntersectionObserver === "function") {
+                this._workflowObserver = new IntersectionObserver(entries => {
+                    this.workflowStuck = entries.length > 0 && !entries[0].isIntersecting;
+                }, { root: this.scrollParent(root), threshold: 0 });
+                this._workflowObserver.observe(sentinel);
+            }
+        },
+        unbindSectionLocator() {
+            var root = this._sectionRoot;
+            if (root && this._locatePointer) { root.removeEventListener("pointermove", this._locatePointer); }
+            if (root && this._locateFocus) { root.removeEventListener("focusin", this._locateFocus); }
+            if (this._workflowObserver) { this._workflowObserver.disconnect(); }
+            if (this._locatedNode && this._locatedNode.classList) { this._locatedNode.classList.remove("is-located"); }
+        },
+        scrollParent(node) {
+            var current = node ? node.parentElement : null;
+            while (current && current !== document.body && current !== document.documentElement) {
+                var style = window.getComputedStyle ? window.getComputedStyle(current) : null;
+                var overflow = style ? style.overflowY || style.overflow : "";
+                if (overflow === "auto" || overflow === "scroll") { return current; }
+                current = current.parentElement;
+            }
+            return null;
+        },
+        locateFromTarget(target) {
+            if (!target || typeof target.closest !== "function") { return; }
+            var section = target.closest("[data-ft-section]");
+            if (!section || typeof section.getAttribute !== "function") { return; }
+            var step = section.getAttribute("data-ft-step");
+            var id = section.getAttribute("data-ft-section");
+            if (this.workflowSteps.indexOf(step) < 0 || !id) { return; }
+            this.locatedStep = step;
+            this.locatedSection = id;
+            if (this._locatedNode && this._locatedNode !== section && this._locatedNode.classList) {
+                this._locatedNode.classList.remove("is-located");
+            }
+            this._locatedNode = section;
+            if (section.classList) { section.classList.add("is-located"); }
+        },
+        scrollToStep(step) {
+            var section = this.pageSections.find(item => item.step === step);
+            if (section) { this.scrollToSection(section.id); }
+        },
+        scrollToSection(id) {
+            var node = document.getElementById(id);
+            if (!node || node.id !== id) { return; }
+            this.locateFromTarget(node);
+            if (typeof node.scrollIntoView === "function") {
+                node.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
         },
         isRecord(value) {
             return value !== null && typeof value === "object" && !Array.isArray(value);
@@ -302,6 +392,15 @@ var app = new Vue({
                     && (data.recordedMethod == null || ["lora", "qlora"].indexOf(data.recordedMethod) >= 0);
             } else if (method === "DeleteJobAsync") {
                 valid = this.isRecord(data) && typeof data.id === "string" && data.deleted === true;
+            } else if (method === "GetFineTuningRuntimeAsync" || method === "SetFineTuningEnabledAsync") {
+                valid = this.isRecord(data) && typeof data.enabled === "boolean" && typeof data.secretDirectory === "string";
+            } else if (method === "GenerateWorkerSecretAsync") {
+                valid = this.isRecord(data) && typeof data.configured === "boolean" && typeof data.path === "string"
+                    && typeof data.created === "boolean" && data.path.indexOf(data.alias + ".key") > 0;
+            } else if (method === "GetManagedWorkerStatusAsync" || method === "StartManagedWorkerAsync" || method === "StopManagedWorkerAsync") {
+                valid = this.isRecord(data) && typeof data.state === "string" && typeof data.secretPath === "string"
+                    && typeof data.commandPreview === "string" && Array.isArray(data.recentLogs)
+                    && data.recentLogs.every(line => typeof line === "string");
             } else {
                 valid = this.validJob(data);
             }
@@ -314,7 +413,11 @@ var app = new Vue({
                 && typeof worker.name === "string" && typeof worker.endpoint === "string"
                 && Number.isInteger(worker.requestTimeoutSeconds) && worker.requestTimeoutSeconds >= 1
                 && worker.requestTimeoutSeconds <= 300 && typeof worker.enabled === "boolean"
-                && typeof worker.hasConfiguredSecret === "boolean";
+                && typeof worker.hasConfiguredSecret === "boolean" && typeof worker.managed === "boolean"
+                && typeof worker.bindHost === "string" && Number.isInteger(worker.port)
+                && typeof worker.modelsRoot === "string" && typeof worker.dataRoot === "string"
+                && typeof worker.pythonPath === "string" && typeof worker.workerProjectPath === "string"
+                && typeof worker.autoStart === "boolean" && typeof worker.secretPath === "string";
         },
         validCatalogPage(page, validItem) {
             return this.isRecord(page) && Number.isInteger(page.total) && page.total >= 0
@@ -345,7 +448,17 @@ var app = new Vue({
             var response;
             var requestPayload = payload || {};
             var isFormData = typeof FormData !== "undefined" && requestPayload instanceof FormData;
-            if (method !== "GetWorkersAsync" && method !== "SaveWorkerAsync") {
+            var runtimeMethods = ["GetFineTuningRuntimeAsync", "SetFineTuningEnabledAsync"];
+            var managedMethods = ["GenerateWorkerSecretAsync", "StartManagedWorkerAsync", "StopManagedWorkerAsync", "GetManagedWorkerStatusAsync"];
+            if (managedMethods.indexOf(method) >= 0) {
+                var explicitAlias = requestPayload.workerAlias || alias;
+                if (post) {
+                    config.params = { workerAlias: explicitAlias };
+                    requestPayload = {};
+                } else {
+                    requestPayload = { workerAlias: explicitAlias };
+                }
+            } else if (method !== "GetWorkersAsync" && method !== "SaveWorkerAsync" && runtimeMethods.indexOf(method) < 0) {
                 if (post) {
                     config.params = { workerAlias: alias };
                     if (method === "StartValidationAsync" || method === "UpdateRuntimeAsync") {
@@ -377,6 +490,7 @@ var app = new Vue({
         refresh() {
             this.workersPending = true;
             this.catalogPending = true;
+            this.loadFineTuningRuntime();
             this.requestPoll();
         },
         requestPoll() {
@@ -715,15 +829,38 @@ var app = new Vue({
                 this.datasetMoreBusy = false;
             }
         },
-        openWorkerEditor(worker) {
-            this.workerEditor = worker ? {
+        blankWorkerEditor() {
+            return {
+                id: 0, alias: "", name: "", endpoint: "http://127.0.0.1:8091/", requestTimeoutSeconds: 30,
+                enabled: true, note: "", managed: false, bindHost: "127.0.0.1", port: 8091,
+                modelsRoot: "", dataRoot: "", pythonPath: "", workerProjectPath: "", autoStart: false
+            };
+        },
+        workerEditorFrom(worker) {
+            return {
                 id: worker.id, alias: worker.alias, name: worker.name, endpoint: worker.endpoint,
-                requestTimeoutSeconds: worker.requestTimeoutSeconds, enabled: worker.enabled, note: worker.note || ""
-            } : { id: 0, alias: "", name: "", endpoint: "", requestTimeoutSeconds: 30, enabled: true, note: "" };
+                requestTimeoutSeconds: worker.requestTimeoutSeconds, enabled: worker.enabled, note: worker.note || "",
+                managed: worker.managed === true, bindHost: worker.bindHost || "127.0.0.1", port: worker.port || 8091,
+                modelsRoot: worker.modelsRoot || "", dataRoot: worker.dataRoot || "", pythonPath: worker.pythonPath || "",
+                workerProjectPath: worker.workerProjectPath || "", autoStart: worker.autoStart === true
+            };
+        },
+        syncManagedEndpoint() {
+            if (!this.workerEditor.managed) { return; }
+            var host = (this.workerEditor.bindHost || "127.0.0.1").trim();
+            var port = this.workerEditor.port || 8091;
+            if (host.indexOf(":") >= 0 && host.charAt(0) !== "[") { host = "[" + host + "]"; }
+            this.workerEditor.endpoint = "http://" + host + ":" + port + "/";
+        },
+        openWorkerEditor(worker) {
+            this.workerProcess = null;
+            this.workerEditor = worker ? this.workerEditorFrom(worker) : this.blankWorkerEditor();
             this.workerEditorVisible = true;
+            if (worker) { this.loadWorkerProcess(); }
         },
         async saveWorker() {
             if (this.workerSaveBusy) { return; }
+            this.syncManagedEndpoint();
             this.workerSaveBusy = true;
             try {
                 var previous = this.workers.find(item => item.id === this.workerEditor.id);
@@ -731,17 +868,95 @@ var app = new Vue({
                 var index = this.workers.findIndex(item => item.id === worker.id);
                 if (index >= 0) { this.$set(this.workers, index, worker); } else { this.workers.push(worker); }
                 this.workersPending = true;
-                this.workerEditorVisible = false;
+                this.workerEditor = this.workerEditorFrom(worker);
                 this.$message.success(this.t("WorkerSaved"));
                 if ((previous && previous.alias === this.workerAlias) || !this.workerAlias) {
                     this.workerAlias = worker.enabled && worker.hasConfiguredSecret ? worker.alias : "";
                     this.selectWorker();
                 }
                 this.requestPoll();
+                this.loadWorkerProcess();
             } catch (error) {
                 this.reportAction(error);
             } finally {
                 this.workerSaveBusy = false;
+            }
+        },
+        async loadFineTuningRuntime() {
+            this.fineTuningRuntimeReady = false;
+            try {
+                var runtime = await this.request("GetFineTuningRuntimeAsync");
+                this.fineTuningRuntime = runtime;
+                this.fineTuningEnabled = runtime.enabled === true;
+            } catch (error) {
+                this.actionError = error.message;
+            } finally {
+                this.$nextTick(() => { this.fineTuningRuntimeReady = true; });
+            }
+        },
+        async setFineTuningEnabled(enabled) {
+            if (!this.fineTuningRuntimeReady || this.fineTuningRuntimeBusy) { return; }
+            this.fineTuningRuntimeBusy = true;
+            try {
+                var runtime = await this.request("SetFineTuningEnabledAsync", { enabled: enabled }, true);
+                this.fineTuningRuntime = runtime;
+                this.fineTuningEnabled = runtime.enabled === true;
+            } catch (error) {
+                this.fineTuningEnabled = !enabled;
+                this.reportAction(error);
+            } finally {
+                this.fineTuningRuntimeBusy = false;
+            }
+        },
+        async generateWorkerSecret() {
+            if (this.workerProcessBusy || !this.workerEditor.alias) { return; }
+            this.workerProcessBusy = true;
+            try {
+                var secret = await this.request("GenerateWorkerSecretAsync", { workerAlias: this.workerEditor.alias }, true);
+                this.$message.success(secret.created ? this.t("SecretGenerated") : this.t("SecretAlreadyExists"));
+                var worker = this.workers.find(item => item.alias === this.workerEditor.alias);
+                if (worker) { worker.hasConfiguredSecret = true; worker.secretPath = secret.path; }
+                this.loadWorkerProcess();
+            } catch (error) {
+                this.reportAction(error);
+            } finally {
+                this.workerProcessBusy = false;
+            }
+        },
+        async startManagedWorker() {
+            if (this.workerProcessBusy || !this.workerEditor.managed || !this.workerEditor.alias) { return; }
+            this.workerProcessBusy = true;
+            try {
+                this.workerProcess = await this.request("StartManagedWorkerAsync", { workerAlias: this.workerEditor.alias }, true);
+                this.$message.success(this.t("WorkerStarted"));
+                this.fineTuningEnabled = true;
+                this.workersPending = true;
+                this.requestPoll();
+            } catch (error) {
+                this.reportAction(error);
+                this.loadWorkerProcess();
+            } finally {
+                this.workerProcessBusy = false;
+            }
+        },
+        async stopManagedWorker() {
+            if (this.workerProcessBusy || !this.workerEditor.alias) { return; }
+            this.workerProcessBusy = true;
+            try {
+                this.workerProcess = await this.request("StopManagedWorkerAsync", { workerAlias: this.workerEditor.alias }, true);
+                this.$message.success(this.t("WorkerStopped"));
+            } catch (error) {
+                this.reportAction(error);
+            } finally {
+                this.workerProcessBusy = false;
+            }
+        },
+        async loadWorkerProcess() {
+            if (!this.workerEditor.alias) { return; }
+            try {
+                this.workerProcess = await this.request("GetManagedWorkerStatusAsync", { workerAlias: this.workerEditor.alias });
+            } catch (error) {
+                this.actionError = error.message;
             }
         },
         async migrateLegacyMetadata() {

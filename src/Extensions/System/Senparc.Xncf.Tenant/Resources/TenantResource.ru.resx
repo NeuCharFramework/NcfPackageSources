@@ -18,4 +18,5 @@
   <data name="Module.Tenant.Description" xml:space="preserve">
     <value>Основной мультитенантный модуль. Не удаляйте его и создавайте резервную копию перед изменениями.</value>
   </data>
+
 </root>

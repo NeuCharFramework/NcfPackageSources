@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.20.11</Version>
+    <Version>0.20.12</Version>
     <AssemblyName>Senparc.Ncf.Database.MySql.Backup</AssemblyName>
     <RootNamespace>Senparc.Ncf.Database.MySql.Backup</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -47,6 +47,10 @@
 				[2026-11-03] v0.20.11 Dependency update from Senparc.Ncf.Core to 0.30.3-preview9
 				1、Dependency update from Senparc.Ncf.Database.MySql to 0.20.11
 				2、Dependency update from Senparc.Ncf.Database to 0.21.11
+				[2026-11-05] v0.20.12 同步直接依赖项目版本
+				1、Dependency update from Senparc.Ncf.Core to 0.30.4-preview10
+				2、Dependency update from Senparc.Ncf.Database.MySql to 0.20.12
+				3、Dependency update from Senparc.Ncf.Database to 0.21.12
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

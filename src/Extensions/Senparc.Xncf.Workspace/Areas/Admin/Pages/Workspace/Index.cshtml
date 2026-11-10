@@ -3,7 +3,10 @@
 @{
     ViewData["Title"] = "工作区与远程编辑";
     Layout = "_Layout_Vue";
-    var runtime = Model.RuntimeStatus;
+}
+
+@section Style {
+    <link rel="stylesheet" href="~/css/Admin/Workspace/Index.css" asp-append-version="true" />
 }
 
 @section breadcrumbs {
@@ -12,152 +15,198 @@
     <el-breadcrumb-item>远程编辑</el-breadcrumb-item>
 }
 
-<style>
-    .workspace-shell { max-width: 1180px; margin: 0 auto; }
-    .workspace-hero {
-        padding: 28px;
-        border-radius: 18px;
-        color: #fff;
-        background: linear-gradient(135deg, #2563eb 0%, #4f46e5 54%, #7c3aed 100%);
-        box-shadow: 0 18px 48px rgba(79,70,229,.22);
-        margin-bottom: 22px;
-    }
-    .workspace-hero h1 { margin: 0 0 8px; font-size: 27px; font-weight: 700; }
-    .workspace-hero p { margin: 0; opacity: .9; line-height: 1.7; }
-    .workspace-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap: 16px; margin: 18px 0; }
-    .workspace-card { border: 1px solid #e8ecf4; border-radius: 14px; padding: 19px; background: #fff; }
-    .workspace-card h3 { margin: 0 0 8px; font-size: 16px; color: #18212f; }
-    .workspace-card p { margin: 0; color: #687386; line-height: 1.65; }
-    .runtime-row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:14px; }
-    .workspace-create { display:flex; gap:12px; align-items:center; margin:18px 0; }
-    .workspace-create .el-input { max-width:360px; }
-    .workspace-name { font-weight:600; color:#1f2937; }
-    .workspace-id { font-family: ui-monospace,SFMono-Regular,Menlo,monospace; color:#64748b; font-size:12px; }
-    .step-list { margin: 10px 0 0; padding-left: 20px; color:#4b5563; line-height:1.9; }
-    @@media(max-width:680px) {
-        .workspace-hero { padding:22px; }
-        .workspace-create { align-items:stretch; flex-direction:column; }
-        .workspace-create .el-input { max-width:none; }
-    }
-</style>
-
 <div class="workspace-shell">
     <input ref="workspaceUploadInput" type="file" hidden multiple
         @@change="handleWorkspaceUpload" />
+
     <div class="workspace-hero">
-        <h1><i class="fa fa-code"></i>&nbsp; 安全远程工作区</h1>
-        <p>文件始终保存在 NCF 配置的持久化目录中；AdminChat、VS Code 和 Cursor 统一通过 Workspace Agent 访问，不再直接操作宿主文件。可在下方直接上传多个文件到 <code>input/</code>，默认单文件上限 300 MiB。</p>
-        <div class="runtime-row">
-            <el-tag effect="dark" type="success">@runtime.Provider</el-tag>
-            <el-tag effect="dark">@runtime.IsolationLevel</el-tag>
-            @if (runtime.ExecutionEnabled)
-            {
-                <el-tag effect="dark" type="warning">允许受控执行</el-tag>
-            }
-            else
-            {
-                <el-tag effect="dark" type="info">仅文件访问 · 执行已关闭</el-tag>
-            }
+        <div class="workspace-hero-icon"><i class="fa fa-code"></i></div>
+        <div>
+            <h1>安全远程工作区</h1>
+            <p>文件保存在隔离目录中，AdminChat、VS Code 与 Cursor 共用。这里查看每个工作区的文件数量和容量，也可以清空内容并恢复成新建时的空目录。</p>
         </div>
     </div>
 
     @if (TempData["WorkspaceMessage"] is string message)
     {
-        <el-alert title="@message" type="success" show-icon :closable="false"></el-alert>
+        <el-alert class="workspace-alert" title="@message" type="success" show-icon :closable="false"></el-alert>
     }
     @if (TempData["WorkspaceError"] is string error)
     {
-        <el-alert title="@error" type="error" show-icon :closable="false"></el-alert>
+        <el-alert class="workspace-alert" title="@error" type="error" show-icon :closable="false"></el-alert>
     }
 
-    <div class="workspace-grid">
-        <div class="workspace-card">
-            <h3><i class="fa fa-shield"></i>&nbsp; 双重身份保护<ncf-doc-help topic="workspace.permissions"></ncf-doc-help></h3>
-            <p>远程网关同时验证 DesktopBridge 设备会话和管理员 JWT，并只显示当前管理员拥有的工作区。</p>
-        </div>
-        <div class="workspace-card">
-            <h3><i class="fa fa-random"></i>&nbsp; 跨平台统一协议</h3>
-            <p>Windows、Linux、macOS 均使用长驻 stdio Agent；无需依赖特定的 Unix Socket 或 Named Pipe。</p>
-        </div>
-        <div class="workspace-card">
-            <h3><i class="fa fa-cube"></i>&nbsp; Docker 可选</h3>
-            <p>有 Docker 时可启用容器隔离；没有 Docker 时保留原生文件访问，且默认禁止执行代码。</p>
-        </div>
-    </div>
+    <section class="ws-metrics" v-if="report.actorId">
+        <article class="ws-metric">
+            <span class="ws-metric-kicker">我的工作区</span>
+            <strong>{{ report.ownSummary.workspaceCount }}</strong>
+            <span class="ws-metric-detail">{{ report.ownSummary.fileCount }} 个文件 · {{ formatFileSize(report.ownSummary.usedBytes) }}</span>
+        </article>
+        <article class="ws-metric is-other" v-if="report.isSuperAdmin">
+            <span class="ws-metric-kicker">其他管理员</span>
+            <strong>{{ report.otherSummary.workspaceCount }}</strong>
+            <span class="ws-metric-detail">{{ report.otherSummary.fileCount }} 个文件 · {{ formatFileSize(report.otherSummary.usedBytes) }}</span>
+        </article>
+        <article class="ws-metric is-total" v-if="report.isSuperAdmin">
+            <span class="ws-metric-kicker">当前租户合计</span>
+            <strong>{{ report.visibleSummary.workspaceCount }}</strong>
+            <span class="ws-metric-detail">{{ report.visibleSummary.fileCount }} 个文件 · {{ formatFileSize(report.visibleSummary.usedBytes) }}</span>
+        </article>
+    </section>
+    <p class="ws-note" v-if="report.actorId">
+        当前账号 #{{ report.actorId }} · 单个工作区配额 {{ formatFileSize(report.quotaBytes) }} · 文件数和容量不含工作区清单。
+        <span v-if="report.isSuperAdmin">其他管理员只统计当前租户内不属于你的工作区。</span>
+    </p>
 
-    <el-card shadow="never">
-        <div slot="header">
-            <span><i class="fa fa-folder-open"></i>&nbsp;工作区</span>
-            <el-tag size="small" style="float:right">@Model.Workspaces.Count 个</el-tag>
+    <section class="ws-section">
+        <div class="ws-section-head">
+            <h2>我的工作区<ncf-doc-help topic="workspace.manage"></ncf-doc-help></h2>
+            <span class="count-pill">{{ report.ownWorkspaces.length }} 个</span>
         </div>
 
-        <form method="post" asp-page-handler="Create" class="workspace-create">
+        <form method="post" asp-page-handler="Create" class="ws-create">
             <input type="hidden" name="Uid" value="@Model.Uid" />
-            <el-input name="NewWorkspaceName" placeholder="例如：订单系统重构" maxlength="100" show-word-limit></el-input>
-            <button type="submit" class="el-button el-button--primary">
-                <i class="el-icon-plus"></i><span>创建工作区</span>
+            <el-input name="NewWorkspaceName" placeholder="给新任务起个名字，例如：订单系统重构" maxlength="100" show-word-limit></el-input>
+            <button type="submit" class="ws-create-btn">
+                <i class="fa fa-plus"></i>创建工作区
             </button>
         </form>
 
-        <el-table :data="workspaces" border stripe empty-text="尚未创建工作区">
-            <el-table-column label="名称" min-width="220">
-                <template slot-scope="scope">
-                    <div class="workspace-name">{{ scope.row.name }}</div>
-                    <div class="workspace-id">{{ scope.row.id }}</div>
-                </template>
-            </el-table-column>
-            <el-table-column prop="ownerType" label="所有者类型" width="120"></el-table-column>
-            <el-table-column prop="storageProvider" label="持久化存储" width="140"></el-table-column>
-            <el-table-column label="创建时间" min-width="180">
-                <template slot-scope="scope">{{ formatDate(scope.row.createdUtc) }}</template>
-            </el-table-column>
-            <el-table-column label="最近访问" min-width="180">
-                <template slot-scope="scope">{{ formatDate(scope.row.lastAccessedUtc) }}</template>
-            </el-table-column>
-            <el-table-column label="手动上传" width="130">
-                <template slot-scope="scope">
-                    <el-button
-                        type="primary"
-                        size="mini"
-                        :loading="manualUploadWorkspaceId === scope.row.id && manualUploading"
-                        :disabled="manualUploading"
-                        @@click="chooseWorkspaceUpload(scope.row.id)">
-                        <i class="el-icon-upload2"></i> 上传文件
-                    </el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-        <el-alert
-            v-if="manualUploading"
-            style="margin-top:16px"
-            type="info"
-            show-icon
-            :closable="false"
-            :title="manualUploadFileName + ' 上传中：' + manualUploadProgress + '%'">
-        </el-alert>
-    </el-card>
-
-    <div class="workspace-grid">
-        <div class="workspace-card">
-            <h3>在 VS Code / Cursor 中连接</h3>
-            <ol class="step-list">
-                <li>安装 “NCF Workspace” 扩展。</li>
-                <li>运行 “NCF: 连接工作区”。</li>
-                <li>输入站点地址并在浏览器中确认配对。</li>
-                <li>选择工作区，文件会作为远程文件夹打开。</li>
-            </ol>
+        <div class="ws-empty" v-if="!report.ownWorkspaces.length">
+            <i class="fa fa-folder-o"></i>
+            <h3>还没有工作区</h3>
+            <p>输入一个名字并点击「创建工作区」，即可在 AI 对话与远程编辑器之间安全共享文件。</p>
         </div>
-        <div class="workspace-card">
-            <h3>需要执行构建或测试？</h3>
-            <p>推荐将 <code>SenparcXncfWorkspace:RuntimeProvider</code> 设置为 <code>Docker</code> 并部署官方 Agent 镜像。NativeAgent 默认只提供安全文件编辑。</p>
-            <div style="margin-top:14px">
-                <a class="el-button el-button--default el-button--small" href="/Admin/DesktopBridge/Index?uid=E9A9D870-A285-4BCE-9D4D-26A219C41252">
+
+        <div class="ws-board" v-if="report.ownWorkspaces.length">
+            <article class="ws-card" v-for="ws in report.ownWorkspaces" :key="ws.id">
+                <header class="ws-card-head">
+                    <div class="ws-card-icon"><i class="fa fa-cube"></i></div>
+                    <div class="ws-card-title">
+                        <h3 :title="ws.name">{{ ws.name }}</h3>
+                        <span class="ws-badge is-own" v-if="report.isSuperAdmin">我的</span>
+                    </div>
+                </header>
+                <div class="ws-card-figures">
+                    <div><span>文件</span><strong>{{ ws.fileCount }}</strong></div>
+                    <div><span>目录</span><strong>{{ ws.directoryCount }}</strong></div>
+                    <div><span>已用</span><strong>{{ formatFileSize(ws.usedBytes) }}</strong></div>
+                </div>
+                <div class="ws-card-usage">
+                    <el-progress :percentage="usagePercent(ws)" :stroke-width="6" :show-text="false" :status="usageStatus(ws)"></el-progress>
+                    <span>{{ formatFileSize(ws.usedBytes) }} / {{ formatFileSize(ws.quotaBytes) }}</span>
+                </div>
+                <footer class="ws-card-foot">
+                    <div class="ws-card-time">
+                        <span :title="formatDate(ws.createdUtc)">创建于 {{ relativeTime(ws.createdUtc) }}</span>
+                        <span :title="formatDate(ws.lastAccessedUtc)">访问于 {{ relativeTime(ws.lastAccessedUtc) }}</span>
+                    </div>
+                    <div class="ws-card-actions">
+                        <el-button
+                            type="primary"
+                            size="small"
+                            :loading="manualUploadWorkspaceId === ws.id && manualUploading"
+                            :disabled="manualUploading || clearing"
+                            @@click="chooseWorkspaceUpload(ws.id)">
+                            <i class="el-icon-upload2"></i> 上传
+                        </el-button>
+                        <el-button
+                            type="danger"
+                            size="small"
+                            plain
+                            :disabled="manualUploading || clearing"
+                            @@click="clearWorkspace(ws)">
+                            <i class="fa fa-eraser"></i> 清空
+                        </el-button>
+                    </div>
+                </footer>
+            </article>
+        </div>
+    </section>
+
+    <section class="ws-section" v-if="report.isSuperAdmin">
+        <div class="ws-section-head">
+            <h2>其他管理员的工作区</h2>
+            <span class="count-pill">{{ report.otherWorkspaces.length }} 个</span>
+        </div>
+        <p class="ws-note">这些工作区不属于当前账号。超级管理员可以查看用量并清空内容，操作会记入日志。</p>
+        <div class="ws-empty" v-if="!report.otherWorkspaces.length">
+            <i class="fa fa-folder-o"></i>
+            <h3>当前租户没有其他管理员的工作区</h3>
+            <p>这里只显示同一个租户里、所有者不是你的工作区。</p>
+        </div>
+        <div class="ws-board" v-if="report.otherWorkspaces.length">
+            <article class="ws-card is-other" v-for="ws in report.otherWorkspaces" :key="ws.id">
+                <header class="ws-card-head">
+                    <div class="ws-card-icon"><i class="fa fa-cube"></i></div>
+                    <div class="ws-card-title">
+                        <h3 :title="ws.name">{{ ws.name }}</h3>
+                        <span class="ws-badge is-other">管理员 #{{ ws.ownerId }}</span>
+                    </div>
+                </header>
+                <div class="ws-card-figures">
+                    <div><span>文件</span><strong>{{ ws.fileCount }}</strong></div>
+                    <div><span>目录</span><strong>{{ ws.directoryCount }}</strong></div>
+                    <div><span>已用</span><strong>{{ formatFileSize(ws.usedBytes) }}</strong></div>
+                </div>
+                <div class="ws-card-usage">
+                    <el-progress :percentage="usagePercent(ws)" :stroke-width="6" :show-text="false" :status="usageStatus(ws)"></el-progress>
+                    <span>{{ formatFileSize(ws.usedBytes) }} / {{ formatFileSize(ws.quotaBytes) }}</span>
+                </div>
+                <footer class="ws-card-foot">
+                    <div class="ws-card-time">
+                        <span :title="formatDate(ws.createdUtc)">创建于 {{ relativeTime(ws.createdUtc) }}</span>
+                        <span :title="formatDate(ws.lastAccessedUtc)">访问于 {{ relativeTime(ws.lastAccessedUtc) }}</span>
+                    </div>
+                    <div class="ws-card-actions">
+                        <el-button
+                            type="danger"
+                            size="small"
+                            plain
+                            :disabled="manualUploading || clearing"
+                            @@click="clearWorkspace(ws)">
+                            <i class="fa fa-eraser"></i> 清空
+                        </el-button>
+                    </div>
+                </footer>
+            </article>
+        </div>
+    </section>
+
+    <section class="ws-section">
+        <div class="ws-section-head">
+            <h2>连接指南</h2>
+        </div>
+        <div class="ws-guide">
+            <div>
+                <h3><i class="fa fa-desktop"></i>在 VS Code / Cursor 中连接</h3>
+                <ol class="step-list">
+                    <li data-step="1">安装 “NCF Workspace” 扩展</li>
+                    <li data-step="2">运行 “NCF: 连接工作区”</li>
+                    <li data-step="3">输入站点地址，在浏览器中确认配对</li>
+                    <li data-step="4">选择工作区，文件将作为远程文件夹打开</li>
+                </ol>
+            </div>
+            <div class="ws-guide-side">
+                <p>设备尚未配对？前往设备会话页面完成配对。</p>
+                <a class="el-button ws-pair-btn el-button--default el-button--small" href="/Admin/DesktopBridge/Index?uid=E9A9D870-A285-4BCE-9D4D-26A219C41252">
                     <i class="fa fa-desktop"></i><span>管理设备配对</span>
                 </a>
             </div>
         </div>
+    </section>
+
+    <form method="post" asp-page-handler="Clear" ref="clearForm" class="ws-clear-form">
+        <input type="hidden" name="Uid" value="@Model.Uid" />
+        <input type="hidden" name="workspaceId" ref="clearWorkspaceId" value="" />
+    </form>
+
+    <div class="ws-upload-toast" v-if="manualUploading">
+        <div class="toast-file"><i class="fa fa-cloud-upload"></i>{{ manualUploadFileName }}</div>
+        <el-progress :percentage="manualUploadProgress" :stroke-width="8" :show-text="true"></el-progress>
     </div>
 </div>
+
 
 @section scripts {
     <script>
@@ -169,21 +218,28 @@
                     manualUploadFileName: '',
                     manualUploadProgress: 0,
                     manualUploading: false,
-                    workspaces: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
-                        Model.Workspaces.Select(x => new {
-                            id = x.Id,
-                            name = x.Name,
-                            ownerType = x.OwnerType,
-                            storageProvider = x.StorageProvider,
-                            createdUtc = x.CreatedUtc,
-                            lastAccessedUtc = x.LastAccessedUtc
-                        }),
-                        new System.Text.Json.JsonSerializerOptions(System.Text.Json.JsonSerializerDefaults.Web)))
+                    clearing: false,
+                    report: @Html.Raw(Model.ClientReportJson)
                 };
             },
             methods: {
                 formatDate: function (value) {
                     return value ? new Date(value).toLocaleString() : "—";
+                },
+                relativeTime: function (value) {
+                    if (!value) return "—";
+                    var diff = Date.now() - new Date(value).getTime();
+                    if (diff < 0) diff = 0;
+                    var min = Math.floor(diff / 60000);
+                    if (min < 1) return "刚刚";
+                    if (min < 60) return min + " 分钟前";
+                    var hour = Math.floor(min / 60);
+                    if (hour < 24) return hour + " 小时前";
+                    var day = Math.floor(hour / 24);
+                    if (day < 30) return day + " 天前";
+                    var month = Math.floor(day / 30);
+                    if (month < 12) return month + " 个月前";
+                    return Math.floor(month / 12) + " 年前";
                 },
                 chooseWorkspaceUpload: function (workspaceId) {
                     this.manualUploadWorkspaceId = workspaceId;
@@ -249,9 +305,30 @@
                     }
                 },
                 formatFileSize: function (bytes) {
-                    if (bytes >= 1024 * 1024 * 1024) return (bytes / (1024 * 1024 * 1024)).toFixed(2) + " GB";
-                    if (bytes >= 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(0) + " MB";
-                    return Math.max(1, Math.round(bytes / 1024)) + " KB";
+                    var size = Number(bytes);
+                    if (!Number.isFinite(size) || size <= 0) return "0 B";
+                    if (size >= 1024 * 1024 * 1024) return (size / (1024 * 1024 * 1024)).toFixed(2) + " GB";
+                    if (size >= 1024 * 1024) return (size / (1024 * 1024)).toFixed(1) + " MB";
+                    if (size >= 1024) return (size / 1024).toFixed(1) + " KB";
+                    return Math.round(size) + " B";
+                },
+                usagePercent: function (ws) {
+                    var quota = Number(ws.quotaBytes);
+                    if (!Number.isFinite(quota) || quota <= 0) return 0;
+                    return Math.min(100, Math.round(Number(ws.usedBytes) * 100 / quota));
+                },
+                usageStatus: function (ws) {
+                    return Number(ws.usedBytes) > Number(ws.quotaBytes) ? "exception" : "";
+                },
+                clearWorkspace: function (ws) {
+                    if (!ws || !ws.id || this.clearing || this.manualUploading) return;
+                    var message = ws.scope === "Other"
+                        ? "这将清空其他管理员 #" + ws.ownerId + " 的工作区「" + ws.name + "」。文件会被删除，并恢复为新建时的 input、output、logs 空目录。工作区本身会保留。此操作不可撤销。"
+                        : "这将清空你自己的工作区「" + ws.name + "」。文件会被删除，并恢复为新建时的 input、output、logs 空目录。工作区本身会保留。此操作不可撤销。";
+                    if (!window.confirm(message)) return;
+                    this.clearing = true;
+                    this.$refs.clearWorkspaceId.value = ws.id;
+                    this.$refs.clearForm.submit();
                 }
             }
         });

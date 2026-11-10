@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
 
-    <Version>0.0.17</Version>
+    <Version>0.0.18</Version>
     <PackageReleaseNotes>
       [2026-07-04] v0.0.1 Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
       1、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
@@ -37,7 +37,12 @@
       [2026-10-09] v0.0.16 Dependency update from Senparc.Areas.Admin to 0.11.0
       [2026-10-21] v0.0.17 升级 Senparc.Ncf.DatabasePlant 至 0.21.13
       1、保持多数据库迁移宿主与当前模块兼容
-</PackageReleaseNotes>
+      [2026-11-05] v0.0.18 同步直接依赖项目版本
+      1、Dependency update from Senparc.Areas.Admin to 0.12.26
+      2、Dependency update from Senparc.Xncf.XncfBuilder to 0.41.8
+      3、Dependency update from Senparc.Xncf.AgentsManager to 0.19.2
+      4、Dependency update from Senparc.Ncf.Core to 0.30.4-preview10
+    </PackageReleaseNotes>
     <Configurations>Debug;Release;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>
   </PropertyGroup>
   <ItemGroup>

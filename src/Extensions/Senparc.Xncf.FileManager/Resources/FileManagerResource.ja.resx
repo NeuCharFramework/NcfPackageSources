@@ -27,12 +27,6 @@
   <data name="Area.FileManager.Files" xml:space="preserve">
     <value>ファイル管理</value>
   </data>
-  <data name="Function.Sample.Name" xml:space="preserve">
-    <value>サンプル関数</value>
-  </data>
-  <data name="Function.Sample.Description" xml:space="preserve">
-    <value>FunctionRender のパラメーターと戻り値を示します</value>
-  </data>
   <data name="Parameter.Sample.Name" xml:space="preserve">
     <value>名前||二重縦線の前はパラメーター名、後ろは説明です</value>
   </data>
@@ -102,4 +96,200 @@
   <data name="Page.Random" xml:space="preserve">
     <value>ランダム</value>
   </data>
+  <data name="Frontend.001" xml:space="preserve">
+    <value>アップロード先：||アップロード先：</value>
+  </data>
+  <data name="Frontend.002" xml:space="preserve">
+    <value>ファイルをアップロード||ファイルをアップロード</value>
+  </data>
+  <data name="Frontend.003" xml:space="preserve">
+    <value>アップロード日時||アップロード日時</value>
+  </data>
+  <data name="Frontend.004" xml:space="preserve">
+    <value>ダウンロード||ダウンロード</value>
+  </data>
+  <data name="Frontend.005" xml:space="preserve">
+    <value>コード||コード</value>
+  </data>
+  <data name="Frontend.006" xml:space="preserve">
+    <value>その他||その他</value>
+  </data>
+  <data name="Frontend.007" xml:space="preserve">
+    <value>削除||削除</value>
+  </data>
+  <data name="Frontend.008" xml:space="preserve">
+    <value>フォルダを更新||フォルダを更新</value>
+  </data>
+  <data name="Frontend.009" xml:space="preserve">
+    <value>キャンセル||キャンセル</value>
+  </data>
+  <data name="Frontend.010" xml:space="preserve">
+    <value>複数ファイルを同時にアップロードできます||複数ファイルを同時にアップロードできます</value>
+  </data>
+  <data name="Frontend.011" xml:space="preserve">
+    <value>名前||名前</value>
+  </data>
+  <data name="Frontend.012" xml:space="preserve">
+    <value>メモ||メモ</value>
+  </data>
+  <data name="Frontend.013" xml:space="preserve">
+    <value>備考（任意）||備考（任意）</value>
+  </data>
+  <data name="Frontend.014" xml:space="preserve">
+    <value>サイズ||サイズ</value>
+  </data>
+  <data name="Frontend.015" xml:space="preserve">
+    <value>拡張モジュール||拡張モジュール</value>
+  </data>
+  <data name="Frontend.016" xml:space="preserve">
+    <value>アクション||アクション</value>
+  </data>
+  <data name="Frontend.017" xml:space="preserve">
+    <value>ファイル名||ファイル名</value>
+  </data>
+  <data name="Frontend.018" xml:space="preserve">
+    <value>フォルダ||フォルダ</value>
+  </data>
+  <data name="Frontend.019" xml:space="preserve">
+    <value>ファイル管理||ファイル管理</value>
+  </data>
+  <data name="Frontend.020" xml:space="preserve">
+    <value>テキスト||テキスト</value>
+  </data>
+  <data name="Frontend.021" xml:space="preserve">
+    <value>新規||新規</value>
+  </data>
+  <data name="Frontend.022" xml:space="preserve">
+    <value>新規フォルダ||新規フォルダ</value>
+  </data>
+  <data name="Frontend.023" xml:space="preserve">
+    <value>ルート||ルート</value>
+  </data>
+  <data name="Frontend.024" xml:space="preserve">
+    <value>OK||OK</value>
+  </data>
+  <data name="Frontend.025" xml:space="preserve">
+    <value>種類||種類</value>
+  </data>
+  <data name="Frontend.026" xml:space="preserve">
+    <value>テーブルId||テーブルId</value>
+  </data>
+  <data name="Frontend.027" xml:space="preserve">
+    <value>フォルダー名を入力||フォルダー名を入力</value>
+  </data>
+  <data name="Frontend.028" xml:space="preserve">
+    <value>ファイルを選択||ファイルを選択</value>
+  </data>
+  <data name="Frontend.029" xml:space="preserve">
+    <value>ホーム||ホーム</value>
+  </data>
+  <data name="Frontend.030" xml:space="preserve">
+    <value>リストの読み込みに失敗||リストの読み込みに失敗</value>
+  </data>
+  <data name="Frontend.031" xml:space="preserve">
+    <value>アップロード完了||アップロード完了</value>
+  </data>
+  <data name="Frontend.032" xml:space="preserve">
+    <value>アップロード失敗||アップロード失敗</value>
+  </data>
+  <data name="Frontend.033" xml:space="preserve">
+    <value>更新しました||更新しました</value>
+  </data>
+  <data name="Frontend.034" xml:space="preserve">
+    <value>変更に失敗しました||変更に失敗しました</value>
+  </data>
+  <data name="Frontend.035" xml:space="preserve">
+    <value>このファイルを削除してよろしいですか?||このファイルを削除してよろしいですか?</value>
+  </data>
+  <data name="Frontend.036" xml:space="preserve">
+    <value>通知||通知</value>
+  </data>
+  <data name="Frontend.037" xml:space="preserve">
+    <value>確認||確認</value>
+  </data>
+  <data name="Frontend.038" xml:space="preserve">
+    <value>キャンセル||キャンセル</value>
+  </data>
+  <data name="Frontend.039" xml:space="preserve">
+    <value>削除しました||削除しました</value>
+  </data>
+  <data name="Frontend.040" xml:space="preserve">
+    <value>削除に失敗しました||削除に失敗しました</value>
+  </data>
+  <data name="Frontend.041" xml:space="preserve">
+    <value>作成しました||作成しました</value>
+  </data>
+  <data name="Frontend.042" xml:space="preserve">
+    <value>作成に失敗しました||作成に失敗しました</value>
+  </data>
+  <data name="Frontend.043" xml:space="preserve">
+    <value>アップロードに失敗：{0}||アップロードに失敗：{0}</value>
+  </data>
+  <data name="Frontend.044" xml:space="preserve">
+    <value>{0}のメモを入力||{0}のメモを入力</value>
+  </data>
+  <data name="Frontend.045" xml:space="preserve">
+    <value>FileManager ホーム||FileManager ホーム</value>
+  </data>
+  <data name="Frontend.046" xml:space="preserve">
+    <value>フォルダー #{0}||フォルダー #{0}</value>
+  </data>
+  <data name="Frontend.047" xml:space="preserve">
+    <value>{0}のメモを入力||{0}のメモを入力</value>
+  </data>
+  <data name="Frontend.048" xml:space="preserve">
+    <value>更新しました||更新しました</value>
+  </data>
+  <data name="Frontend.049" xml:space="preserve">
+    <value>更新失敗||更新失敗</value>
+  </data>
+  <data name="Frontend.050" xml:space="preserve">
+    <value>このファイルを削除しますか?||このファイルを削除しますか?</value>
+  </data>
+  <data name="Frontend.051" xml:space="preserve">
+    <value>アップロードするファイルを選択||アップロードするファイルを選択</value>
+  </data>
+  <data name="Frontend.052" xml:space="preserve">
+    <value>アップロード失敗：||アップロード失敗：</value>
+  </data>
+  <data name="Frontend.053" xml:space="preserve">
+    <value>例外を送出するテスト。引き渡しパラメーター：{0} {1}||例外を送出するテスト。引き渡しパラメーター：{0} {1}</value>
+  </data>
+  <data name="Frontend.054" xml:space="preserve">
+    <value>除数は0にできません！||除数は0にできません！</value>
+  </data>
+  <data name="Frontend.055" xml:space="preserve">
+    <value>不明な演算子：{0}||不明な演算子：{0}</value>
+  </data>
+  <data name="Frontend.056" xml:space="preserve">
+    <value>一度にアップロードできるファイルは最大 {0} 件です。||一度にアップロードできるファイルは最大 {0} 件です。</value>
+  </data>
+  <data name="Frontend.057" xml:space="preserve">
+    <value>1 回のアップロードの合計サイズは {0} MB を超えられません。||1 回のアップロードの合計サイズは {0} MB を超えられません。</value>
+  </data>
+  <data name="Frontend.058" xml:space="preserve">
+    <value>アップロードファイルは空にできません。||アップロードファイルは空にできません。</value>
+  </data>
+  <data name="Frontend.059" xml:space="preserve">
+    <value>1 ファイルのサイズは {0} MB を超えられません。||1 ファイルのサイズは {0} MB を超えられません。</value>
+  </data>
+  <data name="Frontend.060" xml:space="preserve">
+    <value>このファイル形式はアップロードできません。一般的な文書、画像、テキスト、圧縮ファイルのみ対応しています。||このファイル形式はアップロードできません。一般的な文書、画像、テキスト、圧縮ファイルのみ対応しています。</value>
+  </data>
+  <data name="Frontend.061" xml:space="preserve">
+    <value>ファイルが存在しません！||ファイルが存在しません！</value>
+  </data>
+  <data name="Frontend.062" xml:space="preserve">
+    <value>ファイルの物理パス情報が無効です。||ファイルの物理パス情報が無効です。</value>
+  </data>
+  <data name="Frontend.063" xml:space="preserve">
+    <value>ファイルの物理パスが範囲外です。||ファイルの物理パスが範囲外です。</value>
+  </data>
+  <data name="Function.Sample.Name" xml:space="preserve">
+    <value>サンプル関数</value>
+  </data>
+  <data name="Function.Sample.Description" xml:space="preserve">
+    <value>FunctionRender のパラメーターと戻り値を示します</value>
+  </data>
+
 </root>

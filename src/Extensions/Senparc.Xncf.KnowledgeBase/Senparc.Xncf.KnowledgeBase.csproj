@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.8.1</Version>
+    <Version>0.8.2</Version>
     <AssemblyName>Senparc.Xncf.KnowledgeBase</AssemblyName>
     <RootNamespace>Senparc.Xncf.KnowledgeBase</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -82,7 +82,16 @@
 		6、支持可配置文本分块和检索重排序，保持现有检索配置兼容
 		7、完善知识库检索配置、召回测试和多数据库迁移
     [2026-11-03] Add contextual documentation for knowledge-base setup and recall-test Top K.
-</PackageReleaseNotes>
+    [2026-11-05] v0.8.2 将知识库创建与召回 Top K 帮助定位到对应章节，并统一多语言文案
+    1、新建知识库与召回测试 Top K 的上下文帮助指向对应双语章节
+    2、补齐并校正各语言资源条目，使模块界面文案与中文基准保持一致
+    3、Dependency update from Senparc.Ncf.AreaBase to 0.23.10
+    4、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.14
+    5、Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
+    6、Dependency update from Senparc.Xncf.AIKernel to 0.17.2
+    7、Dependency update from Senparc.Xncf.FileManager to 0.8.3
+    8、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

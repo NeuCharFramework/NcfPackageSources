@@ -13,12 +13,16 @@
     修改标识：Senparc - 20261103
     修改描述：v0.17.0 enhance Agent Studio, group configuration, and task management interactions
 
+    修改标识：Senparc - 20261106
+    修改描述：允许本机回环地址在启动后接入微调 Worker，密钥仍可来自环境变量
+
 ----------------------------------------------------------------*/
 
 #nullable enable
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using Senparc.Ncf.Core.Exceptions;
 
 namespace Senparc.Xncf.AIKernel.Domain.Services;
@@ -39,9 +43,19 @@ public sealed class FineTuningWorkerOptions
     public IEnumerable<string> ConfiguredWorkerAliases => WorkerApiKeys
         .Where(item => IsValidApiKey(item.Value)).Select(item => item.Key);
 
-    private static bool IsValidApiKey(string apiKey) =>
+    public static bool IsValidApiKey(string apiKey) =>
         !string.IsNullOrWhiteSpace(apiKey) && apiKey.Length >= 32
         && apiKey == apiKey.Trim() && !apiKey.Contains('\r') && !apiKey.Contains('\n');
+
+    public static bool IsLoopbackHost(string host)
+    {
+        if (string.IsNullOrWhiteSpace(host))
+            return false;
+        host = host.Trim().Trim('[', ']');
+        if (host.Equals("localhost", StringComparison.OrdinalIgnoreCase))
+            return true;
+        return IPAddress.TryParse(host, out var address) && IPAddress.IsLoopback(address);
+    }
 
     public string GetWorkerApiKey(string workerAlias)
     {
@@ -55,13 +69,19 @@ public sealed class FineTuningWorkerOptions
 
     public Uri GetValidatedEndpoint(string workerAlias, string workerEndpoint, int requestTimeoutSeconds)
     {
-        GetWorkerApiKey(workerAlias);
+        if (!Enabled)
+            throw new NcfExceptionBase(AIKernelResource.Get("FineTuning.Error.Disabled",
+                "Local fine-tuning is disabled by the infrastructure configuration."));
+        if (string.IsNullOrWhiteSpace(workerAlias))
+            throw new NcfExceptionBase("A fine-tuning worker must be selected.");
         if (!Uri.TryCreate(workerEndpoint, UriKind.Absolute, out var endpoint)
             || (endpoint.Scheme != Uri.UriSchemeHttp && endpoint.Scheme != Uri.UriSchemeHttps)
             || !string.IsNullOrEmpty(endpoint.UserInfo) || !string.IsNullOrEmpty(endpoint.Query)
             || !string.IsNullOrEmpty(endpoint.Fragment))
             throw new NcfExceptionBase("Fine-tuning WorkerEndpoint must be an absolute HTTP(S) URL without credentials, query or fragment.");
-        if (AllowedHosts.Length == 0 || !AllowedHosts.Contains(endpoint.Host, StringComparer.OrdinalIgnoreCase))
+        var allowedHosts = AllowedHosts ?? [];
+        if (!IsLoopbackHost(endpoint.Host)
+            && (allowedHosts.Length == 0 || !allowedHosts.Contains(endpoint.Host, StringComparer.OrdinalIgnoreCase)))
             throw new NcfExceptionBase($"Fine-tuning WorkerEndpoint host '{endpoint.Host}' is not in the infrastructure allowlist.");
         if (requestTimeoutSeconds < 1 || requestTimeoutSeconds > 300)
             throw new NcfExceptionBase("Fine-tuning RequestTimeoutSeconds must be between 1 and 300.");

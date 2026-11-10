@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <!--<TargetFrameworks>netcoreapp3.1;net8.0</TargetFrameworks>-->
-    <Version>0.28.1</Version>
+    <Version>0.28.2</Version>
     <LangVersion>10.0</LangVersion>
     <AssemblyName>Senparc.Ncf.XncfBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.XncfBase</RootNamespace>
@@ -97,7 +97,11 @@
 			3、扩展 FunctionRender 文件引用、文件存储及参数规范化能力
 			4、完善 AI 函数参数 Schema 与文件上传交互
 			5、Dependency update from Senparc.Ncf.Database to 0.21.11
-</PackageReleaseNotes>
+			[2026-11-05] v0.28.2 同步直接依赖项目版本
+			1、Dependency update from Senparc.Ncf.Core to 0.30.4-preview10
+			2、Dependency update from Senparc.Ncf.Database to 0.21.12
+			3、Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
