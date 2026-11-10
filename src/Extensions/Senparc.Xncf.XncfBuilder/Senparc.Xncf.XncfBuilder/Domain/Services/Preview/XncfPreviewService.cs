@@ -22,6 +22,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.41.7 XncfBuilder 预览与隔离开发任务表统一租户底层支持
 
+    修改标识：Senparc - 20261110
+    修改描述：主站关闭时不再无限等待预览操作锁
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Hosting;
@@ -146,25 +149,26 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
         {
             RequestHostStopForActiveSessions();
 
+            var lockTaken = false;
             try
             {
-                await _operationLock.WaitAsync(cancellationToken).ConfigureAwait(false);
-            }
-            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
-            {
-                _logger?.LogInformation(
-                    "XNCF preview cleanup did not acquire the operation lock before host shutdown completed. " +
-                    "Active previews have already received the stop signal; waiting for their cleanup to finish.");
-                await _operationLock.WaitAsync(CancellationToken.None).ConfigureAwait(false);
-            }
+                lockTaken = await TryAcquireOperationLockForShutdownAsync(cancellationToken).ConfigureAwait(false);
+                if (!lockTaken)
+                {
+                    _logger?.LogInformation(
+                        "XNCF preview cleanup did not acquire the operation lock before host shutdown. " +
+                        "Active previews have already received the stop signal; host shutdown will not wait for the in-flight operation.");
+                    return;
+                }
 
-            try
-            {
                 // An in-flight request can have created a session while shutdown was waiting for the lock.
                 RequestHostStopForActiveSessions();
+                using var cleanupCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                cleanupCancellation.CancelAfter(TimeSpan.FromSeconds(2));
 
                 foreach (var state in _sessions.Values.ToArray())
                 {
+                    cleanupCancellation.Token.ThrowIfCancellationRequested();
                     if (GetStage(state).IsTerminal())
                     {
                         continue;
@@ -175,23 +179,51 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
                         XncfPreviewStage.Stopping,
                         "主站正在关闭预览进程。",
                         null,
-                        CancellationToken.None).ConfigureAwait(false);
-                    await StopStateAsync(state, deleteFiles: true, log: null, CancellationToken.None).ConfigureAwait(false);
+                        cleanupCancellation.Token).ConfigureAwait(false);
+                    await StopStateAsync(state, deleteFiles: true, log: null, cleanupCancellation.Token).ConfigureAwait(false);
                     await SetStageAndPersistAsync(
                         state,
                         XncfPreviewStage.Stopped,
                         "预览进程已随主站停止。",
                         null,
-                        CancellationToken.None).ConfigureAwait(false);
+                        cleanupCancellation.Token).ConfigureAwait(false);
                 }
 
                 _sessions.Clear();
                 _activeSessionIds.Clear();
             }
+            catch (OperationCanceledException)
+            {
+                _logger?.LogInformation("XNCF preview cleanup ended early so the host can finish shutting down.");
+            }
             finally
             {
-                _operationLock.Release();
+                if (lockTaken)
+                {
+                    _operationLock.Release();
+                }
             }
+        }
+
+        /// <summary>
+        /// 关闭时获取预览操作锁。已取消的宿主令牌不能直接传给 <see cref="SemaphoreSlim.WaitAsync(CancellationToken)"/>，
+        /// 否则锁即使空闲也会立即失败，随后若改用 <see cref="CancellationToken.None"/> 又会无限等待。
+        /// </summary>
+        private async Task<bool> TryAcquireOperationLockForShutdownAsync(CancellationToken cancellationToken)
+        {
+            if (!cancellationToken.IsCancellationRequested)
+            {
+                try
+                {
+                    await _operationLock.WaitAsync(cancellationToken).ConfigureAwait(false);
+                    return true;
+                }
+                catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+                {
+                }
+            }
+
+            return await _operationLock.WaitAsync(TimeSpan.FromMilliseconds(200)).ConfigureAwait(false);
         }
 
         public async Task<XncfPreviewSessionInfo> StartAsync(

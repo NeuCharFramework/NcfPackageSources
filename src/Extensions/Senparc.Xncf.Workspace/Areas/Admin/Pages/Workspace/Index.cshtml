@@ -15,491 +15,6 @@
     <el-breadcrumb-item>远程编辑</el-breadcrumb-item>
 }
 
-<style>
-    .workspace-shell { max-width: 1080px; margin: 0 auto; padding: 4px 2px 24px; }
-
-    /* ===== 顶部横幅 ===== */
-    .workspace-hero {
-        display: flex; align-items: center; gap: 16px;
-        padding: 24px 28px; border-radius: 16px; color: #fff;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        box-shadow: 0 12px 34px rgba(102, 126, 234, .26);
-        margin-bottom: 20px;
-    }
-    .workspace-hero-icon {
-        width: 46px; height: 46px; flex: 0 0 46px; border-radius: 12px;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 20px; background: rgba(255, 255, 255, .16);
-        border: 1px solid rgba(255, 255, 255, .28);
-    }
-    .workspace-hero h1 { margin: 0 0 3px; font-size: 20px; font-weight: 700; }
-    .workspace-hero p { margin: 0; font-size: 13px; opacity: .92; line-height: 1.6; }
-
-    .workspace-alert { margin: 14px 0; border-radius: 10px; }
-
-    /* ===== 区块标题 ===== */
-    .ws-section { margin-top: 24px; }
-    .ws-section-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-    .ws-section-head h2 { margin: 0; font-size: 16px; font-weight: 700; color: #1f2d3d; display: flex; align-items: center; gap: 8px; }
-    .ws-section-head .count-pill {
-        padding: 2px 12px; border-radius: 999px; font-size: 12px;
-        color: #667eea; background: rgba(102, 126, 234, .10);
-        border: 1px solid rgba(102, 126, 234, .22);
-    }
-
-    /* ===== 创建工作区 ===== */
-    .ws-create {
-        display: flex; gap: 12px; align-items: center;
-        border: 1px solid #e8ecf4; border-radius: 14px; padding: 16px 18px;
-        background: #fff; box-shadow: 0 2px 10px rgba(32, 38, 51, .04);
-    }
-    .ws-create .el-input { flex: 1 1 auto; max-width: 380px; }
-    .ws-create-btn {
-        border: none; color: #fff; font-size: 14px; padding: 11px 22px; border-radius: 9px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        box-shadow: 0 6px 16px rgba(102, 126, 234, .35); transition: all .3s ease;
-    }
-    .ws-create-btn:hover, .ws-create-btn:focus { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(102, 126, 234, .45); color: #fff; }
-    .ws-create-btn i { margin-right: 6px; }
-
-    /* ===== 空状态 ===== */
-    .ws-empty {
-        border: 1.5px dashed #d5dbe8; border-radius: 14px; margin-top: 14px;
-        padding: 42px 24px; text-align: center; background: #fbfcfe;
-    }
-    .ws-empty i { font-size: 34px; color: #b3bde0; }
-    .ws-empty h3 { margin: 12px 0 6px; font-size: 15px; color: #1f2d3d; }
-    .ws-empty p { margin: 0 auto; max-width: 420px; color: #8a94a6; font-size: 13px; line-height: 1.8; }
-
-    /* ===== 工作区列表 ===== */
-    .ws-list { margin-top: 14px; display: flex; flex-direction: column; gap: 12px; }
-    .ws-item {
-        display: flex; align-items: center; gap: 14px;
-        border: 1px solid #e8ecf4; border-radius: 14px; padding: 16px 18px;
-        background: #fff; transition: all .3s ease;
-    }
-    .ws-item:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(82, 103, 217, .10); border-color: rgba(102, 126, 234, .35); }
-    .ws-item-icon {
-        width: 40px; height: 40px; flex: 0 0 40px; border-radius: 11px;
-        display: flex; align-items: center; justify-content: center;
-        color: #fff; font-size: 15px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-    .ws-item-body { flex: 1 1 auto; min-width: 0; }
-    .ws-item-name { font-size: 15px; font-weight: 600; color: #1f2d3d; word-break: break-all; }
-    .ws-item-meta { margin-top: 5px; display: flex; gap: 14px; flex-wrap: wrap; }
-    .ws-item-meta span { font-size: 12px; color: #8a94a6; display: inline-flex; align-items: center; gap: 5px; }
-    .ws-item-meta .fa { font-size: 11px; color: #b6bfce; }
-    .ws-item-actions { flex: 0 0 auto; }
-    .ws-upload-btn { border-radius: 9px; }
-
-    /* ===== 连接指南 ===== */
-    .ws-guide {
-        display: grid; grid-template-columns: 1.4fr 1fr; gap: 18px;
-        border: 1px solid #e8ecf4; border-radius: 14px; padding: 20px;
-        background: #fff; box-shadow: 0 2px 10px rgba(32, 38, 51, .04);
-    }
-    .ws-guide h3 { margin: 0 0 12px; font-size: 14px; color: #1f2d3d; display: flex; align-items: center; gap: 8px; }
-    .ws-guide h3 .fa { color: #667eea; }
-    .step-list { margin: 0; padding: 0; list-style: none; }
-    .step-list li { position: relative; padding: 0 0 12px 34px; font-size: 13px; color: #4b5563; line-height: 1.6; }
-    .step-list li::before {
-        content: attr(data-step); position: absolute; left: 0; top: 0;
-        width: 24px; height: 24px; border-radius: 50%;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 11.5px; font-weight: 700; color: #fff;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-    .step-list li::after {
-        content: ""; position: absolute; left: 11.5px; top: 26px; bottom: 2px; width: 1.5px;
-        background: linear-gradient(180deg, rgba(102, 126, 234, .4), rgba(102, 126, 234, .08));
-    }
-    .step-list li:last-child { padding-bottom: 0; }
-    .step-list li:last-child::after { display: none; }
-    .ws-guide-side {
-        border-left: 1px solid #eef1f7; padding-left: 18px;
-        display: flex; flex-direction: column; justify-content: center; gap: 10px;
-    }
-    .ws-guide-side p { margin: 0; font-size: 12.5px; color: #8a94a6; line-height: 1.7; }
-    .ws-pair-btn { border-radius: 9px; }
-
-    /* ===== 浮动上传进度 ===== */
-    .ws-upload-toast {
-        position: fixed; right: 24px; bottom: 28px; z-index: 3000;
-        width: 320px; padding: 14px 16px; border-radius: 14px;
-        background: #fff; border: 1px solid #e8ecf4;
-        box-shadow: 0 18px 48px rgba(24, 35, 57, .18);
-    }
-    .ws-upload-toast .toast-file {
-        display: flex; align-items: center; gap: 8px;
-        font-size: 13px; font-weight: 600; color: #1f2d3d; word-break: break-all;
-        margin-bottom: 10px;
-    }
-    .ws-upload-toast .toast-file .fa { color: #667eea; }
-    .ws-upload-toast .el-progress__text { font-size: 12px !important; color: #667eea !important; }
-
-    @@media (max-width: 720px) {
-        .ws-guide { grid-template-columns: 1fr; }
-        .ws-guide-side { border-left: none; border-top: 1px solid #eef1f7; padding: 14px 0 0; }
-        .ws-create { flex-direction: column; align-items: stretch; }
-        .ws-create .el-input { max-width: none; }
-        .ws-item { flex-wrap: wrap; }
-    }
-</style>
-
-<style>
-    /* Workspace follows the AdminChat surface, spacing and interaction language. */
-    .workspace-shell {
-        max-width: 1180px;
-        margin: 0 auto;
-        padding: 4px 4px 28px;
-    }
-
-    .workspace-hero {
-        position: relative;
-        overflow: hidden;
-        align-items: flex-start;
-        padding: 26px 30px;
-        border: 1px solid rgba(255, 255, 255, .18);
-        border-radius: 16px;
-        background:
-            radial-gradient(circle at 90% 15%, rgba(255, 255, 255, .16), transparent 34%),
-            linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        box-shadow: 0 14px 34px rgba(102, 126, 234, .24);
-    }
-
-    .workspace-hero::after {
-        position: absolute;
-        right: -54px;
-        bottom: -82px;
-        width: 220px;
-        height: 220px;
-        border: 1px solid rgba(255, 255, 255, .12);
-        border-radius: 50%;
-        content: "";
-    }
-
-    .workspace-hero-icon {
-        position: relative;
-        z-index: 1;
-        width: 50px;
-        height: 50px;
-        flex-basis: 50px;
-        border-radius: 14px;
-        background: rgba(255, 255, 255, .18);
-        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .2);
-    }
-
-    .workspace-hero > div:last-child {
-        position: relative;
-        z-index: 1;
-        min-width: 0;
-    }
-
-    .workspace-hero h1 {
-        font-size: 22px;
-        letter-spacing: .01em;
-    }
-
-    .workspace-hero p {
-        max-width: 760px;
-    }
-
-    .workspace-alert {
-        margin: 16px 0;
-        border-radius: 10px;
-    }
-
-    .ws-section {
-        margin-top: 22px;
-    }
-
-    .ws-section-head {
-        min-height: 30px;
-        margin-bottom: 12px;
-    }
-
-    .ws-section-head h2 {
-        color: #303133;
-        font-size: 17px;
-        letter-spacing: .01em;
-    }
-
-    .ws-section-head h2::before {
-        width: 4px;
-        height: 18px;
-        border-radius: 4px;
-        background: linear-gradient(180deg, #667eea, #764ba2);
-        content: "";
-    }
-
-    .ws-section-head .count-pill {
-        border-color: rgba(102, 126, 234, .2);
-        background: rgba(102, 126, 234, .09);
-        color: #5b6fd7;
-    }
-
-    .ws-create,
-    .ws-guide {
-        border-color: #e4e7ed;
-        border-radius: 12px;
-        box-shadow: 0 6px 18px rgba(31, 45, 61, .045);
-    }
-
-    .ws-create {
-        padding: 18px 20px;
-    }
-
-    .ws-create .el-input {
-        max-width: 520px;
-    }
-
-    .ws-create-btn {
-        min-height: 38px;
-        border-radius: 8px;
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        box-shadow: 0 6px 16px rgba(102, 126, 234, .24);
-    }
-
-    .ws-create-btn:hover,
-    .ws-create-btn:focus {
-        background: linear-gradient(135deg, #748cf0, #8357ad);
-        box-shadow: 0 10px 22px rgba(102, 126, 234, .3);
-    }
-
-    .ws-empty {
-        margin-top: 12px;
-        border-color: #d9e0ed;
-        border-radius: 12px;
-        background: rgba(255, 255, 255, .62);
-    }
-
-    .ws-empty i {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 58px;
-        height: 58px;
-        border-radius: 18px;
-        background: #eef1ff;
-        color: #7285df;
-    }
-
-    .ws-list {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-        gap: 14px;
-        margin-top: 12px;
-    }
-
-    .ws-item {
-        min-width: 0;
-        padding: 17px 18px;
-        border-color: #e4e7ed;
-        border-radius: 12px;
-        box-shadow: 0 5px 16px rgba(31, 45, 61, .04);
-    }
-
-    .ws-item:hover {
-        border-color: rgba(102, 126, 234, .4);
-        box-shadow: 0 12px 26px rgba(82, 103, 217, .12);
-    }
-
-    .ws-item-icon {
-        width: 42px;
-        height: 42px;
-        flex-basis: 42px;
-        border-radius: 12px;
-        background: linear-gradient(135deg, #667eea, #764ba2);
-    }
-
-    .ws-item-name {
-        color: #303133;
-        font-size: 15px;
-    }
-
-    .ws-item-meta {
-        gap: 8px 14px;
-    }
-
-    .ws-item-actions {
-        align-self: flex-start;
-    }
-
-    .ws-upload-btn,
-    .ws-pair-btn {
-        border-radius: 8px;
-    }
-
-    .ws-guide {
-        grid-template-columns: minmax(0, 1.45fr) minmax(250px, 1fr);
-        padding: 22px;
-    }
-
-    .ws-guide h3 {
-        color: #303133;
-    }
-
-    .ws-guide h3 .fa {
-        color: #667eea;
-    }
-
-    .step-list li::before {
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        box-shadow: 0 4px 10px rgba(102, 126, 234, .2);
-    }
-
-    .ws-guide-side {
-        border-left-color: #ebeef5;
-    }
-
-    .ws-upload-toast {
-        right: 24px;
-        bottom: 42px;
-        border-color: #e4e7ed;
-        border-radius: 12px;
-        box-shadow: 0 18px 48px rgba(24, 35, 57, .18);
-    }
-
-    .ws-stats {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 14px;
-        margin-top: 18px;
-    }
-
-    .ws-stat,
-    .ws-stat-note {
-        border: 1px solid #e4e7ed;
-        border-radius: 12px;
-        background: #fff;
-        box-shadow: 0 6px 18px rgba(31, 45, 61, .045);
-    }
-
-    .ws-stat {
-        padding: 16px 18px;
-    }
-
-    .ws-stat-label {
-        display: block;
-        color: #8a94a6;
-        font-size: 12px;
-    }
-
-    .ws-stat strong {
-        display: block;
-        margin: 6px 0 4px;
-        color: #303133;
-        font-size: 26px;
-        line-height: 1.1;
-    }
-
-    .ws-stat small {
-        color: #606266;
-        font-size: 12px;
-    }
-
-    .ws-stat.is-other {
-        background: #fffaf3;
-    }
-
-    .ws-stat.is-total strong {
-        color: #5b6fd7;
-    }
-
-    .ws-stat-note {
-        margin: 12px 0 0;
-        padding: 12px 16px;
-        color: #606266;
-        font-size: 12.5px;
-        line-height: 1.7;
-    }
-
-    .ws-scope {
-        display: inline-flex;
-        align-items: center;
-        margin-left: 8px;
-        padding: 1px 8px;
-        border-radius: 999px;
-        font-size: 12px;
-        font-weight: 600;
-        vertical-align: 1px;
-    }
-
-    .ws-scope.is-own {
-        color: #3f6b32;
-        background: #eef8ea;
-    }
-
-    .ws-scope.is-other {
-        color: #9a5b12;
-        background: #fff1dc;
-    }
-
-    .ws-item.is-other {
-        background: #fffdf9;
-    }
-
-    .ws-usage {
-        max-width: 280px;
-        margin-top: 10px;
-    }
-
-    .ws-item-actions {
-        display: flex;
-        gap: 8px;
-    }
-
-    .ws-clear-btn {
-        border-radius: 8px;
-    }
-
-    .ws-clear-form {
-        display: none;
-    }
-
-    @@media (max-width: 900px) {
-        .ws-list,
-        .ws-stats {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    @@media (max-width: 600px) {
-        .workspace-shell {
-            padding: 0 0 20px;
-        }
-
-        .workspace-hero {
-            padding: 22px 20px;
-        }
-
-        .ws-create {
-            padding: 16px;
-        }
-
-        .ws-item-actions {
-            width: 100%;
-        }
-
-        .ws-upload-btn,
-        .ws-clear-btn {
-            flex: 1 1 auto;
-        }
-
-        .ws-guide {
-            padding: 18px;
-        }
-
-        .ws-upload-toast {
-            right: 12px;
-            bottom: 48px;
-            width: calc(100vw - 24px);
-            box-sizing: border-box;
-        }
-    }
-</style>
-
 <div class="workspace-shell">
     <input ref="workspaceUploadInput" type="file" hidden multiple
         @@change="handleWorkspaceUpload" />
@@ -508,7 +23,7 @@
         <div class="workspace-hero-icon"><i class="fa fa-code"></i></div>
         <div>
             <h1>安全远程工作区</h1>
-            <p>把资料放进工作区，AdminChat、VS Code 与 Cursor 都会在隔离边界内读写。这里显示每个工作区的文件数量和占用容量；清空内容会保留工作区，只恢复成新建时的空目录。</p>
+            <p>文件保存在隔离目录中，AdminChat、VS Code 与 Cursor 共用。这里查看每个工作区的文件数量和容量，也可以清空内容并恢复成新建时的空目录。</p>
         </div>
     </div>
 
@@ -521,29 +36,29 @@
         <el-alert class="workspace-alert" title="@error" type="error" show-icon :closable="false"></el-alert>
     }
 
-    <div class="ws-stats" v-if="report.actorId">
-        <div class="ws-stat">
-            <span class="ws-stat-label">我的工作区</span>
+    <section class="ws-metrics" v-if="report.actorId">
+        <article class="ws-metric">
+            <span class="ws-metric-kicker">我的工作区</span>
             <strong>{{ report.ownSummary.workspaceCount }}</strong>
-            <small>{{ report.ownSummary.fileCount }} 个文件 · {{ formatFileSize(report.ownSummary.usedBytes) }}</small>
-        </div>
-        <div class="ws-stat is-other" v-if="report.isSuperAdmin">
-            <span class="ws-stat-label">其他管理员</span>
+            <span class="ws-metric-detail">{{ report.ownSummary.fileCount }} 个文件 · {{ formatFileSize(report.ownSummary.usedBytes) }}</span>
+        </article>
+        <article class="ws-metric is-other" v-if="report.isSuperAdmin">
+            <span class="ws-metric-kicker">其他管理员</span>
             <strong>{{ report.otherSummary.workspaceCount }}</strong>
-            <small>{{ report.otherSummary.fileCount }} 个文件 · {{ formatFileSize(report.otherSummary.usedBytes) }}</small>
-        </div>
-        <div class="ws-stat is-total" v-if="report.isSuperAdmin">
-            <span class="ws-stat-label">当前租户合计</span>
+            <span class="ws-metric-detail">{{ report.otherSummary.fileCount }} 个文件 · {{ formatFileSize(report.otherSummary.usedBytes) }}</span>
+        </article>
+        <article class="ws-metric is-total" v-if="report.isSuperAdmin">
+            <span class="ws-metric-kicker">当前租户合计</span>
             <strong>{{ report.visibleSummary.workspaceCount }}</strong>
-            <small>{{ report.visibleSummary.fileCount }} 个文件 · {{ formatFileSize(report.visibleSummary.usedBytes) }}</small>
-        </div>
-    </div>
-    <p class="ws-stat-note" v-if="report.actorId">
-        当前账号 #{{ report.actorId }}。单个工作区配额 {{ formatFileSize(report.quotaBytes) }}，文件数和容量都不含工作区清单。
-        <span v-if="report.isSuperAdmin">「其他管理员」只包含当前租户里不属于你的工作区，其他租户不会出现在这里。</span>
+            <span class="ws-metric-detail">{{ report.visibleSummary.fileCount }} 个文件 · {{ formatFileSize(report.visibleSummary.usedBytes) }}</span>
+        </article>
+    </section>
+    <p class="ws-note" v-if="report.actorId">
+        当前账号 #{{ report.actorId }} · 单个工作区配额 {{ formatFileSize(report.quotaBytes) }} · 文件数和容量不含工作区清单。
+        <span v-if="report.isSuperAdmin">其他管理员只统计当前租户内不属于你的工作区。</span>
     </p>
 
-    <div class="ws-section">
+    <section class="ws-section">
         <div class="ws-section-head">
             <h2>我的工作区<ncf-doc-help topic="workspace.manage"></ncf-doc-help></h2>
             <span class="count-pill">{{ report.ownWorkspaces.length }} 个</span>
@@ -563,89 +78,102 @@
             <p>输入一个名字并点击「创建工作区」，即可在 AI 对话与远程编辑器之间安全共享文件。</p>
         </div>
 
-        <div class="ws-list" v-if="report.ownWorkspaces.length">
-            <div class="ws-item" v-for="ws in report.ownWorkspaces" :key="ws.id">
-                <div class="ws-item-icon"><i class="fa fa-cube"></i></div>
-                <div class="ws-item-body">
-                    <div class="ws-item-name">
-                        {{ ws.name }}
-                        <span class="ws-scope is-own" v-if="report.isSuperAdmin">我的</span>
+        <div class="ws-board" v-if="report.ownWorkspaces.length">
+            <article class="ws-card" v-for="ws in report.ownWorkspaces" :key="ws.id">
+                <header class="ws-card-head">
+                    <div class="ws-card-icon"><i class="fa fa-cube"></i></div>
+                    <div class="ws-card-title">
+                        <h3 :title="ws.name">{{ ws.name }}</h3>
+                        <span class="ws-badge is-own" v-if="report.isSuperAdmin">我的</span>
                     </div>
-                    <div class="ws-item-meta">
-                        <span><i class="fa fa-files-o"></i>{{ ws.fileCount }} 个文件 / {{ ws.directoryCount }} 个目录</span>
-                        <span><i class="fa fa-database"></i>{{ formatFileSize(ws.usedBytes) }} / {{ formatFileSize(ws.quotaBytes) }}</span>
-                        <span :title="formatDate(ws.createdUtc)"><i class="fa fa-calendar"></i>创建于 {{ relativeTime(ws.createdUtc) }}</span>
-                        <span :title="formatDate(ws.lastAccessedUtc)"><i class="fa fa-clock-o"></i>最近访问 {{ relativeTime(ws.lastAccessedUtc) }}</span>
+                </header>
+                <div class="ws-card-figures">
+                    <div><span>文件</span><strong>{{ ws.fileCount }}</strong></div>
+                    <div><span>目录</span><strong>{{ ws.directoryCount }}</strong></div>
+                    <div><span>已用</span><strong>{{ formatFileSize(ws.usedBytes) }}</strong></div>
+                </div>
+                <div class="ws-card-usage">
+                    <el-progress :percentage="usagePercent(ws)" :stroke-width="6" :show-text="false" :status="usageStatus(ws)"></el-progress>
+                    <span>{{ formatFileSize(ws.usedBytes) }} / {{ formatFileSize(ws.quotaBytes) }}</span>
+                </div>
+                <footer class="ws-card-foot">
+                    <div class="ws-card-time">
+                        <span :title="formatDate(ws.createdUtc)">创建于 {{ relativeTime(ws.createdUtc) }}</span>
+                        <span :title="formatDate(ws.lastAccessedUtc)">访问于 {{ relativeTime(ws.lastAccessedUtc) }}</span>
                     </div>
-                    <el-progress class="ws-usage" :percentage="usagePercent(ws)" :stroke-width="6" :show-text="false" :status="usageStatus(ws)"></el-progress>
-                </div>
-                <div class="ws-item-actions">
-                    <el-button
-                        class="ws-upload-btn"
-                        type="primary"
-                        size="small"
-                        :loading="manualUploadWorkspaceId === ws.id && manualUploading"
-                        :disabled="manualUploading || clearing"
-                        @@click="chooseWorkspaceUpload(ws.id)">
-                        <i class="el-icon-upload2"></i> 上传文件
-                    </el-button>
-                    <el-button
-                        class="ws-clear-btn"
-                        type="danger"
-                        size="small"
-                        plain
-                        :disabled="manualUploading || clearing"
-                        @@click="clearWorkspace(ws)">
-                        <i class="fa fa-eraser"></i> 清空内容
-                    </el-button>
-                </div>
-            </div>
+                    <div class="ws-card-actions">
+                        <el-button
+                            type="primary"
+                            size="small"
+                            :loading="manualUploadWorkspaceId === ws.id && manualUploading"
+                            :disabled="manualUploading || clearing"
+                            @@click="chooseWorkspaceUpload(ws.id)">
+                            <i class="el-icon-upload2"></i> 上传
+                        </el-button>
+                        <el-button
+                            type="danger"
+                            size="small"
+                            plain
+                            :disabled="manualUploading || clearing"
+                            @@click="clearWorkspace(ws)">
+                            <i class="fa fa-eraser"></i> 清空
+                        </el-button>
+                    </div>
+                </footer>
+            </article>
         </div>
-    </div>
+    </section>
 
-    <div class="ws-section" v-if="report.isSuperAdmin">
+    <section class="ws-section" v-if="report.isSuperAdmin">
         <div class="ws-section-head">
             <h2>其他管理员的工作区</h2>
             <span class="count-pill">{{ report.otherWorkspaces.length }} 个</span>
         </div>
-        <p class="ws-stat-note">这些工作区不属于当前账号。超级管理员可以查看用量并清空内容，操作会记入日志；普通管理员不能看到或修改它们。</p>
+        <p class="ws-note">这些工作区不属于当前账号。超级管理员可以查看用量并清空内容，操作会记入日志。</p>
         <div class="ws-empty" v-if="!report.otherWorkspaces.length">
             <i class="fa fa-folder-o"></i>
             <h3>当前租户没有其他管理员的工作区</h3>
             <p>这里只显示同一个租户里、所有者不是你的工作区。</p>
         </div>
-        <div class="ws-list" v-if="report.otherWorkspaces.length">
-            <div class="ws-item is-other" v-for="ws in report.otherWorkspaces" :key="ws.id">
-                <div class="ws-item-icon"><i class="fa fa-cube"></i></div>
-                <div class="ws-item-body">
-                    <div class="ws-item-name">
-                        {{ ws.name }}
-                        <span class="ws-scope is-other">其他管理员 #{{ ws.ownerId }}</span>
+        <div class="ws-board" v-if="report.otherWorkspaces.length">
+            <article class="ws-card is-other" v-for="ws in report.otherWorkspaces" :key="ws.id">
+                <header class="ws-card-head">
+                    <div class="ws-card-icon"><i class="fa fa-cube"></i></div>
+                    <div class="ws-card-title">
+                        <h3 :title="ws.name">{{ ws.name }}</h3>
+                        <span class="ws-badge is-other">管理员 #{{ ws.ownerId }}</span>
                     </div>
-                    <div class="ws-item-meta">
-                        <span><i class="fa fa-files-o"></i>{{ ws.fileCount }} 个文件 / {{ ws.directoryCount }} 个目录</span>
-                        <span><i class="fa fa-database"></i>{{ formatFileSize(ws.usedBytes) }} / {{ formatFileSize(ws.quotaBytes) }}</span>
-                        <span :title="formatDate(ws.createdUtc)"><i class="fa fa-calendar"></i>创建于 {{ relativeTime(ws.createdUtc) }}</span>
-                        <span :title="formatDate(ws.lastAccessedUtc)"><i class="fa fa-clock-o"></i>最近访问 {{ relativeTime(ws.lastAccessedUtc) }}</span>
+                </header>
+                <div class="ws-card-figures">
+                    <div><span>文件</span><strong>{{ ws.fileCount }}</strong></div>
+                    <div><span>目录</span><strong>{{ ws.directoryCount }}</strong></div>
+                    <div><span>已用</span><strong>{{ formatFileSize(ws.usedBytes) }}</strong></div>
+                </div>
+                <div class="ws-card-usage">
+                    <el-progress :percentage="usagePercent(ws)" :stroke-width="6" :show-text="false" :status="usageStatus(ws)"></el-progress>
+                    <span>{{ formatFileSize(ws.usedBytes) }} / {{ formatFileSize(ws.quotaBytes) }}</span>
+                </div>
+                <footer class="ws-card-foot">
+                    <div class="ws-card-time">
+                        <span :title="formatDate(ws.createdUtc)">创建于 {{ relativeTime(ws.createdUtc) }}</span>
+                        <span :title="formatDate(ws.lastAccessedUtc)">访问于 {{ relativeTime(ws.lastAccessedUtc) }}</span>
                     </div>
-                    <el-progress class="ws-usage" :percentage="usagePercent(ws)" :stroke-width="6" :show-text="false" :status="usageStatus(ws)"></el-progress>
-                </div>
-                <div class="ws-item-actions">
-                    <el-button
-                        class="ws-clear-btn"
-                        type="danger"
-                        size="small"
-                        plain
-                        :disabled="manualUploading || clearing"
-                        @@click="clearWorkspace(ws)">
-                        <i class="fa fa-eraser"></i> 清空内容
-                    </el-button>
-                </div>
-            </div>
+                    <div class="ws-card-actions">
+                        <el-button
+                            type="danger"
+                            size="small"
+                            plain
+                            :disabled="manualUploading || clearing"
+                            @@click="clearWorkspace(ws)">
+                            <i class="fa fa-eraser"></i> 清空
+                        </el-button>
+                    </div>
+                </footer>
+            </article>
         </div>
-    </div>
+    </section>
 
-    <div class="ws-section">
+    <section class="ws-section">
         <div class="ws-section-head">
             <h2>连接指南</h2>
         </div>
@@ -653,20 +181,20 @@
             <div>
                 <h3><i class="fa fa-desktop"></i>在 VS Code / Cursor 中连接</h3>
                 <ol class="step-list">
-                    <li data-step="1">安装 "NCF Workspace" 扩展</li>
-                    <li data-step="2">运行 "NCF: 连接工作区"</li>
+                    <li data-step="1">安装 “NCF Workspace” 扩展</li>
+                    <li data-step="2">运行 “NCF: 连接工作区”</li>
                     <li data-step="3">输入站点地址，在浏览器中确认配对</li>
                     <li data-step="4">选择工作区，文件将作为远程文件夹打开</li>
                 </ol>
             </div>
             <div class="ws-guide-side">
-                <p>设备尚未配对？点击下方按钮管理你的设备会话。</p>
+                <p>设备尚未配对？前往设备会话页面完成配对。</p>
                 <a class="el-button ws-pair-btn el-button--default el-button--small" href="/Admin/DesktopBridge/Index?uid=E9A9D870-A285-4BCE-9D4D-26A219C41252">
                     <i class="fa fa-desktop"></i><span>管理设备配对</span>
                 </a>
             </div>
         </div>
-    </div>
+    </section>
 
     <form method="post" asp-page-handler="Clear" ref="clearForm" class="ws-clear-form">
         <input type="hidden" name="Uid" value="@Model.Uid" />
@@ -678,6 +206,7 @@
         <el-progress :percentage="manualUploadProgress" :stroke-width="8" :show-text="true"></el-progress>
     </div>
 </div>
+
 
 @section scripts {
     <script>

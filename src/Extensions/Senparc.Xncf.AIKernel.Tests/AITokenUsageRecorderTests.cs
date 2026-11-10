@@ -38,11 +38,45 @@ public class AITokenUsageRecorderTests
         Assert.AreEqual("PromptRange", stats.ByModel.Single().ModelAlias);
     }
 
+    [TestMethod]
+    public async Task StopAsync_WhenPersistenceIsStillRunningAndShutdownIsCanceled_ReturnsWithoutThrowing()
+    {
+        var recorder = new AITokenUsageRecorder(
+            new AITokenMonitorService(),
+            new SlowScopeFactory(),
+            NullLogger<AITokenUsageRecorder>.Instance);
+        await recorder.StartAsync(CancellationToken.None);
+        recorder.Record(new AITokenUsageRecord
+        {
+            ModelAlias = "PromptRange",
+            Snapshot = new AITokenUsageSnapshot { InputTokens = 1, OutputTokens = 1 },
+            Success = true,
+            Source = "Shutdown.Tests"
+        });
+        await Task.Delay(50);
+
+        using var shutdown = new CancellationTokenSource();
+        shutdown.Cancel();
+        var startedAt = DateTime.UtcNow;
+        await recorder.StopAsync(shutdown.Token);
+
+        Assert.IsTrue(DateTime.UtcNow - startedAt < TimeSpan.FromSeconds(1.5));
+    }
+
     private sealed class NoopScopeFactory : IServiceScopeFactory
     {
         public IServiceScope CreateScope()
         {
             throw new InvalidOperationException("Persistence should not be required by this test.");
+        }
+    }
+
+    private sealed class SlowScopeFactory : IServiceScopeFactory
+    {
+        public IServiceScope CreateScope()
+        {
+            Thread.Sleep(TimeSpan.FromSeconds(2));
+            throw new InvalidOperationException("Persistence should still be running when shutdown is requested.");
         }
     }
 }

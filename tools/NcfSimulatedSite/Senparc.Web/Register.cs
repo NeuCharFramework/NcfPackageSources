@@ -22,6 +22,9 @@
     修改标识：Senparc - 20260822
     修改描述：v0.37.0 集成管理端 Chat 工作流与最新桌面发布信息
 
+    修改标识：Senparc - 20261110
+    修改描述：缩短主站关闭等待，避免 Ctrl+C 空等默认 30 秒
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.DataProtection;
@@ -51,6 +54,13 @@ namespace Senparc.Web
         public static void AddNcf(this WebApplicationBuilder builder)
         {
             StartTime = SystemTime.Now.DateTime;
+
+            // 通用主机关闭超时默认 30 秒，Ctrl+C 会一直停在 Application is shutting down。
+            // 后台服务自己的 StopAsync 只做有限收尾，这里把整次退出限制在 2 秒。
+            builder.Services.Configure<HostOptions>(options =>
+            {
+                options.ShutdownTimeout = TimeSpan.FromSeconds(2);
+            });
 
             // Localization baseline for all modules (Web/Admin/Installer/XNCF).
             // Use type-based lookup without ResourcesPath override to match embedded resource names.

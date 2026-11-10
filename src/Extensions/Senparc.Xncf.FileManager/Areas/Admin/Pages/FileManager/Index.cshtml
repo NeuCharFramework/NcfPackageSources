@@ -4070,6 +4070,8 @@
                         this.uploadSettings = defaults;
                     }
                 };
+                // el-button 的 click 会用按钮实例调用监听函数。Vue 初始化时会把 methods 绑到页面实例，
+                // 这里在 new Vue 之后覆盖方法，必须重新 bind，否则 this 指向按钮，getDefaultUploadSettings 不存在。
                 vm.saveUploadSettings = function () {
                     if (!this.uploadSettings) this.uploadSettings = this.getDefaultUploadSettings();
                     var maxSizeMb = Number(this.uploadSettings.maxSizeMb);
@@ -4089,7 +4091,7 @@
                     } catch (e) {
                         this.$message.error('保存失败，请检查浏览器本地存储是否可用');
                     }
-                };
+                }.bind(vm);
                 vm.resetUploadSettings = function () {
                     this.uploadSettings = this.getDefaultUploadSettings();
                     try {
@@ -4105,7 +4107,7 @@
                     } catch (e) {
                         this.$message.error('恢复默认失败');
                     }
-                };
+                }.bind(vm);
                 vm.getMaxUploadSizeBytes = function () {
                     var mb = (this.uploadSettings && Number(this.uploadSettings.maxSizeMb)) || 50;
                     return Math.max(1, mb) * 1024 * 1024;

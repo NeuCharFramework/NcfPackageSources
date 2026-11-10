@@ -373,6 +373,31 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Functions
         }
 
         [TestMethod]
+        public async Task HostedStop_WhenShutdownAlreadyCanceledAndLockStaysHeld_ReturnsWithoutWaiting()
+        {
+            var service = new XncfPreviewService();
+            var operationLock = (SemaphoreSlim)typeof(XncfPreviewService)
+                .GetField("_operationLock", BindingFlags.Instance | BindingFlags.NonPublic)
+                .GetValue(service);
+            await operationLock.WaitAsync();
+
+            try
+            {
+                using var shutdownCancellation = new CancellationTokenSource();
+                shutdownCancellation.Cancel();
+                var stopTask = ((IHostedService)service).StopAsync(shutdownCancellation.Token);
+                var completed = await Task.WhenAny(stopTask, Task.Delay(TimeSpan.FromSeconds(2)));
+
+                Assert.AreEqual(stopTask, completed);
+                await stopTask;
+            }
+            finally
+            {
+                operationLock.Release();
+            }
+        }
+
+        [TestMethod]
         public void PersistenceEntities_ShouldStoreTaskAndHostSeparately()
         {
             var snapshot = new XncfPreviewPersistenceSnapshot

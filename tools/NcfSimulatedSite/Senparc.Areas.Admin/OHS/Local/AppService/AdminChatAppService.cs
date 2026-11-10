@@ -55,6 +55,9 @@
     修改标识：Senparc - 20261107
     修改描述：资产侧栏支持脚本预览，以及常见文本的编辑保存
 
+    修改标识：Senparc - 20261110
+    修改描述：工作区列表、会话绑定和名称回填都按当前账号校验所有者
+
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Domain;
@@ -212,11 +215,19 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     throw new NcfExceptionBase("只有超级管理员可以使用 Workspace。");
                 }
 
+                var ownerId = GetCurrentAdminUserInfoId();
+                if (ownerId <= 0)
+                {
+                    throw new NcfExceptionBase("当前管理员身份无效。");
+                }
+
+                var owned = WorkspaceOwnership.SelectOwned(
+                    await _workspaceStorage.ListWorkspacesAsync().ConfigureAwait(false),
+                    ownerId);
+                logger.Append($"Workspace 选项按所有者返回: OwnerId={ownerId}, Count={owned.Count}");
                 return new GetWorkspaceOptionsResponse
                 {
-                    Workspaces = (await _workspaceStorage.ListWorkspacesAsync().ConfigureAwait(false))
-                        .Select(WorkspaceOptionDto.CreateFromDescriptor)
-                        .ToList()
+                    Workspaces = owned.Select(WorkspaceOptionDto.CreateFromDescriptor).ToList()
                 };
             });
         }
@@ -376,9 +387,17 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                         throw new NcfExceptionBase("只有超级管理员可以使用 Workspace。");
                     }
 
-                    if (_workspaceStorage == null
-                        || await _workspaceStorage.GetAsync(workspaceId).ConfigureAwait(false) == null)
+                    var workspace = _workspaceStorage == null
+                        ? null
+                        : await _workspaceStorage.GetAsync(workspaceId).ConfigureAwait(false);
+                    if (!WorkspaceOwnership.IsOwnedBy(workspace, userId))
                     {
+                        if (workspace != null)
+                        {
+                            logger.Append(
+                                $"拒绝将会话绑定到其他管理员的 Workspace: UserId={userId}, WorkspaceId={workspaceId}, OwnerId={workspace.OwnerId}");
+                        }
+
                         throw new NcfExceptionBase("Workspace 不存在或不可用。");
                     }
                 }
@@ -791,9 +810,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 return;
             }
 
-            var workspaces = await _workspaceStorage.ListWorkspacesAsync().ConfigureAwait(false);
-            var names = workspaces
-                .Where(workspace => workspace != null && !string.IsNullOrWhiteSpace(workspace.Id))
+            var ownerId = GetCurrentAdminUserInfoId();
+            var names = WorkspaceOwnership.SelectOwned(
+                    await _workspaceStorage.ListWorkspacesAsync().ConfigureAwait(false),
+                    ownerId)
                 .ToDictionary(workspace => workspace.Id, workspace => workspace.Name, StringComparer.OrdinalIgnoreCase);
             foreach (var session in items)
             {
