@@ -206,7 +206,7 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Oracle
                         .HasColumnType("NVARCHAR2(100)");
 
                     b.Property<string>("PromptReferencesJson")
-                        .HasColumnType("NVARCHAR2(2000)");
+                        .HasColumnType("NCLOB");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
