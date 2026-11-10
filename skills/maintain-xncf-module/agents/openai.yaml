@@ -1,0 +1,4 @@
+interface:
+  display_name: "维护 XNCF"
+  short_description: "为已有 XNCF 增加用例、迁移、页面和测试"
+  default_prompt: "使用 $maintain-xncf-module 在现有 XNCF 中按垂直切片实现功能，并保持 UID 与数据库前缀不变。"

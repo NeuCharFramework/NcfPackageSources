@@ -1,139 +1,53 @@
 ---
 name: develop-xncf-modules
-description: Create, extend, refactor, and validate NeuCharFramework XNCF modules. Use when Codex needs to scaffold an XNCF, add Domain/Application/OHS/Areas/database/function/EventBus capabilities, plan modular development inside one XNCF, split a business system into multiple XNCFs using DDD bounded contexts, define cross-XNCF contracts and data ownership, or review XNCF architecture and dependency boundaries.
+description: Route NeuCharFramework XNCF work across creation, integration, feature development, maintenance, bounded-context splits, template upkeep, and release. Use when the user mentions XNCF, NCF module, XncfBuilder, dotnet new XNCF, module install, or publishing an XNCF. Hand the concrete procedure to create-xncf-module, maintain-xncf-module, or publish-xncf-module.
 ---
 
-# Develop XNCF Modules
+# 开发 XNCF 模块
 
-Build XNCF modules around business boundaries, not pages or tables. Preserve the repository's current NCF conventions while keeping domain ownership, dependencies, and validation evidence explicit.
+先判断任务属于哪一条链路，再读取对应技能。不要手抄一个旧模块来代替模板生成。
 
-## Route the task
+| 任务 | 技能 |
+| --- | --- |
+| 新建模块、从模板生成、接入解决方案或宿主 | [create-xncf-module](../create-xncf-module/SKILL.md) |
+| 给已有模块加用例、实体、页面、Function、WebApi、迁移、测试 | [maintain-xncf-module](../maintain-xncf-module/SKILL.md) |
+| 对齐版本、更新日志、打包、发布 | [publish-xncf-module](../publish-xncf-module/SKILL.md) |
+| 修改 XNCF 模板本身 | [references/template-maintenance.md](references/template-maintenance.md) |
+| 只审查边界、依赖、拆分，不改代码 | 本文件的判断规则，加上下面两份参考 |
 
-Classify the request before editing:
+设计判断读 [references/architecture.md](references/architecture.md)。拆分、合并、上下文地图读 [references/bounded-context-splitting.md](references/bounded-context-splitting.md)。验证证据的边界读 [references/creation-and-validation.md](references/creation-and-validation.md)。
 
-1. **Create**: scaffold one or more new XNCFs.
-2. **Extend**: add a use case, aggregate, page, API, Function, database capability, or integration to an existing XNCF.
-3. **Split**: decompose a system or oversized XNCF into bounded contexts and multiple XNCFs.
-4. **Review**: report architecture, coupling, migration, or validation findings without changing code.
-5. **Maintain the template**: change the XNCF template or generator itself.
+## 先定边界，再定项目
 
-Read [references/architecture.md](references/architecture.md) for every implementation or review. Read [references/bounded-context-splitting.md](references/bounded-context-splitting.md) for split, merge, dependency, or context-map decisions. Read [references/creation-and-validation.md](references/creation-and-validation.md) before scaffolding, changing the template, packaging, or claiming completion.
+一个 XNCF 对应一组共享语言、不变量、数据所有者和发布节奏的能力。页面、表、控制器、目录大小都不是拆分理由。一个聚合的写事务只属于一个 XNCF。
 
-## Establish the baseline
+默认做一个模块。只有在语言冲突、数据所有者不同、可独立安装或发布、安全或可用性边界不同、或者依赖可以收成稳定契约时，才拆成多个。拆分前先给出上下文地图，并等用户确认。
 
-1. Read all applicable `AGENTS.md` files.
-2. Run `git status --short --branch`; preserve unrelated and user-owned changes.
-3. Locate the solution, host `Senparc.Web.csproj`, candidate XNCFs, template version, target framework, and package/project reference convention.
-4. Run the bundled inspector from the skill directory:
-
-   ```bash
-   python3 scripts/inspect_xncf.py <repository-root>
-   ```
-
-   Add `--module <name>` for focused output and `--layers` for optional Domain/Application namespace checks. Treat direct XNCF references as review signals, not automatic defects. Confirm each finding in source before changing code.
-5. Inspect current `Register.cs`, `Register.Area.cs`, `Register.Database.cs`, project files, resources, tests, and analogous modules. Do not infer architecture from directory names alone.
-
-If the user requested an audit or proposal first, deliver the complete proposal and wait for confirmation before editing.
-
-## Model the business before choosing projects
-
-Capture these facts for each capability:
-
-- business purpose and ubiquitous language;
-- commands, invariants, aggregates, and transaction boundary;
-- authoritative data owner and read-model consumers;
-- actors, authorization boundary, and tenant behavior;
-- external systems and anti-corruption needs;
-- lifecycle, release cadence, optional installation, scale, and failure isolation;
-- synchronous and asynchronous dependencies.
-
-Produce a context map before creating multiple XNCFs. Include proposed XNCF, owned aggregates/tables, exposed contracts, dependencies, consistency model, UI/API entry points, and migration sequence.
-
-## Choose one XNCF or several
-
-Default to one XNCF while capabilities share the same language, invariants, data owner, permissions, and lifecycle. Split only when there is positive boundary evidence.
-
-Strong split signals include:
-
-- different bounded contexts or conflicting meanings for the same terms;
-- independent aggregate and transaction ownership;
-- optional installation or independent release/versioning;
-- distinct security, tenancy, availability, or scaling requirements;
-- external integration that deserves an anti-corruption boundary;
-- a dependency that can be expressed as a stable contract rather than shared internals.
-
-Do not split merely by entity, table, CRUD page, controller, team preference, or folder size. Keep one aggregate's write transaction inside one XNCF. See [references/bounded-context-splitting.md](references/bounded-context-splitting.md) for the scoring and migration rules.
-
-## Design dependencies before code
-
-Use this dependency direction inside an XNCF:
+模块内部依赖方向：
 
 ```text
-Areas / OHS / adapters -> Application -> Domain
-Register / composition root -> all required implementation layers
+Areas / OHS / 适配器 -> Application -> Domain
+Register 只做组合，不写用例
 ```
 
-Keep Domain independent of Areas, OHS, Razor, transport DTOs, and another XNCF's implementation. Let Application orchestrate use cases; keep business invariants in aggregates/domain services. Use OHS and Areas as adapters, not as the business layer.
+跨模块只共享 `.Abstractions` 里的 ID、快照、命令结果和集成事件。不要引用另一个模块的实体、仓储、映射或 `DbContext`。EventBus 是进程内通信，不是安全边界，也不是持久投递。
 
-Across XNCFs:
+## 身份一旦发布就固定
 
-- expose minimal contracts in a small `.Abstractions` project when compile-time sharing is necessary;
-- exchange IDs, value snapshots, commands/results, and integration events—not entities, repositories, EF configurations, or `DbContext`;
-- prefer EventBus for in-process asynchronous module collaboration and explicit APIs/application contracts for queries;
-- use SSE/stream hubs for browser streaming, not as a replacement for domain integration events;
-- design idempotency, retries, timeouts, and failure ownership explicitly;
-- avoid dependency cycles; introduce a contract, orchestrator/process manager, or boundary correction instead.
+- `Register.Uid` 是大写 GUID。已发布模块的 UID 冲突时，改新模块，不改旧模块。
+- `DatabaseUniquePrefix` 发布后不改。表名使用 `Register.DATABASE_PREFIX + nameof(实体)`。
+- `Register.Version` 与 csproj `<Version>` 使用同一个语义化版本。
+- 不要把模板自带的 `1.1.x` 更新历史留在新模块里。
 
-Treat EventBus as a communication mechanism, not a security or process-isolation boundary.
+## 运行位置
 
-## Scaffold safely
+技能运行在用户正在开发的 NCF 站点上。这个站点可能只有 `Senparc.Web` 项目和 NuGet 上的程序集，没有基础库源码。
 
-1. Prefer the installed XNCF template or XncfBuilder over hand-copying an old module.
-2. Run `dotnet new XNCF --help` and inspect the installed template before choosing switches; do not guess stale package versions or options.
-3. Use explicit organization, module name, stable uppercase GUID/UID, semantic version, menu name, icon, description, target framework, and required feature switches.
-4. Generate into a new, explicit directory. Review generated files before adding them to a solution or host.
-5. Keep each XNCF UID and `DatabaseUniquePrefix` globally unique and stable after release.
-6. Add only the capabilities needed now: Web/Areas, Database, Function, or Web API. Remove sample code that is not part of the product.
+- 模板只安装 NuGet 包 `Senparc.Xncf.XncfBuilder.Template`。
+- 基础库版本从宿主已引用的包读取；宿主没有的包再查询 nuget.org。
+- 新模块放在 `Senparc.Web` 同级，并用 `PackageReference` 引用这些包。
+- 生成前先跑 `skills/develop-xncf-modules/scripts/prepare_xncf.py`，`--root` 传站点根目录。用脚本输出的命令和版本，不要写死源码仓库路径。
 
-Never install or update templates/packages, modify a solution, or add host references when the user requested only a plan or audit.
+只有用户明确要求修改模板包的源码时，才阅读 [references/template-maintenance.md](references/template-maintenance.md)。那份文档里的目录不属于普通创建流程。
 
-## Implement vertical slices
-
-For each use case:
-
-1. Define domain behavior and invariants.
-2. Add application request/response DTOs and orchestration.
-3. Add persistence mappings/migrations owned by this XNCF.
-4. Add OHS/API/Function and Areas/UI adapters.
-5. Register services and mappings in the partial `Register` composition root.
-6. Add localization for all user-visible text and authorization for all entry points.
-7. Add unit/contract tests at the lowest meaningful layer; add host integration tests when registration, routing, database, authorization, EventBus, or static assets are involved.
-
-Avoid generic `Common`, `Manager`, or shared-database buckets. Name code after the bounded context and use case.
-
-## Validate proportionately
-
-Run narrow checks first, then the host. Follow repository instructions; do not restore again unless package references changed or a no-restore build demonstrates that restore is required.
-
-At minimum verify:
-
-- the inspector has no unexplained duplicate identity, database-prefix, layer, or cycle findings;
-- changed XNCF projects build with `--no-restore` when allowed;
-- tests covering modified domain/application/contracts pass;
-- the host builds and discovers the module;
-- install/update and migrations are checked when database shape changed;
-- resource files, JavaScript, routes, authorization, and static assets are checked when UI changed;
-- generated package contents and an independently generated consumer are checked before claiming template/package readiness.
-
-Report proof boundaries separately: static inspection, build, tests, package generation, runtime registration, authenticated behavior, and E2E are not interchangeable.
-
-## Deliver the result
-
-Summarize:
-
-- chosen bounded contexts and why they are one or multiple XNCFs;
-- dependency direction and cross-XNCF contracts;
-- data/transaction ownership and consistency model;
-- files/modules changed;
-- validations passed and warnings;
-- runtime, authenticated, package, migration, or E2E evidence still missing.
+用户只要方案时，给出方案后停止，不安装模板、不生成项目、不改解决方案。

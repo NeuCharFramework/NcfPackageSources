@@ -1,5 +1,14 @@
 # XNCF creation, template, and validation workflow
 
+操作步骤以中文技能为准，不要从本文复制命令：
+
+- 创建和接入：`skills/create-xncf-module/SKILL.md` 与 `references/create-and-integrate.md`
+- 功能维护：`skills/maintain-xncf-module/SKILL.md` 与 `references/develop-and-maintain.md`
+- 打包发布：`skills/publish-xncf-module/SKILL.md` 与 `references/publish.md`
+- 模板本身：`references/template-maintenance.md`
+
+下面保留验证证据的边界。文中若出现全 0 GUID 或手写的旧参数，不能拿来执行。
+
 ## Contents
 
 - Discover the active toolchain
@@ -20,44 +29,20 @@ dotnet new XNCF --help
 rg --files -g 'Register*.cs' -g '*.csproj' -g 'template.json'
 ```
 
-Read applicable `AGENTS.md`. Inspect the host target framework and existing package/project references. Do not install or update a template from the network without authorization.
+Read applicable `AGENTS.md`. Inspect the host `Senparc.Web.csproj` target framework and its NuGet package references. Install `Senparc.Xncf.XncfBuilder.Template` from NuGet when creating a module. Do not look for a template in a source tree.
 
-In NcfPackageSources, inspect these current anchors when relevant:
+The directories below exist only in the NCF package source repository. Open them solely when the user asked to change the template package itself:
 
-- authoritative template source: `tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName`;
-- generated template target: `src/Extensions/Senparc.Xncf.XncfBuilder/Senparc.Xncf.XncfBuilder.Template/templates/template1`;
-- generator: `src/Extensions/Senparc.Xncf.XncfBuilder`;
-- sync implementation: `tools/NcfSimulatedSiteSyncTool`.
+- template authoring source and the sync tool live in that repository;
+- the published template id is `Senparc.Xncf.XncfBuilder.Template`.
 
 The simulated-site template source is authoritative for synchronized content. Do not edit only `templates/template1`; a later one-way sync can overwrite it. Account for placeholder transformations such as UID/version before comparing source and target.
 
 ## Scaffold a module
 
-Use the current help output to supply all required symbols. A representative invocation is:
+Run `skills/develop-xncf-modules/scripts/prepare_xncf.py` and follow `skills/create-xncf-module/SKILL.md`. Do not invent the `dotnet new` arguments or copy a GUID from documentation. The script refuses the zero GUID, `WrongGuid`, duplicate UIDs, and duplicate database prefixes.
 
-```bash
-dotnet new XNCF \
-  -n Contoso.Xncf.Ordering \
-  -o src/Extensions/Contoso.Xncf.Ordering \
-  --OrgName Contoso \
-  --XncfName Ordering \
-  --Guid 00000000-0000-0000-0000-000000000000 \
-  --Version 0.1.0 \
-  --MenuName Ordering \
-  --Icon "fa fa-cubes" \
-  --Description "Order lifecycle management" \
-  --Web true \
-  --Database true
-```
-
-Replace the example GUID with a newly generated explicit GUID. Add `--Function true`, `--UseWebApi true`, `--Sample true`, target framework, and NCF package versions only when supported/required by the active template. Never copy the zero GUID.
-
-After generation:
-
-1. Review every generated file and remove irrelevant samples.
-2. Confirm assembly/root namespace, UID, version, menu/description resources, database prefix, and static assets.
-3. Add the project to the intended solution and host only after checking paths and dependency direction.
-4. Prefer package references for independently distributed XNCFs. Use repository project references only when the checkout's conventions require source integration.
+After generation, normalize the package version, remove the Color sample unless it is the requested feature, and integrate the project using the profile printed by the script.
 
 ## Maintain the repository template
 
