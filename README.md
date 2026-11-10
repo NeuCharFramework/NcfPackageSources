@@ -101,9 +101,9 @@ The ADO pipeline builds in Release and relies on each project's `GeneratePackage
 
 Published contract projects must also belong to the CI solution, `src/NcfPackageSources.sln`, with Release build mappings enabled. MSBuild may remove the parent configuration from dependencies missing from the solution, causing a fallback to Debug and skipping Release-only package generation.
 
-推送前会按 MSBuild 求值后的包 ID、版本和输出目录检查 FileManager.Abstractions 与 Workspace.Abstractions 的包文件。构建或检查失败时不执行推送。修复漏发包后重新运行流水线即可补发缺失版本，已存在版本仍通过 `--skip-duplicate` 跳过。
+推送前会按 MSBuild 求值后的包 ID、版本和输出目录检查 `Senparc.Ncf.Shared.Abstractions`、`Senparc.Xncf.FileManager.Abstractions`、`Senparc.Xncf.MCP.Abstractions` 与 `Senparc.Xncf.Workspace.Abstractions` 的包文件。构建或检查失败时不执行推送。修复漏发包后重新运行流水线即可补发缺失版本，已存在版本仍通过 `--skip-duplicate` 跳过。
 
-Before pushing, the pipeline checks the FileManager.Abstractions and Workspace.Abstractions package files using their evaluated MSBuild package IDs, versions and output directories. Build or validation failures prevent pushing. Rerun the pipeline to publish missing versions after fixing packaging; existing versions are skipped with `--skip-duplicate`.
+Before pushing, the pipeline checks the `Senparc.Ncf.Shared.Abstractions`, `Senparc.Xncf.FileManager.Abstractions`, `Senparc.Xncf.MCP.Abstractions`, and `Senparc.Xncf.Workspace.Abstractions` package files using their evaluated MSBuild package IDs, versions and output directories. Build or validation failures prevent pushing. Rerun the pipeline to publish missing versions after fixing packaging; existing versions are skipped with `--skip-duplicate`.
 
 ## 模块加载顺序 / Module Loading Order
 
@@ -143,6 +143,7 @@ The `[XncfOrder(x)]` attribute specifies the loading order of modules in descend
 | Senparc.Ncf.Service | 服务层 | [![Senparc.Ncf.Service][badge-Senparc.Ncf.Service]][nuget-Senparc.Ncf.Service] |
 | Senparc.Ncf.SMS | 短信服务 | [![Senparc.Ncf.SMS][badge-Senparc.Ncf.SMS]][nuget-Senparc.Ncf.SMS] |
 | Senparc.Ncf.Utility | 工具类库 | [![Senparc.Ncf.Utility][badge-Senparc.Ncf.Utility]][nuget-Senparc.Ncf.Utility] |
+| Senparc.Ncf.IsolatedRuntime | 共享隔离运行时 | [![Senparc.Ncf.IsolatedRuntime][badge-Senparc.Ncf.IsolatedRuntime]][nuget-Senparc.Ncf.IsolatedRuntime] |
 
 ### 扩展 XNCF 模块 / Extension XNCF Modules
 
@@ -154,15 +155,22 @@ The `[XncfOrder(x)]` attribute specifies the loading order of modules in descend
 | Senparc.Xncf.ChangeNamespace | 命名空间修改工具 | [![Senparc.Xncf.ChangeNamespace][badge-Senparc.Xncf.ChangeNamespace]][nuget-Senparc.Xncf.ChangeNamespace] |
 | Senparc.Xncf.Dapr | Dapr 分布式运行时支持 | [![Senparc.Xncf.Dapr][badge-Senparc.Xncf.Dapr]][nuget-Senparc.Xncf.Dapr] |
 | Senparc.Xncf.DatabaseToolkit | 数据库工具包模块 | [![Senparc.Xncf.DatabaseToolkit][badge-Senparc.Xncf.DatabaseToolkit]][nuget-Senparc.Xncf.DatabaseToolkit] |
+| Senparc.Xncf.DesktopBridge | 桌面状态桥接 | [![Senparc.Xncf.DesktopBridge][badge-Senparc.Xncf.DesktopBridge]][nuget-Senparc.Xncf.DesktopBridge] |
 | Senparc.Xncf.DynamicData | 动态数据基础模块 | [![Senparc.Xncf.DynamicData][badge-Senparc.Xncf.DynamicData]][nuget-Senparc.Xncf.DynamicData] |
 | Senparc.Xncf.FileManager | 文件管理模块 | [![Senparc.Xncf.FileManager][badge-Senparc.Xncf.FileManager]][nuget-Senparc.Xncf.FileManager] |
+| Senparc.Xncf.FirmwareUpdate | 固件与安装包镜像更新 | [![Senparc.Xncf.FirmwareUpdate][badge-Senparc.Xncf.FirmwareUpdate]][nuget-Senparc.Xncf.FirmwareUpdate] |
 | Senparc.Xncf.KnowledgeBase | AI 知识库 | [![Senparc.Xncf.KnowledgeBase][badge-Senparc.Xncf.KnowledgeBase]][nuget-Senparc.Xncf.KnowledgeBase] |
-| Senparc.Xncf.MCP | MCF 多租户微服务平台 | [![Senparc.Xncf.MCP][badge-Senparc.Xncf.MCP]][nuget-Senparc.Xncf.MCP] |
+| Senparc.Xncf.MCP | MCP 端点管理 | [![Senparc.Xncf.MCP][badge-Senparc.Xncf.MCP]][nuget-Senparc.Xncf.MCP] |
+| Senparc.Xncf.NeuCharWorkflow | 服务端工作流编排 | [![Senparc.Xncf.NeuCharWorkflow][badge-Senparc.Xncf.NeuCharWorkflow]][nuget-Senparc.Xncf.NeuCharWorkflow] |
 | Senparc.Xncf.PromptRange | AI 提示词靶场 | [![Senparc.Xncf.PromptRange][badge-Senparc.Xncf.PromptRange]][nuget-Senparc.Xncf.PromptRange] |
+| Senparc.Xncf.Sandbox | 沙箱环境编排 | [![Senparc.Xncf.Sandbox][badge-Senparc.Xncf.Sandbox]][nuget-Senparc.Xncf.Sandbox] |
 | Senparc.Xncf.SenMapic | SenMapic 爬虫模块 | [![Senparc.Xncf.SenMapic][badge-Senparc.Xncf.SenMapic]][nuget-Senparc.Xncf.SenMapic] |
 | Senparc.Xncf.Swagger | Swagger 接口文档 | [![Senparc.Xncf.Swagger][badge-Senparc.Xncf.Swagger]][nuget-Senparc.Xncf.Swagger] |
 | Senparc.Xncf.Terminal | 终端命令模块 | [![Senparc.Xncf.Terminal][badge-Senparc.Xncf.Terminal]][nuget-Senparc.Xncf.Terminal] |
+| Senparc.Xncf.WeixinManager | 微信管理后台 | [![Senparc.Xncf.WeixinManager][badge-Senparc.Xncf.WeixinManager]][nuget-Senparc.Xncf.WeixinManager] |
+| Senparc.Xncf.Workspace | 工作区存储与远程编辑 | [![Senparc.Xncf.Workspace][badge-Senparc.Xncf.Workspace]][nuget-Senparc.Xncf.Workspace] |
 | Senparc.Xncf.XncfBuilder | XNCF 模块生成器 | [![Senparc.Xncf.XncfBuilder][badge-Senparc.Xncf.XncfBuilder]][nuget-Senparc.Xncf.XncfBuilder] |
+| Senparc.Xncf.XncfBuilder.Template | XNCF 模块项目模板 | [![Senparc.Xncf.XncfBuilder.Template][badge-Senparc.Xncf.XncfBuilder.Template]][nuget-Senparc.Xncf.XncfBuilder.Template] |
 | Senparc.Xncf.AreasBase | 系统区域基础模块 | [![Senparc.Xncf.AreasBase][badge-Senparc.Xncf.AreasBase]][nuget-Senparc.Xncf.AreasBase] |
 | Senparc.Xncf.Menu | 菜单管理模块 | [![Senparc.Xncf.Menu][badge-Senparc.Xncf.Menu]][nuget-Senparc.Xncf.Menu] |
 | Senparc.Xncf.SystemCore | 系统核心模块 | [![Senparc.Xncf.SystemCore][badge-Senparc.Xncf.SystemCore]][nuget-Senparc.Xncf.SystemCore] |
@@ -171,6 +179,25 @@ The `[XncfOrder(x)]` attribute specifies the loading order of modules in descend
 | Senparc.Xncf.Tenant | 多租户管理模块 | [![Senparc.Xncf.Tenant][badge-Senparc.Xncf.Tenant]][nuget-Senparc.Xncf.Tenant] |
 | Senparc.Xncf.Tenant.Interface | 多租户接口模块 | [![Senparc.Xncf.Tenant.Interface][badge-Senparc.Xncf.Tenant.Interface]][nuget-Senparc.Xncf.Tenant.Interface] |
 | Senparc.Xncf.XncfModuleManager | XNCF 模块管理器 | [![Senparc.Xncf.XncfModuleManager][badge-Senparc.Xncf.XncfModuleManager]][nuget-Senparc.Xncf.XncfModuleManager] |
+
+### 契约包 / Abstraction Packages
+
+契约包只暴露跨模块接口，可单独引用，不必依赖对应模块的实现程序集。
+
+Abstraction packages expose cross-module contracts and can be referenced without the corresponding module implementation.
+
+| 包名 / Package Name | 描述 / Description | 版本 / Version |
+|---------------------|-------------------|----------------|
+| Senparc.Ncf.Shared.Abstractions | EventBus、隔离运行时与桌面桥接公共契约 | [![Senparc.Ncf.Shared.Abstractions][badge-Senparc.Ncf.Shared.Abstractions]][nuget-Senparc.Ncf.Shared.Abstractions] |
+| Senparc.Xncf.AgentsManager.Abstractions | 智能体与工作流引用校验契约 | [![Senparc.Xncf.AgentsManager.Abstractions][badge-Senparc.Xncf.AgentsManager.Abstractions]][nuget-Senparc.Xncf.AgentsManager.Abstractions] |
+| Senparc.Xncf.AIKernel.Abstractions | AI 内核跨模块契约 | [![Senparc.Xncf.AIKernel.Abstractions][badge-Senparc.Xncf.AIKernel.Abstractions]][nuget-Senparc.Xncf.AIKernel.Abstractions] |
+| Senparc.Xncf.FileManager.Abstractions | 文件管理跨模块契约 | [![Senparc.Xncf.FileManager.Abstractions][badge-Senparc.Xncf.FileManager.Abstractions]][nuget-Senparc.Xncf.FileManager.Abstractions] |
+| Senparc.Xncf.MCP.Abstractions | MCP 端点查询契约 | [![Senparc.Xncf.MCP.Abstractions][badge-Senparc.Xncf.MCP.Abstractions]][nuget-Senparc.Xncf.MCP.Abstractions] |
+| Senparc.Xncf.NeuCharWorkflow.Abstractions | 工作流对象与通知契约 | [![Senparc.Xncf.NeuCharWorkflow.Abstractions][badge-Senparc.Xncf.NeuCharWorkflow.Abstractions]][nuget-Senparc.Xncf.NeuCharWorkflow.Abstractions] |
+| Senparc.Xncf.PromptRange.Abstractions | 提示词靶场 Skill 与评分契约 | [![Senparc.Xncf.PromptRange.Abstractions][badge-Senparc.Xncf.PromptRange.Abstractions]][nuget-Senparc.Xncf.PromptRange.Abstractions] |
+| Senparc.Xncf.Sandbox.Abstractions | 沙箱集成契约 | [![Senparc.Xncf.Sandbox.Abstractions][badge-Senparc.Xncf.Sandbox.Abstractions]][nuget-Senparc.Xncf.Sandbox.Abstractions] |
+| Senparc.Xncf.Workspace.Abstractions | 工作区访问与 Agent 协议契约 | [![Senparc.Xncf.Workspace.Abstractions][badge-Senparc.Xncf.Workspace.Abstractions]][nuget-Senparc.Xncf.Workspace.Abstractions] |
+| Senparc.Xncf.XncfBuilder.Abstractions | 模块生成器跨模块契约 | [![Senparc.Xncf.XncfBuilder.Abstractions][badge-Senparc.Xncf.XncfBuilder.Abstractions]][nuget-Senparc.Xncf.XncfBuilder.Abstractions] |
 
 ## 贡献指南 / Contributing
 
@@ -233,6 +260,10 @@ Apache License Version 2.0
 [nuget-Senparc.Ncf.SMS]: https://www.nuget.org/packages/Senparc.Ncf.SMS
 [badge-Senparc.Ncf.Utility]: https://img.shields.io/nuget/v/Senparc.Ncf.Utility.svg
 [nuget-Senparc.Ncf.Utility]: https://www.nuget.org/packages/Senparc.Ncf.Utility
+[badge-Senparc.Ncf.IsolatedRuntime]: https://img.shields.io/nuget/v/Senparc.Ncf.IsolatedRuntime.svg
+[nuget-Senparc.Ncf.IsolatedRuntime]: https://www.nuget.org/packages/Senparc.Ncf.IsolatedRuntime
+[badge-Senparc.Ncf.Shared.Abstractions]: https://img.shields.io/nuget/v/Senparc.Ncf.Shared.Abstractions.svg
+[nuget-Senparc.Ncf.Shared.Abstractions]: https://www.nuget.org/packages/Senparc.Ncf.Shared.Abstractions
 
 [badge-Senparc.Xncf.AgentsManager]: https://img.shields.io/nuget/v/Senparc.Xncf.AgentsManager.svg
 [nuget-Senparc.Xncf.AgentsManager]: https://www.nuget.org/packages/Senparc.Xncf.AgentsManager
@@ -280,3 +311,35 @@ Apache License Version 2.0
 [nuget-Senparc.Xncf.Tenant.Interface]: https://www.nuget.org/packages/Senparc.Xncf.Tenant.Interface
 [badge-Senparc.Xncf.XncfModuleManager]: https://img.shields.io/nuget/v/Senparc.Xncf.XncfModuleManager.svg
 [nuget-Senparc.Xncf.XncfModuleManager]: https://www.nuget.org/packages/Senparc.Xncf.XncfModuleManager
+[badge-Senparc.Xncf.DesktopBridge]: https://img.shields.io/nuget/v/Senparc.Xncf.DesktopBridge.svg
+[nuget-Senparc.Xncf.DesktopBridge]: https://www.nuget.org/packages/Senparc.Xncf.DesktopBridge
+[badge-Senparc.Xncf.FirmwareUpdate]: https://img.shields.io/nuget/v/Senparc.Xncf.FirmwareUpdate.svg
+[nuget-Senparc.Xncf.FirmwareUpdate]: https://www.nuget.org/packages/Senparc.Xncf.FirmwareUpdate
+[badge-Senparc.Xncf.NeuCharWorkflow]: https://img.shields.io/nuget/v/Senparc.Xncf.NeuCharWorkflow.svg
+[nuget-Senparc.Xncf.NeuCharWorkflow]: https://www.nuget.org/packages/Senparc.Xncf.NeuCharWorkflow
+[badge-Senparc.Xncf.Sandbox]: https://img.shields.io/nuget/v/Senparc.Xncf.Sandbox.svg
+[nuget-Senparc.Xncf.Sandbox]: https://www.nuget.org/packages/Senparc.Xncf.Sandbox
+[badge-Senparc.Xncf.WeixinManager]: https://img.shields.io/nuget/v/Senparc.Xncf.WeixinManager.svg
+[nuget-Senparc.Xncf.WeixinManager]: https://www.nuget.org/packages/Senparc.Xncf.WeixinManager
+[badge-Senparc.Xncf.Workspace]: https://img.shields.io/nuget/v/Senparc.Xncf.Workspace.svg
+[nuget-Senparc.Xncf.Workspace]: https://www.nuget.org/packages/Senparc.Xncf.Workspace
+[badge-Senparc.Xncf.XncfBuilder.Template]: https://img.shields.io/nuget/v/Senparc.Xncf.XncfBuilder.Template.svg
+[nuget-Senparc.Xncf.XncfBuilder.Template]: https://www.nuget.org/packages/Senparc.Xncf.XncfBuilder.Template
+[badge-Senparc.Xncf.AgentsManager.Abstractions]: https://img.shields.io/nuget/v/Senparc.Xncf.AgentsManager.Abstractions.svg
+[nuget-Senparc.Xncf.AgentsManager.Abstractions]: https://www.nuget.org/packages/Senparc.Xncf.AgentsManager.Abstractions
+[badge-Senparc.Xncf.AIKernel.Abstractions]: https://img.shields.io/nuget/v/Senparc.Xncf.AIKernel.Abstractions.svg
+[nuget-Senparc.Xncf.AIKernel.Abstractions]: https://www.nuget.org/packages/Senparc.Xncf.AIKernel.Abstractions
+[badge-Senparc.Xncf.FileManager.Abstractions]: https://img.shields.io/nuget/v/Senparc.Xncf.FileManager.Abstractions.svg
+[nuget-Senparc.Xncf.FileManager.Abstractions]: https://www.nuget.org/packages/Senparc.Xncf.FileManager.Abstractions
+[badge-Senparc.Xncf.MCP.Abstractions]: https://img.shields.io/nuget/v/Senparc.Xncf.MCP.Abstractions.svg
+[nuget-Senparc.Xncf.MCP.Abstractions]: https://www.nuget.org/packages/Senparc.Xncf.MCP.Abstractions
+[badge-Senparc.Xncf.NeuCharWorkflow.Abstractions]: https://img.shields.io/nuget/v/Senparc.Xncf.NeuCharWorkflow.Abstractions.svg
+[nuget-Senparc.Xncf.NeuCharWorkflow.Abstractions]: https://www.nuget.org/packages/Senparc.Xncf.NeuCharWorkflow.Abstractions
+[badge-Senparc.Xncf.PromptRange.Abstractions]: https://img.shields.io/nuget/v/Senparc.Xncf.PromptRange.Abstractions.svg
+[nuget-Senparc.Xncf.PromptRange.Abstractions]: https://www.nuget.org/packages/Senparc.Xncf.PromptRange.Abstractions
+[badge-Senparc.Xncf.Sandbox.Abstractions]: https://img.shields.io/nuget/v/Senparc.Xncf.Sandbox.Abstractions.svg
+[nuget-Senparc.Xncf.Sandbox.Abstractions]: https://www.nuget.org/packages/Senparc.Xncf.Sandbox.Abstractions
+[badge-Senparc.Xncf.Workspace.Abstractions]: https://img.shields.io/nuget/v/Senparc.Xncf.Workspace.Abstractions.svg
+[nuget-Senparc.Xncf.Workspace.Abstractions]: https://www.nuget.org/packages/Senparc.Xncf.Workspace.Abstractions
+[badge-Senparc.Xncf.XncfBuilder.Abstractions]: https://img.shields.io/nuget/v/Senparc.Xncf.XncfBuilder.Abstractions.svg
+[nuget-Senparc.Xncf.XncfBuilder.Abstractions]: https://www.nuget.org/packages/Senparc.Xncf.XncfBuilder.Abstractions

@@ -79,13 +79,14 @@ public class AdminChatPromptReferenceTests : TestBase
     [TestMethod]
     public void ReferenceMigrations_OnlyAddNullableMetadata()
     {
+        var oracleMigration = new Senparc.Areas.Admin.Domain.Migrations.Oracle.Add_AdminChat_PromptReferences();
         Microsoft.EntityFrameworkCore.Migrations.Migration[] migrations =
         {
             new Senparc.Areas.Admin.Domain.Migrations.Sqlite.Add_AdminChat_PromptReferences(),
             new Senparc.Areas.Admin.Domain.Migrations.SqlServer.Add_AdminChat_PromptReferences(),
             new Senparc.Areas.Admin.Domain.Migrations.MySql.Add_AdminChat_PromptReferences(),
             new Senparc.Areas.Admin.Domain.Migrations.PostgreSQL.Add_AdminChat_PromptReferences(),
-            new Senparc.Areas.Admin.Domain.Migrations.Oracle.Add_AdminChat_PromptReferences(),
+            oracleMigration,
             new Senparc.Areas.Admin.Domain.Migrations.Dm.Add_AdminChat_PromptReferences()
         };
         foreach (var migration in migrations)
@@ -96,6 +97,8 @@ public class AdminChatPromptReferenceTests : TestBase
             Assert.IsTrue(column.IsNullable);
             Assert.AreEqual(1, migration.DownOperations.Count);
         }
+        var oracleColumn = oracleMigration.UpOperations.OfType<Microsoft.EntityFrameworkCore.Migrations.Operations.AddColumnOperation>().Single();
+        Assert.AreEqual("NCLOB", oracleColumn.ColumnType);
     }
 
     [TestMethod]
