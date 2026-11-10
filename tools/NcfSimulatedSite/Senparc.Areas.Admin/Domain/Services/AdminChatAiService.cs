@@ -55,6 +55,9 @@
     修改标识：Senparc - 20261105
     修改描述：v0.12.26 生成回复时处理 Prompt 引用与记忆上下文
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.12.28 适配 Harness 1.28，文件访问改为默认关闭
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Logging;
@@ -598,7 +601,6 @@ namespace Senparc.Areas.Admin.Domain.Services
                         ChatOptions = BuildHarnessChatOptions(
                             modules,
                             build.Functions, memoryContext.Instructions),
-                        DisableFileAccess = true,
                         DisableFileMemory = true,
                         DisableAgentSkillsProvider = true,
                         DisableWebSearch = true,
@@ -838,7 +840,6 @@ namespace Senparc.Areas.Admin.Domain.Services
                         ChatOptions = BuildHarnessChatOptions(
                             modules,
                             build.Functions, memoryInstructions),
-                        DisableFileAccess = true,
                         DisableFileMemory = true,
                         DisableAgentSkillsProvider = true,
                         DisableWebSearch = true,

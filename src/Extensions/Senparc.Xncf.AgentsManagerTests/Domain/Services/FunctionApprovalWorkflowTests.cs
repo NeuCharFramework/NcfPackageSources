@@ -48,7 +48,7 @@ public class FunctionApprovalWorkflowTests
             });
         var workflow = AgentWorkflowBuilder.BuildSequential([agent]);
 
-        await using var run = await InProcessExecution.RunStreamingAsync(
+        await using var run = await InProcessExecution.OffThread.RunStreamingAsync(
             workflow,
             new List<ChatMessage> { new(ChatRole.User, "读取网页") });
         Assert.IsTrue(await run.TrySendMessageAsync(new TurnToken(emitEvents: true)));
@@ -105,7 +105,7 @@ public class FunctionApprovalWorkflowTests
             .AddParticipants([toolAgent, passiveAgent])
             .Build();
 
-        await using var run = await InProcessExecution.RunStreamingAsync(
+        await using var run = await InProcessExecution.OffThread.RunStreamingAsync(
             workflow,
             new List<ChatMessage> { new(ChatRole.User, "读取网页") });
 
@@ -165,7 +165,7 @@ public class FunctionApprovalWorkflowTests
             .AddParticipants([toolAgent, passiveAgent])
             .Build();
 
-        await using var run = await InProcessExecution.RunStreamingAsync(
+        await using var run = await InProcessExecution.OffThread.RunStreamingAsync(
             workflow,
             new List<ChatMessage> { new(ChatRole.User, "读取网页") });
 
@@ -224,7 +224,7 @@ public class FunctionApprovalWorkflowTests
             .AddParticipants([toolAgent, passiveAgent])
             .Build();
 
-        await using var run = await InProcessExecution.RunStreamingAsync(
+        await using var run = await InProcessExecution.OffThread.RunStreamingAsync(
             workflow,
             new List<ChatMessage> { new(ChatRole.User, "读取网页") });
 
@@ -266,9 +266,17 @@ public class FunctionApprovalWorkflowTests
         CancellationToken cancellationToken = default)
     {
         var events = new List<WorkflowEvent>();
-        await foreach (var workflowEvent in run.WatchStreamAsync(cancellationToken))
+        await foreach (var workflowEvent in run.WatchStreamAsync(blockOnPendingRequest: false, cancellationToken))
         {
             events.Add(workflowEvent);
+            if (workflowEvent is SuperStepCompletedEvent)
+            {
+                var status = await run.GetStatusAsync(cancellationToken);
+                if (status is RunStatus.Idle or RunStatus.PendingRequests or RunStatus.Ended)
+                {
+                    break;
+                }
+            }
         }
 
         return events;

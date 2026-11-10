@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.12.27</Version>
+		<Version>0.12.28</Version>
 		<PackageReleaseNotes>
     [2026-07-02] v0.0.2 支持流式输出并优化交互体验，优化 AgentsManager 前端界面与历史消息展示效果
     1、支持流式输出并优化交互体验
@@ -160,6 +160,9 @@
     25、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.12
     [2026-11-10] v0.12.27 将 Oracle 提示词引用列改为 NCLOB
     1、AdminChat 消息的 PromptReferencesJson 在 Oracle 上使用 NCLOB，避免超过 NVARCHAR2(2000) 时被截断
+    [2026-11-11] v0.12.28 适配 Microsoft Agent Framework Harness 1.28
+    1、移除已删除的 DisableFileAccess，文件访问保持默认关闭
+    2、依赖 Senparc.AI.AgentKernel 0.1.16
 		</PackageReleaseNotes>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
 		<!--<RazorLangVersion>2.0</RazorLangVersion>-->

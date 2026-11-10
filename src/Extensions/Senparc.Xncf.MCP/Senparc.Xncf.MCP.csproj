@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.5.12</Version>
+    <Version>0.5.13</Version>
     <AssemblyName>Senparc.Xncf.MCP</AssemblyName>
     <RootNamespace>Senparc.Xncf.MCP</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -96,6 +96,7 @@
     5、Dependency update from Senparc.Xncf.AIKernel to 0.17.2
     6、Dependency update from Senparc.Xncf.SenMapic to 0.4.11
     7、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
+    [2026-11-11] v0.5.13 对齐 Microsoft.Extensions.AI 10.11.0，以适配 MAF 1.28
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -110,7 +111,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.AI" Version="10.5.1" />
+    <PackageReference Include="Microsoft.Extensions.AI" Version="10.11.0" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
     <EmbeddedResource Include="wwwroot\**\*" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />

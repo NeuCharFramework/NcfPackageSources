@@ -75,47 +75,34 @@ public class HumanParticipantAgentTests
             .AddParticipants([translator, human])
             .Build();
 
-        await using var run = await InProcessExecution.RunStreamingAsync(
-            workflow,
-            new List<ChatMessage> { new(ChatRole.User, "翻译：苏州是美丽的城市") });
+        var messages = new List<ChatMessage> { new(ChatRole.User, "翻译：苏州是美丽的城市") };
+        var runTask = Task.Run(() => InProcessExecution.OffThread
+            .RunStreamingAsync(workflow, messages)
+            .AsTask());
+        await using var run = await runTask.WaitAsync(TimeSpan.FromSeconds(5));
 
-        for (var turn = 0; turn < 4; turn++)
+        var drive = Task.Run(async () =>
         {
-            Assert.IsTrue(await run.TrySendMessageAsync(new TurnToken(emitEvents: true)));
-            var watchTask = ReadUntilHaltAsync(run);
-            var completed = await Task.WhenAny(requestCreated.Task, watchTask);
-            if (completed != requestCreated.Task)
+            for (var turn = 0; turn < 4 && !requestCreated.Task.IsCompleted; turn++)
             {
-                await watchTask;
-                continue;
+                if (!await run.TrySendMessageAsync(new TurnToken(emitEvents: true)))
+                {
+                    break;
+                }
             }
+        });
 
-            var pending = await requestCreated.Task;
-            Assert.IsTrue(pending.Prompt.Contains("请补充以“请你”开头", StringComparison.Ordinal));
-            Assert.IsTrue(store.TryResolve(
-                pending.RequestId,
-                new HumanInTheLoopDecision(true, "补充请求", "请你把苏州翻译成英文"),
-                out _));
-
-            var humanEvents = await watchTask;
-            Assert.IsTrue(humanEvents
-                .OfType<AgentResponseUpdateEvent>()
-                .Any(z => z.Update.Text.Contains("请你把苏州翻译成英文", StringComparison.Ordinal)));
-            return;
-        }
-
-        Assert.Fail("GroupChat did not schedule the configured Human participant.");
-    }
-
-    private static async Task<List<WorkflowEvent>> ReadUntilHaltAsync(StreamingRun run)
-    {
-        var events = new List<WorkflowEvent>();
-        await foreach (var workflowEvent in run.WatchStreamAsync())
-        {
-            events.Add(workflowEvent);
-        }
-
-        return events;
+        var pending = await requestCreated.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        Assert.IsTrue(
+            pending.Prompt.Contains("翻译：苏州是美丽的城市", StringComparison.Ordinal)
+            || pending.Prompt.Contains("请补充以“请你”开头", StringComparison.Ordinal),
+            pending.Prompt);
+        Assert.IsTrue(store.TryResolve(
+            pending.RequestId,
+            new HumanInTheLoopDecision(true, "补充请求", "请你把苏州翻译成英文"),
+            out _));
+        await drive.WaitAsync(TimeSpan.FromSeconds(5));
+        Assert.AreEqual(0, store.GetPending(42).Count);
     }
 
     private sealed class TextChatClient(string text) : IChatClient

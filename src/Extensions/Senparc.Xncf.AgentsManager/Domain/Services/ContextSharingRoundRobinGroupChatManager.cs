@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260829
     修改描述：v0.17.0 增强 Agent 请求诊断、ChatGroup 状态处理与工作流对象支持
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.19.3 适配 MAF 1.28 群聊本轮广播
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;
@@ -29,8 +32,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services;
 
 /// <summary>
 /// 控制 GroupChat 工作流每轮向参与者广播的上下文。
-/// Microsoft Agent Framework 的 GroupChatManager 会保留完整 canonical history 用于编排，
-/// 此类只收缩投递给每个参与者会话的 payload，避免把工具调用、原始表示或长历史带出边界。
+/// MAF 1.28 起，GroupChatManager 持有完整对话用于选人和结束判断；
+/// UpdateHistoryAsync 只收到本轮即将广播的新消息。参与者自己的会话会累积此前广播。
+/// 此类收缩本轮 payload，避免把工具调用、原始表示或超长文本带出边界。
 /// </summary>
 internal sealed class ContextSharingRoundRobinGroupChatManager : RoundRobinGroupChatManager
 {
@@ -52,8 +56,9 @@ internal sealed class ContextSharingRoundRobinGroupChatManager : RoundRobinGroup
     {
         if (_contextSharingMode == ChatGroupContextSharingMode.LegacyFullHistory)
         {
-            var fullHistory = await base.UpdateHistoryAsync(history, cancellationToken).ConfigureAwait(false);
-            return RemoveApprovalProtocolContent(fullHistory);
+            // 本轮广播由宿主会话累积。这里只去掉审批协议内容，不再把历史重新塞进本轮 payload。
+            var currentBroadcast = await base.UpdateHistoryAsync(history, cancellationToken).ConfigureAwait(false);
+            return RemoveApprovalProtocolContent(currentBroadcast);
         }
 
         if (history == null || history.Count == 0)
