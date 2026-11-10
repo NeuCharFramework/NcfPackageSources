@@ -13,6 +13,8 @@ function load(extra) {
         window: {},
         console,
         Promise,
+        setTimeout,
+        clearTimeout,
         document: { documentElement: { lang: 'zh-CN' } }
     }, extra);
     vm.runInNewContext(fs.readFileSync(file, 'utf8'), context);
@@ -285,6 +287,83 @@ test('chrome does not start recognition when the microphone is already blocked',
     assert.match(vm.voiceNavMessage, /不会再弹出/);
     assert.equal(vm.voiceNavListening, false);
     assert.equal(vm.voiceNavPanelVisible, true);
+});
+
+test('on-device speech prefers dictation and falls back to command', async () => {
+    const api = load();
+    const seen = [];
+    function Recognition() {}
+    Recognition.available = function (options) {
+        seen.push('available:' + options.quality);
+        return Promise.resolve(options.quality === 'command' ? 'available' : 'downloadable');
+    };
+    Recognition.install = function (options) {
+        seen.push('install:' + options.quality);
+        return Promise.resolve(false);
+    };
+    const quality = await api.prepareLocalSpeech(Recognition, 'zh-CN');
+    assert.equal(quality, 'command');
+    assert.deepEqual(seen, ['available:dictation', 'install:dictation', 'available:command']);
+});
+
+function chromiumWindow(SpeechRecognition) {
+    return {
+        navigator: {
+            userAgent: 'Mozilla/5.0 Chrome/142.0.0.0 Safari/537.36',
+            permissions: {
+                query() {
+                    return Promise.resolve({ state: 'granted' });
+                }
+            },
+            mediaDevices: {
+                getUserMedia() {
+                    return Promise.resolve({ getTracks() { return [{ stop() {} }]; } });
+                }
+            }
+        },
+        SpeechRecognition: SpeechRecognition
+    };
+}
+
+test('chrome listens on device when the language pack is already installed', async () => {
+    const started = [];
+    function SpeechRecognition() {
+        this.start = function () { started.push(this.processLocally === true); };
+        this.abort = function () {};
+        this.stop = function () {};
+    }
+    SpeechRecognition.available = function (options) {
+        return Promise.resolve(options.quality === 'dictation' ? 'available' : 'unavailable');
+    };
+    const api = load({ window: chromiumWindow(SpeechRecognition) });
+    const vm = viewModel();
+    api.toggle(vm);
+    await new Promise((resolve) => setImmediate(resolve));
+    assert.deepEqual(started, [true]);
+    assert.match(vm.voiceNavMessage, /请说要打开的页面名称/);
+});
+
+test('chrome downloads the local language pack before listening', async () => {
+    const steps = [];
+    function SpeechRecognition() {
+        this.start = function () { steps.push(this.processLocally === true ? 'local-start' : 'cloud-start'); };
+        this.abort = function () {};
+    }
+    SpeechRecognition.available = function (options) {
+        steps.push('available:' + options.quality);
+        return Promise.resolve(options.quality === 'dictation' ? 'downloadable' : 'unavailable');
+    };
+    SpeechRecognition.install = function (options) {
+        steps.push('install:' + options.quality);
+        return Promise.resolve(true);
+    };
+    const api = load({ window: chromiumWindow(SpeechRecognition) });
+    const vm = viewModel();
+    api.toggle(vm);
+    assert.match(vm.voiceNavMessage, /本地语音识别/);
+    await new Promise((resolve) => setImmediate(resolve));
+    assert.deepEqual(steps, ['available:dictation', 'install:dictation', 'local-start']);
+    assert.match(vm.voiceNavMessage, /请说要打开的页面名称/);
 });
 
 test('safari starts recognition directly so the click can show its own prompt', () => {
