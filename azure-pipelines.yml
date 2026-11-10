@@ -122,7 +122,9 @@ jobs:
   - powershell: |
       $ErrorActionPreference = 'Stop'
       $requiredProjects = @(
+        'src/Basic/Senparc.Ncf.Shared.Abstractions/Senparc.Ncf.Shared.Abstractions.csproj',
         'src/Extensions/Senparc.Xncf.FileManager.Abstractions/Senparc.Xncf.FileManager.Abstractions.csproj',
+        'src/Extensions/Senparc.Xncf.MCP.Abstractions/Senparc.Xncf.MCP.Abstractions.csproj',
         'src/Extensions/Senparc.Xncf.Workspace.Abstractions/Senparc.Xncf.Workspace.Abstractions.csproj'
       )
       foreach ($relativePath in $requiredProjects) {
