@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
 
-    <Version>0.0.18</Version>
+    <Version>0.0.19</Version>
     <PackageReleaseNotes>
       [2026-07-04] v0.0.1 Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
       1、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
@@ -42,6 +42,7 @@
       2、Dependency update from Senparc.Xncf.XncfBuilder to 0.41.8
       3、Dependency update from Senparc.Xncf.AgentsManager to 0.19.2
       4、Dependency update from Senparc.Ncf.Core to 0.30.4-preview10
+      [2026-11-10] v0.0.19 Dependency update from Senparc.Areas.Admin to 0.12.27
     </PackageReleaseNotes>
     <Configurations>Debug;Release;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>
   </PropertyGroup>

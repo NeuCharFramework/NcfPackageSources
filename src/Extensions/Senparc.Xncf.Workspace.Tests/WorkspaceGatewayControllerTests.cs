@@ -162,6 +162,11 @@ public sealed class WorkspaceGatewayControllerTests
             int maxBytes = 2097152,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
+        public Task<WorkspaceTextWindow> ReadTextWindowAsync(
+            string workspaceId,
+            WorkspaceTextWindowRequest request,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
         public Task WriteFileAsync(
             string workspaceId,
             string relativePath,

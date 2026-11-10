@@ -170,6 +170,7 @@ internal sealed class WorkspaceAgentConnection : IAsyncDisposable
         var message = error?.Message ?? "Workspace Agent operation failed.";
         throw error?.Code switch
         {
+            "limit" => new WorkspaceLimitException(message),
             "conflict" => new WorkspaceConflictException(message),
             "forbidden" => new UnauthorizedAccessException(message),
             "not-found" => new FileNotFoundException(message),

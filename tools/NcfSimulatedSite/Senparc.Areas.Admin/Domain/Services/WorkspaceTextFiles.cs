@@ -22,6 +22,8 @@ public readonly record struct WorkspaceTextEdit(string Path, byte[] Content);
 public static class WorkspaceTextFiles
 {
     public const int MaxEditableBytes = 2 * 1024 * 1024;
+    public const int PreviewWindowLines = 800;
+    public const int PreviewWindowBytes = 384 * 1024;
 
     private static readonly Dictionary<string, string> Extensions =
         new(StringComparer.OrdinalIgnoreCase)
@@ -33,6 +35,7 @@ public static class WorkspaceTextFiles
             [".jsx"] = "text/jsx",
             [".ts"] = "text/typescript", [".tsx"] = "text/typescript", [".mts"] = "text/typescript", [".cts"] = "text/typescript",
             [".json"] = "application/json", [".jsonc"] = "application/json", [".json5"] = "application/json",
+            [".jsonl"] = "application/jsonl", [".ndjson"] = "application/jsonl",
             [".map"] = "application/json", [".ipynb"] = "application/json",
             [".svg"] = "image/svg+xml",
             [".txt"] = "text/plain", [".text"] = "text/plain", [".log"] = "text/plain",
@@ -100,7 +103,7 @@ public static class WorkspaceTextFiles
 
     public static bool IsText(string contentType) =>
         contentType.StartsWith("text/", StringComparison.OrdinalIgnoreCase)
-        || contentType is "application/json" or "image/svg+xml";
+        || contentType is "application/json" or "application/jsonl" or "image/svg+xml";
 
     public static bool CanEdit(string relativePath)
     {

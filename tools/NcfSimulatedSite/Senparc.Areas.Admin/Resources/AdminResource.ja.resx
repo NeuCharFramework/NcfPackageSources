@@ -431,6 +431,17 @@
   <data name="Admin.Common.Error" xml:space="preserve"><value>エラー</value></data>
   <data name="AdminChat.Conversation" xml:space="preserve"><value>会話</value></data>
   <data name="AdminChat.History" xml:space="preserve"><value>会話履歴</value></data>
+  <data name="AdminChat.Search.Open" xml:space="preserve"><value>会話を検索</value></data>
+  <data name="AdminChat.Search.Placeholder" xml:space="preserve"><value>未アーカイブの会話を検索</value></data>
+  <data name="AdminChat.Search.ChatTab" xml:space="preserve"><value>会話</value></data>
+  <data name="AdminChat.Search.ToolTab" xml:space="preserve"><value>メソッド</value></data>
+  <data name="AdminChat.Search.ToolPlaceholder" xml:space="preserve"><value>メソッド名を検索</value></data>
+  <data name="AdminChat.Search.ToolCall" xml:space="preserve"><value>メソッド呼び出し</value></data>
+  <data name="AdminChat.Search.Empty" xml:space="preserve"><value>一致する未アーカイブの会話はありません</value></data>
+  <data name="AdminChat.Search.Hint" xml:space="preserve"><value>未アーカイブの会話だけを検索し、最大 10 件表示します</value></data>
+  <data name="AdminChat.Search.ToolHint" xml:space="preserve"><value>未アーカイブの会話で Harness が実際に呼び出したメソッド名だけを検索し、最大 10 件表示します</value></data>
+  <data name="AdminChat.Search.Failed" xml:space="preserve"><value>検索に失敗しました</value></data>
+  <data name="AdminChat.Search.TitleMatch" xml:space="preserve"><value>タイトル一致</value></data>
   <data name="AdminChat.EmptyHistory" xml:space="preserve"><value>会話履歴はありません</value></data>
   <data name="AdminChat.SelectModel" xml:space="preserve"><value>AI モデルを選択</value></data>
   <data name="AdminChat.Manage" xml:space="preserve"><value>管理する</value></data>

@@ -433,6 +433,17 @@
   <data name="Admin.Common.Error" xml:space="preserve"><value>错误</value></data>
   <data name="AdminChat.Conversation" xml:space="preserve"><value>对话</value></data>
   <data name="AdminChat.History" xml:space="preserve"><value>对话历史</value></data>
+  <data name="AdminChat.Search.Open" xml:space="preserve"><value>搜索对话</value></data>
+  <data name="AdminChat.Search.Placeholder" xml:space="preserve"><value>搜索未归档对话</value></data>
+  <data name="AdminChat.Search.ChatTab" xml:space="preserve"><value>对话</value></data>
+  <data name="AdminChat.Search.ToolTab" xml:space="preserve"><value>方法</value></data>
+  <data name="AdminChat.Search.ToolPlaceholder" xml:space="preserve"><value>搜索方法名</value></data>
+  <data name="AdminChat.Search.ToolCall" xml:space="preserve"><value>方法调用</value></data>
+  <data name="AdminChat.Search.Empty" xml:space="preserve"><value>没有匹配的未归档对话</value></data>
+  <data name="AdminChat.Search.Hint" xml:space="preserve"><value>只搜索未归档对话，最多 10 条</value></data>
+  <data name="AdminChat.Search.ToolHint" xml:space="preserve"><value>只搜索未归档会话里，Harness 实际调用过的方法名，最多 10 条</value></data>
+  <data name="AdminChat.Search.Failed" xml:space="preserve"><value>搜索失败</value></data>
+  <data name="AdminChat.Search.TitleMatch" xml:space="preserve"><value>标题匹配</value></data>
   <data name="AdminChat.EmptyHistory" xml:space="preserve"><value>暂无对话历史</value></data>
   <data name="AdminChat.SelectModel" xml:space="preserve"><value>选择 AI 算力</value></data>
   <data name="AdminChat.Manage" xml:space="preserve"><value>管理</value></data>

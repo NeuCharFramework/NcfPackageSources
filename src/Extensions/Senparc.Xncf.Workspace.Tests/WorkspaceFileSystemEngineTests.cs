@@ -275,4 +275,45 @@ public sealed class WorkspaceFileSystemEngineTests
         Assert.IsTrue(written.Created);
         Assert.AreEqual("shared-provider", Encoding.UTF8.GetString(read.Content));
     }
+
+    [TestMethod]
+    public async Task TextWindow_ReadsLineSliceWithoutLoadingTheWholeFile()
+    {
+        var lines = Enumerable.Range(1, 8).Select(index => "line-" + index);
+        await File.WriteAllTextAsync(Path.Combine(_root, "notes.jsonl"), string.Join("\r\n", lines) + "\r\n");
+
+        var window = await _engine.ReadTextWindowAsync(new WorkspaceTextWindowRequest("notes.jsonl", 3, 2, 4096));
+        Assert.AreEqual("line-3\nline-4", window.Content);
+        Assert.AreEqual(3, window.StartLine);
+        Assert.AreEqual(2, window.LineCount);
+        Assert.IsTrue(window.HasMore);
+        Assert.IsFalse(window.Truncated);
+
+        var pastEnd = await _engine.ReadTextWindowAsync(new WorkspaceTextWindowRequest("notes.jsonl", 100, 10, 4096));
+        Assert.AreEqual(string.Empty, pastEnd.Content);
+        Assert.IsFalse(pastEnd.HasMore);
+
+        var oversized = new string('x', 80);
+        await File.WriteAllTextAsync(
+            Path.Combine(_root, "large.log"),
+            string.Join('\n', Enumerable.Repeat(oversized, 2000)) + "\n");
+        await Assert.ThrowsExactlyAsync<WorkspaceLimitException>(() => _engine.ReadFileAsync("large.log", 1024));
+        var head = await _engine.ReadTextWindowAsync(new WorkspaceTextWindowRequest("large.log", 1, 2, 4096));
+        Assert.AreEqual(oversized + "\n" + oversized, head.Content);
+        Assert.IsTrue(head.HasMore);
+        Assert.IsTrue(head.FileLength > 128 * 1024);
+
+        await File.WriteAllTextAsync(Path.Combine(_root, "wide.txt"), new string('y', 3000) + "\nnext\n");
+        var cut = await _engine.ReadTextWindowAsync(new WorkspaceTextWindowRequest("wide.txt", 1, 10, 1024));
+        Assert.IsTrue(cut.Truncated);
+        Assert.IsTrue(cut.Content.EndsWith('…'));
+        Assert.IsTrue(cut.HasMore);
+        Assert.IsTrue(cut.Content.Length < 1200);
+
+        await File.WriteAllTextAsync(Path.Combine(_root, "binary.txt"), "a\0b");
+        await Assert.ThrowsExactlyAsync<ArgumentException>(
+            () => _engine.ReadTextWindowAsync(new WorkspaceTextWindowRequest("binary.txt", 1, 10, 4096)));
+        await Assert.ThrowsExactlyAsync<InvalidOperationException>(
+            () => _engine.ReadTextWindowAsync(new WorkspaceTextWindowRequest("../secret.txt", 1, 10, 4096)));
+    }
 }

@@ -58,6 +58,9 @@
     修改标识：Senparc - 20261110
     修改描述：工作区列表、会话绑定和名称回填都按当前账号校验所有者
 
+    修改标识：Senparc - 20261110
+    修改描述：提供未归档对话搜索，以及 Harness 方法调用名搜索
+
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Domain;
@@ -285,11 +288,51 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 }
 
                 var session = await GetWorkspaceSessionAsync(sessionId).ConfigureAwait(false);
-                var file = await _workspaceStorage.ReadFileBytesAsync(
-                    session.WorkspaceId,
-                    relativePath,
-                    WorkspaceTextFiles.MaxEditableBytes).ConfigureAwait(false);
-                return CreateWorkspaceFilePreview(relativePath, file.Content, file.Metadata.ETag);
+                var contentType = WorkspaceTextFiles.ResolveContentType(relativePath);
+                try
+                {
+                    var file = await _workspaceStorage.ReadFileBytesAsync(
+                        session.WorkspaceId,
+                        relativePath,
+                        WorkspaceTextFiles.MaxEditableBytes).ConfigureAwait(false);
+                    return CreateWorkspaceFilePreview(relativePath, file.Content, file.Metadata.ETag);
+                }
+                catch (WorkspaceLimitException) when (WorkspaceTextFiles.IsText(contentType))
+                {
+                    logger.Append($"Workspace 大文本改为片段预览: Path={relativePath}");
+                    return await CreateTextWindowPreviewAsync(session.WorkspaceId, relativePath, contentType, 1)
+                        .ConfigureAwait(false);
+                }
+                catch (WorkspaceLimitException)
+                {
+                    throw new NcfExceptionBase("文件超过 2 MB，请下载后查看。");
+                }
+            });
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<WorkspaceFilePreviewDto>> GetWorkspaceTextWindowAsync(
+            int sessionId,
+            string relativePath,
+            int startLine = 1)
+        {
+            return await this.GetResponseAsync<AppResponseBase<WorkspaceFilePreviewDto>, WorkspaceFilePreviewDto>(async (response, logger) =>
+            {
+                if (string.IsNullOrWhiteSpace(relativePath))
+                {
+                    throw new NcfExceptionBase("文件路径不能为空。");
+                }
+
+                var contentType = WorkspaceTextFiles.ResolveContentType(relativePath);
+                if (!WorkspaceTextFiles.IsText(contentType))
+                {
+                    throw new NcfExceptionBase("该文件不支持文本片段预览。");
+                }
+
+                var session = await GetWorkspaceSessionAsync(sessionId).ConfigureAwait(false);
+                logger.Append($"Workspace 文本片段: Path={relativePath}, StartLine={startLine}");
+                return await CreateTextWindowPreviewAsync(session.WorkspaceId, relativePath, contentType, startLine)
+                    .ConfigureAwait(false);
             });
         }
 
@@ -347,7 +390,59 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 IsText = isText,
                 Content = isText ? Encoding.UTF8.GetString(content) : null,
                 ContentBase64 = Convert.ToBase64String(content),
-                Etag = etag ?? string.Empty
+                Etag = etag ?? string.Empty,
+                Windowed = false,
+                StartLine = 1,
+                LineCount = 0,
+                HasMore = false,
+                Truncated = false
+            };
+        }
+
+        private async Task<WorkspaceFilePreviewDto> CreateTextWindowPreviewAsync(
+            string workspaceId,
+            string relativePath,
+            string contentType,
+            int startLine)
+        {
+            WorkspaceTextWindow window;
+            try
+            {
+                window = await _workspaceStorage.ReadTextWindowAsync(
+                    workspaceId,
+                    new WorkspaceTextWindowRequest(
+                        relativePath,
+                        Math.Max(1, startLine),
+                        WorkspaceTextFiles.PreviewWindowLines,
+                        WorkspaceTextFiles.PreviewWindowBytes)).ConfigureAwait(false);
+            }
+            catch (ArgumentException)
+            {
+                throw new NcfExceptionBase("该位置不是可预览的文本。");
+            }
+            catch (UnauthorizedAccessException)
+            {
+                throw new NcfExceptionBase("该文件不能预览。");
+            }
+            catch (FileNotFoundException)
+            {
+                throw new NcfExceptionBase("文件不存在或已被删除。");
+            }
+
+            return new WorkspaceFilePreviewDto
+            {
+                Path = window.RelativePath,
+                ContentType = contentType,
+                Size = window.FileLength,
+                IsText = true,
+                Content = window.Content,
+                ContentBase64 = string.Empty,
+                Etag = window.ETag,
+                Windowed = true,
+                StartLine = window.StartLine,
+                LineCount = window.LineCount,
+                HasMore = window.HasMore,
+                Truncated = window.Truncated
             };
         }
 
@@ -904,6 +999,35 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     TrajectoryStatus = harness?.Status ?? default,
                     TrajectoryEvents = harness?.TrajectoryEvents,
                     PendingApprovals = harness?.PendingApprovals
+                };
+            });
+        }
+
+        /// <summary>
+        /// 在当前用户未归档的对话中检索。scope=tool 时只匹配 Harness 实际调用过的方法名。
+        /// </summary>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<SearchHistoryResponse>> SearchHistoryAsync(
+            string keyword,
+            int limit = 10,
+            string scope = "chat")
+        {
+            return await this.GetResponseAsync<AppResponseBase<SearchHistoryResponse>, SearchHistoryResponse>(async (response, logger) =>
+            {
+                var userId = GetCurrentAdminUserInfoId();
+                if (userId <= 0)
+                {
+                    throw new NcfExceptionBase(_localizer["AdminChat.UserNotLoggedIn"]);
+                }
+
+                var toolScope = string.Equals(scope, "tool", StringComparison.OrdinalIgnoreCase);
+                var hits = toolScope
+                    ? await _messageService.SearchActiveToolCallsAsync(userId, keyword, limit)
+                    : await _messageService.SearchActiveHistoryAsync(userId, keyword, limit);
+                logger.Append($"搜索未归档对话: UserId={userId}, Scope={(toolScope ? "tool" : "chat")}, Hits={hits.Count}");
+                return new SearchHistoryResponse
+                {
+                    Hits = hits.ToList()
                 };
             });
         }
@@ -1778,6 +1902,11 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         public string Content { get; set; }
         public string ContentBase64 { get; set; } = string.Empty;
         public string Etag { get; set; } = string.Empty;
+        public bool Windowed { get; set; }
+        public int StartLine { get; set; } = 1;
+        public int LineCount { get; set; }
+        public bool HasMore { get; set; }
+        public bool Truncated { get; set; }
     }
 
     public class SaveWorkspaceFileRequest
@@ -1862,6 +1991,14 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         /// Tool approvals waiting for the user.
         /// </summary>
         public IReadOnlyList<AdminChatApprovalRequestDto> PendingApprovals { get; set; }
+    }
+
+    /// <summary>
+    /// 未归档对话或 Harness 方法调用的搜索结果。
+    /// </summary>
+    public class SearchHistoryResponse
+    {
+        public List<AdminChatHistorySearchHit> Hits { get; set; } = new();
     }
 
     /// <summary>

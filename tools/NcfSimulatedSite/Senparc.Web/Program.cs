@@ -50,6 +50,7 @@ using Senparc.CO2NET;
 using Senparc.CO2NET.HttpUtility;
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Database.SqlServer;
+using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
@@ -119,8 +120,8 @@ if (!string.IsNullOrWhiteSpace(xncfPreviewPathBase)
 var supportedCultures = LanguageController.SupportedCultures;
 var localizationOptions = new RequestLocalizationOptions()
     .SetDefaultCulture(supportedCultures[0])
-    .AddSupportedCultures(supportedCultures)
-    .AddSupportedUICultures(supportedCultures)
+    .AddSupportedCultures(supportedCultures.ToArray())
+    .AddSupportedUICultures(supportedCultures.ToArray())
     .AddInitialRequestCultureProvider(new CookieRequestCultureProvider());
 
 app.UseRequestLocalization(localizationOptions);

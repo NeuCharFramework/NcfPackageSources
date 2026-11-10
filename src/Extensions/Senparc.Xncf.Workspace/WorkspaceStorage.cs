@@ -250,6 +250,24 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
             .ConfigureAwait(false);
     }
 
+    public async Task<WorkspaceTextWindow> ReadTextWindowAsync(
+        string workspaceId,
+        WorkspaceTextWindowRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        var workspaceRoot = GetWorkspaceRoot(workspaceId);
+        EnsureWorkspaceExists(workspaceRoot);
+        return await _agentPool
+            .InvokeAsync<WorkspaceTextWindowRequest, WorkspaceTextWindow>(
+                workspaceId,
+                workspaceRoot,
+                WorkspaceAgentOperations.ReadTextWindow,
+                request,
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
     public async Task WriteFileAsync(
         string workspaceId,
         string relativePath,

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.5.13</Version>
+		<Version>0.5.14</Version>
 		<AssemblyName>Senparc.Xncf.Installer</AssemblyName>
 		<RootNamespace>Senparc.Xncf.Installer</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -99,6 +99,7 @@
 			14、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.12
 			15、Dependency update from Senparc.Areas.Admin to 0.12.26
 			16、Dependency update from Senparc.Xncf.Installer.Interface to 0.2.3
+			[2026-11-10] v0.5.14 Dependency update from Senparc.Areas.Admin to 0.12.27
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>

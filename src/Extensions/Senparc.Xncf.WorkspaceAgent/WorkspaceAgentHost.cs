@@ -107,6 +107,9 @@ public static class WorkspaceAgentHost
                 Deserialize<WorkspaceAgentPathRequest>(request).RelativePath,
                 cancellationToken).ConfigureAwait(false),
             WorkspaceAgentOperations.Read => await ReadAsync(engine, request, cancellationToken).ConfigureAwait(false),
+            WorkspaceAgentOperations.ReadTextWindow => await engine.ReadTextWindowAsync(
+                Deserialize<WorkspaceTextWindowRequest>(request),
+                cancellationToken).ConfigureAwait(false),
             WorkspaceAgentOperations.Write => await engine.WriteFileAsync(
                 Deserialize<WorkspaceWriteFileRequest>(request),
                 cancellationToken).ConfigureAwait(false),
@@ -199,6 +202,7 @@ public static class WorkspaceAgentHost
     {
         var (code, message) = exception switch
         {
+            WorkspaceLimitException => ("limit", exception.Message),
             WorkspaceConflictException => ("conflict", exception.Message),
             UnauthorizedAccessException => ("forbidden", exception.Message),
             FileNotFoundException or DirectoryNotFoundException => ("not-found", exception.Message),

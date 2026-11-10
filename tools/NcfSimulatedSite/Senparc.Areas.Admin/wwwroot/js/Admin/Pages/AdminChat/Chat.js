@@ -32,36 +32,55 @@ function workspaceCodeProfiles() {
   };
 }
 
-function highlightWorkspaceSource(source, language) {
+const WORKSPACE_LINE_HEIGHT = 20;
+const WORKSPACE_VIRTUAL_THRESHOLD = 600;
+const WORKSPACE_VISIBLE_LINES = 160;
+const WORKSPACE_PREVIEW_PAGE_LINES = 800;
+
+function highlightWorkspaceLine(line, language, inBlock, capture) {
   const profiles = highlightWorkspaceSource.profiles || (highlightWorkspaceSource.profiles = workspaceCodeProfiles());
   const profile = profiles[language] || profiles.plain;
-  const text = String(source || '');
-  const parts = [];
+  const text = String(line == null ? '' : line);
+  const write = capture !== false;
+  const parts = write ? [] : null;
   const push = (chunk, cls) => {
-    if (!chunk) return;
+    if (!write || !chunk) return;
     const escaped = chunk.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     parts.push(cls ? `<span class="${cls}">${escaped}</span>` : escaped);
   };
   const isIdentStart = ch => ch === '_' || ch === '$' || (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z');
   const isIdent = ch => isIdentStart(ch) || (ch >= '0' && ch <= '9');
   const isDigit = ch => ch >= '0' && ch <= '9';
+  const done = block => ({ html: write ? parts.join('') : '', inBlock: !!block });
   let i = 0;
-  while (i < text.length) {
-    const lines = profile.lines || [];
-    const line = lines.find(marker => text.startsWith(marker, i) && (marker !== '//' || i === 0 || text[i - 1] !== ':'));
-    if (line) {
-      let j = i;
-      while (j < text.length && text[j] !== '\n') j += 1;
-      push(text.slice(i, j), 'tok-comment');
-      i = j;
-      continue;
+  let block = !!inBlock;
+  const blockOpen = profile.block && profile.block[0];
+  const blockClose = profile.block && profile.block[1];
+  if (block && blockClose) {
+    const end = text.indexOf(blockClose, i);
+    if (end < 0) {
+      push(text, 'tok-comment');
+      return done(true);
     }
-    if (profile.block && text.startsWith(profile.block[0], i)) {
-      const close = profile.block[1];
-      const end = text.indexOf(close, i + profile.block[0].length);
-      const stop = end < 0 ? text.length : end + close.length;
-      push(text.slice(i, stop), 'tok-comment');
-      i = stop;
+    push(text.slice(0, end + blockClose.length), 'tok-comment');
+    i = end + blockClose.length;
+    block = false;
+  }
+  while (i < text.length) {
+    const markers = profile.lines || [];
+    const marker = markers.find(item => text.startsWith(item, i) && (item !== '//' || i === 0 || text[i - 1] !== ':'));
+    if (marker) {
+      push(text.slice(i), 'tok-comment');
+      return done(false);
+    }
+    if (blockOpen && text.startsWith(blockOpen, i)) {
+      const end = text.indexOf(blockClose, i + blockOpen.length);
+      if (end < 0) {
+        push(text.slice(i), 'tok-comment');
+        return done(true);
+      }
+      push(text.slice(i, end + blockClose.length), 'tok-comment');
+      i = end + blockClose.length;
       continue;
     }
     const quote = text[i];
@@ -72,7 +91,6 @@ function highlightWorkspaceSource(source, language) {
         if (text[j] === '\\') { j += 2; continue; }
         if (triple && text[j] === quote && text[j + 1] === quote && text[j + 2] === quote) { j += 3; break; }
         if (!triple && text[j] === quote) { j += 1; break; }
-        if (!triple && quote !== '`' && text[j] === '\n') break;
         j += 1;
       }
       push(text.slice(i, j), 'tok-string');
@@ -105,7 +123,117 @@ function highlightWorkspaceSource(source, language) {
     push(text[i], '');
     i += 1;
   }
-  return `<pre class="code-preview"><code>${parts.join('')}</code></pre>`;
+  return done(block);
+}
+
+function workspacePreviewLineList(source) {
+  const normalized = String(source || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const lines = normalized.split('\n');
+  if (lines.length > 1 && lines[lines.length - 1] === '') lines.pop();
+  return lines;
+}
+
+function highlightWorkspaceLines(source, language, startLine) {
+  const lines = workspacePreviewLineList(source);
+  const origin = Math.max(1, startLine || 1);
+  let inBlock = false;
+  return lines.map((line, index) => {
+    const highlighted = highlightWorkspaceLine(line, language, inBlock, true);
+    inBlock = highlighted.inBlock;
+    return `<span class="code-line" data-ln="${origin + index}"><span class="code-text">${highlighted.html}</span></span>`;
+  }).join('');
+}
+
+function highlightWorkspaceSource(source, language) {
+  return `<pre class="code-preview"><code>${highlightWorkspaceLines(source, language, 1)}</code></pre>`;
+}
+
+function workspaceBlockStates(lines, language) {
+  const states = new Uint8Array(lines.length);
+  let inBlock = false;
+  for (let index = 0; index < lines.length; index += 1) {
+    states[index] = inBlock ? 1 : 0;
+    inBlock = highlightWorkspaceLine(lines[index], language, inBlock, false).inBlock;
+  }
+  return states;
+}
+
+let workspaceJsonNodeSeq = 1;
+
+function workspaceJsonNode(key, value) {
+  const id = 'json-' + (workspaceJsonNodeSeq++);
+  if (value && value.__workspaceInvalidJson) {
+    return { id, key: '第 ' + value.lineNumber + ' 行', type: 'invalid', text: value.raw };
+  }
+  if (value === null) return { id, key, type: 'null', text: 'null' };
+  if (Array.isArray(value)) return { id, key, type: 'array', size: value.length, value, open: false };
+  if (typeof value === 'object') {
+    return { id, key, type: 'object', size: Object.keys(value).length, keys: Object.keys(value), value, open: false };
+  }
+  if (typeof value === 'string') return { id, key, type: 'string', text: value };
+  if (typeof value === 'number') return { id, key, type: 'number', text: String(value) };
+  if (typeof value === 'boolean') return { id, key, type: 'boolean', text: String(value) };
+  return { id, key, type: 'string', text: String(value) };
+}
+
+function workspaceJsonChild(node, index) {
+  if (!node.cache) node.cache = new Array(node.size);
+  if (!node.cache[index]) {
+    if (node.type === 'array') node.cache[index] = workspaceJsonNode(String(index), node.value[index]);
+    else node.cache[index] = workspaceJsonNode(node.keys[index], node.value[node.keys[index]]);
+  }
+  return node.cache[index];
+}
+
+function workspaceJsonCollapsed(node) {
+  if (node.type === 'array') return node.size ? 'Array(' + node.size + ')' : '[]';
+  if (!node.size) return '{}';
+  const sample = node.keys.slice(0, 3).map(key => JSON.stringify(key) + ': …').join(', ');
+  return node.size > 3 ? '{' + sample + ', …}' : '{' + sample + '}';
+}
+
+function buildWorkspaceJsonRoot(content, jsonLines) {
+  let value;
+  if (jsonLines) {
+    value = [];
+    String(content || '').split('\n').forEach((line, index) => {
+      if (!line.trim()) return;
+      try {
+        value.push(JSON.parse(line));
+      } catch (error) {
+        value.push({
+          __workspaceInvalidJson: true,
+          lineNumber: index + 1,
+          raw: line.length > 180 ? line.slice(0, 180) + '…' : line
+        });
+      }
+    });
+  } else {
+    value = JSON.parse(content);
+  }
+  const root = workspaceJsonNode(null, value);
+  if (root.size != null) {
+    root.open = true;
+    root.shown = Math.min(root.size, 200);
+  }
+  return root;
+}
+
+function flattenWorkspaceJson(root) {
+  const rows = [];
+  const walk = (node, depth) => {
+    rows.push({ id: node.id, depth, node, closing: false });
+    if (node.size == null || !node.open) return;
+    const shown = Math.min(node.size, node.shown || Math.min(node.size, 200));
+    node.shown = shown;
+    for (let index = 0; index < shown; index += 1) walk(workspaceJsonChild(node, index), depth + 1);
+    if (shown < node.size) {
+      rows.push({ id: node.id + '-more', depth: depth + 1, more: true, remaining: node.size - shown, node });
+    }
+    rows.push({ id: node.id + '-end', depth, node, closing: true });
+  };
+  if (root) walk(root, 0);
+  return rows;
 }
 
 function logAdminChat(level, message, detail) {
@@ -170,6 +298,16 @@ var chatApp = new Vue({
       sessionList: [],
       archivedSessionList: [],
       sidebarToolsVisible: false,
+      historySearchVisible: false,
+      historySearchTab: 'chat',
+      historySearchKeyword: '',
+      historySearchHits: [],
+      historySearchLoading: false,
+      historySearchSubmitted: false,
+      historySearchTimer: null,
+      historySearchSequence: 0,
+      historySearchFlashTimer: null,
+      pendingHistorySearchMessageId: 0,
       archivingSessionId: 0,
       restoringSessionId: 0,
       currentSessionStatus: 0,
@@ -249,6 +387,16 @@ var chatApp = new Vue({
       workspacePreviewFilePath: '',
       workspacePreviewData: null,
       workspacePreviewSrcdoc: '',
+      workspacePreviewJsonTree: false,
+      workspaceJsonRoot: null,
+      workspaceJsonRevision: 0,
+      workspacePreviewLines: [],
+      workspacePreviewLineOffset: 0,
+      workspacePreviewVirtual: false,
+      workspaceLineBlockStates: null,
+      workspacePreviewCodeHtml: '',
+      workspacePreviewJumpLine: 1,
+      workspacePreviewWindowLoading: false,
       workspaceEntriesLoading: false,
       workspacePreviewLoading: false,
       workspaceResizeHandler: null,
@@ -286,17 +434,40 @@ var chatApp = new Vue({
     workspacePreviewIsCode() {
       const data = this.workspacePreviewData;
       if (!data || !data.isText || this.workspacePreviewIsDocument) return false;
-      const type = data.contentType || '';
-      if (type === 'image/svg+xml' || type === 'text/plain' || type === 'text/csv') return false;
-      return type === 'application/json'
-        || type === 'text/javascript'
-        || type === 'text/typescript'
-        || type === 'text/jsx'
-        || type === 'text/css'
-        || type === 'text/xml'
-        || type === 'text/yaml'
-        || type === 'text/toml'
-        || type.indexOf('text/x-') === 0;
+      return data.contentType !== 'image/svg+xml';
+    },
+    workspacePreviewIsJson() {
+      const type = this.workspacePreviewData && this.workspacePreviewData.contentType;
+      return type === 'application/json' || type === 'application/jsonl';
+    },
+    workspacePreviewShowsLines() {
+      if (this.workspacePreviewEditing || this.workspacePreviewSource || this.workspacePreviewJsonTree) return false;
+      return this.workspacePreviewIsCode;
+    },
+    workspacePreviewWindowBar() {
+      if (this.workspacePreviewEditing || !this.workspacePreviewData || !this.workspacePreviewData.isText) return false;
+      return !!this.workspacePreviewData.windowed || !!this.workspacePreviewVirtual;
+    },
+    workspacePreviewWindowEnd() {
+      const start = (this.workspacePreviewData && this.workspacePreviewData.startLine) || 1;
+      const count = (this.workspacePreviewLines || []).length;
+      return count ? start + count - 1 : start;
+    },
+    workspacePreviewWindowLabel() {
+      const data = this.workspacePreviewData || {};
+      const total = (this.workspacePreviewLines || []).length;
+      const start = data.startLine || 1;
+      const end = total ? start + total - 1 : start;
+      if (data.windowed) {
+        const truncated = data.truncated ? ' · 超长行已截断' : '';
+        return `第 ${start}–${end} 行 · ${this.formatWorkspaceFileSize(data.size)} · 大文件按片段加载${truncated}`;
+      }
+      return `共 ${total} 行 · 只渲染可见区域`;
+    },
+    workspaceLineBottomPad() {
+      const total = (this.workspacePreviewLines || []).length;
+      const consumed = (this.workspacePreviewLineOffset || 0) + WORKSPACE_VISIBLE_LINES;
+      return Math.max(0, total - consumed) * WORKSPACE_LINE_HEIGHT;
     },
     workspacePreviewCanShowSource() {
       return !!this.workspacePreviewData && this.workspacePreviewData.isText
@@ -304,7 +475,9 @@ var chatApp = new Vue({
         && (this.workspacePreviewIsDocument || this.workspacePreviewIsCode || this.workspacePreviewData.contentType === 'image/svg+xml');
     },
     workspacePreviewCanEdit() {
-      return !!this.workspacePreviewData && this.workspacePreviewData.isText && !this.workspacePreviewEditing;
+      return !!this.workspacePreviewData && this.workspacePreviewData.isText
+        && !this.workspacePreviewData.windowed
+        && !this.workspacePreviewEditing;
     },
     workspacePreviewDirty() {
       if (!this.workspacePreviewEditing || !this.workspacePreviewData) return false;
@@ -330,7 +503,7 @@ var chatApp = new Vue({
         sh: 'shell', bash: 'shell', zsh: 'shell', bat: 'shell', cmd: 'shell', dockerfile: 'shell', makefile: 'shell', jenkinsfile: 'shell',
         ps1: 'powershell', psm1: 'powershell',
         sql: 'sql', css: 'css', scss: 'css', sass: 'css', less: 'css',
-        json: 'json', map: 'json', ipynb: 'json',
+        json: 'json', jsonl: 'json', ndjson: 'json', map: 'json', ipynb: 'json',
         yml: 'yaml', yaml: 'yaml', toml: 'toml',
         html: 'markup', htm: 'markup', xml: 'markup', vue: 'markup', cshtml: 'markup', razor: 'markup',
         svg: 'markup', csproj: 'markup', lua: 'lua'
@@ -372,6 +545,13 @@ var chatApp = new Vue({
       this.$nextTick(() => {
         this.observeMessageRail();
         this.refreshMessageRail();
+      });
+    },
+    historySearchVisible(visible) {
+      if (!visible) return;
+      this.$nextTick(() => {
+        const input = this.$refs.historySearchInput;
+        if (input && typeof input.focus === 'function') input.focus();
       });
     }
   },
@@ -446,6 +626,8 @@ var chatApp = new Vue({
   beforeDestroy() {
     if (this.messageRailObserver) this.messageRailObserver.disconnect();
     clearTimeout(this.messageRailCloseTimer);
+    clearTimeout(this.historySearchTimer);
+    clearTimeout(this.historySearchFlashTimer);
     this.workspacePreviewResizeObserver.disconnect();
     Object.keys(this.sessionRuns).forEach((id) => {
       const controller = this.sessionRuns[id] && this.sessionRuns[id].controller;
@@ -1324,10 +1506,11 @@ var chatApp = new Vue({
     },
 
     beginWorkspacePreviewEdit() {
-      if (!this.workspacePreviewData || !this.workspacePreviewData.isText) return;
+      if (!this.workspacePreviewData || !this.workspacePreviewData.isText || this.workspacePreviewData.windowed) return;
       this.workspacePreviewDraft = this.workspacePreviewData.content || '';
       this.workspacePreviewEditing = true;
       this.workspacePreviewSource = false;
+      this.workspacePreviewJsonTree = false;
     },
 
     cancelWorkspacePreviewEdit() {
@@ -1351,16 +1534,170 @@ var chatApp = new Vue({
       this.workspacePreviewEditing = false;
       this.workspacePreviewDraft = data && data.isText ? (data.content || '') : '';
       this.workspacePreviewSrcdoc = '';
-      if (!data || (!this.workspacePreviewIsDocument && !this.workspacePreviewIsCode)) return;
+      this.workspacePreviewJsonTree = false;
+      this.workspaceJsonRoot = null;
+      this.prepareWorkspaceLinePreview(data);
+      if (data && data.startLine) this.workspacePreviewJumpLine = data.startLine;
+      if (!data || !this.workspacePreviewIsDocument) return;
       const isMarkdown = data.contentType === 'text/markdown';
-      const previewKind = this.workspacePreviewIsCode ? 'code' : '';
-      const html = isMarkdown
-        ? this.formatMessageContent(data.content || '')
-        : previewKind === 'code'
-          ? this.highlightWorkspaceCode(data.content || '', this.workspaceCodeLanguage)
-          : (data.content || '');
-      console.debug('Workspace 预览:', data.path, data.contentType, previewKind || (isMarkdown ? 'markdown' : 'document'));
-      this.workspacePreviewSrcdoc = await this.buildWorkspaceHtmlPreview(html, data.path, isMarkdown, previewKind);
+      const html = isMarkdown ? this.formatMessageContent(data.content || '') : (data.content || '');
+      console.debug('Workspace 预览:', data.path, data.contentType, isMarkdown ? 'markdown' : 'document');
+      this.workspacePreviewSrcdoc = await this.buildWorkspaceHtmlPreview(html, data.path, isMarkdown, '');
+    },
+
+    prepareWorkspaceLinePreview(data) {
+      this.workspacePreviewLineOffset = 0;
+      this.workspaceLineBlockStates = null;
+      this.workspacePreviewCodeHtml = '';
+      this.workspacePreviewVirtual = false;
+      if (!data || !data.isText || data.contentType === 'text/html' || data.contentType === 'text/markdown' || data.contentType === 'image/svg+xml') {
+        this.workspacePreviewLines = [];
+        return;
+      }
+      const lines = workspacePreviewLineList(data.content || '');
+      this.workspacePreviewLines = lines;
+      const virtual = lines.length > WORKSPACE_VIRTUAL_THRESHOLD;
+      this.workspacePreviewVirtual = virtual;
+      if (virtual) {
+        this.workspaceLineBlockStates = workspaceBlockStates(lines, this.workspaceCodeLanguage);
+        console.debug('Workspace 大文本预览:', data.path, lines.length, data.windowed ? 'window' : 'virtual');
+        return;
+      }
+      this.workspacePreviewCodeHtml = highlightWorkspaceLines(data.content || '', this.workspaceCodeLanguage, data.startLine || 1);
+    },
+
+    visibleWorkspaceLines() {
+      const lines = this.workspacePreviewLines || [];
+      const start = this.workspacePreviewLineOffset || 0;
+      const end = Math.min(lines.length, start + WORKSPACE_VISIBLE_LINES);
+      const language = this.workspaceCodeLanguage;
+      const origin = (this.workspacePreviewData && this.workspacePreviewData.startLine) || 1;
+      const states = this.workspaceLineBlockStates;
+      const items = [];
+      for (let index = start; index < end; index += 1) {
+        const highlighted = highlightWorkspaceLine(lines[index], language, !!(states && states[index]), true);
+        items.push({ number: origin + index, html: highlighted.html });
+      }
+      return items;
+    },
+
+    onWorkspaceLineScroll(event) {
+      const scroller = event.target;
+      const top = scroller.scrollTop;
+      const start = Math.max(0, Math.floor(top / WORKSPACE_LINE_HEIGHT) - 40);
+      if (Math.abs(start - this.workspacePreviewLineOffset) < 20) return;
+      this.workspacePreviewLineOffset = start;
+      this.$nextTick(() => {
+        if (scroller.scrollTop !== top) scroller.scrollTop = top;
+      });
+    },
+
+    toggleWorkspacePreviewSource() {
+      this.workspacePreviewSource = !this.workspacePreviewSource;
+      if (this.workspacePreviewSource) this.workspacePreviewJsonTree = false;
+    },
+
+    toggleWorkspaceJsonTree() {
+      if (!this.workspacePreviewIsJson || !this.workspacePreviewData) return;
+      if (this.workspacePreviewJsonTree) {
+        this.workspacePreviewJsonTree = false;
+        return;
+      }
+      try {
+        const jsonl = this.workspacePreviewData.contentType === 'application/jsonl';
+        this.workspaceJsonRoot = buildWorkspaceJsonRoot(this.workspacePreviewData.content || '', jsonl);
+        this.workspaceJsonRevision += 1;
+        this.workspacePreviewJsonTree = true;
+        this.workspacePreviewSource = false;
+        console.debug('Workspace JSON 树:', this.workspacePreviewFilePath, this.workspaceJsonRoot && this.workspaceJsonRoot.size);
+      } catch (error) {
+        console.error('Workspace JSON 解析失败:', error);
+        this.$message.warning('这份 JSON 无法解析，已保留文本预览。');
+      }
+    },
+
+    workspaceJsonRows() {
+      if (!this.workspaceJsonRevision || !this.workspaceJsonRoot) return [];
+      return flattenWorkspaceJson(this.workspaceJsonRoot);
+    },
+
+    toggleWorkspaceJson(node) {
+      if (!node || node.size == null) return;
+      node.open = !node.open;
+      if (node.open && node.shown == null) node.shown = Math.min(node.size, 200);
+      this.workspaceJsonRevision += 1;
+    },
+
+    showMoreWorkspaceJson(node) {
+      if (!node || node.size == null) return;
+      node.shown = Math.min(node.size, 1000, (node.shown || 0) + 200);
+      this.workspaceJsonRevision += 1;
+      if (node.shown >= 1000 && node.size > 1000) {
+        this.$message.info('树状预览一次最多展开 1000 项，其余请用文本查看。');
+      }
+    },
+
+    jsonKeyLabel(node) {
+      const key = String(node.key);
+      return /^\d+$/.test(key) ? key : JSON.stringify(key);
+    },
+
+    jsonRowText(row) {
+      const node = row.node;
+      if (row.closing) return node.type === 'array' ? ']' : '}';
+      if (node.size == null) {
+        if (node.type === 'string') {
+          const text = node.text.length > 240 ? node.text.slice(0, 240) + '…' : node.text;
+          return JSON.stringify(text);
+        }
+        return node.text;
+      }
+      if (!node.open) return workspaceJsonCollapsed(node);
+      return node.type === 'array' ? '[' : '{';
+    },
+
+    jsonValueClass(row) {
+      if (row.closing || row.node.size != null) return 'json-meta';
+      return 'json-' + row.node.type;
+    },
+
+    jsonRowTitle(row) {
+      if (!row || row.closing || !row.node || row.node.type !== 'string') return '';
+      return row.node.text || '';
+    },
+
+    async loadWorkspacePreviewWindow(startLine) {
+      if (!this.workspacePreviewFilePath || this.workspacePreviewWindowLoading) return;
+      const line = Math.max(1, Number(startLine) || 1);
+      this.workspacePreviewWindowLoading = true;
+      try {
+        const response = await service.get('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.GetWorkspaceTextWindowAsync', {
+          params: { sessionId: this.currentSessionId, relativePath: this.workspacePreviewFilePath, startLine: line }
+        });
+        if (!response.data || !response.data.success || !response.data.data) {
+          throw new Error((response.data && response.data.msg) || '文本片段加载失败。');
+        }
+        await this.applyWorkspacePreview(response.data.data);
+        console.debug('Workspace 文本片段:', this.workspacePreviewFilePath, response.data.data.startLine, response.data.data.lineCount);
+      } catch (error) {
+        console.error('加载 Workspace 文本片段失败:', error);
+        this.$notify({ title: 'Workspace', message: error.message || '文本片段加载失败。', type: 'error', duration: 3000 });
+      } finally {
+        this.workspacePreviewWindowLoading = false;
+      }
+    },
+
+    jumpWorkspacePreviewLine() {
+      const line = Math.max(1, Number(this.workspacePreviewJumpLine) || 1);
+      if (this.workspacePreviewData && this.workspacePreviewData.windowed) {
+        return this.loadWorkspacePreviewWindow(line);
+      }
+      const index = Math.max(0, Math.min((this.workspacePreviewLines || []).length - 1, line - 1));
+      this.workspacePreviewLineOffset = Math.max(0, index - 40);
+      this.$nextTick(() => {
+        const scroller = this.$refs.workspaceLineScroller;
+        if (scroller) scroller.scrollTop = index * WORKSPACE_LINE_HEIGHT;
+      });
     },
 
     highlightWorkspaceCode(source, language) {
@@ -1605,7 +1942,7 @@ var chatApp = new Vue({
         html: code, htm: code, css: code, scss: code, js: code, jsx: code, ts: code, tsx: code,
         py: code, pyw: code, cs: code, java: code, go: code, rs: code, php: code, rb: code,
         sh: code, sql: code, vue: code, xml: code,
-        json: text, yml: text, yaml: text, md: text, txt: text, log: text, csv: text,
+        json: text, jsonl: text, ndjson: text, yml: text, yaml: text, md: text, txt: text, log: text, csv: text,
         png: image, jpg: image, jpeg: image, gif: image, svg: image, webp: image
       }[extension] || 'fa fa-file-o';
     },
@@ -2242,14 +2579,23 @@ var chatApp = new Vue({
           await this.loadMemoryMode();
           
           this.$nextTick(() => {
-            if (sessionId === this.currentSessionId && sequence === this.sessionDetailSequence) this.scrollToBottom();
+            if (sessionId !== this.currentSessionId || sequence !== this.sessionDetailSequence) return;
+            const focusId = Number(this.pendingHistorySearchMessageId) || 0;
+            if (focusId) {
+              this.pendingHistorySearchMessageId = 0;
+              this.scrollToSearchedMessage(focusId);
+              return;
+            }
+            this.scrollToBottom();
           });
         } else {
+          this.pendingHistorySearchMessageId = 0;
           console.error('加载会话详情失败:', response.data.errorMessage);
           this.$message.error(ncfT('AdminChat.LoadDetailFailed'));
         }
       } catch (error) {
         if (sessionId !== this.currentSessionId || sequence !== this.sessionDetailSequence) return;
+        this.pendingHistorySearchMessageId = 0;
         console.error('加载会话详情异常:', error);
         this.$message.error(ncfT('AdminChat.LoadDetailFailed'));
       } finally {
@@ -2980,9 +3326,9 @@ var chatApp = new Vue({
     },
 
     async switchSession(sessionId) {
-      if (this.workspaceUploading) { this.$message.warning('请等待附件上传完成后再切换会话。'); return; }
-      if (this.currentSessionId === sessionId) return;
-      if (!(await this.confirmDiscardWorkspaceEdit())) return;
+      if (this.workspaceUploading) { this.$message.warning('请等待附件上传完成后再切换会话。'); return false; }
+      if (this.currentSessionId === sessionId) return true;
+      if (!(await this.confirmDiscardWorkspaceEdit())) return false;
 
       this.rememberSessionDraft();
       this.resetWorkspacePreview();
@@ -3015,6 +3361,7 @@ var chatApp = new Vue({
         await this.loadTrajectoryList();
         await this.resumeAdminChatRun();
       }
+      return this.currentSessionId === sessionId;
     },
 
     async createNewSession() {
@@ -3064,6 +3411,15 @@ var chatApp = new Vue({
       this.workspacePreviewFilePath = '';
       this.workspacePreviewData = null;
       this.workspacePreviewSrcdoc = '';
+      this.workspacePreviewJsonTree = false;
+      this.workspaceJsonRoot = null;
+      this.workspaceJsonRevision = 0;
+      this.workspacePreviewLines = [];
+      this.workspacePreviewLineOffset = 0;
+      this.workspacePreviewVirtual = false;
+      this.workspaceLineBlockStates = null;
+      this.workspacePreviewCodeHtml = '';
+      this.workspacePreviewJumpLine = 1;
     },
 
     resetSessionTrajectoryView() {
@@ -3381,6 +3737,113 @@ var chatApp = new Vue({
       const active = menu && menu.querySelector('.is-active');
       if (!menu || !active) return;
       menu.scrollTop = Math.max(0, active.offsetTop - menu.clientHeight / 2 + active.clientHeight / 2);
+    },
+
+    scheduleHistorySearch() {
+      clearTimeout(this.historySearchTimer);
+      this.historySearchTimer = setTimeout(() => this.searchHistory(), 250);
+    },
+
+    setHistorySearchTab(tab) {
+      const next = tab === 'tool' ? 'tool' : 'chat';
+      if (this.historySearchTab === next) return;
+      this.historySearchTab = next;
+      this.historySearchHits = [];
+      this.historySearchSubmitted = false;
+      console.info('AdminChat search tab:', next);
+      if ((this.historySearchKeyword || '').trim()) return this.searchHistory();
+    },
+
+    async searchHistory() {
+      const keyword = (this.historySearchKeyword || '').trim();
+      const scope = this.historySearchTab === 'tool' ? 'tool' : 'chat';
+      const sequence = ++this.historySearchSequence;
+      if (!keyword) {
+        this.historySearchHits = [];
+        this.historySearchSubmitted = false;
+        this.historySearchLoading = false;
+        return;
+      }
+      this.historySearchLoading = true;
+      try {
+        const response = await service.get(
+          '/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.SearchHistoryAsync',
+          { params: { keyword, limit: 10, scope }, customAlert: true });
+        if (sequence !== this.historySearchSequence) return;
+        if (!(response.data && response.data.success && response.data.data)) {
+          throw new Error(response.data && response.data.errorMessage || ncfT('AdminChat.Search.Failed'));
+        }
+        const hits = response.data.data.hits || response.data.data.Hits || [];
+        this.historySearchHits = hits.map(hit => Object.assign({}, hit, { query: keyword }));
+        this.historySearchSubmitted = true;
+        console.info('AdminChat history search:', scope, keyword, 'hits', this.historySearchHits.length);
+      } catch (error) {
+        if (sequence !== this.historySearchSequence) return;
+        this.historySearchHits = [];
+        this.historySearchSubmitted = true;
+        console.error('AdminChat history search failed:', error);
+        this.$message.error(ncfT('AdminChat.Search.Failed'));
+      } finally {
+        if (sequence === this.historySearchSequence) this.historySearchLoading = false;
+      }
+    },
+
+    highlightParts(text, keyword) {
+      const source = text || '';
+      const query = (keyword == null ? this.historySearchKeyword : keyword).trim();
+      const index = query ? source.toLowerCase().indexOf(query.toLowerCase()) : -1;
+      if (index < 0) return { before: source, match: '', after: '' };
+      return {
+        before: source.slice(0, index),
+        match: source.slice(index, index + query.length),
+        after: source.slice(index + query.length)
+      };
+    },
+
+    isTitleSearchHit(hit) {
+      return !!hit && (hit.matchKind === 1 || hit.matchKind === 'Title');
+    },
+
+    isToolSearchHit(hit) {
+      return !!hit && (hit.matchKind === 2 || hit.matchKind === 'ToolCall');
+    },
+
+    async openHistorySearchHit(hit) {
+      const sessionId = Number(hit && hit.sessionId) || 0;
+      const messageId = Number(hit && hit.messageId) || 0;
+      if (!sessionId) return;
+      this.historySearchVisible = false;
+      console.info('AdminChat search navigate:', sessionId, messageId, hit && hit.matchKind);
+      if (Number(this.currentSessionId) === sessionId) {
+        if (messageId) this.scrollToSearchedMessage(messageId);
+        else this.scrollToBottom();
+        return;
+      }
+      this.pendingHistorySearchMessageId = messageId;
+      const opened = await this.switchSession(sessionId);
+      if (!opened) this.pendingHistorySearchMessageId = 0;
+    },
+
+    scrollToSearchedMessage(id, attempt = 0) {
+      if (!id) return;
+      const container = this.$refs.messagesContainer;
+      const selector = `[data-message-id="${window.CSS && CSS.escape ? CSS.escape(String(id)) : String(id)}"]`;
+      const element = container && container.querySelector(selector);
+      if (!container || !element) {
+        if (attempt < 2) {
+          this.$nextTick(() => this.scrollToSearchedMessage(id, attempt + 1));
+          return;
+        }
+        console.info('AdminChat search target missing:', id);
+        return;
+      }
+      this.scrollToUserMessage(id);
+      element.classList.remove('is-search-target');
+      void element.offsetWidth;
+      element.classList.add('is-search-target');
+      clearTimeout(this.historySearchFlashTimer);
+      this.historySearchFlashTimer = setTimeout(() => element.classList.remove('is-search-target'), 1800);
+      console.info('AdminChat search scrolled to message:', id);
     },
 
     scrollToUserMessage(id) {

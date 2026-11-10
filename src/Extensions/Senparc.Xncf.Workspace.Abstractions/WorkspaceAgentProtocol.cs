@@ -21,6 +21,7 @@ public static class WorkspaceAgentOperations
     public const string List = "list";
     public const string Stat = "stat";
     public const string Read = "read";
+    public const string ReadTextWindow = "read-text-window";
     public const string Write = "write";
     public const string CreateDirectory = "mkdir";
     public const string Delete = "delete";
@@ -53,6 +54,22 @@ public sealed record WorkspaceAgentPathRequest(string RelativePath);
 
 public sealed record WorkspaceAgentReadRequest(string RelativePath, int MaxBytes);
 
+public sealed record WorkspaceTextWindowRequest(
+    string RelativePath,
+    int StartLine = 1,
+    int LineCount = 800,
+    int MaxBytes = 384 * 1024);
+
+public sealed record WorkspaceTextWindow(
+    string RelativePath,
+    long FileLength,
+    int StartLine,
+    int LineCount,
+    bool HasMore,
+    bool Truncated,
+    string Content,
+    string ETag);
+
 public sealed record WorkspaceAgentRuntimeInfo(
     int ProcessId,
     string OperatingSystem,
@@ -63,6 +80,14 @@ public sealed record WorkspaceAgentRuntimeInfo(
 public sealed class WorkspaceConflictException : InvalidOperationException
 {
     public WorkspaceConflictException(string message)
+        : base(message)
+    {
+    }
+}
+
+public sealed class WorkspaceLimitException : InvalidOperationException
+{
+    public WorkspaceLimitException(string message)
         : base(message)
     {
     }

@@ -28,13 +28,66 @@
         <el-aside class="chat-sidebar" :class="{ 'is-collapsed': sidebarCollapsed }">
             <div class="sidebar-heading">
                 <span v-show="!sidebarCollapsed">@AR["AdminChat.History"]</span>
-                <button type="button" class="sidebar-toggle"
-                        :title="ncfT(sidebarCollapsed ? 'AdminChat.Sidebar.Expand' : 'AdminChat.Sidebar.Collapse')"
-                        :aria-label="ncfT(sidebarCollapsed ? 'AdminChat.Sidebar.Expand' : 'AdminChat.Sidebar.Collapse')"
-                        :aria-expanded="String(!sidebarCollapsed)" aria-controls="chat-sidebar-body"
-                        @@click="toggleSidebar">
-                    <i :class="sidebarCollapsed ? 'el-icon-s-unfold' : 'el-icon-s-fold'" aria-hidden="true"></i>
-                </button>
+                <div class="sidebar-heading-actions">
+                    <el-popover v-model="historySearchVisible" placement="bottom-end" trigger="click" width="340"
+                                popper-class="chat-history-search-popover" :visible-arrow="false">
+                        <div class="chat-history-search" @@click.stop>
+                            <div class="chat-history-search-tabs" role="tablist">
+                                <button type="button" role="tab" class="chat-history-search-tab"
+                                        :class="{ 'is-active': historySearchTab === 'chat' }"
+                                        :aria-selected="String(historySearchTab === 'chat')"
+                                        @@click="setHistorySearchTab('chat')">
+                                    {{ ncfT('AdminChat.Search.ChatTab') }}
+                                </button>
+                                <button type="button" role="tab" class="chat-history-search-tab"
+                                        :class="{ 'is-active': historySearchTab === 'tool' }"
+                                        :aria-selected="String(historySearchTab === 'tool')"
+                                        @@click="setHistorySearchTab('tool')">
+                                    {{ ncfT('AdminChat.Search.ToolTab') }}
+                                </button>
+                            </div>
+                            <div role="tabpanel">
+                                <input ref="historySearchInput" v-model="historySearchKeyword" type="search"
+                                       class="chat-history-search-input"
+                                       :placeholder="ncfT(historySearchTab === 'tool' ? 'AdminChat.Search.ToolPlaceholder' : 'AdminChat.Search.Placeholder')"
+                                       :aria-label="ncfT(historySearchTab === 'tool' ? 'AdminChat.Search.ToolPlaceholder' : 'AdminChat.Search.Placeholder')"
+                                       @@input="scheduleHistorySearch" />
+                                <p class="chat-history-search-hint">{{ ncfT(historySearchTab === 'tool' ? 'AdminChat.Search.ToolHint' : 'AdminChat.Search.Hint') }}</p>
+                                <div class="chat-history-search-results" v-loading="historySearchLoading">
+                                    <p v-if="historySearchSubmitted && !historySearchLoading && historySearchHits.length === 0"
+                                       class="chat-history-search-empty">{{ ncfT('AdminChat.Search.Empty') }}</p>
+                                    <button v-for="hit in historySearchHits"
+                                            :key="hit.sessionId + '-' + (hit.trajectoryId || 0) + '-' + (hit.eventSequence || 0) + '-' + hit.messageId + '-' + hit.matchKind"
+                                            type="button" class="chat-history-search-hit"
+                                            :class="{ 'is-tool': isToolSearchHit(hit) }"
+                                            @@click="openHistorySearchHit(hit)">
+                                        <span class="chat-history-search-title">
+                                            <template v-if="highlightParts(hit.title, hit.query).match">{{ highlightParts(hit.title, hit.query).before }}<mark>{{ highlightParts(hit.title, hit.query).match }}</mark>{{ highlightParts(hit.title, hit.query).after }}</template>
+                                            <template v-else>{{ hit.title }}</template>
+                                        </span>
+                                        <span v-if="isTitleSearchHit(hit)" class="chat-history-search-kind">{{ ncfT('AdminChat.Search.TitleMatch') }}</span>
+                                        <span v-else class="chat-history-search-snippet">{{ hit.snippetBefore }}<mark>{{ hit.snippetMatch }}</mark>{{ hit.snippetAfter }}</span>
+                                        <small v-if="isToolSearchHit(hit)">{{ ncfT('AdminChat.Search.ToolCall') }} · {{ formatTime(hit.occurredAt) }}</small>
+                                        <small v-else-if="!isTitleSearchHit(hit)">{{ getRoleTypeName(hit.roleType) }} · {{ formatTime(hit.occurredAt) }}</small>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <button slot="reference" type="button" class="sidebar-toggle sidebar-search-trigger"
+                                :aria-expanded="String(historySearchVisible)"
+                                :aria-label="ncfT('AdminChat.Search.Open')"
+                                :title="ncfT('AdminChat.Search.Open')">
+                            <i class="el-icon-search" aria-hidden="true"></i>
+                        </button>
+                    </el-popover>
+                    <button type="button" class="sidebar-toggle"
+                            :title="ncfT(sidebarCollapsed ? 'AdminChat.Sidebar.Expand' : 'AdminChat.Sidebar.Collapse')"
+                            :aria-label="ncfT(sidebarCollapsed ? 'AdminChat.Sidebar.Expand' : 'AdminChat.Sidebar.Collapse')"
+                            :aria-expanded="String(!sidebarCollapsed)" aria-controls="chat-sidebar-body"
+                            @@click="toggleSidebar">
+                        <i :class="sidebarCollapsed ? 'el-icon-s-unfold' : 'el-icon-s-fold'" aria-hidden="true"></i>
+                    </button>
+                </div>
                 <span v-if="sidebarCollapsed && hasRunningSession" class="sidebar-running-dot"
                       role="status" :aria-label="ncfT('AdminChat.Sidebar.Running')"></span>
                 <span v-else-if="sidebarCollapsed && unreadSessionIds.length" class="sidebar-unread-dot"
@@ -1042,16 +1095,49 @@
                         </el-button>
                         <el-tag v-if="workspacePreviewDirty" size="mini" type="warning">未保存</el-tag>
                         <el-button
+                            v-if="workspacePreviewIsJson && !workspacePreviewEditing"
+                            type="text"
+                            size="mini"
+                            :title="workspacePreviewJsonTree ? '返回文本' : '树状展开'"
+                            :aria-label="workspacePreviewJsonTree ? '返回文本' : '树状展开'"
+                            :aria-pressed="workspacePreviewJsonTree ? 'true' : 'false'"
+                            @@click="toggleWorkspaceJsonTree">
+                            <i class="fa fa-sitemap"></i>
+                        </el-button>
+                        <el-button
                             v-if="workspacePreviewCanShowSource"
                             type="text"
                             size="mini"
                             :title="workspacePreviewSource ? '查看预览' : '查看源码'"
                             :aria-label="workspacePreviewSource ? '查看预览' : '查看源码'"
                             :aria-pressed="workspacePreviewSource ? 'true' : 'false'"
-                            @@click="workspacePreviewSource = !workspacePreviewSource">
+                            @@click="toggleWorkspacePreviewSource">
                             <i :class="workspacePreviewSource ? 'fa fa-eye' : 'fa fa-code'"></i>
                         </el-button>
                         <el-tag v-if="workspacePreviewData" size="mini" type="info">{{ workspacePreviewData.contentType }}</el-tag>
+                    </div>
+                    <div v-if="workspacePreviewWindowBar" class="chat-workspace-window-bar">
+                        <span>{{ workspacePreviewWindowLabel }}</span>
+                        <div class="chat-workspace-window-actions">
+                            <el-button
+                                v-if="workspacePreviewData.windowed"
+                                size="mini"
+                                :disabled="(workspacePreviewData.startLine || 1) <= 1 || workspacePreviewWindowLoading"
+                                @@click="loadWorkspacePreviewWindow((workspacePreviewData.startLine || 1) - 800)">上一段</el-button>
+                            <el-button
+                                v-if="workspacePreviewData.windowed"
+                                size="mini"
+                                :disabled="!workspacePreviewData.hasMore || workspacePreviewWindowLoading"
+                                @@click="loadWorkspacePreviewWindow(workspacePreviewWindowEnd + 1)">下一段</el-button>
+                            <input
+                                class="chat-workspace-line-jump"
+                                type="number"
+                                min="1"
+                                v-model.number="workspacePreviewJumpLine"
+                                aria-label="跳转到行"
+                                @@keydown.enter.prevent="jumpWorkspacePreviewLine" />
+                            <el-button size="mini" :loading="workspacePreviewWindowLoading" @@click="jumpWorkspacePreviewLine">跳转</el-button>
+                        </div>
                     </div>
                     <div v-if="workspacePreviewLoading" class="chat-workspace-preview-loading">
                         <i class="el-icon-loading"></i> 正在加载预览…
@@ -1065,8 +1151,44 @@
                         @@keydown.ctrl.s.prevent="saveWorkspacePreview"
                         @@keydown.meta.s.prevent="saveWorkspacePreview"></textarea>
                     <pre v-else-if="workspacePreviewData && workspacePreviewSource && workspacePreviewData.isText" class="chat-workspace-text-preview">{{ workspacePreviewData.content }}</pre>
+                    <div v-else-if="workspacePreviewJsonTree && workspaceJsonRoot" class="chat-workspace-json-tree" role="tree">
+                        <div
+                            v-for="row in workspaceJsonRows()"
+                            :key="row.id"
+                            class="json-row"
+                            :style="{ paddingLeft: (row.depth * 16) + 'px' }"
+                            role="treeitem">
+                            <button v-if="row.more" type="button" class="json-more" @@click="showMoreWorkspaceJson(row.node)">还有 {{ row.remaining }} 项</button>
+                            <template v-else>
+                                <button
+                                    v-if="row.node.size != null && !row.closing"
+                                    type="button"
+                                    class="json-toggle"
+                                    :aria-expanded="row.node.open ? 'true' : 'false'"
+                                    @@click="toggleWorkspaceJson(row.node)">{{ row.node.open ? '▾' : '▸' }}</button>
+                                <span v-else class="json-toggle-spacer"></span>
+                                <span v-if="row.node.key != null && !row.closing" class="json-key">{{ jsonKeyLabel(row.node) }}</span>
+                                <span v-if="row.node.key != null && !row.closing" class="json-colon">:</span>
+                                <span :class="jsonValueClass(row)" :title="jsonRowTitle(row)">{{ jsonRowText(row) }}</span>
+                            </template>
+                        </div>
+                    </div>
+                    <pre v-else-if="workspacePreviewShowsLines && !workspacePreviewVirtual" class="chat-workspace-code-block"><code v-html="workspacePreviewCodeHtml"></code></pre>
+                    <div
+                        v-else-if="workspacePreviewShowsLines && workspacePreviewVirtual"
+                        ref="workspaceLineScroller"
+                        class="chat-workspace-lines"
+                        @@scroll="onWorkspaceLineScroll">
+                        <div :style="{ height: (workspacePreviewLineOffset * 20) + 'px' }"></div>
+                        <div
+                            v-for="line in visibleWorkspaceLines()"
+                            :key="line.number"
+                            class="chat-workspace-line"
+                            :data-ln="line.number"><span class="chat-workspace-line-text" v-html="line.html"></span></div>
+                        <div :style="{ height: workspaceLineBottomPad + 'px' }"></div>
+                    </div>
                     <iframe
-                        v-else-if="workspacePreviewIsDocument || workspacePreviewIsCode"
+                        v-else-if="workspacePreviewIsDocument"
                         class="chat-workspace-html-frame"
                         sandbox="allow-same-origin"
                         :srcdoc="workspacePreviewSrcdoc"

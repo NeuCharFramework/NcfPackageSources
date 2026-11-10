@@ -17,6 +17,7 @@
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
@@ -24,13 +25,16 @@ using Senparc.CO2NET;
 using Senparc.CO2NET.AspNet;
 using Senparc.CO2NET.HttpUtility;
 using Senparc.Ncf.Core.Areas;
+using Senparc.Ncf.Core.Localization;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.WebApi;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.Database.SqlServer;
 using Senparc.Ncf.XncfBase;
+using Senparc.Ncf.Utility.Helpers;
 using Senparc.Xncf.AreasBase;
 using System;
+using System.Linq;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -40,7 +44,7 @@ builder.AddServiceDefaults();
 
 // Add services to the container.
 builder.Services.AddProblemDetails();
-builder.Services.AddLocalization();
+builder.Services.AddNcfLocalization();
 
 builder.Services.AddControllers().AddDapr();
 
@@ -62,6 +66,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+var supportedCultures = NcfLocalizationOptions.SupportedCultures;
+app.UseRequestLocalization(new RequestLocalizationOptions()
+    .SetDefaultCulture(NcfLocalizationOptions.DefaultCulture)
+    .AddSupportedCultures(supportedCultures.ToArray())
+    .AddSupportedUICultures(supportedCultures.ToArray())
+    .AddInitialRequestCultureProvider(new CookieRequestCultureProvider()));
 
 // 初始化 Senparc 全局 DI 访问器，避免模块静态初始化阶段拿不到 ServiceProvider。
 app.UseSenparcMvcDI();

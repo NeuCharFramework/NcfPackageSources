@@ -273,6 +273,11 @@ public interface IWorkspaceStorage
         int maxBytes = 2 * 1024 * 1024,
         CancellationToken cancellationToken = default);
 
+    Task<WorkspaceTextWindow> ReadTextWindowAsync(
+        string workspaceId,
+        WorkspaceTextWindowRequest request,
+        CancellationToken cancellationToken = default);
+
     Task WriteFileAsync(
         string workspaceId,
         string relativePath,

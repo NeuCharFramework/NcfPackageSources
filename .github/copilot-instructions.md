@@ -81,5 +81,5 @@ Key modules for the RAG implementation:
 | Skill | Description | File |
 |---|---|---|
 | `add-modify-log` | Add modify log | `.github/skills/add-modify-log/SKILL.md` |
-| `update-project-version` | Update .csproj version and release notes when project files change | `.github/skills/update-project-version/SKILL.md` |
+| `senparc-version-updater` | Update package versions from the master/main merge-base, write PackageReleaseNotes, and add C# changelog headers | `codex-skills/senparc-version-updater/SKILL.md` |
 | `multi-language-translation` | Create Developer-Multi-Language branch and translate all Chinese source code comments and README/docs to English | `.github/skills/multi-language-translation/SKILL.md` |

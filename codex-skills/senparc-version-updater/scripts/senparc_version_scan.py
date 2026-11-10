@@ -15,6 +15,7 @@ from pathlib import Path
 
 IGNORED_DIRS = {".git", ".idea", ".vs", ".vscode", "bin", "obj"}
 NET_FILENAME_RE = re.compile(r"\.net(?P<major>\d+)\.csproj$", re.IGNORECASE)
+EF_MIGRATION_FILE_RE = re.compile(r"(?:^|/)Domain/Migrations/[^/]+/.+\.cs$")
 NET_TFM_RE = re.compile(r"^net(?P<major>\d+)(?:\.\d+)?(?:[-].*)?$", re.IGNORECASE)
 MSBUILD_THIS_FILE_DIRECTORY_RE = re.compile(r"\$\(MSBuildThisFileDirectory\)", re.IGNORECASE)
 MSBUILD_PROJECT_DIRECTORY_RE = re.compile(r"\$\(MSBuildProjectDirectory\)", re.IGNORECASE)
@@ -373,6 +374,11 @@ def is_generated_cs(path: str) -> bool:
     return path.lower().endswith(".generated.cs")
 
 
+def is_generated_migration_cs(path: str) -> bool:
+    """EF migration output under Domain/Migrations/<DatabaseName>/ is regenerated."""
+    return EF_MIGRATION_FILE_RE.search(path.replace("\\", "/")) is not None
+
+
 def read_git_file_text(root: Path, revision: str, rel_path: str) -> str | None:
     proc = subprocess.run(
         ["git", "-C", str(root), "show", f"{revision}:{rel_path}"],
@@ -637,6 +643,7 @@ def main() -> int:
 
     changed_cs_files: list[dict[str, str]] = []
     changed_generated_cs_files: list[str] = []
+    skipped_migration_cs_files: list[str] = []
     deleted_changed_cs_files: list[str] = []
     changed_csproj_targets: set[Path] = set()
     changed_csproj_to_files: dict[Path, list[str]] = defaultdict(list)
@@ -684,6 +691,9 @@ def main() -> int:
 
         if is_generated_cs(rel):
             changed_generated_cs_files.append(rel)
+            continue
+        if is_generated_migration_cs(rel):
+            skipped_migration_cs_files.append(rel)
             continue
         if not abs_file.exists():
             deleted_changed_cs_files.append(rel)
@@ -737,6 +747,7 @@ def main() -> int:
         "changed_files": changed_files,
         "changed_cs_files": changed_cs_files,
         "changed_generated_cs_files": changed_generated_cs_files,
+        "skipped_migration_cs_files": skipped_migration_cs_files,
         "deleted_changed_cs_files": deleted_changed_cs_files,
         "changed_csproj_files": changed_csproj_files,
         "changed_props_files": changed_props_files,

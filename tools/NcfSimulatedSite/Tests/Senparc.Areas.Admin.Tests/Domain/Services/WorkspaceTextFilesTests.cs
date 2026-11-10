@@ -20,6 +20,10 @@ public class WorkspaceTextFilesTests
         Assert.AreEqual("text/plain", WorkspaceTextFiles.ResolveContentType(".gitignore"));
         Assert.AreEqual("text/plain", WorkspaceTextFiles.ResolveContentType(".env.local"));
         Assert.AreEqual("text/plain", WorkspaceTextFiles.ResolveContentType("README"));
+        Assert.AreEqual("application/jsonl", WorkspaceTextFiles.ResolveContentType("events.jsonl"));
+        Assert.AreEqual("application/jsonl", WorkspaceTextFiles.ResolveContentType("logs/run.ndjson"));
+        Assert.IsTrue(WorkspaceTextFiles.IsText(WorkspaceTextFiles.ResolveContentType("events.jsonl")));
+        Assert.IsTrue(WorkspaceTextFiles.CanEdit("events.jsonl"));
         Assert.AreEqual("image/png", WorkspaceTextFiles.ResolveContentType("image.png"));
         Assert.AreEqual("application/octet-stream", WorkspaceTextFiles.ResolveContentType("bin/app.exe"));
 

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.4.5</Version>
+    <Version>0.4.6</Version>
     <PackageReleaseNotes>
       [2026-08-13] v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
       1、支持版本与自动保存、Webhook 触发、并行节点和执行回放
@@ -54,6 +54,8 @@
       5、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
       6、Dependency update from Senparc.Xncf.SystemCore to 0.14.12
       7、Dependency update from Senparc.Xncf.SystemManager to 0.15.12
+      [2026-11-10] v0.4.6 保留显式传入的空工作流数组
+      1、参数值为空 JSON 数组时仍视为已填写，避免显式空数组被丢弃
     </PackageReleaseNotes>
     <AssemblyName>Senparc.Xncf.NeuCharWorkflow</AssemblyName>
     <RootNamespace>Senparc.Xncf.NeuCharWorkflow</RootNamespace>

@@ -101,12 +101,105 @@ public sealed class WorkspaceFileSystemEngine
         var info = new FileInfo(path);
         if (info.Length > limit)
         {
-            throw new InvalidOperationException($"Workspace file exceeds the {limit} byte read limit.");
+            throw new WorkspaceLimitException($"Workspace file exceeds the {limit} byte read limit.");
         }
 
         var content = await File.ReadAllBytesAsync(path, cancellationToken).ConfigureAwait(false);
         var metadata = CreateFileMetadata(path, info, content);
         return new WorkspaceFileContent(metadata, content);
+    }
+
+    public async Task<WorkspaceTextWindow> ReadTextWindowAsync(
+        WorkspaceTextWindowRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        var path = ResolvePath(request.RelativePath);
+        EnsureNoSymlink(path);
+        if (!File.Exists(path))
+        {
+            throw new FileNotFoundException("Workspace file does not exist.", request.RelativePath);
+        }
+
+        var startLine = Math.Max(1, request.StartLine);
+        var lineCount = Math.Clamp(request.LineCount, 1, 2000);
+        var maxBytes = Math.Clamp(request.MaxBytes, 1024, 512 * 1024);
+        var info = new FileInfo(path);
+        await using var stream = new FileStream(
+            path,
+            FileMode.Open,
+            FileAccess.Read,
+            FileShare.Read,
+            81920,
+            FileOptions.Asynchronous | FileOptions.SequentialScan);
+        var scanner = new WorkspaceTextScanner(stream);
+        var skipped = await scanner.SkipLinesAsync(startLine - 1, cancellationToken).ConfigureAwait(false);
+        if (skipped < startLine - 1)
+        {
+            return new WorkspaceTextWindow(
+                NormalizeRelativePath(path),
+                info.Length,
+                startLine,
+                0,
+                false,
+                false,
+                string.Empty,
+                CreateWindowETag(info));
+        }
+
+        var builder = new StringBuilder();
+        var returned = 0;
+        var usedBytes = 0;
+        var truncated = false;
+        var hasMore = false;
+        while (returned < lineCount)
+        {
+            var line = await scanner.ReadLineAsync(maxBytes, cancellationToken).ConfigureAwait(false);
+            if (line == null)
+            {
+                break;
+            }
+
+            var piece = line.Value.Truncated
+                ? Encoding.UTF8.GetString(line.Value.Bytes) + "…"
+                : Encoding.UTF8.GetString(line.Value.Bytes);
+            var additional = Encoding.UTF8.GetByteCount(piece) + (returned > 0 ? 1 : 0);
+            if (returned > 0 && usedBytes + additional > maxBytes)
+            {
+                hasMore = true;
+                break;
+            }
+
+            if (returned > 0)
+            {
+                builder.Append('\n');
+            }
+
+            builder.Append(piece);
+            usedBytes += additional;
+            returned++;
+            if (line.Value.Truncated)
+            {
+                truncated = true;
+                hasMore = await scanner.HasMoreAsync(cancellationToken).ConfigureAwait(false);
+                break;
+            }
+        }
+
+        if (!hasMore)
+        {
+            hasMore = await scanner.HasMoreAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        return new WorkspaceTextWindow(
+            NormalizeRelativePath(path),
+            info.Length,
+            startLine,
+            returned,
+            hasMore,
+            truncated,
+            builder.ToString(),
+            CreateWindowETag(info));
     }
 
     public async Task<WorkspaceWriteFileResult> WriteFileAsync(
@@ -628,6 +721,11 @@ public sealed class WorkspaceFileSystemEngine
         return $"\"{Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(value)))}\"";
     }
 
+    private static string CreateWindowETag(FileInfo info)
+    {
+        return $"\"w-{info.Length:x}-{info.LastWriteTimeUtc.Ticks:x}\"";
+    }
+
     private string ResolvePath(string? relativePath, bool allowRoot = false)
     {
         if (string.IsNullOrWhiteSpace(relativePath))
@@ -837,5 +935,155 @@ public sealed class WorkspaceFileSystemEngine
             FileOptions.Asynchronous | FileOptions.SequentialScan);
         var count = await stream.ReadAsync(buffer, cancellationToken).ConfigureAwait(false);
         return buffer.AsSpan(0, count).Contains((byte)0);
+    }
+
+    private readonly record struct WorkspaceTextLine(byte[] Bytes, bool Truncated);
+
+    private sealed class WorkspaceTextScanner
+    {
+        private readonly Stream _stream;
+        private readonly byte[] _buffer = new byte[81920];
+        private int _count;
+        private int _offset;
+
+        public WorkspaceTextScanner(Stream stream)
+        {
+            _stream = stream;
+        }
+
+        public async Task<int> SkipLinesAsync(int lines, CancellationToken cancellationToken)
+        {
+            var skipped = 0;
+            while (skipped < lines)
+            {
+                if (!await EnsureAsync(cancellationToken).ConfigureAwait(false))
+                {
+                    return skipped;
+                }
+
+                var value = _buffer[_offset++];
+                if (value == 0)
+                {
+                    throw new ArgumentException("Workspace text window cannot include binary content.");
+                }
+
+                if (value == (byte)'\n')
+                {
+                    skipped++;
+                }
+                else if (value == (byte)'\r')
+                {
+                    skipped++;
+                    if (await PeekAsync(cancellationToken).ConfigureAwait(false) == '\n')
+                    {
+                        _offset++;
+                    }
+                }
+            }
+
+            return skipped;
+        }
+
+        public async Task<WorkspaceTextLine?> ReadLineAsync(int maxLineBytes, CancellationToken cancellationToken)
+        {
+            var line = new MemoryStream();
+            var any = false;
+            while (true)
+            {
+                if (!await EnsureAsync(cancellationToken).ConfigureAwait(false))
+                {
+                    return any ? new WorkspaceTextLine(line.ToArray(), false) : null;
+                }
+
+                var value = _buffer[_offset++];
+                if (value == 0)
+                {
+                    throw new ArgumentException("Workspace text window cannot include binary content.");
+                }
+
+                if (value == (byte)'\n')
+                {
+                    return new WorkspaceTextLine(line.ToArray(), false);
+                }
+
+                if (value == (byte)'\r')
+                {
+                    if (await PeekAsync(cancellationToken).ConfigureAwait(false) == '\n')
+                    {
+                        _offset++;
+                    }
+
+                    return new WorkspaceTextLine(line.ToArray(), false);
+                }
+
+                if (line.Length >= maxLineBytes)
+                {
+                    await DrainRestOfLineAsync(cancellationToken).ConfigureAwait(false);
+                    return new WorkspaceTextLine(line.ToArray(), true);
+                }
+
+                any = true;
+                line.WriteByte(value);
+            }
+        }
+
+        public Task<bool> HasMoreAsync(CancellationToken cancellationToken)
+        {
+            return EnsureAsync(cancellationToken);
+        }
+
+        private async Task DrainRestOfLineAsync(CancellationToken cancellationToken)
+        {
+            while (true)
+            {
+                if (!await EnsureAsync(cancellationToken).ConfigureAwait(false))
+                {
+                    return;
+                }
+
+                var value = _buffer[_offset++];
+                if (value == 0)
+                {
+                    throw new ArgumentException("Workspace text window cannot include binary content.");
+                }
+
+                if (value == (byte)'\n')
+                {
+                    return;
+                }
+
+                if (value == (byte)'\r')
+                {
+                    if (await PeekAsync(cancellationToken).ConfigureAwait(false) == '\n')
+                    {
+                        _offset++;
+                    }
+
+                    return;
+                }
+            }
+        }
+
+        private async Task<int> PeekAsync(CancellationToken cancellationToken)
+        {
+            if (!await EnsureAsync(cancellationToken).ConfigureAwait(false))
+            {
+                return -1;
+            }
+
+            return _buffer[_offset];
+        }
+
+        private async Task<bool> EnsureAsync(CancellationToken cancellationToken)
+        {
+            if (_offset < _count)
+            {
+                return true;
+            }
+
+            _count = await _stream.ReadAsync(_buffer, cancellationToken).ConfigureAwait(false);
+            _offset = 0;
+            return _count > 0;
+        }
     }
 }

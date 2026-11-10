@@ -254,6 +254,7 @@ public sealed class WorkspaceCatalogTests
         public Task<string> ReadFileAsync(string workspaceId, string relativePath, int maxBytes = 2097152, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<WorkspaceFileMetadata> GetFileInfoAsync(string workspaceId, string relativePath, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<WorkspaceFileContent> ReadFileBytesAsync(string workspaceId, string relativePath, int maxBytes = 2097152, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<WorkspaceTextWindow> ReadTextWindowAsync(string workspaceId, WorkspaceTextWindowRequest request, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task WriteFileAsync(string workspaceId, string relativePath, string content, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<WorkspaceWriteFileResult> WriteFileBytesAsync(string workspaceId, WorkspaceWriteFileRequest request, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<WorkspaceWriteFileResult> WriteFileStreamAsync(string workspaceId, WorkspaceStreamWriteRequest request, Stream content, CancellationToken cancellationToken = default) => throw new NotSupportedException();

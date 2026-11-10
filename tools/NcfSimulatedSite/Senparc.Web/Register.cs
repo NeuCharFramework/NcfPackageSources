@@ -36,6 +36,7 @@ using Senparc.Areas.Admin.Domain.Services;
 using Senparc.CO2NET;
 using Senparc.CO2NET.AspNet;
 using Senparc.Ncf.Core.Models;
+using Senparc.Ncf.Core.Localization;
 using Senparc.Ncf.XncfBase;
 using Senparc.Xncf.AreasBase;
 using Senparc.Ncf.Core.EventBus;
@@ -64,7 +65,7 @@ namespace Senparc.Web
 
             // Localization baseline for all modules (Web/Admin/Installer/XNCF).
             // Use type-based lookup without ResourcesPath override to match embedded resource names.
-            builder.Services.AddLocalization();
+            builder.Services.AddNcfLocalization();
             builder.Services.AddSingleton<DatabaseRuntimeStateStore>();
             builder.Services.AddSingleton<DatabaseUpgradeCoordinator>();
 
