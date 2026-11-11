@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：Register.cs
@@ -12,6 +12,9 @@
 
     修改标识：Senparc - 20260717
     修改描述：v0.13.0-preview2 为 AreasBase 模块接入统一资源本地化并优化功能文案
+
+    修改标识：Senparc - 20261111
+    修改描述：v0.13.12 统一 XNCF Register 显示元数据与多语言资源键
 
 ----------------------------------------------------------------*/
 
@@ -38,6 +41,11 @@ namespace Senparc.Xncf.AreasBase
     [XncfOrder(5955)]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
+        private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<AreasBaseResource>(
+            "Module.AreasBase",
+            "Areas 基础模块",
+            "为 Razor Pages 等页面提供基础运行能力");
+
         #region IXncfRegister 接口
 
         public override string Name => "Senparc.Xncf.AreasBase";
@@ -46,11 +54,11 @@ namespace Senparc.Xncf.AreasBase
 
         public override string Version => "0.1";//必须填写版本号
 
-        public override string MenuName => AreasBaseResource.Get("Module.AreasBase.MenuName", "Areas 基础模块");
+        public override string MenuName => RegisterText.MenuName;
 
         public override string Icon => "fa fa-university";//fa fa-cog
 
-        public override string Description => AreasBaseResource.Get("Module.AreasBase.Description", "运行 Razor Pages 等页面的基础模块");
+        public override string Description => RegisterText.Description;
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

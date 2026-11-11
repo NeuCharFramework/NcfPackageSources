@@ -247,11 +247,12 @@ test('chrome asks for the microphone before starting recognition', async () => {
     const api = load({ window: browser });
     const vm = viewModel();
     api.toggle(vm);
-    assert.equal(calls[0].audio, true);
     assert.match(vm.voiceNavMessage, /弹出的提示/);
     await new Promise((resolve) => setImmediate(resolve));
+    assert.equal(calls[0].audio, true);
     assert.equal(calls[1], 'stop');
-    assert.equal(calls[2], 'start');
+    assert.equal(calls[2].audio, true);
+    assert.equal(calls[3], 'start');
     assert.equal(vm.voiceNavListening, true);
     assert.match(vm.voiceNavMessage, /请说要打开的页面名称/);
 });
@@ -306,7 +307,7 @@ test('on-device speech prefers dictation and falls back to command', async () =>
     assert.deepEqual(seen, ['available:dictation', 'install:dictation', 'available:command']);
 });
 
-function chromiumWindow(SpeechRecognition) {
+function chromiumWindow(SpeechRecognition, getUserMedia) {
     return {
         navigator: {
             userAgent: 'Mozilla/5.0 Chrome/142.0.0.0 Safari/537.36',
@@ -316,7 +317,7 @@ function chromiumWindow(SpeechRecognition) {
                 }
             },
             mediaDevices: {
-                getUserMedia() {
+                getUserMedia: getUserMedia || function () {
                     return Promise.resolve({ getTracks() { return [{ stop() {} }]; } });
                 }
             }
@@ -325,21 +326,59 @@ function chromiumWindow(SpeechRecognition) {
     };
 }
 
-test('chrome listens on device when the language pack is already installed', async () => {
+test('chrome passes the live microphone track to on-device recognition', async () => {
     const started = [];
+    let openedMicrophone = false;
     function SpeechRecognition() {
-        this.start = function () { started.push(this.processLocally === true); };
+        this.start = function (track) {
+            started.push({
+                local: this.processLocally === true,
+                continuous: this.continuous === true,
+                track: !!(track && track.readyState !== 'ended'),
+                phrases: this.phrases && this.phrases.length
+            });
+        };
         this.abort = function () {};
         this.stop = function () {};
     }
     SpeechRecognition.available = function (options) {
         return Promise.resolve(options.quality === 'dictation' ? 'available' : 'unavailable');
     };
-    const api = load({ window: chromiumWindow(SpeechRecognition) });
+    const browser = chromiumWindow(SpeechRecognition, function () {
+        openedMicrophone = true;
+        return Promise.resolve({
+            getAudioTracks() {
+                return [{ readyState: 'live', label: 'Mic', stop() {} }];
+            }
+        });
+    });
+    browser.SpeechRecognitionPhrase = function (phrase, boost) {
+        this.phrase = phrase;
+        this.boost = boost;
+    };
+    browser.service = {
+        get() {
+            return Promise.resolve({
+                data: {
+                    data: {
+                        menuList: [
+                            { menuName: '知识库', url: '/Admin/KnowledgeBase/Index', children: [] }
+                        ]
+                    }
+                }
+            });
+        }
+    };
+    const api = load({ window: browser });
     const vm = viewModel();
     api.toggle(vm);
     await new Promise((resolve) => setImmediate(resolve));
-    assert.deepEqual(started, [true]);
+    assert.equal(openedMicrophone, true);
+    assert.equal(started.length, 1);
+    assert.equal(started[0].local, true);
+    assert.equal(started[0].continuous, false);
+    assert.equal(started[0].track, true);
+    assert.equal(started[0].phrases, 1);
     assert.match(vm.voiceNavMessage, /请说要打开的页面名称/);
 });
 
@@ -362,11 +401,60 @@ test('chrome downloads the local language pack before listening', async () => {
     api.toggle(vm);
     assert.match(vm.voiceNavMessage, /本地语音识别/);
     await new Promise((resolve) => setImmediate(resolve));
-    assert.deepEqual(steps, ['available:dictation', 'install:dictation', 'local-start']);
+    assert.deepEqual(steps, ['install:dictation', 'available:dictation', 'local-start']);
     assert.match(vm.voiceNavMessage, /请说要打开的页面名称/);
 });
 
-test('safari starts recognition directly so the click can show its own prompt', () => {
+test('a language-pack install that never finishes does not keep the panel waiting', async () => {
+    const api = load();
+    function Recognition() {}
+    Recognition.available = function (options) {
+        return Promise.resolve(options.quality === 'dictation' ? 'downloadable' : 'available');
+    };
+    Recognition.install = function () {
+        return new Promise(function () {});
+    };
+    const quality = await api.prepareLocalSpeech(Recognition, 'zh-CN', null, {
+        installPromise: Recognition.install(),
+        installTimeout: 30
+    });
+    assert.equal(quality, '');
+    assert.match(api.text('downloading'), /不会再弹窗/);
+});
+
+test('a premature no-speech does not end the session, and heard text fills the input', async () => {
+    let recognition = null;
+    function SpeechRecognition() {
+        recognition = this;
+        this.starts = 0;
+        this.start = function () { this.starts += 1; };
+        this.abort = function () {};
+        this.stop = function () {};
+    }
+    SpeechRecognition.available = function (options) {
+        return Promise.resolve(options.quality === 'dictation' ? 'available' : 'unavailable');
+    };
+    const api = load({ window: chromiumWindow(SpeechRecognition) });
+    const vm = viewModel();
+    api.toggle(vm);
+    await new Promise((resolve) => setImmediate(resolve));
+    recognition.onerror({ error: 'no-speech' });
+    recognition.onend();
+    assert.equal(vm.voiceNavListening, true);
+    assert.doesNotMatch(vm.voiceNavMessage, /没有听清/);
+    recognition.onresult({
+        results: [{ isFinal: false, 0: { transcript: '打开知识库' }, length: 1 }]
+    });
+    assert.equal(vm.voiceNavDraft, '打开知识库');
+    recognition.onnomatch({
+        results: [{ isFinal: true, 0: { transcript: '知识库' }, length: 1 }]
+    });
+    assert.equal(vm.voiceNavDraft, '知识库');
+    await new Promise((resolve) => setTimeout(resolve, 250));
+    assert.equal(recognition.starts, 2);
+});
+
+test('safari starts recognition directly so the click can show its own prompt', async () => {
     const calls = [];
     const browser = {
         navigator: {
@@ -384,7 +472,9 @@ test('safari starts recognition directly so the click can show its own prompt', 
     };
     const api = load({ window: browser });
     api.toggle(viewModel());
-    assert.deepEqual(calls, ['start']);
+    await new Promise((resolve) => setImmediate(resolve));
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0], 'start');
 });
 
 test('unknown speech does not navigate', () => {

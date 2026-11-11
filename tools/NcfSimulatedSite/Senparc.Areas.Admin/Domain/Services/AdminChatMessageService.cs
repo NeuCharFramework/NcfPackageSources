@@ -25,6 +25,9 @@
     修改标识：Senparc - 20261110
     修改描述：检索未归档会话中 Harness 实际调用过的方法名
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.12.28 完善 Admin Chat 与模块工作区交互能力兼容
+
 ----------------------------------------------------------------*/
 using Microsoft.EntityFrameworkCore;
 using Senparc.Areas.Admin.ACL;

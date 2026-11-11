@@ -31,6 +31,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.19.1 enhance Agent Studio, group configuration, and task management interactions
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.19.3 完善 AgentsManager 模板、ChatGroup 与连接器能力兼容
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.XncfBase.FunctionRenders;
@@ -275,6 +278,12 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
 
         /// <summary>是否在本次 Group 执行中包含 Human 参与者。</summary>
         public bool IncludeHumanParticipant { get; set; }
+
+        /// <summary>为 true 时，本次对话只使用 <see cref="ConnectorInstanceIds"/> 与 Agent 授权的交集。</summary>
+        public bool LimitConnectors { get; set; }
+
+        /// <summary>本次对话选中的连接器实例。仅在 <see cref="LimitConnectors"/> 为 true 时生效。</summary>
+        public List<string> ConnectorInstanceIds { get; set; }
 
         /// <summary>启动任务时捕获的提醒接收人，不参与 HTTP 模型绑定。</summary>
         [JsonIgnore]

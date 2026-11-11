@@ -977,4 +977,10 @@
   <data name="PromptReference.RobotScore" xml:space="preserve"><value>AI 评分</value></data>
   <data name="PromptReference.Retry" xml:space="preserve"><value>重试</value></data>
 
+  <data name="SystemMenu.AdministratorManagement" xml:space="preserve"><value>管理员管理</value></data>
+  <data name="SystemMenu.RoleManagement" xml:space="preserve"><value>角色管理</value></data>
+  <data name="SystemMenu.SystemInfo" xml:space="preserve"><value>系统信息</value></data>
+  <data name="SystemMenu.TenantInfo" xml:space="preserve"><value>多租户信息</value></data>
+  <data name="SystemMenu.ExtensionModules" xml:space="preserve"><value>扩展模块</value></data>
+  <data name="SystemMenu.ModuleManagement" xml:space="preserve"><value>模块管理</value></data>
 </root>

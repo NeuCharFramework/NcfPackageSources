@@ -19,6 +19,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.24.16 Remove DatabaseSample and related components from MCP extension
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.24.18 统一 XNCF Register 显示元数据与多语言资源键
+
 ----------------------------------------------------------------*/
 
 using AutoMapper;
@@ -53,6 +56,8 @@ using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.WeixinManager.Domain.Models.AutoMapper;
 using Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.WeixinManager.Domain.Services;
+using Senparc.Xncf.Connectors.Abstractions;
+using Senparc.Xncf.WeixinManager.Connectors;
 using Senparc.Xncf.WeixinManager.WeixinClaw;
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -68,6 +73,11 @@ namespace Senparc.Xncf.WeixinManager
     [XncfOrder(5880)]
     public partial class Register : XncfRegisterBase, IXncfRegister //注册 XNCF 基础模块接口（必须）
     {
+        private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<WeixinManagerResource>(
+            "Module.WeixinManager",
+            "微信管理",
+            "盛派官方微信管理后台，可快速集成微信公众号和小程序的基础管理功能。基于 Senparc.Weixin SDK：https://github.com/JeffreySu/WeiXinMPSDK");
+
         #region IXncfRegister 接口
 
         public override string Name => "Senparc.Xncf.WeixinManager";
@@ -78,15 +88,13 @@ namespace Senparc.Xncf.WeixinManager
         public override string Version => "0.24.13";
 
 
-        public override string MenuName => WeixinManagerResource.Get("Module.WeixinManager.MenuName", "微信管理");
+        public override string MenuName => RegisterText.MenuName;
 
 
         public override string Icon => "fa fa-weixin";
 
 
-        public override string Description => WeixinManagerResource.Get(
-            "Module.WeixinManager.Description",
-            "XNCF 模块：盛派官方发布的微信管理后台。使用此插件可在 NCF 中快速集成微信公众号、小程序的基础管理功能。微信 SDK 基于 Senparc.Weixin SDK 开发：https://github.com/JeffreySu/WeiXinMPSDK");
+        public override string Description => RegisterText.Description;
 
         //public override IList<Type> Functions => new Type[] { };
 
@@ -125,6 +133,7 @@ namespace Senparc.Xncf.WeixinManager
             services.AddHttpClient<WeixinClawApi>();
             services.AddHostedService<WeixinClawHostedService>();
             services.AddScoped<PromptItemService>();
+            services.AddSingleton<IConnectorProvider, WeixinWorkCheckinConnector>();
 
             var autoCreateApi = false;//是否自动生成API
             services.AddSenparcWeixin(configuration, env, autoCreateApi);

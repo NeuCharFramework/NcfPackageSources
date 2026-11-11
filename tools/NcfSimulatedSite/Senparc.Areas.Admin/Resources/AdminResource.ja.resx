@@ -864,4 +864,10 @@
   <data name="DocHelp.Retry" xml:space="preserve"><value>再試行</value></data>
   <data name="DocHelp.InvalidTopic" xml:space="preserve"><value>ドキュメントの設定が無効です。管理者にお問い合わせください。</value></data>
 
+  <data name="SystemMenu.AdministratorManagement" xml:space="preserve"><value>Administrator management</value></data>
+  <data name="SystemMenu.RoleManagement" xml:space="preserve"><value>Role management</value></data>
+  <data name="SystemMenu.SystemInfo" xml:space="preserve"><value>System information</value></data>
+  <data name="SystemMenu.TenantInfo" xml:space="preserve"><value>Tenant information</value></data>
+  <data name="SystemMenu.ExtensionModules" xml:space="preserve"><value>Extension modules</value></data>
+  <data name="SystemMenu.ModuleManagement" xml:space="preserve"><value>Module management</value></data>
 </root>

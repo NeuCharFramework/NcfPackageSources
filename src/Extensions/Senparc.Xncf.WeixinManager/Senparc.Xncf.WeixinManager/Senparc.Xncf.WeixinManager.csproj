@@ -28,8 +28,7 @@
     <ProjectUrl>https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</PackageProjectUrl>
     <PackageIconUrl>http://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>
-    <PackageReleaseNotes>
-		[2024-09-13] v0.16.4-preview1 升级基础库
+    <PackageReleaseNotes>		[2024-09-13] v0.16.4-preview1 升级基础库
 		[2024-10-09] v0.16.5-preview1 升级基础库
 		[2024-12-07] v0.16.6-preview1 更新基础库
 		[2025-01-10] v0.17.0-preview1 添加达梦（DM）和 Oracle 数据库支持
@@ -147,7 +146,9 @@
     10、Dependency update from Senparc.Ncf.XncfBase to 0.28.2
     11、Dependency update from Senparc.Xncf.PromptRange to 0.20.14
     12、Dependency update from Senparc.Xncf.Swagger to 0.20.10
-    </PackageReleaseNotes>
+    [2026-11-11] v0.24.18 统一 XNCF Register 显示元数据与多语言资源键
+    1、增加 XncfRegisterText，以稳定资源键和中文基准文本解析菜单名称与模块说明。
+    2、迁移模块注册信息并同步模板、Workspace、DesktopBridge 与 Connectors 的资源目录，保留 IXncfRegister 字符串契约。</PackageReleaseNotes>
     <RepositoryUrl> https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
@@ -240,6 +241,7 @@
     <None Include="App_Data\Database\SenparcConfig.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Senparc.Xncf.Connectors.Abstractions\Senparc.Xncf.Connectors.Abstractions.csproj" />
     <ProjectReference Include="..\..\Senparc.Xncf.FileManager.Abstractions\Senparc.Xncf.FileManager.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />

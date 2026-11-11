@@ -17,8 +17,7 @@
     <!--<ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
-			[2024-08-06] v0.6.3.0-preview1 update Senparc.AI.Kernel
+    <PackageReleaseNotes>			[2024-08-06] v0.6.3.0-preview1 update Senparc.AI.Kernel
 			[2024-08-31] v0.7.0-preview1 PromptRange 支持 Markdown 输出格式展示
 			[2024-09-03] v0.7.1-preview1 PromptRange 结果提供“复制”功能
 			[2024-09-04] v0.7.2-preview1 PromptRange 完善结果显示样式，添加“复制”功能
@@ -135,7 +134,9 @@
 			15、Dependency update from Senparc.Xncf.Tenant.Interface to 0.10.11-preview11
 			16、Dependency update from Senparc.Xncf.Tenant to 0.15.15
 			17、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.12
-    </PackageReleaseNotes>
+			[2026-11-11] v0.13.14 统一 XNCF Register 显示元数据与多语言资源键
+			1、增加 XncfRegisterText，以稳定资源键和中文基准文本解析菜单名称与模块说明。
+			2、迁移模块注册信息并同步模板、Workspace、DesktopBridge 与 Connectors 的资源目录，保留 IXncfRegister 字符串契约。</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

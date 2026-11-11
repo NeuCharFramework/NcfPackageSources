@@ -30,6 +30,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.19.1 维护AgentTemplateDto 相关实现
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.19.3 完善 AgentsManager 模板、ChatGroup 与连接器能力兼容
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Identity.Client;
@@ -37,6 +40,7 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
+using Senparc.Xncf.Connectors.Abstractions;
 using Senparc.Xncf.PromptRange.Abstractions.Skills;
 using Senparc.Xncf.Workspace.Abstractions;
 using System;
@@ -119,6 +123,8 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
 
         public string WorkspacePolicyJson { get; set; }
 
+        public string ConnectorBindingsJson { get; set; }
+
         public List<AgentSkillBinding> SkillBindings
         {
             get
@@ -146,6 +152,27 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
                 ? new WorkspacePolicy()
                 : System.Text.Json.JsonSerializer.Deserialize<WorkspacePolicy>(WorkspacePolicyJson) ?? new WorkspacePolicy();
             set => WorkspacePolicyJson = System.Text.Json.JsonSerializer.Serialize(value ?? new WorkspacePolicy());
+        }
+
+        public List<AgentConnectorBinding> ConnectorBindings
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(ConnectorBindingsJson))
+                {
+                    return new List<AgentConnectorBinding>();
+                }
+
+                try
+                {
+                    return System.Text.Json.JsonSerializer.Deserialize<List<AgentConnectorBinding>>(ConnectorBindingsJson) ?? new();
+                }
+                catch (System.Text.Json.JsonException)
+                {
+                    return new List<AgentConnectorBinding>();
+                }
+            }
+            set => ConnectorBindingsJson = System.Text.Json.JsonSerializer.Serialize(value ?? new());
         }
 
         /// <summary>是否为系统保留的 Human 参与者。</summary>

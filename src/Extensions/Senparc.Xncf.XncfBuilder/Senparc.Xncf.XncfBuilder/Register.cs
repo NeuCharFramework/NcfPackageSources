@@ -28,6 +28,9 @@
     修改标识：Senparc - 20260822
     修改描述：v0.41.0 优化 XncfBuilder 预览任务与工作区服务
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.41.8 统一 XNCF Register 显示元数据与多语言资源键
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -63,6 +66,11 @@ namespace Senparc.Xncf.XncfBuilder
     [XncfOrder(5896)]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
+        private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<XncfBuilderResource>(
+            "Module.XncfBuilder",
+            "XNCF 模块生成器",
+            "快速生成 XNCF 模块基础代码和示例，并据此扩展应用");
+
         #region IXncfRegister 接口
 
         public override string Name => "Senparc.Xncf.XncfBuilder";
@@ -71,11 +79,11 @@ namespace Senparc.Xncf.XncfBuilder
 
         public override string Version => "0.10.3";//必须填写版本号
 
-        public override string MenuName => XncfBuilderResource.Get("Module.XncfBuilder.MenuName", "XNCF 模块生成器");
+        public override string MenuName => RegisterText.MenuName;
 
         public override string Icon => "fa fa-plus";
 
-        public override string Description => XncfBuilderResource.Get("Module.XncfBuilder.Description", "快速生成 XNCF 模块基础程序代码或 Sample 演示，可基于基础代码扩展自己的应用");
+        public override string Description => RegisterText.Description;
 
         // The builder's MCP tool attributes are intentionally disabled. Do not
         // publish an unauthenticated MCP route until an administrator-only

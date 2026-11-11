@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：Register.cs
@@ -12,6 +12,9 @@
 
     修改标识：Senparc - 20260717
     修改描述：v0.14.0-preview2 为 SystemCore 模块接入统一资源本地化并优化功能文案
+
+    修改标识：Senparc - 20261111
+    修改描述：v0.14.12 统一 XNCF Register 显示元数据与多语言资源键
 
 ----------------------------------------------------------------*/
 
@@ -51,6 +54,11 @@ namespace Senparc.Xncf.SystemCore
     [XncfOrder(5980)]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
+        private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<SystemCoreResource>(
+            "Module.SystemCore",
+            "系统核心模块",
+            "负责基础数据结构和网站核心运行数据的系统核心模块，请勿删除；操作前请备份数据。");
+
         #region IXncfRegister 接口
 
         public override string Name => "Senparc.Xncf.SystemCore";
@@ -59,11 +67,11 @@ namespace Senparc.Xncf.SystemCore
 
         public override string Version => "0.1.1";//必须填写版本号
 
-        public override string MenuName => SystemCoreResource.Get("Module.SystemCore.MenuName", "系统核心模块");
+        public override string MenuName => RegisterText.MenuName;
 
         public override string Icon => "fa fa-university";//fa fa-cog
 
-        public override string Description => SystemCoreResource.Get("Module.SystemCore.Description", "这是系统服务核心模块，主管基础数据结构和网站核心运行数据，请勿删除此模块。如果你实在忍不住，请务必做好数据备份。");
+        public override string Description => RegisterText.Description;
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

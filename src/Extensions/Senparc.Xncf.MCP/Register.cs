@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：Register.cs
@@ -18,6 +18,9 @@
 
     修改标识：Senparc - 20261103
     修改描述：v0.5.10 use compatible icon for MCP module
+
+    修改标识：Senparc - 20261111
+    修改描述：v0.5.13 统一 XNCF Register 显示元数据与多语言资源键
 
 ----------------------------------------------------------------*/
 
@@ -61,6 +64,11 @@ namespace Senparc.Xncf.MCP
     [XncfRegister]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
+        private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<McpResource>(
+            "Module.MCP",
+            "MCP 管理器",
+            "Model Context Protocol（MCP）管理器");
+
         #region IXncfRegister 接口
 
         public override string Name => "Senparc.Xncf.MCP";
@@ -69,11 +77,11 @@ namespace Senparc.Xncf.MCP
 
         public override string Version => "0.5.8";//必须填写版本号
 
-        public override string MenuName => McpResource.Get("Module.MCP.MenuName", "MCP Manager");
+        public override string MenuName => RegisterText.MenuName;
 
         public override string Icon => "fa fa-plug";
 
-        public override string Description => McpResource.Get("Module.MCP.Description", "Model Context Protocol (MCP) Manager");
+        public override string Description => RegisterText.Description;
 
         public override bool EnableMcpServer => true;
 

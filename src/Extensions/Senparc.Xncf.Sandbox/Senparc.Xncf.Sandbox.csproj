@@ -15,8 +15,7 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Title>沙箱环境</Title>
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
-      v0.1.0-preview1 创世：独立沙箱模块骨架
+    <PackageReleaseNotes>      v0.1.0-preview1 创世：独立沙箱模块骨架
       1、引入 ISandboxRuntime 抽象（Docker + Wasm Stub）
       2、Session 生命周期、配额与 TTL 回收
       3、Function/Admin 管理入口与 Jupyter/Exec 模板占位
@@ -76,7 +75,9 @@
     4、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.14
     5、Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
     6、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
-    </PackageReleaseNotes>
+    [2026-11-11] v0.4.2 统一 XNCF Register 显示元数据与多语言资源键
+    1、增加 XncfRegisterText，以稳定资源键和中文基准文本解析菜单名称与模块说明。
+    2、迁移模块注册信息并同步模板、Workspace、DesktopBridge 与 Connectors 的资源目录，保留 IXncfRegister 字符串契约。</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
     <Nullable>enable</Nullable>

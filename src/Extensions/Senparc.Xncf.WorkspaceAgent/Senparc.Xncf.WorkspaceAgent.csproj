@@ -9,7 +9,8 @@
 [2026-10-24] Fix Workspace Agent deployment and support native or DLL startup.
 [2026-11-03] v0.2.1 提供隔离工作区 Agent、文件系统访问和运行时连接
 [2026-11-03] Rename to Senparc.Xncf.WorkspaceAgent and propagate runtime files through project references for build and publish.
-</PackageReleaseNotes>
+[2026-11-11] v0.2.2 统一 XNCF 本地化基础能力与宿主兼容
+1、保持共享资源回退、模块注册元数据与当前宿主依赖组合兼容。</PackageReleaseNotes>
     <AssemblyName>Senparc.Xncf.WorkspaceAgent</AssemblyName>
     <RootNamespace>Senparc.Xncf.WorkspaceAgent</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>

@@ -17,8 +17,7 @@
     <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
-				[2024-08-11] v0.19.2.0-preview1 新增 DtoBase&lt;T&gt; 类型
+    <PackageReleaseNotes>				[2024-08-11] v0.19.2.0-preview1 新增 DtoBase&lt;T&gt; 类型
 				[2024-08-22] v0.20.0-preview1 为MethodCache 添加异步方法
 				v0.1.0 创世
 				v0.1.1 完善自动部署模块 Xncf
@@ -87,7 +86,8 @@
 				4、提供请求租户快照与后台租户作用域，支持隔离作用域恢复租户上下文
 				[2026-11-03] v0.30.4-preview10 以中文资源为基准统一整理多语言文案
 				1、补齐并校正各语言资源条目，使模块界面文案与中文基准保持一致
-    </PackageReleaseNotes>
+				[2026-11-11] v0.30.4-preview10 统一 XNCF 本地化基础能力与宿主兼容
+				1、保持共享资源回退、模块注册元数据与当前宿主依赖组合兼容。</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

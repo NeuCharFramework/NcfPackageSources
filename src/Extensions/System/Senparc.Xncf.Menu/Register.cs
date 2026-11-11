@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：Register.cs
@@ -12,6 +12,9 @@
 
     修改标识：Senparc - 20260717
     修改描述：v0.14.0-preview2 为 Menu 模块接入统一资源本地化并优化功能文案
+
+    修改标识：Senparc - 20261111
+    修改描述：v0.14.12 统一 XNCF Register 显示元数据与多语言资源键
 
 ----------------------------------------------------------------*/
 
@@ -33,6 +36,11 @@ namespace Senparc.Xncf.Menu
     [XncfOrder(5940)]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
+        private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<MenuResource>(
+            "Module.Menu",
+            "菜单管理",
+            "管理系统菜单");
+
         #region IXncfRegister 接口
 
         public override string Name => "Senparc.Xncf.Menu";
@@ -41,11 +49,11 @@ namespace Senparc.Xncf.Menu
 
         public override string Version => "0.1";//必须填写版本号
 
-        public override string MenuName => MenuResource.Get("Module.Menu.MenuName", "菜单管理");
+        public override string MenuName => RegisterText.MenuName;
 
         public override string Icon => "fa fa-bars";
 
-        public override string Description => MenuResource.Get("Module.Menu.Description", "系统菜单管理");
+        public override string Description => RegisterText.Description;
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

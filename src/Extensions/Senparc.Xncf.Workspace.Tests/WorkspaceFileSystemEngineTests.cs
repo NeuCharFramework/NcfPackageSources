@@ -137,6 +137,44 @@ public sealed class WorkspaceFileSystemEngineTests
     }
 
     [TestMethod]
+    public async Task SuggestPaths_ReturnsFilesAndDirectoriesByRelativePath()
+    {
+        await _engine.CreateDirectoryAsync("docs");
+        await _engine.WriteFileAsync(new WorkspaceWriteFileRequest(
+            "src/Admin/Chat.cs", Encoding.UTF8.GetBytes("class Chat {}")));
+        await _engine.WriteFileAsync(new WorkspaceWriteFileRequest(
+            "src/readme.txt", Encoding.UTF8.GetBytes("workspace readme")));
+        await _engine.WriteFileAsync(new WorkspaceWriteFileRequest(
+            "notes.txt", Encoding.UTF8.GetBytes("plain note")));
+        await _engine.WriteFileAsync(new WorkspaceWriteFileRequest(
+            "node_modules/leftpad/index.js", Encoding.UTF8.GetBytes("module.exports = 1;")));
+
+        var root = await _engine.SearchAsync(new WorkspaceSearchRequest(SuggestPaths: true, MaxResults: 20));
+        CollectionAssert.AreEquivalent(
+            new[] { "docs", "src", "notes.txt" },
+            root.Select(item => item.RelativePath).ToArray());
+        Assert.IsTrue(root.First().MatchType == "directory");
+
+        var byName = await _engine.SearchAsync(new WorkspaceSearchRequest(
+            NameQuery: "chat", SuggestPaths: true, MaxResults: 20));
+        Assert.AreEqual("src/Admin/Chat.cs", byName.Single().RelativePath);
+        Assert.AreEqual("path", byName.Single().MatchType);
+
+        var byDirectory = await _engine.SearchAsync(new WorkspaceSearchRequest(
+            NameQuery: "src/", SuggestPaths: true, MaxResults: 20));
+        CollectionAssert.AreEquivalent(
+            new[] { "src/Admin", "src/Admin/Chat.cs", "src/readme.txt" },
+            byDirectory.Select(item => item.RelativePath).ToArray());
+        Assert.IsFalse(byDirectory.Any(item => item.RelativePath.Contains("node_modules", StringComparison.Ordinal)));
+
+        var fileNameSearch = await _engine.SearchAsync(new WorkspaceSearchRequest(NameQuery: "Chat"));
+        Assert.HasCount(1, fileNameSearch);
+        Assert.IsTrue(fileNameSearch.All(item => item.MatchType == "fileName"));
+        await Assert.ThrowsExactlyAsync<ArgumentException>(() =>
+            _engine.SearchAsync(new WorkspaceSearchRequest(NameQuery: "../secret", SuggestPaths: true)));
+    }
+
+    [TestMethod]
     public async Task NativeExecution_IsDisabledByDefault()
     {
         await Assert.ThrowsExactlyAsync<UnauthorizedAccessException>(() =>

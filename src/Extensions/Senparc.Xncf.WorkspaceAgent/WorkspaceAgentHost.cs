@@ -9,6 +9,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.2.1 implement connection manager and workspace file system provider
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.2.2 完善 Workspace Agent、文件存储与模块注册兼容
+
 ----------------------------------------------------------------*/
 
 using System.Text.Json;

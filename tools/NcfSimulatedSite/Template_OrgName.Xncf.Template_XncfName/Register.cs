@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261103
     修改描述：v1.1.13 XNCF 模板无数据库变体编译修复
 
+    修改标识：Senparc - 20261111
+    修改描述：v1.1.14 统一 XNCF Register 显示元数据与多语言资源键
+
 ----------------------------------------------------------------*/
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.XncfBase;
@@ -43,6 +46,12 @@ namespace Template_OrgName.Xncf.Template_XncfName
     [XncfRegister]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
+        private static readonly XncfRegisterText RegisterText =
+            XncfRegisterText.Create<Template_XncfNameResource>(
+                "Module",
+                "Template_MenuName",
+                "Template_Description");
+
         #region IXncfRegister 接口
 
         public override string Name => "Template_OrgName.Xncf.Template_XncfName";
@@ -51,11 +60,11 @@ namespace Template_OrgName.Xncf.Template_XncfName
 
         public override string Version => "1.0.0";//必须填写版本号
 
-        public override string MenuName => "Template_MenuName";
+        public override string MenuName => RegisterText.MenuName;
 
         public override string Icon => "Template_Icon";
 
-        public override string Description => "Template_Description";
+        public override string Description => RegisterText.Description;
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

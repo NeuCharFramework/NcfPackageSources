@@ -1,0 +1,255 @@
+@page
+@model Senparc.Xncf.Connectors.Areas.Admin.Pages.Connectors.Index
+@{
+    ViewData["Title"] = "连接器";
+    Layout = "_Layout_Vue";
+}
+
+@section Style {
+    <style>
+        .connector-shell { display: flex; flex-direction: column; gap: 22px; }
+        .connector-hero { display: flex; gap: 16px; align-items: center; padding: 22px 24px; border-radius: 16px; background: linear-gradient(135deg, #12324d 0%, #1f6f8b 58%, #2a9d8f 100%); color: #fff; }
+        .connector-hero i { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; background: rgba(255,255,255,.16); font-size: 24px; }
+        .connector-hero h1 { margin: 0 0 6px; font-size: 22px; font-weight: 650; }
+        .connector-hero p { margin: 0; max-width: 760px; line-height: 1.6; color: rgba(255,255,255,.88); }
+        .connector-grid, .connector-instance-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+        .connector-card, .connector-instance { background: #fff; border: 1px solid #e6ebf2; border-radius: 14px; padding: 16px; box-shadow: 0 8px 24px rgba(18, 50, 77, .04); }
+        .connector-card h3, .connector-instance h3 { margin: 8px 0; font-size: 16px; }
+        .connector-card p, .connector-muted { color: #667085; line-height: 1.55; font-size: 13px; }
+        .connector-kicker { display: flex; justify-content: space-between; align-items: center; color: #1f6f8b; font-size: 12px; letter-spacing: .04em; }
+        .connector-actions { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+        .connector-instance-foot { display: flex; justify-content: space-between; gap: 8px; align-items: center; margin-top: 12px; }
+        .connector-section-head { display: flex; justify-content: space-between; align-items: end; gap: 12px; }
+        .connector-section-head h2 { margin: 0; font-size: 18px; }
+        .connector-empty { padding: 28px; text-align: center; color: #667085; border: 1px dashed #d0d7e2; border-radius: 14px; background: #fbfcfe; }
+        .connector-status { font-size: 12px; }
+        .connector-status.ok { color: #0f7b4c; }
+        .connector-status.bad { color: #b42318; }
+    </style>
+}
+
+@section breadcrumbs {
+    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
+    <el-breadcrumb-item>连接器</el-breadcrumb-item>
+    <el-breadcrumb-item>配置</el-breadcrumb-item>
+}
+
+@Html.AntiForgeryToken()
+<div class="connector-shell">
+    <section class="connector-hero">
+        <i class="fa fa-plug"></i>
+        <div>
+            <h1>外部工具连接器</h1>
+            <p>先配置账号和密钥，再决定哪些动作可以交给 AI。Chat 里可以临时收窄，Workflow 的 Function 节点可以直接调用，Agent 模板则决定每个智能体能使用哪些连接器。</p>
+        </div>
+    </section>
+
+    <section>
+        <div class="connector-section-head">
+            <div>
+                <h2>可用类型</h2>
+                <p class="connector-muted">类型由已安装模块提供。企业微信打卡来自微信管理模块。</p>
+            </div>
+        </div>
+        <div class="connector-grid" style="margin-top:12px;" v-if="state.catalog.length">
+            <article class="connector-card" v-for="item in state.catalog" :key="item.key">
+                <div class="connector-kicker"><span><i :class="item.icon || 'fa fa-plug'"></i> {{ item.key }}</span><span>{{ item.actions.length }} 个动作</span></div>
+                <h3>{{ item.name }}</h3>
+                <p>{{ item.description }}</p>
+                <el-button type="primary" size="small" icon="el-icon-plus" @@click="openCreate(item)">配置这个连接器</el-button>
+            </article>
+        </div>
+        <div class="connector-empty" v-else>还没有模块注册连接器。安装并启用微信管理后，这里会出现企业微信打卡。</div>
+    </section>
+
+    <section>
+        <div class="connector-section-head">
+            <div>
+                <h2>已配置</h2>
+                <p class="connector-muted">密钥只保存在服务端。编辑时留空表示继续使用已保存的密钥。</p>
+            </div>
+            <span class="connector-muted">{{ state.instances.length }} 个</span>
+        </div>
+        <div class="connector-instance-grid" style="margin-top:12px;" v-if="state.instances.length">
+            <article class="connector-instance" v-for="item in state.instances" :key="item.instanceId">
+                <div class="connector-kicker">
+                    <span>{{ item.connectorName }}</span>
+                    <el-tag size="mini" :type="item.enabled ? 'success' : 'info'">{{ item.enabled ? '启用' : '停用' }}</el-tag>
+                </div>
+                <h3>{{ item.name }}</h3>
+                <p class="connector-muted">{{ item.description || '未填写说明' }}</p>
+                <div class="connector-actions">
+                    <el-tag v-for="action in item.actionKeys" :key="action" size="mini" effect="plain">{{ actionLabel(item, action) }}</el-tag>
+                </div>
+                <div class="connector-status" :class="item.lastTestSucceeded === true ? 'ok' : (item.lastTestSucceeded === false ? 'bad' : '')">
+                    {{ item.lastTestMessage || '尚未测试连接' }}
+                </div>
+                <div class="connector-instance-foot">
+                    <div>
+                        <el-button size="mini" @@click="openEdit(item)">编辑</el-button>
+                        <el-button size="mini" type="success" plain :loading="testingId === item.instanceId" @@click="testInstance(item)">测试</el-button>
+                    </div>
+                    <el-button size="mini" type="text" @@click="removeInstance(item)">删除</el-button>
+                </div>
+            </article>
+        </div>
+        <div class="connector-empty" v-else>还没有配置。选择上面的类型，填入企业微信 CorpId 和应用 Secret。</div>
+    </section>
+</div>
+
+<el-dialog :title="form.instanceId ? '编辑连接器' : '配置连接器'" :visible.sync="editorVisible" width="640px" :close-on-click-modal="false">
+    <el-form v-if="currentType" label-position="top" size="small">
+        <el-alert :title="currentType.name" :description="currentType.description" type="info" :closable="false" show-icon style="margin-bottom:16px;"></el-alert>
+        <el-form-item label="名称" required>
+            <el-input v-model="form.name" maxlength="100" placeholder="例如：总部企业微信"></el-input>
+        </el-form-item>
+        <el-form-item label="说明">
+            <el-input v-model="form.description" type="textarea" :rows="2" maxlength="500" placeholder="这个账号给哪个团队或场景使用"></el-input>
+        </el-form-item>
+        <el-form-item v-for="field in currentType.fields" :key="field.key" :label="field.label" :required="field.required && field.kind !== 1">
+            <el-select v-if="field.kind === 2" v-model="form.values[field.key]" style="width:100%" :placeholder="field.placeholder || '请选择'">
+                <el-option v-for="option in field.options" :key="option.value" :label="option.label" :value="option.value"></el-option>
+            </el-select>
+            <el-input v-else-if="field.kind === 3" v-model="form.values[field.key]" type="textarea" :rows="3" :placeholder="field.placeholder"></el-input>
+            <el-input v-else v-model="form.values[field.key]" :show-password="field.kind === 1" :placeholder="secretPlaceholder(field)"></el-input>
+            <div class="connector-muted">{{ field.description }}</div>
+        </el-form-item>
+        <el-form-item label="交给 AI 的动作" required>
+            <el-checkbox-group v-model="form.actionKeys">
+                <el-checkbox v-for="action in currentType.actions" :key="action.key" :label="action.key">{{ action.name }}</el-checkbox>
+            </el-checkbox-group>
+            <div class="connector-muted" v-for="action in currentType.actions" :key="action.key + '-desc'">{{ action.name }}：{{ action.description }}</div>
+        </el-form-item>
+        <el-form-item>
+            <el-switch v-model="form.enabled" active-text="启用后可在 Chat、Workflow 和 Agent 中选择"></el-switch>
+        </el-form-item>
+    </el-form>
+    <div slot="footer">
+        <el-button @@click="editorVisible = false">取消</el-button>
+        <el-button type="primary" :loading="saving" @@click="save">保存</el-button>
+    </div>
+</el-dialog>
+
+@section scripts {
+    <script>
+        new Vue({
+            el: "#app",
+            data: function () {
+                return {
+                    state: @Html.Raw(Model.InitialStateJson),
+                    editorVisible: false,
+                    saving: false,
+                    testingId: "",
+                    currentType: null,
+                    form: { instanceId: "", name: "", connectorKey: "", description: "", enabled: true, values: {}, actionKeys: [], secretFields: [] }
+                };
+            },
+            methods: {
+                openCreate: function (item) {
+                    this.currentType = item;
+                    var values = {};
+                    (item.fields || []).forEach(function (field) {
+                        values[field.key] = field.kind === 2 && field.options && field.options.length ? field.options[0].value : "";
+                    });
+                    this.form = {
+                        instanceId: "",
+                        name: "",
+                        connectorKey: item.key,
+                        description: "",
+                        enabled: true,
+                        values: values,
+                        actionKeys: (item.actions || []).map(function (action) { return action.key; }),
+                        secretFields: []
+                    };
+                    this.editorVisible = true;
+                    console.log("[Connector] open create", item.key);
+                },
+                openEdit: function (item) {
+                    this.currentType = this.state.catalog.find(function (catalog) { return catalog.key === item.connectorKey; }) || null;
+                    this.form = {
+                        instanceId: item.instanceId,
+                        name: item.name,
+                        connectorKey: item.connectorKey,
+                        description: item.description,
+                        enabled: item.enabled,
+                        values: Object.assign({}, item.values || {}),
+                        actionKeys: (item.actionKeys || []).slice(),
+                        secretFields: item.secretFields || []
+                    };
+                    this.editorVisible = true;
+                    console.log("[Connector] open edit", item.instanceId);
+                },
+                secretPlaceholder: function (field) {
+                    if (field.kind === 1 && this.form.secretFields.indexOf(field.key) >= 0) {
+                        return "已保存，留空则不修改";
+                    }
+                    return field.placeholder || "";
+                },
+                actionLabel: function (item, actionKey) {
+                    var catalog = this.state.catalog.find(function (entry) { return entry.key === item.connectorKey; });
+                    var action = catalog && (catalog.actions || []).find(function (entry) { return entry.key === actionKey; });
+                    return action ? action.name : actionKey;
+                },
+                token: function () {
+                    var input = document.querySelector('input[name="__RequestVerificationToken"]');
+                    return input ? input.value : "";
+                },
+                post: async function (handler, payload) {
+                    var url = window.location.pathname + window.location.search;
+                    url += (url.indexOf("?") >= 0 ? "&" : "?") + "handler=" + handler;
+                    var response = await fetch(url, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "RequestVerificationToken": this.token()
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                    var data = await response.json();
+                    console.log("[Connector]", handler, data);
+                    return data;
+                },
+                save: async function () {
+                    this.saving = true;
+                    try {
+                        var data = await this.post("Save", this.form);
+                        if (!data.success) {
+                            this.$message.error(data.message || "保存失败");
+                            return;
+                        }
+                        this.$message.success(data.message || "已保存");
+                        window.location.reload();
+                    } catch (error) {
+                        console.error("[Connector] save failed", error);
+                        this.$message.error("保存失败，请稍后重试。");
+                    } finally {
+                        this.saving = false;
+                    }
+                },
+                testInstance: async function (item) {
+                    this.testingId = item.instanceId;
+                    try {
+                        var data = await this.post("Test", { instanceId: item.instanceId });
+                        if (data.success) this.$message.success(data.message || "连接成功");
+                        else this.$message.error(data.message || "连接失败");
+                        window.setTimeout(function () { window.location.reload(); }, 700);
+                    } catch (error) {
+                        console.error("[Connector] test failed", error);
+                        this.$message.error("测试失败，请稍后重试。");
+                    } finally {
+                        this.testingId = "";
+                    }
+                },
+                removeInstance: async function (item) {
+                    if (!window.confirm("删除连接器「" + item.name + "」？已授权给 Agent 的引用会同时失效。")) return;
+                    var data = await this.post("Delete", { instanceId: item.instanceId });
+                    if (!data.success) {
+                        this.$message.error(data.message || "删除失败");
+                        return;
+                    }
+                    window.location.reload();
+                }
+            }
+        });
+    </script>
+}

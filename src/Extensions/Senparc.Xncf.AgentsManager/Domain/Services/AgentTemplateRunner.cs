@@ -30,6 +30,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.19.1 add AITokenUsageRecorder and related services for token usage tracking
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.19.3 完善 AgentsManager 模板、ChatGroup 与连接器能力兼容
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;
@@ -60,6 +63,7 @@ using Senparc.Ncf.XncfBase.Functions;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
+using Senparc.Xncf.Connectors.Abstractions;
 using Senparc.Xncf.PromptRange.Abstractions.Skills;
 using Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins;
 using System;
@@ -538,6 +542,8 @@ public sealed class AgentTemplateRunner
                 toolPolicy.McpTools,
                 request.DiagnosticId,
                 request.AdminUserId,
+                request.LimitConnectors,
+                request.ConnectorInstanceIds,
                 cancellationToken).ConfigureAwait(false)
             : new List<AITool>();
 
@@ -822,9 +828,19 @@ public sealed class AgentTemplateRunner
         ToolPermissionMode mcpToolPermission,
         string correlationId,
         int adminUserId,
+        bool limitConnectors,
+        IReadOnlyList<string> connectorInstanceIds,
         CancellationToken cancellationToken)
     {
         var tools = new List<AITool>();
+        await AddConnectorToolsAsync(
+            tools,
+            template,
+            pluginToolPermission,
+            correlationId,
+            limitConnectors,
+            connectorInstanceIds,
+            cancellationToken).ConfigureAwait(false);
         var skillBindings = template.GetSkillBindings()
             .Where(binding => binding.Enabled && !string.IsNullOrWhiteSpace(binding.SkillId))
             .ToList();
@@ -1058,6 +1074,69 @@ public sealed class AgentTemplateRunner
             .ToList();
     }
 
+    private async Task AddConnectorToolsAsync(
+        List<AITool> tools,
+        AgentTemplate template,
+        ToolPermissionMode pluginToolPermission,
+        string correlationId,
+        bool limitConnectors,
+        IReadOnlyList<string> connectorInstanceIds,
+        CancellationToken cancellationToken)
+    {
+        var gateway = _serviceProvider.GetService<IConnectorGateway>();
+        if (gateway == null)
+        {
+            return;
+        }
+
+        IReadOnlyList<ConfiguredConnector> configured;
+        try
+        {
+            configured = await gateway.ListEnabledAsync(cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            SenparcTrace.SendCustomLog(
+                "AgentsManager.AgentTemplateRunner.Connectors",
+                $"Agent={template.Id}; {ex.Message}");
+            return;
+        }
+
+        var bindings = template.GetConnectorBindings();
+        foreach (var connector in configured)
+        {
+            foreach (var action in connector.Actions)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                if (!ConnectorAuthorization.Allows(
+                        bindings,
+                        connector.InstanceId,
+                        action.Key,
+                        limitConnectors,
+                        connectorInstanceIds))
+                {
+                    continue;
+                }
+
+                AIFunction function = new ConnectorAIFunction(gateway, connector, action);
+                AIFunction diagnosticFunction = new DiagnosticAIFunction(
+                    function,
+                    template.Id,
+                    template.Name,
+                    correlationId);
+                tools.Add(pluginToolPermission == ToolPermissionMode.RequireApproval
+                    ? new ApprovalRequiredAIFunction(diagnosticFunction)
+                    : diagnosticFunction);
+            }
+        }
+
+        if (configured.Count > 0)
+        {
+            Console.WriteLine(
+                $"[Connector] agent={template.Id} authorizedTools={tools.Count} limit={limitConnectors}");
+        }
+    }
+
     private static bool TryParseFunctionBinding(
         AgentFunctionBindingDto binding,
         out string moduleUid,
@@ -1200,6 +1279,12 @@ public sealed class AgentTemplateRunRequest
     public float Temperature { get; init; } = 0.5f;
     public float? TopP { get; init; }
 
+    /// <summary>为 true 时只把本次选中的连接器交给 Agent，并仍受 Agent 授权限制。</summary>
+    public bool LimitConnectors { get; init; }
+
+    /// <summary>本次对话选中的连接器实例。</summary>
+    public IReadOnlyList<string> ConnectorInstanceIds { get; init; }
+
     public static AgentTemplateRunRequest ForLocalWorkflow(
         int agentTemplateId,
         string correlationId,
@@ -1273,7 +1358,9 @@ public sealed class AgentTemplateRunRequest
             MaxOutputTokensOverride = MaxOutputTokensOverride,
             EmptyOutputTokenBudgetRetryAttempted = EmptyOutputTokenBudgetRetryAttempted,
             Temperature = Temperature,
-            TopP = TopP
+            TopP = TopP,
+            LimitConnectors = LimitConnectors,
+            ConnectorInstanceIds = ConnectorInstanceIds
         };
     }
 
@@ -1304,7 +1391,9 @@ public sealed class AgentTemplateRunRequest
             MaxOutputTokensOverride = MaxOutputTokensOverride,
             EmptyOutputTokenBudgetRetryAttempted = EmptyOutputTokenBudgetRetryAttempted,
             Temperature = Temperature,
-            TopP = TopP
+            TopP = TopP,
+            LimitConnectors = LimitConnectors,
+            ConnectorInstanceIds = ConnectorInstanceIds
         };
     }
 
@@ -1332,7 +1421,9 @@ public sealed class AgentTemplateRunRequest
             MaxOutputTokensOverride = MaxOutputTokensOverride,
             EmptyOutputTokenBudgetRetryAttempted = EmptyOutputTokenBudgetRetryAttempted,
             Temperature = Temperature,
-            TopP = TopP
+            TopP = TopP,
+            LimitConnectors = LimitConnectors,
+            ConnectorInstanceIds = ConnectorInstanceIds
         };
     }
 
@@ -1365,7 +1456,9 @@ public sealed class AgentTemplateRunRequest
             MaxOutputTokensOverride = minimumOutputTokens,
             EmptyOutputTokenBudgetRetryAttempted = true,
             Temperature = Temperature,
-            TopP = TopP
+            TopP = TopP,
+            LimitConnectors = LimitConnectors,
+            ConnectorInstanceIds = ConnectorInstanceIds
         };
     }
 }

@@ -9,6 +9,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.2.1 implement connection manager and workspace file system provider
 
+    修改标识：Senparc - 20261111
+    修改描述：按相对路径提供文件和目录候选，供对话输入框引用
+
 ----------------------------------------------------------------*/
 
 using System.ComponentModel;
@@ -365,6 +368,11 @@ public sealed class WorkspaceFileSystemEngine
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
+        if (request.SuggestPaths)
+        {
+            return await SuggestPaths(request, cancellationToken).ConfigureAwait(false);
+        }
+
         if (string.IsNullOrWhiteSpace(request.NameQuery) &&
             string.IsNullOrWhiteSpace(request.ContentQuery))
         {
@@ -469,6 +477,141 @@ public sealed class WorkspaceFileSystemEngine
         }
 
         return results;
+    }
+
+    private Task<IReadOnlyList<WorkspaceSearchResult>> SuggestPaths(
+        WorkspaceSearchRequest request,
+        CancellationToken cancellationToken)
+    {
+        var query = (request.NameQuery ?? string.Empty).Replace('\\', '/').Trim().TrimStart('/');
+        if (query.Contains("..", StringComparison.Ordinal) || query.IndexOfAny(['\0', '\r', '\n']) >= 0)
+        {
+            throw new ArgumentException("Invalid Workspace path suggestion.", nameof(request));
+        }
+
+        var comparison = request.CaseSensitive
+            ? StringComparison.Ordinal
+            : StringComparison.OrdinalIgnoreCase;
+        var resultLimit = Math.Clamp(request.MaxResults, 1, Math.Min(30, Math.Max(1, _options.MaxSearchResults)));
+        var visitLimit = Math.Max(1, _options.MaxSearchFiles);
+        var root = ResolvePath(request.RelativePath, allowRoot: true);
+        EnsureNoSymlink(root);
+        if (!Directory.Exists(root))
+        {
+            throw new DirectoryNotFoundException("Workspace search directory does not exist.");
+        }
+
+        var matches = new List<WorkspaceSearchResult>();
+        var pending = new Stack<string>();
+        pending.Push(root);
+        var visited = 0;
+        while (pending.Count > 0 && visited < visitLimit)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var directory = pending.Pop();
+            foreach (var path in Directory.EnumerateFileSystemEntries(directory))
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                if (IsReservedPath(path))
+                {
+                    continue;
+                }
+
+                if (++visited > visitLimit)
+                {
+                    break;
+                }
+
+                var attributes = File.GetAttributes(path);
+                if (attributes.HasFlag(FileAttributes.ReparsePoint))
+                {
+                    continue;
+                }
+
+                var isDirectory = attributes.HasFlag(FileAttributes.Directory);
+                var name = Path.GetFileName(path);
+                if (isDirectory && IsHiddenWorkspaceDirectory(name))
+                {
+                    continue;
+                }
+
+                if (isDirectory && query.Length > 0)
+                {
+                    pending.Push(path);
+                }
+
+                var relativePath = NormalizeRelativePath(path);
+                if (query.Length == 0)
+                {
+                    if (string.Equals(directory, root, _pathComparison))
+                    {
+                        matches.Add(CreatePathSuggestion(relativePath, isDirectory));
+                    }
+
+                    continue;
+                }
+
+                if (relativePath.Contains(query, comparison))
+                {
+                    matches.Add(CreatePathSuggestion(relativePath, isDirectory));
+                }
+            }
+        }
+
+        var ordered = matches
+            .Select(item => (Item: item, Rank: RankPathSuggestion(item, query, comparison)))
+            .OrderBy(item => item.Rank)
+            .ThenBy(item => item.Item.RelativePath.Count(character => character == '/'))
+            .ThenBy(item => item.Item.RelativePath, StringComparer.OrdinalIgnoreCase)
+            .Take(resultLimit)
+            .Select(item => item.Item)
+            .ToArray();
+        return Task.FromResult<IReadOnlyList<WorkspaceSearchResult>>(ordered);
+    }
+
+    private static bool IsHiddenWorkspaceDirectory(string name)
+    {
+        return name.Equals(".git", StringComparison.OrdinalIgnoreCase)
+            || name.Equals(".venv", StringComparison.OrdinalIgnoreCase)
+            || name.Equals("node_modules", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static WorkspaceSearchResult CreatePathSuggestion(string relativePath, bool isDirectory)
+    {
+        var name = Path.GetFileName(relativePath.TrimEnd('/'));
+        return new WorkspaceSearchResult(relativePath, isDirectory ? "directory" : "path", null, name);
+    }
+
+    private static int RankPathSuggestion(WorkspaceSearchResult item, string query, StringComparison comparison)
+    {
+        var isDirectory = item.MatchType == "directory";
+        if (query.Length == 0)
+        {
+            return isDirectory ? 0 : 1;
+        }
+
+        var name = Path.GetFileName(item.RelativePath);
+        if (name.Equals(query, comparison))
+        {
+            return isDirectory ? 1 : 0;
+        }
+
+        if (name.StartsWith(query, comparison))
+        {
+            return isDirectory ? 3 : 2;
+        }
+
+        if (item.RelativePath.Split('/').Any(segment => segment.StartsWith(query, comparison)))
+        {
+            return 4;
+        }
+
+        if (name.Contains(query, comparison))
+        {
+            return isDirectory ? 6 : 5;
+        }
+
+        return 7;
     }
 
     public async Task<WorkspacePatchResult> ApplyPatchAsync(

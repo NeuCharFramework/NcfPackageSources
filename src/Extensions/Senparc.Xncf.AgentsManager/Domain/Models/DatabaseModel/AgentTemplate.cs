@@ -28,6 +28,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.19.1 维护AgentTemplate 相关实现
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.19.3 完善 AgentsManager 模板、ChatGroup 与连接器能力兼容
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -39,6 +42,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json;
+using Senparc.Xncf.Connectors.Abstractions;
 using Senparc.Xncf.PromptRange.Abstractions.Skills;
 using Senparc.Xncf.Workspace.Abstractions;
 
@@ -123,6 +127,9 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
         /// <summary>Agent 使用 Workspace 的权限策略 JSON。</summary>
         public string WorkspacePolicyJson { get; private set; }
 
+        /// <summary>此 Agent 被允许调用的连接器实例。为空表示没有任何连接器权限。</summary>
+        public string ConnectorBindingsJson { get; private set; }
+
         public IReadOnlyList<AgentSkillBinding> GetSkillBindings()
             => DeserializeOrEmpty<AgentSkillBinding>(SkillBindingsJson);
 
@@ -134,6 +141,12 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
 
         public void SetWorkspacePolicy(WorkspacePolicy policy)
             => WorkspacePolicyJson = JsonSerializer.Serialize(policy ?? new WorkspacePolicy());
+
+        public IReadOnlyList<AgentConnectorBinding> GetConnectorBindings()
+            => DeserializeOrEmpty<AgentConnectorBinding>(ConnectorBindingsJson);
+
+        public void SetConnectorBindings(IEnumerable<AgentConnectorBinding> bindings)
+            => ConnectorBindingsJson = JsonSerializer.Serialize(bindings ?? Array.Empty<AgentConnectorBinding>());
 
         private static IReadOnlyList<T> DeserializeOrEmpty<T>(string json)
         {
@@ -323,6 +336,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
             KnowledgeBaseId = agentTemplateDto.KnowledgeBaseId;
             SkillBindingsJson = agentTemplateDto.SkillBindingsJson;
             WorkspacePolicyJson = agentTemplateDto.WorkspacePolicyJson;
+            ConnectorBindingsJson = agentTemplateDto.ConnectorBindingsJson;
             SetModelBinding(agentTemplateDto.ModelBinding, agentTemplateDto.AiModelId);
         }
 

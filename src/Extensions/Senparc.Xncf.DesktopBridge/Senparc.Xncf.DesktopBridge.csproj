@@ -18,8 +18,7 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
-    <PackageReleaseNotes>
-      [2026-07-25] v0.1.0-preview1 新增 NCF 桌面状态桥接能力
+    <PackageReleaseNotes>      [2026-07-25] v0.1.0-preview1 新增 NCF 桌面状态桥接能力
       1、使用逆变事件处理器的闭合服务映射旁路观察 EventBus，不改变原事件消费行为
       2、避免开放泛型实现被 NCF 扫描为无效 DI 描述符，确保站点容器可正常构建
       3、提供带会话令牌保护的能力探测、活动快照和 SSE 实时事件接口
@@ -73,7 +72,9 @@
     2、Dependency update from Senparc.Ncf.AreaBase to 0.23.10
     3、Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
     4、Dependency update from Senparc.Ncf.XncfBase to 0.28.2
-    </PackageReleaseNotes>
+    [2026-11-11] v0.4.10 统一 XNCF Register 显示元数据与多语言资源键
+    1、增加 XncfRegisterText，以稳定资源键和中文基准文本解析菜单名称与模块说明。
+    2、迁移模块注册信息并同步模板、Workspace、DesktopBridge 与 Connectors 的资源目录，保留 IXncfRegister 字符串契约。</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

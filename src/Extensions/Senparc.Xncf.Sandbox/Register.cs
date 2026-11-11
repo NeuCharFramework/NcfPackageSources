@@ -30,6 +30,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.4.0 沙箱单例编排器恢复请求租户上下文，后台回收按租户迭代
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.4.2 统一 XNCF Register 显示元数据与多语言资源键
+
 ----------------------------------------------------------------*/
 
 using System.Net.Http;
@@ -57,19 +60,22 @@ namespace Senparc.Xncf.Sandbox;
 [XncfRegister]
 public partial class Register : XncfRegisterBase, IXncfRegister
 {
+        private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<SandboxResource>(
+            "Module.Sandbox",
+            "沙箱环境",
+            "NCF 独立沙箱编排：Docker/Wasm 快速创建与销毁实验环境");
+
     public override string Name => "Senparc.Xncf.Sandbox";
 
     public override string Uid => "BDF12490-AA0B-41B4-ADB3-63155ED95A93";
 
     public override string Version => "0.4.0";
 
-    public override string MenuName => SandboxResource.Get("Module.Sandbox.MenuName", "沙箱环境");
+    public override string MenuName => RegisterText.MenuName;
 
     public override string Icon => "fa fa-cube";
 
-    public override string Description => SandboxResource.Get(
-        "Module.Sandbox.Description",
-        "NCF 独立沙箱编排：Docker/Wasm 快速创建与销毁实验环境");
+    public override string Description => RegisterText.Description;
 
     public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
     {

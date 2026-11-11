@@ -19,6 +19,9 @@
     修改标识：Senparc - 20261109
     修改描述：增加工作区用量统计与清空内容契约
 
+    修改标识：Senparc - 20261111
+    修改描述：搜索请求可改为按相对路径返回文件和目录候选
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Workspace.Abstractions;
@@ -134,7 +137,8 @@ public sealed record WorkspaceSearchRequest(
     string ContentQuery = "",
     string RelativePath = "",
     bool CaseSensitive = false,
-    int MaxResults = 100);
+    int MaxResults = 100,
+    bool SuggestPaths = false);
 
 public sealed record WorkspaceSearchResult(
     string RelativePath,

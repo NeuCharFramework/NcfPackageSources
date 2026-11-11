@@ -61,6 +61,9 @@
     修改标识：Senparc - 20261110
     修改描述：提供未归档对话搜索，以及 Harness 方法调用名搜索
 
+    修改标识：Senparc - 20261111
+    修改描述：为对话输入框提供当前 Workspace 的文件和路径候选
+
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Domain;
@@ -273,6 +276,77 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     Entries = entries
                 };
             });
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<WorkspacePathSuggestionsResponse>> SuggestWorkspacePathsAsync(
+            int sessionId = 0,
+            string workspaceId = "",
+            string query = "")
+        {
+            return await this.GetResponseAsync<AppResponseBase<WorkspacePathSuggestionsResponse>, WorkspacePathSuggestionsResponse>(async (response, logger) =>
+            {
+                var normalizedQuery = (query ?? string.Empty).Replace('\\', '/').Trim().TrimStart('/');
+                if (normalizedQuery.Length > 200
+                    || normalizedQuery.Contains("..", StringComparison.Ordinal)
+                    || normalizedQuery.IndexOfAny(['\0', '\r', '\n']) >= 0)
+                {
+                    throw new NcfExceptionBase("路径筛选无效。");
+                }
+
+                var resolvedWorkspaceId = await ResolveSuggestionWorkspaceIdAsync(sessionId, workspaceId)
+                    .ConfigureAwait(false);
+                var results = await _workspaceStorage.SearchAsync(
+                    resolvedWorkspaceId,
+                    new WorkspaceSearchRequest(
+                        NameQuery: normalizedQuery,
+                        MaxResults: 20,
+                        SuggestPaths: true)).ConfigureAwait(false);
+                logger.Append($"Workspace 路径候选: WorkspaceId={resolvedWorkspaceId}, Query={normalizedQuery}, Count={results.Count}");
+                return new WorkspacePathSuggestionsResponse
+                {
+                    Items = results.Select(item => new WorkspacePathSuggestionDto
+                    {
+                        RelativePath = item.RelativePath,
+                        IsDirectory = item.MatchType == "directory",
+                        Name = string.IsNullOrEmpty(item.Preview) ? item.RelativePath : item.Preview
+                    }).ToList()
+                };
+            });
+        }
+
+        private async Task<string> ResolveSuggestionWorkspaceIdAsync(int sessionId, string workspaceId)
+        {
+            if (!IsCurrentAdminSuperAdmin() || _workspaceStorage == null)
+            {
+                throw new NcfExceptionBase("只有超级管理员可以使用 Workspace。");
+            }
+
+            if (sessionId > 0)
+            {
+                var session = await GetWorkspaceSessionAsync(sessionId).ConfigureAwait(false);
+                if (string.IsNullOrWhiteSpace(session.WorkspaceId))
+                {
+                    throw new NcfExceptionBase("当前会话没有 Workspace。");
+                }
+
+                return session.WorkspaceId;
+            }
+
+            workspaceId = workspaceId?.Trim() ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(workspaceId))
+            {
+                throw new NcfExceptionBase("请先选择 Workspace。");
+            }
+
+            var descriptor = await _workspaceStorage.GetAsync(workspaceId).ConfigureAwait(false);
+            var ownerId = GetCurrentAdminUserInfoId();
+            if (!WorkspaceOwnership.IsOwnedBy(descriptor, ownerId))
+            {
+                throw new NcfExceptionBase("无权访问该 Workspace。");
+            }
+
+            return descriptor.Id;
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
@@ -1891,6 +1965,18 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     {
         public string CurrentPath { get; set; } = string.Empty;
         public IReadOnlyList<WorkspaceEntry> Entries { get; set; } = Array.Empty<WorkspaceEntry>();
+    }
+
+    public class WorkspacePathSuggestionsResponse
+    {
+        public IReadOnlyList<WorkspacePathSuggestionDto> Items { get; set; } = Array.Empty<WorkspacePathSuggestionDto>();
+    }
+
+    public class WorkspacePathSuggestionDto
+    {
+        public string RelativePath { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public bool IsDirectory { get; set; }
     }
 
     public class WorkspaceFilePreviewDto

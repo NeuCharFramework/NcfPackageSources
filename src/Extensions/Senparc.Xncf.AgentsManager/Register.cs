@@ -39,6 +39,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.19.1 add SourceFileId, SourceType, and SourceUrl columns to PromptRange table for PostgreSQL, SQL Server, and SQLite
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.19.3 统一 XNCF Register 显示元数据与多语言资源键
+
 ----------------------------------------------------------------*/
 
 using A2A.AspNetCore;
@@ -78,6 +81,11 @@ namespace Senparc.Xncf.AgentsManager
     [XncfRegister]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
+        private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<AgentsManagerResource>(
+            "Module.AgentsManager",
+            "Agents 管理模块",
+            "管理 AI 智能体及相关配置");
+
         public const string ModuleUid = "D858D7FA-775A-4690-9023-CFB0B3B84994";
 
         #region IXncfRegister 接口
@@ -88,11 +96,11 @@ namespace Senparc.Xncf.AgentsManager
 
         public override string Version => "0.3.23";//必须填写版本号
 
-        public override string MenuName => AgentsManagerResource.Get("Module.AgentsManager.MenuName", "Agents 管理模块");
+        public override string MenuName => RegisterText.MenuName;
 
         public override string Icon => "fa fa-star";
 
-        public override string Description => AgentsManagerResource.Get("Module.AgentsManager.Description", "Agents 管理模块");
+        public override string Description => RegisterText.Description;
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

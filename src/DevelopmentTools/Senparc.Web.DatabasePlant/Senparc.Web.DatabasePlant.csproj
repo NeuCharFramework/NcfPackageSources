@@ -4,8 +4,7 @@
 		<TargetFramework>net10.0</TargetFramework>
 
 		<Version>0.0.23</Version>
-		<PackageReleaseNotes>
-		  [2026-07-04] v0.0.1 Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
+		<PackageReleaseNotes>		  [2026-07-04] v0.0.1 Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
 		  1、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
 		  [2026-07-05] v0.0.2 Dependency update from Senparc.Xncf.AgentsManager to 0.11.1-preview3
 		  [2026-07-05] v0.0.3 Dependency update from Senparc.Xncf.AgentsManager to 0.11.2-preview4
@@ -44,7 +43,8 @@
 		  2、Dependency update from Senparc.Xncf.AgentsManager to 0.19.2
 		  3、Dependency update from Senparc.Xncf.Workspace to 0.2.7
 		  [2026-11-10] v0.0.23 Dependency update from Senparc.Areas.Admin to 0.12.27
-		</PackageReleaseNotes>
+		  [2026-11-11] v0.0.23 统一 XNCF 本地化基础能力与宿主兼容
+		  1、保持共享资源回退、模块注册元数据与当前宿主依赖组合兼容。</PackageReleaseNotes>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
@@ -61,6 +61,7 @@
 	  <ProjectReference Include="..\..\Extensions\Senparc.Xncf.AgentsManager\Senparc.Xncf.AgentsManager.csproj" />
 	  <ProjectReference Include="..\..\Extensions\Senparc.Xncf.AIKernel\Senparc.Xncf.AIKernel.csproj" />
 	  <ProjectReference Include="..\..\Extensions\Senparc.Xncf.Workspace\Senparc.Xncf.Workspace.csproj" />
+	  <ProjectReference Include="..\..\Extensions\Senparc.Xncf.Connectors\Senparc.Xncf.Connectors.csproj" />
 	</ItemGroup>
 
 </Project>

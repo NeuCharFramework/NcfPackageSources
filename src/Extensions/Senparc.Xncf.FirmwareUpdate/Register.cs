@@ -16,6 +16,9 @@
     修改标识：Senparc - 20260804
     修改描述：v0.4.0-preview5 扩展 NCF 与 NcfDesktop 发布包同步能力
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.4.9 统一 XNCF Register 显示元数据与多语言资源键
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Configuration;
@@ -36,17 +39,22 @@ namespace Senparc.Xncf.FirmwareUpdate;
 [XncfRegister]
 public partial class Register : XncfRegisterBase, IXncfRegister
 {
+        private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<FirmwareUpdateResource>(
+            "Module.FirmwareUpdate",
+            "NCF 安装包镜像",
+            "从 GitHub 分别同步 NCF Host 运行包与 NcfDesktop 桌面应用到 host/desktop 目录，并生成各自的下载清单。");
+
     public override string Name => "Senparc.Xncf.FirmwareUpdate";
 
     public override string Uid => "E3A61F92-8C54-4A01-B9D7-2F6E8C11A90B";
 
     public override string Version => "0.1.0";
 
-    public override string MenuName => FirmwareUpdateResource.Get("Module.FirmwareUpdate.MenuName", "NCF 安装包镜像");
+    public override string MenuName => RegisterText.MenuName;
 
     public override string Icon => "fa fa-cloud-download";
 
-    public override string Description => FirmwareUpdateResource.Get("Module.FirmwareUpdate.Description", "从 GitHub 同步 NCF 运行包与 NcfDesktop 桌面应用到当前站点 wwwroot 下的 NcfPackages，并生成各自的最新版本清单供本地优先下载。");
+    public override string Description => RegisterText.Description;
 
     public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
     {

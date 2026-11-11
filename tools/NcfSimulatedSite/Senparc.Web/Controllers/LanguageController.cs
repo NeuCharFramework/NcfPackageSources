@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260724
     修改描述：v0.34.0 完善站点本地化及内嵌 WebView 导航兼容性
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.39.8 统一主站请求本地化与宿主注册兼容
+
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;

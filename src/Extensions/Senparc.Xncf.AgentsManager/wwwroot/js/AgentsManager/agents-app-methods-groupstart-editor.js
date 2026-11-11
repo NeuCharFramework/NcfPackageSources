@@ -249,10 +249,13 @@ var AgentsAppMethodsGroupStartEditor = {
         this.groupStartParticipants = this.buildGroupStartParticipants(formData)
         this.groupStartHumanParticipantTouched = false
         this.groupStartForm.includeHumanParticipant = this.groupStartParticipants.some(participant => participant.agentKind === 'Human')
+        this.groupStartForm.limitConnectors = false
+        this.groupStartForm.connectorInstanceIds = []
         this.groupStartPromptCaretStart = 0
         this.groupStartPromptCaretEnd = 0
         this.visible[visibleKey] = true
         await this.loadGroupStartParticipants(this.groupStartForm.chatGroupId)
+        this.loadConnectorOptions()
         this.$nextTick(() => this.captureEditorFormSnapshot(visibleKey))
         return
       }
@@ -273,6 +276,15 @@ var AgentsAppMethodsGroupStartEditor = {
           this.getAgentListData('groupAgent'),
           this.getRemoteAgentListData('groupRemoteAgent')
         ]).catch(() => { })
+      }
+      if (['drawerAgent', 'dialogGroupAgent'].includes(btnType)) {
+        this.agentForm.connectorInstanceIds = []
+        this.loadConnectorOptions()
+      }
+      if (btnType === 'drawerTaskStart') {
+        this.groupStartForm.limitConnectors = false
+        this.groupStartForm.connectorInstanceIds = []
+        this.loadConnectorOptions()
       }
       this.visible[visibleKey] = true
       if (initialSnapshotLoader) {

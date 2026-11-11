@@ -16,6 +16,9 @@
     修改标识：Senparc - 20260729
     修改描述：v0.19.1-preview3 修正 Swagger 认证中间件的认证方案处理
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.20.10 统一 XNCF Register 显示元数据与多语言资源键
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Builder;
@@ -51,6 +54,11 @@ namespace Senparc.Xncf.Swagger
     [XncfRegister]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
+        private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<SwaggerResource>(
+            "Module.Swagger",
+            "接口说明文档",
+            "浏览系统 API 接口说明");
+
         /// <summary>
         /// Api 默认文档地址，返回 null 则不生成 XML 文档
         /// </summary>
@@ -64,11 +72,11 @@ namespace Senparc.Xncf.Swagger
 
         public override string Version => "0.7.1";//必须填写版本号
 
-        public override string MenuName => SwaggerResource.Get("Module.Swagger.MenuName", "接口说明文档");
+        public override string MenuName => RegisterText.MenuName;
 
         public override string Icon => "fa fa-file-code-o";
 
-        public override string Description => SwaggerResource.Get("Module.Swagger.Description", "接口说明文档");
+        public override string Description => RegisterText.Description;
 
         //public override IList<Type> Functions => new Type[] {  /*typeof(BuildXncf)*/ };
 

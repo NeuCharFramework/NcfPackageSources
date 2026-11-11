@@ -3,7 +3,7 @@
     <SenparcAiVersion>0.27.4</SenparcAiVersion>
     <SenparcAiKernelVersion>0.29.1</SenparcAiKernelVersion>
     <SenparcAiAgentsVersion>0.7.3</SenparcAiAgentsVersion>
-    <SenparcAiAgentKernelVersion>0.1.16</SenparcAiAgentKernelVersion>
+    <SenparcAiAgentKernelVersion>0.1.17</SenparcAiAgentKernelVersion>
     <MicrosoftAgentsAiVersion>1.28.0</MicrosoftAgentsAiVersion>
     <MicrosoftAgentsAiHarnessVersion>1.28.0</MicrosoftAgentsAiHarnessVersion>
   </PropertyGroup>

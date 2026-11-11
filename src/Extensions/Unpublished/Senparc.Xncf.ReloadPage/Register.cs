@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.12.14 将 ReloadPage Register 显示元数据接入统一资源本地化
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -31,6 +34,11 @@ namespace Senparc.Xncf.ReloadPage
     [XncfRegister]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
+        private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<ReloadPageResource>(
+            "Module.ReloadPage",
+            "自动重载页面模块",
+            "自动重载页面模块");
+
         #region IXncfRegister 接口
 
         public override string Name => "Senparc.Xncf.ReloadPage";
@@ -39,11 +47,11 @@ namespace Senparc.Xncf.ReloadPage
 
         public override string Version => "0.1";//必须填写版本号
 
-        public override string MenuName => "自动重载页面模块";
+        public override string MenuName => RegisterText.MenuName;
 
         public override string Icon => "fa fa-file-word-o";
 
-        public override string Description => "自动重载页面模块";
+        public override string Description => RegisterText.Description;
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

@@ -908,4 +908,10 @@
   <data name="DocHelp.Retry" xml:space="preserve"><value>重试</value></data>
   <data name="DocHelp.InvalidTopic" xml:space="preserve"><value>帮助文档索引配置无效，请联系管理员。</value></data>
 
+  <data name="SystemMenu.AdministratorManagement" xml:space="preserve"><value>管理员管理</value></data>
+  <data name="SystemMenu.RoleManagement" xml:space="preserve"><value>角色管理</value></data>
+  <data name="SystemMenu.SystemInfo" xml:space="preserve"><value>系统信息</value></data>
+  <data name="SystemMenu.TenantInfo" xml:space="preserve"><value>多租户信息</value></data>
+  <data name="SystemMenu.ExtensionModules" xml:space="preserve"><value>扩展模块</value></data>
+  <data name="SystemMenu.ModuleManagement" xml:space="preserve"><value>模块管理</value></data>
 </root>

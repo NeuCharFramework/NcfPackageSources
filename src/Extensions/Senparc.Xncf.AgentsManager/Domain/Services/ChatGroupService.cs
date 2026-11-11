@@ -619,7 +619,9 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                         DiagnosticId = $"chat-task-{chatTask.Id}",
                         AdminUserId = int.TryParse(request.HumanRecipientUserId, out var adminUserId)
                             ? adminUserId
-                            : 0
+                            : 0,
+                        LimitConnectors = request.LimitConnectors,
+                        ConnectorInstanceIds = request.ConnectorInstanceIds
                     },
                     onExecutionInfo: message => logger.AppendLine(message));
                 if (!build.Success)

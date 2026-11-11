@@ -22,8 +22,7 @@
     <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
-      v0.1.0 创世
+    <PackageReleaseNotes>      v0.1.0 创世
       v0.1.7 删除无用的日志文件
       v0.2.3 添加 UseWebApi 选项
       v0.2.18 添加 PostgreSQL 数据库
@@ -71,7 +70,9 @@
       1、将模板根目录 README.md 纳入正确的排除和打包配置
       2、避免大小写敏感文件系统下模板包缺少说明文件
       [2026-11-03] v0.1.2 修正 XNCF 模板示例命令中的数据库参数名称
-</PackageReleaseNotes>
+      [2026-11-11] v0.1.2 统一 XNCF Register 显示元数据与多语言资源键
+      1、增加 XncfRegisterText，以稳定资源键和中文基准文本解析菜单名称与模块说明。
+      2、迁移模块注册信息并同步模板、Workspace、DesktopBridge 与 Connectors 的资源目录，保留 IXncfRegister 字符串契约。</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>

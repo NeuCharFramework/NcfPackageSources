@@ -2,8 +2,7 @@
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 		<Version>0.12.28</Version>
-		<PackageReleaseNotes>
-    [2026-07-02] v0.0.2 支持流式输出并优化交互体验，优化 AgentsManager 前端界面与历史消息展示效果
+		<PackageReleaseNotes>    [2026-07-02] v0.0.2 支持流式输出并优化交互体验，优化 AgentsManager 前端界面与历史消息展示效果
     1、支持流式输出并优化交互体验
     2、优化 AgentsManager 前端界面与历史消息展示效果
     [2026-07-05] v0.0.3 新增登录超时配置并补齐多数据库迁移支持，重构系统配置初始化与更新流程并统一模型处理
@@ -163,7 +162,12 @@
     [2026-11-11] v0.12.28 适配 Microsoft Agent Framework Harness 1.28
     1、移除已删除的 DisableFileAccess，文件访问保持默认关闭
     2、依赖 Senparc.AI.AgentKernel 0.1.16
-		</PackageReleaseNotes>
+    [2026-11-11] v0.12.28 统一 XNCF Register 显示元数据与多语言资源键
+    1、增加 XncfRegisterText，以稳定资源键和中文基准文本解析菜单名称与模块说明。
+    2、迁移模块注册信息并同步模板、Workspace、DesktopBridge 与 Connectors 的资源目录，保留 IXncfRegister 字符串契约。
+    [2026-11-11] v0.12.28 内置菜单按稳定标识解析多语言显示
+    1、内置系统菜单和已加载 XNCF 模块菜单根据当前文化重新解析显示文本。
+    2、用户自定义菜单继续使用数据库原文，不触发数据迁移。</PackageReleaseNotes>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
 		<!--<RazorLangVersion>2.0</RazorLangVersion>-->
 		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -233,6 +237,7 @@
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.PromptRange.Abstractions\Senparc.Xncf.PromptRange.Abstractions.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.Workspace.Abstractions\Senparc.Xncf.Workspace.Abstractions.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.Workspace\Senparc.Xncf.Workspace.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.Connectors\Senparc.Xncf.Connectors.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.FileManager\Senparc.Xncf.FileManager.csproj" />
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.WeixinManager\Senparc.Xncf.WeixinManager\Senparc.Xncf.WeixinManager.csproj" />

@@ -17,8 +17,7 @@
 		<!--<ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIconUrl>https://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>-->
-		<PackageReleaseNotes>
-			v0.3 创世
+		<PackageReleaseNotes>			v0.3 创世
 			[2026-07-02] v0.3.1 增强多智能体群聊流程、容错与任务调度能力，优化 AgentsManager 前端界面与历史消息展示效果
 			1、增强多智能体群聊流程、容错与任务调度能力
 			2、优化 AgentsManager 前端界面与历史消息展示效果
@@ -100,7 +99,9 @@
 			15、Dependency update from Senparc.Areas.Admin to 0.12.26
 			16、Dependency update from Senparc.Xncf.Installer.Interface to 0.2.3
 			[2026-11-10] v0.5.14 Dependency update from Senparc.Areas.Admin to 0.12.27
-		</PackageReleaseNotes>
+			[2026-11-11] v0.5.14 统一 XNCF Register 显示元数据与多语言资源键
+			1、增加 XncfRegisterText，以稳定资源键和中文基准文本解析菜单名称与模块说明。
+			2、迁移模块注册信息并同步模板、Workspace、DesktopBridge 与 Connectors 的资源目录，保留 IXncfRegister 字符串契约。</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>
 		<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>

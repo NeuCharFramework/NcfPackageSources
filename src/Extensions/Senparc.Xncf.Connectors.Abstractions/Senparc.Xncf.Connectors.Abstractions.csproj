@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>0.1.0</Version>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>Senparc.Xncf.Connectors.Abstractions</AssemblyName>
+    <RootNamespace>Senparc.Xncf.Connectors.Abstractions</RootNamespace>
+    <Description>NCF 连接器契约：外部工具的描述、配置字段、动作和 Agent 授权。</Description>
+  </PropertyGroup>
+</Project>

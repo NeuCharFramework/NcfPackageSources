@@ -134,3 +134,4 @@ tools/NcfSimulatedSite/Senparc.Web/App_Data/WorkspaceAssetShares/*
 tools/NcfSimulatedSite/Senparc.Web/App_Data/Files/*
 tools/NcfSimulatedSite/Senparc.Web/App_Data/AdminChatMemory/*
 tools/NcfSimulatedSite/Senparc.Web/App_Data/Senparc.Xncf.AIKernel/*
+local-nuget/*

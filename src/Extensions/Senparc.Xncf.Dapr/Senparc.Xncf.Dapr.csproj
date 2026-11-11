@@ -18,8 +18,7 @@
     <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
-				[2024-09-10] v0.8.4-preview1 升级缓存基础库
+    <PackageReleaseNotes>				[2024-09-10] v0.8.4-preview1 升级缓存基础库
 				v0.1.0 创世
 				[2025-01-25] v0.9.5-preview1 Update Agents functions, support for function calling
 				[2025-04-29] v0.9.7-preview1 Update CO2NET and AIKernel
@@ -54,7 +53,9 @@
 				[2026-11-03] v0.11.12 以中文资源为基准统一整理多语言文案
 				1、补齐并校正各语言资源条目，使模块界面文案与中文基准保持一致
 				2、Dependency update from Senparc.Ncf.XncfBase to 0.28.2
-    </PackageReleaseNotes>
+				[2026-11-11] v0.11.12 统一 XNCF Register 显示元数据与多语言资源键
+				1、增加 XncfRegisterText，以稳定资源键和中文基准文本解析菜单名称与模块说明。
+				2、迁移模块注册信息并同步模板、Workspace、DesktopBridge 与 Connectors 的资源目录，保留 IXncfRegister 字符串契约。</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

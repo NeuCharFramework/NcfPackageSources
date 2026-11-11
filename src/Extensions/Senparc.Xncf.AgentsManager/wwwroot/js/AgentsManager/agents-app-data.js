@@ -350,6 +350,7 @@ var AgentsAppData = {
         knowledgeBaseId: null, // 绑定的知识库
         modelBinding: 0, // 0 PromptRange，1 跟随组任务，2 手动 AIModel
         aiModelId: null,
+        connectorInstanceIds: [],
       },
       // 编辑现有智能体时，等待 PromptRange 候选项返回后再确定“自选”或“手动”。
       agentSystemMessageTypeDetectionPending: false,
@@ -420,7 +421,9 @@ var AgentsAppData = {
         mcpToolPermission: 0,
         includeHumanParticipant: false,
         chatMaxRound: 20,
-        description: ''
+        description: '',
+        limitConnectors: false,
+        connectorInstanceIds: []
       },
       groupStartParticipants: [],
       groupStartParticipantLoading: false,
@@ -528,6 +531,8 @@ var AgentsAppData = {
       mcpSelectMessage: '', // 从 MCP 列表选择：提示信息
       mcpModuleAvailable: false, // 从 MCP 列表选择：MCP 模块是否可用
       mcpEndpointOptions: [], // 从 MCP 列表选择：可选端点列表
+      connectorOptions: [],
+      connectorOptionsLoading: false,
       currentMcpTools: [], // 当前查看的MCP工具列表
       agentListViewMode: 'panel',
       agentStatisticMetric: 'totalTokens',

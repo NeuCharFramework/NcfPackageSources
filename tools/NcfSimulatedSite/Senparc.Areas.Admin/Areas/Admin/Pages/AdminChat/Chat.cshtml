@@ -646,18 +646,39 @@
                             @@click="removePendingAttachment(attachment)"><i class="el-icon-close"></i></button>
                     </div>
                 </div>
-                <el-input
-                    type="textarea"
-                    v-model="inputMessage"
-                    ref="promptMessageInput"
-                    v-prompt-range="!isCurrentSessionRunning"
-                    placeholder="@AR["AdminChat.InputPlaceholder"]"
-                    :rows="3"
-                    :disabled="!currentSessionId || isCurrentSessionRunning"
-                    @@keydown.native="handleChatInputKeydown"
-                    @@paste.native="handleWorkspacePaste"
-                    class="message-input">
-                </el-input>
+                <div class="chat-mention-anchor">
+                    <div v-if="workspaceMention.open && workspaceMention.field === 'inputMessage'"
+                         class="chat-mention-popover" role="listbox" aria-label="Workspace 文件和路径">
+                        <p class="chat-mention-status" v-if="workspaceMention.loading && !workspaceMention.items.length">正在查找 Workspace…</p>
+                        <p class="chat-mention-status" v-else-if="workspaceMention.error">{{ workspaceMention.error }}</p>
+                        <p class="chat-mention-status" v-else-if="!workspaceMention.items.length">没有匹配的文件或路径</p>
+                        <button v-for="(item, index) in workspaceMention.items" :key="item.relativePath + (item.isDirectory ? '/' : '')"
+                                type="button" class="chat-mention-option" role="option"
+                                :class="{ 'is-active': index === workspaceMention.active }"
+                                :aria-selected="index === workspaceMention.active"
+                                @@mousedown.prevent="selectWorkspaceMention(item)">
+                            <i :class="item.isDirectory ? 'el-icon-folder' : workspaceFileIcon(item.relativePath)"></i>
+                            <strong>{{ item.name }}</strong>
+                            <small>{{ item.relativePath }}{{ item.isDirectory ? '/' : '' }}</small>
+                        </button>
+                    </div>
+                    <el-input
+                        type="textarea"
+                        v-model="inputMessage"
+                        ref="promptMessageInput"
+                        v-prompt-range="!isCurrentSessionRunning"
+                        placeholder="@AR["AdminChat.InputPlaceholder"]"
+                        :rows="3"
+                        :disabled="!currentSessionId || isCurrentSessionRunning"
+                        @@keydown.native="handleChatInputKeydown"
+                        @@input.native="handleWorkspaceMentionEdit('inputMessage', $event)"
+                        @@click.native="handleWorkspaceMentionEdit('inputMessage', $event)"
+                        @@keyup.native="handleWorkspaceMentionEdit('inputMessage', $event)"
+                        @@blur.native="closeWorkspaceMention"
+                        @@paste.native="handleWorkspacePaste"
+                        class="message-input">
+                    </el-input>
+                </div>
                 <div class="input-actions">
                     <span class="ncf-doc-help-group">
                         <el-button type="text" size="mini" aria-label="上传资料" :title="attachmentUploadHint"
@@ -665,9 +686,10 @@
                             @@click="chooseWorkspaceFiles"><i class="fa fa-paperclip"></i></el-button>
                         <ncf-doc-help topic="admin.attachments"></ncf-doc-help>
                     </span>
-                    <span class="input-tip">
-                        <i class="fa fa-info-circle"></i> @AR["AdminChat.SendHint"]
-                    </span>
+                        <span class="input-tip">
+                            <i class="fa fa-info-circle"></i> @AR["AdminChat.SendHint"]
+                            <span v-if="canUploadWorkspaceFiles">，输入 @@ 引用文件或路径</span>
+                        </span>
                     <details class="chat-inline-settings">
                         <summary>
                             <i class="fa fa-sliders"></i>
@@ -773,19 +795,40 @@
 
                         <div class="chat-entrance-input-wrapper" @@dragover="handleWorkspaceDragOver" @@drop="handleWorkspaceDrop">
                             <div class="chat-entrance-composer">
-                                <el-input
-                                    type="textarea"
-                                    v-model="chatInputText"
-                                    ref="promptLauncherInput"
-                                    v-prompt-range="!isCreatingSession"
-                                    placeholder="@AR["Admin.Home.AiPlaceholder"]"
-                                    :rows="4"
-                                    :autosize="{ minRows: 4, maxRows: 8 }"
-                                    @@keydown.native="handleLauncherInputKeydown"
-                                    @@paste.native="handleWorkspacePaste"
-                                    class="chat-entrance-input"
-                                    resize="none">
-                                </el-input>
+                                <div class="chat-mention-anchor">
+                                    <div v-if="workspaceMention.open && workspaceMention.field === 'chatInputText'"
+                                         class="chat-mention-popover" role="listbox" aria-label="Workspace 文件和路径">
+                                        <p class="chat-mention-status" v-if="workspaceMention.loading && !workspaceMention.items.length">正在查找 Workspace…</p>
+                                        <p class="chat-mention-status" v-else-if="workspaceMention.error">{{ workspaceMention.error }}</p>
+                                        <p class="chat-mention-status" v-else-if="!workspaceMention.items.length">没有匹配的文件或路径</p>
+                                        <button v-for="(item, index) in workspaceMention.items" :key="'launcher-' + item.relativePath + (item.isDirectory ? '/' : '')"
+                                                type="button" class="chat-mention-option" role="option"
+                                                :class="{ 'is-active': index === workspaceMention.active }"
+                                                :aria-selected="index === workspaceMention.active"
+                                                @@mousedown.prevent="selectWorkspaceMention(item)">
+                                            <i :class="item.isDirectory ? 'el-icon-folder' : workspaceFileIcon(item.relativePath)"></i>
+                                            <strong>{{ item.name }}</strong>
+                                            <small>{{ item.relativePath }}{{ item.isDirectory ? '/' : '' }}</small>
+                                        </button>
+                                    </div>
+                                    <el-input
+                                        type="textarea"
+                                        v-model="chatInputText"
+                                        ref="promptLauncherInput"
+                                        v-prompt-range="!isCreatingSession"
+                                        placeholder="@AR["Admin.Home.AiPlaceholder"]"
+                                        :rows="4"
+                                        :autosize="{ minRows: 4, maxRows: 8 }"
+                                        @@keydown.native="handleLauncherInputKeydown"
+                                        @@input.native="handleWorkspaceMentionEdit('chatInputText', $event)"
+                                        @@click.native="handleWorkspaceMentionEdit('chatInputText', $event)"
+                                        @@keyup.native="handleWorkspaceMentionEdit('chatInputText', $event)"
+                                        @@blur.native="closeWorkspaceMention"
+                                        @@paste.native="handleWorkspacePaste"
+                                        class="chat-entrance-input"
+                                        resize="none">
+                                    </el-input>
+                                </div>
                                 <div class="chat-entrance-composer-footer">
                                     <span class="ncf-doc-help-group">
                                         <el-button type="text" size="mini" aria-label="上传资料" :title="attachmentUploadHint"
@@ -796,6 +839,7 @@
                                     <span class="chat-entrance-input-tip">
                                         <i class="fa fa-keyboard-o"></i>
                                         按 Ctrl + Enter 或 Cmd + Enter 开始
+                                        <span v-if="canUploadWorkspaceFiles">，@@ 引用文件或路径</span>
                                     </span>
                                     <el-button
                                         type="primary"
@@ -1587,6 +1631,7 @@
 
 @section scripts {
     <script src="~/js/Admin/Pages/AdminChat/ChatLauncherMixin.js" asp-append-version="true"></script>
+    <script src="~/js/Admin/Pages/AdminChat/WorkspaceMentions.js" asp-append-version="true"></script>
     <script src="~/js/Admin/lib/marked.min.js"></script>
     <script src="~/js/Admin/dompurify.min.js"></script>
     <script>

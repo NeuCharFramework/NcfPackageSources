@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260717
     修改描述：v0.6.0-preview2 为 DynamicData 模块接入统一资源本地化并优化功能文案
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.7.10 统一 XNCF Register 显示元数据与多语言资源键
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -43,6 +46,11 @@ namespace Senparc.Xncf.DynamicData
     [XncfRegister]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
+        private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<DynamicDataResource>(
+            "Module.DynamicData",
+            "动态数据基础模块",
+            "用于创建和管理动态数据（早期迭代，尚未正式发布）");
+
         #region IXncfRegister 接口
 
         public override string Name => "Senparc.Xncf.DynamicData";
@@ -51,11 +59,11 @@ namespace Senparc.Xncf.DynamicData
 
         public override string Version => "0.1.0";//必须填写版本号
 
-        public override string MenuName => DynamicDataResource.Get("Module.DynamicData.MenuName", "动态数据基础模块");
+        public override string MenuName => RegisterText.MenuName;
 
         public override string Icon => "fa fa-database";
 
-        public override string Description => DynamicDataResource.Get("Module.DynamicData.Description", "动态数据基础模块，用于创建和管理动态数据（早期迭代，尚未正式发布）");
+        public override string Description => RegisterText.Description;
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

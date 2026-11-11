@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.12.14 将 EmailExtension Register 显示元数据接入统一资源本地化
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -27,6 +30,11 @@ namespace Senparc.Xncf.EmailExtension
     [XncfRegister]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
+        private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<EmailExtensionResource>(
+            "Module.EmailExtension",
+            "Email 插件",
+            "Email 插件");
+
         /// <summary>
         /// 最大自动发送Email次数
         /// </summary>
@@ -40,11 +48,11 @@ namespace Senparc.Xncf.EmailExtension
 
         public override string Version => "0.1";//必须填写版本号
 
-        public override string MenuName => "Email 插件";
+        public override string MenuName => RegisterText.MenuName;
 
         public override string Icon => "fa fa-file-word-o";
 
-        public override string Description => "Email 插件";
+        public override string Description => RegisterText.Description;
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

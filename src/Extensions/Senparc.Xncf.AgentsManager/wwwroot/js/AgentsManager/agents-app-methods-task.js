@@ -5,6 +5,31 @@
  */
 
 var AgentsAppMethodsTask = {
+    readConnectorInstanceIds(source) {
+      const formData = source?.agentTemplateDto || source || {}
+      const bindings = formData.connectorBindings || formData.ConnectorBindings || []
+      return (Array.isArray(bindings) ? bindings : [])
+        .filter(item => item && item.enabled !== false && item.Enabled !== false && (item.instanceId || item.InstanceId))
+        .map(item => item.instanceId || item.InstanceId)
+    },
+    async loadConnectorOptions() {
+      if (this.connectorOptionsLoading) return
+      this.connectorOptionsLoading = true
+      try {
+        const response = await fetch('/Admin/Connectors/Index?handler=Enabled', { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+        if (!response.ok) {
+          console.log('[Connector] enabled list unavailable', response.status)
+          return
+        }
+        const data = await response.json()
+        this.connectorOptions = Array.isArray(data) ? data : []
+        console.log('[Connector] enabled options', this.connectorOptions.length)
+      } catch (error) {
+        console.log('[Connector] enabled list failed', error)
+      } finally {
+        this.connectorOptionsLoading = false
+      }
+    },
     // 获取 任务 数据
     async gettaskListData(listType, id, page = 0, options = {}) {
       const opts = options || {}
@@ -803,6 +828,10 @@ var AgentsAppMethodsTask = {
           .filter(item => item.kind === 'plugin')
           .map(item => item.key)
           .join(',')
+        serviceForm.connectorBindings = (serviceForm.connectorInstanceIds || this.agentForm.connectorInstanceIds || [])
+          .filter(Boolean)
+          .map(id => ({ instanceId: id, enabled: true, actionKeys: [] }))
+        console.log('[Connector] agent bindings', serviceForm.connectorBindings)
 
         // 打印日志以便调试
         console.log('Submitting serviceForm:', serviceForm);
@@ -1734,8 +1763,15 @@ var AgentsAppMethodsTask = {
           this.agentSystemMessageTypeDetectionPending = true
           this.$set(this.agentForm, 'systemMessageType', '1')
         }
-        // 打开 抽屉
+        // 打开抽屉会按“新增”清空连接器选择，编辑时要在打开之后再回填。
+        const connectorInstanceIds = ['drawerAgent', 'dialogGroupAgent'].includes(btnType)
+          ? this.readConnectorInstanceIds(item)
+          : null
         this.handleElVisibleOpenBtn(btnType)
+        if (connectorInstanceIds) {
+          this.$set(this.agentForm, 'connectorInstanceIds', connectorInstanceIds)
+          console.log('[Connector] loaded agent bindings', connectorInstanceIds)
+        }
       }
     },
 };

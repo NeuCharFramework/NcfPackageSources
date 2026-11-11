@@ -398,6 +398,12 @@ var chatApp = new Vue({
       workspacePreviewJumpLine: 1,
       workspacePreviewWindowLoading: false,
       workspaceEntriesLoading: false,
+      workspaceMention: {
+        open: false, field: '', start: 0, end: 0, query: '', items: [], active: 0,
+        loading: false, error: '', sequence: 0, loadedQuery: null
+      },
+      workspaceMentionTimer: null,
+      workspaceMentionApplying: false,
       workspacePreviewLoading: false,
       workspaceResizeHandler: null,
       workspaceResizeEndHandler: null
@@ -2360,12 +2366,149 @@ var chatApp = new Vue({
     },
 
     handleChatInputKeydown(event) {
+      if (this.handleWorkspaceMentionKeydown(event, 'inputMessage')) return;
       // 保持与首页一致：Ctrl+Enter (Windows/Linux) 或 Cmd+Enter (Mac) 发送。
       if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
         event.preventDefault();
         this.sendMessage();
       }
       // 普通 Enter 保留换行行为。
+    },
+
+    handleWorkspaceMentionEdit(field, event) {
+      if (this.workspaceMentionApplying) return;
+      if (event && event.type === 'keyup' && ['ArrowUp', 'ArrowDown', 'Enter', 'Tab', 'Escape'].indexOf(event.key) >= 0) return;
+      const input = event && event.target;
+      if (!input || typeof input.selectionStart !== 'number') return;
+      this.syncWorkspaceMention(field, input.value, input.selectionStart);
+    },
+
+    syncWorkspaceMention(field, value, caret) {
+      const mention = window.NcfWorkspaceMentions && this.canUploadWorkspaceFiles && !this.isCurrentSessionRunning && !this.isCreatingSession
+        ? window.NcfWorkspaceMentions.findActive(value, caret) : null;
+      if (!mention) {
+        this.closeWorkspaceMention();
+        return;
+      }
+      const sameQuery = this.workspaceMention.open && this.workspaceMention.field === field
+        && this.workspaceMention.query === mention.query;
+      this.workspaceMention.open = true;
+      this.workspaceMention.field = field;
+      this.workspaceMention.start = mention.start;
+      this.workspaceMention.end = mention.end;
+      this.workspaceMention.query = mention.query;
+      if (!sameQuery) this.scheduleWorkspaceMentionLoad(mention.query);
+    },
+
+    scheduleWorkspaceMentionLoad(query) {
+      const sequence = ++this.workspaceMention.sequence;
+      if (this.workspaceMentionTimer) clearTimeout(this.workspaceMentionTimer);
+      if (query === this.workspaceMention.loadedQuery) {
+        this.workspaceMention.loading = false;
+        this.workspaceMention.error = '';
+        return;
+      }
+      this.workspaceMention.loading = true;
+      this.workspaceMention.error = '';
+      const delay = query ? 160 : 0;
+      this.workspaceMentionTimer = setTimeout(() => {
+        this.loadWorkspaceMentionItems(query, sequence);
+      }, delay);
+    },
+
+    async loadWorkspaceMentionItems(query, sequence) {
+      try {
+        const params = { query: query };
+        if (this.currentSessionId) params.sessionId = this.currentSessionId;
+        else params.workspaceId = this.selectedWorkspaceId;
+        const response = await service.get(
+          '/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.SuggestWorkspacePathsAsync',
+          { params: params, customAlert: true });
+        if (sequence !== this.workspaceMention.sequence || !this.workspaceMention.open) return;
+        const body = response && response.data;
+        const items = body && body.success && body.data && Array.isArray(body.data.items) ? body.data.items : null;
+        if (!items) throw new Error(body && (body.errorMessage || body.msg) || '无法读取 Workspace 路径');
+        this.workspaceMention.items = items.filter(item => item && item.relativePath);
+        this.workspaceMention.active = 0;
+        this.workspaceMention.loadedQuery = query;
+        this.workspaceMention.error = '';
+      } catch (error) {
+        if (sequence !== this.workspaceMention.sequence) return;
+        this.workspaceMention.items = [];
+        this.workspaceMention.error = error.message || '无法读取 Workspace 路径';
+      } finally {
+        if (sequence === this.workspaceMention.sequence) this.workspaceMention.loading = false;
+      }
+    },
+
+    handleWorkspaceMentionKeydown(event, field) {
+      if (!this.workspaceMention.open || this.workspaceMention.field !== field) return false;
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        event.preventDefault();
+        const count = this.workspaceMention.items.length;
+        if (!count) return true;
+        const step = event.key === 'ArrowDown' ? 1 : -1;
+        this.workspaceMention.active = (this.workspaceMention.active + step + count) % count;
+        this.$nextTick(() => {
+          if (typeof document === 'undefined' || typeof document.querySelector !== 'function') return;
+          const active = document.querySelector('.chat-mention-anchor .chat-mention-option.is-active');
+          if (active && active.scrollIntoView) active.scrollIntoView({ block: 'nearest' });
+        });
+        return true;
+      }
+      if ((event.key === 'Enter' && !event.ctrlKey && !event.metaKey) || event.key === 'Tab') {
+        const item = this.workspaceMention.items[this.workspaceMention.active];
+        if (!item) return false;
+        event.preventDefault();
+        this.selectWorkspaceMention(item);
+        return true;
+      }
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        this.closeWorkspaceMention();
+        return true;
+      }
+      return false;
+    },
+
+    selectWorkspaceMention(item) {
+      const field = this.workspaceMention.field === 'chatInputText' ? 'chatInputText' : 'inputMessage';
+      const refName = field === 'chatInputText' ? 'promptLauncherInput' : 'promptMessageInput';
+      const input = this.workspaceMentionTextarea(refName);
+      const source = input && typeof input.value === 'string' ? input.value : this[field];
+      const applied = window.NcfWorkspaceMentions.apply(source, this.workspaceMention, item);
+      if (!applied) return;
+      this.workspaceMentionApplying = true;
+      this[field] = applied.value;
+      if (input) input.value = applied.value;
+      this.$nextTick(() => {
+        this.workspaceMentionApplying = false;
+        if (input) {
+          input.focus();
+          input.setSelectionRange(applied.caret, applied.caret);
+        }
+        if (item.isDirectory) this.syncWorkspaceMention(field, applied.value, applied.caret);
+        else this.closeWorkspaceMention();
+      });
+    },
+
+    workspaceMentionTextarea(refName) {
+      const component = this.$refs && this.$refs[refName];
+      return component && (component.$refs && component.$refs.textarea || component.textarea || component);
+    },
+
+    closeWorkspaceMention() {
+      if (this.workspaceMentionTimer) {
+        clearTimeout(this.workspaceMentionTimer);
+        this.workspaceMentionTimer = null;
+      }
+      this.workspaceMention.sequence += 1;
+      this.workspaceMention.open = false;
+      this.workspaceMention.items = [];
+      this.workspaceMention.active = 0;
+      this.workspaceMention.loading = false;
+      this.workspaceMention.error = '';
+      this.workspaceMention.loadedQuery = null;
     },
 
     waitForSessionListRetry(attempt) {
@@ -3093,6 +3236,7 @@ var chatApp = new Vue({
     },
 
     async sendMessage(presetReferences) {
+      this.closeWorkspaceMention();
       if (this.isCurrentSessionRunning || this.workspaceUploading || this.memoryBusy || !this.memoryReady) return;
 
       if ((!this.inputMessage || this.inputMessage.trim().length === 0) && this.pendingAttachments.length === 0) {
@@ -3332,6 +3476,7 @@ var chatApp = new Vue({
 
       this.rememberSessionDraft();
       this.resetWorkspacePreview();
+      this.closeWorkspaceMention();
       await this.deletePendingAttachments();
       this.clearPendingAttachments();
       this.currentSessionId = sessionId;
@@ -3369,6 +3514,7 @@ var chatApp = new Vue({
       if (!(await this.confirmDiscardWorkspaceEdit())) return;
       this.rememberSessionDraft();
       this.resetWorkspacePreview();
+      this.closeWorkspaceMention();
       await this.deletePendingAttachments();
       this.clearPendingAttachments();
       this.launcherAiModelId = this.currentSessionAiModelId || this.launcherAiModelId || 0;

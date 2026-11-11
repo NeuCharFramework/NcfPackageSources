@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：Register.cs
@@ -16,6 +16,9 @@
     修改标识：Senparc - 20260729
     修改描述：v0.22.1-preview3 收紧终端模块的命令执行说明和默认行为
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.22.12 统一 XNCF Register 显示元数据与多语言资源键
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -28,6 +31,11 @@ namespace Senparc.Xncf.Terminal
     [XncfRegister]
     public class Register : XncfRegisterBase, IXncfRegister
     {
+        private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<TerminalResource>(
+            "Module.Terminal",
+            "终端模块",
+            "允许开发者直接使用终端命令控制系统。");
+
         public Register()
         { }
 
@@ -37,9 +45,9 @@ namespace Senparc.Xncf.Terminal
         public override string Uid => "600C608A-F99A-4B1B-A18E-8CE69BE8DA92";//必须确保全局唯一，生成后必须固定
         public override string Version => "0.1.6";//必须填写版本号
 
-        public override string MenuName => TerminalResource.Get("Module.Terminal.MenuName", "终端模块");
+        public override string MenuName => RegisterText.MenuName;
         public override string Icon => "fa fa-terminal";
-        public override string Description => TerminalResource.Get("Module.Terminal.Description", "终端命令执行功能当前已禁用。");
+        public override string Description => RegisterText.Description;
 
         ///// <summary>
         ///// 注册当前模块需要支持的功能模块

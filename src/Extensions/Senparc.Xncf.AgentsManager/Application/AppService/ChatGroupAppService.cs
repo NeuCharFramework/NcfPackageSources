@@ -36,6 +36,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.19.1 enhance Agent Studio, group configuration, and task management interactions
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.19.3 完善 AgentsManager 模板、ChatGroup 与连接器能力兼容
+
 ----------------------------------------------------------------*/
 
 using Microsoft.CodeAnalysis.CSharp;
@@ -1097,6 +1100,8 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 PluginToolPermission = request.PluginToolPermission,
                 McpToolPermission = request.McpToolPermission,
                 IncludeHumanParticipant = request.IncludeHumanParticipant,
+                LimitConnectors = request.LimitConnectors,
+                ConnectorInstanceIds = request.ConnectorInstanceIds,
                 HumanRecipientUserId = request.HumanRecipientUserId,
                 CancellationToken = request.CancellationToken
             };
