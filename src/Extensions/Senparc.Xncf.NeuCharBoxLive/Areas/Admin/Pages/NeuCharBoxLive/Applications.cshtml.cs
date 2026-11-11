@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261109
     修改描述：v0.1.0-preview1 页面文字改走资源文件，时间改用使用日所在时区
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.1.0-preview1 话术中的演示页地址改为本站自带的 /live/demo/
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -50,10 +53,11 @@ public class ApplicationsModel(Lazy<XncfModuleService> xncfModuleService, IAppli
     public async Task OnGetAsync()
     {
         var byId = (await codes.ListAsync()).ToDictionary(c => c.Id);
+        var demoUrl = $"{Request.Scheme}://{Request.Host}{SettingsView.TryItLink(Request.PathBase)}";
         Rows = (await applications.ListAsync()).Select(a =>
         {
             var code = a.CodeId is { } id && byId.TryGetValue(id, out var c) ? c : null;
-            return new Row(a, code, a.Status == "approved" && code is not null ? InviteMessage.For(a.Name, code) : null);
+            return new Row(a, code, a.Status == "approved" && code is not null ? InviteMessage.For(a.Name, code, demoUrl) : null);
         }).ToList();
     }
 

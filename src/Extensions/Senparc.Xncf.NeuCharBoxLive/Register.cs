@@ -28,6 +28,9 @@
     修改标识：Senparc - 20261109
     修改描述：v0.1.0-preview1 AddXncfModule 先调用 base（DbContext 注册不会被跳过）；运行时只在 NCF 就绪后读数据库；保留清理读模块运行时；新增 LiveApiHookCheck
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.1.0-preview1 UseXncfModule 同时接入模块自带的演示页（LiveDemoFiles，/live/demo/）
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Builder;
@@ -142,6 +145,7 @@ namespace Senparc.Xncf.NeuCharBoxLive
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
             LiveApiPipeline.Use(app);
+            LiveDemoFiles.Use(app); // the demo's pages at /live/demo/, same origin as /live/api
             return base.UseXncfModule(app, registerService);
         }
     }

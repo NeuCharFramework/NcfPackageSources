@@ -16,6 +16,9 @@
     修改标识：Senparc - 20261109
     修改描述：v0.1.0-preview1 新增 WakeIfStartingAsync：打开设置页时唤醒仍在 starting 的运行时（本次运行中新安装的站点）
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.1.0-preview1 “试用”链接改指向本站自带的演示页（/live/demo/），不再限于 http 回环地址
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Logging;
@@ -31,19 +34,11 @@ public sealed record ModelChoice(int Id, string Label, bool Supported);
 /// <summary>The Settings page's logic, kept out of the PageModel so tests reach it without an admin login.</summary>
 public static class SettingsView
 {
-    public const string DemoUrl = "https://leozheng265.github.io/neucharbox-demo/";
-
     /// <summary>
-    /// The demo page's link that points it at this site, for <c>http://localhost:*</c> and <c>http://127.0.0.1:*</c> only
-    /// (the hosted demo is https and a browser lets it reach plain-http loopback; any other origin needs the visitor's
-    /// own API base). Null otherwise.
+    /// The link to the demo pages this site serves itself (<see cref="Api.LiveDemoFiles"/>), under the site's path base.
+    /// Same origin as /live/api, so it works on any address the site has.
     /// </summary>
-    public static string? TryItLink(string siteOrigin)
-    {
-        if (!Uri.TryCreate(siteOrigin, UriKind.Absolute, out var u) || u.Scheme != Uri.UriSchemeHttp) return null;
-        if (!(u.Host.Equals("localhost", StringComparison.OrdinalIgnoreCase) || u.Host == "127.0.0.1")) return null;
-        return DemoUrl + "?liveApi=" + Uri.EscapeDataString(siteOrigin);
-    }
+    public static string TryItLink(string? pathBase) => (pathBase ?? "").TrimEnd('/') + Api.LiveDemoFiles.Prefix + "/";
 
     /// <summary>The resx key of the status line: Status.On, Status.Off.budget, or Status.Off.&lt;LiveOff code&gt;. An off reason wins over a spent budget.</summary>
     public static string StatusKey(LiveSnapshot s, bool budgetSpent)

@@ -16,6 +16,9 @@
     修改标识：Senparc - 20261109
     修改描述：v0.1.0-preview1 打开设置页时唤醒仍在 starting 的运行时（本次运行中新安装的站点无需重启）
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.1.0-preview1 “试用”链接改指向本站自带的演示页
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -70,8 +73,8 @@ public class SettingsModel(Lazy<XncfModuleService> xncfModuleService, LiveSettin
     public long DailyTokenBudget => Snapshot.Limits.DailyTokenBudget;
     public bool PipelineHooked => LiveApiPipeline.Hooked;
 
-    /// <summary>The demo link for this site, or null when the site is not plain-http loopback.</summary>
-    public string? TryItLink => SettingsView.TryItLink($"{Request.Scheme}://{Request.Host}");
+    /// <summary>The demo pages this site serves itself.</summary>
+    public string TryItLink => SettingsView.TryItLink(Request.PathBase);
 
     public async Task OnGetAsync()
     {

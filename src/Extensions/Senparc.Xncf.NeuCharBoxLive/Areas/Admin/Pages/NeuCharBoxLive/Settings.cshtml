@@ -44,14 +44,7 @@
     </p>
     <p class="lead">
         <b>@XR["Settings.TryIt"]</b>
-        @if (Model.TryItLink is { } link)
-        {
-            <a href="@link" target="_blank" rel="noopener">@XR["Settings.TryItLink"]</a>
-        }
-        else
-        {
-            <span class="muted">@XR["Status.DemoNeedsApiBase"]</span>
-        }
+        <a href="@Model.TryItLink" target="_blank" rel="noopener">@XR["Settings.TryItLink"]</a>
     </p>
 
     <h4>@XR["Settings.FormHeading"]</h4>

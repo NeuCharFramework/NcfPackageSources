@@ -90,9 +90,6 @@
   <data name="Status.Off.budget" xml:space="preserve">
     <value>实时 AI 已暂停：今日 Token 预算已用完，下一个使用日恢复。</value>
   </data>
-  <data name="Status.DemoNeedsApiBase" xml:space="preserve">
-    <value>要试用，请打开演示页，并把本站地址（HTTPS）填为实时 API 地址。一键链接仅适用于 http 的 localhost。</value>
-  </data>
   <data name="Status.PipelineNotHooked" xml:space="preserve">
     <value>警告：/live/api 管道尚未接入。宿主没有调用 UseXncfModules，实时请求无法到达本模块。</value>
   </data>
@@ -109,7 +106,7 @@
     <value>试用</value>
   </data>
   <data name="Settings.TryItLink" xml:space="preserve">
-    <value>用演示页连接本站</value>
+    <value>打开本站的演示页</value>
   </data>
   <data name="Settings.FormHeading" xml:space="preserve">
     <value>实时 AI 设置</value>

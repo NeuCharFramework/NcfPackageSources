@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261109
     修改描述：v0.1.0-preview1 新增测试：AI Kernel 读不到时模型列表为空并给出提示，不抛错
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.1.0-preview1 “试用”链接改为本站自带演示页的测试
+
 ----------------------------------------------------------------*/
 
 using System.Reflection;
@@ -45,11 +48,11 @@ public class AdminTests
     // ---- the try-it link ----
 
     [DataTestMethod]
-    [DataRow("http://localhost:5000", "https://leozheng265.github.io/neucharbox-demo/?liveApi=http%3A%2F%2Flocalhost%3A5000")]
-    [DataRow("http://127.0.0.1:5660", "https://leozheng265.github.io/neucharbox-demo/?liveApi=http%3A%2F%2F127.0.0.1%3A5660")]
-    [DataRow("https://localhost:5081", null)]
-    [DataRow("https://my-site.example", null)]
-    public void TryItLink_OnlyForHttpLoopback(string origin, string? expected) => Assert.AreEqual(expected, SettingsView.TryItLink(origin));
+    [DataRow("", "/live/demo/")]
+    [DataRow(null, "/live/demo/")]
+    [DataRow("/ncf", "/ncf/live/demo/")]
+    [DataRow("/ncf/", "/ncf/live/demo/")]
+    public void TryItLink_IsTheSitesOwnDemoPage(string? pathBase, string expected) => Assert.AreEqual(expected, SettingsView.TryItLink(pathBase));
 
     // ---- status ----
 

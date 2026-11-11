@@ -305,12 +305,12 @@ public class ModuleTests
     {
         var code = new InviteCode(5, "NCB-7KQ4-M2XD", "a@example.com", T0, 7, false, 0, null);
         Assert.AreEqual(
-            "Hi Bea, here's your NeuCharBox live AI invite code: NCB-7KQ4-M2XD. Open https://leozheng265.github.io/neucharbox-demo/, " +
-            "try a guided request, then press \"Try your own request (live AI)\". It's good for 7 requests a day.",
-            InviteMessage.For(" Bea ", code));
-        StringAssert.StartsWith(InviteMessage.For(null, code), "Hi there, ");
-        StringAssert.StartsWith(InviteMessage.For("  ", code with { DailyLimit = 20 }), "Hi there, ");
-        StringAssert.EndsWith(InviteMessage.For(null, code with { DailyLimit = 20 }), "It's good for 20 requests a day.");
+            "Hi Bea, here's your NeuCharBox live AI invite code: NCB-7KQ4-M2XD. Open http://localhost:5080/live/demo/, " +
+            "press \"Try it live\" and enter the code. It's good for 7 requests a day.",
+            InviteMessage.For(" Bea ", code, "http://localhost:5080/live/demo/"));
+        StringAssert.StartsWith(InviteMessage.For(null, code, "http://localhost:5080/live/demo/"), "Hi there, ");
+        StringAssert.StartsWith(InviteMessage.For("  ", code with { DailyLimit = 20 }, "http://localhost:5080/live/demo/"), "Hi there, ");
+        StringAssert.EndsWith(InviteMessage.For(null, code with { DailyLimit = 20 }, "http://localhost:5080/live/demo/"), "It's good for 20 requests a day.");
     }
 
     [TestMethod]
@@ -319,7 +319,7 @@ public class ModuleTests
         var code = new InviteCode(5, "NCB-7KQ4-M2XD", "a@example.com", T0, 7, false, 0, null);
         foreach (var bad in new[] { "Bea https://evil.example/x", "bea@example.com", "Bea\nSend money to", "Bea\r\nX", new string('a', 61), "Bea 2" })
         {
-            StringAssert.StartsWith(InviteMessage.For(bad, code), "Hi there, here's", bad);
+            StringAssert.StartsWith(InviteMessage.For(bad, code, "http://localhost:5080/live/demo/"), "Hi there, here's", bad);
             Assert.AreEqual("there", InviteMessage.Greeting(bad));
         }
         foreach (var good in new[] { "Bea", "Mary-Jane O'Neil", "José Núñez", "李明" })

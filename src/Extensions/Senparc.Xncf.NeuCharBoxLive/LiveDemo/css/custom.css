@@ -1,0 +1,128 @@
+/* "Build your own" (#custom, js/custom/mount.js): the header's Build | Run and Done building →, the room's overlays
+   (the selection bar, notices, the empty-room note), the inventory, and the stage per mode (.stage.custom[data-mode]).
+   Desktop: the room left (about 60%), the side right. Phones (<= 959 px): in build mode the room fills the stage and the
+   inventory is a bottom sheet over it (collapsed: the search and one row of tiles; open: 60vh). */
+
+/* elements whose display a rule here sets still hide with [hidden] */
+.custom-top .done[hidden], .stage.custom .side > [hidden], .stage.custom .status[hidden], .room .selbar[hidden], .room .notice[hidden],
+.room .empty-note[hidden], .room .changed-note[hidden], .selbar [hidden], .inv-tile[hidden], .inv-nomatch[hidden], .inv-empty[hidden] { display: none; }
+
+/* ---------- header ---------- */
+.custom-top .modebar { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
+.seg { display: inline-flex; border: 1px solid var(--line-2); border-radius: 9px; overflow: hidden; background: #fff; }
+.seg button { border: 0; background: transparent; padding: 5px 12px; min-height: 32px; font-size: 13px; font-weight: 600; color: var(--ink-2); cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--line-2); }
+.seg button[aria-pressed="true"] { background: #E3FAF7; color: var(--ink); box-shadow: inset 0 -2px 0 var(--accent-a); }
+.seg button:not(:disabled):not([aria-pressed="true"]):hover { background: #F2FBFA; color: var(--ink); }
+.seg button:disabled { opacity: .45; cursor: default; }
+.seg button:focus-visible, .custom-top .done:focus-visible { outline: 2px solid var(--accent-a); outline-offset: 1px; }
+.custom-top .done { min-height: 32px; white-space: nowrap; }
+
+/* ---------- the room's overlays ---------- */
+.room .selbar { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 3; display: flex; align-items: center; gap: 8px; max-width: calc(100% - 24px); padding: 6px 6px 6px 14px; background: rgba(255,255,255,.96); border: 1px solid var(--line-2); border-radius: 999px; box-shadow: 0 6px 22px rgba(38,56,66,.16); }
+.selbar .sel-name { font-weight: 650; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.selbar .btn { border-radius: 999px; min-height: 32px; flex: 0 0 auto; }
+.selbar .sel-remove { color: #B5412A; }
+.selbar .sel-remove:hover { background: #FDECE8; border-color: #F3C4B8; }
+.room .notice { position: absolute; left: 50%; top: 44px; transform: translateX(-50%); z-index: 3; width: max-content; max-width: min(440px, calc(100% - 24px)); padding: 8px 14px; font-size: 13.5px; line-height: 1.35; color: #fff; background: rgba(20,30,40,.82); border-radius: 12px; text-align: center; animation: cnotice .18s ease-out; }
+@keyframes cnotice { from { opacity: 0; transform: translate(-50%, 6px); } to { opacity: 1; transform: translate(-50%, 0); } }
+.room .empty-note { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 2; margin: 0; width: max-content; max-width: calc(100% - 40px); padding: 10px 16px; font-size: 14px; color: var(--ink); background: rgba(255,255,255,.9); border: 1px solid var(--line-2); border-radius: 12px; text-align: center; pointer-events: none; }
+.room .changed-note { position: absolute; left: 50%; bottom: 64px; /* above the selection bar (bottom 14 px), which an added device opens */ transform: translateX(-50%); z-index: 2; margin: 0; width: max-content; max-width: min(440px, calc(100% - 24px)); padding: 7px 14px; font-size: 13px; line-height: 1.35; color: var(--ink); background: rgba(255,255,255,.92); border: 1px solid var(--line-2); border-radius: 12px; text-align: center; pointer-events: none; }
+.empty-note .narrow { display: none; }
+.stage.custom:not([data-mode="build"]) .empty-note { display: none; } /* building is where devices are added */
+.stage.custom:not([data-mode="run"]) .autos { display: none; } /* the Automations section (js/engine/automations.js) is run mode's, under the cards */
+.room.dragging canvas { touch-action: none; cursor: grabbing; } /* every scene's canvas has it already (orbit); here a drag needs it too */
+.room.dragging { user-select: none; -webkit-user-select: none; }
+
+/* ---------- the inventory ---------- */
+.stage.custom .inventory { display: flex; flex-direction: column; min-height: 0; background: var(--panel); }
+.inv { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+.inv-head { display: flex; align-items: center; padding: 12px 12px 6px; }
+.inv-grip { display: none; }
+.inv-search { flex: 1; min-width: 0; height: 38px; padding: 0 12px; font: inherit; font-size: 15px; color: var(--ink); background: #fff; border: 1px solid var(--line-2); border-radius: 10px; outline: none; }
+.inv-search:focus { border-color: var(--accent-a); box-shadow: 0 0 0 3px rgba(41,238,229,.2); }
+.inv-cats { display: flex; flex-wrap: wrap; gap: 6px; padding: 4px 12px 8px; }
+.inv-cat { min-height: 32px; padding: 4px 12px; font-size: 13px; border: 1px solid var(--line-2); border-radius: 999px; background: #fff; color: var(--ink-2); cursor: pointer; white-space: nowrap; }
+.inv-cat:hover { border-color: var(--accent-a); color: var(--ink); }
+.inv-cat[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+.inv-grid { flex: 1; min-height: 0; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); grid-auto-rows: min-content; gap: 8px; padding: 4px 12px 12px; scrollbar-width: thin; }
+.inv-tile { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 0; padding: 10px 6px 8px; text-align: center; background: #fff; border: 1px solid var(--line); border-radius: 12px; cursor: pointer; transition: border-color .15s, box-shadow .15s, transform .1s; }
+.inv-tile:hover { border-color: var(--accent-a); box-shadow: 0 4px 14px rgba(38,56,66,.08); }
+.inv-tile:active { transform: scale(.97); }
+.inv-tile:focus-visible { outline: none; border-color: var(--accent-a); box-shadow: 0 0 0 3px rgba(41,238,229,.35); }
+.inv-tile .pic { display: grid; place-items: center; width: 64px; height: 44px; margin-bottom: 2px; color: #6E8785; }
+.inv-tile .pic svg { width: 28px; height: 28px; }
+.inv-tile .pic img { width: 100%; height: 100%; object-fit: contain; }
+.inv-tile .nm { max-width: 100%; font-size: 12.5px; font-weight: 650; line-height: 1.25; color: var(--ink); overflow-wrap: anywhere; }
+.inv-tile .cat { font-size: 11px; color: var(--ink-3); }
+.inv-tile .new { position: absolute; left: 6px; top: 6px; padding: 0 6px; font-size: 9.5px; font-weight: 700; line-height: 15px; letter-spacing: .05em; text-transform: uppercase; color: #12222A; background: linear-gradient(135deg, var(--accent-a), var(--accent-b)); border-radius: 999px; }
+.inv-tile .in { display: none; position: absolute; right: 6px; top: 6px; width: 18px; height: 18px; border-radius: 50%; font-size: 11px; font-weight: 700; line-height: 18px; color: #fff; background: var(--green); }
+.inv-tile.has { border-color: #A7E3C4; }
+.inv-tile.has .in { display: block; }
+.inv-tile .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.inv-nomatch { grid-column: 1 / -1; margin: 8px 2px; color: var(--ink-3); font-size: 13.5px; }
+.inv-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 12px calc(8px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-2); }
+.inv-clear { min-height: 32px; padding: 4px 10px; font-size: 13px; border: 1px solid var(--line-2); border-radius: 8px; background: #fff; color: var(--ink-2); cursor: pointer; }
+.inv-clear:not(:disabled):hover { border-color: var(--red); color: #B5412A; }
+.inv-clear.confirm { background: #FDECE8; border-color: #F3C4B8; color: #B5412A; font-weight: 600; }
+.inv-clear:disabled { opacity: .45; cursor: default; }
+.inv-empty { margin: 0; padding: 10px 12px; color: var(--ink-2); font-size: 13.5px; }
+
+/* the "Back to building / Other scenes" card at the end of live mode */
+.card.end.custom-exit { padding: 10px 12px; }
+
+/* ---------- desktop: room left (about 60%), the side right ---------- */
+@media (min-width: 960px) {
+  .stage.custom { grid-template-columns: minmax(0, 3fr) minmax(360px, 2fr); }
+  .stage.custom .inventory { flex: 1; }
+}
+@media (min-width: 960px) and (max-width: 1180px) { .custom-top .social-label { display: none; } }
+/* 521–640 px: the header's mode bar and Done building leave no room for the social links (≤ 520 px app.css hides them) */
+@media (max-width: 640px) { .custom-top .social { display: none; } }
+
+/* ---------- phones and tablets ---------- */
+@media (max-width: 959px) {
+  .custom-top .brand { display: none; }
+  /* gate: the room, then the access card */
+  .stage.custom[data-mode="gate"] { grid-template-rows: auto minmax(0, 1fr); }
+  /* build: the room fills the stage above the collapsed sheet; the sheet opens over it */
+  .stage.custom[data-mode="build"] { display: block; position: relative; --peek: 180px; }
+  .stage.custom[data-mode="build"] .room { position: absolute; left: 0; right: 0; top: 0; bottom: calc(var(--peek) - 14px); }
+  .stage.custom[data-mode="build"] .room canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .stage.custom[data-mode="build"] .room .empty-note { top: 46%; }
+  .empty-note .wide { display: none; } .empty-note .narrow { display: inline; }
+  .stage.custom .inventory { position: absolute; left: 0; right: 0; bottom: 0; z-index: 4; height: var(--peek); border-radius: 16px 16px 0 0; box-shadow: 0 -6px 24px rgba(38,56,66,.14); border-top: 1px solid var(--line); transition: height .22s ease; overflow: hidden; }
+  .stage.custom .inventory.open { height: min(60vh, calc(100% - 40px)); height: min(60dvh, calc(100% - 40px)); }
+  /* the grip: the sheet's whole top strip, 32 px tall (a touch target), its thin bar centred in it */
+  .inv-head { flex-wrap: wrap; padding: 0 12px 8px; }
+  .inv-grip { display: grid; place-items: center; flex: 0 0 auto; width: calc(100% + 24px); height: 32px; margin: 0 -12px; padding: 0; border: 0; background: none; cursor: pointer; }
+  .inv-grip span { width: 40px; height: 4px; border-radius: 4px; background: var(--line-2); }
+  .inv-grip:focus-visible span { background: var(--accent-a); }
+  .stage.custom .room .reset { min-height: 36px; padding: 0 14px; } /* a fingertip, not a 26 px chip */
+  .inv-search { height: 40px; font-size: 16px; } /* 16 px: no zoom-in on focus in iOS Safari */
+  /* collapsed: one row of tiles, scrolled sideways; no chips or foot */
+  .inv:not(.open) .inv-cats, .inv:not(.open) .inv-foot { display: none; }
+  .inv:not(.open) .inv-grid { display: flex; gap: 8px; overflow-x: auto; overflow-y: hidden; padding: 2px 12px 10px; scroll-padding-inline: 12px; }
+  .inv:not(.open) .inv-grid::after { content: ''; flex: 0 0 4px; }
+  .inv:not(.open) .inv-tile { flex: 0 0 92px; }
+  .inv:not(.open) .inv-nomatch { margin: 14px 2px; white-space: nowrap; }
+  /* open: the chips on one row, scrolled sideways; the grid scrolls */
+  .inv.open .inv-cats { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 6px; scrollbar-width: none; }
+  .inv.open .inv-grid { grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); }
+  .inv-tile { padding: 8px 4px 6px; }
+  .inv-tile .pic { width: 52px; height: 36px; }
+  .inv-tile .nm { font-size: 12px; }
+  /* the selection bar under the room's top row (the open sheet covers the room's lower part); a notice below it */
+  .stage.custom[data-mode="build"] .room .selbar { top: 44px; bottom: auto; }
+  .selbar .btn { min-height: 36px; padding-inline: 14px; } /* Rotate and Remove under a thumb */
+  .stage.custom[data-mode="build"] .room .notice { top: 96px; }
+  .room .changed-note { bottom: 14px; } /* the bar is up top here */
+}
+
+@media (max-width: 520px) {
+  /* the header in two rows: logo, name and Scenes; then Build | Run and Done building → */
+  .custom-top { flex-wrap: wrap; row-gap: 6px; }
+  .custom-top .modebar { order: 5; flex: 1 0 100%; justify-content: space-between; }
+  .custom-top .scene-name { flex: 1 1 auto; }
+  .room .notice { font-size: 13px; }
+}

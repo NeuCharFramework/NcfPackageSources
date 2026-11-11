@@ -90,9 +90,6 @@
   <data name="Status.Off.budget" xml:space="preserve">
     <value>Live is paused: today's token budget is spent. It resumes on the next usage day.</value>
   </data>
-  <data name="Status.DemoNeedsApiBase" xml:space="preserve">
-    <value>To try it, open the demo page and enter this site's address (HTTPS) as the live API base. The one-click link only works on plain-http localhost.</value>
-  </data>
   <data name="Status.PipelineNotHooked" xml:space="preserve">
     <value>Warning: the /live/api pipeline is not attached. The host never called UseXncfModules, so live requests will not reach this module.</value>
   </data>
@@ -109,7 +106,7 @@
     <value>Try it</value>
   </data>
   <data name="Settings.TryItLink" xml:space="preserve">
-    <value>Open the demo against this site</value>
+    <value>Open the demo on this site</value>
   </data>
   <data name="Settings.FormHeading" xml:space="preserve">
     <value>Live settings</value>

@@ -1,0 +1,509 @@
+:root {
+  --bg: #F2FBFA; --panel: #FFFFFF; --ink: #263842; --ink-2: #5C7A78; --ink-3: #8AA3A0;
+  --line: #D7ECE9; --line-2: #BFE3DD; --accent-a: #29EEE5; --accent-b: #AAF86D; --green: #2FBF71; --red: #E0563A; --amber: #E4A93A;
+  --font: Inter, "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow-x: hidden; background: var(--bg); color: var(--ink); font: 15px/1.45 var(--font); -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+
+.app { height: 100vh; height: 100dvh; display: flex; flex-direction: column; }
+.app.picker-mode { height: auto; min-height: 100vh; min-height: 100dvh; }
+.top { display: flex; align-items: center; gap: 12px; padding: 10px 16px; background: var(--panel); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 5; }
+.top .logo { width: 26px; height: 26px; border-radius: 7px; background: linear-gradient(135deg, var(--accent-a), var(--accent-b)); flex: 0 0 auto; }
+.top .brand { font-weight: 650; letter-spacing: -0.01em; }
+.top .scene-name { color: var(--ink-2); min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.top .scene-name::before { content: '/'; margin: 0 8px; color: var(--line-2); }
+.top .spacer { flex: 1; }
+.top a.btn { text-decoration: none; white-space: nowrap; flex: 0 0 auto; }
+.top .brand, .top .logo { flex: 0 0 auto; }
+.btn { display: inline-block; padding: 8px 14px; border-radius: 9px; border: 1px solid var(--line-2); background: #fff; cursor: pointer; font-weight: 600; text-decoration: none; }
+.btn.primary { background: linear-gradient(135deg, var(--accent-a), var(--accent-b)); border-color: transparent; color: #12222A; }
+.btn.small { padding: 5px 10px; font-size: 13px; }
+.btn:disabled { opacity: .5; cursor: default; }
+/* the scene header's Live AI button (js/engine/liveentry.js): beside "‹ Scenes", only while live mode is available and not open */
+.top .live-top { flex: 0 0 auto; white-space: nowrap; }
+.top .live-top[hidden] { display: none; } /* .btn's inline-block would beat the hidden attribute */
+.top .live-top:focus-visible { outline: 2px solid var(--accent-a); outline-offset: 2px; }
+/* NeuCharBox's accounts (js/engine/social.js): icons in the header, named pills in an end card's "Follow NeuCharBox" line */
+.top .social { display: flex; align-items: center; gap: 2px; flex: 0 0 auto; }
+.top .social-label { margin-right: 4px; font-size: 13px; color: var(--ink-3); }
+.top .social-link { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 8px; color: var(--ink-2); transition: background .15s, color .15s; }
+.top .social-link svg { width: 18px; height: 18px; }
+.top .social-link:hover { background: #EEF6F5; }
+.top .social-link.youtube:hover { color: #FF0033; } .top .social-link.linkedin:hover { color: #0A66C2; } .top .social-link.x:hover { color: #000; }
+.social-link:focus-visible { outline: 2px solid var(--accent-a); outline-offset: 1px; }
+.card.end .follow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-2); }
+.card.end .follow > span { margin-right: 2px; }
+.card.end .follow .social-link { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px 4px 8px; border: 1px solid var(--line-2); border-radius: 999px; background: #fff; color: var(--ink); font-weight: 600; text-decoration: none; }
+.card.end .follow .social-link:hover { border-color: var(--accent-a); }
+.card.end .follow .social-link svg { width: 15px; height: 15px; flex: 0 0 auto; }
+.card.end .follow .youtube svg { color: #FF0033; } .card.end .follow .linkedin svg { color: #0A66C2; } .card.end .follow .x svg { color: #000; }
+
+/* ---------- picker ---------- */
+.picker { max-width: 1100px; margin: 0 auto; padding: 28px 18px 60px; }
+.picker h1 { font-size: clamp(26px, 4vw, 40px); font-weight: 650; letter-spacing: -0.02em; margin: 0 0 8px; }
+.picker .lede { color: var(--ink-2); max-width: 640px; margin: 0 0 26px; font-size: 17px; }
+.scene-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
+.scene-card { display: block; text-decoration: none; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; transition: transform .15s, box-shadow .15s; }
+.scene-card:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(38,56,66,.10); }
+.scene-card .thumb { aspect-ratio: 16/10; background: var(--thumb, linear-gradient(135deg,#DDF4F2,#BFE3DD)); position: relative; }
+.scene-card .thumb::after { content: attr(data-n); position: absolute; left: 10px; top: 9px; font-size: 12px; font-weight: 700; color: var(--ink); background: rgba(255,255,255,.72); padding: 1px 7px; border-radius: 6px; letter-spacing: .08em; }
+.scene-card .thumb .icons { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 0 12px; color: rgba(38,56,66,.62); }
+.scene-card .thumb.dark .icons { color: rgba(255,255,255,.78); }
+.scene-card .thumb .icons svg { width: 28px; height: 28px; flex: 0 1 auto; min-width: 0; }
+.scene-card .thumb .icons svg:first-child { width: 40px; height: 40px; margin-right: 6px; }
+.scene-card .body { padding: 12px 14px 14px; }
+.scene-card h3 { margin: 0 0 4px; font-size: 17px; font-weight: 650; }
+.scene-card p { margin: 0; color: var(--ink-2); font-size: 14px; }
+.scene-card .tag { display: inline-block; margin-top: 8px; font-size: 11px; color: var(--ink-3); text-transform: uppercase; letter-spacing: .08em; }
+.picker .foot { margin-top: 28px; color: var(--ink-3); font-size: 13px; }
+
+/* ---------- scene layout ---------- */
+.beats { display: flex; gap: 4px; padding: 8px 16px 0; background: var(--panel); }
+.beats button { flex: 1; border: 0; background: transparent; padding: 6px 0 8px; font-size: 12px; color: var(--ink-3); border-bottom: 3px solid var(--line); cursor: pointer; text-transform: uppercase; letter-spacing: .06em; }
+.beats button.done { color: var(--ink-2); border-color: var(--line-2); }
+.beats button.now { color: var(--ink); border-image: linear-gradient(90deg, var(--accent-a), var(--accent-b)) 1; }
+.beats button:disabled { cursor: default; }
+.beats button[hidden] { display: none; } /* Recover, outside what-if runs */
+.beats button:disabled:not(.now) { opacity: .6; }
+.beats button:not(:disabled):not(.now) { color: var(--ink-2); border-color: var(--line-2); }
+.beats button:not(:disabled):not(.now)::after { content: ' ›'; }
+.beats button:not(:disabled):not(.now):hover { color: var(--ink); border-color: var(--accent-a); }
+
+/* Stacked (phones): room, status, device cards, automations (live mode only; an empty row otherwise), then the chat in
+   the last row, whatever shows above it (the custom scene's gate has only the room and the chat). */
+.stage { flex: 1; min-height: 0; min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto auto minmax(0, 1fr); }
+.stage .chat { grid-row: -2 / -1; }
+.room { position: relative; background: #DCEBF3; min-height: 0; min-width: 0; overflow: hidden; }
+.room canvas { width: 100%; max-width: 100%; height: min(75vw, 42dvh); display: block; touch-action: none; }
+.room .hint { position: absolute; right: 10px; top: 10px; max-width: calc(100% - 100px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 11px; color: rgba(255,255,255,.85); background: rgba(20,30,40,.45); padding: 4px 8px; border-radius: 999px; pointer-events: none; }
+.status { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 6px 14px; font-size: 13px; color: var(--ink-2); background: var(--panel); border-top: 1px solid var(--line); min-height: 32px; }
+.status::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-a), var(--accent-b)); flex: 0 0 auto; }
+.status .stext { flex: 1 1 12ch; min-width: 0; }
+.status.bad { color: var(--ink); } .status.bad::before { background: var(--red); }
+.room canvas:focus-visible { outline: 2px solid var(--accent-a); outline-offset: -2px; }
+.room .reset { position: absolute; left: 10px; top: 10px; font-size: 11px; color: #fff; background: rgba(20,30,40,.5); border: 0; padding: 5px 9px; border-radius: 999px; cursor: pointer; }
+.room .reset:hover { background: rgba(20,30,40,.75); }
+.side { display: contents; }
+/* device dashboard: Home-Assistant-style tiles */
+.panel { display: flex; gap: 8px; padding: 8px 0 8px 12px; overflow-x: auto; background: var(--panel); border-top: 1px solid var(--line); scrollbar-width: thin; scroll-padding-inline: 12px; }
+/* the strip's end space (gap 8 + 4 = the 12 px start padding): trailing padding isn't scrollable in every engine */
+.panel::after { content: ''; flex: 0 0 4px; }
+.ent { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; position: relative; flex: 0 0 auto; display: flex; align-items: center; gap: 9px; min-width: 150px; max-width: 200px; text-align: left; border: 1px solid var(--line); border-radius: 12px; padding: 7px 10px 7px 8px; background: #fff; font-size: 12px; cursor: pointer; transition: border-color .15s, box-shadow .15s, opacity .3s; }
+.ent .ico { flex: 0 0 auto; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: #EEF3F2; color: #6E8785; transition: background .25s, color .25s; }
+.ent .ico svg { width: 20px; height: 20px; }
+.ent .txt { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; } /* the whole text column: every bar spans it */
+.ent b { font-size: 12px; font-weight: 650; color: var(--ink); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ent .val { color: var(--ink-2); font-size: 11.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ent.offline { opacity: .5; } .ent.offline .ico { background: #F1F3F3; color: #B4BDBC; }
+.ent.on .ico { background: #FFF1CC; color: #D9930A; }
+.ent.busy .ico { background: #DCEFFF; color: #1E7FD8; }
+.ent.bad { border-color: var(--red); } .ent.bad .ico { background: #FDE4DF; color: var(--red); } .ent.bad .val { color: var(--red); font-weight: 600; }
+.ent.selected { border-color: var(--accent-a); box-shadow: 0 0 0 3px rgba(41,238,229,.25); }
+.ent .ctl { display: flex; align-items: center; margin-top: 4px; height: 12px; }
+.ent .ctl[hidden] { display: none; }
+.ent .bar { flex: 1; min-width: 60px; height: 4px; border-radius: 4px; background: #e6eaef; overflow: hidden; }
+.ent .bar > i { display: block; height: 100%; width: 0; border-radius: 4px; background: #0f9d76; transition: width .25s; }
+.ent .sw { position: relative; flex: 0 0 auto; width: 22px; height: 12px; border-radius: 999px; background: #cfd6dd; transition: background .2s; }
+.ent .sw::after { content: ''; position: absolute; top: 2px; left: 2px; width: 8px; height: 8px; border-radius: 50%; background: #fff; transition: transform .2s; }
+.ent .sw.on { background: #0f9d76; } .ent .sw.on::after { transform: translateX(10px); }
+.ent.bad .bar > i, .ent.bad .sw.on { background: var(--red); }
+.ent.bad .bar, .ent.bad .sw { background: #F3C4B8; } /* a fault turns the control red at 0 % or off too */
+/* over the tile's top-right corner, out of the flow: a marked tile keeps its size (no value pushed onto a second line) */
+.ent .badge { display: none; position: absolute; top: -7px; right: 6px; font-size: 9.5px; line-height: 11px; font-weight: 700; letter-spacing: .04em; padding: 1px 6px; border-radius: 999px; white-space: nowrap; }
+.ent.marked-just .badge, .ent.marked-busy .badge { display: inline-block; }
+.ent.marked-just .badge { background: #E7F7F0; color: #17744A; }
+.ent.marked-busy .badge { background: #DCEFFF; color: #1667B3; }
+.ent.marked-just { border-color: var(--accent-a); box-shadow: 0 0 0 3px rgba(41,238,229,.22); }
+.ent.marked-busy { border-color: #93c5fd; }
+.ent.bad .badge { display: none; }
+.ent.bad.marked-just, .ent.bad.marked-busy { border-color: var(--red); box-shadow: none; } /* a fault wins */
+.ent.pop { animation: tilepop .7s cubic-bezier(.2,.9,.3,1.4); }
+@keyframes tilepop { 0% { transform: scale(.85); box-shadow: 0 0 0 0 rgba(41,238,229,.6); } 40% { transform: scale(1.06); } 100% { transform: scale(1); box-shadow: 0 0 0 10px rgba(41,238,229,0); } }
+.ent.bad.pop { animation-name: tilepop-bad; } /* a fault pops with a red halo, like its red ring: no cyan beside the red */
+@keyframes tilepop-bad { 0% { transform: scale(.85); box-shadow: 0 0 0 0 rgba(224,86,58,.55); } 40% { transform: scale(1.06); } 100% { transform: scale(1); box-shadow: 0 0 0 10px rgba(224,86,58,0); } }
+
+/* ---------- chat ---------- */
+.chat { display: flex; flex-direction: column; background: var(--bg); border-top: 1px solid var(--line); min-height: 0; }
+.chat-log { flex: 1; overflow-y: auto; padding: 14px 14px 8px; display: flex; flex-direction: column; gap: 10px; scroll-behavior: smooth; }
+.chat-input { display: flex; gap: 8px; padding: 10px 12px calc(10px + env(safe-area-inset-bottom)); background: var(--panel); border-top: 1px solid var(--line); position: sticky; bottom: 0; }
+.chat-input input { flex: 1; min-width: 0; height: 42px; border-radius: 21px; border: 1px solid var(--line-2); padding: 0 16px; font: inherit; font-size: 16px; background: #fff; outline: none; }
+.chat-input input:focus { border-color: var(--accent-a); box-shadow: 0 0 0 3px rgba(41,238,229,.2); }
+.chat-input input:disabled { background: #F5F8F7; }
+.chat-input button { width: 42px; height: 42px; border-radius: 50%; border: 0; background: linear-gradient(135deg, var(--accent-a), var(--accent-b)); cursor: pointer; font-size: 15px; color: #12222A; flex: 0 0 auto; }
+.chat-input button:disabled { opacity: .45; cursor: default; }
+.chat-log:focus { outline: none; }
+.msg { max-width: 88%; padding: 10px 13px; border-radius: 14px; line-height: 1.4; white-space: pre-line; overflow-wrap: anywhere; animation: pop .18s ease-out; }
+.msg.me { align-self: flex-end; background: var(--ink); color: #fff; border-bottom-right-radius: 4px; }
+.msg.ncb { align-self: flex-start; background: var(--panel); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+.msg.alert { border-color: var(--red); } .msg.alert b { display: block; color: var(--red); margin-bottom: 3px; }
+/* A calm note (title starting with 📝): nothing is wrong enough to alarm anyone. */
+.msg.alert.note { border-color: var(--line-2); } .msg.alert.note b { color: var(--ink); }
+.msg.typing { display: flex; gap: 4px; padding: 12px 14px; }
+.msg.typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-3); animation: blink 1s infinite; }
+.msg.typing span:nth-child(2) { animation-delay: .2s; } .msg.typing span:nth-child(3) { animation-delay: .4s; }
+@keyframes blink { 0%, 80%, 100% { opacity: .25; } 40% { opacity: 1; } }
+@keyframes pop { from { transform: translateY(6px); opacity: 0; } to { transform: none; opacity: 1; } }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; align-self: stretch; padding: 4px 0; }
+.chip { border: 1px solid var(--line-2); background: #fff; border-radius: 999px; padding: 8px 13px; font-size: 14px; cursor: pointer; text-align: left; overflow-wrap: anywhere; }
+.chip:hover { border-color: var(--accent-a); }
+.card { align-self: stretch; background: var(--panel); border: 1px solid var(--line-2); border-radius: 14px; padding: 12px 14px; animation: pop .18s ease-out; }
+.card { overflow-wrap: anywhere; }
+.card .intro { margin: 0 0 8px; font-weight: 600; }
+.card ol, .card ul { margin: 0 0 10px; padding-left: 20px; }
+.card li { margin: 4px 0; }
+.card li .link { border: 0; background: none; color: var(--ink-2); text-decoration: underline; cursor: pointer; margin-left: 8px; font-size: 13px; }
+.card .row { display: flex; gap: 8px; flex-wrap: wrap; }
+.card.end .btn.more { background: #fff; }
+.card .row.col { flex-direction: column; align-items: stretch; }
+.card .row.col .btn { text-align: left; }
+.card .btn.approve { background: linear-gradient(135deg, var(--accent-a), var(--accent-b)); border-color: transparent; color: #12222A; }
+.card.done .btn.approve { background: #E7F7F0; color: #1E8F55; }
+.card.done .link { display: none; }
+.card.halt.done .btn.approve:not(.chosen) { background: #fff; color: var(--ink); border-color: var(--line-2); }
+.card.done .btn.chosen { opacity: 1; background: #E7F7F0; color: #1E8F55; border-color: #BFE3DD; }
+.card.plan.skipped .btn.approve { background: #F1F5F4; color: var(--ink-2); }
+.card.plan.stopped .btn.approve { background: #F1F5F4; color: var(--ink-3); } /* live mode took over before it ran (chat.stopPending) */
+.card .btn.decline { background: #fff; color: var(--ink-2); }
+.card.plan.declined .btn.approve { background: #F1F5F4; color: var(--ink-3); }
+.card.plan.declined .btn.decline.chosen { opacity: 1; background: #FDECE8; color: #B5412A; border-color: #F3C4B8; }
+.card.plan.declined ol { color: var(--ink-3); text-decoration: line-through; text-decoration-color: rgba(92,122,120,.45); }
+.card.fail { border-color: var(--red); }
+.app.failed .beats, .app.failed .room, .app.failed .panel { display: none; }
+.app.failed .status { border-top: 0; } /* sits right under the header's own border */
+.app.failed .stage { display: block; overflow-y: auto; }
+.app.failed .side { display: block; max-width: 640px; margin: 0 auto; border: 0; }
+.card.action { display: flex; justify-content: flex-start; }
+.card.action.done, .card.qr.done { opacity: .55; pointer-events: none; }
+.card.qr { display: flex; gap: 14px; align-items: center; }
+.card.qr p { margin: 2px 0 8px; color: var(--ink-2); font-size: 13px; }
+.qr-code { flex: 0 0 auto; width: 84px; height: 84px; display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; padding: 6px; background: #fff; border: 1px solid var(--line); border-radius: 8px; }
+.qr-code i { background: #E9F1EF; border-radius: 1px; } .qr-code i.on { background: var(--ink); }
+.card.halt { border-color: var(--amber); }
+.card.replan { border-color: var(--green); }
+.card.replan .needs { margin: 6px 0 0; color: var(--ink); background: #FFF7E8; border: 1px solid #F3DDB0; padding: 8px 10px; border-radius: 8px; }
+/* live mode: the LIVE AI badge, the plan / checklist card, the access card, the live end card */
+.live-badge, .chat-input.live::before { font-size: 9.5px; font-weight: 700; letter-spacing: .06em; line-height: 1.5; padding: 1px 7px; border-radius: 999px; background: linear-gradient(135deg, var(--accent-a), var(--accent-b)); color: #12222A; }
+.live-badge { display: inline-block; vertical-align: 1px; }
+.chat-input.live::before { content: 'LIVE AI'; align-self: center; flex: 0 0 auto; }
+.msg.planning { display: flex; align-items: center; gap: 9px; color: var(--ink-2); }
+.msg.planning .dots { display: inline-flex; gap: 4px; flex: 0 0 auto; }
+.msg.planning .dots span { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-a); animation: lpulse 1.4s ease-in-out infinite; }
+.msg.planning .dots span:nth-child(2) { animation-delay: .2s; } .msg.planning .dots span:nth-child(3) { animation-delay: .4s; }
+@keyframes lpulse { 0%, 100% { opacity: .25; transform: scale(.8); } 50% { opacity: 1; transform: scale(1); } }
+.msg.live-say { border-color: var(--line-2); }
+/* the containing block of their screen-reader words (.sr) and the form's hidden field (.hp): positioned from the page
+   instead, they escape the chat log's scroll box and make the whole page scroll */
+.card.live-plan, .card.access { position: relative; }
+.card.live-plan .intro { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; }
+.card .lsteps { list-style: none; margin: 0 0 10px; padding: 0; }
+.lstep { display: grid; grid-template-columns: 1.5em minmax(0, 1fr); column-gap: 6px; margin: 6px 0; }
+.lstep .glyph { font-weight: 700; color: var(--ink-3); text-align: center; }
+.lstep .calls { grid-column: 2; }
+.lstep .calls:empty { display: none; }
+.lstep[data-status="running"] .glyph { color: #1E7FD8; animation: lpulse 1.4s ease-in-out infinite; }
+.lstep[data-status="done"] .glyph { color: #1E8F55; }
+.lstep[data-status="failed"] .glyph { color: var(--red); }
+.lstep[data-status="skipped"] .txt { color: var(--ink-3); }
+.card.live-plan.done .lstep .glyph { animation: none; }
+.live-plan .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.live-plan .call { display: inline-block; max-width: 100%; margin: 3px 4px 0 0; padding: 1px 7px; font-size: 11.5px; line-height: 1.45; color: var(--ink-2); background: #EEF6F5; border: 1px solid var(--line); border-radius: 6px; overflow-wrap: anywhere; }
+.live-plan .call.bad { color: #B5412A; background: #FDECE8; border-color: #F3C4B8; }
+.card .lloose { list-style: none; margin: 0 0 8px; padding: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 3px; }
+.card .lloose li.call { margin: 0; }
+.ltimeline { margin-top: 8px; padding: 6px 9px; max-height: 11.5em; overflow-y: auto; font-size: 12.5px; line-height: 1.4; background: #F7FBFA; border: 1px solid var(--line); border-radius: 8px; }
+.ltimeline .trow { padding: 2px 0; color: var(--ink-2); }
+.ltimeline .trow[data-kind="fault"], .ltimeline .trow[data-ok="false"] { color: var(--red); }
+.card.live-plan.done .btn.approve { background: #F1F5F4; color: var(--ink-3); }
+.card.live-plan.declined ol { color: var(--ink-3); text-decoration: line-through; text-decoration-color: rgba(92,122,120,.45); }
+.card.live-plan.declined .btn.approve { background: #F1F5F4; color: var(--ink-3); }
+.card.live-plan.declined .btn.decline.chosen { opacity: 1; background: #FDECE8; color: #B5412A; border-color: #F3C4B8; }
+.card.end.live .left { margin: 0 0 10px; font-size: 13.5px; }
+.card.end.live .btn.reset { background: #fff; }
+/* Phones: an end card taller than the chat log is shown from its top (chat.js). With the live button it needs one more
+   line of buttons, which a small phone (360 x 640) can't fit under the story: the buttons then stay in view at the foot
+   of the log, over the end of the story, until the visitor scrolls on. Where the card fits, nothing moves. (Desktop's
+   log is tall enough, and its history never gets a row of buttons riding over its own text.) */
+@media (max-width: 959px) {
+  .card.end.live .row { position: sticky; bottom: 0; z-index: 1; margin: -6px 0; padding: 6px 0; background: var(--bg); }
+  .card.end:has(.live-go) .row { position: sticky; bottom: 0; z-index: 1; margin: -6px 0; padding: 6px 0; background: var(--bg); }
+}
+.card.access .intro { margin-bottom: 6px; }
+.card.access .anote { margin: 0 0 8px; color: var(--ink-2); font-size: 13.5px; }
+.card.access form.code { display: flex; gap: 8px; margin: 6px 0 8px; }
+.card.access input, .card.access select, .card.access textarea { width: 100%; min-width: 0; padding: 8px 11px; font: inherit; font-size: 16px; color: var(--ink); background: #fff; border: 1px solid var(--line-2); border-radius: 10px; outline: none; }
+.card.access input:focus, .card.access select:focus, .card.access textarea:focus { border-color: var(--accent-a); box-shadow: 0 0 0 3px rgba(41,238,229,.2); }
+.card.access form.code input { flex: 1; height: 42px; text-transform: uppercase; letter-spacing: .08em; }
+.card.access form.code .btn { flex: 0 0 auto; }
+.card.access .lnk { display: inline-block; margin: 2px 12px 0 0; padding: 2px 0; border: 0; background: none; color: var(--ink-2); font-size: 13.5px; text-decoration: underline; cursor: pointer; }
+.card.access .lnk[hidden] { display: none; }
+.card.access form.apply { display: grid; gap: 8px; margin: 8px 0; }
+.card.access form.apply[hidden] { display: none; }
+.card.access .fld { display: grid; gap: 3px; font-size: 12.5px; font-weight: 600; color: var(--ink-2); }
+.card.access .hp { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+.card.access .use { margin: 0; font-size: 12.5px; color: var(--ink-2); }
+.card.access .applied { margin: 8px 0; font-weight: 600; color: #1E8F55; }
+.card.access .err { margin: 4px 0 8px; padding: 6px 10px; font-size: 13.5px; color: #B5412A; background: #FDECE8; border: 1px solid #F3C4B8; border-radius: 8px; }
+.card.access .err[hidden] { display: none; }
+.card.access.done { opacity: .55; pointer-events: none; }
+.card.access .follow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 4px 0 8px; font-size: 13px; color: var(--ink-2); }
+.card.access .follow .social-link { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px 4px 8px; border: 1px solid var(--line-2); border-radius: 999px; background: #fff; color: var(--ink); font-weight: 600; text-decoration: none; }
+.card.access .follow .social-link:hover { border-color: var(--accent-a); }
+.card.access .follow .social-link svg { width: 15px; height: 15px; flex: 0 0 auto; }
+.card.access .follow .youtube svg { color: #FF0033; } .card.access .follow .linkedin svg { color: #0A66C2; } .card.access .follow .x svg { color: #000; }
+@media (prefers-reduced-motion: reduce) { .msg.planning .dots span, .lstep[data-status="running"] .glyph { animation: none; opacity: 1; } }
+.card.end { background: linear-gradient(180deg, #fff, #EEFBF9); text-align: left; }
+.card.end h3 { margin: 0 0 6px; font-size: 18px; letter-spacing: -0.01em; text-wrap: balance; } /* no one-word last line on a phone */
+.card.end p { margin: 0 0 12px; color: var(--ink-2); }
+/* end card: "What if something fails?" / "Try another failure" (a warning sign, then the label) */
+.card.end .btn.whatif { display: inline-flex; align-items: center; gap: 6px; background: #fff; border-color: var(--amber); }
+.card.end .btn.whatif svg { width: 16px; height: 16px; flex: 0 0 auto; color: #D9930A; }
+.card.end .btn.whatif:not(:disabled):hover { background: #FFF8E8; }
+/* the picker of failures: tiles like the dashboard's, two or more to a row; the specials full width under "Or" */
+.card.failures .intro { margin-bottom: 2px; }
+.card.failures .sec { margin: 10px 0 6px; font-size: 11px; font-weight: 650; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-3); }
+.card.failures .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(138px, 1fr)); gap: 8px; }
+.card.failures .tiles.special { grid-template-columns: minmax(0, 1fr); }
+.pick { display: flex; align-items: center; gap: 9px; min-width: 0; text-align: left; border: 1px solid var(--line); border-radius: 12px; padding: 7px 10px 7px 8px; background: #fff; font-size: 12px; cursor: pointer; transition: border-color .15s, box-shadow .15s, opacity .2s; }
+.pick .ico { flex: 0 0 auto; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: #EEF3F2; color: #6E8785; transition: background .2s, color .2s; }
+.pick .ico svg { width: 20px; height: 20px; }
+.pick .txt { min-width: 0; display: flex; flex-direction: column; }
+.pick b { font-size: 12.5px; font-weight: 650; color: var(--ink); line-height: 1.25; overflow-wrap: anywhere; }
+.pick .hint { margin-top: 1px; color: var(--ink-3); font-size: 11px; line-height: 1.25; }
+.pick.special .ico { background: #FFF1CC; color: #D9930A; }
+.pick:not(:disabled):hover { border-color: var(--red); }
+.pick:not(:disabled):hover .ico { background: #FDE4DF; color: var(--red); }
+.pick:focus-visible { outline: none; border-color: var(--accent-a); box-shadow: 0 0 0 3px rgba(41,238,229,.35); }
+.card.failures.done .pick { opacity: .45; cursor: default; }
+.card.failures.done .pick.chosen { opacity: 1; border-color: var(--red); }
+.card.failures.done .pick.chosen .ico { background: #FDE4DF; color: var(--red); }
+
+@media (min-width: 960px) {
+  .stage { grid-template-columns: minmax(0, 1fr) 440px; grid-template-rows: minmax(0, 1fr) auto; min-height: 0; }
+  .room { grid-column: 1; grid-row: 1; }
+  .room canvas { position: absolute; inset: 0; aspect-ratio: auto; height: 100%; width: 100%; }
+  .status { grid-column: 1; grid-row: 2; }
+  .side { display: flex; flex-direction: column; grid-column: 2; grid-row: 1 / 3; min-height: 0; border-left: 1px solid var(--line); }
+  .panel { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 10px 12px; overflow: visible; border-top: 0; flex: 0 0 auto; max-height: 46%; overflow-y: auto; }
+  .panel::after { display: none; }
+  .ent { min-width: 0; max-width: none; }
+  .ent .val { white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; line-height: 1.3; }
+  .chat { flex: 1; min-height: 0; border-top: 1px solid var(--line); }
+}
+
+@media (max-width: 959px) {
+  .room canvas { height: clamp(140px, calc(100dvh - 420px), min(75vw, 42dvh)); }
+  /* Live mode (.live-edit) adds the editing rows: the thermostat's two 32 px sliders lift the strip from ~50 to ~110 px and the
+     status row takes two lines (the clock beside it); and the Automations summary line (36 px, its list folded). The room
+     gives up that height (74 + 36 px), not the chat. */
+  .app.live-edit .room canvas { height: max(110px, calc(clamp(140px, calc(100dvh - 420px), min(75vw, 42dvh)) - 110px)); }
+  .app.live-edit .status { min-height: 46px; } /* two lines of status text, always: the row doesn't jump with the message */
+  .ent { max-width: 240px; }
+  .ent .ctl[hidden] { display: flex; visibility: hidden; } /* same tile height with or without a control */
+  /* A slimmer strip, so the control row costs 1 px, not 13: at 360 x 640 an end card shown from its top keeps its
+     buttons in view. (The strip's 6 px still holds a badge, which sits 6 px over its tile's top edge.) */
+  .panel { padding-top: 6px; padding-bottom: 6px; }
+  .ent { padding-top: 5px; padding-bottom: 5px; }
+  .ent .ctl { margin-top: 2px; height: 10px; }
+  .ent .sw { width: 18px; height: 10px; } .ent .sw::after { width: 6px; height: 6px; } .ent .sw.on::after { transform: translateX(8px); }
+  /* No disabled input bar while a request runs or an end card is up (chat.js marks it .off): the conversation gets its
+     height, so an end card and its buttons fit on a phone. It is back with the chips, when there is something to type. */
+  .chat-input.off { display: none; }
+}
+
+/* phones held sideways: room left, dashboard and chat right (stacked, the chat got 33 px) */
+@media (max-width: 959px) and (orientation: landscape) and (max-height: 540px) {
+  .top, .beats { padding-left: max(12px, env(safe-area-inset-left)); padding-right: max(12px, env(safe-area-inset-right)); }
+  .top { padding-top: 6px; padding-bottom: 6px; }
+  .beats { padding-top: 4px; }
+  .beats button { padding: 3px 0 5px; }
+  .stage { grid-template-columns: minmax(0, 1fr) minmax(300px, 46%); grid-template-rows: minmax(0, 1fr) auto; padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right); }
+  .room { grid-column: 1; grid-row: 1; }
+  .room canvas, .app.live-edit .room canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .app.live-edit .status { min-height: 32px; }
+  .status { grid-column: 1; grid-row: 2; }
+  .side { display: flex; flex-direction: column; grid-column: 2; grid-row: 1 / 3; min-height: 0; border-left: 1px solid var(--line); }
+  .panel { flex: 0 0 auto; border-top: 0; }
+  .chat { flex: 1; min-height: 0; }
+  .chat-input { padding-top: 6px; padding-bottom: calc(6px + env(safe-area-inset-bottom)); }
+}
+
+@media (max-width: 520px) {
+  .top { gap: 8px; padding: 8px 12px; }
+  .top .brand { display: none; }
+  .top .btn.secondary { padding: 5px 9px; font-size: 12.5px; }
+  .top .btn.primary { padding: 5px 10px; font-size: 12.5px; }
+  .top .social-label { display: none; }
+  .app:not(.picker-mode) .top .social { display: none; } /* room for the scene's name; every end card has the links */
+  .top .scene-name::before { content: none; }
+  .top .spacer { display: none; } .top .spacer + .btn, .top .spacer + .social { margin-left: auto; } /* one gap less: "Home, away for a week" fits at 360 px */
+  .top .spacer + .live-top[hidden] + .btn { margin-left: auto; } /* Live AI (first after the spacer) hidden: "‹ Scenes" stays at the right */
+  .app.picker-mode .top .brand { display: block; }
+  .app.picker-mode .top .scene-name::before { content: '/'; }
+  .scene-card .thumb { aspect-ratio: 16/6; }
+  .beats { padding: 6px 8px 0; gap: 2px; }
+  .beats button { font-size: 10.5px; letter-spacing: .03em; }
+  .beats button:not(:disabled):not(.now)::after { content: ''; }
+  .beats button:not(:disabled):not(.now) { text-decoration: underline dotted; text-underline-offset: 3px; }
+  .card.end { padding: 11px 12px; } /* a little tighter on a phone, so the headline, the story, the buttons and the follow line fit */
+  .card.end h3 { font-size: 17px; line-height: 1.3; margin-bottom: 4px; }
+  .card.end p { margin-bottom: 10px; }
+  .card.end .row { gap: 6px; }
+  .card.end .row .btn { padding: 7px 12px; }
+  .card.end .follow { margin-top: 10px; padding-top: 8px; }
+  .card.end .follow .long { display: none; } /* "Follow" and the three links on one line */
+  .card.failures .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+  .card.failures .tiles.special { grid-template-columns: minmax(0, 1fr); }
+  .chat-input.live::before { content: 'LIVE'; }
+  .card.end.live .row { gap: 5px; }
+  .card.end.live .row .btn { padding: 6px 10px; font-size: 13px; }
+  .card.end.live .left { margin-bottom: 8px; font-size: 13px; }
+  .live-plan .call { white-space: normal; }
+  .ltimeline { font-size: 12px; }
+  .pick { gap: 7px; padding: 6px 8px 6px 6px; }
+  .pick .ico { width: 30px; height: 30px; } .pick .ico svg { width: 18px; height: 18px; }
+}
+
+/* the narrowest phones (360 px): smaller end-card type, so its last two buttons share a row and the follow line stays one line */
+@media (max-width: 380px) {
+  .card.end { padding: 10px 11px; }
+  .card.end h3 { font-size: 16.5px; }
+  .card.end p { font-size: 14px; line-height: 1.4; }
+  .card.end .row .btn { font-size: 13px; padding: 7px 10px; }
+  .card.end .follow { gap: 5px; font-size: 12.5px; }
+  .card.end .follow .social-link { padding: 4px 8px 4px 7px; }
+}
+
+/* ---- editable cards (live mode): controls right on the card, and the clock beside the status line ---- */
+.ent:focus-visible { outline: 2px solid var(--accent-a); outline-offset: 2px; }
+.ent .edits { display: flex; flex-direction: column; gap: 3px; margin-top: 4px; }
+.clockctl[hidden], .clockctl .clk-pick[hidden], .clockctl .clk-why[hidden] { display: none; }
+.ent.has-edits .ctl, .ent.has-edits[class] .ctl[hidden] { display: none; } /* the controls replace the display bar and switch */
+.ent .erow { display: flex; align-items: center; gap: 6px; min-height: 22px; min-width: 0; }
+.ent .erow.switch { gap: 5px; }
+.ent .elab { flex: 0 0 auto; font-size: 11px; color: var(--ink-2); }
+.ent .eval { flex: 0 0 auto; min-width: 3.2ch; text-align: right; font-size: 12px; font-weight: 650; color: #138a9a; font-variant-numeric: tabular-nums; }
+.ent .edits.one { padding-right: 0; }
+.ent .edits.one .eval { position: absolute; right: 10px; top: 8px; }
+.ent .edits.one .erow { padding-top: 0; }
+.ent .edit-range { -webkit-appearance: none; appearance: none; flex: 1 1 auto; min-width: 48px; height: 22px; margin: 0; padding: 0; background: transparent; cursor: pointer; --fill: 0%; }
+.ent .edit-range:focus-visible { outline: 2px solid var(--accent-a); outline-offset: 2px; border-radius: 6px; }
+.ent .edit-range::-webkit-slider-runnable-track { height: 6px; border-radius: 6px; background: linear-gradient(90deg, #19c3d6, #36c98a) left / var(--fill) 100% no-repeat, #e6eef0; }
+.ent .edit-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 16px; height: 16px; margin-top: -5px; border-radius: 50%; background: #fff; border: 2px solid #19b3c6; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+.ent .edit-range::-moz-range-track { height: 6px; border-radius: 6px; background: #e6eef0; }
+.ent .edit-range::-moz-range-progress { height: 6px; border-radius: 6px; background: linear-gradient(90deg, #19c3d6, #36c98a); }
+.ent .edit-range::-moz-range-thumb { width: 12px; height: 12px; border-radius: 50%; background: #fff; border: 2px solid #19b3c6; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+.ent .edit-sw { border: 0; padding: 0; cursor: pointer; width: 26px; height: 15px; }
+.ent .edit-sw::after { top: 2px; left: 2px; width: 11px; height: 11px; }
+.ent .edit-sw.on { background: #36c98a; } .ent .edit-sw.on::after { transform: translateX(11px); }
+.ent .edit-sw::before { content: ''; position: absolute; inset: -9px -5px; } /* a bigger hit area than the switch itself */
+.ent .edit-sw:focus-visible { outline: 2px solid var(--accent-a); outline-offset: 2px; }
+.ent.bad .edit-sw.on { background: #F3C4B8; }
+.ent .edit-range:disabled, .ent .edit-sw:disabled { opacity: .45; cursor: default; }
+.ent .edit-range:disabled { pointer-events: none; }
+
+.clockctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-left: auto; font-size: 12px; color: var(--ink-2); }
+.clockctl .clk-label { font-weight: 650; color: var(--ink); margin-right: 2px; }
+.clockctl .clk-pick { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.clockctl .clk-btn { min-height: 26px; padding: 2px 10px; border: 1px solid #9fd9e1; border-radius: 999px; background: #fff; color: #138a9a; font-size: 12px; font-weight: 600; cursor: pointer; }
+.clockctl .clk-btn:hover:not(:disabled) { border-color: var(--accent-a); }
+.clockctl .clk-btn:disabled { color: var(--ink-3); border-color: var(--line-2); cursor: default; }
+.clockctl .clk-btn:focus-visible, .clockctl select:focus-visible, .clockctl input:focus-visible { outline: 2px solid var(--accent-a); outline-offset: 1px; }
+.clockctl .clk-why { font-size: 12px; color: var(--ink-2); line-height: 1.3; }
+.clockctl .clk-day, .clockctl .clk-time { min-height: 26px; padding: 1px 6px; border: 1px solid var(--line-2); border-radius: 8px; background: #fff; font: inherit; font-size: 12px; color: var(--ink); }
+@media (max-width: 959px) {
+  .ent.has-edits { align-items: flex-start; max-width: 260px; }
+  .ent.has-edits .ico { margin-top: 3px; }
+  .ent .erow { min-height: 32px; }
+  .ent .edit-range { height: 32px; min-width: 70px; }
+  .ent .edits.one .eval { top: 6px; }
+  .ent .edits { margin-top: 2px; gap: 0; }
+  .clockctl .clk-btn, .clockctl .clk-day, .clockctl .clk-time { min-height: 32px; }
+  .clockctl .clk-day, .clockctl .clk-time { font-size: 16px; } /* no zoom on focus */
+  /* The clock control sits in the status row, beside the status text (which gives up width, up to two lines), so live mode
+     costs the chat no row of its own. Open, its picker (or the reason, a sentence) takes the row's second line. */
+  .status:has(.clockctl:not([hidden])) { flex-wrap: nowrap; }
+  .status:has(.clockctl:not([hidden])) .stext { flex: 1 1 0; line-height: 1.25; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
+  .clockctl { flex: 0 0 auto; flex-wrap: nowrap; gap: 4px; margin-left: 0; }
+  .clockctl .clk-btn { padding: 2px 8px; }
+  .status:has(.clk-pick:not([hidden])), .status:has(.clk-why:not([hidden])) { flex-wrap: wrap; }
+  .status:has(.clk-pick:not([hidden])) .clockctl, .status:has(.clk-why:not([hidden])) .clockctl { flex: 1 1 100%; flex-wrap: wrap; }
+}
+
+/* ---- live mode: the Automations section under the device cards (js/engine/automations.js; spec 2026-11-08 §1) ---- */
+.autos[hidden], .autos .autos-body[hidden], .autos .alist[hidden], .autos .aempty[hidden] { display: none; }
+.autos { position: relative; min-width: 0; background: var(--panel); border-top: 1px solid var(--line); }
+.autos-head { display: flex; align-items: center; gap: 6px; width: 100%; min-height: 35px; margin: 0; padding: 0 14px; border: 0; background: none; font: inherit; font-size: 13px; line-height: 1.3; color: var(--ink-2); text-align: left; cursor: pointer; }
+.autos-head:hover .autos-title { color: #138a9a; }
+.autos-head:focus-visible { outline: 2px solid var(--accent-a); outline-offset: -2px; border-radius: 6px; }
+.autos-title { font-weight: 650; color: var(--ink); }
+.autos-count { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.autos-chev { margin-left: auto; flex: 0 0 auto; font-size: 11px; color: var(--ink-3); transition: transform .2s; }
+.autos.open .autos-chev { transform: rotate(180deg); }
+/* folded, the summary line carries a card's JUST RAN / HELD */
+.autos-badge { flex: 0 0 auto; font-size: 9.5px; line-height: 11px; font-weight: 700; letter-spacing: .04em; padding: 1px 6px; border-radius: 999px; background: #E7F7F0; color: #17744A; }
+.autos-badge:empty, .autos.open .autos-badge { display: none; }
+.autos-head.flash-held .autos-badge { background: #FFF1CC; color: #8A5A00; }
+.autos-body { padding: 2px 12px 10px; }
+.autos .alist { list-style: none; margin: 0; padding: 6px 0 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+.autos .aempty { margin: 0; padding: 0 2px; font-size: 13px; line-height: 1.4; color: var(--ink-2); }
+/* a card: like a device card (icon, text, switch), its badge over the top-right corner */
+.auto { position: relative; display: flex; align-items: center; gap: 9px; min-width: 0; padding: 7px 10px 7px 8px; background: #fff; border: 1px solid var(--line); border-radius: 12px; font-size: 12px; transition: border-color .15s, box-shadow .15s; }
+.auto .aico { flex: 0 0 auto; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: #FFF1CC; font-size: 15px; line-height: 1; }
+.auto[data-kind="schedule"] .aico { background: #DCEFFF; }
+.auto .atxt { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.auto .atext { font-size: 12.5px; font-weight: 600; line-height: 1.3; color: var(--ink); overflow-wrap: anywhere; }
+.auto .asub { font-size: 11.5px; line-height: 1.3; color: var(--ink-2); }
+.auto.off .atext, .auto.done .atext { color: var(--ink-2); } /* still content: ink-2 keeps it at 4.5:1 or better */
+.auto.off .aico, .auto.done .aico { background: #F1F3F3; filter: grayscale(1); opacity: .7; }
+.auto .sw[hidden] { display: none; } /* a done one-off has no switch */
+/* the switch: the editable cards' switch (.ent .edit-sw), with a fingertip-sized hit area */
+.auto .sw { position: relative; flex: 0 0 auto; width: 26px; height: 15px; margin: 0 2px 0 4px; padding: 0; border: 0; border-radius: 999px; background: #cfd6dd; cursor: pointer; transition: background .2s; }
+.auto .sw::after { content: ''; position: absolute; top: 2px; left: 2px; width: 11px; height: 11px; border-radius: 50%; background: #fff; transition: transform .2s; }
+.auto .sw.on { background: #36c98a; } .auto .sw.on::after { transform: translateX(11px); }
+.auto .sw::before { content: ''; position: absolute; inset: -12px -8px; }
+.auto .sw:focus-visible { outline: 2px solid var(--accent-a); outline-offset: 2px; }
+.auto .badge { display: none; position: absolute; top: -7px; right: 6px; font-size: 9.5px; line-height: 11px; font-weight: 700; letter-spacing: .04em; padding: 1px 6px; border-radius: 999px; white-space: nowrap; }
+.auto.flash-ran .badge, .auto.flash-held .badge { display: inline-block; }
+.auto.flash-ran { border-color: var(--accent-a); box-shadow: 0 0 0 3px rgba(41,238,229,.22); }
+.auto.flash-ran .badge { background: #E7F7F0; color: #17744A; }
+.auto.flash-held { border-color: var(--amber); box-shadow: 0 0 0 3px rgba(228,169,58,.2); }
+.auto.flash-held .badge { background: #FFF1CC; color: #8A5A00; }
+@media (prefers-reduced-motion: reduce) { .autos-chev, .auto .sw, .auto .sw::after { transition: none; } }
+
+/* Desktop: open under the device cards (folded by default on windows under 900 px tall, js/engine/automations.js); a long
+   list scrolls in its own box. In live mode the chat keeps at least min(45%, 280 px): the section shrinks to its summary
+   line first, then the cards' box scrolls. */
+@media (min-width: 960px) {
+  .autos { flex: 0 1 auto; display: flex; flex-direction: column; max-height: min(30%, 220px); min-height: 36px; }
+  .autos-body { flex: 0 1 auto; min-height: 0; overflow-y: auto; scrollbar-width: thin; }
+  .app.live-edit .chat { min-height: min(45%, 280px); }
+  .app.live-edit .panel { flex-shrink: 1; min-height: 0; }
+}
+/* Phones: one 36 px summary line (the room gave up that height, so the chat keeps its own); unfolded, the list drops
+   over the top of the chat instead of pushing it down. Escape or the summary line folds it again. */
+@media (max-width: 959px) {
+  .autos-head { padding: 0 12px; }
+  .autos .autos-body { position: absolute; left: 0; right: 0; top: 100%; z-index: 4; max-height: min(52vh, 340px); max-height: min(52dvh, 340px, var(--autos-below, 340px)); overflow-y: auto; padding: 4px 12px 12px; background: var(--panel); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line-2); box-shadow: 0 12px 24px rgba(38,56,66,.16); }
+  .auto { padding-top: 6px; padding-bottom: 6px; }
+  .auto .sw { width: 30px; height: 17px; } .auto .sw::after { width: 13px; height: 13px; } .auto .sw.on::after { transform: translateX(13px); }
+}
+/* Phones held sideways (live mode): the side column is too short to give anything up, so the summary line goes to the
+   room column, under the room, which gives up its 31 px; the side column stays the cards, then the chat. Open, the list
+   rises over the room. */
+@media (max-width: 959px) and (orientation: landscape) and (max-height: 540px) {
+  .autos-head { min-height: 30px; }
+  .app.live-edit .stage { grid-template-rows: auto minmax(0, 1fr) auto auto; }
+  .app.live-edit .room { grid-column: 1; grid-row: 1 / 3; }
+  .app.live-edit .side { display: contents; }
+  .app.live-edit .panel { grid-column: 2; grid-row: 1; border-left: 1px solid var(--line); }
+  .app.live-edit .stage .chat { grid-column: 2; grid-row: 2 / -1; border-left: 1px solid var(--line); }
+  .app.live-edit .autos { grid-column: 1; grid-row: 3; }
+  .app.live-edit .status { grid-column: 1; grid-row: 4; }
+  .app.live-edit .autos .autos-body { top: auto; bottom: 100%; max-height: min(260px, var(--autos-above, 260px)); border-top: 1px solid var(--line-2); border-bottom: 0; box-shadow: 0 -12px 24px rgba(38,56,66,.16); }
+}
+/* the header's Live AI on phones: no sparkle, and at 360 px one gap less, so "Home, away for a week" still fits */
+@media (max-width: 520px) { .top .live-top .spark { display: none; } }
+@media (max-width: 380px) { .app:not(.picker-mode) .top:has(.live-top:not([hidden])) { gap: 6px; } }

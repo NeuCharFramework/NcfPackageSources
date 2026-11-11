@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261109
     修改描述：v0.1.0-preview1 后台时间改用使用日所在时区（AdminTime.InZone16 取代 Eastern16）
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.1.0-preview1 邀请话术改指向本站自带的演示页（由调用方传入地址）
+
 ----------------------------------------------------------------*/
 
 using System.Globalization;
@@ -25,8 +28,6 @@ namespace Senparc.Xncf.NeuCharBoxLive.Domain.Services;
 /// <summary>The ready-to-copy message the Applications page shows for an approved application (Leo sends it himself).</summary>
 public static class InviteMessage
 {
-    public const string DemoUrl = "https://leozheng265.github.io/neucharbox-demo/";
-
     static readonly Regex SafeName = new(@"^[\p{L} '\-]{1,60}$", RegexOptions.CultureInvariant | RegexOptions.NonBacktracking);
 
     /// <summary>The applicant's name if it is only letters, spaces, apostrophes and hyphens (at most 60); otherwise "there". The name is typed by a stranger and Leo pastes this message, so no link, email or line break gets through.</summary>
@@ -36,10 +37,13 @@ public static class InviteMessage
         return n is not null && SafeName.IsMatch(n) ? n : "there";
     }
 
-    /// <summary>The daily limit is the code's own, so a code whose limit was changed says so.</summary>
-    public static string For(string? name, InviteCode code) =>
+    /// <summary>
+    /// The daily limit is the code's own, so a code whose limit was changed says so. <paramref name="demoUrl"/> is this
+    /// site's own demo page (/live/demo/), as the admin's browser reached it.
+    /// </summary>
+    public static string For(string? name, InviteCode code, string demoUrl) =>
         $"Hi {Greeting(name)}, here's your NeuCharBox live AI invite code: {code.Code}. " +
-        $"Open {DemoUrl}, try a guided request, then press \"Try your own request (live AI)\". " +
+        $"Open {demoUrl}, press \"Try it live\" and enter the code. " +
         $"It's good for {code.DailyLimit.ToString(CultureInfo.InvariantCulture)} requests a day.";
 }
 

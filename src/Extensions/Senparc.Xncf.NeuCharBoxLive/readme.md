@@ -1,13 +1,18 @@
 ﻿## Senparc.Xncf.NeuCharBoxLive
 
 NeuCharBox live AI demo as an XNCF module of the NCF host: invite-only live sessions where a visitor asks an AI to run a
-simulated room (lamp, blinds, thermostat, ...), approves its plan, and watches the result stream in. The public demo
-(`https://leozheng265.github.io`) is the browser side; this module is the server side.
+simulated room (lamp, blinds, thermostat, ...), approves its plan, and watches the result stream in. The module is both
+sides: the live API, and the demo's pages served by the site itself at `/live/demo/`. The public demo
+(`https://leozheng265.github.io`) is the same pages, guided requests only.
 
 ### What it does
 
 - **Live API** at `/live/api` (health, access check, apply, sessions, SSE events, requests, approve/decline, what-if, reset,
   hand edits, clock advance, automations). The wire contract is [docs/live-api-contract.md](docs/live-api-contract.md).
+- **Demo pages** at `/live/demo/`: the demo's own pages (3D scenes, guided requests), with a "Try it live" button in
+  every scene that talks to this site's `/live/api`. Same origin, so there is nothing to allow in the browser and it
+  works on any address the site has. The files are the `LiveDemo/` folder, embedded in the module; it is a copy of the
+  demo repo written by that repo's `node tools/sync-module.mjs <this folder>` and is never edited here.
 - **Admin pages** inside the NCF admin (module menu "NeuCharBox Live", English and Simplified Chinese): Settings (the module's
   home), Codes, Applications, Runs.
 - **Stores** in the NCF database: invite codes, applications, the run log and one settings row (tables
@@ -17,8 +22,8 @@ simulated room (lamp, blinds, thermostat, ...), approves its plan, and watches t
   Settings page. The module holds no API key of its own.
 - Visitor text (request text, plan, summary) is blanked 30 days after a run; token, call and latency numbers stay.
 
-The module hooks its own `/live/api` branch in from `UseXncfModule`, so the host's `Program.cs` needs no edit. Only
-`/live/api` and below is touched: CORS for the allowed origins (preflights answered there, including
+The module hooks its own `/live/api` branch and the `/live/demo` files in from `UseXncfModule`, so the host's `Program.cs`
+needs no edit. Under `/live/demo` only GET and HEAD for a file the demo has are answered. Under `/live/api`: CORS for the allowed origins (preflights answered there, including
 `Access-Control-Allow-Private-Network`), a JSON `404 no_request` for an unknown live path and a JSON `405 bad_request` for a
 wrong method. Everything else on the site, including its admin login, is the host's.
 
@@ -53,7 +58,7 @@ off, no model yet, ...) they stay open: applications keep coming in while you se
 Built-in allowed origins: the published demo, `https://leozheng265.github.io`; in the Development environment only, also
 `http://localhost:8765` (a local copy of the demo).
 
-The page also shows the status, today's token spend, and a "Try it" link to the demo against this site. If AI Kernel can't be
+The page also shows the status, today's token spend, and a "Try it" link to the demo pages on this site (`/live/demo/`). If AI Kernel can't be
 read (not installed or not enabled), the model pickers are empty and the page says so.
 
 ### Configuration (`NcbLive` section of appsettings)
@@ -94,17 +99,22 @@ moves from New York to UTC: set `NcbLive:UsageTimeZone` to `America/New_York` to
 1. In the site's admin, install and enable AI Kernel first (the model pickers read it), and add a chat model there. Then
    install "NeuCharBox Live" (Install, then Enable) and choose the model on the module's Settings page.
 2. On the Codes page, create an invite code.
-3. Open the "Try it" link on the Settings page and enter the code.
+3. Open the "Try it" link on the Settings page (`/live/demo/` on this site), press "Try it live" in the Home scene and
+   enter the code.
 
-The public demo reaches `http://localhost` and `http://127.0.0.1` sites through the `?liveApi=` address parameter. Any other
-address (an HTTPS site, a LAN host) is reachable only through a demo build whose `apiBase` is set to it, and that site's
-origin must be on the allowed origins list. A public https page calling a localhost site also needs the browser's
-private-network preflight, which the module answers.
+Live AI runs the Home scene and "Build your own" today. In the other scenes the button says the scene isn't live yet;
+without a chosen model, or with the module not enabled, it says live is off and points here.
+
+The public demo can still be pointed at a `http://localhost` or `http://127.0.0.1` site with the `?liveApi=` address
+parameter (that origin is on the built-in allowed list, and the module answers the browser's private-network
+preflight), but the site's own `/live/demo/` needs none of that.
 
 ### Layout
 
 - `Register.cs`, `Register.Area.cs`, `Register.Database.cs`: module registration, admin menu, database.
-- `Api/`: the HTTP side (controller, SSE, `/live/api` pipeline, CORS, error bodies, retry handler for model calls).
+- `Api/`: the HTTP side (controller, SSE, `/live/api` pipeline, CORS, error bodies, retry handler for model calls, the
+  `/live/demo` files).
+- `LiveDemo/`: the demo's pages, copied from the demo repo (see "What it does").
 - `Engine/`: the live engine (scenes, simulator, rules and schedules, sessions, AI request runner, access and limits). It has
   no dependency on ASP.NET Core or NCF; the runtime and stores are plugged in from the module.
 - `Domain/`: entities, migrations, and services (settings, EF stores, module runtime, AI Kernel clients, retention).
