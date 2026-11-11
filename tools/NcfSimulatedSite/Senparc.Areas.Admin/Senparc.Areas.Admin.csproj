@@ -159,15 +159,13 @@
     25、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.12
     [2026-11-10] v0.12.27 将 Oracle 提示词引用列改为 NCLOB
     1、AdminChat 消息的 PromptReferencesJson 在 Oracle 上使用 NCLOB，避免超过 NVARCHAR2(2000) 时被截断
-    [2026-11-11] v0.12.28 适配 Microsoft Agent Framework Harness 1.28
-    1、移除已删除的 DisableFileAccess，文件访问保持默认关闭
-    2、依赖 Senparc.AI.AgentKernel 0.1.16
-    [2026-11-11] v0.12.28 统一 XNCF Register 显示元数据与多语言资源键
-    1、增加 XncfRegisterText，以稳定资源键和中文基准文本解析菜单名称与模块说明。
-    2、迁移模块注册信息并同步模板、Workspace、DesktopBridge 与 Connectors 的资源目录，保留 IXncfRegister 字符串契约。
-    [2026-11-11] v0.12.28 内置菜单按稳定标识解析多语言显示
-    1、内置系统菜单和已加载 XNCF 模块菜单根据当前文化重新解析显示文本。
-    2、用户自定义菜单继续使用数据库原文，不触发数据迁移。</PackageReleaseNotes>
+    [2026-11-11] v0.12.28 适配 Agent Framework Harness 1.28，并完善后台语言与语音导航
+    1、移除已删除的 DisableFileAccess，文件访问保持默认关闭。
+    2、依赖 Senparc.AI.AgentKernel 0.1.17 与 Microsoft Agent Framework Harness 1.28.0。
+    3、内置系统菜单和已加载 XNCF 模块菜单按当前文化重新解析显示文本，用户自定义菜单仍使用数据库原文。
+    4、语音导航优先使用浏览器本地语音识别，并补齐多语言提示。
+    5、Register 通过 XncfRegisterText 用稳定资源键解析菜单名称与模块说明。
+		</PackageReleaseNotes>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
 		<!--<RazorLangVersion>2.0</RazorLangVersion>-->
 		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>

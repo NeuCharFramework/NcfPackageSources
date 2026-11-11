@@ -107,11 +107,13 @@
 			32、Dependency update from Senparc.Xncf.Accounts to 0.3.12
 			33、Dependency update from Senparc.Xncf.Installer to 0.5.13
 			34、Dependency update from Template_OrgName.Xncf.Template_XncfName to 1.1.14
-			[2026-11-10] v0.39.8 Dependency update from Senparc.Xncf.NeuCharWorkflow to 0.4.6
-			1、Dependency update from Senparc.Areas.Admin to 0.12.27
-			2、Dependency update from Senparc.Xncf.Installer to 0.5.14
-			[2026-11-11] v0.39.8 统一 XNCF 本地化基础能力与宿主兼容
-			1、保持共享资源回退、模块注册元数据与当前宿主依赖组合兼容。</PackageReleaseNotes>
+			[2026-11-11] v0.39.8 宿主语言切换改用统一文化列表，并升级 Agent Framework 依赖
+			1、语言切换使用 NcfLocalizationOptions 的支持文化、默认文化和规范化结果。
+			2、共享 AI 依赖升级到 Senparc.AI.AgentKernel 0.1.17、Microsoft Agent Framework 1.28.0 与 OpenAI 2.14.0。
+			3、Dependency update from Senparc.Xncf.NeuCharWorkflow to 0.4.6
+			4、Dependency update from Senparc.Areas.Admin to 0.12.28
+			5、Dependency update from Senparc.Xncf.Installer to 0.5.14
+		</PackageReleaseNotes>
 		<AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
 		<TypeScriptToolsVersion>4.1</TypeScriptToolsVersion>
 		<UserSecretsId>d2144151-af7a-4d50-896d-4a306e594f7b</UserSecretsId>

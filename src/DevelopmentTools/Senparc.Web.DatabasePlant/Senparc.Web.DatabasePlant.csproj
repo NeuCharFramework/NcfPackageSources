@@ -42,9 +42,11 @@
 		  1、Dependency update from Senparc.Areas.Admin to 0.12.26
 		  2、Dependency update from Senparc.Xncf.AgentsManager to 0.19.2
 		  3、Dependency update from Senparc.Xncf.Workspace to 0.2.7
-		  [2026-11-10] v0.0.23 Dependency update from Senparc.Areas.Admin to 0.12.27
-		  [2026-11-11] v0.0.23 统一 XNCF 本地化基础能力与宿主兼容
-		  1、保持共享资源回退、模块注册元数据与当前宿主依赖组合兼容。</PackageReleaseNotes>
+		  [2026-11-11] v0.0.23 同步后台、AgentsManager，并引用 Connectors
+		  1、Dependency update from Senparc.Areas.Admin to 0.12.28
+		  2、Dependency update from Senparc.Xncf.AgentsManager to 0.19.3
+		  3、引用 Senparc.Xncf.Connectors 0.1.0，使迁移宿主包含连接器模型。
+		</PackageReleaseNotes>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>

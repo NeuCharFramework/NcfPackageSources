@@ -10,8 +10,10 @@
       1、AdminChat、桌面网关和其他客户端共享相同访问语义
       2、支持原子写入、移动、删除、会话策略与结构化 Agent 错误
       3、提供 Workspace 文件访问、流式上传及 Agent 通信契约
-      [2026-11-11] v0.2.0 统一 XNCF 本地化基础能力与宿主兼容
-      1、保持共享资源回退、模块注册元数据与当前宿主依赖组合兼容。</PackageReleaseNotes>
+      [2026-11-11] v0.2.0 支持按行窗口读取工作区文本
+      1、新增 read-text-window 协议、文本窗口请求和超限异常。
+      2、工作区客户端可按起始行和行数读取文本片段。
+    </PackageReleaseNotes>
     <AssemblyName>Senparc.Xncf.Workspace.Abstractions</AssemblyName>
     <RootNamespace>Senparc.Xncf.Workspace.Abstractions</RootNamespace>
     <Nullable>enable</Nullable>

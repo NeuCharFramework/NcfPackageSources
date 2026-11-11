@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：ConnectorInstance.cs
+    文件功能描述：已保存的连接器账号实体
+    
+    
+    创建标识：Senparc - 20261111
+    
+    修改标识：Senparc - 20261111
+    修改描述：v0.1.0 保存连接器账号与受保护的配置
+
+----------------------------------------------------------------*/
+
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;

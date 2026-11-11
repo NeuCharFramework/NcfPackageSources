@@ -2,6 +2,11 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Version>0.1.0</Version>
+    <PackageReleaseNotes>
+      [2026-11-11] v0.1.0 定义连接器描述、配置字段、动作与授权契约
+      1、描述连接器类型、字段和可调用动作。
+      2、授权计算 Agent 绑定与本次对话选择的交集，未授权实例不能因勾选而生效。
+    </PackageReleaseNotes>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>Senparc.Xncf.Connectors.Abstractions</AssemblyName>

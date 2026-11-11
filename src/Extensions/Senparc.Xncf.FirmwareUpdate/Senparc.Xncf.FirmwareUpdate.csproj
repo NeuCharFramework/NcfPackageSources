@@ -51,9 +51,9 @@
       1、补齐并校正各语言资源条目，使模块界面文案与中文基准保持一致
       2、Dependency update from Senparc.Ncf.Core to 0.30.4-preview10
       3、Dependency update from Senparc.Ncf.XncfBase to 0.28.2
-      [2026-11-11] v0.4.9 统一 XNCF Register 显示元数据与多语言资源键
-      1、增加 XncfRegisterText，以稳定资源键和中文基准文本解析菜单名称与模块说明。
-      2、迁移模块注册信息并同步模板、Workspace、DesktopBridge 与 Connectors 的资源目录，保留 IXncfRegister 字符串契约。</PackageReleaseNotes>
+      [2026-11-11] v0.4.9 统一模块注册显示名称与说明的多语言资源键
+      1、Register 通过 XncfRegisterText 用稳定资源键和中文基准文本解析菜单名称与模块说明。
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
     <Nullable>enable</Nullable>

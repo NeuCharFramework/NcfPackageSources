@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：WeixinWorkCheckinConnector.cs
+    文件功能描述：提供企业微信打卡连接器
+    
+    
+    创建标识：Senparc - 20261111
+    
+    修改标识：Senparc - 20261111
+    修改描述：v0.24.18 提供企业微信打卡连接器
+
+----------------------------------------------------------------*/
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;

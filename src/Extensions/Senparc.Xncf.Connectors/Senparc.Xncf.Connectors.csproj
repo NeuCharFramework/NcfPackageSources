@@ -9,10 +9,12 @@
     <RootNamespace>Senparc.Xncf.Connectors</RootNamespace>
     <Description>NCF 连接器：保存外部工具账号，并提供给 Chat、Workflow 与 Agent 模板。</Description>
   
-    <PackageReleaseNotes>
-      [2026-11-11] v0.1.0 统一 XNCF Register 显示元数据与多语言资源键
-      1、增加 XncfRegisterText，以稳定资源键和中文基准文本解析菜单名称与模块说明。
-      2、迁移模块注册信息并同步模板、Workspace、DesktopBridge 与 Connectors 的资源目录，保留 IXncfRegister 字符串契约。
+    <PackageReleaseNotes>      [2026-11-11] v0.1.0 新增可配置的外部工具连接器
+      1、保存连接器账号，并用数据保护保存密钥。
+      2、提供后台管理页，按目录、实例和授权调用连接器动作。
+      3、供 Chat、Workflow 与 Agent 模板按权限使用。
+      4、Register 通过 XncfRegisterText 解析菜单名称与模块说明。
+      5、新增多数据库迁移，创建连接器实例表。
     </PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>

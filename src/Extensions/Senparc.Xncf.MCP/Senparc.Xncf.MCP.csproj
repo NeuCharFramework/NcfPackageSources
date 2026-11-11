@@ -95,10 +95,11 @@
     5、Dependency update from Senparc.Xncf.AIKernel to 0.17.2
     6、Dependency update from Senparc.Xncf.SenMapic to 0.4.11
     7、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
-    [2026-11-11] v0.5.13 对齐 Microsoft.Extensions.AI 10.11.0，以适配 MAF 1.28
-    [2026-11-11] v0.5.13 统一 XNCF Register 显示元数据与多语言资源键
-    1、增加 XncfRegisterText，以稳定资源键和中文基准文本解析菜单名称与模块说明。
-    2、迁移模块注册信息并同步模板、Workspace、DesktopBridge 与 Connectors 的资源目录，保留 IXncfRegister 字符串契约。</PackageReleaseNotes>
+    [2026-11-11] v0.5.13 对齐 Microsoft.Extensions.AI 10.11.0 与 Agent Framework 1.28
+    1、Microsoft.Extensions.AI 升级到 10.11.0，以适配 Microsoft Agent Framework 1.28。
+    2、共享 AI 依赖升级到 Senparc.AI.AgentKernel 0.1.17 与 OpenAI 2.14.0。
+    3、Register 通过 XncfRegisterText 用稳定资源键解析菜单名称与模块说明。
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

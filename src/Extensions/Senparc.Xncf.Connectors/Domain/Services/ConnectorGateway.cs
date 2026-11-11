@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：ConnectorGateway.cs
+    文件功能描述：按目录和授权调用已配置的连接器动作
+    
+    
+    创建标识：Senparc - 20261111
+    
+    修改标识：Senparc - 20261111
+    修改描述：v0.1.0 按目录和授权调用连接器动作
+
+----------------------------------------------------------------*/
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Senparc.Xncf.Connectors.Abstractions;

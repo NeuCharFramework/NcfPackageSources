@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：ConnectorSecretProtector.cs
+    文件功能描述：保护并还原连接器密钥
+    
+    
+    创建标识：Senparc - 20261111
+    
+    修改标识：Senparc - 20261111
+    修改描述：v0.1.0 使用数据保护保存连接器密钥
+
+----------------------------------------------------------------*/
+
 using System.Text.Json;
 using Microsoft.AspNetCore.DataProtection;
 

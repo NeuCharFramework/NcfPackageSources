@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：ConnectorAppService.cs
+    文件功能描述：连接器配置与调用的应用服务
+    
+    
+    创建标识：Senparc - 20261111
+    
+    修改标识：Senparc - 20261111
+    修改描述：v0.1.0 提供连接器配置与调用的应用服务
+
+----------------------------------------------------------------*/
+
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;

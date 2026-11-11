@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：ConnectorAuthorization.cs
+    文件功能描述：计算 Agent 授权与本次对话选择的连接器动作交集
+    
+    
+    创建标识：Senparc - 20261111
+    
+    修改标识：Senparc - 20261111
+    修改描述：v0.1.0 计算 Agent 授权与对话选择的交集
+
+----------------------------------------------------------------*/
+
 namespace Senparc.Xncf.Connectors.Abstractions;
 
 /// <summary>

@@ -59,10 +59,10 @@
         2、Dependency update from Senparc.Web to 0.39.7
         3、Dependency update from Senparc.Xncf.Accounts to 0.3.12
         4、Dependency update from Senparc.Xncf.Installer to 0.5.13
-        [2026-11-10] v0.0.21 Dependency update from Senparc.Web to 0.39.8
-        1、Dependency update from Senparc.Xncf.Installer to 0.5.14
-        [2026-11-11] v0.0.21 统一 XNCF 本地化基础能力与宿主兼容
-        1、保持共享资源回退、模块注册元数据与当前宿主依赖组合兼容。</PackageReleaseNotes>
+        [2026-11-11] v0.0.21 同步 Web 与 Installer 依赖
+        1、Dependency update from Senparc.Web to 0.39.8
+        2、Dependency update from Senparc.Xncf.Installer to 0.5.14
+    </PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsAspireHost>true</IsAspireHost>

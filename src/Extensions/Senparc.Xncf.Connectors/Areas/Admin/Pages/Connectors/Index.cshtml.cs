@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：Index.cshtml.cs
+    文件功能描述：连接器后台管理页模型
+    
+    
+    创建标识：Senparc - 20261111
+    
+    修改标识：Senparc - 20261111
+    修改描述：v0.1.0 提供连接器后台管理页
+
+----------------------------------------------------------------*/
+
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;

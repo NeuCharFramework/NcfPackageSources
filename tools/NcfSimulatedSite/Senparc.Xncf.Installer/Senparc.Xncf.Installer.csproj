@@ -98,10 +98,13 @@
 			14、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.12
 			15、Dependency update from Senparc.Areas.Admin to 0.12.26
 			16、Dependency update from Senparc.Xncf.Installer.Interface to 0.2.3
-			[2026-11-10] v0.5.14 Dependency update from Senparc.Areas.Admin to 0.12.27
-			[2026-11-11] v0.5.14 统一 XNCF Register 显示元数据与多语言资源键
-			1、增加 XncfRegisterText，以稳定资源键和中文基准文本解析菜单名称与模块说明。
-			2、迁移模块注册信息并同步模板、Workspace、DesktopBridge 与 Connectors 的资源目录，保留 IXncfRegister 字符串契约。</PackageReleaseNotes>
+			[2026-11-11] v0.5.14 独立安装器改用统一本地化注册
+			1、安装器宿主使用 AddNcfLocalization，并按统一文化列表启用请求本地化。
+			2、安装页切换语言时写入文化 Cookie 并刷新页面。
+			3、Register 通过 XncfRegisterText 用稳定资源键解析菜单名称与模块说明。
+			4、共享 AI 依赖升级到 Senparc.AI.AgentKernel 0.1.17 与 Microsoft Agent Framework 1.28.0。
+			5、Dependency update from Senparc.Areas.Admin to 0.12.28
+		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>
 		<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>

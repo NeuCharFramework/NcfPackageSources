@@ -43,9 +43,10 @@
       4、Dependency update from Senparc.Ncf.Core to 0.30.4-preview10
       [2026-11-10] v0.0.19 Dependency update from Senparc.Areas.Admin to 0.12.27
       [2026-11-11] v0.0.20 引用 Connectors 与 AgentsManager，用于标准 EF 迁移生成
-      1、升级 Senparc.Ncf.DatabasePlant 至 0.21.14，与 XncfBuilder 对齐
-      [2026-11-11] v0.0.20 统一 XNCF 本地化基础能力与宿主兼容
-      1、保持共享资源回退、模块注册元数据与当前宿主依赖组合兼容。</PackageReleaseNotes>
+      1、升级 Senparc.Ncf.DatabasePlant 至 0.21.14，与 XncfBuilder 对齐。
+      2、Dependency update from Senparc.Xncf.AgentsManager to 0.19.3
+      3、引用 Senparc.Xncf.Connectors 0.1.0。
+    </PackageReleaseNotes>
     <Configurations>Debug;Release;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>
   </PropertyGroup>
   <ItemGroup>
