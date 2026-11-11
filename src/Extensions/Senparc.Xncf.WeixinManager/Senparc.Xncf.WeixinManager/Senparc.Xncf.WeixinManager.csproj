@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <!--<RazorLangVersion>3.0</RazorLangVersion>-->
-    <Version>0.24.18</Version>
+    <Version>0.25.0</Version>
     <!--<GenerateProgramFile>false</GenerateProgramFile>-->
     <!--https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/1511#issuecomment-696682962-->
     <OpenApiGenerateDocumentsOnBuild>false</OpenApiGenerateDocumentsOnBuild>
@@ -151,6 +151,9 @@
     2、配置后可在对话、Workflow 和 Agent 模板中按授权选择。
     3、Register 通过 XncfRegisterText 用稳定资源键解析菜单名称与模块说明。
     4、共享 AI 依赖升级到 Senparc.AI.AgentKernel 0.1.17 与 Microsoft Agent Framework 1.28.0。
+    [2026-11-12] v0.25.0 新增企业微信打卡连接器并统一模块注册文案
+    1、增加企业微信打卡连接器及参数校验、请求错误处理能力。
+    2、模块注册显示名称与说明改用稳定资源键解析。
     </PackageReleaseNotes>
     <RepositoryUrl> https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

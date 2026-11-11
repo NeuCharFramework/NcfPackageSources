@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.21.14</Version>
+    <Version>0.21.15</Version>
     <AssemblyName>Senparc.Ncf.DatabasePlant</AssemblyName>
     <RootNamespace>Senparc.Ncf.DatabasePlant</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -100,6 +100,7 @@
 				8、Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.12
 				9、Dependency update from Senparc.Ncf.Database.PostgreSQL to 0.13.12
 				10、Dependency update from Senparc.Ncf.Database.Oracle to 0.10.12
+				[2026-11-12] v0.21.15 Dependency updates from Senparc.Ncf.Core to 0.31.0-preview11；Senparc.Ncf.Database.Dm to 0.7.13；Senparc.Ncf.Database.InMemory to 0.20.13；Senparc.Ncf.Database to 0.21.13
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

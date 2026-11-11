@@ -1,4 +1,18 @@
-﻿using System;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：20261110164028_AddConnectorInstance.cs
+    文件功能描述：数据库迁移定义
+
+
+    创建标识：Senparc - 20220818
+
+    修改标识：Senparc - 20261112
+    修改描述：v0.1.0 同步数据库迁移定义
+
+----------------------------------------------------------------*/
+
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable

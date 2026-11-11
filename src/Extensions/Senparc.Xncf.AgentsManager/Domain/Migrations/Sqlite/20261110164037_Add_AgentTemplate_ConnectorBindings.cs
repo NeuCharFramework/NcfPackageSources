@@ -1,4 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：20261110164037_Add_AgentTemplate_ConnectorBindings.cs
+    文件功能描述：数据库迁移定义
+
+
+    创建标识：Senparc - 20250120
+
+    修改标识：Senparc - 20261112
+    修改描述：v0.19.3 同步数据库迁移定义
+
+----------------------------------------------------------------*/
+
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 

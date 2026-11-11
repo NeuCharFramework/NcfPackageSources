@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.13.14</Version>
+    <Version>0.13.15</Version>
     <AssemblyName>Senparc.Xncf.AIAgentsHub</AssemblyName>
     <RootNamespace>Senparc.Xncf.AIAgentsHub</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -136,6 +136,9 @@
 			17、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.12
 			[2026-11-11] v0.13.14 统一模块注册显示名称与说明的多语言资源键
 			1、Register 通过 XncfRegisterText 用稳定资源键和中文基准文本解析菜单名称与模块说明。
+			[2026-11-12] v0.13.15 统一模块注册显示名称与说明的多语言资源键
+			1、模块注册信息优先使用稳定资源键解析多语言显示文本。
+			2、兼容现有资源与默认文案，避免缺少翻译时影响模块加载。
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

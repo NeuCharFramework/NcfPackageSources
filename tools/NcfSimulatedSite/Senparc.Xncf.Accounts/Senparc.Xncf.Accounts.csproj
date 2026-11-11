@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.3.12</Version>
+		<Version>0.3.13</Version>
 		<AssemblyName>Senparc.Xncf.Accounts</AssemblyName>
 		<RootNamespace>Senparc.Xncf.Accounts</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -56,6 +56,9 @@
 			4、Dependency update from Senparc.Xncf.SystemCore to 0.14.12
 			[2026-11-11] v0.3.12 统一模块注册显示名称与说明的多语言资源键
 			1、Register 通过 XncfRegisterText 用稳定资源键和中文基准文本解析菜单名称与模块说明。
+			[2026-11-12] v0.3.13 统一账户模块注册文案与多语言资源
+			1、账户模块注册显示名称与说明使用稳定资源键。
+			2、补齐多语言资源并保持现有模块加载行为兼容。
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.2.0</Version>
+    <Version>0.3.0</Version>
     <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
     <PackageReleaseNotes>      [2026-10-21] v0.1.0 定义工作区描述、创建请求与访问策略契约
       1、描述符支持所有者类型、Agent 模板与存储提供方
@@ -13,6 +13,9 @@
       [2026-11-11] v0.2.0 支持按行窗口读取工作区文本
       1、新增 read-text-window 协议、文本窗口请求和超限异常。
       2、工作区客户端可按起始行和行数读取文本片段。
+      [2026-11-12] v0.3.0 扩展工作区搜索契约，支持路径 glob 与内容正则
+      1、搜索请求新增相对路径 glob 和内容正则表达式参数。
+      2、保持按行窗口读取协议，并为无效搜索输入提供明确契约边界。
     </PackageReleaseNotes>
     <AssemblyName>Senparc.Xncf.Workspace.Abstractions</AssemblyName>
     <RootNamespace>Senparc.Xncf.Workspace.Abstractions</RootNamespace>

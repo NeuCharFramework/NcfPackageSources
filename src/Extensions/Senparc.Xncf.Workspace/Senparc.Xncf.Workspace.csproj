@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.2.7</Version>
+    <Version>0.2.8</Version>
     <PackageReleaseNotes>      [2026-10-21] v0.1.1 提供按所有者隔离的工作区存储，并持久化元数据
       1、支持工作区创建、文件访问、命令执行与访问策略
       2、描述符支持所有者类型、Agent 模板关联与存储提供方
@@ -32,6 +32,9 @@
       [2026-11-11] v0.2.7 统一模块注册显示名称与说明的多语言资源
       1、Register 通过 XncfRegisterText 用稳定资源键和中文基准文本解析菜单名称与模块说明。
       2、补齐模块多语言资源，缺少翻译时沿当前语言、英语、简体中文回退。
+      [2026-11-12] v0.2.8 统一 Workspace 模块注册文案与多语言资源
+      1、模块注册显示名称与说明使用稳定资源键解析。
+      2、补齐 Workspace 资源文案，保持宿主语言切换后的显示一致性。
     </PackageReleaseNotes>
     <AssemblyName>Senparc.Xncf.Workspace</AssemblyName>
     <RootNamespace>Senparc.Xncf.Workspace</RootNamespace>

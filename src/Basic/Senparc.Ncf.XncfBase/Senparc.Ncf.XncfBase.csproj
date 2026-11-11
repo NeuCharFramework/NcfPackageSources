@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <!--<TargetFrameworks>netcoreapp3.1;net8.0</TargetFrameworks>-->
-    <Version>0.28.2</Version>
+    <Version>0.29.0</Version>
     <LangVersion>10.0</LangVersion>
     <AssemblyName>Senparc.Ncf.XncfBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.XncfBase</RootNamespace>
@@ -103,6 +103,9 @@
 			[2026-11-11] v0.28.2 用稳定资源键解析 XNCF 注册显示文本
 			1、新增 XncfRegisterText，按资源键和中文基准文本解析菜单名称与模块说明。
 			2、保留 IXncfRegister 的字符串契约，模块仍返回已解析的显示文本。
+			[2026-11-12] v0.29.0 支持 XNCF 注册文本的稳定资源键解析
+			1、注册信息可通过稳定资源键解析多语言显示名称与说明。
+			2、保留现有文本回退行为，兼容未提供本地化资源的模块。
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.17.2</Version>
+    <Version>0.17.3</Version>
     <AssemblyName>Senparc.Xncf.AIKernel</AssemblyName>
     <RootNamespace>Senparc.Xncf.AIKernel</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -147,6 +147,9 @@
     [2026-11-11] v0.17.2 统一模块注册文案，并升级共享 AI 依赖
     1、Register 通过 XncfRegisterText 用稳定资源键和中文基准文本解析菜单名称与模块说明。
     2、共享 AI 依赖升级到 Senparc.AI.AgentKernel 0.1.17、Microsoft Agent Framework 1.28.0、OpenAI 2.14.0 与 Microsoft.Extensions.AI.OpenAI 10.11.0。
+    [2026-11-12] v0.17.3 升级共享 AI 依赖并统一模块注册文案
+    1、适配共享 Microsoft Agent Framework 和 AI 抽象依赖版本。
+    2、模块注册显示名称与说明改用稳定资源键解析。
     </PackageReleaseNotes>
     <PackageIcon>icon.jpg</PackageIcon>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.0.6</Version>
+    <Version>0.0.7</Version>
     <PackageReleaseNotes>
       [2026-09-05] v0.0.1 新增 AIKernel Token 监控单元测试
       1、覆盖 AITokenUsageSnapshot 归一化与空值判断
@@ -28,7 +28,8 @@
       2、验证 Worker 客户端、持久化配置和真实训练流程的回归行为
       [2026-10-21] v0.0.6 补充 Token 用量记录测试
       1、覆盖用量记录器的入队、聚合与持久化行为
-</PackageReleaseNotes>
+      [2026-11-12] v0.0.7 Dependency updates from Senparc.Xncf.AIKernel to 0.17.3
+    </PackageReleaseNotes>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <ImplicitUsings>enable</ImplicitUsings>

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.21.1-preview3</Version>
+    <Version>0.21.2-preview4</Version>
     <AssemblyName>Senparc.Ncf.Utility</AssemblyName>
     <RootNamespace>Senparc.Ncf.Utility</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -29,6 +29,9 @@
 				[2026-11-11] v0.21.1-preview3 说明非中文资源缺失时的回退顺序
 				1、支持文化列表仍由 NcfLocalizationOptions 统一提供。
 				2、缺少非中文资源时，按当前语言、英语、简体中文和中性资源回退。
+				[2026-11-12] v0.21.2-preview4 完善本地化选项与资源回退配置
+				1、补充本地化选项对多语言资源回退行为的支持。
+				2、保持现有模块配置方式兼容，并为缺失翻译提供稳定默认值。
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

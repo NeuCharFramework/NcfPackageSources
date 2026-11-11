@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0</TargetFrameworks>
-    <Version>0.30.4-preview10</Version>
+    <Version>0.31.0-preview11</Version>
     <AssemblyName>Senparc.Ncf.Core</AssemblyName>
     <RootNamespace>Senparc.Ncf.Core</RootNamespace>
     <LangVersion>10.0</LangVersion>
@@ -89,6 +89,9 @@
 				[2026-11-11] v0.30.4-preview10 统一字符串资源的文化回退
 				1、资源查找按当前文化、英语、简体中文，再回退到中性资源。
 				2、本地化服务注册与资源读取共用这条回退链，缺少翻译时仍显示已有文案。
+				[2026-11-12] v0.31.0-preview11 增强本地化资源文化回退能力
+				1、资源查找按当前文化、英语、简体中文和中性资源逐级回退。
+				2、本地化服务注册与资源读取共用一致的回退链，缺少翻译时仍保留可用文案。
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

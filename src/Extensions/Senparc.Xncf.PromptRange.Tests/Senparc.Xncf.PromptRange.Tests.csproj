@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.0.20</Version>
+		<Version>0.0.21</Version>
 		<PackageReleaseNotes>
     [2026-07-02] v0.0.2 升级 Senparc.AI.AgentKernel 并完成兼容性适配，升级并适配 net10.0 框架
     1、升级 Senparc.AI.AgentKernel 并完成兼容性适配
@@ -44,7 +44,8 @@
     [2026-11-02] Cover prompt selector SQL filtering, paging, content projection, tenant isolation and input validation.
     [2026-11-04] Verify exact references, last-save scoring, concurrent same-value updates, benchmark validation and tenant isolation.
     [2026-11-05] Verify complete Range score overviews, shared current scores, lightweight responses and access isolation.
-</PackageReleaseNotes>
+    [2026-11-12] v0.0.21 Dependency updates from Senparc.Ncf.Core.Tests to 0.0.13；Senparc.Ncf.UnitTestExtension to 0.3.28；Senparc.Xncf.PromptRange to 0.20.15
+		</PackageReleaseNotes>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 
