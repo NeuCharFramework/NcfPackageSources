@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261109
     修改描述：v0.1.0-preview1 按 NCF 顺序搭建：LiveApiPipeline 在 UseRouting 之前；移除隧道守卫、API 兜底与 “fell through” 终端中间件
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.1.0-preview1 测试宿主默认带试点时期的上限配置（Pilot.Config），测试自己的配置可覆盖
+
 ----------------------------------------------------------------*/
 
 using System.Net;
@@ -242,7 +245,8 @@ public sealed class LiveHost : IAsyncDisposable
         var h = new LiveHost();
         var first = snapshot is null ? h.OnSnapshot() : snapshot(h);
         if (first is not null) h.Runtime = new StaticLiveRuntime(first);
-        var cfg = new ConfigurationBuilder().AddInMemoryCollection(config ?? new()).Build();
+        // The pilot's bounds first (the defaults have none), then the test's own settings over them.
+        var cfg = new ConfigurationBuilder().AddInMemoryCollection(Pilot.Config()).AddInMemoryCollection(config ?? new()).Build();
         h.Host = new HostBuilder()
             .ConfigureLogging(l => l.ClearProviders())
             .ConfigureWebHost(w => w

@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261109
     修改描述：v0.1.0-preview1 新增测试：模型调用失败与请求失败的日志只有类型、状态码与清洗后的首行，不带异常对象
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.1.0-preview1 测试夹具改用试点时期的上限（Pilot）
+
 ----------------------------------------------------------------*/
 
 using System.Text.Json.Nodes;
@@ -44,7 +47,7 @@ public class RunnerTests
     readonly InMemoryLiveStore Store = new();
     readonly StubMeter Meter = new();
     readonly ListLogger<RequestRunner> Log = new();
-    readonly LiveOptions Opt = new();
+    readonly LiveOptions Opt = Fakes.Pilot.Options(); // the pilot's bounds: the defaults have none
 
     /// <summary>The limits the next request's snapshot carries.</summary>
     LiveLimits Limits = LiveLimits.Defaults;

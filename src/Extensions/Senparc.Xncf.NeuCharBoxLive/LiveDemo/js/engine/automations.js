@@ -1,8 +1,9 @@
 // The Automations section (live mode, below the device cards; spec docs/superpowers/specs/2026-11-08-automations-design.md
-// §1): one card per rule or schedule the AI set up in this session's room, in creation order, each with an on/off switch.
+// §1): one card per rule or schedule the AI set up in this session's room, in creation order, each with an on/off switch
+// and a remove button (onRemove(id)); under the list, "Clear all" (onClear()) removes every one.
 // It shows what render() is given and reports a flipped switch to onToggle(id, on): js/engine/live.js keeps the visitor's
 // value until the server agrees, and puts it back when the server refuses it.
-//   createAutomations(root, { onToggle, emptyText, fold, overlay, doc })
+//   createAutomations(root, { onToggle, onRemove, onClear, emptyText, fold, overlay, doc })
 //     render(items | null)     items: [{ id, kind: 'rule'|'schedule', text, enabled, firedToday, done }]; null: not in
 //                              live mode (guided, or live mode over), the section hides
 //     flash(id, 'ran'|'held')  the card's JUST RAN / HELD badge for 2 s (folded, the summary line's too)
@@ -38,7 +39,7 @@ const asMedia = (q) => (q && typeof q === 'object' ? q : { matches: !!q });
 // A MediaQueryList's change listener on or off (Safari < 14 only has addListener / removeListener).
 const listen = (m, fn, on) => { if (typeof m.addEventListener === 'function') m[on ? 'addEventListener' : 'removeEventListener']('change', fn); else if (typeof m.addListener === 'function') m[on ? 'addListener' : 'removeListener'](fn); };
 
-export function createAutomations(root, { onToggle = () => {}, emptyText = C.autosEmptyAny, fold = false, overlay = fold, doc = globalThis.document } = {}) {
+export function createAutomations(root, { onToggle = () => {}, onRemove = () => {}, onClear = () => {}, emptyText = C.autosEmptyAny, fold = false, overlay = fold, doc = globalThis.document } = {}) {
   const k = ++sections, foldM = asMedia(fold), overM = asMedia(overlay);
   let nSub = 0, open = !foldM.matches, headTimer = 0;
   const mk = (tag, cls, text) => { const n = doc.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
@@ -50,7 +51,8 @@ export function createAutomations(root, { onToggle = () => {}, emptyText = C.aut
   head.append(mk('span', 'autos-title', C.autosTitle), count, badge, chev);
   const body = mk('div', 'autos-body'); body.id = `autos-${k}`; head.setAttribute('aria-controls', body.id);
   const list = mk('ul', 'alist'), empty = mk('p', 'aempty', emptyText);
-  body.append(list, empty); root.append(head, body);
+  const clear = mk('button', 'autos-clear', C.autosClear); clear.type = 'button'; clear.hidden = true; clear.onclick = () => onClear();
+  body.append(list, empty, clear); root.append(head, body);
 
   // Lying over the page, the open list stays inside the window: the room below the summary line (a portrait phone) and
   // above it (a phone held sideways, where it opens upward over the room). css/app.css reads the two lengths.
@@ -74,7 +76,7 @@ export function createAutomations(root, { onToggle = () => {}, emptyText = C.aut
   listen(foldM, onFold, true); doc.addEventListener?.('pointerdown', onTap, { passive: true });
   setOpen(open);
 
-  const cards = new Map(); // id → { li, ico, text, sub, sw, badge, timer }
+  const cards = new Map(); // id → { li, ico, text, sub, sw, rm, badge, timer }
   function cardFor(a) {
     let c = cards.get(a.id);
     if (!c) {
@@ -84,9 +86,11 @@ export function createAutomations(root, { onToggle = () => {}, emptyText = C.aut
       // A real switch: a button with role="switch" and aria-checked (Enter and Space press it), named by the automation's text.
       const sw = mk('button', 'sw auto-sw'); sw.type = 'button'; sw.setAttribute('role', 'switch'); sw.setAttribute('aria-describedby', sub.id);
       const id = a.id; sw.onclick = () => onToggle(id, sw.getAttribute('aria-checked') !== 'true');
+      // Remove: a small × after the switch (a done one-off keeps it, though its switch is gone).
+      const rm = mk('button', 'auto-rm', '×'); rm.type = 'button'; rm.onclick = () => onRemove(id);
       const b = mk('span', 'badge');
-      txt.append(text, sub); li.append(ico, txt, sw, b);
-      c = { li, ico, text, sub, sw, badge: b, timer: 0 }; cards.set(id, c);
+      txt.append(text, sub); li.append(ico, txt, sw, rm, b);
+      c = { li, ico, text, sub, sw, rm, badge: b, timer: 0 }; cards.set(id, c);
     }
     const on = a.enabled !== false, done = !!a.done;
     c.li.dataset.kind = a.kind; c.li.classList.toggle('off', !on && !done); c.li.classList.toggle('done', done);
@@ -96,6 +100,7 @@ export function createAutomations(root, { onToggle = () => {}, emptyText = C.aut
     c.sw.hidden = done;
     // Never unnamed: an automation without text is named by its sub-line.
     c.sw.setAttribute('aria-label', a.text || subLine(a)); c.sw.setAttribute('aria-checked', String(on)); c.sw.classList.toggle('on', on);
+    c.rm.setAttribute('aria-label', C.autoRemove(a.text || subLine(a))); c.rm.title = C.autoRemove(a.text || subLine(a));
     return c;
   }
   const unflashHead = () => { clearTimeout(headTimer); headTimer = 0; badge.textContent = ''; head.classList.remove('flash-ran', 'flash-held'); };
@@ -115,6 +120,8 @@ export function createAutomations(root, { onToggle = () => {}, emptyText = C.aut
     // In place: a card that stays keeps its node (and the focus on its switch); only an order change moves one.
     items.forEach((a, i) => { const c = cardFor(a); if (list.children[i] !== c.li) list.insertBefore(c.li, list.children[i] ?? null); });
     list.hidden = !items.length; empty.hidden = items.length > 0;
+    if (!items.length && doc.activeElement === clear) head.focus(); // "Clear all" goes with the last card
+    clear.hidden = !items.length;
     count.textContent = ` · ${summaryOf(items)}`;
     root.hidden = false;
     if (open) fit();

@@ -72,15 +72,15 @@ until it is fixed, and the rest of the site is unaffected.
 | Key | Default | Meaning |
 |---|---|---|
 | `NcbLive:PlanToolMode` | `required` | `required` makes the planning call pick a tool; `auto` lets it answer in text. |
-| `NcbLive:MaxCalls` | 60 | Model calls per request. |
-| `NcbLive:MaxCallsWhatIf` | 60 | Model calls per what-if. |
+| `NcbLive:MaxCalls` | 0 | Model calls per request; 0 = no limit (a request is never cut short for it). |
+| `NcbLive:MaxCallsWhatIf` | 0 | Model calls per what-if; 0 = no limit. |
 | `NcbLive:MaxChars` | 400 | Longest request text. |
-| `NcbLive:MaxWork` | `00:30:00` | Server work time per request, approval waits excluded. |
+| `NcbLive:MaxWork` | `00:00:00` | Server work time per request, approval waits excluded; zero = no limit. |
 | `NcbLive:MaxCompletionTokens` | 1500 | Completion token cap per model call. |
-| `NcbLive:ApprovalWait` | `00:10:00` | How long a plan waits for approval before it expires. |
-| `NcbLive:SessionIdle` | `00:45:00` | Idle time after which a session is dropped. |
+| `NcbLive:ApprovalWait` | `00:00:00` | How long a plan waits for approval before it expires; zero = it waits for as long as it takes. |
+| `NcbLive:SessionIdle` | `00:00:00` | Idle time after which a session is dropped; zero = never. With a timeout set, it must be longer than `MaxWork` plus `ApprovalWait`, and both of those must be set. |
 | `NcbLive:HistoryTurns` | 6 | Earlier turns the model sees. |
-| `NcbLive:MaxSessions` | 200 | Live sessions at once, all codes; at the cap `POST sessions` is `429 global_limit`. |
+| `NcbLive:MaxSessions` | 200 | Live sessions at once, all codes. At the cap, with no idle timeout, the least recently active idle session is ended to make room; `POST sessions` is `429 global_limit` only when every session is busy (or, with an idle timeout, whenever the cap is reached). |
 | `NcbLive:AccessCheckPerMinute` | 30 | `POST access/check` calls per IP per minute. |
 | `NcbLive:UsageTimeZone` | `UTC` | Time zone whose midnight resets the daily limits and the token budget. |
 | `NcbLive:Pacing:IdleHourSeconds` | 0.1 | Real seconds per idle simulated hour in a fast-forward. |

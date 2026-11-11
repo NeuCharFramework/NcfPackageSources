@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.1.0-preview1 审批等待为 0 时一直等待，不再过期
+
 ----------------------------------------------------------------*/
 
 using Senparc.Xncf.NeuCharBoxLive.Engine.Ai;
@@ -73,7 +76,8 @@ public class RequestRecord
         using var stop = CancellationTokenSource.CreateLinkedTokenSource(ct);
         try
         {
-            var expiry = Task.Delay(timeout, _tp, stop.Token);
+            // Zero or less: the card waits for as long as it takes (LiveOptions.ApprovalWait's default).
+            var expiry = Task.Delay(timeout > TimeSpan.Zero ? timeout : Timeout.InfiniteTimeSpan, _tp, stop.Token);
             await Task.WhenAny(tcs.Task, expiry);
         }
         finally

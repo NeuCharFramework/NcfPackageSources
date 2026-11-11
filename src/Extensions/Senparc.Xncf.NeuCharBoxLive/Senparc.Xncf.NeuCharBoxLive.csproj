@@ -3,6 +3,8 @@
     <TargetFramework>net10.0</TargetFramework>
     <Version>0.1.0-preview1</Version>
     <PackageReleaseNotes>
+      [2026-11-11] v0.1.0-preview1 默认不再截断请求：每请求调用数、工作时间、审批等待与会话空闲超时默认不限（0 表示不限，可在 NcbLive 配置中设置）
+      [2026-11-11] v0.1.0-preview1 自动化可单条移除或一键清空（automations/{id}/remove、automations/clear）；演示页“正在执行计划”改为 Implementing your plan
       [2026-11-11] v0.1.0-preview1 模块自带演示页：内嵌 LiveDemo 文件夹，由本站在 /live/demo/ 提供（与 /live/api 同源）；设置页“试用”链接与邀请话术改指向本站演示页
       [2026-11-09] v0.1.0-preview1 本次运行中新安装的站点：打开设置页即唤醒模块运行时（显式刷新读库成功视为就绪），无需重启
       [2026-11-09] v0.1.0-preview1 终审修正：NcbLive 配置值无法转换时模块照常注册（DbContext 不再被跳过）并关闭 Live（config）；模块未在服务时申请与邀请码检查答 503 live_off；NCF 就绪前不读数据库；AI Kernel 读不到时设置页不再抛错；保存后等运行时刷新；未接入 /live/api 时记错误；模型失败日志不带异常对象；不再注册 CORS 服务；旧版键告警

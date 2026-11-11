@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.1.0-preview1 新增 Remove：移除一条规则或定时，或清空全部
+
 ----------------------------------------------------------------*/
 
 using System.Globalization;
@@ -124,6 +127,21 @@ public static class Automations
             return true;
         }
         return false;
+    }
+
+    /// <summary>
+    /// The visitor removing an automation: the rule or schedule with that id, or with a null id every one in the room.
+    /// False when an id is given and nothing has it. Removing fires nothing, and what an automation already did stays done.
+    /// </summary>
+    public static bool Remove(RoomState room, string? id)
+    {
+        if (id is null)
+        {
+            room.Rules.Clear();
+            room.Schedules.Clear();
+            return true;
+        }
+        return room.Rules.RemoveAll(r => r.Id == id) + room.Schedules.RemoveAll(s => s.Id == id) > 0;
     }
 
     static JsonObject Item(string id, string kind, string text, IEnumerable<string> devices, bool enabled, int firedToday, bool done) => new()

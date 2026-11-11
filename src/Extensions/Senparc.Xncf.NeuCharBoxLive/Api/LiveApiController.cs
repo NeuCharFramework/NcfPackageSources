@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261109
     修改描述：v0.1.0-preview1 模块未在服务（多租户、未安装、已关闭）时，申请与邀请码检查先答 503 live_off，不读也不存任何内容
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.1.0-preview1 新增移除单条自动化与清空全部的路由（automations/{id}/remove、automations/clear）
+
 ----------------------------------------------------------------*/
 
 using System.Globalization;
@@ -269,6 +272,33 @@ public sealed class LiveApiController(SessionManager sessions, AccessService acc
         if (!ok || body?["enabled"] is not JsonValue ev || ev.GetValueKind() is not (JsonValueKind.True or JsonValueKind.False))
             return Error("bad_request");
         var error = await sessions.ToggleAsync(s, id, ev.GetValue<bool>());
+        return error is { } kind ? Error(kind) : Accepted202();
+    }
+
+    /// <summary>
+    /// An automation card's remove button. bad_code → no_session → rate (the edit limit) → no_automation (404, an id not
+    /// in the room). No body is read. Allowed mid-request; not gated on LiveOn; counts against no limit. 202 when
+    /// applied or queued behind the room's owner; an <c>automations</c> event without it follows.
+    /// </summary>
+    [HttpPost("sessions/{sid}/automations/{id}/remove")]
+    public Task<IActionResult> RemoveAutomation(string sid, string id) => RemoveAutomationsAsync(sid, id);
+
+    /// <summary>
+    /// The Automations section's "Clear all": removes every rule and schedule in the room. The same checks as the remove
+    /// button, and never no_automation: an empty room answers 202 too. The literal route wins over the switch's
+    /// <c>automations/{id}</c> (ids are rule1, sched1, …, never "clear").
+    /// </summary>
+    [HttpPost("sessions/{sid}/automations/clear")]
+    public Task<IActionResult> ClearAutomations(string sid) => RemoveAutomationsAsync(sid, null);
+
+    async Task<IActionResult> RemoveAutomationsAsync(string sid, string? id)
+    {
+        var a = await CheckCodeAsync();
+        if (!a.Ok) return Error(a.Error!);
+        var s = sessions.Get(sid, a.Code!);
+        if (s is null) return Error("no_session");
+        if (!editLimit.TryAcquire(s.Id)) return Error("rate");
+        var error = await sessions.RemoveAutomationAsync(s, id);
         return error is { } kind ? Error(kind) : Accepted202();
     }
 

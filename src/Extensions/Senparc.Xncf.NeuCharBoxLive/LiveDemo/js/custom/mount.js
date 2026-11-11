@@ -174,7 +174,7 @@ export async function mountCustom({ app, isCurrent, setCurrent }) {
     // The clock control beside the status line: shown while a live session's cards are editable, usable between requests.
     const clockCtl = createClockCtl($('clockctl'), { onAdvance: (h) => controller?.live?.advance(h) });
     // The Automations section under the device cards (run mode only, css/custom.css); its switches go to the current live.
-    autos = createAutomations($('autos'), { onToggle: (id, on) => controller?.live?.setAutomation(id, on), ...foldMedia(), emptyText: LIVE_COPY.autosEmptyAny });
+    autos = createAutomations($('autos'), { onToggle: (id, on) => controller?.live?.setAutomation(id, on), onRemove: (id) => controller?.live?.removeAutomation(id), onClear: () => controller?.live?.clearAutomations(), ...foldMedia(), emptyText: LIVE_COPY.autosEmptyAny });
     liveUi = liveUiFor({
       statusEl, statusTextEl, getPanel: () => wiring.panel, room3d, R, baselineRef, chat, alive: () => isCurrent() && !torn,
       onBackToBuilding: () => controller.toBuild(),

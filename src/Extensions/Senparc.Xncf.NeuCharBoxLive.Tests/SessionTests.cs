@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.1.0-preview1 测试夹具改用试点时期的上限（Pilot）；新增默认不设上限的测试
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.AI;
@@ -37,7 +40,7 @@ public class SessionTests
     static readonly TimeSpan Guard = TimeSpan.FromSeconds(20);
 
     readonly FakeTimeProvider Fake = new(new DateTimeOffset(2026, 11, 7, 15, 0, 0, TimeSpan.Zero));
-    readonly LiveOptions Opt = new();
+    readonly LiveOptions Opt = Fakes.Pilot.Options(); // the pilot's bounds: the defaults have none
     readonly ListLogger<RequestRunner> Log = new();
     readonly ListLogger<SessionManager> ManagerLog = new();
     readonly InMemoryLiveStore Store;
@@ -615,7 +618,7 @@ public class SessionTests
         var limited = await Start(s, Script(LampPlan(), SetLamp20(), Text("DONE")));
         await Decide(s, limited, Decision.Approve);
         Assert.AreEqual("limit", await Outcome(s, limited));
-        Opt.MaxCalls = new LiveOptions().MaxCalls;
+        Opt.MaxCalls = Fakes.Pilot.Options().MaxCalls;
         Assert.IsNotNull(s.Find(limited)!.Plan);
 
         foreach (var rid in new[] { declined, cannot, expired, limited })
@@ -748,11 +751,11 @@ public class SessionTests
     public void Options_SessionIdleMustCoverWorkAndApproval()
     {
         Assert.AreEqual(0, new LiveOptions().Problems().Count);
-        Assert.AreEqual(0, new LiveOptions { SessionIdle = TimeSpan.FromMinutes(40) }.Problems().Count); // exactly MaxWork + ApprovalWait
+        Assert.AreEqual(0, Fakes.Pilot.Options(o => o.SessionIdle = TimeSpan.FromMinutes(40)).Problems().Count); // exactly MaxWork + ApprovalWait
 
-        var bad = new LiveOptions { SessionIdle = TimeSpan.FromMinutes(40) - TimeSpan.FromSeconds(1) };
+        var bad = Fakes.Pilot.Options(o => o.SessionIdle = TimeSpan.FromMinutes(40) - TimeSpan.FromSeconds(1));
         CollectionAssert.AreEqual(new[] { "SessionIdle" }, bad.Problems().ToList());
-        var longWait = new LiveOptions { ApprovalWait = TimeSpan.FromMinutes(40) };
+        var longWait = Fakes.Pilot.Options(o => o.ApprovalWait = TimeSpan.FromMinutes(40));
         CollectionAssert.AreEqual(new[] { "SessionIdle" }, longWait.Problems().ToList());
         // Neither stops the manager any more: AddNcbLive keeps live off instead (RuntimeTests).
         foreach (var o in new[] { bad, longWait })
@@ -804,5 +807,72 @@ public class SessionTests
 
         _runnerLog = Log;
         await RunOk(s); // not left busy
+    }
+    // ---- no cut-offs by default (LiveOptions' defaults; the fixture's Opt has the pilot's bounds) ----
+
+    [TestMethod]
+    public void NoIdleTimeout_ASessionIsNeverDroppedForBeingIdle()
+    {
+        Opt.SessionIdle = TimeSpan.Zero;
+        var s = NewSession();
+        var expiry = M.ExpiryOf(s)!.Value;
+        Fake.Advance(TimeSpan.FromDays(30));
+        M.Sweep();
+        Assert.AreSame(s, M.Get(s.Id, Code), "still there after a month without a call");
+        Assert.IsFalse(expiry.IsCancellationRequested);
+        Assert.AreEqual(1, M.Count);
+    }
+
+    [TestMethod]
+    public async Task NoIdleTimeout_AtTheSessionCap_TheLeastRecentlyActiveIdleSessionMakesRoom()
+    {
+        Opt.SessionIdle = TimeSpan.Zero;
+        Opt.MaxSessions = 3;
+        var codes = new List<InviteCode>();
+        for (var i = 0; i < 4; i++) codes.Add(await Store.CreateAsync($"w{i}@example.com", 20));
+        var held = new List<LiveSession>();
+        foreach (var c in codes.Take(3))
+        {
+            held.Add(NewSession(c));
+            Fake.Advance(TimeSpan.FromMinutes(1));
+        }
+        Assert.AreSame(held[0], M.Get(held[0].Id, codes[0]), "a call makes the first one the most recently active");
+        var oldest = M.ExpiryOf(held[1])!.Value;
+
+        var r = M.Create(codes[3], "home");
+        Assert.IsNull(r.Error, "never global_limit while an idle session can make room");
+        Assert.AreEqual(3, M.Count);
+        Assert.IsNull(M.Get(held[1].Id, codes[1]), "the least recently active one was ended");
+        Assert.IsTrue(oldest.IsCancellationRequested, "and its stream with it");
+        Assert.IsNotNull(M.Get(held[0].Id, codes[0]));
+        Assert.IsNotNull(M.Get(held[2].Id, codes[2]));
+    }
+
+    [TestMethod]
+    public void NoBounds_ARequestBudgetNeverRunsOut()
+    {
+        var b = new RequestBudget(0, TimeSpan.Zero, Fake);
+        for (var i = 0; i < 500; i++) b.BeforeCall();
+        Fake.Advance(TimeSpan.FromDays(10));
+        b.BeforeCall();
+        Assert.IsFalse(b.TimeUp);
+        Assert.AreEqual(Timeout.InfiniteTimeSpan, b.Remaining, "a timer given it never fires");
+        Assert.AreEqual(501, b.Usage.Calls);
+
+        var bounded = new RequestBudget(2, TimeSpan.FromMinutes(30), Fake);
+        bounded.BeforeCall();
+        bounded.BeforeCall();
+        Assert.AreEqual("calls", Assert.ThrowsException<BudgetExceededException>(bounded.BeforeCall).Kind, "a bound that is set still holds");
+    }
+
+    [TestMethod]
+    public async Task NoApprovalWait_ACardWaitsForAsLongAsItTakes()
+    {
+        var r = new RequestRecord("r1", "text", new RoomState(), Fake);
+        var wait = r.WaitDecisionAsync(TimeSpan.Zero, CancellationToken.None);
+        Fake.Advance(TimeSpan.FromDays(7));
+        Assert.IsFalse(wait.IsCompleted, "a week later the card still waits");
+        Assert.IsTrue(r.TryDecide(Decision.Approve));
+        Assert.AreEqual(Decision.Approve, await wait);
     }
 }

@@ -10,6 +10,12 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.1.0-preview1 新增 RemoveAutomationAsync：移除一条或全部自动化，走与开关相同的编辑队列
+
+    修改标识：Senparc - 20261111
+    修改描述：v0.1.0-preview1 会话空闲超时为 0 时不过期；达到会话上限时结束最久未用的空闲会话腾出位置
+
 ----------------------------------------------------------------*/
 
 using System.Security.Cryptography;
@@ -94,7 +100,8 @@ public sealed class SessionManager
     /// A new session on the scene's post-setup room, within the caps (contract, server final review). Expired sessions
     /// are removed first, so they hold no place. A code already holding <see cref="SessionsPerCode"/> sessions ends its
     /// least recently active idle one to make room (that tab then gets no_session, its stream ends); if every one is
-    /// busy, Error is code_limit. Otherwise, at <see cref="LiveOptions.MaxSessions"/>, Error is global_limit.
+    /// busy, Error is code_limit. Otherwise, at <see cref="LiveOptions.MaxSessions"/>, Error is global_limit; with no
+    /// idle timeout (the default) the least recently active idle session of any code is ended to make room instead.
     /// Throws KeyNotFoundException for an unknown scene.
     /// </summary>
     public SessionResult Create(InviteCode c, string scene) => Create(c, ManifestLoader.Load(scene));
@@ -119,7 +126,15 @@ public sealed class SessionManager
                     if (mine.FirstOrDefault(TryEndIdle) is not { } evicted) return new SessionResult(null, "code_limit");
                     ended.Add(evicted);
                 }
-                else if (_sessions.Count >= _opt.MaxSessions) return new SessionResult(null, "global_limit");
+                else if (_sessions.Count >= _opt.MaxSessions)
+                {
+                    // With no idle timeout nothing leaves by itself, so the least recently active idle session makes
+                    // room (its tab then gets no_session); global_limit only when every session is busy.
+                    if (_opt.SessionIdle > TimeSpan.Zero) return new SessionResult(null, "global_limit");
+                    if (_sessions.Values.OrderBy(e => e.Session.LastActivity).ToList().FirstOrDefault(TryEndIdle) is not { } oldest)
+                        return new SessionResult(null, "global_limit");
+                    ended.Add(oldest);
+                }
 
                 string id;
                 do id = Convert.ToHexStringLower(RandomNumberGenerator.GetBytes(16));
@@ -301,6 +316,28 @@ public sealed class SessionManager
     }
 
     /// <summary>
+    /// The visitor removing automation <paramref name="id"/>, or every automation in the room with a null id ("Clear
+    /// all"): null when it was applied, or queued behind the room's owner and not yet applied after 2 s;
+    /// "no_automation" for an id not in the room (clearing an empty room is not an error). It takes the same path as
+    /// <see cref="ToggleAsync"/>: the edit queue under Gate, applied only where the room's owner applies edits. Allowed
+    /// mid-request; never calls the model or counts against a limit.
+    /// </summary>
+    public async Task<string?> RemoveAutomationAsync(LiveSession s, string? id)
+    {
+        Task<EditOutcome> task;
+        await s.Gate.WaitAsync(CancellationToken.None);
+        try
+        {
+            if (id is not null && s.Busy && !s.KnowsAutomation(id)) return "no_automation";
+            task = s.Edits.EnqueueRemoval(id);
+            if (!s.Busy) EditApplier.ApplyAll(s, EditorFor(s), s.Room, null, _pacer);
+        }
+        finally { s.Gate.Release(); }
+        try { return (await task.WaitAsync(TimeSpan.FromSeconds(2), _tp)).Error; }
+        catch (TimeoutException) { return null; }
+    }
+
+    /// <summary>
     /// Moves the room's clock forward <paramref name="hours"/> (the route checks 0 &lt; hours ≤ 168), playing the gap like
     /// the AI's fast-forward, paced, with its events on the session stream: no rid, src "edit". Busy while a request or
     /// another advance owns the room. Gate is held only to claim and to release the room, not while it plays, so an edit
@@ -368,12 +405,12 @@ public sealed class SessionManager
     }
 
     /// <summary>
-    /// No call for SessionIdle. A running request touches the session when it starts and ends, and every approve or
+    /// No call for SessionIdle (never, when it is zero or less: the default). A running request touches the session when it starts and ends, and every approve or
     /// decline comes through Get. The longest quiet stretch inside a request is its work time plus one approval wait,
     /// and a SessionIdle shorter than that is one of <see cref="LiveOptions.Problems"/> (live stays off), so expiry only
     /// cancels a request that is stuck.
     /// </summary>
-    bool Idle(LiveSession s, DateTimeOffset now) => now - s.LastActivity >= _opt.SessionIdle;
+    bool Idle(LiveSession s, DateTimeOffset now) => _opt.SessionIdle > TimeSpan.Zero && now - s.LastActivity >= _opt.SessionIdle;
 
     /// <summary>
     /// Cancelled when the session expires (swept, or found idle by Get), so an SSE loop can end its stream; its requests

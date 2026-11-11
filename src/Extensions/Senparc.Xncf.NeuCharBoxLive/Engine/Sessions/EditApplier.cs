@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.1.0-preview1 ApplyAll 处理移除自动化（ApplyRemoval），之后总是推送自动化列表
+
 ----------------------------------------------------------------*/
 
 using System.Text.Json.Nodes;
@@ -52,6 +55,11 @@ public static class EditApplier
             if (p.Toggle is { } t)
             {
                 ApplyToggle(s, room, rid, p, t);
+                continue;
+            }
+            if (p.Removal is { } gone)
+            {
+                ApplyRemoval(s, room, rid, p, gone);
                 continue;
             }
 
@@ -103,6 +111,30 @@ public static class EditApplier
         try
         {
             if (!Automations.SetEnabled(room, t.Id, t.Enabled))
+            {
+                p.Done.TrySetResult(new EditOutcome("no_automation", [], []));
+                return;
+            }
+            EmitAutomations(s, room, rid, edit: true, force: true);
+        }
+        catch (Exception e)
+        {
+            p.Done.TrySetException(e);
+            return;
+        }
+        p.Done.TrySetResult(new EditOutcome(null, [], []));
+    }
+
+    /// <summary>
+    /// The visitor removing an automation, or all of them (a null id), applied to the owner's room in its place in the
+    /// queue. The automations list always streams afterwards (src "edit", the owner's rid), so the section ends on the
+    /// room's list; an unknown id (dropped meanwhile) changes nothing and completes with "no_automation".
+    /// </summary>
+    static void ApplyRemoval(LiveSession s, RoomState room, string? rid, PendingEdit p, AutomationRemoval gone)
+    {
+        try
+        {
+            if (!Automations.Remove(room, gone.Id))
             {
                 p.Done.TrySetResult(new EditOutcome("no_automation", [], []));
                 return;

@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261109
     修改描述：v0.1.0-preview1 新增测试：旧版独立宿主的 NcbLive 键被忽略并只记一条警告（只列键名）；配置段无法绑定时用默认值且 Live 关闭
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.1.0-preview1 默认值改为不设上限；问题检查的用例改用试点时期的上限
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Configuration;
@@ -34,18 +37,19 @@ namespace Senparc.Xncf.NeuCharBoxLive.Tests;
 public class ConfigTests
 {
     [TestMethod]
-    public void LiveOptions_Defaults_MatchPilot()
+    public void LiveOptions_Defaults_NoCutOffs()
     {
         var o = new LiveOptions();
-        Assert.AreEqual(60, o.MaxCalls);
-        Assert.AreEqual(60, o.MaxCallsWhatIf);
-        Assert.AreEqual(TimeSpan.FromMinutes(30), o.MaxWork);
-        Assert.AreEqual(TimeSpan.FromMinutes(45), o.SessionIdle);
+        // No request is cut short and no session is dropped for being idle unless the host sets a bound (0 = none).
+        Assert.AreEqual(0, o.MaxCalls);
+        Assert.AreEqual(0, o.MaxCallsWhatIf);
+        Assert.AreEqual(TimeSpan.Zero, o.MaxWork);
+        Assert.AreEqual(TimeSpan.Zero, o.SessionIdle);
         Assert.AreEqual("UTC", o.UsageTimeZone);
         Assert.AreEqual("required", o.PlanToolMode);
         Assert.AreEqual(400, o.MaxChars);
         Assert.AreEqual(1500, o.MaxCompletionTokens);
-        Assert.AreEqual(TimeSpan.FromMinutes(10), o.ApprovalWait);
+        Assert.AreEqual(TimeSpan.Zero, o.ApprovalWait);
         Assert.AreEqual(6, o.HistoryTurns);
         Assert.AreEqual(200, o.MaxSessions);
         Assert.AreEqual(30, o.AccessCheckPerMinute);
@@ -65,11 +69,11 @@ public class ConfigTests
     public void LiveOptions_Problems_NamesEachBadSetting()
     {
         // A request can be quiet for its work time plus one approval wait; its session must outlive that.
-        Assert.AreEqual(0, new LiveOptions { SessionIdle = TimeSpan.FromMinutes(40) }.Problems().Count, "exactly MaxWork + ApprovalWait");
+        Assert.AreEqual(0, Fakes.Pilot.Options(o => o.SessionIdle = TimeSpan.FromMinutes(40)).Problems().Count, "exactly MaxWork + ApprovalWait");
         CollectionAssert.AreEqual(new[] { nameof(LiveOptions.SessionIdle) },
-            new LiveOptions { SessionIdle = TimeSpan.FromMinutes(40) - TimeSpan.FromSeconds(1) }.Problems().ToList());
+            Fakes.Pilot.Options(o => o.SessionIdle = TimeSpan.FromMinutes(40) - TimeSpan.FromSeconds(1)).Problems().ToList());
         CollectionAssert.AreEqual(new[] { nameof(LiveOptions.SessionIdle) },
-            new LiveOptions { ApprovalWait = TimeSpan.FromMinutes(40) }.Problems().ToList());
+            Fakes.Pilot.Options(o => o.ApprovalWait = TimeSpan.FromMinutes(40)).Problems().ToList());
         CollectionAssert.AreEqual(new[] { nameof(LiveOptions.MaxSessions) }, new LiveOptions { MaxSessions = 0 }.Problems().ToList());
         CollectionAssert.AreEqual(new[] { nameof(LiveOptions.AccessCheckPerMinute) },
             new LiveOptions { AccessCheckPerMinute = 0 }.Problems().ToList());
@@ -77,7 +81,12 @@ public class ConfigTests
         Assert.AreEqual(0, new LiveOptions { UsageTimeZone = "America/New_York" }.Problems().Count);
         Assert.AreEqual(0, new LiveOptions { UsageTimeZone = "" }.Problems().Count, "empty is UTC");
 
-        var all = new LiveOptions { SessionIdle = TimeSpan.Zero, MaxSessions = 0, AccessCheckPerMinute = -1, UsageTimeZone = "Mars/Base" };
+        // An idle timeout with unbounded work or approval wait (the defaults) can never be long enough.
+        CollectionAssert.AreEqual(new[] { nameof(LiveOptions.SessionIdle) }, new LiveOptions { SessionIdle = TimeSpan.FromMinutes(45) }.Problems().ToList());
+        CollectionAssert.AreEqual(new[] { nameof(LiveOptions.SessionIdle) }, Fakes.Pilot.Options(o => o.ApprovalWait = TimeSpan.Zero).Problems().ToList());
+        Assert.AreEqual(0, Fakes.Pilot.Options(o => o.SessionIdle = TimeSpan.Zero).Problems().Count, "no idle timeout is fine with any bounds");
+
+        var all = new LiveOptions { SessionIdle = TimeSpan.FromSeconds(1), MaxSessions = 0, AccessCheckPerMinute = -1, UsageTimeZone = "Mars/Base" };
         CollectionAssert.AreEquivalent(new[] { "SessionIdle", "MaxSessions", "AccessCheckPerMinute", "UsageTimeZone" }, all.Problems().ToList());
     }
 
@@ -88,7 +97,7 @@ public class ConfigTests
     {
         var cfg = Config(new()
         {
-            ["NcbLive:MaxWork"] = "00:05:00", ["NcbLive:SessionIdle"] = "00:20:00", ["NcbLive:AccessCheckPerMinute"] = "7",
+            ["NcbLive:MaxWork"] = "00:05:00", ["NcbLive:ApprovalWait"] = "00:10:00", ["NcbLive:SessionIdle"] = "00:20:00", ["NcbLive:AccessCheckPerMinute"] = "7",
             ["NcbLive:Pacing:IdleHourSeconds"] = "0.2", ["NcbLive:Pacing:EventSeconds"] = "0.5", ["NcbLive:Pacing:WeekCapSeconds"] = "10",
             ["NcbLive:UsageTimeZone"] = "America/New_York",
         });
@@ -194,8 +203,8 @@ public class ConfigTests
         using var sp = services.BuildServiceProvider();
 
         var o = sp.GetRequiredService<LiveOptions>();
-        Assert.AreEqual(TimeSpan.FromMinutes(30), o.MaxWork);
-        Assert.AreEqual(TimeSpan.FromMinutes(45), o.SessionIdle, "nothing of the section is half-bound");
+        Assert.AreEqual(TimeSpan.Zero, o.MaxWork);
+        Assert.AreEqual(TimeSpan.Zero, o.SessionIdle, "nothing of the section is half-bound");
         var snap = sp.GetRequiredService<ILiveRuntime>().Current;
         Assert.AreEqual(LiveOff.Config, snap.OffReason);
         Assert.IsFalse(snap.On);

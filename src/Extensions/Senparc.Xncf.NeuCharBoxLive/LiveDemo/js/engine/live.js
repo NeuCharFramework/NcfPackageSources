@@ -33,7 +33,7 @@ export const LIVE_COPY = {
   reading: (ref) => `Checking ${ref}…`,
   planIntro: "Here's the plan. Nothing runs until you approve.",
   replanIntro: (reason) => `I need to change the plan: ${String(reason ?? '').replace(/[\s.!?…]+$/, '')}.`,
-  checklistTitle: 'Running your plan',
+  checklistTitle: 'Implementing your plan',
   replayTitle: 'Replaying your plan',
   declined: "OK, nothing ran. Everything is as it was. Type another request when you're ready.",
   expired: 'That plan waited too long, so I dropped it. Nothing ran.',
@@ -88,6 +88,10 @@ export const LIVE_COPY = {
   autoHeldBadge: 'HELD',
   autoRejected: "That switch didn't go through, so the automation is back as it was.",
   autoGone: "That automation isn't there any more, so nothing changed.",
+  autosClear: 'Clear all',
+  autoRemove: (text) => `Remove automation: ${text}`,
+  autoRemoveRejected: "That automation couldn't be removed, so it is back.",
+  autosClearRejected: "The automations couldn't be cleared, so they are back.",
 };
 
 export const normalizeCode = (text) => String(text ?? '').toUpperCase().replace(/\s+/g, '');
@@ -156,6 +160,7 @@ export function createLive({ scene, store, view, panel, ui, base, fetch: doFetch
   let autos = [];
   const autoWant = new Map(); // id → { on, n, text }: the flip shown, its number, and the text of the automation flipped
   const autoFlying = new Map(); // id → its switch POSTs not answered yet
+  const autoGone = new Map(); // id → text: removed by the visitor, not shown until the server's list has dropped it
   let autoN = 0, announced = null;
 
   // The clock control: usable only between requests (idle), while no advance runs, and while a session exists.
@@ -182,7 +187,7 @@ export function createLive({ scene, store, view, panel, ui, base, fetch: doFetch
   const announce = () => { if (dead()) return; const k = `${available}|${active}`; if (k === announced) return; announced = k; ui.availability?.({ available, active }); };
 
   // ---- automations ----
-  const shownAutos = () => autos.map((a) => { const w = autoWant.get(a.id); return w && w.on !== a.enabled ? { ...a, enabled: w.on } : a; });
+  const shownAutos = () => autos.filter((a) => autoGone.get(a.id) !== a.text).map((a) => { const w = autoWant.get(a.id); return w && w.on !== a.enabled ? { ...a, enabled: w.on } : a; });
   const showAutos = () => { if (!dead()) ui.automations?.(shownAutos()); };
   // A flipped switch is settled once the server's list agrees and none of its POSTs is still out (a list that agrees
   // while one is out may predate both flips), or once its automation is gone or replaced (a re-plan can reuse an id).
@@ -190,11 +195,15 @@ export function createLive({ scene, store, view, panel, ui, base, fetch: doFetch
   // A list from the server (last one wins). fresh (a new session, a reset, a what-if's room): flipped switches go too.
   function setAutos(list, { fresh = false } = {}) {
     autos = automationsOf(list);
-    if (fresh) autoWant.clear();
-    else for (const [id, w] of [...autoWant]) if (settled(id, w)) autoWant.delete(id);
+    if (fresh) { autoWant.clear(); autoGone.clear(); }
+    else {
+      for (const [id, w] of [...autoWant]) if (settled(id, w)) autoWant.delete(id);
+      // A removal is settled once the list no longer has that automation (the same id with another text is a new one).
+      for (const [id, text] of [...autoGone]) if (!autos.some((a) => a.id === id && a.text === text)) autoGone.delete(id);
+    }
     showAutos();
   }
-  const noAutos = () => { autos = []; autoWant.clear(); autoFlying.clear(); if (!dead()) ui.automations?.(null); }; // live mode is over: the section goes
+  const noAutos = () => { autos = []; autoWant.clear(); autoFlying.clear(); autoGone.clear(); if (!dead()) ui.automations?.(null); }; // live mode is over: the section goes
   // A timeline row an automation made (a rule fired, a schedule ran, a rule held back): its card flashes.
   function flashAuto(d) {
     if (dead() || typeof d.automation !== 'string' || !autos.some((a) => a.id === d.automation)) return;
@@ -357,9 +366,11 @@ export function createLive({ scene, store, view, panel, ui, base, fetch: doFetch
       if (replayable && !isWhatIf) lastRid = rid;     // a what-if never becomes the latest finished request (contract)
       closeEnd(); // the last end card, which stays usable until this one shows (a decline or cannot_do shows none)
       ended = view.endCard({ remainingToday, whatIfLabel: isWhatIf ? LIVE_COPY.anotherFailure : LIVE_COPY.whatIf, whatIf: replayable }, endActions()) ?? null;
-      beat('end'); ui.status(LIVE_COPY.statusDone(remainingToday));
-    } else { beat('ask'); ui.status(LIVE_COPY.statusWaiting(n)); }
+    }
     if (remainingToday === 0 && !isWhatIf) view.ncb(LIVE_COPY.lastOne); // a what-if spends no request
+    // A finished request ends nothing: no DONE step and no card to press first. The page is back at "ask" and the next
+    // request can be typed at once; the follow-ups (a what-if, a reset) stay offered in a slim row under the summary.
+    isWhatIf = false; beat('ask'); ui.status(LIVE_COPY.statusWaiting(n));
     setPhase('idle'); view.input(true);
     if (pendingText) { const t = pendingText; pendingText = null; submit(t); }
   }
@@ -542,6 +553,35 @@ export function createLive({ scene, store, view, panel, ui, base, fetch: doFetch
     if (autoWant.get(id)?.n === k) { autoWant.delete(id); showAutos(); } else settle(); // a later flip moved it on: that one stands
     if (kindOf(err) === 'rate') sayRate(); else view.ncb(kindOf(err) === 'no_automation' ? LIVE_COPY.autoGone : LIVE_COPY.autoRejected);
   }
+  // A card's remove button, and the section's "Clear all". The cards go at once and stay away until the server's list
+  // has dropped them (mid-request the server applies a removal where it owns the room, so an older list may still
+  // arrive first). A refusal brings them back with a short line; one the server no longer has just stays gone.
+  async function removeAutomation(id) {
+    const a = autos.find((x) => x.id === id);
+    if (gone() || !sessionId || !a || autoGone.get(id) === a.text) return;
+    const sid = sessionId; autoGone.set(id, a.text); showAutos();
+    let err = null;
+    try { await api.removeAutomation(sid, id); } catch (e) { err = e; }
+    if (gone() || sid !== sessionId || !err) return;
+    if (status(err) === 401) return unauthorized();
+    if (kindOf(err) === 'no_session') return regenerate();
+    if (kindOf(err) === 'no_automation') return;
+    if (autoGone.get(id) === a.text) { autoGone.delete(id); showAutos(); }
+    if (kindOf(err) === 'rate') sayRate(); else view.ncb(LIVE_COPY.autoRemoveRejected);
+  }
+  async function clearAutomations() {
+    const mine = shownAutos().map((a) => [a.id, a.text]);
+    if (gone() || !sessionId || !mine.length) return;
+    const sid = sessionId; for (const [id, text] of mine) autoGone.set(id, text); showAutos();
+    let err = null;
+    try { await api.clearAutomations(sid); } catch (e) { err = e; }
+    if (gone() || sid !== sessionId || !err) return;
+    if (status(err) === 401) return unauthorized();
+    if (kindOf(err) === 'no_session') return regenerate();
+    for (const [id, text] of mine) if (autoGone.get(id) === text) autoGone.delete(id);
+    showAutos();
+    if (kindOf(err) === 'rate') sayRate(); else view.ncb(LIVE_COPY.autosClearRejected);
+  }
 
   async function advance(hours) {
     if (gone() || !sessionId || phase !== 'idle' || advancing) return;
@@ -592,7 +632,7 @@ export function createLive({ scene, store, view, panel, ui, base, fetch: doFetch
   function forget() {
     if (answer) answer.over = true;
     rid = null; lastRid = null; holding = null; answer = null; pendingText = null; held = null; isWhatIf = false; requesting = false;
-    busy.clear(); begin(); autos = []; autoWant.clear(); autoFlying.clear();
+    busy.clear(); begin(); autos = []; autoWant.clear(); autoFlying.clear(); autoGone.clear();
   }
   // Makes a session and its stream. false when it failed (already handled) or the visit moved on.
   async function newSession({ notice } = {}) {
@@ -726,7 +766,7 @@ export function createLive({ scene, store, view, panel, ui, base, fetch: doFetch
   function close() { closed = true; active = false; phase = 'off'; stream?.close(); stream = null; forget(); }
 
   return {
-    probe, open, submit, exit, close, edit, advance, setAutomation,
+    probe, open, submit, exit, close, edit, advance, setAutomation, removeAutomation, clearAutomations,
     get automations() { return shownAutos(); }, // what the section shows (QA hooks)
     get available() { return available; },
     get active() { return active; },

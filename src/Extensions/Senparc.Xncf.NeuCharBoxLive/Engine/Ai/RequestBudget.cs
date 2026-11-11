@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.1.0-preview1 调用数或工作时间上限为 0 时不设限（TimeUp、Remaining 为无限）
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.AI;
@@ -24,7 +27,8 @@ public class BudgetExceededException(string kind) : Exception($"request {kind} b
 }
 
 /// <summary>
-/// One request's bounds (spec 6): model calls, and server work time with approval waits left out. Also adds up the
+/// One request's bounds (spec 6): model calls, and server work time with approval waits left out; a bound of zero or
+/// less is no bound (the default: a request is never cut short). Also adds up the
 /// tokens for done.usage. Time runs on the TimeProvider, so a FakeTimeProvider drives it.
 /// </summary>
 public class RequestBudget
@@ -51,8 +55,8 @@ public class RequestBudget
     {
         lock (_gate)
         {
-            if (_calls >= _maxCalls) throw new BudgetExceededException("calls");
-            if (WorkedLocked() >= _maxWork) throw new BudgetExceededException("time");
+            if (_maxCalls > 0 && _calls >= _maxCalls) throw new BudgetExceededException("calls");
+            if (_maxWork > TimeSpan.Zero && WorkedLocked() >= _maxWork) throw new BudgetExceededException("time");
             _calls++;
         }
     }
@@ -78,11 +82,15 @@ public class RequestBudget
         }
     }
 
-    /// <summary>The work time left, never negative.</summary>
+    /// <summary>The work time is used up (never, with no bound on it).</summary>
+    public bool TimeUp => _maxWork > TimeSpan.Zero && Remaining <= TimeSpan.Zero;
+
+    /// <summary>The work time left, never negative; <see cref="Timeout.InfiniteTimeSpan"/> with no bound on it (a timer given it never fires).</summary>
     public TimeSpan Remaining
     {
         get
         {
+            if (_maxWork <= TimeSpan.Zero) return Timeout.InfiniteTimeSpan;
             lock (_gate)
             {
                 var left = _maxWork - WorkedLocked();

@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.1.0-preview1 每个请求的调用数、工作时间、审批等待与会话空闲超时默认不设上限（0 表示不限），请求不再被中途截断
+
 ----------------------------------------------------------------*/
 
 using Senparc.Xncf.NeuCharBoxLive.Engine.Sim;
@@ -28,16 +31,27 @@ public class LiveOptions
     /// <summary>"required" makes the planning call pick a tool; "auto" lets it answer in text (the runner then parses JSON).</summary>
     public string PlanToolMode { get; set; } = "required";
 
-    public int MaxCalls { get; set; } = 60;
-    public int MaxCallsWhatIf { get; set; } = 60;
+    /// <summary>Model calls per request; 0 (the default) or less is no limit: a request is never cut short for it.</summary>
+    public int MaxCalls { get; set; }
+
+    /// <summary>Model calls per what-if; 0 (the default) or less is no limit.</summary>
+    public int MaxCallsWhatIf { get; set; }
+
     public int MaxChars { get; set; } = 400;
 
-    /// <summary>Server work time per request, approval waits excluded.</summary>
-    public TimeSpan MaxWork { get; set; } = TimeSpan.FromMinutes(30);
+    /// <summary>Server work time per request, approval waits excluded; zero (the default) or less is no limit.</summary>
+    public TimeSpan MaxWork { get; set; } = TimeSpan.Zero;
 
     public int MaxCompletionTokens { get; set; } = 1500;
-    public TimeSpan ApprovalWait { get; set; } = TimeSpan.FromMinutes(10);
-    public TimeSpan SessionIdle { get; set; } = TimeSpan.FromMinutes(45);
+    /// <summary>How long a plan waits for approval before it expires; zero (the default) or less waits for as long as it takes.</summary>
+    public TimeSpan ApprovalWait { get; set; } = TimeSpan.Zero;
+
+    /// <summary>
+    /// Idle time after which a session is dropped; zero (the default) or less never drops one for being idle. Then a
+    /// session leaves only when its code opens one too many, or, with the server at <see cref="MaxSessions"/>, as the
+    /// least recently active idle one when a new session needs the place.
+    /// </summary>
+    public TimeSpan SessionIdle { get; set; } = TimeSpan.Zero;
     public int HistoryTurns { get; set; } = 6;
     public FastForwardPacing Pacing { get; set; } = new();
 
@@ -56,9 +70,11 @@ public class LiveOptions
     public IReadOnlyList<string> Problems()
     {
         var p = new List<string>();
-        // A request can be quiet for its work time plus one approval wait; its session must outlive that, or a session
-        // could expire while its request waits for approval.
-        if (SessionIdle < MaxWork + ApprovalWait) p.Add(nameof(SessionIdle));
+        // A request can be quiet for its work time plus one approval wait; a session with an idle timeout must outlive
+        // that, or it could expire while its request waits for approval. With either of the two unlimited, no idle
+        // timeout is long enough.
+        if (SessionIdle > TimeSpan.Zero && (MaxWork <= TimeSpan.Zero || ApprovalWait <= TimeSpan.Zero || SessionIdle < MaxWork + ApprovalWait))
+            p.Add(nameof(SessionIdle));
         if (MaxSessions < 1) p.Add(nameof(MaxSessions));               // no session could open
         if (AccessCheckPerMinute < 1) p.Add(nameof(AccessCheckPerMinute)); // no invite code could be checked
         if (!UsageDay.TryFromId(UsageTimeZone, out _)) p.Add(nameof(UsageTimeZone));

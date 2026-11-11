@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.1.0-preview1 测试夹具改用试点时期的上限（Pilot）
+
 ----------------------------------------------------------------*/
 
 using System.Text.Json.Nodes;
@@ -41,7 +44,7 @@ public class ReplanWhatIfTests
     readonly FakeTimeProvider Fake = new(new DateTimeOffset(2026, 11, 7, 15, 0, 0, TimeSpan.Zero));
     readonly InMemoryLiveStore Store = new();
     readonly ListLogger<RequestRunner> Log = new();
-    readonly LiveOptions Opt = new();
+    readonly LiveOptions Opt = Fakes.Pilot.Options(); // the pilot's bounds: the defaults have none
     readonly LiveSession S;
     readonly InstantPacer Pacer;
     int _rids;

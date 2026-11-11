@@ -10,6 +10,12 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.1.0-preview1 新增测试：移除单条自动化与清空全部
+
+    修改标识：Senparc - 20261111
+    修改描述：v0.1.0-preview1 测试夹具改用试点时期的上限（Pilot）
+
 ----------------------------------------------------------------*/
 
 using System.Text.Json.Nodes;
@@ -39,7 +45,7 @@ public class AutomationsTests
     static readonly ISceneBehavior HomeB = ManifestLoader.Behavior("home");
 
     readonly FakeTimeProvider Fake = new(new DateTimeOffset(2026, 11, 7, 15, 0, 0, TimeSpan.Zero));
-    readonly LiveOptions Opt = new();
+    readonly LiveOptions Opt = Fakes.Pilot.Options(); // the pilot's bounds: the defaults have none
     readonly InMemoryLiveStore Store;
     readonly AccessService Access;
     readonly TokenMeter Meter;
@@ -1027,5 +1033,119 @@ public class AutomationsTests
 
         await h.PostAsync($"sessions/{sid}/requests/{rid}/approve", new { }, c.Code);
         Assert.AreEqual("ok", (string?)(await sse.UntilAsync("done"))[^1].Data["outcome"]);
+    }
+    // ---- removing automations (the card's remove button, "Clear all") ----
+
+    [TestMethod]
+    public void Remove_OneById_OrAllWithNull()
+    {
+        var room = new RoomState();
+        room.Rules.Add(Water());
+        room.Rules.Add(DoorNotify());
+        Assert.IsFalse(Automations.Remove(room, "rule9"), "an unknown id removes nothing");
+        Assert.AreEqual(2, room.Rules.Count);
+        Assert.IsTrue(Automations.Remove(room, "rule1"));
+        Assert.AreEqual("rule2", room.Rules.Single().Id);
+        Assert.IsTrue(Automations.Remove(room, null));
+        Assert.AreEqual(0, room.Rules.Count + room.Schedules.Count);
+        Assert.IsTrue(Automations.Remove(room, null), "clearing an empty room is fine");
+    }
+
+    [TestMethod]
+    public async Task Remove_Idle_StreamsTheListWithoutIt_AndTheRuleNoLongerFires()
+    {
+        var s = NewSession();
+        Seed(s, Water());
+        s.Room.Rules.Add(DoorNotify());
+
+        Assert.IsNull(await M.RemoveAutomationAsync(s, "rule1"));
+        var list = AutomationEvents(s)[^1];
+        Assert.IsTrue(IsEdit(list));
+        Assert.IsNull(list.Rid, "outside a request there is no rid");
+        var ids = list.Data["items"]!.AsArray().Select(i => (string)i!["id"]!).ToList();
+        CollectionAssert.AreEqual(new[] { "rule2" }, ids);
+        Assert.AreEqual("rule2", s.Room.Rules.Single().Id);
+
+        var o = await M.EditAsync(s, "soil.moisture", JsonValue.Create(25.0));
+        Assert.IsNull(o.Error);
+        Assert.IsFalse(All(s).Any(e => e.Kind == "timeline"), "a removed rule doesn't fire");
+
+        Assert.AreEqual("no_automation", await M.RemoveAutomationAsync(s, "rule1"), "it is gone");
+    }
+
+    [TestMethod]
+    public async Task ClearAll_Idle_StreamsAnEmptyList_EvenFromAnEmptyRoom()
+    {
+        var s = NewSession();
+        Seed(s, Water());
+        s.Room.Rules.Add(DoorNotify());
+
+        Assert.IsNull(await M.RemoveAutomationAsync(s, null));
+        Assert.AreEqual(0, s.Room.Rules.Count + s.Room.Schedules.Count);
+        var list = AutomationEvents(s)[^1];
+        Assert.IsTrue(IsEdit(list));
+        Assert.AreEqual(0, list.Data["items"]!.AsArray().Count);
+
+        var n = AutomationEvents(s).Count;
+        Assert.IsNull(await M.RemoveAutomationAsync(s, null), "nothing to clear is not an error");
+        Assert.AreEqual(n + 1, AutomationEvents(s).Count, "and the empty list is sent again, so the section ends on the room's");
+    }
+
+    [TestMethod]
+    public async Task Remove_WhileOwned_QueuesForTheOwner_AndAnUnknownIdIsRefusedAtOnce()
+    {
+        var s = NewSession();
+        Seed(s, Water());
+        s.Advancing = true;
+        Assert.AreEqual("no_automation", await M.RemoveAutomationAsync(s, "rule9"));
+        Assert.AreEqual(0, s.Edits.TakeAll().Count, "nothing was queued");
+
+        var pending = M.RemoveAutomationAsync(s, "rule1");
+        Assert.IsFalse(pending.IsCompleted);
+        Assert.AreEqual(1, s.Room.Rules.Count, "nothing is applied while the room is owned");
+        Fake.Advance(TimeSpan.FromSeconds(2));
+        Assert.IsNull(await pending, "answered 202: queued");
+
+        EditApplier.ApplyAll(s, new RoomEditor(s.Scene, new Simulator(s.Scene, s.Behavior)), s.Room, "r1", new InstantPacer());
+        Assert.AreEqual(0, s.Room.Rules.Count);
+        var list = AutomationEvents(s)[^1];
+        Assert.AreEqual("r1", list.Rid, "the owner's rid");
+        Assert.AreEqual(0, list.Data["items"]!.AsArray().Count);
+    }
+
+    [TestMethod]
+    public async Task RemoveAndClearRoutes_202_401_404()
+    {
+        await using var h = await LiveHost.StartAsync();
+        var c = await h.NewCodeAsync();
+        var sid = await h.SessionAsync(c);
+        var s = h.Get<SessionManager>().Get(sid, c)!;
+        s.Room.Rules.Add(Water());
+        s.Room.Rules.Add(DoorNotify());
+        await using var sse = await h.OpenSseAsync(c, sid);
+
+        AssertError(await h.PostAsync($"sessions/{sid}/automations/rule9/remove", new { }, c.Code), 404, "no_automation");
+        AssertError(await h.PostAsync($"sessions/{sid}/automations/rule1/remove", new { }), 401, "bad_code");
+        AssertError(await h.PostAsync("sessions/nope/automations/rule1/remove", new { }, c.Code), 404, "no_session");
+        AssertError(await h.PostAsync($"sessions/{sid}/automations/clear", new { }), 401, "bad_code");
+        AssertError(await h.PostAsync("sessions/nope/automations/clear", new { }, c.Code), 404, "no_session");
+        Assert.AreEqual(2, s.Room.Rules.Count, "no refused call changed it");
+
+        var r = await h.PostAsync($"sessions/{sid}/automations/rule1/remove", new { }, c.Code);
+        Assert.AreEqual(202, r.Code, r.Body?.ToJsonString());
+        Assert.IsTrue(JsonNode.DeepEquals(new JsonObject(), r.Body));
+        var e = await sse.NextAsync();
+        Assert.AreEqual("automations", e.Kind);
+        Assert.AreEqual("edit", (string?)e.Data["src"]);
+        Assert.AreEqual("rule2", (string)e.Data["items"]!.AsArray().Single()!["id"]!);
+
+        // "clear" is the Clear all route, not a switch on an automation called "clear": no body is needed.
+        r = await h.PostAsync($"sessions/{sid}/automations/clear", new { }, c.Code);
+        Assert.AreEqual(202, r.Code, r.Body?.ToJsonString());
+        e = await sse.NextAsync();
+        Assert.AreEqual("automations", e.Kind);
+        Assert.AreEqual(0, e.Data["items"]!.AsArray().Count);
+        Assert.AreEqual(0, s.Room.Rules.Count);
+        Assert.AreEqual(202, (await h.PostAsync($"sessions/{sid}/automations/clear", new { }, c.Code)).Code, "an empty room clears fine");
     }
 }

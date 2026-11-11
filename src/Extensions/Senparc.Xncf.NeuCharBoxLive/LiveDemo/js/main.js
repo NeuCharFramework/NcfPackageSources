@@ -163,7 +163,7 @@ async function mountScene(meta, gen) {
   const clockCtl = createClockCtl(document.getElementById('clockctl'), { onAdvance: (h) => live?.advance(h) });
   // The Automations section under the device cards (live mode only; js/engine/automations.js) and the header's Live AI
   // button (shown in every scene while live mode is not open). Neither exists without an API base.
-  autos = base ? createAutomations(document.getElementById('autos'), { onToggle: (id, on) => live?.setAutomation(id, on), ...foldMedia(),
+  autos = base ? createAutomations(document.getElementById('autos'), { onToggle: (id, on) => live?.setAutomation(id, on), onRemove: (id) => live?.removeAutomation(id), onClear: () => live?.clearAutomations(), ...foldMedia(),
     emptyText: scene.devices.soil && scene.devices.pump ? LIVE_COPY.autosEmpty : LIVE_COPY.autosEmptyAny }) : null;
   const liveTop = document.getElementById('liveTop');
   let entry = null;

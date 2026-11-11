@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.1.0-preview1 测试夹具改用试点时期的上限（Pilot）
+
 ----------------------------------------------------------------*/
 
 using System.Text.RegularExpressions;
@@ -25,7 +28,7 @@ public class AccessTests
     // 2026-11-07 10:00 in New York (EST, UTC−5).
     readonly FakeTimeProvider Fake = new(new DateTimeOffset(2026, 11, 7, 15, 0, 0, TimeSpan.Zero));
     readonly InMemoryLiveStore Store;
-    readonly LiveOptions Opt = new();
+    readonly LiveOptions Opt = Fakes.Pilot.Options(); // the pilot's bounds: the defaults have none
 
     /// <summary>Usage days reset at midnight in New York here: the boundary cases below are written for it.</summary>
     readonly UsageDay Days = NewYork();

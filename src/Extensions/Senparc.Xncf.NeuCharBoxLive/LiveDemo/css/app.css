@@ -222,6 +222,10 @@ button { font: inherit; color: inherit; }
 .card.live-plan.declined .btn.decline.chosen { opacity: 1; background: #FDECE8; color: #B5412A; border-color: #F3C4B8; }
 .card.end.live .left { margin: 0 0 10px; font-size: 13.5px; }
 .card.end.live .btn.reset { background: #fff; }
+/* a finished live request ends nothing: no end card, only a slim row of follow-ups under the summary */
+.card.end.live.slim { padding: 0; border: 0; background: none; box-shadow: none; }
+.card.end.live.slim .left { margin: 0 0 6px; font-size: 12.5px; color: var(--ink-2); }
+.card.end.live.slim .btn { padding: 5px 10px; font-size: 13px; }
 /* Phones: an end card taller than the chat log is shown from its top (chat.js). With the live button it needs one more
    line of buttons, which a small phone (360 x 640) can't fit under the story: the buttons then stay in view at the foot
    of the log, over the end of the story, until the visitor scrolls on. Where the card fits, nothing moves. (Desktop's
@@ -471,6 +475,15 @@ button { font: inherit; color: inherit; }
 .auto.flash-ran .badge { background: #E7F7F0; color: #17744A; }
 .auto.flash-held { border-color: var(--amber); box-shadow: 0 0 0 3px rgba(228,169,58,.2); }
 .auto.flash-held .badge { background: #FFF1CC; color: #8A5A00; }
+/* remove: a small × after the switch, with a fingertip-sized hit area; "Clear all" under the list */
+.auto .auto-rm { position: relative; flex: 0 0 auto; width: 20px; height: 20px; margin: 0 -4px 0 2px; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--ink-2); font: inherit; font-size: 16px; line-height: 1; cursor: pointer; }
+.auto .auto-rm::before { content: ''; position: absolute; inset: -9px -4px; }
+.auto .auto-rm:hover { background: #FDECEC; color: #B3261E; }
+.auto .auto-rm:focus-visible { outline: 2px solid var(--accent-a); outline-offset: 1px; }
+.autos .autos-clear { display: block; margin: 8px 0 0 auto; padding: 3px 6px; border: 0; border-radius: 6px; background: none; color: var(--ink-2); font: inherit; font-size: 12px; text-decoration: underline; cursor: pointer; }
+.autos .autos-clear:hover { color: #B3261E; }
+.autos .autos-clear:focus-visible { outline: 2px solid var(--accent-a); outline-offset: 1px; }
+.autos .autos-clear[hidden] { display: none; }
 @media (prefers-reduced-motion: reduce) { .autos-chev, .auto .sw, .auto .sw::after { transition: none; } }
 
 /* Desktop: open under the device cards (folded by default on windows under 900 px tall, js/engine/automations.js); a long

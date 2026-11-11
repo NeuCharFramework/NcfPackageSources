@@ -145,7 +145,7 @@ export function createLiveView({ chat, scene }) {
   // ---- the end card ----
   function endCard({ remainingToday, whatIfLabel, whatIf }, { onAnother, onWhatIf, onReset }) {
     sayEl = null;
-    const node = parse(`<div class="card end live">${remainingToday != null ? `<p class="left">${esc(LIVE_COPY.left(remainingToday))}</p>` : ''}<div class="row"><button class="btn primary another" type="button">${esc(LIVE_COPY.another)}</button>${whatIf ? `<button class="btn whatif" type="button">${icon('whatif')}<span>${esc(whatIfLabel)}</span></button>` : ''}<button class="btn reset" type="button">${esc(LIVE_COPY.reset)}</button><a class="btn" href="#">${esc(LIVE_COPY.otherScene)}</a></div><div class="follow"><span>Follow<span class="long"> NeuCharBox</span></span>${socialLinks({ labels: true })}</div></div>`);
+    const node = parse(`<div class="card end live slim">${remainingToday != null ? `<p class="left">${esc(LIVE_COPY.left(remainingToday))}</p>` : ''}<div class="row">${whatIf ? `<button class="btn whatif" type="button">${icon('whatif')}<span>${esc(whatIfLabel)}</span></button>` : ''}<button class="btn reset" type="button">${esc(LIVE_COPY.reset)}</button></div></div>`);
     const buttons = [...node.querySelectorAll('button')];
     const log = () => node.closest('.chat-log');
     const press = (b, act, e) => {
@@ -155,11 +155,7 @@ export function createLiveView({ chat, scene }) {
       act();
       return keyboard;
     };
-    node.querySelector('.another').onclick = (e) => {
-      press(e.currentTarget, onAnother, e);
-      const input = log()?.parentElement?.querySelector('#chatText');
-      if (input && !input.disabled) input.focus({ preventScroll: true });
-    };
+    // No "another request" button: a finished request ends nothing, the input is already open (js/engine/live.js done()).
     node.querySelector('.reset').onclick = (e) => { press(e.currentTarget, onReset, e); };
     const w = node.querySelector('.whatif');
     if (w) w.onclick = (e) => {

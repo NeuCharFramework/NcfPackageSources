@@ -16,6 +16,9 @@
     修改标识：Senparc - 20261109
     修改描述：v0.1.0-preview1 模型调用失败与请求失败的日志只记异常类型、状态码与清洗后的首行消息（SafeError），不再记录异常对象
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.1.0-preview1 工作时间不设上限时不再因时间截断请求（改用 RequestBudget.TimeUp）
+
 ----------------------------------------------------------------*/
 
 using System.Globalization;
@@ -573,7 +576,7 @@ public sealed class RequestRunner
                 foreach (var fc in calls)
                 {
                     // One response can hold many paced calls: the 3-minute bound holds between them too.
-                    if (_budget.Remaining <= TimeSpan.Zero) throw new BudgetExceededException("time");
+                    if (_budget.TimeUp) throw new BudgetExceededException("time");
                     results.Add(Reply(fc, await RunCallAsync(fc, plan, paused: false, ct)));
                 }
                 msgs.Add(new ChatMessage(ChatRole.Tool, results));
@@ -898,7 +901,7 @@ public sealed class RequestRunner
             pauses.Add(new JsonObject { ["at"] = row.At, ["fault"] = row.Text, ["results"] = did });
             foreach (var fc in CallsIn(resp))
             {
-                if (_budget.Remaining <= TimeSpan.Zero) throw new BudgetExceededException("time");
+                if (_budget.TimeUp) throw new BudgetExceededException("time");
                 try
                 {
                     did.Add($"{fc.Name}: {Prompts.ToJson(await RunCallAsync(fc, plan, paused: true, ct))}");
