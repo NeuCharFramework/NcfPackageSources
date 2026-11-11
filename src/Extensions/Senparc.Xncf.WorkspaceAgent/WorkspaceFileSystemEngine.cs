@@ -12,12 +12,16 @@
     修改标识：Senparc - 20261111
     修改描述：按相对路径提供文件和目录候选，供对话输入框引用
 
+    修改标识：Senparc - 20261111
+    修改描述：修复相对路径 glob 校验的 StartsWith 重载兼容
+
 ----------------------------------------------------------------*/
 
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using Senparc.Xncf.Workspace.Abstractions;
 
 namespace Senparc.Xncf.WorkspaceAgent;
@@ -374,7 +378,8 @@ public sealed class WorkspaceFileSystemEngine
         }
 
         if (string.IsNullOrWhiteSpace(request.NameQuery) &&
-            string.IsNullOrWhiteSpace(request.ContentQuery))
+            string.IsNullOrWhiteSpace(request.ContentQuery) &&
+            string.IsNullOrWhiteSpace(request.PathGlob))
         {
             throw new ArgumentException("At least one search query is required.", nameof(request));
         }
@@ -389,6 +394,11 @@ public sealed class WorkspaceFileSystemEngine
         var comparison = request.CaseSensitive
             ? StringComparison.Ordinal
             : StringComparison.OrdinalIgnoreCase;
+        var pathGlob = CreatePathGlobMatcher(request.PathGlob, request.CaseSensitive);
+        var contentPattern = CreateContentMatcher(
+            request.ContentQuery,
+            request.ContentRegex,
+            request.CaseSensitive);
         var resultLimit = Math.Clamp(request.MaxResults, 1, Math.Max(1, _options.MaxSearchResults));
         var fileLimit = Math.Max(1, _options.MaxSearchFiles);
         var results = new List<WorkspaceSearchResult>();
@@ -430,12 +440,15 @@ public sealed class WorkspaceFileSystemEngine
 
                 inspectedFiles++;
                 var relativePath = NormalizeRelativePath(path);
-                if (!string.IsNullOrWhiteSpace(request.NameQuery) &&
-                    Path.GetFileName(path).Contains(request.NameQuery, comparison))
+                var nameMatches = string.IsNullOrWhiteSpace(request.NameQuery) ||
+                    Path.GetFileName(path).Contains(request.NameQuery, comparison);
+                var pathMatches = pathGlob == null || pathGlob.IsMatch(relativePath);
+                if (nameMatches && pathMatches &&
+                    (!string.IsNullOrWhiteSpace(request.NameQuery) || pathGlob != null))
                 {
                     results.Add(new WorkspaceSearchResult(
                         relativePath,
-                        "fileName",
+                        pathGlob == null ? "fileName" : "path",
                         null,
                         Path.GetFileName(path)));
                     if (results.Count >= resultLimit)
@@ -445,7 +458,7 @@ public sealed class WorkspaceFileSystemEngine
                 }
 
                 var fileInfo = new FileInfo(path);
-                if (string.IsNullOrWhiteSpace(request.ContentQuery) ||
+                if (contentPattern == null ||
                     fileInfo.Length > _options.MaxSearchFileBytes ||
                     await IsBinaryFileAsync(path, cancellationToken).ConfigureAwait(false))
                 {
@@ -458,7 +471,7 @@ public sealed class WorkspaceFileSystemEngine
                 while (await reader.ReadLineAsync(cancellationToken).ConfigureAwait(false) is { } line)
                 {
                     lineNumber++;
-                    if (!line.Contains(request.ContentQuery, comparison))
+                    if (!contentPattern.IsMatch(line))
                     {
                         continue;
                     }
@@ -477,6 +490,103 @@ public sealed class WorkspaceFileSystemEngine
         }
 
         return results;
+    }
+
+    private static Regex? CreateContentMatcher(
+        string query,
+        bool useRegex,
+        bool caseSensitive)
+    {
+        if (string.IsNullOrWhiteSpace(query))
+        {
+            return null;
+        }
+
+        if (!useRegex)
+        {
+            var escapedQuery = Regex.Escape(query);
+            return new Regex(
+                escapedQuery,
+                CreateSearchRegexOptions(caseSensitive),
+                TimeSpan.FromSeconds(1));
+        }
+
+        try
+        {
+            return new Regex(
+                query,
+                CreateSearchRegexOptions(caseSensitive),
+                TimeSpan.FromSeconds(1));
+        }
+        catch (ArgumentException exception)
+        {
+            throw new ArgumentException("Workspace content query is not a valid regular expression.", nameof(query), exception);
+        }
+    }
+
+    private static Regex? CreatePathGlobMatcher(string pathGlob, bool caseSensitive)
+    {
+        if (string.IsNullOrWhiteSpace(pathGlob))
+        {
+            return null;
+        }
+
+        var normalized = pathGlob.Replace('\\', '/').Trim();
+        if (normalized.Length > 500 ||
+            normalized.StartsWith("/", StringComparison.Ordinal) ||
+            normalized.IndexOfAny(['\0', '\r', '\n']) >= 0 ||
+            normalized.Split('/').Any(segment => segment == ".."))
+        {
+            throw new ArgumentException(
+                "Workspace path glob must be a relative path without parent traversal.",
+                nameof(pathGlob));
+        }
+
+        var pattern = new StringBuilder("^");
+        for (var index = 0; index < normalized.Length; index++)
+        {
+            var character = normalized[index];
+            if (character == '*')
+            {
+                if (index + 1 < normalized.Length && normalized[index + 1] == '*')
+                {
+                    index++;
+                    if (index + 1 < normalized.Length && normalized[index + 1] == '/')
+                    {
+                        pattern.Append("(?:.*/)?");
+                        index++;
+                    }
+                    else
+                    {
+                        pattern.Append(".*");
+                    }
+                }
+                else
+                {
+                    pattern.Append("[^/]*");
+                }
+            }
+            else if (character == '?')
+            {
+                pattern.Append("[^/]");
+            }
+            else
+            {
+                pattern.Append(Regex.Escape(character.ToString()));
+            }
+        }
+
+        pattern.Append('$');
+        return new Regex(
+            pattern.ToString(),
+            CreateSearchRegexOptions(caseSensitive),
+            TimeSpan.FromSeconds(1));
+    }
+
+    private static RegexOptions CreateSearchRegexOptions(bool caseSensitive)
+    {
+        return RegexOptions.CultureInvariant
+            | (caseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase);
     }
 
     private Task<IReadOnlyList<WorkspaceSearchResult>> SuggestPaths(

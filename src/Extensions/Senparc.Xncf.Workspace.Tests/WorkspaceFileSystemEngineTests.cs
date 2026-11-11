@@ -38,6 +38,19 @@ public sealed class WorkspaceFileSystemEngineTests
     }
 
     [TestMethod]
+    public async Task WriteFile_RejectsEmptyRelativePath()
+    {
+        var exception = await Assert.ThrowsExactlyAsync<InvalidOperationException>(() =>
+            _engine.WriteFileAsync(new WorkspaceWriteFileRequest(
+                string.Empty,
+                Encoding.UTF8.GetBytes("content"))));
+
+        Assert.AreEqual(
+            "Workspace root cannot be modified as a file entry.",
+            exception.Message);
+    }
+
+    [TestMethod]
     public async Task BinaryFileLifecycle_UsesAtomicWritesAndEtags()
     {
         await _engine.CreateDirectoryAsync("src");
@@ -172,6 +185,44 @@ public sealed class WorkspaceFileSystemEngineTests
         Assert.IsTrue(fileNameSearch.All(item => item.MatchType == "fileName"));
         await Assert.ThrowsExactlyAsync<ArgumentException>(() =>
             _engine.SearchAsync(new WorkspaceSearchRequest(NameQuery: "../secret", SuggestPaths: true)));
+    }
+
+    [TestMethod]
+    public async Task SearchSupportsRegexContentAndRelativePathGlob()
+    {
+        await _engine.WriteFileAsync(new WorkspaceWriteFileRequest(
+            "tools/NcfSimulatedSite/Senparc.Areas.Admin/WorkspacePreview.cs",
+            Encoding.UTF8.GetBytes(
+                "WorkspaceAssets are loaded here.\nContent-Security-Policy is set here.\n")));
+        await _engine.WriteFileAsync(new WorkspaceWriteFileRequest(
+            "tools/NcfSimulatedSite/Senparc.Areas.Admin/Other.cs",
+            Encoding.UTF8.GetBytes("WorkspaceAssets are not a path match.\n")));
+
+        var contentMatches = await _engine.SearchAsync(new WorkspaceSearchRequest(
+            ContentQuery: "WorkspaceAssets|Content-Security-Policy|Workspace.*Preview",
+            ContentRegex: true,
+            MaxResults: 20));
+        Assert.HasCount(3, contentMatches);
+        Assert.IsTrue(contentMatches.All(item => item.MatchType == "content"));
+
+        var pathMatches = await _engine.SearchAsync(new WorkspaceSearchRequest(
+            PathGlob: "tools/NcfSimulatedSite/Senparc.Areas.Admin/**/*Workspace*",
+            MaxResults: 20));
+        Assert.AreEqual("tools/NcfSimulatedSite/Senparc.Areas.Admin/WorkspacePreview.cs",
+            pathMatches.Single().RelativePath);
+        Assert.AreEqual("path", pathMatches.Single().MatchType);
+    }
+
+    [TestMethod]
+    public async Task SearchRejectsInvalidRegexAndPathGlobTraversal()
+    {
+        await Assert.ThrowsExactlyAsync<ArgumentException>(() =>
+            _engine.SearchAsync(new WorkspaceSearchRequest(
+                ContentQuery: "(",
+                ContentRegex: true)));
+        await Assert.ThrowsExactlyAsync<ArgumentException>(() =>
+            _engine.SearchAsync(new WorkspaceSearchRequest(
+                PathGlob: "../**/*")));
     }
 
     [TestMethod]

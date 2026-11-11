@@ -12,6 +12,9 @@
     修改标识：Senparc - 20261111
     修改描述：v0.2.2 完善 Workspace Agent、文件存储与模块注册兼容
 
+    修改标识：Senparc - 20261111
+    修改描述：保留 Workspace Agent 操作失败的诊断信息并输出到标准错误
+
 ----------------------------------------------------------------*/
 
 using System.Text.Json;
@@ -75,6 +78,10 @@ public static class WorkspaceAgentHost
             }
             catch (Exception exception)
             {
+                await error.WriteLineAsync(
+                    $"Workspace Agent request failed: Operation={request?.Operation ?? "(invalid)"}; " +
+                    $"Error={exception.GetType().FullName}: {exception.Message}")
+                    .ConfigureAwait(false);
                 response = CreateErrorResponse(request?.Id ?? string.Empty, exception);
             }
 
@@ -212,7 +219,7 @@ public static class WorkspaceAgentHost
             ArgumentException or JsonException => ("invalid-request", exception.Message),
             IOException => ("io-error", exception.Message),
             OperationCanceledException => ("cancelled", "Workspace operation was cancelled."),
-            _ => ("internal-error", "Workspace operation failed.")
+            _ => ("internal-error", exception.Message)
         };
         return new WorkspaceAgentResponse(
             requestId,

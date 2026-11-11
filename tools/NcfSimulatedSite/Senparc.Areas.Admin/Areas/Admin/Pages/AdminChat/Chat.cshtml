@@ -1234,7 +1234,7 @@
                     <iframe
                         v-else-if="workspacePreviewIsDocument"
                         class="chat-workspace-html-frame"
-                        sandbox="allow-same-origin"
+                        sandbox="allow-scripts"
                         :srcdoc="workspacePreviewSrcdoc"
                         :title="workspacePreviewFrameTitle"></iframe>
                     <div v-else-if="workspacePreviewData && workspacePreviewData.contentType.indexOf('image/') === 0" class="chat-workspace-image-preview">
@@ -1258,7 +1258,7 @@
         width="560px" append-to-body custom-class="workspace-share-dialog">
         <el-alert type="warning" :closable="false"
             title="任何持有链接的人都能查看此快照。"
-            description="只发布选中的 HTML 及其所在目录内引用的静态资源，不公开 Workspace 目录。脚本、表单、外部资源和页面跳转禁用。后续修改不会同步；撤销无法收回已经保存的副本。">
+            description="只发布选中的 HTML 及其所在目录内引用的静态资源，不公开 Workspace 目录。脚本仅在无同源权限的隔离沙箱中运行，表单、网络请求、外部资源和页面跳转已禁用。后续修改不会同步；撤销无法收回已经保存的副本。">
         </el-alert>
         <div class="workspace-share-heading">{{ workspaceSharePath }}</div>
         <div class="workspace-share-create">

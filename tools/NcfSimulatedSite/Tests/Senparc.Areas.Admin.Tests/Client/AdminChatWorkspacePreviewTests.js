@@ -55,6 +55,10 @@ assert.ok(headerActions.lastIndexOf('toggleWorkspacePreview') > headerActions.la
     'Assets must be the rightmost Chat header action.');
 assert.ok(template.includes('v-html="formatMessageContent(liveThinkingText)"'),
     'Live reasoning must render Markdown consistently with the final answer.');
+assert.ok(template.includes('sandbox="allow-scripts"'),
+    'Workspace HTML preview must allow scripts only inside the iframe sandbox.');
+assert.ok(!template.includes('sandbox="allow-same-origin"'),
+    'Workspace HTML preview must not grant same-origin access to sandboxed scripts.');
 for (const selector of ['live-answer-preview', 'live-thinking-content', 'harness-step-body']) {
     const rule = styles.match(new RegExp(`\\.${selector}\\s*\\{([^}]+)\\}`));
     assert.match(rule[1], /white-space:\s*normal/,

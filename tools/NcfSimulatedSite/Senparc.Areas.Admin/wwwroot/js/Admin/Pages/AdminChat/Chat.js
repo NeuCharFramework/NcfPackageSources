@@ -1775,10 +1775,12 @@ var chatApp = new Vue({
     async buildWorkspaceHtmlPreview(content, filePath, isMarkdown = false, previewKind = '') {
       const parser = new DOMParser();
       const document = parser.parseFromString(content, 'text/html');
-      document.querySelectorAll('script, iframe, object, embed, form, base, meta[http-equiv="refresh"]').forEach((element) => element.remove());
+      document.querySelectorAll('iframe, object, embed, form, base, meta[http-equiv]').forEach((element) => element.remove());
       document.querySelectorAll('*').forEach((element) => {
         Array.from(element.attributes).forEach((attribute) => {
-          if (attribute.name.toLowerCase().startsWith('on')) {
+          if (attribute.name.toLowerCase().startsWith('on')
+            || ['action', 'formaction', 'ping', 'srcset'].includes(attribute.name.toLowerCase())
+            || attribute.name.includes(':')) {
             element.removeAttribute(attribute.name);
           }
           if ((attribute.name === 'src' || attribute.name === 'href')
@@ -1786,11 +1788,16 @@ var chatApp = new Vue({
             element.removeAttribute(attribute.name);
           }
         });
-        element.removeAttribute('srcset');
+        if (element.localName === 'a') {
+          const href = element.getAttribute('href');
+          if (href && !href.startsWith('#')) element.removeAttribute('href');
+          element.removeAttribute('target');
+          element.removeAttribute('download');
+        }
       });
 
       const resources = [];
-      document.querySelectorAll('img[src], video[src], audio[src], source[src], link[href]').forEach((element) => {
+      document.querySelectorAll('img[src], video[src], audio[src], source[src], link[href], script[src]').forEach((element) => {
         const attribute = element.hasAttribute('src') ? 'src' : 'href';
         const value = element.getAttribute(attribute);
         if (!value || value.startsWith('#') || /^(data:|blob:|https?:|\/\/)/i.test(value)) {
@@ -1801,9 +1808,17 @@ var chatApp = new Vue({
       });
 
       for (const resource of resources) {
+        if (resource.element.localName === 'script'
+          && !this.isWorkspaceExecutableScriptType(resource.element.getAttribute('type'))) {
+          resource.element.remove();
+          continue;
+        }
         try {
           const asset = await this.loadWorkspacePreviewAsset(resource.path);
-          if (asset && asset.contentBase64) {
+          if (asset && asset.contentBase64
+            && (resource.element.localName !== 'script'
+              || asset.contentType === 'text/javascript'
+              || asset.contentType === 'application/javascript')) {
             let contentBase64 = asset.contentBase64;
             if (asset.contentType === 'text/css' && asset.isText && asset.content) {
               const css = await this.inlineWorkspaceCss(asset.content, resource.path);
@@ -1812,13 +1827,27 @@ var chatApp = new Vue({
             resource.element.setAttribute(
               resource.attribute,
               `data:${asset.contentType};base64,${contentBase64}`);
+            if (resource.element.localName === 'script') resource.element.textContent = '';
           } else {
-            resource.element.removeAttribute(resource.attribute);
+            resource.element.remove();
           }
         } catch (error) {
-          resource.element.removeAttribute(resource.attribute);
+          resource.element.remove();
         }
       }
+
+      document.querySelectorAll('script').forEach((element) => {
+        if (!this.isWorkspaceExecutableScriptType(element.getAttribute('type'))) {
+          element.remove();
+          return;
+        }
+        if (!element.hasAttribute('src')) {
+          element.setAttribute(
+            'src',
+            `data:text/javascript;base64,${this.encodeWorkspaceText(element.textContent || '')}`);
+          element.textContent = '';
+        }
+      });
 
       const style = document.createElement('style');
       style.textContent = 'html,body{max-width:100%;overflow-x:hidden;}';
@@ -1853,9 +1882,20 @@ var chatApp = new Vue({
       document.head.appendChild(style);
       const csp = document.createElement('meta');
       csp.httpEquiv = 'Content-Security-Policy';
-      csp.content = "default-src 'none'; img-src data:; style-src 'unsafe-inline' data:; font-src data:; media-src data:;";
+      csp.content = "default-src 'none'; script-src data:; img-src data:; " +
+        "style-src 'unsafe-inline' data:; font-src data:; media-src data:; " +
+        "base-uri 'none'; form-action 'none'; connect-src 'none'; frame-src 'none'; " +
+        "child-src 'none'; object-src 'none'; worker-src 'none'; navigate-to 'none';";
       document.head.appendChild(csp);
       return '<!doctype html>' + document.documentElement.outerHTML;
+    },
+
+    isWorkspaceExecutableScriptType(type) {
+      const normalized = String(type || '').split(';', 1)[0].trim().toLowerCase();
+      return !normalized || [
+        'module', 'text/javascript', 'application/javascript',
+        'text/ecmascript', 'application/ecmascript'
+      ].includes(normalized);
     },
 
     async inlineWorkspaceCss(css, cssPath) {

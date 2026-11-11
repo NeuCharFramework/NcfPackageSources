@@ -22,6 +22,9 @@
     修改标识：Senparc - 20261111
     修改描述：搜索请求可改为按相对路径返回文件和目录候选
 
+    修改标识：Senparc - 20261111
+    修改描述：搜索支持内容正则表达式和相对路径 glob
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Workspace.Abstractions;
@@ -138,7 +141,9 @@ public sealed record WorkspaceSearchRequest(
     string RelativePath = "",
     bool CaseSensitive = false,
     int MaxResults = 100,
-    bool SuggestPaths = false);
+    bool SuggestPaths = false,
+    string PathGlob = "",
+    bool ContentRegex = false);
 
 public sealed record WorkspaceSearchResult(
     string RelativePath,
