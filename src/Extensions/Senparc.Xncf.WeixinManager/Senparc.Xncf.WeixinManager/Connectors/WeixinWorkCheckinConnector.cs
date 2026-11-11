@@ -209,7 +209,7 @@ public sealed class WeixinWorkCheckinConnector : IConnectorProvider
         catch (Exception exception)
         {
             Console.WriteLine($"[Connector] weixin.work.checkin invoke failed: {exception.Message}");
-            return ConnectorInvocationResult.Fail("获取打卡记录失败，请确认应用有打卡权限，且成员账号正确。");
+            return ConnectorInvocationResult.Fail($"获取打卡记录失败，请确认应用有打卡权限，且成员账号正确。错误信息：{exception.Message}");
         }
     }
 

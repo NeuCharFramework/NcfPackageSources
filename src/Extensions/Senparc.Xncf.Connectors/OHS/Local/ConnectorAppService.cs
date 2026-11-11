@@ -42,7 +42,7 @@ public sealed class ConnectorAppService : AppServiceBase
         typeof(Register),
         "调用连接器",
         "调用一个已启用的连接器动作。在 Workflow 中添加 Function 节点后，选择连接器和动作即可。",
-        AllowAiInvocation = false)]
+        AllowAiInvocation = true)]
     public Task<StringAppResponse> InvokeConfiguredConnector(InvokeConnectorRequest request)
     {
         return this.GetStringResponseAsync(async (_, logger) =>

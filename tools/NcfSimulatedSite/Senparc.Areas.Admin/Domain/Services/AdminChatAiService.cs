@@ -96,6 +96,7 @@ using Senparc.AI.AgentKernel.Extensions;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using Senparc.Xncf.Workspace.Abstractions;
 using Senparc.Xncf.PromptRange.Abstractions.Skills;
+using Senparc.Xncf.Connectors.OHS.Local;
 using MafFunctionCallContent = Microsoft.Extensions.AI.FunctionCallContent;
 using MafFunctionResultContent = Microsoft.Extensions.AI.FunctionResultContent;
 using MafTextContent = Microsoft.Extensions.AI.TextContent;
@@ -1470,7 +1471,8 @@ namespace Senparc.Areas.Admin.Domain.Services
                                 parameterInfos = await FunctionHelper.GetFunctionParameterInfoAsync(
                                     _serviceProvider,
                                     functionBag,
-                                    tryLoadData: false).ConfigureAwait(false);
+                                    tryLoadData: functionBag.MethodInfo.DeclaringType == typeof(ConnectorAppService))
+                                    .ConfigureAwait(false);
                             }
                             catch (Exception metadataException)
                             {
