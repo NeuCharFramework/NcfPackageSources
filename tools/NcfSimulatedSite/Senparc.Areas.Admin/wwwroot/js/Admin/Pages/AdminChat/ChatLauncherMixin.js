@@ -323,6 +323,8 @@ window.ChatLauncherMixin = {
     },
 
     handleLauncherInputKeydown(event) {
+      if (typeof this.handleWorkspaceMentionKeydown === 'function'
+        && this.handleWorkspaceMentionKeydown(event, 'chatInputText')) return;
       if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
         event.preventDefault();
         this.startChatSession();
@@ -523,6 +525,7 @@ window.ChatLauncherMixin = {
     },
 
     async startChatSession() {
+      if (typeof this.closeWorkspaceMention === 'function') this.closeWorkspaceMention();
       if ((!this.chatInputText || this.chatInputText.trim().length === 0)
         && (!this.pendingAttachments || this.pendingAttachments.length === 0)) {
         this.$message.warning(ncfT('AdminChat.InputRequired'));

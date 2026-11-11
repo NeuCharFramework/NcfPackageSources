@@ -3,9 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
 
-    <Version>0.0.18</Version>
-    <PackageReleaseNotes>
-      [2026-07-04] v0.0.1 Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
+    <Version>0.0.20</Version>
+    <PackageReleaseNotes>      [2026-07-04] v0.0.1 Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
       1、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
       [2026-07-07] v0.0.2 Dependency updates from upstream modules
       1、Dependency update from Senparc.Areas.Admin to 0.0.5
@@ -42,6 +41,11 @@
       2、Dependency update from Senparc.Xncf.XncfBuilder to 0.41.8
       3、Dependency update from Senparc.Xncf.AgentsManager to 0.19.2
       4、Dependency update from Senparc.Ncf.Core to 0.30.4-preview10
+      [2026-11-10] v0.0.19 Dependency update from Senparc.Areas.Admin to 0.12.27
+      [2026-11-11] v0.0.20 引用 Connectors 与 AgentsManager，用于标准 EF 迁移生成
+      1、升级 Senparc.Ncf.DatabasePlant 至 0.21.14，与 XncfBuilder 对齐。
+      2、Dependency update from Senparc.Xncf.AgentsManager to 0.19.3
+      3、引用 Senparc.Xncf.Connectors 0.1.0。
     </PackageReleaseNotes>
     <Configurations>Debug;Release;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>
   </PropertyGroup>
@@ -57,7 +61,9 @@
     <PackageReference Include="Senparc.Xncf.Swagger" Version="0.20.4-preview8" />
     <!--<ProjectReference Include="..\..\..\..\NcfPackageSources\src\Extensions\Senparc.Xncf.AgentsManager\Senparc.Xncf.AgentsManager.ForNcf.csproj" />-->
     <ProjectReference Include="..\Senparc.Areas.Admin\Senparc.Areas.Admin.csproj" />
-    <PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.21.13" />
+    <ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.Connectors\Senparc.Xncf.Connectors.csproj" />
+    <ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.AgentsManager\Senparc.Xncf.AgentsManager.csproj" />
+    <PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.21.14" />
     <ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder.csproj" />
     <!-- <ProjectReference Include="..\..\..\..\NcfPackageSources\src\Extensions\Senparc.Xncf.AgentsManager\Senparc.Xncf.AgentsManager.csproj" /> -->
     <!-- <ProjectReference Include="..\..\..\..\NcfPackageSources\src\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" /> -->

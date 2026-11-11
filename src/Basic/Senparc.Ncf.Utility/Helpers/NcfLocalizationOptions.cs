@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260717
     修改描述：v0.21.0-preview2 增强全局文化配置与本地化选项支持
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.21.1-preview3 统一本地化资源回退与语言配置能力
+
 ----------------------------------------------------------------*/
 using System;
 using System.Collections.Generic;
@@ -23,7 +26,8 @@ namespace Senparc.Ncf.Utility.Helpers
     /// </summary>
     /// <remarks>
     /// 所有宿主和模块都应从此处读取支持列表，避免语言切换器、请求中间件和资源文件
-    /// 分别维护不同的语言集合。
+    /// 分别维护不同的语言集合。非中文资源缺失时，运行时按当前语言、英语、简体中文
+    /// 和中性资源的顺序回退。
     /// </remarks>
     public static class NcfLocalizationOptions
     {

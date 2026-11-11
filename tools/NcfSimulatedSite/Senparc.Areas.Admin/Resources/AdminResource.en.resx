@@ -433,6 +433,17 @@
   <data name="Admin.Common.Error" xml:space="preserve"><value>Error</value></data>
   <data name="AdminChat.Conversation" xml:space="preserve"><value>Conversation</value></data>
   <data name="AdminChat.History" xml:space="preserve"><value>Conversation history</value></data>
+  <data name="AdminChat.Search.Open" xml:space="preserve"><value>Search conversations</value></data>
+  <data name="AdminChat.Search.Placeholder" xml:space="preserve"><value>Search unarchived conversations</value></data>
+  <data name="AdminChat.Search.ChatTab" xml:space="preserve"><value>Chats</value></data>
+  <data name="AdminChat.Search.ToolTab" xml:space="preserve"><value>Calls</value></data>
+  <data name="AdminChat.Search.ToolPlaceholder" xml:space="preserve"><value>Search method names</value></data>
+  <data name="AdminChat.Search.ToolCall" xml:space="preserve"><value>Method call</value></data>
+  <data name="AdminChat.Search.Empty" xml:space="preserve"><value>No matching unarchived conversations</value></data>
+  <data name="AdminChat.Search.Hint" xml:space="preserve"><value>Searches unarchived conversations only, up to 10 results</value></data>
+  <data name="AdminChat.Search.ToolHint" xml:space="preserve"><value>Searches method names actually called by Harness in unarchived conversations, up to 10 results</value></data>
+  <data name="AdminChat.Search.Failed" xml:space="preserve"><value>Search failed</value></data>
+  <data name="AdminChat.Search.TitleMatch" xml:space="preserve"><value>Title match</value></data>
   <data name="AdminChat.EmptyHistory" xml:space="preserve"><value>No conversation history</value></data>
   <data name="AdminChat.SelectModel" xml:space="preserve"><value>Select AI model</value></data>
   <data name="AdminChat.Manage" xml:space="preserve"><value>Manage</value></data>
@@ -922,4 +933,10 @@
   <data name="PromptReference.RobotScore" xml:space="preserve"><value>AI score</value></data>
   <data name="PromptReference.Retry" xml:space="preserve"><value>Retry</value></data>
 
+  <data name="SystemMenu.AdministratorManagement" xml:space="preserve"><value>Administrator management</value></data>
+  <data name="SystemMenu.RoleManagement" xml:space="preserve"><value>Role management</value></data>
+  <data name="SystemMenu.SystemInfo" xml:space="preserve"><value>System information</value></data>
+  <data name="SystemMenu.TenantInfo" xml:space="preserve"><value>Tenant information</value></data>
+  <data name="SystemMenu.ExtensionModules" xml:space="preserve"><value>Extension modules</value></data>
+  <data name="SystemMenu.ModuleManagement" xml:space="preserve"><value>Module management</value></data>
 </root>

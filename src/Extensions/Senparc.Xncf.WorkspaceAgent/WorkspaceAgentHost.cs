@@ -9,6 +9,15 @@
     修改标识：Senparc - 20261103
     修改描述：v0.2.1 implement connection manager and workspace file system provider
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.2.2 完善 Workspace Agent、文件存储与模块注册兼容
+
+    修改标识：Senparc - 20261111
+    修改描述：保留 Workspace Agent 操作失败的诊断信息并输出到标准错误
+
+    修改标识：Senparc - 20261112
+    修改描述：v0.2.3 支持路径 glob、内容正则搜索并改进错误诊断
+
 ----------------------------------------------------------------*/
 
 using System.Text.Json;
@@ -72,6 +81,10 @@ public static class WorkspaceAgentHost
             }
             catch (Exception exception)
             {
+                await error.WriteLineAsync(
+                    $"Workspace Agent request failed: Operation={request?.Operation ?? "(invalid)"}; " +
+                    $"Error={exception.GetType().FullName}: {exception.Message}")
+                    .ConfigureAwait(false);
                 response = CreateErrorResponse(request?.Id ?? string.Empty, exception);
             }
 
@@ -107,6 +120,9 @@ public static class WorkspaceAgentHost
                 Deserialize<WorkspaceAgentPathRequest>(request).RelativePath,
                 cancellationToken).ConfigureAwait(false),
             WorkspaceAgentOperations.Read => await ReadAsync(engine, request, cancellationToken).ConfigureAwait(false),
+            WorkspaceAgentOperations.ReadTextWindow => await engine.ReadTextWindowAsync(
+                Deserialize<WorkspaceTextWindowRequest>(request),
+                cancellationToken).ConfigureAwait(false),
             WorkspaceAgentOperations.Write => await engine.WriteFileAsync(
                 Deserialize<WorkspaceWriteFileRequest>(request),
                 cancellationToken).ConfigureAwait(false),
@@ -199,13 +215,14 @@ public static class WorkspaceAgentHost
     {
         var (code, message) = exception switch
         {
+            WorkspaceLimitException => ("limit", exception.Message),
             WorkspaceConflictException => ("conflict", exception.Message),
             UnauthorizedAccessException => ("forbidden", exception.Message),
             FileNotFoundException or DirectoryNotFoundException => ("not-found", exception.Message),
             ArgumentException or JsonException => ("invalid-request", exception.Message),
             IOException => ("io-error", exception.Message),
             OperationCanceledException => ("cancelled", "Workspace operation was cancelled."),
-            _ => ("internal-error", "Workspace operation failed.")
+            _ => ("internal-error", exception.Message)
         };
         return new WorkspaceAgentResponse(
             requestId,

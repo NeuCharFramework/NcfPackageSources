@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.3.27</Version>
+		<Version>0.3.28</Version>
 		<AssemblyName>Senparc.Ncf.UnitTestExtension</AssemblyName>
 		<RootNamespace>Senparc.Ncf.UnitTestExtension</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -88,6 +88,7 @@
 				5、Dependency update from Senparc.Ncf.Repository to 0.20.11-preview10
 				6、Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
 				7、Dependency update from Senparc.Ncf.XncfBase to 0.28.2
+				[2026-11-12] v0.3.28 Dependency updates from Senparc.Xncf.AreasBase to 0.13.13；Senparc.Xncf.SystemCore to 0.14.13；Senparc.Ncf.Core to 0.31.0-preview11；Senparc.Ncf.DatabasePlant to 0.21.15
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>

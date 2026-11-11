@@ -19,8 +19,7 @@
     <!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
-      v1.0.0 创世
+    <PackageReleaseNotes>      v1.0.0 创世
       [2026-04-24] Update FunctionRender request templates for simplified values and SelectionList UI metadata compatibility
       [2026-07-17] v1.1.0 更新示例 XNCF 模块的功能参数与页面本地化能力
       1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
@@ -65,6 +64,9 @@
       3、修复模板参数默认值及数据库和静态资源的条件引用
       [2026-11-03] v1.1.14 以中文资源为基准统一整理多语言文案
       1、补齐并校正各语言资源条目，使模块界面文案与中文基准保持一致
+      [2026-11-11] v1.1.14 统一模块注册显示名称与说明的多语言资源
+      1、Register 通过 XncfRegisterText 用稳定资源键和中文基准文本解析菜单名称与模块说明。
+      2、补齐模块多语言资源，缺少翻译时沿当前语言、英语、简体中文回退。
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.19.2</Version>
+    <Version>0.19.3</Version>
     <AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -17,8 +17,7 @@
     <!--<ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
-		[2024-08-06] v0.4.4.0-preview1 update Senparc.AI.Kernel
+    <PackageReleaseNotes>		[2024-08-06] v0.4.4.0-preview1 update Senparc.AI.Kernel
 		[2024-08-31] v0.5.0-preview1 PromptRange 支持 Markdown 输出格式展示
 		v0.1.0 创世
 		[2024-09-03] v0.5.1-preview1 PromptRange 结果提供“复制”功能
@@ -196,6 +195,13 @@
         6、Dependency update from Senparc.Xncf.KnowledgeBase to 0.8.2
         7、Dependency update from Senparc.Xncf.PromptRange.Abstractions to 0.3.2-preview6
         8、Dependency update from Senparc.Ncf.AreaBase to 0.23.10
+        [2026-11-11] v0.19.3 升级 Agent Framework 1.28，并支持模板绑定连接器
+        1、群聊广播改为只处理本轮新消息，参与者会话继续累积历史。
+        2、同步 Microsoft.Agents.AI.Workflows 1.28.0 与 A2A 1.28.0-preview.261106.1，等待外部响应时结束当前事件流。
+        3、依赖 Senparc.AI.AgentKernel 0.1.17 与 Senparc.Xncf.MCP 0.5.13。
+        4、Agent 模板可绑定连接器动作，运行时按授权调用。
+        5、新增多数据库迁移，保存 Agent 模板的连接器绑定。
+        6、Register 通过 XncfRegisterText 用稳定资源键解析菜单名称与模块说明。
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -210,8 +216,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Agents.AI.Workflows" Version="1.8.0" />
-    <PackageReference Include="Microsoft.Agents.AI.A2A" Version="1.8.0-preview.260528.1" />
+    <PackageReference Include="Microsoft.Agents.AI.Workflows" Version="1.28.0" />
+    <PackageReference Include="Microsoft.Agents.AI.A2A" Version="1.28.0-preview.261106.1" />
     <PackageReference Include="Senparc.AI.Agents" Version="$(SenparcAiAgentsVersion)" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />
     <PackageReference Include="Senparc.Weixin.Work" Version="3.32.4" />
@@ -261,6 +267,7 @@
     <ProjectReference Include="..\Senparc.Xncf.NeuCharWorkflow.Abstractions\Senparc.Xncf.NeuCharWorkflow.Abstractions.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.PromptRange.Abstractions\Senparc.Xncf.PromptRange.Abstractions.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.Workspace.Abstractions\Senparc.Xncf.Workspace.Abstractions.csproj" />
+    <ProjectReference Include="..\Senparc.Xncf.Connectors.Abstractions\Senparc.Xncf.Connectors.Abstractions.csproj" />
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
   </ItemGroup>
   <ItemGroup>

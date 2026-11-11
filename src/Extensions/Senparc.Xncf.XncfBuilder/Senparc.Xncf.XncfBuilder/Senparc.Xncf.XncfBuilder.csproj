@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.41.8</Version>
+    <Version>0.41.9</Version>
     <LangVersion>latest</LangVersion>
     <AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -17,8 +17,7 @@
     <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
-			[2024-08-06] v0.28.6.0-preview1 update Senparc.AI.Kernel
+    <PackageReleaseNotes>			[2024-08-06] v0.28.6.0-preview1 update Senparc.AI.Kernel
 			[2024-08-13] v0.29.0-preview1 优化 ServiceBase，提供 Mapping&lt;T&gt;(entity) 快捷方法；为 DynamicData 添加根据 Entity 类型自动创建表结构的功能
 			[2024-08-31] v0.30.0-preview1 PromptRange 支持 Markdown 输出格式展示
 			[2024-09-03] v0.30.1-preview1 PromptRange 结果提供“复制”功能
@@ -157,6 +156,12 @@
 			4、Dependency update from Senparc.Xncf.MCP to 0.5.12
 			5、Dependency update from Senparc.Xncf.PromptRange to 0.20.14
 			6、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.12
+			[2026-11-11] v0.41.8 统一模块注册文案，并升级共享 AI 依赖
+			1、Register 通过 XncfRegisterText 用稳定资源键和中文基准文本解析菜单名称与模块说明。
+			2、共享 AI 依赖升级到 Senparc.AI.AgentKernel 0.1.17、Microsoft Agent Framework 1.28.0、OpenAI 2.14.0 与 Microsoft.Extensions.AI.OpenAI 10.11.0。
+			[2026-11-12] v0.41.9 统一模块注册显示名称与说明的多语言资源键
+			1、模块注册信息优先使用稳定资源键解析多语言显示文本。
+			2、兼容现有资源与默认文案，避免缺少翻译时影响模块加载。
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

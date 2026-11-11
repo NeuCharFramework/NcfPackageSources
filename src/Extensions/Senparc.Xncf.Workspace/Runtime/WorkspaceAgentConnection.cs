@@ -9,6 +9,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.2.2 implement connection manager and workspace file system provider
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.2.7 完善 Workspace Agent、文件存储与模块注册兼容
+
 ----------------------------------------------------------------*/
 
 using System.Text.Json;
@@ -170,6 +173,7 @@ internal sealed class WorkspaceAgentConnection : IAsyncDisposable
         var message = error?.Message ?? "Workspace Agent operation failed.";
         throw error?.Code switch
         {
+            "limit" => new WorkspaceLimitException(message),
             "conflict" => new WorkspaceConflictException(message),
             "forbidden" => new UnauthorizedAccessException(message),
             "not-found" => new FileNotFoundException(message),

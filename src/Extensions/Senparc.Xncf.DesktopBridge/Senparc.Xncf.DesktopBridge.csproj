@@ -4,7 +4,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-    <Version>0.4.10</Version>
+    <Version>0.4.11</Version>
     <AssemblyName>Senparc.Xncf.DesktopBridge</AssemblyName>
     <RootNamespace>Senparc.Xncf.DesktopBridge</RootNamespace>
     <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
@@ -18,8 +18,7 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
-    <PackageReleaseNotes>
-      [2026-07-25] v0.1.0-preview1 新增 NCF 桌面状态桥接能力
+    <PackageReleaseNotes>      [2026-07-25] v0.1.0-preview1 新增 NCF 桌面状态桥接能力
       1、使用逆变事件处理器的闭合服务映射旁路观察 EventBus，不改变原事件消费行为
       2、避免开放泛型实现被 NCF 扫描为无效 DI 描述符，确保站点容器可正常构建
       3、提供带会话令牌保护的能力探测、活动快照和 SSE 实时事件接口
@@ -73,6 +72,12 @@
     2、Dependency update from Senparc.Ncf.AreaBase to 0.23.10
     3、Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
     4、Dependency update from Senparc.Ncf.XncfBase to 0.28.2
+    [2026-11-11] v0.4.10 统一模块注册显示名称与说明的多语言资源
+    1、Register 通过 XncfRegisterText 用稳定资源键和中文基准文本解析菜单名称与模块说明。
+    2、补齐模块多语言资源，缺少翻译时沿当前语言、英语、简体中文回退。
+    [2026-11-12] v0.4.11 统一模块注册显示名称与说明的多语言资源键
+    1、模块注册信息优先使用稳定资源键解析多语言显示文本。
+    2、兼容现有资源与默认文案，避免缺少翻译时影响模块加载。
     </PackageReleaseNotes>
   </PropertyGroup>
 

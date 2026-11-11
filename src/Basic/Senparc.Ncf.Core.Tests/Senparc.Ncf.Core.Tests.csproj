@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.0.12</Version>
+		<Version>0.0.13</Version>
 		<PackageReleaseNotes>
 		  [2026-07-17] v0.0.1 补充本地化属性、资源查找与文化回退测试
 		  1、新增本地化描述、必填校验与资源解析测试覆盖
@@ -30,7 +30,11 @@
 		  1、同步受影响的基础库、AI 模块或宿主项目版本
 		  2、保持项目引用链与当前功能兼容
 		  [2026-10-05] v0.0.12 Enhanced Senparc.Ncf.Core.Tests functionality and compatibility
-		  1、Updated Senparc.Ncf.Core.Tests project behavior and integration for the latest feature and reliability improvements.</PackageReleaseNotes>
+		  1、Updated Senparc.Ncf.Core.Tests project behavior and integration for the latest feature and reliability improvements.
+		  [2026-11-12] v0.0.13 补充 Senparc.Ncf.Core.Tests 回归测试覆盖
+		  1、覆盖当前窗口新增或调整的模块行为与边界场景。
+		  2、保持测试项目与对应模块版本及引用链兼容。
+		</PackageReleaseNotes>
 
 		<IsPackable>false</IsPackable>
 		<IsTestProject>true</IsTestProject>

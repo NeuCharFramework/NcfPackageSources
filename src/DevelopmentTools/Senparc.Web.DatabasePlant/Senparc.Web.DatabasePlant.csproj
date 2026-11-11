@@ -3,9 +3,8 @@
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 
-		<Version>0.0.22</Version>
-		<PackageReleaseNotes>
-		  [2026-07-04] v0.0.1 Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
+		<Version>0.0.23</Version>
+		<PackageReleaseNotes>		  [2026-07-04] v0.0.1 Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
 		  1、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
 		  [2026-07-05] v0.0.2 Dependency update from Senparc.Xncf.AgentsManager to 0.11.1-preview3
 		  [2026-07-05] v0.0.3 Dependency update from Senparc.Xncf.AgentsManager to 0.11.2-preview4
@@ -43,6 +42,10 @@
 		  1、Dependency update from Senparc.Areas.Admin to 0.12.26
 		  2、Dependency update from Senparc.Xncf.AgentsManager to 0.19.2
 		  3、Dependency update from Senparc.Xncf.Workspace to 0.2.7
+		  [2026-11-11] v0.0.23 同步后台、AgentsManager，并引用 Connectors
+		  1、Dependency update from Senparc.Areas.Admin to 0.12.28
+		  2、Dependency update from Senparc.Xncf.AgentsManager to 0.19.3
+		  3、引用 Senparc.Xncf.Connectors 0.1.0，使迁移宿主包含连接器模型。
 		</PackageReleaseNotes>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
@@ -60,6 +63,7 @@
 	  <ProjectReference Include="..\..\Extensions\Senparc.Xncf.AgentsManager\Senparc.Xncf.AgentsManager.csproj" />
 	  <ProjectReference Include="..\..\Extensions\Senparc.Xncf.AIKernel\Senparc.Xncf.AIKernel.csproj" />
 	  <ProjectReference Include="..\..\Extensions\Senparc.Xncf.Workspace\Senparc.Xncf.Workspace.csproj" />
+	  <ProjectReference Include="..\..\Extensions\Senparc.Xncf.Connectors\Senparc.Xncf.Connectors.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：Register.cs
@@ -18,6 +18,9 @@
 
     修改标识：Senparc - 20261103
     修改描述：v0.15.14 维护Register 相关实现
+
+    修改标识：Senparc - 20261111
+    修改描述：v0.15.15 统一 XNCF Register 显示元数据与多语言资源键
 
 ----------------------------------------------------------------*/
 
@@ -58,6 +61,11 @@ namespace Senparc.Xncf.Tenant
     [XncfOrder(5990)]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
+        private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<TenantResource>(
+            "Module.Tenant",
+            "多租户",
+            "系统多租户核心模块，请勿删除；操作前请备份数据。");
+
         #region IXncfRegister 接口
 
         public override string Name => "Senparc.Xncf.Tenant";
@@ -66,11 +74,11 @@ namespace Senparc.Xncf.Tenant
 
         public override string Version => "0.1";//必须填写版本号
 
-        public override string MenuName => TenantResource.Get("Module.Tenant.MenuName", "多租户");
+        public override string MenuName => RegisterText.MenuName;
 
         public override string Icon => "fa fa-university";//fa fa-cog
 
-        public override string Description => TenantResource.Get("Module.Tenant.Description", "多租户模块，这是系统服务核心模块，请勿删除此模块。如果你实在忍不住，请务必做好数据备份。");
+        public override string Description => RegisterText.Description;
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

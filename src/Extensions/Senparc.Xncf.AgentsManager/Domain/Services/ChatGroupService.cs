@@ -60,6 +60,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.19.1 Enhance ChatGroupService with task management and concurrency handling
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.19.3 适配 MAF 1.28，外部响应挂起时结束当前事件流
+
 ----------------------------------------------------------------*/
 
 #nullable enable annotations
@@ -616,7 +619,9 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                         DiagnosticId = $"chat-task-{chatTask.Id}",
                         AdminUserId = int.TryParse(request.HumanRecipientUserId, out var adminUserId)
                             ? adminUserId
-                            : 0
+                            : 0,
+                        LimitConnectors = request.LimitConnectors,
+                        ConnectorInstanceIds = request.ConnectorInstanceIds
                     },
                     onExecutionInfo: message => logger.AppendLine(message));
                 if (!build.Success)
@@ -951,7 +956,9 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             StreamingRun run = null;
             try
             {
-                run = await InProcessExecution.RunStreamingAsync(
+                // OffThread 在后台执行超级步。人类参与者会在回合内等待外部输入，
+                // 不能让超级步占用调用线程，否则任务循环无法观察到并提交回复。
+                run = await InProcessExecution.OffThread.RunStreamingAsync(
                     workflow,
                     new List<ChatMessage> { new(ChatRole.User, taskPrompt) },
                     cancellationToken: cancellationToken);
@@ -1000,9 +1007,20 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     var hadEventsInCurrentSuperStep = false;
                     var workflowRequestReceived = false;
 
-                    await foreach (var workflowEvent in run.WatchStreamAsync(cancellationToken))
+                    // MAF 1.28 默认会在等待外部响应时挂起事件流。这里由任务循环自己发送
+                    // 下一轮 TurnToken 或审批响应，因此在挂起时结束本段流。
+                    await foreach (var workflowEvent in run.WatchStreamAsync(blockOnPendingRequest: false, cancellationToken))
                     {
                         hadEventsInCurrentSuperStep = true;
+
+                        if (workflowEvent is SuperStepCompletedEvent)
+                        {
+                            var stepStatus = await run.GetStatusAsync(cancellationToken);
+                            if (stepStatus is RunStatus.Idle or RunStatus.PendingRequests or RunStatus.Ended)
+                            {
+                                break;
+                            }
+                        }
 
                         var loopKeepRunning = await _cache.GetAsync<RunningChatTaskDto>(runningKey);
                         if (loopKeepRunning == null)

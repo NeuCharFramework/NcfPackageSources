@@ -25,6 +25,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.19.1 enhance Agent Studio, group configuration, and task management interactions
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.19.3 完善 AgentsManager 模板、ChatGroup 与连接器能力兼容
+
 ----------------------------------------------------------------*/
 
 using log4net.Core;
@@ -49,6 +52,7 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using Senparc.Xncf.Connectors.Abstractions;
 using Senparc.Xncf.PromptRange.Abstractions.Skills;
 using Senparc.Xncf.Workspace.Abstractions;
 
@@ -131,6 +135,9 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
 
         /// <summary>此 Agent 的 Workspace 文件和命令权限。</summary>
         public WorkspacePolicy WorkspacePolicy { get; set; } = new();
+
+        /// <summary>允许此 Agent 调用的连接器。null 表示本次请求不修改已有授权。</summary>
+        public List<AgentConnectorBinding> ConnectorBindings { get; set; }
 
         public string GetSystemMessagePromptCode()
         {

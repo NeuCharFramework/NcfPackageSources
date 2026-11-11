@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.5.12</Version>
+    <Version>0.5.13</Version>
     <AssemblyName>Senparc.Xncf.MCP</AssemblyName>
     <RootNamespace>Senparc.Xncf.MCP</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -17,8 +17,7 @@
     <!--<ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
-      [2025-06-20] v0.2.1-beta Add MCP functions in XncfRegisterBase class
+    <PackageReleaseNotes>      [2025-06-20] v0.2.1-beta Add MCP functions in XncfRegisterBase class
       [2025-06-20] v0.2.2-beta Add MCP functions in XncfRegisterBase class
       v0.1.0 创世
       v0.2.0 Update new ModelContextProtocol library
@@ -96,6 +95,10 @@
     5、Dependency update from Senparc.Xncf.AIKernel to 0.17.2
     6、Dependency update from Senparc.Xncf.SenMapic to 0.4.11
     7、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
+    [2026-11-11] v0.5.13 对齐 Microsoft.Extensions.AI 10.11.0 与 Agent Framework 1.28
+    1、Microsoft.Extensions.AI 升级到 10.11.0，以适配 Microsoft Agent Framework 1.28。
+    2、共享 AI 依赖升级到 Senparc.AI.AgentKernel 0.1.17 与 OpenAI 2.14.0。
+    3、Register 通过 XncfRegisterText 用稳定资源键解析菜单名称与模块说明。
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -110,7 +113,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.AI" Version="10.5.1" />
+    <PackageReference Include="Microsoft.Extensions.AI" Version="10.11.0" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
     <EmbeddedResource Include="wwwroot\**\*" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />

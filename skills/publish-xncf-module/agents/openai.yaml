@@ -1,0 +1,4 @@
+interface:
+  display_name: "发布 XNCF"
+  short_description: "对齐 XNCF 版本并打包，不擅自推送 NuGet"
+  default_prompt: "使用 $publish-xncf-module 对齐模块版本、更新说明并打出 Release 包。"

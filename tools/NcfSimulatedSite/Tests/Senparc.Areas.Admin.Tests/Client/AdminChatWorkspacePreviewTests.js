@@ -55,6 +55,10 @@ assert.ok(headerActions.lastIndexOf('toggleWorkspacePreview') > headerActions.la
     'Assets must be the rightmost Chat header action.');
 assert.ok(template.includes('v-html="formatMessageContent(liveThinkingText)"'),
     'Live reasoning must render Markdown consistently with the final answer.');
+assert.ok(template.includes('sandbox="allow-scripts"'),
+    'Workspace HTML preview must allow scripts only inside the iframe sandbox.');
+assert.ok(!template.includes('sandbox="allow-same-origin"'),
+    'Workspace HTML preview must not grant same-origin access to sandboxed scripts.');
 for (const selector of ['live-answer-preview', 'live-thinking-content', 'harness-step-body']) {
     const rule = styles.match(new RegExp(`\\.${selector}\\s*\\{([^}]+)\\}`));
     assert.match(rule[1], /white-space:\s*normal/,
@@ -193,20 +197,33 @@ async function run() {
     assert.ok(highlighted.includes('class="tok-comment"># ok'), 'Python preview must highlight comments.');
     assert.ok(!highlighted.includes('<script>'), 'Code preview must escape markup.');
     assert.ok(highlighted.includes('&lt;script&gt;'));
-    let codePreview = null;
-    app.buildWorkspaceHtmlPreview = async (content, filePath, isMarkdown, previewKind) => {
-        codePreview = { content, filePath, isMarkdown, previewKind };
-        return '<!doctype html><pre class="code-preview"></pre>';
-    };
+    assert.ok(highlighted.includes('data-ln="1"'), 'Line numbers stay in an attribute, not the copied text.');
+    assert.ok(highlighted.includes('class="code-line"'));
+    assert.ok(!highlighted.includes('>1<'), 'Line number text must not be part of the code.');
+    assert.match(styles, /content:\s*attr\(data-ln\)/);
+    assert.match(styles, /user-select:\s*none/);
+    const block = sandbox.highlightWorkspaceLine(' still', 'javascript', true, true);
+    assert.strictEqual(block.inBlock, true);
+    assert.ok(block.html.includes('tok-comment'));
     await app.handleWorkspaceEntryClick({ relativePath: 'tools/main.py', isDirectory: false });
     assert.strictEqual(app.workspacePreviewIsCode, true);
     assert.strictEqual(app.workspacePreviewCanShowSource, true);
     assert.strictEqual(app.workspacePreviewCanEdit, true);
     assert.strictEqual(app.workspacePreviewSource, false, 'Opening a script must default to highlighted preview.');
-    assert.strictEqual(codePreview.isMarkdown, false);
-    assert.strictEqual(codePreview.previewKind, 'code');
-    assert.strictEqual(codePreview.filePath, 'tools/main.py');
-    assert.ok(codePreview.content.includes('tok-keyword'));
+    assert.strictEqual(app.workspacePreviewSrcdoc, '', 'Code preview stays in the page so line numbers are not a second document.');
+    assert.ok(app.workspacePreviewCodeHtml.includes('tok-keyword'));
+    assert.ok(app.workspacePreviewCodeHtml.includes('data-ln="1"'));
+    const jsonRoot = sandbox.buildWorkspaceJsonRoot('{"name":"ncf","ok":true,"items":[1,null]}', false);
+    assert.strictEqual(jsonRoot.open, true);
+    const jsonRows = sandbox.flattenWorkspaceJson(jsonRoot);
+    assert.ok(jsonRows.some(row => row.node && row.node.key === 'name' && row.node.type === 'string'));
+    const jsonlRoot = sandbox.buildWorkspaceJsonRoot('{"a":1}\n{bad\n{"b":2}\n', true);
+    assert.strictEqual(jsonlRoot.type, 'array');
+    assert.strictEqual(jsonlRoot.size, 3);
+    assert.strictEqual(sandbox.workspaceJsonChild(jsonlRoot, 1).type, 'invalid');
+    assert.ok(template.includes('toggleWorkspaceJsonTree'));
+    assert.ok(template.includes('chat-workspace-json-tree'));
+    assert.ok(template.includes('chat-workspace-window-bar'));
     app.beginWorkspacePreviewEdit();
     assert.strictEqual(app.workspacePreviewEditing, true);
     app.workspacePreviewDraft += 'print(1)\n';
@@ -226,6 +243,14 @@ async function run() {
     await app.handleWorkspaceEntryClick({ relativePath: 'image.png', isDirectory: false });
     assert.strictEqual(app.workspacePreviewCanEdit, false);
     assert.strictEqual(app.workspacePreviewIsCode, false);
+    app.workspacePreviewData = {
+        path: 'events.jsonl', isText: true, contentType: 'application/jsonl', content: '{"a":1}\n{bad\n{"b":2}\n', etag: 'etag-jsonl'
+    };
+    assert.strictEqual(app.workspaceCodeLanguage, 'json');
+    assert.strictEqual(app.workspacePreviewIsJson, true);
+    assert.strictEqual(app.workspacePreviewIsCode, true);
+    app.workspacePreviewData = { path: 'notes.txt', isText: true, contentType: 'text/plain', content: 'a\nb', windowed: true };
+    assert.strictEqual(app.workspacePreviewCanEdit, false, 'A partial text window must not be saved over the whole file.');
     assert.ok(template.includes('beginWorkspacePreviewEdit'));
     assert.ok(template.includes('chat-workspace-text-editor'));
     assert.ok(styles.includes('.chat-workspace-text-editor'));

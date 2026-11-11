@@ -28,6 +28,9 @@
     修改标识：Senparc - 20260915
     修改描述：v0.4.0 增强 Chat 触发器消息持久化与恢复能力
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.4.6 统一 XNCF Register 显示元数据与多语言资源键
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Builder;
@@ -59,19 +62,22 @@ namespace Senparc.Xncf.NeuCharWorkflow;
 [XncfOrder(5890)]
 public partial class Register : XncfRegisterBase, IXncfRegister
 {
+        private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<NeuCharWorkflowResource>(
+            "Module",
+            "NeuChar 工作流",
+            "以 Function、系统节点与受控 Agent 组合的安全服务端工作流。");
+
     public override string Name => "Senparc.Xncf.NeuCharWorkflow";
 
     public override string Uid => "5F972F29-A2A5-4A87-B5B8-2FE758AA457B";
 
     public override string Version => "0.1.0-preview1";
 
-    public override string MenuName => NeuCharWorkflowResource.Get("Module.MenuName", "NeuChar Workflow");
+    public override string MenuName => RegisterText.MenuName;
 
     public override string Icon => "fa fa-random";
 
-    public override string Description => NeuCharWorkflowResource.Get(
-        "Module.Description",
-        "Secure server-side workflows composed from Functions, system nodes, and controlled Agents.");
+    public override string Description => RegisterText.Description;
 
     public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
     {

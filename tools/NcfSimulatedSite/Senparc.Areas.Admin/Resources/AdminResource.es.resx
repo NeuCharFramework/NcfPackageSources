@@ -431,6 +431,17 @@
   <data name="Admin.Common.Error" xml:space="preserve"><value>Error</value></data>
   <data name="AdminChat.Conversation" xml:space="preserve"><value>Conversación</value></data>
   <data name="AdminChat.History" xml:space="preserve"><value>Historial de conversaciones</value></data>
+  <data name="AdminChat.Search.Open" xml:space="preserve"><value>Buscar conversaciones</value></data>
+  <data name="AdminChat.Search.Placeholder" xml:space="preserve"><value>Buscar conversaciones no archivadas</value></data>
+  <data name="AdminChat.Search.ChatTab" xml:space="preserve"><value>Conversaciones</value></data>
+  <data name="AdminChat.Search.ToolTab" xml:space="preserve"><value>Llamadas</value></data>
+  <data name="AdminChat.Search.ToolPlaceholder" xml:space="preserve"><value>Buscar nombre de método</value></data>
+  <data name="AdminChat.Search.ToolCall" xml:space="preserve"><value>Llamada de método</value></data>
+  <data name="AdminChat.Search.Empty" xml:space="preserve"><value>No hay conversaciones no archivadas coincidentes</value></data>
+  <data name="AdminChat.Search.Hint" xml:space="preserve"><value>Solo busca conversaciones no archivadas, hasta 10 resultados</value></data>
+  <data name="AdminChat.Search.ToolHint" xml:space="preserve"><value>Busca nombres de métodos realmente invocados por Harness en conversaciones no archivadas, hasta 10 resultados</value></data>
+  <data name="AdminChat.Search.Failed" xml:space="preserve"><value>Error de búsqueda</value></data>
+  <data name="AdminChat.Search.TitleMatch" xml:space="preserve"><value>Coincidencia de título</value></data>
   <data name="AdminChat.EmptyHistory" xml:space="preserve"><value>No hay historial de conversaciones</value></data>
   <data name="AdminChat.SelectModel" xml:space="preserve"><value>Seleccionar modelo de IA</value></data>
   <data name="AdminChat.Manage" xml:space="preserve"><value>Gestionar</value></data>
@@ -853,4 +864,10 @@
   <data name="DocHelp.Retry" xml:space="preserve"><value>Reintentar</value></data>
   <data name="DocHelp.InvalidTopic" xml:space="preserve"><value>La configuración de la documentación no es válida. Contacte con su administrador.</value></data>
 
+  <data name="SystemMenu.AdministratorManagement" xml:space="preserve"><value>Administrator management</value></data>
+  <data name="SystemMenu.RoleManagement" xml:space="preserve"><value>Role management</value></data>
+  <data name="SystemMenu.SystemInfo" xml:space="preserve"><value>System information</value></data>
+  <data name="SystemMenu.TenantInfo" xml:space="preserve"><value>Tenant information</value></data>
+  <data name="SystemMenu.ExtensionModules" xml:space="preserve"><value>Extension modules</value></data>
+  <data name="SystemMenu.ModuleManagement" xml:space="preserve"><value>Module management</value></data>
 </root>

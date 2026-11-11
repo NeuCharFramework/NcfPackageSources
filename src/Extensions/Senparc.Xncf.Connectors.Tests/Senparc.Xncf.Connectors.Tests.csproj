@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>0.0.1</Version>
+
+    <PackageReleaseNotes>      [2026-11-12] v0.0.1 补充 Senparc.Xncf.Connectors.Tests 回归测试覆盖
+      1、覆盖当前窗口新增或调整的模块行为与边界场景。
+      2、保持测试项目与对应模块版本及引用链兼容。
+
+    </PackageReleaseNotes>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="MSTest" Version="3.6.1" />
+    <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Senparc.Xncf.Connectors.Abstractions\Senparc.Xncf.Connectors.Abstractions.csproj" />
+  </ItemGroup>
+</Project>

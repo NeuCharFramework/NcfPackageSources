@@ -51,6 +51,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.19.1 update chat avatar icon and improve assistant message styling
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.19.3 完善 AgentsManager 模板、ChatGroup 与连接器能力兼容
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http.Timeouts;
@@ -253,6 +256,9 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     null, request.FunctionCallNames, null, request.KnowledgeBaseId);
                 agentTemplateDto.SkillBindings = request.SkillBindings;
                 agentTemplateDto.WorkspacePolicy = request.WorkspacePolicy;
+                agentTemplateDto.ConnectorBindings = request.ConnectorBindings
+                    ?? existingAgent?.GetConnectorBindings().ToList()
+                    ?? new List<Senparc.Xncf.Connectors.Abstractions.AgentConnectorBinding>();
 
                 var savedAgentTemplate = await this._agentsTemplateService.UpdateAgentTemplateAsync(request.Id, agentTemplateDto);
 

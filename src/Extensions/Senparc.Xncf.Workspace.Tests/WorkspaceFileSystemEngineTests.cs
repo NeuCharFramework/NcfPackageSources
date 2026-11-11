@@ -38,6 +38,19 @@ public sealed class WorkspaceFileSystemEngineTests
     }
 
     [TestMethod]
+    public async Task WriteFile_RejectsEmptyRelativePath()
+    {
+        var exception = await Assert.ThrowsExactlyAsync<InvalidOperationException>(() =>
+            _engine.WriteFileAsync(new WorkspaceWriteFileRequest(
+                string.Empty,
+                Encoding.UTF8.GetBytes("content"))));
+
+        Assert.AreEqual(
+            "Workspace root cannot be modified as a file entry.",
+            exception.Message);
+    }
+
+    [TestMethod]
     public async Task BinaryFileLifecycle_UsesAtomicWritesAndEtags()
     {
         await _engine.CreateDirectoryAsync("src");
@@ -134,6 +147,82 @@ public sealed class WorkspaceFileSystemEngineTests
         StringAssert.Contains(
             Encoding.UTF8.GetString((await _engine.ReadFileAsync("Program.cs", 4096)).Content),
             "\"new\"");
+    }
+
+    [TestMethod]
+    public async Task SuggestPaths_ReturnsFilesAndDirectoriesByRelativePath()
+    {
+        await _engine.CreateDirectoryAsync("docs");
+        await _engine.WriteFileAsync(new WorkspaceWriteFileRequest(
+            "src/Admin/Chat.cs", Encoding.UTF8.GetBytes("class Chat {}")));
+        await _engine.WriteFileAsync(new WorkspaceWriteFileRequest(
+            "src/readme.txt", Encoding.UTF8.GetBytes("workspace readme")));
+        await _engine.WriteFileAsync(new WorkspaceWriteFileRequest(
+            "notes.txt", Encoding.UTF8.GetBytes("plain note")));
+        await _engine.WriteFileAsync(new WorkspaceWriteFileRequest(
+            "node_modules/leftpad/index.js", Encoding.UTF8.GetBytes("module.exports = 1;")));
+
+        var root = await _engine.SearchAsync(new WorkspaceSearchRequest(SuggestPaths: true, MaxResults: 20));
+        CollectionAssert.AreEquivalent(
+            new[] { "docs", "src", "notes.txt" },
+            root.Select(item => item.RelativePath).ToArray());
+        Assert.IsTrue(root.First().MatchType == "directory");
+
+        var byName = await _engine.SearchAsync(new WorkspaceSearchRequest(
+            NameQuery: "chat", SuggestPaths: true, MaxResults: 20));
+        Assert.AreEqual("src/Admin/Chat.cs", byName.Single().RelativePath);
+        Assert.AreEqual("path", byName.Single().MatchType);
+
+        var byDirectory = await _engine.SearchAsync(new WorkspaceSearchRequest(
+            NameQuery: "src/", SuggestPaths: true, MaxResults: 20));
+        CollectionAssert.AreEquivalent(
+            new[] { "src/Admin", "src/Admin/Chat.cs", "src/readme.txt" },
+            byDirectory.Select(item => item.RelativePath).ToArray());
+        Assert.IsFalse(byDirectory.Any(item => item.RelativePath.Contains("node_modules", StringComparison.Ordinal)));
+
+        var fileNameSearch = await _engine.SearchAsync(new WorkspaceSearchRequest(NameQuery: "Chat"));
+        Assert.HasCount(1, fileNameSearch);
+        Assert.IsTrue(fileNameSearch.All(item => item.MatchType == "fileName"));
+        await Assert.ThrowsExactlyAsync<ArgumentException>(() =>
+            _engine.SearchAsync(new WorkspaceSearchRequest(NameQuery: "../secret", SuggestPaths: true)));
+    }
+
+    [TestMethod]
+    public async Task SearchSupportsRegexContentAndRelativePathGlob()
+    {
+        await _engine.WriteFileAsync(new WorkspaceWriteFileRequest(
+            "tools/NcfSimulatedSite/Senparc.Areas.Admin/WorkspacePreview.cs",
+            Encoding.UTF8.GetBytes(
+                "WorkspaceAssets are loaded here.\nContent-Security-Policy is set here.\n")));
+        await _engine.WriteFileAsync(new WorkspaceWriteFileRequest(
+            "tools/NcfSimulatedSite/Senparc.Areas.Admin/Other.cs",
+            Encoding.UTF8.GetBytes("WorkspaceAssets are not a path match.\n")));
+
+        var contentMatches = await _engine.SearchAsync(new WorkspaceSearchRequest(
+            ContentQuery: "WorkspaceAssets|Content-Security-Policy|Workspace.*Preview",
+            ContentRegex: true,
+            MaxResults: 20));
+        Assert.HasCount(3, contentMatches);
+        Assert.IsTrue(contentMatches.All(item => item.MatchType == "content"));
+
+        var pathMatches = await _engine.SearchAsync(new WorkspaceSearchRequest(
+            PathGlob: "tools/NcfSimulatedSite/Senparc.Areas.Admin/**/*Workspace*",
+            MaxResults: 20));
+        Assert.AreEqual("tools/NcfSimulatedSite/Senparc.Areas.Admin/WorkspacePreview.cs",
+            pathMatches.Single().RelativePath);
+        Assert.AreEqual("path", pathMatches.Single().MatchType);
+    }
+
+    [TestMethod]
+    public async Task SearchRejectsInvalidRegexAndPathGlobTraversal()
+    {
+        await Assert.ThrowsExactlyAsync<ArgumentException>(() =>
+            _engine.SearchAsync(new WorkspaceSearchRequest(
+                ContentQuery: "(",
+                ContentRegex: true)));
+        await Assert.ThrowsExactlyAsync<ArgumentException>(() =>
+            _engine.SearchAsync(new WorkspaceSearchRequest(
+                PathGlob: "../**/*")));
     }
 
     [TestMethod]
@@ -274,5 +363,46 @@ public sealed class WorkspaceFileSystemEngineTests
 
         Assert.IsTrue(written.Created);
         Assert.AreEqual("shared-provider", Encoding.UTF8.GetString(read.Content));
+    }
+
+    [TestMethod]
+    public async Task TextWindow_ReadsLineSliceWithoutLoadingTheWholeFile()
+    {
+        var lines = Enumerable.Range(1, 8).Select(index => "line-" + index);
+        await File.WriteAllTextAsync(Path.Combine(_root, "notes.jsonl"), string.Join("\r\n", lines) + "\r\n");
+
+        var window = await _engine.ReadTextWindowAsync(new WorkspaceTextWindowRequest("notes.jsonl", 3, 2, 4096));
+        Assert.AreEqual("line-3\nline-4", window.Content);
+        Assert.AreEqual(3, window.StartLine);
+        Assert.AreEqual(2, window.LineCount);
+        Assert.IsTrue(window.HasMore);
+        Assert.IsFalse(window.Truncated);
+
+        var pastEnd = await _engine.ReadTextWindowAsync(new WorkspaceTextWindowRequest("notes.jsonl", 100, 10, 4096));
+        Assert.AreEqual(string.Empty, pastEnd.Content);
+        Assert.IsFalse(pastEnd.HasMore);
+
+        var oversized = new string('x', 80);
+        await File.WriteAllTextAsync(
+            Path.Combine(_root, "large.log"),
+            string.Join('\n', Enumerable.Repeat(oversized, 2000)) + "\n");
+        await Assert.ThrowsExactlyAsync<WorkspaceLimitException>(() => _engine.ReadFileAsync("large.log", 1024));
+        var head = await _engine.ReadTextWindowAsync(new WorkspaceTextWindowRequest("large.log", 1, 2, 4096));
+        Assert.AreEqual(oversized + "\n" + oversized, head.Content);
+        Assert.IsTrue(head.HasMore);
+        Assert.IsTrue(head.FileLength > 128 * 1024);
+
+        await File.WriteAllTextAsync(Path.Combine(_root, "wide.txt"), new string('y', 3000) + "\nnext\n");
+        var cut = await _engine.ReadTextWindowAsync(new WorkspaceTextWindowRequest("wide.txt", 1, 10, 1024));
+        Assert.IsTrue(cut.Truncated);
+        Assert.IsTrue(cut.Content.EndsWith('…'));
+        Assert.IsTrue(cut.HasMore);
+        Assert.IsTrue(cut.Content.Length < 1200);
+
+        await File.WriteAllTextAsync(Path.Combine(_root, "binary.txt"), "a\0b");
+        await Assert.ThrowsExactlyAsync<ArgumentException>(
+            () => _engine.ReadTextWindowAsync(new WorkspaceTextWindowRequest("binary.txt", 1, 10, 4096)));
+        await Assert.ThrowsExactlyAsync<InvalidOperationException>(
+            () => _engine.ReadTextWindowAsync(new WorkspaceTextWindowRequest("../secret.txt", 1, 10, 4096)));
     }
 }

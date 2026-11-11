@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：Register.cs
@@ -33,6 +33,9 @@
 
     修改标识：Senparc - 20261106
     修改描述：注册微调密钥文件、运行时开关和本机 Worker 进程管理
+
+    修改标识：Senparc - 20261111
+    修改描述：v0.17.2 统一 XNCF Register 显示元数据与多语言资源键
 
 ----------------------------------------------------------------*/
 
@@ -73,6 +76,11 @@ namespace Senparc.Xncf.AIKernel
     //[XncfOrder(5899)]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
+        private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<AIKernelResource>(
+            "Module.AIKernel",
+            "AI 核心模块",
+            "基于 Senparc.AI，为所有 AI 项目提供基础能力");
+
         #region IXncfRegister 接口
 
         public override string Name => "Senparc.Xncf.AIKernel";
@@ -81,11 +89,11 @@ namespace Senparc.Xncf.AIKernel
 
         public override string Version => "5.0.5";//必须填写版本号
 
-        public override string MenuName => AIKernelResource.Get("Module.AIKernel.MenuName", "AI 核心模块");
+        public override string MenuName => RegisterText.MenuName;
 
         public override string Icon => "fa  fa-magic";
 
-        public override string Description => AIKernelResource.Get("Module.AIKernel.Description", "AI 核心模块，基于 Senparc.AI 为所有 AI 项目提供基础能力");
+        public override string Description => RegisterText.Description;
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

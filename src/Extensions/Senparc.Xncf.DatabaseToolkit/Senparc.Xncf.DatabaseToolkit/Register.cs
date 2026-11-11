@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：Register.cs
@@ -12,6 +12,9 @@
 
     修改标识：Senparc - 20260717
     修改描述：v0.26.0-preview2 为 DatabaseToolkit 模块接入统一资源本地化并优化功能文案
+
+    修改标识：Senparc - 20261111
+    修改描述：v0.27.11 统一 XNCF Register 显示元数据与多语言资源键
 
 ----------------------------------------------------------------*/
 
@@ -33,6 +36,11 @@ namespace Senparc.Xncf.DatabaseToolkit
     [XncfRegister]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
+        private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<DatabaseToolkitResource>(
+            "Module.DatabaseToolkit",
+            "数据库工具包",
+            "提供数据库操作工具。数据库操作可能损坏数据，请充分了解功能并在修改前完成备份。");
+
         public Register()
         { }
 
@@ -43,9 +51,9 @@ namespace Senparc.Xncf.DatabaseToolkit
         public override string Uid => "3019CCBE-0739-43D5-9DED-027A0B26745E";//必须确保全局唯一，生成后必须固定
         public override string Version => "0.7.1";//必须填写版本号
 
-        public override string MenuName => DatabaseToolkitResource.Get("Module.DatabaseToolkit.MenuName", "数据库工具包");
+        public override string MenuName => RegisterText.MenuName;
         public override string Icon => "fa fa-database";
-        public override string Description => DatabaseToolkitResource.Get("Module.DatabaseToolkit.Description", "为方便数据库操作提供的工具包。请完全了解本工具各项功能特点后再使用，所有数据库操作都有损坏数据的可能，修改数据库前务必注意数据备份！");
+        public override string Description => RegisterText.Description;
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

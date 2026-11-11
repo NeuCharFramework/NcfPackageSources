@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.20.11-preview10</Version>
+    <Version>0.20.12-preview11</Version>
     <AssemblyName>Senparc.Ncf.Repository</AssemblyName>
     <RootNamespace>Senparc.Ncf.Repository</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -39,6 +39,7 @@
 		[2026-10-01] 支持已跟踪实体按指定字段保存，统一封装局部更新能力
 				[2026-11-03] v0.20.10-preview9 支持按指定字段保存已跟踪实体
 				[2026-11-05] v0.20.11-preview10 Dependency update from Senparc.Ncf.Core to 0.30.4-preview10
+				[2026-11-12] v0.20.12-preview11 Dependency updates from Senparc.Ncf.Core to 0.31.0-preview11
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

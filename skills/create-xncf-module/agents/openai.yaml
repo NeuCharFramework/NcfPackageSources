@@ -1,0 +1,4 @@
+interface:
+  display_name: "创建 XNCF"
+  short_description: "用权威模板生成 XNCF，并接入解决方案与宿主"
+  default_prompt: "使用 $create-xncf-module 从 XNCF 模板创建一个模块，生成 GUID 和数据库前缀，并接入宿主。"

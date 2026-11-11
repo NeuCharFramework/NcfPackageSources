@@ -81,5 +81,9 @@ Key modules for the RAG implementation:
 | Skill | Description | File |
 |---|---|---|
 | `add-modify-log` | Add modify log | `.github/skills/add-modify-log/SKILL.md` |
-| `update-project-version` | Update .csproj version and release notes when project files change | `.github/skills/update-project-version/SKILL.md` |
+| `senparc-version-updater` | Update package versions from the master/main merge-base, write PackageReleaseNotes, and add C# changelog headers | `codex-skills/senparc-version-updater/SKILL.md` |
 | `multi-language-translation` | Create Developer-Multi-Language branch and translate all Chinese source code comments and README/docs to English | `.github/skills/multi-language-translation/SKILL.md` |
+| `develop-xncf-modules` | Route XNCF creation, maintenance, publishing, and bounded-context decisions | `skills/develop-xncf-modules/SKILL.md` |
+| `create-xncf-module` | Scaffold an XNCF from the authoritative dotnet new template and integrate it | `skills/create-xncf-module/SKILL.md` |
+| `maintain-xncf-module` | Add use cases, migrations, UI, Functions, and tests to an existing XNCF | `skills/maintain-xncf-module/SKILL.md` |
+| `publish-xncf-module` | Align XNCF versions and pack a Release package without pushing unless asked | `skills/publish-xncf-module/SKILL.md` |

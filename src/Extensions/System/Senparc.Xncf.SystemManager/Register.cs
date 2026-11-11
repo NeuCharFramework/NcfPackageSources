@@ -19,6 +19,9 @@
     修改标识：Senparc - 20260804
     修改描述：v0.15.3-preview6 补齐 SystemConfig.FooterContent 数据库迁移
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.15.12 统一 XNCF Register 显示元数据与多语言资源键
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -44,6 +47,11 @@ namespace Senparc.Xncf.SystemManager
     [XncfOrder(5970)]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
+        private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<SystemManagerResource>(
+            "Module.SystemManager",
+            "系统管理",
+            "负责系统配置和核心运行数据的管理模块，请勿删除；操作前请备份数据。");
+
         #region IXncfRegister 接口
 
         public override string Name => "Senparc.Xncf.SystemManager";
@@ -52,11 +60,11 @@ namespace Senparc.Xncf.SystemManager
 
         public override string Version => "1.1.3";//必须填写版本号
 
-        public override string MenuName => SystemManagerResource.Get("Module.SystemManager.MenuName", "系统管理");
+        public override string MenuName => RegisterText.MenuName;
 
         public override string Icon => "fa fa-university";//fa fa-cog
 
-        public override string Description => SystemManagerResource.Get("Module.SystemManager.Description", "这是系统服务核心模块，主管基础数据结构和网站核心运行数据，请勿删除此模块。如果你实在忍不住，请务必做好数据备份。");
+        public override string Description => RegisterText.Description;
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

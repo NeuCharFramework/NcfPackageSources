@@ -8,10 +8,27 @@ const { test } = require('node:test');
 
 const file = path.resolve(__dirname, '../../../Senparc.Areas.Admin/wwwroot/js/Admin/Shared/VoiceNavigation.js');
 
-function load() {
-    const context = { window: {}, console };
+function load(extra) {
+    const context = Object.assign({
+        window: {},
+        console,
+        Promise,
+        setTimeout,
+        clearTimeout,
+        document: { documentElement: { lang: 'zh-CN' } }
+    }, extra);
     vm.runInNewContext(fs.readFileSync(file, 'utf8'), context);
     return context.window.NcfVoiceNavigation;
+}
+
+function viewModel() {
+    return {
+        voiceNavListening: false,
+        voiceNavPanelVisible: false,
+        voiceNavMessage: '',
+        voiceNavChoices: [],
+        voiceNavDraft: ''
+    };
 }
 
 const menus = [
@@ -187,6 +204,277 @@ test('dismiss closes the voice panel without keeping the draft', () => {
     assert.equal(vm.voiceNavDraft, '');
     assert.equal(vm.voiceNavChoices.length, 0);
     assert.equal(api.text('close'), '关闭');
+});
+
+test('a blocked microphone tells the user the browser will not ask again', () => {
+    const api = load();
+    assert.match(api.describeSpeechError('not-allowed', 'denied'), /不会再弹出/);
+    assert.match(api.describeSpeechError('not-allowed', 'prompt'), /需要允许麦克风/);
+    assert.match(api.describeSpeechError('not-allowed', 'granted'), /系统拦住了浏览器/);
+    assert.match(api.describeSpeechError('service-not-allowed', ''), /没有开放语音识别/);
+    assert.equal(api.speechPromptIsSeparate({ userAgent: 'Mozilla/5.0 Chrome/130.0.0.0 Safari/537.36' }), true);
+    assert.equal(api.speechPromptIsSeparate({ userAgent: 'Mozilla/5.0 Version/17.6 Safari/605.1.15' }), false);
+    assert.equal(api.speechPromptIsSeparate({ userAgent: 'Mozilla/5.0 (iPhone) CriOS/130.0.0.0 Mobile/15E148 Safari/604.1' }), false);
+});
+
+test('chrome asks for the microphone before starting recognition', async () => {
+    const calls = [];
+    const browser = {
+        navigator: {
+            userAgent: 'Mozilla/5.0 Chrome/130.0.0.0 Safari/537.36',
+            permissions: {
+                query() {
+                    return Promise.resolve({ state: 'prompt' });
+                }
+            },
+            mediaDevices: {
+                getUserMedia(constraints) {
+                    calls.push(constraints);
+                    return Promise.resolve({
+                        getTracks() {
+                            return [{ stop() { calls.push('stop'); } }];
+                        }
+                    });
+                }
+            }
+        },
+        SpeechRecognition: function SpeechRecognition() {
+            this.start = function () { calls.push('start'); };
+            this.abort = function () { calls.push('abort'); };
+            this.stop = function () { calls.push('recognition-stop'); };
+        }
+    };
+    const api = load({ window: browser });
+    const vm = viewModel();
+    api.toggle(vm);
+    assert.match(vm.voiceNavMessage, /弹出的提示/);
+    await new Promise((resolve) => setImmediate(resolve));
+    assert.equal(calls[0].audio, true);
+    assert.equal(calls[1], 'stop');
+    assert.equal(calls[2].audio, true);
+    assert.equal(calls[3], 'start');
+    assert.equal(vm.voiceNavListening, true);
+    assert.match(vm.voiceNavMessage, /请说要打开的页面名称/);
+});
+
+test('chrome does not start recognition when the microphone is already blocked', async () => {
+    const calls = [];
+    const browser = {
+        navigator: {
+            userAgent: 'Mozilla/5.0 Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0',
+            permissions: {
+                query() {
+                    return Promise.resolve({ state: 'denied' });
+                }
+            },
+            mediaDevices: {
+                getUserMedia() {
+                    calls.push('ask');
+                    const error = new Error('Permission denied');
+                    error.name = 'NotAllowedError';
+                    return Promise.reject(error);
+                }
+            }
+        },
+        SpeechRecognition: function SpeechRecognition() {
+            this.start = function () { calls.push('start'); };
+        }
+    };
+    const api = load({ window: browser });
+    const vm = viewModel();
+    api.toggle(vm);
+    await new Promise((resolve) => setImmediate(resolve));
+    assert.deepEqual(calls, ['ask']);
+    assert.match(vm.voiceNavMessage, /不会再弹出/);
+    assert.equal(vm.voiceNavListening, false);
+    assert.equal(vm.voiceNavPanelVisible, true);
+});
+
+test('on-device speech prefers dictation and falls back to command', async () => {
+    const api = load();
+    const seen = [];
+    function Recognition() {}
+    Recognition.available = function (options) {
+        seen.push('available:' + options.quality);
+        return Promise.resolve(options.quality === 'command' ? 'available' : 'downloadable');
+    };
+    Recognition.install = function (options) {
+        seen.push('install:' + options.quality);
+        return Promise.resolve(false);
+    };
+    const quality = await api.prepareLocalSpeech(Recognition, 'zh-CN');
+    assert.equal(quality, 'command');
+    assert.deepEqual(seen, ['available:dictation', 'install:dictation', 'available:command']);
+});
+
+function chromiumWindow(SpeechRecognition, getUserMedia) {
+    return {
+        navigator: {
+            userAgent: 'Mozilla/5.0 Chrome/142.0.0.0 Safari/537.36',
+            permissions: {
+                query() {
+                    return Promise.resolve({ state: 'granted' });
+                }
+            },
+            mediaDevices: {
+                getUserMedia: getUserMedia || function () {
+                    return Promise.resolve({ getTracks() { return [{ stop() {} }]; } });
+                }
+            }
+        },
+        SpeechRecognition: SpeechRecognition
+    };
+}
+
+test('chrome passes the live microphone track to on-device recognition', async () => {
+    const started = [];
+    let openedMicrophone = false;
+    function SpeechRecognition() {
+        this.start = function (track) {
+            started.push({
+                local: this.processLocally === true,
+                continuous: this.continuous === true,
+                track: !!(track && track.readyState !== 'ended'),
+                phrases: this.phrases && this.phrases.length
+            });
+        };
+        this.abort = function () {};
+        this.stop = function () {};
+    }
+    SpeechRecognition.available = function (options) {
+        return Promise.resolve(options.quality === 'dictation' ? 'available' : 'unavailable');
+    };
+    const browser = chromiumWindow(SpeechRecognition, function () {
+        openedMicrophone = true;
+        return Promise.resolve({
+            getAudioTracks() {
+                return [{ readyState: 'live', label: 'Mic', stop() {} }];
+            }
+        });
+    });
+    browser.SpeechRecognitionPhrase = function (phrase, boost) {
+        this.phrase = phrase;
+        this.boost = boost;
+    };
+    browser.service = {
+        get() {
+            return Promise.resolve({
+                data: {
+                    data: {
+                        menuList: [
+                            { menuName: '知识库', url: '/Admin/KnowledgeBase/Index', children: [] }
+                        ]
+                    }
+                }
+            });
+        }
+    };
+    const api = load({ window: browser });
+    const vm = viewModel();
+    api.toggle(vm);
+    await new Promise((resolve) => setImmediate(resolve));
+    assert.equal(openedMicrophone, true);
+    assert.equal(started.length, 1);
+    assert.equal(started[0].local, true);
+    assert.equal(started[0].continuous, false);
+    assert.equal(started[0].track, true);
+    assert.equal(started[0].phrases, 1);
+    assert.match(vm.voiceNavMessage, /请说要打开的页面名称/);
+});
+
+test('chrome downloads the local language pack before listening', async () => {
+    const steps = [];
+    function SpeechRecognition() {
+        this.start = function () { steps.push(this.processLocally === true ? 'local-start' : 'cloud-start'); };
+        this.abort = function () {};
+    }
+    SpeechRecognition.available = function (options) {
+        steps.push('available:' + options.quality);
+        return Promise.resolve(options.quality === 'dictation' ? 'downloadable' : 'unavailable');
+    };
+    SpeechRecognition.install = function (options) {
+        steps.push('install:' + options.quality);
+        return Promise.resolve(true);
+    };
+    const api = load({ window: chromiumWindow(SpeechRecognition) });
+    const vm = viewModel();
+    api.toggle(vm);
+    assert.match(vm.voiceNavMessage, /本地语音识别/);
+    await new Promise((resolve) => setImmediate(resolve));
+    assert.deepEqual(steps, ['install:dictation', 'available:dictation', 'local-start']);
+    assert.match(vm.voiceNavMessage, /请说要打开的页面名称/);
+});
+
+test('a language-pack install that never finishes does not keep the panel waiting', async () => {
+    const api = load();
+    function Recognition() {}
+    Recognition.available = function (options) {
+        return Promise.resolve(options.quality === 'dictation' ? 'downloadable' : 'available');
+    };
+    Recognition.install = function () {
+        return new Promise(function () {});
+    };
+    const quality = await api.prepareLocalSpeech(Recognition, 'zh-CN', null, {
+        installPromise: Recognition.install(),
+        installTimeout: 30
+    });
+    assert.equal(quality, '');
+    assert.match(api.text('downloading'), /不会再弹窗/);
+});
+
+test('a premature no-speech does not end the session, and heard text fills the input', async () => {
+    let recognition = null;
+    function SpeechRecognition() {
+        recognition = this;
+        this.starts = 0;
+        this.start = function () { this.starts += 1; };
+        this.abort = function () {};
+        this.stop = function () {};
+    }
+    SpeechRecognition.available = function (options) {
+        return Promise.resolve(options.quality === 'dictation' ? 'available' : 'unavailable');
+    };
+    const api = load({ window: chromiumWindow(SpeechRecognition) });
+    const vm = viewModel();
+    api.toggle(vm);
+    await new Promise((resolve) => setImmediate(resolve));
+    recognition.onerror({ error: 'no-speech' });
+    recognition.onend();
+    assert.equal(vm.voiceNavListening, true);
+    assert.doesNotMatch(vm.voiceNavMessage, /没有听清/);
+    recognition.onresult({
+        results: [{ isFinal: false, 0: { transcript: '打开知识库' }, length: 1 }]
+    });
+    assert.equal(vm.voiceNavDraft, '打开知识库');
+    recognition.onnomatch({
+        results: [{ isFinal: true, 0: { transcript: '知识库' }, length: 1 }]
+    });
+    assert.equal(vm.voiceNavDraft, '知识库');
+    await new Promise((resolve) => setTimeout(resolve, 250));
+    assert.equal(recognition.starts, 2);
+});
+
+test('safari starts recognition directly so the click can show its own prompt', async () => {
+    const calls = [];
+    const browser = {
+        navigator: {
+            userAgent: 'Mozilla/5.0 Version/17.6 Safari/605.1.15',
+            mediaDevices: {
+                getUserMedia() {
+                    calls.push('ask');
+                    return Promise.resolve({ getTracks() { return []; } });
+                }
+            }
+        },
+        webkitSpeechRecognition: function SpeechRecognition() {
+            this.start = function () { calls.push('start'); };
+        }
+    };
+    const api = load({ window: browser });
+    api.toggle(viewModel());
+    await new Promise((resolve) => setImmediate(resolve));
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0], 'start');
 });
 
 test('unknown speech does not navigate', () => {

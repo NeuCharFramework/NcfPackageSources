@@ -1,9 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.12.26</Version>
-		<PackageReleaseNotes>
-    [2026-07-02] v0.0.2 支持流式输出并优化交互体验，优化 AgentsManager 前端界面与历史消息展示效果
+		<Version>0.12.28</Version>
+		<PackageReleaseNotes>    [2026-07-02] v0.0.2 支持流式输出并优化交互体验，优化 AgentsManager 前端界面与历史消息展示效果
     1、支持流式输出并优化交互体验
     2、优化 AgentsManager 前端界面与历史消息展示效果
     [2026-07-05] v0.0.3 新增登录超时配置并补齐多数据库迁移支持，重构系统配置初始化与更新流程并统一模型处理
@@ -158,6 +157,14 @@
     23、Dependency update from Senparc.Xncf.SystemPermission to 0.15.12
     24、Dependency update from Senparc.Xncf.Tenant to 0.15.15
     25、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.12
+    [2026-11-10] v0.12.27 将 Oracle 提示词引用列改为 NCLOB
+    1、AdminChat 消息的 PromptReferencesJson 在 Oracle 上使用 NCLOB，避免超过 NVARCHAR2(2000) 时被截断
+    [2026-11-11] v0.12.28 适配 Agent Framework Harness 1.28，并完善后台语言与语音导航
+    1、移除已删除的 DisableFileAccess，文件访问保持默认关闭。
+    2、依赖 Senparc.AI.AgentKernel 0.1.17 与 Microsoft Agent Framework Harness 1.28.0。
+    3、内置系统菜单和已加载 XNCF 模块菜单按当前文化重新解析显示文本，用户自定义菜单仍使用数据库原文。
+    4、语音导航优先使用浏览器本地语音识别，并补齐多语言提示。
+    5、Register 通过 XncfRegisterText 用稳定资源键解析菜单名称与模块说明。
 		</PackageReleaseNotes>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
 		<!--<RazorLangVersion>2.0</RazorLangVersion>-->
@@ -228,6 +235,7 @@
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.PromptRange.Abstractions\Senparc.Xncf.PromptRange.Abstractions.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.Workspace.Abstractions\Senparc.Xncf.Workspace.Abstractions.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.Workspace\Senparc.Xncf.Workspace.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.Connectors\Senparc.Xncf.Connectors.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.FileManager\Senparc.Xncf.FileManager.csproj" />
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.WeixinManager\Senparc.Xncf.WeixinManager\Senparc.Xncf.WeixinManager.csproj" />

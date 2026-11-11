@@ -1,4 +1,4 @@
 interface:
   display_name: "XNCF 模块化开发"
-  short_description: "创建、演进、审查并按 DDD 边界拆分 XNCF 模块"
-  default_prompt: "使用 $develop-xncf-modules 规划并实现一个边界清晰、可验证的 XNCF 模块。"
+  short_description: "按模板创建、接入、维护并发布 XNCF，同时审查 DDD 边界"
+  default_prompt: "使用 $develop-xncf-modules 判断这次 XNCF 工作属于创建、维护、发布还是边界审查，并按对应技能完成。"

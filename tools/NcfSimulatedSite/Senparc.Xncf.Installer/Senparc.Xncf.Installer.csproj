@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.5.13</Version>
+		<Version>0.5.14</Version>
 		<AssemblyName>Senparc.Xncf.Installer</AssemblyName>
 		<RootNamespace>Senparc.Xncf.Installer</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -17,8 +17,7 @@
 		<!--<ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIconUrl>https://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>-->
-		<PackageReleaseNotes>
-			v0.3 创世
+		<PackageReleaseNotes>			v0.3 创世
 			[2026-07-02] v0.3.1 增强多智能体群聊流程、容错与任务调度能力，优化 AgentsManager 前端界面与历史消息展示效果
 			1、增强多智能体群聊流程、容错与任务调度能力
 			2、优化 AgentsManager 前端界面与历史消息展示效果
@@ -99,6 +98,12 @@
 			14、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.12
 			15、Dependency update from Senparc.Areas.Admin to 0.12.26
 			16、Dependency update from Senparc.Xncf.Installer.Interface to 0.2.3
+			[2026-11-11] v0.5.14 独立安装器改用统一本地化注册
+			1、安装器宿主使用 AddNcfLocalization，并按统一文化列表启用请求本地化。
+			2、安装页切换语言时写入文化 Cookie 并刷新页面。
+			3、Register 通过 XncfRegisterText 用稳定资源键解析菜单名称与模块说明。
+			4、共享 AI 依赖升级到 Senparc.AI.AgentKernel 0.1.17 与 Microsoft Agent Framework 1.28.0。
+			5、Dependency update from Senparc.Areas.Admin to 0.12.28
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>

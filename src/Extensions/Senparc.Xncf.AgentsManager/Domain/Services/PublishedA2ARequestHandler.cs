@@ -16,6 +16,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.19.1 A2A 发布端点恢复请求租户上下文，A2AServer 缓存按租户隔离
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.19.3 适配 A2A 1.0.0-preview4 请求上下文与推送配置接口
+
 ----------------------------------------------------------------*/
 
 using A2A;
@@ -51,52 +54,54 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             _serverRegistry = serverRegistry;
         }
 
-        public async Task<SendMessageResponse> SendMessageAsync(SendMessageRequest request, CancellationToken cancellationToken)
-            => await (await ResolveServerAsync(cancellationToken)).SendMessageAsync(request, cancellationToken);
+        public async Task<SendMessageResponse> SendMessageAsync(SendMessageRequest request, A2ARequestContext? context, CancellationToken cancellationToken)
+            => await (await ResolveServerAsync(cancellationToken)).SendMessageAsync(request, context, cancellationToken);
 
         public async IAsyncEnumerable<StreamResponse> SendStreamingMessageAsync(
             SendMessageRequest request,
+            A2ARequestContext? context,
             [EnumeratorCancellation] CancellationToken cancellationToken)
         {
-            await foreach (var item in (await ResolveServerAsync(cancellationToken)).SendStreamingMessageAsync(request, cancellationToken))
+            await foreach (var item in (await ResolveServerAsync(cancellationToken)).SendStreamingMessageAsync(request, context, cancellationToken))
             {
                 yield return item;
             }
         }
 
-        public async Task<AgentTask> GetTaskAsync(GetTaskRequest request, CancellationToken cancellationToken)
-            => await (await ResolveServerAsync(cancellationToken)).GetTaskAsync(request, cancellationToken);
+        public async Task<AgentTask> GetTaskAsync(GetTaskRequest request, A2ARequestContext? context, CancellationToken cancellationToken)
+            => await (await ResolveServerAsync(cancellationToken)).GetTaskAsync(request, context, cancellationToken);
 
-        public async Task<ListTasksResponse> ListTasksAsync(ListTasksRequest request, CancellationToken cancellationToken)
-            => await (await ResolveServerAsync(cancellationToken)).ListTasksAsync(request, cancellationToken);
+        public async Task<ListTasksResponse> ListTasksAsync(ListTasksRequest request, A2ARequestContext? context, CancellationToken cancellationToken)
+            => await (await ResolveServerAsync(cancellationToken)).ListTasksAsync(request, context, cancellationToken);
 
-        public async Task<AgentTask> CancelTaskAsync(CancelTaskRequest request, CancellationToken cancellationToken)
-            => await (await ResolveServerAsync(cancellationToken)).CancelTaskAsync(request, cancellationToken);
+        public async Task<AgentTask> CancelTaskAsync(CancelTaskRequest request, A2ARequestContext? context, CancellationToken cancellationToken)
+            => await (await ResolveServerAsync(cancellationToken)).CancelTaskAsync(request, context, cancellationToken);
 
         public async IAsyncEnumerable<StreamResponse> SubscribeToTaskAsync(
             SubscribeToTaskRequest request,
+            A2ARequestContext? context,
             [EnumeratorCancellation] CancellationToken cancellationToken)
         {
-            await foreach (var item in (await ResolveServerAsync(cancellationToken)).SubscribeToTaskAsync(request, cancellationToken))
+            await foreach (var item in (await ResolveServerAsync(cancellationToken)).SubscribeToTaskAsync(request, context, cancellationToken))
             {
                 yield return item;
             }
         }
 
-        public async Task<TaskPushNotificationConfig> CreateTaskPushNotificationConfigAsync(CreateTaskPushNotificationConfigRequest request, CancellationToken cancellationToken)
-            => await (await ResolveServerAsync(cancellationToken)).CreateTaskPushNotificationConfigAsync(request, cancellationToken);
+        public async Task<TaskPushNotificationConfig> CreateTaskPushNotificationConfigAsync(TaskPushNotificationConfig request, A2ARequestContext? context, CancellationToken cancellationToken)
+            => await (await ResolveServerAsync(cancellationToken)).CreateTaskPushNotificationConfigAsync(request, context, cancellationToken);
 
-        public async Task<TaskPushNotificationConfig> GetTaskPushNotificationConfigAsync(GetTaskPushNotificationConfigRequest request, CancellationToken cancellationToken)
-            => await (await ResolveServerAsync(cancellationToken)).GetTaskPushNotificationConfigAsync(request, cancellationToken);
+        public async Task<TaskPushNotificationConfig> GetTaskPushNotificationConfigAsync(GetTaskPushNotificationConfigRequest request, A2ARequestContext? context, CancellationToken cancellationToken)
+            => await (await ResolveServerAsync(cancellationToken)).GetTaskPushNotificationConfigAsync(request, context, cancellationToken);
 
-        public async Task<ListTaskPushNotificationConfigResponse> ListTaskPushNotificationConfigAsync(ListTaskPushNotificationConfigRequest request, CancellationToken cancellationToken)
-            => await (await ResolveServerAsync(cancellationToken)).ListTaskPushNotificationConfigAsync(request, cancellationToken);
+        public async Task<ListTaskPushNotificationConfigsResponse> ListTaskPushNotificationConfigsAsync(ListTaskPushNotificationConfigsRequest request, A2ARequestContext? context, CancellationToken cancellationToken)
+            => await (await ResolveServerAsync(cancellationToken)).ListTaskPushNotificationConfigsAsync(request, context, cancellationToken);
 
-        public async Task DeleteTaskPushNotificationConfigAsync(DeleteTaskPushNotificationConfigRequest request, CancellationToken cancellationToken)
-            => await (await ResolveServerAsync(cancellationToken)).DeleteTaskPushNotificationConfigAsync(request, cancellationToken);
+        public async Task DeleteTaskPushNotificationConfigAsync(DeleteTaskPushNotificationConfigRequest request, A2ARequestContext? context, CancellationToken cancellationToken)
+            => await (await ResolveServerAsync(cancellationToken)).DeleteTaskPushNotificationConfigAsync(request, context, cancellationToken);
 
-        public async Task<AgentCard> GetExtendedAgentCardAsync(GetExtendedAgentCardRequest request, CancellationToken cancellationToken)
-            => await (await ResolveServerAsync(cancellationToken)).GetExtendedAgentCardAsync(request, cancellationToken);
+        public async Task<AgentCard> GetExtendedAgentCardAsync(GetExtendedAgentCardRequest request, A2ARequestContext? context, CancellationToken cancellationToken)
+            => await (await ResolveServerAsync(cancellationToken)).GetExtendedAgentCardAsync(request, context, cancellationToken);
 
         private Task<A2AServer> ResolveServerAsync(CancellationToken cancellationToken)
         {
@@ -279,7 +284,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
 
         public async Task CancelAsync(RequestContext context, AgentEventQueue eventQueue, CancellationToken cancellationToken)
         {
-            await new TaskUpdater(eventQueue, context.TaskId, context.ContextId).CancelAsync(cancellationToken);
+            await new TaskUpdater(eventQueue, context.TaskId, context.ContextId).CancelAsync(null, cancellationToken);
         }
     }
 }

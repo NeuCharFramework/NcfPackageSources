@@ -22,6 +22,9 @@
     修改标识：Senparc - 20261109
     修改描述：增加工作区用量统计，以及保留清单的内容清空
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.2.7 完善 Workspace Agent、文件存储与模块注册兼容
+
 ----------------------------------------------------------------*/
 
 using System.Collections.Concurrent;
@@ -246,6 +249,24 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
                 workspaceRoot,
                 WorkspaceAgentOperations.Read,
                 new WorkspaceAgentReadRequest(relativePath, maxBytes),
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    public async Task<WorkspaceTextWindow> ReadTextWindowAsync(
+        string workspaceId,
+        WorkspaceTextWindowRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        var workspaceRoot = GetWorkspaceRoot(workspaceId);
+        EnsureWorkspaceExists(workspaceRoot);
+        return await _agentPool
+            .InvokeAsync<WorkspaceTextWindowRequest, WorkspaceTextWindow>(
+                workspaceId,
+                workspaceRoot,
+                WorkspaceAgentOperations.ReadTextWindow,
+                request,
                 cancellationToken)
             .ConfigureAwait(false);
     }

@@ -19,6 +19,15 @@
     修改标识：Senparc - 20261105
     修改描述：v0.12.26 持久化消息、Prompt 引用与评分
 
+    修改标识：Senparc - 20261110
+    修改描述：按当前用户检索未归档会话中的消息片段
+
+    修改标识：Senparc - 20261110
+    修改描述：检索未归档会话中 Harness 实际调用过的方法名
+
+    修改标识：Senparc - 20261111
+    修改描述：v0.12.28 完善 Admin Chat 与模块工作区交互能力兼容
+
 ----------------------------------------------------------------*/
 using Microsoft.EntityFrameworkCore;
 using Senparc.Areas.Admin.ACL;
@@ -264,6 +273,82 @@ namespace Senparc.Areas.Admin.Domain.Services
             message.SetFeedback(feedback);
             await base.SaveObjectAsync(message);
             return true;
+        }
+
+        /// <summary>
+        /// 在当前用户未归档、未删除的会话里检索消息。已归档会话的正文不会被读出。
+        /// </summary>
+        public async Task<IReadOnlyList<AdminChatHistorySearchHit>> SearchActiveHistoryAsync(
+            int userId,
+            string keyword,
+            int limit = AdminChatHistorySearch.DefaultLimit)
+        {
+            if (userId <= 0 || AdminChatHistorySearch.NormalizeKeyword(keyword).Length == 0)
+            {
+                return Array.Empty<AdminChatHistorySearchHit>();
+            }
+
+            var db = BaseData.BaseDB.BaseDataContext;
+            var sessions = await db.Set<AdminChatSession>()
+                .AsNoTracking()
+                .Where(session => session.UserId == userId && session.Status == ChatSessionStatus.Active)
+                .ToListAsync();
+            if (sessions.Count == 0)
+            {
+                return Array.Empty<AdminChatHistorySearchHit>();
+            }
+
+            var sessionIds = sessions.Select(session => session.Id).ToList();
+            var messages = await db.Set<AdminChatMessage>()
+                .AsNoTracking()
+                .Where(message => sessionIds.Contains(message.SessionId))
+                .ToListAsync();
+            return AdminChatHistorySearch.Search(sessions, messages, userId, keyword, limit);
+        }
+
+        /// <summary>
+        /// 在当前用户未归档会话的 Harness 轨迹中检索 tool.call 方法名。
+        /// </summary>
+        public async Task<IReadOnlyList<AdminChatHistorySearchHit>> SearchActiveToolCallsAsync(
+            int userId,
+            string keyword,
+            int limit = AdminChatHistorySearch.DefaultLimit)
+        {
+            if (userId <= 0 || AdminChatHistorySearch.NormalizeKeyword(keyword).Length == 0)
+            {
+                return Array.Empty<AdminChatHistorySearchHit>();
+            }
+
+            var db = BaseData.BaseDB.BaseDataContext;
+            var sessions = await db.Set<AdminChatSession>()
+                .AsNoTracking()
+                .Where(session => session.UserId == userId && session.Status == ChatSessionStatus.Active)
+                .ToListAsync();
+            if (sessions.Count == 0)
+            {
+                return Array.Empty<AdminChatHistorySearchHit>();
+            }
+
+            var sessionIds = sessions.Select(session => session.Id).ToList();
+            var trajectories = await db.Set<AdminChatTrajectory>()
+                .AsNoTracking()
+                .Where(trajectory => trajectory.UserId == userId && sessionIds.Contains(trajectory.SessionId))
+                .ToListAsync();
+            if (trajectories.Count == 0)
+            {
+                return Array.Empty<AdminChatHistorySearchHit>();
+            }
+
+            var trajectoryIds = trajectories.Select(trajectory => trajectory.Id).ToList();
+            var events = await db.Set<AdminChatTrajectoryEvent>()
+                .AsNoTracking()
+                .Where(item => trajectoryIds.Contains(item.TrajectoryId) && item.EventType == "tool.call")
+                .ToListAsync();
+            var messages = await db.Set<AdminChatMessage>()
+                .AsNoTracking()
+                .Where(message => sessionIds.Contains(message.SessionId) && message.TrajectoryId != null)
+                .ToListAsync();
+            return AdminChatHistorySearch.SearchToolCalls(sessions, trajectories, events, messages, userId, keyword, limit);
         }
 
         /// <summary>

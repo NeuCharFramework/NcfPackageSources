@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Module.MenuName" xml:space="preserve"><value>NeuChar Workflow</value></data>
+  <data name="Module.Description" xml:space="preserve"><value>Secure server-side workflows composed from Functions, system nodes, and controlled Agents.</value></data>
+  <data name="Area.Workflow" xml:space="preserve"><value>Workflow</value></data>
+  <data name="Area.Tasks" xml:space="preserve"><value>Tasks</value></data>
+  <data name="Area.Replay" xml:space="preserve"><value>Run replay</value></data>
+  <data name="Title.Designer" xml:space="preserve"><value>NeuChar Workflow</value></data>
+  <data name="Title.Tasks" xml:space="preserve"><value>Workflow tasks</value></data>
+  <data name="Title.Replay" xml:space="preserve"><value>Workflow run replay</value></data>
+  <data name="Designer.Introduction" xml:space="preserve"><value>Compose Functions, system nodes, and Agents. Parameters, types, connections, and module state are checked before save and run.</value></data>
+  <data name="Action.Refresh" xml:space="preserve"><value>Refresh</value></data>
+  <data name="Action.NewWorkflow" xml:space="preserve"><value>New workflow</value></data>
+</root>

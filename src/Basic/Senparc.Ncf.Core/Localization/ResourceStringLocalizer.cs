@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260717
     修改描述：v0.25.0-preview2 新增统一资源本地化基础设施并支持 FunctionRender 动态文案
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.30.4-preview10 统一本地化资源回退与语言配置能力
+
 ----------------------------------------------------------------*/
 using System;
 using System.Collections.Concurrent;
@@ -25,7 +28,7 @@ namespace Senparc.Ncf.Core.Localization
     /// </summary>
     public static class ResourceStringLocalizer
     {
-        private static readonly ConcurrentDictionary<Type, ResourceManager> ResourceManagers = new();
+        private static readonly ConcurrentDictionary<Type, NcfFallbackStringLocalizer> Localizers = new();
 
         public static string Get(
             Type resourceType,
@@ -36,13 +39,32 @@ namespace Senparc.Ncf.Core.Localization
             ArgumentNullException.ThrowIfNull(resourceType);
             ArgumentException.ThrowIfNullOrWhiteSpace(resourceKey);
 
-            var resourceManager = ResourceManagers.GetOrAdd(
+            var localizer = Localizers.GetOrAdd(
                 resourceType,
-                type => new ResourceManager(type.FullName!, type.Assembly));
+                type => new NcfFallbackStringLocalizer(
+                    new ResourceManager(type.FullName!, type.Assembly),
+                    type.Assembly.FullName ?? type.Assembly.GetName().Name ?? type.FullName!));
 
-            return resourceManager.GetString(resourceKey, culture ?? CultureInfo.CurrentUICulture)
-                   ?? fallback
-                   ?? resourceKey;
+            var originalCulture = CultureInfo.CurrentUICulture;
+            try
+            {
+                if (culture is not null)
+                {
+                    CultureInfo.CurrentUICulture = culture;
+                }
+
+                var localized = localizer[resourceKey];
+                return localized.ResourceNotFound
+                    ? fallback ?? resourceKey
+                    : localized.Value;
+            }
+            finally
+            {
+                if (culture is not null)
+                {
+                    CultureInfo.CurrentUICulture = originalCulture;
+                }
+            }
         }
 
         public static string Format(

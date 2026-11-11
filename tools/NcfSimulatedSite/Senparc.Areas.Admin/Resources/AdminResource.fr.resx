@@ -431,6 +431,17 @@
   <data name="Admin.Common.Error" xml:space="preserve"><value>Erreur</value></data>
   <data name="AdminChat.Conversation" xml:space="preserve"><value>Conversation</value></data>
   <data name="AdminChat.History" xml:space="preserve"><value>Historique des conversations</value></data>
+  <data name="AdminChat.Search.Open" xml:space="preserve"><value>Rechercher des conversations</value></data>
+  <data name="AdminChat.Search.Placeholder" xml:space="preserve"><value>Rechercher les conversations non archivées</value></data>
+  <data name="AdminChat.Search.ChatTab" xml:space="preserve"><value>Conversations</value></data>
+  <data name="AdminChat.Search.ToolTab" xml:space="preserve"><value>Appels</value></data>
+  <data name="AdminChat.Search.ToolPlaceholder" xml:space="preserve"><value>Rechercher un nom de méthode</value></data>
+  <data name="AdminChat.Search.ToolCall" xml:space="preserve"><value>Appel de méthode</value></data>
+  <data name="AdminChat.Search.Empty" xml:space="preserve"><value>Aucune conversation non archivée correspondante</value></data>
+  <data name="AdminChat.Search.Hint" xml:space="preserve"><value>Recherche uniquement les conversations non archivées, 10 résultats maximum</value></data>
+  <data name="AdminChat.Search.ToolHint" xml:space="preserve"><value>Recherche les noms de méthodes réellement appelées par Harness dans les conversations non archivées, 10 résultats maximum</value></data>
+  <data name="AdminChat.Search.Failed" xml:space="preserve"><value>Échec de la recherche</value></data>
+  <data name="AdminChat.Search.TitleMatch" xml:space="preserve"><value>Titre correspondant</value></data>
   <data name="AdminChat.EmptyHistory" xml:space="preserve"><value>Aucun historique de conversation</value></data>
   <data name="AdminChat.SelectModel" xml:space="preserve"><value>Sélectionner le modèle IA</value></data>
   <data name="AdminChat.Manage" xml:space="preserve"><value>Gérer</value></data>
@@ -853,4 +864,10 @@
   <data name="DocHelp.Retry" xml:space="preserve"><value>Réessayer</value></data>
   <data name="DocHelp.InvalidTopic" xml:space="preserve"><value>La configuration de la documentation est invalide. Contactez votre administrateur.</value></data>
 
+  <data name="SystemMenu.AdministratorManagement" xml:space="preserve"><value>Administrator management</value></data>
+  <data name="SystemMenu.RoleManagement" xml:space="preserve"><value>Role management</value></data>
+  <data name="SystemMenu.SystemInfo" xml:space="preserve"><value>System information</value></data>
+  <data name="SystemMenu.TenantInfo" xml:space="preserve"><value>Tenant information</value></data>
+  <data name="SystemMenu.ExtensionModules" xml:space="preserve"><value>Extension modules</value></data>
+  <data name="SystemMenu.ModuleManagement" xml:space="preserve"><value>Module management</value></data>
 </root>

@@ -19,6 +19,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.8.1 enhance file management capabilities with new upload stream method and service registration
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.8.3 统一 XNCF Register 显示元数据与多语言资源键
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -51,6 +54,11 @@ namespace Senparc.Xncf.FileManager
     [XncfRegister]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
+        private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<FileManagerResource>(
+            "Module.FileManager",
+            "文件管理",
+            "管理系统文件");
+
         #region IXncfRegister 接口
 
         public override string Name => "Senparc.Xncf.FileManager";
@@ -59,11 +67,11 @@ namespace Senparc.Xncf.FileManager
 
         public override string Version => "0.7.3";//必须填写版本号
 
-        public override string MenuName => FileManagerResource.Get("Module.FileManager.MenuName", "文件管理");
+        public override string MenuName => RegisterText.MenuName;
 
         public override string Icon => "fa fa-database";
 
-        public override string Description => FileManagerResource.Get("Module.FileManager.Description", "文件管理");
+        public override string Description => RegisterText.Description;
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

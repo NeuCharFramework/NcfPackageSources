@@ -16,6 +16,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.6.0-preview8 完善知识库文件删除保护、召回测试与管理界面
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.8.2 统一 XNCF Register 显示元数据与多语言资源键
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -42,6 +45,11 @@ namespace Senparc.Xncf.KnowledgeBase
     [XncfRegister]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
+        private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<KnowledgeBaseResource>(
+            "Module.KnowledgeBase",
+            "AI 知识库",
+            "创建、管理和检索 AI 知识库");
+
         #region IXncfRegister 接口
 
         public override string Name => "Senparc.Xncf.KnowledgeBase";
@@ -50,11 +58,11 @@ namespace Senparc.Xncf.KnowledgeBase
 
         public override string Version => "0.1.10";//必须填写版本号
 
-        public override string MenuName => KnowledgeBaseResource.Get("Module.KnowledgeBase.MenuName", "AI 知识库");
+        public override string MenuName => RegisterText.MenuName;
 
         public override string Icon => "fa fa-lightbulb-o";
 
-        public override string Description => KnowledgeBaseResource.Get("Module.KnowledgeBase.Description", "AI 知识库");
+        public override string Description => RegisterText.Description;
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

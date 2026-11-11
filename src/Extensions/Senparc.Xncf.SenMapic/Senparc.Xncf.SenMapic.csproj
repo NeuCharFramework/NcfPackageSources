@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.4.11</Version>
+    <Version>0.4.12</Version>
     <AssemblyName>Senparc.Xncf.SenMapic</AssemblyName>
     <RootNamespace>Senparc.Xncf.SenMapic</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -17,8 +17,7 @@
     <!--<ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
-      v0.1.0 创世
+    <PackageReleaseNotes>      v0.1.0 创世
       [2025-01-20] v0.1.3-alpha3 update UID
       [2025-01-25] v0.1.2-alpha2 Update Agents functions, support for function calling
       [2025-01-28] v0.1.3-alpha2 update Senparc.AI
@@ -71,6 +70,11 @@
     4、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.14
     5、Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
     6、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
+    [2026-11-11] v0.4.11 统一模块注册显示名称与说明的多语言资源键
+    1、Register 通过 XncfRegisterText 用稳定资源键和中文基准文本解析菜单名称与模块说明。
+    [2026-11-12] v0.4.12 统一模块注册显示名称与说明的多语言资源键
+    1、模块注册信息优先使用稳定资源键解析多语言显示文本。
+    2、兼容现有资源与默认文案，避免缺少翻译时影响模块加载。
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

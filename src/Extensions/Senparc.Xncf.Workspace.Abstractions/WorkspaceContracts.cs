@@ -19,6 +19,15 @@
     修改标识：Senparc - 20261109
     修改描述：增加工作区用量统计与清空内容契约
 
+    修改标识：Senparc - 20261111
+    修改描述：搜索请求可改为按相对路径返回文件和目录候选
+
+    修改标识：Senparc - 20261111
+    修改描述：搜索支持内容正则表达式和相对路径 glob
+
+    修改标识：Senparc - 20261112
+    修改描述：v0.3.0 支持路径 glob、内容正则与更清晰的搜索契约错误
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Workspace.Abstractions;
@@ -134,7 +143,10 @@ public sealed record WorkspaceSearchRequest(
     string ContentQuery = "",
     string RelativePath = "",
     bool CaseSensitive = false,
-    int MaxResults = 100);
+    int MaxResults = 100,
+    bool SuggestPaths = false,
+    string PathGlob = "",
+    bool ContentRegex = false);
 
 public sealed record WorkspaceSearchResult(
     string RelativePath,
@@ -271,6 +283,11 @@ public interface IWorkspaceStorage
         string workspaceId,
         string relativePath,
         int maxBytes = 2 * 1024 * 1024,
+        CancellationToken cancellationToken = default);
+
+    Task<WorkspaceTextWindow> ReadTextWindowAsync(
+        string workspaceId,
+        WorkspaceTextWindowRequest request,
         CancellationToken cancellationToken = default);
 
     Task WriteFileAsync(

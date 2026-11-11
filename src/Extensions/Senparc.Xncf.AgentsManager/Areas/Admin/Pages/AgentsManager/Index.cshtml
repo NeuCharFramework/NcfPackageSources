@@ -1596,7 +1596,14 @@
                         </span>
                     </div>
                 </el-form-item>
-                
+                <el-form-item v-if="!agentForm.isHuman" label="连接器权限">
+                    <el-select v-model="agentForm.connectorInstanceIds" multiple filterable clearable style="width:100%"
+                               placeholder="不授权任何连接器" :loading="connectorOptionsLoading">
+                        <el-option v-for="item in connectorOptions" :key="item.instanceId"
+                                   :label="item.name + ' · ' + item.connectorName" :value="item.instanceId"></el-option>
+                    </el-select>
+                    <div class="form-help-text">只有这里选中的连接器能被这个 Agent 调用。留空表示没有外部工具权限。</div>
+                </el-form-item>
                 <el-form-item label="MCP Endpoints" prop="mcpEndpoints">
                     <div class="mcp-endpoints-container">
                         <div class="mcp-endpoints-list">
@@ -2111,6 +2118,20 @@
                         <div v-else class="groupStartMentions__empty">当前群组没有可提及的组员。</div>
                     </div>
                 </el-form-item>
+                <el-form-item label="本次连接器">
+                    <el-switch v-model="groupStartForm.limitConnectors"
+                               active-text="只使用选中的连接器"
+                               inactive-text="使用各 Agent 已授权的连接器"></el-switch>
+                    <div v-if="groupStartForm.limitConnectors" style="margin-top:10px;">
+                        <el-select v-model="groupStartForm.connectorInstanceIds" multiple filterable clearable
+                                   style="width:100%" placeholder="不选则本次不使用连接器"
+                                   :loading="connectorOptionsLoading">
+                            <el-option v-for="item in connectorOptions" :key="item.instanceId"
+                                       :label="item.name + ' · ' + item.connectorName" :value="item.instanceId"></el-option>
+                        </el-select>
+                    </div>
+                    <div class="form-help-text">Agent 模板没有授权的连接器，即使在这里选中也不会被调用。</div>
+                </el-form-item>
                 <el-form-item label="任务描述" prop="promptCommand">
                     <el-input ref="groupStartPromptCommand" type="textarea" v-model="groupStartForm.promptCommand" :rows="8"
                         placeholder="我能帮你做什么" @@focus="rememberGroupStartPromptCaret"
@@ -2237,6 +2258,14 @@
                     还有 {{ agentForm.functionBindings.length - 6 }} 项
                 </span>
             </div>
+        </el-form-item>
+        <el-form-item v-if="!agentForm.isHuman" label="连接器权限">
+            <el-select v-model="agentForm.connectorInstanceIds" multiple filterable clearable style="width:100%"
+                       placeholder="不授权任何连接器" :loading="connectorOptionsLoading">
+                <el-option v-for="item in connectorOptions" :key="item.instanceId"
+                           :label="item.name + ' · ' + item.connectorName" :value="item.instanceId"></el-option>
+            </el-select>
+            <div class="form-help-text">只有这里选中的连接器能被这个 Agent 调用。留空表示没有外部工具权限。</div>
         </el-form-item>
         
         <el-form-item label="MCP Endpoints" prop="mcpEndpoints">

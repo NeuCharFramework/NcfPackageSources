@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：Register.cs
@@ -12,6 +12,9 @@
 
     修改标识：Senparc - 20260717
     修改描述：v0.15.0-preview2 为 XncfModuleManager 模块接入统一资源本地化并优化功能文案
+
+    修改标识：Senparc - 20261111
+    修改描述：v0.15.12 统一 XNCF Register 显示元数据与多语言资源键
 
 ----------------------------------------------------------------*/
 
@@ -35,6 +38,11 @@ namespace Senparc.Xncf.XncfModuleManager
     [XncfOrder(5950)]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
+        private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<XncfModuleManagerResource>(
+            "Module.XncfModuleManager",
+            "XNCF 模块管理核心",
+            "安装、更新和管理 XNCF 模块的核心组件");
+
         #region IXncfRegister 接口
 
         public override string Name => "Senparc.Xncf.XncfModuleManager";
@@ -43,11 +51,11 @@ namespace Senparc.Xncf.XncfModuleManager
 
         public override string Version => "0.1.2";//必须填写版本号
 
-        public override string MenuName => XncfModuleManagerResource.Get("Module.XncfModuleManager.MenuName", "XNCF 模块管理核心");
+        public override string MenuName => RegisterText.MenuName;
 
         public override string Icon => "fa fa-user-secret";//fa fa-cog
 
-        public override string Description => XncfModuleManagerResource.Get("Module.XncfModuleManager.Description", "XNCF 模块管理核心");
+        public override string Description => RegisterText.Description;
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

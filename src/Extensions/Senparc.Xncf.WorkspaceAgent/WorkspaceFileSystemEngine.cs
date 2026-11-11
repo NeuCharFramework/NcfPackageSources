@@ -9,12 +9,22 @@
     修改标识：Senparc - 20261103
     修改描述：v0.2.1 implement connection manager and workspace file system provider
 
+    修改标识：Senparc - 20261111
+    修改描述：按相对路径提供文件和目录候选，供对话输入框引用
+
+    修改标识：Senparc - 20261111
+    修改描述：修复相对路径 glob 校验的 StartsWith 重载兼容
+
+    修改标识：Senparc - 20261112
+    修改描述：v0.2.3 支持路径 glob、内容正则搜索并改进错误诊断
+
 ----------------------------------------------------------------*/
 
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using Senparc.Xncf.Workspace.Abstractions;
 
 namespace Senparc.Xncf.WorkspaceAgent;
@@ -101,12 +111,105 @@ public sealed class WorkspaceFileSystemEngine
         var info = new FileInfo(path);
         if (info.Length > limit)
         {
-            throw new InvalidOperationException($"Workspace file exceeds the {limit} byte read limit.");
+            throw new WorkspaceLimitException($"Workspace file exceeds the {limit} byte read limit.");
         }
 
         var content = await File.ReadAllBytesAsync(path, cancellationToken).ConfigureAwait(false);
         var metadata = CreateFileMetadata(path, info, content);
         return new WorkspaceFileContent(metadata, content);
+    }
+
+    public async Task<WorkspaceTextWindow> ReadTextWindowAsync(
+        WorkspaceTextWindowRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        var path = ResolvePath(request.RelativePath);
+        EnsureNoSymlink(path);
+        if (!File.Exists(path))
+        {
+            throw new FileNotFoundException("Workspace file does not exist.", request.RelativePath);
+        }
+
+        var startLine = Math.Max(1, request.StartLine);
+        var lineCount = Math.Clamp(request.LineCount, 1, 2000);
+        var maxBytes = Math.Clamp(request.MaxBytes, 1024, 512 * 1024);
+        var info = new FileInfo(path);
+        await using var stream = new FileStream(
+            path,
+            FileMode.Open,
+            FileAccess.Read,
+            FileShare.Read,
+            81920,
+            FileOptions.Asynchronous | FileOptions.SequentialScan);
+        var scanner = new WorkspaceTextScanner(stream);
+        var skipped = await scanner.SkipLinesAsync(startLine - 1, cancellationToken).ConfigureAwait(false);
+        if (skipped < startLine - 1)
+        {
+            return new WorkspaceTextWindow(
+                NormalizeRelativePath(path),
+                info.Length,
+                startLine,
+                0,
+                false,
+                false,
+                string.Empty,
+                CreateWindowETag(info));
+        }
+
+        var builder = new StringBuilder();
+        var returned = 0;
+        var usedBytes = 0;
+        var truncated = false;
+        var hasMore = false;
+        while (returned < lineCount)
+        {
+            var line = await scanner.ReadLineAsync(maxBytes, cancellationToken).ConfigureAwait(false);
+            if (line == null)
+            {
+                break;
+            }
+
+            var piece = line.Value.Truncated
+                ? Encoding.UTF8.GetString(line.Value.Bytes) + "…"
+                : Encoding.UTF8.GetString(line.Value.Bytes);
+            var additional = Encoding.UTF8.GetByteCount(piece) + (returned > 0 ? 1 : 0);
+            if (returned > 0 && usedBytes + additional > maxBytes)
+            {
+                hasMore = true;
+                break;
+            }
+
+            if (returned > 0)
+            {
+                builder.Append('\n');
+            }
+
+            builder.Append(piece);
+            usedBytes += additional;
+            returned++;
+            if (line.Value.Truncated)
+            {
+                truncated = true;
+                hasMore = await scanner.HasMoreAsync(cancellationToken).ConfigureAwait(false);
+                break;
+            }
+        }
+
+        if (!hasMore)
+        {
+            hasMore = await scanner.HasMoreAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        return new WorkspaceTextWindow(
+            NormalizeRelativePath(path),
+            info.Length,
+            startLine,
+            returned,
+            hasMore,
+            truncated,
+            builder.ToString(),
+            CreateWindowETag(info));
     }
 
     public async Task<WorkspaceWriteFileResult> WriteFileAsync(
@@ -272,8 +375,14 @@ public sealed class WorkspaceFileSystemEngine
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
+        if (request.SuggestPaths)
+        {
+            return await SuggestPaths(request, cancellationToken).ConfigureAwait(false);
+        }
+
         if (string.IsNullOrWhiteSpace(request.NameQuery) &&
-            string.IsNullOrWhiteSpace(request.ContentQuery))
+            string.IsNullOrWhiteSpace(request.ContentQuery) &&
+            string.IsNullOrWhiteSpace(request.PathGlob))
         {
             throw new ArgumentException("At least one search query is required.", nameof(request));
         }
@@ -288,6 +397,11 @@ public sealed class WorkspaceFileSystemEngine
         var comparison = request.CaseSensitive
             ? StringComparison.Ordinal
             : StringComparison.OrdinalIgnoreCase;
+        var pathGlob = CreatePathGlobMatcher(request.PathGlob, request.CaseSensitive);
+        var contentPattern = CreateContentMatcher(
+            request.ContentQuery,
+            request.ContentRegex,
+            request.CaseSensitive);
         var resultLimit = Math.Clamp(request.MaxResults, 1, Math.Max(1, _options.MaxSearchResults));
         var fileLimit = Math.Max(1, _options.MaxSearchFiles);
         var results = new List<WorkspaceSearchResult>();
@@ -329,12 +443,15 @@ public sealed class WorkspaceFileSystemEngine
 
                 inspectedFiles++;
                 var relativePath = NormalizeRelativePath(path);
-                if (!string.IsNullOrWhiteSpace(request.NameQuery) &&
-                    Path.GetFileName(path).Contains(request.NameQuery, comparison))
+                var nameMatches = string.IsNullOrWhiteSpace(request.NameQuery) ||
+                    Path.GetFileName(path).Contains(request.NameQuery, comparison);
+                var pathMatches = pathGlob == null || pathGlob.IsMatch(relativePath);
+                if (nameMatches && pathMatches &&
+                    (!string.IsNullOrWhiteSpace(request.NameQuery) || pathGlob != null))
                 {
                     results.Add(new WorkspaceSearchResult(
                         relativePath,
-                        "fileName",
+                        pathGlob == null ? "fileName" : "path",
                         null,
                         Path.GetFileName(path)));
                     if (results.Count >= resultLimit)
@@ -344,7 +461,7 @@ public sealed class WorkspaceFileSystemEngine
                 }
 
                 var fileInfo = new FileInfo(path);
-                if (string.IsNullOrWhiteSpace(request.ContentQuery) ||
+                if (contentPattern == null ||
                     fileInfo.Length > _options.MaxSearchFileBytes ||
                     await IsBinaryFileAsync(path, cancellationToken).ConfigureAwait(false))
                 {
@@ -357,7 +474,7 @@ public sealed class WorkspaceFileSystemEngine
                 while (await reader.ReadLineAsync(cancellationToken).ConfigureAwait(false) is { } line)
                 {
                     lineNumber++;
-                    if (!line.Contains(request.ContentQuery, comparison))
+                    if (!contentPattern.IsMatch(line))
                     {
                         continue;
                     }
@@ -376,6 +493,238 @@ public sealed class WorkspaceFileSystemEngine
         }
 
         return results;
+    }
+
+    private static Regex? CreateContentMatcher(
+        string query,
+        bool useRegex,
+        bool caseSensitive)
+    {
+        if (string.IsNullOrWhiteSpace(query))
+        {
+            return null;
+        }
+
+        if (!useRegex)
+        {
+            var escapedQuery = Regex.Escape(query);
+            return new Regex(
+                escapedQuery,
+                CreateSearchRegexOptions(caseSensitive),
+                TimeSpan.FromSeconds(1));
+        }
+
+        try
+        {
+            return new Regex(
+                query,
+                CreateSearchRegexOptions(caseSensitive),
+                TimeSpan.FromSeconds(1));
+        }
+        catch (ArgumentException exception)
+        {
+            throw new ArgumentException("Workspace content query is not a valid regular expression.", nameof(query), exception);
+        }
+    }
+
+    private static Regex? CreatePathGlobMatcher(string pathGlob, bool caseSensitive)
+    {
+        if (string.IsNullOrWhiteSpace(pathGlob))
+        {
+            return null;
+        }
+
+        var normalized = pathGlob.Replace('\\', '/').Trim();
+        if (normalized.Length > 500 ||
+            normalized.StartsWith("/", StringComparison.Ordinal) ||
+            normalized.IndexOfAny(['\0', '\r', '\n']) >= 0 ||
+            normalized.Split('/').Any(segment => segment == ".."))
+        {
+            throw new ArgumentException(
+                "Workspace path glob must be a relative path without parent traversal.",
+                nameof(pathGlob));
+        }
+
+        var pattern = new StringBuilder("^");
+        for (var index = 0; index < normalized.Length; index++)
+        {
+            var character = normalized[index];
+            if (character == '*')
+            {
+                if (index + 1 < normalized.Length && normalized[index + 1] == '*')
+                {
+                    index++;
+                    if (index + 1 < normalized.Length && normalized[index + 1] == '/')
+                    {
+                        pattern.Append("(?:.*/)?");
+                        index++;
+                    }
+                    else
+                    {
+                        pattern.Append(".*");
+                    }
+                }
+                else
+                {
+                    pattern.Append("[^/]*");
+                }
+            }
+            else if (character == '?')
+            {
+                pattern.Append("[^/]");
+            }
+            else
+            {
+                pattern.Append(Regex.Escape(character.ToString()));
+            }
+        }
+
+        pattern.Append('$');
+        return new Regex(
+            pattern.ToString(),
+            CreateSearchRegexOptions(caseSensitive),
+            TimeSpan.FromSeconds(1));
+    }
+
+    private static RegexOptions CreateSearchRegexOptions(bool caseSensitive)
+    {
+        return RegexOptions.CultureInvariant
+            | (caseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase);
+    }
+
+    private Task<IReadOnlyList<WorkspaceSearchResult>> SuggestPaths(
+        WorkspaceSearchRequest request,
+        CancellationToken cancellationToken)
+    {
+        var query = (request.NameQuery ?? string.Empty).Replace('\\', '/').Trim().TrimStart('/');
+        if (query.Contains("..", StringComparison.Ordinal) || query.IndexOfAny(['\0', '\r', '\n']) >= 0)
+        {
+            throw new ArgumentException("Invalid Workspace path suggestion.", nameof(request));
+        }
+
+        var comparison = request.CaseSensitive
+            ? StringComparison.Ordinal
+            : StringComparison.OrdinalIgnoreCase;
+        var resultLimit = Math.Clamp(request.MaxResults, 1, Math.Min(30, Math.Max(1, _options.MaxSearchResults)));
+        var visitLimit = Math.Max(1, _options.MaxSearchFiles);
+        var root = ResolvePath(request.RelativePath, allowRoot: true);
+        EnsureNoSymlink(root);
+        if (!Directory.Exists(root))
+        {
+            throw new DirectoryNotFoundException("Workspace search directory does not exist.");
+        }
+
+        var matches = new List<WorkspaceSearchResult>();
+        var pending = new Stack<string>();
+        pending.Push(root);
+        var visited = 0;
+        while (pending.Count > 0 && visited < visitLimit)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var directory = pending.Pop();
+            foreach (var path in Directory.EnumerateFileSystemEntries(directory))
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                if (IsReservedPath(path))
+                {
+                    continue;
+                }
+
+                if (++visited > visitLimit)
+                {
+                    break;
+                }
+
+                var attributes = File.GetAttributes(path);
+                if (attributes.HasFlag(FileAttributes.ReparsePoint))
+                {
+                    continue;
+                }
+
+                var isDirectory = attributes.HasFlag(FileAttributes.Directory);
+                var name = Path.GetFileName(path);
+                if (isDirectory && IsHiddenWorkspaceDirectory(name))
+                {
+                    continue;
+                }
+
+                if (isDirectory && query.Length > 0)
+                {
+                    pending.Push(path);
+                }
+
+                var relativePath = NormalizeRelativePath(path);
+                if (query.Length == 0)
+                {
+                    if (string.Equals(directory, root, _pathComparison))
+                    {
+                        matches.Add(CreatePathSuggestion(relativePath, isDirectory));
+                    }
+
+                    continue;
+                }
+
+                if (relativePath.Contains(query, comparison))
+                {
+                    matches.Add(CreatePathSuggestion(relativePath, isDirectory));
+                }
+            }
+        }
+
+        var ordered = matches
+            .Select(item => (Item: item, Rank: RankPathSuggestion(item, query, comparison)))
+            .OrderBy(item => item.Rank)
+            .ThenBy(item => item.Item.RelativePath.Count(character => character == '/'))
+            .ThenBy(item => item.Item.RelativePath, StringComparer.OrdinalIgnoreCase)
+            .Take(resultLimit)
+            .Select(item => item.Item)
+            .ToArray();
+        return Task.FromResult<IReadOnlyList<WorkspaceSearchResult>>(ordered);
+    }
+
+    private static bool IsHiddenWorkspaceDirectory(string name)
+    {
+        return name.Equals(".git", StringComparison.OrdinalIgnoreCase)
+            || name.Equals(".venv", StringComparison.OrdinalIgnoreCase)
+            || name.Equals("node_modules", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static WorkspaceSearchResult CreatePathSuggestion(string relativePath, bool isDirectory)
+    {
+        var name = Path.GetFileName(relativePath.TrimEnd('/'));
+        return new WorkspaceSearchResult(relativePath, isDirectory ? "directory" : "path", null, name);
+    }
+
+    private static int RankPathSuggestion(WorkspaceSearchResult item, string query, StringComparison comparison)
+    {
+        var isDirectory = item.MatchType == "directory";
+        if (query.Length == 0)
+        {
+            return isDirectory ? 0 : 1;
+        }
+
+        var name = Path.GetFileName(item.RelativePath);
+        if (name.Equals(query, comparison))
+        {
+            return isDirectory ? 1 : 0;
+        }
+
+        if (name.StartsWith(query, comparison))
+        {
+            return isDirectory ? 3 : 2;
+        }
+
+        if (item.RelativePath.Split('/').Any(segment => segment.StartsWith(query, comparison)))
+        {
+            return 4;
+        }
+
+        if (name.Contains(query, comparison))
+        {
+            return isDirectory ? 6 : 5;
+        }
+
+        return 7;
     }
 
     public async Task<WorkspacePatchResult> ApplyPatchAsync(
@@ -628,6 +977,11 @@ public sealed class WorkspaceFileSystemEngine
         return $"\"{Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(value)))}\"";
     }
 
+    private static string CreateWindowETag(FileInfo info)
+    {
+        return $"\"w-{info.Length:x}-{info.LastWriteTimeUtc.Ticks:x}\"";
+    }
+
     private string ResolvePath(string? relativePath, bool allowRoot = false)
     {
         if (string.IsNullOrWhiteSpace(relativePath))
@@ -837,5 +1191,155 @@ public sealed class WorkspaceFileSystemEngine
             FileOptions.Asynchronous | FileOptions.SequentialScan);
         var count = await stream.ReadAsync(buffer, cancellationToken).ConfigureAwait(false);
         return buffer.AsSpan(0, count).Contains((byte)0);
+    }
+
+    private readonly record struct WorkspaceTextLine(byte[] Bytes, bool Truncated);
+
+    private sealed class WorkspaceTextScanner
+    {
+        private readonly Stream _stream;
+        private readonly byte[] _buffer = new byte[81920];
+        private int _count;
+        private int _offset;
+
+        public WorkspaceTextScanner(Stream stream)
+        {
+            _stream = stream;
+        }
+
+        public async Task<int> SkipLinesAsync(int lines, CancellationToken cancellationToken)
+        {
+            var skipped = 0;
+            while (skipped < lines)
+            {
+                if (!await EnsureAsync(cancellationToken).ConfigureAwait(false))
+                {
+                    return skipped;
+                }
+
+                var value = _buffer[_offset++];
+                if (value == 0)
+                {
+                    throw new ArgumentException("Workspace text window cannot include binary content.");
+                }
+
+                if (value == (byte)'\n')
+                {
+                    skipped++;
+                }
+                else if (value == (byte)'\r')
+                {
+                    skipped++;
+                    if (await PeekAsync(cancellationToken).ConfigureAwait(false) == '\n')
+                    {
+                        _offset++;
+                    }
+                }
+            }
+
+            return skipped;
+        }
+
+        public async Task<WorkspaceTextLine?> ReadLineAsync(int maxLineBytes, CancellationToken cancellationToken)
+        {
+            var line = new MemoryStream();
+            var any = false;
+            while (true)
+            {
+                if (!await EnsureAsync(cancellationToken).ConfigureAwait(false))
+                {
+                    return any ? new WorkspaceTextLine(line.ToArray(), false) : null;
+                }
+
+                var value = _buffer[_offset++];
+                if (value == 0)
+                {
+                    throw new ArgumentException("Workspace text window cannot include binary content.");
+                }
+
+                if (value == (byte)'\n')
+                {
+                    return new WorkspaceTextLine(line.ToArray(), false);
+                }
+
+                if (value == (byte)'\r')
+                {
+                    if (await PeekAsync(cancellationToken).ConfigureAwait(false) == '\n')
+                    {
+                        _offset++;
+                    }
+
+                    return new WorkspaceTextLine(line.ToArray(), false);
+                }
+
+                if (line.Length >= maxLineBytes)
+                {
+                    await DrainRestOfLineAsync(cancellationToken).ConfigureAwait(false);
+                    return new WorkspaceTextLine(line.ToArray(), true);
+                }
+
+                any = true;
+                line.WriteByte(value);
+            }
+        }
+
+        public Task<bool> HasMoreAsync(CancellationToken cancellationToken)
+        {
+            return EnsureAsync(cancellationToken);
+        }
+
+        private async Task DrainRestOfLineAsync(CancellationToken cancellationToken)
+        {
+            while (true)
+            {
+                if (!await EnsureAsync(cancellationToken).ConfigureAwait(false))
+                {
+                    return;
+                }
+
+                var value = _buffer[_offset++];
+                if (value == 0)
+                {
+                    throw new ArgumentException("Workspace text window cannot include binary content.");
+                }
+
+                if (value == (byte)'\n')
+                {
+                    return;
+                }
+
+                if (value == (byte)'\r')
+                {
+                    if (await PeekAsync(cancellationToken).ConfigureAwait(false) == '\n')
+                    {
+                        _offset++;
+                    }
+
+                    return;
+                }
+            }
+        }
+
+        private async Task<int> PeekAsync(CancellationToken cancellationToken)
+        {
+            if (!await EnsureAsync(cancellationToken).ConfigureAwait(false))
+            {
+                return -1;
+            }
+
+            return _buffer[_offset];
+        }
+
+        private async Task<bool> EnsureAsync(CancellationToken cancellationToken)
+        {
+            if (_offset < _count)
+            {
+                return true;
+            }
+
+            _count = await _stream.ReadAsync(_buffer, cancellationToken).ConfigureAwait(false);
+            _offset = 0;
+            return _count > 0;
+        }
     }
 }

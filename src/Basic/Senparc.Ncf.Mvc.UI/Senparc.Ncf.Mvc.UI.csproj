@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0</TargetFrameworks>
-    <Version>0.22.7-preview11</Version>
+    <Version>0.22.8-preview12</Version>
     <AssemblyName>Senparc.Ncf.Mvc.UI</AssemblyName>
     <RootNamespace>Senparc.Ncf.Mvc.UI</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -41,6 +41,7 @@
 				1、Dependency update from Senparc.Ncf.Core to 0.30.0-preview9
 				[2026-11-03] v0.22.6-preview10 Dependency update from Senparc.Ncf.Core to 0.30.3-preview9
 				[2026-11-05] v0.22.7-preview11 Dependency update from Senparc.Ncf.Core to 0.30.4-preview10
+				[2026-11-12] v0.22.8-preview12 Dependency updates from Senparc.Ncf.Core to 0.31.0-preview11
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

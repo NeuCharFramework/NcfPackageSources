@@ -22,6 +22,9 @@
     修改标识：Senparc - 20261105
     修改描述：v0.20.14 注册 Prompt 引用与记忆提示词相关服务
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.20.14 统一 XNCF Register 显示元数据与多语言资源键
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -53,6 +56,11 @@ namespace Senparc.Xncf.PromptRange
     [XncfOrder(5897)]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
+        private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<PromptRangeResource>(
+            "Module.PromptRange",
+            "提示词靶场",
+            "用于训练和评估提示词（Prompt）");
+
         #region IXncfRegister 接口
 
         public override string Name => "Senparc.Xncf.PromptRange";
@@ -61,11 +69,11 @@ namespace Senparc.Xncf.PromptRange
 
         public override string Version => "0.15.4"; //必须填写版本号
 
-        public override string MenuName => PromptRangeResource.Get("Module.PromptRange.MenuName", "提示词靶场");
+        public override string MenuName => RegisterText.MenuName;
 
         public override string Icon => "fa fa-dot-circle-o";
 
-        public override string Description => PromptRangeResource.Get("Module.PromptRange.Description", "你的提示词（Prompt）训练场");
+        public override string Description => RegisterText.Description;
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider,
             InstallOrUpdate installOrUpdate)

@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：Register.cs
@@ -12,6 +12,9 @@
 
     修改标识：Senparc - 20260717
     修改描述：v0.13.0-preview3 为 AIAgentsHub 模块接入统一资源本地化并优化功能文案
+
+    修改标识：Senparc - 20261111
+    修改描述：v0.13.14 统一 XNCF Register 显示元数据与多语言资源键
 
 ----------------------------------------------------------------*/
 
@@ -37,6 +40,11 @@ namespace Senparc.Xncf.AIAgentsHub
     [XncfRegister]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
+        private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<AIAgentsHubResource>(
+            "Module.AIAgentsHub",
+            "AI Agent Hub",
+            "AI 智能体枢纽模块");
+
         #region IXncfRegister 接口
 
         public override string Name => "Senparc.Xncf.AIAgentsHub";
@@ -45,11 +53,11 @@ namespace Senparc.Xncf.AIAgentsHub
 
         public override string Version => "0.1.0";//必须填写版本号
 
-        public override string MenuName => AIAgentsHubResource.Get("Module.AIAgentsHub.MenuName", "AI Agent Hub");
+        public override string MenuName => RegisterText.MenuName;
 
         public override string Icon => "fa fa-robot";
 
-        public override string Description => AIAgentsHubResource.Get("Module.AIAgentsHub.Description", "人工智能代理枢纽模块");
+        public override string Description => RegisterText.Description;
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

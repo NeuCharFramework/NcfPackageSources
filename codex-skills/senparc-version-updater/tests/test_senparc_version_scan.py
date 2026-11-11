@@ -118,5 +118,73 @@ class TestScanDependencyTraversal(unittest.TestCase):
         self.assertEqual(["Consumer/Consumer.csproj"], result["dependent_csprojs"])
 
 
+class TestGeneratedMigrationHeaderSkip(unittest.TestCase):
+    def test_migration_directory_is_tracked_without_header_candidates(self):
+        self.assertTrue(scanner.is_generated_migration_cs(
+            "Module/Domain/Migrations/Oracle/20260101000000_AddColumn.cs"
+        ))
+        self.assertTrue(scanner.is_generated_migration_cs(
+            "Module/Domain/Migrations/SqlServer/ModuleModelSnapshot.Designer.cs"
+        ))
+        self.assertFalse(scanner.is_generated_migration_cs(
+            "Module/Domain/Services/Feature.cs"
+        ))
+        self.assertFalse(scanner.is_generated_migration_cs(
+            "Module/Domain/Migrations/README.md"
+        ))
+
+    def test_scan_keeps_migration_project_while_skipping_headers(self):
+        temp = tempfile.TemporaryDirectory()
+        self.addCleanup(temp.cleanup)
+        root = Path(temp.name)
+        subprocess.run(["git", "-C", str(root), "init", "--quiet", "-b", "master"], check=True)
+        subprocess.run(["git", "-C", str(root), "config", "user.name", "Test"], check=True)
+        subprocess.run(["git", "-C", str(root), "config", "user.email", "test@example.invalid"], check=True)
+
+        def write(path, text):
+            target = root / path
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(text, encoding="utf-8")
+
+        write(
+            "Module/Module.csproj",
+            '<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup>'
+            "<TargetFramework>net10.0</TargetFramework><Version>1.0.0</Version>"
+            "</PropertyGroup></Project>\n",
+        )
+        write("Module/Domain/Services/Feature.cs", "class Feature {}\n")
+        write("Module/Domain/Migrations/Oracle/20260101000000_AddColumn.cs", "class AddColumn {}\n")
+        subprocess.run(["git", "-C", str(root), "add", "."], check=True)
+        subprocess.run(["git", "-C", str(root), "commit", "--quiet", "-m", "baseline"], check=True)
+        subprocess.run(["git", "-C", str(root), "checkout", "--quiet", "-b", "feature"], check=True)
+        write("Module/Domain/Services/Feature.cs", "class Feature { int Value; }\n")
+        write(
+            "Module/Domain/Migrations/Oracle/20260101000000_AddColumn.cs",
+            "class AddColumn { string Type; }\n",
+        )
+        subprocess.run(["git", "-C", str(root), "add", "."], check=True)
+        subprocess.run(["git", "-C", str(root), "commit", "--quiet", "-m", "change migration"], check=True)
+
+        result = subprocess.run(
+            [sys.executable, str(SCRIPT), "--root", str(root), "--project", "Module/Module.csproj"],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        payload = json.loads(result.stdout)
+        header_paths = [item["path"] for item in payload["changed_cs_files"]]
+
+        self.assertEqual(["Module/Domain/Services/Feature.cs"], header_paths)
+        self.assertEqual(
+            ["Module/Domain/Migrations/Oracle/20260101000000_AddColumn.cs"],
+            payload["skipped_migration_cs_files"],
+        )
+        self.assertIn(
+            "Module/Domain/Migrations/Oracle/20260101000000_AddColumn.cs",
+            payload["changed_csproj_to_files"]["Module/Module.csproj"],
+        )
+        self.assertEqual(["Module/Module.csproj"], payload["changed_csprojs"])
+
+
 if __name__ == "__main__":
     unittest.main()

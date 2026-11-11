@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.0.12</Version>
+    <Version>0.0.13</Version>
     <PackageReleaseNotes>
       [2026-07-17] v0.0.1 同步上游项目版本并适配统一本地化能力
       1、Dependency update from Senparc.Ncf.UnitTestExtension to 0.3.15-preview.2
@@ -28,7 +28,9 @@
       2、保持项目引用链与当前功能兼容
       [2026-10-05] v0.0.12 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
       1、Updated Senparc.Xncf.DynamicDataTests project behavior and integration for the latest feature and reliability improvements.
-      2、chore: update package versions and dependencies across multiple projects</PackageReleaseNotes>
+      2、chore: update package versions and dependencies across multiple projects
+      [2026-11-12] v0.0.13 Dependency updates from Senparc.Ncf.UnitTestExtension to 0.3.28；Senparc.Xncf.DynamicData to 0.7.11
+    </PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 

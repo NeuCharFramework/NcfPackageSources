@@ -21,6 +21,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.4.8 implement connection manager and workspace file system provider
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.4.10 统一 XNCF Register 显示元数据与多语言资源键
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Configuration;
@@ -39,6 +42,12 @@ namespace Senparc.Xncf.DesktopBridge;
 [XncfRegister]
 public sealed partial class Register : XncfRegisterBase, IXncfRegister
 {
+    private static readonly XncfRegisterText RegisterText =
+        XncfRegisterText.Create<DesktopBridgeResource>(
+            "Module.DesktopBridge",
+            "DesktopBridge 桌面桥接",
+            "为 NCF 桌面机器人提供受保护的本机或远程状态、设备配对和 EventBus 活动流。");
+
     public const string ModuleUid = "E9A9D870-A285-4BCE-9D4D-26A219C41252";
 
     public override string Name => "Senparc.Xncf.DesktopBridge";
@@ -47,11 +56,11 @@ public sealed partial class Register : XncfRegisterBase, IXncfRegister
 
     public override string Version => "0.4.8";
 
-    public override string MenuName => "DesktopBridge 桌面桥接";
+    public override string MenuName => RegisterText.MenuName;
 
     public override string Icon => "fa fa-desktop";
 
-    public override string Description => "为 NCF 桌面机器人提供受保护的本机或远程状态、设备配对和 EventBus 活动流。";
+    public override string Description => RegisterText.Description;
 
     public override Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
     {

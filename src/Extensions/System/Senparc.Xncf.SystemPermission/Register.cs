@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260717
     修改描述：v0.15.0-preview2 为 SystemPermission 模块接入统一资源本地化并优化功能文案
 
+    修改标识：Senparc - 20261111
+    修改描述：v0.15.12 统一 XNCF Register 显示元数据与多语言资源键
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -33,6 +36,11 @@ namespace Senparc.Xncf.SystemPermission
     [XncfOrder(5960)]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
+        private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<SystemPermissionResource>(
+            "Module.SystemPermission",
+            "权限管理",
+            "管理系统角色与权限");
+
         #region IXncfRegister 接口
 
         public override string Name => "Senparc.Xncf.SystemPermission";
@@ -41,11 +49,11 @@ namespace Senparc.Xncf.SystemPermission
 
         public override string Version => "0.2.0";//必须填写版本号
 
-        public override string MenuName => SystemPermissionResource.Get("Module.SystemPermission.MenuName", "权限管理");
+        public override string MenuName => RegisterText.MenuName;
 
         public override string Icon => "fa fa-bars";
 
-        public override string Description => SystemPermissionResource.Get("Module.SystemPermission.Description", "系统权限管理");
+        public override string Description => RegisterText.Description;
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

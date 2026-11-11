@@ -28,6 +28,7 @@
 6. 作者默认 `Senparc`，除非用户显式指定其他作者。
 7. `*.Generated.cs` 文件永远不添加该注释块。
 8. 如果 `*.Generated.cs` 只有时间戳变化（重新生成但无实质内容变化），不要将其视为修改文件。
+9. 模块 `Domain/Migrations/<数据库名称>/` 下的自动生成迁移文件（迁移类、`*.Designer.cs`、`*ModelSnapshot.cs`）不添加该注释块，因为下次生成会覆盖它。这些文件仍属于变更范围，必须把功能变化写入所属非测试项目的 `<PackageReleaseNotes>`。
 
 ## 追加规则
 

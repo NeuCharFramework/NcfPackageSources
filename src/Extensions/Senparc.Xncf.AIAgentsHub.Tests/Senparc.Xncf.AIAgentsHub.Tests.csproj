@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
 
-    <Version>0.0.17</Version>
+    <Version>0.0.18</Version>
     <PackageReleaseNotes>
       [2026-07-04] v0.0.1 Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
       1、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
@@ -76,7 +76,8 @@
       1、Updated Senparc.Xncf.AIAgentsHub.Tests project behavior and integration for the latest feature and reliability improvements.
       [2026-10-09] v0.0.16 Dependency update from Senparc.Xncf.AIAgentsHub to 0.13.11
       [2026-10-21] v0.0.17 Dependency update from Senparc.Xncf.XncfBuilder to 0.41.7
-</PackageReleaseNotes>
+      [2026-11-12] v0.0.18 Dependency updates from Senparc.Ncf.AreaBase to 0.23.11；Senparc.Ncf.Core.Tests to 0.0.13；Senparc.Ncf.Core to 0.31.0-preview11；Senparc.Ncf.Database.Sqlite to 0.20.13
+    </PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 

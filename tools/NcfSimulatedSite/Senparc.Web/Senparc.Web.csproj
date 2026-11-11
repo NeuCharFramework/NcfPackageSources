@@ -2,9 +2,8 @@
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
-		<Version>0.39.7</Version>
-		<PackageReleaseNotes>
-			[2026-07-01] v0.21.5 Dependency update from Senparc.Xncf.AgentsManager to 0.11.0-preview2
+		<Version>0.39.8</Version>
+		<PackageReleaseNotes>			[2026-07-01] v0.21.5 Dependency update from Senparc.Xncf.AgentsManager to 0.11.0-preview2
 			[2026-07-02] v0.21.5 支持流式输出并优化交互体验，升级 Senparc.AI.AgentKernel 并完成兼容性适配
 			1、支持流式输出并优化交互体验
 			2、升级 Senparc.AI.AgentKernel 并完成兼容性适配
@@ -108,6 +107,12 @@
 			32、Dependency update from Senparc.Xncf.Accounts to 0.3.12
 			33、Dependency update from Senparc.Xncf.Installer to 0.5.13
 			34、Dependency update from Template_OrgName.Xncf.Template_XncfName to 1.1.14
+			[2026-11-11] v0.39.8 宿主语言切换改用统一文化列表，并升级 Agent Framework 依赖
+			1、语言切换使用 NcfLocalizationOptions 的支持文化、默认文化和规范化结果。
+			2、共享 AI 依赖升级到 Senparc.AI.AgentKernel 0.1.17、Microsoft Agent Framework 1.28.0 与 OpenAI 2.14.0。
+			3、Dependency update from Senparc.Xncf.NeuCharWorkflow to 0.4.6
+			4、Dependency update from Senparc.Areas.Admin to 0.12.28
+			5、Dependency update from Senparc.Xncf.Installer to 0.5.14
 		</PackageReleaseNotes>
 		<AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
 		<TypeScriptToolsVersion>4.1</TypeScriptToolsVersion>
@@ -158,6 +163,7 @@
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Database.SqlServer\Senparc.Ncf.Database.SqlServer.csproj" />
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Database.MySql\Senparc.Ncf.Database.MySql.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.AgentsManager\Senparc.Xncf.AgentsManager.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.Connectors\Senparc.Xncf.Connectors.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.AIKernel\Senparc.Xncf.AIKernel.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.DatabaseToolkit\Senparc.Xncf.DatabaseToolkit\Senparc.Xncf.DatabaseToolkit.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.DynamicData\Senparc.Xncf.DynamicData.csproj" />
