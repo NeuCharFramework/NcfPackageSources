@@ -2,8 +2,22 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Version>0.3.0</Version>
-    <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
-    <PackageReleaseNotes>      [2026-10-21] v0.1.0 定义工作区描述、创建请求与访问策略契约
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>Senparc.Xncf.Workspace.Abstractions</AssemblyName>
+    <RootNamespace>Senparc.Xncf.Workspace.Abstractions</RootNamespace>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
+    <Description>NCF 工作区契约：存储描述、访问策略、Agent 协议与文件操作。</Description>
+    <Copyright>Senparc</Copyright>
+    <PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.Workspace,Abstractions</PackageTags>
+    <Authors>Senparc</Authors>
+    <Owners>Senparc</Owners>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <Title>NCF 工作区 Abstractions</Title>
+    <PackageIcon>icon.jpg</PackageIcon>
+    <PackageReleaseNotes>
+      [2026-10-21] v0.1.0 定义工作区描述、创建请求与访问策略契约
       1、描述符支持所有者类型、Agent 模板与存储提供方
       2、新增工作区读写、命令与 Python 访问策略
       [2026-11-03] v0.2.0 新增统一 Workspace Client、二进制文件、ETag 与 Agent 协议
@@ -17,9 +31,26 @@
       1、搜索请求新增相对路径 glob 和内容正则表达式参数。
       2、保持按行窗口读取协议，并为无效搜索输入提供明确契约边界。
     </PackageReleaseNotes>
-    <AssemblyName>Senparc.Xncf.Workspace.Abstractions</AssemblyName>
-    <RootNamespace>Senparc.Xncf.Workspace.Abstractions</RootNamespace>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+    <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>..\..\BuildOutPut</OutputPath>
+    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='TemplateRelease'">
+    <OutputPath>..\..\BuildOutPut</OutputPath>
+    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
 </Project>

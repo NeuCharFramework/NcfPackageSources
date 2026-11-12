@@ -2,23 +2,48 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Version>0.2.0</Version>
-    <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>Senparc.Xncf.FileManager.Abstractions</AssemblyName>
     <RootNamespace>Senparc.Xncf.FileManager.Abstractions</RootNamespace>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
     <Description>Contracts for optional integrations with Senparc.Xncf.FileManager.</Description>
+    <Copyright>Senparc</Copyright>
     <PackageTags>Senparc,NeuCharFramework,NCF,FileManager,Abstractions</PackageTags>
     <Authors>Senparc</Authors>
     <Owners>Senparc</Owners>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <Title>文件管理 Abstractions</Title>
+    <PackageIcon>icon.jpg</PackageIcon>
+    <PackageReleaseNotes>
+      [2026-10-01] v0.1.1 增加跨模块私有附件导入的 EventBus 请求响应契约
+      [2026-11-03] v0.2.0 增加微调产物文件资源类型
+      1、FileManagerResourceKind 新增 FineTuning，供微调产物导入引用
+      2、扩展文件管理跨模块契约与流式文件上传能力
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
-    <PackageReleaseNotes>
-    [2026-10-01] v0.1.1 增加跨模块私有附件导入的 EventBus 请求响应契约
-    [2026-11-03] v0.2.0 增加微调产物文件资源类型
-    1、FileManagerResourceKind 新增 FineTuning，供微调产物导入引用
-    2、扩展文件管理跨模块契约与流式文件上传能力
-</PackageReleaseNotes>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>..\..\BuildOutPut</OutputPath>
+    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='TemplateRelease'">
+    <OutputPath>..\..\BuildOutPut</OutputPath>
+    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.Shared.Abstractions\Senparc.Ncf.Shared.Abstractions.csproj" />
   </ItemGroup>
