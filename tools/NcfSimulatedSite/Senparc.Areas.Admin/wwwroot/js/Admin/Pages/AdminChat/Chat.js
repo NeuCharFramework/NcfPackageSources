@@ -1886,7 +1886,7 @@ var chatApp = new Vue({
         "style-src 'unsafe-inline' data:; font-src data:; media-src data:; " +
         "base-uri 'none'; form-action 'none'; connect-src 'none'; frame-src 'none'; " +
         "child-src 'none'; object-src 'none'; worker-src 'none'; navigate-to 'none';";
-      document.head.appendChild(csp);
+      document.head.insertBefore(csp, document.head.firstChild);
       return '<!doctype html>' + document.documentElement.outerHTML;
     },
 
