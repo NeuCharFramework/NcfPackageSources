@@ -9,6 +9,7 @@ const adminPath = path.resolve(__dirname, '../../../Senparc.Areas.Admin');
 const page = fs.readFileSync(path.join(adminPath, 'Areas/Admin/Pages/AdminChat/Chat.cshtml'), 'utf8');
 const selector = fs.readFileSync(path.join(adminPath, 'Areas/Admin/Pages/Shared/_ChatModuleSelectorDialog.cshtml'), 'utf8');
 const scriptPath = path.join(adminPath, 'wwwroot/js/Admin/Pages/AdminChat/Chat.js');
+const chatScript = fs.readFileSync(scriptPath, 'utf8');
 const styles = fs.readFileSync(path.join(adminPath, 'wwwroot/css/Admin/Pages/AdminChat/Chat.css'), 'utf8');
 const template = page.slice(page.indexOf('<div class="admin-chat-container">'), page.indexOf('@section scripts'))
     .replace(/@await Html\.PartialAsync\("[^"]+_ChatModuleSelectorDialog\.cshtml"\)/g, selector)
@@ -59,6 +60,8 @@ assert.ok(template.includes('sandbox="allow-scripts"'),
     'Workspace HTML preview must allow scripts only inside the iframe sandbox.');
 assert.ok(!template.includes('sandbox="allow-same-origin"'),
     'Workspace HTML preview must not grant same-origin access to sandboxed scripts.');
+assert.ok(chatScript.includes('document.head.insertBefore(csp, document.head.firstChild);'),
+    'Workspace preview CSP must be parsed before any user-provided head script.');
 for (const selector of ['live-answer-preview', 'live-thinking-content', 'harness-step-body']) {
     const rule = styles.match(new RegExp(`\\.${selector}\\s*\\{([^}]+)\\}`));
     assert.match(rule[1], /white-space:\s*normal/,
@@ -115,7 +118,7 @@ const sandbox = {
 };
 sandbox.marked = require(path.join(adminPath, 'wwwroot/js/Admin/lib/marked.min.js'));
 sandbox.DOMPurify = { sanitize: html => html };
-vm.runInNewContext(fs.readFileSync(scriptPath, 'utf8'), sandbox, { filename: scriptPath });
+vm.runInNewContext(chatScript, sandbox, { filename: scriptPath });
 const app = options.data();
 Object.entries(options.methods).forEach(([name, method]) => { app[name] = method.bind(app); });
 Object.entries(options.computed).forEach(([name, getter]) => {

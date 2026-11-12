@@ -2,6 +2,21 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Version>0.3.1</Version>
+    <AssemblyName>Senparc.Xncf.NeuCharWorkflow.Abstractions</AssemblyName>
+    <RootNamespace>Senparc.Xncf.NeuCharWorkflow.Abstractions</RootNamespace>
+    <LangVersion>10.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
+    <Description>NeuChar Workflow module contracts for external workflow objects and notifications.</Description>
+    <Copyright>Senparc</Copyright>
+    <PackageTags>Senparc,NeuCharFramework,NCF,Workflow,Abstractions</PackageTags>
+    <Authors>Senparc</Authors>
+    <Owners>Senparc</Owners>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <Title>NeuChar 工作流 Abstractions</Title>
+    <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
       [2026-08-13] v0.1.0-preview1 扩展工作流模块的对象与事件契约
       1、新增工作流对象编辑地址、元数据及模块事件契约，支持宿主集成
@@ -14,18 +29,28 @@
       2、保持现有 Workflow 对象发现、执行和结果传递契约兼容
       [2026-11-03] v0.3.1 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.7.0-preview1
     </PackageReleaseNotes>
-    <AssemblyName>Senparc.Xncf.NeuCharWorkflow.Abstractions</AssemblyName>
-    <RootNamespace>Senparc.Xncf.NeuCharWorkflow.Abstractions</RootNamespace>
-    <LangVersion>10.0</LangVersion>
-    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <Description>NeuChar Workflow module contracts for external workflow objects and notifications.</Description>
-    <PackageTags>Senparc,NeuCharFramework,NCF,Workflow</PackageTags>
-    <Authors>Senparc</Authors>
-    <Owners>Senparc</Owners>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>..\..\BuildOutPut</OutputPath>
+    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='TemplateRelease'">
+    <OutputPath>..\..\BuildOutPut</OutputPath>
+    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.Shared.Abstractions\Senparc.Ncf.Shared.Abstractions.csproj" />
   </ItemGroup>

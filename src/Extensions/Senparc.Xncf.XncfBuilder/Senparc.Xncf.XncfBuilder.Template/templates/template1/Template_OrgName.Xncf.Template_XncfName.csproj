@@ -64,6 +64,8 @@
       3、修复模板参数默认值及数据库和静态资源的条件引用
       [2026-11-03] v1.1.14 以中文资源为基准统一整理多语言文案
       1、补齐并校正各语言资源条目，使模块界面文案与中文基准保持一致
+      2、Dependency update from Senparc.Ncf.AreaBase to 0.23.10
+      3、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
       [2026-11-11] v1.1.14 统一模块注册显示名称与说明的多语言资源
       1、Register 通过 XncfRegisterText 用稳定资源键和中文基准文本解析菜单名称与模块说明。
       2、补齐模块多语言资源，缺少翻译时沿当前语言、英语、简体中文回退。
