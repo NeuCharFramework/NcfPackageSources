@@ -28,7 +28,7 @@ namespace Senparc.Xncf.Dapr;
 [XncfRegister]
 public class Register : XncfRegisterBase, IXncfRegister
 {
-        private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<DaprResource>(
+    private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<DaprResource>(
             "Module.Dapr",
             "Dapr 模块",
             "为其他模块提供 Dapr 相关能力");

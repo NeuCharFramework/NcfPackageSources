@@ -220,7 +220,7 @@
     <PackageReference Include="Microsoft.Agents.AI.A2A" Version="1.28.0-preview.261106.1" />
     <PackageReference Include="Senparc.AI.Agents" Version="$(SenparcAiAgentsVersion)" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />
-    <PackageReference Include="Senparc.Weixin.Work" Version="3.32.4" />
+    <PackageReference Include="Senparc.Weixin.Work" Version="3.32.5" />
   </ItemGroup>
   <!--<ItemGroup>
 		<PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.15.2-preview1" />
