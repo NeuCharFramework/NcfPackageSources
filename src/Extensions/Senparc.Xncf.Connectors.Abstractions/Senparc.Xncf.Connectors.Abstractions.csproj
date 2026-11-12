@@ -2,6 +2,8 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Version>0.1.0</Version>
+    <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild Condition="'$(Configuration)' == 'TemplateRelease'">true</GeneratePackageOnBuild>
     <PackageReleaseNotes>
       [2026-11-11] v0.1.0 定义连接器描述、配置字段、动作与授权契约
       1、描述连接器类型、字段和可调用动作。
