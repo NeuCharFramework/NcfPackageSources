@@ -23,6 +23,7 @@
     <PackageTags>NeuCharFramework,NCF,Senparc.Xncf.WeixinManager</PackageTags>
     <Authors>NeuCharFramework</Authors>
     <Owners>NeuCharFramework</Owners>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPackageSources/blob/master/LICENSE</PackageLicenseUrl>
     <Title>NCF 模块：微信管理后台 盛派官方</Title>
     <ProjectUrl>https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</ProjectUrl>

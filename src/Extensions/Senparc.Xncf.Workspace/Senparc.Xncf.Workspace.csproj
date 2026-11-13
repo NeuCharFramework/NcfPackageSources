@@ -2,6 +2,21 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Version>0.2.4</Version>
+    <AssemblyName>Senparc.Xncf.Workspace</AssemblyName>
+    <RootNamespace>Senparc.Xncf.Workspace</RootNamespace>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <Description>NCF 工作区模块：隔离存储、Agent 运行时、远程编辑与文件网关。</Description>
+    <Copyright>Senparc</Copyright>
+    <PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.Workspace</PackageTags>
+    <Authors>Senparc</Authors>
+    <Owners>Senparc</Owners>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <Title>NCF 工作区</Title>
+    <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
       [2026-10-21] v0.1.1 提供按所有者隔离的工作区存储，并持久化元数据
       1、支持工作区创建、文件访问、命令执行与访问策略
@@ -20,35 +35,32 @@
       2、补充六类数据库的设计时 DbContext 工厂
       3、支持租户隔离的 Workspace 文件管理、流式大文件上传及持久化
       4、提供工作区文件预览和跨模块文件引用
-    [2026-11-03] Add shared contextual documentation for Workspace access boundaries.
-    [2026-11-03] Use Senparc.Xncf.WorkspaceAgent and transitive runtime content instead of configuration-dependent copy paths.
-</PackageReleaseNotes>
-    <AssemblyName>Senparc.Xncf.Workspace</AssemblyName>
-    <RootNamespace>Senparc.Xncf.Workspace</RootNamespace>
-    <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+      [2026-11-03] Use Senparc.Xncf.WorkspaceAgent and transitive runtime content instead of configuration-dependent copy paths.
+    </PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+    <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>..\..\BuildOutPut</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='TemplateRelease'">
+    <OutputPath>..\..\BuildOutPut</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Oracle.EntityFrameworkCore" Version="8.23.60" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.10" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.10" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
-    <PackageReference Include="DM.Microsoft.EntityFrameworkCore" Version="8.0.0.28188" />
     <ProjectReference Include="..\Senparc.Xncf.WorkspaceAgent\Senparc.Xncf.WorkspaceAgent.csproj" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\Senparc.Xncf.Workspace.Abstractions\Senparc.Xncf.Workspace.Abstractions.csproj" />
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
-    <ProjectReference Include="..\..\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
+    <ProjectReference Include="..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.IsolatedRuntime\Senparc.Ncf.IsolatedRuntime.csproj" />
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.Shared.Abstractions\Senparc.Ncf.Shared.Abstractions.csproj" />
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
   </ItemGroup>
 
   <Target Name="IncludeWorkspaceAgentRuntimeFiles" BeforeTargets="AssignTargetPaths" DependsOnTargets="ResolveProjectReferences">
