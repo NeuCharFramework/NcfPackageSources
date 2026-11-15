@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：NeuCharWorkflowChatConfig.cs
-    文件功能描述：Chat 触发器的持久化配置
+    File name: NeuCharWorkflowChatConfig.cs
+    File description: Persistent configuration for the Chat trigger
 
-    创建标识：Senparc - 20260909
-    创建描述：v0.4.0 新增 Chat 触发器
+    Created by: Senparc - 20260909
+    Creation description: v0.4.0 add the Chat trigger
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.4.0 增强 Chat 触发器消息持久化与恢复能力
+    Modified by: Senparc - 20260915
+    Change description: v0.4.0 enhance Chat trigger message persistence and recovery
 
 ----------------------------------------------------------------*/
 
@@ -19,7 +19,8 @@ using System.Text.Json.Serialization;
 namespace Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 
 /// <summary>
-/// Chat 触发器的持久化配置。配置由服务端规范化，避免前端写入过长的标题或欢迎语。
+/// Persistent configuration for the Chat trigger. The server normalizes it to prevent
+/// overly long titles or greetings from being written by the client.
 /// </summary>
 public sealed class NeuCharWorkflowChatConfig
 {
@@ -38,9 +39,9 @@ public sealed class NeuCharWorkflowChatConfig
     public string? Greeting { get; set; }
 
     /// <summary>
-    /// 规范化 Chat 配置：优先使用前端请求值，缺失时沿用已有配置，最后落到默认值。
+    /// Normalize Chat configuration: prefer the client value, keep the existing value when absent, and finally use the default.
     /// </summary>
-    public static NeuCharWorkflowChatConfig Normalize(string requestedJson, string existingJson = null)
+    public static NeuCharWorkflowChatConfig Normalize(string requestedJson, string? existingJson = null)
     {
         var requested = ParseObject(requestedJson);
         var existing = ParseObject(existingJson);
@@ -54,8 +55,8 @@ public sealed class NeuCharWorkflowChatConfig
         return new NeuCharWorkflowChatConfig
         {
             AllowGuest = allowGuest,
-            Title = Limit(title, MaxTitleLength, "Chat 标题"),
-            Greeting = Limit(greeting, MaxGreetingLength, "欢迎语")
+            Title = Limit(title, MaxTitleLength, "Chat title"),
+            Greeting = Limit(greeting, MaxGreetingLength, "Greeting")
         };
     }
 
@@ -75,7 +76,7 @@ public sealed class NeuCharWorkflowChatConfig
         var trimmed = value.Trim();
         if (trimmed.Length > maxLength)
         {
-            throw new InvalidOperationException($"{label}不能超过 {maxLength} 个字符。");
+            throw new InvalidOperationException($"{label} must be at most {maxLength} characters.");
         }
         return trimmed;
     }
@@ -95,7 +96,7 @@ public sealed class NeuCharWorkflowChatConfig
         }
         catch (JsonException ex)
         {
-            throw new InvalidOperationException("Chat 配置不是有效的 JSON。", ex);
+            throw new InvalidOperationException("Chat configuration is not valid JSON.", ex);
         }
     }
 

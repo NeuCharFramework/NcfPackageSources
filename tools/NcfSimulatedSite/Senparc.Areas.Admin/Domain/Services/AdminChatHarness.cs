@@ -47,9 +47,58 @@ namespace Senparc.Areas.Admin.Domain.Services
         Simple = 0,
 
         /// <summary>
-        /// 长任务 Harness：多步骤自主执行（计划 → 调用工具 → 观察 → 继续），受最大步数与超时预算约束。
+        /// MAF Harness 的计划模式：多步骤自主执行（计划 → 调用工具 → 观察 → 继续）。
         /// </summary>
-        Harness = 1
+        Plan = 1,
+
+        /// <summary>
+        /// 兼容旧客户端的 Harness 别名，等同于 Plan。
+        /// </summary>
+        Harness = Plan,
+
+        /// <summary>
+        /// MAF Harness 的执行模式：直接进入工具执行阶段。
+        /// </summary>
+        Execute = 2
+    }
+
+    /// <summary>
+    /// Harness execution capabilities selected for the next request.
+    /// File memory, Skills and Hosted Web Search are opt-in.
+    /// </summary>
+    public sealed class AdminChatHarnessOptions
+    {
+        public int MaxIterations { get; set; } = 32;
+        public int MaxOutputTokens { get; set; } = 4000;
+        public bool DisableTodoProvider { get; set; }
+        public bool DisableCompaction { get; set; }
+        public bool EnableFileMemory { get; set; }
+        public bool EnableAgentSkillsProvider { get; set; }
+        public bool EnableWebSearch { get; set; }
+
+        public static AdminChatHarnessOptions Normalize(
+            AdminChatHarnessOptions options,
+            int fallbackIterations = 32,
+            int fallbackOutputTokens = 4000)
+        {
+            options ??= new AdminChatHarnessOptions();
+            return new AdminChatHarnessOptions
+            {
+                MaxIterations = Math.Clamp(
+                    options.MaxIterations > 0 ? options.MaxIterations : fallbackIterations,
+                    1,
+                    64),
+                MaxOutputTokens = Math.Clamp(
+                    options.MaxOutputTokens > 0 ? options.MaxOutputTokens : fallbackOutputTokens,
+                    256,
+                    8000),
+                DisableTodoProvider = options.DisableTodoProvider,
+                DisableCompaction = options.DisableCompaction,
+                EnableFileMemory = options.EnableFileMemory,
+                EnableAgentSkillsProvider = options.EnableAgentSkillsProvider,
+                EnableWebSearch = options.EnableWebSearch
+            };
+        }
     }
 
     /// <summary>

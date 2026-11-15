@@ -159,6 +159,8 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
         /// 初始消息运行模式；页面默认发送 Harness。
         /// </summary>
         public AdminChatMode Mode { get; set; } = AdminChatMode.Simple;
+        public int MaxOutputTokens { get; set; } = 2000;
+        public AdminChatHarnessOptions HarnessOptions { get; set; } = new();
 
         public string WorkspaceId { get; set; }
 

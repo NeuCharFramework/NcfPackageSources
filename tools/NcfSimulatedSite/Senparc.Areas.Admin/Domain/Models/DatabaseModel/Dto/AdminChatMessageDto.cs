@@ -120,9 +120,11 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
         public string Content { get; set; }
 
         /// <summary>
-        /// 运行模式：Simple（普通单轮对话，默认）或 Harness（MAF 长任务）。
+        /// 运行模式：Simple、Plan 或 Execute；Plan/Execute 使用 MAF Harness。
         /// </summary>
         public AdminChatMode Mode { get; set; } = AdminChatMode.Simple;
+        public int MaxOutputTokens { get; set; }
+        public AdminChatHarnessOptions HarnessOptions { get; set; } = new();
         [MaxLength(4)]
         public List<AdminChatAttachmentInput> Attachments { get; set; } = new();
         [MaxLength(32)]

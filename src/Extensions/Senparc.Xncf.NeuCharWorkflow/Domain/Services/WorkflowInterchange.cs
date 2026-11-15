@@ -192,11 +192,11 @@ public static class WorkflowInterchangeCodec
         }
 
         var actualFormat = format ?? DetectFormat(content);
-        JsonNode root = actualFormat == WorkflowInterchangeFormat.Json
+        JsonNode? root = actualFormat == WorkflowInterchangeFormat.Json
             ? ParseJson(content)
             : ParseYaml(content);
 
-        var definition = ParseDefinition(root);
+        var definition = ParseDefinition(root!);
         ValidateDefinition(definition);
         return new WorkflowInterchangeDocument(definition, actualFormat);
     }
@@ -335,7 +335,7 @@ public static class WorkflowInterchangeCodec
             : WorkflowInterchangeFormat.Yaml;
     }
 
-    private static JsonNode ParseYaml(string content)
+    private static JsonNode? ParseYaml(string content)
     {
         try
         {
@@ -359,7 +359,7 @@ public static class WorkflowInterchangeCodec
         }
     }
 
-    private static JsonNode ConvertYamlNode(YamlNode node)
+    private static JsonNode? ConvertYamlNode(YamlNode node)
     {
         if (node is YamlMappingNode mapping)
         {

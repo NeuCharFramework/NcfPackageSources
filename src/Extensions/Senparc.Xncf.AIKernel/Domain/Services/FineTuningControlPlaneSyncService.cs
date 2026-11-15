@@ -51,11 +51,22 @@ public sealed class FineTuningControlPlaneSyncService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        await SynchronizeAsync(stoppingToken);
-        using var timer = new PeriodicTimer(PollInterval);
-        while (await timer.WaitForNextTickAsync(stoppingToken))
+        try
         {
             await SynchronizeAsync(stoppingToken);
+            using var timer = new PeriodicTimer(PollInterval);
+            while (await timer.WaitForNextTickAsync(stoppingToken))
+            {
+                await SynchronizeAsync(stoppingToken);
+            }
+        }
+        catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
+        {
+            _logger.LogDebug("Fine-tuning control-plane synchronization stopped.");
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Fine-tuning control-plane synchronization loop stopped unexpectedly.");
         }
     }
 

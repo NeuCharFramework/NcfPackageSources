@@ -181,21 +181,26 @@ public sealed class AdminChatStreamController : ControllerBase
             AllowSynchronousContinuations = false
         });
 
-        var generationTask = request.Mode == AdminChatMode.Harness
+        var generationTask = request.Mode != AdminChatMode.Simple
             ? GenerateHarnessResponseAsync(
                 request.SessionId,
                 userId,
                 content,
                 request.AiModelId,
                 liveEvents.Writer,
-                run.Token, attachments)
+                run.Token,
+                attachments,
+                request.Mode == AdminChatMode.Execute ? "execute" : "plan",
+                request.HarnessOptions)
             : GenerateResponseAsync(
             request.SessionId,
             userId,
             content,
             request.AiModelId,
             liveEvents.Writer,
-            run.Token, attachments);
+            run.Token,
+            attachments,
+            request.MaxOutputTokens);
 
         try
         {
@@ -412,7 +417,8 @@ public sealed class AdminChatStreamController : ControllerBase
         int aiModelId,
         ChannelWriter<AdminChatLiveEvent> writer,
         CancellationToken cancellationToken,
-        IReadOnlyList<AdminChatAttachment> attachments)
+        IReadOnlyList<AdminChatAttachment> attachments,
+        int maxOutputTokens)
         {
             try
             {
@@ -427,6 +433,9 @@ public sealed class AdminChatStreamController : ControllerBase
                         Text = chunk
                     }),
                     cancellationToken: cancellationToken,
+                    generationOptions: maxOutputTokens > 0
+                        ? new AdminChatGenerationOptions { MaxOutputTokens = maxOutputTokens }
+                        : null,
                     onUsage: usage => writer.TryWrite(new AdminChatLiveEvent
                     {
                         Kind = "usage",
@@ -456,7 +465,9 @@ public sealed class AdminChatStreamController : ControllerBase
         int aiModelId,
         ChannelWriter<AdminChatLiveEvent> writer,
         CancellationToken cancellationToken,
-        IReadOnlyList<AdminChatAttachment> attachments)
+        IReadOnlyList<AdminChatAttachment> attachments,
+        string requestedMode,
+        AdminChatHarnessOptions harnessOptions)
     {
         try
         {
@@ -466,7 +477,10 @@ public sealed class AdminChatStreamController : ControllerBase
                 content,
                 aiModelId,
                 cancellationToken: cancellationToken,
-                onLiveEvent: liveEvent => writer.TryWrite(liveEvent), attachments: attachments);
+                onLiveEvent: liveEvent => writer.TryWrite(liveEvent),
+                attachments: attachments,
+                requestedMode: requestedMode,
+                harnessOptions: harnessOptions);
             return new AdminChatStreamResult
             {
                 Response = result.response,

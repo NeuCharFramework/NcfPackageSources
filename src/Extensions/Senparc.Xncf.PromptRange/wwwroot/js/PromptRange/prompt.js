@@ -784,6 +784,15 @@ var app = new Vue({
                 this.applyPromptHashRoute()
             }
             window.addEventListener('hashchange', this.hashChangeHandler)
+            const alias = new URLSearchParams(window.location.search || '').get('alias')
+            const rangeOption = alias
+                ? this.promptFieldOpt.find(item => item.alias === alias)
+                : null
+            if (rangeOption) {
+                this.pageChange = false
+                this.promptField = rangeOption.value
+                await this.promptChangeHandel(this.promptField, 'promptField', null, true)
+            }
             await this.applyPromptHashRoute()
           
         }, 100)

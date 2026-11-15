@@ -85,6 +85,7 @@ using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Ncf.Shared.Abstractions.Events;
 using Senparc.Areas.Admin.OHS.Local.Events;
 using Senparc.Xncf.Workspace.Abstractions;
+using Senparc.Xncf.PromptRange.Abstractions.SystemMessages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -208,6 +209,20 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                         .SaveGlobalAsync(request.Revision, request.SystemMessage);
                     logger.Append("Updated tenant-wide AdminChat SystemMessage.");
                     return new AdminChatSystemMessageView(profile.Revision, profile.SystemMessage);
+                });
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<AdminChatSystemMessagePromptView>> EnsureAdminChatSystemMessagePromptAsync()
+        {
+            return await this.GetResponseAsync<AppResponseBase<AdminChatSystemMessagePromptView>, AdminChatSystemMessagePromptView>(
+                async (response, logger) =>
+                {
+                    var provider = ServiceProvider.GetService<IAdminChatSystemMessageProvider>()
+                        ?? throw new NcfExceptionBase("PromptRange 模块不可用，无法管理 AdminChat 默认 SystemMessage。");
+                    var prompt = await provider.GetAsync();
+                    logger.Append($"确保 AdminChat SystemMessage PromptRange 已初始化: PromptCode={prompt.PromptCode}");
+                    return new AdminChatSystemMessagePromptView(prompt.PromptCode, "AdminChat.SystemMessage");
                 });
         }
 
@@ -1035,17 +1050,28 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 string modelIdentifier;
                 AdminChatHarnessResult harness = null;
 
-                if (mode == AdminChatMode.Harness)
+                if (mode != AdminChatMode.Simple)
                 {
                     (aiResponse, modelIdentifier, harness) = await _chatAiService.GenerateNativeHarnessResponseAsync(
                         request.SessionId,
                         userId,
                         content,
-                        request.AiModelId, attachments: attachments);
+                        request.AiModelId,
+                        attachments: attachments,
+                        requestedMode: mode == AdminChatMode.Execute ? "execute" : "plan",
+                        harnessOptions: request.HarnessOptions);
                 }
                 else
                 {
-                    (aiResponse, modelIdentifier) = await _chatAiService.GenerateResponseAsync(request.SessionId, userId, content, request.AiModelId, attachments: attachments);
+                    (aiResponse, modelIdentifier) = await _chatAiService.GenerateResponseAsync(
+                        request.SessionId,
+                        userId,
+                        content,
+                        request.AiModelId,
+                        generationOptions: request.MaxOutputTokens > 0
+                            ? new AdminChatGenerationOptions { MaxOutputTokens = request.MaxOutputTokens }
+                            : null,
+                        attachments: attachments);
                 }
 
                 var assistantMessage = await _messageService.AddMessageAsync(
@@ -1892,6 +1918,8 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         public bool WorkspaceCliEnabled { get; set; }
     }
 
+    public sealed record AdminChatSystemMessagePromptView(string PromptCode, string RangeAlias);
+
     /// <summary>
     /// 获取会话列表响应
     /// </summary>
@@ -2050,6 +2078,8 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         /// 本次运行使用的模式（Simple 或 Harness）。
         /// </summary>
         public AdminChatMode Mode { get; set; } = AdminChatMode.Simple;
+        public int MaxOutputTokens { get; set; } = 2000;
+        public AdminChatHarnessOptions HarnessOptions { get; set; } = new();
 
         /// <summary>
         /// Harness 模式的执行步骤记录（Simple 模式为 null）。

@@ -11,6 +11,7 @@
 
 ----------------------------------------------------------------*/
 
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using Microsoft.Extensions.Logging;
@@ -45,7 +46,8 @@ public sealed class DockerIsolatedRuntimeProvider : IIsolatedRuntimeProvider
             return result.ExitCode == 0 && !string.IsNullOrWhiteSpace(result.StandardOutput);
         }
         catch (Exception exception) when (exception is
-                   IOException or InvalidOperationException or TimeoutException)
+                   Win32Exception or UnauthorizedAccessException or IOException or
+                   InvalidOperationException or TimeoutException)
         {
             _logger.LogDebug(exception, "Docker isolated runtime probe failed.");
             return false;

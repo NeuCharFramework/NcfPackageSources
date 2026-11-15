@@ -14,6 +14,7 @@
 ----------------------------------------------------------------*/
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -185,7 +186,7 @@ public sealed class NeuCharWorkflowChatController : ControllerBase
         return token;
     }
 
-    private static bool IsValidGuestToken(string? value) =>
+    private static bool IsValidGuestToken([NotNullWhen(true)] string? value) =>
         value is { Length: 43 }
         && value.All(z => (z >= 'A' && z <= 'Z') || (z >= 'a' && z <= 'z') || (z >= '0' && z <= '9') || z is '-' or '_');
 

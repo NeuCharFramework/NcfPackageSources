@@ -10,6 +10,29 @@ namespace Senparc.Areas.Admin.Tests.Domain.Services;
 [TestClass]
 public class AdminChatHarnessExecutorTests
 {
+    [TestMethod]
+    public void HarnessOptions_Normalize_ClampsBudgetsAndKeepsOptInBoundaries()
+    {
+        var options = AdminChatHarnessOptions.Normalize(new AdminChatHarnessOptions
+        {
+            MaxIterations = 999,
+            MaxOutputTokens = 1,
+            EnableFileMemory = true,
+            EnableAgentSkillsProvider = true,
+            EnableWebSearch = true,
+            DisableTodoProvider = true,
+            DisableCompaction = true
+        });
+
+        Assert.AreEqual(64, options.MaxIterations);
+        Assert.AreEqual(256, options.MaxOutputTokens);
+        Assert.IsTrue(options.EnableFileMemory);
+        Assert.IsTrue(options.EnableAgentSkillsProvider);
+        Assert.IsTrue(options.EnableWebSearch);
+        Assert.IsTrue(options.DisableTodoProvider);
+        Assert.IsTrue(options.DisableCompaction);
+    }
+
     private static AdminChatHarnessExecutor NewExecutor(string[] outputs, int maxSteps = 8, TimeSpan? timeout = null)
     {
         var i = 0;

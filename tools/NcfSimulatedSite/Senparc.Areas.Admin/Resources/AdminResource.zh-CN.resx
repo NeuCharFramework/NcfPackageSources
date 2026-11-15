@@ -907,6 +907,28 @@
   <data name="DocHelp.LoadFailed" xml:space="preserve"><value>文档加载失败或等待超时，请重试或在新窗口打开。</value></data>
   <data name="DocHelp.Retry" xml:space="preserve"><value>重试</value></data>
   <data name="DocHelp.InvalidTopic" xml:space="preserve"><value>帮助文档索引配置无效，请联系管理员。</value></data>
+  <data name="AdminChat.Settings.Title" xml:space="preserve"><value>对话设置</value></data>
+  <data name="AdminChat.Settings.ModeLabel" xml:space="preserve"><value>执行模式</value></data>
+  <data name="AdminChat.Settings.ModeTitle" xml:space="preserve"><value>选择执行模式</value></data>
+  <data name="AdminChat.Settings.ModeCaption" xml:space="preserve"><value>当前会话下一轮请求使用的策略。</value></data>
+  <data name="AdminChat.Settings.LauncherModeCaption" xml:space="preserve"><value>模式只影响下一轮请求；Plan / Execute 使用 MAF Harness。</value></data>
+  <data name="AdminChat.Settings.HarnessAdvanced" xml:space="preserve"><value>Harness 高级设置</value></data>
+  <data name="AdminChat.Settings.MaxIterations" xml:space="preserve"><value>最大迭代</value></data>
+  <data name="AdminChat.Settings.MaxOutputTokens" xml:space="preserve"><value>最大输出 Token</value></data>
+  <data name="AdminChat.Settings.CapabilityNotice" xml:space="preserve"><value>FileMemory 仅通过 /harness file-memory on|off 设置；Agent Skills 和 Hosted Web Search 默认关闭。开启这些能力会改变隐私、工具和外部访问边界。</value></data>
+  <data name="AdminChat.Settings.Close" xml:space="preserve"><value>关闭对话设置</value></data>
+  <data name="AdminChat.Settings.Stop" xml:space="preserve"><value>终止</value></data>
+  <data name="AdminChat.Mode.Simple" xml:space="preserve"><value>普通对话</value></data>
+  <data name="AdminChat.Mode.SimpleDescription" xml:space="preserve"><value>单轮回答，不启动 MAF 长任务循环。</value></data>
+  <data name="AdminChat.Mode.Plan" xml:space="preserve"><value>Plan</value></data>
+  <data name="AdminChat.Mode.PlanDescription" xml:space="preserve"><value>先规划任务，再按需调用工具并等待审批。</value></data>
+  <data name="AdminChat.Mode.Execute" xml:space="preserve"><value>Execute</value></data>
+  <data name="AdminChat.Mode.ExecuteDescription" xml:space="preserve"><value>直接进入 MAF 执行模式，适合已经明确的任务。</value></data>
+  <data name="AdminChat.Command.Mode" xml:space="preserve"><value>切换执行模式</value></data>
+  <data name="AdminChat.Command.Help" xml:space="preserve"><value>查看可用命令</value></data>
+  <data name="AdminChat.Command.MaxToken" xml:space="preserve"><value>设置输出上限</value></data>
+  <data name="AdminChat.Command.MaxIterations" xml:space="preserve"><value>设置 Harness 最大迭代</value></data>
+  <data name="AdminChat.Command.Harness" xml:space="preserve"><value>设置 Harness 能力</value></data>
 
   <data name="SystemMenu.AdministratorManagement" xml:space="preserve"><value>管理员管理</value></data>
   <data name="SystemMenu.RoleManagement" xml:space="preserve"><value>角色管理</value></data>

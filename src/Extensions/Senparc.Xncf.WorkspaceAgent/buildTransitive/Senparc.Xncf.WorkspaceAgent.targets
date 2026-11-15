@@ -1,0 +1,21 @@
+<Project>
+  <ItemGroup>
+    <_SenparcWorkspaceAgentRuntimeFiles Include="$(MSBuildThisFileDirectory)..\tools\WorkspaceAgent\**\*" />
+  </ItemGroup>
+
+  <Target Name="CopySenparcWorkspaceAgentRuntimeFilesToOutput"
+          AfterTargets="Build"
+          Condition="'$(DesignTimeBuild)' != 'true'">
+    <Copy SourceFiles="@(_SenparcWorkspaceAgentRuntimeFiles)"
+          DestinationFolder="$(OutputPath)"
+          SkipUnchangedFiles="true" />
+  </Target>
+
+  <Target Name="CopySenparcWorkspaceAgentRuntimeFilesToPublish"
+          AfterTargets="Publish"
+          Condition="'$(PublishDir)' != ''">
+    <Copy SourceFiles="@(_SenparcWorkspaceAgentRuntimeFiles)"
+          DestinationFolder="$(PublishDir)"
+          SkipUnchangedFiles="true" />
+  </Target>
+</Project>

@@ -73,12 +73,12 @@ public static class WorkflowFunctionSchemaBuilder
             };
         }).ToList();
 
-    public static Dictionary<string, object> BuildDefaults(IEnumerable<WorkflowFunctionParameterSchema> parameters)
+    public static Dictionary<string, object?> BuildDefaults(IEnumerable<WorkflowFunctionParameterSchema> parameters)
     {
-        var result = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+        var result = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
         foreach (var parameter in parameters ?? Array.Empty<WorkflowFunctionParameterSchema>())
         {
-            object value = parameter.DefaultValue;
+            object? value = parameter.DefaultValue;
             var options = parameter.Options ?? new List<WorkflowFunctionParameterOption>();
             if (parameter.ParameterType == (int)ParameterType.CheckBoxList)
             {
@@ -112,7 +112,7 @@ public static class WorkflowFunctionSchemaBuilder
     /// </summary>
     public static string MergeMissingDefaults(string parametersJson, IReadOnlyList<FunctionParameterInfo> parameters)
     {
-        JsonNode parsed;
+        JsonNode? parsed;
         try
         {
             parsed = JsonNode.Parse(string.IsNullOrWhiteSpace(parametersJson) ? "{}" : parametersJson);
@@ -157,10 +157,10 @@ public static class WorkflowFunctionSchemaBuilder
         return obj.ToJsonString();
     }
 
-    private static bool IsBlank(object value) =>
+    private static bool IsBlank(object? value) =>
         value == null || (value is string text && string.IsNullOrWhiteSpace(text));
 
-    private static bool HasRuntimeValue(object value)
+    private static bool HasRuntimeValue(object? value)
     {
         switch (value)
         {
@@ -195,7 +195,7 @@ public static class WorkflowFunctionSchemaBuilder
         return true;
     }
 
-    private static bool TryGetPropertyIgnoreCase(JsonObject obj, string name, out string key, out JsonNode node)
+    private static bool TryGetPropertyIgnoreCase(JsonObject obj, string name, out string? key, out JsonNode? node)
     {
         foreach (var property in obj)
         {
@@ -239,8 +239,8 @@ public sealed class WorkflowFunctionParameterSchema
     public int MaxFiles { get; set; }
     public string Accept { get; set; }
     public bool HasSyntheticName { get; set; }
-    public string MetadataError { get; set; }
-    public object DefaultValue { get; set; }
+    public string? MetadataError { get; set; }
+    public object? DefaultValue { get; set; }
     public List<WorkflowFunctionParameterOption> Options { get; set; } = new();
 }
 

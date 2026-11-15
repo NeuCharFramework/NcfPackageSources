@@ -42,8 +42,8 @@ public sealed record WorkflowHumanInteraction(
 public sealed record WorkflowHumanInteractionResult(
     bool Success,
     bool Approved,
-    string Input,
-    string Reason,
+    string? Input,
+    string? Reason,
     string Message);
 
 /// <summary>
@@ -62,8 +62,8 @@ public interface IWorkflowHumanInteractionBridge
         string userId,
         string requestId,
         bool approved,
-        string input = null,
-        string reason = null,
+        string? input = null,
+        string? reason = null,
         CancellationToken cancellationToken = default);
 }
 
@@ -84,8 +84,8 @@ public sealed class NullWorkflowHumanInteractionBridge : IWorkflowHumanInteracti
         string userId,
         string requestId,
         bool approved,
-        string input = null,
-        string reason = null,
+        string? input = null,
+        string? reason = null,
         CancellationToken cancellationToken = default)
         => ValueTask.FromResult(new WorkflowHumanInteractionResult(
             false,

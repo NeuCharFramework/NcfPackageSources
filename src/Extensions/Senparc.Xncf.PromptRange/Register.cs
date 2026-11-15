@@ -142,6 +142,7 @@ namespace Senparc.Xncf.PromptRange
             services.AddScoped<PromptItemService>();
             services.AddScoped<Senparc.Xncf.PromptRange.Abstractions.References.IPromptReferenceService, PromptReferenceService>();
             services.AddScoped<Senparc.Xncf.PromptRange.Abstractions.Memory.IMemoryPromptProvider, MemoryPromptProvider>();
+            services.AddScoped<Senparc.Xncf.PromptRange.Abstractions.SystemMessages.IAdminChatSystemMessageProvider, AdminChatSystemMessagePromptProvider>();
             services.AddScoped<PromptResultService>();
             services.AddScoped<PromptResultChatService>();
             services.AddScoped<LlModelService>();

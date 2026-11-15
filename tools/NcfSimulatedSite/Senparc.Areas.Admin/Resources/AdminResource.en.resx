@@ -865,6 +865,28 @@
   <data name="DocHelp.LoadFailed" xml:space="preserve"><value>Document loading failed or timed out. Retry or open in a new window.</value></data>
   <data name="DocHelp.Retry" xml:space="preserve"><value>Retry</value></data>
   <data name="DocHelp.InvalidTopic" xml:space="preserve"><value>The documentation index is invalid. Please contact your administrator.</value></data>
+  <data name="AdminChat.Settings.Title" xml:space="preserve"><value>Chat settings</value></data>
+  <data name="AdminChat.Settings.ModeLabel" xml:space="preserve"><value>Mode</value></data>
+  <data name="AdminChat.Settings.ModeTitle" xml:space="preserve"><value>Choose execution mode</value></data>
+  <data name="AdminChat.Settings.ModeCaption" xml:space="preserve"><value>Strategy used by the next request in this conversation.</value></data>
+  <data name="AdminChat.Settings.LauncherModeCaption" xml:space="preserve"><value>This mode applies only to the next request; Plan and Execute use MAF Harness.</value></data>
+  <data name="AdminChat.Settings.HarnessAdvanced" xml:space="preserve"><value>Harness advanced settings</value></data>
+  <data name="AdminChat.Settings.MaxIterations" xml:space="preserve"><value>Max iterations</value></data>
+  <data name="AdminChat.Settings.MaxOutputTokens" xml:space="preserve"><value>Max output tokens</value></data>
+  <data name="AdminChat.Settings.CapabilityNotice" xml:space="preserve"><value>FileMemory can only be changed with /harness file-memory on|off; Agent Skills and Hosted Web Search are off by default. Enabling them changes privacy, tool, and external-access boundaries.</value></data>
+  <data name="AdminChat.Settings.Close" xml:space="preserve"><value>Close chat settings</value></data>
+  <data name="AdminChat.Settings.Stop" xml:space="preserve"><value>Stop</value></data>
+  <data name="AdminChat.Mode.Simple" xml:space="preserve"><value>Chat</value></data>
+  <data name="AdminChat.Mode.SimpleDescription" xml:space="preserve"><value>One response without the MAF long-running task loop.</value></data>
+  <data name="AdminChat.Mode.Plan" xml:space="preserve"><value>Plan</value></data>
+  <data name="AdminChat.Mode.PlanDescription" xml:space="preserve"><value>Plan first, then call tools as needed and wait for approval.</value></data>
+  <data name="AdminChat.Mode.Execute" xml:space="preserve"><value>Execute</value></data>
+  <data name="AdminChat.Mode.ExecuteDescription" xml:space="preserve"><value>Enter MAF execution mode directly for well-defined tasks.</value></data>
+  <data name="AdminChat.Command.Mode" xml:space="preserve"><value>Switch execution mode</value></data>
+  <data name="AdminChat.Command.Help" xml:space="preserve"><value>Show available commands</value></data>
+  <data name="AdminChat.Command.MaxToken" xml:space="preserve"><value>Set output limit</value></data>
+  <data name="AdminChat.Command.MaxIterations" xml:space="preserve"><value>Set Harness max iterations</value></data>
+  <data name="AdminChat.Command.Harness" xml:space="preserve"><value>Set Harness capabilities</value></data>
   <data name="AdminChat.UserStats" xml:space="preserve"><value>Usage Stats</value></data>
   <data name="AdminChat.UserStatsTitle" xml:space="preserve"><value>User Usage Statistics (AdminChat)</value></data>
   <data name="AdminChat.UserStatsTip" xml:space="preserve"><value>Only the per-account session/message counts are shown. No session or message content is exposed.</value></data>

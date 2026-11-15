@@ -10,7 +10,7 @@ namespace Senparc.Xncf.Sandbox.Models
     /// </summary>
     public static class SenparcDbContextFactoryConfig
     {
-        private static string _rootDirectoryPath = null;
+        private static string? _rootDirectoryPath;
 
         /// <summary>
         /// 用于寻找 App_Data 文件夹，从而找到数据库连接字符串配置信息

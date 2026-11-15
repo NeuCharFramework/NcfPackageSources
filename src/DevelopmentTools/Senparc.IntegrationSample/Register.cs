@@ -109,7 +109,7 @@ namespace Senparc.IntegrationSample
         public static void ShowSuccessTip(this WebApplication app)
         {
             //输出启动成功标志
-            Senparc.Ncf.Core.VersionManager.ShowSuccessTip($"\t\t启动工作准备就绪\r\n\t\t用时：{SystemTime.NowDiff(StartTime).TotalSeconds} s");
+            Senparc.Ncf.Core.VersionManager.ShowSuccessTip($"\t\tStartup is ready\r\n\t\tStarted at: {StartTime:yyyy-MM-dd HH:mm:ss}\r\n\t\tElapsed: {SystemTime.NowDiff(StartTime).TotalSeconds} s");
         }
 
     }

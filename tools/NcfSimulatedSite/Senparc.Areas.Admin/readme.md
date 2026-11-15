@@ -247,10 +247,31 @@ SQLite、SQL Server、MySQL、Oracle、PostgreSQL 和 DM 六种数据库。
 
 ## Admin Chat：Native MAF Harness 与 Trajectory
 
-管理后台 Admin Chat 支持两种运行模式，可在输入框下方切换：
+管理后台 Admin Chat 支持三种运行模式，可在输入框下方切换：
 
 - **普通对话（Simple）**：单轮问答，保持既有体验。
-- **长任务（Harness）**：使用 `Microsoft.Agents.AI.Harness` 原生 `HarnessAgent`，内置工具调用、上下文压缩、Todo、plan/execute 和人工审批。
+- **计划（Plan）**：使用 `Microsoft.Agents.AI.Harness` 原生 `HarnessAgent` 的 `AgentModeProvider` 计划模式。
+- **执行（Execute）**：复用同一 Harness，先将 MAF 会话模式切换为 `execute`，再进入工具执行阶段。
+
+输入框也支持统一的 `/` 命令候选面板；候选可以点击，也可以手写覆盖：
+
+- `/mode simple|plan|execute`：切换下一轮请求的运行策略；
+- `/help`：显示当前命令；
+- `/maxtoken 256-8000`：设置输出上限；
+- `/maxiterations 1-64`：设置 Harness 单轮最大工具迭代；
+- `/harness todo|compact|file-memory|skills|web on|off`：设置下一轮 Harness Provider。
+
+新建对话和当前会话的“对话设置”都使用同一个弹出式模式面板。面板会解释
+Simple、Plan、Execute，并展示最大迭代、输出 Token 和可视化 Harness Provider 选项。
+FileMemory 通过 `/harness file-memory on|off` 设置；Todo 与上下文压缩默认开启，
+Agent Skills、Hosted Web Search 默认关闭。
+设置会在下一轮请求发送时由服务端再次归一化，不能通过手写命令绕过 1–64 迭代、
+256–8000 输出 Token 和安全默认值。
+
+这里的 Plan/Execute 不是 AdminChat 自己实现的两个循环。MAF Harness 默认启用
+`AgentModeProvider`、Todo、上下文压缩和工具调用；AdminChat 通过 `ModeProvider.SetModeAsync`
+设置会话模式，并仍使用现有 Trajectory、审批和 Resume 机制。文件记忆、Skills、Hosted Web Search
+仍按 AdminChat 的最小权限配置关闭。
 
 关键实现：
 
@@ -259,7 +280,9 @@ SQLite、SQL Server、MySQL、Oracle、PostgreSQL 和 DM 六种数据库。
 - `AdminChatMessage.TrajectoryId` / `TrajectorySequence`：将 assistant 消息与轨迹持久关联，刷新后仍可执行轨迹操作。
 - `AdminChatStreamController`：Simple 与 Harness 共用 SSE；Harness 会实时推送 assistant 文本、工具调用、工具结果和审批状态。
 - `GetTrajectoryAsync`、`ResumeTrajectoryAsync`、`ForkTrajectoryAsync`、`SearchTrajectoriesAsync`：提供回放、恢复、分叉和检索能力。
-- `ChatMessageInputDto.Mode`（`AdminChatMode.Simple/Harness`）：请求级模式开关；Admin Chat 页面默认选择 Harness，普通对话仍可手动切换。
+- `ChatMessageInputDto.Mode`（`Simple/Plan/Execute`，`Harness` 作为旧客户端别名）：请求级模式开关；页面默认选择 Plan。
+- `ChatMessageInputDto.HarnessOptions`：当前请求的最大迭代、输出 Token 以及 Todo、Compaction、
+  FileMemory、Skills、Hosted Web Search 选项；FileMemory/Skills/Web Search 仍需用户显式开启。
 
 前端在 `Areas/Admin/Pages/AdminChat/Chat.cshtml` 提供模式切换、轨迹抽屉、事件回放、恢复、分叉和工具审批按钮。数据库迁移名为 `Add_AdminChatHarnessTrajectory`，覆盖 SQLite、SQL Server、MySQL、Oracle、PostgreSQL 和 DM。
 

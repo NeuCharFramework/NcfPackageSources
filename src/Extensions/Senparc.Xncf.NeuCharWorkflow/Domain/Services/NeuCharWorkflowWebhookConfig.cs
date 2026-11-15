@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：NeuCharWorkflowWebhookConfig.cs
-    文件功能描述：领域服务与业务流程实现
+    File name: NeuCharWorkflowWebhookConfig.cs
+    File description: Domain service and business workflow implementation
 
 
-    创建标识：Senparc - 20260809
+    Created by: Senparc - 20260809
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Modified by: Senparc - 20260813
+    Change description: v0.1.0-preview1 enhance Workflow orchestration, replay, Webhook, and parallel execution
 
 ----------------------------------------------------------------*/
 
@@ -24,7 +24,7 @@ using Microsoft.AspNetCore.WebUtilities;
 namespace Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 
 /// <summary>
-/// Webhook 触发器的持久化配置。配置由服务端规范化，避免前端可以写入任意 HTTP 方法、重复参数或过大的内容。
+/// Persistent Webhook trigger configuration. The server normalizes it to prevent arbitrary HTTP methods, duplicate parameters, or oversized content from being written by the client.
 /// </summary>
 public sealed class NeuCharWorkflowWebhookConfig
 {
@@ -42,7 +42,7 @@ public sealed class NeuCharWorkflowWebhookConfig
 
     public static NeuCharWorkflowWebhookConfig Normalize(
         string requestedJson,
-        string existingJson = null,
+        string? existingJson = null,
         bool generateToken = true)
     {
         var requested = ParseObject(requestedJson);
@@ -59,7 +59,7 @@ public sealed class NeuCharWorkflowWebhookConfig
         }
         if (string.IsNullOrWhiteSpace(token) || token.Length > 256)
         {
-            throw new InvalidOperationException("Webhook 访问密钥不能为空且不能超过 256 个字符。");
+            throw new InvalidOperationException("The Webhook access key is required and must be at most 256 characters.");
         }
 
         var parameters = ParseParameters(requested);
@@ -90,7 +90,7 @@ public sealed class NeuCharWorkflowWebhookConfig
         return WebEncoders.Base64UrlEncode(bytes.ToArray());
     }
 
-    private static JsonElement ParseObject(string json)
+    private static JsonElement ParseObject(string? json)
     {
         if (string.IsNullOrWhiteSpace(json))
         {
@@ -105,11 +105,11 @@ public sealed class NeuCharWorkflowWebhookConfig
         }
         catch (JsonException ex)
         {
-            throw new InvalidOperationException("Webhook 配置不是有效的 JSON。", ex);
+            throw new InvalidOperationException("Webhook configuration is not valid JSON.", ex);
         }
     }
 
-    private static string GetString(JsonElement root, string propertyName)
+    private static string? GetString(JsonElement root, string propertyName)
     {
         return root.ValueKind == JsonValueKind.Object &&
                root.TryGetProperty(propertyName, out var value) &&
@@ -118,12 +118,12 @@ public sealed class NeuCharWorkflowWebhookConfig
             : null;
     }
 
-    private static string NormalizeMethod(string value) => value?.Trim().ToLowerInvariant() switch
+    private static string NormalizeMethod(string? value) => value?.Trim().ToLowerInvariant() switch
     {
         null or "" or "any" or "*" => "any",
         "get" => "get",
         "post" => "post",
-        _ => throw new InvalidOperationException("Webhook 请求方法只能是 GET、POST 或不限定。")
+        _ => throw new InvalidOperationException("The Webhook method must be GET, POST, or unrestricted.")
     };
 
     private static List<NeuCharWorkflowWebhookParameter> ParseParameters(JsonElement root)
@@ -140,7 +140,7 @@ public sealed class NeuCharWorkflowWebhookConfig
         {
             if (item.ValueKind != JsonValueKind.Object)
             {
-                throw new InvalidOperationException("Webhook 参数配置格式不正确。");
+                throw new InvalidOperationException("The Webhook parameter configuration is invalid.");
             }
             var name = item.TryGetProperty("name", out var nameElement) &&
                        nameElement.ValueKind == JsonValueKind.String
@@ -148,11 +148,11 @@ public sealed class NeuCharWorkflowWebhookConfig
                 : null;
             if (string.IsNullOrWhiteSpace(name) || !ParameterNameRegex.IsMatch(name))
             {
-                throw new InvalidOperationException("Webhook 参数名必须以字母或下划线开头，且只能包含字母、数字、下划线、点或短横线。");
+                throw new InvalidOperationException("Webhook parameter names must start with a letter or underscore and contain only letters, numbers, underscores, dots, or hyphens.");
             }
             if (result.Any(z => string.Equals(z.Name, name, StringComparison.OrdinalIgnoreCase)))
             {
-                throw new InvalidOperationException($"Webhook 参数“{name}”重复。");
+                throw new InvalidOperationException($"Webhook parameter “{name}” is duplicated.");
             }
             var required = item.TryGetProperty("required", out var requiredElement) &&
                            requiredElement.ValueKind == JsonValueKind.True;
@@ -162,12 +162,12 @@ public sealed class NeuCharWorkflowWebhookConfig
                 : null;
             if (description?.Length > 500)
             {
-                throw new InvalidOperationException($"Webhook 参数“{name}”的说明不能超过 500 个字符。");
+                throw new InvalidOperationException($"The description for Webhook parameter “{name}” must be at most 500 characters.");
             }
             result.Add(new NeuCharWorkflowWebhookParameter(name, required, description));
             if (result.Count > 50)
             {
-                throw new InvalidOperationException("单个 Webhook 最多允许配置 50 个参数。");
+                throw new InvalidOperationException("A single Webhook may define at most 50 parameters.");
             }
         }
         return result;

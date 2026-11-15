@@ -45,8 +45,8 @@ public sealed record NeuCharFunctionDescriptor(
     string Name,
     string Description,
     IReadOnlyList<FunctionParameterInfo> Parameters,
-    NeuCharFunctionOutputDescriptor Output = null,
-    string CatalogError = null);
+    NeuCharFunctionOutputDescriptor? Output = null,
+    string? CatalogError = null);
 
 public sealed record NeuCharFunctionOutputFieldDescriptor(
     string Path,
@@ -55,20 +55,20 @@ public sealed record NeuCharFunctionOutputFieldDescriptor(
     bool IsArray,
     bool RequiresIndex,
     string SourceKind = "output",
-    string SourceParameterName = null);
+    string? SourceParameterName = null);
 
 public sealed record NeuCharFunctionOutputDescriptor(
     string TypeName,
     string DisplayName,
     bool IsArray,
-    string ElementTypeName,
+    string? ElementTypeName,
     IReadOnlyList<NeuCharFunctionOutputFieldDescriptor> Fields);
 
 public sealed record NeuCharFunctionExecutionResult(
     bool Success,
-    object Data,
-    string ErrorMessage,
-    string RequestTempId);
+    object? Data,
+    string? ErrorMessage,
+    string? RequestTempId);
 
 /// <summary>
 /// 系统内所有 Function 调用的复用入口。只允许调用 FunctionRenderCollection 中已注册的方法，
@@ -86,7 +86,7 @@ public sealed class NeuCharWorkflowFunctionService
     }
 
     public async Task<IReadOnlyList<NeuCharFunctionDescriptor>> GetCatalogAsync(
-        string moduleUid = null,
+        string? moduleUid = null,
         bool loadParameterOptions = true,
         CancellationToken cancellationToken = default)
     {
@@ -167,7 +167,7 @@ public sealed class NeuCharWorkflowFunctionService
         bool loadParameterOptions)
     {
         IReadOnlyList<FunctionParameterInfo> parameters;
-        string catalogError = null;
+        string? catalogError = null;
         try
         {
             parameters = await FunctionHelper.GetFunctionParameterInfoAsync(
@@ -259,7 +259,7 @@ public sealed class NeuCharWorkflowFunctionService
         {
             cancellationToken.ThrowIfCancellationRequested();
             var methodParameters = bag.MethodInfo.GetParameters();
-            object[] arguments = null;
+            object[]? arguments = null;
             if (methodParameters.Length == 1)
             {
                 var parameterType = methodParameters[0].ParameterType;
@@ -312,7 +312,7 @@ public sealed class NeuCharWorkflowFunctionService
         }
     }
 
-    public static string ValidateRequiredParameters(
+    public static string? ValidateRequiredParameters(
         IReadOnlyList<FunctionParameterInfo> parameterInfos,
         string parametersJson)
     {
@@ -399,7 +399,7 @@ public sealed class NeuCharWorkflowFunctionService
             fields);
     }
 
-    public static string NormalizeValueType(Type type)
+    public static string NormalizeValueType(Type? type)
     {
         type ??= typeof(object);
         type = Nullable.GetUnderlyingType(type) ?? type;
@@ -429,7 +429,7 @@ public sealed class NeuCharWorkflowFunctionService
         return type == typeof(object) ? "any" : "object";
     }
 
-    private static Type GetResponseDataType(Type returnType)
+    private static Type? GetResponseDataType(Type? returnType)
     {
         if (returnType == null)
         {

@@ -619,8 +619,8 @@ public sealed class NeuCharWorkflowAppService
         int adminUserId,
         string requestId,
         bool approved,
-        string input = null,
-        string reason = null,
+        string? input = null,
+        string? reason = null,
         CancellationToken cancellationToken = default)
     {
         if (runId == Guid.Empty)

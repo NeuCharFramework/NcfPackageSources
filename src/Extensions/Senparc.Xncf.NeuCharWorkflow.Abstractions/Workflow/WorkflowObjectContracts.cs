@@ -37,16 +37,16 @@ public sealed record WorkflowObjectDescriptor(
     string Name,
     string Description,
     bool Enabled,
-    string Icon = null,
-    string EditUrl = null,
-    IReadOnlyDictionary<string, string> Metadata = null);
+    string? Icon = null,
+    string? EditUrl = null,
+    IReadOnlyDictionary<string, string>? Metadata = null);
 
 public sealed record WorkflowObjectExecutionRequest(
     string ObjectId,
     string Input,
     int AiModelId,
     string CorrelationId,
-    IReadOnlyDictionary<string, string> Parameters = null,
+    IReadOnlyDictionary<string, string>? Parameters = null,
     int? AdminUserId = null);
 
 /// <summary>
@@ -73,13 +73,13 @@ public sealed record WorkflowObjectExecutionReference(
     string ProviderId,
     int? ChatTaskId = null,
     int? ChatGroupId = null,
-    string DisplayName = null,
-    string ObjectId = null);
+    string? DisplayName = null,
+    string? ObjectId = null);
 
 public sealed record WorkflowObjectExecutionResult(
     bool Success,
-    string Output,
-    string ErrorMessage = null)
+    string? Output,
+    string? ErrorMessage = null)
 {
     /// <summary>仅供 Workflow 日志跳转使用，不参与下游节点的业务输出。</summary>
     public WorkflowObjectExecutionReference? Reference { get; init; }

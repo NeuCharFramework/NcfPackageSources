@@ -4,12 +4,14 @@ window.ChatLauncherMixin = {
       moduleStorageKey: 'ncf.admin.chat.selectedModuleUids',
       workflowStorageKey: 'ncf.admin.chat.selectedWorkflowIds',
       aiModelStorageKey: 'ncf.admin.chat.sessionAiModelMap',
+      modeStorageKey: 'ncf.admin.chat.sessionModeMap',
       chatInputText: '',
       launcherAiModelId: 0,
-      launcherChatMode: 'harness',
+      launcherChatMode: 'plan',
       launcherUseMemory: false,
       launcherMemoryMode: 0,
       sessionAiModelMap: {},
+      sessionModeMap: {},
       selectedModules: [],
       moduleSelectorVisible: false,
       moduleSelectorTab: 'modules',
@@ -148,6 +150,7 @@ window.ChatLauncherMixin = {
     this.restoreSelectedModuleUids();
     this.restoreSelectedWorkflowIds();
     this.restoreSessionAiModelMap();
+    this.restoreSessionModeMap();
     this.ensureModuleOptionsLoaded(false);
   },
   watch: {
@@ -281,6 +284,42 @@ window.ChatLauncherMixin = {
       return this.normalizeAiModelId(this.sessionAiModelMap[String(sessionId)]);
     },
 
+    persistSessionModeMap() {
+      try {
+        localStorage.setItem(this.modeStorageKey, JSON.stringify(this.sessionModeMap || {}));
+      } catch (error) {
+        console.warn('保存会话模式失败:', error);
+      }
+    },
+
+    restoreSessionModeMap() {
+      try {
+        const raw = localStorage.getItem(this.modeStorageKey);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return;
+        this.sessionModeMap = Object.keys(parsed).reduce((result, key) => {
+          result[key] = Number(parsed[key]) === 2 ? 2 : Number(parsed[key]) === 1 ? 1 : 0;
+          return result;
+        }, {});
+      } catch (error) {
+        console.warn('读取会话模式失败:', error);
+      }
+    },
+
+    setSessionMode(sessionId, mode) {
+      if (!sessionId) return;
+      const value = Number(mode) === 2 ? 2 : Number(mode) === 1 ? 1 : 0;
+      this.$set(this.sessionModeMap, String(sessionId), value);
+      this.persistSessionModeMap();
+    },
+
+    getSessionMode(sessionId) {
+      if (!sessionId) return 0;
+      const value = this.sessionModeMap[String(sessionId)];
+      return Number(value) === 2 ? 2 : Number(value) === 1 ? 1 : 0;
+    },
+
     syncSelectedModulesFromUids() {
       const uidSet = new Set(this.selectedModuleUids);
       this.selectedModules = this.availableModules.filter((item) => uidSet.has(item.uid));
@@ -323,6 +362,8 @@ window.ChatLauncherMixin = {
     },
 
     handleLauncherInputKeydown(event) {
+      if (typeof this.handleSlashCommandKeydown === 'function'
+        && this.handleSlashCommandKeydown(event, 'chatInputText')) return;
       if (typeof this.handleWorkspaceMentionKeydown === 'function'
         && this.handleWorkspaceMentionKeydown(event, 'chatInputText')) return;
       if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
@@ -515,7 +556,21 @@ window.ChatLauncherMixin = {
         aiModelId: this.normalizeAiModelId(this.launcherAiModelId),
         moduleUids: this.selectedModules.map(item => item.uid),
         workflowIds: this.selectedWorkflows.map(item => item.id),
-        mode: this.launcherChatMode === 'harness' ? 1 : 0,
+        mode: typeof this.chatModeValue === 'function'
+          ? this.chatModeValue(this.launcherChatMode)
+          : this.launcherChatMode === 'execute' ? 2 : this.launcherChatMode === 'plan' || this.launcherChatMode === 'harness' ? 1 : 0,
+        maxOutputTokens: this.chatMaxOutputTokens || 2000,
+        harnessOptions: typeof this.buildHarnessOptions === 'function'
+          ? this.buildHarnessOptions()
+          : {
+            maxIterations: 32,
+            maxOutputTokens: this.chatMaxOutputTokens || 2000,
+            disableTodoProvider: false,
+            disableCompaction: false,
+            enableFileMemory: false,
+            enableAgentSkillsProvider: false,
+            enableWebSearch: false
+          },
         useMemory: !!this.launcherUseMemory,
         memoryMode: this.launcherMemoryMode,
         workspaceId: this.isSuperAdmin ? this.selectedWorkspaceId || null : null,
@@ -542,18 +597,25 @@ window.ChatLauncherMixin = {
         const response = await service.post('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.CreateSessionAsync', requestData);
         if (response.data && response.data.success && response.data.data) {
           const sessionId = response.data.data.sessionId;
+          const responseMode = response.data.data.mode;
           this.setSessionAiModelId(sessionId, this.launcherAiModelId);
+          this.setSessionMode(sessionId, responseMode);
           const pendingMessage = references.length ? initialMessage : response.data.data.initialMessage || initialMessage;
-          sessionStorage.setItem(`ncf.admin.chat.initialMessage.${sessionId}`, pendingMessage);
           if (typeof this.openCreatedChatSession === 'function') {
-            await this.openCreatedChatSession(sessionId, pendingMessage, references);
+            sessionStorage.removeItem(`ncf.admin.chat.initialMessage.${sessionId}`);
+            await this.openCreatedChatSession(sessionId, pendingMessage, references, responseMode);
             return;
           }
+          sessionStorage.setItem(`ncf.admin.chat.initialMessage.${sessionId}`, pendingMessage);
           if (references.length) {
             sessionStorage.setItem(`ncf.admin.chat.initialReferences.${sessionId}`, JSON.stringify(references));
           }
           window.location.href = '/Admin/AdminChat/Chat?sessionId=' + sessionId
-            + '&mode=' + (this.launcherChatMode === 'harness' ? '1' : '0')
+            + '&mode=' + String(Number.isInteger(responseMode)
+              ? responseMode
+              : (typeof this.chatModeValue === 'function'
+                ? this.chatModeValue(this.launcherChatMode)
+                : this.launcherChatMode === 'execute' ? '2' : this.launcherChatMode === 'plan' || this.launcherChatMode === 'harness' ? '1' : '0'))
             + '#session-' + sessionId;
           return;
         }

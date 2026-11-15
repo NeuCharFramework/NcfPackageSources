@@ -46,7 +46,7 @@ public sealed record FileManagerImportRequest(
     string FileName,
     string ContentType,
     long Length,
-    string Description = null,
+    string? Description = null,
     FileManagerResourceKind ResourceKind = FileManagerResourceKind.SiteAsset);
 
 public sealed record FileManagerImportResult(

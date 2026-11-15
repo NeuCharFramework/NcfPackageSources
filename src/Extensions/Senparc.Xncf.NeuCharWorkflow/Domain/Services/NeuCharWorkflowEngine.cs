@@ -111,16 +111,16 @@ public sealed class NeuCharWorkflowEdge
 
 public sealed record NeuCharWorkflowRunResult(
     bool Success,
-    string Output,
+    string? Output,
     IReadOnlyList<string> Trace,
-    string ErrorMessage = null);
+    string? ErrorMessage = null);
 
 public sealed record NeuCharWorkflowProgress(
     string NodeId,
     string NodeName,
     string Status,
     string Message,
-    string Output,
+    string? Output,
     DateTimeOffset Timestamp,
     string? OutputSchema = null,
     string? Input = null)
@@ -161,7 +161,7 @@ public sealed class NeuCharWorkflowEngine
             string boundaryNodeId,
             string bodyEntryNodeId,
             int iterationCount,
-            LoopExecutionState parent)
+            LoopExecutionState? parent)
         {
             LoopNodeId = loopNodeId;
             BoundaryNodeId = boundaryNodeId;
@@ -175,8 +175,8 @@ public sealed class NeuCharWorkflowEngine
         public string BodyEntryNodeId { get; }
         public int IterationCount { get; }
         public int CompletedIterations { get; set; }
-        public JsonNode LastOutput { get; set; }
-        public LoopExecutionState Parent { get; }
+        public JsonNode? LastOutput { get; set; }
+        public LoopExecutionState? Parent { get; }
     }
 
     private readonly NeuCharWorkflowService _workflowService;
@@ -451,7 +451,7 @@ public sealed class NeuCharWorkflowEngine
         return trigger == null ? graph.Nodes : FindDisconnectedNodes(graph, trigger.Id);
     }
 
-    public async Task<string> ValidateReferencesAsync(
+    public async Task<string?> ValidateReferencesAsync(
         NeuCharWorkflowGraph graph,
         CancellationToken cancellationToken = default)
     {
@@ -681,7 +681,7 @@ public sealed class NeuCharWorkflowEngine
         string existingGraphJson,
         CancellationToken cancellationToken = default)
     {
-        NeuCharWorkflowGraph existingGraph = null;
+        NeuCharWorkflowGraph? existingGraph = null;
         if (!string.IsNullOrWhiteSpace(existingGraphJson))
         {
             try
@@ -818,7 +818,7 @@ public sealed class NeuCharWorkflowEngine
         WorkflowEntity workflow,
         string input,
         CancellationToken cancellationToken = default,
-        Action<NeuCharWorkflowProgress> progress = null,
+        Action<NeuCharWorkflowProgress>? progress = null,
         string? runId = null,
         Func<string?>? cancellationResult = null,
         IReadOnlyCollection<int>? ancestorWorkflowIds = null,
@@ -844,7 +844,7 @@ public sealed class NeuCharWorkflowEngine
                 {
                     replayEvents.Add(item with
                     {
-                        Message = LimitReplayText(item.Message, 2_000),
+                        Message = LimitReplayText(item.Message, 2_000)!,
                         Output = LimitReplayText(item.Output, 2_000),
                         OutputSchema = LimitReplayText(item.OutputSchema, 20_000),
                         Input = LimitReplayText(item.Input, 20_000)
@@ -906,7 +906,7 @@ public sealed class NeuCharWorkflowEngine
             // settled. A merge node starts a stream: every input is carried through its
             // downstream chain as an independent activation. Stream activations are kept
             // serial for deterministic side effects and replay ordering.
-            var ready = new List<(NeuCharWorkflowNode node, JsonNode value, bool isStream, LoopExecutionState loopState, string loopSignal)>
+            var ready = new List<(NeuCharWorkflowNode node, JsonNode? value, bool isStream, LoopExecutionState? loopState, string? loopSignal)>
             {
                 (trigger, triggerInput, false, null, null)
             };
@@ -928,22 +928,22 @@ public sealed class NeuCharWorkflowEngine
             var activeExecutions = new List<Task<(
                 NeuCharWorkflowNode node,
                 bool isStream,
-                LoopExecutionState loopState,
-                string loopSignal,
+                LoopExecutionState? loopState,
+                string? loopSignal,
                 string replayInputText,
                 string? objectReferenceKey,
-                (bool success, JsonNode output, bool? condition, string error) execution)>>();
+                (bool success, JsonNode? output, bool? condition, string? error) execution)>>();
             var streamActivationRunning = false;
 
             async Task<(
                 NeuCharWorkflowNode node,
                 bool isStream,
-                LoopExecutionState loopState,
-                string loopSignal,
+                LoopExecutionState? loopState,
+                string? loopSignal,
                 string replayInputText,
                 string? objectReferenceKey,
-                (bool success, JsonNode output, bool? condition, string error) execution)> ExecuteActivationAsync(
-                (NeuCharWorkflowNode node, JsonNode value, bool isStream, LoopExecutionState loopState, string loopSignal) item)
+                (bool success, JsonNode? output, bool? condition, string? error) execution)> ExecuteActivationAsync(
+                (NeuCharWorkflowNode node, JsonNode? value, bool isStream, LoopExecutionState? loopState, string? loopSignal) item)
             {
                 var replayInputText = await BuildReplayInputTextAsync(
                         item.node,
@@ -974,11 +974,11 @@ public sealed class NeuCharWorkflowEngine
             void ProcessCompletedExecution((
                 NeuCharWorkflowNode node,
                 bool isStream,
-                LoopExecutionState loopState,
-                string loopSignal,
+                LoopExecutionState? loopState,
+                string? loopSignal,
                 string replayInputText,
                 string? objectReferenceKey,
-                (bool success, JsonNode output, bool? condition, string error) execution) completed)
+                (bool success, JsonNode? output, bool? condition, string? error) execution) completed)
             {
                 var (node, isStream, loopState, loopSignal, replayInputText, objectReferenceKey, execution) = completed;
                 WorkflowObjectExecutionReference? objectReference = null;
@@ -994,7 +994,7 @@ public sealed class NeuCharWorkflowEngine
                     throw new InvalidOperationException(execution.error);
                 }
 
-                finalOutput = execution.output ?? JsonNode.Parse("null");
+                finalOutput = execution.output ?? JsonNode.Parse("null")!;
                 outputs[node.Id] = finalOutput.DeepClone();
                 var outputText = NodeToText(finalOutput);
                 var outputSchema = NeuCharWorkflowObservedOutputSchemaBuilder.Build(node, finalOutput);
@@ -1167,8 +1167,8 @@ public sealed class NeuCharWorkflowEngine
                         ready.AddRange(waitingAggregateEdges
                             .Select(pair => (node: nodes[pair.Key], activeEdgeIds: pair.Value))
                             .OrderBy(item => graph.Nodes.FindIndex(node => node.Id == item.node.Id))
-                            .Select(item => (item.node, value: (JsonNode)BuildAggregateInput(
-                                graph, item.node, item.activeEdgeIds, outputs), isStream: false, loopState: (LoopExecutionState)null, loopSignal: (string)null)));
+                            .Select(item => (item.node, value: (JsonNode?)BuildAggregateInput(
+                                graph, item.node, item.activeEdgeIds, outputs), isStream: false, loopState: (LoopExecutionState?)null, loopSignal: (string?)null)));
                         waitingAggregateEdges.Clear();
                     }
 
@@ -1376,7 +1376,7 @@ public sealed class NeuCharWorkflowEngine
         return aggregate;
     }
 
-    private async Task<(bool success, JsonNode output, bool? condition, string error)> ExecuteNodeAsync(
+    private async Task<(bool success, JsonNode? output, bool? condition, string? error)> ExecuteNodeAsync(
         WorkflowEntity workflow,
         NeuCharWorkflowNode node,
         JsonNode input,
@@ -1482,7 +1482,7 @@ public sealed class NeuCharWorkflowEngine
         }
     }
 
-    private async Task<(bool success, JsonNode output, bool? condition, string error)> ExecuteFunctionNodeAsync(
+    private async Task<(bool success, JsonNode? output, bool? condition, string? error)> ExecuteFunctionNodeAsync(
         NeuCharWorkflowNode node,
         JsonNode input,
         IReadOnlyDictionary<string, JsonNode> outputs,
@@ -1538,7 +1538,7 @@ public sealed class NeuCharWorkflowEngine
             : (false, null, null, result.ErrorMessage);
     }
 
-    private async Task<(bool success, JsonNode output, bool? condition, string error)> ExecuteNeuBellNodeAsync(
+    private async Task<(bool success, JsonNode? output, bool? condition, string? error)> ExecuteNeuBellNodeAsync(
         WorkflowEntity workflow,
         NeuCharWorkflowNode node,
         JsonNode input,
@@ -1587,7 +1587,7 @@ public sealed class NeuCharWorkflowEngine
         }, null, null);
     }
 
-    private async Task<(bool success, JsonNode output, bool? condition, string error)> ExecuteHumanInputNodeAsync(
+    private async Task<(bool success, JsonNode? output, bool? condition, string? error)> ExecuteHumanInputNodeAsync(
         WorkflowEntity workflow,
         NeuCharWorkflowNode node,
         JsonNode input,
@@ -1678,7 +1678,7 @@ public sealed class NeuCharWorkflowEngine
         }
     }
 
-    private async Task<(bool success, JsonNode output, bool? condition, string error)> ExecuteWorkflowObjectNodeAsync(
+    private async Task<(bool success, JsonNode? output, bool? condition, string? error)> ExecuteWorkflowObjectNodeAsync(
         WorkflowEntity workflow,
         NeuCharWorkflowNode node,
         JsonNode input,
@@ -1698,7 +1698,7 @@ public sealed class NeuCharWorkflowEngine
                 null)
             .ConfigureAwait(false);
 
-    private async Task<(bool success, JsonNode output, bool? condition, string error)> ExecuteWorkflowObjectNodeWithReferenceAsync(
+    private async Task<(bool success, JsonNode? output, bool? condition, string? error)> ExecuteWorkflowObjectNodeWithReferenceAsync(
         WorkflowEntity workflow,
         NeuCharWorkflowNode node,
         JsonNode input,
@@ -1791,7 +1791,7 @@ public sealed class NeuCharWorkflowEngine
             .GroupBy(provider => provider.ProviderId, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
 
-    private async Task<(bool success, JsonNode output, bool? condition, string error)> ExecuteSubWorkflowNodeAsync(
+    private async Task<(bool success, JsonNode? output, bool? condition, string? error)> ExecuteSubWorkflowNodeAsync(
         WorkflowEntity parentWorkflow,
         NeuCharWorkflowNode node,
         JsonNode input,
@@ -1850,7 +1850,7 @@ public sealed class NeuCharWorkflowEngine
             : (false, null, null, result.ErrorMessage ?? "子工作流执行失败。");
     }
 
-    private static (bool success, JsonNode output, bool? condition, string error) ExecuteCodeNode(
+    private static (bool success, JsonNode? output, bool? condition, string? error) ExecuteCodeNode(
         NeuCharWorkflowNode node,
         JsonNode input,
         IReadOnlyDictionary<string, JsonNode> outputs,
@@ -1889,7 +1889,7 @@ public sealed class NeuCharWorkflowEngine
         IReadOnlyDictionary<string, JsonNode> outputs,
         IReadOnlyDictionary<string, JsonNode> functionSelectionInputs,
         out int count,
-        out string error)
+        out string? error)
     {
         count = 0;
         error = null;
@@ -1949,7 +1949,7 @@ public sealed class NeuCharWorkflowEngine
         };
     }
 
-    private static JsonNode ResolveAggregateOutput(
+    private static JsonNode? ResolveAggregateOutput(
         JsonObject config,
         JsonNode input,
         IReadOnlyDictionary<string, JsonNode> outputs,
@@ -1986,7 +1986,7 @@ public sealed class NeuCharWorkflowEngine
     /// 解析 Console 的展示内容。该值只供执行 Console 使用，Console 节点本身仍透传原始输入，
     /// 因而不会改变下游节点看到的数据类型或内容。
     /// </summary>
-    private static JsonNode ResolveConsolePrintOutput(
+    private static JsonNode? ResolveConsolePrintOutput(
         JsonObject config,
         JsonNode input,
         IReadOnlyDictionary<string, JsonNode> outputs,
@@ -2003,9 +2003,9 @@ public sealed class NeuCharWorkflowEngine
         return ResolveRuntimeValue(templateValue, input, outputs, functionSelectionInputs);
     }
 
-    private static JsonNode ResolveRuntimeValue(
-        JsonNode node,
-        JsonNode input,
+    private static JsonNode? ResolveRuntimeValue(
+        JsonNode? node,
+        JsonNode? input,
         IReadOnlyDictionary<string, JsonNode> outputs,
         IReadOnlyDictionary<string, JsonNode> functionSelectionInputs)
     {
@@ -2084,14 +2084,14 @@ public sealed class NeuCharWorkflowEngine
     /// { "$template": { "text": "prefix {{value_1}}", "bindings": [{ "token": "value_1", "source": { ... } }] } }.
     /// It keeps user text literal and makes Function/module upgrades validate every referenced source.
     /// </summary>
-    private static JsonNode ResolveTemplate(
+    private static JsonNode? ResolveTemplate(
         JsonObject template,
         JsonNode input,
         IReadOnlyDictionary<string, JsonNode> outputs,
         IReadOnlyDictionary<string, JsonNode> functionSelectionInputs)
     {
         var text = GetString(template, "text") ?? string.Empty;
-        var variables = new Dictionary<string, JsonNode>(StringComparer.OrdinalIgnoreCase)
+        var variables = new Dictionary<string, JsonNode?>(StringComparer.OrdinalIgnoreCase)
         {
             ["input"] = input
         };
@@ -2142,7 +2142,7 @@ public sealed class NeuCharWorkflowEngine
         return JsonValue.Create(text);
     }
 
-    private static bool TryGetWholeTemplateExpression(string text, out string expression)
+    private static bool TryGetWholeTemplateExpression(string text, out string? expression)
     {
         expression = null;
         var trimmed = (text ?? string.Empty).Trim();
@@ -2161,7 +2161,7 @@ public sealed class NeuCharWorkflowEngine
         return expression.Length > 0;
     }
 
-    private static string RenderTemplateExpressions(string text, IReadOnlyDictionary<string, JsonNode> variables)
+    private static string RenderTemplateExpressions(string text, IReadOnlyDictionary<string, JsonNode?> variables)
     {
         var position = 0;
         var count = 0;
@@ -2291,7 +2291,7 @@ public sealed class NeuCharWorkflowEngine
         path.StartsWith("$", StringComparison.Ordinal) &&
         path.Length <= 256;
 
-    private static JsonNode ResolveBinding(
+    private static JsonNode? ResolveBinding(
         JsonObject binding,
         IReadOnlyDictionary<string, JsonNode> outputs,
         IReadOnlyDictionary<string, JsonNode> functionSelectionInputs)
@@ -2299,7 +2299,7 @@ public sealed class NeuCharWorkflowEngine
         var nodeId = GetString(binding, "nodeId");
         var path = GetString(binding, "path") ?? "$";
         var sourceKind = GetString(binding, "sourceKind") ?? "output";
-        JsonNode value;
+        JsonNode? value;
         if (string.Equals(sourceKind, "function-selection", StringComparison.OrdinalIgnoreCase))
         {
             var parameterName = GetString(binding, "sourceParameterName");
@@ -2389,7 +2389,7 @@ public sealed class NeuCharWorkflowEngine
         return selections;
     }
 
-    private static JsonNode SelectArrayIndex(JsonNode value, int index, string label)
+    private static JsonNode? SelectArrayIndex(JsonNode? value, int index, string label)
     {
         if (value is not JsonArray array || index < 0 || index >= array.Count)
         {
@@ -2398,24 +2398,24 @@ public sealed class NeuCharWorkflowEngine
         return array[index]?.DeepClone();
     }
 
-    private static JsonNode ToJsonNode(object value)
+    private static JsonNode ToJsonNode(object? value)
     {
         if (value == null)
         {
-            return JsonNode.Parse("null");
+            return JsonNode.Parse("null")!;
         }
         try
         {
             return JsonSerializer.SerializeToNode(value, value.GetType(), JsonOptions)
-                   ?? JsonNode.Parse("null");
+                   ?? JsonNode.Parse("null")!;
         }
         catch
         {
-            return JsonValue.Create(value.ToString());
+            return JsonValue.Create(value.ToString())!;
         }
     }
 
-    private static string NodeToText(JsonNode value)
+    private static string NodeToText(JsonNode? value)
     {
         if (value == null)
         {
@@ -2433,7 +2433,7 @@ public sealed class NeuCharWorkflowEngine
         NeuCharWorkflowNode node,
         string status,
         string message,
-        string output,
+        string? output,
         string? outputSchema = null,
         string? input = null,
         WorkflowObjectExecutionReference? objectReference = null)
@@ -2469,13 +2469,13 @@ public sealed class NeuCharWorkflowEngine
         catch { return false; }
     }
 
-    private static string GetString(JsonObject config, string name)
+    private static string? GetString(JsonObject config, string name)
     {
         try { return config?[name]?.GetValue<string>(); }
         catch { return null; }
     }
 
-    private static string GetRuntimeText(JsonObject config, string name)
+    private static string? GetRuntimeText(JsonObject config, string name)
     {
         var value = config?[name];
         if (value is JsonObject obj && obj["$template"] is JsonObject template)
@@ -2485,7 +2485,7 @@ public sealed class NeuCharWorkflowEngine
         return GetString(config, name);
     }
 
-    private static string ValidateNodeTextTemplates(NeuCharWorkflowNode node)
+    private static string? ValidateNodeTextTemplates(NeuCharWorkflowNode node)
     {
         var fields = node.Type.ToLowerInvariant() switch
         {
@@ -2510,7 +2510,7 @@ public sealed class NeuCharWorkflowEngine
         return null;
     }
 
-    private static string ValidateRuntimeTextValue(JsonNode value)
+    private static string? ValidateRuntimeTextValue(JsonNode? value)
     {
         if (value is JsonObject obj && obj["$template"] is JsonObject template)
         {
@@ -2542,10 +2542,10 @@ public sealed class NeuCharWorkflowEngine
         catch { return null; }
     }
 
-    private async Task<ResolvedFunctionReference> ResolveFunctionReferenceAsync(
+    private async Task<ResolvedFunctionReference?> ResolveFunctionReferenceAsync(
         NeuCharWorkflowNode node,
         CancellationToken cancellationToken,
-        IDictionary<string, NeuCharFunctionDescriptor> descriptorCache = null)
+        IDictionary<string, NeuCharFunctionDescriptor>? descriptorCache = null)
     {
         var moduleUid = GetString(node.Config, "moduleUid");
         var functionKey = GetString(node.Config, "functionKey");
@@ -2609,7 +2609,7 @@ public sealed class NeuCharWorkflowEngine
                string.Equals(GetString(left.Config, "functionKey"), GetString(right.Config, "functionKey"), StringComparison.OrdinalIgnoreCase);
     }
 
-    private async Task<string> ValidateFunctionBindingsAsync(
+    private async Task<string?> ValidateFunctionBindingsAsync(
         NeuCharWorkflowGraph graph,
         NeuCharWorkflowNode targetNode,
         NeuCharFunctionDescriptor targetFunction,
@@ -2753,7 +2753,7 @@ public sealed class NeuCharWorkflowEngine
         }
     }
 
-    private static string ValidateCodeAssignments(
+    private static string? ValidateCodeAssignments(
         JsonObject config,
         IReadOnlyCollection<NeuCharWorkflowVariable> workflowVariables)
     {
@@ -2805,7 +2805,7 @@ public sealed class NeuCharWorkflowEngine
     /// fan-out/joins remain rejected because one loop iteration must have one unambiguous
     /// continue/break completion.
     /// </summary>
-    private static string ValidateLoopBoundary(NeuCharWorkflowGraph graph, NeuCharWorkflowNode loop)
+    private static string? ValidateLoopBoundary(NeuCharWorkflowGraph graph, NeuCharWorkflowNode loop)
     {
         var nodeMap = graph.Nodes.ToDictionary(node => node.Id, StringComparer.Ordinal);
         var outgoing = graph.Edges.Where(edge => edge.Source == loop.Id).ToList();
@@ -2842,7 +2842,7 @@ public sealed class NeuCharWorkflowEngine
         return null;
     }
 
-    private static string ValidateLoopScopePath(
+    private static string? ValidateLoopScopePath(
         NeuCharWorkflowGraph graph,
         string loopId,
         string currentId,
@@ -2948,7 +2948,7 @@ public sealed class NeuCharWorkflowEngine
         return ValidateLoopScopePath(graph, loopId, outgoing[0].Target, boundaryId, nodeMap, path);
     }
 
-    private static string FindLoopBoundaryNodeId(NeuCharWorkflowGraph graph, string loopNodeId)
+    private static string? FindLoopBoundaryNodeId(NeuCharWorkflowGraph graph, string loopNodeId)
     {
         var reachable = new HashSet<string>(StringComparer.Ordinal);
         var boundaryIds = new HashSet<string>(StringComparer.Ordinal);
@@ -3028,7 +3028,7 @@ public sealed class NeuCharWorkflowEngine
         return false;
     }
 
-    private static string ValidateLoopCountConfiguration(JsonObject config)
+    private static string? ValidateLoopCountConfiguration(JsonObject config)
     {
         var count = config?["count"];
         if (count is JsonObject { } countObject && countObject["$source"] is JsonObject)
@@ -3060,7 +3060,7 @@ public sealed class NeuCharWorkflowEngine
             : $"循环次数必须为 1 到 {MaxLoopIterations} 的整数，或引用上游单值。";
     }
 
-    private static string ValidateAggregateOutputTemplate(JsonObject config)
+    private static string? ValidateAggregateOutputTemplate(JsonObject config)
     {
         var template = GetRuntimeText(config, "outputTemplate");
         if (string.IsNullOrWhiteSpace(template))
@@ -3107,7 +3107,7 @@ public sealed class NeuCharWorkflowEngine
         }
     }
 
-    private static string ValidateTemplate(
+    private static string? ValidateTemplate(
         Senparc.Ncf.XncfBase.FunctionParameterInfo parameter,
         JsonObject template)
     {
@@ -3170,7 +3170,7 @@ public sealed class NeuCharWorkflowEngine
         return null;
     }
 
-    private static string ValidateTemplateText(JsonObject template)
+    private static string? ValidateTemplateText(JsonObject template)
     {
         if (template["text"] is not JsonValue textValue || !textValue.TryGetValue<string>(out var text))
         {
@@ -3226,7 +3226,7 @@ public sealed class NeuCharWorkflowEngine
         }
     }
 
-    private async Task<string> ValidateNodeBindingsAsync(
+    private async Task<string?> ValidateNodeBindingsAsync(
         NeuCharWorkflowGraph graph,
         NeuCharWorkflowNode targetNode,
         CancellationToken cancellationToken)
@@ -3349,11 +3349,11 @@ public sealed class NeuCharWorkflowEngine
                string.Equals(fieldKind, "output", StringComparison.OrdinalIgnoreCase);
     }
 
-    private async Task<NeuCharFunctionOutputDescriptor> GetNodeOutputDescriptorAsync(
+    private async Task<NeuCharFunctionOutputDescriptor?> GetNodeOutputDescriptorAsync(
         NeuCharWorkflowGraph graph,
         NeuCharWorkflowNode node,
         CancellationToken cancellationToken,
-        ISet<string> visited = null)
+        ISet<string>? visited = null)
     {
         visited ??= new HashSet<string>(StringComparer.Ordinal);
         if (!visited.Add(node.Id))
@@ -3412,7 +3412,7 @@ public sealed class NeuCharWorkflowEngine
                 false,
                 null,
                 fields is { Length: > 0 }
-                    ? fields
+                    ? (IReadOnlyList<NeuCharFunctionOutputFieldDescriptor>)fields
                     : new[] { new NeuCharFunctionOutputFieldDescriptor("$", "Webhook 输入", "object", false, false) });
         }
         if (node.Type is "delay" or "condition" or "loop" or "loop-end" or "code" or "console" or "end")

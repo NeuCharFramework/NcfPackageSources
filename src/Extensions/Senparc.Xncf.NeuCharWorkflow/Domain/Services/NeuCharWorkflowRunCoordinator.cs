@@ -63,10 +63,10 @@ public sealed record NeuCharWorkflowRunSnapshot(
     int WorkflowId,
     bool Running,
     bool? Succeeded,
-    string ErrorMessage,
+    string? ErrorMessage,
     string FinalOutput,
     IReadOnlyList<NeuCharWorkflowRunEvent> Events,
-    IReadOnlyList<Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow.WorkflowHumanInteraction> HumanInteractions = null,
+    IReadOnlyList<Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow.WorkflowHumanInteraction>? HumanInteractions = null,
     int RunningCount = 0);
 
 /// <summary>
@@ -93,15 +93,29 @@ public sealed class NeuCharWorkflowRunCoordinator
         private readonly CancellationTokenSource _manualAbort = new();
         private long _sequence;
 
-        public RunState(Guid runId, int workflowId, int adminUserId, string input, string source, RequestTenantSnapshot? tenant)
+        public RunState(Guid runId, int workflowId, int adminUserId, string input, string source)
         {
             RunId = runId;
             WorkflowId = workflowId;
             AdminUserId = adminUserId;
             Input = input;
             Source = source;
-            Tenant = tenant;
             StartedAt = DateTimeOffset.UtcNow;
+        }
+
+        public static RunState Create(
+            Guid runId,
+            int workflowId,
+            int adminUserId,
+            string input,
+            string source,
+            RequestTenantSnapshot? tenant)
+        {
+            var state = new RunState(runId, workflowId, adminUserId, input, source)
+            {
+                Tenant = tenant
+            };
+            return state;
         }
 
         public Guid RunId { get; }
@@ -109,12 +123,12 @@ public sealed class NeuCharWorkflowRunCoordinator
         public int AdminUserId { get; }
         public string Input { get; }
         public string Source { get; }
-        public RequestTenantSnapshot? Tenant { get; }
+        public RequestTenantSnapshot? Tenant { get; private set; }
         public DateTimeOffset StartedAt { get; }
         public bool Running { get; private set; } = true;
         public bool? Succeeded { get; private set; }
-        public string ErrorMessage { get; private set; }
-        public string FinalOutput { get; private set; }
+        public string? ErrorMessage { get; private set; }
+        public string? FinalOutput { get; private set; }
         public bool IsManuallyAborted { get; private set; }
         public CancellationToken ManualAbortToken => _manualAbort.Token;
 
@@ -176,7 +190,7 @@ public sealed class NeuCharWorkflowRunCoordinator
             }
         }
 
-        public void Complete(bool succeeded, string output, string error)
+        public void Complete(bool succeeded, string? output, string? error)
         {
             lock (_gate)
             {
@@ -219,7 +233,7 @@ public sealed class NeuCharWorkflowRunCoordinator
             }
         }
 
-        private static string Limit(string value, int maxLength) =>
+        private static string? Limit(string? value, int maxLength) =>
             string.IsNullOrEmpty(value) || value.Length <= maxLength
                 ? value
                 : value[..maxLength] + "\n…（输出已截断）";
@@ -246,7 +260,7 @@ public sealed class NeuCharWorkflowRunCoordinator
         int adminUserId,
         string input,
         out Guid runId,
-        out string error,
+        out string? error,
         string source = "manual",
         RequestTenantSnapshot? tenant = null)
     {
@@ -254,7 +268,13 @@ public sealed class NeuCharWorkflowRunCoordinator
         {
             Cleanup();
             runId = Guid.NewGuid();
-            var state = new RunState(runId, workflowId, adminUserId, input ?? string.Empty, NormalizeSource(source), tenant);
+            var state = RunState.Create(
+                runId,
+                workflowId,
+                adminUserId,
+                input ?? string.Empty,
+                NormalizeSource(source),
+                tenant);
             _runs[runId] = state;
             _ = ExecuteAsync(state);
             error = null;
@@ -262,7 +282,7 @@ public sealed class NeuCharWorkflowRunCoordinator
         }
     }
 
-    public NeuCharWorkflowRunSnapshot GetSnapshot(Guid runId, int adminUserId, long afterSequence)
+    public NeuCharWorkflowRunSnapshot? GetSnapshot(Guid runId, int adminUserId, long afterSequence)
     {
         if (!_runs.TryGetValue(runId, out var state) || state.AdminUserId != adminUserId)
         {
