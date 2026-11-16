@@ -174,6 +174,34 @@ test('新标签记录来源标签，并可以返回来源', function () {
     assert.equal(returned.state.activeId, '/admin/systemconfig/index');
 });
 
+test('从模块标签打开新页面时保留模块浮窗上下文和 UID 颜色', function () {
+    let state = initial();
+    state = tabs.openTab(state, '/Admin/XncfModule/Start?uid=sandbox', 'Settings / Execute', 11, 20, shellHref).state;
+    state = tabs.applyMenuTitles(state, [
+        {
+            id: 'module-sandbox',
+            menuName: 'Sandbox',
+            url: '/Admin/XncfModule/Start?uid=sandbox',
+            children: [
+                { id: 'sandbox-setup', menuName: 'Settings / Execute', url: '/Admin/XncfModule/Start?uid=sandbox', children: [] }
+            ]
+        }
+    ], shellHref).state;
+
+    const opened = tabs.openTab(
+        state,
+        '/Admin/NeuCharPivot/Access?moduleUid=sandbox',
+        'NeuCharPivot - Access control',
+        null,
+        30,
+        shellHref);
+    const tab = opened.tab;
+    assert.equal(tab.moduleName, 'Sandbox');
+    assert.equal(tab.moduleUid, 'sandbox');
+    assert.equal(tab.moduleLinks.length, 1);
+    assert.equal(tab.accentColor, tabs.accentColorFromUid('sandbox'));
+});
+
 test('标签超出可视宽度时才显示左右滚动', function () {
     assert.deepEqual(tabs.tabScrollState(0, 200, 200), { canScrollLeft: false, canScrollRight: false });
     assert.deepEqual(tabs.tabScrollState(0, 480, 200), { canScrollLeft: false, canScrollRight: true });

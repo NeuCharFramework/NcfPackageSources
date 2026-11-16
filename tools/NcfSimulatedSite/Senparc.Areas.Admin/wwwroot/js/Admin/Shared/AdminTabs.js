@@ -119,6 +119,18 @@
         }
     }
 
+    function moduleUidFromUrl(rawUrl, baseHref) {
+        if (!rawUrl) {
+            return '';
+        }
+        try {
+            var url = new URL(String(rawUrl), baseHref || 'http://localhost/Admin/Index');
+            return String(url.searchParams.get('moduleUid') || url.searchParams.get('uid') || '').trim();
+        } catch (error) {
+            return '';
+        }
+    }
+
     function hashSegment(value, seed) {
         var hash = (2166136261 ^ seed) >>> 0;
         for (var index = 0; index < value.length; index += 1) {
@@ -429,6 +441,10 @@
             title: hasMenuTitle ? title : titleFromPath(parsed, textOf('untitled', 'Untitled')),
             titleSource: hasMenuTitle ? 'menu' : 'path',
             menuIndex: menuIndex,
+            moduleName: source && source.moduleName,
+            moduleUid: source && source.moduleUid || moduleUidFromUrl(parsed.url, baseHref),
+            moduleLinks: source && source.moduleLinks,
+            accentColor: source && source.moduleUid ? source.accentColor : null,
             sourceTabId: source && source.id,
             sourceTabUrl: source && (source.address || source.url),
             sourceTabTitle: source && source.title,
@@ -1160,6 +1176,14 @@
             if (!result.handled) {
                 console.debug('[NCF][AdminTabs] 交给浏览器打开', url);
                 return false;
+            }
+            var menuList = root.Store && root.Store.state && root.Store.state.navMenu
+                ? root.Store.state.navMenu.navMenuList
+                : null;
+            if (Array.isArray(menuList) && menuList.length) {
+                var applied = applyMenuTitles(result.state, menuList, root.location.href);
+                result.state = applied.state;
+                result.tab = applied.activeTab;
             }
             publish(result.state, 'open');
             return true;
