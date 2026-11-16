@@ -1,16 +1,16 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：NeuCharWorkflowHumanInputController.cs
-    文件功能描述：等待人工输入节点的受控外部恢复接口
+    File name: NeuCharWorkflowHumanInputController.cs
+    File description: 等待人工输入节点的受控外部恢复接口
 
-    创建标识：Senparc - 20260815
+    Created by: Senparc - 20260815
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 支持 Human Input 人工节点暂停与外部恢复
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 支持 Human Input 人工节点暂停与外部恢复
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 增强工作流函数调用、任务控制与回放管理
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 增强工作流函数调用、任务控制与回放管理
 
 ----------------------------------------------------------------*/
 

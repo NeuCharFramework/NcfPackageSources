@@ -1,35 +1,35 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：NeuCharWorkflowRunCoordinator.cs
-    文件功能描述：NeuChar Workflow 测试运行状态、节点进度与 Console 协调器
+    File name: NeuCharWorkflowRunCoordinator.cs
+    File description: NeuChar Workflow 测试运行状态、节点进度与 Console 协调器
 
 
-    创建标识：Senparc - 20260809
+    Created by: Senparc - 20260809
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Modified by: Senparc - 20260813
+    Change description: v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.2.0 增强工作流并行与运行控制
+    Modified by: Senparc - 20260815
+    Change description: v0.2.0 增强工作流并行与运行控制
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 支持 Human Input 人工节点暂停与外部恢复
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 支持 Human Input 人工节点暂停与外部恢复
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 增强工作流函数调用、任务控制与回放管理
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 增强工作流函数调用、任务控制与回放管理
 
-    修改标识：Senparc - 20260909
-    修改描述：v0.4.0 运行来源新增 chat（Chat 触发器聊天会话）
+    Modified by: Senparc - 20260909
+    Change description: v0.4.0 运行来源新增 chat（Chat 触发器聊天会话）
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.4.0 增强 Chat 触发器消息持久化与恢复能力
+    Modified by: Senparc - 20260915
+    Change description: v0.4.0 增强 Chat 触发器消息持久化与恢复能力
 
-    修改标识：Senparc - 20261028
-    修改描述：vNext 运行状态携带发起租户快照，执行作用域恢复租户上下文
+    Modified by: Senparc - 20261028
+    Change description: vNext 运行状态携带发起租户快照，执行作用域恢复租户上下文
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.4.4 Workflow 运行协调器与定时宿主服务恢复/按租户传播租户上下文
+    Modified by: Senparc - 20261103
+    Change description: v0.4.4 Workflow 运行协调器与定时宿主服务恢复/按租户传播租户上下文
 
 ----------------------------------------------------------------*/
 
@@ -138,7 +138,7 @@ public sealed class NeuCharWorkflowRunCoordinator
             {
                 if (!Running)
                 {
-                    error = "该工作流任务已结束，无法中止。";
+                    error = "The Workflow task has ended and cannot be aborted.";
                     return false;
                 }
                 if (IsManuallyAborted)
@@ -299,7 +299,7 @@ public sealed class NeuCharWorkflowRunCoordinator
     {
         if (!_runs.TryGetValue(runId, out var state) || state.AdminUserId != adminUserId)
         {
-            error = "运行任务不存在或不属于当前账号。";
+            error = "The run does not exist or does not belong to the current account.";
             return false;
         }
         return state.TryAbort(out error);
@@ -406,7 +406,7 @@ public sealed class NeuCharWorkflowRunCoordinator
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Workflow 测试运行异常：WorkflowId={WorkflowId}, RunId={RunId}", state.WorkflowId, state.RunId);
+            _logger.LogError(ex, "Workflow test run failed: WorkflowId={WorkflowId}, RunId={RunId}", state.WorkflowId, state.RunId);
             state.Complete(false, null, ex.Message);
         }
     }
@@ -417,7 +417,7 @@ public sealed class NeuCharWorkflowRunCoordinator
         NeuCharWorkflowExecutionLogService executionLogService,
         RunState state)
     {
-        const string message = "手动中止";
+        const string message = "Manually aborted";
         workflow.MarkCompleted(false, message);
         await workflowService.SaveRuntimeCompletedAsync(workflow).ConfigureAwait(false);
 

@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：Register.Area.cs
-    文件功能描述：增强工作流编排、回放、Webhook 与并行执行能力
+    File name: Register.Area.cs
+    File description: Workflow orchestration, replay, Webhook, and parallel execution
 
 
-    创建标识：Senparc - 20260810
+    Created by: Senparc - 20260810
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Modified by: Senparc - 20260813
+    Change description: v0.1.0-preview1 enhance Workflow orchestration, replay, Webhook, and parallel execution
 
 ----------------------------------------------------------------*/
 
@@ -39,11 +39,11 @@ public partial class Register : IAreaRegister, IXncfRazorRuntimeCompilation
     {
         builder.AddRazorPagesOptions(options =>
         {
-            // 所有模块页面只允许具有 AdminMemberClaim 的已登录管理员访问。
+            // All module pages require an authenticated administrator with AdminMemberClaim.
             options.Conventions.AuthorizeAreaFolder("Admin", "/NeuCharWorkflow", NcfAuthorizationPolicyNames.AdminOnly);
         });
 
-        SenparcTrace.SendCustomLog("NeuChar Workflow 启动", "完成独立 XNCF Area 注册与 AdminOnly 授权。");
+        SenparcTrace.SendCustomLog("NeuChar Workflow started", "Registered the standalone XNCF Area and AdminOnly authorization.");
         return builder;
     }
 

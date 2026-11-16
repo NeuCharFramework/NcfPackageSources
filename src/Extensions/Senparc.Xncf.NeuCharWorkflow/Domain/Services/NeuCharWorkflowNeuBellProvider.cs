@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：NeuCharWorkflowNeuBellProvider.cs
-    文件功能描述：Workflow 发送的纽铃提醒与按任务回访消费
+    File name: NeuCharWorkflowNeuBellProvider.cs
+    File description: Workflow notifications and task-based NeuBell consumption
 
 
-    创建标识：Senparc - 20260810
+    Created by: Senparc - 20260810
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Modified by: Senparc - 20260813
+    Change description: v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
 
 ----------------------------------------------------------------*/
 
@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 
-/// <summary>“发送纽铃提醒”节点在点击任务后采用的消费方式。</summary>
+/// <summary>Consumption mode used by a Send NeuBell node after a task is opened.</summary>
 public static class NeuCharWorkflowNeuBellConsumption
 {
     public const string None = "none";
@@ -37,8 +37,9 @@ public static class NeuCharWorkflowNeuBellConsumption
 }
 
 /// <summary>
-/// 仅保存当前 Host 进程内由 Workflow 节点发出的提醒。
-/// 每条提醒链接到具体的 Workflow 运行任务，并可按节点配置选择不消费、消费本条或消费本订阅全部条目。
+/// Stores only notifications emitted by Workflow nodes in the current host process.
+/// Each notification links to a Workflow run and can consume none, this item, or all
+/// items in the subscription according to the node configuration.
 /// </summary>
 public sealed class NeuCharWorkflowNeuBellProvider : INeuBellProvider, INeuBellConsumableProvider
 {
@@ -80,8 +81,8 @@ public sealed class NeuCharWorkflowNeuBellProvider : INeuBellProvider, INeuBellC
             Limit(workflowName, 200, "Workflow"),
             NormalizeRunId(runId),
             Limit(nodeId, 200, "neubell"),
-            Limit(title, 200, "Workflow 提醒"),
-            Limit(summary, 4_000, "工作流已发送一条纽铃提醒。"),
+            Limit(title, 200, "Workflow notification"),
+            Limit(summary, 4_000, "The Workflow sent a NeuBell notification."),
             NeuCharWorkflowNeuBellConsumption.Normalize(consumeMode),
             DateTimeOffset.UtcNow);
         lock (_syncRoot)

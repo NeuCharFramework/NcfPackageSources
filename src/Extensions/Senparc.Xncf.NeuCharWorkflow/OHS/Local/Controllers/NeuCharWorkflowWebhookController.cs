@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：NeuCharWorkflowWebhookController.cs
-    文件功能描述：HTTP 控制器与远程接口
+    File name: NeuCharWorkflowWebhookController.cs
+    File description: HTTP controller and remote endpoints
 
 
-    创建标识：Senparc - 20260810
+    Created by: Senparc - 20260810
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Modified by: Senparc - 20260813
+    Change description: v0.1.0-preview1 enhance Workflow orchestration, replay, Webhook, and parallel execution
 
 ----------------------------------------------------------------*/
 
@@ -29,7 +29,8 @@ using Senparc.Xncf.NeuCharWorkflow.Application.AppServices;
 namespace Senparc.Xncf.NeuCharWorkflow.OHS.Local.Controllers;
 
 /// <summary>
-/// NeuChar Workflow 的匿名 Webhook 入口。真正的工作流仍由服务端协调器执行，浏览器端不会参与运行。
+/// Anonymous Webhook entry point for NeuChar Workflow. The server coordinator executes
+/// the workflow; the browser does not participate in execution.
 /// </summary>
 [ApiController]
 [AllowAnonymous]
@@ -48,7 +49,8 @@ public sealed class NeuCharWorkflowWebhookController : ControllerBase
         _workflowAppService = workflowAppService;
     }
 
-    // 这里不声明 HTTP 动词约束；当配置为 any 时，路由可以接收任意动词，配置为 GET/POST 时由下方校验返回 405。
+    // Do not declare an HTTP verb constraint here. The route accepts any verb when
+    // configured as any; GET/POST restrictions return 405 from the validation below.
     [Route("{workflowId:int}")]
     [RequestSizeLimit(MaxRequestBytes)]
     public async Task<IActionResult> TriggerAsync(int workflowId, CancellationToken cancellationToken)
@@ -108,7 +110,7 @@ public sealed class NeuCharWorkflowWebhookController : ControllerBase
         }
         if (Request.ContentLength > MaxRequestBytes)
         {
-            throw new InvalidDataException("Webhook 请求体不能超过 1 MB。");
+            throw new InvalidDataException("The Webhook request body must not exceed 1 MB.");
         }
 
         using var reader = new StreamReader(Request.Body, Encoding.UTF8, detectEncodingFromByteOrderMarks: true, leaveOpen: true);
@@ -136,7 +138,7 @@ public sealed class NeuCharWorkflowWebhookController : ControllerBase
             }
             catch (JsonException ex)
             {
-                throw new InvalidDataException("Webhook JSON 请求体无效。", ex);
+                throw new InvalidDataException("The Webhook JSON request body is invalid.", ex);
             }
         }
         else

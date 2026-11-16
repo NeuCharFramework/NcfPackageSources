@@ -1,11 +1,11 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：Analytics.cshtml.cs
-    文件功能描述：Workflow 统计分析页面适配器
+    File name: Analytics.cshtml.cs
+    File description: Workflow 统计分析页面适配器
 
-    修改标识：Senparc - 20260829
-    修改描述：v0.3.0 新增工作流分析查询与管理端可视化
+    Modified by: Senparc - 20260829
+    Change description: v0.3.0 新增工作流分析查询与管理端可视化
 
 ----------------------------------------------------------------*/
 

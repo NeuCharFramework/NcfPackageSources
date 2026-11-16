@@ -1,44 +1,44 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：NeuCharWorkflowEngine.cs
-    文件功能描述：新手友好的 NeuChar Workflow 声明式存储与执行引擎
+    File name: NeuCharWorkflowEngine.cs
+    File description: 新手友好的 NeuChar Workflow 声明式存储与执行引擎
 
 
-    创建标识：Senparc - 20260809
+    Created by: Senparc - 20260809
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Modified by: Senparc - 20260813
+    Change description: v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.2.0 增强工作流并行与运行控制
+    Modified by: Senparc - 20260815
+    Change description: v0.2.0 增强工作流并行与运行控制
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 支持 Human Input 人工节点暂停与外部恢复
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 支持 Human Input 人工节点暂停与外部恢复
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 增强工作流函数调用、任务控制与回放管理
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 增强工作流函数调用、任务控制与回放管理
 
-    修改标识：Senparc - 20260829
-    修改描述：v0.3.0 新增工作流分析查询与管理端可视化
+    Modified by: Senparc - 20260829
+    Change description: v0.3.0 新增工作流分析查询与管理端可视化
 
-    修改标识：Senparc - 20260909
-    修改描述：v0.4.0 新增 Chat 触发器（chat-trigger），支持登录用户与访客通过聊天页面启动工作流
+    Modified by: Senparc - 20260909
+    Change description: v0.4.0 新增 Chat 触发器（chat-trigger），支持登录用户与访客通过聊天页面启动工作流
 
-    修改标识：Senparc - 20260913
-    修改描述：v0.4.0 宿主服务定期清理超过保留期的 Chat 消息
+    Modified by: Senparc - 20260913
+    Change description: v0.4.0 宿主服务定期清理超过保留期的 Chat 消息
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.4.0 增强 Chat 触发器消息持久化与恢复能力
+    Modified by: Senparc - 20260915
+    Change description: v0.4.0 增强 Chat 触发器消息持久化与恢复能力
 
-    修改标识：Senparc - 20261028
-    修改描述：vNext 宿主服务定时扫描按租户迭代，触发运行时携带租户快照
+    Modified by: Senparc - 20261028
+    Change description: vNext 宿主服务定时扫描按租户迭代，触发运行时携带租户快照
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.4.4 Workflow 运行协调器与定时宿主服务恢复/按租户传播租户上下文
+    Modified by: Senparc - 20261103
+    Change description: v0.4.4 Workflow 运行协调器与定时宿主服务恢复/按租户传播租户上下文
 
-    修改标识：Senparc - 20261106
-    修改描述：Function 节点在校验和执行前补齐默认值与唯一选项
+    Modified by: Senparc - 20261106
+    Change description: Function 节点在校验和执行前补齐默认值与唯一选项
 
 ----------------------------------------------------------------*/
 

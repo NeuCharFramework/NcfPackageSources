@@ -1,37 +1,37 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：NeuCharWorkflowServices.cs
-    文件功能描述：领域服务与业务流程实现
+    File name: NeuCharWorkflowServices.cs
+    File description: 领域服务与业务流程实现
 
 
-    创建标识：Senparc - 20260810
+    Created by: Senparc - 20260810
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Modified by: Senparc - 20260813
+    Change description: v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.2.0 增强工作流并行与运行控制
+    Modified by: Senparc - 20260815
+    Change description: v0.2.0 增强工作流并行与运行控制
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 增强工作流函数调用、任务控制与回放管理
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 增强工作流函数调用、任务控制与回放管理
 
 -
 
-    修改标识：Senparc - 20260829
-    修改描述：v0.3.0 新增工作流分析查询与管理端可视化
+    Modified by: Senparc - 20260829
+    Change description: v0.3.0 新增工作流分析查询与管理端可视化
 
-    修改标识：Senparc - 20260913
-    修改描述：v0.4.0 新增 Chat 消息服务：历史查询、清理与 30 天保留期
+    Modified by: Senparc - 20260913
+    Change description: v0.4.0 新增 Chat 消息服务：历史查询、清理与 30 天保留期
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.4.0 增强 Chat 触发器消息持久化与恢复能力
+    Modified by: Senparc - 20260915
+    Change description: v0.4.0 增强 Chat 触发器消息持久化与恢复能力
 
-    修改标识：Senparc - 20261001
-    修改描述：通过现有 Repository 查询能力访问数据，运行状态按指定字段保存
+    Modified by: Senparc - 20261001
+    Change description: 通过现有 Repository 查询能力访问数据，运行状态按指定字段保存
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.4.4 维护领域服务与业务流程实现
+    Modified by: Senparc - 20261103
+    Change description: v0.4.4 维护领域服务与业务流程实现
 
 ----------------------------------------------------------------*/
 

@@ -1,15 +1,15 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：NeuCharWorkflowChatController.cs
-    文件功能描述：Chat 触发器的聊天页面与匿名 HTTP 入口
+    File name: NeuCharWorkflowChatController.cs
+    File description: Chat 触发器的聊天页面与匿名 HTTP 入口
 
 
-    创建标识：Senparc - 20260909
-    创建描述：v0.4.0 新增 Chat 触发器
+    Created by: Senparc - 20260909
+    Creation description: v0.4.0 新增 Chat 触发器
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.4.0 增强 Chat 触发器消息持久化与恢复能力
+    Modified by: Senparc - 20260915
+    Change description: v0.4.0 增强 Chat 触发器消息持久化与恢复能力
 
 ----------------------------------------------------------------*/
 

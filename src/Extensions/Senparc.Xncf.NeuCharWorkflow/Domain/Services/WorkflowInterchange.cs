@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：WorkflowInterchange.cs
-    文件功能描述：工作流 JSON/YAML 导入导出
+    File name: WorkflowInterchange.cs
+    File description: 工作流 JSON/YAML 导入导出
     
     
-    创建标识：Senparc - 20261014
+    Created by: Senparc - 20261014
     
-    修改标识：Senparc - 20261021
-    修改描述：v0.4.4 实现工作流 JSON/YAML 导入导出与脱敏校验
+    Modified by: Senparc - 20261021
+    Change description: v0.4.4 实现工作流 JSON/YAML 导入导出与脱敏校验
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.4.4 enhance fine-tuning functionality with artifact tracking and import/export capabilities
+    Modified by: Senparc - 20261103
+    Change description: v0.4.4 enhance fine-tuning functionality with artifact tracking and import/export capabilities
 
 ----------------------------------------------------------------*/
 

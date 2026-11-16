@@ -1,26 +1,26 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：Index.cshtml.cs
-    文件功能描述：增强工作流编排、回放、Webhook 与并行执行能力
+    File name: Index.cshtml.cs
+    File description: 增强工作流编排、回放、Webhook 与并行执行能力
 
 
-    创建标识：Senparc - 20260810
+    Created by: Senparc - 20260810
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Modified by: Senparc - 20260813
+    Change description: v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 支持 Human Input 人工节点暂停与外部恢复
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 支持 Human Input 人工节点暂停与外部恢复
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 增强工作流函数调用、任务控制与回放管理
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 增强工作流函数调用、任务控制与回放管理
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.4.4 管理端支持导出和导入工作流文件
+    Modified by: Senparc - 20261021
+    Change description: v0.4.4 管理端支持导出和导入工作流文件
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.4.4 enhance fine-tuning functionality with artifact tracking and import/export capabilities
+    Modified by: Senparc - 20261103
+    Change description: v0.4.4 enhance fine-tuning functionality with artifact tracking and import/export capabilities
 
 ----------------------------------------------------------------*/
 

@@ -1,26 +1,26 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：WorkflowFunctionSchemaBuilder.cs
-    文件功能描述：领域服务与业务流程实现
+    File name: WorkflowFunctionSchemaBuilder.cs
+    File description: 领域服务与业务流程实现
 
 
-    创建标识：Senparc - 20260810
+    Created by: Senparc - 20260810
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Modified by: Senparc - 20260813
+    Change description: v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.4.4 add bulk file upload functionality to Sandbox Lab
+    Modified by: Senparc - 20261103
+    Change description: v0.4.4 add bulk file upload functionality to Sandbox Lab
 
-    修改标识：Senparc - 20261106
-    修改描述：执行 Function 时补齐已声明的默认值，并只自动选中明确的唯一选项
+    Modified by: Senparc - 20261106
+    Change description: 执行 Function 时补齐已声明的默认值，并只自动选中明确的唯一选项
 
-    修改标识：Senparc - 20261110
-    修改描述：v0.4.6 保留显式传入的空工作流数组，不再把空数组当成未填写
+    Modified by: Senparc - 20261110
+    Change description: v0.4.6 保留显式传入的空工作流数组，不再把空数组当成未填写
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.4.6 保持 Workflow Function 元数据与模块能力兼容
+    Modified by: Senparc - 20261111
+    Change description: v0.4.6 保持 Workflow Function 元数据与模块能力兼容
 
 ----------------------------------------------------------------*/
 

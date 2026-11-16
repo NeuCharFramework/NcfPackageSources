@@ -1,35 +1,35 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：Register.cs
-    文件功能描述：增强工作流编排、回放、Webhook 与并行执行能力
+    File name: Register.cs
+    File description: Workflow orchestration, replay, Webhook, and parallel execution
 
 
-    创建标识：Senparc - 20260810
+    Created by: Senparc - 20260810
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Modified by: Senparc - 20260813
+    Change description: v0.1.0-preview1 enhance Workflow orchestration, replay, Webhook, and parallel execution
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 支持 Human Input 人工节点暂停与外部恢复
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 support Human Input node suspension and external resumption
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 增强工作流函数调用、任务控制与回放管理
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 enhance Workflow function calls, task control, and replay management
 
-    修改标识：Senparc - 20260829
-    修改描述：v0.3.0 新增工作流分析查询与管理端可视化
+    Modified by: Senparc - 20260829
+    Change description: v0.3.0 add Workflow analytics queries and the Admin visualization
 
-    修改标识：Senparc - 20260909
-    修改描述：v0.4.0 新增 Chat 触发器：聊天页面、会话服务与匿名访问
+    Modified by: Senparc - 20260909
+    Change description: v0.4.0 add the Chat trigger, chat page, session service, and anonymous access
 
-    修改标识：Senparc - 20260913
-    修改描述：v0.4.0 注册 Chat 消息仓储与服务依赖注入
+    Modified by: Senparc - 20260913
+    Change description: v0.4.0 register Chat message repositories and service dependencies
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.4.0 增强 Chat 触发器消息持久化与恢复能力
+    Modified by: Senparc - 20260915
+    Change description: v0.4.0 enhance Chat trigger message persistence and recovery
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.4.6 统一 XNCF Register 显示元数据与多语言资源键
+    Modified by: Senparc - 20261111
+    Change description: v0.4.6 unify XNCF Register display metadata and localization keys
 
 ----------------------------------------------------------------*/
 
@@ -64,8 +64,8 @@ public partial class Register : XncfRegisterBase, IXncfRegister
 {
         private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<NeuCharWorkflowResource>(
             "Module",
-            "NeuChar 工作流",
-            "以 Function、系统节点与受控 Agent 组合的安全服务端工作流。");
+            "NeuChar Workflow",
+            "Secure server-side workflows composed of Functions, system nodes, and controlled Agents.");
 
     public override string Name => "Senparc.Xncf.NeuCharWorkflow";
 
@@ -119,8 +119,8 @@ public partial class Register : XncfRegisterBase, IXncfRegister
         services.AddSingleton<NeuCharWorkflowChatSessionService>();
         services.AddScoped<NeuCharWorkflowEngine>();
         services.AddSingleton<NeuCharWorkflowRunCoordinator>();
-        // 仅在没有外部执行模块提供桥接时注册空实现。AgentsManager 无论先于或后于
-        // Workflow 注册，都应成为最终的 HIL 实现。
+        // Register the null bridge only when no external execution module provides one.
+        // AgentsManager must become the final HIL implementation regardless of registration order.
         if (!services.Any(descriptor =>
                 descriptor.ServiceType == typeof(IWorkflowHumanInteractionBridge)))
         {

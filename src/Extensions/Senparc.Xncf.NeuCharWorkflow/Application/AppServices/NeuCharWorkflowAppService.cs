@@ -1,44 +1,44 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：NeuCharWorkflowAppService.cs
-    文件功能描述：增强工作流编排、回放、Webhook 与并行执行能力
+    File name: NeuCharWorkflowAppService.cs
+    File description: 增强工作流编排、回放、Webhook 与并行执行能力
 
 
-    创建标识：Senparc - 20260810
+    Created by: Senparc - 20260810
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Modified by: Senparc - 20260813
+    Change description: v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.2.0 增强工作流并行与运行控制
+    Modified by: Senparc - 20260815
+    Change description: v0.2.0 增强工作流并行与运行控制
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 支持 Human Input 人工节点暂停与外部恢复
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 支持 Human Input 人工节点暂停与外部恢复
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 增强工作流函数调用、任务控制与回放管理
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 增强工作流函数调用、任务控制与回放管理
 
-    修改标识：Senparc - 20260829
-    修改描述：v0.3.0 新增工作流分析查询与管理端可视化
+    Modified by: Senparc - 20260829
+    Change description: v0.3.0 新增工作流分析查询与管理端可视化
 
-    修改标识：Senparc - 20260909
-    修改描述：v0.4.0 新增 Chat 触发器：聊天会话、消息发送与运行状态查询
+    Modified by: Senparc - 20260909
+    Change description: v0.4.0 新增 Chat 触发器：聊天会话、消息发送与运行状态查询
 
-    修改标识：Senparc - 20260913
-    修改描述：v0.4.0 Chat 历史落库持久化，支持跨主机重启恢复
+    Modified by: Senparc - 20260913
+    Change description: v0.4.0 Chat 历史落库持久化，支持跨主机重启恢复
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.4.0 增强 Chat 触发器消息持久化与恢复能力
+    Modified by: Senparc - 20260915
+    Change description: v0.4.0 增强 Chat 触发器消息持久化与恢复能力
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.4.4 提供工作流导入导出接口
+    Modified by: Senparc - 20261021
+    Change description: v0.4.4 提供工作流导入导出接口
 
-    修改标识：Senparc - 20261028
-    修改描述：vNext 启动运行时捕获请求租户快照，执行作用域恢复租户上下文
+    Modified by: Senparc - 20261028
+    Change description: vNext 启动运行时捕获请求租户快照，执行作用域恢复租户上下文
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.4.4 Workflow 运行协调器与定时宿主服务恢复/按租户传播租户上下文
+    Modified by: Senparc - 20261103
+    Change description: v0.4.4 Workflow 运行协调器与定时宿主服务恢复/按租户传播租户上下文
 
 ----------------------------------------------------------------*/
 
