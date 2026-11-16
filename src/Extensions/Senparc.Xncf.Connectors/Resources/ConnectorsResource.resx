@@ -31,4 +31,7 @@
   <data name="Frontend.020" xml:space="preserve"><value>连接器||Connector</value></data>
   <data name="Frontend.021" xml:space="preserve"><value>配置||Configure</value></data>
   <data name="Frontend.022" xml:space="preserve"><value>配置这个连接器||Configure this connector</value></data>
+  <data name="Frontend.023" xml:space="preserve"><value>{0} 个动作||{0} actions</value></data>
+  <data name="Frontend.024" xml:space="preserve"><value>启用后可在 Chat、Workflow 和 Agent 中选择||Available for selection in Chat, Workflow, and Agent after enabling</value></data>
+  <data name="Frontend.025" xml:space="preserve"><value>请选择||Please select</value></data>
 </root>

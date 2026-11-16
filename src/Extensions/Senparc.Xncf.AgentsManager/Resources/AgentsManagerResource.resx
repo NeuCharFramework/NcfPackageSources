@@ -1119,4 +1119,27 @@
   <data name="Frontend.493" xml:space="preserve"><value>本地工具调用已开放。外部请求可能间接触发 Function / MCP 的读写或外部访问，请只对受信任的调用方开放。||Local tool calls are enabled. External requests may indirectly trigger Function/MCP writes or external access; open this only to trusted callers.</value></data>
   <data name="Frontend.494" xml:space="preserve"><value>本地工具调用已开放。外部请求可能间接触发 Function / MCP 的读写或外部访问，请只对受信任的调用方开放。||Local tool calls are enabled. External requests may indirectly trigger Function/MCP writes or external access; open this only to trusted callers.</value></data>
   <data name="Frontend.495" xml:space="preserve"><value>本地工具调用已开放。外部请求可能间接触发 Function / MCP 的读写或外部访问；请只开放最小权限工具并仅信任明确的调用方。||Local tool calls are enabled. External requests may indirectly trigger Function/MCP writes or external access; open only the minimum required tools to explicitly trusted callers.</value></data>
+  <data name="Frontend.496" xml:space="preserve"><value>合计||Total</value></data>
+  <data name="Frontend.497" xml:space="preserve"><value>完成轮次||Completed rounds</value></data>
+  <data name="Frontend.498" xml:space="preserve"><value>知识库||Knowledge base</value></data>
+  <data name="Frontend.499" xml:space="preserve"><value>管理 A2A 发布配置||Manage A2A publishing</value></data>
+  <data name="Frontend.500" xml:space="preserve"><value>发布为 A2A||Publish as A2A</value></data>
+  <data name="Frontend.501" xml:space="preserve"><value>停用||Disable</value></data>
+  <data name="Frontend.502" xml:space="preserve"><value>启用||Enable</value></data>
+  <data name="Frontend.503" xml:space="preserve"><value>完成对话轮数：||Completed conversation rounds:</value></data>
+  <data name="Frontend.504" xml:space="preserve"><value>完成任务：||Completed tasks:</value></data>
+  <data name="Frontend.505" xml:space="preserve"><value>输入 Token：||Input tokens:</value></data>
+  <data name="Frontend.506" xml:space="preserve"><value>输出 Token：||Output tokens:</value></data>
+  <data name="Frontend.507" xml:space="preserve"><value>总 Token：||Total tokens:</value></data>
+  <data name="Frontend.508" xml:space="preserve"><value>平均响应：||Average response:</value></data>
+  <data name="Frontend.509" xml:space="preserve"><value>最后活动：||Last activity:</value></data>
+  <data name="Frontend.510" xml:space="preserve"><value>当前没有可选择的绑定。||No bindings are available for selection.</value></data>
+  <data name="Frontend.511" xml:space="preserve"><value>当前没有可选择的 MCP 端点。||No MCP endpoints are available for selection.</value></data>
+  <data name="Frontend.512" xml:space="preserve"><value>当前已配置 {0} 个 Endpoint||{0} endpoints are configured</value></data>
+  <data name="Frontend.513" xml:space="preserve"><value>正在加载 Group 配置||Loading Group configuration</value></data>
+  <data name="Frontend.514" xml:space="preserve"><value>检测||Inspect</value></data>
+  <data name="Frontend.515" xml:space="preserve"><value>允许 A2A 调用||Allow A2A calls</value></data>
+  <data name="Frontend.516" xml:space="preserve"><value>显式允许||Explicitly allowed</value></data>
+  <data name="Frontend.517" xml:space="preserve"><value>工具与流程绑定||Tool and workflow bindings</value></data>
+  <data name="Frontend.518" xml:space="preserve"><value>一键复制||Copy</value></data>
 </root>

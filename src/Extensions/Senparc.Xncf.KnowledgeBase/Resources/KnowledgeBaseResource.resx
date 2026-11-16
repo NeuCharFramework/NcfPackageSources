@@ -699,4 +699,21 @@
   <data name="Frontend.258" xml:space="preserve"><value>重排模型||Reranking model</value></data>
   <data name="Frontend.259" xml:space="preserve"><value>重排（Re-ranking）||Reranking</value></data>
   <data name="Frontend.260" xml:space="preserve"><value>重排（本次测试）||Reranking (this test)</value></data>
+  <data name="Frontend.261" xml:space="preserve"><value>本次最多返回 {0} 个片段||Return up to {0} segments</value></data>
+  <data name="Frontend.262" xml:space="preserve"><value>{0} 个片段||{0} segments</value></data>
+  <data name="Frontend.263" xml:space="preserve"><value>耗时 {0} ms||Duration: {0} ms</value></data>
+  <data name="Frontend.264" xml:space="preserve"><value>第 {0} 条||Item {0}</value></data>
+  <data name="Frontend.265" xml:space="preserve"><value>重排分||Reranking score</value></data>
+  <data name="Frontend.266" xml:space="preserve"><value>原排名 #{0}||Original rank #{0}</value></data>
+  <data name="Frontend.267" xml:space="preserve"><value>来源：||Source:</value></data>
+  <data name="Frontend.268" xml:space="preserve"><value>（词法分数在融合得分中的占比）||Lexical score share of the fused score</value></data>
+  <data name="Frontend.269" xml:space="preserve"><value>当前已选 {0} 份资料||{0} materials selected</value></data>
+  <data name="Frontend.270" xml:space="preserve"><value>处理完成 {0}||Processed {0}</value></data>
+  <data name="Frontend.271" xml:space="preserve"><value>处理失败 {0}||Failed {0}</value></data>
+  <data name="Frontend.272" xml:space="preserve"><value>正在处理 {0}||Processing {0}</value></data>
+  <data name="Frontend.273" xml:space="preserve"><value>您于 {0} 发起的【{1}】||Your request for [{1}] was started at {0}</value></data>
+  <data name="Frontend.274" xml:space="preserve"><value>共处理 {0} 条，成功 {1} 条，失败 {2} 条||Processed {0}; succeeded {1}; failed {2}</value></data>
+  <data name="Frontend.275" xml:space="preserve"><value>当前知识库配置：||Current knowledge-base configuration:</value></data>
+  <data name="Frontend.276" xml:space="preserve"><value>第 {0} 条 · 相似度||Item {0} · Similarity</value></data>
+  <data name="Frontend.277" xml:space="preserve"><value>· 重排前第 {0} 条||· Original rerank position {0}</value></data>
 </root>

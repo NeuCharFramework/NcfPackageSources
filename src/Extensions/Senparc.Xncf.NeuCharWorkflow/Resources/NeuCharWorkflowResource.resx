@@ -394,4 +394,15 @@
   <data name="Frontend.377" xml:space="preserve"><value>；POST JSON 至少提供||; POST JSON must provide at least</value></data>
   <data name="Frontend.378" xml:space="preserve"><value>当前筛选范围没有运行明细。||No run details match the current filters.</value></data>
   <data name="Frontend.379" xml:space="preserve"><value>运行后，这里会显示校验结果、当前节点、执行状态和 Console 节点输出。||After a run, this area shows validation results, the current node, execution status, and Console node output.</value></data>
+  <data name="Frontend.380" xml:space="preserve"><value>第 {0} 页||Page {0}</value></data>
+  <data name="Frontend.381" xml:space="preserve"><value>参数（{0}/50）||Parameters ({0}/50)</value></data>
+  <data name="Frontend.382" xml:space="preserve"><value>已选择 {0} 个节点||{0} nodes selected</value></data>
+  <data name="Frontend.383" xml:space="preserve"><value>{0} 个后续分支||{0} downstream branches</value></data>
+  <data name="Frontend.384" xml:space="preserve"><value>最多 {0} 个文件||Up to {0} files</value></data>
+  <data name="Frontend.385" xml:space="preserve"><value>允许持有密钥的外部程序提交输入||Allow external programs holding the key to submit input</value></data>
+  <data name="Frontend.386" xml:space="preserve"><value>仅允许后台用户处理||Only admin users may process it</value></data>
+  <data name="Frontend.387" xml:space="preserve"><value>允许使用已配置的插件与 MCP 工具||Allow configured plugins and MCP tools</value></data>
+  <data name="Frontend.388" xml:space="preserve"><value>例如：共 {0} 项：||Example: {0} items:</value></data>
+  <data name="Frontend.389" xml:space="preserve"><value>{0} 个待处理请求||{0} pending requests</value></data>
+  <data name="Frontend.390" xml:space="preserve"><value>显示更多步骤（{0} / {1}）||Show more steps ({0} / {1})</value></data>
 </root>

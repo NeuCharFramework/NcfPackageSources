@@ -183,5 +183,9 @@
   <data name="Frontend.079" xml:space="preserve"><value>销毁||Destroy</value></data>
   <data name="Frontend.080" xml:space="preserve"><value>镜像仓库前缀：||Image registry prefix:</value></data>
   <data name="Frontend.081" xml:space="preserve"><value>集中查看会话状态，并通过模块 Function 创建、执行和清理隔离运行环境。||Review session status in one place and create, execute, and clean isolated environments through module Functions.</value></data>
+  <data name="Frontend.082" xml:space="preserve"><value>状态更新于 {0}||Status updated {0}</value></data>
+  <data name="Frontend.083" xml:space="preserve"><value>{0} 个会话||{0} sessions</value></data>
+  <data name="Frontend.084" xml:space="preserve"><value>暂无沙箱会话||No sandbox sessions</value></data>
+  <data name="Frontend.085" xml:space="preserve"><value>别名仅用于在列表、Function 结果与日志中识别会话；不影响运行环境。||Aliases identify sessions in lists, Function results, and logs; they do not affect the runtime environment.</value></data>
 
 </root>

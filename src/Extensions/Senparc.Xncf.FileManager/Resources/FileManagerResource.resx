@@ -405,4 +405,18 @@
   <data name="Frontend.174" xml:space="preserve"><value>需要过滤的文件类型||File types to filter</value></data>
   <data name="Frontend.175" xml:space="preserve"><value>黑名单扩展名，命中后禁止上传（优先级高于允许列表）。||Blocked extensions; matching files cannot be uploaded and this takes priority over the allow list.</value></data>
   <data name="Frontend.176" xml:space="preserve"><value>默认 50 MB；超过此大小的文件将在上传前被拦截。||The default is 50 MB; larger files are blocked before upload.</value></data>
+  <data name="Frontend.177" xml:space="preserve"><value>取消收藏||Remove from favorites</value></data>
+  <data name="Frontend.178" xml:space="preserve"><value>统计截止时间||Statistics cutoff time</value></data>
+  <data name="Frontend.179" xml:space="preserve"><value>企业文档已使用：||Enterprise documents used:</value></data>
+  <data name="Frontend.180" xml:space="preserve"><value>每行一个扩展名，例如：.docx .xlsx .pdf||One extension per line, for example: .docx .xlsx .pdf</value></data>
+  <data name="Frontend.181" xml:space="preserve"><value>每行一个扩展名，例如：.exe .bat .js||One extension per line, for example: .exe .bat .js</value></data>
+  <data name="Frontend.182" xml:space="preserve"><value>开始上传||Start upload</value></data>
+  <data name="Frontend.183" xml:space="preserve"><value>幻灯片||Slides</value></data>
+  <data name="Frontend.184" xml:space="preserve"><value>编辑文件夹||Edit folder</value></data>
+  <data name="Frontend.185" xml:space="preserve"><value>新建文件夹||New folder</value></data>
+  <data name="Frontend.186" xml:space="preserve"><value>编辑分类||Edit category</value></data>
+  <data name="Frontend.187" xml:space="preserve"><value>新增分类||Add category</value></data>
+  <data name="Frontend.188" xml:space="preserve"><value>编辑标签||Edit tag</value></data>
+  <data name="Frontend.189" xml:space="preserve"><value>新增标签||Add tag</value></data>
+  <data name="Frontend.190" xml:space="preserve"><value>文件预览||File preview</value></data>
 </root>

@@ -1355,4 +1355,11 @@ workspace_write 的 relativePath 必须是非空的 Workspace 相对文件路径
   <data name="Frontend.760" xml:space="preserve"><value>以版本树管理 Skill，以 Draft 作为 AI 生成和外部导入的安全边界||Manage Skills through a version tree, using Draft as the safe boundary for AI generation and external imports</value></data>
   <data name="Frontend.761" xml:space="preserve"><value>可选，例如 excel.report||Optional, for example excel.report</value></data>
   <data name="Frontend.762" xml:space="preserve"><value>备注:||Notes:</value></data>
+  <data name="Frontend.763" xml:space="preserve"><value>检测到 {0} 个变量||Detected {0} variables</value></data>
+  <data name="Frontend.764" xml:space="preserve"><value>共 {0} 个节点||{0} nodes</value></data>
+  <data name="Frontend.765" xml:space="preserve"><value>已选择: {0} 个靶道||Selected: {0} lanes</value></data>
+  <data name="Frontend.766" xml:space="preserve"><value>请输入 Prompt 内容||Enter Prompt content</value></data>
+  <data name="Frontend.767" xml:space="preserve"><value>请输入您的问题... (Ctrl+Enter / Cmd+Enter 发送)||Enter your question... (Ctrl+Enter / Cmd+Enter to send)</value></data>
+  <data name="Frontend.768" xml:space="preserve"><value>请输入您的下一句话... (Ctrl+Enter / Cmd+Enter 发送)||Enter your next message... (Ctrl+Enter / Cmd+Enter to send)</value></data>
+  <data name="Frontend.769" xml:space="preserve"><value>当前 PromptCode 下已有 {0} 个智能体：{1}||{0} agents already exist for the current PromptCode: {1}</value></data>
 </root>

@@ -35,4 +35,6 @@
   <data name="Frontend.027" xml:space="preserve"><value>设备配对与会话||Device pairing and sessions</value></data>
   <data name="Frontend.028" xml:space="preserve"><value>过期时间||Expiration time</value></data>
   <data name="Frontend.029" xml:space="preserve"><value>配对码||Pairing code</value></data>
+  <data name="Frontend.030" xml:space="preserve"><value>当前没有待审批的配对请求||There are no pending pairing requests</value></data>
+  <data name="Frontend.031" xml:space="preserve"><value>当前没有通过配对签发的活动会话||There are no active sessions issued through pairing</value></data>
 </root>

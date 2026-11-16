@@ -209,4 +209,9 @@
   <data name="Frontend.044" xml:space="preserve"><value>编辑||Edit</value></data>
   <data name="Frontend.045" xml:space="preserve"><value>访问端点||Access endpoint</value></data>
   <data name="Frontend.046" xml:space="preserve"><value>输入 Schema（JSON）||Input Schema (JSON)</value></data>
+  <data name="Frontend.047" xml:space="preserve"><value>本站发布的 MCP（{0}）||MCP services published by this site ({0})</value></data>
+  <data name="Frontend.048" xml:space="preserve"><value>暂无匹配的本站 MCP 服务||No matching MCP service published by this site</value></data>
+  <data name="Frontend.049" xml:space="preserve"><value>发现 {0} 个工具（Function）||Found {0} tools (Functions)</value></data>
+  <data name="Frontend.050" xml:space="preserve"><value>连接测试 - {0}||Connection test - {0}</value></data>
+  <data name="Frontend.051" xml:space="preserve"><value>共发现 {0} 个工具（Function）。点击左侧箭头展开查看参数与输入 Schema。||Found {0} tools (Functions). Select the arrow on the left to view parameters and input schemas.</value></data>
 </root>
