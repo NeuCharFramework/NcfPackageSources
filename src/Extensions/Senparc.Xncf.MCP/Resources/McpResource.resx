@@ -163,4 +163,50 @@
     <value>执行 MCP；选择模块时，默认地址为 http://localhost:5080/{Module Name}/sse</value>
   </data>
 
+  <data name="Frontend.001" xml:space="preserve"><value>仅显示已启用||Enabled only</value></data>
+  <data name="Frontend.002" xml:space="preserve"><value>以下为本站运行时已映射的 MCP 服务，只读展示，不属于客户端连接配置。||These are MCP services mapped by this site runtime. They are read-only and are not client connection settings.</value></data>
+  <data name="Frontend.003" xml:space="preserve"><value>例如 1.0（可选）||For example 1.0 (optional)</value></data>
+  <data name="Frontend.004" xml:space="preserve"><value>例如 http://localhost:3001/mcp/sse||For example http://localhost:3001/mcp/sse</value></data>
+  <data name="Frontend.005" xml:space="preserve"><value>保存||Save</value></data>
+  <data name="Frontend.006" xml:space="preserve"><value>保存前测试||Test before saving</value></data>
+  <data name="Frontend.007" xml:space="preserve"><value>关闭||Close</value></data>
+  <data name="Frontend.008" xml:space="preserve"><value>删除||Delete</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>刷新||Refresh</value></data>
+  <data name="Frontend.010" xml:space="preserve"><value>协议版本||Protocol version</value></data>
+  <data name="Frontend.011" xml:space="preserve"><value>参数列表||Parameters</value></data>
+  <data name="Frontend.012" xml:space="preserve"><value>参数名||Parameter name</value></data>
+  <data name="Frontend.013" xml:space="preserve"><value>参数数||Parameter count</value></data>
+  <data name="Frontend.014" xml:space="preserve"><value>发布路由||Published route</value></data>
+  <data name="Frontend.015" xml:space="preserve"><value>取消||Cancel</value></data>
+  <data name="Frontend.016" xml:space="preserve"><value>可选||Optional</value></data>
+  <data name="Frontend.017" xml:space="preserve"><value>可选，保存为 AuthConfig JSON（字段 token）||Optional; save as AuthConfig JSON with a token field</value></data>
+  <data name="Frontend.018" xml:space="preserve"><value>名称||Name</value></data>
+  <data name="Frontend.019" xml:space="preserve"><value>否||No</value></data>
+  <data name="Frontend.020" xml:space="preserve"><value>启用||Enabled</value></data>
+  <data name="Frontend.021" xml:space="preserve"><value>复制||Copy</value></data>
+  <data name="Frontend.022" xml:space="preserve"><value>客户端连接配置||Client connection configuration</value></data>
+  <data name="Frontend.023" xml:space="preserve"><value>工具名称||Tool name</value></data>
+  <data name="Frontend.024" xml:space="preserve"><value>必填||Required</value></data>
+  <data name="Frontend.025" xml:space="preserve"><value>所属模块||Owning module</value></data>
+  <data name="Frontend.026" xml:space="preserve"><value>描述||Description</value></data>
+  <data name="Frontend.027" xml:space="preserve"><value>搜索名称 / 地址 / 描述||Search name / address / description</value></data>
+  <data name="Frontend.028" xml:space="preserve"><value>搜索服务 / 模块 / 地址||Search service / module / address</value></data>
+  <data name="Frontend.029" xml:space="preserve"><value>操作||Actions</value></data>
+  <data name="Frontend.030" xml:space="preserve"><value>放大查看||Zoom in</value></data>
+  <data name="Frontend.031" xml:space="preserve"><value>新增 Endpoint||Add endpoint</value></data>
+  <data name="Frontend.032" xml:space="preserve"><value>是||Yes</value></data>
+  <data name="Frontend.033" xml:space="preserve"><value>最近测试||Last tested</value></data>
+  <data name="Frontend.034" xml:space="preserve"><value>服务名称||Service name</value></data>
+  <data name="Frontend.035" xml:space="preserve"><value>未测试||Not tested</value></data>
+  <data name="Frontend.036" xml:space="preserve"><value>未获取到工具列表。请检查端点地址、协议类型与鉴权信息后重试。||No tool list was returned. Check the endpoint, protocol, and authentication, then retry.</value></data>
+  <data name="Frontend.037" xml:space="preserve"><value>标题||Title</value></data>
+  <data name="Frontend.038" xml:space="preserve"><value>测试||Test</value></data>
+  <data name="Frontend.039" xml:space="preserve"><value>测试当前配置连接||Test the current configuration</value></data>
+  <data name="Frontend.040" xml:space="preserve"><value>用于唯一标识该 MCP 端点||Uniquely identifies this MCP endpoint</value></data>
+  <data name="Frontend.041" xml:space="preserve"><value>端点地址||Endpoint address</value></data>
+  <data name="Frontend.042" xml:space="preserve"><value>端点类型||Endpoint type</value></data>
+  <data name="Frontend.043" xml:space="preserve"><value>类型||Type</value></data>
+  <data name="Frontend.044" xml:space="preserve"><value>编辑||Edit</value></data>
+  <data name="Frontend.045" xml:space="preserve"><value>访问端点||Access endpoint</value></data>
+  <data name="Frontend.046" xml:space="preserve"><value>输入 Schema（JSON）||Input Schema (JSON)</value></data>
 </root>
