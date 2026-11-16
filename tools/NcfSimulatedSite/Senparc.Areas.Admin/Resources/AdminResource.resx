@@ -1117,4 +1117,46 @@
   <data name="Frontend.184" xml:space="preserve"><value>面板||Panel</value></data>
   <data name="Frontend.185" xml:space="preserve"><value>面板名称||Panel name</value></data>
   <data name="Frontend.186" xml:space="preserve"><value>页面标识||Page key</value></data>
+  <data name="Frontend.187" xml:space="preserve"><value>Function 状态||Function status</value></data>
+  <data name="Frontend.188" xml:space="preserve"><value>Function：全部||Function: all</value></data>
+  <data name="Frontend.189" xml:space="preserve"><value>Function：可用||Function: available</value></data>
+  <data name="Frontend.190" xml:space="preserve"><value>Function：已移除||Function: removed</value></data>
+  <data name="Frontend.191" xml:space="preserve"><value>LoopTask 状态||LoopTask status</value></data>
+  <data name="Frontend.192" xml:space="preserve"><value>LoopTask：上次失败||LoopTask: last failed</value></data>
+  <data name="Frontend.193" xml:space="preserve"><value>LoopTask：倒计时||LoopTask: countdown</value></data>
+  <data name="Frontend.194" xml:space="preserve"><value>LoopTask：全部||LoopTask: all</value></data>
+  <data name="Frontend.195" xml:space="preserve"><value>LoopTask：已停用||LoopTask: disabled</value></data>
+  <data name="Frontend.196" xml:space="preserve"><value>LoopTask：待执行||LoopTask: pending</value></data>
+  <data name="Frontend.197" xml:space="preserve"><value>LoopTask：执行中||LoopTask: running</value></data>
+  <data name="Frontend.198" xml:space="preserve"><value>LoopTask：未设置||LoopTask: not configured</value></data>
+  <data name="Frontend.199" xml:space="preserve"><value>NeuCharPivot 模块导航||NeuCharPivot module navigation</value></data>
+  <data name="Frontend.200" xml:space="preserve"><value>NeuCharPivot 聚合||NeuCharPivot aggregate</value></data>
+  <data name="Frontend.201" xml:space="preserve"><value>Pivot 执行||Pivot runs</value></data>
+  <data name="Frontend.202" xml:space="preserve"><value>Workflow 关联||Workflow links</value></data>
+  <data name="Frontend.203" xml:space="preserve"><value>Workflow 触发||Workflow triggers</value></data>
+  <data name="Frontend.204" xml:space="preserve"><value>Workflow：全部||Workflow: all</value></data>
+  <data name="Frontend.205" xml:space="preserve"><value>Workflow：已关联||Workflow: linked</value></data>
+  <data name="Frontend.206" xml:space="preserve"><value>Workflow：未关联||Workflow: unlinked</value></data>
+  <data name="Frontend.207" xml:space="preserve"><value>上次失败||Last failure</value></data>
+  <data name="Frontend.208" xml:space="preserve"><value>可用 / 总数||Available / total</value></data>
+  <data name="Frontend.209" xml:space="preserve"><value>启用 / 已配置||Enabled / configured</value></data>
+  <data name="Frontend.210" xml:space="preserve"><value>当前版本已移除||Removed in the current version</value></data>
+  <data name="Frontend.211" xml:space="preserve"><value>成功 / 失败||Succeeded / failed</value></data>
+  <data name="Frontend.212" xml:space="preserve"><value>执行||Run</value></data>
+  <data name="Frontend.213" xml:space="preserve"><value>执行中 / 倒计时||Running / countdown</value></data>
+  <data name="Frontend.214" xml:space="preserve"><value>执行状态||Run status</value></data>
+  <data name="Frontend.215" xml:space="preserve"><value>搜索模块、Function 或 Workflow||Search modules, Functions, or Workflows</value></data>
+  <data name="Frontend.216" xml:space="preserve"><value>模块||Module</value></data>
+  <data name="Frontend.217" xml:space="preserve"><value>模块导航||Module navigation</value></data>
+  <data name="Frontend.218" xml:space="preserve"><value>模块已关闭||Module disabled</value></data>
+  <data name="Frontend.219" xml:space="preserve"><value>模块状态||Module status</value></data>
+  <data name="Frontend.220" xml:space="preserve"><value>模块状态：不可用||Module status: unavailable</value></data>
+  <data name="Frontend.221" xml:space="preserve"><value>模块状态：全部||Module status: all</value></data>
+  <data name="Frontend.222" xml:space="preserve"><value>模块状态：可用||Module status: available</value></data>
+  <data name="Frontend.223" xml:space="preserve"><value>没有匹配的 NeuCharPivot||No matching NeuCharPivot entries</value></data>
+  <data name="Frontend.224" xml:space="preserve"><value>聚合||Aggregate</value></data>
+  <data name="Frontend.225" xml:space="preserve"><value>该模块当前未安装或未开启，Function 仅保留配置，不允许执行。||This module is not installed or enabled. Functions keep their configuration but cannot run.</value></data>
+  <data name="Frontend.226" xml:space="preserve"><value>请调整筛选条件，或先进入任意模块的“设置/执行 → NeuCharPivot”生成操作面板。||Adjust the filters, or open Settings / Execute → NeuCharPivot in any module to generate an operation panel first.</value></data>
+  <data name="Frontend.227" xml:space="preserve"><value>重置筛选||Reset filters</value></data>
+  <data name="Frontend.228" xml:space="preserve"><value>集中查看模块面板、参数化 Function、LoopTask 倒计时和完成后触发的 Workflow。||Review module panels, parameterized Functions, LoopTask countdowns, and post-completion Workflows in one place.</value></data>
 </root>
