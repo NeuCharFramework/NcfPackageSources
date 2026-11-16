@@ -863,6 +863,7 @@ li {
     color: #606266;
     background: #f5f7fa;
     border: 1px solid #e4e7ed;
+    border-top: 3px solid var(--admin-tab-accent, #c0c4cc);
     border-bottom-color: #e4e7ed;
     border-radius: 8px 8px 0 0;
     box-sizing: border-box;
@@ -874,7 +875,7 @@ li {
     color: #303133;
     background: #fff;
     border-bottom-color: #fff;
-    box-shadow: inset 0 2px 0 #667eea;
+    box-shadow: inset 0 2px 0 var(--admin-tab-accent, #667eea);
 }
 
 .admin-page-tab-main,
@@ -886,6 +887,8 @@ li {
 }
 
 .admin-page-tab-main {
+    display: inline-flex;
+    align-items: center;
     min-width: 0;
     height: 32px;
     padding: 0 4px 0 12px;
@@ -894,6 +897,15 @@ li {
     line-height: 32px;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.admin-page-tab-accent-dot {
+    flex: 0 0 auto;
+    width: 7px;
+    height: 7px;
+    margin-right: 7px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, .72);
 }
 
 /* 首页没有关闭按钮，左右留白要一样，文字才在标签中间。 */
@@ -922,6 +934,104 @@ li {
 .admin-page-tab-close:hover,
 .admin-page-tab-close:focus {
     background: rgba(102, 126, 234, .12);
+}
+
+.admin-page-tab-popover {
+    padding: 0 !important;
+    border: 1px solid #dfe5ef !important;
+    border-radius: 10px !important;
+    box-shadow: 0 12px 30px rgba(31, 45, 61, .16) !important;
+}
+
+.admin-page-tab-popover-content {
+    padding: 12px;
+    color: #303133;
+}
+
+.admin-page-tab-popover-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    padding-bottom: 9px;
+    border-bottom: 1px solid #ebeef5;
+}
+
+.admin-page-tab-module-dot {
+    flex: 0 0 auto;
+    width: 10px;
+    height: 10px;
+    margin-top: 4px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px rgba(64, 158, 255, .10);
+}
+
+.admin-page-tab-popover-heading strong,
+.admin-page-tab-popover-heading small {
+    display: block;
+}
+
+.admin-page-tab-popover-heading strong {
+    font-size: 13px;
+    line-height: 18px;
+}
+
+.admin-page-tab-popover-heading small {
+    max-width: 228px;
+    margin-top: 2px;
+    overflow: hidden;
+    color: #909399;
+    font-size: 10px;
+    line-height: 14px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-page-tab-popover-current {
+    padding: 9px 0 6px;
+    color: #606266;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.admin-page-tab-popover-links {
+    display: grid;
+    gap: 3px;
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+.admin-page-tab-popover-links button {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    width: 100%;
+    min-height: 28px;
+    padding: 4px 7px;
+    color: #606266;
+    text-align: left;
+    background: transparent;
+    border: 0;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.admin-page-tab-popover-links button:hover,
+.admin-page-tab-popover-links button:focus {
+    color: #409eff;
+    background: #f0f7ff;
+    outline: none;
+}
+
+.admin-page-tab-popover-links button.is-current {
+    color: #303133;
+    background: #f5f7fa;
+    font-weight: 600;
+}
+
+.admin-page-tab-popover-links button i {
+    color: #a8abb2;
+    font-size: 12px;
 }
 
 .admin-content.is-tab-frame {

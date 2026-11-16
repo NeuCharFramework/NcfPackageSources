@@ -102,5 +102,64 @@
   <data name="Page.Random" xml:space="preserve">
     <value>Random</value>
   </data>
+  <data name="Frontend.001" xml:space="preserve"><value>Extension Modules||Extension Modules</value></data>
+  <data name="Frontend.002" xml:space="preserve"><value>Panel||Panel</value></data>
+  <data name="Frontend.003" xml:space="preserve"><value>Sandbox panel||Sandbox panel</value></data>
+  <data name="Frontend.004" xml:space="preserve"><value>Environment setup||Environment setup</value></data>
+  <data name="Frontend.005" xml:space="preserve"><value>Sandbox runtime overview||Sandbox runtime overview</value></data>
+  <data name="Frontend.006" xml:space="preserve"><value>Registered sessions||Registered sessions</value></data>
+  <data name="Frontend.007" xml:space="preserve"><value>Running||Running</value></data>
+  <data name="Frontend.008" xml:space="preserve"><value>Interactive sessions||Interactive sessions</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>Refresh||Refresh</value></data>
+  <data name="Frontend.010" xml:space="preserve"><value>All Functions||All Functions</value></data>
+  <data name="Frontend.011" xml:space="preserve"><value>Environment docs||Environment docs</value></data>
+  <data name="Frontend.012" xml:space="preserve"><value>Session overview||Session overview</value></data>
+  <data name="Frontend.013" xml:space="preserve"><value>All sessions||All sessions</value></data>
+  <data name="Frontend.014" xml:space="preserve"><value>Registered||Registered</value></data>
+  <data name="Frontend.015" xml:space="preserve"><value>Currently available||Currently available</value></data>
+  <data name="Frontend.016" xml:space="preserve"><value>Notebook / preview||Notebook / preview</value></data>
+  <data name="Frontend.017" xml:space="preserve"><value>Needs attention||Needs attention</value></data>
+  <data name="Frontend.018" xml:space="preserve"><value>Failed or expired||Failed or expired</value></data>
+  <data name="Frontend.019" xml:space="preserve"><value>Function quick actions||Function quick actions</value></data>
+  <data name="Frontend.020" xml:space="preserve"><value>Open module Function||Open module Function</value></data>
+  <data name="Frontend.021" xml:space="preserve"><value>Create sandbox||Create sandbox</value></data>
+  <data name="Frontend.022" xml:space="preserve"><value>Execute code||Execute code</value></data>
+  <data name="Frontend.023" xml:space="preserve"><value>Destroy sandbox||Destroy sandbox</value></data>
+  <data name="Frontend.024" xml:space="preserve"><value>Runtime environment||Runtime environment</value></data>
+  <data name="Frontend.025" xml:space="preserve"><value>Lifecycle||Lifecycle</value></data>
+  <data name="Frontend.026" xml:space="preserve"><value>Automatic TTL cleanup||Automatic TTL cleanup</value></data>
+  <data name="Frontend.027" xml:space="preserve"><value>Check environment||Check environment</value></data>
+  <data name="Frontend.028" xml:space="preserve"><value>Sandbox sessions||Sandbox sessions</value></data>
+  <data name="Frontend.029" xml:space="preserve"><value>Template||Template</value></data>
+  <data name="Frontend.030" xml:space="preserve"><value>Alias||Alias</value></data>
+  <data name="Frontend.031" xml:space="preserve"><value>Runtime||Runtime</value></data>
+  <data name="Frontend.032" xml:space="preserve"><value>Status||Status</value></data>
+  <data name="Frontend.033" xml:space="preserve"><value>Port||Port</value></data>
+  <data name="Frontend.034" xml:space="preserve"><value>Additional ports||Additional ports</value></data>
+  <data name="Frontend.035" xml:space="preserve"><value>Access||Access</value></data>
+  <data name="Frontend.036" xml:space="preserve"><value>Open interactive session||Open interactive session</value></data>
+  <data name="Frontend.037" xml:space="preserve"><value>Open||Open</value></data>
+  <data name="Frontend.038" xml:space="preserve"><value>Actions||Actions</value></data>
+  <data name="Frontend.039" xml:space="preserve"><value>Edit alias||Edit alias</value></data>
+  <data name="Frontend.040" xml:space="preserve"><value>Set alias||Set alias</value></data>
+  <data name="Frontend.041" xml:space="preserve"><value>Extend or edit TTL||Extend or edit TTL</value></data>
+  <data name="Frontend.042" xml:space="preserve"><value>Destroy runtime||Destroy runtime</value></data>
+  <data name="Frontend.043" xml:space="preserve"><value>Permanently delete session record||Permanently delete session record</value></data>
+  <data name="Frontend.044" xml:space="preserve"><value>Session alias||Session alias</value></data>
+  <data name="Frontend.045" xml:space="preserve"><value>Leave blank to clear the alias||Leave blank to clear the alias</value></data>
+  <data name="Frontend.046" xml:space="preserve"><value>Cancel||Cancel</value></data>
+  <data name="Frontend.047" xml:space="preserve"><value>Save||Save</value></data>
+  <data name="Frontend.048" xml:space="preserve"><value>Edit TTL||Edit TTL</value></data>
+  <data name="Frontend.049" xml:space="preserve"><value>Scheduled cleanup||Scheduled cleanup</value></data>
+  <data name="Frontend.050" xml:space="preserve"><value>Keep forever||Keep forever</value></data>
+  <data name="Frontend.051" xml:space="preserve"><value>Local check||Local check</value></data>
+  <data name="Frontend.052" xml:space="preserve"><value>Check again||Check again</value></data>
+  <data name="Frontend.053" xml:space="preserve"><value>Available||Available</value></data>
+  <data name="Frontend.054" xml:space="preserve"><value>Unavailable||Unavailable</value></data>
+  <data name="Frontend.055" xml:space="preserve"><value>Image registry prefix||Image registry prefix</value></data>
+  <data name="Frontend.056" xml:space="preserve"><value>Not configured (public default images are used; see the documentation)||Not configured (public default images are used; see the documentation)</value></data>
+  <data name="Frontend.057" xml:space="preserve"><value>Manual configuration checklist (summary)||Manual configuration checklist (summary)</value></data>
+  <data name="Frontend.058" xml:space="preserve"><value>Open Sandbox panel||Open Sandbox panel</value></data>
+  <data name="Frontend.059" xml:space="preserve"><value>Documentation: ||Documentation: </value></data>
 
 </root>

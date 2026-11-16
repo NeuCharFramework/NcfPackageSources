@@ -102,5 +102,64 @@
   <data name="Page.Random" xml:space="preserve">
     <value>随机</value>
   </data>
+  <data name="Frontend.001" xml:space="preserve"><value>扩展模块||Extension Modules</value></data>
+  <data name="Frontend.002" xml:space="preserve"><value>面板||Panel</value></data>
+  <data name="Frontend.003" xml:space="preserve"><value>沙箱面板||Sandbox panel</value></data>
+  <data name="Frontend.004" xml:space="preserve"><value>环境准备||Environment setup</value></data>
+  <data name="Frontend.005" xml:space="preserve"><value>沙箱运行概览||Sandbox runtime overview</value></data>
+  <data name="Frontend.006" xml:space="preserve"><value>已登记会话||Registered sessions</value></data>
+  <data name="Frontend.007" xml:space="preserve"><value>运行中||Running</value></data>
+  <data name="Frontend.008" xml:space="preserve"><value>交互式会话||Interactive sessions</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>刷新||Refresh</value></data>
+  <data name="Frontend.010" xml:space="preserve"><value>全部 Function||All Functions</value></data>
+  <data name="Frontend.011" xml:space="preserve"><value>环境文档||Environment docs</value></data>
+  <data name="Frontend.012" xml:space="preserve"><value>会话概览||Session overview</value></data>
+  <data name="Frontend.013" xml:space="preserve"><value>全部会话||All sessions</value></data>
+  <data name="Frontend.014" xml:space="preserve"><value>已登记||Registered</value></data>
+  <data name="Frontend.015" xml:space="preserve"><value>当前可用||Currently available</value></data>
+  <data name="Frontend.016" xml:space="preserve"><value>Notebook / 预览||Notebook / preview</value></data>
+  <data name="Frontend.017" xml:space="preserve"><value>待处理||Needs attention</value></data>
+  <data name="Frontend.018" xml:space="preserve"><value>失败或已过期||Failed or expired</value></data>
+  <data name="Frontend.019" xml:space="preserve"><value>Function 快捷操作||Function quick actions</value></data>
+  <data name="Frontend.020" xml:space="preserve"><value>打开模块 Function||Open module Function</value></data>
+  <data name="Frontend.021" xml:space="preserve"><value>创建沙箱||Create sandbox</value></data>
+  <data name="Frontend.022" xml:space="preserve"><value>执行代码||Execute code</value></data>
+  <data name="Frontend.023" xml:space="preserve"><value>销毁沙箱||Destroy sandbox</value></data>
+  <data name="Frontend.024" xml:space="preserve"><value>运行环境||Runtime environment</value></data>
+  <data name="Frontend.025" xml:space="preserve"><value>生命周期||Lifecycle</value></data>
+  <data name="Frontend.026" xml:space="preserve"><value>TTL 自动回收||Automatic TTL cleanup</value></data>
+  <data name="Frontend.027" xml:space="preserve"><value>检查环境||Check environment</value></data>
+  <data name="Frontend.028" xml:space="preserve"><value>沙箱会话||Sandbox sessions</value></data>
+  <data name="Frontend.029" xml:space="preserve"><value>模板||Template</value></data>
+  <data name="Frontend.030" xml:space="preserve"><value>别名||Alias</value></data>
+  <data name="Frontend.031" xml:space="preserve"><value>运行时||Runtime</value></data>
+  <data name="Frontend.032" xml:space="preserve"><value>状态||Status</value></data>
+  <data name="Frontend.033" xml:space="preserve"><value>端口||Port</value></data>
+  <data name="Frontend.034" xml:space="preserve"><value>附加端口||Additional ports</value></data>
+  <data name="Frontend.035" xml:space="preserve"><value>访问||Access</value></data>
+  <data name="Frontend.036" xml:space="preserve"><value>打开交互式会话||Open interactive session</value></data>
+  <data name="Frontend.037" xml:space="preserve"><value>打开||Open</value></data>
+  <data name="Frontend.038" xml:space="preserve"><value>操作||Actions</value></data>
+  <data name="Frontend.039" xml:space="preserve"><value>修改别名||Edit alias</value></data>
+  <data name="Frontend.040" xml:space="preserve"><value>设置别名||Set alias</value></data>
+  <data name="Frontend.041" xml:space="preserve"><value>延长或修改 TTL||Extend or edit TTL</value></data>
+  <data name="Frontend.042" xml:space="preserve"><value>销毁运行环境||Destroy runtime</value></data>
+  <data name="Frontend.043" xml:space="preserve"><value>永久删除会话记录||Permanently delete session record</value></data>
+  <data name="Frontend.044" xml:space="preserve"><value>会话别名||Session alias</value></data>
+  <data name="Frontend.045" xml:space="preserve"><value>留空表示清除别名||Leave blank to clear the alias</value></data>
+  <data name="Frontend.046" xml:space="preserve"><value>取消||Cancel</value></data>
+  <data name="Frontend.047" xml:space="preserve"><value>保存||Save</value></data>
+  <data name="Frontend.048" xml:space="preserve"><value>修改 TTL||Edit TTL</value></data>
+  <data name="Frontend.049" xml:space="preserve"><value>定时回收||Scheduled cleanup</value></data>
+  <data name="Frontend.050" xml:space="preserve"><value>永久保持||Keep forever</value></data>
+  <data name="Frontend.051" xml:space="preserve"><value>本机检测||Local check</value></data>
+  <data name="Frontend.052" xml:space="preserve"><value>重新检测||Check again</value></data>
+  <data name="Frontend.053" xml:space="preserve"><value>可用||Available</value></data>
+  <data name="Frontend.054" xml:space="preserve"><value>不可用||Unavailable</value></data>
+  <data name="Frontend.055" xml:space="preserve"><value>镜像仓库前缀||Image registry prefix</value></data>
+  <data name="Frontend.056" xml:space="preserve"><value>未配置（使用公开默认镜像；详见文档）||Not configured (public default images are used; see the documentation)</value></data>
+  <data name="Frontend.057" xml:space="preserve"><value>手动配置清单（摘要）||Manual configuration checklist (summary)</value></data>
+  <data name="Frontend.058" xml:space="preserve"><value>进入沙箱面板||Open Sandbox panel</value></data>
+  <data name="Frontend.059" xml:space="preserve"><value>文档链接：||Documentation: </value></data>
 
 </root>

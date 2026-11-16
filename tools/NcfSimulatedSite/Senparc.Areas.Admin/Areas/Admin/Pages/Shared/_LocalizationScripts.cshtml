@@ -1,15 +1,57 @@
 @using System.Text.Json
+@using System.Reflection
+@using Microsoft.Extensions.Localization
+@using System.Collections.Generic
+@inject IStringLocalizerFactory LocalizationFactory
 @{
     var translations = AR.GetAllStrings(includeParentCultures: true)
         .GroupBy(item => item.Name)
         .ToDictionary(group => group.Key, group => group.First().Value);
     var translationsJson = JsonSerializer.Serialize(translations);
-    var sourceTranslations = AR.GetAllStrings(includeParentCultures: true)
-        .Where(item => item.Name.StartsWith("Frontend.", StringComparison.Ordinal))
-        .Select(item => item.Value.Split(new[] { "||" }, 2, StringSplitOptions.None))
-        .Where(parts => parts.Length == 2)
-        .GroupBy(parts => parts[0])
-        .ToDictionary(group => group.Key, group => group.First()[1]);
+    var sourceTranslations = new Dictionary<string, string>(StringComparer.Ordinal);
+    void AddSourceTranslations(IStringLocalizer localizer)
+    {
+        foreach (var item in localizer.GetAllStrings(includeParentCultures: true)
+                     .Where(item => item.Name.StartsWith("Frontend.", StringComparison.Ordinal)))
+        {
+            var parts = item.Value.Split(new[] { "||" }, 2, StringSplitOptions.None);
+            if (parts.Length == 2 && !sourceTranslations.ContainsKey(parts[0]))
+            {
+                sourceTranslations[parts[0]] = parts[1];
+            }
+        }
+    }
+
+    AddSourceTranslations(AR);
+    var resourceTypes = AppDomain.CurrentDomain.GetAssemblies()
+        .Where(assembly => !assembly.IsDynamic)
+        .SelectMany(assembly =>
+        {
+            try
+            {
+                return assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException exception)
+            {
+                return exception.Types.Where(type => type != null).Select(type => type!);
+            }
+        })
+        .Where(type => type is not null
+                       && type.Name.EndsWith("Resource", StringComparison.Ordinal)
+                       && type.Namespace?.StartsWith("Senparc.", StringComparison.Ordinal) == true
+                       && type != typeof(Senparc.Areas.Admin.AdminResource))
+        .OrderBy(type => type!.FullName, StringComparer.Ordinal);
+    foreach (var resourceType in resourceTypes)
+    {
+        try
+        {
+            AddSourceTranslations(LocalizationFactory.Create(resourceType!));
+        }
+        catch
+        {
+            // A module resource must never prevent the Admin layout from rendering.
+        }
+    }
 }
 <script>
     window.ncfI18n = Object.assign(window.ncfI18n || {}, @Html.Raw(translationsJson));

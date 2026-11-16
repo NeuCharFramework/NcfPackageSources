@@ -107,6 +107,41 @@
         }
     }
 
+    function uidFromUrl(rawUrl, baseHref) {
+        if (!rawUrl) {
+            return '';
+        }
+        try {
+            var url = new URL(String(rawUrl), baseHref || 'http://localhost/Admin/Index');
+            return String(url.searchParams.get('uid') || '').trim();
+        } catch (error) {
+            return '';
+        }
+    }
+
+    function accentColorFromUid(uid) {
+        var value = String(uid || '').trim();
+        if (!value) {
+            return '#c0c4cc';
+        }
+        var hash = 0;
+        for (var index = 0; index < value.length; index += 1) {
+            hash = ((hash << 5) - hash + value.charCodeAt(index)) | 0;
+        }
+        var hue = Math.abs(hash) % 360;
+        return 'hsl(' + hue + ' 58% 52%)';
+    }
+
+    function cloneModuleLinks(links) {
+        return (links || []).map(function (link) {
+            return {
+                id: link.id,
+                title: link.title,
+                url: link.url
+            };
+        });
+    }
+
     function cloneState(state) {
         return {
             enabled: !!state.enabled,
@@ -120,6 +155,10 @@
                     frameUrl: tab.frameUrl,
                     title: tab.title,
                     menuIndex: tab.menuIndex || null,
+                    moduleName: tab.moduleName || '',
+                    moduleUid: tab.moduleUid || '',
+                    moduleLinks: cloneModuleLinks(tab.moduleLinks),
+                    accentColor: tab.accentColor || '#c0c4cc',
                     isShell: !!tab.isShell,
                     loaded: !!tab.loaded,
                     openedAt: tab.openedAt || 0
@@ -161,6 +200,10 @@
             frameUrl: parsed.frameUrl,
             title: isShell ? (options.homeTitle || untitled) : (options.title || titleFromPath(parsed, untitled)),
             menuIndex: options.menuIndex ? String(options.menuIndex) : null,
+            moduleName: options.moduleName || '',
+            moduleUid: options.moduleUid || '',
+            moduleLinks: cloneModuleLinks(options.moduleLinks),
+            accentColor: options.accentColor || accentColorFromUid(options.moduleUid),
             isShell: isShell,
             loaded: !isShell && !!options.loaded,
             openedAt: options.openedAt || 0
@@ -209,6 +252,10 @@
                 shellId: shell.id,
                 title: item.title,
                 menuIndex: item.menuIndex,
+                moduleName: item.moduleName,
+                moduleUid: item.moduleUid,
+                moduleLinks: item.moduleLinks,
+                accentColor: item.accentColor,
                 untitled: untitled,
                 homeTitle: homeTitle,
                 openedAt: item.openedAt || 0,
@@ -396,29 +443,90 @@
         });
     }
 
+    function collectModuleLinks(moduleNode, baseHref) {
+        var links = [];
+        var seen = {};
+        function collect(node) {
+            if (!node) {
+                return;
+            }
+            if (node.url) {
+                var parsed = parseAdminUrl(node.url, baseHref || 'http://localhost/Admin/Index');
+                if (parsed && parsed.hijack && !seen[parsed.id]) {
+                    seen[parsed.id] = true;
+                    links.push({
+                        id: node.id,
+                        title: node.menuName || titleFromPath(parsed, 'Untitled'),
+                        url: node.url
+                    });
+                }
+            }
+            (node.children || []).forEach(collect);
+        }
+        collect(moduleNode);
+        return links;
+    }
+
+    function buildMenuIndex(menuList, baseHref) {
+        var byUrl = {};
+        function visit(list, ancestors) {
+            (list || []).forEach(function (item) {
+                var chain = (ancestors || []).concat([item]);
+                var moduleNode = null;
+                for (var index = chain.length - 1; index >= 0; index -= 1) {
+                    if (uidFromUrl(chain[index] && chain[index].url, baseHref)
+                        && ((chain[index].children || []).length > 0 || index === 0)) {
+                        moduleNode = chain[index];
+                        break;
+                    }
+                }
+                if (!moduleNode) {
+                    for (var fallbackIndex = chain.length - 1; fallbackIndex >= 0; fallbackIndex -= 1) {
+                        if (uidFromUrl(chain[fallbackIndex] && chain[fallbackIndex].url, baseHref)) {
+                            moduleNode = chain[fallbackIndex];
+                            break;
+                        }
+                    }
+                }
+                if (item && item.url) {
+                    var parsed = parseAdminUrl(item.url, baseHref || 'http://localhost/Admin/Index');
+                    if (parsed && parsed.hijack) {
+                        var moduleUid = uidFromUrl(moduleNode && moduleNode.url, baseHref) || uidFromUrl(item.url, baseHref);
+                        byUrl[parsed.id] = {
+                            item: item,
+                            moduleName: moduleNode && moduleNode.menuName ? moduleNode.menuName : '',
+                            moduleUid: moduleUid,
+                            moduleLinks: moduleNode ? collectModuleLinks(moduleNode, baseHref) : []
+                        };
+                    }
+                }
+                visit(item && item.children, chain);
+            });
+        }
+        visit(menuList, []);
+        return byUrl;
+    }
+
     function applyMenuTitles(state, menuList, baseHref) {
         var current = cloneState(state);
-        var byUrl = {};
-        eachMenu(menuList, function (item) {
-            if (!item || !item.url) {
-                return;
-            }
-            var parsed = parseAdminUrl(item.url, baseHref || 'http://localhost/Admin/Index');
-            if (!parsed || !parsed.hijack) {
-                return;
-            }
-            byUrl[parsed.id] = item;
-        });
+        var byUrl = buildMenuIndex(menuList, baseHref);
         current.tabs.forEach(function (tab) {
-            var item = byUrl[tab.id];
-            if (!item) {
+            var metadata = byUrl[tab.id];
+            if (!metadata) {
                 return;
             }
+            var item = metadata.item;
             if (item.menuName && !tab.isShell) {
                 tab.title = item.menuName;
             }
             if (item.id !== undefined && item.id !== null) {
                 tab.menuIndex = String(item.id);
+            }
+            if (!tab.isShell && metadata.moduleName) {
+                tab.moduleName = metadata.moduleName;
+                tab.moduleUid = metadata.moduleUid;
+                tab.moduleLinks = cloneModuleLinks(metadata.moduleLinks);
+                tab.accentColor = accentColorFromUid(metadata.moduleUid);
             }
         });
         var active = null;
@@ -551,6 +659,10 @@
                         address: tab.address || tab.url,
                         title: tab.title,
                         menuIndex: tab.menuIndex,
+                        moduleName: tab.moduleName || '',
+                        moduleUid: tab.moduleUid || '',
+                        moduleLinks: cloneModuleLinks(tab.moduleLinks),
+                        accentColor: tab.accentColor || '#c0c4cc',
                         openedAt: tab.openedAt
                     };
                 })
@@ -584,6 +696,10 @@
                     frameUrl: tab.frameUrl,
                     title: tab.title,
                     menuIndex: tab.menuIndex || null,
+                    moduleName: tab.moduleName || '',
+                    moduleUid: tab.moduleUid || '',
+                    moduleLinks: cloneModuleLinks(tab.moduleLinks),
+                    accentColor: tab.accentColor || accentColorFromUid(tab.moduleUid),
                     isShell: !!tab.isShell,
                     loaded: !!tab.loaded,
                     openedAt: tab.openedAt || 0
@@ -595,6 +711,10 @@
             found.frameUrl = tab.frameUrl;
             found.title = tab.title;
             found.menuIndex = tab.menuIndex || null;
+            found.moduleName = tab.moduleName || '';
+            found.moduleUid = tab.moduleUid || '';
+            found.moduleLinks = cloneModuleLinks(tab.moduleLinks);
+            found.accentColor = tab.accentColor || accentColorFromUid(tab.moduleUid);
             found.isShell = !!tab.isShell;
             found.loaded = !!found.loaded || !!tab.loaded;
             found.openedAt = tab.openedAt || found.openedAt || 0;
@@ -1037,6 +1157,7 @@
         activateTab: activateTab,
         closeTab: closeTab,
         applyMenuTitles: applyMenuTitles,
+        accentColorFromUid: accentColorFromUid,
         tabScrollState: tabScrollState,
         shellPageHash: shellPageHash,
         shellAddress: shellAddress,

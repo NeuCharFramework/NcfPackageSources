@@ -156,14 +156,59 @@
                                 <div v-for="tab in Store.state.adminTabs.tabs"
                                      :key="tab.id"
                                      class="admin-page-tab"
-                                     :class="{ 'is-active': tab.id === Store.state.adminTabs.activeId }">
-                                    <button type="button"
+                                     :class="{ 'is-active': tab.id === Store.state.adminTabs.activeId }"
+                                     :style="{ '--admin-tab-accent': tab.accentColor || '#c0c4cc' }">
+                                    <el-popover v-if="!tab.isShell && tab.moduleName"
+                                                placement="bottom-start"
+                                                trigger="hover"
+                                                width="280"
+                                                popper-class="admin-page-tab-popover"
+                                                :open-delay="180">
+                                        <div class="admin-page-tab-popover-content">
+                                            <div class="admin-page-tab-popover-heading">
+                                                <span class="admin-page-tab-module-dot"
+                                                      :style="{ backgroundColor: tab.accentColor || '#c0c4cc' }"></span>
+                                                <div>
+                                                    <strong>{{ tab.moduleName }}</strong>
+                                                    <small v-if="tab.moduleUid">{{ tab.moduleUid }}</small>
+                                                </div>
+                                            </div>
+                                            <div class="admin-page-tab-popover-current">{{ tab.title }}</div>
+                                            <div v-if="tab.moduleLinks && tab.moduleLinks.length"
+                                                 class="admin-page-tab-popover-links">
+                                                <button v-for="link in tab.moduleLinks"
+                                                        :key="link.id || link.url"
+                                                        type="button"
+                                                        :class="{ 'is-current': link.title === tab.title }"
+                                                        @@click.stop="ncfOpenAdminPage(link.url, link.title, link.id)">
+                                                    <i class="el-icon-right"></i>
+                                                    <span>{{ link.title }}</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <button slot="reference"
+                                                type="button"
+                                                class="admin-page-tab-main"
+                                                role="tab"
+                                                :aria-selected="tab.id === Store.state.adminTabs.activeId ? 'true' : 'false'"
+                                                :title="tab.moduleName + ' · ' + tab.title"
+                                                @@click="ncfActivateAdminTab(tab.id)"
+                                                @@auxclick="ncfAuxCloseAdminTab(tab.id, $event)">
+                                            <span class="admin-page-tab-accent-dot"
+                                                  :style="{ backgroundColor: tab.accentColor || '#c0c4cc' }"></span>
+                                            <span>{{ tab.title }}</span>
+                                        </button>
+                                    </el-popover>
+                                    <button v-else
+                                            type="button"
                                             class="admin-page-tab-main"
                                             role="tab"
                                             :aria-selected="tab.id === Store.state.adminTabs.activeId ? 'true' : 'false'"
                                             :title="tab.title"
                                             @@click="ncfActivateAdminTab(tab.id)"
                                             @@auxclick="ncfAuxCloseAdminTab(tab.id, $event)">
+                                        <span class="admin-page-tab-accent-dot"
+                                              :style="{ backgroundColor: tab.accentColor || '#c0c4cc' }"></span>
                                         <span>{{ tab.title }}</span>
                                     </button>
                                     <button v-if="!tab.isShell && Store.state.adminTabs.tabs.length > 1"

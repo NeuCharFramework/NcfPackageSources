@@ -1281,6 +1281,44 @@
   <data name="Function.PromptRange.ViewCodes.Description" xml:space="preserve">
     <value>查看所有靶场和靶道的 PromptCode，可用于在 AgentsManager 中快速创建智能体</value>
   </data>
+  <data name="Frontend.700" xml:space="preserve"><value>Skill 管理||Skill management</value></data>
+  <data name="Frontend.701" xml:space="preserve"><value>提示词靶场||Prompt Range</value></data>
+  <data name="Frontend.702" xml:space="preserve"><value>刷新||Refresh</value></data>
+  <data name="Frontend.703" xml:space="preserve"><value>AI 创建 / 修改 Skill||Create / edit Skill with AI</value></data>
+  <data name="Frontend.704" xml:space="preserve"><value>导入 Skill||Import Skill</value></data>
+  <data name="Frontend.705" xml:space="preserve"><value>所有外部导入和 AI 生成的 Skill 都会先进入 Draft。请先预览内容、确认权限并完成测试，再发布给 Agent 或 AdminChat。||All externally imported and AI-generated Skills enter Draft first. Preview the content, confirm permissions, and test before publishing to Agent or AdminChat.</value></data>
+  <data name="Frontend.706" xml:space="preserve"><value>Skill 总数||Total Skills</value></data>
+  <data name="Frontend.707" xml:space="preserve"><value>待审核 Draft||Drafts awaiting review</value></data>
+  <data name="Frontend.708" xml:space="preserve"><value>已发布版本||Published versions</value></data>
+  <data name="Frontend.709" xml:space="preserve"><value>预览内容||Preview content</value></data>
+  <data name="Frontend.710" xml:space="preserve"><value>名称||Name</value></data>
+  <data name="Frontend.711" xml:space="preserve"><value>当前版本||Current version</value></data>
+  <data name="Frontend.712" xml:space="preserve"><value>状态||Status</value></data>
+  <data name="Frontend.713" xml:space="preserve"><value>操作||Actions</value></data>
+  <data name="Frontend.714" xml:space="preserve"><value>预览||Preview</value></data>
+  <data name="Frontend.715" xml:space="preserve"><value>发布||Publish</value></data>
+  <data name="Frontend.716" xml:space="preserve"><value>本地上传||Local upload</value></data>
+  <data name="Frontend.717" xml:space="preserve"><value>支持 skill.json 位于根目录、平铺文件，或包含外层文件夹的 ZIP。单个 ZIP 最大 50 MB。||Supports a root skill.json, flat files, or a ZIP with an outer folder. Each ZIP is limited to 50 MB.</value></data>
+  <data name="Frontend.718" xml:space="preserve"><value>GitHub 文件夹||GitHub folder</value></data>
+  <data name="Frontend.719" xml:space="preserve"><value>需要包含 SKILL.md 或 skprompt.txt。导入后会自动转换为 PromptRange Skill 包。||The folder must contain SKILL.md or skprompt.txt. It is converted to a PromptRange Skill package after import.</value></data>
+  <data name="Frontend.720" xml:space="preserve"><value>导入并生成 Draft||Import and create Draft</value></data>
+  <data name="Frontend.721" xml:space="preserve"><value>需求描述||Requirement description</value></data>
+  <data name="Frontend.722" xml:space="preserve"><value>描述 Skill 的目标、输入、输出和边界||Describe the Skill goal, inputs, outputs, and boundaries</value></data>
+  <data name="Frontend.723" xml:space="preserve"><value>可选||Optional</value></data>
+  <data name="Frontend.724" xml:space="preserve"><value>显示名称||Display name</value></data>
+  <data name="Frontend.725" xml:space="preserve"><value>修改现有 Skill||Edit existing Skill</value></data>
+  <data name="Frontend.726" xml:space="preserve"><value>不选择则创建新的 Skill||Leave empty to create a new Skill</value></data>
+  <data name="Frontend.727" xml:space="preserve"><value>基准版本||Base version</value></data>
+  <data name="Frontend.728" xml:space="preserve"><value>默认使用当前版本||Use the current version by default</value></data>
+  <data name="Frontend.729" xml:space="preserve"><value>生成模型||Generation model</value></data>
+  <data name="Frontend.730" xml:space="preserve"><value>选择 AIKernel Chat 模型||Select an AIKernel Chat model</value></data>
+  <data name="Frontend.731" xml:space="preserve"><value>生成 Draft Skill||Generate Draft Skill</value></data>
+  <data name="Frontend.732" xml:space="preserve"><value>Skill 内容预览||Skill content preview</value></data>
+  <data name="Frontend.733" xml:space="preserve"><value>当前版本没有可预览的文件||The current version has no previewable files</value></data>
+  <data name="Frontend.734" xml:space="preserve"><value>此文件类型不支持在线预览，仅展示文件信息。||This file type cannot be previewed online; only file information is shown.</value></data>
+  <data name="Frontend.735" xml:space="preserve"><value>确认发布当前 Skill 版本吗？||Publish the current Skill version?</value></data>
+  <data name="Frontend.736" xml:space="preserve"><value>发布确认||Publish confirmation</value></data>
+  <data name="Frontend.737" xml:space="preserve"><value>Skill 已发布||Skill published</value></data>
   <data name="AdminChat.SystemPrompt.Default" xml:space="preserve">
     <value>你是 NeuCharFramework 管理后台首页中的 AI 智能助手。
 请使用简洁、准确、可执行的中文回答用户问题。若信息不足，请明确指出缺失信息。

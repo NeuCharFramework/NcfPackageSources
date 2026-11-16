@@ -95,6 +95,50 @@ test('菜单名称会回填到相同地址的标签', function () {
     assert.equal(applied.activeTab.menuIndex, '9');
 });
 
+test('XNCF 标签会携带模块名称、注册页面和稳定的 UID 颜色', function () {
+    const state = tabs.openTab(initial(), '/Admin/Sandbox/Index?uid=sandbox', 'Sandbox panel', null, 20, shellHref).state;
+    const applied = tabs.applyMenuTitles(state, [
+        {
+            id: 'module-sandbox',
+            menuName: 'Sandbox',
+            url: '/Admin/XncfModule/Start?uid=sandbox',
+            children: [
+                { id: 'sandbox-setup', menuName: 'Settings / Execute', url: '/Admin/XncfModule/Start?uid=sandbox', children: [] },
+                { id: 'sandbox-home', menuName: 'Sandbox panel', url: '/Admin/Sandbox/Index?uid=sandbox', children: [] },
+                { id: 'sandbox-setup-page', menuName: 'Environment setup', url: '/Admin/Sandbox/Setup?uid=sandbox', children: [] }
+            ]
+        }
+    ], shellHref);
+    const tab = applied.activeTab;
+    assert.equal(tab.moduleName, 'Sandbox');
+    assert.equal(tab.moduleUid, 'sandbox');
+    assert.equal(tab.moduleLinks.length, 3);
+    assert.equal(tab.moduleLinks.some(function (link) { return link.title === 'Environment setup'; }), true);
+    assert.equal(tab.accentColor, tabs.accentColorFromUid('sandbox'));
+    assert.match(tab.accentColor, /^hsl\(/);
+});
+
+test('刷新后保留 XNCF 标签的模块上下文和 accent 色', function () {
+    const restored = initial({
+        storedTabs: [{
+            url: '/Admin/Sandbox/Index?uid=sandbox',
+            title: 'Sandbox panel',
+            moduleName: 'Sandbox',
+            moduleUid: 'sandbox',
+            moduleLinks: [
+                { id: 'sandbox-home', title: 'Sandbox panel', url: '/Admin/Sandbox/Index?uid=sandbox' }
+            ],
+            accentColor: tabs.accentColorFromUid('sandbox')
+        }],
+        openUrl: '/Admin/Sandbox/Index?uid=sandbox'
+    });
+    const tab = restored.tabs.find(function (item) { return !item.isShell; });
+    assert.equal(tab.moduleName, 'Sandbox');
+    assert.equal(tab.moduleUid, 'sandbox');
+    assert.equal(tab.moduleLinks.length, 1);
+    assert.equal(tab.accentColor, tabs.accentColorFromUid('sandbox'));
+});
+
 test('标签超出可视宽度时才显示左右滚动', function () {
     assert.deepEqual(tabs.tabScrollState(0, 200, 200), { canScrollLeft: false, canScrollRight: false });
     assert.deepEqual(tabs.tabScrollState(0, 480, 200), { canScrollLeft: false, canScrollRight: true });
