@@ -955,4 +955,64 @@
     <value>删除整个对话及其所有数据</value>
   </data>
 
+  <data name="Frontend.332" xml:space="preserve"><value>A2A Agent Card 仅公开名称、描述和技能；不会公开 Prompt、密钥或内部工具信息。||An A2A Agent Card exposes only the name, description, and skills; it does not expose Prompts, secrets, or internal tools.</value></data>
+  <data name="Frontend.333" xml:space="preserve"><value>A2A 对外服务||A2A public service</value></data>
+  <data name="Frontend.334" xml:space="preserve"><value>A2A 远程||Remote A2A</value></data>
+  <data name="Frontend.335" xml:space="preserve"><value>A2A 远程智能体||Remote A2A Agent</value></data>
+  <data name="Frontend.336" xml:space="preserve"><value>A2A:Secrets:密钥名||A2A:Secrets:key-name</value></data>
+  <data name="Frontend.337" xml:space="preserve"><value>Agent Card 名称||Agent Card name</value></data>
+  <data name="Frontend.338" xml:space="preserve"><value>Agent Card 地址||Agent Card URL</value></data>
+  <data name="Frontend.339" xml:space="preserve"><value>Agent 模板没有授权的连接器，即使在这里选中也不会被调用。||The Agent template has no authorized connectors; selecting one here will not call it.</value></data>
+  <data name="Frontend.340" xml:space="preserve"><value>Group 已配置 Human 成员时，会在轮到 Human 时暂停等待文本回复。||When a Group has Human members, it pauses for a text reply when the Human turn is reached.</value></data>
+  <data name="Frontend.341" xml:space="preserve"><value>HIL 等级||HIL level</value></data>
+  <data name="Frontend.342" xml:space="preserve"><value>Human 不调用模型；该绑定用于保留其系统 Agent 的任务策略配置，默认跟随组任务。||Human does not call a model; this binding preserves the system Agent task policy and follows the group task by default.</value></data>
+  <data name="Frontend.343" xml:space="preserve"><value>Human 参与者||Human participant</value></data>
+  <data name="Frontend.344" xml:space="preserve"><value>Human 回合||Human turn</value></data>
+  <data name="Frontend.345" xml:space="preserve"><value>L0 全自动（插件/MCP 自动执行）||L0 fully automatic (plugins/MCP execute automatically)</value></data>
+  <data name="Frontend.346" xml:space="preserve"><value>L1 风险分层（MCP 默认审批）||L1 risk-based approval (MCP default approval)</value></data>
+  <data name="Frontend.347" xml:space="preserve"><value>L2 工具审批（所有工具先确认）||L2 tool approval (confirm every tool first)</value></data>
+  <data name="Frontend.348" xml:space="preserve"><value>L3 Human 参与者 + 工具审批||L3 Human participant + tool approval</value></data>
+  <data name="Frontend.349" xml:space="preserve"><value>MCP 工具权限||MCP tool permissions</value></data>
+  <data name="Frontend.350" xml:space="preserve"><value>上下文共享||Context sharing</value></data>
+  <data name="Frontend.351" xml:space="preserve"><value>不授权任何连接器||Do not authorize any connector</value></data>
+  <data name="Frontend.352" xml:space="preserve"><value>不绑定知识库||Do not bind a knowledge base</value></data>
+  <data name="Frontend.353" xml:space="preserve"><value>不选则本次不使用连接器||Leave unselected to use no connector this time</value></data>
+  <data name="Frontend.354" xml:space="preserve"><value>个性化参数||Personalized parameters</value></data>
+  <data name="Frontend.355" xml:space="preserve"><value>中维护。||maintained here.</value></data>
+  <data name="Frontend.356" xml:space="preserve"><value>仅任务指令||Task instructions only</value></data>
+  <data name="Frontend.357" xml:space="preserve"><value>从 MCP 列表选择||Select from the MCP list</value></data>
+  <data name="Frontend.358" xml:space="preserve"><value>从 PromptRange 继承||Inherit from PromptRange</value></data>
+  <data name="Frontend.359" xml:space="preserve"><value>以下端点来自 MCP 模块的登记列表，勾选后会以“名称 + URL”方式加入当前配置，可随时移除。||These endpoints come from the MCP module registry. Select one to add it as name + URL to the current configuration; it can be removed at any time.</value></data>
+  <data name="Frontend.360" xml:space="preserve"><value>任务指令 + 当前轮关键结论||Task instructions + key conclusion from the current turn</value></data>
+  <data name="Frontend.361" xml:space="preserve"><value>任务描述与执行策略||Task description and execution strategy</value></data>
+  <data name="Frontend.362" xml:space="preserve"><value>使用当前明文 Prompt 和所选 Chat 模型创建靶场，完成一次打靶及 AI 评分后，自动切换为靶场级引用。||Create a Prompt Range from the current plain-text Prompt and selected Chat model, run it once, score it with AI, and switch automatically to a range-level reference.</value></data>
+  <data name="Frontend.363" xml:space="preserve"><value>例如 X-A2A-Token||For example X-A2A-Token</value></data>
+  <data name="Frontend.364" xml:space="preserve"><value>例如 X-API-Key||For example X-API-Key</value></data>
+  <data name="Frontend.365" xml:space="preserve"><value>例如 partner-ncf||For example partner-ncf</value></data>
+  <data name="Frontend.366" xml:space="preserve"><value>例如 research-agent||For example research-agent</value></data>
+  <data name="Frontend.367" xml:space="preserve"><value>例如：外部研究助手||For example: external research assistant</value></data>
+  <data name="Frontend.368" xml:space="preserve"><value>供远程系统选择 Agent 使用；不要填写 Prompt 或内部信息||Used by remote systems to choose an Agent; do not enter Prompts or internal information.</value></data>
+  <data name="Frontend.369" xml:space="preserve"><value>保 存||Save</value></data>
+  <data name="Frontend.370" xml:space="preserve"><value>保存||Save</value></data>
+  <data name="Frontend.371" xml:space="preserve"><value>允许本地工具调用||Allow local tool calls</value></data>
+  <data name="Frontend.372" xml:space="preserve"><value>入站鉴权||Inbound authentication</value></data>
+  <data name="Frontend.373" xml:space="preserve"><value>公开描述||Public description</value></data>
+  <data name="Frontend.374" xml:space="preserve"><value>公开标识||Public identifier</value></data>
+  <data name="Frontend.375" xml:space="preserve"><value>兼容 Plugin||Plugin compatibility</value></data>
+  <data name="Frontend.376" xml:space="preserve"><value>兼容强制审批||Compatible forced approval</value></data>
+  <data name="Frontend.377" xml:space="preserve"><value>兼容总开关：强制所有工具调用前审批||Compatibility switch: require approval before every tool call</value></data>
+  <data name="Frontend.378" xml:space="preserve"><value>兼容旧组：完整历史（仅无远程成员）||Legacy group compatibility: full history (only without remote members)</value></data>
+  <data name="Frontend.379" xml:space="preserve"><value>删除智能体||Delete Agent</value></data>
+  <data name="Frontend.380" xml:space="preserve"><value>刷新数据||Refresh data</value></data>
+  <data name="Frontend.381" xml:space="preserve"><value>刷新状态||Refresh status</value></data>
+  <data name="Frontend.382" xml:space="preserve"><value>加入 Human 文本参与者||Add a Human text participant</value></data>
+  <data name="Frontend.383" xml:space="preserve"><value>发布后将生成标准 Agent Card，供任意兼容 A2A 的系统发现和调用。||Publishing creates a standard Agent Card discoverable and callable by any A2A-compatible system.</value></data>
+  <data name="Frontend.384" xml:space="preserve"><value>发布本地 Agent 为 A2A 服务||Publish local Agent as an A2A service</value></data>
+  <data name="Frontend.385" xml:space="preserve"><value>只允许小写字母、数字和连字符；地址在启用后保持稳定。||Only lowercase letters, digits, and hyphens are allowed; the address remains stable after enablement.</value></data>
+  <data name="Frontend.386" xml:space="preserve"><value>只填写密钥名，不填写令牌正文||Enter only the secret name, not the token value</value></data>
+  <data name="Frontend.387" xml:space="preserve"><value>只显示当前管理员可用的 Workflow；保存 Agent 或 Workflow 时会再次检查权限与循环引用。||Only Workflows available to the current administrator are shown; permissions and circular references are checked again when saving an Agent or Workflow.</value></data>
+  <data name="Frontend.388" xml:space="preserve"><value>只有这里选中的连接器能被这个 Agent 调用。留空表示没有外部工具权限。||Only connectors selected here can be called by this Agent. Leave empty to grant no external tool access.</value></data>
+  <data name="Frontend.389" xml:space="preserve"><value>可提及的组员||Mentionable group members</value></data>
+  <data name="Frontend.390" xml:space="preserve"><value>可选，仅管理员可见||Optional; visible to administrators only</value></data>
+  <data name="Frontend.391" xml:space="preserve"><value>名称||Name</value></data>
 </root>
