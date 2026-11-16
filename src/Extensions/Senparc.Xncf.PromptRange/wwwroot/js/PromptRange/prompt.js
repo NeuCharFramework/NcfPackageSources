@@ -744,7 +744,7 @@ var app = new Vue({
             const editor = this.$refs.promptEditor;
             if (!editor || this.isComposing) return;
             
-            const currentText = editor.innerText || '';
+            const currentText = this.getEditorText();
             // 如果编辑器内容与content不一致（外部赋值），更新编辑器
             if (currentText !== newVal && newVal !== oldVal) {
                 this.$nextTick(() => {
@@ -754,7 +754,7 @@ var app = new Vue({
                     }
                     const latestEditor = this.$refs.promptEditor;
                     if (!latestEditor) return;
-                    if ((latestEditor.innerText || '') === newVal) return;
+                    if (this.getEditorText() === newVal) return;
                     console.log('[prompt editor] apply external content to editor, length:', (newVal || '').length);
                     const html = this.generateHighlightHTML(newVal);
                     latestEditor.innerHTML = html;
@@ -1929,7 +1929,23 @@ var app = new Vue({
       
         //放大输入区域
        
+        preservePromptContentBeforeAmplification() {
+            const editor = this.$refs.promptEditor;
+            if (!editor || this.isComposing || editor.offsetParent === null) {
+                return this.content;
+            }
+
+            const editorText = this.getEditorText();
+            if (editorText || !this.content) {
+                this.assignContentFromEditor(editorText);
+            }
+            return editorText || this.content;
+        },
+
         Amplification(boxClicked) {
+            const promptContent = this.preservePromptContentBeforeAmplification();
+            this.clearHighlightTimer();
+
             if (this.lastClickedBox === boxClicked) {
                 // 再次点击同一个区域，恢复所有区域
                 this.box1Hidden = false;
@@ -1963,6 +1979,12 @@ var app = new Vue({
                 }
                 this.lastClickedBox = boxClicked;
             }
+
+            this.$nextTick(() => {
+                const editor = this.$refs.promptEditor;
+                if (!editor || !promptContent || this.getEditorText() === promptContent) return;
+                editor.innerHTML = this.generateHighlightHTML(promptContent);
+            });
             },
         style(val) {
             const length = 10,
@@ -9590,7 +9612,26 @@ var app = new Vue({
         getEditorText() {
             const editor = this.$refs.promptEditor;
             if (!editor) return '';
-            return editor.innerText || '';
+
+            // 隐藏的 contenteditable 在部分浏览器中 innerText 会返回空字符串，
+            // 但 textContent 仍保留编辑器中的实际内容。
+            const innerText = editor.innerText || '';
+            if (innerText || !editor.textContent) {
+                return innerText;
+            }
+
+            let text = '';
+            const appendText = (node) => {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    text += node.textContent || '';
+                } else if (node.nodeName === 'BR') {
+                    text += '\n';
+                } else if (node.nodeType === Node.ELEMENT_NODE) {
+                    Array.from(node.childNodes).forEach(appendText);
+                }
+            };
+            Array.from(editor.childNodes).forEach(appendText);
+            return text;
         },
         
         // 生成带高亮的HTML
@@ -9940,7 +9981,8 @@ var app = new Vue({
             const editor = this.$refs.promptEditor;
             if (!editor) return;
 
-            const text = this.getEditorText();
+            const hasFocus = document.activeElement === editor;
+            const text = hasFocus ? this.getEditorText() : this.content;
             const contentChanged = text !== this.content;
             console.log('[prompt editor] capture text, changed:', contentChanged, 'length:', text.length);
             this.assignContentFromEditor(text);
@@ -9995,7 +10037,10 @@ var app = new Vue({
                 // 再等一帧。如果上面读到的仍是拼音，浏览器此时已经换成汉字，需要重新同步。
                 requestAnimationFrame(() => {
                     if (this.isComposing) return;
-                    const latestText = this.getEditorText();
+                    const editor = this.$refs.promptEditor;
+                    const latestText = editor && document.activeElement === editor
+                        ? this.getEditorText()
+                        : this.content;
                     if (latestText !== this.content) {
                         console.log('[IME] post-composition text changed, recapture. length:', latestText.length);
                         this.captureEditorText();
@@ -10009,8 +10054,8 @@ var app = new Vue({
                 console.log('[IME] ignore blur during composition');
                 return;
             }
-            // 放大按钮会在失焦后隐藏编辑器，不能再从隐藏的 contenteditable 读取 innerText。
-            this.applyHighlight(this.content);
+            // 最大化等布局操作会触发失焦，但不应因此重写 contenteditable 的 DOM。
+            this.clearHighlightTimer();
         },
 
         handleEditorKeyUp() {
@@ -10138,7 +10183,9 @@ var app = new Vue({
                     
                     console.log('[handlePaste] Calculated new caret position:', newCaretPos);
                     
-                    const text = this.getEditorText();
+                    const text = document.activeElement === editor
+                        ? this.getEditorText()
+                        : this.content;
                     
                     // 检查内容是否真的发生了变化
                     const contentChanged = text !== this.content;
@@ -10207,7 +10254,9 @@ var app = new Vue({
                         
                         console.log('[handleKeyDown] After Enter, calculated new caret position:', newCaretPos);
                         
-                        const text = this.getEditorText();
+                        const text = document.activeElement === editor
+                            ? this.getEditorText()
+                            : this.content;
                         
                         // 检查内容是否真的发生了变化
                         const contentChanged = text !== this.content;
@@ -10318,8 +10367,9 @@ var app = new Vue({
             const editor = this.$refs.promptEditor;
             if (!editor) return;
             
-            // 获取当前文本
-            const text = this.getEditorText();
+            // 编辑器失焦后可能已被最大化操作隐藏，此时使用已同步的 content。
+            const hasFocus = document.activeElement === editor;
+            const text = hasFocus ? this.getEditorText() : this.content;
             
             // 同步 content（但不触发状态变化，因为状态变化应该在 handleEditorInput、handlePaste、handleKeyDown 中处理）
             // 这里只负责高亮显示
@@ -10369,8 +10419,10 @@ var app = new Vue({
             // 检查编辑器是否有焦点
             const hasFocus = document.activeElement === editor;
             
-            // 失焦时使用已由输入事件同步到 Vue 的 content，避免隐藏编辑器的 innerText 变为空。
-            const text = typeof textOverride === 'string' ? textOverride : this.getEditorText();
+            // 失焦或隐藏时使用已由输入事件同步到 Vue 的 content，避免隐藏编辑器的 innerText 变为空。
+            const text = typeof textOverride === 'string'
+                ? textOverride
+                : (hasFocus ? this.getEditorText() : this.content);
             if (typeof textOverride !== 'string') {
                 this.assignContentFromEditor(text);
             }

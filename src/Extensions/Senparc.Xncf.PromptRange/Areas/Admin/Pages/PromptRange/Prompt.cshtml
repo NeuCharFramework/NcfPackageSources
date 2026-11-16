@@ -256,7 +256,7 @@
                             <div class="titleRow_rightBox">
                                 <el-button size="mini" @@click="resetInputPrompt">重置</el-button>
                                 <el-button v-if="shouldShowPromptEditor" type="primary" size="mini" :icon="promptParamVisible?'el-icon-s-fold':'el-icon-s-unfold'" @@click="promptParamVisible = !promptParamVisible">请求参数</el-button>
-                                <i class="el-icon-full-screen" style="font-size: 1.3rem;cursor: pointer;" @@click="Amplification('box2')"></i>
+                                <i class="el-icon-full-screen" style="font-size: 1.3rem;cursor: pointer;" @@mousedown.prevent="preservePromptContentBeforeAmplification" @@click="Amplification('box2')"></i>
                             </div>
                         </div>
                         <div class="promptContentBox">
@@ -519,7 +519,7 @@
                         <span>{{promptDetail.tacticsStr||'--'}}</span>
                     </div>
                 </div>
-                <span><i class="el-icon-full-screen" style="font-size: 1.3rem;cursor: pointer;" @@click="Amplification('box1')"></i></span>
+                <span><i class="el-icon-full-screen" style="font-size: 1.3rem;cursor: pointer;" @@mousedown.prevent="preservePromptContentBeforeAmplification" @@click="Amplification('box1')"></i></span>
             </div>
           
             <div class="titleRow">
@@ -1705,5 +1705,5 @@
     @* ApiHelper 暂不使用，项目已有 servicePR (axios) *@
     @* <script src="~/js/PromptRange/utils/apiHelper.js"></script> *@
     
-    <script src="~/js/PromptRange/prompt.js"></script>
+    <script src="~/js/PromptRange/prompt.js" asp-append-version="true"></script>
 }

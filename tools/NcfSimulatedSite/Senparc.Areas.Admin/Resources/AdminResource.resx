@@ -1159,4 +1159,53 @@
   <data name="Frontend.226" xml:space="preserve"><value>请调整筛选条件，或先进入任意模块的“设置/执行 → NeuCharPivot”生成操作面板。||Adjust the filters, or open Settings / Execute → NeuCharPivot in any module to generate an operation panel first.</value></data>
   <data name="Frontend.227" xml:space="preserve"><value>重置筛选||Reset filters</value></data>
   <data name="Frontend.228" xml:space="preserve"><value>集中查看模块面板、参数化 Function、LoopTask 倒计时和完成后触发的 Workflow。||Review module panels, parameterized Functions, LoopTask countdowns, and post-completion Workflows in one place.</value></data>
+  <data name="Frontend.229" xml:space="preserve"><value>Function 全局 Provit 访问控制||Function global Provit access control</value></data>
+  <data name="Frontend.230" xml:space="preserve"><value>Function 已不存在，策略冗余保留||The Function no longer exists; the policy is retained as an orphan</value></data>
+  <data name="Frontend.231" xml:space="preserve"><value>个 Function 应用“受限”策略。受限模式下，仅绑定的用户 / 角色 / 权限码（任一命中）可访问全局 Provit，请至少绑定一项。||Function(s) will receive the Restricted policy. In Restricted mode, only bound users, roles, or permission codes may access the global Provit; bind at least one.</value></data>
+  <data name="Frontend.232" xml:space="preserve"><value>为任意 XNCF 模块的 Function 设置数据库访问策略，绑定用户 / 角色 / 权限码。数据库策略存在时覆盖代码属性（AllowGlobalPivot / GlobalPivotRoleCodes / GlobalPivotPermissionCodes）；模块被清除后策略冗余保留，模块重装后自动继续生效，仅手动清除才会删除。||Configure a database access policy for any XNCF Function and bind users, roles, or permission codes. A database policy overrides the code attributes; after a module is cleared, the policy remains orphaned and resumes when the module is reinstalled.</value></data>
+  <data name="Frontend.233" xml:space="preserve"><value>代码基线||Code baseline</value></data>
+  <data name="Frontend.234" xml:space="preserve"><value>代码基线（FunctionRenderAttribute）||Code baseline (FunctionRenderAttribute)</value></data>
+  <data name="Frontend.235" xml:space="preserve"><value>任意登录管理员||Any signed-in administrator</value></data>
+  <data name="Frontend.236" xml:space="preserve"><value>保存策略||Save policy</value></data>
+  <data name="Frontend.237" xml:space="preserve"><value>允许权限码||Allowed permission codes</value></data>
+  <data name="Frontend.238" xml:space="preserve"><value>允许用户||Allowed users</value></data>
+  <data name="Frontend.239" xml:space="preserve"><value>允许角色||Allowed roles</value></data>
+  <data name="Frontend.240" xml:space="preserve"><value>受限||Restricted</value></data>
+  <data name="Frontend.241" xml:space="preserve"><value>将对选中的||The selected</value></data>
+  <data name="Frontend.242" xml:space="preserve"><value>尚未设置数据库策略，当前按代码基线执行。||No database policy is configured; the code baseline is currently used.</value></data>
+  <data name="Frontend.243" xml:space="preserve"><value>已有绑定||Existing bindings</value></data>
+  <data name="Frontend.244" xml:space="preserve"><value>应用||Apply</value></data>
+  <data name="Frontend.245" xml:space="preserve"><value>开放||Open</value></data>
+  <data name="Frontend.246" xml:space="preserve"><value>当前数据库策略||Current database policy</value></data>
+  <data name="Frontend.247" xml:space="preserve"><value>批量受限||Batch Restricted</value></data>
+  <data name="Frontend.248" xml:space="preserve"><value>批量受限设置||Batch Restricted settings</value></data>
+  <data name="Frontend.249" xml:space="preserve"><value>批量开放||Batch Open</value></data>
+  <data name="Frontend.250" xml:space="preserve"><value>批量恢复继承||Batch restore Inherit</value></data>
+  <data name="Frontend.251" xml:space="preserve"><value>批量清除||Batch clear</value></data>
+  <data name="Frontend.252" xml:space="preserve"><value>批量禁用||Batch disable</value></data>
+  <data name="Frontend.253" xml:space="preserve"><value>搜索模块 / Function||Search module / Function</value></data>
+  <data name="Frontend.254" xml:space="preserve"><value>数据库策略||Database policy</value></data>
+  <data name="Frontend.255" xml:space="preserve"><value>未设置（按代码基线）||Not set (using code baseline)</value></data>
+  <data name="Frontend.256" xml:space="preserve"><value>模块不可用||Module unavailable</value></data>
+  <data name="Frontend.257" xml:space="preserve"><value>模块已清除||Module cleared</value></data>
+  <data name="Frontend.258" xml:space="preserve"><value>模块已清除，无法读取代码基线；策略以数据库记录为准。||The module is cleared, so its code baseline cannot be read; the database policy is authoritative.</value></data>
+  <data name="Frontend.259" xml:space="preserve"><value>模式||Mode</value></data>
+  <data name="Frontend.260" xml:space="preserve"><value>清除||Clear</value></data>
+  <data name="Frontend.261" xml:space="preserve"><value>生效策略||Effective policy</value></data>
+  <data name="Frontend.262" xml:space="preserve"><value>目标信息||Target information</value></data>
+  <data name="Frontend.263" xml:space="preserve"><value>禁用||Deny</value></data>
+  <data name="Frontend.264" xml:space="preserve"><value>策略保存后冗余保留，模块重装后自动生效||The policy remains as an orphan after saving and becomes effective automatically when the module is reinstalled.</value></data>
+  <data name="Frontend.265" xml:space="preserve"><value>策略模式||Policy mode</value></data>
+  <data name="Frontend.266" xml:space="preserve"><value>继承代码||Inherit code</value></data>
+  <data name="Frontend.267" xml:space="preserve"><value>记录本次策略调整的原因，便于后续审计||Record why this policy changed for later auditing</value></data>
+  <data name="Frontend.268" xml:space="preserve"><value>设置||Settings</value></data>
+  <data name="Frontend.269" xml:space="preserve"><value>设置全局 Provit 访问策略||Configure global Provit access policy</value></data>
+  <data name="Frontend.270" xml:space="preserve"><value>访问控制||Access control</value></data>
+  <data name="Frontend.271" xml:space="preserve"><value>输入权限资源码||Enter a permission resource code</value></data>
+  <data name="Frontend.272" xml:space="preserve"><value>输入权限资源码（如 sandbox.execute，任一命中即放行）||Enter a permission resource code, such as sandbox.execute; any match allows access.</value></data>
+  <data name="Frontend.273" xml:space="preserve"><value>选择后台管理员用户||Select administrator users</value></data>
+  <data name="Frontend.274" xml:space="preserve"><value>选择后台管理员用户（任一命中即放行）||Select administrator users; any match allows access.</value></data>
+  <data name="Frontend.275" xml:space="preserve"><value>选择或输入角色码||Select or enter role codes</value></data>
+  <data name="Frontend.276" xml:space="preserve"><value>选择或输入角色码（任一命中即放行）||Select or enter role codes; any match allows access.</value></data>
+  <data name="Frontend.277" xml:space="preserve"><value>（无）||(none)</value></data>
 </root>
