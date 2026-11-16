@@ -26,4 +26,18 @@
   <data name="Frontend.018" xml:space="preserve"><value>Enter a name and choose Create Workspace to share files securely between AI chat and the remote editor.||Enter a name and choose Create Workspace to share files securely between AI chat and the remote editor.</value></data>
   <data name="Frontend.019" xml:space="preserve"><value>No other administrator Workspaces exist in the current tenant||No other administrator Workspaces exist in the current tenant</value></data>
   <data name="Frontend.020" xml:space="preserve"><value>Device not paired? Open device sessions to complete pairing.||Device not paired? Open device sessions to complete pairing.</value></data>
+  <data name="Frontend.021" xml:space="preserve"><value>Just now||Just now</value></data>
+  <data name="Frontend.022" xml:space="preserve"><value>{0} minutes ago||{0} minutes ago</value></data>
+  <data name="Frontend.023" xml:space="preserve"><value>{0} hours ago||{0} hours ago</value></data>
+  <data name="Frontend.024" xml:space="preserve"><value>{0} days ago||{0} days ago</value></data>
+  <data name="Frontend.025" xml:space="preserve"><value>{0} months ago||{0} months ago</value></data>
+  <data name="Frontend.026" xml:space="preserve"><value>{0} years ago||{0} years ago</value></data>
+  <data name="Frontend.027" xml:space="preserve"><value>Could not read the Workspace upload limit.||Could not read the Workspace upload limit.</value></data>
+  <data name="Frontend.028" xml:space="preserve"><value>{0} is empty or exceeds {1}.||{0} is empty or exceeds {1}.</value></data>
+  <data name="Frontend.029" xml:space="preserve"><value>The upload response for {0} is invalid.||The upload response for {0} is invalid.</value></data>
+  <data name="Frontend.030" xml:space="preserve"><value>{0} was uploaded to Workspace/input.||{0} was uploaded to Workspace/input.</value></data>
+  <data name="Frontend.031" xml:space="preserve"><value>Manual Workspace upload failed:||Manual Workspace upload failed:</value></data>
+  <data name="Frontend.032" xml:space="preserve"><value>Manual Workspace upload failed.||Manual Workspace upload failed.</value></data>
+  <data name="Frontend.033" xml:space="preserve"><value>This will clear administrator #{0}'s Workspace “{1}”. Files will be deleted and input, output, and logs will be reset to empty directories. The Workspace itself will remain. This cannot be undone.||This will clear administrator #{0}'s Workspace “{1}”. Files will be deleted and input, output, and logs will be reset to empty directories. The Workspace itself will remain. This cannot be undone.</value></data>
+  <data name="Frontend.034" xml:space="preserve"><value>This will clear your Workspace “{0}”. Files will be deleted and input, output, and logs will be reset to empty directories. The Workspace itself will remain. This cannot be undone.||This will clear your Workspace “{0}”. Files will be deleted and input, output, and logs will be reset to empty directories. The Workspace itself will remain. This cannot be undone.</value></data>
 </root>

@@ -26,4 +26,18 @@
   <data name="Frontend.018" xml:space="preserve"><value>输入一个名字并点击「创建工作区」，即可在 AI 对话与远程编辑器之间安全共享文件。||Enter a name and choose Create Workspace to share files securely between AI chat and the remote editor.</value></data>
   <data name="Frontend.019" xml:space="preserve"><value>当前租户没有其他管理员的工作区||No other administrator Workspaces exist in the current tenant</value></data>
   <data name="Frontend.020" xml:space="preserve"><value>设备尚未配对？前往设备会话页面完成配对。||Device not paired? Open device sessions to complete pairing.</value></data>
+  <data name="Frontend.021" xml:space="preserve"><value>刚刚||Just now</value></data>
+  <data name="Frontend.022" xml:space="preserve"><value>{0} 分钟前||{0} minutes ago</value></data>
+  <data name="Frontend.023" xml:space="preserve"><value>{0} 小时前||{0} hours ago</value></data>
+  <data name="Frontend.024" xml:space="preserve"><value>{0} 天前||{0} days ago</value></data>
+  <data name="Frontend.025" xml:space="preserve"><value>{0} 个月前||{0} months ago</value></data>
+  <data name="Frontend.026" xml:space="preserve"><value>{0} 年前||{0} years ago</value></data>
+  <data name="Frontend.027" xml:space="preserve"><value>无法取得 Workspace 上传限制。||Could not read the Workspace upload limit.</value></data>
+  <data name="Frontend.028" xml:space="preserve"><value>{0} 为空或超过 {1}。||{0} is empty or exceeds {1}.</value></data>
+  <data name="Frontend.029" xml:space="preserve"><value>{0} 上传响应无效。||The upload response for {0} is invalid.</value></data>
+  <data name="Frontend.030" xml:space="preserve"><value>{0} 已上传到 Workspace/input。||{0} was uploaded to Workspace/input.</value></data>
+  <data name="Frontend.031" xml:space="preserve"><value>Workspace 手动上传失败：||Manual Workspace upload failed:</value></data>
+  <data name="Frontend.032" xml:space="preserve"><value>Workspace 手动上传失败。||Manual Workspace upload failed.</value></data>
+  <data name="Frontend.033" xml:space="preserve"><value>这将清空其他管理员 #{0} 的工作区「{1}」。文件会被删除，并恢复为新建时的 input、output、logs 空目录。工作区本身会保留。此操作不可撤销。||This will clear administrator #{0}'s Workspace “{1}”. Files will be deleted and input, output, and logs will be reset to empty directories. The Workspace itself will remain. This cannot be undone.</value></data>
+  <data name="Frontend.034" xml:space="preserve"><value>这将清空你自己的工作区「{0}」。文件会被删除，并恢复为新建时的 input、output、logs 空目录。工作区本身会保留。此操作不可撤销。||This will clear your Workspace “{0}”. Files will be deleted and input, output, and logs will be reset to empty directories. The Workspace itself will remain. This cannot be undone.</value></data>
 </root>

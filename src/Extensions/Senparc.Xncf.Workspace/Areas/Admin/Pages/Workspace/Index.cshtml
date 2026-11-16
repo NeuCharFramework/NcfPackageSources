@@ -232,15 +232,15 @@
                     var diff = Date.now() - new Date(value).getTime();
                     if (diff < 0) diff = 0;
                     var min = Math.floor(diff / 60000);
-                    if (min < 1) return "刚刚";
-                    if (min < 60) return min + " 分钟前";
+                    if (min < 1) return ncfST("刚刚");
+                    if (min < 60) return ncfST("{0} 分钟前", min);
                     var hour = Math.floor(min / 60);
-                    if (hour < 24) return hour + " 小时前";
+                    if (hour < 24) return ncfST("{0} 小时前", hour);
                     var day = Math.floor(hour / 24);
-                    if (day < 30) return day + " 天前";
+                    if (day < 30) return ncfST("{0} 天前", day);
                     var month = Math.floor(day / 30);
-                    if (month < 12) return month + " 个月前";
-                    return Math.floor(month / 12) + " 年前";
+                    if (month < 12) return ncfST("{0} 个月前", month);
+                    return ncfST("{0} 年前", Math.floor(month / 12));
                 },
                 chooseWorkspaceUpload: function (workspaceId) {
                     this.manualUploadWorkspaceId = workspaceId;
@@ -261,12 +261,12 @@
                         var capabilities = capabilitiesResponse.data || {};
                         var maxFileBytes = Number(capabilities.maxFileBytes);
                         if (!Number.isFinite(maxFileBytes) || maxFileBytes <= 0) {
-                            throw new Error("无法取得 Workspace 上传限制。");
+                            throw new Error(ncfST("无法取得 Workspace 上传限制。"));
                         }
 
                         for (var file of files) {
                             if (!file || file.size <= 0 || file.size > maxFileBytes) {
-                                throw new Error(file.name + " 为空或超过 " + this.formatFileSize(maxFileBytes) + "。");
+                                throw new Error(ncfST("{0} 为空或超过 {1}。", file.name, this.formatFileSize(maxFileBytes)));
                             }
 
                             this.manualUploadFileName = file.name;
@@ -288,16 +288,16 @@
                                     }.bind(this)
                                 });
                             if (!response.data || !response.data.file) {
-                                throw new Error(file.name + " 上传响应无效。");
+                                throw new Error(ncfST("{0} 上传响应无效。", file.name));
                             }
-                            this.$message.success(file.name + " 已上传到 Workspace/input。");
+                            this.$message.success(ncfST("{0} 已上传到 Workspace/input。", file.name));
                         }
                     } catch (error) {
-                        console.error("Workspace 手动上传失败:", error);
+                        console.error(ncfST("Workspace 手动上传失败："), error);
                         this.$message.error(
                             (error.response && error.response.data && error.response.data.message)
                             || error.message
-                            || "Workspace 手动上传失败。");
+                            || ncfST("Workspace 手动上传失败。"));
                     } finally {
                         this.manualUploading = false;
                         this.manualUploadProgress = 0;
@@ -324,8 +324,8 @@
                 clearWorkspace: function (ws) {
                     if (!ws || !ws.id || this.clearing || this.manualUploading) return;
                     var message = ws.scope === "Other"
-                        ? "这将清空其他管理员 #" + ws.ownerId + " 的工作区「" + ws.name + "」。文件会被删除，并恢复为新建时的 input、output、logs 空目录。工作区本身会保留。此操作不可撤销。"
-                        : "这将清空你自己的工作区「" + ws.name + "」。文件会被删除，并恢复为新建时的 input、output、logs 空目录。工作区本身会保留。此操作不可撤销。";
+                        ? ncfST("这将清空其他管理员 #{0} 的工作区「{1}」。文件会被删除，并恢复为新建时的 input、output、logs 空目录。工作区本身会保留。此操作不可撤销。", ws.ownerId, ws.name)
+                        : ncfST("这将清空你自己的工作区「{0}」。文件会被删除，并恢复为新建时的 input、output、logs 空目录。工作区本身会保留。此操作不可撤销。", ws.name);
                     if (!window.confirm(message)) return;
                     this.clearing = true;
                     this.$refs.clearWorkspaceId.value = ws.id;
