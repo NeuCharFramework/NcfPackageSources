@@ -118,6 +118,13 @@ test('XNCF 标签会携带模块名称、注册页面和稳定的 UID 颜色', f
     assert.match(tab.accentColor, /^hsl\(/);
 });
 
+test('UID 配色会混合 GUID 各段，避免相同前缀导致颜色过于接近', function () {
+    const prefix = '11111111-2222-3333-4444-';
+    const first = tabs.accentColorFromUid(prefix + '000000000001');
+    const second = tabs.accentColorFromUid(prefix + 'ffffffffffff');
+    assert.notEqual(first, second);
+});
+
 test('刷新后保留 XNCF 标签的模块上下文和 accent 色', function () {
     const restored = initial({
         storedTabs: [{

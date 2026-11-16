@@ -37,6 +37,7 @@ using Senparc.Xncf.XncfModuleManager.Domain.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Senparc.Areas.Admin.Pages
@@ -395,22 +396,76 @@ namespace Senparc.Areas.Admin.Pages
         /// <param name="sysMenuTreeItems"></param>
         /// <param name="sysMenuTrees"></param>
         /// <param name="parent"></param>
-        private void GetSysMenuTreesRecursive(IEnumerable<SysMenuDto> sysMenuTreeItems, IList<SysMenuTreeItemDto> sysMenuTrees, SysMenuDto parent)
+        private void GetSysMenuTreesRecursive(
+            IEnumerable<SysMenuDto> sysMenuTreeItems,
+            IList<SysMenuTreeItemDto> sysMenuTrees,
+            SysMenuDto parent,
+            string moduleName = null,
+            string moduleUid = null)
         {
             IEnumerable<SysMenuDto> list = sysMenuTreeItems.Where(_ => _.ParentId == parent?.Id);
             foreach (var item in list)
             {
+                var currentModuleName = moduleName;
+                var currentModuleUid = moduleUid;
+                var itemUid = GetUidFromUrl(item.Url);
+                if (IsXncfModuleStartUrl(item.Url)
+                    && !string.IsNullOrWhiteSpace(itemUid)
+                    && (string.IsNullOrWhiteSpace(currentModuleUid)
+                        || !string.Equals(currentModuleUid, itemUid, StringComparison.OrdinalIgnoreCase)))
+                {
+                    currentModuleName = item.MenuName;
+                    currentModuleUid = itemUid;
+                }
+
                 SysMenuTreeItemDto sysMenu = new SysMenuTreeItemDto()
                 {
                     MenuName = item.MenuName,
                     Id = item.Id,
                     Icon = item.Icon,
                     Url = item.Url,
+                    ModuleName = currentModuleName,
+                    ModuleUid = currentModuleUid,
                     Children = new List<SysMenuTreeItemDto>()
                 };
                 sysMenuTrees.Add(sysMenu);
-                GetSysMenuTreesRecursive(sysMenuTreeItems, sysMenu.Children, item);
+                GetSysMenuTreesRecursive(sysMenuTreeItems, sysMenu.Children, item, currentModuleName, currentModuleUid);
             }
+        }
+
+        private static bool IsXncfModuleStartUrl(string url)
+        {
+            return !string.IsNullOrWhiteSpace(url)
+                   && url.Contains("/Admin/XncfModule/Start", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static string GetUidFromUrl(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                return string.Empty;
+            }
+
+            var queryIndex = url.IndexOf('?', StringComparison.Ordinal);
+            if (queryIndex < 0 || queryIndex == url.Length - 1)
+            {
+                return string.Empty;
+            }
+
+            foreach (var pair in url[(queryIndex + 1)..].Split('&', StringSplitOptions.RemoveEmptyEntries))
+            {
+                var separatorIndex = pair.IndexOf('=');
+                var key = separatorIndex < 0 ? pair : pair[..separatorIndex];
+                if (!string.Equals(key, "uid", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                var value = separatorIndex < 0 ? string.Empty : pair[(separatorIndex + 1)..];
+                return WebUtility.UrlDecode(value) ?? string.Empty;
+            }
+
+            return string.Empty;
         }
 
         #endregion

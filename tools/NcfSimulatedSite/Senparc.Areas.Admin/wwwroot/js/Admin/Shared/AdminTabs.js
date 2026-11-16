@@ -119,17 +119,40 @@
         }
     }
 
+    function hashSegment(value, seed) {
+        var hash = (2166136261 ^ seed) >>> 0;
+        for (var index = 0; index < value.length; index += 1) {
+            hash ^= value.charCodeAt(index);
+            hash = Math.imul(hash, 16777619) >>> 0;
+        }
+        return hash >>> 0;
+    }
+
+    function rotateHash(value, bits) {
+        return ((value << bits) | (value >>> (32 - bits))) >>> 0;
+    }
+
     function accentColorFromUid(uid) {
-        var value = String(uid || '').trim();
+        var value = String(uid || '').trim().toLowerCase();
         if (!value) {
             return '#c0c4cc';
         }
-        var hash = 0;
-        for (var index = 0; index < value.length; index += 1) {
-            hash = ((hash << 5) - hash + value.charCodeAt(index)) | 0;
-        }
-        var hue = Math.abs(hash) % 360;
-        return 'hsl(' + hue + ' 58% 52%)';
+
+        // Mix each GUID segment independently. This prevents modules with a shared
+        // prefix from receiving nearly identical hues when their tail differs.
+        var segments = value.split('-').filter(Boolean);
+        var mixed = 0;
+        segments.forEach(function (segment, index) {
+            var segmentHash = hashSegment(segment, (0x9e3779b9 * (index + 1)) >>> 0);
+            mixed ^= rotateHash(segmentHash, (index * 7 + 3) % 32);
+        });
+        mixed ^= rotateHash(hashSegment(value.slice(-12), 0xa5a5a5a5), 11);
+        mixed >>>= 0;
+
+        var hue = Math.floor((mixed % 360 + 360) % 360);
+        var saturation = 54 + ((mixed >>> 8) % 12);
+        var lightness = 48 + ((mixed >>> 16) % 8);
+        return 'hsl(' + hue + ' ' + saturation + '% ' + lightness + '%)';
     }
 
     function cloneModuleLinks(links) {
@@ -494,8 +517,8 @@
                         var moduleUid = uidFromUrl(moduleNode && moduleNode.url, baseHref) || uidFromUrl(item.url, baseHref);
                         byUrl[parsed.id] = {
                             item: item,
-                            moduleName: moduleNode && moduleNode.menuName ? moduleNode.menuName : '',
-                            moduleUid: moduleUid,
+                            moduleName: item.moduleName || (moduleNode && moduleNode.menuName ? moduleNode.menuName : ''),
+                            moduleUid: item.moduleUid || moduleUid,
                             moduleLinks: moduleNode ? collectModuleLinks(moduleNode, baseHref) : []
                         };
                     }
