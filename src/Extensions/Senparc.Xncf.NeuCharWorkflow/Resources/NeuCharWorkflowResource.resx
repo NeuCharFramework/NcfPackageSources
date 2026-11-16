@@ -315,4 +315,83 @@
   <data name="Frontend.298" xml:space="preserve"><value>此 Function 有多个上游；任一有效来源到达都可以触发，单次工作流运行中该节点最多执行一次。||This Function has multiple upstream sources; any valid source can trigger it, but the node runs at most once per workflow execution.</value></data>
   <data name="Frontend.299" xml:space="preserve"><value>汇总输出内容||Aggregate output</value></data>
   <data name="Frontend.300" xml:space="preserve"><value>测试输入（传入触发器）||Test input (passed to the trigger)</value></data>
+  <data name="Frontend.301" xml:space="preserve"><value>消费当前这一条提醒||Consume this reminder</value></data>
+  <data name="Frontend.302" xml:space="preserve"><value>消费这个订阅下全部提醒||Consume all reminders in this subscription</value></data>
+  <data name="Frontend.303" xml:space="preserve"><value>添加参数||Add parameter</value></data>
+  <data name="Frontend.304" xml:space="preserve"><value>添加变量||Add variable</value></data>
+  <data name="Frontend.305" xml:space="preserve"><value>添加节点||Add node</value></data>
+  <data name="Frontend.306" xml:space="preserve"><value>添加赋值||Add assignment</value></data>
+  <data name="Frontend.307" xml:space="preserve"><value>清空||Clear</value></data>
+  <data name="Frontend.308" xml:space="preserve"><value>清除提示||Clear prompt</value></data>
+  <data name="Frontend.309" xml:space="preserve"><value>点击定位画布||Click to center the canvas</value></data>
+  <data name="Frontend.310" xml:space="preserve"><value>点击插入||Click to insert</value></data>
+  <data name="Frontend.311" xml:space="preserve"><value>生成新密钥||Generate new key</value></data>
+  <data name="Frontend.312" xml:space="preserve"><value>用一句话说明这个工作流||Describe this workflow in one sentence</value></data>
+  <data name="Frontend.313" xml:space="preserve"><value>用于有明确查看即已读场景；例如 DesktopBridge 等需要业务审核的提醒应选择“只查看”。||Use this when viewing marks an item as read; choose View only for reminders requiring business review, such as DesktopBridge.</value></data>
+  <data name="Frontend.314" xml:space="preserve"><value>用户发送的每条消息都会作为输入启动一次工作流运行；关闭“允许访客”后仅登录用户可以聊天。||Every user message starts a workflow run as input; when Allow guests is disabled, only signed-in users can chat.</value></data>
+  <data name="Frontend.315" xml:space="preserve"><value>画布对齐||Canvas alignment</value></data>
+  <data name="Frontend.316" xml:space="preserve"><value>留空时使用工作流名称||Use the workflow name when empty</value></data>
+  <data name="Frontend.317" xml:space="preserve"><value>真||True</value></data>
+  <data name="Frontend.318" xml:space="preserve"><value>禁止使用||Prohibited</value></data>
+  <data name="Frontend.319" xml:space="preserve"><value>稍后处理||Handle later</value></data>
+  <data name="Frontend.320" xml:space="preserve"><value>等为受限表达式，不执行任意 JavaScript。||are restricted expressions; arbitrary JavaScript is not executed.</value></data>
+  <data name="Frontend.321" xml:space="preserve"><value>等于||Equal</value></data>
+  <data name="Frontend.322" xml:space="preserve"><value>等待秒数（单节点最多 30 秒）||Wait seconds (maximum 30 seconds per node)</value></data>
+  <data name="Frontend.323" xml:space="preserve"><value>纵向||Vertical</value></data>
+  <data name="Frontend.324" xml:space="preserve"><value>结尾是||Ends with</value></data>
+  <data name="Frontend.325" xml:space="preserve"><value>统计||Analytics</value></data>
+  <data name="Frontend.326" xml:space="preserve"><value>继承 HIL 等级||Inherit HIL level</value></data>
+  <data name="Frontend.327" xml:space="preserve"><value>编辑||Edit</value></data>
+  <data name="Frontend.328" xml:space="preserve"><value>编辑公式||Edit formula</value></data>
+  <data name="Frontend.329" xml:space="preserve"><value>编辑公式文本||Edit formula text</value></data>
+  <data name="Frontend.330" xml:space="preserve"><value>编辑文本与变量||Edit text and variables</value></data>
+  <data name="Frontend.331" xml:space="preserve"><value>编辑语法||Edit syntax</value></data>
+  <data name="Frontend.332" xml:space="preserve"><value>缩小||Zoom out</value></data>
+  <data name="Frontend.333" xml:space="preserve"><value>缩小画布||Zoom out canvas</value></data>
+  <data name="Frontend.334" xml:space="preserve"><value>聊天页面||Chat page</value></data>
+  <data name="Frontend.335" xml:space="preserve"><value>聚合会等待所有已激活的上游分支结束，再按连线顺序汇总，并只向下游输出一次。||Aggregate waits for all active upstream branches, summarizes them in connection order, and emits one downstream output.</value></data>
+  <data name="Frontend.336" xml:space="preserve"><value>自动保存||Auto-save</value></data>
+  <data name="Frontend.337" xml:space="preserve"><value>自动执行||Automatic execution</value></data>
+  <data name="Frontend.338" xml:space="preserve"><value>自动排列方向||Automatic layout direction</value></data>
+  <data name="Frontend.339" xml:space="preserve"><value>自动识别（单层循环）||Auto-detect (single-layer loop)</value></data>
+  <data name="Frontend.340" xml:space="preserve"><value>节点检查失败||Node validation failed</value></data>
+  <data name="Frontend.341" xml:space="preserve"><value>节点设置||Node settings</value></data>
+  <data name="Frontend.342" xml:space="preserve"><value>要调用的工作流||Workflow to call</value></data>
+  <data name="Frontend.343" xml:space="preserve"><value>触发方式||Trigger method</value></data>
+  <data name="Frontend.344" xml:space="preserve"><value>设置||Settings</value></data>
+  <data name="Frontend.345" xml:space="preserve"><value>访问密钥||Access key</value></data>
+  <data name="Frontend.346" xml:space="preserve"><value>说明||Description</value></data>
+  <data name="Frontend.347" xml:space="preserve"><value>说明（可选）||Description (optional)</value></data>
+  <data name="Frontend.348" xml:space="preserve"><value>请从节点右侧输出端依次拖拽到每个要同时运行的节点。||Drag from the output port on the right of this node to each node that should run concurrently.</value></data>
+  <data name="Frontend.349" xml:space="preserve"><value>请求头使用||Use request headers</value></data>
+  <data name="Frontend.350" xml:space="preserve"><value>请求方法||Request method</value></data>
+  <data name="Frontend.351" xml:space="preserve"><value>读取；安全代码节点可在本次运行中重新赋值。||Read; a Safe Code node can reassign it during this run.</value></data>
+  <data name="Frontend.352" xml:space="preserve"><value>调用地址：||Call URL:</value></data>
+  <data name="Frontend.353" xml:space="preserve"><value>输入 Human 回复||Enter Human response</value></data>
+  <data name="Frontend.354" xml:space="preserve"><value>运行到此节点会创建一条 NeuBell，并暂停当前分支；后台快速处理或已启用的外部 API 都会恢复同一个运行。Agent/Group 自身触发的 HIL 会继续复用下方同一 Workflow HIL 面板。||Reaching this node creates a NeuBell and pauses the current branch. Admin quick handling or an enabled external API resumes the same run. HIL triggered by an Agent or Group reuses the Workflow HIL panel below.</value></data>
+  <data name="Frontend.355" xml:space="preserve"><value>运行到此节点时，会按上述模板在页面底部 Console 打印内容；原始输入会继续向下游传递。||When this node runs, it prints the template above to the Console at the bottom of the page; the original input continues downstream.</value></data>
+  <data name="Frontend.356" xml:space="preserve"><value>运行时会创建一条 Workflow 纽铃提醒；从 Footer 点击提醒会进入任务列表并按上方设置进行消费。||A Workflow NeuBell reminder is created at runtime; clicking it in the Footer opens the task list and consumes it according to the settings above.</value></data>
+  <data name="Frontend.357" xml:space="preserve"><value>运行时结果必须是 1–100000 的整数；可使用||The runtime result must be an integer from 1 to 100000; you can use</value></data>
+  <data name="Frontend.358" xml:space="preserve"><value>运行时读取，必须是 1–100000 的整数。||read at runtime and it must be an integer from 1 to 100000.</value></data>
+  <data name="Frontend.359" xml:space="preserve"><value>运行状态||Run status</value></data>
+  <data name="Frontend.360" xml:space="preserve"><value>这不是任意 JavaScript：每一行都是一次受限赋值。可用||This is not arbitrary JavaScript: each line is a restricted assignment. You can use</value></data>
+  <data name="Frontend.361" xml:space="preserve"><value>连接到 break 输入端||Connect to the break input</value></data>
+  <data name="Frontend.362" xml:space="preserve"><value>连接到 continue 输入端||Connect to the continue input</value></data>
+  <data name="Frontend.363" xml:space="preserve"><value>适应画布||Fit canvas</value></data>
+  <data name="Frontend.364" xml:space="preserve"><value>选择工作流变量||Select a workflow variable</value></data>
+  <data name="Frontend.365" xml:space="preserve"><value>选择已保存的工作流||Select a saved workflow</value></data>
+  <data name="Frontend.366" xml:space="preserve"><value>选择或创建一个工作流||Select or create a workflow</value></data>
+  <data name="Frontend.367" xml:space="preserve"><value>选择画布中的节点进行设置||Select a canvas node to configure</value></data>
+  <data name="Frontend.368" xml:space="preserve"><value>选择节点、输出或预载输入选择||Select a node, output, or preloaded input selection</value></data>
+  <data name="Frontend.369" xml:space="preserve"><value>逐项合流不会等待全部输入：每条输入都会独立向下游发出一次。下游按稳定的执行计划顺序串行运行，单次工作流最多处理 5000 次逐项激活。||Item-wise merge does not wait for every input; each input is sent downstream independently. Downstream nodes run serially in stable plan order, with at most 5000 item-wise activations per workflow.</value></data>
+  <data name="Frontend.370" xml:space="preserve"><value>配置上限：单个循环最多 100000 次；单次运行的循环与逐项合流下游激活合计最多 5000 次。||Limits: one loop supports at most 100000 iterations; one run supports at most 5000 combined loop and item-wise downstream activations.</value></data>
+  <data name="Frontend.371" xml:space="preserve"><value>重复次数（For）||Iterations (For)</value></data>
+  <data name="Frontend.372" xml:space="preserve"><value>间隔秒数||Interval seconds</value></data>
+  <data name="Frontend.373" xml:space="preserve"><value>间隔触发||Interval trigger</value></data>
+  <data name="Frontend.374" xml:space="preserve"><value>页面标题||Page title</value></data>
+  <data name="Frontend.375" xml:space="preserve"><value>首次打开聊天页面时显示的问候语，留空时使用默认文案||Greeting shown when the chat page opens for the first time; leave empty to use the default</value></data>
+  <data name="Frontend.376" xml:space="preserve"><value>默认||Default</value></data>
+  <data name="Frontend.377" xml:space="preserve"><value>；POST JSON 至少提供||; POST JSON must provide at least</value></data>
+  <data name="Frontend.378" xml:space="preserve"><value>当前筛选范围没有运行明细。||No run details match the current filters.</value></data>
+  <data name="Frontend.379" xml:space="preserve"><value>运行后，这里会显示校验结果、当前节点、执行状态和 Console 节点输出。||After a run, this area shows validation results, the current node, execution status, and Console node output.</value></data>
 </root>
