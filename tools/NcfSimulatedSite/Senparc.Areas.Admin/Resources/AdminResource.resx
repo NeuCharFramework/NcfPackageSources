@@ -1039,4 +1039,50 @@
   <data name="Xncf.NeuCharPivotAccessControl" xml:space="preserve"><value>NeuCharPivot - 访问控制</value></data>
   <data name="Xncf.ModuleNotLoaded" xml:space="preserve"><value>模块未加载。</value></data>
   <data name="Xncf.PasswordRequired" xml:space="preserve"><value>请输入密码。</value></data>
+  <data name="Frontend.109" xml:space="preserve"><value>GET（不发送请求体，数据经地址占位符传递）||GET (no body; data is passed through URL placeholders)</value></data>
+  <data name="Frontend.110" xml:space="preserve"><value>NeuBell WebHook 设置||NeuBell WebHook settings</value></data>
+  <data name="Frontend.111" xml:space="preserve"><value>POST（默认，携带 JSON 请求体）||POST (default, with a JSON body)</value></data>
+  <data name="Frontend.112" xml:space="preserve"><value>PUT（携带请求体）||PUT (with a request body)</value></data>
+  <data name="Frontend.113" xml:space="preserve"><value>Provider 过滤||Provider filter</value></data>
+  <data name="Frontend.114" xml:space="preserve"><value>WebHook 地址||WebHook URL</value></data>
+  <data name="Frontend.115" xml:space="preserve"><value>WebHook 设置||WebHook settings</value></data>
+  <data name="Frontend.116" xml:space="preserve"><value>WebHook 请求报文||WebHook request payload</value></data>
+  <data name="Frontend.117" xml:space="preserve"><value>例如：运维值班机器人||For example: operations duty bot</value></data>
+  <data name="Frontend.118" xml:space="preserve"><value>创建 NeuBell 时按参数触发的通知、设置页“测试”与后台监测的变更通知，均在此记录请求数据与结果。||This records request data and results for parameter-triggered NeuBell notifications, settings-page tests, and monitored change notifications.</value></data>
+  <data name="Frontend.119" xml:space="preserve"><value>动作值 ·||Action value ·</value></data>
+  <data name="Frontend.120" xml:space="preserve"><value>占位符||Placeholders</value></data>
+  <data name="Frontend.121" xml:space="preserve"><value>完整默认 JSON 报文||Complete default JSON payload</value></data>
+  <data name="Frontend.122" xml:space="preserve"><value>已配置||Configured</value></data>
+  <data name="Frontend.123" xml:space="preserve"><value>报文||Payload</value></data>
+  <data name="Frontend.124" xml:space="preserve"><value>搜索名称、地址或 Provider||Search name, URL, or Provider</value></data>
+  <data name="Frontend.125" xml:space="preserve"><value>数量 ·||Count ·</value></data>
+  <data name="Frontend.126" xml:space="preserve"><value>新增 WebHook||Add WebHook</value></data>
+  <data name="Frontend.127" xml:space="preserve"><value>新增时通知||Notify on added</value></data>
+  <data name="Frontend.128" xml:space="preserve"><value>方式||Method</value></data>
+  <data name="Frontend.129" xml:space="preserve"><value>时间||Time</value></data>
+  <data name="Frontend.130" xml:space="preserve"><value>暂无请求日志。||No request logs yet.</value></data>
+  <data name="Frontend.131" xml:space="preserve"><value>本次新增/移除标题（以“、”连接）||Titles added/removed in this event (joined with 、)</value></data>
+  <data name="Frontend.132" xml:space="preserve"><value>条目 Id ·||Item ID ·</value></data>
+  <data name="Frontend.133" xml:space="preserve"><value>条目更新时间||Item updated at</value></data>
+  <data name="Frontend.134" xml:space="preserve"><value>条目标题 ·||Item title ·</value></data>
+  <data name="Frontend.135" xml:space="preserve"><value>条目链接（配置站点根地址时为绝对链接）·||Item link (absolute when a site root is configured) ·</value></data>
+  <data name="Frontend.136" xml:space="preserve"><value>模板||Template</value></data>
+  <data name="Frontend.137" xml:space="preserve"><value>清空（保留 50 条）||Clear (keep 50)</value></data>
+  <data name="Frontend.138" xml:space="preserve"><value>点击右上角“新增 WebHook”，配置一个外部 WebAPI 通知端点。||Choose Add WebHook in the upper right to configure an external WebAPI notification endpoint.</value></data>
+  <data name="Frontend.139" xml:space="preserve"><value>留空使用系统默认 JSON 报文；以 { 或 [ 开头按 JSON 处理。例如：{||Leave empty to use the default JSON payload; values starting with { or [ are treated as JSON. For example: {</value></data>
+  <data name="Frontend.140" xml:space="preserve"><value>留空表示全部 Provider||Leave empty for all Providers</value></data>
+  <data name="Frontend.141" xml:space="preserve"><value>租户标识（无租户时为空）||Tenant identifier (empty without a tenant)</value></data>
+  <data name="Frontend.142" xml:space="preserve"><value>移除||Removed</value></data>
+  <data name="Frontend.143" xml:space="preserve"><value>移除时通知||Notify on removed</value></data>
+  <data name="Frontend.144" xml:space="preserve"><value>签名||Signature</value></data>
+  <data name="Frontend.145" xml:space="preserve"><value>签名密钥||Signing secret</value></data>
+  <data name="Frontend.146" xml:space="preserve"><value>结果||Result</value></data>
+  <data name="Frontend.147" xml:space="preserve"><value>耗时||Duration</value></data>
+  <data name="Frontend.148" xml:space="preserve"><value>请求体模板||Request body template</value></data>
+  <data name="Frontend.149" xml:space="preserve"><value>请求方式||Request method</value></data>
+  <data name="Frontend.150" xml:space="preserve"><value>请求日志||Request logs</value></data>
+  <data name="Frontend.151" xml:space="preserve"><value>还没有 WebHook||No WebHooks yet</value></data>
+  <data name="Frontend.152" xml:space="preserve"><value>通知时间（ISO 8601）·||Notification time (ISO 8601) ·</value></data>
+  <data name="Frontend.153" xml:space="preserve"><value>配置后请求携带 X-NeuBell-Signature（HMAC-SHA256）||Configured requests include X-NeuBell-Signature (HMAC-SHA256)</value></data>
+  <data name="Frontend.154" xml:space="preserve"><value>（与 Workflow 文本模板同格式，|| (same format as Workflow text templates,</value></data>
 </root>
