@@ -1313,6 +1313,22 @@
   <data name="Frontend.735" xml:space="preserve"><value>确认发布当前 Skill 版本吗？||确认发布当前 Skill 版本吗？</value></data>
   <data name="Frontend.736" xml:space="preserve"><value>发布确认||发布确认</value></data>
   <data name="Frontend.737" xml:space="preserve"><value>Skill 已发布||Skill 已发布</value></data>
+  <data name="Frontend.738" xml:space="preserve"><value>加载 Skill 失败：||加载 Skill 失败：</value></data>
+  <data name="Frontend.739" xml:space="preserve"><value>加载 Chat 模型失败：||加载 Chat 模型失败：</value></data>
+  <data name="Frontend.740" xml:space="preserve"><value>未知错误||未知错误</value></data>
+  <data name="Frontend.741" xml:space="preserve"><value>Skill ZIP 不能超过 50 MB||Skill ZIP 不能超过 50 MB</value></data>
+  <data name="Frontend.742" xml:space="preserve"><value>请选择要上传的 Skill ZIP||请选择要上传的 Skill ZIP</value></data>
+  <data name="Frontend.743" xml:space="preserve"><value>Skill 已导入为 Draft，请预览、测试并审核后发布||Skill 已导入为 Draft，请预览、测试并审核后发布</value></data>
+  <data name="Frontend.744" xml:space="preserve"><value>上传失败：||上传失败：</value></data>
+  <data name="Frontend.745" xml:space="preserve"><value>只允许使用 HTTPS 地址||只允许使用 HTTPS 地址</value></data>
+  <data name="Frontend.746" xml:space="preserve"><value>安装失败：||安装失败：</value></data>
+  <data name="Frontend.747" xml:space="preserve"><value>请填写需求描述并选择 Chat 模型||请填写需求描述并选择 Chat 模型</value></data>
+  <data name="Frontend.748" xml:space="preserve"><value>AI 已生成 Draft Skill，可展开版本树进行预览||AI 已生成 Draft Skill，可展开版本树进行预览</value></data>
+  <data name="Frontend.749" xml:space="preserve"><value>生成失败：||生成失败：</value></data>
+  <data name="Frontend.750" xml:space="preserve"><value>预览失败：||预览失败：</value></data>
+  <data name="Frontend.751" xml:space="preserve"><value>确认发布当前 Skill 版本吗？||确认发布当前 Skill 版本吗？</value></data>
+  <data name="Frontend.752" xml:space="preserve"><value>发布确认||发布确认</value></data>
+  <data name="Frontend.753" xml:space="preserve"><value>Skill 已发布||Skill 已发布</value></data>
   <data name="AdminChat.SystemPrompt.Default" xml:space="preserve">
     <value>你是 NeuCharFramework 管理后台首页中的 AI 智能助手。
 请使用简洁、准确、可执行的中文回答用户问题。若信息不足，请明确指出缺失信息。

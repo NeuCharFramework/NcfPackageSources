@@ -805,6 +805,22 @@
   <data name="Frontend.735" xml:space="preserve"><value>Publish the current Skill version?||Publish the current Skill version?</value></data>
   <data name="Frontend.736" xml:space="preserve"><value>Publish confirmation||Publish confirmation</value></data>
   <data name="Frontend.737" xml:space="preserve"><value>Skill published||Skill published</value></data>
+  <data name="Frontend.738" xml:space="preserve"><value>Failed to load Skill: ||Failed to load Skill: </value></data>
+  <data name="Frontend.739" xml:space="preserve"><value>Failed to load Chat models: ||Failed to load Chat models: </value></data>
+  <data name="Frontend.740" xml:space="preserve"><value>Unknown error||Unknown error</value></data>
+  <data name="Frontend.741" xml:space="preserve"><value>Skill ZIP files must not exceed 50 MB||Skill ZIP files must not exceed 50 MB</value></data>
+  <data name="Frontend.742" xml:space="preserve"><value>Select a Skill ZIP to upload||Select a Skill ZIP to upload</value></data>
+  <data name="Frontend.743" xml:space="preserve"><value>Skill imported as Draft. Preview, test, review, and publish it.||Skill imported as Draft. Preview, test, review, and publish it.</value></data>
+  <data name="Frontend.744" xml:space="preserve"><value>Upload failed: ||Upload failed: </value></data>
+  <data name="Frontend.745" xml:space="preserve"><value>Only HTTPS URLs are allowed.||Only HTTPS URLs are allowed.</value></data>
+  <data name="Frontend.746" xml:space="preserve"><value>Installation failed: ||Installation failed: </value></data>
+  <data name="Frontend.747" xml:space="preserve"><value>Enter a requirement description and select a Chat model.||Enter a requirement description and select a Chat model.</value></data>
+  <data name="Frontend.748" xml:space="preserve"><value>AI generated a Draft Skill. Expand the version tree to preview it.||AI generated a Draft Skill. Expand the version tree to preview it.</value></data>
+  <data name="Frontend.749" xml:space="preserve"><value>Generation failed: ||Generation failed: </value></data>
+  <data name="Frontend.750" xml:space="preserve"><value>Preview failed: ||Preview failed: </value></data>
+  <data name="Frontend.751" xml:space="preserve"><value>Publish the current Skill version?||Publish the current Skill version?</value></data>
+  <data name="Frontend.752" xml:space="preserve"><value>Publish confirmation||Publish confirmation</value></data>
+  <data name="Frontend.753" xml:space="preserve"><value>Skill published||Skill published</value></data>
   <data name="AdminChat.SystemPrompt.Default" xml:space="preserve">
     <value>You are the AI assistant on the NeuCharFramework administration home page.
 Answer user questions concisely, accurately, and in an actionable way. If information is missing, state exactly what is missing.
