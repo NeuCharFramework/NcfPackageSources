@@ -1251,4 +1251,34 @@
   <data name="Frontend.318" xml:space="preserve"><value>还没有启用中的绑定配置。先到个人微信 Bot 为微信账号创建绑定，手机端才能识别管理员。||No enabled binding configuration exists. Create a binding for the WeChat account in Personal WeChat Bot first so the phone can identify the administrator.</value></data>
   <data name="Frontend.319" xml:space="preserve"><value>集成状态||Integration status</value></data>
   <data name="Frontend.320" xml:space="preserve"><value>首次绑定||First binding</value></data>
+  <data name="Frontend.321" xml:space="preserve"><value>Pivot Block 尚未初始化||Pivot Block has not been initialized</value></data>
+  <data name="Frontend.322" xml:space="preserve"><value>打开模块 NeuCharPivot 设置||Open module NeuCharPivot settings</value></data>
+  <data name="Frontend.323" xml:space="preserve"><value>打开面板设置并预填代码||Open panel settings and prefill the code</value></data>
+  <data name="Frontend.324" xml:space="preserve"><value>数据库中没有找到该块引用的 Function。先初始化或恢复 Function 后，再回到面板设置重新选择即可。||The Function referenced by this block was not found in the database. Initialize or restore it first, then return to panel settings and select it again.</value></data>
+  <data name="Frontend.325" xml:space="preserve"><value>管理面板||Manage panels</value></data>
+  <data name="Frontend.326" xml:space="preserve"><value>日本語||日本語</value></data>
+  <data name="Frontend.327" xml:space="preserve"><value>简体中文||Simplified Chinese</value></data>
+  <data name="Frontend.328" xml:space="preserve"><value>苏州盛派网络科技有限公司||Suzhou Senparc Network Technology Co., Ltd.</value></data>
+  <data name="Frontend.329" xml:space="preserve"><value>Function Calling 参数||Function Calling parameters</value></data>
+  <data name="Frontend.330" xml:space="preserve"><value>XNCF 模块||XNCF module</value></data>
+  <data name="Frontend.331" xml:space="preserve"><value>仅接收常规 input 参数||Accept regular input parameters only</value></data>
+  <data name="Frontend.332" xml:space="preserve"><value>打开||Open</value></data>
+  <data name="Frontend.333" xml:space="preserve"><value>搜索 Workflow 名称 / 描述 / 参数||Search Workflow name / description / parameters</value></data>
+  <data name="Frontend.334" xml:space="preserve"><value>没有可用的已启用 Workflow||No enabled Workflows are available</value></data>
+  <data name="Frontend.335" xml:space="preserve"><value>清空选择||Clear selection</value></data>
+  <data name="Frontend.336" xml:space="preserve"><value>AI 快捷对话||AI quick chat</value></data>
+  <data name="Frontend.337" xml:space="preserve"><value>Admin Chat 快捷对话||Admin Chat quick chat</value></data>
+  <data name="Frontend.338" xml:space="preserve"><value>NeuBell 提醒||NeuBell reminders</value></data>
+  <data name="Frontend.339" xml:space="preserve"><value>仅显示当前页面加载后捕获的浏览器日志，不包含服务器 stdout。||Only browser logs captured after this page loaded are shown; server stdout is not included.</value></data>
+  <data name="Frontend.340" xml:space="preserve"><value>关闭全部||Close all</value></data>
+  <data name="Frontend.341" xml:space="preserve"><value>切换到正式页面||Switch to the full page</value></data>
+  <data name="Frontend.342" xml:space="preserve"><value>当前没有模块提供纽铃信息。||No module currently provides NeuBell information.</value></data>
+  <data name="Frontend.343" xml:space="preserve"><value>暂无日志||No logs yet</value></data>
+  <data name="Frontend.344" xml:space="preserve"><value>服务器时间||Server time</value></data>
+  <data name="Frontend.345" xml:space="preserve"><value>浏览器 Console||Browser Console</value></data>
+  <data name="Frontend.346" xml:space="preserve"><value>消费||Consume</value></data>
+  <data name="Frontend.347" xml:space="preserve"><value>消费全部||Consume all</value></data>
+  <data name="Frontend.348" xml:space="preserve"><value>清空||Clear</value></data>
+  <data name="Frontend.349" xml:space="preserve"><value>选择在 Footer 显示的模块提醒。设置保存在当前账号的浏览器中。||Choose which module reminders appear in the Footer. The setting is saved in this account's browser.</value></data>
+  <data name="Frontend.350" xml:space="preserve"><value>支持普通文本和绝对 http/https 链接的 &lt;a&gt; 标签；其他 HTML 会被编码。||Supports plain text and absolute http/https links using &lt;a&gt; tags; other HTML is encoded.</value></data>
 </root>
