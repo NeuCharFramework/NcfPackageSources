@@ -916,5 +916,6 @@
   <data name="FineTuning.SecretAlreadyExists" xml:space="preserve"><value>密钥文件已存在，未覆盖。</value></data>
   <data name="FineTuning.SaveBeforeLaunch" xml:space="preserve"><value>请先保存，再生成密钥并启动。</value></data>
   <data name="FineTuning.Optional" xml:space="preserve"><value>可选</value></data>
+  <data name="Frontend.400" xml:space="preserve"><value>从 NeuChar AI 导入（DevId:{0}）||Imported from NeuChar AI (DevId: {0})</value></data>
 
 </root>

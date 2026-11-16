@@ -1384,4 +1384,11 @@
   <data name="Admin.Pagination.PageSize" xml:space="preserve"><value>条/页</value></data>
   <data name="Admin.Pagination.Total" xml:space="preserve"><value>共 {total} 条</value></data>
   <data name="Admin.Pagination.Page" xml:space="preserve"><value>页</value></data>
+  <data name="Frontend.450" xml:space="preserve"><value>命令前缀 {0} · 必填||Command prefix {0} · required</value></data>
+  <data name="Frontend.451" xml:space="preserve"><value>命令前缀 {0} · 可选||Command prefix {0} · optional</value></data>
+  <data name="Frontend.452" xml:space="preserve"><value>Harness 未开启||Harness is disabled</value></data>
+  <data name="Frontend.453" xml:space="preserve"><value>绑定微信账号||Bind Weixin account</value></data>
+  <data name="Frontend.454" xml:space="preserve"><value>获取 Workflow 列表||Get Workflow list</value></data>
+  <data name="Frontend.455" xml:space="preserve"><value>当前命令前缀为||The current command prefix is</value></data>
+  <data name="Frontend.456" xml:space="preserve"><value>{0} / {1} 条||{0} / {1} items</value></data>
 </root>
