@@ -41,6 +41,29 @@
   <data name="Frontend.032" xml:space="preserve"><value>Workspace 手动上传失败。||Workspace 手动上传失败。</value></data>
   <data name="Frontend.033" xml:space="preserve"><value>这将清空其他管理员 #{0} 的工作区「{1}」。文件会被删除，并恢复为新建时的 input、output、logs 空目录。工作区本身会保留。此操作不可撤销。||这将清空其他管理员 #{0} 的工作区「{1}」。文件会被删除，并恢复为新建时的 input、output、logs 空目录。工作区本身会保留。此操作不可撤销。</value></data>
   <data name="Frontend.034" xml:space="preserve"><value>这将清空你自己的工作区「{0}」。文件会被删除，并恢复为新建时的 input、output、logs 空目录。工作区本身会保留。此操作不可撤销。||这将清空你自己的工作区「{0}」。文件会被删除，并恢复为新建时的 input、output、logs 空目录。工作区本身会保留。此操作不可撤销。</value></data>
+  <data name="Frontend.035" xml:space="preserve"><value>工作区与远程编辑||工作区与远程编辑</value></data>
+  <data name="Frontend.036" xml:space="preserve"><value>文件保存在隔离目录中，AdminChat、VS Code 与 Cursor 共用。这里查看每个工作区的文件数量和容量，也可以清空内容并恢复成新建时的空目录。||文件保存在隔离目录中，AdminChat、VS Code 与 Cursor 共用。这里查看每个工作区的文件数量和容量，也可以清空内容并恢复成新建时的空目录。</value></data>
+  <data name="Frontend.037" xml:space="preserve"><value>当前账号 #{0} · 单个工作区配额 {1} · 文件数和容量不含工作区清单。||当前账号 #{0} · 单个工作区配额 {1} · 文件数和容量不含工作区清单。</value></data>
+  <data name="Frontend.038" xml:space="preserve"><value>其他管理员只统计当前租户内不属于你的工作区。||其他管理员只统计当前租户内不属于你的工作区。</value></data>
+  <data name="Frontend.039" xml:space="preserve"><value>{0} 个||{0} 个</value></data>
+  <data name="Frontend.040" xml:space="preserve"><value>给新任务起个名字，例如：订单系统重构||给新任务起个名字，例如：订单系统重构</value></data>
+  <data name="Frontend.041" xml:space="preserve"><value>创建于 {0}||创建于 {0}</value></data>
+  <data name="Frontend.042" xml:space="preserve"><value>访问于 {0}||访问于 {0}</value></data>
+  <data name="Frontend.043" xml:space="preserve"><value>这些工作区不属于当前账号。超级管理员可以查看用量并清空内容，操作会记入日志。||这些工作区不属于当前账号。超级管理员可以查看用量并清空内容，操作会记入日志。</value></data>
+  <data name="Frontend.044" xml:space="preserve"><value>这里只显示同一个租户里、所有者不是你的工作区。||这里只显示同一个租户里、所有者不是你的工作区。</value></data>
+  <data name="Frontend.045" xml:space="preserve"><value>管理员 #{0}||管理员 #{0}</value></data>
+  <data name="Frontend.046" xml:space="preserve"><value>安装 “NCF Workspace” 扩展||安装 “NCF Workspace” 扩展</value></data>
+  <data name="Frontend.047" xml:space="preserve"><value>运行 “NCF: 连接工作区”||运行 “NCF: 连接工作区”</value></data>
+  <data name="Frontend.048" xml:space="preserve"><value>输入站点地址，在浏览器中确认配对||输入站点地址，在浏览器中确认配对</value></data>
+  <data name="Frontend.049" xml:space="preserve"><value>选择工作区，文件将作为远程文件夹打开||选择工作区，文件将作为远程文件夹打开</value></data>
+  <data name="Frontend.050" xml:space="preserve"><value>工作区本身会保留。此操作不可撤销。||工作区本身会保留。此操作不可撤销。</value></data>
+  <data name="Frontend.051" xml:space="preserve"><value>当前租户没有其他管理员的工作区||当前租户没有其他管理员的工作区</value></data>
+  <data name="Frontend.052" xml:space="preserve"><value>设备尚未配对？前往设备会话页面完成配对。||设备尚未配对？前往设备会话页面完成配对。</value></data>
+  <data name="Frontend.053" xml:space="preserve"><value>工作区||工作区</value></data>
+  <data name="Frontend.054" xml:space="preserve"><value>我的||我的</value></data>
+  <data name="Frontend.055" xml:space="preserve"><value>其他管理员||其他管理员</value></data>
+  <data name="Frontend.056" xml:space="preserve"><value>创建工作区||创建工作区</value></data>
+  <data name="Frontend.057" xml:space="preserve"><value>当前账号||当前账号</value></data>
   <data name="Server.IdentityInvalid" xml:space="preserve"><value>当前管理员身份无效，请重新登录。||当前管理员身份无效，请重新登录。</value></data>
   <data name="Server.UsageReadFailed" xml:space="preserve"><value>读取工作区用量失败，请稍后重试。||读取工作区用量失败，请稍后重试。</value></data>
   <data name="Server.NameRequired" xml:space="preserve"><value>请输入工作区名称。||请输入工作区名称。</value></data>
