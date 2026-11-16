@@ -1391,4 +1391,7 @@
   <data name="Frontend.454" xml:space="preserve"><value>获取 Workflow 列表||Get Workflow list</value></data>
   <data name="Frontend.455" xml:space="preserve"><value>当前命令前缀为||The current command prefix is</value></data>
   <data name="Frontend.456" xml:space="preserve"><value>{0} / {1} 条||{0} / {1} items</value></data>
+  <data name="Frontend.457" xml:space="preserve"><value>输入内容||Input text</value></data>
+  <data name="Frontend.458" xml:space="preserve"><value>{0} 条新消息||{0} new messages</value></data>
+  <data name="Frontend.459" xml:space="preserve"><value>命令前缀||Command prefix</value></data>
 </root>
