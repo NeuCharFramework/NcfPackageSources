@@ -10009,7 +10009,8 @@ var app = new Vue({
                 console.log('[IME] ignore blur during composition');
                 return;
             }
-            this.applyHighlight();
+            // 放大按钮会在失焦后隐藏编辑器，不能再从隐藏的 contenteditable 读取 innerText。
+            this.applyHighlight(this.content);
         },
 
         handleEditorKeyUp() {
@@ -10357,7 +10358,7 @@ var app = new Vue({
         },
         
         // 应用高亮（保存光标位置）
-        applyHighlight() {
+        applyHighlight(textOverride) {
             if (this.isComposing) {
                 console.log('[IME] applyHighlight blocked during composition');
                 return;
@@ -10368,12 +10369,11 @@ var app = new Vue({
             // 检查编辑器是否有焦点
             const hasFocus = document.activeElement === editor;
             
-            // 获取当前文本（在保存光标位置之前获取，确保文本一致性）
-            const text = this.getEditorText();
-            
-            // 同步 content（但不触发状态变化，因为状态变化应该在 handleEditorInput 中处理）
-            // 这里只负责高亮显示。标记来源，避免 watcher 在下一帧把 innerHTML 再写一遍
-            this.assignContentFromEditor(text);
+            // 失焦时使用已由输入事件同步到 Vue 的 content，避免隐藏编辑器的 innerText 变为空。
+            const text = typeof textOverride === 'string' ? textOverride : this.getEditorText();
+            if (typeof textOverride !== 'string') {
+                this.assignContentFromEditor(text);
+            }
             
             // 只有在编辑器有焦点时才保存光标位置
             // 使用基于文本内容的方法，而不是 DOM 遍历，确保与恢复时一致
