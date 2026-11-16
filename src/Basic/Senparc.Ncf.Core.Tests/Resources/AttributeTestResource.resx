@@ -9,4 +9,5 @@
   <data name="Function.Description" xml:space="preserve"><value>测试说明</value></data>
   <data name="Parameter.Description" xml:space="preserve"><value>参数||参数说明</value></data>
   <data name="NeutralOnly" xml:space="preserve"><value>仅中文</value></data>
+  <data name="Frontend.Conflict" xml:space="preserve"><value>运行中||Running</value></data>
 </root>
