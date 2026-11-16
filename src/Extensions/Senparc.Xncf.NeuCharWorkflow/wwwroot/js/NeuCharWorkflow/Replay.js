@@ -6,6 +6,7 @@ new Vue({
             loadError: '',
             replay: null,
             graph: { nodes: [], edges: [] },
+            canvasViewportSize: { width: 0, height: 0 },
             stepIndex: -1,
             nodeStates: {},
             timelineRenderLimit: 300,
@@ -29,7 +30,12 @@ new Vue({
             const nodes = this.graph.nodes || [];
             const right = Math.max(760, ...nodes.map(node => Number(node.x || 0) + 240));
             const bottom = Math.max(520, ...nodes.map(node => Number(node.y || 0) + 130));
-            return { width: right + this.canvasInset * 2, height: bottom + this.canvasInset * 2 };
+            const viewportWidth = Number(this.canvasViewportSize && this.canvasViewportSize.width) || 0;
+            const viewportHeight = Number(this.canvasViewportSize && this.canvasViewportSize.height) || 0;
+            return {
+                width: right + this.canvasInset * 2 + viewportWidth / 2,
+                height: bottom + this.canvasInset * 2 + viewportHeight / 2
+            };
         },
         canvasStyle() {
             return { width: `${this.canvasSize.width}px`, minHeight: `${this.canvasSize.height}px` };
@@ -70,6 +76,7 @@ new Vue({
                 this.graph = NeuCharWorkflowUi.parseJson(this.replay.definition && this.replay.definition.graphJson, { nodes: [], edges: [] }) || { nodes: [], edges: [] };
                 this.graph.nodes = Array.isArray(this.graph.nodes) ? this.graph.nodes : [];
                 this.graph.edges = Array.isArray(this.graph.edges) ? this.graph.edges : [];
+                this.centerGraph();
             } catch (error) {
                 this.loadError = this.errorMessage(error, '无法读取任务回看。运行中的任务需要等待结束，旧任务可能尚未保存快照。');
             } finally {
@@ -82,8 +89,39 @@ new Vue({
                 top: `${this.canvasInset + Math.max(24, Number(node.y || 0))}px`
             };
         },
+        isHorizontalLayout() {
+            return !!(this.graph && this.graph.layout && this.graph.layout.direction === 'horizontal');
+        },
         findNode(id) {
             return this.graph.nodes.find(node => node.id === id);
+        },
+        centerGraph() {
+            const nodes = this.graph.nodes || [];
+            if (!nodes.length) return;
+            const center = () => {
+                const viewport = this.$refs && this.$refs.canvasViewport;
+                if (!viewport) return;
+                const viewportSize = {
+                    width: viewport.clientWidth,
+                    height: viewport.clientHeight
+                };
+                const previousSize = this.canvasViewportSize || {};
+                if (previousSize.width !== viewportSize.width || previousSize.height !== viewportSize.height) {
+                    this.canvasViewportSize = viewportSize;
+                    if (typeof this.$nextTick === 'function') this.$nextTick(center);
+                    return;
+                }
+                const left = this.canvasInset + Math.min(...nodes.map(node => Math.max(24, Number(node.x || 0))));
+                const top = this.canvasInset + Math.min(...nodes.map(node => Math.max(24, Number(node.y || 0))));
+                const right = this.canvasInset + Math.max(...nodes.map(node => Math.max(24, Number(node.x || 0)) + 234));
+                const bottom = this.canvasInset + Math.max(...nodes.map(node => Math.max(24, Number(node.y || 0)) + 92));
+                const targetLeft = Math.max(0, (left + right) / 2 - viewport.clientWidth / 2);
+                const targetTop = Math.max(0, (top + bottom) / 2 - viewport.clientHeight / 2);
+                viewport.scrollLeft = Math.min(targetLeft, Math.max(0, viewport.scrollWidth - viewport.clientWidth));
+                viewport.scrollTop = Math.min(targetTop, Math.max(0, viewport.scrollHeight - viewport.clientHeight));
+            };
+            if (typeof this.$nextTick === 'function') this.$nextTick(center);
+            else center();
         },
         centerCurrentNode() {
             const event = this.currentEvent;
@@ -108,19 +146,23 @@ new Vue({
         },
         edgeStartX(edge) {
             const source = this.findNode(edge.source);
-            return this.canvasInset + Number(source && source.x || 0) + 208;
+            const left = this.canvasInset + Math.max(24, Number(source && source.x || 0));
+            return left + (this.isHorizontalLayout() ? 234 : 117);
         },
         edgeStartY(edge) {
             const source = this.findNode(edge.source);
-            return this.canvasInset + Number(source && source.y || 0) + 43;
+            const top = this.canvasInset + Math.max(24, Number(source && source.y || 0));
+            return top + (this.isHorizontalLayout() ? 46 : 92);
         },
         edgeEndX(edge) {
             const target = this.findNode(edge.target);
-            return this.canvasInset + Number(target && target.x || 0) + 12;
+            const left = this.canvasInset + Math.max(24, Number(target && target.x || 0));
+            return left + (this.isHorizontalLayout() ? 0 : 117);
         },
         edgeEndY(edge) {
             const target = this.findNode(edge.target);
-            return this.canvasInset + Number(target && target.y || 0) + 43;
+            const top = this.canvasInset + Math.max(24, Number(target && target.y || 0));
+            return top + (this.isHorizontalLayout() ? 46 : 0);
         },
         nodeState(id) { return this.nodeStates[id] || 'pending'; },
         goToStep(index) {

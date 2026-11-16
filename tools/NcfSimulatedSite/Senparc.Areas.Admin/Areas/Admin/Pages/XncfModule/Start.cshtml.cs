@@ -48,6 +48,8 @@ using Senparc.Areas.Admin;
 using Senparc.Areas.Admin.Domain.Services;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
 using Senparc.Ncf.Core.WorkContext.Provider;
+using Senparc.Ncf.Core.Models;
+using Microsoft.EntityFrameworkCore;
 using Senparc.Ncf.Shared.Abstractions.ChatAgent;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 
@@ -590,6 +592,73 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             if (uid.IsNullOrEmpty())
             {
                 throw new Exception(_localizer["Xncf.ModuleIdNotProvided"]);
+            }
+
+            public async Task<IActionResult> OnGetCapabilitiesAsync(string uid)
+            {
+                var register = XncfRegisterManager.RegisterList.FirstOrDefault(z => z.Uid == uid);
+                if (register == null) return NotFound("模块未加载。");
+                var functions = new List<object>();
+                if (Register.FunctionRenderCollection.TryGetValue(register.GetType(), out var group))
+                {
+                    functions.AddRange(group.Values.Select(z => new
+                    {
+                        key = z.Key,
+                        name = z.FunctionRenderAttribute.Name,
+                        description = z.FunctionRenderAttribute.Description
+                    }));
+                }
+                var database = register as IXncfDatabase;
+                return Ok(new
+                {
+                    interfaces = register.GetType().GetInterfaces().Select(z => z.Name).OrderBy(z => z),
+                    functions,
+                    threadCount = register.RegisteredThreadInfo?.Count() ?? 0,
+                    hasDatabase = database != null,
+                    databasePrefix = database?.DatabaseUniquePrefix,
+                    dbContextType = database?.TryGetXncfDatabaseDbContextType?.FullName
+                });
+            }
+
+            public async Task<IActionResult> OnPostEntitiesAsync(
+                [FromBody] EntityInsightRequest request)
+            {
+                if (request == null || string.IsNullOrWhiteSpace(request.Uid) || string.IsNullOrEmpty(request.Password))
+                    return BadRequest("请输入密码。");
+                var register = XncfRegisterManager.RegisterList.FirstOrDefault(z => z.Uid == request.Uid);
+                if (register == null) return NotFound("模块未加载。");
+                var admin = await _adminUserInfoService.GetObjectAsync(z => z.Id == _adminWorkContextProvider.GetAdminWorkContext().AdminUserId).ConfigureAwait(false);
+                if (admin == null || !admin.CheckPassword(request.Password))
+                    return Unauthorized("密码验证失败。");
+                var database = register as IXncfDatabase;
+                if (database == null) return Ok(new { entityCount = 0, entities = Array.Empty<object>(), databasePrefix = (string)null, appliedMigrations = Array.Empty<string>(), pendingMigrations = Array.Empty<string>() });
+                var db = _serviceProvider.GetService(database.TryGetXncfDatabaseDbContextType) as DbContext;
+                var entities = new List<object>();
+                foreach (var type in register.GetType().Assembly.GetTypes().Where(z => !z.IsAbstract && !z.IsInterface && IsEntityType(z)))
+                {
+                    var tableName = type.GetCustomAttributes(typeof(System.ComponentModel.DataAnnotations.Schema.TableAttribute), false).OfType<System.ComponentModel.DataAnnotations.Schema.TableAttribute>().FirstOrDefault()?.Name
+                        ?? database.DatabaseUniquePrefix + type.Name + "s";
+                    long? rowCount = null;
+                    if (db != null)
+                    {
+                        try { rowCount = await db.Set(type).LongCountAsync(HttpContext.RequestAborted).ConfigureAwait(false); } catch { }
+                    }
+                    entities.Add(new { tableName, entityName = type.FullName, rowCount, columns = type.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(z => z.Name != "ConcurrencyStamp").Select(z => new { name = z.Name, type = z.PropertyType.Name }) });
+                }
+                var applied = db == null ? Array.Empty<string>() : (await db.Database.GetAppliedMigrationsAsync(HttpContext.RequestAborted).ConfigureAwait(false)).ToArray();
+                var pending = db == null ? Array.Empty<string>() : (await db.Database.GetPendingMigrationsAsync(HttpContext.RequestAborted).ConfigureAwait(false)).ToArray();
+                return Ok(new { entityCount = entities.Count, entities, databasePrefix = database.DatabaseUniquePrefix, appliedMigrations = applied, pendingMigrations = pending });
+            }
+
+            private static bool IsEntityType(Type type)
+            {
+                var current = type.BaseType;
+                while (current != null && current != typeof(object))
+                {
+                    if ((current.FullName ?? "").StartsWith("Senparc.Ncf.Core.Models.EntityBase", StringComparison.Ordinal)) return true;
+                    current = current.BaseType;
+                }
+                return false;
             }
 
 
