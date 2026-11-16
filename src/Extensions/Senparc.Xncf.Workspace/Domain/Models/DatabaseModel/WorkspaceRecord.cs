@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：WorkspaceRecord.cs
-    文件功能描述：工作区元数据实体
+    File name: WorkspaceRecord.cs
+    File description: 工作区元数据实体
     
     
-    创建标识：Senparc - 20261021
+    Created by: Senparc - 20261021
     
-    修改标识：Senparc - 20261021
-    修改描述：v0.1.1 持久化工作区所有者与存储信息
+    Modified by: Senparc - 20261021
+    Change description: v0.1.1 持久化工作区所有者与存储信息
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.2.2 维护工作区元数据实体
+    Modified by: Senparc - 20261103
+    Change description: v0.2.2 维护工作区元数据实体
 
 ----------------------------------------------------------------*/
 

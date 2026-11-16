@@ -1,13 +1,13 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：WorkspaceGatewayController.cs
-    文件功能描述：VS Code、Cursor 与桌面客户端安全 Workspace 网关
+    File name: WorkspaceGatewayController.cs
+    File description: VS Code、Cursor 与桌面客户端安全 Workspace 网关
 
-    创建标识：Senparc - 20261024
+    Created by: Senparc - 20261024
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.2.2 implement connection manager and workspace file system provider
+    Modified by: Senparc - 20261103
+    Change description: v0.2.2 implement connection manager and workspace file system provider
 
 ----------------------------------------------------------------*/
 

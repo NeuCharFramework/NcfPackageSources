@@ -1,13 +1,13 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：WorkspaceChangeHub.cs
-    文件功能描述：Workspace 文件变更通知中心
+    File name: WorkspaceChangeHub.cs
+    File description: Workspace 文件变更通知中心
 
-    创建标识：Senparc - 20261024
+    Created by: Senparc - 20261024
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.2.2 implement connection manager and workspace file system provider
+    Modified by: Senparc - 20261103
+    Change description: v0.2.2 implement connection manager and workspace file system provider
 
 ----------------------------------------------------------------*/
 
