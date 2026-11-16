@@ -1208,4 +1208,22 @@
   <data name="Frontend.275" xml:space="preserve"><value>选择或输入角色码||Select or enter role codes</value></data>
   <data name="Frontend.276" xml:space="preserve"><value>选择或输入角色码（任一命中即放行）||Select or enter role codes; any match allows access.</value></data>
   <data name="Frontend.277" xml:space="preserve"><value>（无）||(none)</value></data>
+  <data name="Frontend.278" xml:space="preserve"><value>Chat 修改||Edit with Chat</value></data>
+  <data name="Frontend.279" xml:space="preserve"><value>ChatAgent · 当前 XNCF 模块||ChatAgent · Current XNCF module</value></data>
+  <data name="Frontend.280" xml:space="preserve"><value>ChatAgent 会汇总全部 Function，生成一个声明式快捷操作面板。不会执行 AI 生成的脚本或任意内部方法。||ChatAgent summarizes all Functions into a declarative quick-action panel. It never executes AI-generated scripts or arbitrary internal methods.</value></data>
+  <data name="Frontend.281" xml:space="preserve"><value>NeuBell 通知||NeuBell notification</value></data>
+  <data name="Frontend.282" xml:space="preserve"><value>NeuCharPivot 生成过程已关闭 Function Calling；完整 AdminChat 仍只加载会话显式关联模块公开注册的 FunctionRender。Pivot/Workflow 执行会再次进行服务端白名单和模块状态校验。||Function Calling is disabled during NeuCharPivot generation; full AdminChat still loads only publicly registered FunctionRender entries from explicitly linked modules. Pivot/Workflow execution performs server-side allowlist and module-state checks again.</value></data>
+  <data name="Frontend.283" xml:space="preserve"><value>不关联||Do not link</value></data>
+  <data name="Frontend.284" xml:space="preserve"><value>例如：把高频操作放在第一组，并只暴露必要参数||For example: put frequent actions in the first group and expose only required parameters</value></data>
+  <data name="Frontend.285" xml:space="preserve"><value>发送并更新 Pivot||Send and update Pivot</value></data>
+  <data name="Frontend.286" xml:space="preserve"><value>启用前会再次校验所有必填参数；模块关闭或 Function 被移除时不会执行。||All required parameters are checked again before enabling; execution is blocked when the module is disabled or the Function is removed.</value></data>
+  <data name="Frontend.287" xml:space="preserve"><value>完成后触发 Workflow||Trigger Workflow after completion</value></data>
+  <data name="Frontend.288" xml:space="preserve"><value>当前引用：||Current reference:</value></data>
+  <data name="Frontend.289" xml:space="preserve"><value>打开完整 AdminChat||Open full AdminChat</value></data>
+  <data name="Frontend.290" xml:space="preserve"><value>模块当前未安装或未开启，所有 Pivot Function 和定时任务均已在底层禁用。||This module is not installed or enabled; all Pivot Functions and scheduled tasks are disabled at the runtime layer.</value></data>
+  <data name="Frontend.291" xml:space="preserve"><value>生成此模块的 NeuCharPivot||Generate NeuCharPivot for this module</value></data>
+  <data name="Frontend.292" xml:space="preserve"><value>生成界面||Generate panel</value></data>
+  <data name="Frontend.293" xml:space="preserve"><value>自动执行||Automatic execution</value></data>
+  <data name="Frontend.294" xml:space="preserve"><value>选择 AI 算力||Select AI capacity</value></data>
+  <data name="Frontend.295" xml:space="preserve"><value>间隔（秒）||Interval (seconds)</value></data>
 </root>
