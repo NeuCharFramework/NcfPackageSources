@@ -15,4 +15,33 @@
   <data name="Designer.Introduction" xml:space="preserve"><value>用 Function、系统节点和 Agent 组合流程；保存与运行前会校验参数、类型、连线及模块状态。</value></data>
   <data name="Action.Refresh" xml:space="preserve"><value>刷新</value></data>
   <data name="Action.NewWorkflow" xml:space="preserve"><value>新建工作流</value></data>
+  <data name="Frontend.001" xml:space="preserve"><value>任务列表||Tasks</value></data>
+  <data name="Frontend.002" xml:space="preserve"><value>运行回看||Run replay</value></data>
+  <data name="Frontend.003" xml:space="preserve"><value>刷新||Refresh</value></data>
+  <data name="Frontend.004" xml:space="preserve"><value>快速清理||Quick cleanup</value></data>
+  <data name="Frontend.005" xml:space="preserve"><value>统计分析||Analytics</value></data>
+  <data name="Frontend.006" xml:space="preserve"><value>任务统计||Task statistics</value></data>
+  <data name="Frontend.007" xml:space="preserve"><value>全部任务||All tasks</value></data>
+  <data name="Frontend.008" xml:space="preserve"><value>正在运行||Running</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>运行成功||Succeeded</value></data>
+  <data name="Frontend.010" xml:space="preserve"><value>运行失败||Failed</value></data>
+  <data name="Frontend.011" xml:space="preserve"><value>工作流||Workflow</value></data>
+  <data name="Frontend.012" xml:space="preserve"><value>状态||Status</value></data>
+  <data name="Frontend.013" xml:space="preserve"><value>开始时间||Started at</value></data>
+  <data name="Frontend.014" xml:space="preserve"><value>完成时间||Completed at</value></data>
+  <data name="Frontend.015" xml:space="preserve"><value>当前进度 / 结果||Progress / result</value></data>
+  <data name="Frontend.016" xml:space="preserve"><value>操作||Actions</value></data>
+  <data name="Frontend.017" xml:space="preserve"><value>中止||Abort</value></data>
+  <data name="Frontend.018" xml:space="preserve"><value>查看运行||View run</value></data>
+  <data name="Frontend.019" xml:space="preserve"><value>回看运行||Replay run</value></data>
+  <data name="Frontend.020" xml:space="preserve"><value>暂无快照||No snapshot</value></data>
+  <data name="Frontend.021" xml:space="preserve"><value>没有更多记录||No more records</value></data>
+  <data name="Frontend.022" xml:space="preserve"><value>返回任务列表||Back to tasks</value></data>
+  <data name="Frontend.023" xml:space="preserve"><value>查看此工作流任务||View workflow tasks</value></data>
+  <data name="Frontend.024" xml:space="preserve"><value>查看统计||View analytics</value></data>
+  <data name="Frontend.025" xml:space="preserve"><value>执行步骤||Execution steps</value></data>
+  <data name="Frontend.026" xml:space="preserve"><value>输入参数||Input parameters</value></data>
+  <data name="Frontend.027" xml:space="preserve"><value>输出结果||Output result</value></data>
+  <data name="Frontend.028" xml:space="preserve"><value>当前步骤||Current step</value></data>
+  <data name="Frontend.029" xml:space="preserve"><value>运行概览||Run overview</value></data>
 </root>

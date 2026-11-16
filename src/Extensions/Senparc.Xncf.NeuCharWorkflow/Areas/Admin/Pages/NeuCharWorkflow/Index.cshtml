@@ -1440,6 +1440,7 @@
 </div>
 
 @section scripts {
+    <partial name="~/Areas/Admin/Pages/Shared/_LocalizationScripts.cshtml" />
     @* Keep this template outside the shared #app Vue root. Otherwise the root compiler
        evaluates its v-for variables (such as fn) in the page scope before the child
        component receives the template. *@

@@ -15,4 +15,33 @@
   <data name="Designer.Introduction" xml:space="preserve"><value>Compose Functions, system nodes, and Agents. Parameters, types, connections, and module state are checked before save and run.</value></data>
   <data name="Action.Refresh" xml:space="preserve"><value>Refresh</value></data>
   <data name="Action.NewWorkflow" xml:space="preserve"><value>New workflow</value></data>
+  <data name="Frontend.001" xml:space="preserve"><value>Tasks||Tasks</value></data>
+  <data name="Frontend.002" xml:space="preserve"><value>Run replay||Run replay</value></data>
+  <data name="Frontend.003" xml:space="preserve"><value>Refresh||Refresh</value></data>
+  <data name="Frontend.004" xml:space="preserve"><value>Quick cleanup||Quick cleanup</value></data>
+  <data name="Frontend.005" xml:space="preserve"><value>Analytics||Analytics</value></data>
+  <data name="Frontend.006" xml:space="preserve"><value>Task statistics||Task statistics</value></data>
+  <data name="Frontend.007" xml:space="preserve"><value>All tasks||All tasks</value></data>
+  <data name="Frontend.008" xml:space="preserve"><value>Running||Running</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>Succeeded||Succeeded</value></data>
+  <data name="Frontend.010" xml:space="preserve"><value>Failed||Failed</value></data>
+  <data name="Frontend.011" xml:space="preserve"><value>Workflow||Workflow</value></data>
+  <data name="Frontend.012" xml:space="preserve"><value>Status||Status</value></data>
+  <data name="Frontend.013" xml:space="preserve"><value>Started at||Started at</value></data>
+  <data name="Frontend.014" xml:space="preserve"><value>Completed at||Completed at</value></data>
+  <data name="Frontend.015" xml:space="preserve"><value>Progress / result||Progress / result</value></data>
+  <data name="Frontend.016" xml:space="preserve"><value>Actions||Actions</value></data>
+  <data name="Frontend.017" xml:space="preserve"><value>Abort||Abort</value></data>
+  <data name="Frontend.018" xml:space="preserve"><value>View run||View run</value></data>
+  <data name="Frontend.019" xml:space="preserve"><value>Replay run||Replay run</value></data>
+  <data name="Frontend.020" xml:space="preserve"><value>No snapshot||No snapshot</value></data>
+  <data name="Frontend.021" xml:space="preserve"><value>No more records||No more records</value></data>
+  <data name="Frontend.022" xml:space="preserve"><value>Back to tasks||Back to tasks</value></data>
+  <data name="Frontend.023" xml:space="preserve"><value>View workflow tasks||View workflow tasks</value></data>
+  <data name="Frontend.024" xml:space="preserve"><value>View analytics||View analytics</value></data>
+  <data name="Frontend.025" xml:space="preserve"><value>Execution steps||Execution steps</value></data>
+  <data name="Frontend.026" xml:space="preserve"><value>Input parameters||Input parameters</value></data>
+  <data name="Frontend.027" xml:space="preserve"><value>Output result||Output result</value></data>
+  <data name="Frontend.028" xml:space="preserve"><value>Current step||Current step</value></data>
+  <data name="Frontend.029" xml:space="preserve"><value>Run overview||Run overview</value></data>
 </root>

@@ -6,4 +6,24 @@
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <data name="Module.Workspace.MenuName" xml:space="preserve"><value>工作区</value></data>
   <data name="Module.Workspace.Description" xml:space="preserve"><value>通过跨平台 Workspace Agent 提供隔离文件访问、桌面编辑和安全运行时。</value></data>
+  <data name="Frontend.001" xml:space="preserve"><value>扩展模块||Extension Modules</value></data>
+  <data name="Frontend.002" xml:space="preserve"><value>远程编辑||Remote editing</value></data>
+  <data name="Frontend.003" xml:space="preserve"><value>安全远程工作区||Secure remote Workspace</value></data>
+  <data name="Frontend.004" xml:space="preserve"><value>我的工作区||My Workspaces</value></data>
+  <data name="Frontend.005" xml:space="preserve"><value>其他管理员||Other administrators</value></data>
+  <data name="Frontend.006" xml:space="preserve"><value>当前租户合计||Current tenant total</value></data>
+  <data name="Frontend.007" xml:space="preserve"><value>创建工作区||Create Workspace</value></data>
+  <data name="Frontend.008" xml:space="preserve"><value>还没有工作区||No Workspaces yet</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>其他管理员的工作区||Other administrators' Workspaces</value></data>
+  <data name="Frontend.010" xml:space="preserve"><value>连接指南||Connection guide</value></data>
+  <data name="Frontend.011" xml:space="preserve"><value>在 VS Code / Cursor 中连接||Connect in VS Code / Cursor</value></data>
+  <data name="Frontend.012" xml:space="preserve"><value>管理设备配对||Manage device pairing</value></data>
+  <data name="Frontend.013" xml:space="preserve"><value>文件||Files</value></data>
+  <data name="Frontend.014" xml:space="preserve"><value>目录||Directories</value></data>
+  <data name="Frontend.015" xml:space="preserve"><value>已用||Used</value></data>
+  <data name="Frontend.016" xml:space="preserve"><value>上传||Upload</value></data>
+  <data name="Frontend.017" xml:space="preserve"><value>清空||Clear</value></data>
+  <data name="Frontend.018" xml:space="preserve"><value>输入一个名字并点击「创建工作区」，即可在 AI 对话与远程编辑器之间安全共享文件。||Enter a name and choose Create Workspace to share files securely between AI chat and the remote editor.</value></data>
+  <data name="Frontend.019" xml:space="preserve"><value>当前租户没有其他管理员的工作区||No other administrator Workspaces exist in the current tenant</value></data>
+  <data name="Frontend.020" xml:space="preserve"><value>设备尚未配对？前往设备会话页面完成配对。||Device not paired? Open device sessions to complete pairing.</value></data>
 </root>
