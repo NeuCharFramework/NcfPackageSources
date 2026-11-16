@@ -1,8 +1,8 @@
 @using System.Text.Json
 @using System.Reflection
-@using System.Globalization
 @using Microsoft.Extensions.Localization
 @using System.Collections.Generic
+@using Senparc.Ncf.Core.Localization
 @inject IStringLocalizerFactory LocalizationFactory
 @{
     var translations = AR.GetAllStrings(includeParentCultures: true)
@@ -10,55 +10,18 @@
         .ToDictionary(group => group.Key, group => group.First().Value);
     var translationsJson = JsonSerializer.Serialize(translations);
     var sourceTranslations = new Dictionary<string, string>(StringComparer.Ordinal);
-    void AddSourceTranslations(Type resourceType, IStringLocalizer localizer)
+    void AddSourceTranslations(Type resourceType)
     {
-        var neutralStrings = Array.Empty<LocalizedString>();
-        var originalCulture = CultureInfo.CurrentUICulture;
-        try
+        foreach (var item in FrontendTranslationCatalog.Get(LocalizationFactory, resourceType))
         {
-            CultureInfo.CurrentUICulture = CultureInfo.InvariantCulture;
-            neutralStrings = LocalizationFactory.Create(resourceType)
-                .GetAllStrings(includeParentCultures: false)
-                .ToArray();
-        }
-        finally
-        {
-            CultureInfo.CurrentUICulture = originalCulture;
-        }
-
-        var neutralByKey = neutralStrings
-            .Where(item => item.Name.StartsWith("Frontend.", StringComparison.Ordinal))
-            .Select(item => new
+            if (!sourceTranslations.ContainsKey(item.Key))
             {
-                item.Name,
-                Parts = item.Value.Split(new[] { "||" }, 2, StringSplitOptions.None)
-            })
-            .Where(item => item.Parts.Length == 2)
-            .ToDictionary(item => item.Name, item => item.Parts, StringComparer.Ordinal);
-
-        foreach (var item in neutralByKey.Values)
-        {
-            sourceTranslations[item[0]] = item[1];
-        }
-
-        foreach (var item in localizer.GetAllStrings(includeParentCultures: false)
-                     .Where(item => item.Name.StartsWith("Frontend.", StringComparison.Ordinal)))
-        {
-            var localizedParts = item.Value.Split(new[] { "||" }, 2, StringSplitOptions.None);
-            if (neutralByKey.TryGetValue(item.Name, out var neutralParts))
-            {
-                sourceTranslations[neutralParts[0]] = localizedParts.Length == 2
-                    ? localizedParts[1]
-                    : item.Value;
-            }
-            else if (localizedParts.Length == 2 && !sourceTranslations.ContainsKey(localizedParts[0]))
-            {
-                sourceTranslations[localizedParts[0]] = localizedParts[1];
+                sourceTranslations[item.Key] = item.Value;
             }
         }
     }
 
-    AddSourceTranslations(typeof(Senparc.Areas.Admin.AdminResource), AR);
+    AddSourceTranslations(typeof(Senparc.Areas.Admin.AdminResource));
     var resourceTypes = AppDomain.CurrentDomain.GetAssemblies()
         .Where(assembly => !assembly.IsDynamic)
         .SelectMany(assembly =>
@@ -81,7 +44,7 @@
     {
         try
         {
-            AddSourceTranslations(resourceType!, LocalizationFactory.Create(resourceType!));
+            AddSourceTranslations(resourceType!);
         }
         catch
         {
