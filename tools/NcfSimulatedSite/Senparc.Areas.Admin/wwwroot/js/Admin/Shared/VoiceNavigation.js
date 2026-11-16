@@ -279,7 +279,17 @@
     }
 
     function isSetupPage(name) {
-        return compact(name) === compact('设置/执行');
+        const setupNames = [
+            '设置/执行',
+            'Settings / Execute',
+            'Настройки / Выполнить',
+            '設定 / 実行',
+            'Paramètres / Exécuter',
+            'Configuración / Ejecutar'
+        ];
+        return setupNames.some(function (setupName) {
+            return compact(name) === compact(setupName);
+        });
     }
 
     function sameMenuNode(left, right) {
@@ -322,7 +332,8 @@
         });
     }
 
-    // XNCF 模块节点没有自己的地址。第一个子节点是「设置/执行」，真正的首页是它后面的第一个页面。
+    // XNCF module nodes have no own address. The first child is the setup page;
+    // the actual landing page is the first page after it.
     function moduleLanding(entries, moduleNode) {
         const pages = pagesInside(entries, moduleNode);
         const setupIndex = pages.findIndex(function (page) {

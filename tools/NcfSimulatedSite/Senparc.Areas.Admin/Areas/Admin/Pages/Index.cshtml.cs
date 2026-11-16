@@ -25,6 +25,8 @@
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using Senparc.Areas.Admin;
 using Senparc.Areas.Admin.Domain;
 using AdminMenuLocalizationService = Senparc.Areas.Admin.Domain.Services.AdminMenuLocalizationService;
 using Senparc.Ncf.Core.Models.DataBaseModel;
@@ -44,12 +46,14 @@ namespace Senparc.Areas.Admin.Pages
         IServiceProvider serviceProvider,
         XncfModuleServiceExtension xncfModuleServiceEx,
         IAdminWorkContextProvider adminWorkContextProvider,
-        AdminMenuLocalizationService menuLocalization)
+        AdminMenuLocalizationService menuLocalization,
+        IStringLocalizer<AdminResource> localizer)
         : BaseAdminPageModel(serviceProvider)
     {
         private readonly IServiceProvider _serviceProvider = serviceProvider;
         private readonly IAdminWorkContextProvider _adminWorkContextProvider = adminWorkContextProvider;
         private readonly AdminMenuLocalizationService _menuLocalization = menuLocalization;
+        private readonly IStringLocalizer<AdminResource> _localizer = localizer;
 
         //TODO:从其他模块获得
         private readonly XncfModuleServiceExtension _xncfModuleServiceEx = xncfModuleServiceEx;
@@ -245,7 +249,7 @@ namespace Senparc.Areas.Admin.Pages
                     {
                         dest.Add(new SysMenuDto()
                         {
-                            MenuName = "设置/执行",
+                            MenuName = _localizer["Xncf.SettingsAndExecute"].Value,
                             Url = item.Url,
                             Id = (index++).ToString(),
                             ParentId = item.Id,

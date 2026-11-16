@@ -188,6 +188,22 @@ test('a module name opens the first page after its setup entry', () => {
     const setup = api.match('打开微信管理的设置/执行', entries);
     assert.equal(setup.status, 'navigate');
     assert.equal(setup.target.url, '/Admin/XncfModule/Start?uid=weixin');
+
+    const englishEntries = api.indexMenus([
+        {
+            menuName: 'Extension Modules', url: '', children: [
+                {
+                    menuName: 'File Manager', url: '', id: 'files-en', children: [
+                        { menuName: 'Settings / Execute', url: '/Admin/XncfModule/Start?uid=files', id: 'files-en-setup', children: [] },
+                        { menuName: 'File resources', url: '/Admin/FileManager/Index?uid=files', id: 'files-en-home', children: [] }
+                    ]
+                }
+            ]
+        }
+    ]);
+    const englishSetup = api.match('Open File Manager Settings / Execute', englishEntries);
+    assert.equal(englishSetup.status, 'navigate');
+    assert.equal(englishSetup.target.url, '/Admin/XncfModule/Start?uid=files');
 });
 
 test('dismiss closes the voice panel without keeping the draft', () => {
