@@ -44,4 +44,95 @@
   <data name="Frontend.027" xml:space="preserve"><value>输出结果||输出结果</value></data>
   <data name="Frontend.028" xml:space="preserve"><value>当前步骤||当前步骤</value></data>
   <data name="Frontend.029" xml:space="preserve"><value>运行概览||运行概览</value></data>
+  <data name="Frontend.030" xml:space="preserve"><value>统计分析||统计分析</value></data>
+  <data name="Frontend.031" xml:space="preserve"><value>Workflow 统计分析||Workflow 统计分析</value></data>
+  <data name="Frontend.032" xml:space="preserve"><value>运行健康度、外部资源调用和可回看的执行记录。||运行健康度、外部资源调用和可回看的执行记录。</value></data>
+  <data name="Frontend.033" xml:space="preserve"><value>统计筛选||统计筛选</value></data>
+  <data name="Frontend.034" xml:space="preserve"><value>至||至</value></data>
+  <data name="Frontend.035" xml:space="preserve"><value>开始日期||开始日期</value></data>
+  <data name="Frontend.036" xml:space="preserve"><value>结束日期||结束日期</value></data>
+  <data name="Frontend.037" xml:space="preserve"><value>全部工作流||全部工作流</value></data>
+  <data name="Frontend.038" xml:space="preserve"><value>全部状态||全部状态</value></data>
+  <data name="Frontend.039" xml:space="preserve"><value>全部资源类型||全部资源类型</value></data>
+  <data name="Frontend.040" xml:space="preserve"><value>全部外部资源||全部外部资源</value></data>
+  <data name="Frontend.041" xml:space="preserve"><value>搜索工作流、资源或错误||搜索工作流、资源或错误</value></data>
+  <data name="Frontend.042" xml:space="preserve"><value>查询||查询</value></data>
+  <data name="Frontend.043" xml:space="preserve"><value>重置||重置</value></data>
+  <data name="Frontend.044" xml:space="preserve"><value>运行概览||运行概览</value></data>
+  <data name="Frontend.045" xml:space="preserve"><value>运行总数||运行总数</value></data>
+  <data name="Frontend.046" xml:space="preserve"><value>成功率||成功率</value></data>
+  <data name="Frontend.047" xml:space="preserve"><value>平均耗时||平均耗时</value></data>
+  <data name="Frontend.048" xml:space="preserve"><value>运行趋势||运行趋势</value></data>
+  <data name="Frontend.049" xml:space="preserve"><value>按开始日期统计||按开始日期统计</value></data>
+  <data name="Frontend.050" xml:space="preserve"><value>{0} 天||{0} 天</value></data>
+  <data name="Frontend.051" xml:space="preserve"><value>当前筛选范围没有运行记录。||当前筛选范围没有运行记录。</value></data>
+  <data name="Frontend.052" xml:space="preserve"><value>外部资源调用||外部资源调用</value></data>
+  <data name="Frontend.053" xml:space="preserve"><value>{0} 次调用 · {1} 个资源||{0} 次调用 · {1} 个资源</value></data>
+  <data name="Frontend.054" xml:space="preserve"><value>资源||资源</value></data>
+  <data name="Frontend.055" xml:space="preserve"><value>调用||调用</value></data>
+  <data name="Frontend.056" xml:space="preserve"><value>涉及工作流||涉及工作流</value></data>
+  <data name="Frontend.057" xml:space="preserve"><value>当前筛选范围没有资源调用记录。||当前筛选范围没有资源调用记录。</value></data>
+  <data name="Frontend.058" xml:space="preserve"><value>工作流健康度||工作流健康度</value></data>
+  <data name="Frontend.059" xml:space="preserve"><value>点击工作流名称可进入对应任务范围||点击工作流名称可进入对应任务范围</value></data>
+  <data name="Frontend.060" xml:space="preserve"><value>运行||运行</value></data>
+  <data name="Frontend.061" xml:space="preserve"><value>最近运行||最近运行</value></data>
+  <data name="Frontend.062" xml:space="preserve"><value>当前筛选范围没有工作流运行记录。||当前筛选范围没有工作流运行记录。</value></data>
+  <data name="Frontend.063" xml:space="preserve"><value>运行明细||运行明细</value></data>
+  <data name="Frontend.064" xml:space="preserve"><value>点击记录进入实时运行或只读回看||点击记录进入实时运行或只读回看</value></data>
+  <data name="Frontend.065" xml:space="preserve"><value>上一页||上一页</value></data>
+  <data name="Frontend.066" xml:space="preserve"><value>第 {0} 页||第 {0} 页</value></data>
+  <data name="Frontend.067" xml:space="preserve"><value>下一页||下一页</value></data>
+  <data name="Frontend.068" xml:space="preserve"><value>耗时||耗时</value></data>
+  <data name="Frontend.069" xml:space="preserve"><value>结果||结果</value></data>
+  <data name="Frontend.070" xml:space="preserve"><value>Workflow 任务||Workflow 任务</value></data>
+  <data name="Frontend.071" xml:space="preserve"><value>首次仅加载最新 30 条运行记录；滚动到底部会继续加载历史，正在运行的任务会自动更新。||首次仅加载最新 30 条运行记录；滚动到底部会继续加载历史，正在运行的任务会自动更新。</value></data>
+  <data name="Frontend.072" xml:space="preserve"><value>当前工作流 #{0}||当前工作流 #{0}</value></data>
+  <data name="Frontend.073" xml:space="preserve"><value>搜索工作流或状态||搜索工作流或状态</value></data>
+  <data name="Frontend.074" xml:space="preserve"><value>任务统计||任务统计</value></data>
+  <data name="Frontend.075" xml:space="preserve"><value>全部任务||全部任务</value></data>
+  <data name="Frontend.076" xml:space="preserve"><value>当前||当前</value></data>
+  <data name="Frontend.077" xml:space="preserve"><value>运行中||运行中</value></data>
+  <data name="Frontend.078" xml:space="preserve"><value>当前进度 / 结果||当前进度 / 结果</value></data>
+  <data name="Frontend.079" xml:space="preserve"><value>没有匹配的任务||没有匹配的任务</value></data>
+  <data name="Frontend.080" xml:space="preserve"><value>还没有运行记录||还没有运行记录</value></data>
+  <data name="Frontend.081" xml:space="preserve"><value>调整搜索关键词或状态筛选后再试。||调整搜索关键词或状态筛选后再试。</value></data>
+  <data name="Frontend.082" xml:space="preserve"><value>从工作流画布运行、Webhook 或定时触发后，任务会显示在这里。运行结束后可进入只读回看。||从工作流画布运行、Webhook 或定时触发后，任务会显示在这里。运行结束后可进入只读回看。</value></data>
+  <data name="Frontend.083" xml:space="preserve"><value>正在加载更多记录…||正在加载更多记录…</value></data>
+  <data name="Frontend.084" xml:space="preserve"><value>继续向下滚动以加载更多记录||继续向下滚动以加载更多记录</value></data>
+  <data name="Frontend.085" xml:space="preserve"><value>只读运行回看 · #{0}||只读运行回看 · #{0}</value></data>
+  <data name="Frontend.086" xml:space="preserve"><value>运行于 {0}，{1}。画布为当时的运行快照，不会影响最新工作流。||运行于 {0}，{1}。画布为当时的运行快照，不会影响最新工作流。</value></data>
+  <data name="Frontend.087" xml:space="preserve"><value>运行回放控制||运行回放控制</value></data>
+  <data name="Frontend.088" xml:space="preserve"><value>共 {0} 个节点事件||共 {0} 个节点事件</value></data>
+  <data name="Frontend.089" xml:space="preserve"><value>该运行没有节点事件||该运行没有节点事件</value></data>
+  <data name="Frontend.090" xml:space="preserve"><value>开始||开始</value></data>
+  <data name="Frontend.091" xml:space="preserve"><value>加载运行快照||加载运行快照</value></data>
+  <data name="Frontend.092" xml:space="preserve"><value>显示更多步骤（{0} / {1}）||显示更多步骤（{0} / {1}）</value></data>
+  <data name="Frontend.093" xml:space="preserve"><value>节点状态已更新。||节点状态已更新。</value></data>
+  <data name="Frontend.094" xml:space="preserve"><value>该历史步骤未保存输入记录。||该历史步骤未保存输入记录。</value></data>
+  <data name="Frontend.095" xml:space="preserve"><value>查看 Agent Group 对话||查看 Agent Group 对话</value></data>
+  <data name="Frontend.096" xml:space="preserve"><value>运行完成。||运行完成。</value></data>
+  <data name="Frontend.097" xml:space="preserve"><value>运行失败。||运行失败。</value></data>
+  <data name="Frontend.098" xml:space="preserve"><value>点击左侧步骤，或使用播放控件逐步还原节点执行状态。||点击左侧步骤，或使用播放控件逐步还原节点执行状态。</value></data>
+  <data name="Frontend.099" xml:space="preserve"><value>参数 {0}||参数 {0}</value></data>
+  <data name="Frontend.100" xml:space="preserve"><value>Function 参数元数据缺少字段名；当前仅可保存草稿，修复或更新模块后才能运行。||Function 参数元数据缺少字段名；当前仅可保存草稿，修复或更新模块后才能运行。</value></data>
+  <data name="Frontend.101" xml:space="preserve"><value>{0} 秒||{0} 秒</value></data>
+  <data name="Frontend.102" xml:space="preserve"><value>{0} 分 {1} 秒||{0} 分 {1} 秒</value></data>
+  <data name="Frontend.103" xml:space="preserve"><value>读取 Workflow 统计失败。||读取 Workflow 统计失败。</value></data>
+  <data name="Frontend.104" xml:space="preserve"><value>读取 Workflow 任务列表失败。||读取 Workflow 任务列表失败。</value></data>
+  <data name="Frontend.105" xml:space="preserve"><value>刷新 Workflow 任务列表失败。||刷新 Workflow 任务列表失败。</value></data>
+  <data name="Frontend.106" xml:space="preserve"><value>加载更多 Workflow 任务失败。||加载更多 Workflow 任务失败。</value></data>
+  <data name="Frontend.107" xml:space="preserve"><value>正在读取运行记录…||正在读取运行记录…</value></data>
+  <data name="Frontend.108" xml:space="preserve"><value>运行开始前||运行开始前</value></data>
+  <data name="Frontend.109" xml:space="preserve"><value>步骤 {0} / {1}||步骤 {0} / {1}</value></data>
+  <data name="Frontend.110" xml:space="preserve"><value>缺少需要回看的任务标识。||缺少需要回看的任务标识。</value></data>
+  <data name="Frontend.111" xml:space="preserve"><value>未找到任务回看数据。||未找到任务回看数据。</value></data>
+  <data name="Frontend.112" xml:space="preserve"><value>无法读取任务回看。运行中的任务需要等待结束，旧任务可能尚未保存快照。||无法读取任务回看。运行中的任务需要等待结束，旧任务可能尚未保存快照。</value></data>
+  <data name="Frontend.113" xml:space="preserve"><value>无法从当前回看创建工作流草稿。||无法从当前回看创建工作流草稿。</value></data>
+  <data name="Frontend.114" xml:space="preserve"><value>复制工作流失败。||复制工作流失败。</value></data>
+  <data name="Frontend.115" xml:space="preserve"><value>等待||等待</value></data>
+  <data name="Frontend.116" xml:space="preserve"><value>条件判断||条件判断</value></data>
+  <data name="Frontend.117" xml:space="preserve"><value>Agent 组||Agent 组</value></data>
+  <data name="Frontend.118" xml:space="preserve"><value>聚合||聚合</value></data>
+  <data name="Frontend.119" xml:space="preserve"><value>发送纽铃||发送纽铃</value></data>
+  <data name="Frontend.120" xml:space="preserve"><value>状态更新||状态更新</value></data>
 </root>

@@ -44,4 +44,95 @@
   <data name="Frontend.027" xml:space="preserve"><value>输出结果||Output result</value></data>
   <data name="Frontend.028" xml:space="preserve"><value>当前步骤||Current step</value></data>
   <data name="Frontend.029" xml:space="preserve"><value>运行概览||Run overview</value></data>
+  <data name="Frontend.030" xml:space="preserve"><value>统计分析||Analytics</value></data>
+  <data name="Frontend.031" xml:space="preserve"><value>Workflow 统计分析||Workflow analytics</value></data>
+  <data name="Frontend.032" xml:space="preserve"><value>运行健康度、外部资源调用和可回看的执行记录。||Runtime health, external resource calls, and replayable execution records.</value></data>
+  <data name="Frontend.033" xml:space="preserve"><value>统计筛选||Analytics filters</value></data>
+  <data name="Frontend.034" xml:space="preserve"><value>至||to</value></data>
+  <data name="Frontend.035" xml:space="preserve"><value>开始日期||Start date</value></data>
+  <data name="Frontend.036" xml:space="preserve"><value>结束日期||End date</value></data>
+  <data name="Frontend.037" xml:space="preserve"><value>全部工作流||All workflows</value></data>
+  <data name="Frontend.038" xml:space="preserve"><value>全部状态||All statuses</value></data>
+  <data name="Frontend.039" xml:space="preserve"><value>全部资源类型||All resource types</value></data>
+  <data name="Frontend.040" xml:space="preserve"><value>全部外部资源||All external resources</value></data>
+  <data name="Frontend.041" xml:space="preserve"><value>搜索工作流、资源或错误||Search workflows, resources, or errors</value></data>
+  <data name="Frontend.042" xml:space="preserve"><value>查询||Search</value></data>
+  <data name="Frontend.043" xml:space="preserve"><value>重置||Reset</value></data>
+  <data name="Frontend.044" xml:space="preserve"><value>运行概览||Run overview</value></data>
+  <data name="Frontend.045" xml:space="preserve"><value>运行总数||Total runs</value></data>
+  <data name="Frontend.046" xml:space="preserve"><value>成功率||Success rate</value></data>
+  <data name="Frontend.047" xml:space="preserve"><value>平均耗时||Average duration</value></data>
+  <data name="Frontend.048" xml:space="preserve"><value>运行趋势||Run trend</value></data>
+  <data name="Frontend.049" xml:space="preserve"><value>按开始日期统计||Grouped by start date</value></data>
+  <data name="Frontend.050" xml:space="preserve"><value>{0} 天||{0} days</value></data>
+  <data name="Frontend.051" xml:space="preserve"><value>当前筛选范围没有运行记录。||No run records match the current filters.</value></data>
+  <data name="Frontend.052" xml:space="preserve"><value>外部资源调用||External resource calls</value></data>
+  <data name="Frontend.053" xml:space="preserve"><value>{0} 次调用 · {1} 个资源||{0} calls · {1} resources</value></data>
+  <data name="Frontend.054" xml:space="preserve"><value>资源||Resource</value></data>
+  <data name="Frontend.055" xml:space="preserve"><value>调用||Calls</value></data>
+  <data name="Frontend.056" xml:space="preserve"><value>涉及工作流||Workflows</value></data>
+  <data name="Frontend.057" xml:space="preserve"><value>当前筛选范围没有资源调用记录。||No resource calls match the current filters.</value></data>
+  <data name="Frontend.058" xml:space="preserve"><value>工作流健康度||Workflow health</value></data>
+  <data name="Frontend.059" xml:space="preserve"><value>点击工作流名称可进入对应任务范围||Select a workflow name to open its task scope</value></data>
+  <data name="Frontend.060" xml:space="preserve"><value>运行||Runs</value></data>
+  <data name="Frontend.061" xml:space="preserve"><value>最近运行||Last run</value></data>
+  <data name="Frontend.062" xml:space="preserve"><value>当前筛选范围没有工作流运行记录。||No workflow runs match the current filters.</value></data>
+  <data name="Frontend.063" xml:space="preserve"><value>运行明细||Run details</value></data>
+  <data name="Frontend.064" xml:space="preserve"><value>点击记录进入实时运行或只读回看||Select a record to open the live run or read-only replay</value></data>
+  <data name="Frontend.065" xml:space="preserve"><value>上一页||Previous page</value></data>
+  <data name="Frontend.066" xml:space="preserve"><value>第 {0} 页||Page {0}</value></data>
+  <data name="Frontend.067" xml:space="preserve"><value>下一页||Next page</value></data>
+  <data name="Frontend.068" xml:space="preserve"><value>耗时||Duration</value></data>
+  <data name="Frontend.069" xml:space="preserve"><value>结果||Result</value></data>
+  <data name="Frontend.070" xml:space="preserve"><value>Workflow 任务||Workflow tasks</value></data>
+  <data name="Frontend.071" xml:space="preserve"><value>首次仅加载最新 30 条运行记录；滚动到底部会继续加载历史，正在运行的任务会自动更新。||The latest 30 runs load first. Scroll to the bottom for history; running tasks update automatically.</value></data>
+  <data name="Frontend.072" xml:space="preserve"><value>当前工作流 #{0}||Current workflow #{0}</value></data>
+  <data name="Frontend.073" xml:space="preserve"><value>搜索工作流或状态||Search workflows or statuses</value></data>
+  <data name="Frontend.074" xml:space="preserve"><value>任务统计||Task statistics</value></data>
+  <data name="Frontend.075" xml:space="preserve"><value>全部任务||All tasks</value></data>
+  <data name="Frontend.076" xml:space="preserve"><value>当前||Current</value></data>
+  <data name="Frontend.077" xml:space="preserve"><value>运行中||Running</value></data>
+  <data name="Frontend.078" xml:space="preserve"><value>当前进度 / 结果||Progress / result</value></data>
+  <data name="Frontend.079" xml:space="preserve"><value>没有匹配的任务||No matching tasks</value></data>
+  <data name="Frontend.080" xml:space="preserve"><value>还没有运行记录||No run records yet</value></data>
+  <data name="Frontend.081" xml:space="preserve"><value>调整搜索关键词或状态筛选后再试。||Adjust the search keyword or status filter and try again.</value></data>
+  <data name="Frontend.082" xml:space="preserve"><value>从工作流画布运行、Webhook 或定时触发后，任务会显示在这里。运行结束后可进入只读回看。||Tasks appear here after a canvas run, Webhook, or scheduled trigger. Completed runs can be opened in read-only replay.</value></data>
+  <data name="Frontend.083" xml:space="preserve"><value>正在加载更多记录…||Loading more records…</value></data>
+  <data name="Frontend.084" xml:space="preserve"><value>继续向下滚动以加载更多记录||Continue scrolling to load more records</value></data>
+  <data name="Frontend.085" xml:space="preserve"><value>只读运行回看 · #{0}||Read-only run replay · #{0}</value></data>
+  <data name="Frontend.086" xml:space="preserve"><value>运行于 {0}，{1}。画布为当时的运行快照，不会影响最新工作流。||Ran at {0}, {1}. The canvas is a snapshot from that run and does not affect the latest workflow.</value></data>
+  <data name="Frontend.087" xml:space="preserve"><value>运行回放控制||Replay controls</value></data>
+  <data name="Frontend.088" xml:space="preserve"><value>共 {0} 个节点事件||{0} node events</value></data>
+  <data name="Frontend.089" xml:space="preserve"><value>该运行没有节点事件||This run has no node events</value></data>
+  <data name="Frontend.090" xml:space="preserve"><value>开始||Start</value></data>
+  <data name="Frontend.091" xml:space="preserve"><value>加载运行快照||Load run snapshot</value></data>
+  <data name="Frontend.092" xml:space="preserve"><value>显示更多步骤（{0} / {1}）||Show more steps ({0} / {1})</value></data>
+  <data name="Frontend.093" xml:space="preserve"><value>节点状态已更新。||Node status updated.</value></data>
+  <data name="Frontend.094" xml:space="preserve"><value>该历史步骤未保存输入记录。||Input was not saved for this historical step.</value></data>
+  <data name="Frontend.095" xml:space="preserve"><value>查看 Agent Group 对话||View Agent Group conversation</value></data>
+  <data name="Frontend.096" xml:space="preserve"><value>运行完成。||Run completed.</value></data>
+  <data name="Frontend.097" xml:space="preserve"><value>运行失败。||Run failed.</value></data>
+  <data name="Frontend.098" xml:space="preserve"><value>点击左侧步骤，或使用播放控件逐步还原节点执行状态。||Select a step on the left or use the playback controls to restore node execution state.</value></data>
+  <data name="Frontend.099" xml:space="preserve"><value>参数 {0}||Parameter {0}</value></data>
+  <data name="Frontend.100" xml:space="preserve"><value>Function 参数元数据缺少字段名；当前仅可保存草稿，修复或更新模块后才能运行。||Function parameter metadata is missing a field name. Only drafts can be saved until the module is fixed or updated.</value></data>
+  <data name="Frontend.101" xml:space="preserve"><value>{0} 秒||{0} seconds</value></data>
+  <data name="Frontend.102" xml:space="preserve"><value>{0} 分 {1} 秒||{0} minutes {1} seconds</value></data>
+  <data name="Frontend.103" xml:space="preserve"><value>读取 Workflow 统计失败。||Failed to load Workflow analytics.</value></data>
+  <data name="Frontend.104" xml:space="preserve"><value>读取 Workflow 任务列表失败。||Failed to load the Workflow task list.</value></data>
+  <data name="Frontend.105" xml:space="preserve"><value>刷新 Workflow 任务列表失败。||Failed to refresh the Workflow task list.</value></data>
+  <data name="Frontend.106" xml:space="preserve"><value>加载更多 Workflow 任务失败。||Failed to load more Workflow tasks.</value></data>
+  <data name="Frontend.107" xml:space="preserve"><value>正在读取运行记录…||Loading run records…</value></data>
+  <data name="Frontend.108" xml:space="preserve"><value>运行开始前||Before the run</value></data>
+  <data name="Frontend.109" xml:space="preserve"><value>步骤 {0} / {1}||Step {0} / {1}</value></data>
+  <data name="Frontend.110" xml:space="preserve"><value>缺少需要回看的任务标识。||The task identifier required for replay is missing.</value></data>
+  <data name="Frontend.111" xml:space="preserve"><value>未找到任务回看数据。||Replay data was not found.</value></data>
+  <data name="Frontend.112" xml:space="preserve"><value>无法读取任务回看。运行中的任务需要等待结束，旧任务可能尚未保存快照。||Unable to load the task replay. Running tasks must finish first; older tasks may not have a saved snapshot.</value></data>
+  <data name="Frontend.113" xml:space="preserve"><value>无法从当前回看创建工作流草稿。||Unable to create a workflow draft from this replay.</value></data>
+  <data name="Frontend.114" xml:space="preserve"><value>复制工作流失败。||Failed to copy the workflow.</value></data>
+  <data name="Frontend.115" xml:space="preserve"><value>等待||Wait</value></data>
+  <data name="Frontend.116" xml:space="preserve"><value>条件判断||Condition</value></data>
+  <data name="Frontend.117" xml:space="preserve"><value>Agent 组||Agent group</value></data>
+  <data name="Frontend.118" xml:space="preserve"><value>聚合||Aggregate</value></data>
+  <data name="Frontend.119" xml:space="preserve"><value>发送纽铃||Send NeuBell</value></data>
+  <data name="Frontend.120" xml:space="preserve"><value>状态更新||Status update</value></data>
 </root>
