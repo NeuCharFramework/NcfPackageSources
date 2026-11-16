@@ -2,16 +2,16 @@
     Copyright (C) 2026 Senparc
   
     File name: WorkspaceOptions.cs
-    File description: 工作区存储配置
+    File description: Workspace storage configuration
     
     
     Created by: Senparc - 20261015
     
     Modified by: Senparc - 20261021
-    Change description: v0.1.1 配置工作区根路径与执行限制
+    Change description: v0.1.1 configure the Workspace root path and execution limits
 
     Modified by: Senparc - 20261102
-    Change description: 增加默认 300 MiB 手动上传上限
+    Change description: add a default 300 MiB manual upload limit
 
     Modified by: Senparc - 20261103
     Change description: v0.2.2 add streamed large-file Workspace uploads with tenant-aware ownership checks

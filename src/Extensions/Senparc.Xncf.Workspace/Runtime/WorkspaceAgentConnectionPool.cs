@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     File name: WorkspaceAgentConnectionPool.cs
-    File description: 按 Workspace 复用 Agent 长连接
+    File description: reuse long-lived Agent connections by Workspace
 
     Created by: Senparc - 20261024
 

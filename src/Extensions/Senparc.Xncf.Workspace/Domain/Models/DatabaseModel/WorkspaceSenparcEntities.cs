@@ -2,16 +2,16 @@
     Copyright (C) 2026 Senparc
   
     File name: WorkspaceSenparcEntities.cs
-    File description: 工作区模块数据库上下文
+    File description: Workspace module database context
     
     
     Created by: Senparc - 20261021
     
     Modified by: Senparc - 20261021
-    Change description: v0.1.1 提供工作区模块数据库上下文
+    Change description: v0.1.1 provide the Workspace module database context
 
     Modified by: Senparc - 20261103
-    Change description: v0.2.2 维护工作区模块数据库上下文
+    Change description: v0.2.2 maintain the Workspace module database context
 
 ----------------------------------------------------------------*/
 

@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     File name: WorkspaceGatewayController.cs
-    File description: VS Code、Cursor 与桌面客户端安全 Workspace 网关
+    File description: secure Workspace gateway for VS Code, Cursor, and desktop clients
 
     Created by: Senparc - 20261024
 

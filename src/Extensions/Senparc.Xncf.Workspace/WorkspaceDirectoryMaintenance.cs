@@ -2,13 +2,13 @@
     Copyright (C) 2026 Senparc
 
     File name: WorkspaceDirectoryMaintenance.cs
-    File description: 工作区目录用量统计与内容重置
+    File description: Workspace directory usage statistics and content reset
 
 
     Created by: Senparc - 20261109
 
     Modified by: Senparc - 20261109
-    Change description: 统计工作区文件数量与容量，并可将目录恢复到新建布局
+    Change description: count Workspace files and capacity, and restore directories to their initial layout
 
 ----------------------------------------------------------------*/
 

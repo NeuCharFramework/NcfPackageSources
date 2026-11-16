@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     File name: Index.cshtml.cs
-    File description: Workspace 运行时与远程编辑管理页面
+    File description: Workspace runtime and remote editing administration page
 
     Created by: Senparc - 20261024
 
@@ -10,7 +10,7 @@
     Change description: v0.2.2 implement connection manager and workspace file system provider
 
     Modified by: Senparc - 20261109
-    Change description: 展示按所有者隔离的用量，并允许在权限范围内清空工作区内容
+    Change description: show owner-isolated usage and allow content clearing within authorization boundaries
 
 ----------------------------------------------------------------*/
 

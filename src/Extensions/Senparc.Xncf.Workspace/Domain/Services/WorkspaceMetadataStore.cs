@@ -2,16 +2,16 @@
     Copyright (C) 2026 Senparc
   
     File name: WorkspaceMetadataStore.cs
-    File description: 工作区元数据持久化
+    File description: Workspace metadata persistence
     
     
     Created by: Senparc - 20261021
     
     Modified by: Senparc - 20261021
-    Change description: v0.1.1 保存和更新工作区元数据
+    Change description: v0.1.1 save and update Workspace metadata
 
     Modified by: Senparc - 20261102
-    Change description: 增加租户范围内的 Workspace 可见性查询
+    Change description: add tenant-scoped Workspace visibility queries
 
     Modified by: Senparc - 20261103
     Change description: v0.2.2 add streamed large-file Workspace uploads with tenant-aware ownership checks

@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     File name: WorkspaceClientFactory.cs
-    File description: 带会话策略的统一 Workspace Client
+    File description: unified Workspace client with session policies
 
     Created by: Senparc - 20261024
 

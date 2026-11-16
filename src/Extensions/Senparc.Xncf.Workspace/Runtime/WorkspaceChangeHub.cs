@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     File name: WorkspaceChangeHub.cs
-    File description: Workspace 文件变更通知中心
+    File description: Workspace file-change notification hub
 
     Created by: Senparc - 20261024
 
