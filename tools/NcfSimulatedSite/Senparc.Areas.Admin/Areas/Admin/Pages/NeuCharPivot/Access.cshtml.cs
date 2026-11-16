@@ -58,7 +58,7 @@ public class AccessModel(
     /// 全量列表：所有 XNCF 模块 Function 的代码基线 + 数据库策略 + 生效策略，
     /// 以及“孤儿策略”（模块/Function 已不存在，策略冗余保留待重装生效）。
     /// </summary>
-    public async Task<IActionResult> OnGetListAsync()
+    public async Task<IActionResult> OnGetListAsync([FromQuery] string moduleUid = null)
     {
         var catalog = await _functionService.GetCatalogAsync(null, false, HttpContext.RequestAborted)
             .ConfigureAwait(false);
@@ -71,7 +71,8 @@ public class AccessModel(
         var items = new List<object>();
         var matchedPolicyKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-        foreach (var descriptor in catalog)
+        foreach (var descriptor in catalog.Where(z => string.IsNullOrWhiteSpace(moduleUid) ||
+            string.Equals(z.ModuleUid, moduleUid, StringComparison.OrdinalIgnoreCase)))
         {
             var policyKey = NeuCharFunctionProvitAccess.GetPolicyKey(
                 descriptor.ModuleUid,
@@ -99,6 +100,8 @@ public class AccessModel(
 
         // 孤儿策略：模块被清除或 Function 已移除，策略冗余保留
         var orphans = policies
+            .Where(z => string.IsNullOrWhiteSpace(moduleUid) ||
+                string.Equals(z.ModuleUid, moduleUid, StringComparison.OrdinalIgnoreCase))
             .Where(z => !matchedPolicyKeys.Contains(
                 NeuCharFunctionProvitAccess.GetPolicyKey(z.ModuleUid, z.FunctionKey)))
             .OrderBy(z => z.ModuleUid)

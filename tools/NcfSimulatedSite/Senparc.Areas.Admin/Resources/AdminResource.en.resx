@@ -963,4 +963,36 @@
   <data name="SystemMenu.TenantInfo" xml:space="preserve"><value>Tenant information</value></data>
   <data name="SystemMenu.ExtensionModules" xml:space="preserve"><value>Extension modules</value></data>
   <data name="SystemMenu.ModuleManagement" xml:space="preserve"><value>Module management</value></data>
+  <data name="Xncf.ModuleFunctionCatalog" xml:space="preserve"><value>Module Function catalog and execution entry points</value></data>
+  <data name="Xncf.ModuleFunctionAccessControl" xml:space="preserve"><value>Manage access control in a NeuCharPivot iframe tab</value></data>
+  <data name="Xncf.Capabilities" xml:space="preserve"><value>Capabilities</value></data>
+  <data name="Xncf.ModuleCapabilities" xml:space="preserve"><value>Module capabilities</value></data>
+  <data name="Xncf.Refresh" xml:space="preserve"><value>Refresh</value></data>
+  <data name="Xncf.NoAdditionalInterfaces" xml:space="preserve"><value>No additional interfaces declared</value></data>
+  <data name="Xncf.RuntimeDataCapabilities" xml:space="preserve"><value>Runtime and data capabilities</value></data>
+  <data name="Xncf.RegisteredThreads" xml:space="preserve"><value>Registered threads</value></data>
+  <data name="Xncf.DedicatedDatabase" xml:space="preserve"><value>Dedicated database</value></data>
+  <data name="Xncf.DatabasePrefix" xml:space="preserve"><value>Database prefix</value></data>
+  <data name="Xncf.DatabaseContext" xml:space="preserve"><value>Database context</value></data>
+  <data name="Xncf.DataTables" xml:space="preserve"><value>Data tables</value></data>
+  <data name="Xncf.DataTablesAndMigrations" xml:space="preserve"><value>Data tables and migrations</value></data>
+  <data name="Xncf.DatabaseReauthenticationRequired" xml:space="preserve"><value>This area contains database schema and data statistics. Re-enter the current administrator password to continue.</value></data>
+  <data name="Xncf.CurrentAdministratorPassword" xml:space="preserve"><value>Current administrator password</value></data>
+  <data name="Xncf.VerifyAndView" xml:space="preserve"><value>Verify and view</value></data>
+  <data name="Xncf.EntityCount" xml:space="preserve"><value>Entity count</value></data>
+  <data name="Xncf.TablePrefix" xml:space="preserve"><value>Table prefix</value></data>
+  <data name="Xncf.AppliedMigrations" xml:space="preserve"><value>Applied migrations</value></data>
+  <data name="Xncf.PendingMigrations" xml:space="preserve"><value>Pending migrations</value></data>
+  <data name="Xncf.Table" xml:space="preserve"><value>Table</value></data>
+  <data name="Xncf.Entity" xml:space="preserve"><value>Entity</value></data>
+  <data name="Xncf.CurrentRowCount" xml:space="preserve"><value>Current row count</value></data>
+  <data name="Xncf.Columns" xml:space="preserve"><value>Columns</value></data>
+  <data name="Xncf.MigrationHistory" xml:space="preserve"><value>Migration history</value></data>
+  <data name="Xncf.LoadCapabilitiesFailed" xml:space="preserve"><value>Failed to load module capabilities.</value></data>
+  <data name="Xncf.EnterCurrentAdministratorPassword" xml:space="preserve"><value>Enter the current administrator password.</value></data>
+  <data name="Xncf.PasswordVerificationFailed" xml:space="preserve"><value>Password verification failed.</value></data>
+  <data name="Xncf.LoadDataTablesFailed" xml:space="preserve"><value>Failed to load data table information.</value></data>
+  <data name="Xncf.NeuCharPivotAccessControl" xml:space="preserve"><value>NeuCharPivot - Access control</value></data>
+  <data name="Xncf.ModuleNotLoaded" xml:space="preserve"><value>The module is not loaded.</value></data>
+  <data name="Xncf.PasswordRequired" xml:space="preserve"><value>Enter the password.</value></data>
 </root>

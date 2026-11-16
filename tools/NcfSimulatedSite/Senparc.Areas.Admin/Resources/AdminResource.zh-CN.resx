@@ -938,4 +938,36 @@
   <data name="SystemMenu.TenantInfo" xml:space="preserve"><value>多租户信息</value></data>
   <data name="SystemMenu.ExtensionModules" xml:space="preserve"><value>扩展模块</value></data>
   <data name="SystemMenu.ModuleManagement" xml:space="preserve"><value>模块管理</value></data>
+  <data name="Xncf.ModuleFunctionCatalog" xml:space="preserve"><value>模块 Function 清单与执行入口</value></data>
+  <data name="Xncf.ModuleFunctionAccessControl" xml:space="preserve"><value>在 NeuCharPivot iframe 标签页中管理访问控制</value></data>
+  <data name="Xncf.Capabilities" xml:space="preserve"><value>能力透视</value></data>
+  <data name="Xncf.ModuleCapabilities" xml:space="preserve"><value>模块能力</value></data>
+  <data name="Xncf.Refresh" xml:space="preserve"><value>刷新</value></data>
+  <data name="Xncf.NoAdditionalInterfaces" xml:space="preserve"><value>未声明额外接口</value></data>
+  <data name="Xncf.RuntimeDataCapabilities" xml:space="preserve"><value>运行与数据能力</value></data>
+  <data name="Xncf.RegisteredThreads" xml:space="preserve"><value>注册线程</value></data>
+  <data name="Xncf.DedicatedDatabase" xml:space="preserve"><value>独立数据库</value></data>
+  <data name="Xncf.DatabasePrefix" xml:space="preserve"><value>数据库前缀</value></data>
+  <data name="Xncf.DatabaseContext" xml:space="preserve"><value>数据库上下文</value></data>
+  <data name="Xncf.DataTables" xml:space="preserve"><value>数据表透视</value></data>
+  <data name="Xncf.DataTablesAndMigrations" xml:space="preserve"><value>数据表与迁移</value></data>
+  <data name="Xncf.DatabaseReauthenticationRequired" xml:space="preserve"><value>此区域包含数据库结构和数据统计。请再次输入当前管理员密码后继续。</value></data>
+  <data name="Xncf.CurrentAdministratorPassword" xml:space="preserve"><value>当前管理员密码</value></data>
+  <data name="Xncf.VerifyAndView" xml:space="preserve"><value>验证并查看</value></data>
+  <data name="Xncf.EntityCount" xml:space="preserve"><value>实体数</value></data>
+  <data name="Xncf.TablePrefix" xml:space="preserve"><value>表前缀</value></data>
+  <data name="Xncf.AppliedMigrations" xml:space="preserve"><value>已应用迁移</value></data>
+  <data name="Xncf.PendingMigrations" xml:space="preserve"><value>待执行迁移</value></data>
+  <data name="Xncf.Table" xml:space="preserve"><value>表</value></data>
+  <data name="Xncf.Entity" xml:space="preserve"><value>实体</value></data>
+  <data name="Xncf.CurrentRowCount" xml:space="preserve"><value>当前数据总条数</value></data>
+  <data name="Xncf.Columns" xml:space="preserve"><value>字段</value></data>
+  <data name="Xncf.MigrationHistory" xml:space="preserve"><value>迁移记录</value></data>
+  <data name="Xncf.LoadCapabilitiesFailed" xml:space="preserve"><value>加载模块能力失败。</value></data>
+  <data name="Xncf.EnterCurrentAdministratorPassword" xml:space="preserve"><value>请输入当前管理员密码。</value></data>
+  <data name="Xncf.PasswordVerificationFailed" xml:space="preserve"><value>密码验证失败。</value></data>
+  <data name="Xncf.LoadDataTablesFailed" xml:space="preserve"><value>加载数据表信息失败。</value></data>
+  <data name="Xncf.NeuCharPivotAccessControl" xml:space="preserve"><value>NeuCharPivot - 访问控制</value></data>
+  <data name="Xncf.ModuleNotLoaded" xml:space="preserve"><value>模块未加载。</value></data>
+  <data name="Xncf.PasswordRequired" xml:space="preserve"><value>请输入密码。</value></data>
 </root>

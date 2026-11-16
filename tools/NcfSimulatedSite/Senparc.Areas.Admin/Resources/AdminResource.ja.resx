@@ -872,4 +872,36 @@
   <data name="SystemMenu.TenantInfo" xml:space="preserve"><value>Tenant information</value></data>
   <data name="SystemMenu.ExtensionModules" xml:space="preserve"><value>Extension modules</value></data>
   <data name="SystemMenu.ModuleManagement" xml:space="preserve"><value>Module management</value></data>
+  <data name="Xncf.ModuleFunctionCatalog" xml:space="preserve"><value>モジュール Function 一覧と実行エントリ</value></data>
+  <data name="Xncf.ModuleFunctionAccessControl" xml:space="preserve"><value>NeuCharPivot の iframe タブでアクセス制御を管理</value></data>
+  <data name="Xncf.Capabilities" xml:space="preserve"><value>機能</value></data>
+  <data name="Xncf.ModuleCapabilities" xml:space="preserve"><value>モジュール機能</value></data>
+  <data name="Xncf.Refresh" xml:space="preserve"><value>更新</value></data>
+  <data name="Xncf.NoAdditionalInterfaces" xml:space="preserve"><value>追加のインターフェースは宣言されていません</value></data>
+  <data name="Xncf.RuntimeDataCapabilities" xml:space="preserve"><value>実行時およびデータ機能</value></data>
+  <data name="Xncf.RegisteredThreads" xml:space="preserve"><value>登録済みスレッド</value></data>
+  <data name="Xncf.DedicatedDatabase" xml:space="preserve"><value>専用データベース</value></data>
+  <data name="Xncf.DatabasePrefix" xml:space="preserve"><value>データベース接頭辞</value></data>
+  <data name="Xncf.DatabaseContext" xml:space="preserve"><value>データベースコンテキスト</value></data>
+  <data name="Xncf.DataTables" xml:space="preserve"><value>データテーブル</value></data>
+  <data name="Xncf.DataTablesAndMigrations" xml:space="preserve"><value>データテーブルとマイグレーション</value></data>
+  <data name="Xncf.DatabaseReauthenticationRequired" xml:space="preserve"><value>この領域にはデータベースのスキーマと統計情報が含まれます。続行するには現在の管理者パスワードを再入力してください。</value></data>
+  <data name="Xncf.CurrentAdministratorPassword" xml:space="preserve"><value>現在の管理者パスワード</value></data>
+  <data name="Xncf.VerifyAndView" xml:space="preserve"><value>認証して表示</value></data>
+  <data name="Xncf.EntityCount" xml:space="preserve"><value>エンティティ数</value></data>
+  <data name="Xncf.TablePrefix" xml:space="preserve"><value>テーブル接頭辞</value></data>
+  <data name="Xncf.AppliedMigrations" xml:space="preserve"><value>適用済みマイグレーション</value></data>
+  <data name="Xncf.PendingMigrations" xml:space="preserve"><value>保留中のマイグレーション</value></data>
+  <data name="Xncf.Table" xml:space="preserve"><value>テーブル</value></data>
+  <data name="Xncf.Entity" xml:space="preserve"><value>エンティティ</value></data>
+  <data name="Xncf.CurrentRowCount" xml:space="preserve"><value>現在の行数</value></data>
+  <data name="Xncf.Columns" xml:space="preserve"><value>列</value></data>
+  <data name="Xncf.MigrationHistory" xml:space="preserve"><value>マイグレーション履歴</value></data>
+  <data name="Xncf.LoadCapabilitiesFailed" xml:space="preserve"><value>モジュール機能の読み込みに失敗しました。</value></data>
+  <data name="Xncf.EnterCurrentAdministratorPassword" xml:space="preserve"><value>現在の管理者パスワードを入力してください。</value></data>
+  <data name="Xncf.PasswordVerificationFailed" xml:space="preserve"><value>パスワードの認証に失敗しました。</value></data>
+  <data name="Xncf.LoadDataTablesFailed" xml:space="preserve"><value>データテーブル情報の読み込みに失敗しました。</value></data>
+  <data name="Xncf.NeuCharPivotAccessControl" xml:space="preserve"><value>NeuCharPivot - アクセス制御</value></data>
+  <data name="Xncf.ModuleNotLoaded" xml:space="preserve"><value>モジュールが読み込まれていません。</value></data>
+  <data name="Xncf.PasswordRequired" xml:space="preserve"><value>パスワードを入力してください。</value></data>
 </root>

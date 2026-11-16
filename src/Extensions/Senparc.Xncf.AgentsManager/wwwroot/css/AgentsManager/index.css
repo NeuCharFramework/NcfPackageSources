@@ -1715,6 +1715,196 @@ height:100%;
     line-height: 1;
 }
 
+/*
+ * The admin shell gives embedded pages a definite height. Keep the root tabs
+ * and each of the three panes inside that height, and let their inner lists
+ * own scrolling instead of the page frame.
+ */
+.ncf-admin-tabbed.ncf-admin-embedded .agentsManager-rootTabs {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .agentsManager-rootTabs > .el-tabs__header {
+    flex: 0 0 auto;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .agentsManager-rootTabs > .el-tabs__content {
+    flex: 1 1 0;
+    height: 0;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .agentsManager-rootTabs > .el-tabs__content > .el-tab-pane {
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .tabPane-container {
+    align-items: stretch;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .tabPane-container > .sidebar-container,
+.ncf-admin-tabbed.ncf-admin-embedded .tabPane-container > .main-container {
+    height: 100%;
+    min-height: 0;
+    box-sizing: border-box;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .sidebar-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .sidebar-container .sidebar-main-container {
+    flex: 1 1 auto;
+    height: auto;
+    min-height: 0;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .main-container {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .main-container.agent-container > .agent-view-mode-row {
+    flex: 0 0 auto;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .main-container.agent-container > .sidebar-agent-container,
+.ncf-admin-tabbed.ncf-admin-embedded .main-container.agent-container > .agent-statistics-wrap {
+    flex: 1 1 0;
+    height: auto;
+    min-height: 0;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .studio-layout > .main-container {
+    height: 100%;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .studio-layout > .main-container > .agent-view-mode-row + div {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .studio-layout > .main-container > .agent-view-mode-row + div > .agent-studio {
+    height: 100%;
+    min-height: 0;
+    box-sizing: border-box;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .agentDetails-container {
+    min-height: 0;
+    box-sizing: border-box;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .agentDetails-main {
+    min-width: 0;
+    min-height: 0;
+    box-sizing: border-box;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .agentDetails-statistics,
+.ncf-admin-tabbed.ncf-admin-embedded .groupInfoRow,
+.ncf-admin-tabbed.ncf-admin-embedded .groupInfoRow-info,
+.ncf-admin-tabbed.ncf-admin-embedded .task-header,
+.ncf-admin-tabbed.ncf-admin-embedded .task-info {
+    flex: 0 0 auto;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .agentDetails-main-left > .el-tabs {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .agentDetails-main-left > .el-tabs > .el-tabs__content {
+    flex: 1 1 0;
+    height: 0;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .agentDetails-main-left > .el-tabs > .el-tabs__content > .el-tab-pane,
+.ncf-admin-tabbed.ncf-admin-embedded .agentDetails-main-left-list {
+    height: 100%;
+    min-height: 0;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .agentDetails-main-left-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .sidebar-agentDetails-main-left {
+    flex: 1 1 auto;
+    height: auto;
+    min-height: 0;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .agentDetails-main-right {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+    box-sizing: border-box;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .group-container > .groupInfoRow + .el-table,
+.ncf-admin-tabbed.ncf-admin-embedded .main-container.agent-container > .groupInfoRow + .el-table {
+    height: calc(100% - 45px) !important;
+    min-height: 0;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .group-container .groupInfoRow-info + .el-table,
+.ncf-admin-tabbed.ncf-admin-embedded .agentDetails-main-right .groupInfoRow-info + .el-table {
+    height: calc(100% - 90px) !important;
+    min-height: 0;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .task-main {
+    flex: 1 1 0;
+    height: auto;
+    min-height: 0;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .task-main .taskmain-record {
+    display: flex;
+    min-width: 0;
+    min-height: 0;
+    flex-direction: column;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .task-main .sidebar-taskrecord-container {
+    flex: 1 1 auto;
+    height: auto;
+    min-height: 0;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .task-main .taskmain-members {
+    min-height: 0;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .task-main .sidebar-taskmembers-container {
+    flex: 1 1 auto;
+    height: auto;
+    min-height: 0;
+}
+
 .filter-popover .el-popover {
     padding: 0px;
 }

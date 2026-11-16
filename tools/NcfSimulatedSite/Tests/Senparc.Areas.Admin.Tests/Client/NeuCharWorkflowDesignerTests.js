@@ -2102,6 +2102,7 @@ replayScrollTarget = null;
 const replayGraphCenterContext = {
     graph: { nodes: [{ id: 'first', x: 300, y: 100 }, { id: 'second', x: 500, y: 300 }] },
     canvasInset: 240,
+    canvasViewportSize: { width: 400, height: 300 },
     $nextTick(callback) { callback(); },
     $refs: {
         canvasViewport: {
@@ -2111,8 +2112,8 @@ const replayGraphCenterContext = {
     }
 };
 replayVueOptions.methods.centerGraph.call(replayGraphCenterContext);
-assert.strictEqual(replayGraphCenterContext.$refs.canvasViewport.scrollLeft, 557,
-    'The initial replay view should center the workflow nodes horizontally.');
+assert.strictEqual(replayGraphCenterContext.$refs.canvasViewport.scrollLeft, 457,
+    'The initial replay view should center the first workflow node horizontally.');
 assert.strictEqual(replayGraphCenterContext.$refs.canvasViewport.scrollTop, 336,
     'The initial replay view should center the workflow nodes vertically.');
 const replayCanvasSizeContext = {

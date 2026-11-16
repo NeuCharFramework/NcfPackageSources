@@ -291,6 +291,70 @@
     margin-bottom: 18px;
 }
 
+.module-function-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding: 10px 14px;
+    background: #fff;
+    border: 1px solid #ebeef5;
+    color: #606266;
+}
+
+.module-insight-card {
+    margin-bottom: 16px;
+}
+
+.module-insight-refresh {
+    float: right;
+}
+
+.module-insight-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.module-insight-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+    margin: 12px 0;
+}
+
+.module-insight-grid > div {
+    padding: 12px;
+    border: 1px solid #ebeef5;
+    border-radius: 6px;
+}
+
+.module-insight-grid label,
+.module-insight-grid strong {
+    display: block;
+}
+
+.module-insight-grid label {
+    color: #909399;
+    font-size: 12px;
+}
+
+.module-re-auth {
+    max-width: 520px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.module-column-chip {
+    display: inline-block;
+    margin: 2px 6px 2px 0;
+    padding: 2px 6px;
+    background: #f0f2f5;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
 .pivot-empty {
     max-width: 720px;
     margin: 44px auto;

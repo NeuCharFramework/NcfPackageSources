@@ -43,6 +43,10 @@
         <el-main class="module-main">
             <el-tabs v-model="activeModuleTab" class="module-mode-tabs">
                 <el-tab-pane label="Function" name="function">
+                <div class="module-function-toolbar">
+                    <span>@AR["Xncf.ModuleFunctionCatalog"]</span>
+                    <el-button size="mini" icon="el-icon-lock" @@click="openAccessControl">@AR["Xncf.ModuleFunctionAccessControl"]</el-button>
+                </div>
                 <template v-if="!data.mustUpdate">
                     <template v-if="data.xncfRegister.interfaces.includes('IAreaRegister')&&data.xncfRegister.areaHomeUrl!==null">
                         <el-card class="box-card">
@@ -241,13 +245,13 @@
                                     </section>
                                 </div>
                             </el-tab-pane>
-                            <el-tab-pane label="能力透视" name="capabilities">
+                            <el-tab-pane label="@AR["Xncf.Capabilities"]" name="capabilities">
                                 <el-card class="module-insight-card" v-loading="insights.capabilitiesLoading">
-                                    <div slot="header"><strong><i class="fa fa-sitemap"></i> 模块能力</strong><el-button size="mini" icon="el-icon-refresh" class="module-insight-refresh" @@click="loadCapabilities">刷新</el-button></div>
+                                    <div slot="header"><strong><i class="fa fa-sitemap"></i> @AR["Xncf.ModuleCapabilities"]</strong><el-button size="mini" icon="el-icon-refresh" class="module-insight-refresh" @@click="loadCapabilities">@AR["Xncf.Refresh"]</el-button></div>
                                     <div v-if="insights.capabilities">
                                         <div class="module-insight-summary">
                                             <el-tag v-for="item in insights.capabilities.interfaces" :key="item" type="success">{{item}}</el-tag>
-                                            <el-tag v-if="!insights.capabilities.interfaces.length" type="info">未声明额外接口</el-tag>
+                                            <el-tag v-if="!insights.capabilities.interfaces.length" type="info">@AR["Xncf.NoAdditionalInterfaces"]</el-tag>
                                         </div>
                                         <el-divider content-position="left">Function</el-divider>
                                         <el-table :data="insights.capabilities.functions" border stripe size="small">
@@ -255,40 +259,40 @@
                                             <el-table-column prop="key" label="Key" min-width="240"></el-table-column>
                                             <el-table-column prop="description" label="说明" min-width="280"></el-table-column>
                                         </el-table>
-                                        <el-divider content-position="left">运行与数据能力</el-divider>
+                                        <el-divider content-position="left">@AR["Xncf.RuntimeDataCapabilities"]</el-divider>
                                         <div class="module-insight-grid">
-                                            <div><label>注册线程</label><strong>{{insights.capabilities.threadCount}}</strong></div>
-                                            <div><label>独立数据库</label><strong>{{insights.capabilities.hasDatabase ? '是' : '否'}}</strong></div>
-                                            <div><label>数据库前缀</label><strong>{{insights.capabilities.databasePrefix || '—'}}</strong></div>
-                                            <div><label>数据库上下文</label><strong>{{insights.capabilities.dbContextType || '—'}}</strong></div>
+                                            <div><label>@AR["Xncf.RegisteredThreads"]</label><strong>{{insights.capabilities.threadCount}}</strong></div>
+                                            <div><label>@AR["Xncf.DedicatedDatabase"]</label><strong>{{insights.capabilities.hasDatabase ? ncfT('Xncf.Yes') : ncfT('Xncf.No')}}</strong></div>
+                                            <div><label>@AR["Xncf.DatabasePrefix"]</label><strong>{{insights.capabilities.databasePrefix || '-'}}</strong></div>
+                                            <div><label>@AR["Xncf.DatabaseContext"]</label><strong>{{insights.capabilities.dbContextType || '-'}}</strong></div>
                                         </div>
                                     </div>
                                 </el-card>
                             </el-tab-pane>
-                            <el-tab-pane label="数据表透视" name="entities">
+                            <el-tab-pane label="@AR["Xncf.DataTables"]" name="entities">
                                 <el-card class="module-insight-card" v-loading="insights.entitiesLoading">
-                                    <div slot="header"><strong><i class="fa fa-database"></i> 数据表与迁移</strong></div>
+                                    <div slot="header"><strong><i class="fa fa-database"></i> @AR["Xncf.DataTablesAndMigrations"]</strong></div>
                                     <div v-if="!insights.entitiesAuthorized" class="module-re-auth">
-                                        <el-alert title="此区域包含数据库结构和数据统计，需再次验证当前管理员密码。" type="warning" :closable="false" show-icon></el-alert>
-                                        <el-input v-model="insights.password" type="password" show-password placeholder="当前管理员密码" @@keyup.enter.native="loadEntities"></el-input>
-                                        <el-button type="primary" icon="el-icon-unlock" :loading="insights.entitiesLoading" @@click="loadEntities">验证并查看</el-button>
+                                        <el-alert title="@AR["Xncf.DatabaseReauthenticationRequired"]" type="warning" :closable="false" show-icon></el-alert>
+                                        <el-input v-model="insights.password" type="password" show-password placeholder="@AR["Xncf.CurrentAdministratorPassword"]" @@keyup.enter.native="loadEntities"></el-input>
+                                        <el-button type="primary" icon="el-icon-unlock" :loading="insights.entitiesLoading" @@click="loadEntities">@AR["Xncf.VerifyAndView"]</el-button>
                                     </div>
                                     <div v-else-if="insights.entities">
                                         <div class="module-insight-grid">
-                                            <div><label>实体数</label><strong>{{insights.entities.entityCount}}</strong></div>
-                                            <div><label>表前缀</label><strong>{{insights.entities.databasePrefix || '—'}}</strong></div>
-                                            <div><label>已应用迁移</label><strong>{{insights.entities.appliedMigrations.length}}</strong></div>
-                                            <div><label>待执行迁移</label><strong>{{insights.entities.pendingMigrations.length}}</strong></div>
+                                            <div><label>@AR["Xncf.EntityCount"]</label><strong>{{insights.entities.entityCount}}</strong></div>
+                                            <div><label>@AR["Xncf.TablePrefix"]</label><strong>{{insights.entities.databasePrefix || '-'}}</strong></div>
+                                            <div><label>@AR["Xncf.AppliedMigrations"]</label><strong>{{insights.entities.appliedMigrations.length}}</strong></div>
+                                            <div><label>@AR["Xncf.PendingMigrations"]</label><strong>{{insights.entities.pendingMigrations.length}}</strong></div>
                                         </div>
                                         <el-table :data="insights.entities.entities" border stripe size="small">
-                                            <el-table-column prop="tableName" label="表名" min-width="180"></el-table-column>
-                                            <el-table-column prop="entityName" label="实体" min-width="180"></el-table-column>
-                                            <el-table-column prop="rowCount" label="当前总条数" width="120"></el-table-column>
-                                            <el-table-column label="字段" min-width="360">
+                                            <el-table-column prop="tableName" label="@AR["Xncf.Table"]" min-width="180"></el-table-column>
+                                            <el-table-column prop="entityName" label="@AR["Xncf.Entity"]" min-width="180"></el-table-column>
+                                            <el-table-column prop="rowCount" label="@AR["Xncf.CurrentRowCount"]" width="120"></el-table-column>
+                                            <el-table-column label="@AR["Xncf.Columns"]" min-width="360">
                                                 <template slot-scope="scope"><span v-for="column in scope.row.columns" :key="column.name" class="module-column-chip">{{column.name}}: {{column.type}}</span></template>
                                             </el-table-column>
                                         </el-table>
-                                        <el-divider content-position="left">迁移记录</el-divider>
+                                        <el-divider content-position="left">@AR["Xncf.MigrationHistory"]</el-divider>
                                         <el-tag v-for="migration in insights.entities.appliedMigrations" :key="migration" type="success" class="module-column-chip">{{migration}}</el-tag>
                                         <el-tag v-for="migration in insights.entities.pendingMigrations" :key="migration" type="warning" class="module-column-chip">{{migration}}</el-tag>
                                     </div>

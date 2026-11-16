@@ -46,7 +46,10 @@ new Vue({
             this.loading = true;
             try {
                 const [listResponse, usersResponse, rolesResponse] = await Promise.all([
-                    service.get('/Admin/NeuCharPivot/Access?handler=List'),
+                    service.get('/Admin/NeuCharPivot/Access?handler=List' +
+                        (new URLSearchParams(window.location.search).get('moduleUid')
+                            ? '&moduleUid=' + encodeURIComponent(new URLSearchParams(window.location.search).get('moduleUid'))
+                            : '')),
                     service.get('/Admin/NeuCharPivot/Access?handler=Users'),
                     service.get('/Admin/NeuCharPivot/Access?handler=Roles')
                 ]);

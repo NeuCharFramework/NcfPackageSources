@@ -52,8 +52,13 @@ new Vue({
     created() {
         this.loadReplay();
     },
+    mounted() {
+        this.scheduleInitialCenter();
+        window.addEventListener('resize', this.scheduleInitialCenter);
+    },
     beforeDestroy() {
         this.stopPlayback();
+        window.removeEventListener('resize', this.scheduleInitialCenter);
     },
     methods: {
         routeExecutionLogId() {
@@ -76,7 +81,7 @@ new Vue({
                 this.graph = NeuCharWorkflowUi.parseJson(this.replay.definition && this.replay.definition.graphJson, { nodes: [], edges: [] }) || { nodes: [], edges: [] };
                 this.graph.nodes = Array.isArray(this.graph.nodes) ? this.graph.nodes : [];
                 this.graph.edges = Array.isArray(this.graph.edges) ? this.graph.edges : [];
-                this.centerGraph();
+                this.scheduleInitialCenter();
             } catch (error) {
                 this.loadError = this.errorMessage(error, '无法读取任务回看。运行中的任务需要等待结束，旧任务可能尚未保存快照。');
             } finally {
@@ -95,33 +100,42 @@ new Vue({
         findNode(id) {
             return this.graph.nodes.find(node => node.id === id);
         },
+        scheduleInitialCenter() {
+            if (!this.graph.nodes.length) return;
+            const retry = remaining => {
+                if (this.centerGraph() || remaining <= 0) return;
+                const next = () => retry(remaining - 1);
+                if (typeof window.requestAnimationFrame === 'function') window.requestAnimationFrame(next);
+                else window.setTimeout(next, 0);
+            };
+            const schedule = () => {
+                if (typeof window.requestAnimationFrame === 'function') window.requestAnimationFrame(() => retry(3));
+                else window.setTimeout(() => retry(3), 0);
+            };
+            if (typeof this.$nextTick === 'function') this.$nextTick(schedule);
+            else schedule();
+        },
         centerGraph() {
             const nodes = this.graph.nodes || [];
-            if (!nodes.length) return;
-            const center = () => {
-                const viewport = this.$refs && this.$refs.canvasViewport;
-                if (!viewport) return;
-                const viewportSize = {
-                    width: viewport.clientWidth,
-                    height: viewport.clientHeight
-                };
-                const previousSize = this.canvasViewportSize || {};
-                if (previousSize.width !== viewportSize.width || previousSize.height !== viewportSize.height) {
-                    this.canvasViewportSize = viewportSize;
-                    if (typeof this.$nextTick === 'function') this.$nextTick(center);
-                    return;
-                }
-                const left = this.canvasInset + Math.min(...nodes.map(node => Math.max(24, Number(node.x || 0))));
-                const top = this.canvasInset + Math.min(...nodes.map(node => Math.max(24, Number(node.y || 0))));
-                const right = this.canvasInset + Math.max(...nodes.map(node => Math.max(24, Number(node.x || 0)) + 234));
-                const bottom = this.canvasInset + Math.max(...nodes.map(node => Math.max(24, Number(node.y || 0)) + 92));
-                const targetLeft = Math.max(0, (left + right) / 2 - viewport.clientWidth / 2);
-                const targetTop = Math.max(0, (top + bottom) / 2 - viewport.clientHeight / 2);
-                viewport.scrollLeft = Math.min(targetLeft, Math.max(0, viewport.scrollWidth - viewport.clientWidth));
-                viewport.scrollTop = Math.min(targetTop, Math.max(0, viewport.scrollHeight - viewport.clientHeight));
-            };
-            if (typeof this.$nextTick === 'function') this.$nextTick(center);
-            else center();
+            const viewport = this.$refs && this.$refs.canvasViewport;
+            if (!nodes.length || !viewport || !viewport.clientWidth || !viewport.clientHeight) return false;
+            const viewportSize = { width: viewport.clientWidth, height: viewport.clientHeight };
+            const previousSize = this.canvasViewportSize || {};
+            if (previousSize.width !== viewportSize.width || previousSize.height !== viewportSize.height) {
+                this.canvasViewportSize = viewportSize;
+                return false;
+            }
+            const firstNode = nodes[0];
+            const firstNodeLeft = this.canvasInset + Math.max(24, Number(firstNode.x || 0));
+            const left = this.canvasInset + Math.min(...nodes.map(node => Math.max(24, Number(node.x || 0))));
+            const top = this.canvasInset + Math.min(...nodes.map(node => Math.max(24, Number(node.y || 0))));
+            const right = this.canvasInset + Math.max(...nodes.map(node => Math.max(24, Number(node.x || 0)) + 234));
+            const bottom = this.canvasInset + Math.max(...nodes.map(node => Math.max(24, Number(node.y || 0)) + 92));
+            const targetLeft = Math.max(0, firstNodeLeft + 117 - viewport.clientWidth / 2);
+            const targetTop = Math.max(0, (top + bottom) / 2 - viewport.clientHeight / 2);
+            viewport.scrollLeft = Math.min(targetLeft, Math.max(0, viewport.scrollWidth - viewport.clientWidth));
+            viewport.scrollTop = Math.min(targetTop, Math.max(0, viewport.scrollHeight - viewport.clientHeight));
+            return true;
         },
         centerCurrentNode() {
             const event = this.currentEvent;

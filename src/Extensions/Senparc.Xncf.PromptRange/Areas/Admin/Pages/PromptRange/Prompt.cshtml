@@ -225,7 +225,7 @@
     
     @*中间 输入Prompt*@
     <div class="promptPage_centerArea" 
-         v-if="!box2Hidden" 
+         v-show="!box2Hidden"
          :class="{'promptPage_centerAreaMaximized': centerAreaMaximized}"
          :style="!centerAreaMaximized && !rightAreaMaximized ? {width: centerAreaWidth + 'px'} : {}">
         <div class="boxCard entertarget" >

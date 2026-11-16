@@ -872,4 +872,36 @@
   <data name="SystemMenu.TenantInfo" xml:space="preserve"><value>Tenant information</value></data>
   <data name="SystemMenu.ExtensionModules" xml:space="preserve"><value>Extension modules</value></data>
   <data name="SystemMenu.ModuleManagement" xml:space="preserve"><value>Module management</value></data>
+  <data name="Xncf.ModuleFunctionCatalog" xml:space="preserve"><value>Каталог Function модуля и точки выполнения</value></data>
+  <data name="Xncf.ModuleFunctionAccessControl" xml:space="preserve"><value>Управление доступом во вкладке iframe NeuCharPivot</value></data>
+  <data name="Xncf.Capabilities" xml:space="preserve"><value>Возможности</value></data>
+  <data name="Xncf.ModuleCapabilities" xml:space="preserve"><value>Возможности модуля</value></data>
+  <data name="Xncf.Refresh" xml:space="preserve"><value>Обновить</value></data>
+  <data name="Xncf.NoAdditionalInterfaces" xml:space="preserve"><value>Дополнительные интерфейсы не объявлены</value></data>
+  <data name="Xncf.RuntimeDataCapabilities" xml:space="preserve"><value>Возможности выполнения и данных</value></data>
+  <data name="Xncf.RegisteredThreads" xml:space="preserve"><value>Зарегистрированные потоки</value></data>
+  <data name="Xncf.DedicatedDatabase" xml:space="preserve"><value>Выделенная база данных</value></data>
+  <data name="Xncf.DatabasePrefix" xml:space="preserve"><value>Префикс базы данных</value></data>
+  <data name="Xncf.DatabaseContext" xml:space="preserve"><value>Контекст базы данных</value></data>
+  <data name="Xncf.DataTables" xml:space="preserve"><value>Таблицы данных</value></data>
+  <data name="Xncf.DataTablesAndMigrations" xml:space="preserve"><value>Таблицы данных и миграции</value></data>
+  <data name="Xncf.DatabaseReauthenticationRequired" xml:space="preserve"><value>В этой области отображаются схема и статистика базы данных. Для продолжения повторно введите текущий пароль администратора.</value></data>
+  <data name="Xncf.CurrentAdministratorPassword" xml:space="preserve"><value>Текущий пароль администратора</value></data>
+  <data name="Xncf.VerifyAndView" xml:space="preserve"><value>Проверить и просмотреть</value></data>
+  <data name="Xncf.EntityCount" xml:space="preserve"><value>Количество сущностей</value></data>
+  <data name="Xncf.TablePrefix" xml:space="preserve"><value>Префикс таблицы</value></data>
+  <data name="Xncf.AppliedMigrations" xml:space="preserve"><value>Применённые миграции</value></data>
+  <data name="Xncf.PendingMigrations" xml:space="preserve"><value>Ожидающие миграции</value></data>
+  <data name="Xncf.Table" xml:space="preserve"><value>Таблица</value></data>
+  <data name="Xncf.Entity" xml:space="preserve"><value>Сущность</value></data>
+  <data name="Xncf.CurrentRowCount" xml:space="preserve"><value>Текущее количество строк</value></data>
+  <data name="Xncf.Columns" xml:space="preserve"><value>Столбцы</value></data>
+  <data name="Xncf.MigrationHistory" xml:space="preserve"><value>История миграций</value></data>
+  <data name="Xncf.LoadCapabilitiesFailed" xml:space="preserve"><value>Не удалось загрузить возможности модуля.</value></data>
+  <data name="Xncf.EnterCurrentAdministratorPassword" xml:space="preserve"><value>Введите текущий пароль администратора.</value></data>
+  <data name="Xncf.PasswordVerificationFailed" xml:space="preserve"><value>Не удалось проверить пароль.</value></data>
+  <data name="Xncf.LoadDataTablesFailed" xml:space="preserve"><value>Не удалось загрузить сведения о таблицах данных.</value></data>
+  <data name="Xncf.NeuCharPivotAccessControl" xml:space="preserve"><value>NeuCharPivot - Управление доступом</value></data>
+  <data name="Xncf.ModuleNotLoaded" xml:space="preserve"><value>Модуль не загружен.</value></data>
+  <data name="Xncf.PasswordRequired" xml:space="preserve"><value>Введите пароль.</value></data>
 </root>
