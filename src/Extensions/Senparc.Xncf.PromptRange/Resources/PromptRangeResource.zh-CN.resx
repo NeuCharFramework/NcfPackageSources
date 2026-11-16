@@ -1340,4 +1340,10 @@ workspace_write 的 relativePath 必须是非空的 Workspace 相对文件路径
 附件只提供索引，不表示你已经读取内容。文档先用 workspace_document_info/search 定位，再用 workspace_document_read 按页、工作表或分段读取；每次最多 4000 字符，Workspace 资料读取、目录与搜索工具每轮共享 16000 字符输出限额。明确区分部分读取与全文分析并引用文件名和页/表/分段；无文字层的扫描件不可声称已 OCR。公式缓存可能过期，不要虚构重新计算结果。只有本轮明确授权且实际收到图片内容时才能做视觉分析；否则请用户勾选视觉处理并选择支持图片的模型。</value>
   </data>
 
+  <data name="Frontend.754" xml:space="preserve"><value>保 存||保 存</value></data>
+  <data name="Frontend.755" xml:space="preserve"><value>查看备注||查看备注</value></data>
+  <data name="Frontend.756" xml:space="preserve"><value>当前：{0}||当前：{0}</value></data>
+  <data name="Frontend.757" xml:space="preserve"><value>Token 总量：{0}（输入 {1} / 输出 {2}）||Token 总量：{0}（输入 {1} / 输出 {2}）</value></data>
+  <data name="Frontend.758" xml:space="preserve"><value>{0} [耗时(毫秒):{1}]||{0} [耗时(毫秒):{1}]</value></data>
+  <data name="Frontend.759" xml:space="preserve"><value>手动评分: {0}||手动评分: {0}</value></data>
 </root>
