@@ -995,4 +995,8 @@
   <data name="Xncf.NeuCharPivotAccessControl" xml:space="preserve"><value>NeuCharPivot - Access control</value></data>
   <data name="Xncf.ModuleNotLoaded" xml:space="preserve"><value>The module is not loaded.</value></data>
   <data name="Xncf.PasswordRequired" xml:space="preserve"><value>Enter the password.</value></data>
+  <data name="Admin.Pagination.Goto" xml:space="preserve"><value>Go to</value></data>
+  <data name="Admin.Pagination.PageSize" xml:space="preserve"><value>per page</value></data>
+  <data name="Admin.Pagination.Total" xml:space="preserve"><value>{total} total</value></data>
+  <data name="Admin.Pagination.Page" xml:space="preserve"><value>Page</value></data>
 </root>

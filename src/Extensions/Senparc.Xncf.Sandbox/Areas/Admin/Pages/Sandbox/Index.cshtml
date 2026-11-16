@@ -351,7 +351,8 @@
                         failed: '失败',
                         expired: '已过期'
                     };
-                    return map[this.statusKey(status)] || ('未知(' + status + ')');
+                    const source = map[this.statusKey(status)];
+                    return source ? ncfST(source) : ncfST('未知({0})', status);
                 },
                 statusTagType(status) {
                     const map = {

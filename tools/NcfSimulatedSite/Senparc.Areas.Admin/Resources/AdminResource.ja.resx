@@ -904,4 +904,8 @@
   <data name="Xncf.NeuCharPivotAccessControl" xml:space="preserve"><value>NeuCharPivot - アクセス制御</value></data>
   <data name="Xncf.ModuleNotLoaded" xml:space="preserve"><value>モジュールが読み込まれていません。</value></data>
   <data name="Xncf.PasswordRequired" xml:space="preserve"><value>パスワードを入力してください。</value></data>
+  <data name="Admin.Pagination.Goto" xml:space="preserve"><value>移動</value></data>
+  <data name="Admin.Pagination.PageSize" xml:space="preserve"><value>件/ページ</value></data>
+  <data name="Admin.Pagination.Total" xml:space="preserve"><value>合計 {total} 件</value></data>
+  <data name="Admin.Pagination.Page" xml:space="preserve"><value>ページ</value></data>
 </root>

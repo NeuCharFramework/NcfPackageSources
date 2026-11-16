@@ -76,7 +76,11 @@
         var sourceMap = {};
         var patterns = [];
         var observer;
-        var translatedAttributes = ['placeholder', 'title', 'aria-label', 'alt'];
+        var translatedAttributes = [
+            'placeholder', 'title', 'aria-label', 'alt',
+            'data-placeholder', 'label', 'empty-text', 'active-text',
+            'inactive-text', 'description'
+        ];
 
         function escapeRegExp(value) {
             return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -200,4 +204,17 @@
         };
     })();
     window.ncfRegisterSourceTranslations(@Html.Raw(JsonSerializer.Serialize(sourceTranslations)));
+    if (window.ELEMENT && typeof window.ELEMENT.i18n === 'function') {
+        window.ELEMENT.i18n(function (key) {
+            var pagination = {
+                'el.pagination.goto': window.ncfT('Admin.Pagination.Goto'),
+                'el.pagination.pagesize': window.ncfT('Admin.Pagination.PageSize'),
+                'el.pagination.total': window.ncfT('Admin.Pagination.Total'),
+                'el.pagination.pageClassifier': window.ncfT('Admin.Pagination.Page')
+            };
+            return Object.prototype.hasOwnProperty.call(pagination, key)
+                ? pagination[key]
+                : null;
+        });
+    }
 </script>

@@ -1013,7 +1013,11 @@
                 }
 
                 .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkRow > .remarkInputBox::before {
-                    content: '备注:';
+                    content: none;
+                    display: none;
+                }
+
+                .entertarget > .promptContetnPmroparaBox .promptContentBox > .remarkLabel {
                     position: absolute;
                     left: 15px;
                     top: 5px;

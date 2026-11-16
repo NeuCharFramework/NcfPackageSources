@@ -37,4 +37,7 @@
   <data name="Frontend.029" xml:space="preserve"><value>配对码||Pairing code</value></data>
   <data name="Frontend.030" xml:space="preserve"><value>当前没有待审批的配对请求||There are no pending pairing requests</value></data>
   <data name="Frontend.031" xml:space="preserve"><value>当前没有通过配对签发的活动会话||There are no active sessions issued through pairing</value></data>
+  <data name="Frontend.032" xml:space="preserve"><value>待审批 {0}||Pending approval {0}</value></data>
+  <data name="Frontend.033" xml:space="preserve"><value>活动会话 {0}||Active sessions {0}</value></data>
+  <data name="Frontend.034" xml:space="preserve"><value>桌面端留空令牌后会生成 5 分钟有效的配对码。请核对配对码和来源地址后批准；会话令牌有效 24 小时、不会在后台显示，并可随时撤销。||Leaving the token empty on the desktop generates a pairing code valid for 5 minutes. Verify the pairing code and source address before approving; session tokens are valid for 24 hours, are not shown in the background, and can be revoked at any time.</value></data>
 </root>

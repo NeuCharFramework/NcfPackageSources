@@ -187,5 +187,11 @@
   <data name="Frontend.083" xml:space="preserve"><value>{0} 个会话||{0} sessions</value></data>
   <data name="Frontend.084" xml:space="preserve"><value>暂无沙箱会话||No sandbox sessions</value></data>
   <data name="Frontend.085" xml:space="preserve"><value>别名仅用于在列表、Function 结果与日志中识别会话；不影响运行环境。||Aliases identify sessions in lists, Function results, and logs; they do not affect the runtime environment.</value></data>
+  <data name="Frontend.086" xml:space="preserve"><value>创建中||Creating</value></data>
+  <data name="Frontend.087" xml:space="preserve"><value>停止中||Stopping</value></data>
+  <data name="Frontend.088" xml:space="preserve"><value>已停止||Stopped</value></data>
+  <data name="Frontend.089" xml:space="preserve"><value>失败||Failed</value></data>
+  <data name="Frontend.090" xml:space="preserve"><value>已过期||Expired</value></data>
+  <data name="Frontend.091" xml:space="preserve"><value>未知({0})||Unknown ({0})</value></data>
 
 </root>

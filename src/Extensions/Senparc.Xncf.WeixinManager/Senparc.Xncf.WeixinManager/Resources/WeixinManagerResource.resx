@@ -363,4 +363,10 @@
   <data name="Frontend.122" xml:space="preserve"><value>输入消息，发送到当前微信会话||Enter a message to send to the current WeChat conversation</value></data>
   <data name="Frontend.123" xml:space="preserve"><value>配置名称||Configuration name</value></data>
   <data name="Frontend.124" xml:space="preserve"><value>验证代码||Verification code</value></data>
+  <data name="Frontend.125" xml:space="preserve"><value>企业微信打卡||WeCom attendance</value></data>
+  <data name="Frontend.126" xml:space="preserve"><value>获取企业微信打卡记录||Retrieve WeCom attendance records</value></data>
+  <data name="Frontend.127" xml:space="preserve"><value>获取打卡记录||Get attendance records</value></data>
+  <data name="Frontend.128" xml:space="preserve"><value>按成员账号和时间范围获取企业微信打卡记录，单次最长 30 天。||Retrieve WeCom attendance records by member account and time range, up to 30 days per request.</value></data>
+  <data name="Frontend.129" xml:space="preserve"><value>企业微信凭证有效，可以获取打卡记录。||The WeCom credential is valid and can retrieve attendance records.</value></data>
+  <data name="Frontend.130" xml:space="preserve"><value>企业微信打卡连接器目前只提供获取打卡记录。||The WeCom attendance connector currently only provides attendance record retrieval.</value></data>
 </root>

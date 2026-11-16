@@ -904,4 +904,8 @@
   <data name="Xncf.NeuCharPivotAccessControl" xml:space="preserve"><value>NeuCharPivot - Управление доступом</value></data>
   <data name="Xncf.ModuleNotLoaded" xml:space="preserve"><value>Модуль не загружен.</value></data>
   <data name="Xncf.PasswordRequired" xml:space="preserve"><value>Введите пароль.</value></data>
+  <data name="Admin.Pagination.Goto" xml:space="preserve"><value>Перейти</value></data>
+  <data name="Admin.Pagination.PageSize" xml:space="preserve"><value>на странице</value></data>
+  <data name="Admin.Pagination.Total" xml:space="preserve"><value>Всего {total}</value></data>
+  <data name="Admin.Pagination.Page" xml:space="preserve"><value>Страница</value></data>
 </root>

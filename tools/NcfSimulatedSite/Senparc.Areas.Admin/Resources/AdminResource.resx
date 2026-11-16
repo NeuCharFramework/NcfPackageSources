@@ -1372,4 +1372,16 @@
   <data name="Frontend.439" xml:space="preserve"><value>显示不可用模块（{0}）||Show unavailable modules ({0})</value></data>
   <data name="Frontend.440" xml:space="preserve"><value>模块版本||Module version</value></data>
   <data name="Frontend.441" xml:space="preserve"><value>最多 {0} 个文件||Up to {0} files</value></data>
+  <data name="Frontend.442" xml:space="preserve"><value>共 {0} 条||{0} total</value></data>
+  <data name="Frontend.443" xml:space="preserve"><value>{0}条/页||{0} per page</value></data>
+  <data name="Frontend.444" xml:space="preserve"><value>前往||Go to</value></data>
+  <data name="Frontend.445" xml:space="preserve"><value>页||Page</value></data>
+  <data name="Frontend.446" xml:space="preserve"><value>10条/页||10 per page</value></data>
+  <data name="Frontend.447" xml:space="preserve"><value>20条/页||20 per page</value></data>
+  <data name="Frontend.448" xml:space="preserve"><value>30条/页||30 per page</value></data>
+  <data name="Frontend.449" xml:space="preserve"><value>40条/页||40 per page</value></data>
+  <data name="Admin.Pagination.Goto" xml:space="preserve"><value>前往</value></data>
+  <data name="Admin.Pagination.PageSize" xml:space="preserve"><value>条/页</value></data>
+  <data name="Admin.Pagination.Total" xml:space="preserve"><value>共 {total} 条</value></data>
+  <data name="Admin.Pagination.Page" xml:space="preserve"><value>页</value></data>
 </root>

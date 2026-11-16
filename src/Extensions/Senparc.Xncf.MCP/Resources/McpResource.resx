@@ -214,4 +214,6 @@
   <data name="Frontend.049" xml:space="preserve"><value>发现 {0} 个工具（Function）||Found {0} tools (Functions)</value></data>
   <data name="Frontend.050" xml:space="preserve"><value>连接测试 - {0}||Connection test - {0}</value></data>
   <data name="Frontend.051" xml:space="preserve"><value>共发现 {0} 个工具（Function）。点击左侧箭头展开查看参数与输入 Schema。||Found {0} tools (Functions). Select the arrow on the left to view parameters and input schemas.</value></data>
+  <data name="Frontend.052" xml:space="preserve"><value>发布开关、工具和访问权限由所属模块管理。地址基于当前访问站点生成，不代表已允许匿名访问或公网可达。||Publishing, tools, and access permissions are managed by the owning module. The address is generated from the current site and does not imply anonymous access or public reachability.</value></data>
+  <data name="Frontend.053" xml:space="preserve"><value>工具 {0}||Tools {0}</value></data>
 </root>

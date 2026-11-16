@@ -970,4 +970,8 @@
   <data name="Xncf.NeuCharPivotAccessControl" xml:space="preserve"><value>NeuCharPivot - 访问控制</value></data>
   <data name="Xncf.ModuleNotLoaded" xml:space="preserve"><value>模块未加载。</value></data>
   <data name="Xncf.PasswordRequired" xml:space="preserve"><value>请输入密码。</value></data>
+  <data name="Admin.Pagination.Goto" xml:space="preserve"><value>前往</value></data>
+  <data name="Admin.Pagination.PageSize" xml:space="preserve"><value>条/页</value></data>
+  <data name="Admin.Pagination.Total" xml:space="preserve"><value>共 {total} 条</value></data>
+  <data name="Admin.Pagination.Page" xml:space="preserve"><value>页</value></data>
 </root>

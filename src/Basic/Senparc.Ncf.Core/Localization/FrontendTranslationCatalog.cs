@@ -46,7 +46,18 @@ public static class FrontendTranslationCatalog
             var parts = Split(item.Value);
             if (neutral.TryGetValue(item.Name, out var neutralParts))
             {
-                result[neutralParts[0]] = parts.Length == 2 ? parts[1] : item.Value;
+                var target = parts.Length == 2 ? parts[1] : item.Value;
+                // A culture resource can intentionally repeat the neutral source
+                // when a translation is missing. Keep the neutral target instead
+                // of letting that placeholder overwrite a real translation from
+                // another resource family.
+                if (!activeCulture.Name.StartsWith("zh", StringComparison.OrdinalIgnoreCase)
+                    && string.Equals(target, neutralParts[0], StringComparison.Ordinal))
+                {
+                    target = neutralParts[1];
+                }
+
+                result[neutralParts[0]] = target;
             }
             else if (parts.Length == 2 && !result.ContainsKey(parts[0]))
             {

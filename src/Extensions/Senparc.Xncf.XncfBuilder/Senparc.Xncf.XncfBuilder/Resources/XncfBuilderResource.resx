@@ -499,4 +499,10 @@
   <data name="Frontend.034" xml:space="preserve"><value>预览状态数据库持久化尚未就绪||Preview status persistence is not ready</value></data>
   <data name="Frontend.035" xml:space="preserve"><value>预览监控||Preview monitor</value></data>
   <data name="Frontend.036" xml:space="preserve"><value>预览部署（publish）目录：||Preview deployment (publish) directory:</value></data>
+  <data name="Frontend.037" xml:space="preserve"><value>预览已由用户停止。||Preview stopped by the user.</value></data>
+  <data name="Frontend.038" xml:space="preserve"><value>预览进程意外退出。||The preview process exited unexpectedly.</value></data>
+  <data name="Frontend.039" xml:space="preserve"><value>预览任务执行失败。||The preview task failed.</value></data>
+  <data name="Frontend.040" xml:space="preserve"><value>模块预览会话||Module preview sessions</value></data>
+  <data name="Frontend.041" xml:space="preserve"><value>当前没有隔离开发任务||No isolated development tasks</value></data>
+  <data name="Frontend.042" xml:space="preserve"><value>最近更新：{0}||Last updated: {0}</value></data>
 </root>
