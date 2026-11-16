@@ -1,6 +1,6 @@
 ---
 name: senparc-version-updater
-description: Update version metadata for Senparc-prefixed .NET projects. Use when Codex needs to update package versions in .csproj files (preferring .net10+ variants), propagate changed shared .props imports to all importing projects, summarize project changes since the merge-base against master/main, add standardized Chinese changelog headers to changed .cs files, append PackageReleaseNotes entries, and recursively bump versions for referencing projects.
+description: Update version metadata for Senparc-prefixed .NET projects. Use when Codex needs to update package versions in .csproj files (preferring .net10+ variants), propagate changed shared .props imports to all importing projects, summarize project changes since the merge-base against master/main, add standardized English changelog headers to changed .cs files, append PackageReleaseNotes entries, and recursively bump versions for referencing projects.
 ---
 
 # Senparc Version Updater
@@ -97,12 +97,12 @@ For every file in `changed_cs_files`:
 
 1. Ensure a top-of-file changelog block exists.
 2. Use the exact format in [header-template.md](references/header-template.md).
-3. Replace `文件名` with actual filename.
-4. Set `文件功能描述` once and keep it stable afterward.
-5. Set `创建标识` date to file creation date (`creation_date_yyyymmdd` from scanner, fallback to today).
+3. Replace `File name` with the actual filename.
+4. Set `File description` once and keep it stable afterward.
+5. Set the `Created by` date to the file creation date (`creation_date_yyyymmdd` from the scanner, falling back to today).
 6. Append one new pair for current change:
-   - `修改标识：<author> - YYYYMMDD`
-   - `修改描述：v<new-version> <summary>`
+   - `Modified by: <author> - YYYYMMDD`
+   - `Change description: v<new-version> <summary>`
 7. Keep exactly one blank line between modification groups (no extra blank lines).
 8. Skip files matched by the special skip rules above (`*.Generated.cs`, unit test project files, `MultipleDatabase/` directory files, and auto-generated files under `Domain/Migrations/<DatabaseName>/`).
 
@@ -138,8 +138,8 @@ In every `.csproj` in `changed_csprojs` (the selected primary must also satisfy 
 3. Do not insert blank lines inside `<PackageReleaseNotes>` (including between entries and detail lines).
 4. Use this structure:
    - `[YYYY-MM-DD] vX.Y.Z <one-line summary>`
-   - `1、<detail>`
-   - `2、<detail>`
+   - `1. <detail>`
+   - `2. <detail>`
 5. Include all key updates found in Step 2.
 6. Within the same unmerged `comparison_base..HEAD` window, do not create another version bump entry; merge new details into the same `vX.Y.Z` release-note block.
 7. `summary/detail` must describe project functional changes (feature, behavior, compatibility, bug fix, UI/UX, dependency adaptation).
