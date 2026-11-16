@@ -6,6 +6,17 @@
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <data name="Module.DesktopBridge.MenuName" xml:space="preserve"><value>DesktopBridge 桌面桥接</value></data>
   <data name="Module.DesktopBridge.Description" xml:space="preserve"><value>为 NCF 桌面机器人提供受保护的本机或远程状态、设备配对和 EventBus 活动流。</value></data>
+  <data name="AuthHandoff.Title" xml:space="preserve"><value>Desktop AdminChat authorization</value></data>
+  <data name="AuthHandoff.ConfirmTitle" xml:space="preserve"><value>Authorize desktop AdminChat</value></data>
+  <data name="AuthHandoff.ConfirmDescription" xml:space="preserve"><value>After confirmation, the current GUI will use AdminChat as this administrator. Only a one-time authorization result is transmitted; browser cookies are not read or copied.</value></data>
+  <data name="AuthHandoff.GuiOnly" xml:space="preserve"><value>Continue only when this page was opened automatically by the NCF GUI you are using.</value></data>
+  <data name="AuthHandoff.Authorize" xml:space="preserve"><value>Authorize this GUI</value></data>
+  <data name="AuthHandoff.FailedTitle" xml:space="preserve"><value>Unable to authorize desktop AdminChat</value></data>
+  <data name="AuthHandoff.RequestMissing" xml:space="preserve"><value>The desktop authorization request does not exist or has expired. Return to the GUI and try again.</value></data>
+  <data name="AuthHandoff.LoginExpired" xml:space="preserve"><value>The WebView administrator login has expired. Please sign in again.</value></data>
+  <data name="AuthHandoff.TenantUnsupported" xml:space="preserve"><value>WebView automatic authorization is not supported for tenant administrators. Use explicit sign-in.</value></data>
+  <data name="AuthHandoff.LoginExpiring" xml:space="preserve"><value>The WebView administrator login is about to expire. Please sign in again.</value></data>
+  <data name="AuthHandoff.RequestInvalidated" xml:space="preserve"><value>The desktop authorization request is no longer valid. Return to the GUI and try again.</value></data>
   <data name="Frontend.001" xml:space="preserve"><value>待审批请求||Pending approval requests</value></data>
   <data name="Frontend.002" xml:space="preserve"><value>活动会话||Active sessions</value></data>
   <data name="Frontend.003" xml:space="preserve"><value>仅当此页面由你正在使用的 NCF GUI 自动打开时继续。||Continue only when this page was opened automatically by the NCF GUI you are using.</value></data>

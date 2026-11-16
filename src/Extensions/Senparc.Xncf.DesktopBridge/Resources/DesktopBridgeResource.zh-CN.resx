@@ -6,4 +6,15 @@
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <data name="Module.DesktopBridge.MenuName" xml:space="preserve"><value>DesktopBridge 桌面桥接</value></data>
   <data name="Module.DesktopBridge.Description" xml:space="preserve"><value>为 NCF 桌面机器人提供受保护的本机或远程状态、设备配对和 EventBus 活动流。</value></data>
+  <data name="AuthHandoff.Title" xml:space="preserve"><value>桌面 AdminChat 授权</value></data>
+  <data name="AuthHandoff.ConfirmTitle" xml:space="preserve"><value>授权桌面 AdminChat</value></data>
+  <data name="AuthHandoff.ConfirmDescription" xml:space="preserve"><value>确认后，当前 GUI 将以此管理员身份使用 AdminChat。只传递一次性授权结果，不会读取或复制浏览器 Cookie。</value></data>
+  <data name="AuthHandoff.GuiOnly" xml:space="preserve"><value>仅当此页面由你正在使用的 NCF GUI 自动打开时继续。</value></data>
+  <data name="AuthHandoff.Authorize" xml:space="preserve"><value>授权此 GUI</value></data>
+  <data name="AuthHandoff.FailedTitle" xml:space="preserve"><value>未能授权桌面 AdminChat</value></data>
+  <data name="AuthHandoff.RequestMissing" xml:space="preserve"><value>桌面授权请求不存在或已过期，请返回 GUI 后重试。</value></data>
+  <data name="AuthHandoff.LoginExpired" xml:space="preserve"><value>WebView 管理员登录已失效，请重新登录。</value></data>
+  <data name="AuthHandoff.TenantUnsupported" xml:space="preserve"><value>多租户管理员暂不支持 WebView 自动授权，请使用显式登录。</value></data>
+  <data name="AuthHandoff.LoginExpiring" xml:space="preserve"><value>WebView 管理员登录即将过期，请重新登录。</value></data>
+  <data name="AuthHandoff.RequestInvalidated" xml:space="preserve"><value>桌面授权请求已失效，请返回 GUI 后重试。</value></data>
 </root>
