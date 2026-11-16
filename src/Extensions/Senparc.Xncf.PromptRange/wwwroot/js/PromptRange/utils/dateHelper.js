@@ -1,6 +1,6 @@
 /**
- * 日期时间辅助工具
- * 提供日期格式化、相对时间显示等功能
+ * Date and time helper.
+ * Provides date formatting and relative-time display.
  * 
  * @version 1.0.0
  * @author Senparc
@@ -9,35 +9,34 @@
     'use strict';
     
     /**
-     * 日期辅助工具集
-     * 使用对象字面量模式（无需实例化）
+     * Date helper methods.
+     * Uses an object-literal pattern and requires no instantiation.
      */
     var DateHelper = {
         /**
-         * 格式化日期
-         * 将日期对象、字符串或时间戳格式化为指定格式的字符串
-         * @param {Date|string|number} date - 日期对象、字符串或时间戳
-         * @param {string} [format='YYYY-MM-DD HH:mm:ss'] - 格式字符串
-         * @returns {string} 格式化后的日期字符串
+         * Format a date.
+         * @param {Date|string|number} date - Date object, string, or timestamp.
+         * @param {string} [format='YYYY-MM-DD HH:mm:ss'] - Format string.
+         * @returns {string} Formatted date.
          * 
-         * 支持的格式标记:
-         * - YYYY: 四位年份
-         * - MM: 两位月份 (01-12)
-         * - DD: 两位日期 (01-31)
-         * - HH: 两位小时 (00-23)
-         * - mm: 两位分钟 (00-59)
-         * - ss: 两位秒 (00-59)
+         * Supported tokens:
+         * - YYYY: four-digit year
+         * - MM: two-digit month (01-12)
+         * - DD: two-digit day (01-31)
+         * - HH: two-digit hour (00-23)
+         * - mm: two-digit minute (00-59)
+         * - ss: two-digit second (00-59)
          */
         formatDate: function(date, format) {
             format = format || 'YYYY-MM-DD HH:mm:ss';
             var d = new Date(date);
             
-            // 检查日期是否有效
+            // Reject invalid dates.
             if (isNaN(d.getTime())) {
                 return '';
             }
 
-            // 辅助函数：补零
+            // Pad a number with a leading zero.
             function pad(num) {
                 return num < 10 ? '0' + num : '' + num;
             }
@@ -57,10 +56,9 @@
         },
 
         /**
-         * 格式化聊天时间（相对时间）
-         * 将时间转换为相对当前时间的描述（如"刚刚"、"5分钟前"）
-         * @param {Date|string|number} date - 日期对象、字符串或时间戳
-         * @returns {string} 相对时间描述
+         * Format a chat timestamp as relative time.
+         * @param {Date|string|number} date - Date object, string, or timestamp.
+         * @returns {string} Relative time description.
          */
         formatChatTime: function(date) {
             var now = new Date();
@@ -87,10 +85,9 @@
         },
 
         /**
-         * 格式化时间字符串
-         * 提取并格式化 ISO 8601 时间字符串
-         * @param {string} timeStr - 时间字符串
-         * @returns {string} 格式化后的时间字符串
+         * Format an ISO 8601 time string.
+         * @param {string} timeStr - Time string.
+         * @returns {string} Formatted time string.
          */
         formatTime: function(timeStr) {
             if (!timeStr) return '';
@@ -99,20 +96,18 @@
         },
 
         /**
-         * 获取时间戳
-         * 返回当前时间的时间戳（毫秒）
-         * @returns {number} 时间戳
+         * Return the current timestamp in milliseconds.
+         * @returns {number} Timestamp in milliseconds.
          */
         getTimestamp: function() {
             return new Date().getTime();
         },
 
         /**
-         * 计算时间差
-         * 计算两个时间之间的差值
-         * @param {Date|string|number} startDate - 开始时间
-         * @param {Date|string|number} endDate - 结束时间
-         * @returns {Object} 时间差对象 {days, hours, minutes, seconds, milliseconds}
+         * Calculate the difference between two dates.
+         * @param {Date|string|number} startDate - Start date.
+         * @param {Date|string|number} endDate - End date.
+         * @returns {Object} Difference object: {days, hours, minutes, seconds, milliseconds}.
          */
         getTimeDiff: function(startDate, endDate) {
             var start = new Date(startDate);
@@ -129,9 +124,9 @@
         },
 
         /**
-         * 判断是否为今天
-         * @param {Date|string|number} date - 要判断的日期
-         * @returns {boolean} 是否为今天
+         * Check whether a date is today.
+         * @param {Date|string|number} date - Date to check.
+         * @returns {boolean} Whether the date is today.
          */
         isToday: function(date) {
             var d = new Date(date);
@@ -142,9 +137,9 @@
         },
 
         /**
-         * 判断是否为昨天
-         * @param {Date|string|number} date - 要判断的日期
-         * @returns {boolean} 是否为昨天
+         * Check whether a date is yesterday.
+         * @param {Date|string|number} date - Date to check.
+         * @returns {boolean} Whether the date is yesterday.
          */
         isYesterday: function(date) {
             var d = new Date(date);
@@ -156,20 +151,19 @@
         },
 
         /**
-         * 获取月份的天数
-         * @param {number} year - 年份
-         * @param {number} month - 月份 (1-12)
-         * @returns {number} 该月的天数
+         * Return the number of days in a month.
+         * @param {number} year - Year.
+         * @param {number} month - Month (1-12).
+         * @returns {number} Number of days.
          */
         getDaysInMonth: function(year, month) {
             return new Date(year, month, 0).getDate();
         },
 
         /**
-         * 格式化持续时间
-         * 将毫秒数转换为可读的持续时间格式
-         * @param {number} milliseconds - 毫秒数
-         * @returns {string} 格式化后的持续时间（如 "2小时30分钟"）
+         * Format a duration.
+         * @param {number} milliseconds - Duration in milliseconds.
+         * @returns {string} Readable duration such as "2 hours 30 minutes".
          */
         formatDuration: function(milliseconds) {
             var seconds = Math.floor(milliseconds / 1000);
@@ -191,7 +185,7 @@
         }
     };
 
-    // 暴露到全局命名空间
+    // Expose the helper through the global namespace.
     window.PromptRangeUtils = window.PromptRangeUtils || {};
     window.PromptRangeUtils.DateHelper = DateHelper;
 

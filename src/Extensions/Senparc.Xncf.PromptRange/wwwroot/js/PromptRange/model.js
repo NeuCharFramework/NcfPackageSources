@@ -2,7 +2,7 @@ var app = new Vue({
     el: "#app",
     data() {
         return {
-            // 查询列表 参数
+            // List query parameters.
             queryList: {
                 page: 1,
                 size: 10,
@@ -10,8 +10,8 @@ var app = new Vue({
             },
             pageSizes: [10, 20, 30, 50],
             tableTotal: 0,
-            tableData: [], // 模型列表
-            multipleSelection: {}, // 选中的模型
+            tableData: [], // Model list.
+            multipleSelection: {}, // Selected models.
             dialogFormVisible: false,
             dialogFormTitle: ncfT('PromptRange.Model.NewTitle'),
             formLabelWidth: '',
@@ -86,7 +86,7 @@ var app = new Vue({
                 }
             });
         },
-        // 新增模型 btn
+        // Create-model button.
         async createBtnFrom() {
             this.dialogFormTitle = ncfT('PromptRange.Model.NewTitle')
             this.editModelName = true
@@ -106,7 +106,7 @@ var app = new Vue({
                 this.$message.error(res.data.errorMessage || res.data.message || ncfT('PromptRange.Model.AddFailed'));
             }
         },
-        // 编辑模型 btn
+        // Edit-model button.
         editBtnFrom(row) {
             this.dialogFormTitle = ncfT('PromptRange.Model.EditTitle')
             this.newModelForm = {
@@ -132,19 +132,19 @@ var app = new Vue({
                 this.$message.error(res.data.errorMessage || res.data.message || ncfT('PromptRange.Model.ModifyFailed'))
             }
         },
-        // 删除模型 
+        // Delete a model.
         deleteHandle(row) {
             console.log("row.id", row.id)
             const idsToDelete = []
             idsToDelete.push(row.id)
             this.deletModel(idsToDelete)
         },
-        // 删除
+        // Delete models.
         async deletModel(idsToDelete) {
             const res = await service.request({
                 method: 'delete',
                 url: '/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.BatchDelete',
-                data: idsToDelete // 将 ID 列表作为请求体数据发送
+                data: idsToDelete // Send the ID list as the request body.
             });
             console.log(res)
             if (res.data.success) {
@@ -153,10 +153,10 @@ var app = new Vue({
                 this.$message.error(res.data.errorMessage || res.data.message || ncfT('PromptRange.Model.DeleteFailed'))
             }
         },
-        // btn 批量删除
+        // Batch-delete button.
         btnBatchdelete() {
             console.log('批量删除', this.multipleSelection)
-            // 循环 this.multipleSelection
+            // Iterate through the selected rows.
             // this.$refs.multipleTable.toggleRowSelection(row);
             const idsToDelete = []
             this.multipleSelection[1].forEach(item => {
@@ -164,37 +164,37 @@ var app = new Vue({
             });
             this.deletModel(idsToDelete)
         },
-        // async  获取table列表数据
+        // Load table data asynchronously.
         async getList() {
             const res = await service.get(`/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.GetLlmModelList?pageIndex=${this.queryList.page}&pageSize=${this.queryList.size}&key=${this.queryList.modelName}`);
             this.tableData = res.data.data.list;
             this.tableTotal = res.data.data.totalCount;
         },
 
-        // table 自定义行号
+        // Custom table row number.
         indexMethod(index) {
             let { page, size } = this.queryList
             return (page - 1) * size + index + 1;
             //return  index + 1;
         },
-        // table 选中列
+        // Selected table rows.
         handleSelectionChange(val) {
             let { page } = this.queryList
             this.multipleSelection[page] = val;
-            // 按照 页码 记录对应页选择的数量
-            console.log('tbale 选择', this.multipleSelection)
+            // Keep the selection for each page.
+            console.log('Table selection', this.multipleSelection)
         },
-        // 分页 页大小
+        // Pagination page size.
         handleSizeChange(val) {
             this.queryList.size = val
             this.getList()
         },
-        // 分页 页码
+        // Pagination page number.
         handleCurrentChange(val) {
             this.queryList.page = val
             this.getList()
         },
-        // 点击搜索
+        // Search button.
         clickSearch() {
             this.getList()
         },

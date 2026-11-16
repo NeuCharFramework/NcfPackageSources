@@ -1,6 +1,6 @@
 /**
- * 复制功能辅助工具
- * 提供复制文本到剪贴板的功能，兼容多种浏览器
+ * Clipboard helper.
+ * Copies text to the clipboard with broad browser compatibility.
  * 
  * @version 1.0.0
  * @author Senparc
@@ -9,18 +9,17 @@
     'use strict';
     
     /**
-     * Copy 辅助工具集
-     * 使用对象字面量模式（无需实例化）
+     * Clipboard helper methods.
+     * Uses an object-literal pattern and requires no instantiation.
      */
     var CopyHelper = {
         /**
-         * 复制文本到剪贴板
-         * 优先使用现代 Clipboard API，降级使用传统方法
-         * @param {string} text - 要复制的文本
-         * @param {string} [successMessage='复制成功'] - 成功提示消息
-         * @param {string} [errorMessage='复制失败'] - 失败提示消息
-         * @param {boolean} [showMessage=true] - 是否显示提示消息
-         * @returns {boolean} 是否复制成功
+         * Copy text to the clipboard.
+         * @param {string} text - Text to copy.
+         * @param {string} [successMessage='复制成功'] - Success message.
+         * @param {string} [errorMessage='复制失败'] - Error message.
+         * @param {boolean} [showMessage=true] - Whether to show a message.
+         * @returns {boolean} Whether the copy request was accepted.
          */
         copyToClipboard: function(text, successMessage, errorMessage, showMessage) {
             if (!text) {
@@ -35,8 +34,8 @@
         },
 
         /**
-         * 异步复制文本，并返回最终复制结果。
-         * @returns {Promise<boolean>} 是否复制成功
+         * Copy text asynchronously and return the final result.
+         * @returns {Promise<boolean>} Whether copying succeeded.
          */
         copyToClipboardAsync: async function(text, successMessage, errorMessage, showMessage) {
             successMessage = successMessage || ncfST('复制成功');
@@ -52,7 +51,7 @@
 
             var success = false;
 
-            // 方法1: 使用现代 Clipboard API (需要 HTTPS 或 localhost)
+            // Prefer the modern Clipboard API (HTTPS or localhost required).
             if (window.isSecureContext && navigator.clipboard && navigator.clipboard.writeText) {
                 try {
                     await navigator.clipboard.writeText(text);
@@ -73,9 +72,9 @@
         },
 
         /**
-         * 降级复制方法（使用 document.execCommand）
-         * @param {string} text - 要复制的文本
-         * @returns {boolean} 是否复制成功
+         * Compatibility fallback using document.execCommand.
+         * @param {string} text - Text to copy.
+         * @returns {boolean} Whether copying succeeded.
          * @private
          */
         _fallbackCopy: function(text) {
@@ -110,11 +109,10 @@
         },
 
         /**
-         * 复制 Prompt 结果
-         * 专门用于复制 Prompt 结果的便捷方法
-         * @param {Object} item - Prompt 结果对象
-         * @param {boolean} [rawResult=false] - 是否复制原始结果
-         * @returns {boolean} 是否复制成功
+         * Copy a Prompt result.
+         * @param {Object} item - Prompt result.
+         * @param {boolean} [rawResult=false] - Whether to copy the raw result.
+         * @returns {boolean} Whether copying succeeded.
          */
         copyPromptResult: function(item, rawResult) {
             if (!item) {
@@ -132,11 +130,10 @@
         },
 
         /**
-         * 复制对象为 JSON 字符串
-         * 将对象序列化为格式化的 JSON 后复制
-         * @param {*} obj - 要复制的对象
-         * @param {number} [indent=2] - 缩进空格数
-         * @returns {boolean} 是否复制成功
+         * Copy an object as formatted JSON.
+         * @param {*} obj - Object to copy.
+         * @param {number} [indent=2] - Indentation size.
+         * @returns {boolean} Whether copying succeeded.
          */
         copyObject: function(obj, indent) {
             indent = indent !== undefined ? indent : 2;
@@ -157,11 +154,10 @@
         },
 
         /**
-         * 复制数组内容
-         * 将数组元素用换行符连接后复制
-         * @param {Array} arr - 要复制的数组
-         * @param {string} [separator='\n'] - 分隔符
-         * @returns {boolean} 是否复制成功
+         * Copy array contents joined by a separator.
+         * @param {Array} arr - Array to copy.
+         * @param {string} [separator='\n'] - Separator.
+         * @returns {boolean} Whether copying succeeded.
          */
         copyArray: function(arr, separator) {
             separator = separator || '\n';
@@ -181,9 +177,9 @@
         },
 
         /**
-         * 复制 HTML 内容（保留格式）
-         * @param {string} html - HTML 内容
-         * @returns {boolean} 是否复制成功
+         * Copy HTML content while preserving formatting.
+         * @param {string} html - HTML content.
+         * @returns {boolean} Whether copying succeeded.
          */
         copyHtml: function(html) {
             if (!html) {
@@ -191,7 +187,7 @@
                 return false;
             }
 
-            // 创建临时容器
+            // Create a temporary container.
             var container = document.createElement('div');
             container.innerHTML = html;
             container.style.position = 'fixed';
@@ -199,7 +195,7 @@
             
             document.body.appendChild(container);
 
-            // 选中内容
+            // Select the content.
             var range = document.createRange();
             range.selectNode(container);
             window.getSelection().removeAllRanges();
@@ -225,10 +221,9 @@
         },
 
         /**
-         * 显示消息提示
-         * 使用 Element UI 的 Message 组件
-         * @param {string} message - 消息内容
-         * @param {string} type - 消息类型 (success/error/warning/info)
+         * Show a message through Element UI's Message component.
+         * @param {string} message - Message content.
+         * @param {string} type - Message type (success/error/warning/info).
          * @private
          */
         _showMessage: function(message, type) {
@@ -244,15 +239,15 @@
         },
 
         /**
-         * 检查复制功能是否可用
-         * @returns {boolean} 是否可用
+         * Check whether the copy feature is available.
+         * @returns {boolean} Whether copying is available.
          */
         isSupported: function() {
             return !!(navigator.clipboard || document.queryCommandSupported('copy'));
         }
     };
 
-    // 暴露到全局命名空间
+    // Expose the helper through the global namespace.
     window.PromptRangeUtils = window.PromptRangeUtils || {};
     window.PromptRangeUtils.CopyHelper = CopyHelper;
 
