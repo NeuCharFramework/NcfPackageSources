@@ -2,22 +2,23 @@
     Copyright (C) 2026 Senparc
   
     File name: NeuCharWorkflowChatPage.cs
-    File description: Chat 触发器的自包含聊天页面模板（无外部依赖）
+    File description: Self-contained Chat trigger page template with no external dependencies
 
 
     Created by: Senparc - 20260909
-    Creation description: v0.4.0 新增 Chat 触发器
+    Creation description: v0.4.0 add the Chat trigger
 
     Modified by: Senparc - 20260915
-    Change description: v0.4.0 增强 Chat 触发器消息持久化与恢复能力
+    Change description: v0.4.0 improve Chat message persistence and recovery
 
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.NeuCharWorkflow.OHS.Local.Controllers;
 
 /// <summary>
-/// Chat 聊天页面模板。页面内联全部 CSS 与 JS，不依赖任何外部资源；
-/// 模板中的 __WORKFLOW_ID__ 占位符由控制器在渲染时替换为实际工作流 ID。
+/// Template for the Chat page. All CSS and JavaScript are inline and no
+/// external resources are required. The controller replaces the
+/// __WORKFLOW_ID__ placeholder with the actual workflow ID.
 /// </summary>
 public static class NeuCharWorkflowChatPage
 {

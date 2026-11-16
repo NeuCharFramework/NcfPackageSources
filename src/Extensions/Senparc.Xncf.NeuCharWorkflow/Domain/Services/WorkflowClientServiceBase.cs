@@ -2,13 +2,13 @@
     Copyright (C) 2026 Senparc
   
     File name: WorkflowClientServiceBase.cs
-    File description: 领域服务与业务流程实现
+    File description: Domain services and business workflow implementation
 
 
     Created by: Senparc - 20260810
 
     Modified by: Senparc - 20260813
-    Change description: v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Change description: v0.1.0-preview1 improve workflow orchestration, replay, Webhook, and parallel execution
 
 ----------------------------------------------------------------*/
 
@@ -19,7 +19,7 @@ using System;
 
 namespace Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 
-/// <summary>模块内持久化服务的最小基类，避免依赖 Admin 的服务基类。</summary>
+/// <summary>Minimal base class for module persistence services without depending on the Admin service base.</summary>
 public abstract class WorkflowClientServiceBase<TEntity> : ClientServiceBase<TEntity>
     where TEntity : EntityBase
 {

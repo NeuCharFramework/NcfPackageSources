@@ -2,13 +2,13 @@
     Copyright (C) 2026 Senparc
   
     File name: SenparcDbContextFactoryConfig.cs
-    File description: 数据模型、DTO 与映射定义
+    File description: Data models, DTOs, and mapping definitions
 
 
     Created by: Senparc - 20260810
 
     Modified by: Senparc - 20260813
-    Change description: v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Change description: v0.1.0-preview1 improve workflow orchestration, replay, Webhook, and parallel execution
 
 ----------------------------------------------------------------*/
 
@@ -17,7 +17,7 @@ using System.IO;
 
 namespace Senparc.Xncf.NeuCharWorkflow.Models;
 
-/// <summary>设计时 Migration 工厂定位宿主配置的路径。</summary>
+/// <summary>Design-time migration factory that locates the host configuration path.</summary>
 public static class SenparcDbContextFactoryConfig
 {
     private static string? _rootDirectoryPath;

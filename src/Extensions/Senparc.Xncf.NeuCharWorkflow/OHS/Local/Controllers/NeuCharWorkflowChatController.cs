@@ -2,14 +2,14 @@
     Copyright (C) 2026 Senparc
   
     File name: NeuCharWorkflowChatController.cs
-    File description: Chat 触发器的聊天页面与匿名 HTTP 入口
+    File description: Chat trigger page and anonymous HTTP entry points
 
 
     Created by: Senparc - 20260909
-    Creation description: v0.4.0 新增 Chat 触发器
+    Creation description: v0.4.0 add the Chat trigger
 
     Modified by: Senparc - 20260915
-    Change description: v0.4.0 增强 Chat 触发器消息持久化与恢复能力
+    Change description: v0.4.0 improve Chat message persistence and recovery
 
 ----------------------------------------------------------------*/
 
@@ -30,8 +30,9 @@ using Senparc.Xncf.NeuCharWorkflow.Application.AppServices;
 namespace Senparc.Xncf.NeuCharWorkflow.OHS.Local.Controllers;
 
 /// <summary>
-/// NeuChar Workflow 的 Chat 触发器入口。页面可直接被登录用户或访客打开，
-/// 身份通过登录 Claims 或 HttpOnly 会话 Cookie 识别；工作流仍由服务端协调器执行。
+/// Entry point for the NeuChar Workflow Chat trigger. The page can be opened by
+/// authenticated users or guests; identity comes from claims or an HttpOnly
+/// session cookie, while the workflow remains coordinated on the server.
 /// </summary>
 [ApiController]
 [AllowAnonymous]
@@ -53,7 +54,8 @@ public sealed class NeuCharWorkflowChatController : ControllerBase
     }
 
     /// <summary>
-    /// 打开聊天页面。页面本身不携带任何会话数据，数据由前端调用下方的 JSON 接口获得。
+    /// Open the chat page. The page carries no session data; the client loads
+    /// it through the JSON endpoints below.
     /// </summary>
     [HttpGet("{workflowId:int}/page")]
     public IActionResult Page(int workflowId)
@@ -149,7 +151,8 @@ public sealed class NeuCharWorkflowChatController : ControllerBase
     }
 
     /// <summary>
-    /// 登录用户使用 Claims 身份，访客使用 HttpOnly Cookie；两种身份在同一工作流下互不混用。
+    /// Authenticated users use claims, while guests use an HttpOnly cookie.
+    /// The two identities are never mixed within one workflow.
     /// </summary>
     private string ResolveParticipantKey()
     {
@@ -164,7 +167,8 @@ public sealed class NeuCharWorkflowChatController : ControllerBase
     }
 
     /// <summary>
-    /// 读取或创建访客会话令牌。令牌为 32 字节随机值的 Base64Url 编码，只存在 Cookie 中。
+    /// Read or create the guest session token. It is a Base64Url encoding of
+    /// 32 random bytes and exists only in the cookie.
     /// </summary>
     private string EnsureGuestCookie()
     {

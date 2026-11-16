@@ -2,13 +2,13 @@
     Copyright (C) 2026 Senparc
   
     File name: WorkflowEventPublisher.cs
-    File description: 增强工作流编排、回放、Webhook 与并行执行能力
+    File description: Workflow orchestration, replay, Webhook, and parallel execution
 
 
     Created by: Senparc - 20260810
 
     Modified by: Senparc - 20260813
-    Change description: v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Change description: v0.1.0-preview1 improve workflow orchestration, replay, Webhook, and parallel execution
 
 ----------------------------------------------------------------*/
 
@@ -21,8 +21,9 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.NeuCharWorkflow.Application.Events;
 
 /// <summary>
-/// Workflow 只发布状态通知。IEventBus 将事件写入 Channel 即返回，调用方不等待订阅模块执行，
-/// 因此保存、运行和调度线程不会被跨模块消费者阻塞。
+/// Workflow publishes status notifications only. IEventBus returns after
+/// writing the event to the channel instead of waiting for subscribers, so
+/// save, run, and scheduling threads are not blocked by cross-module consumers.
 /// </summary>
 public sealed class WorkflowEventPublisher
 {

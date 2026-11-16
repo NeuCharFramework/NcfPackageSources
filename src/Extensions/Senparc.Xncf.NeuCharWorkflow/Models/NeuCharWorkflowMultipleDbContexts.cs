@@ -2,19 +2,19 @@
     Copyright (C) 2026 Senparc
   
     File name: NeuCharWorkflowMultipleDbContexts.cs
-    File description: 数据模型、DTO 与映射定义
+    File description: Data models, DTOs, and mapping definitions
 
 
     Created by: Senparc - 20260810
 
     Modified by: Senparc - 20260813
-    Change description: v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Change description: v0.1.0-preview1 improve workflow orchestration, replay, Webhook, and parallel execution
 
     Modified by: Senparc - 20260913
-    Change description: v0.4.0 Oracle/Dm 长文本列类型映射：Chat 内容与回放 JSON 使用 CLOB
+    Change description: v0.4.0 map Oracle/Dm long-text columns: Chat content and replay JSON use CLOB
 
     Modified by: Senparc - 20260915
-    Change description: v0.4.0 增强 Chat 触发器消息持久化与恢复能力
+    Change description: v0.4.0 improve Chat trigger message persistence and recovery
 
 ----------------------------------------------------------------*/
 
@@ -61,10 +61,12 @@ public sealed class NeuCharWorkflowSenparcEntities_Oracle : NeuCharWorkflowSenpa
     {
         base.OnModelCreating(modelBuilder);
 
-        // Chat 内容最多 8000 个字符，Oracle 默认的 NVARCHAR2(2000) 不足以承载，使用 NCLOB。
+        // Chat content can contain up to 8000 characters; Oracle's default
+        // NVARCHAR2(2000) is too small, so use NCLOB.
         modelBuilder.Entity<NeuCharWorkflowChatMessage>().Property(z => z.Content).HasColumnType("NCLOB");
 
-        // 回放 JSON 体积不可预估，AddExecutionReplay 迁移在 Oracle 中使用的就是 CLOB，这里保持一致，避免迁移收缩列类型。
+        // Replay JSON size is unbounded. The AddExecutionReplay migration uses
+        // CLOB on Oracle, so keep the mapping consistent and avoid narrowing it.
         modelBuilder.Entity<NeuCharWorkflowExecutionLog>().Property(z => z.ReplaySnapshotJson).HasColumnType("CLOB");
         modelBuilder.Entity<NeuCharWorkflowExecutionLog>().Property(z => z.ReplayEventsJson).HasColumnType("CLOB");
     }
@@ -79,13 +81,15 @@ public sealed class NeuCharWorkflowSenparcEntities_Dm : NeuCharWorkflowSenparcEn
     {
         base.OnModelCreating(modelBuilder);
 
-        // 回放 JSON 体积不可预估，AddExecutionReplay 迁移在 Dm 中使用的就是 CLOB，这里保持一致，避免迁移收缩列类型。
+        // Replay JSON size is unbounded. The AddExecutionReplay migration uses
+        // CLOB on Dm, so keep the mapping consistent and avoid narrowing it.
         modelBuilder.Entity<NeuCharWorkflowExecutionLog>().Property(z => z.ReplaySnapshotJson).HasColumnType("CLOB");
         modelBuilder.Entity<NeuCharWorkflowExecutionLog>().Property(z => z.ReplayEventsJson).HasColumnType("CLOB");
     }
 }
 
-// 设计时工厂确保每种受支持数据库生成独立、由本 XNCF 所有的 EF Migration。
+// The design-time factory keeps EF migrations independent and owned by this
+// XNCF for every supported database.
 public sealed class NeuCharWorkflowDbContextFactory_Sqlite
     : SenparcDesignTimeDbContextFactoryBase<NeuCharWorkflowSenparcEntities_Sqlite, Register>
 {
