@@ -100,5 +100,15 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public string Icon { get; set; }
 
         public string Url { get; set; }
+
+        /// <summary>
+        /// The owning XNCF module's localized menu name, when applicable.
+        /// </summary>
+        public string ModuleName { get; set; }
+
+        /// <summary>
+        /// The owning XNCF module UID, when applicable.
+        /// </summary>
+        public string ModuleUid { get; set; }
     }
 }
