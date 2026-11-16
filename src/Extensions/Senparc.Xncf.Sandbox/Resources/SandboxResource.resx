@@ -161,5 +161,27 @@
   <data name="Frontend.057" xml:space="preserve"><value>手动配置清单（摘要）||Manual configuration checklist (summary)</value></data>
   <data name="Frontend.058" xml:space="preserve"><value>进入沙箱面板||Open Sandbox panel</value></data>
   <data name="Frontend.059" xml:space="preserve"><value>文档链接：||Documentation: </value></data>
+  <data name="Frontend.060" xml:space="preserve"><value>Docker 可用性、镜像前缀和部署说明统一在环境准备页检查。||Check Docker availability, image prefixes, and deployment notes on the environment setup page.</value></data>
+  <data name="Frontend.061" xml:space="preserve"><value>不会||No</value></data>
+  <data name="Frontend.062" xml:space="preserve"><value>中配置前缀或覆盖项（说明见文档）。||Configure prefixes or overrides here; see the documentation.</value></data>
+  <data name="Frontend.063" xml:space="preserve"><value>使用模块已注册的执行入口，参数校验和结果日志保持与模块 Function 页面一致。||Use the execution entry registered by the module; parameter validation and result logs match the module Function page.</value></data>
+  <data name="Frontend.064" xml:space="preserve"><value>保存后从当前时刻重新计算，到期由后台自动销毁。||After saving, calculation starts from the current time and the session is destroyed automatically at expiry.</value></data>
+  <data name="Frontend.065" xml:space="preserve"><value>创建||Create</value></data>
+  <data name="Frontend.066" xml:space="preserve"><value>在 Exec 模板会话中提交短任务代码。||Submit short task code in an Exec template session.</value></data>
+  <data name="Frontend.067" xml:space="preserve"><value>在运行 NCF 的同一台机器上安装并启动 Docker（或兼容 CLI）。模块||Install and start Docker (or a compatible CLI) on the same machine running NCF. The module</value></data>
+  <data name="Frontend.068" xml:space="preserve"><value>如需内网仓库，可在宿主||For an internal registry, configure it on the host</value></data>
+  <data name="Frontend.069" xml:space="preserve"><value>执行||Execute</value></data>
+  <data name="Frontend.070" xml:space="preserve"><value>按官方文档预拉所需镜像；具体镜像名称与版本以文档为准。||Pre-pull the required images according to the official documentation; use the documented image names and versions.</value></data>
+  <data name="Frontend.071" xml:space="preserve"><value>检测通过后，打开模块 Function「创建沙箱」，在模板下拉中选择 Python Exec，执行即可；无需在命令行输入模板名。||After the check passes, open the module Function “Create sandbox”, choose Python Exec in the template list, and run it; no command-line template name is required.</value></data>
+  <data name="Frontend.072" xml:space="preserve"><value>状态：||Status:</value></data>
+  <data name="Frontend.073" xml:space="preserve"><value>的||of</value></data>
+  <data name="Frontend.074" xml:space="preserve"><value>自动安装 Docker。||Install Docker automatically.</value></data>
+  <data name="Frontend.075" xml:space="preserve"><value>该会话不会被 TTL 扫描自动销毁，须由管理员手动销毁。||This session is not destroyed by the TTL scan and must be destroyed manually by an administrator.</value></data>
+  <data name="Frontend.076" xml:space="preserve"><value>输入 SessionId，停止并清理指定会话。||Enter a SessionId to stop and clean up the specified session.</value></data>
+  <data name="Frontend.077" xml:space="preserve"><value>选择运行模板与运行时，创建独立会话。||Choose an execution template and runtime to create an isolated session.</value></data>
+  <data name="Frontend.078" xml:space="preserve"><value>通过站点反向代理访问交互式会话，访问链接不暴露容器 token。||Access interactive sessions through the site reverse proxy; links do not expose the container token.</value></data>
+  <data name="Frontend.079" xml:space="preserve"><value>销毁||Destroy</value></data>
+  <data name="Frontend.080" xml:space="preserve"><value>镜像仓库前缀：||Image registry prefix:</value></data>
+  <data name="Frontend.081" xml:space="preserve"><value>集中查看会话状态，并通过模块 Function 创建、执行和清理隔离运行环境。||Review session status in one place and create, execute, and clean isolated environments through module Functions.</value></data>
 
 </root>
