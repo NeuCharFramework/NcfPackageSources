@@ -40,17 +40,17 @@
         <article class="ws-metric">
             <span class="ws-metric-kicker">我的工作区</span>
             <strong>{{ report.ownSummary.workspaceCount }}</strong>
-            <span class="ws-metric-detail">{{ report.ownSummary.fileCount }} 个文件 · {{ formatFileSize(report.ownSummary.usedBytes) }}</span>
+            <span class="ws-metric-detail">{{ ncfST('{0} 个文件 · {1}', report.ownSummary.fileCount, formatFileSize(report.ownSummary.usedBytes)) }}</span>
         </article>
         <article class="ws-metric is-other" v-if="report.isSuperAdmin">
             <span class="ws-metric-kicker">其他管理员</span>
             <strong>{{ report.otherSummary.workspaceCount }}</strong>
-            <span class="ws-metric-detail">{{ report.otherSummary.fileCount }} 个文件 · {{ formatFileSize(report.otherSummary.usedBytes) }}</span>
+            <span class="ws-metric-detail">{{ ncfST('{0} 个文件 · {1}', report.otherSummary.fileCount, formatFileSize(report.otherSummary.usedBytes)) }}</span>
         </article>
         <article class="ws-metric is-total" v-if="report.isSuperAdmin">
             <span class="ws-metric-kicker">当前租户合计</span>
             <strong>{{ report.visibleSummary.workspaceCount }}</strong>
-            <span class="ws-metric-detail">{{ report.visibleSummary.fileCount }} 个文件 · {{ formatFileSize(report.visibleSummary.usedBytes) }}</span>
+            <span class="ws-metric-detail">{{ ncfST('{0} 个文件 · {1}', report.visibleSummary.fileCount, formatFileSize(report.visibleSummary.usedBytes)) }}</span>
         </article>
     </section>
     <p class="ws-note" v-if="report.actorId">

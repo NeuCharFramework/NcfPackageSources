@@ -505,4 +505,5 @@
   <data name="Frontend.040" xml:space="preserve"><value>模块预览会话||Module preview sessions</value></data>
   <data name="Frontend.041" xml:space="preserve"><value>当前没有隔离开发任务||No isolated development tasks</value></data>
   <data name="Frontend.042" xml:space="preserve"><value>最近更新：{0}||Last updated: {0}</value></data>
+  <data name="Frontend.043" xml:space="preserve"><value>每个任务依次执行宿主引用校验、隔离构建、启动新预览、健康检查和原子替换。新预览通过检查前，当前可用的旧预览不会停止。||Each task validates host references, performs an isolated build, starts a new preview, runs a health check, and atomically replaces the preview. The current preview stays available until the new preview passes its checks.</value></data>
 </root>

@@ -75,4 +75,5 @@
   <data name="Server.ClearFailed" xml:space="preserve"><value>清空工作区失败，请稍后重试。||Failed to clear the Workspace. Please retry later.</value></data>
   <data name="Frontend.058" xml:space="preserve"><value>{0} 个文件 ·||{0} files ·</value></data>
   <data name="Frontend.059" xml:space="preserve"><value>当前账号 #{0} · 单个工作区配额 · 文件数和容量不含工作区清单。||Current account #{0} · per-Workspace quota · file count and capacity exclude the Workspace manifest.</value></data>
+  <data name="Frontend.060" xml:space="preserve"><value>{0} 个文件 · {1}||{0} files · {1}</value></data>
 </root>
