@@ -1118,4 +1118,5 @@
   <data name="Frontend.492" xml:space="preserve"><value>最大输入字符数||Maximum input characters</value></data>
   <data name="Frontend.493" xml:space="preserve"><value>本地工具调用已开放。外部请求可能间接触发 Function / MCP 的读写或外部访问，请只对受信任的调用方开放。||Local tool calls are enabled. External requests may indirectly trigger Function/MCP writes or external access; open this only to trusted callers.</value></data>
   <data name="Frontend.494" xml:space="preserve"><value>本地工具调用已开放。外部请求可能间接触发 Function / MCP 的读写或外部访问，请只对受信任的调用方开放。||Local tool calls are enabled. External requests may indirectly trigger Function/MCP writes or external access; open this only to trusted callers.</value></data>
+  <data name="Frontend.495" xml:space="preserve"><value>本地工具调用已开放。外部请求可能间接触发 Function / MCP 的读写或外部访问；请只开放最小权限工具并仅信任明确的调用方。||Local tool calls are enabled. External requests may indirectly trigger Function/MCP writes or external access; open only the minimum required tools to explicitly trusted callers.</value></data>
 </root>
