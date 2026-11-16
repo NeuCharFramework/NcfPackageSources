@@ -1342,4 +1342,5 @@
   <data name="Frontend.409" xml:space="preserve"><value>默认系统提示词由 PromptRange 管理；当前文本是个人或租户附加偏好。||The default system prompt is managed by PromptRange; the current text contains personal or tenant preferences.</value></data>
   <data name="Frontend.410" xml:space="preserve"><value>，@@ 引用文件或路径||, use @@ to reference a file or path</value></data>
   <data name="Frontend.411" xml:space="preserve"><value>，输入 @@ 引用文件或路径||, enter @@ to reference a file or path</value></data>
+  <data name="Frontend.412" xml:space="preserve"><value>支持普通文本和绝对 http/https 链接的 &amp;lt;a&amp;gt; 标签；其他 HTML 会被编码。||Supports plain text and absolute http/https links using &amp;lt;a&amp;gt; tags; other HTML is encoded.</value></data>
 </root>
