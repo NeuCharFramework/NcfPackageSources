@@ -1,0 +1,12 @@
+@using System.Text.Json
+@using Senparc.Ncf.Core.Localization
+@using Senparc.Xncf.XncfBuilder
+@inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizationFactory
+@{
+    var sourceTranslations = FrontendTranslationCatalog.Get(
+        LocalizationFactory,
+        typeof(XncfBuilderResource));
+}
+<script>
+    window.ncfRegisterSourceTranslations(@Html.Raw(JsonSerializer.Serialize(sourceTranslations)));
+</script>
