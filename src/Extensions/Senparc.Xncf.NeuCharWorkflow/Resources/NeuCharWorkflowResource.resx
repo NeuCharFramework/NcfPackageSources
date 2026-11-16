@@ -135,4 +135,84 @@
   <data name="Frontend.118" xml:space="preserve"><value>聚合||Aggregate</value></data>
   <data name="Frontend.119" xml:space="preserve"><value>发送纽铃||Send NeuBell</value></data>
   <data name="Frontend.120" xml:space="preserve"><value>状态更新||Status update</value></data>
+  <data name="Frontend.121" xml:space="preserve"><value>上一步||Previous step</value></data>
+  <data name="Frontend.122" xml:space="preserve"><value>下一步||Next step</value></data>
+  <data name="Frontend.123" xml:space="preserve"><value>开头||Beginning</value></data>
+  <data name="Frontend.124" xml:space="preserve"><value>结尾||End</value></data>
+  <data name="Frontend.125" xml:space="preserve"><value>复制当前工作流并编辑||Copy current workflow and edit</value></data>
+  <data name="Frontend.126" xml:space="preserve"><value>查看最新工作流||View latest workflow</value></data>
+  <data name="Frontend.127" xml:space="preserve"><value>成功||Succeeded</value></data>
+  <data name="Frontend.128" xml:space="preserve"><value>失败||Failed</value></data>
+  <data name="Frontend.129" xml:space="preserve"><value>Agent 工具||Agent tools</value></data>
+  <data name="Frontend.130" xml:space="preserve"><value>Agent 或 A2A 连接不存在、所属模块未开启或已被移除||The Agent or A2A connection does not exist, its module is disabled, or it was removed</value></data>
+  <data name="Frontend.131" xml:space="preserve"><value>Agent 请求执行工具，请确认是否允许本次调用。||The Agent requested a tool call. Confirm whether to allow this call.</value></data>
+  <data name="Frontend.132" xml:space="preserve"><value>Chat 触发||Chat trigger</value></data>
+  <data name="Frontend.133" xml:space="preserve"><value>Chat 触发配置||Chat trigger settings</value></data>
+  <data name="Frontend.134" xml:space="preserve"><value>Console 打印内容||Console output</value></data>
+  <data name="Frontend.135" xml:space="preserve"><value>Function 参数元数据读取异常，请检查模块日志||Function parameter metadata could not be read. Check the module log.</value></data>
+  <data name="Frontend.136" xml:space="preserve"><value>HIL 等级||HIL level</value></data>
+  <data name="Frontend.137" xml:space="preserve"><value>Human 参与者||Human participant</value></data>
+  <data name="Frontend.138" xml:space="preserve"><value>JSON 文件||JSON file</value></data>
+  <data name="Frontend.139" xml:space="preserve"><value>YAML 文件||YAML file</value></data>
+  <data name="Frontend.140" xml:space="preserve"><value>L0 全自动||L0 fully automatic</value></data>
+  <data name="Frontend.141" xml:space="preserve"><value>L1 风险分层（MCP 默认审批）||L1 risk-based approval (MCP default approval)</value></data>
+  <data name="Frontend.142" xml:space="preserve"><value>L2 所有工具调用前审批||L2 approval before every tool call</value></data>
+  <data name="Frontend.143" xml:space="preserve"><value>L3 Human 参与者 + 工具审批||L3 Human participant + tool approval</value></data>
+  <data name="Frontend.144" xml:space="preserve"><value>MCP 工具权限||MCP tool permissions</value></data>
+  <data name="Frontend.145" xml:space="preserve"><value>Webhook 使用说明||Webhook usage guide</value></data>
+  <data name="Frontend.146" xml:space="preserve"><value>Webhook 触发配置||Webhook trigger settings</value></data>
+  <data name="Frontend.147" xml:space="preserve"><value>Workflow 等待 Human||Workflow waiting for Human</value></data>
+  <data name="Frontend.148" xml:space="preserve"><value>break 后续节点||break successor node</value></data>
+  <data name="Frontend.149" xml:space="preserve"><value>不启用 break||Do not enable break</value></data>
+  <data name="Frontend.150" xml:space="preserve"><value>不等于||Not equal</value></data>
+  <data name="Frontend.151" xml:space="preserve"><value>不限定（GET/POST及其他）||Any method (GET/POST and others)</value></data>
+  <data name="Frontend.152" xml:space="preserve"><value>个性化智能体模型||Personalized Agent model</value></data>
+  <data name="Frontend.153" xml:space="preserve"><value>也可直接拖拽连线||You can also drag directly to create a connection</value></data>
+  <data name="Frontend.154" xml:space="preserve"><value>人工输入提示||Human input prompt</value></data>
+  <data name="Frontend.155" xml:space="preserve"><value>仅在循环控制启用时使用||Used only when loop control is enabled</value></data>
+  <data name="Frontend.156" xml:space="preserve"><value>从触发器开始添加节点；节点支持拖动排版、拖拽端口连线以及上游 Output 参数关联。||Start with a trigger. Nodes support drag layout, port connections, and upstream Output parameter bindings.</value></data>
+  <data name="Frontend.157" xml:space="preserve"><value>任务||Tasks</value></data>
+  <data name="Frontend.158" xml:space="preserve"><value>任务模型||Task model</value></data>
+  <data name="Frontend.159" xml:space="preserve"><value>传入子工作流的输入||Input to the sub-workflow</value></data>
+  <data name="Frontend.160" xml:space="preserve"><value>传递访问密钥；也兼容 query 参数||Pass an access key; query parameters are also supported</value></data>
+  <data name="Frontend.161" xml:space="preserve"><value>使用语法编辑||Edit with syntax</value></data>
+  <data name="Frontend.162" xml:space="preserve"><value>使用说明||Usage instructions</value></data>
+  <data name="Frontend.163" xml:space="preserve"><value>例如：工作流需要处理||Example: the workflow needs to process</value></data>
+  <data name="Frontend.164" xml:space="preserve"><value>例如：请补充审批意见||Example: please add your approval comments</value></data>
+  <data name="Frontend.165" xml:space="preserve"><value>例如：请说明审批结论和下一步处理方式||Example: explain the approval result and next steps</value></data>
+  <data name="Frontend.166" xml:space="preserve"><value>保存||Save</value></data>
+  <data name="Frontend.167" xml:space="preserve"><value>保存后不会再返回；留空将保留已保存密钥||The key cannot be shown again after saving; leave it empty to keep the saved key</value></data>
+  <data name="Frontend.168" xml:space="preserve"><value>保存后可访问||Available after saving</value></data>
+  <data name="Frontend.169" xml:space="preserve"><value>保存后自动生成||Generated automatically after saving</value></data>
+  <data name="Frontend.170" xml:space="preserve"><value>保存（Command/Ctrl + S）||Save (Command/Ctrl + S)</value></data>
+  <data name="Frontend.171" xml:space="preserve"><value>保留聚合数组；||Preserve the aggregate array;</value></data>
+  <data name="Frontend.172" xml:space="preserve"><value>假||False</value></data>
+  <data name="Frontend.173" xml:space="preserve"><value>允许外部恢复||Allow external resume</value></data>
+  <data name="Frontend.174" xml:space="preserve"><value>允许访客（未登录）||Allow guests (not signed in)</value></data>
+  <data name="Frontend.175" xml:space="preserve"><value>先保存工作流以生成调用地址和访问密钥。外部请求必须携带该密钥。||Save the workflow first to generate the call URL and access key. External requests must include this key.</value></data>
+  <data name="Frontend.176" xml:space="preserve"><value>先输入固定文字，再从右侧选择公式或从下方选择上游输出。点击公式会插入完整表达式；选中文本时会自动包围选区，多参数公式会保留空参数位供继续填写。||Enter fixed text first, then choose a formula on the right or an upstream output below. Clicking a formula inserts the full expression; selected text is wrapped automatically and multi-argument formulas keep empty slots for completion.</value></data>
+  <data name="Frontend.177" xml:space="preserve"><value>关联上游 Output||Bind upstream Output</value></data>
+  <data name="Frontend.178" xml:space="preserve"><value>关闭||Close</value></data>
+  <data name="Frontend.179" xml:space="preserve"><value>关闭节点详情||Close node details</value></data>
+  <data name="Frontend.180" xml:space="preserve"><value>内部 WebAPI（无需后台登录）||Internal WebAPI (Admin sign-in not required)</value></data>
+  <data name="Frontend.181" xml:space="preserve"><value>分钟||Minutes</value></data>
+  <data name="Frontend.182" xml:space="preserve"><value>列表索引||List index</value></data>
+  <data name="Frontend.183" xml:space="preserve"><value>删除||Delete</value></data>
+  <data name="Frontend.184" xml:space="preserve"><value>删除连线||Delete connection</value></data>
+  <data name="Frontend.185" xml:space="preserve"><value>判断||Condition</value></data>
+  <data name="Frontend.186" xml:space="preserve"><value>刷新工作流列表||Refresh workflow list</value></data>
+  <data name="Frontend.187" xml:space="preserve"><value>包含||Contains</value></data>
+  <data name="Frontend.188" xml:space="preserve"><value>原连线会替换为“上游 → 新节点 → 下游”。||The original connection will be replaced with “upstream → new node → downstream”.</value></data>
+  <data name="Frontend.189" xml:space="preserve"><value>参数元数据异常||Parameter metadata error</value></data>
+  <data name="Frontend.190" xml:space="preserve"><value>参数名，例如 userId||Parameter name, for example userId</value></data>
+  <data name="Frontend.191" xml:space="preserve"><value>参数说明||Parameter description</value></data>
+  <data name="Frontend.192" xml:space="preserve"><value>双击节点添加到右键所选位置；也可直接拖放到画布。||Double-click a node to add it at the selected context-menu position, or drag it onto the canvas.</value></data>
+  <data name="Frontend.193" xml:space="preserve"><value>取消||Cancel</value></data>
+  <data name="Frontend.194" xml:space="preserve"><value>变量名只能使用字母、数字、下划线，且以字母或下划线开头。默认值可使用受限公式；不会执行 JavaScript。||Variable names may use only letters, numbers, and underscores, and must start with a letter or underscore. Default values may use restricted formulas; JavaScript is not executed.</value></data>
+  <data name="Frontend.195" xml:space="preserve"><value>变量名，例如 customerName||Variable name, for example customerName</value></data>
+  <data name="Frontend.196" xml:space="preserve"><value>只在当前页面打开且内容有变化时执行||Run only while this page is open and content has changed</value></data>
+  <data name="Frontend.197" xml:space="preserve"><value>只显示当前用户已保存的工作流。保存和运行前会完整检查多层引用，禁止直接或间接调用回自身。||Only workflows saved by the current user are shown. Multi-level references are checked before saving and running; direct or indirect self-calls are forbidden.</value></data>
+  <data name="Frontend.198" xml:space="preserve"><value>只查看任务，不自动消费||View the task only; do not consume automatically</value></data>
+  <data name="Frontend.199" xml:space="preserve"><value>可使用输入占位符、公式或插入变量||You can use input placeholders, formulas, or inserted variables</value></data>
+  <data name="Frontend.200" xml:space="preserve"><value>右值||Right-hand value</value></data>
 </root>

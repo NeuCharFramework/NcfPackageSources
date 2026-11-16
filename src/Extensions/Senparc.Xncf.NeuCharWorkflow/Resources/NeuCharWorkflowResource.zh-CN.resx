@@ -135,4 +135,84 @@
   <data name="Frontend.118" xml:space="preserve"><value>聚合||聚合</value></data>
   <data name="Frontend.119" xml:space="preserve"><value>发送纽铃||发送纽铃</value></data>
   <data name="Frontend.120" xml:space="preserve"><value>状态更新||状态更新</value></data>
+  <data name="Frontend.121" xml:space="preserve"><value>上一步||上一步</value></data>
+  <data name="Frontend.122" xml:space="preserve"><value>下一步||下一步</value></data>
+  <data name="Frontend.123" xml:space="preserve"><value>开头||开头</value></data>
+  <data name="Frontend.124" xml:space="preserve"><value>结尾||结尾</value></data>
+  <data name="Frontend.125" xml:space="preserve"><value>复制当前工作流并编辑||复制当前工作流并编辑</value></data>
+  <data name="Frontend.126" xml:space="preserve"><value>查看最新工作流||查看最新工作流</value></data>
+  <data name="Frontend.127" xml:space="preserve"><value>成功||成功</value></data>
+  <data name="Frontend.128" xml:space="preserve"><value>失败||失败</value></data>
+  <data name="Frontend.129" xml:space="preserve"><value>Agent 工具||Agent 工具</value></data>
+  <data name="Frontend.130" xml:space="preserve"><value>Agent 或 A2A 连接不存在、所属模块未开启或已被移除||Agent 或 A2A 连接不存在、所属模块未开启或已被移除</value></data>
+  <data name="Frontend.131" xml:space="preserve"><value>Agent 请求执行工具，请确认是否允许本次调用。||Agent 请求执行工具，请确认是否允许本次调用。</value></data>
+  <data name="Frontend.132" xml:space="preserve"><value>Chat 触发||Chat 触发</value></data>
+  <data name="Frontend.133" xml:space="preserve"><value>Chat 触发配置||Chat 触发配置</value></data>
+  <data name="Frontend.134" xml:space="preserve"><value>Console 打印内容||Console 打印内容</value></data>
+  <data name="Frontend.135" xml:space="preserve"><value>Function 参数元数据读取异常，请检查模块日志||Function 参数元数据读取异常，请检查模块日志</value></data>
+  <data name="Frontend.136" xml:space="preserve"><value>HIL 等级||HIL 等级</value></data>
+  <data name="Frontend.137" xml:space="preserve"><value>Human 参与者||Human 参与者</value></data>
+  <data name="Frontend.138" xml:space="preserve"><value>JSON 文件||JSON 文件</value></data>
+  <data name="Frontend.139" xml:space="preserve"><value>YAML 文件||YAML 文件</value></data>
+  <data name="Frontend.140" xml:space="preserve"><value>L0 全自动||L0 全自动</value></data>
+  <data name="Frontend.141" xml:space="preserve"><value>L1 风险分层（MCP 默认审批）||L1 风险分层（MCP 默认审批）</value></data>
+  <data name="Frontend.142" xml:space="preserve"><value>L2 所有工具调用前审批||L2 所有工具调用前审批</value></data>
+  <data name="Frontend.143" xml:space="preserve"><value>L3 Human 参与者 + 工具审批||L3 Human 参与者 + 工具审批</value></data>
+  <data name="Frontend.144" xml:space="preserve"><value>MCP 工具权限||MCP 工具权限</value></data>
+  <data name="Frontend.145" xml:space="preserve"><value>Webhook 使用说明||Webhook 使用说明</value></data>
+  <data name="Frontend.146" xml:space="preserve"><value>Webhook 触发配置||Webhook 触发配置</value></data>
+  <data name="Frontend.147" xml:space="preserve"><value>Workflow 等待 Human||Workflow 等待 Human</value></data>
+  <data name="Frontend.148" xml:space="preserve"><value>break 后续节点||break 后续节点</value></data>
+  <data name="Frontend.149" xml:space="preserve"><value>不启用 break||不启用 break</value></data>
+  <data name="Frontend.150" xml:space="preserve"><value>不等于||不等于</value></data>
+  <data name="Frontend.151" xml:space="preserve"><value>不限定（GET/POST及其他）||不限定（GET/POST及其他）</value></data>
+  <data name="Frontend.152" xml:space="preserve"><value>个性化智能体模型||个性化智能体模型</value></data>
+  <data name="Frontend.153" xml:space="preserve"><value>也可直接拖拽连线||也可直接拖拽连线</value></data>
+  <data name="Frontend.154" xml:space="preserve"><value>人工输入提示||人工输入提示</value></data>
+  <data name="Frontend.155" xml:space="preserve"><value>仅在循环控制启用时使用||仅在循环控制启用时使用</value></data>
+  <data name="Frontend.156" xml:space="preserve"><value>从触发器开始添加节点；节点支持拖动排版、拖拽端口连线以及上游 Output 参数关联。||从触发器开始添加节点；节点支持拖动排版、拖拽端口连线以及上游 Output 参数关联。</value></data>
+  <data name="Frontend.157" xml:space="preserve"><value>任务||任务</value></data>
+  <data name="Frontend.158" xml:space="preserve"><value>任务模型||任务模型</value></data>
+  <data name="Frontend.159" xml:space="preserve"><value>传入子工作流的输入||传入子工作流的输入</value></data>
+  <data name="Frontend.160" xml:space="preserve"><value>传递访问密钥；也兼容 query 参数||传递访问密钥；也兼容 query 参数</value></data>
+  <data name="Frontend.161" xml:space="preserve"><value>使用语法编辑||使用语法编辑</value></data>
+  <data name="Frontend.162" xml:space="preserve"><value>使用说明||使用说明</value></data>
+  <data name="Frontend.163" xml:space="preserve"><value>例如：工作流需要处理||例如：工作流需要处理</value></data>
+  <data name="Frontend.164" xml:space="preserve"><value>例如：请补充审批意见||例如：请补充审批意见</value></data>
+  <data name="Frontend.165" xml:space="preserve"><value>例如：请说明审批结论和下一步处理方式||例如：请说明审批结论和下一步处理方式</value></data>
+  <data name="Frontend.166" xml:space="preserve"><value>保存||保存</value></data>
+  <data name="Frontend.167" xml:space="preserve"><value>保存后不会再返回；留空将保留已保存密钥||保存后不会再返回；留空将保留已保存密钥</value></data>
+  <data name="Frontend.168" xml:space="preserve"><value>保存后可访问||保存后可访问</value></data>
+  <data name="Frontend.169" xml:space="preserve"><value>保存后自动生成||保存后自动生成</value></data>
+  <data name="Frontend.170" xml:space="preserve"><value>保存（Command/Ctrl + S）||保存（Command/Ctrl + S）</value></data>
+  <data name="Frontend.171" xml:space="preserve"><value>保留聚合数组；||保留聚合数组；</value></data>
+  <data name="Frontend.172" xml:space="preserve"><value>假||假</value></data>
+  <data name="Frontend.173" xml:space="preserve"><value>允许外部恢复||允许外部恢复</value></data>
+  <data name="Frontend.174" xml:space="preserve"><value>允许访客（未登录）||允许访客（未登录）</value></data>
+  <data name="Frontend.175" xml:space="preserve"><value>先保存工作流以生成调用地址和访问密钥。外部请求必须携带该密钥。||先保存工作流以生成调用地址和访问密钥。外部请求必须携带该密钥。</value></data>
+  <data name="Frontend.176" xml:space="preserve"><value>先输入固定文字，再从右侧选择公式或从下方选择上游输出。点击公式会插入完整表达式；选中文本时会自动包围选区，多参数公式会保留空参数位供继续填写。||先输入固定文字，再从右侧选择公式或从下方选择上游输出。点击公式会插入完整表达式；选中文本时会自动包围选区，多参数公式会保留空参数位供继续填写。</value></data>
+  <data name="Frontend.177" xml:space="preserve"><value>关联上游 Output||关联上游 Output</value></data>
+  <data name="Frontend.178" xml:space="preserve"><value>关闭||关闭</value></data>
+  <data name="Frontend.179" xml:space="preserve"><value>关闭节点详情||关闭节点详情</value></data>
+  <data name="Frontend.180" xml:space="preserve"><value>内部 WebAPI（无需后台登录）||内部 WebAPI（无需后台登录）</value></data>
+  <data name="Frontend.181" xml:space="preserve"><value>分钟||分钟</value></data>
+  <data name="Frontend.182" xml:space="preserve"><value>列表索引||列表索引</value></data>
+  <data name="Frontend.183" xml:space="preserve"><value>删除||删除</value></data>
+  <data name="Frontend.184" xml:space="preserve"><value>删除连线||删除连线</value></data>
+  <data name="Frontend.185" xml:space="preserve"><value>判断||判断</value></data>
+  <data name="Frontend.186" xml:space="preserve"><value>刷新工作流列表||刷新工作流列表</value></data>
+  <data name="Frontend.187" xml:space="preserve"><value>包含||包含</value></data>
+  <data name="Frontend.188" xml:space="preserve"><value>原连线会替换为“上游 → 新节点 → 下游”。||原连线会替换为“上游 → 新节点 → 下游”。</value></data>
+  <data name="Frontend.189" xml:space="preserve"><value>参数元数据异常||参数元数据异常</value></data>
+  <data name="Frontend.190" xml:space="preserve"><value>参数名，例如 userId||参数名，例如 userId</value></data>
+  <data name="Frontend.191" xml:space="preserve"><value>参数说明||参数说明</value></data>
+  <data name="Frontend.192" xml:space="preserve"><value>双击节点添加到右键所选位置；也可直接拖放到画布。||双击节点添加到右键所选位置；也可直接拖放到画布。</value></data>
+  <data name="Frontend.193" xml:space="preserve"><value>取消||取消</value></data>
+  <data name="Frontend.194" xml:space="preserve"><value>变量名只能使用字母、数字、下划线，且以字母或下划线开头。默认值可使用受限公式；不会执行 JavaScript。||变量名只能使用字母、数字、下划线，且以字母或下划线开头。默认值可使用受限公式；不会执行 JavaScript。</value></data>
+  <data name="Frontend.195" xml:space="preserve"><value>变量名，例如 customerName||变量名，例如 customerName</value></data>
+  <data name="Frontend.196" xml:space="preserve"><value>只在当前页面打开且内容有变化时执行||只在当前页面打开且内容有变化时执行</value></data>
+  <data name="Frontend.197" xml:space="preserve"><value>只显示当前用户已保存的工作流。保存和运行前会完整检查多层引用，禁止直接或间接调用回自身。||只显示当前用户已保存的工作流。保存和运行前会完整检查多层引用，禁止直接或间接调用回自身。</value></data>
+  <data name="Frontend.198" xml:space="preserve"><value>只查看任务，不自动消费||只查看任务，不自动消费</value></data>
+  <data name="Frontend.199" xml:space="preserve"><value>可使用输入占位符、公式或插入变量||可使用输入占位符、公式或插入变量</value></data>
+  <data name="Frontend.200" xml:space="preserve"><value>右值||右值</value></data>
 </root>
