@@ -2,13 +2,13 @@
     Copyright (C) 2026 Senparc
   
     File name: Replay.cshtml.cs
-    File description: 增强工作流编排、回放、Webhook 与并行执行能力
+    File description: Workflow orchestration, replay, Webhook, and parallel execution
 
 
     Created by: Senparc - 20260811
 
     Modified by: Senparc - 20260813
-    Change description: v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Change description: v0.1.0-preview1 improve workflow orchestration, replay, Webhook, and parallel execution
 
 ----------------------------------------------------------------*/
 
@@ -21,7 +21,8 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.NeuCharWorkflow.Areas.NeuCharWorkflow.Pages;
 
-/// <summary>已完成任务的只读回看页；不加载编辑器，也不会修改历史运行数据。</summary>
+/// <summary>Read-only replay page for completed tasks. It does not load the
+/// editor or modify historical run data.</summary>
 public class ReplayModel(
     Lazy<XncfModuleService> xncfModuleService,
     NeuCharWorkflowAppService workflowAppService,

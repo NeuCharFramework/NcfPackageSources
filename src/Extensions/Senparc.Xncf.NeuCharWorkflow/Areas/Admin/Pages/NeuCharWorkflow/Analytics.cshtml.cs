@@ -2,10 +2,10 @@
     Copyright (C) 2026 Senparc
 
     File name: Analytics.cshtml.cs
-    File description: Workflow 统计分析页面适配器
+    File description: Workflow analytics page adapter
 
     Modified by: Senparc - 20260829
-    Change description: v0.3.0 新增工作流分析查询与管理端可视化
+    Change description: v0.3.0 add workflow analytics queries and Admin visualization
 
 ----------------------------------------------------------------*/
 

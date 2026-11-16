@@ -72,7 +72,7 @@ new Vue({
                 this.hasMore = page.hasMore;
                 this.nextExecutionLogId = page.nextExecutionLogId;
             } catch (error) {
-                this.$message.error(this.errorMessage(error, '读取 Workflow 任务列表失败。'));
+                this.$message.error(this.errorMessage(error, ncfST('读取 Workflow 任务列表失败。')));
             } finally {
                 this.loading = false;
                 this.scheduleRefresh();
@@ -87,13 +87,14 @@ new Vue({
                 const wasEmpty = this.tasks.length === 0;
                 this.summary = page.summary || this.summary;
                 this.mergeLatestTasks(page.items);
-                // 已加载到末尾时，刷新只合并顶部新增记录，不能重新把已加载历史标记为“未加载”。
+                // Once history is loaded to the end, refresh only merges new
+                // records at the top and does not reopen the loaded history.
                 if (wasEmpty) {
                     this.hasMore = page.hasMore;
                     this.nextExecutionLogId = page.nextExecutionLogId;
                 }
             } catch (error) {
-                this.$message.error(this.errorMessage(error, '刷新 Workflow 任务列表失败。'));
+                this.$message.error(this.errorMessage(error, ncfST('刷新 Workflow 任务列表失败。')));
             } finally {
                 this.loading = false;
                 this.scheduleRefresh();
@@ -114,12 +115,13 @@ new Vue({
                 this.tasks = this.sortTasks(this.tasks.concat(page.items));
                 this.hasMore = page.hasMore;
                 this.nextExecutionLogId = page.nextExecutionLogId;
-                // 防御异常服务端响应，避免滚动到底部后反复请求同一游标。
+                // Guard against an invalid server cursor so reaching the
+                // bottom cannot request the same page repeatedly.
                 if (page.hasMore && page.nextExecutionLogId === previousCursor) {
                     this.hasMore = false;
                 }
             } catch (error) {
-                this.$message.error(this.errorMessage(error, '加载更多 Workflow 任务失败。'));
+                this.$message.error(this.errorMessage(error, ncfST('加载更多 Workflow 任务失败。')));
             } finally {
                 this.loadingMore = false;
                 this.$nextTick(() => this.handleScroll());
@@ -147,7 +149,9 @@ new Vue({
         },
         mergeLatestTasks(items) {
             const merged = new Map();
-            // 最新页是实时状态的唯一来源，先移除旧 live 项以避免结束后仍显示“运行中”。
+            // The latest page is the source of truth for live state. Remove
+            // stale live items before merging it so completed tasks do not
+            // remain marked as running.
             this.tasks.filter(task => !this.isLiveTask(task)).forEach(task => merged.set(task.taskId, task));
             (items || []).forEach(task => merged.set(task.taskId, task));
             this.tasks = this.sortTasks(Array.from(merged.values()));
@@ -197,16 +201,26 @@ new Vue({
             this.loadTasks();
         },
         statusText(status) {
-            return { running: '运行中', success: '成功', failed: '失败' }[status] || '未知';
+            return {
+                running: ncfST('运行中'),
+                success: ncfST('成功'),
+                failed: ncfST('失败')
+            }[status] || ncfST('未知');
         },
         statusType(status) {
             return { running: 'warning', success: 'success', failed: 'danger' }[status] || 'info';
         },
         sourceText(source) {
-            return { manual: '手动运行', webhook: 'Webhook', interval: '定时触发', history: '历史记录' }[source] || '运行记录';
+            return {
+                manual: ncfST('手动运行'),
+                webhook: 'Webhook',
+                interval: ncfST('定时触发'),
+                history: ncfST('历史记录')
+            }[source] || ncfST('运行记录');
         },
         summaryText(task) {
-            return task.errorMessage || task.summary || (task.status === 'running' ? '正在准备执行…' : '没有可显示的结果摘要。');
+            return task.errorMessage || task.summary ||
+                (task.status === 'running' ? ncfST('正在准备执行…') : ncfST('没有可显示的结果摘要。'));
         },
         formatDate(value) {
             if (!value) return '—';
@@ -219,14 +233,14 @@ new Vue({
             if (!task || !task.workflowId) return;
             if (task.status === 'running') {
                 if (!task.runId) {
-                    this.$message.warning('该运行缺少实时运行标识，可能由已退出的服务进程遗留；请先中止或等待任务状态更新。');
+                    this.$message.warning(ncfST('该运行缺少实时运行标识，可能由已退出的服务进程遗留；请先中止或等待任务状态更新。'));
                     return;
                 }
                 window.location.assign(`/Admin/NeuCharWorkflow/Index?workflowId=${encodeURIComponent(task.workflowId)}&runId=${encodeURIComponent(task.runId)}`);
                 return;
             }
             if (!task.replayAvailable || !task.executionLogId) {
-                this.$message.warning('该任务没有可用的运行快照，可能产生于回看功能启用前。');
+                this.$message.warning(ncfST('该任务没有可用的运行快照，可能产生于回看功能启用前。'));
                 return;
             }
             window.location.assign(`/Admin/NeuCharWorkflow/Replay?executionLogId=${encodeURIComponent(task.executionLogId)}`);
@@ -234,7 +248,7 @@ new Vue({
         async abortTask(task) {
             if (!task || task.status !== 'running' || this.abortingTaskId) return;
             if (!task.runId && !task.executionLogId) {
-                this.$message.error('该运行缺少可中止标识，请刷新任务列表后重试。');
+                this.$message.error(ncfST('该运行缺少可中止标识，请刷新任务列表后重试。'));
                 return;
             }
             try {

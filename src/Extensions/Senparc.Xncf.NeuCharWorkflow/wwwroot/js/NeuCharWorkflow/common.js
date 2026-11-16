@@ -73,10 +73,10 @@
             // Older or faulty XNCF metadata can omit Name. Keep the parameter operable in a
             // draft with a deterministic key, but mark it so the runtime can refuse execution.
             normalized.name = `parameter_${index + 1}`;
-            normalized.title = String(normalized.title || '').trim() || `参数 ${index + 1}`;
+            normalized.title = String(normalized.title || '').trim() || ncfST('参数 {0}', index + 1);
             normalized.hasSyntheticName = true;
             normalized.metadataError = normalized.metadataError ||
-                'Function 参数元数据缺少字段名；当前仅可保存草稿，修复或更新模块后才能运行。';
+                ncfST('Function 参数元数据缺少字段名；当前仅可保存草稿，修复或更新模块后才能运行。');
             return normalized;
         }) : [];
     }
