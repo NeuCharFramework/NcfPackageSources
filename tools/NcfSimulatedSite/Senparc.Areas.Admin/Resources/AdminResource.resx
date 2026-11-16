@@ -1226,4 +1226,29 @@
   <data name="Frontend.293" xml:space="preserve"><value>自动执行||Automatic execution</value></data>
   <data name="Frontend.294" xml:space="preserve"><value>选择 AI 算力||Select AI capacity</value></data>
   <data name="Frontend.295" xml:space="preserve"><value>间隔（秒）||Interval (seconds)</value></data>
+  <data name="Frontend.296" xml:space="preserve"><value>Workflow 能力当前未开启。列表仍可查看，手机端执行命令不会生效。||Workflow capability is currently disabled. The list remains visible, but phone commands will not execute.</value></data>
+  <data name="Frontend.297" xml:space="preserve"><value>个人微信 Bot||Personal WeChat Bot</value></data>
+  <data name="Frontend.298" xml:space="preserve"><value>个人微信集成||Personal WeChat integration</value></data>
+  <data name="Frontend.299" xml:space="preserve"><value>个人微信集成当前已停用，手机端命令不会进入 Admin。||Personal WeChat integration is disabled; phone commands will not enter Admin.</value></data>
+  <data name="Frontend.300" xml:space="preserve"><value>创建绑定配置||Create binding configuration</value></data>
+  <data name="Frontend.301" xml:space="preserve"><value>可用 Workflow||Available Workflows</value></data>
+  <data name="Frontend.302" xml:space="preserve"><value>命令前缀 @Model.PageData.CommandPrefix@(Model.PageData.RequireCommandPrefix ? " · 必填" : " · 可选")||Command prefix @Model.PageData.CommandPrefix@(Model.PageData.RequireCommandPrefix ? " · required" : " · optional")</value></data>
+  <data name="Frontend.303" xml:space="preserve"><value>在微信里完成绑定||Complete binding in WeChat</value></data>
+  <data name="Frontend.304" xml:space="preserve"><value>复制||Copy</value></data>
+  <data name="Frontend.305" xml:space="preserve"><value>当前 Admin 用户 Id||Current Admin user ID</value></data>
+  <data name="Frontend.306" xml:space="preserve"><value>当前管理员没有可用 Workflow。||The current administrator has no available Workflows.</value></data>
+  <data name="Frontend.307" xml:space="preserve"><value>当前能力||Current capability</value></data>
+  <data name="Frontend.308" xml:space="preserve"><value>手机命令||Phone commands</value></data>
+  <data name="Frontend.309" xml:space="preserve"><value>打开个人微信 Bot||Open Personal WeChat Bot</value></data>
+  <data name="Frontend.310" xml:space="preserve"><value>把当前管理员和微信账号绑定后，可以在手机上查询并执行 Workflow。||After binding the current administrator to a WeChat account, Workflows can be queried and executed from the phone.</value></data>
+  <data name="Frontend.311" xml:space="preserve"><value>把绑定码发给对方||Send the binding code to the user</value></data>
+  <data name="Frontend.312" xml:space="preserve"><value>按当前管理员 Id @Model.PageData.WorkflowUserId 查询。手机发送「获取 Workflow 列表」会得到同一份结果。||Query by current administrator ID @Model.PageData.WorkflowUserId. Sending “Get Workflow list” from the phone returns the same results.</value></data>
+  <data name="Frontend.313" xml:space="preserve"><value>搜索编号或名称||Search ID or name</value></data>
+  <data name="Frontend.314" xml:space="preserve"><value>数据库绑定配置||Database binding configuration</value></data>
+  <data name="Frontend.315" xml:space="preserve"><value>条启用||enabled</value></data>
+  <data name="Frontend.316" xml:space="preserve"><value>系统只保留不可逆哈希。创建或修改成功后，立刻把本次明文绑定码发给对应的微信用户。||The system stores only an irreversible hash. Send the plaintext binding code to the WeChat user immediately after creating or updating it.</value></data>
+  <data name="Frontend.317" xml:space="preserve"><value>让对方发送「绑定微信账号」命令。绑定完成后，发送「获取 Workflow 列表」，即可看到本页同一份列表。||Ask the user to send “Bind WeChat account”. After binding, “Get Workflow list” returns the same list shown here.</value></data>
+  <data name="Frontend.318" xml:space="preserve"><value>还没有启用中的绑定配置。先到个人微信 Bot 为微信账号创建绑定，手机端才能识别管理员。||No enabled binding configuration exists. Create a binding for the WeChat account in Personal WeChat Bot first so the phone can identify the administrator.</value></data>
+  <data name="Frontend.319" xml:space="preserve"><value>集成状态||Integration status</value></data>
+  <data name="Frontend.320" xml:space="preserve"><value>首次绑定||First binding</value></data>
 </root>
