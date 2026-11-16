@@ -1015,4 +1015,106 @@
   <data name="Frontend.389" xml:space="preserve"><value>可提及的组员||Mentionable group members</value></data>
   <data name="Frontend.390" xml:space="preserve"><value>可选，仅管理员可见||Optional; visible to administrators only</value></data>
   <data name="Frontend.391" xml:space="preserve"><value>名称||Name</value></data>
+  <data name="Frontend.392" xml:space="preserve"><value>启用对外服务||Enable public service</value></data>
+  <data name="Frontend.393" xml:space="preserve"><value>启用该组||Enable this group</value></data>
+  <data name="Frontend.394" xml:space="preserve"><value>复制||Copy</value></data>
+  <data name="Frontend.395" xml:space="preserve"><value>复杂绑定集中在右侧抽屉，当前 Agent 编辑状态会保留。||Complex bindings are managed in the right drawer; the current Agent editing state is preserved.</value></data>
+  <data name="Frontend.396" xml:space="preserve"><value>完整参数||Full parameters</value></data>
+  <data name="Frontend.397" xml:space="preserve"><value>对外服务已启用：通过鉴权的外部系统可以调用此 Agent。请确认 Prompt、知识库和回复内容均允许对外共享，并通过 HTTPS、网关限流和监控控制调用范围与模型成本。||Public service is enabled: authenticated external systems can call this Agent. Confirm that the Prompt, knowledge base, and responses may be shared, and control access and model cost with HTTPS, gateway limits, and monitoring.</value></data>
+  <data name="Frontend.398" xml:space="preserve"><value>工具||Tools</value></data>
+  <data name="Frontend.399" xml:space="preserve"><value>工具与流程||Tools and workflows</value></data>
+  <data name="Frontend.400" xml:space="preserve"><value>工具调用审批||Tool-call approval</value></data>
+  <data name="Frontend.401" xml:space="preserve"><value>已记录的本地 Agent 累计/实时数据||Recorded cumulative/live data for local Agents</value></data>
+  <data name="Frontend.402" xml:space="preserve"><value>已连通||Connected</value></data>
+  <data name="Frontend.403" xml:space="preserve"><value>开启后会覆盖下方较宽松的工具权限；新配置建议直接使用 HIL 等级和分类权限。||When enabled, this overrides the more permissive tool permissions below; new configurations should use HIL levels and category permissions directly.</value></data>
+  <data name="Frontend.404" xml:space="preserve"><value>开启后，外部请求可能间接触发该本地 Agent 已配置的 Function / MCP 工具，请只对受信任的调用方开放。||When enabled, external requests may indirectly trigger Functions or MCP tools configured for this local Agent. Open it only to trusted callers.</value></data>
+  <data name="Frontend.405" xml:space="preserve"><value>当前 Group 已轮到 Human，任务正在等待文本回复。||The current Group is waiting for a Human turn and a text reply.</value></data>
+  <data name="Frontend.406" xml:space="preserve"><value>当前未启用入站鉴权。请仅在隔离、受控网络中使用；公网或跨组织调用必须改用 Bearer Token 或自定义请求头。||Inbound authentication is disabled. Use this only on an isolated, controlled network; public or cross-organization calls must use a Bearer Token or custom header.</value></data>
+  <data name="Frontend.407" xml:space="preserve"><value>当前群组没有可提及的组员。||The current group has no mentionable members.</value></data>
+  <data name="Frontend.408" xml:space="preserve"><value>快速编辑||Quick edit</value></data>
+  <data name="Frontend.409" xml:space="preserve"><value>手动 Prompt 必须手动选择一个 Chat 类型 AIModel。||A manual Prompt requires manually selecting a Chat AIModel.</value></data>
+  <data name="Frontend.410" xml:space="preserve"><value>手动 Prompt 没有 PromptRange 模型可继承，必须手动选择一个 Chat 类型 AIModel。||No PromptRange model is available to inherit for this manual Prompt; select a Chat AIModel manually.</value></data>
+  <data name="Frontend.411" xml:space="preserve"><value>手动选择 AIModel||Select AIModel manually</value></data>
+  <data name="Frontend.412" xml:space="preserve"><value>执行前审批||Approve before execution</value></data>
+  <data name="Frontend.413" xml:space="preserve"><value>批准||Approve</value></data>
+  <data name="Frontend.414" xml:space="preserve"><value>技能公开描述||Public skill description</value></data>
+  <data name="Frontend.415" xml:space="preserve"><value>技能标识 / 名称||Skill identifier / name</value></data>
+  <data name="Frontend.416" xml:space="preserve"><value>拒绝||Reject</value></data>
+  <data name="Frontend.417" xml:space="preserve"><value>按名称筛选||Filter by name</value></data>
+  <data name="Frontend.418" xml:space="preserve"><value>提交 Human 回复||Submit Human response</value></data>
+  <data name="Frontend.419" xml:space="preserve"><value>插件工具权限||Plugin tool permissions</value></data>
+  <data name="Frontend.420" xml:space="preserve"><value>搜索名称、URL 或说明||Search name, URL, or description</value></data>
+  <data name="Frontend.421" xml:space="preserve"><value>搜索名称、模块或说明||Search name, module, or description</value></data>
+  <data name="Frontend.422" xml:space="preserve"><value>数据库仅保存密钥引用；实际令牌请在部署配置||The database stores only the secret reference; configure the actual token in deployment settings.</value></data>
+  <data name="Frontend.423" xml:space="preserve"><value>新增||Add</value></data>
+  <data name="Frontend.424" xml:space="preserve"><value>新增远程 A2A||Add remote A2A</value></data>
+  <data name="Frontend.425" xml:space="preserve"><value>新建组默认启用。停用后不会创建新任务，也不会作为 Workflow 节点使用。||New groups are enabled by default. Disabled groups do not create new tasks or act as Workflow nodes.</value></data>
+  <data name="Frontend.426" xml:space="preserve"><value>方块面积表示所选指标的相对大小；点击方块可直接编辑对应智能体。||Tile area represents the relative size of the selected metric; click a tile to edit the Agent.</value></data>
+  <data name="Frontend.427" xml:space="preserve"><value>无鉴权||No authentication</value></data>
+  <data name="Frontend.428" xml:space="preserve"><value>无（仅适合受控网络）||None (controlled networks only)</value></data>
+  <data name="Frontend.429" xml:space="preserve"><value>旧版向量数据需要在知识库中重新向量化，才能升级为 Agent 可安全隔离检索的发布集合。||Legacy vector data must be re-vectorized in the knowledge base before it can become a published collection for safe Agent-isolated retrieval.</value></data>
+  <data name="Frontend.430" xml:space="preserve"><value>智能体统计图||Agent statistics chart</value></data>
+  <data name="Frontend.431" xml:space="preserve"><value>暂无可统计的智能体。||No Agents are available for statistics.</value></data>
+  <data name="Frontend.432" xml:space="preserve"><value>最大对话轮数||Maximum chat rounds</value></data>
+  <data name="Frontend.433" xml:space="preserve"><value>未测试||Not tested</value></data>
+  <data name="Frontend.434" xml:space="preserve"><value>未绑定||Not bound</value></data>
+  <data name="Frontend.435" xml:space="preserve"><value>未绑定知识库||No knowledge base bound</value></data>
+  <data name="Frontend.436" xml:space="preserve"><value>本地||Local</value></data>
+  <data name="Frontend.437" xml:space="preserve"><value>本地 Agents||Local Agents</value></data>
+  <data name="Frontend.438" xml:space="preserve"><value>本地工具调用已开放。外部请求可能间接触发 Function / MCP 的读写或外部访问；请只对受信任的调用方开放。||Local tool calls are enabled. External requests may indirectly trigger Function/MCP writes or external access; open this only to trusted callers.</value></data>
+  <data name="Frontend.439" xml:space="preserve"><value>本地成员||Local members</value></data>
+  <data name="Frontend.440" xml:space="preserve"><value>本次运行策略||Run policy</value></data>
+  <data name="Frontend.441" xml:space="preserve"><value>本次连接器||Connectors for this run</value></data>
+  <data name="Frontend.442" xml:space="preserve"><value>查看任务||View tasks</value></data>
+  <data name="Frontend.443" xml:space="preserve"><value>查看该智能体关联的任务||View tasks associated with this Agent</value></data>
+  <data name="Frontend.444" xml:space="preserve"><value>此任务创建于策略记录功能启用之前，无法还原当时的 HIL 与工具权限。||This task was created before policy recording was enabled; its historical HIL and tool permissions cannot be restored.</value></data>
+  <data name="Frontend.445" xml:space="preserve"><value>测试||Test</value></data>
+  <data name="Frontend.446" xml:space="preserve"><value>测试全部||Test all</value></data>
+  <data name="Frontend.447" xml:space="preserve"><value>测试失败||Test failed</value></data>
+  <data name="Frontend.448" xml:space="preserve"><value>混合群组会采用所有远程成员要求中最严格的策略；本地群未设置时保持升级前行为。||Mixed groups use the strictest policy required by all remote members; without local group settings, pre-upgrade behavior is preserved.</value></data>
+  <data name="Frontend.449" xml:space="preserve"><value>点击组员即可在下方任务描述的当前光标位置插入提及。||Click a member to insert a mention at the current cursor position in the task description below.</value></data>
+  <data name="Frontend.450" xml:space="preserve"><value>状态||Status</value></data>
+  <data name="Frontend.451" xml:space="preserve"><value>生成到 PromptRange 并打靶评分||Generate in PromptRange and run scoring</value></data>
+  <data name="Frontend.452" xml:space="preserve"><value>留空则使用 Card 名称||Leave empty to use the Card name</value></data>
+  <data name="Frontend.453" xml:space="preserve"><value>留空则使用公开描述||Leave empty to use the public description</value></data>
+  <data name="Frontend.454" xml:space="preserve"><value>留空则使用本地 Agent 名称||Leave empty to use the local Agent name</value></data>
+  <data name="Frontend.455" xml:space="preserve"><value>禁止使用||Prohibited</value></data>
+  <data name="Frontend.456" xml:space="preserve"><value>稍后回复||Reply later</value></data>
+  <data name="Frontend.457" xml:space="preserve"><value>稍后处理||Handle later</value></data>
+  <data name="Frontend.458" xml:space="preserve"><value>管理绑定||Manage bindings</value></data>
+  <data name="Frontend.459" xml:space="preserve"><value>管理资料||Manage materials</value></data>
+  <data name="Frontend.460" xml:space="preserve"><value>管理远程 A2A||Manage remote A2A</value></data>
+  <data name="Frontend.461" xml:space="preserve"><value>管理远程 A2A 智能体||Manage remote A2A Agents</value></data>
+  <data name="Frontend.462" xml:space="preserve"><value>类型||Type</value></data>
+  <data name="Frontend.463" xml:space="preserve"><value>绑定模型||Bind model</value></data>
+  <data name="Frontend.464" xml:space="preserve"><value>绑定知识库||Bind knowledge base</value></data>
+  <data name="Frontend.465" xml:space="preserve"><value>绑定知识库：||Knowledge base:</value></data>
+  <data name="Frontend.466" xml:space="preserve"><value>统计图||Statistics chart</value></data>
+  <data name="Frontend.467" xml:space="preserve"><value>统计范围||Statistics scope</value></data>
+  <data name="Frontend.468" xml:space="preserve"><value>继承 HIL 等级||Inherit HIL level</value></data>
+  <data name="Frontend.469" xml:space="preserve"><value>编辑设置||Edit settings</value></data>
+  <data name="Frontend.470" xml:space="preserve"><value>自动执行||Automatic execution</value></data>
+  <data name="Frontend.471" xml:space="preserve"><value>自定义请求头||Custom request header</value></data>
+  <data name="Frontend.472" xml:space="preserve"><value>让模型按需调用 FunctionRender、Workflow 或兼容的 Plugin。||Let the model call FunctionRender, Workflow, or compatible Plugins as needed.</value></data>
+  <data name="Frontend.473" xml:space="preserve"><value>设置||Settings</value></data>
+  <data name="Frontend.474" xml:space="preserve"><value>请求头名称||Request header name</value></data>
+  <data name="Frontend.475" xml:space="preserve"><value>请输入文本，提交后任务将继续执行||Enter text; the task continues after submission</value></data>
+  <data name="Frontend.476" xml:space="preserve"><value>请选择 Chat 模型||Select a Chat model</value></data>
+  <data name="Frontend.477" xml:space="preserve"><value>资料||Materials</value></data>
+  <data name="Frontend.478" xml:space="preserve"><value>跟随组任务||Follow group task</value></data>
+  <data name="Frontend.479" xml:space="preserve"><value>运行轮次到达 Human 时任务会暂停，窗口提供文本输入；回复成功后继续 MAF 工作流。||When a run reaches a Human turn, the task pauses and the dialog accepts text; after a successful reply, the MAF Workflow continues.</value></data>
+  <data name="Frontend.480" xml:space="preserve"><value>远程 A2A||Remote A2A</value></data>
+  <data name="Frontend.481" xml:space="preserve"><value>远程 A2A 成员||Remote A2A members</value></data>
+  <data name="Frontend.482" xml:space="preserve"><value>远程 A2A 智能体||Remote A2A Agents</value></data>
+  <data name="Frontend.483" xml:space="preserve"><value>远程成员默认仅收到任务指令和当前轮的文本结论；不会收到工具调用、原始模型内容或完整历史。||Remote members receive only task instructions and the current turn's text conclusion by default; tool calls, raw model content, and full history are not shared.</value></data>
+  <data name="Frontend.484" xml:space="preserve"><value>远程成员默认：指令 + 关键结论||Remote member default: instructions + key conclusions</value></data>
+  <data name="Frontend.485" xml:space="preserve"><value>远程智能体||Remote Agent</value></data>
+  <data name="Frontend.486" xml:space="preserve"><value>连接||Connection</value></data>
+  <data name="Frontend.487" xml:space="preserve"><value>连接器权限||Connector permissions</value></data>
+  <data name="Frontend.488" xml:space="preserve"><value>连接超时（秒）||Connection timeout (seconds)</value></data>
+  <data name="Frontend.489" xml:space="preserve"><value>部署密钥名||Deployment secret name</value></data>
+  <data name="Frontend.490" xml:space="preserve"><value>配置 / 发布为 A2A Agent||Configure / publish as A2A Agent</value></data>
+  <data name="Frontend.491" xml:space="preserve"><value>鉴权方式||Authentication mode</value></data>
+  <data name="Frontend.492" xml:space="preserve"><value>最大输入字符数||Maximum input characters</value></data>
+  <data name="Frontend.493" xml:space="preserve"><value>本地工具调用已开放。外部请求可能间接触发 Function / MCP 的读写或外部访问，请只对受信任的调用方开放。||Local tool calls are enabled. External requests may indirectly trigger Function/MCP writes or external access; open this only to trusted callers.</value></data>
 </root>
