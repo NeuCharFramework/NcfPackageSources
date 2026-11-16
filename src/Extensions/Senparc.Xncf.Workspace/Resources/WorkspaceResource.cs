@@ -19,4 +19,7 @@ public sealed class WorkspaceResource
 {
     public static string Get(string key, string? fallback = null) =>
         ResourceStringLocalizer.Get(typeof(WorkspaceResource), key, fallback);
+
+    public static string Format(string key, string fallback, params object[] arguments) =>
+        ResourceStringLocalizer.Format(typeof(WorkspaceResource), key, fallback, arguments);
 }

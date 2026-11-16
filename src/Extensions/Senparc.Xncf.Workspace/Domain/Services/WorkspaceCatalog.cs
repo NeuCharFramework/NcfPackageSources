@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：WorkspaceCatalog.cs
-    文件功能描述：按管理员身份汇总工作区用量，并执行受权限约束的内容清空
+    File name: WorkspaceCatalog.cs
+    File description: aggregate Workspace usage by administrator and clear content within permission boundaries
 
 
-    创建标识：Senparc - 20261109
+    Created by: Senparc - 20261109
 
-    修改标识：Senparc - 20261109
-    修改描述：普通管理员只管理自己的工作区；超级管理员可查看并清空当前租户内其他工作区
+    Modified by: Senparc - 20261109
+    Change description: regular administrators manage their own Workspaces; super administrators can view and clear other Workspaces in the current tenant
 
 ----------------------------------------------------------------*/
 
@@ -74,7 +74,7 @@ public sealed record WorkspaceClearResult(
 public static class WorkspaceActors
 {
     /// <summary>
-    /// 与 Senparc.Ncf.Service.Config.SYSROLE_ADMINISTRATOR_ROLE_CODE 保持一致。
+    /// Must remain consistent with Senparc.Ncf.Service.Config.SYSROLE_ADMINISTRATOR_ROLE_CODE.
     /// </summary>
     public const string SuperAdminRoleCode = "administrator";
 
@@ -148,7 +148,7 @@ public sealed class WorkspaceCatalog : IWorkspaceCatalog
         }
 
         _logger.LogInformation(
-            "管理员创建自己的工作区: ActorId={ActorId}, Name={Name}",
+            "Administrator created a Workspace: ActorId={ActorId}, Name={Name}",
             actor.UserId,
             name.Trim());
         return _storage.CreateAsync(new WorkspaceCreateRequest(actor.UserId, name.Trim()), cancellationToken);
@@ -168,7 +168,7 @@ public sealed class WorkspaceCatalog : IWorkspaceCatalog
             if (!isOwn && !actor.IsSuperAdmin)
             {
                 _logger.LogDebug(
-                    "跳过不属于当前管理员的工作区: ActorId={ActorId}, WorkspaceId={WorkspaceId}, OwnerId={OwnerId}",
+                    "Skipped a Workspace owned by another administrator: ActorId={ActorId}, WorkspaceId={WorkspaceId}, OwnerId={OwnerId}",
                     actor.UserId,
                     workspace.Id,
                     workspace.OwnerId);
@@ -186,7 +186,7 @@ public sealed class WorkspaceCatalog : IWorkspaceCatalog
                 isOwn ? WorkspaceOwnershipScope.Own : WorkspaceOwnershipScope.Other,
                 usage);
             _logger.LogDebug(
-                "工作区用量: WorkspaceId={WorkspaceId}, Scope={Scope}, Files={FileCount}, Directories={DirectoryCount}, Bytes={UsedBytes}",
+                "Workspace usage: WorkspaceId={WorkspaceId}, Scope={Scope}, Files={FileCount}, Directories={DirectoryCount}, Bytes={UsedBytes}",
                 item.Id,
                 item.Scope,
                 usage.FileCount,
@@ -206,7 +206,7 @@ public sealed class WorkspaceCatalog : IWorkspaceCatalog
         var otherSummary = WorkspaceUsageSummaryMath.From(other);
         var visibleSummary = WorkspaceUsageSummaryMath.Add(ownSummary, otherSummary);
         _logger.LogInformation(
-            "工作区用量汇总: ActorId={ActorId}, SuperAdmin={IsSuperAdmin}, OwnCount={OwnCount}, OtherCount={OtherCount}, OwnBytes={OwnBytes}, OtherBytes={OtherBytes}",
+            "Workspace usage summary: ActorId={ActorId}, SuperAdmin={IsSuperAdmin}, OwnCount={OwnCount}, OtherCount={OtherCount}, OwnBytes={OwnBytes}, OtherBytes={OtherBytes}",
             actor.UserId,
             actor.IsSuperAdmin,
             ownSummary.WorkspaceCount,
@@ -242,7 +242,7 @@ public sealed class WorkspaceCatalog : IWorkspaceCatalog
             if (clearingOtherOwner && descriptor != null)
             {
                 _logger.LogWarning(
-                    "拒绝清空他人工作区: ActorId={ActorId}, WorkspaceId={WorkspaceId}, OwnerId={OwnerId}",
+                    "Rejected clearing another administrator's Workspace: ActorId={ActorId}, WorkspaceId={WorkspaceId}, OwnerId={OwnerId}",
                     actor.UserId,
                     workspaceId,
                     descriptor.OwnerId);
@@ -250,7 +250,7 @@ public sealed class WorkspaceCatalog : IWorkspaceCatalog
             else
             {
                 _logger.LogInformation(
-                    "清空请求未命中可见工作区: ActorId={ActorId}, WorkspaceId={WorkspaceId}",
+                    "Workspace clear request did not match a visible Workspace: ActorId={ActorId}, WorkspaceId={WorkspaceId}",
                     actor.UserId,
                     workspaceId);
             }
@@ -261,7 +261,7 @@ public sealed class WorkspaceCatalog : IWorkspaceCatalog
         if (clearingOtherOwner)
         {
             _logger.LogWarning(
-                "超级管理员清空其他管理员的工作区: ActorId={ActorId}, WorkspaceId={WorkspaceId}, OwnerId={OwnerId}, Name={Name}",
+                "Super administrator cleared another administrator's Workspace: ActorId={ActorId}, WorkspaceId={WorkspaceId}, OwnerId={OwnerId}, Name={Name}",
                 actor.UserId,
                 descriptor.Id,
                 descriptor.OwnerId,
@@ -270,7 +270,7 @@ public sealed class WorkspaceCatalog : IWorkspaceCatalog
         else
         {
             _logger.LogInformation(
-                "清空自己的工作区内容: ActorId={ActorId}, WorkspaceId={WorkspaceId}, Name={Name}",
+                "Administrator cleared their own Workspace content: ActorId={ActorId}, WorkspaceId={WorkspaceId}, Name={Name}",
                 actor.UserId,
                 descriptor.Id,
                 descriptor.Name);
@@ -284,7 +284,7 @@ public sealed class WorkspaceCatalog : IWorkspaceCatalog
     {
         if (actor.UserId <= 0)
         {
-            throw new UnauthorizedAccessException("当前管理员身份无效。");
+            throw new UnauthorizedAccessException("The current administrator identity is invalid.");
         }
     }
 }

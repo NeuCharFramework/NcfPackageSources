@@ -6,6 +6,7 @@
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <data name="Module.Workspace.MenuName" xml:space="preserve"><value>工作区</value></data>
   <data name="Module.Workspace.Description" xml:space="preserve"><value>通过跨平台 Workspace Agent 提供隔离文件访问、桌面编辑和安全运行时。</value></data>
+  <data name="Area.Menu.Admin" xml:space="preserve"><value>工作区与远程编辑</value></data>
   <data name="Frontend.001" xml:space="preserve"><value>扩展模块||Extension Modules</value></data>
   <data name="Frontend.002" xml:space="preserve"><value>远程编辑||Remote editing</value></data>
   <data name="Frontend.003" xml:space="preserve"><value>安全远程工作区||Secure remote Workspace</value></data>
@@ -40,4 +41,13 @@
   <data name="Frontend.032" xml:space="preserve"><value>Workspace 手动上传失败。||Manual Workspace upload failed.</value></data>
   <data name="Frontend.033" xml:space="preserve"><value>这将清空其他管理员 #{0} 的工作区「{1}」。文件会被删除，并恢复为新建时的 input、output、logs 空目录。工作区本身会保留。此操作不可撤销。||This will clear administrator #{0}'s Workspace “{1}”. Files will be deleted and input, output, and logs will be reset to empty directories. The Workspace itself will remain. This cannot be undone.</value></data>
   <data name="Frontend.034" xml:space="preserve"><value>这将清空你自己的工作区「{0}」。文件会被删除，并恢复为新建时的 input、output、logs 空目录。工作区本身会保留。此操作不可撤销。||This will clear your Workspace “{0}”. Files will be deleted and input, output, and logs will be reset to empty directories. The Workspace itself will remain. This cannot be undone.</value></data>
+  <data name="Server.IdentityInvalid" xml:space="preserve"><value>当前管理员身份无效，请重新登录。||The current administrator identity is invalid. Please sign in again.</value></data>
+  <data name="Server.UsageReadFailed" xml:space="preserve"><value>读取工作区用量失败，请稍后重试。||Failed to read Workspace usage. Please retry later.</value></data>
+  <data name="Server.NameRequired" xml:space="preserve"><value>请输入工作区名称。||Enter a Workspace name.</value></data>
+  <data name="Server.Created" xml:space="preserve"><value>工作区已创建，可在 VS Code 或 Cursor 中连接。||Workspace created. Connect with VS Code or Cursor.</value></data>
+  <data name="Server.ClearedOther" xml:space="preserve"><value>已清空其他管理员 #{0} 的工作区「{1}」，内容已恢复为新建时的空目录。||Cleared administrator #{0}'s Workspace "{1}". Its content was reset to the empty initial layout.</value></data>
+  <data name="Server.ClearedOwn" xml:space="preserve"><value>已清空工作区「{0}」，内容已恢复为新建时的空目录。||Cleared Workspace "{0}". Its content was reset to the empty initial layout.</value></data>
+  <data name="Server.SelectionRequired" xml:space="preserve"><value>请选择要清空的工作区。||Select a Workspace to clear.</value></data>
+  <data name="Server.NotFound" xml:space="preserve"><value>工作区不存在，或不在当前账号的管理范围内。||The Workspace does not exist or is outside the current administrator's scope.</value></data>
+  <data name="Server.ClearFailed" xml:space="preserve"><value>清空工作区失败，请稍后重试。||Failed to clear the Workspace. Please retry later.</value></data>
 </root>
