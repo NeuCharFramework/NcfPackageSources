@@ -1281,4 +1281,65 @@
   <data name="Frontend.348" xml:space="preserve"><value>清空||Clear</value></data>
   <data name="Frontend.349" xml:space="preserve"><value>选择在 Footer 显示的模块提醒。设置保存在当前账号的浏览器中。||Choose which module reminders appear in the Footer. The setting is saved in this account's browser.</value></data>
   <data name="Frontend.350" xml:space="preserve"><value>支持普通文本和绝对 http/https 链接的 &lt;a&gt; 标签；其他 HTML 会被编码。||Supports plain text and absolute http/https links using &lt;a&gt; tags; other HTML is encoded.</value></data>
+  <data name="Frontend.351" xml:space="preserve"><value>1 小时||1 hour</value></data>
+  <data name="Frontend.352" xml:space="preserve"><value>24 小时||24 hours</value></data>
+  <data name="Frontend.353" xml:space="preserve"><value>7 天||7 days</value></data>
+  <data name="Frontend.354" xml:space="preserve"><value>AdminChat 命令||AdminChat commands</value></data>
+  <data name="Frontend.355" xml:space="preserve"><value>HTML 匿名快照分享||Anonymous HTML snapshot sharing</value></data>
+  <data name="Frontend.356" xml:space="preserve"><value>Harness 任务轨迹||Harness task trajectory</value></data>
+  <data name="Frontend.357" xml:space="preserve"><value>Workspace PDF 预览||Workspace PDF preview</value></data>
+  <data name="Frontend.358" xml:space="preserve"><value>Workspace 名称||Workspace name</value></data>
+  <data name="Frontend.359" xml:space="preserve"><value>Workspace 文件和路径||Workspace files and paths</value></data>
+  <data name="Frontend.360" xml:space="preserve"><value>Workspace 资产||Workspace assets</value></data>
+  <data name="Frontend.361" xml:space="preserve"><value>上一段||Previous chunk</value></data>
+  <data name="Frontend.362" xml:space="preserve"><value>上传资料||Upload material</value></data>
+  <data name="Frontend.363" xml:space="preserve"><value>下一段||Next chunk</value></data>
+  <data name="Frontend.364" xml:space="preserve"><value>下载 / 另存为||Download / Save as</value></data>
+  <data name="Frontend.365" xml:space="preserve"><value>下载当前目录 (.zip)||Download current directory (.zip)</value></data>
+  <data name="Frontend.366" xml:space="preserve"><value>不使用 Workspace||Do not use Workspace</value></data>
+  <data name="Frontend.367" xml:space="preserve"><value>不引用模块也可以直接开始||Start directly without referencing a module</value></data>
+  <data name="Frontend.368" xml:space="preserve"><value>为当前对话添加可调用模块或 Workflow||Add callable modules or Workflows to this conversation</value></data>
+  <data name="Frontend.369" xml:space="preserve"><value>为当前对话选择工作区||Choose a Workspace for this conversation</value></data>
+  <data name="Frontend.370" xml:space="preserve"><value>仅本轮授权发送压缩图片给视觉模型，可能产生额外 Token。||Authorize compressed images to be sent to the vision model for this turn only; this may use additional Tokens.</value></data>
+  <data name="Frontend.371" xml:space="preserve"><value>从本轮移除并删除 Workspace 文件||Remove from this turn and delete the Workspace file</value></data>
+  <data name="Frontend.372" xml:space="preserve"><value>任何持有链接的人都能查看此快照。||Anyone with the link can view this snapshot.</value></data>
+  <data name="Frontend.373" xml:space="preserve"><value>任务轨迹||Task trajectory</value></data>
+  <data name="Frontend.374" xml:space="preserve"><value>例如：Yield C# 示例项目||For example: a Yield C# sample project</value></data>
+  <data name="Frontend.375" xml:space="preserve"><value>保存文件||Save file</value></data>
+  <data name="Frontend.376" xml:space="preserve"><value>允许||Allow</value></data>
+  <data name="Frontend.377" xml:space="preserve"><value>允许 AI 写入文件||Allow AI to write files</value></data>
+  <data name="Frontend.378" xml:space="preserve"><value>允许 AI 执行 Python||Allow AI to execute Python</value></data>
+  <data name="Frontend.379" xml:space="preserve"><value>关闭资产面板||Close asset panel</value></data>
+  <data name="Frontend.380" xml:space="preserve"><value>分享有效期||Share expiration</value></data>
+  <data name="Frontend.381" xml:space="preserve"><value>创建只读快照链接||Create read-only snapshot link</value></data>
+  <data name="Frontend.382" xml:space="preserve"><value>匿名快照链接||Anonymous snapshot link</value></data>
+  <data name="Frontend.383" xml:space="preserve"><value>取消编辑||Cancel editing</value></data>
+  <data name="Frontend.384" xml:space="preserve"><value>可写入||Writable</value></data>
+  <data name="Frontend.385" xml:space="preserve"><value>可执行 CLI||CLI execution allowed</value></data>
+  <data name="Frontend.386" xml:space="preserve"><value>可选：补充说明或拒绝原因||Optional: add details or a rejection reason</value></data>
+  <data name="Frontend.387" xml:space="preserve"><value>在外部浏览器打开（只读）||Open in external browser (read-only)</value></data>
+  <data name="Frontend.388" xml:space="preserve"><value>展开至最大可用宽度||Expand to the maximum available width</value></data>
+  <data name="Frontend.389" xml:space="preserve"><value>引用模块||Referenced module</value></data>
+  <data name="Frontend.390" xml:space="preserve"><value>当前会话||Current session</value></data>
+  <data name="Frontend.391" xml:space="preserve"><value>当前目录为空||The current directory is empty</value></data>
+  <data name="Frontend.392" xml:space="preserve"><value>拒绝||Reject</value></data>
+  <data name="Frontend.393" xml:space="preserve"><value>搜索模型||Search models</value></data>
+  <data name="Frontend.394" xml:space="preserve"><value>撤销||Revoke</value></data>
+  <data name="Frontend.395" xml:space="preserve"><value>新建 Workspace||New Workspace</value></data>
+  <data name="Frontend.396" xml:space="preserve"><value>暂无 Harness 轨迹||No Harness trajectory yet</value></data>
+  <data name="Frontend.397" xml:space="preserve"><value>未保存||Unsaved</value></data>
+  <data name="Frontend.398" xml:space="preserve"><value>查看实时执行过程||View live execution</value></data>
+  <data name="Frontend.399" xml:space="preserve"><value>检索轨迹、工具或结果||Search trajectories, tools, or results</value></data>
+  <data name="Frontend.400" xml:space="preserve"><value>正在查找 Workspace…||Searching Workspace…</value></data>
+  <data name="Frontend.401" xml:space="preserve"><value>此文件类型暂不支持文本预览||Text preview is not supported for this file type</value></data>
+  <data name="Frontend.402" xml:space="preserve"><value>没有匹配的文件或路径||No matching files or paths</value></data>
+  <data name="Frontend.403" xml:space="preserve"><value>管理匿名分享||Manage anonymous sharing</value></data>
+  <data name="Frontend.404" xml:space="preserve"><value>编辑文件||Edit file</value></data>
+  <data name="Frontend.405" xml:space="preserve"><value>视觉||Vision</value></data>
+  <data name="Frontend.406" xml:space="preserve"><value>资产||Assets</value></data>
+  <data name="Frontend.407" xml:space="preserve"><value>跳转||Go to</value></data>
+  <data name="Frontend.408" xml:space="preserve"><value>跳转到行||Go to line</value></data>
+  <data name="Frontend.409" xml:space="preserve"><value>默认系统提示词由 PromptRange 管理；当前文本是个人或租户附加偏好。||The default system prompt is managed by PromptRange; the current text contains personal or tenant preferences.</value></data>
+  <data name="Frontend.410" xml:space="preserve"><value>，@@ 引用文件或路径||, use @@ to reference a file or path</value></data>
+  <data name="Frontend.411" xml:space="preserve"><value>，输入 @@ 引用文件或路径||, enter @@ to reference a file or path</value></data>
 </root>
