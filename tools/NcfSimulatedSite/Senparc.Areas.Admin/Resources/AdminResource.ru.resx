@@ -160,6 +160,8 @@
   <data name="Admin.Tabs.Untitled" xml:space="preserve">
     <value>Страница без названия</value>
   </data>
+  <data name="Admin.Tabs.BackToSource" xml:space="preserve"><value>Вернуться к источнику:</value></data>
+  <data name="Admin.Tabs.CurrentPage" xml:space="preserve"><value>Текущая страница</value></data>
   <data name="Admin.Tabs.ScrollLeft" xml:space="preserve">
     <value>Прокрутить вкладки влево</value>
   </data>

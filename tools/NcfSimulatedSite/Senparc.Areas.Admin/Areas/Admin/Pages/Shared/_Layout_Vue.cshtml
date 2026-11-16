@@ -173,7 +173,21 @@
                                                     <small v-if="tab.moduleUid">{{ tab.moduleUid }}</small>
                                                 </div>
                                             </div>
-                                            <div class="admin-page-tab-popover-current">{{ tab.title }}</div>
+                                            <button v-if="tab.sourceTabUrl"
+                                                    type="button"
+                                                    class="admin-page-tab-source"
+                                                    :title="ncfAdminTabBackToSourceLabel + ' ' + tab.sourceTabTitle"
+                                                    @@click.stop="ncfReturnAdminTabToSource(tab.id)">
+                                                <i class="el-icon-back"></i>
+                                                <span>
+                                                    <strong>{{ ncfAdminTabBackToSourceLabel }}</strong>
+                                                    <small>{{ tab.sourceTabTitle }}</small>
+                                                </span>
+                                            </button>
+                                            <div class="admin-page-tab-popover-current">
+                                                <span>{{ ncfAdminTabCurrentPageLabel }}</span>
+                                                <strong>{{ tab.title }}</strong>
+                                            </div>
                                             <div v-if="tab.moduleLinks && tab.moduleLinks.length"
                                                  class="admin-page-tab-popover-links">
                                                 <button v-for="link in tab.moduleLinks"
@@ -450,7 +464,9 @@
             scrollLeft: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(AR["Admin.Tabs.ScrollLeft"].Value)),
             scrollRight: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(AR["Admin.Tabs.ScrollRight"].Value)),
             list: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(AR["Admin.Tabs.List"].Value)),
-            untitled: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(AR["Admin.Tabs.Untitled"].Value))
+            untitled: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(AR["Admin.Tabs.Untitled"].Value)),
+            backToSource: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(AR["Admin.Tabs.BackToSource"].Value)),
+            currentPage: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(AR["Admin.Tabs.CurrentPage"].Value))
         };
     </script>
     <script src="~/js/Admin/store.js" asp-append-version="true"></script>

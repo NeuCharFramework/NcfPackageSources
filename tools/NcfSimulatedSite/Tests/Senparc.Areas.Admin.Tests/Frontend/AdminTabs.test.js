@@ -146,6 +146,34 @@ test('刷新后保留 XNCF 标签的模块上下文和 accent 色', function () 
     assert.equal(tab.accentColor, tabs.accentColorFromUid('sandbox'));
 });
 
+test('直接链接先使用短路径标题，加载后可用页面 title 替换，菜单标题保持优先', function () {
+    let state = initial();
+    state = tabs.openTab(state, '/Admin/NeuCharWorkflow/Index?uid=workflow', 'Go to NeuChar Workflow home', null, 20, shellHref).state;
+    let tab = state.tabs.find(function (item) { return !item.isShell; });
+    assert.equal(tab.title, 'Index');
+    const titled = tabs.updateTabPageTitle(state, tab.id, 'NeuChar Workflow');
+    assert.equal(titled.changed, true);
+    assert.equal(titled.tab.title, 'NeuChar Workflow');
+
+    state = tabs.openTab(state, '/Admin/PromptRange/Prompt?uid=prompt', 'Prompt page', 42, 30, shellHref).state;
+    tab = state.tabs.find(function (item) { return item.id === '/admin/promptrange/prompt?uid=prompt'; });
+    const menuTitled = tabs.updateTabPageTitle(state, tab.id, 'PromptRange Prompt');
+    assert.equal(menuTitled.changed, false);
+    assert.equal(menuTitled.tab.title, 'Prompt page');
+});
+
+test('新标签记录来源标签，并可以返回来源', function () {
+    let state = initial();
+    state = tabs.openTab(state, '/Admin/SystemConfig/Index', 'System configuration', 11, 20, shellHref).state;
+    state = tabs.openTab(state, '/Admin/NeuCharWorkflow/Index?uid=workflow', 'Workflow home', null, 30, shellHref).state;
+    const current = state.tabs.find(function (item) { return item.id === '/admin/neucharworkflow/index?uid=workflow'; });
+    assert.equal(current.sourceTabId, '/admin/systemconfig/index');
+    assert.equal(current.sourceTabTitle, 'System configuration');
+    const returned = tabs.returnToSource(state, current.id, shellHref);
+    assert.equal(returned.handled, true);
+    assert.equal(returned.state.activeId, '/admin/systemconfig/index');
+});
+
 test('标签超出可视宽度时才显示左右滚动', function () {
     assert.deepEqual(tabs.tabScrollState(0, 200, 200), { canScrollLeft: false, canScrollRight: false });
     assert.deepEqual(tabs.tabScrollState(0, 480, 200), { canScrollLeft: false, canScrollRight: true });

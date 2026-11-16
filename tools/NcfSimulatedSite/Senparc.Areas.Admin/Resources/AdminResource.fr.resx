@@ -160,6 +160,8 @@
   <data name="Admin.Tabs.Untitled" xml:space="preserve">
     <value>Page sans titre</value>
   </data>
+  <data name="Admin.Tabs.BackToSource" xml:space="preserve"><value>Retour à la source :</value></data>
+  <data name="Admin.Tabs.CurrentPage" xml:space="preserve"><value>Page actuelle</value></data>
   <data name="Admin.Tabs.ScrollLeft" xml:space="preserve">
     <value>Onglets vers la gauche</value>
   </data>

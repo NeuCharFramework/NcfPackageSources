@@ -160,6 +160,8 @@
   <data name="Admin.Tabs.Untitled" xml:space="preserve">
     <value>未命名页面</value>
   </data>
+  <data name="Admin.Tabs.BackToSource" xml:space="preserve"><value>返回来源：</value></data>
+  <data name="Admin.Tabs.CurrentPage" xml:space="preserve"><value>当前页面</value></data>
   <data name="Admin.Tabs.ScrollLeft" xml:space="preserve">
     <value>向左查看标签</value>
   </data>

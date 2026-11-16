@@ -182,6 +182,12 @@
                     moduleUid: tab.moduleUid || '',
                     moduleLinks: cloneModuleLinks(tab.moduleLinks),
                     accentColor: tab.accentColor || '#c0c4cc',
+                    titleSource: tab.titleSource || 'path',
+                    sourceTabId: tab.sourceTabId || '',
+                    sourceTabUrl: tab.sourceTabUrl || '',
+                    sourceTabTitle: tab.sourceTabTitle || '',
+                    sourceTabMenuIndex: tab.sourceTabMenuIndex || null,
+                    sourceTabModuleName: tab.sourceTabModuleName || '',
                     isShell: !!tab.isShell,
                     loaded: !!tab.loaded,
                     openedAt: tab.openedAt || 0
@@ -227,6 +233,12 @@
             moduleUid: options.moduleUid || '',
             moduleLinks: cloneModuleLinks(options.moduleLinks),
             accentColor: options.accentColor || accentColorFromUid(options.moduleUid),
+            titleSource: isShell ? 'shell' : (options.titleSource || 'path'),
+            sourceTabId: options.sourceTabId || '',
+            sourceTabUrl: options.sourceTabUrl || '',
+            sourceTabTitle: options.sourceTabTitle || '',
+            sourceTabMenuIndex: options.sourceTabMenuIndex || null,
+            sourceTabModuleName: options.sourceTabModuleName || '',
             isShell: isShell,
             loaded: !isShell && !!options.loaded,
             openedAt: options.openedAt || 0
@@ -279,6 +291,12 @@
                 moduleUid: item.moduleUid,
                 moduleLinks: item.moduleLinks,
                 accentColor: item.accentColor,
+                titleSource: item.titleSource,
+                sourceTabId: item.sourceTabId,
+                sourceTabUrl: item.sourceTabUrl,
+                sourceTabTitle: item.sourceTabTitle,
+                sourceTabMenuIndex: item.sourceTabMenuIndex,
+                sourceTabModuleName: item.sourceTabModuleName,
                 untitled: untitled,
                 homeTitle: homeTitle,
                 openedAt: item.openedAt || 0,
@@ -370,6 +388,14 @@
             return { state: current, handled: false, tab: null };
         }
 
+        var source = null;
+        current.tabs.forEach(function (tab) {
+            if (tab.id === current.activeId && tab.id !== parsed.id) {
+                source = tab;
+            }
+        });
+        var hasMenuTitle = menuIndex !== undefined && menuIndex !== null && menuIndex !== '';
+
         var existing = null;
         current.tabs.forEach(function (tab) {
             if (tab.id === parsed.id) {
@@ -377,11 +403,19 @@
             }
         });
         if (existing) {
-            if (title && !existing.isShell) {
+            if (hasMenuTitle && title && !existing.isShell) {
                 existing.title = title;
+                existing.titleSource = 'menu';
             }
-            if (menuIndex !== undefined && menuIndex !== null && menuIndex !== '') {
+            if (hasMenuTitle) {
                 existing.menuIndex = String(menuIndex);
+            }
+            if (source) {
+                existing.sourceTabId = source.id;
+                existing.sourceTabUrl = source.address || source.url;
+                existing.sourceTabTitle = source.title;
+                existing.sourceTabMenuIndex = source.menuIndex || null;
+                existing.sourceTabModuleName = source.moduleName || '';
             }
             if (!existing.isShell) {
                 existing.loaded = true;
@@ -392,8 +426,14 @@
 
         var created = createTab(parsed, {
             shellId: current.shellId,
-            title: title,
+            title: hasMenuTitle ? title : titleFromPath(parsed, textOf('untitled', 'Untitled')),
+            titleSource: hasMenuTitle ? 'menu' : 'path',
             menuIndex: menuIndex,
+            sourceTabId: source && source.id,
+            sourceTabUrl: source && (source.address || source.url),
+            sourceTabTitle: source && source.title,
+            sourceTabMenuIndex: source && source.menuIndex,
+            sourceTabModuleName: source && source.moduleName,
             untitled: textOf('untitled', 'Untitled'),
             homeTitle: textOf('home', 'Home'),
             openedAt: now || 0,
@@ -541,6 +581,7 @@
             var item = metadata.item;
             if (item.menuName && !tab.isShell) {
                 tab.title = item.menuName;
+                tab.titleSource = 'menu';
             }
             if (item.id !== undefined && item.id !== null) {
                 tab.menuIndex = String(item.id);
@@ -610,6 +651,60 @@
         }
         target.address = parsed.url;
         return { state: current, changed: true, tab: target };
+    }
+
+    function updateTabPageTitle(state, id, pageTitle) {
+        var current = cloneState(state);
+        var title = String(pageTitle || '').replace(/\s+/g, ' ').trim();
+        if (!title) {
+            return { state: current, changed: false, tab: null };
+        }
+
+        var target = null;
+        current.tabs.forEach(function (tab) {
+            if (tab.id === id) {
+                target = tab;
+            }
+        });
+        if (!target || target.isShell || target.titleSource === 'menu' || target.title === title) {
+            return { state: current, changed: false, tab: target };
+        }
+
+        target.title = title;
+        target.titleSource = 'page';
+        return { state: current, changed: true, tab: target };
+    }
+
+    function returnToSource(state, id, baseHref) {
+        var current = cloneState(state);
+        var target = current.tabs.find(function (tab) { return tab.id === id; });
+        if (!target || !target.sourceTabUrl) {
+            return { state: current, handled: false, tab: target };
+        }
+
+        var source = current.tabs.find(function (tab) {
+            return tab.id === target.sourceTabId;
+        });
+        if (source) {
+            return {
+                state: activateTab(current, source.id),
+                handled: true,
+                tab: source
+            };
+        }
+
+        var reopened = openTab(
+            current,
+            target.sourceTabUrl,
+            target.sourceTabTitle,
+            target.sourceTabMenuIndex,
+            Date.now(),
+            baseHref || 'http://localhost/Admin/Index');
+        return {
+            state: reopened.state,
+            handled: reopened.handled,
+            tab: reopened.tab
+        };
     }
 
     function shellAddress(tab) {
@@ -686,6 +781,12 @@
                         moduleUid: tab.moduleUid || '',
                         moduleLinks: cloneModuleLinks(tab.moduleLinks),
                         accentColor: tab.accentColor || '#c0c4cc',
+                        titleSource: tab.titleSource || 'path',
+                        sourceTabId: tab.sourceTabId || '',
+                        sourceTabUrl: tab.sourceTabUrl || '',
+                        sourceTabTitle: tab.sourceTabTitle || '',
+                        sourceTabMenuIndex: tab.sourceTabMenuIndex || null,
+                        sourceTabModuleName: tab.sourceTabModuleName || '',
                         openedAt: tab.openedAt
                     };
                 })
@@ -723,6 +824,12 @@
                     moduleUid: tab.moduleUid || '',
                     moduleLinks: cloneModuleLinks(tab.moduleLinks),
                     accentColor: tab.accentColor || accentColorFromUid(tab.moduleUid),
+                    titleSource: tab.titleSource || 'path',
+                    sourceTabId: tab.sourceTabId || '',
+                    sourceTabUrl: tab.sourceTabUrl || '',
+                    sourceTabTitle: tab.sourceTabTitle || '',
+                    sourceTabMenuIndex: tab.sourceTabMenuIndex || null,
+                    sourceTabModuleName: tab.sourceTabModuleName || '',
                     isShell: !!tab.isShell,
                     loaded: !!tab.loaded,
                     openedAt: tab.openedAt || 0
@@ -738,6 +845,12 @@
             found.moduleUid = tab.moduleUid || '';
             found.moduleLinks = cloneModuleLinks(tab.moduleLinks);
             found.accentColor = tab.accentColor || accentColorFromUid(tab.moduleUid);
+            found.titleSource = tab.titleSource || 'path';
+            found.sourceTabId = tab.sourceTabId || '';
+            found.sourceTabUrl = tab.sourceTabUrl || '';
+            found.sourceTabTitle = tab.sourceTabTitle || '';
+            found.sourceTabMenuIndex = tab.sourceTabMenuIndex || null;
+            found.sourceTabModuleName = tab.sourceTabModuleName || '';
             found.isShell = !!tab.isShell;
             found.loaded = !!found.loaded || !!tab.loaded;
             found.openedAt = tab.openedAt || found.openedAt || 0;
@@ -1056,6 +1169,15 @@
             publish(activateTab(snapshot(), id), 'activate');
         };
 
+        root.ncfReturnAdminTabToSource = function (id) {
+            var result = returnToSource(snapshot(), id, root.location.href);
+            if (!result.handled) {
+                return false;
+            }
+            publish(result.state, 'source');
+            return true;
+        };
+
         root.ncfScrollAdminTabs = scrollAdminTabs;
 
         root.ncfCloseAdminTab = function (id) {
@@ -1083,6 +1205,13 @@
                 if (/^\/admin\/login(\/|$)/i.test(path)) {
                     root.location.href = frameWindow.location.href;
                     return;
+                }
+                var pageTitle = frameWindow.document && String(frameWindow.document.title || '').trim();
+                if (pageTitle) {
+                    var titleResult = updateTabPageTitle(snapshot(), tab && tab.id, pageTitle);
+                    if (titleResult.changed) {
+                        publish(titleResult.state, 'frame-title');
+                    }
                 }
                 if (typeof root.ncfReportAdminTabLocation === 'function') {
                     root.ncfReportAdminTabLocation(frameWindow.location.href);
@@ -1126,6 +1255,11 @@
                 root.ncfActivateAdminTab(id);
             }
         };
+        root.Vue.prototype.ncfReturnAdminTabToSource = function (id) {
+            if (typeof root.ncfReturnAdminTabToSource === 'function') {
+                root.ncfReturnAdminTabToSource(id);
+            }
+        };
         root.Vue.prototype.ncfCloseAdminTab = function (id) {
             if (typeof root.ncfCloseAdminTab === 'function') {
                 root.ncfCloseAdminTab(id);
@@ -1149,6 +1283,8 @@
             }
         };
         root.Vue.prototype.ncfAdminTabCloseLabel = textOf('close', '关闭');
+        root.Vue.prototype.ncfAdminTabBackToSourceLabel = textOf('backToSource', '返回来源');
+        root.Vue.prototype.ncfAdminTabCurrentPageLabel = textOf('currentPage', '当前页面');
         root.Vue.prototype.ncfAdminTabScrollLeftLabel = textOf('scrollLeft', '向左查看标签');
         root.Vue.prototype.ncfAdminTabScrollRightLabel = textOf('scrollRight', '向右查看标签');
         if (root.Vue.mixin) {
@@ -1180,6 +1316,8 @@
         activateTab: activateTab,
         closeTab: closeTab,
         applyMenuTitles: applyMenuTitles,
+        updateTabPageTitle: updateTabPageTitle,
+        returnToSource: returnToSource,
         accentColorFromUid: accentColorFromUid,
         tabScrollState: tabScrollState,
         shellPageHash: shellPageHash,

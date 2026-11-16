@@ -987,10 +987,76 @@ li {
 }
 
 .admin-page-tab-popover-current {
-    padding: 9px 0 6px;
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    padding: 8px 0 6px;
     color: #606266;
     font-size: 12px;
-    font-weight: 600;
+}
+
+.admin-page-tab-popover-current span {
+    color: #909399;
+    font-size: 11px;
+}
+
+.admin-page-tab-popover-current strong {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-page-tab-source {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 9px;
+    padding: 8px 9px;
+    color: #409eff;
+    text-align: left;
+    background: #f0f7ff;
+    border: 1px solid #d9ecff;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.admin-page-tab-source:hover,
+.admin-page-tab-source:focus {
+    color: #337ecc;
+    background: #e6f3ff;
+    border-color: #b3d8ff;
+    outline: none;
+}
+
+.admin-page-tab-source > i {
+    flex: 0 0 auto;
+    font-size: 16px;
+}
+
+.admin-page-tab-source span {
+    display: block;
+    min-width: 0;
+}
+
+.admin-page-tab-source strong,
+.admin-page-tab-source small {
+    display: block;
+}
+
+.admin-page-tab-source strong {
+    font-size: 11px;
+    line-height: 15px;
+}
+
+.admin-page-tab-source small {
+    overflow: hidden;
+    color: #606266;
+    font-size: 12px;
+    line-height: 16px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .admin-page-tab-popover-links {
