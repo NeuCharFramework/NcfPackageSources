@@ -2403,7 +2403,7 @@ think {
 }
 
 think::before {
-    content: "推理过程";
+    content: "Reasoning process";
     position: absolute;
     top: -10px;
     left: 10px;
@@ -2414,6 +2414,7 @@ think::before {
     border-radius: 4px;
 }
 
+html[lang^="zh"] think::before { content: "推理过程"; }
 html[lang^="en"] think::before { content: "Reasoning process"; }
 html[lang^="ja"] think::before { content: "推論プロセス"; }
 html[lang^="fr"] think::before { content: "Processus de raisonnement"; }
