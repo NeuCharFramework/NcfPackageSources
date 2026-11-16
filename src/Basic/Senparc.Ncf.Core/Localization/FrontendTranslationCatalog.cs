@@ -20,6 +20,7 @@ public static class FrontendTranslationCatalog
         ArgumentNullException.ThrowIfNull(factory);
         ArgumentNullException.ThrowIfNull(resourceType);
 
+        var activeCulture = CultureInfo.CurrentUICulture;
         var neutral = GetStrings(factory, resourceType, CultureInfo.InvariantCulture)
             .Where(item => item.Name.StartsWith("Frontend.", StringComparison.Ordinal))
             .Select(item => new
@@ -30,10 +31,12 @@ public static class FrontendTranslationCatalog
             .Where(item => item.Parts.Length == 2)
             .ToDictionary(item => item.Name, item => item.Parts, StringComparer.Ordinal);
 
-        var result = neutral.Values.ToDictionary(
-            parts => parts[0],
-            parts => parts[1],
-            StringComparer.Ordinal);
+        var result = neutral.Values
+            .GroupBy(parts => parts[0], StringComparer.Ordinal)
+            .ToDictionary(
+                group => group.Key,
+                group => group.First()[1],
+                StringComparer.Ordinal);
 
         var localized = factory.Create(resourceType)
             .GetAllStrings(includeParentCultures: false)
@@ -48,6 +51,14 @@ public static class FrontendTranslationCatalog
             else if (parts.Length == 2 && !result.ContainsKey(parts[0]))
             {
                 result[parts[0]] = parts[1];
+            }
+        }
+
+        if (activeCulture.Name.StartsWith("zh", StringComparison.OrdinalIgnoreCase))
+        {
+            foreach (var parts in neutral.Values)
+            {
+                result[parts[0]] = parts[0];
             }
         }
 
