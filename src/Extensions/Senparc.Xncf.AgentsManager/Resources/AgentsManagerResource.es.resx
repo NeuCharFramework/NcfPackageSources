@@ -997,64 +997,64 @@
     <value>Aprobación obligatoria compatible</value>
   </data>
   <data name="Frontend.281" xml:space="preserve">
-    <value>Inicialización completada correctamente</value>
+    <value>Interruptor de compatibilidad: exigir aprobación antes de cada llamada de herramienta</value>
   </data>
   <data name="Frontend.282" xml:space="preserve">
-    <value>Tiempo de espera de la solicitud de optimización agotado: {0}</value>
+    <value>Compatibilidad de grupo heredado: historial completo (solo sin miembros remotos)</value>
   </data>
   <data name="Frontend.283" xml:space="preserve">
-    <value>Grupo de Chat no encontrado: {0}</value>
+    <value>Eliminar Agent</value>
   </data>
   <data name="Frontend.284" xml:space="preserve">
-    <value>El modelo de IA seleccionado no existe: {0}</value>
+    <value>Actualizar datos</value>
   </data>
   <data name="Frontend.285" xml:space="preserve">
-    <value>El grupo de Chat [{0}] no tiene agentes habilitados disponibles.</value>
+    <value>Actualizar estado</value>
   </data>
   <data name="Frontend.286" xml:space="preserve">
-    <value>No se encontró un agente administrador válido (ID: {1}) en el grupo de chat [{0}].</value>
+    <value>Añadir participante de texto humano</value>
   </data>
   <data name="Frontend.287" xml:space="preserve">
-    <value>El grupo de Chat [{0}] necesita al menos dos agentes habilitados para la colaboración multiagente.</value>
+    <value>La publicación crea una Agent Card estándar, detectable y utilizable por cualquier sistema compatible con A2A.</value>
   </data>
   <data name="Frontend.288" xml:space="preserve">
-    <value>El flujo de trabajo multiagente espera una respuesta externa y la ruta de ejecución actual no puede continuar automáticamente.</value>
+    <value>Publicar Agent local como servicio A2A</value>
   </data>
   <data name="Frontend.289" xml:space="preserve">
-    <value>Mensaje del sistema: la orquestación multiagente falló ({0}) y la ejecución de reserva no devolvió texto que se pueda mostrar.</value>
+    <value>Solo se permiten letras minúsculas, dígitos y guiones; la dirección permanece estable después de activarla.</value>
   </data>
   <data name="Frontend.290" xml:space="preserve">
-    <value>Mensaje del sistema: el servicio de IA devolvió 403 (Forbidden) y la tarea actual no puede continuar. Compruebe los permisos del modelo, la API Key o la disponibilidad del modelo seleccionado.</value>
+    <value>Introduce solo el nombre del secreto, no el valor del token</value>
   </data>
   <data name="Frontend.291" xml:space="preserve">
-    <value>Mensaje del sistema: falló la autenticación del servicio de IA (401). Compruebe la configuración de API Key / Endpoint.</value>
+    <value>Solo se muestran los Workflows disponibles para el administrador actual; los permisos y las referencias circulares se vuelven a comprobar al guardar un Agent o Workflow.</value>
   </data>
   <data name="Frontend.292" xml:space="preserve">
-    <value>Mensaje del sistema: la llamada al servicio de IA falló y la tarea se interrumpió. Motivo: {0}</value>
+    <value>Solo los conectores seleccionados aquí pueden ser invocados por este Agent. Déjalo vacío para no conceder acceso a herramientas externas.</value>
   </data>
   <data name="Frontend.293" xml:space="preserve">
-    <value>La configuración del modelo está vacía (AIModelDto == null)</value>
+    <value>Miembros de grupo mencionables</value>
   </data>
   <data name="Frontend.294" xml:space="preserve">
-    <value>No se encontró PromptCatalyzer ChatGroup. Termine primero la inicialización.</value>
+    <value>Opcional; visible solo para administradores</value>
   </data>
   <data name="Frontend.295" xml:space="preserve">
-    <value>No se encontró PromptCatalyzer Agent. Termine primero la inicialización.</value>
+    <value>Nombre</value>
   </data>
   <data name="Frontend.296" xml:space="preserve">
-    <value>Error en la conversación del Agent: {0}</value>
+    <value>Activar servicio público</value>
   </data>
   <data name="Frontend.297" xml:space="preserve">
-    <value>Seleccione o introduzca manualmente un PromptCode</value>
+    <value>Activar este grupo</value>
   </data>
   <data name="Frontend.298" xml:space="preserve">
-    <value>Ingrese el nombre del Agente</value>
+    <value>Copiar</value>
   </data>
   <data name="Frontend.299" xml:space="preserve">
-    <value>Introduzca un término de búsqueda (nombre, PromptCode o palabra clave)</value>
+    <value>Las vinculaciones complejas se gestionan en el panel derecho; se conserva el estado actual de edición del Agent.</value>
   </data>
   <data name="Frontend.300" xml:space="preserve">
-    <value>Ingrese un término de búsqueda válido</value>
+    <value>Parámetros completos</value>
   </data>
   <data name="Frontend.301" xml:space="preserve">
     <value>Habilitado correctamente</value>
