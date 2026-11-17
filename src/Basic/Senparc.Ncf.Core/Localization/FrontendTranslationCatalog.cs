@@ -35,6 +35,10 @@ public static class FrontendTranslationCatalog
                 group => group.Key,
                 group => group.First(),
                 StringComparer.Ordinal);
+        foreach (var entry in neutral)
+        {
+            result[entry.Key] = entry.Value;
+        }
 
         var localized = factory.Create(resourceType)
             .GetAllStrings(includeParentCultures: false)
@@ -55,6 +59,7 @@ public static class FrontendTranslationCatalog
                 }
 
                 result[neutralSource] = target;
+                result[item.Name] = target;
             }
         }
 
@@ -63,6 +68,10 @@ public static class FrontendTranslationCatalog
             foreach (var source in neutral.Values)
             {
                 result[source] = source;
+            }
+            foreach (var entry in neutral)
+            {
+                result[entry.Key] = entry.Value;
             }
         }
 

@@ -4,6 +4,7 @@
   <data name="Module.Connectors.Description" xml:space="preserve"><value>外部ツールを選択可能なコネクターとして設定します。アカウントを設定すると、権限に応じてChat、Workflow、Agentテンプレートから利用できます。</value></data>
 
   <data name="Area.Connectors.Config" xml:space="preserve"><value>コネクター設定</value></data>
+  <data name="Area.Extensions" xml:space="preserve"><value>拡張モジュール</value></data>
   <data name="Function.Connectors.Invoke.Name" xml:space="preserve"><value>コネクターを呼び出す</value></data>
   <data name="Function.Connectors.Invoke.Description" xml:space="preserve"><value>有効なコネクターアクションを呼び出します。WorkflowにFunctionノードを追加し、コネクターとアクションを選択してください。</value></data>
   <data name="Frontend.001" xml:space="preserve"><value>AIで利用できるアクション</value></data>

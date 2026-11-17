@@ -7,6 +7,7 @@
   <data name="Module.Connectors.MenuName" xml:space="preserve"><value>Connectors</value></data>
   <data name="Module.Connectors.Description" xml:space="preserve"><value>Configure external tools as selectable connectors. After an account is configured, Chat, Workflow and Agent templates can use it according to permissions.</value></data>
   <data name="Area.Connectors.Config" xml:space="preserve"><value>Connector setup</value></data>
+  <data name="Area.Extensions" xml:space="preserve"><value>Extensions</value></data>
   <data name="Function.Connectors.Invoke.Name" xml:space="preserve"><value>Invoke connector</value></data>
   <data name="Function.Connectors.Invoke.Description" xml:space="preserve"><value>Invoke an enabled connector action. Add a Function node in Workflow, then choose the connector and action.</value></data>
 

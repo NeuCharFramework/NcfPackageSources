@@ -4,6 +4,7 @@
   <data name="Module.Connectors.Description" xml:space="preserve"><value>Configurez des outils externes comme connecteurs sélectionnables. Après configuration d'un compte, Chat, Workflow et les modèles Agent peuvent l'utiliser selon les autorisations.</value></data>
 
   <data name="Area.Connectors.Config" xml:space="preserve"><value>Configuration des connecteurs</value></data>
+  <data name="Area.Extensions" xml:space="preserve"><value>Extensions</value></data>
   <data name="Function.Connectors.Invoke.Name" xml:space="preserve"><value>Appeler le connecteur</value></data>
   <data name="Function.Connectors.Invoke.Description" xml:space="preserve"><value>Appelle une action de connecteur activée. Ajoutez un nœud Function dans Workflow, puis choisissez le connecteur et l'action.</value></data>
   <data name="Frontend.001" xml:space="preserve"><value>Actions disponibles pour l'IA</value></data>

@@ -4,6 +4,7 @@
   <data name="Module.Connectors.Description" xml:space="preserve"><value>Настраивает внешние инструменты как доступные для выбора подключатели. После настройки учётной записи Chat, Workflow и шаблоны Agent могут использовать её согласно разрешениям.</value></data>
 
   <data name="Area.Connectors.Config" xml:space="preserve"><value>Настройка подключателей</value></data>
+  <data name="Area.Extensions" xml:space="preserve"><value>Расширения</value></data>
   <data name="Function.Connectors.Invoke.Name" xml:space="preserve"><value>Вызвать подключатель</value></data>
   <data name="Function.Connectors.Invoke.Description" xml:space="preserve"><value>Вызывает действие включённого подключателя. Добавьте узел Function в Workflow, затем выберите подключатель и действие.</value></data>
   <data name="Frontend.001" xml:space="preserve"><value>Действия, доступные ИИ</value></data>
