@@ -1967,16 +1967,16 @@
                     this.$message.success(publish ? fileManagerText('Frontend.240', 'Resource published') : fileManagerText('Frontend.241', 'Resource made private'));
                     await this.getList();
                 } catch (error) {
-                    this.$message.error('更新发布状态失败：' + errorMessage(error));
+                    this.$message.error(fileManagerText('Frontend.242', 'Failed to update publication status: {0}', errorMessage(error)));
                 }
             },
             copyPublicUrl: async function (row) {
                 const url = window.location.origin + row.publicUrl;
                 try {
                     await navigator.clipboard.writeText(url);
-                    this.$message.success('公开 URL 已复制');
+                    this.$message.success(fileManagerText('Frontend.243', 'Public URL copied'));
                 } catch (_) {
-                    this.$prompt('请复制以下公开 URL', '公开 URL', { inputValue: url, inputType: 'textarea' });
+                    this.$prompt(fileManagerText('Frontend.244', 'Copy the following public URL'), fileManagerText('Frontend.245', 'Public URL'), { inputValue: url, inputType: 'textarea' });
                 }
             },
             resetUploadDialog: function (visible) {
@@ -1999,7 +1999,7 @@
             chooseUploadFolder: function () {
                 const input = this.$refs.folderUploadInput;
                 if (!input || !('webkitdirectory' in input)) {
-                    this.$message.warning('当前浏览器不支持选择文件夹，请使用最新版 Chrome、Edge 或 Safari。');
+                    this.$message.warning(fileManagerText('Frontend.246', 'This browser does not support folder selection. Use the latest Chrome, Edge or Safari.'));
                     return;
                 }
                 input.click();
@@ -2011,7 +2011,7 @@
                 const paths = rawFiles.map(function (file) { return file.webkitRelativePath || ''; });
                 const rootNames = Array.from(new Set(paths.map(function (path) { return path.split('/')[0]; }).filter(Boolean)));
                 if (paths.some(function (path) { return !path; }) || rootNames.length !== 1) {
-                    this.$message.error('浏览器未提供完整的文件夹相对路径，请重新选择一个文件夹。');
+                    this.$message.error(fileManagerText('Frontend.247', 'The browser did not provide a complete relative folder path. Select a folder again.'));
                     return;
                 }
 
@@ -2043,7 +2043,7 @@
                 let batchBytes = 0;
                 fileList.forEach(function (file) {
                     const rawFile = file.raw || file;
-                    if (!rawFile || !rawFile.size) throw new Error('存在无法读取的文件，请重新选择。');
+                    if (!rawFile || !rawFile.size) throw new Error(fileManagerText('Frontend.248', 'Some files could not be read. Select again.'));
                     if (typeof self.validateUploadFile === 'function') {
                         const reason = self.validateUploadFile(file.name || rawFile.name, rawFile.size);
                         if (reason) throw new Error(reason);
@@ -2106,7 +2106,7 @@
             },
             submitFolder: async function () {
                 const form = this.folderDialog.form;
-                if (!form.name || !form.name.trim()) { this.$message.warning('请输入文件夹名称'); return; }
+                if (!form.name || !form.name.trim()) { this.$message.warning(fileManagerText('Frontend.249', 'Enter a folder name')); return; }
                 this.folderDialog.loading = true;
                 try {
                     if (this.folderDialog.editing) {
@@ -2119,24 +2119,24 @@
                             resourceScope: this.resourceScope
                         });
                     }
-                    this.$message.success(this.folderDialog.editing ? '文件夹已更新' : '文件夹已创建');
+                    this.$message.success(this.folderDialog.editing ? fileManagerText('Frontend.250', 'Folder updated') : fileManagerText('Frontend.251', 'Folder created'));
                     this.folderDialog.visible = false;
                     this.reloadFolderTree();
                 } catch (error) {
-                    this.$message.error('保存文件夹失败：' + errorMessage(error));
+                    this.$message.error(fileManagerText('Frontend.252', 'Failed to save the folder: {0}', errorMessage(error)));
                 } finally {
                     this.folderDialog.loading = false;
                 }
             },
             deleteFolder: async function (folder) {
                 try {
-                    await this.$confirm('仅空文件夹可以删除。确认删除“' + folder.name + '”吗？', '确认删除', { type: 'warning' });
+                    await this.$confirm(fileManagerText('Frontend.253', 'Only empty folders can be deleted. Delete “{0}”?', folder.name), fileManagerText('Frontend.254', 'Confirm deletion'), { type: 'warning' });
                     await post(pageUrl + '?handler=DeleteFolder&id=' + encodeURIComponent(folder.id));
                     if (this.currentFolderId === folder.id) await this.enterFolder(null);
                     this.reloadFolderTree();
-                    this.$message.success('文件夹已删除');
+                    this.$message.success(fileManagerText('Frontend.255', 'Folder deleted'));
                 } catch (error) {
-                    if (error !== 'cancel') this.$message.error('删除文件夹失败：' + errorMessage(error));
+                    if (error !== 'cancel') this.$message.error(fileManagerText('Frontend.256', 'Failed to delete the folder: {0}', errorMessage(error)));
                 }
             }
         }

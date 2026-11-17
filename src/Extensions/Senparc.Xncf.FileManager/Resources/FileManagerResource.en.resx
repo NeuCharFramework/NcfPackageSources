@@ -478,4 +478,19 @@
   <data name="Frontend.239" xml:space="preserve"><value>Delete failed: {0}</value></data>
   <data name="Frontend.240" xml:space="preserve"><value>Resource published</value></data>
   <data name="Frontend.241" xml:space="preserve"><value>Resource made private</value></data>
+  <data name="Frontend.242" xml:space="preserve"><value>Failed to update publication status: {0}</value></data>
+  <data name="Frontend.243" xml:space="preserve"><value>Public URL copied</value></data>
+  <data name="Frontend.244" xml:space="preserve"><value>Copy the following public URL</value></data>
+  <data name="Frontend.245" xml:space="preserve"><value>Public URL</value></data>
+  <data name="Frontend.246" xml:space="preserve"><value>This browser does not support folder selection. Use the latest Chrome, Edge or Safari.</value></data>
+  <data name="Frontend.247" xml:space="preserve"><value>The browser did not provide a complete relative folder path. Select a folder again.</value></data>
+  <data name="Frontend.248" xml:space="preserve"><value>Some files could not be read. Select again.</value></data>
+  <data name="Frontend.249" xml:space="preserve"><value>Enter a folder name</value></data>
+  <data name="Frontend.250" xml:space="preserve"><value>Folder updated</value></data>
+  <data name="Frontend.251" xml:space="preserve"><value>Folder created</value></data>
+  <data name="Frontend.252" xml:space="preserve"><value>Failed to save the folder: {0}</value></data>
+  <data name="Frontend.253" xml:space="preserve"><value>Only empty folders can be deleted. Delete “{0}”?</value></data>
+  <data name="Frontend.254" xml:space="preserve"><value>Confirm deletion</value></data>
+  <data name="Frontend.255" xml:space="preserve"><value>Folder deleted</value></data>
+  <data name="Frontend.256" xml:space="preserve"><value>Failed to delete the folder: {0}</value></data>
 </root>

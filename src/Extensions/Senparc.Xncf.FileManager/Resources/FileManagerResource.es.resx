@@ -478,4 +478,19 @@
   <data name="Frontend.239" xml:space="preserve"><value>Error al eliminar: {0}</value></data>
   <data name="Frontend.240" xml:space="preserve"><value>Recurso publicado</value></data>
   <data name="Frontend.241" xml:space="preserve"><value>Recurso establecido como privado</value></data>
+  <data name="Frontend.242" xml:space="preserve"><value>No se pudo actualizar el estado de publicación: {0}</value></data>
+  <data name="Frontend.243" xml:space="preserve"><value>URL pública copiada</value></data>
+  <data name="Frontend.244" xml:space="preserve"><value>Copia la siguiente URL pública</value></data>
+  <data name="Frontend.245" xml:space="preserve"><value>URL pública</value></data>
+  <data name="Frontend.246" xml:space="preserve"><value>Este navegador no admite la selección de carpetas. Usa la última versión de Chrome, Edge o Safari.</value></data>
+  <data name="Frontend.247" xml:space="preserve"><value>El navegador no proporcionó una ruta relativa completa. Vuelve a seleccionar una carpeta.</value></data>
+  <data name="Frontend.248" xml:space="preserve"><value>Hay archivos que no se pueden leer. Vuelve a seleccionarlos.</value></data>
+  <data name="Frontend.249" xml:space="preserve"><value>Introduce un nombre de carpeta</value></data>
+  <data name="Frontend.250" xml:space="preserve"><value>Carpeta actualizada</value></data>
+  <data name="Frontend.251" xml:space="preserve"><value>Carpeta creada</value></data>
+  <data name="Frontend.252" xml:space="preserve"><value>No se pudo guardar la carpeta: {0}</value></data>
+  <data name="Frontend.253" xml:space="preserve"><value>Solo se pueden eliminar carpetas vacías. ¿Eliminar “{0}”?</value></data>
+  <data name="Frontend.254" xml:space="preserve"><value>Confirmar eliminación</value></data>
+  <data name="Frontend.255" xml:space="preserve"><value>Carpeta eliminada</value></data>
+  <data name="Frontend.256" xml:space="preserve"><value>No se pudo eliminar la carpeta: {0}</value></data>
 </root>

@@ -478,4 +478,19 @@
   <data name="Frontend.239" xml:space="preserve"><value>Ошибка удаления: {0}</value></data>
   <data name="Frontend.240" xml:space="preserve"><value>Ресурс опубликован</value></data>
   <data name="Frontend.241" xml:space="preserve"><value>Ресурс сделан приватным</value></data>
+  <data name="Frontend.242" xml:space="preserve"><value>Не удалось обновить статус публикации: {0}</value></data>
+  <data name="Frontend.243" xml:space="preserve"><value>Публичный URL скопирован</value></data>
+  <data name="Frontend.244" xml:space="preserve"><value>Скопируйте следующий публичный URL</value></data>
+  <data name="Frontend.245" xml:space="preserve"><value>Публичный URL</value></data>
+  <data name="Frontend.246" xml:space="preserve"><value>Этот браузер не поддерживает выбор папок. Используйте последнюю версию Chrome, Edge или Safari.</value></data>
+  <data name="Frontend.247" xml:space="preserve"><value>Браузер не предоставил полный относительный путь папки. Выберите папку ещё раз.</value></data>
+  <data name="Frontend.248" xml:space="preserve"><value>Некоторые файлы невозможно прочитать. Выберите их снова.</value></data>
+  <data name="Frontend.249" xml:space="preserve"><value>Введите имя папки</value></data>
+  <data name="Frontend.250" xml:space="preserve"><value>Папка обновлена</value></data>
+  <data name="Frontend.251" xml:space="preserve"><value>Папка создана</value></data>
+  <data name="Frontend.252" xml:space="preserve"><value>Не удалось сохранить папку: {0}</value></data>
+  <data name="Frontend.253" xml:space="preserve"><value>Удалять можно только пустые папки. Удалить «{0}»?</value></data>
+  <data name="Frontend.254" xml:space="preserve"><value>Подтвердить удаление</value></data>
+  <data name="Frontend.255" xml:space="preserve"><value>Папка удалена</value></data>
+  <data name="Frontend.256" xml:space="preserve"><value>Не удалось удалить папку: {0}</value></data>
 </root>

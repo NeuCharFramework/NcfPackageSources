@@ -473,4 +473,19 @@
   <data name="Frontend.239" xml:space="preserve"><value>删除失败：{0}</value></data>
   <data name="Frontend.240" xml:space="preserve"><value>资源已公开</value></data>
   <data name="Frontend.241" xml:space="preserve"><value>资源已设为私有</value></data>
+  <data name="Frontend.242" xml:space="preserve"><value>更新发布状态失败：{0}</value></data>
+  <data name="Frontend.243" xml:space="preserve"><value>公开 URL 已复制</value></data>
+  <data name="Frontend.244" xml:space="preserve"><value>请复制以下公开 URL</value></data>
+  <data name="Frontend.245" xml:space="preserve"><value>公开 URL</value></data>
+  <data name="Frontend.246" xml:space="preserve"><value>当前浏览器不支持选择文件夹，请使用最新版 Chrome、Edge 或 Safari。</value></data>
+  <data name="Frontend.247" xml:space="preserve"><value>浏览器未提供完整的文件夹相对路径，请重新选择一个文件夹。</value></data>
+  <data name="Frontend.248" xml:space="preserve"><value>存在无法读取的文件，请重新选择。</value></data>
+  <data name="Frontend.249" xml:space="preserve"><value>请输入文件夹名称</value></data>
+  <data name="Frontend.250" xml:space="preserve"><value>文件夹已更新</value></data>
+  <data name="Frontend.251" xml:space="preserve"><value>文件夹已创建</value></data>
+  <data name="Frontend.252" xml:space="preserve"><value>保存文件夹失败：{0}</value></data>
+  <data name="Frontend.253" xml:space="preserve"><value>仅空文件夹可以删除。确认删除“{0}”吗？</value></data>
+  <data name="Frontend.254" xml:space="preserve"><value>确认删除</value></data>
+  <data name="Frontend.255" xml:space="preserve"><value>文件夹已删除</value></data>
+  <data name="Frontend.256" xml:space="preserve"><value>删除文件夹失败：{0}</value></data>
 </root>

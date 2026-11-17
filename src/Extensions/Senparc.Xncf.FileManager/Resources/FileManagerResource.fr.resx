@@ -478,4 +478,19 @@
   <data name="Frontend.239" xml:space="preserve"><value>Échec de la suppression : {0}</value></data>
   <data name="Frontend.240" xml:space="preserve"><value>Ressource publiée</value></data>
   <data name="Frontend.241" xml:space="preserve"><value>Ressource rendue privée</value></data>
+  <data name="Frontend.242" xml:space="preserve"><value>Impossible de mettre à jour l’état de publication : {0}</value></data>
+  <data name="Frontend.243" xml:space="preserve"><value>URL publique copiée</value></data>
+  <data name="Frontend.244" xml:space="preserve"><value>Copiez l’URL publique suivante</value></data>
+  <data name="Frontend.245" xml:space="preserve"><value>URL publique</value></data>
+  <data name="Frontend.246" xml:space="preserve"><value>Ce navigateur ne prend pas en charge la sélection de dossiers. Utilisez la dernière version de Chrome, Edge ou Safari.</value></data>
+  <data name="Frontend.247" xml:space="preserve"><value>Le navigateur n’a pas fourni un chemin relatif complet. Sélectionnez à nouveau un dossier.</value></data>
+  <data name="Frontend.248" xml:space="preserve"><value>Certains fichiers sont illisibles. Sélectionnez-les à nouveau.</value></data>
+  <data name="Frontend.249" xml:space="preserve"><value>Saisissez un nom de dossier</value></data>
+  <data name="Frontend.250" xml:space="preserve"><value>Dossier mis à jour</value></data>
+  <data name="Frontend.251" xml:space="preserve"><value>Dossier créé</value></data>
+  <data name="Frontend.252" xml:space="preserve"><value>Impossible d’enregistrer le dossier : {0}</value></data>
+  <data name="Frontend.253" xml:space="preserve"><value>Seuls les dossiers vides peuvent être supprimés. Supprimer « {0} » ?</value></data>
+  <data name="Frontend.254" xml:space="preserve"><value>Confirmer la suppression</value></data>
+  <data name="Frontend.255" xml:space="preserve"><value>Dossier supprimé</value></data>
+  <data name="Frontend.256" xml:space="preserve"><value>Impossible de supprimer le dossier : {0}</value></data>
 </root>

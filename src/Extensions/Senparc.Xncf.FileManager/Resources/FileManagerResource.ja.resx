@@ -478,4 +478,19 @@
   <data name="Frontend.239" xml:space="preserve"><value>削除に失敗しました：{0}</value></data>
   <data name="Frontend.240" xml:space="preserve"><value>リソースを公開しました</value></data>
   <data name="Frontend.241" xml:space="preserve"><value>リソースを非公開にしました</value></data>
+  <data name="Frontend.242" xml:space="preserve"><value>公開状態の更新に失敗しました：{0}</value></data>
+  <data name="Frontend.243" xml:space="preserve"><value>公開URLをコピーしました</value></data>
+  <data name="Frontend.244" xml:space="preserve"><value>次の公開URLをコピーしてください</value></data>
+  <data name="Frontend.245" xml:space="preserve"><value>公開URL</value></data>
+  <data name="Frontend.246" xml:space="preserve"><value>このブラウザーはフォルダー選択に対応していません。最新版のChrome、Edge、Safariを使用してください。</value></data>
+  <data name="Frontend.247" xml:space="preserve"><value>ブラウザーから完全な相対フォルダーパスが提供されませんでした。もう一度フォルダーを選択してください。</value></data>
+  <data name="Frontend.248" xml:space="preserve"><value>読み取れないファイルがあります。もう一度選択してください。</value></data>
+  <data name="Frontend.249" xml:space="preserve"><value>フォルダー名を入力してください</value></data>
+  <data name="Frontend.250" xml:space="preserve"><value>フォルダーを更新しました</value></data>
+  <data name="Frontend.251" xml:space="preserve"><value>フォルダーを作成しました</value></data>
+  <data name="Frontend.252" xml:space="preserve"><value>フォルダーの保存に失敗しました：{0}</value></data>
+  <data name="Frontend.253" xml:space="preserve"><value>空のフォルダーのみ削除できます。「{0}」を削除しますか？</value></data>
+  <data name="Frontend.254" xml:space="preserve"><value>削除を確認</value></data>
+  <data name="Frontend.255" xml:space="preserve"><value>フォルダーを削除しました</value></data>
+  <data name="Frontend.256" xml:space="preserve"><value>フォルダーの削除に失敗しました：{0}</value></data>
 </root>
