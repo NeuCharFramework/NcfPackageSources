@@ -721,10 +721,10 @@
     <value>Tarea: (#)</value>
   </data>
   <data name="Frontend.189" xml:space="preserve">
-    <value>Avatar del Agente</value>
+    <value>Avatar del Agent</value>
   </data>
   <data name="Frontend.190" xml:space="preserve">
-    <value>Endpoint URL (por ejemplo: http://localhost:5000/mcp/sse)</value>
+    <value>URL del endpoint (por ejemplo: http://localhost:5000/mcp/sse)</value>
   </data>
   <data name="Frontend.191" xml:space="preserve">
     <value>Cancelar</value>
@@ -733,25 +733,25 @@
     <value>Aceptar</value>
   </data>
   <data name="Frontend.193" xml:space="preserve">
-    <value>Puntería:</value>
+    <value>Objetivo:</value>
   </data>
   <data name="Frontend.194" xml:space="preserve">
     <value>Puntuación media:</value>
   </data>
   <data name="Frontend.195" xml:space="preserve">
-    <value>Puntuación más alta:</value>
+    <value>Puntuación máxima:</value>
   </data>
   <data name="Frontend.196" xml:space="preserve">
-    <value>[Duración (ms):]</value>
+    <value>[Tiempo transcurrido (ms):]</value>
   </data>
   <data name="Frontend.197" xml:space="preserve">
     <value>Copiar código HTML con formato</value>
   </data>
   <data name="Frontend.198" xml:space="preserve">
-    <value>Copiar el contenido original (por ejemplo, se copiarán las marcas markdown)</value>
+    <value>Copiar contenido sin procesar (por ejemplo, se copiarán las marcas Markdown)</value>
   </data>
   <data name="Frontend.199" xml:space="preserve">
-    <value>Original</value>
+    <value>Sin procesar</value>
   </data>
   <data name="Frontend.200" xml:space="preserve">
     <value>Cerrar</value>
