@@ -419,12 +419,12 @@
                                                     <div class="popover-list-item df-wn flex-ac">
                                                         <div class="line-label">选项 label</div>
                                                         <el-input v-model="item.label"
-                                                            placeholder="请输入内容"></el-input>
+                                                            :placeholder="ncfST('Frontend.191')"></el-input>
                                                     </div>
                                                     <div class="popover-list-item df-wn flex-ac">
                                                         <div class="line-label">选项 value</div>
                                                         <el-input v-model="item.value"
-                                                            placeholder="请输入内容"></el-input>
+                                                            :placeholder="ncfST('Frontend.191')"></el-input>
                                                     </div>
                                                 </div>
                                             </div>
@@ -432,7 +432,7 @@
                                                 <div class="sortitem-box df-wn flex-ac">
                                                     <img src="/image/DynamicData/icon-move.png" alt=""
                                                         class="moveIcon" />
-                                                    <div class="sortitemtext">{{ item.label&&item.value ? `${item.label}` : '请添加选项' }}</div>
+                                                    <div class="sortitemtext">{{ item.label&&item.value ? `${item.label}` : ncfST('Frontend.250') }}</div>
                                                     <i class="el-icon-remove-outline"
                                                         style="cursor:pointer;color:#a6a6a6;"
                                                         @@click.stop="handleDeleteOptionData(index)"></i>
@@ -944,12 +944,12 @@
                                                     <div class="popover-list-item df-wn flex-ac">
                                                         <div class="line-label">选项 label</div>
                                                         <el-input v-model="item.label"
-                                                            placeholder="请输入内容"></el-input>
+                                                            :placeholder="ncfST('Frontend.191')"></el-input>
                                                     </div>
                                                     <div class="popover-list-item df-wn flex-ac">
                                                         <div class="line-label">选项 value</div>
                                                         <el-input v-model="item.value"
-                                                            placeholder="请输入内容"></el-input>
+                                                            :placeholder="ncfST('Frontend.191')"></el-input>
                                                     </div>
                                                 </div>
                                             </div>
@@ -957,7 +957,7 @@
                                                 <div class="sortitem-box df-wn flex-ac">
                                                     <img src="/image/DynamicData/icon-move.png" alt=""
                                                         class="moveIcon" />
-                                                    <div class="sortitemtext">{{ item.label&&item.value ? `${item.label}` : '请添加选项' }}</div>
+                                                    <div class="sortitemtext">{{ item.label&&item.value ? `${item.label}` : ncfST('Frontend.250') }}</div>
                                                     <i class="el-icon-remove-outline"
                                                         style="cursor:pointer;color:#a6a6a6;"
                                                         @@click.stop="handleDeleteOptionData(index)"></i>
@@ -1006,10 +1006,10 @@
                                         </el-select>
                                     </el-form-item>
                                     <el-form-item label="字段名称">
-                                        <el-input v-model="sheetSettingForm.fieldName" placeholder="请输入内容"></el-input>
+                                        <el-input v-model="sheetSettingForm.fieldName" :placeholder="ncfST('Frontend.191')"></el-input>
                                     </el-form-item>
                                     <el-form-item label="提示文字">
-                                        <el-input v-model="sheetSettingForm.tipText" placeholder="请输入内容"></el-input>
+                                        <el-input v-model="sheetSettingForm.tipText" :placeholder="ncfST('Frontend.191')"></el-input>
                                     </el-form-item>
                                     <el-form-item label="显示方式">
                                         <el-select v-model="sheetSettingForm.displayUsage" style="width:100%"
@@ -1036,7 +1036,7 @@
                                                     <div class="popover-list-item df-wn flex-ac">
                                                         <div class="line-label">选项字段</div>
                                                         <el-input v-model="item.optionName"
-                                                            placeholder="请输入内容"></el-input>
+                                                            :placeholder="ncfST('Frontend.191')"></el-input>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1046,7 +1046,7 @@
                                                         class="moveIcon" />
                                                     <div class="sortitemtext">{{ item.optionName ? `${item.optionName}`
                                                         :
-                                                        '请添加选项' }}</div>
+                                                        ncfST('Frontend.250') }}</div>
                                                     <i class="el-icon-remove-outline"
                                                         style="cursor:pointer;color:#a6a6a6;"
                                                         @@click.stop="handleDeleteOptionData(index)"></i>
@@ -1147,7 +1147,7 @@
                                 <el-form v-model="formSubmitBtnForm" :size="elSize" label-position="top"
                                     label-width="80px" class="form-container">
                                     <el-form-item label="按钮名称">
-                                        <el-input v-model="formSubmitBtnForm.buttonName" placeholder="请输入内容"></el-input>
+                                        <el-input v-model="formSubmitBtnForm.buttonName" :placeholder="ncfST('Frontend.191')"></el-input>
                                     </el-form-item>
                                     <el-form-item label="按钮属性">
                                         <el-select v-model="formSubmitBtnForm.buttonAttribute" style="width:100%"
