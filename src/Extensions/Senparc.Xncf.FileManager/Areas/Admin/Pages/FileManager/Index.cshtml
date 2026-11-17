@@ -13,7 +13,7 @@
 @section Style {
     <link rel="stylesheet" href="~/css/Admin/FileManager/index.css" asp-append-version="true" />
     <style>
-        /* ========== 清除父级对布局节点的控制 ========== */
+        /* ========== Clear parent layout constraints ========== */
         .el-main.admin-content:has(.file-manager-layout),
         .admin-content:has(.file-manager-layout) {
             all: unset;
@@ -38,7 +38,7 @@
             overflow: hidden !important;
         }
 
-        /* ========== 根布局：横向 flex ========== */
+        /* ========== Root layout: horizontal flex ========== */
         .file-manager-layout {
             display: flex !important;
             flex-direction: row !important;
@@ -56,7 +56,7 @@
             position: relative !important;
         }
 
-        /* ========== 左栏 / 主区域 ========== */
+        /* ========== Left panel / main area ========== */
         .file-manager-layout-left,
         .file-manager-layout-main {
             box-sizing: border-box !important;
@@ -85,7 +85,7 @@
             flex-direction: column !important;
         }
 
-        /* 文件浏览：主区域内再分 树 + 表 */
+        /* File browser: split the main area into tree + table */
         .file-manager-layout-main .file-manager-browser {
             display: flex;
             flex-direction: row;
@@ -116,7 +116,7 @@
             background: #fff;
         }
 
-        /* ========== 左栏：导航 ========== */
+        /* ========== Left panel: navigation ========== */
         .file-manager-layout-left .file-manager-nav-panel {
             box-sizing: border-box;
             width: 100%;
@@ -173,7 +173,7 @@
             pointer-events: none;
         }
 
-        /* ========== 中栏：目录树 ========== */
+        /* ========== Center panel: directory tree ========== */
         .file-manager-layout-main .file-manager-tree-wrap .file-manager-tree-panel {
             display: flex;
             flex-direction: column;
@@ -275,7 +275,7 @@
             height: 32px;
         }
 
-        /* ========== 右栏：文件表 ========== */
+        /* ========== Right panel: file table ========== */
         .file-manager-layout-main .file-manager-main-panel {
             display: flex;
             flex-direction: column;
@@ -433,7 +433,7 @@
             cursor: pointer;
         }
 
-        /* ========== 文件在线预览 ========== */
+        /* ========== Online file preview ========== */
         .file-preview-dialog .el-dialog__body {
             padding: 0;
             height: calc(100vh - 110px);
@@ -583,7 +583,7 @@
             white-space: nowrap;
         }
 
-        /* ========== 数据面板：占满 file-manager-layout-main ========== */
+        /* ========== Data dashboard: fill file-manager-layout-main ========== */
         .file-manager-layout-main .file-manager-dashboard-panel {
             box-sizing: border-box;
             flex: 1 1 auto;
@@ -734,7 +734,7 @@
             margin-top: 10px;
         }
 
-        /* ========== 上传对话框（图1样式） ========== */
+        /* ========== Upload dialog ========== */
         .file-manager-upload-dialog .el-dialog__header {
             padding: 14px 20px;
             border-bottom: 1px solid #ebeef5;
@@ -828,7 +828,7 @@
             line-height: 1.9;
         }
 
-        /* ========== 设置：占满 file-manager-layout-main ========== */
+        /* ========== Settings: fill file-manager-layout-main ========== */
         .file-manager-layout-main .file-manager-settings-panel {
             box-sizing: border-box;
             flex: 1 1 auto;
@@ -878,7 +878,7 @@
             gap: 12px;
         }
 
-        /* ========== 标签管理：占满 file-manager-layout-main ========== */
+        /* ========== Tag management: fill file-manager-layout-main ========== */
         .file-manager-layout-main .file-manager-tags-panel {
             box-sizing: border-box;
             flex: 1 1 auto;
@@ -991,7 +991,7 @@
             border: none;
         }
 
-        /* ========== 回收站：占满 file-manager-layout-main ========== */
+        /* ========== Recycle bin: fill file-manager-layout-main ========== */
         .file-manager-layout-main .file-manager-recycle-panel {
             box-sizing: border-box;
             flex: 1 1 auto;
@@ -1080,7 +1080,7 @@
             border-top: 1px solid #f0f2f5;
         }
 
-        /* ========== 收藏：占满 file-manager-layout-main ========== */
+        /* ========== Favorites: fill file-manager-layout-main ========== */
         .file-manager-layout-main .file-manager-favorite-panel {
             box-sizing: border-box;
             flex: 1 1 auto;
@@ -1146,7 +1146,7 @@
             border-top: 1px solid #f0f2f5;
         }
 
-        /* ========== 首页：占满 file-manager-layout-main ========== */
+        /* ========== Home: fill file-manager-layout-main ========== */
         .file-manager-layout-main .file-manager-home-panel {
             box-sizing: border-box;
             flex: 1 1 auto;
@@ -1317,7 +1317,7 @@
             color: #909399;
         }
 
-        /* ========== 新增分类 / 新增标签 对话框 ========== */
+        /* ========== Add category / add tag dialogs ========== */
         .tag-manage-dialog .el-dialog__body {
             padding: 16px 24px 8px;
         }
@@ -1379,7 +1379,7 @@
             color: #303133;
         }
 
-        /* 文件行「标签管理」对话框 */
+        /* File-row tag management dialog */
         .file-tag-dialog .file-tag-dialog-toolbar {
             display: flex;
             align-items: center;
@@ -1463,7 +1463,7 @@
 <div class="file-manager-layout">
     @Html.AntiForgeryToken()
 
-    @* 左栏 15%：分类导航 *@
+    @* Left panel 15%: category navigation *@
     <div class="file-manager-layout-left">
         <nav class="file-manager-nav-panel">
             <ul class="file-manager-nav-list">
@@ -1496,7 +1496,7 @@
         </nav>
     </div>
 
-    @* 主区域 85%：文件浏览（树+表）或数据面板 *@
+    @* Main area 85%: file browser (tree + table) or data dashboard *@
     <div class="file-manager-layout-main">
         <div class="file-manager-browser" v-if="activeNavKey !== 'dashboard' && activeNavKey !== 'tags' && activeNavKey !== 'recycle' && activeNavKey !== 'favorite' && activeNavKey !== 'home' && activeNavKey !== 'settings'">
             <div class="file-manager-tree-wrap">
