@@ -33,7 +33,7 @@ var app = new Vue({
             recallKbOptions: [], //Legacy comment translated to English.
             embeddingProgressPercent: 0,
             embeddingProgressStatus: '',   // '' | success | exception
-            embeddingProgressText: '正在准备...',
+            embeddingProgressText: ncfST('Frontend.134'),
             embeddingResultText: '',
             embeddingTaskName: '',
             embeddingDoneCount: 0,
@@ -172,7 +172,7 @@ var app = new Vue({
             },
             detailDialog:
             {
-                title: '知识库管理详情',
+                title: ncfST('Frontend.137'),
                 visible: false,
                 data:
                 {
@@ -182,7 +182,7 @@ var app = new Vue({
                 {
                     name:
                         [
-                            { required: true, message: "知识库管理名称为必填项", trigger: "blur" }
+                            { required: true, message: ncfST('Frontend.136'), trigger: "blur" }
                         ]
                 },
                 updateLoading: false,
@@ -387,9 +387,9 @@ var app = new Vue({
             }
             that.embeddingResultCard = {
                 isError: !!opts.isError,
-                title: opts.title || (opts.isError ? '向量化任务执行失败!' : '向量化请求已经执行完毕!'),
+                title: opts.title || (opts.isError ? ncfST('Frontend.163') : ncfST('Frontend.161')),
                 timeText: that.formatEmbeddingTime(opts.startedAt || that.embeddingStartedAt || new Date()),
-                taskName: opts.taskName || that.embeddingTaskName || '知识库向量化',
+                taskName: opts.taskName || that.embeddingTaskName || ncfST('Frontend.197'),
                 total: stats.total,
                 success: stats.success,
                 fail: stats.fail,
@@ -412,7 +412,7 @@ var app = new Vue({
                 this.recallKbOptions = Array.isArray(payload.list) ? payload.list : [];
             } catch (e) {
                 console.error(e);
-                this.$message.error('无法获取知识库列表，请稍后重试');
+                this.$message.error(ncfST('Frontend.279', ''));
             }
         },
         handleRowCommand(command, row) {
@@ -452,15 +452,15 @@ var app = new Vue({
             const content = (this.recallContent || '').trim();
             const recallUrl = '/api/Senparc.Xncf.KnowledgeBase/RecallTestAppService/Xncf.KnowledgeBase_RecallTestAppService.RecallTest';
             if (!knowledgeBase) {
-                this.$message.warning('请先选择知识库');
+                this.$message.warning(ncfST('Frontend.103'));
                 return;
             }
             if (!knowledgeBase.ready) {
-                this.$message.warning('该知识库尚未向量化，请先执行“向量化”');
+                this.$message.warning(ncfST('Frontend.280'));
                 return;
             }
             if (!content) {
-                this.$message.warning('请输入要测试的问题');
+                this.$message.warning(ncfST('Frontend.281'));
                 return;
             }
 
@@ -476,7 +476,7 @@ var app = new Vue({
                 });
                 const body = response && response.data;
                 const results = body && Object.prototype.hasOwnProperty.call(body, 'data') ? body.data : body;
-                if (!Array.isArray(results)) throw new Error('服务未返回有效的召回结果');
+                if (!Array.isArray(results)) throw new Error(ncfST('Frontend.282'));
 
                 this.recallResults = results.map(function (item, index) {
                     return Object.assign({}, item, {
@@ -496,11 +496,11 @@ var app = new Vue({
                     time: new Date().toLocaleString('zh-CN', { hour12: false })
                 });
                 this.recordPage = 1;
-                this.$message.success(this.recallResults.length ? '召回测试完成，请核对来源与内容。' : '测试完成，但没有返回匹配片段。');
+                this.$message.success(this.recallResults.length ? ncfST('Frontend.283') : ncfST('Frontend.284'));
             } catch (error) {
                 const response = error && error.response && error.response.data;
-                const msg = (response && (response.errorMessage || response.message || response.title)) || (error && error.message) || '请求未完成，请检查知识库和模型配置。';
-                this.$notify({ title: '召回未完成', message: msg, type: 'error', duration: 6000 });
+                const msg = (response && (response.errorMessage || response.message || response.title)) || (error && error.message) || ncfST('Frontend.278');
+                this.$notify({ title: ncfST('Frontend.285'), message: msg, type: 'error', duration: 6000 });
             } finally {
                 this.recallLoading = false;
             }
@@ -558,24 +558,24 @@ var app = new Vue({
             //debugger
             if (res.stateCode == 0) {
                 that.$notify({
-                    title: '成功',
-                    message: '恭喜你，上传成功',
+                    title: ncfST('Frontend.048'),
+                    message: ncfST('Frontend.139'),
                     type: 'success'
                 });
                 //Legacy comment translated to English.
                 that.$refs.uploadRef.clearFiles();
             } else {
                 that.$notify.error({
-                    title: '失败',
-                    message: '上传失败，请重新上传'
+                    title: ncfST('Frontend.049'),
+                    message: ncfST('Frontend.132')
                 });
             }
         },
         uploadError() {
             let that = this;
             that.$notify.error({
-                title: '失败',
-                message: '上传失败，请重新上传'
+                title: ncfST('Frontend.049'),
+                message: ncfST('Frontend.132')
             });
         },
         //Legacy comment translated to English.
@@ -596,16 +596,16 @@ var app = new Vue({
                     const row = that.fileList.find(i => i.id === id);
                     if (row) that.toggleSelection(that.groupForm.files.map(f => that.fileList.find(i => i.id === f.id)).filter(Boolean));
                 });
-                that.$notify({ title: '成功', message: '资料已上传并勾选，请点击“确认”保存关联', type: 'success' });
+                that.$notify({ title: ncfST('Frontend.048'), message: ncfST('Frontend.143'), type: 'success' });
             } else {
-                that.$notify.error({ title: '失败', message: '上传失败，请重试' });
+                that.$notify.error({ title: ncfST('Frontend.049'), message: ncfST('Frontend.140') });
             }
             that.$nextTick(() => {
                 if (that.$refs.configUploadRef) that.$refs.configUploadRef.clearFiles();
             });
         },
         configUploadError() {
-            this.$notify.error({ title: '失败', message: '上传失败，请重新上传' });
+            this.$notify.error({ title: ncfST('Frontend.049'), message: ncfST('Frontend.132') });
         },
         handleDialogFileClose() {
             this.configUploadFileList = [];
