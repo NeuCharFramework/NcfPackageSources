@@ -464,47 +464,47 @@
   </data>
 
 
-  <data name="Frontend.001" xml:space="preserve"><value>Module preview sessions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.002" xml:space="preserve"><value>Isolated development / Sandbox preview jobs</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.003" xml:space="preserve"><value>AI can write only to the isolated workspace; applying changes requires an administrator confirmation phrase.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.004" xml:space="preserve"><value>Host stopped / ExitCode:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.005" xml:space="preserve"><value>Host started / healthy:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.006" xml:space="preserve"><value>XNCF preview monitor</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.007" xml:space="preserve"><value>Discard</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.008" xml:space="preserve"><value>Apply manually</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.009" xml:space="preserve"><value>Session ID:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.010" xml:space="preserve"><value>Total sessions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.011" xml:space="preserve"><value>Processing / queued</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.012" xml:space="preserve"><value>Failed / interrupted</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.013" xml:space="preserve"><value>Started / updated</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.014" xml:space="preserve"><value>Current stage</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.015" xml:space="preserve"><value>Open Sandbox preview</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.016" xml:space="preserve"><value>Extension module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.001" xml:space="preserve"><value>Sessions de prévisualisation du module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.002" xml:space="preserve"><value>Tâches de développement isolé / prévisualisation Sandbox</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.003" xml:space="preserve"><value>L'IA ne peut écrire que dans le workspace isolé ; l'application des modifications nécessite une phrase de confirmation de l'administrateur.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.004" xml:space="preserve"><value>Hôte arrêté / ExitCode :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.005" xml:space="preserve"><value>Hôte démarré / sain :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.006" xml:space="preserve"><value>Moniteur de prévisualisation XNCF</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.007" xml:space="preserve"><value>Ignorer</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.008" xml:space="preserve"><value>Appliquer manuellement</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.009" xml:space="preserve"><value>ID de session :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.010" xml:space="preserve"><value>Nombre total de sessions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.011" xml:space="preserve"><value>En traitement / en file</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.012" xml:space="preserve"><value>Échec / interrompu</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.013" xml:space="preserve"><value>Démarré / mis à jour</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.014" xml:space="preserve"><value>Étape actuelle</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.015" xml:space="preserve"><value>Ouvrir la prévisualisation Sandbox</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.016" xml:space="preserve"><value>Module d'extension</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.017" xml:space="preserve"><value>Actions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.018" xml:space="preserve"><value>Recent output (up to 300 lines)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.019" xml:space="preserve"><value>Source solution for this build:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.018" xml:space="preserve"><value>Sortie récente (jusqu'à 300 lignes)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.019" xml:space="preserve"><value>Solution source de cette compilation :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.020" xml:space="preserve"><value>Module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.021" xml:space="preserve"><value>Module DLL SHA-256:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.022" xml:space="preserve"><value>Mode / stage</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.023" xml:space="preserve"><value>Pipeline progress</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.024" xml:space="preserve"><value>Source SHA-256:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.025" xml:space="preserve"><value>After source generation or modification completes, choose Start XNCF isolated preview to enter this queue; the source fingerprint proves the exact snapshot used by the build.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.026" xml:space="preserve"><value>Status and diff</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.027" xml:space="preserve"><value>Environment:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.028" xml:space="preserve"><value>Auto-refresh: 2 seconds</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.029" xml:space="preserve"><value>Path / Sandbox</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.030" xml:space="preserve"><value>Running</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.031" xml:space="preserve"><value>Process</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.032" xml:space="preserve"><value>Isolated development job persistence is not ready</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.033" xml:space="preserve"><value>Isolated preview pipeline</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.034" xml:space="preserve"><value>Preview status persistence is not ready</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.035" xml:space="preserve"><value>Preview monitor</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.036" xml:space="preserve"><value>Preview deployment (publish) directory:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.037" xml:space="preserve"><value>Preview stopped by the user.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.038" xml:space="preserve"><value>The preview process exited unexpectedly.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.039" xml:space="preserve"><value>The preview task failed.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.040" xml:space="preserve"><value>Module preview sessions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.041" xml:space="preserve"><value>No isolated development tasks</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.042" xml:space="preserve"><value>Last updated: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.043" xml:space="preserve"><value>Each task validates host references, performs an isolated build, starts a new preview, runs a health check, and atomically replaces the preview. The current preview stays available until the new preview passes its checks.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.021" xml:space="preserve"><value>SHA-256 de la DLL du module :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.022" xml:space="preserve"><value>Mode / étape</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.023" xml:space="preserve"><value>Progression du pipeline</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.024" xml:space="preserve"><value>SHA-256 de la source :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.025" xml:space="preserve"><value>Une fois la génération ou la modification de la source terminée, choisissez Démarrer la prévisualisation isolée XNCF pour rejoindre cette file ; l'empreinte source prouve l'instantané exact utilisé par la compilation.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.026" xml:space="preserve"><value>État et différences</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.027" xml:space="preserve"><value>Environnement :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.028" xml:space="preserve"><value>Actualisation automatique : 2 secondes</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.029" xml:space="preserve"><value>Chemin / Sandbox</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.030" xml:space="preserve"><value>En cours d'exécution</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.031" xml:space="preserve"><value>Processus</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.032" xml:space="preserve"><value>La persistance de la tâche de développement isolé n'est pas prête</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.033" xml:space="preserve"><value>Pipeline de prévisualisation isolée</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.034" xml:space="preserve"><value>La persistance de l'état de prévisualisation n'est pas prête</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.035" xml:space="preserve"><value>Moniteur de prévisualisation</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.036" xml:space="preserve"><value>Répertoire de déploiement (publication) de la prévisualisation :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.037" xml:space="preserve"><value>La prévisualisation a été arrêtée par l'utilisateur.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.038" xml:space="preserve"><value>Le processus de prévisualisation s'est arrêté de manière inattendue.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.039" xml:space="preserve"><value>La tâche de prévisualisation a échoué.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.040" xml:space="preserve"><value>Sessions de prévisualisation du module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.041" xml:space="preserve"><value>Aucune tâche de développement isolé</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.042" xml:space="preserve"><value>Dernière mise à jour : {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.043" xml:space="preserve"><value>Chaque tâche valide les références de l'hôte, effectue une compilation isolée, démarre une nouvelle prévisualisation, exécute un contrôle de santé et remplace la prévisualisation de manière atomique. La prévisualisation actuelle reste disponible jusqu'à ce que la nouvelle réussisse ses contrôles.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
 </root>
