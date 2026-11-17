@@ -517,7 +517,7 @@
     <value>Añadir endpoint MCP</value>
   </data>
   <data name="Frontend.121" xml:space="preserve">
-    <value>Nombre del Endpoint (por ejemplo: mcp-server-NCF-7)</value>
+    <value>Nombre del endpoint (por ejemplo: mcp-server-NCF-7)</value>
   </data>
   <data name="Frontend.122" xml:space="preserve">
     <value>Confirmar</value>
@@ -526,13 +526,13 @@
     <value>Notas</value>
   </data>
   <data name="Frontend.124" xml:space="preserve">
-    <value>Complete (solo administradores)</value>
+    <value>Completar (solo administradores)</value>
   </data>
   <data name="Frontend.125" xml:space="preserve">
     <value>Editar grupo</value>
   </data>
   <data name="Frontend.126" xml:space="preserve">
-    <value>Agregar grupo</value>
+    <value>Añadir grupo</value>
   </data>
   <data name="Frontend.127" xml:space="preserve">
     <value>Nombre del grupo</value>
@@ -544,7 +544,7 @@
     <value>Buscar</value>
   </data>
   <data name="Frontend.130" xml:space="preserve">
-    <value>Seleccionado:</value>
+    <value>Seleccionados:</value>
   </data>
   <data name="Frontend.131" xml:space="preserve">
     <value>Descripción</value>
@@ -553,7 +553,7 @@
     <value>Propietario</value>
   </data>
   <data name="Frontend.133" xml:space="preserve">
-    <value>Contacto</value>
+    <value>Responsable</value>
   </data>
   <data name="Frontend.134" xml:space="preserve">
     <value>Descripción</value>
@@ -571,10 +571,10 @@
     <value>Seleccionar modelo</value>
   </data>
   <data name="Frontend.139" xml:space="preserve">
-    <value>Agente personalizado</value>
+    <value>Agent personalizado</value>
   </data>
   <data name="Frontend.140" xml:space="preserve">
-    <value>Ejecutar el Agente con parámetros personalizados</value>
+    <value>Ejecutar Agent con parámetros personalizados</value>
   </data>
   <data name="Frontend.141" xml:space="preserve">
     <value>¿En qué puedo ayudarte?</value>
