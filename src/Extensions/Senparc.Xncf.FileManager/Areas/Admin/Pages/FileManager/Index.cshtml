@@ -2144,14 +2144,14 @@
     <div class="file-manager-upload-toolbar">
         <el-dropdown trigger="click" @@command="handleUploadPickerCommand">
             <el-button size="small">
-                上传文件<i class="el-icon-arrow-down el-icon--right"></i>
+                {{ ncfST('Frontend.002') }}<i class="el-icon-arrow-down el-icon--right"></i>
             </el-button>
             <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="files">上传文件</el-dropdown-item>
-                <el-dropdown-item command="folder">上传文件夹</el-dropdown-item>
+                <el-dropdown-item command="files">{{ ncfST('Frontend.002') }}</el-dropdown-item>
+                <el-dropdown-item command="folder">{{ ncfST('Frontend.066') }}</el-dropdown-item>
             </el-dropdown-menu>
         </el-dropdown>
-        <el-button type="text" size="small" @@click="clearUploadList">清空列表</el-button>
+        <el-button type="text" size="small" @@click="clearUploadList">{{ ncfST('Frontend.146') }}</el-button>
     </div>
 
     <el-upload
@@ -2165,19 +2165,19 @@
         :on-change="handleFileChange"
         :before-upload="beforeUpload"
         :file-list="uploadDialog.fileList">
-        <div class="file-manager-upload-drop-hint">请将需要上传的文件/文件夹拖到此处</div>
+        <div class="file-manager-upload-drop-hint">{{ ncfST('Frontend.160') }}</div>
     </el-upload>
     <input ref="folderUploadInput" class="file-manager-folder-input" type="file" webkitdirectory directory multiple @@change="handleFolderSelection" />
 
     <div v-if="uploadDialog.fileList.length" class="file-manager-upload-filelist">
         <el-table :data="uploadDialog.fileList" size="mini" border max-height="180">
-            <el-table-column prop="name" label="文件名" min-width="220" show-overflow-tooltip></el-table-column>
-            <el-table-column label="大小" width="100">
+            <el-table-column prop="name" :label="ncfST('Frontend.122')" min-width="220" show-overflow-tooltip></el-table-column>
+            <el-table-column :label="ncfST('Frontend.014')" width="100">
                 <template slot-scope="scope">{{ formatFileSize(scope.row.size || (scope.row.raw && scope.row.raw.size) || 0) }}</template>
             </el-table-column>
-            <el-table-column label="备注" min-width="160">
+            <el-table-column :label="ncfST('Frontend.012')" min-width="160">
                 <template slot-scope="scope">
-                    <el-input v-model="scope.row.description" size="mini" placeholder="可选备注"></el-input>
+                    <el-input v-model="scope.row.description" size="mini" :placeholder="ncfST('Frontend.093')"></el-input>
                 </template>
             </el-table-column>
         </el-table>
@@ -2200,27 +2200,27 @@
             size="small"
             @@click="submitUpload"
             :loading="uploadDialog.uploading">
-            开始上传
+            {{ ncfST('Frontend.182') }}
         </el-button>
     </span>
 </el-dialog>
 
-<el-dialog :title="folderDialog.editing ? '编辑文件夹' : '新建文件夹'" :visible.sync="folderDialog.visible" width="420px" append-to-body>
+<el-dialog :title="folderDialog.editing ? ncfST('Frontend.184') : ncfST('Frontend.185')" :visible.sync="folderDialog.visible" width="420px" append-to-body>
     <el-form :model="folderDialog.form" label-width="80px">
-        <el-form-item label="名称"><el-input v-model="folderDialog.form.name" placeholder="请输入文件夹名称"></el-input></el-form-item>
-        <el-form-item label="备注"><el-input type="textarea" v-model="folderDialog.form.description" placeholder="可选" rows="3"></el-input></el-form-item>
+        <el-form-item :label="ncfST('Frontend.011')"><el-input v-model="folderDialog.form.name" :placeholder="ncfST('Frontend.027')"></el-input></el-form-item>
+        <el-form-item :label="ncfST('Frontend.012')"><el-input type="textarea" v-model="folderDialog.form.description" :placeholder="ncfST('Frontend.092')" rows="3"></el-input></el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
-        <el-button @@click="folderDialog.visible=false">取消</el-button>
-        <el-button type="primary" @@click="submitFolder" :loading="folderDialog.loading">确定</el-button>
+        <el-button @@click="folderDialog.visible=false">{{ ncfST('Frontend.009') }}</el-button>
+        <el-button type="primary" @@click="submitFolder" :loading="folderDialog.loading">{{ ncfST('Frontend.024') }}</el-button>
     </span>
 </el-dialog>
 
-<el-dialog title="编辑备注" :visible.sync="noteDialog.visible" width="420px" append-to-body>
-    <el-input type="textarea" v-model="noteDialog.note" rows="4" placeholder="请输入文件备注"></el-input>
+<el-dialog :title="ncfST('Frontend.156')" :visible.sync="noteDialog.visible" width="420px" append-to-body>
+    <el-input type="textarea" v-model="noteDialog.note" rows="4" :placeholder="ncfST('Frontend.162')"></el-input>
     <span slot="footer" class="dialog-footer">
-        <el-button @@click="noteDialog.visible=false">取消</el-button>
-        <el-button type="primary" @@click="submitNote" :loading="noteDialog.loading">保存</el-button>
+        <el-button @@click="noteDialog.visible=false">{{ ncfST('Frontend.009') }}</el-button>
+        <el-button type="primary" @@click="submitNote" :loading="noteDialog.loading">{{ ncfST('Frontend.074') }}</el-button>
     </span>
 </el-dialog>
 
