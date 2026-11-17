@@ -293,43 +293,43 @@
   </data>
 
 
-  <data name="Frontend.064" xml:space="preserve"><value>Clear all</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.065" xml:space="preserve"><value>After uploading, associate the material under Knowledge Base Management → Configuration, save, then choose Vectorize.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.066" xml:space="preserve"><value>Upload folder</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.067" xml:space="preserve"><value>Upload settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.068" xml:space="preserve"><value>Uploads are private by default. After confirming the content, choose Public and copy the generated URL into site content.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.069" xml:space="preserve"><value>Set file tags</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.070" xml:space="preserve"><value>Enterprise documents only: show file count and total size over time</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.071" xml:space="preserve"><value>Remove from Quick Access</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.072" xml:space="preserve"><value>Enterprise documents</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.073" xml:space="preserve"><value>Enterprise document capacity</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.074" xml:space="preserve"><value>Save</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.075" xml:space="preserve"><value>Save settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.076" xml:space="preserve"><value>Disable</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.077" xml:space="preserve"><value>Allowed upload file types</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.078" xml:space="preserve"><value>Choose a scope first:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.079" xml:space="preserve"><value>All</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.080" xml:space="preserve"><value>Then choose a location:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.081" xml:space="preserve"><value>Category</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.082" xml:space="preserve"><value>Category name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.083" xml:space="preserve"><value>Category description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.084" xml:space="preserve"><value>Category administrators</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.085" xml:space="preserve"><value>Column settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.086" xml:space="preserve"><value>Deleted at</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.087" xml:space="preserve"><value>Refresh</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.088" xml:space="preserve"><value>Maximum single-file upload size (MB)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.089" xml:space="preserve"><value>Double-click to preview</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.090" xml:space="preserve"><value>Remove favorite</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.091" xml:space="preserve"><value>Add frequently used files and folders to Quick Access. Choose More in the list to add or remove entries.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.092" xml:space="preserve"><value>Optional</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.093" xml:space="preserve"><value>Optional note</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.094" xml:space="preserve"><value>Optional tags come from Tag Management; selected tags are written to the current file's metadata.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.095" xml:space="preserve"><value>Enable</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.096" xml:space="preserve"><value>Recycle bin</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.097" xml:space="preserve"><value>Select or create a folder in the directory tree; after refresh, the current scope and folder remain in the address bar.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.098" xml:space="preserve"><value>Online preview</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.099" xml:space="preserve"><value>Copy URL</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.100" xml:space="preserve"><value>Import</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.064" xml:space="preserve"><value>Vaciar todo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.065" xml:space="preserve"><value>Después de subir, asocia el material en Gestión de la base de conocimientos → Configuración, guarda y selecciona Vectorizar.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.066" xml:space="preserve"><value>Carpeta de carga</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.067" xml:space="preserve"><value>Configuración de carga</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.068" xml:space="preserve"><value>Las cargas son privadas de forma predeterminada. Después de confirmar el contenido, elige Público y copia la URL generada en el contenido del sitio.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.069" xml:space="preserve"><value>Establecer etiquetas de archivo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.070" xml:space="preserve"><value>Solo documentos empresariales: mostrar el número de archivos y el tamaño total a lo largo del tiempo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.071" xml:space="preserve"><value>Quitar de Acceso rápido</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.072" xml:space="preserve"><value>Documentos empresariales</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.073" xml:space="preserve"><value>Capacidad de documentos empresariales</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.074" xml:space="preserve"><value>Guardar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.075" xml:space="preserve"><value>Guardar configuración</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.076" xml:space="preserve"><value>Desactivar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.077" xml:space="preserve"><value>Tipos de archivo permitidos para cargar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.078" xml:space="preserve"><value>Elige primero un ámbito:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.079" xml:space="preserve"><value>Todos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.080" xml:space="preserve"><value>Luego elige una ubicación:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.081" xml:space="preserve"><value>Categoría</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.082" xml:space="preserve"><value>Nombre de categoría</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.083" xml:space="preserve"><value>Descripción de categoría</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.084" xml:space="preserve"><value>Administradores de categoría</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.085" xml:space="preserve"><value>Configuración de columnas</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.086" xml:space="preserve"><value>Eliminado el</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.087" xml:space="preserve"><value>Actualizar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.088" xml:space="preserve"><value>Tamaño máximo de carga de un archivo (MB)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.089" xml:space="preserve"><value>Haz doble clic para previsualizar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.090" xml:space="preserve"><value>Quitar de favoritos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.091" xml:space="preserve"><value>Añade archivos y carpetas de uso frecuente a Acceso rápido. Elige Más en la lista para añadir o quitar entradas.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.092" xml:space="preserve"><value>Opcional</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.093" xml:space="preserve"><value>Nota opcional</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.094" xml:space="preserve"><value>Las etiquetas opcionales proceden de Gestión de etiquetas; las seleccionadas se escriben en los metadatos del archivo actual.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.095" xml:space="preserve"><value>Activar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.096" xml:space="preserve"><value>Papelera de reciclaje</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.097" xml:space="preserve"><value>Selecciona o crea una carpeta en el árbol de directorios; después de actualizar, el ámbito y la carpeta actuales permanecerán en la barra de direcciones.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.098" xml:space="preserve"><value>Vista previa en línea</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.099" xml:space="preserve"><value>Copiar URL</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.100" xml:space="preserve"><value>Importar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.101" xml:space="preserve"><value>Export</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.102" xml:space="preserve"><value>Show current space used by the enterprise document library</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.103" xml:space="preserve"><value>Use Enterprise Documents on the left to manage knowledge-base materials; site static resources can be switched with the scope parameter in the address bar.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
