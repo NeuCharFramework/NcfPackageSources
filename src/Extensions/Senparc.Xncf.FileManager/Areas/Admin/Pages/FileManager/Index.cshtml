@@ -2459,7 +2459,7 @@
     <partial name="~/Areas/Admin/Pages/Shared/_LocalizationScripts.cshtml" />
     <script src="~/lib/echarts/dist/echarts.js"></script>
     <script>
-        // 嵌入的 index.js 未重编时，模板已引用 fileTagDialog / isFileFavorited，必须在 new Vue 之前注入
+        // When the embedded index.js is stale, inject the referenced fileTagDialog / isFileFavorited fields before creating Vue.
         (function ensureFileTagDialogBeforeVue() {
             if (!window.Vue || window.Vue.__ncfFileTagDialogMixin) return;
             window.Vue.__ncfFileTagDialogMixin = true;
@@ -3241,7 +3241,7 @@
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="~/js/Admin/FileManager/index.js" asp-append-version="true"></script>
     <script>
-        // 嵌入资源未重编时，仍保证「数据面板」可切换并渲染图表
+        // Keep the data dashboard switchable and render charts when embedded assets are stale.
         (function ensureFileManagerDashboard() {
             function pad(n) { return String(n).padStart(2, '0'); }
             function fmtDate(d) {
@@ -3387,7 +3387,7 @@
                     if (typeof originalOnNavClick === 'function') return originalOnNavClick(item);
                 };
 
-                // 标签树形列表 + 行扩展操作（覆盖旧版扁平列表实现）
+                // Tag tree list and row expansion actions, replacing the legacy flat list.
                 if (!vm.tagManager) {
                     Vue.set(vm, 'tagManager', {
                         keyword: '', category: '', status: '', selectedIds: [],
@@ -4073,8 +4073,8 @@
                         this.uploadSettings = defaults;
                     }
                 };
-                // el-button 的 click 会用按钮实例调用监听函数。Vue 初始化时会把 methods 绑到页面实例，
-                // 这里在 new Vue 之后覆盖方法，必须重新 bind，否则 this 指向按钮，getDefaultUploadSettings 不存在。
+                // el-button invokes the listener with the button instance. Vue normally binds methods to the page instance;
+                // rebind methods after creating Vue so this does not point to the button.
                 vm.saveUploadSettings = function () {
                     if (!this.uploadSettings) this.uploadSettings = this.getDefaultUploadSettings();
                     var maxSizeMb = Number(this.uploadSettings.maxSizeMb);
@@ -4138,7 +4138,7 @@
                     vm.loadUploadSettingsFromStorage();
                 }
 
-                // 未重编 index.js 时，仍用设置校验上传
+                // Validate uploads with the settings even when index.js is stale.
                 if (typeof vm.createUploadBatches === 'function' && !vm.__uploadSettingsBatchPatched) {
                     vm.__uploadSettingsBatchPatched = true;
                     var originalCreateUploadBatches = vm.createUploadBatches.bind(vm);
@@ -4382,7 +4382,7 @@
                     [capacityChart, sizeChart, countChart].forEach(function (c) { if (c) c.resize(); });
                 };
 
-                // 修复列表解析：PagedList 序列化为数组时，原先取 result.data/items 会得到空表
+                // Handle list parsing when PagedList serializes as an array instead of result.data/items.
                 vm.getList = async function () {
                     var pageUrlLocal = window.location.pathname || '/Admin/FileManager/Index';
                     this.tableLoading = true;
