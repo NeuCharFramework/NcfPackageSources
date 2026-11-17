@@ -637,13 +637,13 @@
     <value>Parámetros:</value>
   </data>
   <data name="Frontend.161" xml:space="preserve">
-    <value>Este Agente no pertenece actualmente a ningún grupo.</value>
+    <value>Este Agent no pertenece actualmente a ningún grupo.</value>
   </data>
   <data name="Frontend.162" xml:space="preserve">
-    <value>Complete el campo</value>
+    <value>Completa este campo</value>
   </data>
   <data name="Frontend.163" xml:space="preserve">
-    <value>Cadena de destino</value>
+    <value>Cadena objetivo</value>
   </data>
   <data name="Frontend.164" xml:space="preserve">
     <value>Cadena no objetivo</value>
@@ -655,13 +655,13 @@
     <value>Eliminado correctamente</value>
   </data>
   <data name="Frontend.167" xml:space="preserve">
-    <value>Éxito</value>
+    <value>Operación correcta</value>
   </data>
   <data name="Frontend.168" xml:space="preserve">
-    <value>Error</value>
+    <value>Error en la operación</value>
   </data>
   <data name="Frontend.169" xml:space="preserve">
-    <value>Seleccione al menos un elemento</value>
+    <value>Selecciona al menos un elemento</value>
   </data>
   <data name="Frontend.170" xml:space="preserve">
     <value>¿Continuar?</value>
@@ -673,7 +673,7 @@
     <value>Confirmar</value>
   </data>
   <data name="Frontend.173" xml:space="preserve">
-    <value>Error al cargar</value>
+    <value>Error de carga</value>
   </data>
   <data name="Frontend.174" xml:space="preserve">
     <value>Sin contenido</value>
