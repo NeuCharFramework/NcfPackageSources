@@ -314,38 +314,38 @@
   <data name="Frontend.296" xml:space="preserve"><value>Количество можно задать, взять из одного значения предыдущего узла или использовать ограниченный синтаксис; результат должен быть целым числом от 1 до 100000. Границу цикла отмечайте «конец цикла».</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.297" xml:space="preserve"><value>Приветственное сообщение</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.298" xml:space="preserve"><value>У этой Function несколько предыдущих узлов; её может запустить любой допустимый источник, но за один запуск Workflow узел выполняется не более одного раза.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.299" xml:space="preserve"><value>Aggregate output</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.300" xml:space="preserve"><value>Test input (passed to the trigger)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.301" xml:space="preserve"><value>Consume this reminder</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.302" xml:space="preserve"><value>Consume all reminders in this subscription</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.303" xml:space="preserve"><value>Add parameter</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.304" xml:space="preserve"><value>Add variable</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.305" xml:space="preserve"><value>Add node</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.306" xml:space="preserve"><value>Add assignment</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.307" xml:space="preserve"><value>Clear</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.308" xml:space="preserve"><value>Clear prompt</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.309" xml:space="preserve"><value>Click to center the canvas</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.310" xml:space="preserve"><value>Click to insert</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.311" xml:space="preserve"><value>Generate new key</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.312" xml:space="preserve"><value>Describe this workflow in one sentence</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.313" xml:space="preserve"><value>Use this when viewing marks an item as read; choose View only for reminders requiring business review, such as DesktopBridge.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.314" xml:space="preserve"><value>Every user message starts a workflow run as input; when Allow guests is disabled, only signed-in users can chat.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.315" xml:space="preserve"><value>Canvas alignment</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.316" xml:space="preserve"><value>Use the workflow name when empty</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.317" xml:space="preserve"><value>True</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.318" xml:space="preserve"><value>Prohibited</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.319" xml:space="preserve"><value>Handle later</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.320" xml:space="preserve"><value>are restricted expressions; arbitrary JavaScript is not executed.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.321" xml:space="preserve"><value>Equal</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.322" xml:space="preserve"><value>Wait seconds (maximum 30 seconds per node)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.323" xml:space="preserve"><value>Vertical</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.324" xml:space="preserve"><value>Ends with</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.325" xml:space="preserve"><value>Analytics</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.326" xml:space="preserve"><value>Inherit HIL level</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.327" xml:space="preserve"><value>Edit</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.328" xml:space="preserve"><value>Edit formula</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.329" xml:space="preserve"><value>Edit formula text</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.330" xml:space="preserve"><value>Edit text and variables</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.299" xml:space="preserve"><value>Агрегировать вывод</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.300" xml:space="preserve"><value>Тестовый ввод (передаётся триггеру)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.301" xml:space="preserve"><value>Обработать это уведомление</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.302" xml:space="preserve"><value>Обработать все уведомления этой подписки</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.303" xml:space="preserve"><value>Добавить параметр</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.304" xml:space="preserve"><value>Добавить переменную</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.305" xml:space="preserve"><value>Добавить узел</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.306" xml:space="preserve"><value>Добавить присваивание</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.307" xml:space="preserve"><value>Очистить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.308" xml:space="preserve"><value>Очистить prompt</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.309" xml:space="preserve"><value>Нажмите для перехода к холсту</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.310" xml:space="preserve"><value>Нажмите для вставки</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.311" xml:space="preserve"><value>Создать новый ключ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.312" xml:space="preserve"><value>Опишите этот Workflow одним предложением</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.313" xml:space="preserve"><value>Используйте, когда просмотр отмечает элемент прочитанным; для напоминаний, требующих проверки, например DesktopBridge, выберите «только просмотр».</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.314" xml:space="preserve"><value>Каждое сообщение пользователя запускает один Workflow; при отключённом «разрешить гостей» чат доступен только вошедшим пользователям.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.315" xml:space="preserve"><value>Выравнивание холста</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.316" xml:space="preserve"><value>Если пусто, использовать название Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.317" xml:space="preserve"><value>Истина</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.318" xml:space="preserve"><value>Запрещено</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.319" xml:space="preserve"><value>Обработать позже</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.320" xml:space="preserve"><value>и другие ограниченные выражения; произвольный JavaScript не выполняется.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.321" xml:space="preserve"><value>Равно</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.322" xml:space="preserve"><value>Секунды ожидания (максимум 30 секунд на узел)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.323" xml:space="preserve"><value>Вертикально</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.324" xml:space="preserve"><value>Заканчивается на</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.325" xml:space="preserve"><value>Статистика</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.326" xml:space="preserve"><value>Наследовать уровень HIL</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.327" xml:space="preserve"><value>Изменить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.328" xml:space="preserve"><value>Изменить формулу</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.329" xml:space="preserve"><value>Изменить текст формулы</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.330" xml:space="preserve"><value>Изменить текст и переменные</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.331" xml:space="preserve"><value>Edit syntax</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.332" xml:space="preserve"><value>Zoom out</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.333" xml:space="preserve"><value>Zoom out canvas</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
