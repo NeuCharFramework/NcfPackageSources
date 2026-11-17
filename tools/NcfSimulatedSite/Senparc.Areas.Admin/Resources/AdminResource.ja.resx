@@ -1073,16 +1073,16 @@
   <data name="Frontend.178" xml:space="preserve"><value>緑</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.179" xml:space="preserve"><value>青</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.180" xml:space="preserve"><value>パネルはまだありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.181" xml:space="preserve"><value>Select Function</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.182" xml:space="preserve"><value>Select a Pivot Function from any XNCF module as a block for this panel.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.183" xml:space="preserve"><value>Select module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.184" xml:space="preserve"><value>Panel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.185" xml:space="preserve"><value>Panel name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.186" xml:space="preserve"><value>Page key</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.187" xml:space="preserve"><value>Function status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.188" xml:space="preserve"><value>Function: all</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.189" xml:space="preserve"><value>Function: available</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.190" xml:space="preserve"><value>Function: removed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.181" xml:space="preserve"><value>Functionを選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.182" xml:space="preserve"><value>任意のXNCFモジュールのPivot Functionをこのパネルのブロックとして選択します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.183" xml:space="preserve"><value>モジュールを選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.184" xml:space="preserve"><value>パネル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.185" xml:space="preserve"><value>パネル名</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.186" xml:space="preserve"><value>ページ識別子</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.187" xml:space="preserve"><value>Functionの状態</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.188" xml:space="preserve"><value>Function：すべて</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.189" xml:space="preserve"><value>Function：利用可能</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.190" xml:space="preserve"><value>Function：削除済み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.191" xml:space="preserve"><value>LoopTask status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.192" xml:space="preserve"><value>LoopTask: last failed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.193" xml:space="preserve"><value>LoopTask: countdown</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>

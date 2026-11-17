@@ -1076,11 +1076,11 @@
   <data name="Frontend.179" xml:space="preserve"><value>Blue</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.180" xml:space="preserve"><value>No panels yet</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.181" xml:space="preserve"><value>Select Function</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.182" xml:space="preserve"><value>Select a Pivot Function from any XNCF module as a block for this panel.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.182" xml:space="preserve"><value>Choose a Pivot Function from any XNCF module as a block for this panel.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.183" xml:space="preserve"><value>Select module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.184" xml:space="preserve"><value>Panel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.185" xml:space="preserve"><value>Panel name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.186" xml:space="preserve"><value>Page key</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.186" xml:space="preserve"><value>Page identifier</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.187" xml:space="preserve"><value>Function status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.188" xml:space="preserve"><value>Function: all</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.189" xml:space="preserve"><value>Function: available</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
