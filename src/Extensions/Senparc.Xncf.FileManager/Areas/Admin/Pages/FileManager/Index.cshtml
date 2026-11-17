@@ -1682,14 +1682,14 @@
             <div class="file-manager-dashboard-grid">
                 <section class="file-manager-dash-card">
                     <div class="file-manager-dash-card-header">
-                        <span>文件库容量统计</span>
-                        <i class="el-icon-question" title="仅统计企业文档：展示文件数量与总大小随时间变化"></i>
+                        <span>{{ ncfST('Frontend.124') }}</span>
+                        <i class="el-icon-question" :title="ncfST('Frontend.070')"></i>
                     </div>
                     <div class="file-manager-dash-toolbar">
                         <el-radio-group v-model="dashboard.capacityRange" size="mini" @@change="onDashboardRangeChange">
-                            <el-radio-button label="7d">过去7天</el-radio-button>
-                            <el-radio-button label="30d">过去一个月</el-radio-button>
-                            <el-radio-button label="365d">过去一年</el-radio-button>
+                            <el-radio-button label="7d">{{ ncfST('Frontend.167') }}</el-radio-button>
+                            <el-radio-button label="30d">{{ ncfST('Frontend.168') }}</el-radio-button>
+                            <el-radio-button label="365d">{{ ncfST('Frontend.169') }}</el-radio-button>
                         </el-radio-group>
                         <el-date-picker
                             v-model="dashboard.capacityDates"
@@ -1697,8 +1697,8 @@
                             size="mini"
                             value-format="yyyy-MM-dd"
                             range-separator="~"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期"
+                            :start-placeholder="ncfST('Frontend.105')"
+                            :end-placeholder="ncfST('Frontend.154')"
                             style="width: 240px;"
                             @@change="loadDashboardStats">
                         </el-date-picker>
@@ -1708,17 +1708,17 @@
 
                 <section class="file-manager-dash-card">
                     <div class="file-manager-dash-card-header">
-                        <span>企业文档容量统计</span>
-                        <i class="el-icon-question" title="展示企业文档库当前已使用空间"></i>
+                        <span>{{ ncfST('Frontend.073') }}</span>
+                        <i class="el-icon-question" :title="ncfST('Frontend.102')"></i>
                     </div>
                     <div class="file-manager-dash-meta">
-                        <span>统计截止时间：{{ dashboard.statsCutoff }}</span>
-                        <span class="file-manager-dash-used-tag">企业文档已使用：{{ dashboard.enterpriseUsed }}</span>
+                        <span>{{ ncfST('Frontend.178') }}：{{ dashboard.statsCutoff }}</span>
+                        <span class="file-manager-dash-used-tag">{{ ncfST('Frontend.179') }} {{ dashboard.enterpriseUsed }}</span>
                     </div>
                     <div class="file-manager-dash-org-list">
                         <div class="file-manager-dash-org-head">
-                            <span>租户/组织名称</span>
-                            <span>已用空间</span>
+                            <span>{{ ncfST('Frontend.151') }}</span>
+                            <span>{{ ncfST('Frontend.104') }}</span>
                         </div>
                         <div class="file-manager-dash-org-row" v-for="org in dashboard.orgUsages" :key="org.name">
                             <span class="file-manager-dash-org-name"><i class="el-icon-office-building"></i>{{ org.name }}</span>
@@ -1729,22 +1729,22 @@
 
                 <section class="file-manager-dash-card">
                     <div class="file-manager-dash-card-header">
-                        <span>文件大小统计</span>
-                        <i class="el-icon-question" title="按文件类型统计占用容量占比"></i>
+                        <span>{{ ncfST('Frontend.123') }}</span>
+                        <i class="el-icon-question" :title="ncfST('Frontend.111')"></i>
                     </div>
                     <div class="file-manager-dash-meta">
-                        <span>统计截止时间：{{ dashboard.statsCutoff }}</span>
+                        <span>{{ ncfST('Frontend.178') }}：{{ dashboard.statsCutoff }}</span>
                     </div>
                     <div ref="sizeChart" class="file-manager-dash-chart"></div>
                 </section>
 
                 <section class="file-manager-dash-card">
                     <div class="file-manager-dash-card-header">
-                        <span>文件个数统计</span>
-                        <i class="el-icon-question" title="按文件类型统计文件数量占比"></i>
+                        <span>{{ ncfST('Frontend.121') }}</span>
+                        <i class="el-icon-question" :title="ncfST('Frontend.112')"></i>
                     </div>
                     <div class="file-manager-dash-meta">
-                        <span>统计截止时间：{{ dashboard.statsCutoff }}</span>
+                        <span>{{ ncfST('Frontend.178') }}：{{ dashboard.statsCutoff }}</span>
                     </div>
                     <div ref="countChart" class="file-manager-dash-chart"></div>
                 </section>
