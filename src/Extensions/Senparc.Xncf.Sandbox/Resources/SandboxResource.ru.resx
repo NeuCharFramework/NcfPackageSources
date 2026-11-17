@@ -163,36 +163,36 @@
   <data name="Frontend.057" xml:space="preserve"><value>Контрольный список ручной настройки (кратко)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.058" xml:space="preserve"><value>Открыть панель Sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.059" xml:space="preserve"><value>Документация:</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.060" xml:space="preserve"><value>Check Docker availability, image prefixes, and deployment notes on the environment setup page.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.061" xml:space="preserve"><value>No</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.062" xml:space="preserve"><value>Configure prefixes or overrides here; see the documentation.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.063" xml:space="preserve"><value>Use the execution entry registered by the module; parameter validation and result logs match the module Function page.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.064" xml:space="preserve"><value>After saving, calculation starts from the current time and the session is destroyed automatically at expiry.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.065" xml:space="preserve"><value>Create</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.066" xml:space="preserve"><value>Submit short task code in an Exec template session.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.067" xml:space="preserve"><value>Install and start Docker (or a compatible CLI) on the same machine running NCF. The module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.068" xml:space="preserve"><value>For an internal registry, configure it on the host</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.069" xml:space="preserve"><value>Execute</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.070" xml:space="preserve"><value>Pre-pull the required images according to the official documentation; use the documented image names and versions.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.071" xml:space="preserve"><value>After the check passes, open the module Function “Create sandbox”, choose Python Exec in the template list, and run it; no command-line template name is required.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.072" xml:space="preserve"><value>Status:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.073" xml:space="preserve"><value>of</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.074" xml:space="preserve"><value>Install Docker automatically.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.075" xml:space="preserve"><value>This session is not destroyed by the TTL scan and must be destroyed manually by an administrator.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.076" xml:space="preserve"><value>Enter a SessionId to stop and clean up the specified session.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.077" xml:space="preserve"><value>Choose an execution template and runtime to create an isolated session.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.078" xml:space="preserve"><value>Access interactive sessions through the site reverse proxy; links do not expose the container token.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.079" xml:space="preserve"><value>Destroy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.080" xml:space="preserve"><value>Image registry prefix:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.081" xml:space="preserve"><value>Review session status in one place and create, execute, and clean isolated environments through module Functions.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.082" xml:space="preserve"><value>Status updated {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.083" xml:space="preserve"><value>{0} sessions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.084" xml:space="preserve"><value>No sandbox sessions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.085" xml:space="preserve"><value>Aliases identify sessions in lists, Function results, and logs; they do not affect the runtime environment.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.086" xml:space="preserve"><value>Creating</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.087" xml:space="preserve"><value>Stopping</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.088" xml:space="preserve"><value>Stopped</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.089" xml:space="preserve"><value>Failed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.090" xml:space="preserve"><value>Expired</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.091" xml:space="preserve"><value>Unknown ({0})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.060" xml:space="preserve"><value>Проверяйте доступность Docker, префиксы образов и сведения о развёртывании на странице подготовки среды.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.061" xml:space="preserve"><value>Нет</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.062" xml:space="preserve"><value>Настройте здесь префиксы или переопределения; см. документацию.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.063" xml:space="preserve"><value>Использует зарегистрированную модулем точку выполнения; проверка параметров и журналы результатов соответствуют странице Function модуля.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.064" xml:space="preserve"><value>После сохранения пересчитывает срок от текущего момента и автоматически уничтожает сессию по истечении.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.065" xml:space="preserve"><value>Создать</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.066" xml:space="preserve"><value>Отправляет короткий код задачи в сессии шаблона Exec.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.067" xml:space="preserve"><value>Установите и запустите Docker (или совместимый CLI) на той же машине, где работает NCF. Модуль</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.068" xml:space="preserve"><value>Для внутреннего реестра настройте его на хосте</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.069" xml:space="preserve"><value>Выполнить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.070" xml:space="preserve"><value>Заранее загрузите нужные образы по официальной документации; используйте указанные имена и версии.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.071" xml:space="preserve"><value>После успешной проверки откройте Function модуля «Создать Sandbox», выберите Python Exec в списке шаблонов и запустите; имя шаблона в командной строке не требуется.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.072" xml:space="preserve"><value>Состояние:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.073" xml:space="preserve"><value>из</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.074" xml:space="preserve"><value>Установить Docker автоматически.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.075" xml:space="preserve"><value>Эта сессия не уничтожается сканированием TTL и должна быть уничтожена администратором вручную.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.076" xml:space="preserve"><value>Введите SessionId, чтобы остановить и очистить указанную сессию.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.077" xml:space="preserve"><value>Выберите шаблон выполнения и среду, чтобы создать изолированную сессию.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.078" xml:space="preserve"><value>Получайте доступ к интерактивным сессиям через обратный прокси сайта; ссылки не раскрывают токен контейнера.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.079" xml:space="preserve"><value>Уничтожить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.080" xml:space="preserve"><value>Префикс реестра образов:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.081" xml:space="preserve"><value>Просматривайте состояние сессий в одном месте и создавайте, выполняйте и очищайте изолированные среды через Function модуля.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.082" xml:space="preserve"><value>Состояние обновлено: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.083" xml:space="preserve"><value>Сессий: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.084" xml:space="preserve"><value>Сессий Sandbox нет</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.085" xml:space="preserve"><value>Псевдонимы идентифицируют сессии в списках, результатах Function и журналах; на среду выполнения они не влияют.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.086" xml:space="preserve"><value>Создание</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.087" xml:space="preserve"><value>Остановка</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.088" xml:space="preserve"><value>Остановлено</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.089" xml:space="preserve"><value>Ошибка</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.090" xml:space="preserve"><value>Истёк</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.091" xml:space="preserve"><value>Неизвестно ({0})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
 </root>
