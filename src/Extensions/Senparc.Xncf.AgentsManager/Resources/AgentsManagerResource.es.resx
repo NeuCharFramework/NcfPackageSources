@@ -1591,26 +1591,26 @@
   <data name="Frontend.418" xml:space="preserve"><value>Enviar respuesta Human</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.419" xml:space="preserve"><value>Permisos de herramientas de plugins</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.420" xml:space="preserve"><value>Buscar por nombre, URL o descripción</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.421" xml:space="preserve"><value>Search name, module, or description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.422" xml:space="preserve"><value>The database stores only the secret reference; configure the actual token in deployment settings.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.423" xml:space="preserve"><value>Add</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.424" xml:space="preserve"><value>Add remote A2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.425" xml:space="preserve"><value>New groups are enabled by default. Disabled groups do not create new tasks or act as Workflow nodes.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.426" xml:space="preserve"><value>Tile area represents the relative size of the selected metric; click a tile to edit the Agent.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.427" xml:space="preserve"><value>No authentication</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.428" xml:space="preserve"><value>None (controlled networks only)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.429" xml:space="preserve"><value>Legacy vector data must be re-vectorized in the knowledge base before it can become a published collection for safe Agent-isolated retrieval.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.430" xml:space="preserve"><value>Agent statistics chart</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.431" xml:space="preserve"><value>No Agents are available for statistics.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.432" xml:space="preserve"><value>Maximum chat rounds</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.433" xml:space="preserve"><value>Not tested</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.434" xml:space="preserve"><value>Not bound</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.435" xml:space="preserve"><value>No knowledge base bound</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.421" xml:space="preserve"><value>Buscar por nombre, módulo o descripción</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.422" xml:space="preserve"><value>La base de datos solo almacena la referencia del secreto; configura el token real en los ajustes de despliegue.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.423" xml:space="preserve"><value>Añadir</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.424" xml:space="preserve"><value>Añadir A2A remoto</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.425" xml:space="preserve"><value>Los grupos nuevos están activados de forma predeterminada. Los grupos desactivados no crean tareas nuevas ni actúan como nodos de Workflow.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.426" xml:space="preserve"><value>El área de mosaicos representa el tamaño relativo de la métrica seleccionada; haz clic en un mosaico para editar el Agent.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.427" xml:space="preserve"><value>Sin autenticación</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.428" xml:space="preserve"><value>Ninguna (solo redes controladas)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.429" xml:space="preserve"><value>Los datos vectoriales heredados deben volver a vectorizarse en la base de conocimiento antes de convertirse en una colección publicada para una recuperación segura y aislada por Agent.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.430" xml:space="preserve"><value>Gráfico de estadísticas de Agents</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.431" xml:space="preserve"><value>No hay Agents disponibles para las estadísticas.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.432" xml:space="preserve"><value>Máximo de rondas de chat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.433" xml:space="preserve"><value>No probado</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.434" xml:space="preserve"><value>No vinculado</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.435" xml:space="preserve"><value>No hay ninguna base de conocimiento vinculada</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.436" xml:space="preserve"><value>Local</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.437" xml:space="preserve"><value>Local Agents</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.438" xml:space="preserve"><value>Local tool calls are enabled. External requests may indirectly trigger Function/MCP writes or external access; open this only to trusted callers.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.439" xml:space="preserve"><value>Local members</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.440" xml:space="preserve"><value>Run policy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.437" xml:space="preserve"><value>Agents locales</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.438" xml:space="preserve"><value>Las llamadas de herramientas locales están activadas. Las solicitudes externas pueden activar indirectamente escrituras de Function/MCP o accesos externos; ábrelo solo a emisores de confianza.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.439" xml:space="preserve"><value>Miembros locales</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.440" xml:space="preserve"><value>Política de ejecución</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.441" xml:space="preserve"><value>Connectors for this run</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.442" xml:space="preserve"><value>View tasks</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.443" xml:space="preserve"><value>View tasks associated with this Agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
