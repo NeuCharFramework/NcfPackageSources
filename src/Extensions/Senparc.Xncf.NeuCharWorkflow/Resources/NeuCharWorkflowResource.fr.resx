@@ -197,25 +197,25 @@
   <data name="Frontend.179" xml:space="preserve"><value>Fermer les détails du nœud</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.180" xml:space="preserve"><value>WebAPI interne (connexion Admin non requise)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.181" xml:space="preserve"><value>Minutes</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.182" xml:space="preserve"><value>List index</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.183" xml:space="preserve"><value>Delete</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.184" xml:space="preserve"><value>Delete connection</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.185" xml:space="preserve"><value>Condition</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.186" xml:space="preserve"><value>Refresh workflow list</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.187" xml:space="preserve"><value>Contains</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.188" xml:space="preserve"><value>The original connection will be replaced with “upstream → new node → downstream”.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.189" xml:space="preserve"><value>Parameter metadata error</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.190" xml:space="preserve"><value>Parameter name, for example userId</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.191" xml:space="preserve"><value>Parameter description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.192" xml:space="preserve"><value>Double-click a node to add it at the selected context-menu position, or drag it onto the canvas.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.193" xml:space="preserve"><value>Cancel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.194" xml:space="preserve"><value>Variable names may use only letters, numbers, and underscores, and must start with a letter or underscore. Default values may use restricted formulas; JavaScript is not executed.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.195" xml:space="preserve"><value>Variable name, for example customerName</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.196" xml:space="preserve"><value>Run only while this page is open and content has changed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.197" xml:space="preserve"><value>Only workflows saved by the current user are shown. Multi-level references are checked before saving and running; direct or indirect self-calls are forbidden.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.198" xml:space="preserve"><value>View the task only; do not consume automatically</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.199" xml:space="preserve"><value>You can use input placeholders, formulas, or inserted variables</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.200" xml:space="preserve"><value>Right-hand value</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.182" xml:space="preserve"><value>Index de liste</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.183" xml:space="preserve"><value>Supprimer</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.184" xml:space="preserve"><value>Supprimer la connexion</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.185" xml:space="preserve"><value>Décision</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.186" xml:space="preserve"><value>Actualiser la liste des Workflows</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.187" xml:space="preserve"><value>Contient</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.188" xml:space="preserve"><value>La connexion d’origine sera remplacée par « amont → nouveau nœud → aval ».</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.189" xml:space="preserve"><value>Erreur de métadonnées de paramètres</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.190" xml:space="preserve"><value>Nom du paramètre, par exemple userId</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.191" xml:space="preserve"><value>Description du paramètre</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.192" xml:space="preserve"><value>Double-cliquez sur un nœud pour l’ajouter à la position sélectionnée ; vous pouvez aussi le faire glisser sur le canevas.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.193" xml:space="preserve"><value>Annuler</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.194" xml:space="preserve"><value>Les noms de variables ne peuvent contenir que des lettres, chiffres et traits de soulignement, et doivent commencer par une lettre ou un trait de soulignement. Les valeurs par défaut peuvent utiliser des formules limitées ; JavaScript n’est pas exécuté.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.195" xml:space="preserve"><value>Nom de variable, par exemple customerName</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.196" xml:space="preserve"><value>Exécuter uniquement lorsque la page actuelle est ouverte et que son contenu change</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.197" xml:space="preserve"><value>Affiche uniquement les Workflows enregistrés par l’utilisateur actuel. Les références imbriquées sont vérifiées avant l’enregistrement et l’exécution ; les appels directs ou indirects à soi-même sont interdits.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.198" xml:space="preserve"><value>Afficher uniquement les tâches ; ne pas consommer automatiquement</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.199" xml:space="preserve"><value>Les espaces réservés d’entrée, formules ou variables insérées peuvent être utilisés</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.200" xml:space="preserve"><value>Valeur de droite</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.201" xml:space="preserve"><value>{"input":"Human text"}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.202" xml:space="preserve"><value>Name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.203" xml:space="preserve"><value>Next node</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
