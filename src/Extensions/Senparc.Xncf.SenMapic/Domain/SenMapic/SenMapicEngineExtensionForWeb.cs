@@ -60,7 +60,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             var publicAddresses = addresses.Where(IsPublicAddress).ToArray();
             if (publicAddresses.Length == 0)
             {
-                throw new HttpRequestException("目标主机解析为非公网地址，已拒绝连接。");
+        throw new HttpRequestException("The target host resolved to a non-public address; the connection was rejected.");
             }
 
             Exception lastException = null;
@@ -79,7 +79,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                 }
             }
 
-            throw new HttpRequestException("无法连接到已通过公网地址校验的目标主机。", lastException);
+            throw new HttpRequestException("Unable to connect to the target host after public-address validation.", lastException);
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         {
             if (!IsAvailableUrl(url))
             {
-                throw new InvalidOperationException("目标 URL 不允许访问。");
+            throw new InvalidOperationException("The target URL is not allowed.");
             }
 
             var requestStartTime = DateTime.Now;//startrequest
@@ -104,7 +104,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             {
                 if (!IsAvailableUrl(currentUri.AbsoluteUri))
                 {
-                    throw new InvalidOperationException("重定向目标 URL 不允许访问。");
+            throw new InvalidOperationException("The redirect target URL is not allowed.");
                 }
 
                 var request = new HttpRequestMessage(HttpMethod.Get, currentUri);

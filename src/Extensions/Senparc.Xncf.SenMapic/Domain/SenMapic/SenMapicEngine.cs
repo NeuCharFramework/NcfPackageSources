@@ -201,7 +201,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
                     if (string.IsNullOrEmpty(_currentDomain))
                     {
-                        throw new Exception("请提供正确的网址！");
+                        throw new Exception("Please provide a valid URL.");
                     }
                     _currentUrlBuildStop = false;
                     _currentProtocol = this.GetProtocol(_currentUrl);
@@ -230,11 +230,11 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                     DateTime dt2 = DateTime.Now;
                     TimeSpan ts = dt2 - dt1;
                     //Legacy comment translated to English.
-                    SenparcTrace.SendCustomLog("SiteMap", $"Sitemap生成：{this._currentUrl}，收录页面：{this._currentUrls.Count}，总耗时：{ts.TotalMilliseconds:###,###}毫秒，平均{(this._currentUrls.Count > 0 ? (ts.TotalMilliseconds / this._currentUrls.Count).ToString("###,###") : "0")}毫秒。");
+                    SenparcTrace.SendCustomLog("SiteMap", $"Sitemap generated: {this._currentUrl}; pages collected: {this._currentUrls.Count}; total time: {ts.TotalMilliseconds:###,###} ms; average: {(this._currentUrls.Count > 0 ? (ts.TotalMilliseconds / this._currentUrls.Count).ToString("###,###") : "0")} ms.");
                 }
                 catch (Exception e)
                 {
-                    var ex = new Exception($"Sitemap生成出错。url:{this._currentUrl}", e);
+                    var ex = new Exception($"Sitemap generation failed. URL: {this._currentUrl}", e);
                     SenparcTrace.BaseExceptionLog(ex);
                     throw;
                 }
@@ -279,7 +279,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                 if (threadInUsing > 0)
                 {
                     //Legacy comment translated to English.
-                    SenparcTrace.SendCustomLog("Sitemap", $"Sitemap多线程出错！当前实际线程数：{threadInUsing},Deep:{deep},Url:{homeUrl}");
+                        SenparcTrace.SendCustomLog("Sitemap", $"Sitemap multithreading failed. Active threads: {threadInUsing}, depth: {deep}, URL: {homeUrl}");
                 }
 
                 if (this._currentUrls.Count >= this._maxPageCount || this._currentUrlBuildStop)
@@ -326,7 +326,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                     }
                     catch (Exception e)
                     {
-                        var ex = new Exception($"Sitemap多线程出错！当前实际线程数：{threadInUsing},Deep:{deep},Url:{homeUrl}", e);
+                        var ex = new Exception($"Sitemap multithreading failed. Active threads: {threadInUsing}, depth: {deep}, URL: {homeUrl}", e);
                         SenparcTrace.BaseExceptionLog(ex);
                     }
 
@@ -348,7 +348,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
                         if ((DateTime.Now - dtStartWait).TotalMinutes > totalWaitMinutes)/*Legacy comment translated to English.*/
                         {
-                            var ex = new Exception($"Sitemap线程超时，强制忽略。首页:{homeUrl}，已等待{totalWaitMinutes}分钟，当前使用线程数：{threadInUsing}，最大允许线程数：{_maxThread}，当前层Url数：{thisLayerUrls.Count}，当前使用线程数：{threadInUsing}，当前剩余Url数：{_remainUrlCount}");
+                            var ex = new Exception($"Sitemap thread timed out and was skipped. Home URL: {homeUrl}; waited: {totalWaitMinutes} minutes; active threads: {threadInUsing}; maximum threads: {_maxThread}; URLs at this level: {thisLayerUrls.Count}; remaining URLs: {_remainUrlCount}");
                             SenparcTrace.BaseExceptionLog(ex);
                             break;
                         }

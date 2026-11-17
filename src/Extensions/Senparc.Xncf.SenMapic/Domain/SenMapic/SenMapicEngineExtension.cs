@@ -282,7 +282,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             }
             catch (Exception e)
             {
-                var ex = new Exception($"GetFullUrl方法内部出错：URL:{url},newUrl:{newUrl}", e);
+                var ex = new Exception($"GetFullUrl failed internally. URL: {url}, new URL: {newUrl}", e);
                 SenparcTrace.BaseExceptionLog(ex);
                 throw;
             }
@@ -445,7 +445,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             }
             catch (Exception e)
             {
-                var ex = new Exception($"SitemapDebug异常({url})", e);
+                var ex = new Exception($"SitemapDebug failed ({url})", e);
                 //Legacy comment translated to English.
                 SenparcTrace.BaseExceptionLog(ex);
                 return new UrlData(url, deep, "", "", 0, 0, null, linkText);
@@ -471,7 +471,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                 if (!singleUrl && (DateTime.Now - this.CurrentSiteStartTime).TotalMinutes >= MaxBuildMinutesForSingleSite)
                 {
                     this.StopBuild();
-                    SenparcTrace.SendCustomLog("SiteMap", $"SitemapBuild超时退出（{MaxBuildMinutesForSingleSite}分钟）。当前Url:{url}");
+                    SenparcTrace.SendCustomLog("SiteMap", $"SitemapBuild timed out after {MaxBuildMinutesForSingleSite} minutes. Current URL: {url}");
                 }
             }
             return urlData;//Legacy comment translated to English.
@@ -845,7 +845,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                         result = new FilterOmitWord(keyword, FilterOmitWord.OperatorKind.Equal);
                         break;
                     default:
-                        throw new Exception("未知操作符");
+                        throw new Exception("Unknown operator.");
                 }
             }
             else
