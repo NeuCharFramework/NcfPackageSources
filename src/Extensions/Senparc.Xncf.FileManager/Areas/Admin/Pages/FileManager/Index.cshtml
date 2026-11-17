@@ -1752,19 +1752,19 @@
         </div>
 
         <div class="file-manager-settings-panel" v-if="activeNavKey === 'settings' && uploadSettings">
-            <h2 class="file-manager-settings-title">上传设置<ncf-doc-help topic="files.uploads"></ncf-doc-help></h2>
-            <p class="file-manager-settings-desc">配置文件上传的允许类型、大小上限以及需要拦截的扩展名。保存后立即对后续上传生效（本机浏览器记忆）。</p>
+            <h2 class="file-manager-settings-title">{{ ncfST('Frontend.067') }}<ncf-doc-help topic="files.uploads"></ncf-doc-help></h2>
+            <p class="file-manager-settings-desc">{{ ncfST('Frontend.172') }}</p>
             <el-form class="file-manager-settings-form" label-position="top" size="small">
-                <el-form-item label="允许上传的文件类型">
+                <el-form-item :label="ncfST('Frontend.077')">
                     <el-input
                         type="textarea"
                         :rows="8"
                         v-model="uploadSettings.allowedTypesText"
-                        placeholder="每行一个扩展名，例如：.docx&#10;.xlsx&#10;.pdf">
+                        :placeholder="ncfST('Frontend.144')">
                     </el-input>
-                    <div class="file-manager-settings-hint">支持每行一个扩展名，也可使用逗号分隔。建议带点号（如 .docx）。留空表示不限制允许列表（仍受下方过滤类型约束）。</div>
+                    <div class="file-manager-settings-hint">{{ ncfST('Frontend.118') }}</div>
                 </el-form-item>
-                <el-form-item label="单文件上传大小上限（MB）">
+                <el-form-item :label="ncfST('Frontend.088')">
                     <el-input-number
                         v-model="uploadSettings.maxSizeMb"
                         :min="1"
@@ -1772,20 +1772,20 @@
                         :step="1"
                         controls-position="right">
                     </el-input-number>
-                    <div class="file-manager-settings-hint">默认 50 MB；超过此大小的文件将在上传前被拦截。</div>
+                    <div class="file-manager-settings-hint">{{ ncfST('Frontend.176') }}</div>
                 </el-form-item>
-                <el-form-item label="需要过滤的文件类型">
+                <el-form-item :label="ncfST('Frontend.174')">
                     <el-input
                         type="textarea"
                         :rows="6"
                         v-model="uploadSettings.blockedTypesText"
-                        placeholder="每行一个扩展名，例如：.exe&#10;.bat&#10;.js">
+                        :placeholder="ncfST('Frontend.145')">
                     </el-input>
-                    <div class="file-manager-settings-hint">黑名单扩展名，命中后禁止上传（优先级高于允许列表）。</div>
+                    <div class="file-manager-settings-hint">{{ ncfST('Frontend.175') }}</div>
                 </el-form-item>
                 <div class="file-manager-settings-actions">
-                    <el-button type="primary" @@click="saveUploadSettings">保存设置</el-button>
-                    <el-button @@click="resetUploadSettings">恢复默认</el-button>
+                    <el-button type="primary" @@click="saveUploadSettings">{{ ncfST('Frontend.075') }}</el-button>
+                    <el-button @@click="resetUploadSettings">{{ ncfST('Frontend.173') }}</el-button>
                 </div>
             </el-form>
         </div>
@@ -1793,19 +1793,19 @@
         <div class="file-manager-tags-panel" v-if="activeNavKey === 'tags' && tagManager">
             <div class="file-manager-tags-filter">
                 <div class="file-manager-tags-filter-item">
-                    <span>搜索</span>
+                    <span>{{ ncfST('Frontend.114') }}</span>
                     <el-input
                         v-model="tagManager.keyword"
                         size="small"
-                        placeholder="搜索标签名称"
+                        :placeholder="ncfST('Frontend.116')"
                         prefix-icon="el-icon-search"
                         clearable
                         @@keyup.enter.native="searchTags">
                     </el-input>
                 </div>
                 <div class="file-manager-tags-filter-item">
-                    <span>分类</span>
-                    <el-select v-model="tagManager.category" size="small" placeholder="选择分类" clearable>
+                    <span>{{ ncfST('Frontend.081') }}</span>
+                    <el-select v-model="tagManager.category" size="small" :placeholder="ncfST('Frontend.171')" clearable>
                         <el-option
                             v-for="item in tagManager.categoryOptions"
                             :key="item.value"
@@ -1815,16 +1815,16 @@
                     </el-select>
                 </div>
                 <div class="file-manager-tags-filter-item">
-                    <span>状态</span>
-                    <el-select v-model="tagManager.status" size="small" placeholder="全部" clearable>
-                        <el-option label="全部" value=""></el-option>
-                        <el-option label="启用" value="enabled"></el-option>
-                        <el-option label="停用" value="disabled"></el-option>
+                    <span>{{ ncfST('Frontend.148') }}</span>
+                    <el-select v-model="tagManager.status" size="small" :placeholder="ncfST('Frontend.079')" clearable>
+                        <el-option :label="ncfST('Frontend.079')" value=""></el-option>
+                        <el-option :label="ncfST('Frontend.095')" value="enabled"></el-option>
+                        <el-option :label="ncfST('Frontend.076')" value="disabled"></el-option>
                     </el-select>
                 </div>
                 <div class="file-manager-tags-filter-actions">
                     <el-button type="primary" size="small" icon="el-icon-search" @@click="searchTags"></el-button>
-                    <el-button type="text" size="small" @@click="resetTagFilters">重置</el-button>
+                    <el-button type="text" size="small" @@click="resetTagFilters">{{ ncfST('Frontend.173') }}</el-button>
                 </div>
             </div>
 
