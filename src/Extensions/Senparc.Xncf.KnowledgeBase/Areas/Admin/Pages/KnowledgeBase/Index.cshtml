@@ -424,7 +424,7 @@
                           v-model="dialog.data.content"
                           :rows="4"
                           clearable
-                          placeholder="请输入内容（可选）" />
+                          :placeholder="ncfST('Frontend.242')" />
             </el-form-item>
 
             <p class="kb-edit-form-tip">* 向量库仅支持 Redis / Qdrant；Memory 无法跨请求持久化。保存后可在「配置」中关联资料并执行向量化。<br />* 修改「切片策略 / 大小 / 重叠」需重新保存内容或资料并重新向量化后生效；「重排」配置保存后立即对召回生效，不影响已构建的向量。</p>
