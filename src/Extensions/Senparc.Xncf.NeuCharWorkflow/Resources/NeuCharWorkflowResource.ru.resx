@@ -610,4 +610,21 @@
   <data name="Frontend.585" xml:space="preserve"><value>Сортирует массив; можно указать путь к полю и направление asc/desc.</value></data>
   <data name="Frontend.586" xml:space="preserve"><value>Смысловой псевдоним sort для стабильной сортировки по пути поля объекта.</value></data>
   <data name="Frontend.587" xml:space="preserve"><value>Возвращает копию элементов массива в обратном порядке.</value></data>
+
+  <data name="Frontend.588" xml:space="preserve"><value>Возвращает указанное количество элементов с начала массива.</value></data>
+  <data name="Frontend.589" xml:space="preserve"><value>Пропускает указанное количество элементов в начале массива.</value></data>
+  <data name="Frontend.590" xml:space="preserve"><value>Разворачивает один уровень вложенного массива без рекурсивной обработки более глубоких уровней.</value></data>
+  <data name="Frontend.591" xml:space="preserve"><value>Преобразует элементы массива в числа и суммирует их.</value></data>
+  <data name="Frontend.592" xml:space="preserve"><value>Возвращает минимальное число после преобразования элементов массива.</value></data>
+  <data name="Frontend.593" xml:space="preserve"><value>Возвращает максимальное число после преобразования элементов массива.</value></data>
+  <data name="Frontend.594" xml:space="preserve"><value>Удаляет дубликаты по текстовому представлению, сохраняя первое вхождение.</value></data>
+  <data name="Frontend.595" xml:space="preserve"><value>Возвращает массив имён свойств объекта.</value></data>
+  <data name="Frontend.596" xml:space="preserve"><value>Возвращает массив значений свойств объекта.</value></data>
+  <data name="Frontend.597" xml:space="preserve"><value>Проверяет, содержит ли объект указанное имя свойства.</value></data>
+  <data name="Frontend.598" xml:space="preserve"><value>Преобразует значение в число.</value></data>
+  <data name="Frontend.599" xml:space="preserve"><value>Преобразует значение в Int32.</value></data>
+  <data name="Frontend.600" xml:space="preserve"><value>Преобразует значение в Int64.</value></data>
+  <data name="Frontend.601" xml:space="preserve"><value>Преобразует значение в Decimal.</value></data>
+  <data name="Frontend.602" xml:space="preserve"><value>Преобразует значение в логическое значение; поддерживаются true/false и 1/0.</value></data>
+  <data name="Frontend.603" xml:space="preserve"><value>Преобразует значение в текст.</value></data>
 </root>

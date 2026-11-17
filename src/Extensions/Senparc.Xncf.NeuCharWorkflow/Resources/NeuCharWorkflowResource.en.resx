@@ -610,4 +610,21 @@
   <data name="Frontend.585" xml:space="preserve"><value>Sorts an array; an optional field path and asc/desc direction can be specified.</value></data>
   <data name="Frontend.586" xml:space="preserve"><value>A semantic alias for sort that performs stable sorting by an object field path.</value></data>
   <data name="Frontend.587" xml:space="preserve"><value>Returns a reversed copy of the array items.</value></data>
+
+  <data name="Frontend.588" xml:space="preserve"><value>Returns the specified number of items from the start of an array.</value></data>
+  <data name="Frontend.589" xml:space="preserve"><value>Skips the specified number of items at the start of an array.</value></data>
+  <data name="Frontend.590" xml:space="preserve"><value>Flattens one level of a nested array without processing deeper levels recursively.</value></data>
+  <data name="Frontend.591" xml:space="preserve"><value>Converts array items to numbers and sums them.</value></data>
+  <data name="Frontend.592" xml:space="preserve"><value>Returns the smallest number after converting the array items.</value></data>
+  <data name="Frontend.593" xml:space="preserve"><value>Returns the largest number after converting the array items.</value></data>
+  <data name="Frontend.594" xml:space="preserve"><value>Removes duplicates by text representation and keeps the first occurrence.</value></data>
+  <data name="Frontend.595" xml:space="preserve"><value>Returns an array of the object property names.</value></data>
+  <data name="Frontend.596" xml:space="preserve"><value>Returns an array of the object property values.</value></data>
+  <data name="Frontend.597" xml:space="preserve"><value>Checks whether an object contains the specified property name.</value></data>
+  <data name="Frontend.598" xml:space="preserve"><value>Converts a value to a number.</value></data>
+  <data name="Frontend.599" xml:space="preserve"><value>Converts a value to Int32.</value></data>
+  <data name="Frontend.600" xml:space="preserve"><value>Converts a value to Int64.</value></data>
+  <data name="Frontend.601" xml:space="preserve"><value>Converts a value to Decimal.</value></data>
+  <data name="Frontend.602" xml:space="preserve"><value>Converts a value to a Boolean, supporting true/false or 1/0.</value></data>
+  <data name="Frontend.603" xml:space="preserve"><value>Converts a value to text.</value></data>
 </root>

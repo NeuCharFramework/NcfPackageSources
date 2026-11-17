@@ -610,4 +610,21 @@
   <data name="Frontend.585" xml:space="preserve"><value>Ordena una matriz; se puede indicar una ruta de campo y la dirección asc/desc.</value></data>
   <data name="Frontend.586" xml:space="preserve"><value>Alias semántico de sort que ordena de forma estable por la ruta de un campo del objeto.</value></data>
   <data name="Frontend.587" xml:space="preserve"><value>Devuelve una copia invertida de los elementos de la matriz.</value></data>
+
+  <data name="Frontend.588" xml:space="preserve"><value>Devuelve la cantidad indicada de elementos desde el inicio de una matriz.</value></data>
+  <data name="Frontend.589" xml:space="preserve"><value>Omite la cantidad indicada de elementos al inicio de una matriz.</value></data>
+  <data name="Frontend.590" xml:space="preserve"><value>Aplana un nivel de una matriz anidada sin procesar niveles más profundos de forma recursiva.</value></data>
+  <data name="Frontend.591" xml:space="preserve"><value>Convierte los elementos de una matriz en números y calcula su suma.</value></data>
+  <data name="Frontend.592" xml:space="preserve"><value>Devuelve el menor número tras convertir los elementos de la matriz.</value></data>
+  <data name="Frontend.593" xml:space="preserve"><value>Devuelve el mayor número tras convertir los elementos de la matriz.</value></data>
+  <data name="Frontend.594" xml:space="preserve"><value>Elimina duplicados según su representación textual y conserva la primera aparición.</value></data>
+  <data name="Frontend.595" xml:space="preserve"><value>Devuelve una matriz con los nombres de las propiedades del objeto.</value></data>
+  <data name="Frontend.596" xml:space="preserve"><value>Devuelve una matriz con los valores de las propiedades del objeto.</value></data>
+  <data name="Frontend.597" xml:space="preserve"><value>Comprueba si un objeto contiene el nombre de propiedad indicado.</value></data>
+  <data name="Frontend.598" xml:space="preserve"><value>Convierte un valor en número.</value></data>
+  <data name="Frontend.599" xml:space="preserve"><value>Convierte un valor en Int32.</value></data>
+  <data name="Frontend.600" xml:space="preserve"><value>Convierte un valor en Int64.</value></data>
+  <data name="Frontend.601" xml:space="preserve"><value>Convierte un valor en Decimal.</value></data>
+  <data name="Frontend.602" xml:space="preserve"><value>Convierte un valor en booleano; admite true/false o 1/0.</value></data>
+  <data name="Frontend.603" xml:space="preserve"><value>Convierte un valor en texto.</value></data>
 </root>

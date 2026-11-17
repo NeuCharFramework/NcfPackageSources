@@ -610,4 +610,21 @@
   <data name="Frontend.585" xml:space="preserve"><value>对数组排序；可选字段路径和 asc/desc 排序方向。</value></data>
   <data name="Frontend.586" xml:space="preserve"><value>sort 的语义别名，按对象字段路径稳定排序。</value></data>
   <data name="Frontend.587" xml:space="preserve"><value>返回数组项的反向副本。</value></data>
+
+  <data name="Frontend.588" xml:space="preserve"><value>返回数组开头指定数量的项。</value></data>
+  <data name="Frontend.589" xml:space="preserve"><value>跳过数组开头指定数量的项。</value></data>
+  <data name="Frontend.590" xml:space="preserve"><value>将嵌套数组展开一层，不递归处理更深层级。</value></data>
+  <data name="Frontend.591" xml:space="preserve"><value>将数组项转换为数字并求和。</value></data>
+  <data name="Frontend.592" xml:space="preserve"><value>返回数组项转换后的最小数字。</value></data>
+  <data name="Frontend.593" xml:space="preserve"><value>返回数组项转换后的最大数字。</value></data>
+  <data name="Frontend.594" xml:space="preserve"><value>按文本表现去重并保留首次出现的项。</value></data>
+  <data name="Frontend.595" xml:space="preserve"><value>返回对象的属性名数组。</value></data>
+  <data name="Frontend.596" xml:space="preserve"><value>返回对象的属性值数组。</value></data>
+  <data name="Frontend.597" xml:space="preserve"><value>判断对象是否包含指定属性名。</value></data>
+  <data name="Frontend.598" xml:space="preserve"><value>将值转换为数字。</value></data>
+  <data name="Frontend.599" xml:space="preserve"><value>将值转换为 Int32。</value></data>
+  <data name="Frontend.600" xml:space="preserve"><value>将值转换为 Int64。</value></data>
+  <data name="Frontend.601" xml:space="preserve"><value>将值转换为 Decimal。</value></data>
+  <data name="Frontend.602" xml:space="preserve"><value>将值转换为布尔值，支持 true/false 或 1/0。</value></data>
+  <data name="Frontend.603" xml:space="preserve"><value>将值转换为文本。</value></data>
 </root>

@@ -610,4 +610,21 @@
   <data name="Frontend.585" xml:space="preserve"><value>配列を並べ替えます。任意でフィールドパスとasc/descの方向を指定できます。</value></data>
   <data name="Frontend.586" xml:space="preserve"><value>sortの意味上の別名で、オブジェクトのフィールドパスにより安定ソートします。</value></data>
   <data name="Frontend.587" xml:space="preserve"><value>配列項目の逆順コピーを返します。</value></data>
+
+  <data name="Frontend.588" xml:space="preserve"><value>配列の先頭から指定した数の項目を返します。</value></data>
+  <data name="Frontend.589" xml:space="preserve"><value>配列の先頭から指定した数の項目をスキップします。</value></data>
+  <data name="Frontend.590" xml:space="preserve"><value>ネストした配列を1階層だけ展開し、より深い階層は再帰処理しません。</value></data>
+  <data name="Frontend.591" xml:space="preserve"><value>配列の項目を数値に変換して合計します。</value></data>
+  <data name="Frontend.592" xml:space="preserve"><value>配列の項目を変換した後の最小値を返します。</value></data>
+  <data name="Frontend.593" xml:space="preserve"><value>配列の項目を変換した後の最大値を返します。</value></data>
+  <data name="Frontend.594" xml:space="preserve"><value>テキスト表現で重複を除去し、最初に現れた項目を保持します。</value></data>
+  <data name="Frontend.595" xml:space="preserve"><value>オブジェクトのプロパティ名の配列を返します。</value></data>
+  <data name="Frontend.596" xml:space="preserve"><value>オブジェクトのプロパティ値の配列を返します。</value></data>
+  <data name="Frontend.597" xml:space="preserve"><value>オブジェクトに指定したプロパティ名が含まれるかを判定します。</value></data>
+  <data name="Frontend.598" xml:space="preserve"><value>値を数値に変換します。</value></data>
+  <data name="Frontend.599" xml:space="preserve"><value>値をInt32に変換します。</value></data>
+  <data name="Frontend.600" xml:space="preserve"><value>値をInt64に変換します。</value></data>
+  <data name="Frontend.601" xml:space="preserve"><value>値をDecimalに変換します。</value></data>
+  <data name="Frontend.602" xml:space="preserve"><value>値をブール値に変換します。true/falseまたは1/0に対応します。</value></data>
+  <data name="Frontend.603" xml:space="preserve"><value>値をテキストに変換します。</value></data>
 </root>

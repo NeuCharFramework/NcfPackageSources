@@ -610,4 +610,21 @@
   <data name="Frontend.585" xml:space="preserve"><value>Trie un tableau ; un chemin de champ et une direction asc/desc peuvent être indiqués.</value></data>
   <data name="Frontend.586" xml:space="preserve"><value>Alias sémantique de sort qui effectue un tri stable selon le chemin d’un champ d’objet.</value></data>
   <data name="Frontend.587" xml:space="preserve"><value>Renvoie une copie inversée des éléments du tableau.</value></data>
+
+  <data name="Frontend.588" xml:space="preserve"><value>Renvoie le nombre indiqué d’éléments au début d’un tableau.</value></data>
+  <data name="Frontend.589" xml:space="preserve"><value>Ignore le nombre indiqué d’éléments au début d’un tableau.</value></data>
+  <data name="Frontend.590" xml:space="preserve"><value>Aplati un niveau d’un tableau imbriqué sans traiter récursivement les niveaux plus profonds.</value></data>
+  <data name="Frontend.591" xml:space="preserve"><value>Convertit les éléments d’un tableau en nombres et les additionne.</value></data>
+  <data name="Frontend.592" xml:space="preserve"><value>Renvoie le plus petit nombre après conversion des éléments du tableau.</value></data>
+  <data name="Frontend.593" xml:space="preserve"><value>Renvoie le plus grand nombre après conversion des éléments du tableau.</value></data>
+  <data name="Frontend.594" xml:space="preserve"><value>Supprime les doublons selon leur représentation textuelle et conserve la première occurrence.</value></data>
+  <data name="Frontend.595" xml:space="preserve"><value>Renvoie un tableau des noms de propriétés de l’objet.</value></data>
+  <data name="Frontend.596" xml:space="preserve"><value>Renvoie un tableau des valeurs de propriétés de l’objet.</value></data>
+  <data name="Frontend.597" xml:space="preserve"><value>Vérifie si un objet contient le nom de propriété indiqué.</value></data>
+  <data name="Frontend.598" xml:space="preserve"><value>Convertit une valeur en nombre.</value></data>
+  <data name="Frontend.599" xml:space="preserve"><value>Convertit une valeur en Int32.</value></data>
+  <data name="Frontend.600" xml:space="preserve"><value>Convertit une valeur en Int64.</value></data>
+  <data name="Frontend.601" xml:space="preserve"><value>Convertit une valeur en Decimal.</value></data>
+  <data name="Frontend.602" xml:space="preserve"><value>Convertit une valeur en booléen ; accepte true/false ou 1/0.</value></data>
+  <data name="Frontend.603" xml:space="preserve"><value>Convertit une valeur en texte.</value></data>
 </root>
