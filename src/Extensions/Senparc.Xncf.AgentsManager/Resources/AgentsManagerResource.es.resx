@@ -220,13 +220,13 @@
     <value>Esperando</value>
   </data>
   <data name="Frontend.022" xml:space="preserve">
-    <value>En chat</value>
+    <value>Chateando</value>
   </data>
   <data name="Frontend.023" xml:space="preserve">
-    <value>En pausa</value>
+    <value>Pausado</value>
   </data>
   <data name="Frontend.024" xml:space="preserve">
-    <value>Listo</value>
+    <value>Completado</value>
   </data>
   <data name="Frontend.025" xml:space="preserve">
     <value>Cancelar</value>
@@ -235,43 +235,43 @@
     <value>Solo grupos en ejecución</value>
   </data>
   <data name="Frontend.027" xml:space="preserve">
-    <value>Apertura rápida del grupo</value>
+    <value>Abrir grupo rápidamente</value>
   </data>
   <data name="Frontend.028" xml:space="preserve">
     <value>Abrir grupo</value>
   </data>
   <data name="Frontend.029" xml:space="preserve">
-    <value>Apertura rápida de la tarea</value>
+    <value>Abrir tarea rápidamente</value>
   </data>
   <data name="Frontend.030" xml:space="preserve">
     <value>Abrir tarea</value>
   </data>
   <data name="Frontend.031" xml:space="preserve">
-    <value>Pase el cursor sobre la columna de un Group para resaltar a sus miembros; haga clic en un Group para bloquearlo o desbloquearlo; los números superiores muestran el recuento de estados de las tareas en ejecución de ese grupo.</value>
+    <value>Pasa el cursor sobre la columna Grupo para resaltar sus miembros; haz clic en un Grupo para bloquearlo o desbloquearlo; los números superiores muestran las estadísticas de tareas en ejecución de ese grupo.</value>
   </data>
   <data name="Frontend.032" xml:space="preserve">
-    <value>Grupos</value>
+    <value>Grupos participantes</value>
   </data>
   <data name="Frontend.033" xml:space="preserve">
-    <value>Tareas</value>
+    <value>Tareas participantes</value>
   </data>
   <data name="Frontend.034" xml:space="preserve">
     <value>Tareas en ejecución</value>
   </data>
   <data name="Frontend.035" xml:space="preserve">
-    <value>Rango:</value>
+    <value>Campo de tiro:</value>
   </data>
   <data name="Frontend.036" xml:space="preserve">
-    <value>Táctica:</value>
+    <value>Canal:</value>
   </data>
   <data name="Frontend.037" xml:space="preserve">
-    <value>Ejecución</value>
+    <value>Ejecutar</value>
   </data>
   <data name="Frontend.038" xml:space="preserve">
-    <value>Model:</value>
+    <value>Modelo:</value>
   </data>
   <data name="Frontend.039" xml:space="preserve">
-    <value>Administrar modelos de AI</value>
+    <value>Gestionar modelos de IA</value>
   </data>
   <data name="Frontend.040" xml:space="preserve">
     <value>Parámetros del modelo</value>
