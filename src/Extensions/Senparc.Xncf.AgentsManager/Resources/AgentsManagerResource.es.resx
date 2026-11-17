@@ -163,28 +163,28 @@
     <value>Módulos de extensión</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>Gestor de agentes</value>
+    <value>Módulo de gestión de Agents</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
     <value>Inicio</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>Agente</value>
+    <value>Agent</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>Lista de agentes</value>
+    <value>Lista de Agents</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
     <value>Buscar por nombre</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>Ordenar por hora</value>
+    <value>Ordenar por fecha</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
     <value>Seleccionar estado</value>
   </data>
   <data name="Frontend.010" xml:space="preserve">
-    <value>Todos los agentes</value>
+    <value>Todos los Agents</value>
   </data>
   <data name="Frontend.011" xml:space="preserve">
     <value>Sin datos</value>
