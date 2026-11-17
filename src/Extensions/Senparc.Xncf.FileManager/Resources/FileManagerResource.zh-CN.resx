@@ -423,4 +423,6 @@
   <data name="Script.RequestRejected" xml:space="preserve"><value>服务器拒绝了请求，请刷新页面后重试。</value></data>
   <data name="Script.RequestFailed" xml:space="preserve"><value>请求失败。</value></data>
   <data name="Script.CsrfMissing" xml:space="preserve"><value>页面缺少防伪令牌，请刷新页面后重试。</value></data>
+  <data name="Frontend.191" xml:space="preserve"><value>收起</value></data>
+  <data name="Frontend.192" xml:space="preserve"><value>展开</value></data>
 </root>

@@ -1829,15 +1829,15 @@
             </div>
 
             <div class="file-manager-tags-toolbar">
-                <el-button type="primary" size="small" @@click="createTag">新增标签</el-button>
-                <el-button size="small" @@click="createTagCategory">新增分类</el-button>
+                <el-button type="primary" size="small" @@click="createTag">{{ ncfST('Frontend.129') }}</el-button>
+                <el-button size="small" @@click="createTagCategory">{{ ncfST('Frontend.128') }}</el-button>
                 <el-button size="small" @@click="expandTagRows">
-                    {{ tagManager.treeExpanded ? '收起' : '展开' }}<i class="el-icon-arrow-down el-icon--right"></i>
+                    {{ tagManager.treeExpanded ? ncfST('Frontend.191') : ncfST('Frontend.192') }}<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
-                <el-button size="small" :disabled="!tagManager.selectedIds.length" @@click="enableSelectedTags">启用</el-button>
-                <el-button size="small" :disabled="!tagManager.selectedIds.length" @@click="disableSelectedTags">停用</el-button>
-                <el-button size="small" @@click="importTags">导入</el-button>
-                <el-button size="small" @@click="exportTags">导出</el-button>
+                <el-button size="small" :disabled="!tagManager.selectedIds.length" @@click="enableSelectedTags">{{ ncfST('Frontend.095') }}</el-button>
+                <el-button size="small" :disabled="!tagManager.selectedIds.length" @@click="disableSelectedTags">{{ ncfST('Frontend.076') }}</el-button>
+                <el-button size="small" @@click="importTags">{{ ncfST('Frontend.100') }}</el-button>
+                <el-button size="small" @@click="exportTags">{{ ncfST('Frontend.101') }}</el-button>
             </div>
 
             <div class="file-manager-tags-table-wrap">
@@ -1855,16 +1855,16 @@
                     <template slot="empty">
                         <div class="file-manager-tags-empty">
                             <i class="el-icon-document"></i>
-                            <strong>暂无数据</strong>
+                            <strong>{{ ncfST('Frontend.132') }}</strong>
                         </div>
                     </template>
                     <el-table-column type="expand" width="44">
                         <template slot-scope="scope">
                             <div class="tag-row-actions">
-                                <el-button size="mini" @@click="editTagRow(scope.row)">编辑</el-button>
-                                <el-button size="mini" @@click="deleteTagRow(scope.row)">删除</el-button>
+                                <el-button size="mini" @@click="editTagRow(scope.row)">{{ ncfST('Frontend.155') }}</el-button>
+                                <el-button size="mini" @@click="deleteTagRow(scope.row)">{{ ncfST('Frontend.007') }}</el-button>
                                 <el-button size="mini" @@click="toggleTagRowStatus(scope.row)">
-                                    {{ isTagRowEnabled(scope.row) ? '停用' : '启用' }}
+                                    {{ isTagRowEnabled(scope.row) ? ncfST('Frontend.076') : ncfST('Frontend.095') }}
                                 </el-button>
                                 <el-button
                                     v-if="isTagCategoryRow(scope.row)"
@@ -1878,8 +1878,8 @@
                         </template>
                     </el-table-column>
                     <el-table-column type="selection" width="48"></el-table-column>
-                    <el-table-column prop="name" label="名称" min-width="200" show-overflow-tooltip></el-table-column>
-                    <el-table-column prop="type" label="类型" width="120">
+                            <el-table-column prop="name" :label="ncfST('Frontend.122')" min-width="200" show-overflow-tooltip></el-table-column>
+                            <el-table-column prop="type" :label="ncfST('Frontend.025')" width="120">
                         <template slot-scope="scope">
                             <el-tag
                                 class="file-manager-tags-type-tag"
@@ -1888,21 +1888,21 @@
                                 effect="plain">{{ scope.row.type }}</el-tag>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="status" label="状态" width="100">
+                            <el-table-column prop="status" :label="ncfST('Frontend.148')" width="100">
                         <template slot-scope="scope">
                             <el-tag :type="isTagRowEnabled(scope.row) ? 'success' : 'info'" size="mini">
-                                {{ isTagRowEnabled(scope.row) ? '启用' : '已停用' }}
+                                {{ isTagRowEnabled(scope.row) ? ncfST('Frontend.095') : ncfST('Frontend.076') }}
                             </el-tag>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="tagCount" label="标签数量" width="110">
+                            <el-table-column prop="tagCount" :label="ncfST('Frontend.142')" width="110">
                         <template slot-scope="scope">
                             {{ scope.row.nodeType === 'tag' ? '-' : (scope.row.tagCount || 0) }}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="updatedAt" label="最后更新时间" width="170"></el-table-column>
-                    <el-table-column prop="updatedBy" label="最后更新人" width="120" show-overflow-tooltip></el-table-column>
-                    <el-table-column prop="admin" label="管理员" width="120" show-overflow-tooltip>
+                            <el-table-column prop="updatedAt" :label="ncfST('Frontend.138')" width="170"></el-table-column>
+                            <el-table-column prop="updatedBy" :label="ncfST('Frontend.137')" width="120" show-overflow-tooltip></el-table-column>
+                            <el-table-column prop="admin" :label="ncfST('Frontend.153')" width="120" show-overflow-tooltip>
                         <template slot-scope="scope">
                             {{ scope.row.nodeType === 'tag' ? '-' : (scope.row.admin || '-') }}
                         </template>

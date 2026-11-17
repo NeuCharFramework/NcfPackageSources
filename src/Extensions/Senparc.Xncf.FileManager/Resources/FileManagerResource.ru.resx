@@ -427,4 +427,6 @@
   <data name="Script.RequestRejected" xml:space="preserve"><value>Сервер отклонил запрос. Обновите страницу и повторите попытку.</value></data>
   <data name="Script.RequestFailed" xml:space="preserve"><value>Запрос не выполнен.</value></data>
   <data name="Script.CsrfMissing" xml:space="preserve"><value>На странице отсутствует токен защиты от подделки запросов. Обновите страницу и повторите попытку.</value></data>
+  <data name="Frontend.191" xml:space="preserve"><value>Свернуть</value></data>
+  <data name="Frontend.192" xml:space="preserve"><value>Развернуть</value></data>
 </root>

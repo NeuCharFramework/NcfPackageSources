@@ -427,4 +427,6 @@
   <data name="Script.RequestRejected" xml:space="preserve"><value>サーバーがリクエストを拒否しました。ページを再読み込みして再試行してください。</value></data>
   <data name="Script.RequestFailed" xml:space="preserve"><value>リクエストに失敗しました。</value></data>
   <data name="Script.CsrfMissing" xml:space="preserve"><value>ページの偽造防止トークンがありません。ページを再読み込みして再試行してください。</value></data>
+  <data name="Frontend.191" xml:space="preserve"><value>折りたたむ</value></data>
+  <data name="Frontend.192" xml:space="preserve"><value>展開</value></data>
 </root>

@@ -427,4 +427,6 @@
   <data name="Script.RequestRejected" xml:space="preserve"><value>The server rejected the request. Refresh the page and try again.</value></data>
   <data name="Script.RequestFailed" xml:space="preserve"><value>Request failed.</value></data>
   <data name="Script.CsrfMissing" xml:space="preserve"><value>The page anti-forgery token is missing. Refresh the page and try again.</value></data>
+  <data name="Frontend.191" xml:space="preserve"><value>Collapse</value></data>
+  <data name="Frontend.192" xml:space="preserve"><value>Expand</value></data>
 </root>

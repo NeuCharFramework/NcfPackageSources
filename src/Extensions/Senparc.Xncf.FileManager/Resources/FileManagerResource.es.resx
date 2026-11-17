@@ -427,4 +427,6 @@
   <data name="Script.RequestRejected" xml:space="preserve"><value>El servidor rechazó la solicitud. Actualiza la página e inténtalo de nuevo.</value></data>
   <data name="Script.RequestFailed" xml:space="preserve"><value>La solicitud falló.</value></data>
   <data name="Script.CsrfMissing" xml:space="preserve"><value>Falta el token antifalsificación de la página. Actualiza la página e inténtalo de nuevo.</value></data>
+  <data name="Frontend.191" xml:space="preserve"><value>Contraer</value></data>
+  <data name="Frontend.192" xml:space="preserve"><value>Expandir</value></data>
 </root>

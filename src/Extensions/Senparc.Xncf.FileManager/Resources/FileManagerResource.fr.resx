@@ -427,4 +427,6 @@
   <data name="Script.RequestRejected" xml:space="preserve"><value>Le serveur a rejeté la requête. Actualisez la page et réessayez.</value></data>
   <data name="Script.RequestFailed" xml:space="preserve"><value>La requête a échoué.</value></data>
   <data name="Script.CsrfMissing" xml:space="preserve"><value>Le jeton antifalsification de la page est manquant. Actualisez la page et réessayez.</value></data>
+  <data name="Frontend.191" xml:space="preserve"><value>Réduire</value></data>
+  <data name="Frontend.192" xml:space="preserve"><value>Développer</value></data>
 </root>
