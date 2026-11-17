@@ -1322,32 +1322,32 @@
   <data name="Frontend.427" xml:space="preserve"><value>Seleccionar todos los resultados filtrados</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.428" xml:space="preserve"><value>Seleccionados {0} / {1}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.429" xml:space="preserve"><value>NeuBell · configuración de WebHook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.430" xml:space="preserve"><value>Edit WebHook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.431" xml:space="preserve"><value>Add WebHook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.432" xml:space="preserve"><value>Personal Weixin integration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.433" xml:space="preserve"><value>No matching Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.434" xml:space="preserve"><value>{0} database policies</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.435" xml:space="preserve"><value>{0} orphan policies</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.436" xml:space="preserve"><value>available Workflows</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.437" xml:space="preserve"><value>panels</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.438" xml:space="preserve"><value>Up to {0} files</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.439" xml:space="preserve"><value>Show unavailable modules ({0})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.440" xml:space="preserve"><value>Module version</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.441" xml:space="preserve"><value>Up to {0} files</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.442" xml:space="preserve"><value>{0} total</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.443" xml:space="preserve"><value>{0} per page</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.444" xml:space="preserve"><value>Go to</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.445" xml:space="preserve"><value>Page</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.446" xml:space="preserve"><value>10 per page</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.447" xml:space="preserve"><value>20 per page</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.448" xml:space="preserve"><value>30 per page</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.449" xml:space="preserve"><value>40 per page</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.450" xml:space="preserve"><value>Command prefix {0} · required</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.451" xml:space="preserve"><value>Command prefix {0} · optional</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.452" xml:space="preserve"><value>Harness is disabled</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.453" xml:space="preserve"><value>Bind Weixin account</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.454" xml:space="preserve"><value>Get Workflow list</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.455" xml:space="preserve"><value>The current command prefix is</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.430" xml:space="preserve"><value>Editar WebHook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.431" xml:space="preserve"><value>Añadir WebHook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.432" xml:space="preserve"><value>Integración de WeChat personal</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.433" xml:space="preserve"><value>No hay ningún Workflow coincidente</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.434" xml:space="preserve"><value>Políticas de base de datos: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.435" xml:space="preserve"><value>Políticas huérfanas: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.436" xml:space="preserve"><value>Workflows disponibles</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.437" xml:space="preserve"><value>paneles</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.438" xml:space="preserve"><value>Hasta {0} archivos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.439" xml:space="preserve"><value>Mostrar módulos no disponibles ({0})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.440" xml:space="preserve"><value>Versión del módulo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.441" xml:space="preserve"><value>Hasta {0} archivos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.442" xml:space="preserve"><value>Total: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.443" xml:space="preserve"><value>{0} por página</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.444" xml:space="preserve"><value>Ir a</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.445" xml:space="preserve"><value>Página</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.446" xml:space="preserve"><value>10 por página</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.447" xml:space="preserve"><value>20 por página</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.448" xml:space="preserve"><value>30 por página</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.449" xml:space="preserve"><value>40 por página</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.450" xml:space="preserve"><value>Prefijo de comando {0} · obligatorio</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.451" xml:space="preserve"><value>Prefijo de comando {0} · opcional</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.452" xml:space="preserve"><value>Harness desactivado</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.453" xml:space="preserve"><value>Vincular cuenta de WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.454" xml:space="preserve"><value>Obtener lista de Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.455" xml:space="preserve"><value>El prefijo de comando actual es</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.456" xml:space="preserve"><value>{0} / {1} items</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.457" xml:space="preserve"><value>Input text</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.458" xml:space="preserve"><value>{0} new messages</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
