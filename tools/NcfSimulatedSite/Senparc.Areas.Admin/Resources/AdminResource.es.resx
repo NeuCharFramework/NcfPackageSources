@@ -1503,39 +1503,39 @@
 
   <data name="Frontend.569" xml:space="preserve"><value>Any signed-in administrator can access this Function through global Provit (overrides code restrictions; use with care).</value></data>
 
-  <data name="Frontend.570" xml:space="preserve"><value>Only the users, roles, or permission codes bound below (any match) can access it; all other accounts are denied.</value></data>
+  <data name="Frontend.570" xml:space="preserve"><value>Solo los usuarios, roles o códigos de permiso vinculados abajo (cualquiera coincide) pueden acceder; las demás cuentas se rechazan.</value></data>
 
-  <data name="Frontend.571" xml:space="preserve"><value>Explicitly deny all global Provit access, even when the code attributes allow it.</value></data>
+  <data name="Frontend.571" xml:space="preserve"><value>Denegar explícitamente todo el acceso global a Provit, incluso cuando los atributos del código lo permiten.</value></data>
 
-  <data name="Frontend.572" xml:space="preserve"><value>Policy saved</value></data>
+  <data name="Frontend.572" xml:space="preserve"><value>Política guardada</value></data>
 
-  <data name="Frontend.573" xml:space="preserve"><value>Save failed</value></data>
+  <data name="Frontend.573" xml:space="preserve"><value>Error al guardar</value></data>
 
-  <data name="Frontend.574" xml:space="preserve"><value>Clear the database policy for {0} / {1}? The code baseline will apply again after clearing.</value></data>
+  <data name="Frontend.574" xml:space="preserve"><value>¿Borrar la política de base de datos de {0} / {1}? Tras borrarla se volverá a aplicar la base del código.</value></data>
 
-  <data name="Frontend.575" xml:space="preserve"><value>Clear policy</value></data>
+  <data name="Frontend.575" xml:space="preserve"><value>Borrar política</value></data>
 
-  <data name="Frontend.576" xml:space="preserve"><value>Policy cleared</value></data>
+  <data name="Frontend.576" xml:space="preserve"><value>Política borrada</value></data>
 
-  <data name="Frontend.577" xml:space="preserve"><value>Clear failed</value></data>
+  <data name="Frontend.577" xml:space="preserve"><value>Error al borrar</value></data>
 
-  <data name="Frontend.578" xml:space="preserve"><value>Open all {0} selected Functions (any signed-in administrator can access them)?</value></data>
+  <data name="Frontend.578" xml:space="preserve"><value>¿Abrir las {0} Functions seleccionadas (cualquier administrador autenticado podrá acceder)?</value></data>
 
-  <data name="Frontend.579" xml:space="preserve"><value>Disable all {0} selected Functions (global Provit access will always be denied)?</value></data>
+  <data name="Frontend.579" xml:space="preserve"><value>¿Deshabilitar las {0} Functions seleccionadas (el acceso global a Provit siempre será rechazado)?</value></data>
 
-  <data name="Frontend.580" xml:space="preserve"><value>Restore {0} selected Functions to “inherit code” (database policies will no longer override the code baseline)?</value></data>
+  <data name="Frontend.580" xml:space="preserve"><value>¿Restaurar las {0} Functions seleccionadas a «heredar código» (las políticas de base de datos ya no anularán la base del código)?</value></data>
 
-  <data name="Frontend.581" xml:space="preserve"><value>Clear database policies for {0} selected Functions (restore the code baseline)? This cannot be undone.</value></data>
+  <data name="Frontend.581" xml:space="preserve"><value>¿Borrar las políticas de base de datos de las {0} Functions seleccionadas (restaurar la base del código)? Esta acción no se puede deshacer.</value></data>
 
-  <data name="Frontend.582" xml:space="preserve"><value>Confirm operation?</value></data>
+  <data name="Frontend.582" xml:space="preserve"><value>¿Confirmar la operación?</value></data>
 
-  <data name="Frontend.583" xml:space="preserve"><value>Bulk operation</value></data>
+  <data name="Frontend.583" xml:space="preserve"><value>Operación masiva</value></data>
 
-  <data name="Frontend.584" xml:space="preserve"><value>Confirm</value></data>
+  <data name="Frontend.584" xml:space="preserve"><value>Confirmar</value></data>
 
-  <data name="Frontend.585" xml:space="preserve"><value>Bulk operation completed; {0} policies affected</value></data>
+  <data name="Frontend.585" xml:space="preserve"><value>Operación masiva completada; políticas afectadas: {0}</value></data>
 
-  <data name="Frontend.586" xml:space="preserve"><value>Bulk operation failed</value></data>
+  <data name="Frontend.586" xml:space="preserve"><value>Error en la operación masiva</value></data>
 
   <data name="Frontend.600" xml:space="preserve"><value>Elige qué recordatorios de módulos aparecen en el Footer. La configuración se guarda en el navegador de esta cuenta.</value></data>
   <data name="Frontend.601" xml:space="preserve"><value>Ningún módulo proporciona información de NeuBell.</value></data>

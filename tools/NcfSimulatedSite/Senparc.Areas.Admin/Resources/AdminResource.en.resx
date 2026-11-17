@@ -1505,9 +1505,9 @@
 
   <data name="Frontend.569" xml:space="preserve"><value>Any signed-in administrator can access this Function through global Provit (overrides code restrictions; use with care).</value></data>
 
-  <data name="Frontend.570" xml:space="preserve"><value>Only the users, roles, or permission codes bound below (any match) can access it; all other accounts are denied.</value></data>
+  <data name="Frontend.570" xml:space="preserve"><value>Only users, roles, or permission codes bound below (any match) may access it; all other accounts are denied.</value></data>
 
-  <data name="Frontend.571" xml:space="preserve"><value>Explicitly deny all global Provit access, even when the code attributes allow it.</value></data>
+  <data name="Frontend.571" xml:space="preserve"><value>Explicitly deny all global Provit access, even when code attributes allow it.</value></data>
 
   <data name="Frontend.572" xml:space="preserve"><value>Policy saved</value></data>
 
