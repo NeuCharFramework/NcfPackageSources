@@ -1467,30 +1467,30 @@
     <div class="file-manager-layout-left">
         <nav class="file-manager-nav-panel">
             <ul class="file-manager-nav-list">
-                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'home' }" @@click="onNavClick({ key: 'home', label: '首页' })">
-                    <i class="el-icon-s-home"></i><span>首页</span>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'home' }" @@click="onNavClick({ key: 'home', label: ncfST('Frontend.029') })">
+                    <i class="el-icon-s-home"></i><span>{{ ncfST('Frontend.029') }}</span>
                 </li>
-                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'favorite' }" @@click="onNavClick({ key: 'favorite', label: '收藏' })">
-                    <i :class="activeNavKey === 'favorite' ? 'el-icon-star-on' : 'el-icon-star-off'"></i><span>收藏</span>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'favorite' }" @@click="onNavClick({ key: 'favorite', label: ncfST('Frontend.119') })">
+                    <i :class="activeNavKey === 'favorite' ? 'el-icon-star-on' : 'el-icon-star-off'"></i><span>{{ ncfST('Frontend.119') }}</span>
                 </li>
-                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'enterprise' }" @@click="onNavClick({ key: 'enterprise', label: '企业文档', scope: 100 })">
-                    <i class="el-icon-folder"></i><span>企业文档</span>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'enterprise' }" @@click="onNavClick({ key: 'enterprise', label: ncfST('Frontend.072'), scope: 100 })">
+                    <i class="el-icon-folder"></i><span>{{ ncfST('Frontend.072') }}</span>
                 </li>
-                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'fine-tuning' }" @@click="onNavClick({ key: 'fine-tuning', label: '微调产物', scope: 300 })">
-                    <i class="el-icon-s-data"></i><span>微调产物</span>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'fine-tuning' }" @@click="onNavClick({ key: 'fine-tuning', label: ncfST('Frontend.106'), scope: 300 })">
+                    <i class="el-icon-s-data"></i><span>{{ ncfST('Frontend.106') }}</span>
                 </li>
-                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'recycle' }" @@click="onNavClick({ key: 'recycle', label: '回收站' })">
-                    <i class="el-icon-delete"></i><span>回收站</span>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'recycle' }" @@click="onNavClick({ key: 'recycle', label: ncfST('Frontend.096') })">
+                    <i class="el-icon-delete"></i><span>{{ ncfST('Frontend.096') }}</span>
                 </li>
                 <li class="file-manager-nav-item is-divider"></li>
-                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'dashboard' }" @@click="onNavClick({ key: 'dashboard', label: '数据面板' })">
-                    <i class="el-icon-data-line"></i><span>数据面板</span>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'dashboard' }" @@click="onNavClick({ key: 'dashboard', label: ncfST('Frontend.120') })">
+                    <i class="el-icon-data-line"></i><span>{{ ncfST('Frontend.120') }}</span>
                 </li>
-                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'tags' }" @@click="onNavClick({ key: 'tags', label: '标签管理' })">
-                    <i class="el-icon-price-tag"></i><span>标签管理</span>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'tags' }" @@click="onNavClick({ key: 'tags', label: ncfST('Frontend.143') })">
+                    <i class="el-icon-price-tag"></i><span>{{ ncfST('Frontend.143') }}</span>
                 </li>
-                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'settings' }" @@click="onNavClick({ key: 'settings', label: '设置' })">
-                    <i class="el-icon-setting"></i><span>设置</span>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'settings' }" @@click="onNavClick({ key: 'settings', label: ncfST('Frontend.157') })">
+                    <i class="el-icon-setting"></i><span>{{ ncfST('Frontend.157') }}</span>
                 </li>
             </ul>
         </nav>
