@@ -757,16 +757,16 @@
     <value>Cerrar</value>
   </data>
   <data name="Frontend.201" xml:space="preserve">
-    <value>Evaluación de la tarea</value>
+    <value>Evaluación de tarea</value>
   </data>
   <data name="Frontend.202" xml:space="preserve">
-    <value>Ingrese una puntuación (0-10)</value>
+    <value>Introduce una puntuación (0-10)</value>
   </data>
   <data name="Frontend.203" xml:space="preserve">
-    <value>Introduzca una evaluación</value>
+    <value>Introduce una evaluación</value>
   </data>
   <data name="Frontend.204" xml:space="preserve">
-    <value>Ejemplo de base de datos</value>
+    <value>Ejemplo de operaciones de base de datos</value>
   </data>
   <data name="Frontend.205" xml:space="preserve">
     <value>Aún no hay tareas ejecutables</value>
@@ -775,13 +775,13 @@
     <value>Error al cargar las estadísticas</value>
   </data>
   <data name="Frontend.207" xml:space="preserve">
-    <value>{0} con error</value>
+    <value>{0} fallido</value>
   </data>
   <data name="Frontend.208" xml:space="preserve">
-    <value>{0} correctos</value>
+    <value>{0} correcto</value>
   </data>
   <data name="Frontend.209" xml:space="preserve">
-    <value>{0} falló: {1}</value>
+    <value>{0} fallido: {1}</value>
   </data>
   <data name="Frontend.210" xml:space="preserve">
     <value>Error desconocido</value>
@@ -790,19 +790,19 @@
     <value>¿Cerrar ahora?</value>
   </data>
   <data name="Frontend.212" xml:space="preserve">
-    <value>¿Desactivar el Agente {0}?</value>
+    <value>¿Desactivar Agent {0}?</value>
   </data>
   <data name="Frontend.213" xml:space="preserve">
-    <value>Este Agente no participará en las nuevas tareas posteriores</value>
+    <value>Este Agent no participará en nuevas tareas posteriores</value>
   </data>
   <data name="Frontend.214" xml:space="preserve">
-    <value>¿Activar el Agente {0}?</value>
+    <value>¿Activar Agent {0}?</value>
   </data>
   <data name="Frontend.215" xml:space="preserve">
     <value>¿Salir del grupo {0}?</value>
   </data>
   <data name="Frontend.216" xml:space="preserve">
-    <value>Tras la eliminación, ya no verá los registros de las tareas en las que participó</value>
+    <value>Después de retirarlo, ya no podrás ver los registros de tareas en los que participó</value>
   </data>
   <data name="Frontend.217" xml:space="preserve">
     <value>Confirmar acción</value>
@@ -814,7 +814,7 @@
     <value>Operación cancelada</value>
   </data>
   <data name="Frontend.220" xml:space="preserve">
-    <value>El Agente "{0}" no se puede eliminar en este momento.</value>
+    <value>El Agent «{0}» no se puede eliminar ahora.</value>
   </data>
   <data name="Frontend.221" xml:space="preserve">
     <value>Grupos como propietario: {0}</value>
