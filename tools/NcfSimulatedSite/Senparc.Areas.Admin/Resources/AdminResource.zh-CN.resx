@@ -1403,4 +1403,178 @@
   <data name="WeixinClaw.Workflow.Failed" xml:space="preserve"><value>Workflow「{0}」执行失败：{1}</value></data>
   <data name="WeixinClaw.Workflow.HelpList" xml:space="preserve"><value>{0}workflow - 列出可用 Workflow 和 WorkflowId</value></data>
   <data name="WeixinClaw.Workflow.HelpExecute" xml:space="preserve"><value>{0}workflow &lt;WorkflowId&gt; &lt;输入&gt; - 执行指定 Workflow</value></data>
+
+  <data name="Frontend.500" xml:space="preserve"><value>NeuCharPivot · 访问控制||NeuCharPivot · 访问控制</value></data>
+
+  <data name="Frontend.501" xml:space="preserve"><value>访问控制||访问控制</value></data>
+
+  <data name="Frontend.502" xml:space="preserve"><value>Function 全局 Provit 访问控制||Function 全局 Provit 访问控制</value></data>
+
+  <data name="Frontend.503" xml:space="preserve"><value>为任意 XNCF 模块的 Function 设置数据库访问策略，绑定用户 / 角色 / 权限码。数据库策略存在时覆盖代码属性（AllowGlobalPivot / GlobalPivotRoleCodes / GlobalPivotPermissionCodes）；模块被清除后策略冗余保留，模块重装后自动继续生效，仅手动清除才会删除。||为任意 XNCF 模块的 Function 设置数据库访问策略，绑定用户 / 角色 / 权限码。数据库策略存在时覆盖代码属性（AllowGlobalPivot / GlobalPivotRoleCodes / GlobalPivotPermissionCodes）；模块被清除后策略冗余保留，模块重装后自动继续生效，仅手动清除才会删除。</value></data>
+
+  <data name="Frontend.504" xml:space="preserve"><value>搜索模块 / Function||搜索模块 / Function</value></data>
+
+  <data name="Frontend.505" xml:space="preserve"><value>刷新||刷新</value></data>
+
+  <data name="Frontend.506" xml:space="preserve"><value>Function 共 {0} 个||Function 共 {0} 个</value></data>
+
+  <data name="Frontend.507" xml:space="preserve"><value>数据库策略 {0} 条||数据库策略 {0} 条</value></data>
+
+  <data name="Frontend.508" xml:space="preserve"><value>孤儿策略 {0} 条||孤儿策略 {0} 条</value></data>
+
+  <data name="Frontend.509" xml:space="preserve"><value>批量开放||批量开放</value></data>
+
+  <data name="Frontend.510" xml:space="preserve"><value>批量受限||批量受限</value></data>
+
+  <data name="Frontend.511" xml:space="preserve"><value>批量禁用||批量禁用</value></data>
+
+  <data name="Frontend.512" xml:space="preserve"><value>批量恢复继承||批量恢复继承</value></data>
+
+  <data name="Frontend.513" xml:space="preserve"><value>批量清除||批量清除</value></data>
+
+  <data name="Frontend.514" xml:space="preserve"><value>模块||模块</value></data>
+
+  <data name="Frontend.515" xml:space="preserve"><value>模块已清除||模块已清除</value></data>
+
+  <data name="Frontend.516" xml:space="preserve"><value>模块不可用||模块不可用</value></data>
+
+  <data name="Frontend.517" xml:space="preserve"><value>代码基线||代码基线</value></data>
+
+  <data name="Frontend.518" xml:space="preserve"><value>允许全局||允许全局</value></data>
+
+  <data name="Frontend.519" xml:space="preserve"><value>未声明全局||未声明全局</value></data>
+
+  <data name="Frontend.520" xml:space="preserve"><value>任意登录管理员||任意登录管理员</value></data>
+
+  <data name="Frontend.521" xml:space="preserve"><value>数据库策略||数据库策略</value></data>
+
+  <data name="Frontend.522" xml:space="preserve"><value>来源：数据库策略||来源：数据库策略</value></data>
+
+  <data name="Frontend.523" xml:space="preserve"><value>重装后生效||重装后生效</value></data>
+
+  <data name="Frontend.524" xml:space="preserve"><value>来源：代码属性||来源：代码属性</value></data>
+
+  <data name="Frontend.525" xml:space="preserve"><value>生效策略||生效策略</value></data>
+
+  <data name="Frontend.526" xml:space="preserve"><value>操作||操作</value></data>
+
+  <data name="Frontend.527" xml:space="preserve"><value>设置||设置</value></data>
+
+  <data name="Frontend.528" xml:space="preserve"><value>清除||清除</value></data>
+
+  <data name="Frontend.529" xml:space="preserve"><value>设置全局 Provit 访问策略||设置全局 Provit 访问策略</value></data>
+
+  <data name="Frontend.530" xml:space="preserve"><value>目标信息||目标信息</value></data>
+
+  <data name="Frontend.531" xml:space="preserve"><value>未知版本||未知版本</value></data>
+
+  <data name="Frontend.532" xml:space="preserve"><value>策略保存后冗余保留，模块重装后自动生效||策略保存后冗余保留，模块重装后自动生效</value></data>
+
+  <data name="Frontend.533" xml:space="preserve"><value>Function 已不存在，策略冗余保留||Function 已不存在，策略冗余保留</value></data>
+
+  <data name="Frontend.534" xml:space="preserve"><value>（无）||（无）</value></data>
+
+  <data name="Frontend.535" xml:space="preserve"><value>说明||说明</value></data>
+
+  <data name="Frontend.536" xml:space="preserve"><value>代码基线（FunctionRenderAttribute）||代码基线（FunctionRenderAttribute）</value></data>
+
+  <data name="Frontend.537" xml:space="preserve"><value>允许出现在全局 Provit||允许出现在全局 Provit</value></data>
+
+  <data name="Frontend.538" xml:space="preserve"><value>不允许出现在全局 Provit||不允许出现在全局 Provit</value></data>
+
+  <data name="Frontend.539" xml:space="preserve"><value>模块已清除，无法读取代码基线；策略以数据库记录为准。||模块已清除，无法读取代码基线；策略以数据库记录为准。</value></data>
+
+  <data name="Frontend.540" xml:space="preserve"><value>当前数据库策略||当前数据库策略</value></data>
+
+  <data name="Frontend.541" xml:space="preserve"><value>模式||模式</value></data>
+
+  <data name="Frontend.542" xml:space="preserve"><value>创建时间||创建时间</value></data>
+
+  <data name="Frontend.543" xml:space="preserve"><value>已有绑定||已有绑定</value></data>
+
+  <data name="Frontend.544" xml:space="preserve"><value>备注||备注</value></data>
+
+  <data name="Frontend.545" xml:space="preserve"><value>尚未设置数据库策略，当前按代码基线执行。||尚未设置数据库策略，当前按代码基线执行。</value></data>
+
+  <data name="Frontend.546" xml:space="preserve"><value>策略模式||策略模式</value></data>
+
+  <data name="Frontend.547" xml:space="preserve"><value>继承代码||继承代码</value></data>
+
+  <data name="Frontend.548" xml:space="preserve"><value>开放||开放</value></data>
+
+  <data name="Frontend.549" xml:space="preserve"><value>受限||受限</value></data>
+
+  <data name="Frontend.550" xml:space="preserve"><value>禁用||禁用</value></data>
+
+  <data name="Frontend.551" xml:space="preserve"><value>选择或输入角色码（任一命中即放行）||选择或输入角色码（任一命中即放行）</value></data>
+
+  <data name="Frontend.552" xml:space="preserve"><value>允许角色||允许角色</value></data>
+
+  <data name="Frontend.553" xml:space="preserve"><value>允许权限码||允许权限码</value></data>
+
+  <data name="Frontend.554" xml:space="preserve"><value>输入权限资源码（如 sandbox.execute，任一命中即放行）||输入权限资源码（如 sandbox.execute，任一命中即放行）</value></data>
+
+  <data name="Frontend.555" xml:space="preserve"><value>允许用户||允许用户</value></data>
+
+  <data name="Frontend.556" xml:space="preserve"><value>选择后台管理员用户（任一命中即放行）||选择后台管理员用户（任一命中即放行）</value></data>
+
+  <data name="Frontend.557" xml:space="preserve"><value>记录本次策略调整的原因，便于后续审计||记录本次策略调整的原因，便于后续审计</value></data>
+
+  <data name="Frontend.558" xml:space="preserve"><value>取消||取消</value></data>
+
+  <data name="Frontend.559" xml:space="preserve"><value>保存策略||保存策略</value></data>
+
+  <data name="Frontend.560" xml:space="preserve"><value>批量受限设置||批量受限设置</value></data>
+
+  <data name="Frontend.561" xml:space="preserve"><value>将对选中的 {0} 个 Function 应用“受限”策略。受限模式下，仅绑定的用户 / 角色 / 权限码（任一命中）可访问全局 Provit，请至少绑定一项。||将对选中的 {0} 个 Function 应用“受限”策略。受限模式下，仅绑定的用户 / 角色 / 权限码（任一命中）可访问全局 Provit，请至少绑定一项。</value></data>
+
+  <data name="Frontend.562" xml:space="preserve"><value>选择或输入角色码||选择或输入角色码</value></data>
+
+  <data name="Frontend.563" xml:space="preserve"><value>输入权限资源码||输入权限资源码</value></data>
+
+  <data name="Frontend.564" xml:space="preserve"><value>选择后台管理员用户||选择后台管理员用户</value></data>
+
+  <data name="Frontend.565" xml:space="preserve"><value>应用||应用</value></data>
+
+  <data name="Frontend.566" xml:space="preserve"><value>未知||未知</value></data>
+
+  <data name="Frontend.567" xml:space="preserve"><value>待重装生效||待重装生效</value></data>
+
+  <data name="Frontend.568" xml:space="preserve"><value>不使用数据库策略，完全按代码属性（AllowGlobalPivot / GlobalPivotRoleCodes / GlobalPivotPermissionCodes）执行。||不使用数据库策略，完全按代码属性（AllowGlobalPivot / GlobalPivotRoleCodes / GlobalPivotPermissionCodes）执行。</value></data>
+
+  <data name="Frontend.569" xml:space="preserve"><value>任意已登录后台管理员均可通过全局 Provit 访问该 Function（覆盖代码约束，请谨慎）。||任意已登录后台管理员均可通过全局 Provit 访问该 Function（覆盖代码约束，请谨慎）。</value></data>
+
+  <data name="Frontend.570" xml:space="preserve"><value>仅下方绑定的用户 / 角色 / 权限码（任一命中）可访问，其余账号一律拒绝。||仅下方绑定的用户 / 角色 / 权限码（任一命中）可访问，其余账号一律拒绝。</value></data>
+
+  <data name="Frontend.571" xml:space="preserve"><value>显式拒绝所有全局 Provit 访问，即使代码属性声明允许。||显式拒绝所有全局 Provit 访问，即使代码属性声明允许。</value></data>
+
+  <data name="Frontend.572" xml:space="preserve"><value>策略已保存||策略已保存</value></data>
+
+  <data name="Frontend.573" xml:space="preserve"><value>保存失败||保存失败</value></data>
+
+  <data name="Frontend.574" xml:space="preserve"><value>确定清除 {0} / {1} 的数据库策略？清除后恢复为按代码基线执行。||确定清除 {0} / {1} 的数据库策略？清除后恢复为按代码基线执行。</value></data>
+
+  <data name="Frontend.575" xml:space="preserve"><value>清除策略||清除策略</value></data>
+
+  <data name="Frontend.576" xml:space="preserve"><value>策略已清除||策略已清除</value></data>
+
+  <data name="Frontend.577" xml:space="preserve"><value>清除失败||清除失败</value></data>
+
+  <data name="Frontend.578" xml:space="preserve"><value>将选中的 {0} 个 Function 全部“开放”（任意登录管理员可访问）？||将选中的 {0} 个 Function 全部“开放”（任意登录管理员可访问）？</value></data>
+
+  <data name="Frontend.579" xml:space="preserve"><value>将选中的 {0} 个 Function 全部“禁用”（全局 Provit 一律拒绝）？||将选中的 {0} 个 Function 全部“禁用”（全局 Provit 一律拒绝）？</value></data>
+
+  <data name="Frontend.580" xml:space="preserve"><value>将选中的 {0} 个 Function 恢复为“继承代码”（数据库策略不再覆盖代码基线）？||将选中的 {0} 个 Function 恢复为“继承代码”（数据库策略不再覆盖代码基线）？</value></data>
+
+  <data name="Frontend.581" xml:space="preserve"><value>清除选中的 {0} 个 Function 的数据库策略（恢复代码基线）？此操作不可恢复。||清除选中的 {0} 个 Function 的数据库策略（恢复代码基线）？此操作不可恢复。</value></data>
+
+  <data name="Frontend.582" xml:space="preserve"><value>确定执行？||确定执行？</value></data>
+
+  <data name="Frontend.583" xml:space="preserve"><value>批量操作||批量操作</value></data>
+
+  <data name="Frontend.584" xml:space="preserve"><value>确定||确定</value></data>
+
+  <data name="Frontend.585" xml:space="preserve"><value>批量操作完成，影响 {0} 条策略||批量操作完成，影响 {0} 条策略</value></data>
+
+  <data name="Frontend.586" xml:space="preserve"><value>批量操作失败||批量操作失败</value></data>
 </root>

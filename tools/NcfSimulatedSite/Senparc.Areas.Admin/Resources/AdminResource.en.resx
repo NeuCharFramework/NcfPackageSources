@@ -1361,4 +1361,178 @@
   <data name="WeixinClaw.Workflow.Failed" xml:space="preserve"><value>Workflow "{0}" failed: {1}</value></data>
   <data name="WeixinClaw.Workflow.HelpList" xml:space="preserve"><value>{0}workflow - List available Workflows and Workflow IDs</value></data>
   <data name="WeixinClaw.Workflow.HelpExecute" xml:space="preserve"><value>{0}workflow &lt;WorkflowId&gt; &lt;input&gt; - Execute the specified Workflow</value></data>
+
+  <data name="Frontend.500" xml:space="preserve"><value>NeuCharPivot · 访问控制||NeuCharPivot · Access control</value></data>
+
+  <data name="Frontend.501" xml:space="preserve"><value>访问控制||Access control</value></data>
+
+  <data name="Frontend.502" xml:space="preserve"><value>Function 全局 Provit 访问控制||Function global Provit access control</value></data>
+
+  <data name="Frontend.503" xml:space="preserve"><value>为任意 XNCF 模块的 Function 设置数据库访问策略，绑定用户 / 角色 / 权限码。数据库策略存在时覆盖代码属性（AllowGlobalPivot / GlobalPivotRoleCodes / GlobalPivotPermissionCodes）；模块被清除后策略冗余保留，模块重装后自动继续生效，仅手动清除才会删除。||Configure database access policies for Functions in any XNCF module and bind users, roles, or permission codes. A database policy overrides code attributes (AllowGlobalPivot / GlobalPivotRoleCodes / GlobalPivotPermissionCodes). Policies remain as orphans after a module is removed and become effective again after reinstall; only manual clearing deletes them.</value></data>
+
+  <data name="Frontend.504" xml:space="preserve"><value>搜索模块 / Function||Search modules / Functions</value></data>
+
+  <data name="Frontend.505" xml:space="preserve"><value>刷新||Refresh</value></data>
+
+  <data name="Frontend.506" xml:space="preserve"><value>Function 共 {0} 个||{0} Functions</value></data>
+
+  <data name="Frontend.507" xml:space="preserve"><value>数据库策略 {0} 条||{0} database policies</value></data>
+
+  <data name="Frontend.508" xml:space="preserve"><value>孤儿策略 {0} 条||{0} orphan policies</value></data>
+
+  <data name="Frontend.509" xml:space="preserve"><value>批量开放||Bulk open</value></data>
+
+  <data name="Frontend.510" xml:space="preserve"><value>批量受限||Bulk restrict</value></data>
+
+  <data name="Frontend.511" xml:space="preserve"><value>批量禁用||Bulk deny</value></data>
+
+  <data name="Frontend.512" xml:space="preserve"><value>批量恢复继承||Bulk restore inheritance</value></data>
+
+  <data name="Frontend.513" xml:space="preserve"><value>批量清除||Bulk clear</value></data>
+
+  <data name="Frontend.514" xml:space="preserve"><value>模块||Module</value></data>
+
+  <data name="Frontend.515" xml:space="preserve"><value>模块已清除||Module removed</value></data>
+
+  <data name="Frontend.516" xml:space="preserve"><value>模块不可用||Module unavailable</value></data>
+
+  <data name="Frontend.517" xml:space="preserve"><value>代码基线||Code baseline</value></data>
+
+  <data name="Frontend.518" xml:space="preserve"><value>允许全局||Global access allowed</value></data>
+
+  <data name="Frontend.519" xml:space="preserve"><value>未声明全局||Global access not declared</value></data>
+
+  <data name="Frontend.520" xml:space="preserve"><value>任意登录管理员||Any signed-in administrator</value></data>
+
+  <data name="Frontend.521" xml:space="preserve"><value>数据库策略||Database policy</value></data>
+
+  <data name="Frontend.522" xml:space="preserve"><value>来源：数据库策略||Source: database policy</value></data>
+
+  <data name="Frontend.523" xml:space="preserve"><value>重装后生效||Effective after reinstall</value></data>
+
+  <data name="Frontend.524" xml:space="preserve"><value>来源：代码属性||Source: code attribute</value></data>
+
+  <data name="Frontend.525" xml:space="preserve"><value>生效策略||Effective policy</value></data>
+
+  <data name="Frontend.526" xml:space="preserve"><value>操作||Actions</value></data>
+
+  <data name="Frontend.527" xml:space="preserve"><value>设置||Settings</value></data>
+
+  <data name="Frontend.528" xml:space="preserve"><value>清除||Clear</value></data>
+
+  <data name="Frontend.529" xml:space="preserve"><value>设置全局 Provit 访问策略||Configure global Provit access policy</value></data>
+
+  <data name="Frontend.530" xml:space="preserve"><value>目标信息||Target information</value></data>
+
+  <data name="Frontend.531" xml:space="preserve"><value>未知版本||Unknown version</value></data>
+
+  <data name="Frontend.532" xml:space="preserve"><value>策略保存后冗余保留，模块重装后自动生效||The policy remains as an orphan and becomes effective after module reinstall</value></data>
+
+  <data name="Frontend.533" xml:space="preserve"><value>Function 已不存在，策略冗余保留||The Function no longer exists; the policy remains as an orphan</value></data>
+
+  <data name="Frontend.534" xml:space="preserve"><value>（无）||(none)</value></data>
+
+  <data name="Frontend.535" xml:space="preserve"><value>说明||Description</value></data>
+
+  <data name="Frontend.536" xml:space="preserve"><value>代码基线（FunctionRenderAttribute）||Code baseline (FunctionRenderAttribute)</value></data>
+
+  <data name="Frontend.537" xml:space="preserve"><value>允许出现在全局 Provit||Available in global Provit</value></data>
+
+  <data name="Frontend.538" xml:space="preserve"><value>不允许出现在全局 Provit||Unavailable in global Provit</value></data>
+
+  <data name="Frontend.539" xml:space="preserve"><value>模块已清除，无法读取代码基线；策略以数据库记录为准。||The module was removed, so the code baseline cannot be read; the database policy is authoritative.</value></data>
+
+  <data name="Frontend.540" xml:space="preserve"><value>当前数据库策略||Current database policy</value></data>
+
+  <data name="Frontend.541" xml:space="preserve"><value>模式||Mode</value></data>
+
+  <data name="Frontend.542" xml:space="preserve"><value>创建时间||Created at</value></data>
+
+  <data name="Frontend.543" xml:space="preserve"><value>已有绑定||Existing bindings</value></data>
+
+  <data name="Frontend.544" xml:space="preserve"><value>备注||Remark</value></data>
+
+  <data name="Frontend.545" xml:space="preserve"><value>尚未设置数据库策略，当前按代码基线执行。||No database policy is configured; the code baseline is currently applied.</value></data>
+
+  <data name="Frontend.546" xml:space="preserve"><value>策略模式||Policy mode</value></data>
+
+  <data name="Frontend.547" xml:space="preserve"><value>继承代码||Inherit code</value></data>
+
+  <data name="Frontend.548" xml:space="preserve"><value>开放||Open</value></data>
+
+  <data name="Frontend.549" xml:space="preserve"><value>受限||Restricted</value></data>
+
+  <data name="Frontend.550" xml:space="preserve"><value>禁用||Disabled</value></data>
+
+  <data name="Frontend.551" xml:space="preserve"><value>选择或输入角色码（任一命中即放行）||Select or enter role codes (any match grants access)</value></data>
+
+  <data name="Frontend.552" xml:space="preserve"><value>允许角色||Allowed roles</value></data>
+
+  <data name="Frontend.553" xml:space="preserve"><value>允许权限码||Allowed permission codes</value></data>
+
+  <data name="Frontend.554" xml:space="preserve"><value>输入权限资源码（如 sandbox.execute，任一命中即放行）||Enter permission codes (for example sandbox.execute; any match grants access)</value></data>
+
+  <data name="Frontend.555" xml:space="preserve"><value>允许用户||Allowed users</value></data>
+
+  <data name="Frontend.556" xml:space="preserve"><value>选择后台管理员用户（任一命中即放行）||Select admin users (any match grants access)</value></data>
+
+  <data name="Frontend.557" xml:space="preserve"><value>记录本次策略调整的原因，便于后续审计||Record the reason for this policy change for later auditing</value></data>
+
+  <data name="Frontend.558" xml:space="preserve"><value>取消||Cancel</value></data>
+
+  <data name="Frontend.559" xml:space="preserve"><value>保存策略||Save policy</value></data>
+
+  <data name="Frontend.560" xml:space="preserve"><value>批量受限设置||Bulk restriction settings</value></data>
+
+  <data name="Frontend.561" xml:space="preserve"><value>将对选中的 {0} 个 Function 应用“受限”策略。受限模式下，仅绑定的用户 / 角色 / 权限码（任一命中）可访问全局 Provit，请至少绑定一项。||Apply a restricted policy to {0} selected Functions. In restricted mode, only bound users, roles, or permission codes (any match) can access global Provit. Bind at least one item.</value></data>
+
+  <data name="Frontend.562" xml:space="preserve"><value>选择或输入角色码||Select or enter role codes</value></data>
+
+  <data name="Frontend.563" xml:space="preserve"><value>输入权限资源码||Enter permission codes</value></data>
+
+  <data name="Frontend.564" xml:space="preserve"><value>选择后台管理员用户||Select admin users</value></data>
+
+  <data name="Frontend.565" xml:space="preserve"><value>应用||Apply</value></data>
+
+  <data name="Frontend.566" xml:space="preserve"><value>未知||Unknown</value></data>
+
+  <data name="Frontend.567" xml:space="preserve"><value>待重装生效||Effective after reinstall</value></data>
+
+  <data name="Frontend.568" xml:space="preserve"><value>不使用数据库策略，完全按代码属性（AllowGlobalPivot / GlobalPivotRoleCodes / GlobalPivotPermissionCodes）执行。||Do not use a database policy; follow the code attributes (AllowGlobalPivot / GlobalPivotRoleCodes / GlobalPivotPermissionCodes) completely.</value></data>
+
+  <data name="Frontend.569" xml:space="preserve"><value>任意已登录后台管理员均可通过全局 Provit 访问该 Function（覆盖代码约束，请谨慎）。||Any signed-in administrator can access this Function through global Provit (overrides code restrictions; use with care).</value></data>
+
+  <data name="Frontend.570" xml:space="preserve"><value>仅下方绑定的用户 / 角色 / 权限码（任一命中）可访问，其余账号一律拒绝。||Only the users, roles, or permission codes bound below (any match) can access it; all other accounts are denied.</value></data>
+
+  <data name="Frontend.571" xml:space="preserve"><value>显式拒绝所有全局 Provit 访问，即使代码属性声明允许。||Explicitly deny all global Provit access, even when the code attributes allow it.</value></data>
+
+  <data name="Frontend.572" xml:space="preserve"><value>策略已保存||Policy saved</value></data>
+
+  <data name="Frontend.573" xml:space="preserve"><value>保存失败||Save failed</value></data>
+
+  <data name="Frontend.574" xml:space="preserve"><value>确定清除 {0} / {1} 的数据库策略？清除后恢复为按代码基线执行。||Clear the database policy for {0} / {1}? The code baseline will apply again after clearing.</value></data>
+
+  <data name="Frontend.575" xml:space="preserve"><value>清除策略||Clear policy</value></data>
+
+  <data name="Frontend.576" xml:space="preserve"><value>策略已清除||Policy cleared</value></data>
+
+  <data name="Frontend.577" xml:space="preserve"><value>清除失败||Clear failed</value></data>
+
+  <data name="Frontend.578" xml:space="preserve"><value>将选中的 {0} 个 Function 全部“开放”（任意登录管理员可访问）？||Open all {0} selected Functions (any signed-in administrator can access them)?</value></data>
+
+  <data name="Frontend.579" xml:space="preserve"><value>将选中的 {0} 个 Function 全部“禁用”（全局 Provit 一律拒绝）？||Disable all {0} selected Functions (global Provit access will always be denied)?</value></data>
+
+  <data name="Frontend.580" xml:space="preserve"><value>将选中的 {0} 个 Function 恢复为“继承代码”（数据库策略不再覆盖代码基线）？||Restore {0} selected Functions to “inherit code” (database policies will no longer override the code baseline)?</value></data>
+
+  <data name="Frontend.581" xml:space="preserve"><value>清除选中的 {0} 个 Function 的数据库策略（恢复代码基线）？此操作不可恢复。||Clear database policies for {0} selected Functions (restore the code baseline)? This cannot be undone.</value></data>
+
+  <data name="Frontend.582" xml:space="preserve"><value>确定执行？||Confirm operation?</value></data>
+
+  <data name="Frontend.583" xml:space="preserve"><value>批量操作||Bulk operation</value></data>
+
+  <data name="Frontend.584" xml:space="preserve"><value>确定||Confirm</value></data>
+
+  <data name="Frontend.585" xml:space="preserve"><value>批量操作完成，影响 {0} 条策略||Bulk operation completed; {0} policies affected</value></data>
+
+  <data name="Frontend.586" xml:space="preserve"><value>批量操作失败||Bulk operation failed</value></data>
 </root>
