@@ -1,5 +1,8 @@
 ﻿@page
 @model Senparc.Xncf.Sandbox.Areas.Sandbox.Pages.Index
+@using Microsoft.Extensions.Localization
+@using Senparc.Xncf.Sandbox
+@inject IStringLocalizer<SandboxResource> XR
 @{
     ViewData["Title"] = $"{Model.XncfRegister.MenuName}";
     Layout = "_Layout_Vue";
@@ -10,37 +13,37 @@
 }
 
 @section breadcrumbs{
-    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.001"]</el-breadcrumb-item>
     <el-breadcrumb-item>@Model.XncfRegister.MenuName</el-breadcrumb-item>
-    <el-breadcrumb-item>面板</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.002"]</el-breadcrumb-item>
 }
 
 <div class="sandboxPage" v-cloak>
     @Html.AntiForgeryToken()
 
-    <section class="sandboxHero" aria-labelledby="sandbox-page-title">
+    <section class="sandboxHero" :aria-label="ncfST('Frontend.003')" aria-labelledby="sandbox-page-title">
         <div class="sandboxHeroCopy">
             <div class="sandboxEyebrow"><i class="fa fa-cube"></i> Sandbox Runtime</div>
-            <h1 id="sandbox-page-title">沙箱面板</h1>
-            <p>集中查看会话状态，并通过模块 Function 创建、执行和清理隔离运行环境。</p>
+            <h1 id="sandbox-page-title">{{ ncfST('Frontend.003') }}</h1>
+            <p>{{ ncfST('Frontend.081') }}</p>
             <div class="sandboxHeroActions">
-                <el-button type="primary" icon="el-icon-plus" @@click="openFunction('Create')">创建沙箱</el-button>
-                <el-button icon="el-icon-setting" @@click="openSetup">环境准备</el-button>
+                <el-button type="primary" icon="el-icon-plus" @@click="openFunction('Create')">{{ ncfST('Frontend.021') }}</el-button>
+                <el-button icon="el-icon-setting" @@click="openSetup">{{ ncfST('Frontend.004') }}</el-button>
             </div>
         </div>
-        <div class="sandboxRuntimeSummary" aria-label="沙箱运行概览">
+        <div class="sandboxRuntimeSummary" :aria-label="ncfST('Frontend.005')">
             <div class="runtimeSummaryIcon"><i class="fa fa-cubes"></i></div>
             <div class="runtimeSummaryMetrics">
                 <div>
-                    <span>已登记会话</span>
+                    <span>{{ ncfST('Frontend.006') }}</span>
                     <strong>{{ sessionStats.total }}</strong>
                 </div>
                 <div>
-                    <span>运行中</span>
+                    <span>{{ ncfST('Frontend.007') }}</span>
                     <strong>{{ sessionStats.running }}</strong>
                 </div>
                 <div>
-                    <span>交互式会话</span>
+                    <span>{{ ncfST('Frontend.008') }}</span>
                     <strong>{{ sessionStats.interactive }}</strong>
                 </div>
             </div>
@@ -48,91 +51,91 @@
     </section>
 
     <div class="sandboxToolRow">
-        <div class="sandboxToolMeta">状态更新于 {{ formatDateTime(lastUpdatedAt) }}</div>
+        <div class="sandboxToolMeta">{{ ncfST('Frontend.082', formatDateTime(lastUpdatedAt)) }}</div>
         <div class="sandboxToolActions">
-            <el-button size="mini" icon="el-icon-refresh" :loading="loading" @@click="reload">刷新</el-button>
-            <el-button size="mini" icon="el-icon-menu" @@click="openFunction()">全部 Function</el-button>
-            <el-button size="mini" icon="el-icon-document" @@click="openDocs">环境文档</el-button>
+            <el-button size="mini" icon="el-icon-refresh" :loading="loading" @@click="reload">{{ ncfST('Frontend.009') }}</el-button>
+            <el-button size="mini" icon="el-icon-menu" @@click="openFunction()">{{ ncfST('Frontend.010') }}</el-button>
+            <el-button size="mini" icon="el-icon-document" @@click="openDocs">{{ ncfST('Frontend.011') }}</el-button>
         </div>
     </div>
 
-    <section class="sandboxOverviewGrid" aria-label="会话概览">
+    <section class="sandboxOverviewGrid" :aria-label="ncfST('Frontend.012')">
         <div class="sandboxOverviewCard">
             <div class="overviewIcon iconBlue"><i class="fa fa-cubes"></i></div>
             <div>
-                <div class="overviewLabel">全部会话</div>
+                <div class="overviewLabel">{{ ncfST('Frontend.013') }}</div>
                 <div class="overviewValue">{{ sessionStats.total }}</div>
-                <div class="overviewHint">已登记</div>
+                <div class="overviewHint">{{ ncfST('Frontend.014') }}</div>
             </div>
         </div>
         <div class="sandboxOverviewCard">
             <div class="overviewIcon iconGreen"><i class="fa fa-play"></i></div>
             <div>
-                <div class="overviewLabel">运行中</div>
+                <div class="overviewLabel">{{ ncfST('Frontend.007') }}</div>
                 <div class="overviewValue">{{ sessionStats.running }}</div>
-                <div class="overviewHint">当前可用</div>
+                <div class="overviewHint">{{ ncfST('Frontend.015') }}</div>
             </div>
         </div>
         <div class="sandboxOverviewCard">
             <div class="overviewIcon iconTeal"><i class="fa fa-desktop"></i></div>
             <div>
-                <div class="overviewLabel">交互式会话</div>
+                <div class="overviewLabel">{{ ncfST('Frontend.008') }}</div>
                 <div class="overviewValue">{{ sessionStats.interactive }}</div>
-                <div class="overviewHint">Notebook / 预览</div>
+                <div class="overviewHint">{{ ncfST('Frontend.016') }}</div>
             </div>
         </div>
         <div class="sandboxOverviewCard">
             <div class="overviewIcon iconAmber"><i class="fa fa-exclamation-triangle"></i></div>
             <div>
-                <div class="overviewLabel">待处理</div>
+                <div class="overviewLabel">{{ ncfST('Frontend.017') }}</div>
                 <div class="overviewValue">{{ sessionStats.attention }}</div>
-                <div class="overviewHint">失败或已过期</div>
+                <div class="overviewHint">{{ ncfST('Frontend.018') }}</div>
             </div>
         </div>
     </section>
 
     <section class="sandboxBoardGrid">
-        <section class="sandboxBoardCard sandboxQuickActions" aria-labelledby="sandbox-function-title">
+        <section class="sandboxBoardCard sandboxQuickActions" :aria-label="ncfST('Frontend.019')" aria-labelledby="sandbox-function-title">
             <div class="sandboxBoardTitleRow">
                 <div>
-                    <h2 id="sandbox-function-title">Function 快捷操作</h2>
-                    <p>使用模块已注册的执行入口，参数校验和结果日志保持与模块 Function 页面一致。</p>
+                    <h2 id="sandbox-function-title">{{ ncfST('Frontend.019') }}</h2>
+                    <p>{{ ncfST('Frontend.063') }}</p>
                 </div>
-                <el-button size="mini" icon="el-icon-right" @@click="openFunction()">打开模块 Function</el-button>
+                <el-button size="mini" icon="el-icon-right" @@click="openFunction()">{{ ncfST('Frontend.020') }}</el-button>
             </div>
             <div class="sandboxShortcutList">
                 <div class="sandboxShortcut">
                     <div class="shortcutIcon shortcutCreate"><i class="el-icon-plus"></i></div>
                     <div class="shortcutContent">
-                        <h3>创建沙箱</h3>
-                        <p>选择运行模板与运行时，创建独立会话。</p>
+                        <h3>{{ ncfST('Frontend.021') }}</h3>
+                        <p>{{ ncfST('Frontend.077') }}</p>
                     </div>
-                    <el-button type="primary" size="mini" icon="el-icon-plus" @@click="openFunction('Create')">创建</el-button>
+                    <el-button type="primary" size="mini" icon="el-icon-plus" @@click="openFunction('Create')">{{ ncfST('Frontend.065') }}</el-button>
                 </div>
                 <div class="sandboxShortcut">
                     <div class="shortcutIcon shortcutExec"><i class="el-icon-caret-right"></i></div>
                     <div class="shortcutContent">
-                        <h3>执行代码</h3>
-                        <p>在 Exec 模板会话中提交短任务代码。</p>
+                        <h3>{{ ncfST('Frontend.022') }}</h3>
+                        <p>{{ ncfST('Frontend.066') }}</p>
                     </div>
-                    <el-button type="success" size="mini" icon="el-icon-caret-right" @@click="openFunction('Exec')">执行</el-button>
+                    <el-button type="success" size="mini" icon="el-icon-caret-right" @@click="openFunction('Exec')">{{ ncfST('Frontend.069') }}</el-button>
                 </div>
                 <div class="sandboxShortcut">
                     <div class="shortcutIcon shortcutDestroy"><i class="el-icon-delete"></i></div>
                     <div class="shortcutContent">
-                        <h3>销毁沙箱</h3>
-                        <p>输入 SessionId，停止并清理指定会话。</p>
+                        <h3>{{ ncfST('Frontend.023') }}</h3>
+                        <p>{{ ncfST('Frontend.076') }}</p>
                     </div>
-                    <el-button type="danger" size="mini" icon="el-icon-delete" @@click="openFunction('Destroy')">销毁</el-button>
+                    <el-button type="danger" size="mini" icon="el-icon-delete" @@click="openFunction('Destroy')">{{ ncfST('Frontend.079') }}</el-button>
                 </div>
             </div>
         </section>
 
-        <section class="sandboxBoardCard sandboxEnvironment" aria-labelledby="sandbox-environment-title">
+        <section class="sandboxBoardCard sandboxEnvironment" :aria-label="ncfST('Frontend.024')" aria-labelledby="sandbox-environment-title">
             <div class="sandboxBoardTitleRow">
                 <div>
-                    <h2 id="sandbox-environment-title">运行环境</h2>
-                    <p>Docker 可用性、镜像前缀和部署说明统一在环境准备页检查。</p>
+                    <h2 id="sandbox-environment-title">{{ ncfST('Frontend.024') }}</h2>
+                    <p>{{ ncfST('Frontend.060') }}</p>
                 </div>
             </div>
             <div class="sandboxEnvironmentRows">
@@ -145,53 +148,53 @@
                     <strong>JupyterLab</strong>
                 </div>
                 <div>
-                    <span><i class="fa fa-shield"></i> 生命周期</span>
-                    <strong>TTL 自动回收</strong>
+                    <span><i class="fa fa-shield"></i> {{ ncfST('Frontend.025') }}</span>
+                    <strong>{{ ncfST('Frontend.026') }}</strong>
                 </div>
             </div>
-            <el-button class="sandboxEnvironmentButton" type="primary" plain icon="el-icon-setting" @@click="openSetup">检查环境</el-button>
+            <el-button class="sandboxEnvironmentButton" type="primary" plain icon="el-icon-setting" @@click="openSetup">{{ ncfST('Frontend.027') }}</el-button>
         </section>
 
-        <section class="sandboxBoardCard sandboxSessions" aria-labelledby="sandbox-sessions-title" v-loading="loading">
+        <section class="sandboxBoardCard sandboxSessions" :aria-label="ncfST('Frontend.028')" aria-labelledby="sandbox-sessions-title" v-loading="loading">
             <div class="sandboxBoardTitleRow">
                 <div>
-                    <h2 id="sandbox-sessions-title">沙箱会话</h2>
-                    <p>通过站点反向代理访问交互式会话，访问链接不暴露容器 token。</p>
+                    <h2 id="sandbox-sessions-title">{{ ncfST('Frontend.028') }}</h2>
+                    <p>{{ ncfST('Frontend.078') }}</p>
                 </div>
-                <el-tag size="mini" type="info">{{ sessionStats.total }} 个会话</el-tag>
+                <el-tag size="mini" type="info">{{ ncfST('Frontend.083', sessionStats.total) }}</el-tag>
             </div>
-            <el-table :data="sessions" class="sandboxSessionTable" empty-text="暂无沙箱会话">
+            <el-table :data="sessions" class="sandboxSessionTable" :empty-text="ncfST('Frontend.084')">
                 <el-table-column prop="sessionId" label="SessionId" min-width="190" show-overflow-tooltip></el-table-column>
-                <el-table-column label="模板" min-width="150">
+                <el-table-column :label="ncfST('Frontend.029')" min-width="150">
                     <template slot-scope="scope">
                         <span class="templateName">{{ templateName(scope.row.templateKey) }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="别名" min-width="130" show-overflow-tooltip>
+                <el-table-column :label="ncfST('Frontend.030')" min-width="130" show-overflow-tooltip>
                     <template slot-scope="scope">
                         <span v-if="scope.row.alias" class="aliasName">{{ scope.row.alias }}</span>
                         <span v-else class="sessionMuted">-</span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="runtimeKind" label="运行时" width="94"></el-table-column>
-                <el-table-column label="状态" width="108">
+                <el-table-column prop="runtimeKind" :label="ncfST('Frontend.031')" width="94"></el-table-column>
+                <el-table-column :label="ncfST('Frontend.032')" width="108">
                     <template slot-scope="scope">
                         <el-tag :type="statusTagType(scope.row.status)" size="mini">{{ statusText(scope.row.status) }}</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column prop="hostPort" label="端口" width="80">
+                <el-table-column prop="hostPort" :label="ncfST('Frontend.033')" width="80">
                     <template slot-scope="scope">{{ scope.row.hostPort || '-' }}</template>
                 </el-table-column>
-                <el-table-column label="附加端口" min-width="150" show-overflow-tooltip>
+                <el-table-column :label="ncfST('Frontend.034')" min-width="150" show-overflow-tooltip>
                     <template slot-scope="scope">
                         <span v-if="scope.row.extraPorts" class="extraPortsText">{{ scope.row.extraPorts }}</span>
                         <span v-else class="sessionMuted">-</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="访问" width="104">
+                <el-table-column :label="ncfST('Frontend.035')" width="104">
                     <template slot-scope="scope">
-                        <el-tooltip v-if="scope.row.accessUrl" content="打开交互式会话" placement="top">
-                            <el-button type="text" size="mini" icon="el-icon-top-right" @@click="openAccessUrl(scope.row.accessUrl)">打开</el-button>
+                        <el-tooltip v-if="scope.row.accessUrl" :content="ncfST('Frontend.036')" placement="top">
+                            <el-button type="text" size="mini" icon="el-icon-top-right" @@click="openAccessUrl(scope.row.accessUrl)">{{ ncfST('Frontend.037') }}</el-button>
                         </el-tooltip>
                         <span v-else class="sessionMuted">-</span>
                     </template>
@@ -203,18 +206,18 @@
                         </span>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" width="190" align="center" class-name="ncf-table-actions-column">
+                <el-table-column :label="ncfST('Frontend.038')" width="190" align="center" class-name="ncf-table-actions-column">
                     <template slot-scope="scope">
-                        <el-tooltip v-if="canEditAlias(scope.row)" :content="scope.row.alias ? '修改别名' : '设置别名'" placement="top">
+                        <el-tooltip v-if="canEditAlias(scope.row)" :content="scope.row.alias ? ncfST('Frontend.039') : ncfST('Frontend.040')" placement="top">
                             <el-button type="success" size="mini" circle icon="el-icon-edit" @@click="openAliasDialog(scope.row)"></el-button>
                         </el-tooltip>
-                        <el-tooltip v-if="canUpdateTtl(scope.row)" content="延长或修改 TTL" placement="top">
+                        <el-tooltip v-if="canUpdateTtl(scope.row)" :content="ncfST('Frontend.041')" placement="top">
                             <el-button type="primary" size="mini" circle icon="el-icon-time" @@click="openTtlDialog(scope.row)"></el-button>
                         </el-tooltip>
-                        <el-tooltip v-if="canDestroySession(scope.row)" content="销毁运行环境" placement="top">
+                        <el-tooltip v-if="canDestroySession(scope.row)" :content="ncfST('Frontend.042')" placement="top">
                             <el-button type="warning" size="mini" circle icon="el-icon-video-pause" @@click="destroySession(scope.row.sessionId)"></el-button>
                         </el-tooltip>
-                        <el-tooltip v-if="canDeleteRecord(scope.row)" content="永久删除会话记录" placement="top">
+                        <el-tooltip v-if="canDeleteRecord(scope.row)" :content="ncfST('Frontend.043')" placement="top">
                             <el-button type="danger" size="mini" circle icon="el-icon-delete" @@click="deleteSessionRecord(scope.row.sessionId)"></el-button>
                         </el-tooltip>
                     </template>
@@ -223,32 +226,32 @@
         </section>
     </section>
 
-    <el-dialog title="会话别名" :visible.sync="aliasDialog.visible" width="440px" :close-on-click-modal="false">
+    <el-dialog :title="ncfST('Frontend.044')" :visible.sync="aliasDialog.visible" width="440px" :close-on-click-modal="false">
         <div v-if="aliasDialog.session" class="aliasDialog">
             <div class="aliasSessionId">{{ aliasDialog.session.sessionId }}</div>
             <el-input
                 v-model="aliasDialog.alias"
-                placeholder="留空表示清除别名"
+                :placeholder="ncfST('Frontend.045')"
                 maxlength="128"
                 show-word-limit
                 clearable>
             </el-input>
             <div class="aliasDialogHint">
-                别名仅用于在列表、Function 结果与日志中识别会话；不影响运行环境。
+                {{ ncfST('Frontend.085') }}
             </div>
         </div>
         <span slot="footer">
-            <el-button @@click="aliasDialog.visible = false">取消</el-button>
-            <el-button type="primary" :loading="aliasDialog.saving" @@click="saveAlias">保存</el-button>
+            <el-button @@click="aliasDialog.visible = false">{{ ncfST('Frontend.046') }}</el-button>
+            <el-button type="primary" :loading="aliasDialog.saving" @@click="saveAlias">{{ ncfST('Frontend.047') }}</el-button>
         </span>
     </el-dialog>
 
-    <el-dialog title="修改 TTL" :visible.sync="ttlDialog.visible" width="420px" :close-on-click-modal="false">
+    <el-dialog :title="ncfST('Frontend.048')" :visible.sync="ttlDialog.visible" width="420px" :close-on-click-modal="false">
         <div v-if="ttlDialog.session" class="ttlDialog">
             <div class="ttlSessionId">{{ ttlDialog.session.sessionId }}</div>
             <el-radio-group v-model="ttlDialog.keepAlive">
-                <el-radio :label="false">定时回收</el-radio>
-                <el-radio :label="true">永久保持</el-radio>
+                <el-radio :label="false">{{ ncfST('Frontend.049') }}</el-radio>
+                <el-radio :label="true">{{ ncfST('Frontend.050') }}</el-radio>
             </el-radio-group>
             <el-input-number
                 v-if="!ttlDialog.keepAlive"
@@ -260,13 +263,13 @@
                 class="ttlMinutesInput">
             </el-input-number>
             <div class="ttlDialogHint">
-                <template v-if="ttlDialog.keepAlive">该会话不会被 TTL 扫描自动销毁，须由管理员手动销毁。</template>
-                <template v-else>保存后从当前时刻重新计算，到期由后台自动销毁。</template>
+                <template v-if="ttlDialog.keepAlive">{{ ncfST('Frontend.075') }}</template>
+                <template v-else>{{ ncfST('Frontend.064') }}</template>
             </div>
         </div>
         <span slot="footer">
-            <el-button @@click="ttlDialog.visible = false">取消</el-button>
-            <el-button type="primary" :loading="ttlDialog.saving" @@click="saveTtl">保存</el-button>
+            <el-button @@click="ttlDialog.visible = false">{{ ncfST('Frontend.046') }}</el-button>
+            <el-button type="primary" :loading="ttlDialog.saving" @@click="saveTtl">{{ ncfST('Frontend.047') }}</el-button>
         </span>
     </el-dialog>
 </div>
@@ -338,21 +341,21 @@
                 statusText(status) {
                     // SandboxSessionStatus: Creating=0, Running=1, Stopping=2, Stopped=3, Failed=4, Expired=5
                     const map = {
-                        0: '创建中',
-                        1: '运行中',
-                        2: '停止中',
-                        3: '已停止',
-                        4: '失败',
-                        5: '已过期',
-                        creating: '创建中',
-                        running: '运行中',
-                        stopping: '停止中',
-                        stopped: '已停止',
-                        failed: '失败',
-                        expired: '已过期'
+                        0: 'Frontend.086',
+                        1: 'Frontend.007',
+                        2: 'Frontend.087',
+                        3: 'Frontend.088',
+                        4: 'Frontend.089',
+                        5: 'Frontend.090',
+                        creating: 'Frontend.086',
+                        running: 'Frontend.007',
+                        stopping: 'Frontend.087',
+                        stopped: 'Frontend.088',
+                        failed: 'Frontend.089',
+                        expired: 'Frontend.090'
                     };
-                    const source = map[this.statusKey(status)];
-                    return source ? ncfST(source) : ncfST('未知({0})', status);
+                    const key = map[this.statusKey(status)];
+                    return key ? ncfST(key) : ncfST('Frontend.091', status);
                 },
                 statusTagType(status) {
                     const map = {
@@ -414,7 +417,7 @@
                     }
 
                     if (row.isTtlUnlimited) {
-                        return '永久保持';
+                        return ncfST('Frontend.050');
                     }
 
                     if (!this.isRunning(row.status)) {
