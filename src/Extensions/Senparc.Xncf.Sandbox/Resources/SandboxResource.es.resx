@@ -104,31 +104,31 @@
   </data>
 
 
-  <data name="Frontend.001" xml:space="preserve"><value>Extension Modules</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.001" xml:space="preserve"><value>Módulos de extensión</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.002" xml:space="preserve"><value>Panel</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.003" xml:space="preserve"><value>Sandbox panel</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.004" xml:space="preserve"><value>Environment setup</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.005" xml:space="preserve"><value>Sandbox runtime overview</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.006" xml:space="preserve"><value>Registered sessions</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.007" xml:space="preserve"><value>Running</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.008" xml:space="preserve"><value>Interactive sessions</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.009" xml:space="preserve"><value>Refresh</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.010" xml:space="preserve"><value>All Functions</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.011" xml:space="preserve"><value>Environment docs</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.012" xml:space="preserve"><value>Session overview</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.013" xml:space="preserve"><value>All sessions</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.014" xml:space="preserve"><value>Registered</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.015" xml:space="preserve"><value>Currently available</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.016" xml:space="preserve"><value>Notebook / preview</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.017" xml:space="preserve"><value>Needs attention</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.018" xml:space="preserve"><value>Failed or expired</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.019" xml:space="preserve"><value>Function quick actions</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.020" xml:space="preserve"><value>Open module Function</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.021" xml:space="preserve"><value>Create sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.022" xml:space="preserve"><value>Execute code</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.023" xml:space="preserve"><value>Destroy sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.024" xml:space="preserve"><value>Runtime environment</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.025" xml:space="preserve"><value>Lifecycle</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.003" xml:space="preserve"><value>Panel de Sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.004" xml:space="preserve"><value>Preparación del entorno</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.005" xml:space="preserve"><value>Resumen del entorno Sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.006" xml:space="preserve"><value>Sesiones registradas</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.007" xml:space="preserve"><value>En ejecución</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.008" xml:space="preserve"><value>Sesiones interactivas</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.009" xml:space="preserve"><value>Actualizar</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.010" xml:space="preserve"><value>Todas las Functions</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.011" xml:space="preserve"><value>Documentación del entorno</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.012" xml:space="preserve"><value>Resumen de sesiones</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.013" xml:space="preserve"><value>Todas las sesiones</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.014" xml:space="preserve"><value>Registrado</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.015" xml:space="preserve"><value>Disponible actualmente</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.016" xml:space="preserve"><value>Notebook / vista previa</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.017" xml:space="preserve"><value>Pendiente de atención</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.018" xml:space="preserve"><value>Fallido o caducado</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.019" xml:space="preserve"><value>Acciones rápidas de Function</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.020" xml:space="preserve"><value>Abrir Function del módulo</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.021" xml:space="preserve"><value>Crear Sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.022" xml:space="preserve"><value>Ejecutar código</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.023" xml:space="preserve"><value>Destruir Sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.024" xml:space="preserve"><value>Entorno de ejecución</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.025" xml:space="preserve"><value>Ciclo de vida</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.026" xml:space="preserve"><value>Automatic TTL cleanup</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.027" xml:space="preserve"><value>Check environment</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.028" xml:space="preserve"><value>Sandbox sessions</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
