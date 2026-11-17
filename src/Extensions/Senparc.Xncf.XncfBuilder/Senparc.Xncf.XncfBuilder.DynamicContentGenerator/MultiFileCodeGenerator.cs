@@ -277,7 +277,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
         //Legacy comment translated to English.
         sb.AppendLine($"    /// <summary>");
-        sb.AppendLine($"    /// 自动生成的NCF模板常量类，包含所有模板文件的内容");
+        sb.AppendLine($"    /// Auto-generated NCF template constants containing all template file content.");
         sb.AppendLine($"    /// </summary>");
         sb.AppendLine($"    public partial class {config.OutputClassName}");
         sb.AppendLine("    {");
@@ -417,7 +417,7 @@ Code:
 
         sb.AppendLine($"        /// <summary>");
         sb.AppendLine($"        /// {file.Description}");
-        sb.AppendLine($"        /// 类型: {file.Type}");
+        sb.AppendLine($"        /// Type: {file.Type}");
         sb.AppendLine($"        /// </summary>");
         sb.AppendLine($"        public const string {file.ConstantName} = @\"{escapedContent}\";");
         sb.AppendLine();
@@ -430,7 +430,7 @@ Code:
         sb.AppendLine("        #region Template Types");
         sb.AppendLine();
         sb.AppendLine("        /// <summary>");
-        sb.AppendLine("        /// 模板类型常量");
+        sb.AppendLine("        /// Template type constants.");
         sb.AppendLine("        /// </summary>");
         sb.AppendLine("        public static class TemplateTypes");
         sb.AppendLine("        {");
@@ -452,7 +452,7 @@ Code:
         sb.AppendLine("        #region File Information");
         sb.AppendLine();
         sb.AppendLine("        /// <summary>");
-        sb.AppendLine("        /// 所有模板文件信息");
+        sb.AppendLine("        /// Information for all template files.");
         sb.AppendLine("        /// </summary>");
         sb.AppendLine("        public static readonly TemplateFileInfo[] AllTemplateFiles = new TemplateFileInfo[]");
         sb.AppendLine("        {");
@@ -465,7 +465,7 @@ Code:
         sb.AppendLine("        };");
         sb.AppendLine();
         sb.AppendLine("        /// <summary>");
-        sb.AppendLine("        /// 模板文件信息结构");
+        sb.AppendLine("        /// Template file information structure.");
         sb.AppendLine("        /// </summary>");
         sb.AppendLine("        public record TemplateFileInfo(string Name, string Description, string Type, string Path, string Content);");
         sb.AppendLine();
@@ -478,7 +478,7 @@ Code:
         sb.AppendLine("        #region Helper Methods");
         sb.AppendLine();
         sb.AppendLine("        /// <summary>");
-        sb.AppendLine("        /// 根据类型获取模板文件");
+        sb.AppendLine("        /// Get template files by type.");
         sb.AppendLine("        /// </summary>");
         sb.AppendLine("        public static TemplateFileInfo[] GetTemplatesByType(string templateType)");
         sb.AppendLine("        {");
@@ -486,7 +486,7 @@ Code:
         sb.AppendLine("        }");
         sb.AppendLine();
         sb.AppendLine("        /// <summary>");
-        sb.AppendLine("        /// 根据名称获取模板内容");
+        sb.AppendLine("        /// Get template content by name.");
         sb.AppendLine("        /// </summary>");
         sb.AppendLine("        public static string GetTemplateContent(string templateName)");
         sb.AppendLine("        {");
@@ -494,7 +494,7 @@ Code:
         sb.AppendLine("        }");
         sb.AppendLine();
         sb.AppendLine("        /// <summary>");
-        sb.AppendLine("        /// 获取所有模板类型");
+        sb.AppendLine("        /// Get all template types.");
         sb.AppendLine("        /// </summary>");
         sb.AppendLine("        public static string[] GetAllTemplateTypes()");
         sb.AppendLine("        {");
