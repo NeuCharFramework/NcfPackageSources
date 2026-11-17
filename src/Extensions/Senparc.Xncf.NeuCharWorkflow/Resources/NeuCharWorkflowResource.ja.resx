@@ -276,44 +276,44 @@
   <data name="Frontend.258" xml:space="preserve"><value>実行前承認</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.259" xml:space="preserve"><value>拒否</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.260" xml:space="preserve"><value>ここにドラッグして接続を完了</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.261" xml:space="preserve"><value>Drag break: exit the current loop</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.262" xml:space="preserve"><value>Drag the false branch</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.263" xml:space="preserve"><value>Drag the true branch</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.264" xml:space="preserve"><value>Drag to connect the next node</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.265" xml:space="preserve"><value>Rearrange by direction</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.266" xml:space="preserve"><value>Auto-layout by settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.267" xml:space="preserve"><value>Request headers are recommended</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.268" xml:space="preserve"><value>Reminder content</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.269" xml:space="preserve"><value>Reminder title</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.270" xml:space="preserve"><value>Plugin tool permissions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.271" xml:space="preserve"><value>Insert upstream value</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.272" xml:space="preserve"><value>Search workflows</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.273" xml:space="preserve"><value>Supported formulas</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.274" xml:space="preserve"><value>Change to fixed count</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.275" xml:space="preserve"><value>Change to manual input</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.276" xml:space="preserve"><value>Zoom in</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.277" xml:space="preserve"><value>Zoom in canvas</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.278" xml:space="preserve"><value>Array index</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.279" xml:space="preserve"><value>Add node</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.280" xml:space="preserve"><value>New workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.281" xml:space="preserve"><value>Standard condition</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.282" xml:space="preserve"><value>No workflows yet</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.283" xml:space="preserve"><value>More workflow actions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.284" xml:space="preserve"><value>Maximum chat rounds</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.285" xml:space="preserve"><value>Use the group default model when none is selected</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.286" xml:space="preserve"><value>When none is selected, AgentGroup inherits the group owner's PromptRange model first and falls back to the system Chat model only when no usable model exists.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.287" xml:space="preserve"><value>No parameters configured: accept all Query, Form, and JSON fields.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.288" xml:space="preserve"><value>When condition is false</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.289" xml:space="preserve"><value>Exit the loop when false</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.290" xml:space="preserve"><value>When condition is true</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.291" xml:space="preserve"><value>Exit the loop when true</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.292" xml:space="preserve"><value>Validate and run</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.293" xml:space="preserve"><value>The module is not installed or enabled; this node cannot run</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.294" xml:space="preserve"><value>Model</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.295" xml:space="preserve"><value>Horizontal</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.296" xml:space="preserve"><value>The count may be fixed, reference an upstream scalar, or use restricted syntax; the result must be an integer from 1 to 100000. Mark the loop boundary with Loop End.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.297" xml:space="preserve"><value>Greeting</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.298" xml:space="preserve"><value>This Function has multiple upstream sources; any valid source can trigger it, but the node runs at most once per workflow execution.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.261" xml:space="preserve"><value>breakをドラッグして現在のループを抜ける</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.262" xml:space="preserve"><value>偽分岐をドラッグ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.263" xml:space="preserve"><value>真分岐をドラッグ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.264" xml:space="preserve"><value>ドラッグして後続ノードに接続</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.265" xml:space="preserve"><value>方向に従って再配置</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.266" xml:space="preserve"><value>設定に従って自動レイアウト</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.267" xml:space="preserve"><value>リクエストヘッダーの使用を推奨</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.268" xml:space="preserve"><value>通知内容</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.269" xml:space="preserve"><value>通知タイトル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.270" xml:space="preserve"><value>プラグインツール権限</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.271" xml:space="preserve"><value>上流値を挿入</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.272" xml:space="preserve"><value>Workflowを検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.273" xml:space="preserve"><value>対応する数式</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.274" xml:space="preserve"><value>固定回数に変更</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.275" xml:space="preserve"><value>手動入力に変更</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.276" xml:space="preserve"><value>拡大</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.277" xml:space="preserve"><value>キャンバスを拡大</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.278" xml:space="preserve"><value>配列インデックス</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.279" xml:space="preserve"><value>ノードを追加</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.280" xml:space="preserve"><value>新しいWorkflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.281" xml:space="preserve"><value>通常の条件判定</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.282" xml:space="preserve"><value>Workflowはありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.283" xml:space="preserve"><value>その他のWorkflow操作</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.284" xml:space="preserve"><value>最大チャットラウンド数</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.285" xml:space="preserve"><value>未選択時はグループの既定モデルを使用</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.286" xml:space="preserve"><value>未選択の場合、AgentGroupはまずグループ所有者のPromptRangeモデルを継承し、利用可能なモデルがない場合のみシステム既定のChatモデルにフォールバックします。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.287" xml:space="preserve"><value>パラメーター未設定：Query、Form、JSONの全フィールドを受け取ります。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.288" xml:space="preserve"><value>条件が偽の場合</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.289" xml:space="preserve"><value>条件が偽の場合にループを抜ける</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.290" xml:space="preserve"><value>条件が真の場合</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.291" xml:space="preserve"><value>条件が真の場合にループを抜ける</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.292" xml:space="preserve"><value>検証して実行</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.293" xml:space="preserve"><value>モジュールが未インストールまたは無効のため、ノードを実行できません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.294" xml:space="preserve"><value>モデル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.295" xml:space="preserve"><value>横方向</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.296" xml:space="preserve"><value>回数は固定値、上流の単一値、または制限付き構文を使用できます。結果は1～100000の整数である必要があります。ループ範囲は「ループ終了」で示します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.297" xml:space="preserve"><value>ウェルカムメッセージ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.298" xml:space="preserve"><value>このFunctionには複数の上流ノードがあります。いずれかの有効なソースで起動でき、1回のWorkflow実行につき最大1回実行されます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.299" xml:space="preserve"><value>Aggregate output</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.300" xml:space="preserve"><value>Test input (passed to the trigger)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.301" xml:space="preserve"><value>Consume this reminder</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
