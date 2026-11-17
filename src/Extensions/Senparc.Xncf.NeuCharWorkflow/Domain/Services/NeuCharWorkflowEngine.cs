@@ -989,7 +989,13 @@ public sealed class NeuCharWorkflowEngine
                         functionSelectionInputs,
                         cancellationToken)
                     .ConfigureAwait(false);
-                Report(progress, item.node, "running", "开始执行节点。", null, input: replayInputText);
+                Report(
+                    progress,
+                    item.node,
+                    "running",
+                    NeuCharWorkflowResource.Get("Frontend.398", "开始执行节点。"),
+                    null,
+                    input: replayInputText);
                 var objectReferenceKey = item.node.Type is "agent" or "agent-group" or "a2a" or "function"
                     ? Guid.NewGuid().ToString("N")
                     : null;
@@ -1035,7 +1041,12 @@ public sealed class NeuCharWorkflowEngine
                 outputs[node.Id] = finalOutput.DeepClone();
                 var outputText = NodeToText(finalOutput);
                 var outputSchema = NeuCharWorkflowObservedOutputSchemaBuilder.Build(node, finalOutput);
-                Report(progress, node, "success", "节点执行完成。", outputText,
+                Report(
+                    progress,
+                    node,
+                    "success",
+                    NeuCharWorkflowResource.Get("Frontend.399", "节点执行完成。"),
+                    outputText,
                     JsonSerializer.Serialize(outputSchema, JsonOptions),
                     replayInputText,
                     objectReference);

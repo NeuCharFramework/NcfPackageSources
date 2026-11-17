@@ -497,13 +497,13 @@ new Vue({
             };
         },
         runStatusText() {
-            if (this.run.validating) return window.ncfWorkflowText('正在校验参数和节点引用');
-            if (this.run.aborting) return window.ncfWorkflowText('正在中止工作流，等待当前节点响应取消');
-            if (this.run.running && this.run.humanInteractions.length) return window.ncfWorkflowText('等待 Human 输入或审批，Workflow 已暂停');
-            if (this.run.running) return window.ncfWorkflowText('工作流运行中，编辑已锁定');
-            if (this.run.status === 'success') return window.ncfWorkflowText('最近一次测试运行成功');
-            if (this.run.status === 'failed') return window.ncfWorkflowText('最近一次测试运行失败');
-            return window.ncfWorkflowText('测试运行就绪');
+            if (this.run.validating) return window.ncfWorkflowText('Frontend.392');
+            if (this.run.aborting) return window.ncfWorkflowText('Frontend.393');
+            if (this.run.running && this.run.humanInteractions.length) return window.ncfWorkflowText('Frontend.394');
+            if (this.run.running) return window.ncfWorkflowText('Frontend.395');
+            if (this.run.status === 'success') return window.ncfWorkflowText('Frontend.396');
+            if (this.run.status === 'failed') return window.ncfWorkflowText('Frontend.397');
+            return window.ncfWorkflowText('Frontend.391');
         },
         webhookUrl() {
             return this.form.id
