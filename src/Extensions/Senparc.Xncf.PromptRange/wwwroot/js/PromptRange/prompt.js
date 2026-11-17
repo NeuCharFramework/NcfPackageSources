@@ -1449,7 +1449,7 @@ var app = new Vue({
             const topK = Number(resultItem.embeddingQueryTopK || 3)
             if (!query) {
                 this.$message({
-                    message: '请输入要查询的文本',
+                    message: ncfST('请输入要查询的文本'),
                     type: 'warning',
                     duration: 3000
                 })
@@ -1465,7 +1465,7 @@ var app = new Vue({
                 })
                 if (!res.data.success) {
                     this.$message({
-                        message: res.data.errorMessage || res.data.data || 'Embedding 查询失败',
+                        message: res.data.errorMessage || res.data.data || ncfST('Embedding 查询失败'),
                         type: 'error',
                         duration: 5 * 1000
                     })
@@ -1481,7 +1481,7 @@ var app = new Vue({
                 }))
             } catch (e) {
                 this.$message({
-                    message: 'Embedding 查询失败：' + (e.message || '未知错误'),
+                        message: ncfST('Embedding 查询失败：') + (e.message || ncfST('未知错误')),
                     type: 'error',
                     duration: 5 * 1000
                 })
@@ -2022,7 +2022,7 @@ var app = new Vue({
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: '已取消操作'
+                        message: ncfST('已取消操作')
                 });
             });
 
@@ -2115,7 +2115,7 @@ var app = new Vue({
         confirmtargetlaneName() {
             if(!this.targetlaneName){
                 this.$message({
-                    message: '靶道名称不能为空！',
+                        message: ncfST('靶道名称不能为空！'),
                     type: 'error'
                 })
                 return
@@ -2174,7 +2174,7 @@ var app = new Vue({
                 // checkwhetherhasinputcontent
                 if (!this.tacticalChatInput || !this.tacticalChatInput.trim()) {
                     this.$message({
-                        message: '请输入对话内容',
+                        message: ncfST('请输入对话内容'),
                         type: 'warning',
                         duration: 3000
                     })
@@ -2195,7 +2195,7 @@ var app = new Vue({
             //Legacy comment translated to English.
             if (!this.tacticalForm.chatMode) {
                 this.$message({
-                    message: '请选择打靶测试模式',
+                        message: ncfST('请选择打靶测试模式'),
                     type: 'warning',
                     duration: 3000
                 })
@@ -2205,7 +2205,7 @@ var app = new Vue({
             //Legacy comment translated to English.
             if (this.promptid && !this.tacticalForm.tactics) {
                 this.$message({
-                    message: '请选择战术',
+                        message: ncfST('请选择战术'),
                     type: 'warning',
                     duration: 3000
                 })
@@ -2217,7 +2217,7 @@ var app = new Vue({
                 // checkwhetherhasinputcontent
                 if (!this.tacticalChatInput || !this.tacticalChatInput.trim()) {
                     this.$message({
-                        message: '请输入对话内容',
+                        message: ncfST('请输入对话内容'),
                         type: 'warning',
                         duration: 3000
                     })
@@ -2310,7 +2310,7 @@ var app = new Vue({
                     //Legacy comment translated to English.
                     this.tacticalChatInput = ''
                     this.$message({
-                        message: '对话已追加',
+                        message: ncfST('对话已追加'),
                         type: 'success',
                         duration: 2000
                     })
@@ -2319,14 +2319,14 @@ var app = new Vue({
                     this.removeContinueChatPendingUserMessage()
                     this.closePromptStream()
                     this.$message({
-                        message: res.data.errorMessage || '继续聊天失败',
+                        message: res.data.errorMessage || ncfST('继续聊天失败'),
                         type: 'error'
                     })
                 }
             } catch (error) {
                 this.closePromptStream()
                 this.$message({
-                    message: '继续聊天失败：' + (error.message || '未知错误'),
+                    message: ncfST('继续聊天失败：') + (error.message || ncfST('未知错误')),
                     type: 'error'
                 })
                 this.removeContinueChatStreamingMessage()
@@ -2344,7 +2344,7 @@ var app = new Vue({
         async targetShootHandel(isDraft = false, isSaveDirect) {
             if (!this.modelid) {
                 this.$message({
-                    message: '请选择模型！',
+                        message: ncfST('请选择模型！'),
                     type: 'warning'
                 })
                 return
@@ -2354,7 +2354,7 @@ var app = new Vue({
             }
             if (!isDraft && !this.content) {
                 this.$message({
-                    message: '请输入内容！',
+                        message: ncfST('请输入内容！'),
                     type: 'warning'
                 })
                 return
@@ -2449,7 +2449,7 @@ var app = new Vue({
                         this.pageChange = false
                         //Legacy comment translated to English.
                         this.$message({
-                            message: '保存成功！',
+                            message: ncfST('保存成功！'),
                             type: 'success'
                         })
                     } else {
@@ -2470,7 +2470,7 @@ var app = new Vue({
                         if (isDraft) {
                             //Legacy comment translated to English.
                             this.$message({
-                                message: '保存成功！',
+                                message: ncfST('保存成功！'),
                                 type: 'success'
                             })
                             this.sendBtns = [
@@ -2560,14 +2560,14 @@ var app = new Vue({
         async dealRapicFireHandel(howmany, id) {
             if (!this.promptid) {
                 this.$message({
-                    message: '请选择一个靶道！',
+                        message: ncfST('请选择一个靶道！'),
                     type: 'warning'
                 })
                 return
             }
             if (!this.modelid) {
                 this.$message({
-                    message: '请选择一个模型！',
+                        message: ncfST('请选择一个模型！'),
                     type: 'warning'
                 })
                 return
