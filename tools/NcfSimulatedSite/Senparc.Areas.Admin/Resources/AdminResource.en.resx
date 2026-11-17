@@ -1453,7 +1453,7 @@
 
   <data name="Frontend.543" xml:space="preserve"><value>Existing bindings</value></data>
 
-  <data name="Frontend.544" xml:space="preserve"><value>Remark</value></data>
+  <data name="Frontend.544" xml:space="preserve"><value>Notes</value></data>
 
   <data name="Frontend.545" xml:space="preserve"><value>No database policy is configured; the code baseline is currently applied.</value></data>
 
@@ -1485,13 +1485,13 @@
 
   <data name="Frontend.559" xml:space="preserve"><value>Save policy</value></data>
 
-  <data name="Frontend.560" xml:space="preserve"><value>Bulk restriction settings</value></data>
+  <data name="Frontend.560" xml:space="preserve"><value>Bulk restricted settings</value></data>
 
-  <data name="Frontend.561" xml:space="preserve"><value>Apply a restricted policy to {0} selected Functions. In restricted mode, only bound users, roles, or permission codes (any match) can access global Provit. Bind at least one item.</value></data>
+  <data name="Frontend.561" xml:space="preserve"><value>Apply the “restricted” policy to the {0} selected Functions. In restricted mode, only bound users, roles, or permission codes (any match) can access global Provit; bind at least one item.</value></data>
 
   <data name="Frontend.562" xml:space="preserve"><value>Select or enter role codes</value></data>
 
-  <data name="Frontend.563" xml:space="preserve"><value>Enter permission codes</value></data>
+  <data name="Frontend.563" xml:space="preserve"><value>Enter permission resource codes</value></data>
 
   <data name="Frontend.564" xml:space="preserve"><value>Select admin users</value></data>
 
@@ -1501,9 +1501,9 @@
 
   <data name="Frontend.567" xml:space="preserve"><value>Effective after reinstall</value></data>
 
-  <data name="Frontend.568" xml:space="preserve"><value>Do not use a database policy; follow the code attributes (AllowGlobalPivot / GlobalPivotRoleCodes / GlobalPivotPermissionCodes) completely.</value></data>
+  <data name="Frontend.568" xml:space="preserve"><value>Do not use database policies; follow code attributes only (AllowGlobalPivot / GlobalPivotRoleCodes / GlobalPivotPermissionCodes).</value></data>
 
-  <data name="Frontend.569" xml:space="preserve"><value>Any signed-in administrator can access this Function through global Provit (overrides code restrictions; use with care).</value></data>
+  <data name="Frontend.569" xml:space="preserve"><value>Any signed-in admin can access this Function through global Provit (overrides code constraints; use with care).</value></data>
 
   <data name="Frontend.570" xml:space="preserve"><value>Only users, roles, or permission codes bound below (any match) may access it; all other accounts are denied.</value></data>
 

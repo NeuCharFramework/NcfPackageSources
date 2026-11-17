@@ -1443,25 +1443,25 @@
 
   <data name="Frontend.539" xml:space="preserve"><value>The module was removed, so the code baseline cannot be read; the database policy is authoritative.</value></data>
 
-  <data name="Frontend.540" xml:space="preserve"><value>Current database policy</value></data>
+  <data name="Frontend.540" xml:space="preserve"><value>Stratégie de base de données actuelle</value></data>
 
   <data name="Frontend.541" xml:space="preserve"><value>Mode</value></data>
 
-  <data name="Frontend.542" xml:space="preserve"><value>Created at</value></data>
+  <data name="Frontend.542" xml:space="preserve"><value>Date de création</value></data>
 
-  <data name="Frontend.543" xml:space="preserve"><value>Existing bindings</value></data>
+  <data name="Frontend.543" xml:space="preserve"><value>Liaisons existantes</value></data>
 
-  <data name="Frontend.544" xml:space="preserve"><value>Remark</value></data>
+  <data name="Frontend.544" xml:space="preserve"><value>Notes</value></data>
 
-  <data name="Frontend.545" xml:space="preserve"><value>No database policy is configured; the code baseline is currently applied.</value></data>
+  <data name="Frontend.545" xml:space="preserve"><value>Aucune stratégie de base de données n’est configurée ; la base du code est appliquée.</value></data>
 
-  <data name="Frontend.546" xml:space="preserve"><value>Policy mode</value></data>
+  <data name="Frontend.546" xml:space="preserve"><value>Mode de stratégie</value></data>
 
-  <data name="Frontend.547" xml:space="preserve"><value>Inherit code</value></data>
+  <data name="Frontend.547" xml:space="preserve"><value>Hériter du code</value></data>
 
-  <data name="Frontend.548" xml:space="preserve"><value>Open</value></data>
+  <data name="Frontend.548" xml:space="preserve"><value>Ouvert</value></data>
 
-  <data name="Frontend.549" xml:space="preserve"><value>Restricted</value></data>
+  <data name="Frontend.549" xml:space="preserve"><value>Restreint</value></data>
 
   <data name="Frontend.550" xml:space="preserve"><value>Disabled</value></data>
 
@@ -1483,25 +1483,25 @@
 
   <data name="Frontend.559" xml:space="preserve"><value>Save policy</value></data>
 
-  <data name="Frontend.560" xml:space="preserve"><value>Bulk restriction settings</value></data>
+  <data name="Frontend.560" xml:space="preserve"><value>Paramètres restreints groupés</value></data>
 
-  <data name="Frontend.561" xml:space="preserve"><value>Apply a restricted policy to {0} selected Functions. In restricted mode, only bound users, roles, or permission codes (any match) can access global Provit. Bind at least one item.</value></data>
+  <data name="Frontend.561" xml:space="preserve"><value>Appliquer la stratégie « restreinte » aux {0} Functions sélectionnées. Dans ce mode, seuls les utilisateurs, rôles ou codes d’autorisation liés (une correspondance suffit) peuvent accéder à Provit global ; liez-en au moins un.</value></data>
 
-  <data name="Frontend.562" xml:space="preserve"><value>Select or enter role codes</value></data>
+  <data name="Frontend.562" xml:space="preserve"><value>Sélectionnez ou saisissez des codes de rôle</value></data>
 
-  <data name="Frontend.563" xml:space="preserve"><value>Enter permission codes</value></data>
+  <data name="Frontend.563" xml:space="preserve"><value>Saisissez les codes de ressources d’autorisation</value></data>
 
-  <data name="Frontend.564" xml:space="preserve"><value>Select admin users</value></data>
+  <data name="Frontend.564" xml:space="preserve"><value>Sélectionnez des utilisateurs administrateurs</value></data>
 
-  <data name="Frontend.565" xml:space="preserve"><value>Apply</value></data>
+  <data name="Frontend.565" xml:space="preserve"><value>Appliquer</value></data>
 
-  <data name="Frontend.566" xml:space="preserve"><value>Unknown</value></data>
+  <data name="Frontend.566" xml:space="preserve"><value>Inconnu</value></data>
 
-  <data name="Frontend.567" xml:space="preserve"><value>Effective after reinstall</value></data>
+  <data name="Frontend.567" xml:space="preserve"><value>Effectif après réinstallation</value></data>
 
-  <data name="Frontend.568" xml:space="preserve"><value>Do not use a database policy; follow the code attributes (AllowGlobalPivot / GlobalPivotRoleCodes / GlobalPivotPermissionCodes) completely.</value></data>
+  <data name="Frontend.568" xml:space="preserve"><value>N’utilisez pas les stratégies de base de données ; suivez uniquement les attributs du code (AllowGlobalPivot / GlobalPivotRoleCodes / GlobalPivotPermissionCodes).</value></data>
 
-  <data name="Frontend.569" xml:space="preserve"><value>Any signed-in administrator can access this Function through global Provit (overrides code restrictions; use with care).</value></data>
+  <data name="Frontend.569" xml:space="preserve"><value>Tout administrateur connecté peut accéder à cette Function via Provit global (ignore les contraintes du code ; utilisez cette option avec prudence).</value></data>
 
   <data name="Frontend.570" xml:space="preserve"><value>Seuls les utilisateurs, rôles ou codes d’autorisation liés ci-dessous (une correspondance suffit) peuvent y accéder ; tous les autres comptes sont refusés.</value></data>
 
