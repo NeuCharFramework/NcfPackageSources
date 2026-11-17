@@ -40,7 +40,7 @@ namespace Senparc.Xncf.FileManager
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
                          //Legacy comment translated to English.
-                         new AreaPageMenuItem(GetAreaUrl($"/Admin/FileManager/Index"), FileManagerResource.Get("Area.FileManager.Files", "文件资源管理"),"fa fa-file")
+                         new AreaPageMenuItem(GetAreaUrl($"/Admin/FileManager/Index"), FileManagerResource.Get("Area.FileManager.Files", "File resource management"),"fa fa-file")
         };
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
@@ -50,7 +50,7 @@ namespace Senparc.Xncf.FileManager
                 //configure page permissions here
             });
 
-            SenparcTrace.SendCustomLog("FileManager 启动", "完成 Area:Senparc.Xncf.FileManager 注册");
+            SenparcTrace.SendCustomLog("FileManager startup", "Completed Area:Senparc.Xncf.FileManager registration");
 
             return builder;
         }

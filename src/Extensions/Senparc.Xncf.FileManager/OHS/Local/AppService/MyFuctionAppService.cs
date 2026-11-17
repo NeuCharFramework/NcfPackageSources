@@ -78,14 +78,14 @@ namespace Senparc.Xncf.FileManager.OHS.Local.AppService
                         if (request.Number2 == 0)
                         {
                             response.Success = false;
-                            response.ErrorMessage = "被除数不能为0！";
+                            response.ErrorMessage = "The divisor cannot be zero!";
                             return null;
                         }
                         calcResult = calcResult / request.Number2;
                         break;
                     default:
                         response.Success = false;
-                        response.ErrorMessage = $"未知的运算符：{theOperator}";
+                        response.ErrorMessage = $"Unknown operator: {theOperator}";
                         return null;
                 }
 
@@ -97,14 +97,14 @@ namespace Senparc.Xncf.FileManager.OHS.Local.AppService
                     {
                         var oldValue = calcResult;
                         calcResult = Math.Pow(calcResult, power);
-                        logger.Append($"进行{power}次方运算：{oldValue}{(power == 2 ? "²" : "³")} = {calcResult}");
+                        logger.Append($"Calculated power {power}: {oldValue}{(power == 2 ? "²" : "³")} = {calcResult}");
                     }
                 };
 
                 raisePower(2);
                 raisePower(3);
 
-                response.Data = $"【{request.Name}】计算结果：{calcResult}。计算过程请看日志";
+                response.Data = $"[{request.Name}] Result: {calcResult}. See the log for calculation details.";
                 return null;
             });
         }

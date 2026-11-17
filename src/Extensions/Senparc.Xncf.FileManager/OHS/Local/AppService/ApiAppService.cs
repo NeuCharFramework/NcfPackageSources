@@ -63,12 +63,12 @@ namespace Senparc.Xncf.FileManager.OHS.Local.AppService
             //StringAppResponse is a shorthand for AppResponseBase<string>
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                throw new NcfExceptionBase($"抛出异常测试，传输参数：{request.FirstName} {request.LastName}");
+                throw new NcfExceptionBase($"Exception test; parameters: {request.FirstName} {request.LastName}");
                 response.StateCode = 100;
             },
             exceptionHandler: (ex, response, logger) =>
             {
-                logger.Append($"正在处理异常，信息：{ex.Message}");
+                logger.Append($"Handling exception: {ex.Message}");
             },
             afterFunc: (response, logger) =>
             {

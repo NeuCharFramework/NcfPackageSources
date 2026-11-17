@@ -56,8 +56,8 @@ namespace Senparc.Xncf.FileManager
     {
         private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<FileManagerResource>(
             "Module.FileManager",
-            "文件管理",
-            "管理系统文件");
+            "File Manager",
+            "Manages system files");
 
         #region Legacy section
 
