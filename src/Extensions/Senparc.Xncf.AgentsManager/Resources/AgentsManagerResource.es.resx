@@ -1531,26 +1531,26 @@
   <data name="Frontend.358" xml:space="preserve"><value>Heredar de PromptRange</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.359" xml:space="preserve"><value>Estos endpoints proceden del registro del módulo MCP. Selecciona uno para añadirlo como nombre + URL a la configuración actual; se puede eliminar en cualquier momento.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.360" xml:space="preserve"><value>Instrucciones de tarea + conclusión clave del turno actual</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.361" xml:space="preserve"><value>Task description and execution strategy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.362" xml:space="preserve"><value>Create a Prompt Range from the current plain-text Prompt and selected Chat model, run it once, score it with AI, and switch automatically to a range-level reference.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.363" xml:space="preserve"><value>For example X-A2A-Token</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.364" xml:space="preserve"><value>For example X-API-Key</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.365" xml:space="preserve"><value>For example partner-ncf</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.366" xml:space="preserve"><value>For example research-agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.367" xml:space="preserve"><value>For example: external research assistant</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.368" xml:space="preserve"><value>Used by remote systems to choose an Agent; do not enter Prompts or internal information.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.369" xml:space="preserve"><value>Save</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.370" xml:space="preserve"><value>Save</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.371" xml:space="preserve"><value>Allow local tool calls</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.372" xml:space="preserve"><value>Inbound authentication</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.373" xml:space="preserve"><value>Public description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.374" xml:space="preserve"><value>Public identifier</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.375" xml:space="preserve"><value>Plugin compatibility</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.376" xml:space="preserve"><value>Compatible forced approval</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.377" xml:space="preserve"><value>Compatibility switch: require approval before every tool call</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.378" xml:space="preserve"><value>Legacy group compatibility: full history (only without remote members)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.379" xml:space="preserve"><value>Delete Agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.380" xml:space="preserve"><value>Refresh data</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.361" xml:space="preserve"><value>Instrucciones de tarea + conclusión clave del turno actual</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.362" xml:space="preserve"><value>Descripción de la tarea y estrategia de ejecución</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.363" xml:space="preserve"><value>Por ejemplo X-A2A-Token</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.364" xml:space="preserve"><value>Por ejemplo X-API-Key</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.365" xml:space="preserve"><value>Por ejemplo partner-ncf</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.366" xml:space="preserve"><value>Por ejemplo research-agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.367" xml:space="preserve"><value>Por ejemplo: asistente de investigación externo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.368" xml:space="preserve"><value>Se usa para que los sistemas remotos seleccionen un Agent; no introduzcas Prompts ni información interna.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.369" xml:space="preserve"><value>Guardar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.370" xml:space="preserve"><value>Guardar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.371" xml:space="preserve"><value>Permitir llamadas de herramientas locales</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.372" xml:space="preserve"><value>Autenticación entrante</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.373" xml:space="preserve"><value>Descripción pública</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.374" xml:space="preserve"><value>Identificador público</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.375" xml:space="preserve"><value>Compatibilidad de plugins</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.376" xml:space="preserve"><value>Aprobación forzada compatible</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.377" xml:space="preserve"><value>Interruptor de compatibilidad: exigir aprobación antes de cada llamada de herramienta</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.378" xml:space="preserve"><value>Compatibilidad de grupo heredado: historial completo (solo sin miembros remotos)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.379" xml:space="preserve"><value>Eliminar Agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.380" xml:space="preserve"><value>Actualizar datos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.381" xml:space="preserve"><value>Refresh status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.382" xml:space="preserve"><value>Add a Human text participant</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.383" xml:space="preserve"><value>Publishing creates a standard Agent Card discoverable and callable by any A2A-compatible system.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
