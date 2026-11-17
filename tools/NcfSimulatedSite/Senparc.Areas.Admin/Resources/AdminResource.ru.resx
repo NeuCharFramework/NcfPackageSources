@@ -1267,41 +1267,41 @@
   <data name="Frontend.372" xml:space="preserve"><value>Любой, у кого есть ссылка, может просмотреть этот снимок.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.373" xml:space="preserve"><value>Трассировка задачи</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.374" xml:space="preserve"><value>Например: пример проекта Yield C#</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.375" xml:space="preserve"><value>Save file</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.376" xml:space="preserve"><value>Allow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.377" xml:space="preserve"><value>Allow AI to write files</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.378" xml:space="preserve"><value>Allow AI to execute Python</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.379" xml:space="preserve"><value>Close asset panel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.380" xml:space="preserve"><value>Share expiration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.381" xml:space="preserve"><value>Create read-only snapshot link</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.382" xml:space="preserve"><value>Anonymous snapshot link</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.383" xml:space="preserve"><value>Cancel editing</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.384" xml:space="preserve"><value>Writable</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.385" xml:space="preserve"><value>CLI execution allowed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.386" xml:space="preserve"><value>Optional: add details or a rejection reason</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.387" xml:space="preserve"><value>Open in external browser (read-only)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.388" xml:space="preserve"><value>Expand to the maximum available width</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.389" xml:space="preserve"><value>Referenced module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.390" xml:space="preserve"><value>Current session</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.391" xml:space="preserve"><value>The current directory is empty</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.392" xml:space="preserve"><value>Reject</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.393" xml:space="preserve"><value>Search models</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.394" xml:space="preserve"><value>Revoke</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.395" xml:space="preserve"><value>New Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.396" xml:space="preserve"><value>No Harness trajectory yet</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.397" xml:space="preserve"><value>Unsaved</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.398" xml:space="preserve"><value>View live execution</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.399" xml:space="preserve"><value>Search trajectories, tools, or results</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.400" xml:space="preserve"><value>Searching Workspace…</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.401" xml:space="preserve"><value>Text preview is not supported for this file type</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.402" xml:space="preserve"><value>No matching files or paths</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.403" xml:space="preserve"><value>Manage anonymous sharing</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.404" xml:space="preserve"><value>Edit file</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.405" xml:space="preserve"><value>Vision</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.406" xml:space="preserve"><value>Assets</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.407" xml:space="preserve"><value>Go to</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.408" xml:space="preserve"><value>Go to line</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.409" xml:space="preserve"><value>The default system prompt is managed by PromptRange; the current text contains personal or tenant preferences.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.375" xml:space="preserve"><value>Сохранить файл</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.376" xml:space="preserve"><value>Разрешить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.377" xml:space="preserve"><value>Разрешить ИИ записывать файлы</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.378" xml:space="preserve"><value>Разрешить ИИ выполнять Python</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.379" xml:space="preserve"><value>Закрыть панель ресурсов</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.380" xml:space="preserve"><value>Срок действия публикации</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.381" xml:space="preserve"><value>Создать ссылку на снимок только для чтения</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.382" xml:space="preserve"><value>Анонимная ссылка на снимок</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.383" xml:space="preserve"><value>Отменить редактирование</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.384" xml:space="preserve"><value>Доступно для записи</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.385" xml:space="preserve"><value>Исполняемый CLI</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.386" xml:space="preserve"><value>Необязательно: добавьте примечание или причину отказа</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.387" xml:space="preserve"><value>Открыть во внешнем браузере (только чтение)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.388" xml:space="preserve"><value>Развернуть до максимальной доступной ширины</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.389" xml:space="preserve"><value>Связанные модули</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.390" xml:space="preserve"><value>Текущая сессия</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.391" xml:space="preserve"><value>Текущий каталог пуст</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.392" xml:space="preserve"><value>Отклонить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.393" xml:space="preserve"><value>Поиск моделей</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.394" xml:space="preserve"><value>Отменить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.395" xml:space="preserve"><value>Создать Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.396" xml:space="preserve"><value>Трассировка Harness отсутствует</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.397" xml:space="preserve"><value>Не сохранено</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.398" xml:space="preserve"><value>Просмотреть выполнение в реальном времени</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.399" xml:space="preserve"><value>Поиск трасс, инструментов или результатов</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.400" xml:space="preserve"><value>Поиск Workspace…</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.401" xml:space="preserve"><value>Предпросмотр текста не поддерживается для этого типа файла</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.402" xml:space="preserve"><value>Подходящие файлы или пути не найдены</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.403" xml:space="preserve"><value>Управление анонимными публикациями</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.404" xml:space="preserve"><value>Редактировать файл</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.405" xml:space="preserve"><value>Визуальный режим</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.406" xml:space="preserve"><value>Ресурсы</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.407" xml:space="preserve"><value>Перейти</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.408" xml:space="preserve"><value>Перейти к строке</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.409" xml:space="preserve"><value>Системный prompt по умолчанию управляется PromptRange; текущий текст содержит личные настройки или настройки арендатора.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.410" xml:space="preserve"><value>, use @@ to reference a file or path</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.411" xml:space="preserve"><value>, enter @@ to reference a file or path</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.412" xml:space="preserve"><value>Supports plain text and absolute http/https links using &amp;lt;a&amp;gt; tags; other HTML is encoded.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>

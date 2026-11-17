@@ -1279,22 +1279,22 @@
   <data name="Frontend.382" xml:space="preserve"><value>Anonymous snapshot link</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.383" xml:space="preserve"><value>Cancel editing</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.384" xml:space="preserve"><value>Writable</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.385" xml:space="preserve"><value>CLI execution allowed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.386" xml:space="preserve"><value>Optional: add details or a rejection reason</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.385" xml:space="preserve"><value>CLI executable</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.386" xml:space="preserve"><value>Optional: add a note or rejection reason</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.387" xml:space="preserve"><value>Open in external browser (read-only)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.388" xml:space="preserve"><value>Expand to the maximum available width</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.389" xml:space="preserve"><value>Referenced module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.389" xml:space="preserve"><value>Referenced modules</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.390" xml:space="preserve"><value>Current session</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.391" xml:space="preserve"><value>The current directory is empty</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.391" xml:space="preserve"><value>Current directory is empty</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.392" xml:space="preserve"><value>Reject</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.393" xml:space="preserve"><value>Search models</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.394" xml:space="preserve"><value>Revoke</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.395" xml:space="preserve"><value>New Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.396" xml:space="preserve"><value>No Harness trajectory yet</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.394" xml:space="preserve"><value>Undo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.395" xml:space="preserve"><value>Create Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.396" xml:space="preserve"><value>No Harness traces</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.397" xml:space="preserve"><value>Unsaved</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.398" xml:space="preserve"><value>View live execution</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.399" xml:space="preserve"><value>Search trajectories, tools, or results</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.400" xml:space="preserve"><value>Searching Workspace…</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.399" xml:space="preserve"><value>Search traces, tools, or results</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.400" xml:space="preserve"><value>Finding Workspace…</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.401" xml:space="preserve"><value>Text preview is not supported for this file type</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.402" xml:space="preserve"><value>No matching files or paths</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.403" xml:space="preserve"><value>Manage anonymous sharing</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
