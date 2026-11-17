@@ -61,7 +61,7 @@
     <value>モジュール管理</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>Weixin Management</value>
+    <value>Weixin管理</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
     <value>公式アカウント管理センター</value>
@@ -100,10 +100,10 @@
     <value>タグを表示</value>
   </data>
   <data name="Frontend.016" xml:space="preserve">
-    <value>Conversation</value>
+    <value>会話</value>
   </data>
   <data name="Frontend.017" xml:space="preserve">
-    <value>Edit</value>
+    <value>編集</value>
   </data>
   <data name="Frontend.018" xml:space="preserve">
     <value>AccessToken 資格情報の有効期限</value>
@@ -115,22 +115,22 @@
     <value>公式アカウント管理</value>
   </data>
   <data name="Frontend.021" xml:space="preserve">
-    <value>Add</value>
+    <value>追加</value>
   </data>
   <data name="Frontend.022" xml:space="preserve">
-    <value>Delete</value>
+    <value>削除</value>
   </data>
   <data name="Frontend.023" xml:space="preserve">
-    <value>Name</value>
+    <value>名前</value>
   </data>
   <data name="Frontend.024" xml:space="preserve">
     <value>メモ</value>
   </data>
   <data name="Frontend.025" xml:space="preserve">
-    <value>Description</value>
+    <value>説明</value>
   </data>
   <data name="Frontend.026" xml:space="preserve">
-    <value>Added time</value>
+    <value>追加日時</value>
   </data>
   <data name="Frontend.027" xml:space="preserve">
     <value>メッセージURL</value>
@@ -163,7 +163,7 @@
     <value>キャンセル</value>
   </data>
   <data name="Frontend.037" xml:space="preserve">
-    <value>Confirm</value>
+    <value>確認</value>
   </data>
   <data name="Frontend.038" xml:space="preserve">
     <value>公式アカウント名を入力</value>
@@ -199,7 +199,7 @@
     <value>成功しました</value>
   </data>
   <data name="Frontend.049" xml:space="preserve">
-    <value>Warning</value>
+    <value>警告</value>
   </data>
   <data name="Frontend.050" xml:space="preserve">
     <value>公式アカウントを1つ以上選択</value>
@@ -226,19 +226,19 @@
     <value>アバター</value>
   </data>
   <data name="Frontend.058" xml:space="preserve">
-    <value>Gender</value>
+    <value>性別</value>
   </data>
   <data name="Frontend.059" xml:space="preserve">
-    <value>Male</value>
+    <value>男性</value>
   </data>
   <data name="Frontend.060" xml:space="preserve">
-    <value>Female</value>
+    <value>女性</value>
   </data>
   <data name="Frontend.061" xml:space="preserve">
-    <value>Unknown</value>
+    <value>不明</value>
   </data>
   <data name="Frontend.062" xml:space="preserve">
-    <value>Region</value>
+    <value>地域</value>
   </data>
   <data name="Frontend.063" xml:space="preserve">
     <value>グループ</value>
