@@ -118,7 +118,7 @@
     <value>コンテンツタイプ</value>
   </data>
   <data name="Frontend.014" xml:space="preserve">
-    <value>Delete</value>
+    <value>削除</value>
   </data>
   <data name="Frontend.015" xml:space="preserve">
     <value>キャンセル</value>
@@ -127,10 +127,10 @@
     <value>検索テスト</value>
   </data>
   <data name="Frontend.017" xml:space="preserve">
-    <value>Recall rate</value>
+    <value>検索率</value>
   </data>
   <data name="Frontend.018" xml:space="preserve">
-    <value>Name</value>
+    <value>名前</value>
   </data>
   <data name="Frontend.019" xml:space="preserve">
     <value>ベクトル化</value>
@@ -142,7 +142,7 @@
     <value>ベクトル化の進捗</value>
   </data>
   <data name="Frontend.022" xml:space="preserve">
-    <value>characters</value>
+    <value>文字</value>
   </data>
   <data name="Frontend.023" xml:space="preserve">
     <value>プロパティ名</value>
@@ -151,7 +151,7 @@
     <value>プロパティ管理</value>
   </data>
   <data name="Frontend.025" xml:space="preserve">
-    <value>Selected:</value>
+    <value>選択済み：</value>
   </data>
   <data name="Frontend.026" xml:space="preserve">
     <value>{0} 行を選択中</value>
@@ -166,7 +166,7 @@
     <value>選択を削除</value>
   </data>
   <data name="Frontend.030" xml:space="preserve">
-    <value>Search</value>
+    <value>検索</value>
   </data>
   <data name="Frontend.031" xml:space="preserve">
     <value>アクション</value>
@@ -187,22 +187,22 @@
     <value>ファイルサイズ</value>
   </data>
   <data name="Frontend.037" xml:space="preserve">
-    <value>Add</value>
+    <value>追加</value>
   </data>
   <data name="Frontend.038" xml:space="preserve">
     <value>新規ファイル</value>
   </data>
   <data name="Frontend.039" xml:space="preserve">
-    <value>Time ↓</value>
+    <value>時間 ↓</value>
   </data>
   <data name="Frontend.040" xml:space="preserve">
     <value>リコール結果はまだありません。ナレッジベースを選び、元テキストを入力して「テスト」をクリックしてください。</value>
   </data>
   <data name="Frontend.041" xml:space="preserve">
-    <value>Search</value>
+    <value>検索</value>
   </data>
   <data name="Frontend.042" xml:space="preserve">
-    <value>Query content</value>
+    <value>クエリ内容</value>
   </data>
   <data name="Frontend.043" xml:space="preserve">
     <value>タグ名</value>
@@ -214,10 +214,10 @@
     <value>指定したクエリテキストで、ナレッジのリコール精度をテストします。</value>
   </data>
   <data name="Frontend.046" xml:space="preserve">
-    <value>Retrieval method</value>
+    <value>検索方法</value>
   </data>
   <data name="Frontend.047" xml:space="preserve">
-    <value>Retrieval settings</value>
+    <value>検索設定</value>
   </data>
   <data name="Frontend.048" xml:space="preserve">
     <value>パッセージの詳細</value>
@@ -226,7 +226,7 @@
     <value>テスト</value>
   </data>
   <data name="Frontend.050" xml:space="preserve">
-    <value>Added time</value>
+    <value>追加日時</value>
   </data>
   <data name="Frontend.051" xml:space="preserve">
     <value>ソーステキスト</value>
@@ -244,10 +244,10 @@
     <value>ナレッジベース管理</value>
   </data>
   <data name="Frontend.056" xml:space="preserve">
-    <value>Confirm</value>
+    <value>確認</value>
   </data>
   <data name="Frontend.057" xml:space="preserve">
-    <value>Confirm</value>
+    <value>確認</value>
   </data>
   <data name="Frontend.058" xml:space="preserve">
     <value>このナレッジベースを削除しますか？</value>
@@ -256,10 +256,10 @@
     <value>列を絞り込む</value>
   </data>
   <data name="Frontend.060" xml:space="preserve">
-    <value>Edit</value>
+    <value>編集</value>
   </data>
   <data name="Frontend.061" xml:space="preserve">
-    <value>records</value>
+    <value>件</value>
   </data>
   <data name="Frontend.062" xml:space="preserve">
     <value>記入してください</value>
@@ -298,7 +298,7 @@
     <value>ファイルを選ぶとファイル管理へアップロードされます。下の一覧でチェックすると、現在のナレッジベースに関連付けられます。</value>
   </data>
   <data name="Frontend.074" xml:space="preserve">
-    <value>Configure</value>
+    <value>構成</value>
   </data>
   <data name="Frontend.075" xml:space="preserve">
     <value>リセット</value>
@@ -313,7 +313,7 @@
     <value>追加に失敗しました</value>
   </data>
   <data name="Frontend.079" xml:space="preserve">
-    <value>Updated successfully</value>
+    <value>更新しました</value>
   </data>
   <data name="Frontend.080" xml:space="preserve">
     <value>編集に失敗しました</value>
@@ -340,7 +340,7 @@
     <value>データなし</value>
   </data>
   <data name="Frontend.088" xml:space="preserve">
-    <value>Notice</value>
+    <value>お知らせ</value>
   </data>
   <data name="Page.EditKnowledgeBase" xml:space="preserve">
     <value>ナレッジベースを編集</value>
@@ -349,13 +349,13 @@
     <value>ナレッジベースを作成</value>
   </data>
   <data name="Frontend.089" xml:space="preserve">
-    <value>Kind</value>
+    <value>種類</value>
   </data>
   <data name="Frontend.090" xml:space="preserve">
     <value>ソース</value>
   </data>
   <data name="Frontend.091" xml:space="preserve">
-    <value>Important</value>
+    <value>重要</value>
   </data>
   <data name="Frontend.092" xml:space="preserve">
     <value>審査待ち</value>
@@ -451,7 +451,7 @@
     <value>ナレッジベースId</value>
   </data>
   <data name="Frontend.123" xml:space="preserve">
-    <value>Input</value>
+    <value>入力</value>
   </data>
   <data name="Frontend.124" xml:space="preserve">
     <value>ファイル</value>
@@ -475,7 +475,7 @@
     <value>アップロードに成功しました</value>
   </data>
   <data name="Frontend.131" xml:space="preserve">
-    <value>Failed</value>
+    <value>失敗</value>
   </data>
   <data name="Frontend.132" xml:space="preserve">
     <value>アップロードに失敗しました。再度アップロードしてください</value>
@@ -547,7 +547,7 @@
     <value>一括削除の確認</value>
   </data>
   <data name="Frontend.155" xml:space="preserve">
-    <value>Partially completed</value>
+    <value>一部完了</value>
   </data>
   <data name="Frontend.156" xml:space="preserve">
     <value>{0}/{1} 件のファイルを削除しました</value>
@@ -556,7 +556,7 @@
     <value>ファイル削除済み</value>
   </data>
   <data name="Frontend.158" xml:space="preserve">
-    <value>Deletion failed:</value>
+    <value>削除に失敗：</value>
   </data>
   <data name="Frontend.159" xml:space="preserve">
     <value>ベクトル化を確認</value>
