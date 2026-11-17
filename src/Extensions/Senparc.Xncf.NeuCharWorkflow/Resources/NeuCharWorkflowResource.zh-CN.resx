@@ -539,4 +539,49 @@
   <data name="Frontend.517" xml:space="preserve"><value>将永久删除 {0} 条已完成任务记录（成功 {1} 条，失败 {2} 条）。运行中的任务、工作流定义和版本不会受影响，删除后无法恢复。</value></data>
   <data name="Frontend.518" xml:space="preserve"><value>清理 {0} 条</value></data>
   <data name="Frontend.519" xml:space="preserve"><value>已清理 {0} 条已完成任务记录。</value></data>
+
+  <data name="Frontend.520" xml:space="preserve"><value>取首个非空值</value></data>
+  <data name="Frontend.521" xml:space="preserve"><value>前缀匹配</value></data>
+  <data name="Frontend.522" xml:space="preserve"><value>后缀匹配</value></data>
+  <data name="Frontend.523" xml:space="preserve"><value>是否为空</value></data>
+  <data name="Frontend.524" xml:space="preserve"><value>是否为 null</value></data>
+  <data name="Frontend.525" xml:space="preserve"><value>截取文本</value></data>
+  <data name="Frontend.526" xml:space="preserve"><value>去首尾空白</value></data>
+  <data name="Frontend.527" xml:space="preserve"><value>转小写</value></data>
+  <data name="Frontend.528" xml:space="preserve"><value>转大写</value></data>
+  <data name="Frontend.529" xml:space="preserve"><value>替换文本</value></data>
+  <data name="Frontend.530" xml:space="preserve"><value>分割文本</value></data>
+  <data name="Frontend.531" xml:space="preserve"><value>连接值</value></data>
+  <data name="Frontend.532" xml:space="preserve"><value>长度</value></data>
+  <data name="Frontend.533" xml:space="preserve"><value>计数</value></data>
+  <data name="Frontend.534" xml:space="preserve"><value>转数组</value></data>
+  <data name="Frontend.535" xml:space="preserve"><value>首项</value></data>
+  <data name="Frontend.536" xml:space="preserve"><value>末项</value></data>
+  <data name="Frontend.537" xml:space="preserve"><value>按索引取值</value></data>
+  <data name="Frontend.538" xml:space="preserve"><value>连接数组</value></data>
+  <data name="Frontend.539" xml:space="preserve"><value>排序</value></data>
+  <data name="Frontend.540" xml:space="preserve"><value>按字段排序</value></data>
+  <data name="Frontend.541" xml:space="preserve"><value>反转</value></data>
+  <data name="Frontend.542" xml:space="preserve"><value>取前几项</value></data>
+  <data name="Frontend.543" xml:space="preserve"><value>跳过前几项</value></data>
+  <data name="Frontend.544" xml:space="preserve"><value>展开一层</value></data>
+  <data name="Frontend.545" xml:space="preserve"><value>求和</value></data>
+  <data name="Frontend.546" xml:space="preserve"><value>最小值</value></data>
+  <data name="Frontend.547" xml:space="preserve"><value>最大值</value></data>
+  <data name="Frontend.548" xml:space="preserve"><value>去重</value></data>
+  <data name="Frontend.549" xml:space="preserve"><value>对象键名</value></data>
+  <data name="Frontend.550" xml:space="preserve"><value>对象值</value></data>
+  <data name="Frontend.551" xml:space="preserve"><value>包含属性</value></data>
+  <data name="Frontend.552" xml:space="preserve"><value>转数字</value></data>
+  <data name="Frontend.553" xml:space="preserve"><value>转 Int32</value></data>
+  <data name="Frontend.554" xml:space="preserve"><value>转 Int64</value></data>
+  <data name="Frontend.555" xml:space="preserve"><value>转 Decimal</value></data>
+  <data name="Frontend.556" xml:space="preserve"><value>转布尔</value></data>
+  <data name="Frontend.557" xml:space="preserve"><value>转文本</value></data>
+  <data name="Frontend.558" xml:space="preserve"><value>当前时间</value></data>
+  <data name="Frontend.559" xml:space="preserve"><value>格式化日期</value></data>
+  <data name="Frontend.560" xml:space="preserve"><value>文本</value></data>
+  <data name="Frontend.561" xml:space="preserve"><value>文本/数组</value></data>
+  <data name="Frontend.562" xml:space="preserve"><value>类型</value></data>
+  <data name="Frontend.563" xml:space="preserve"><value>时间</value></data>
 </root>

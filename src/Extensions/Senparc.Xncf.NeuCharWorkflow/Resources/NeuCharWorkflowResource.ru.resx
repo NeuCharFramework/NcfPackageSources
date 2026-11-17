@@ -539,4 +539,49 @@
   <data name="Frontend.517" xml:space="preserve"><value>Будет безвозвратно удалено завершённых задач: {0} (успешных {1}, неуспешных {2}). Выполняющиеся задачи, определения Workflow и версии не затрагиваются; удаление нельзя отменить.</value></data>
   <data name="Frontend.518" xml:space="preserve"><value>Очистить {0}</value></data>
   <data name="Frontend.519" xml:space="preserve"><value>Очищено завершённых записей задач: {0}.</value></data>
+
+  <data name="Frontend.520" xml:space="preserve"><value>Первое непустое значение</value></data>
+  <data name="Frontend.521" xml:space="preserve"><value>Совпадение префикса</value></data>
+  <data name="Frontend.522" xml:space="preserve"><value>Совпадение суффикса</value></data>
+  <data name="Frontend.523" xml:space="preserve"><value>Пусто ли</value></data>
+  <data name="Frontend.524" xml:space="preserve"><value>Является ли null</value></data>
+  <data name="Frontend.525" xml:space="preserve"><value>Подстрока</value></data>
+  <data name="Frontend.526" xml:space="preserve"><value>Удалить пробелы</value></data>
+  <data name="Frontend.527" xml:space="preserve"><value>В нижний регистр</value></data>
+  <data name="Frontend.528" xml:space="preserve"><value>В верхний регистр</value></data>
+  <data name="Frontend.529" xml:space="preserve"><value>Заменить текст</value></data>
+  <data name="Frontend.530" xml:space="preserve"><value>Разделить текст</value></data>
+  <data name="Frontend.531" xml:space="preserve"><value>Объединить значения</value></data>
+  <data name="Frontend.532" xml:space="preserve"><value>Длина</value></data>
+  <data name="Frontend.533" xml:space="preserve"><value>Количество</value></data>
+  <data name="Frontend.534" xml:space="preserve"><value>В массив</value></data>
+  <data name="Frontend.535" xml:space="preserve"><value>Первый элемент</value></data>
+  <data name="Frontend.536" xml:space="preserve"><value>Последний элемент</value></data>
+  <data name="Frontend.537" xml:space="preserve"><value>Получить по индексу</value></data>
+  <data name="Frontend.538" xml:space="preserve"><value>Объединить массив</value></data>
+  <data name="Frontend.539" xml:space="preserve"><value>Сортировка</value></data>
+  <data name="Frontend.540" xml:space="preserve"><value>Сортировка по полю</value></data>
+  <data name="Frontend.541" xml:space="preserve"><value>Обратить</value></data>
+  <data name="Frontend.542" xml:space="preserve"><value>Взять первые элементы</value></data>
+  <data name="Frontend.543" xml:space="preserve"><value>Пропустить первые элементы</value></data>
+  <data name="Frontend.544" xml:space="preserve"><value>Развернуть один уровень</value></data>
+  <data name="Frontend.545" xml:space="preserve"><value>Сумма</value></data>
+  <data name="Frontend.546" xml:space="preserve"><value>Минимум</value></data>
+  <data name="Frontend.547" xml:space="preserve"><value>Максимум</value></data>
+  <data name="Frontend.548" xml:space="preserve"><value>Уникальные</value></data>
+  <data name="Frontend.549" xml:space="preserve"><value>Ключи объекта</value></data>
+  <data name="Frontend.550" xml:space="preserve"><value>Значения объекта</value></data>
+  <data name="Frontend.551" xml:space="preserve"><value>Имеет свойство</value></data>
+  <data name="Frontend.552" xml:space="preserve"><value>В число</value></data>
+  <data name="Frontend.553" xml:space="preserve"><value>В Int32</value></data>
+  <data name="Frontend.554" xml:space="preserve"><value>В Int64</value></data>
+  <data name="Frontend.555" xml:space="preserve"><value>В Decimal</value></data>
+  <data name="Frontend.556" xml:space="preserve"><value>В логическое значение</value></data>
+  <data name="Frontend.557" xml:space="preserve"><value>В текст</value></data>
+  <data name="Frontend.558" xml:space="preserve"><value>Текущее время</value></data>
+  <data name="Frontend.559" xml:space="preserve"><value>Формат даты</value></data>
+  <data name="Frontend.560" xml:space="preserve"><value>Текст</value></data>
+  <data name="Frontend.561" xml:space="preserve"><value>Текст/массив</value></data>
+  <data name="Frontend.562" xml:space="preserve"><value>Тип</value></data>
+  <data name="Frontend.563" xml:space="preserve"><value>Время</value></data>
 </root>

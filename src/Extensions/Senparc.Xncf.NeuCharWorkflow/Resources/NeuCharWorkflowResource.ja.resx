@@ -539,4 +539,49 @@
   <data name="Frontend.517" xml:space="preserve"><value>完了済みタスク記録を{0}件削除します（成功 {1}件、失敗 {2}件）。実行中のタスク、Workflow定義、バージョンには影響せず、削除後は復元できません。</value></data>
   <data name="Frontend.518" xml:space="preserve"><value>{0}件をクリーンアップ</value></data>
   <data name="Frontend.519" xml:space="preserve"><value>完了済みタスク記録を{0}件クリーンアップしました。</value></data>
+
+  <data name="Frontend.520" xml:space="preserve"><value>最初の空でない値</value></data>
+  <data name="Frontend.521" xml:space="preserve"><value>前方一致</value></data>
+  <data name="Frontend.522" xml:space="preserve"><value>後方一致</value></data>
+  <data name="Frontend.523" xml:space="preserve"><value>空かどうか</value></data>
+  <data name="Frontend.524" xml:space="preserve"><value>nullかどうか</value></data>
+  <data name="Frontend.525" xml:space="preserve"><value>部分文字列</value></data>
+  <data name="Frontend.526" xml:space="preserve"><value>前後の空白を削除</value></data>
+  <data name="Frontend.527" xml:space="preserve"><value>小文字に変換</value></data>
+  <data name="Frontend.528" xml:space="preserve"><value>大文字に変換</value></data>
+  <data name="Frontend.529" xml:space="preserve"><value>テキストを置換</value></data>
+  <data name="Frontend.530" xml:space="preserve"><value>テキストを分割</value></data>
+  <data name="Frontend.531" xml:space="preserve"><value>値を連結</value></data>
+  <data name="Frontend.532" xml:space="preserve"><value>長さ</value></data>
+  <data name="Frontend.533" xml:space="preserve"><value>カウント</value></data>
+  <data name="Frontend.534" xml:space="preserve"><value>配列に変換</value></data>
+  <data name="Frontend.535" xml:space="preserve"><value>先頭項目</value></data>
+  <data name="Frontend.536" xml:space="preserve"><value>末尾項目</value></data>
+  <data name="Frontend.537" xml:space="preserve"><value>インデックスで取得</value></data>
+  <data name="Frontend.538" xml:space="preserve"><value>配列を連結</value></data>
+  <data name="Frontend.539" xml:space="preserve"><value>並べ替え</value></data>
+  <data name="Frontend.540" xml:space="preserve"><value>フィールドで並べ替え</value></data>
+  <data name="Frontend.541" xml:space="preserve"><value>反転</value></data>
+  <data name="Frontend.542" xml:space="preserve"><value>先頭から取得</value></data>
+  <data name="Frontend.543" xml:space="preserve"><value>先頭をスキップ</value></data>
+  <data name="Frontend.544" xml:space="preserve"><value>1階層展開</value></data>
+  <data name="Frontend.545" xml:space="preserve"><value>合計</value></data>
+  <data name="Frontend.546" xml:space="preserve"><value>最小値</value></data>
+  <data name="Frontend.547" xml:space="preserve"><value>最大値</value></data>
+  <data name="Frontend.548" xml:space="preserve"><value>重複を除去</value></data>
+  <data name="Frontend.549" xml:space="preserve"><value>オブジェクトのキー</value></data>
+  <data name="Frontend.550" xml:space="preserve"><value>オブジェクトの値</value></data>
+  <data name="Frontend.551" xml:space="preserve"><value>プロパティを含む</value></data>
+  <data name="Frontend.552" xml:space="preserve"><value>数値に変換</value></data>
+  <data name="Frontend.553" xml:space="preserve"><value>Int32に変換</value></data>
+  <data name="Frontend.554" xml:space="preserve"><value>Int64に変換</value></data>
+  <data name="Frontend.555" xml:space="preserve"><value>Decimalに変換</value></data>
+  <data name="Frontend.556" xml:space="preserve"><value>ブール値に変換</value></data>
+  <data name="Frontend.557" xml:space="preserve"><value>テキストに変換</value></data>
+  <data name="Frontend.558" xml:space="preserve"><value>現在時刻</value></data>
+  <data name="Frontend.559" xml:space="preserve"><value>日付をフォーマット</value></data>
+  <data name="Frontend.560" xml:space="preserve"><value>テキスト</value></data>
+  <data name="Frontend.561" xml:space="preserve"><value>テキスト/配列</value></data>
+  <data name="Frontend.562" xml:space="preserve"><value>型</value></data>
+  <data name="Frontend.563" xml:space="preserve"><value>時間</value></data>
 </root>

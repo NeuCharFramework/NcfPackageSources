@@ -50,6 +50,10 @@ const WorkflowFormulaDefinitions = [
     { name: 'now', label: '当前时间', category: '时间', arity: 0, description: '返回当前 UTC 时间的 ISO 文本。' },
     { name: 'formatDate', label: '格式化日期', category: '时间', arity: 2, description: '按指定格式格式化日期；格式参数留空时使用默认格式。' }
 ];
+WorkflowFormulaDefinitions.forEach(definition => {
+    definition.label = ncfWorkflowText(definition.label);
+    definition.category = ncfWorkflowText(definition.category);
+});
 const workflowNodePickerTemplateElement = typeof document !== 'undefined'
     ? document.getElementById('workflow-node-picker-template')
     : null;

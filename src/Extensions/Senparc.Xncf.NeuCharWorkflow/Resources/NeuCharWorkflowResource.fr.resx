@@ -539,4 +539,49 @@
   <data name="Frontend.517" xml:space="preserve"><value>{0} enregistrements de tâches terminées seront définitivement supprimés ({1} réussis, {2} échoués). Les tâches en cours, les définitions de Workflow et les versions ne sont pas affectées ; la suppression est irréversible.</value></data>
   <data name="Frontend.518" xml:space="preserve"><value>Nettoyer {0}</value></data>
   <data name="Frontend.519" xml:space="preserve"><value>{0} enregistrements de tâches terminées nettoyés.</value></data>
+
+  <data name="Frontend.520" xml:space="preserve"><value>Première valeur non vide</value></data>
+  <data name="Frontend.521" xml:space="preserve"><value>Correspondance de préfixe</value></data>
+  <data name="Frontend.522" xml:space="preserve"><value>Correspondance de suffixe</value></data>
+  <data name="Frontend.523" xml:space="preserve"><value>Est vide</value></data>
+  <data name="Frontend.524" xml:space="preserve"><value>Est null</value></data>
+  <data name="Frontend.525" xml:space="preserve"><value>Sous-chaîne</value></data>
+  <data name="Frontend.526" xml:space="preserve"><value>Supprimer les espaces</value></data>
+  <data name="Frontend.527" xml:space="preserve"><value>Minuscules</value></data>
+  <data name="Frontend.528" xml:space="preserve"><value>Majuscules</value></data>
+  <data name="Frontend.529" xml:space="preserve"><value>Remplacer le texte</value></data>
+  <data name="Frontend.530" xml:space="preserve"><value>Diviser le texte</value></data>
+  <data name="Frontend.531" xml:space="preserve"><value>Concaténer les valeurs</value></data>
+  <data name="Frontend.532" xml:space="preserve"><value>Longueur</value></data>
+  <data name="Frontend.533" xml:space="preserve"><value>Compter</value></data>
+  <data name="Frontend.534" xml:space="preserve"><value>Convertir en tableau</value></data>
+  <data name="Frontend.535" xml:space="preserve"><value>Premier élément</value></data>
+  <data name="Frontend.536" xml:space="preserve"><value>Dernier élément</value></data>
+  <data name="Frontend.537" xml:space="preserve"><value>Lire par index</value></data>
+  <data name="Frontend.538" xml:space="preserve"><value>Joindre le tableau</value></data>
+  <data name="Frontend.539" xml:space="preserve"><value>Trier</value></data>
+  <data name="Frontend.540" xml:space="preserve"><value>Trier par champ</value></data>
+  <data name="Frontend.541" xml:space="preserve"><value>Inverser</value></data>
+  <data name="Frontend.542" xml:space="preserve"><value>Prendre les premiers éléments</value></data>
+  <data name="Frontend.543" xml:space="preserve"><value>Ignorer les premiers éléments</value></data>
+  <data name="Frontend.544" xml:space="preserve"><value>Aplatir un niveau</value></data>
+  <data name="Frontend.545" xml:space="preserve"><value>Somme</value></data>
+  <data name="Frontend.546" xml:space="preserve"><value>Minimum</value></data>
+  <data name="Frontend.547" xml:space="preserve"><value>Maximum</value></data>
+  <data name="Frontend.548" xml:space="preserve"><value>Unique</value></data>
+  <data name="Frontend.549" xml:space="preserve"><value>Clés de l’objet</value></data>
+  <data name="Frontend.550" xml:space="preserve"><value>Valeurs de l’objet</value></data>
+  <data name="Frontend.551" xml:space="preserve"><value>Contient la propriété</value></data>
+  <data name="Frontend.552" xml:space="preserve"><value>Convertir en nombre</value></data>
+  <data name="Frontend.553" xml:space="preserve"><value>Convertir en Int32</value></data>
+  <data name="Frontend.554" xml:space="preserve"><value>Convertir en Int64</value></data>
+  <data name="Frontend.555" xml:space="preserve"><value>Convertir en Decimal</value></data>
+  <data name="Frontend.556" xml:space="preserve"><value>Convertir en booléen</value></data>
+  <data name="Frontend.557" xml:space="preserve"><value>Convertir en texte</value></data>
+  <data name="Frontend.558" xml:space="preserve"><value>Heure actuelle</value></data>
+  <data name="Frontend.559" xml:space="preserve"><value>Formater la date</value></data>
+  <data name="Frontend.560" xml:space="preserve"><value>Texte</value></data>
+  <data name="Frontend.561" xml:space="preserve"><value>Texte/tableau</value></data>
+  <data name="Frontend.562" xml:space="preserve"><value>Type</value></data>
+  <data name="Frontend.563" xml:space="preserve"><value>Temps</value></data>
 </root>
