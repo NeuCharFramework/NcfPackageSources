@@ -423,9 +423,9 @@ var app = new Vue({
                 this.activeNavKey = 'recall';
                 this.loadRecallKnowledgeBaseList();
             } else if (command === 'delete') {
-                this.$confirm('确认删除此知识库管理吗？', '删除确认', {
-                    confirmButtonText: '删除',
-                    cancelButtonText: '取消',
+                this.$confirm(ncfST('Frontend.150', row && row.name ? row.name : ''), ncfST('Frontend.151'), {
+                    confirmButtonText: ncfST('Frontend.007'),
+                    cancelButtonText: ncfST('Frontend.097'),
                     type: 'warning'
                 }).then(() => {
                     this.handleDelete(0, row);
@@ -666,7 +666,7 @@ var app = new Vue({
         resolveSaveResponse(res) {
             var body = res && res.data;
             if (!body) {
-                return { ok: false, message: '保存失败：未收到服务端响应' };
+                return { ok: false, message: ncfST('Frontend.149') + ncfST('Frontend.148') };
             }
             var payload = body;
             if (body.data && typeof body.data === 'object' && !Array.isArray(body.data)) {
@@ -678,7 +678,7 @@ var app = new Vue({
             var success = payload.success === true || payload.Success === true;
             var message = payload.msg || payload.Msg || body.msg || body.Msg
                 || body.exception || body.Exception
-                || (success ? '知识库保存成功' : '保存失败，请检查数据');
+                || (success ? ncfST('Frontend.147') : ncfST('Frontend.148'));
             return { ok: success, message: String(message) };
         },
         async getChatModelList() {
@@ -869,7 +869,7 @@ var app = new Vue({
             });
 
             if (flag === 'add') {
-                that.dialog.title = '添加知识库';
+                that.dialog.title = ncfST('Frontend.135');
                 that.dialog.data = {
                     id: 0,
                     embeddingModelId: null,
@@ -896,7 +896,7 @@ var app = new Vue({
             };
 
             if (flag === 'edit') {
-                that.dialog.title = '编辑知识库';
+                that.dialog.title = ncfST('Frontend.141');
             }
         },
         //Legacy comment translated to English.
@@ -1195,7 +1195,7 @@ var app = new Vue({
                 }).then(() => {
                     that.embeddingProgressPercent = 0;
                     that.embeddingProgressStatus = '';
-                    that.embeddingProgressText = '正在准备...';
+                    that.embeddingProgressText = ncfST('Frontend.134');
                     that.embeddingTaskName = item && item.name ? item.name : ('知识库-' + (item && item.id ? item.id : ''));
                     that.embeddingDoneCount = 0;
                     that.embeddingTotalCount = 1;
@@ -1209,7 +1209,7 @@ var app = new Vue({
                         progressVal += Math.random() * 8 + 4;
                         if (progressVal > 90) progressVal = 90;
                         that.embeddingProgressPercent = Math.floor(progressVal);
-                        that.embeddingProgressText = '正在向量化处理中... ' + that.embeddingProgressPercent + '%';
+                    that.embeddingProgressText = ncfST('Frontend.160') + ' ' + that.embeddingProgressPercent + '%';
                     }, 400);
 
                     const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseAppService/Xncf.KnowledgeBase_KnowledgeBaseAppService.EmbeddingKnowledgeBase';
@@ -1223,7 +1223,7 @@ var app = new Vue({
                         that.embeddingProgressPercent = 100;
                         that.embeddingProgressStatus = 'success';
                         that.embeddingDoneCount = 1;
-                        that.embeddingProgressText = '向量化完成';
+                        that.embeddingProgressText = ncfST('Frontend.161');
 
                         var body = res && res.data;
                         var success = body && (body.success === true);
@@ -1232,19 +1232,19 @@ var app = new Vue({
                             setTimeout(function () {
                                 that.showEmbeddingResultToast({
                                     isError: false,
-                                    title: '向量化请求已经执行完毕!',
+                                    title: ncfST('Frontend.161'),
                                     taskName: that.embeddingTaskName,
                                     startedAt: that.embeddingStartedAt,
-                                    message: resultMessage || ('知识库「' + (item.name || '') + '」向量化已完成。')
+                                    message: resultMessage || ncfST('Frontend.162', item.name || '')
                                 });
                             }, 500);
                         } else {
                             that.embeddingProgressStatus = 'exception';
-                            that.embeddingProgressText = '向量化失败，请稍后重试。';
+                            that.embeddingProgressText = ncfST('Frontend.163');
                             setTimeout(function () {
                                 that.showEmbeddingResultToast({
                                     isError: true,
-                                    title: '向量化任务执行失败!',
+                                    title: ncfST('Frontend.163'),
                                     taskName: that.embeddingTaskName,
                                     startedAt: that.embeddingStartedAt,
                                     total: 1,
@@ -1262,18 +1262,18 @@ var app = new Vue({
                         }
                         that.embeddingProgressStatus = 'exception';
                         that.embeddingProgressPercent = Math.max(that.embeddingProgressPercent, 50);
-                        that.embeddingProgressText = '处理出错，请稍后重试。';
+                        that.embeddingProgressText = ncfST('Frontend.163');
                         setTimeout(function () {
                             that.showEmbeddingResultToast({
                                 isError: true,
-                                title: '向量化任务执行失败!',
+                                title: ncfST('Frontend.163'),
                                 taskName: that.embeddingTaskName,
                                 startedAt: that.embeddingStartedAt,
                                 total: 1,
                                 success: 0,
                                 fail: 1,
-                                detail: err.message || '向量化处理出错，请检查配置',
-                                message: err.message || '向量化处理出错，请检查配置'
+                                detail: err.message || ncfST('Frontend.163'),
+                                message: err.message || ncfST('Frontend.163')
                             });
                         }, 800);
                     });
