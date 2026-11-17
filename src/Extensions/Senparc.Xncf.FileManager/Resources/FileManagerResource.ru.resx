@@ -424,4 +424,7 @@
   <data name="Frontend.188" xml:space="preserve"><value>Изменить тег</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.189" xml:space="preserve"><value>Добавить тег</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.190" xml:space="preserve"><value>Предварительный просмотр файла</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Script.RequestRejected" xml:space="preserve"><value>Сервер отклонил запрос. Обновите страницу и повторите попытку.</value></data>
+  <data name="Script.RequestFailed" xml:space="preserve"><value>Запрос не выполнен.</value></data>
+  <data name="Script.CsrfMissing" xml:space="preserve"><value>На странице отсутствует токен защиты от подделки запросов. Обновите страницу и повторите попытку.</value></data>
 </root>

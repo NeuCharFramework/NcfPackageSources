@@ -424,4 +424,7 @@
   <data name="Frontend.188" xml:space="preserve"><value>タグを編集</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.189" xml:space="preserve"><value>タグを追加</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.190" xml:space="preserve"><value>ファイルプレビュー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Script.RequestRejected" xml:space="preserve"><value>サーバーがリクエストを拒否しました。ページを再読み込みして再試行してください。</value></data>
+  <data name="Script.RequestFailed" xml:space="preserve"><value>リクエストに失敗しました。</value></data>
+  <data name="Script.CsrfMissing" xml:space="preserve"><value>ページの偽造防止トークンがありません。ページを再読み込みして再試行してください。</value></data>
 </root>

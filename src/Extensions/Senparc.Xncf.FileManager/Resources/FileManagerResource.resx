@@ -419,4 +419,7 @@
   <data name="Frontend.188" xml:space="preserve"><value>编辑标签</value></data>
   <data name="Frontend.189" xml:space="preserve"><value>新增标签</value></data>
   <data name="Frontend.190" xml:space="preserve"><value>文件预览</value></data>
+  <data name="Script.RequestRejected" xml:space="preserve"><value>服务器拒绝了请求，请刷新页面后重试。</value></data>
+  <data name="Script.RequestFailed" xml:space="preserve"><value>请求失败。</value></data>
+  <data name="Script.CsrfMissing" xml:space="preserve"><value>页面缺少防伪令牌，请刷新页面后重试。</value></data>
 </root>

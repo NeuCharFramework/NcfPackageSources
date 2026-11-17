@@ -22,15 +22,15 @@
         const message = typeof data === 'string' ? data : (data && (data.errorMessage || data.message || data.title));
         if (message) return message;
         if (error && error.response && error.response.status === 400) {
-            return '请求被服务器拒绝，请刷新页面后重试。';
+            return fileManagerText('Script.RequestRejected', 'The server rejected the request. Refresh the page and try again.');
         }
-        return (error && error.message) || '请求失败';
+        return (error && error.message) || fileManagerText('Script.RequestFailed', 'Request failed.');
     }
 
     function getRequestVerificationToken() {
         const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
         if (!tokenInput || !tokenInput.value) {
-            throw new Error('页面防伪令牌缺失，请刷新页面后重试。');
+            throw new Error(fileManagerText('Script.CsrfMissing', 'The page anti-forgery token is missing. Refresh the page and try again.'));
         }
         return tokenInput.value;
     }

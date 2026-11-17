@@ -424,4 +424,7 @@
   <data name="Frontend.188" xml:space="preserve"><value>Modifier la balise</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.189" xml:space="preserve"><value>Ajouter une balise</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.190" xml:space="preserve"><value>Prévisualisation du fichier</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Script.RequestRejected" xml:space="preserve"><value>Le serveur a rejeté la requête. Actualisez la page et réessayez.</value></data>
+  <data name="Script.RequestFailed" xml:space="preserve"><value>La requête a échoué.</value></data>
+  <data name="Script.CsrfMissing" xml:space="preserve"><value>Le jeton antifalsification de la page est manquant. Actualisez la page et réessayez.</value></data>
 </root>

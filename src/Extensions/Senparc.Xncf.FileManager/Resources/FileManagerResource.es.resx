@@ -424,4 +424,7 @@
   <data name="Frontend.188" xml:space="preserve"><value>Editar etiqueta</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.189" xml:space="preserve"><value>Añadir etiqueta</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.190" xml:space="preserve"><value>Vista previa del archivo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Script.RequestRejected" xml:space="preserve"><value>El servidor rechazó la solicitud. Actualiza la página e inténtalo de nuevo.</value></data>
+  <data name="Script.RequestFailed" xml:space="preserve"><value>La solicitud falló.</value></data>
+  <data name="Script.CsrfMissing" xml:space="preserve"><value>Falta el token antifalsificación de la página. Actualiza la página e inténtalo de nuevo.</value></data>
 </root>
