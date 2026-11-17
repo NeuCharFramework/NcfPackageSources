@@ -1156,7 +1156,7 @@
             emptyRecycleBin: function () {
                 var list = (this.recycleBin && (this.recycleBin.list || this.recycleBin.displayList)) || [];
                 if (!list.length) {
-                    this.$message.info('回收站暂无文档');
+                    this.$message.info(fileManagerText('Frontend.133', 'No documents'));
                     return;
                 }
                 if (!this.recycleEmptyDialog) {
@@ -1177,7 +1177,7 @@
                     : (this.recycleBin.displayList || [])).slice();
                 if (!items.length) {
                     if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
-                    this.$message.info('回收站暂无文档');
+                    this.$message.info(fileManagerText('Frontend.133', 'No documents'));
                     return;
                 }
 
@@ -1305,7 +1305,7 @@
                 if (index >= 0) {
                     list.splice(index, 1);
                     this.$set(row, 'isFavorite', false);
-                    this.$message.success('已取消收藏');
+                this.$message.success(fileManagerText('Frontend.090', 'Remove favorite'));
                 } else {
                     list.unshift({
                         id: row.id,
@@ -1319,7 +1319,7 @@
                         isFavorite: true
                     });
                     this.$set(row, 'isFavorite', true);
-                    this.$message.success('已加入收藏');
+                this.$message.success(fileManagerText('Frontend.119', 'Favorite'));
                 }
                 this.favoriteList.list = list;
                 this.saveFavoritesToStorage();
@@ -1451,7 +1451,7 @@
                 const index = list.findIndex(function (item) { return item.id === row.id; });
                 if (index >= 0) {
                     list.splice(index, 1);
-                    this.$message.success('已从快速访问移除');
+                    this.$message.success(fileManagerText('Frontend.071', 'Remove from Quick Access'));
                 } else {
                     list.unshift({
                         id: row.id,
@@ -1461,7 +1461,7 @@
                         folderPathText: typeof this.buildFavoritePathText === 'function' ? this.buildFavoritePathText() : '',
                         resourceScope: this.resourceScope
                     });
-                    this.$message.success('已添加至快速访问');
+                    this.$message.success(fileManagerText('Frontend.147', 'Use Quick Access'));
                 }
                 this.saveQuickAccessToStorage();
             },
@@ -1527,9 +1527,9 @@
                             blockedTypesText: this.uploadSettings.blockedTypesText || ''
                         })
                     );
-                    this.$message.success('上传设置已保存');
+                    this.$message.success(fileManagerText('Frontend.075', 'Save settings'));
                 } catch (e) {
-                    this.$message.error('保存失败，请检查浏览器本地存储是否可用');
+                    this.$message.error(fileManagerText('Frontend.035', 'Save failed'));
                 }
             },
             resetUploadSettings: function () {
@@ -1543,9 +1543,9 @@
                             blockedTypesText: this.uploadSettings.blockedTypesText || ''
                         })
                     );
-                    this.$message.success('已恢复默认上传设置');
+                    this.$message.success(fileManagerText('Frontend.108', 'Restore defaults'));
                 } catch (e) {
-                    this.$message.error('恢复默认失败');
+                    this.$message.error(fileManagerText('Frontend.040', 'Delete failed'));
                 }
             },
             getMaxUploadSizeBytes: function () {
@@ -1724,7 +1724,7 @@
                     this.syncFavoriteFlagsOnTable();
                     this.applyFileTagsToTable();
                 } catch (error) {
-                    this.$message.error('获取文件列表失败：' + errorMessage(error));
+                    this.$message.error(fileManagerText('Frontend.030', 'Failed to load the list') + ': ' + errorMessage(error));
                 } finally {
                     this.tableLoading = false;
                 }
@@ -1739,7 +1739,7 @@
                         return { id: folder.id, name: folder.name, description: folder.description || '', parentId: folder.parentId, hasChildren: true };
                     }));
                 } catch (error) {
-                    this.$message.error('获取文件夹失败：' + errorMessage(error));
+                    this.$message.error(fileManagerText('Frontend.030', 'Failed to load the list') + ': ' + errorMessage(error));
                     resolve([]);
                 }
             },
@@ -1790,9 +1790,9 @@
             handleNoteChange: async function (row) {
                 try {
                     await post(pageUrl + '?handler=EditNote', { id: row.id, note: row.description || '' });
-                    this.$message.success('备注已更新');
+                    this.$message.success(fileManagerText('Frontend.033', 'Updated successfully'));
                 } catch (error) {
-                    this.$message.error('更新备注失败：' + errorMessage(error));
+                    this.$message.error(fileManagerText('Frontend.034', 'Update failed') + ': ' + errorMessage(error));
                 }
             },
             downloadFile: function (row) { window.location.assign(pageUrl + '?handler=Download&id=' + encodeURIComponent(row.id)); },
@@ -1851,7 +1851,7 @@
             },
             previewFile: async function (row) {
                 if (!row || row.id == null) {
-                    this.$message.warning('当前项无法预览');
+                    this.$message.warning(fileManagerText('Frontend.131', 'No previewable content'));
                     return;
                 }
                 const fileName = row.fileName || row.name || '未命名文件';
