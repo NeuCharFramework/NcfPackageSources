@@ -36,12 +36,12 @@ public sealed class DesktopAdminAuthHandoffStore
     {
         if (string.IsNullOrWhiteSpace(desktopSessionToken))
         {
-            throw new DesktopAdminAuthHandoffException("桌面会话无效。");
+            throw new DesktopAdminAuthHandoffException("The desktop session is invalid.");
         }
 
         if (!TryDecodeCodeChallenge(codeChallenge, out var challengeBytes))
         {
-            throw new DesktopAdminAuthHandoffException("PKCE challenge 无效。");
+            throw new DesktopAdminAuthHandoffException("The PKCE challenge is invalid.");
         }
 
         var now = DateTimeOffset.UtcNow;
@@ -135,7 +135,7 @@ public sealed class DesktopAdminAuthHandoffStore
 
             handoff.Status = HandoffStatus.Denied;
             handoff.Message = string.IsNullOrWhiteSpace(message)
-                ? "WebView 登录不能用于桌面授权。"
+                ? "WebView login cannot be used for desktop authorization."
                 : message.Trim();
             return true;
         }
@@ -298,7 +298,7 @@ public class DesktopAdminAuthHandoffException : Exception
 public sealed class DesktopAdminAuthHandoffRateLimitException : DesktopAdminAuthHandoffException
 {
     public DesktopAdminAuthHandoffRateLimitException()
-        : base("桌面登录授权请求过于频繁，请稍后重试。")
+        : base("Desktop login authorization requests are being sent too frequently. Try again later.")
     {
     }
 }

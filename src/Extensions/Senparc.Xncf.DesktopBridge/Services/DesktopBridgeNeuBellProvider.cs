@@ -44,8 +44,8 @@ public sealed class DesktopBridgeNeuBellProvider : INeuBellProvider
         [
             new NeuBellItem(
                 "pending-pairings",
-                "DesktopBridge 远程连接审核",
-                pendingCount > 0 ? $"有 {pendingCount} 个设备配对请求等待处理。" : "当前没有待处理的设备配对请求。",
+                "DesktopBridge remote connection approval",
+                pendingCount > 0 ? $"{pendingCount} device pairing requests are waiting for review." : "There are no pending device pairing requests.",
                 pendingCount,
                 pendingCount > 0 ? "warning" : "info",
                 $"/Admin/DesktopBridge/Index?uid={Register.ModuleUid}",
