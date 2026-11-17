@@ -751,7 +751,7 @@ public sealed class WorkspaceFileSystemEngine
                 return new WorkspacePatchResult(
                     false,
                     0,
-                    "补丁未应用：文件内容已变化，请重新读取文件后再生成补丁。");
+                    "Patch was not applied: the file content changed. Read the file again before generating a patch.");
             }
         }
 
@@ -762,7 +762,7 @@ public sealed class WorkspaceFileSystemEngine
             return new WorkspacePatchResult(
                 false,
                 replacementCount,
-                $"补丁未应用：找到 {replacementCount} 处匹配，但预期为 {expectedReplacements} 处。");
+                $"Patch was not applied: found {replacementCount} matching occurrences, but expected {expectedReplacements}.");
         }
 
         var updated = currentText.Replace(request.OldText, request.NewText, StringComparison.Ordinal);
@@ -772,7 +772,7 @@ public sealed class WorkspaceFileSystemEngine
                 Encoding.UTF8.GetBytes(updated),
                 ExpectedETag: current.Metadata.ETag),
             cancellationToken).ConfigureAwait(false);
-        return new WorkspacePatchResult(true, replacementCount, "补丁应用成功。");
+        return new WorkspacePatchResult(true, replacementCount, "Patch applied successfully.");
     }
 
     public Task<WorkspaceCommandResult> ExecuteCommandAsync(
