@@ -1119,29 +1119,29 @@
   <data name="Frontend.224" xml:space="preserve"><value>Агрегация</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.225" xml:space="preserve"><value>Модуль не установлен или отключён; настройки Function сохраняются, но выполнение запрещено.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.226" xml:space="preserve"><value>Измените фильтры или сначала откройте в любом модуле «Настройки / Выполнение → NeuCharPivot», чтобы создать панель действий.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.227" xml:space="preserve"><value>Reset filters</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.228" xml:space="preserve"><value>Review module panels, parameterized Functions, LoopTask countdowns, and post-completion Workflows in one place.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.229" xml:space="preserve"><value>Function global Provit access control</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.230" xml:space="preserve"><value>The Function no longer exists; the policy is retained as an orphan</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.231" xml:space="preserve"><value>Function(s) will receive the Restricted policy. In Restricted mode, only bound users, roles, or permission codes may access the global Provit; bind at least one.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.232" xml:space="preserve"><value>Configure a database access policy for any XNCF Function and bind users, roles, or permission codes. A database policy overrides the code attributes; after a module is cleared, the policy remains orphaned and resumes when the module is reinstalled.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.233" xml:space="preserve"><value>Code baseline</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.234" xml:space="preserve"><value>Code baseline (FunctionRenderAttribute)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.235" xml:space="preserve"><value>Any signed-in administrator</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.236" xml:space="preserve"><value>Save policy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.237" xml:space="preserve"><value>Allowed permission codes</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.238" xml:space="preserve"><value>Allowed users</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.239" xml:space="preserve"><value>Allowed roles</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.240" xml:space="preserve"><value>Restricted</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.241" xml:space="preserve"><value>The selected</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.242" xml:space="preserve"><value>No database policy is configured; the code baseline is currently used.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.243" xml:space="preserve"><value>Existing bindings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.244" xml:space="preserve"><value>Apply</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.245" xml:space="preserve"><value>Open</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.246" xml:space="preserve"><value>Current database policy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.247" xml:space="preserve"><value>Batch Restricted</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.248" xml:space="preserve"><value>Batch Restricted settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.249" xml:space="preserve"><value>Batch Open</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.227" xml:space="preserve"><value>Сбросить фильтры</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.228" xml:space="preserve"><value>Просматривайте панели модулей, параметризованные Function, обратный отсчёт LoopTask и Workflow, запускаемые после завершения.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.229" xml:space="preserve"><value>Глобальный контроль доступа Provit для Function</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.230" xml:space="preserve"><value>Function больше не существует; политика сохранена как избыточная</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.231" xml:space="preserve"><value>Применить политику «ограничено» к Function. В этом режиме доступ к глобальному Provit получают только привязанные пользователи, роли или коды разрешений; привяжите хотя бы один.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.232" xml:space="preserve"><value>Настраивает политики доступа к базе данных для Function любого модуля XNCF с привязкой пользователей, ролей или кодов разрешений. Политика базы данных переопределяет атрибуты кода; после удаления модуля она остаётся избыточной и снова действует после переустановки, пока не будет очищена вручную.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.233" xml:space="preserve"><value>Базовая политика кода</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.234" xml:space="preserve"><value>Базовая политика кода (FunctionRenderAttribute)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.235" xml:space="preserve"><value>Любой вошедший администратор</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.236" xml:space="preserve"><value>Сохранить политику</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.237" xml:space="preserve"><value>Разрешённые коды разрешений</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.238" xml:space="preserve"><value>Разрешённые пользователи</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.239" xml:space="preserve"><value>Разрешённые роли</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.240" xml:space="preserve"><value>Ограничено</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.241" xml:space="preserve"><value>Применить к выбранным</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.242" xml:space="preserve"><value>Политика базы данных не настроена; сейчас применяется базовая политика кода.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.243" xml:space="preserve"><value>Существующие привязки</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.244" xml:space="preserve"><value>Применить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.245" xml:space="preserve"><value>Открыто</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.246" xml:space="preserve"><value>Текущая политика базы данных</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.247" xml:space="preserve"><value>Пакетное ограничение</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.248" xml:space="preserve"><value>Пакетная настройка ограничений</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.249" xml:space="preserve"><value>Пакетное открытие</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.250" xml:space="preserve"><value>Batch restore Inherit</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.251" xml:space="preserve"><value>Batch clear</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.252" xml:space="preserve"><value>Batch disable</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>

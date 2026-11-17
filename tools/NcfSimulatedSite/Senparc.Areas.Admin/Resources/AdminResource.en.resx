@@ -1122,11 +1122,11 @@
   <data name="Frontend.225" xml:space="preserve"><value>This module is not installed or enabled; Functions retain their configuration but cannot run.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.226" xml:space="preserve"><value>Adjust the filters, or open “Settings / Execute → NeuCharPivot” in any module to generate an action panel first.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.227" xml:space="preserve"><value>Reset filters</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.228" xml:space="preserve"><value>Review module panels, parameterized Functions, LoopTask countdowns, and post-completion Workflows in one place.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.229" xml:space="preserve"><value>Function global Provit access control</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.230" xml:space="preserve"><value>The Function no longer exists; the policy is retained as an orphan</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.231" xml:space="preserve"><value>Function(s) will receive the Restricted policy. In Restricted mode, only bound users, roles, or permission codes may access the global Provit; bind at least one.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.232" xml:space="preserve"><value>Configure a database access policy for any XNCF Function and bind users, roles, or permission codes. A database policy overrides the code attributes; after a module is cleared, the policy remains orphaned and resumes when the module is reinstalled.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.228" xml:space="preserve"><value>Review module panels, parameterized Functions, LoopTask countdowns, and Workflows triggered after completion in one place.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.229" xml:space="preserve"><value>Global Function Provit access control</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.230" xml:space="preserve"><value>Function no longer exists; policy retained as redundant</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.231" xml:space="preserve"><value>Apply the “restricted” policy to Functions. In restricted mode, only bound users, roles, or permission codes can access global Provit; bind at least one item.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.232" xml:space="preserve"><value>Configure database access policies for Functions in any XNCF module by binding users, roles, or permission codes. A database policy overrides code attributes; after a module is removed, the policy remains redundant and becomes effective again after reinstall until manually cleared.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.233" xml:space="preserve"><value>Code baseline</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.234" xml:space="preserve"><value>Code baseline (FunctionRenderAttribute)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.235" xml:space="preserve"><value>Any signed-in administrator</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
@@ -1135,15 +1135,15 @@
   <data name="Frontend.238" xml:space="preserve"><value>Allowed users</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.239" xml:space="preserve"><value>Allowed roles</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.240" xml:space="preserve"><value>Restricted</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.241" xml:space="preserve"><value>The selected</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.242" xml:space="preserve"><value>No database policy is configured; the code baseline is currently used.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.241" xml:space="preserve"><value>Apply to selected</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.242" xml:space="preserve"><value>No database policy is configured; the code baseline is currently applied.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.243" xml:space="preserve"><value>Existing bindings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.244" xml:space="preserve"><value>Apply</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.245" xml:space="preserve"><value>Open</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.246" xml:space="preserve"><value>Current database policy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.247" xml:space="preserve"><value>Batch Restricted</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.248" xml:space="preserve"><value>Batch Restricted settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.249" xml:space="preserve"><value>Batch Open</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.247" xml:space="preserve"><value>Bulk restricted</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.248" xml:space="preserve"><value>Bulk restricted settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.249" xml:space="preserve"><value>Bulk open</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.250" xml:space="preserve"><value>Batch restore Inherit</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.251" xml:space="preserve"><value>Batch clear</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.252" xml:space="preserve"><value>Batch disable</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
