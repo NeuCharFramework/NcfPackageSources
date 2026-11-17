@@ -1153,4 +1153,27 @@
   <data name="Frontend.526" xml:space="preserve"><value>无法刷新完整组员列表，当前仅显示已加载的组员</value></data>
   <data name="Frontend.527" xml:space="preserve"><value>当前修改尚未保存，确认关闭？</value></data>
   <data name="Frontend.528" xml:space="preserve"><value>操作确认</value></data>
+  <data name="Frontend.529" xml:space="preserve"><value>未检测</value></data>
+  <data name="Frontend.530" xml:space="preserve"><value>可用</value></data>
+  <data name="Frontend.531" xml:space="preserve"><value>不可用</value></data>
+  <data name="Frontend.532" xml:space="preserve"><value>已停用</value></data>
+  <data name="Frontend.533" xml:space="preserve"><value>连接测试失败</value></data>
+  <data name="Frontend.534" xml:space="preserve"><value>没有可测试的远程 A2A 智能体</value></data>
+  <data name="Frontend.535" xml:space="preserve"><value>全部通过：{0} 个远程 A2A 智能体均可用</value></data>
+  <data name="Frontend.536" xml:space="preserve"><value>远程 A2A 批量测试结果</value></data>
+  <data name="Frontend.537" xml:space="preserve"><value>知道了</value></data>
+  <data name="Frontend.538" xml:space="preserve"><value>加载远程 A2A 智能体失败</value></data>
+  <data name="Frontend.539" xml:space="preserve"><value>请先保存本地智能体，再配置 A2A 对外发布</value></data>
+  <data name="Frontend.540" xml:space="preserve"><value>加载 A2A 发布配置失败</value></data>
+  <data name="Frontend.541" xml:space="preserve"><value>保存失败</value></data>
+  <data name="Frontend.542" xml:space="preserve"><value>远程 A2A 智能体已保存</value></data>
+  <data name="Frontend.543" xml:space="preserve"><value>保存远程 A2A 智能体失败</value></data>
+  <data name="Frontend.544" xml:space="preserve"><value>A2A Agent Card 连接成功</value></data>
+  <data name="Frontend.545" xml:space="preserve"><value>批量连接测试失败</value></data>
+  <data name="Frontend.546" xml:space="preserve"><value>状态更新失败</value></data>
+  <data name="Frontend.547" xml:space="preserve"><value>状态已更新</value></data>
+  <data name="Frontend.548" xml:space="preserve"><value>删除确认</value></data>
+  <data name="Frontend.549" xml:space="preserve"><value>确认删除远程 A2A 智能体“{0}”？已加入群组的智能体不可删除。</value></data>
+  <data name="Frontend.550" xml:space="preserve"><value>删除失败</value></data>
+  <data name="Frontend.551" xml:space="preserve"><value>已删除</value></data>
 </root>

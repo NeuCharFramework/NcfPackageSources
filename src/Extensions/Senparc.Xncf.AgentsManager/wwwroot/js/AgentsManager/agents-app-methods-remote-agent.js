@@ -6,15 +6,15 @@
 
 var AgentsAppMethodsRemoteAgent = {
     remoteConnectionStatusText(status) {
-      const statusMap = { 0: '未检测', 1: '可用', 2: '不可用' }
-      return statusMap[Number(status)] || '未检测'
+      const statusMap = { 0: ncfST('未检测'), 1: ncfST('可用'), 2: ncfST('不可用') }
+      return statusMap[Number(status)] || ncfST('未检测')
     },
     remoteConnectionStatusType(status) {
       const statusTypeMap = { 0: 'info', 1: 'success', 2: 'danger' }
       return statusTypeMap[Number(status)] || 'info'
     },
     remoteParticipantAvailabilityText(participant) {
-      if (!participant?.enable) return '已停用'
+      if (!participant?.enable) return ncfST('已停用')
       return this.remoteConnectionStatusText(participant.connectionStatus)
     },
     remoteParticipantAvailabilityType(participant) {
@@ -78,7 +78,7 @@ var AgentsAppMethodsRemoteAgent = {
           '/api/Senparc.Xncf.AgentsManager/RemoteAgentAppService/Xncf.AgentsManager_RemoteAgentAppService.TestConnections',
           { remoteAgentIds: testAll ? [] : requestedIds })
         const data = response?.data ?? {}
-        if (!data.success) throw new Error(data.errorMessage || data.data || '连接测试失败')
+        if (!data.success) throw new Error(data.errorMessage || data.data || ncfST('连接测试失败'))
 
         const results = data?.data?.results ?? []
         this.applyRemoteConnectionResults(results)
@@ -88,7 +88,7 @@ var AgentsAppMethodsRemoteAgent = {
         }
         return results
       } catch (err) {
-        if (!options.silent) this.$message.error(err?.message || '连接测试失败')
+        if (!options.silent) this.$message.error(err?.message || ncfST('连接测试失败'))
         throw err
       } finally {
         this.setRemoteAgentTesting(loadingIds, false)
@@ -98,16 +98,16 @@ var AgentsAppMethodsRemoteAgent = {
     showRemoteAgentTestSummary(results) {
       const failedResults = (results || []).filter(result => !result.success)
       if (!results?.length) {
-        this.$message.warning('没有可测试的远程 A2A 智能体')
+        this.$message.warning(ncfST('没有可测试的远程 A2A 智能体'))
         return
       }
       if (!failedResults.length) {
-        this.$message.success(`全部通过：${results.length} 个远程 A2A 智能体均可用`)
+        this.$message.success(ncfST('全部通过：{0} 个远程 A2A 智能体均可用', results.length))
         return
       }
       const failedLines = failedResults.map(result => `${result.name || `#${result.remoteAgentId}`}：${result.message || '不可用'}`)
-      this.$alert(`通过 ${results.length - failedResults.length} 个，未通过 ${failedResults.length} 个。\n\n${failedLines.join('\n')}`,
-        '远程 A2A 批量测试结果', { type: 'warning', confirmButtonText: '知道了' })
+      this.$alert(ncfST('通过 {0} 个，未通过 {1} 个。\n\n{2}', results.length - failedResults.length, failedResults.length, failedLines.join('\n')),
+        ncfST('远程 A2A 批量测试结果'), { type: 'warning', confirmButtonText: ncfST('知道了') })
     },
     async getRemoteAgentListData(listType = 'remoteAgent') {
       const query = listType === 'groupRemoteAgent'
@@ -117,7 +117,7 @@ var AgentsAppMethodsRemoteAgent = {
         const response = await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/RemoteAgentAppService/Xncf.AgentsManager_RemoteAgentAppService.GetList?${getInterfaceQueryStr(query)}`)
         const data = response?.data ?? {}
         if (!data.success) {
-          throw new Error(data.errorMessage || data.data || '加载远程 A2A 智能体失败')
+          throw new Error(data.errorMessage || data.data || ncfST('加载远程 A2A 智能体失败'))
         }
 
         const list = data?.data?.list ?? []
@@ -134,7 +134,7 @@ var AgentsAppMethodsRemoteAgent = {
         }
       } catch (err) {
         console.log('getRemoteAgentListData', err)
-        this.$message.error(err?.message || '加载远程 A2A 智能体失败')
+        this.$message.error(err?.message || ncfST('加载远程 A2A 智能体失败'))
       }
     },
     openRemoteAgentManager() {
@@ -145,7 +145,7 @@ var AgentsAppMethodsRemoteAgent = {
       const agent = item?.agentTemplateDto || item || this.agentForm
       const agentTemplateId = Number(agent?.id || agent?.agentTemplateId || 0)
       if (!agentTemplateId) {
-        this.$message.warning('请先保存本地智能体，再配置 A2A 对外发布')
+        this.$message.warning(ncfST('请先保存本地智能体，再配置 A2A 对外发布'))
         return
       }
 
@@ -154,7 +154,7 @@ var AgentsAppMethodsRemoteAgent = {
         const response = await serviceAM.get(
           `/api/Senparc.Xncf.AgentsManager/PublishedA2AAgentAppService/Xncf.AgentsManager_PublishedA2AAgentAppService.GetByAgentTemplateId?agentTemplateId=${agentTemplateId}`)
         const data = response?.data ?? {}
-        if (!data.success) throw new Error(data.errorMessage || data.data || '加载 A2A 发布配置失败')
+        if (!data.success) throw new Error(data.errorMessage || data.data || ncfST('加载 A2A 发布配置失败'))
         const existed = data.data || {}
         this.$set(this, 'publishedA2AForm', {
           ...defaults,
@@ -167,7 +167,7 @@ var AgentsAppMethodsRemoteAgent = {
         this.visible.dialogPublishedA2A = true
         this.$nextTick(() => this.$refs.publishedA2AELForm?.clearValidate())
       } catch (err) {
-        this.$message.error(err?.message || '加载 A2A 发布配置失败')
+        this.$message.error(err?.message || ncfST('加载 A2A 发布配置失败'))
       }
     },
     closePublishedA2AEditor() {
@@ -210,12 +210,12 @@ var AgentsAppMethodsRemoteAgent = {
             '/api/Senparc.Xncf.AgentsManager/PublishedA2AAgentAppService/Xncf.AgentsManager_PublishedA2AAgentAppService.SetPublishedAgent',
             this.publishedA2AForm)
           const data = response?.data ?? {}
-          if (!data.success) throw new Error(data.errorMessage || data.data || '保存失败')
+          if (!data.success) throw new Error(data.errorMessage || data.data || ncfST('保存失败'))
           this.$set(this, 'publishedA2AForm', { ...this.publishedA2AForm, ...(data.data || {}) })
           await this.getAgentListData('agent')
-          this.$message.success(this.publishedA2AForm.enable ? '本地 Agent 已发布为 A2A 服务' : 'A2A 发布配置已保存（当前未启用）')
+          this.$message.success(this.publishedA2AForm.enable ? ncfST('本地 Agent 已发布为 A2A 服务') : ncfST('A2A 发布配置已保存（当前未启用）'))
         } catch (err) {
-          this.$message.error(err?.message || '保存 A2A 发布配置失败')
+          this.$message.error(err?.message || ncfST('保存 A2A 发布配置失败'))
         }
       })
     },
@@ -224,9 +224,9 @@ var AgentsAppMethodsRemoteAgent = {
       if (!url) return
       try {
         await navigator.clipboard.writeText(url)
-        this.$message.success('A2A Agent Card 地址已复制')
+        this.$message.success(ncfST('A2A Agent Card 地址已复制'))
       } catch (err) {
-        this.$message.warning('复制失败，请手动复制地址')
+        this.$message.warning(ncfST('复制失败，请手动复制地址'))
       }
     },
     openRemoteAgentEditor(item = null) {
