@@ -838,7 +838,7 @@
                     self.syncTagCategoryOptions();
                     self.saveTagManagerToStorage();
                     self.searchTags();
-                    self.$message.success('已删除');
+                    self.$message.success(fileManagerText('Frontend.039', 'Deleted successfully'));
                 }).catch(function () { /* cancel */ });
             },
             toggleTagRowStatus: function (row) {
@@ -859,12 +859,14 @@
                 }
                 this.saveTagManagerToStorage();
                 this.searchTags();
-                this.$message.success(enabled ? '已停用' : '已启用');
+                this.$message.success(enabled
+                    ? fileManagerText('Frontend.076', 'Disable')
+                    : fileManagerText('Frontend.095', 'Enable'));
             },
             setSelectedTagStatus: function (enabled) {
                 const ids = (this.tagManager && this.tagManager.selectedIds) || [];
                 if (!ids.length) {
-                    this.$message.warning('请先选择数据');
+                    this.$message.warning(fileManagerText('Frontend.169', 'Select at least one item'));
                     return;
                 }
                 const idMap = {};
@@ -885,7 +887,9 @@
                 });
                 this.saveTagManagerToStorage();
                 this.searchTags();
-                this.$message.success(enabled ? '已启用所选项目' : '已停用所选项目');
+                this.$message.success(enabled
+                    ? fileManagerText('Frontend.095', 'Enable')
+                    : fileManagerText('Frontend.076', 'Disable'));
             },
             onTagCategoryDialogClosed: function () {
                 if (!this.tagCategoryDialog) return;
@@ -942,7 +946,7 @@
                             target.admin = form.admin || '-';
                             target.updatedAt = now;
                             target.updatedBy = '当前用户';
-                            self.$message.success('分类已更新');
+                            self.$message.success(fileManagerText('Frontend.033', 'Updated successfully'));
                         } else {
                             self.tagManager.list.unshift({
                                 id: 'cat-' + Date.now(),
@@ -956,7 +960,7 @@
                                 updatedBy: '当前用户',
                                 admin: form.admin || '-'
                             });
-                            self.$message.success('分类已创建');
+                            self.$message.success(fileManagerText('Frontend.041', 'Created successfully'));
                         }
                         self.syncTagCategoryOptions();
                         self.saveTagManagerToStorage();
@@ -1023,7 +1027,7 @@
                                 category.tagCount = (category.tagCount || 0) + 1;
                             }
                             category.updatedAt = now;
-                            self.$message.success('标签已更新');
+                            self.$message.success(fileManagerText('Frontend.033', 'Updated successfully'));
                         } else {
                             self.tagManager.tags.unshift({
                                 id: 'tag-' + Date.now(),
@@ -1038,7 +1042,7 @@
                             category.tagCount = (category.tagCount || 0) + 1;
                             category.updatedAt = now;
                             category.updatedBy = '当前用户';
-                            self.$message.success('标签已创建');
+                            self.$message.success(fileManagerText('Frontend.041', 'Created successfully'));
                         }
                         self.saveTagManagerToStorage();
                         self.searchTags();
