@@ -3074,7 +3074,7 @@ var app = new Vue({
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: '已取消删除'
+                    message: ncfST('已取消删除')
                 });
             });
 
@@ -3265,7 +3265,7 @@ var app = new Vue({
                     console.error('无效的 chatId:', chatId, '类型:', typeof chatId)
                     console.error('当前历史记录:', this.continueChatHistory)
                     this.$message({
-                        message: '对话记录ID无效，请刷新页面后重试',
+                        message: ncfST('对话记录ID无效，请刷新页面后重试'),
                         type: 'error'
                     })
                     return
@@ -3276,7 +3276,7 @@ var app = new Vue({
                 if (isNaN(numericChatId) || numericChatId <= 0) {
                     console.error('无效的 chatId（转换后）:', numericChatId, '原始值:', chatId)
                     this.$message({
-                        message: '对话记录ID无效，请刷新页面后重试',
+                        message: ncfST('对话记录ID无效，请刷新页面后重试'),
                         type: 'error'
                     })
                     return
@@ -3293,7 +3293,7 @@ var app = new Vue({
                     console.error('查找的 chatId:', numericChatId, '原始 chatId:', chatId)
                     console.error('历史记录中的所有 ID:', this.continueChatHistory.map(m => ({ id: m.id, idType: typeof m.id, roleType: m.roleType, sequence: m.sequence })))
                     this.$message({
-                        message: '未找到对应的对话记录，请刷新页面后重试',
+                        message: ncfST('未找到对应的对话记录，请刷新页面后重试'),
                         type: 'error'
                     })
                     return
@@ -3307,7 +3307,7 @@ var app = new Vue({
                 if (!msgId || msgId === 0 || isNaN(msgId)) {
                     console.error('消息 ID 无效:', currentMsg.id, '类型:', typeof currentMsg.id)
                     this.$message({
-                        message: '消息ID无效，请刷新页面后重试',
+                        message: ncfST('消息ID无效，请刷新页面后重试'),
                         type: 'error'
                     })
                     return
@@ -3329,20 +3329,20 @@ var app = new Vue({
                     this.$forceUpdate()
                     
                     this.$message({
-                        message: newFeedback === null ? '已取消反馈' : (newFeedback ? '已点赞' : '已点踩'),
+                        message: newFeedback === null ? ncfST('已取消反馈') : (newFeedback ? ncfST('已点赞') : ncfST('已点踩')),
                         type: 'success',
                         duration: 1500
                     })
                 } else {
                     this.$message({
-                        message: res.data.errorMessage || '更新反馈失败',
+                        message: res.data.errorMessage || ncfST('更新反馈失败'),
                         type: 'error'
                     })
                 }
             } catch (error) {
                 console.error('更新反馈失败:', error)
                 this.$message({
-                    message: '更新反馈失败：' + (error.message || '未知错误'),
+                    message: ncfST('更新反馈失败：') + (error.message || ncfST('未知错误')),
                     type: 'error'
                 })
             } finally {
@@ -4066,14 +4066,14 @@ var app = new Vue({
         openCreateAgentDialog() {
             if (!this.promptField) {
                 this.$message({
-                    message: '请先选择靶场',
+                    message: ncfST('请先选择靶场'),
                     type: 'warning'
                 })
                 return
             }
             if (!this.promptid || !this.promptDetail || !this.promptDetail.fullVersion) {
                 this.$message({
-                    message: '请先选择靶道以确定 PromptCode',
+                    message: ncfST('请先选择靶道以确定 PromptCode'),
                     type: 'warning'
                 })
                 return
@@ -4120,12 +4120,12 @@ var app = new Vue({
         //Legacy comment translated to English.
         async submitCreateAgent() {
             if (!this.createAgentForm.name) {
-                this.$message({ message: '请输入智能体名称', type: 'warning' })
+                this.$message({ message: ncfST('请输入智能体名称'), type: 'warning' })
                 return
             }
             const promptCode = this.createAgentPromptCode
             if (!promptCode) {
-                this.$message({ message: '无效的 PromptCode', type: 'error' })
+                this.$message({ message: ncfST('无效的 PromptCode'), type: 'error' })
                 return
             }
 
@@ -4165,11 +4165,11 @@ var app = new Vue({
                     this.$message({ message: `智能体「${this.createAgentForm.name}」创建成功！`, type: 'success' })
                     this.createAgentDialogVisible = false
                 } else {
-                    this.$message({ message: '创建失败：' + (res.data?.msg || '未知错误'), type: 'error' })
+                    this.$message({ message: ncfST('创建失败：') + (res.data?.msg || ncfST('未知错误')), type: 'error' })
                 }
             } catch (e) {
                 console.error('创建智能体失败:', e)
-                this.$message({ message: '创建失败，请确认 AgentsManager 模块已安装', type: 'error' })
+                this.$message({ message: ncfST('创建失败，请确认 AgentsManager 模块已安装'), type: 'error' })
             } finally {
                 this.createAgentLoading = false
             }
@@ -4179,7 +4179,7 @@ var app = new Vue({
         openMapDialog() {
             if (!this.promptField) {
                 this.$message({
-                    message: '请先选择靶场',
+                    message: ncfST('请先选择靶场'),
                     type: 'warning'
                 })
                 return
