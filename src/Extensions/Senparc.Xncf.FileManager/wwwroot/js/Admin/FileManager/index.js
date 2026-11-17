@@ -850,7 +850,7 @@
             toggleTagRowStatus: function (row) {
                 if (!row) return;
                 const enabled = this.isTagRowEnabled(row);
-                const nextStatus = enabled ? fileManagerText('Frontend.225', 'Disabled') : fileManagerText('Frontend.095', 'Enabled');
+                const nextStatus = enabled ? '已停用' : '启用';
                 const now = this.formatTagDateTime(new Date());
                 if (row.nodeType === 'tag') {
                     const tag = (this.tagManager.tags || []).find(function (item) { return item.id === row.id; });
@@ -877,7 +877,7 @@
                 }
                 const idMap = {};
                 ids.forEach(function (id) { idMap[id] = true; });
-                const nextStatus = enabled ? fileManagerText('Frontend.095', 'Enabled') : fileManagerText('Frontend.225', 'Disabled');
+                const nextStatus = enabled ? '启用' : '已停用';
                 const now = this.formatTagDateTime(new Date());
                 (this.tagManager.list || []).forEach(function (cat) {
                     if (idMap[cat.id]) {
