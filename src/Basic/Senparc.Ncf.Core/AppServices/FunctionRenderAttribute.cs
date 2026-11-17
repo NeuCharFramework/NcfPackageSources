@@ -40,7 +40,7 @@ namespace Senparc.Ncf.Core.AppServices
         public string Name
         {
             get => ResourceType == null
-                ? _name
+                ? FunctionRenderTextResolver.Resolve(RegisterType, _name)
                 : ResourceStringLocalizer.Get(ResourceType, NameResourceKey, _name);
             set => _name = value;
         }
@@ -52,7 +52,7 @@ namespace Senparc.Ncf.Core.AppServices
         public string Description
         {
             get => ResourceType == null
-                ? _description
+                ? FunctionRenderTextResolver.Resolve(RegisterType, _description)
                 : ResourceStringLocalizer.Get(ResourceType, DescriptionResourceKey, _description);
             set => _description = value;
         }
