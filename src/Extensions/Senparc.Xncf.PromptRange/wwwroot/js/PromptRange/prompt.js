@@ -2344,7 +2344,7 @@ var app = new Vue({
         async targetShootHandel(isDraft = false, isSaveDirect) {
             if (!this.modelid) {
                 this.$message({
-                        message: ncfST('请选择模型！'),
+                        message: ncfST('Frontend.380'),
                     type: 'warning'
                 })
                 return
@@ -2354,7 +2354,7 @@ var app = new Vue({
             }
             if (!isDraft && !this.content) {
                 this.$message({
-                        message: ncfST('请输入内容！'),
+                        message: ncfST('Frontend.287'),
                     type: 'warning'
                 })
                 return

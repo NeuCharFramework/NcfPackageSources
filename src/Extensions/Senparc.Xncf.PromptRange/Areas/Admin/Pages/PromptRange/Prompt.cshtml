@@ -937,11 +937,11 @@
                     :rows="6"
                     ref="tacticalChatInput"
                     @@keydown.native="handleChatInputKeydown"
-                    :placeholder="continueChatMode ? '请输入您的下一句话... (Ctrl+Enter / Cmd+Enter 发送)' : '请输入您的问题... (Ctrl+Enter / Cmd+Enter 发送)'">
+                    :placeholder="continueChatMode ? ncfST('Frontend.768') : ncfST('Frontend.767')">
                 </el-input>
                 <div style="margin-top: 8px; font-size: 12px; color: #909399;">
-                    {{ continueChatMode ? '输入内容将追加到现有对话中' : '输入内容将作为 userMessage 参数传递到后端接口' }}
-                    <span style="margin-left: 8px; color: #909399;">快捷键：Ctrl+Enter (Windows) / Cmd+Enter (Mac)</span>
+                    {{ continueChatMode ? ncfST('Frontend.137') : ncfST('Frontend.138') }}
+                    <span style="margin-left: 8px; color: #909399;">{{ ncfST('Frontend.139') }}</span>
                 </div>
             </el-form-item>
         </el-form>
