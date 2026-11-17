@@ -157,400 +157,400 @@
     <value>Vous êtes un traducteur professionnel maîtrisant {0}. Traduisez fidèlement le texte et renvoyez uniquement la traduction.</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>AgentsManager Home</value>
+    <value>Accueil AgentsManager</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
-    <value>Extension Modules</value>
+    <value>Modules d’extension</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>Agents Manager</value>
+    <value>Gestion des agents</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>Home</value>
+    <value>Accueil</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
     <value>Agent</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>Agent list</value>
+    <value>Liste des agents</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>Search by name</value>
+    <value>Rechercher par nom</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>Sort by time</value>
+    <value>Trier par heure</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>Select status</value>
+    <value>Sélectionner l'état</value>
   </data>
   <data name="Frontend.010" xml:space="preserve">
-    <value>All agents</value>
+    <value>Tous les agents</value>
   </data>
   <data name="Frontend.011" xml:space="preserve">
-    <value>No Data</value>
+    <value>Aucune donnée</value>
   </data>
   <data name="Frontend.012" xml:space="preserve">
-    <value>Panel view</value>
+    <value>Vue du panneau</value>
   </data>
   <data name="Frontend.013" xml:space="preserve">
-    <value>3D view</value>
+    <value>Vue 3D</value>
   </data>
   <data name="Frontend.014" xml:space="preserve">
-    <value>Participating</value>
+    <value>Participation</value>
   </data>
   <data name="Frontend.015" xml:space="preserve">
     <value>Score</value>
   </data>
   <data name="Frontend.016" xml:space="preserve">
-    <value>Edit</value>
+    <value>Modifier</value>
   </data>
   <data name="Frontend.017" xml:space="preserve">
-    <value>Details</value>
+    <value>Détails</value>
   </data>
   <data name="Frontend.018" xml:space="preserve">
-    <value>Delete</value>
+    <value>Supprimer</value>
   </data>
   <data name="Frontend.019" xml:space="preserve">
-    <value>All groups</value>
+    <value>Tous les groupes</value>
   </data>
   <data name="Frontend.020" xml:space="preserve">
-    <value>Task status</value>
+    <value>Statut de la tâche</value>
   </data>
   <data name="Frontend.021" xml:space="preserve">
-    <value>Waiting</value>
+    <value>En attente</value>
   </data>
   <data name="Frontend.022" xml:space="preserve">
-    <value>Chatting</value>
+    <value>En discussion</value>
   </data>
   <data name="Frontend.023" xml:space="preserve">
-    <value>Paused</value>
+    <value>En pause</value>
   </data>
   <data name="Frontend.024" xml:space="preserve">
-    <value>Done</value>
+    <value>Terminé</value>
   </data>
   <data name="Frontend.025" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Annuler</value>
   </data>
   <data name="Frontend.026" xml:space="preserve">
-    <value>Running groups only</value>
+    <value>Groupes en cours uniquement</value>
   </data>
   <data name="Frontend.027" xml:space="preserve">
-    <value>Quick-open group</value>
+    <value>Ouverture rapide du groupe</value>
   </data>
   <data name="Frontend.028" xml:space="preserve">
-    <value>Open group</value>
+    <value>Ouvrir le groupe</value>
   </data>
   <data name="Frontend.029" xml:space="preserve">
-    <value>Quick-open task</value>
+    <value>Ouverture rapide de la tâche</value>
   </data>
   <data name="Frontend.030" xml:space="preserve">
-    <value>Open task</value>
+    <value>Ouvrir la tâche</value>
   </data>
   <data name="Frontend.031" xml:space="preserve">
-    <value>Hover a Group column to highlight its members; click a Group to lock or unlock it; the numbers at the top show running-task status counts for that group.</value>
+    <value>Survolez une colonne Group pour mettre ses membres en évidence ; cliquez sur un Group pour le verrouiller ou le déverrouiller ; les chiffres en haut indiquent le décompte des états des tâches en cours de ce groupe.</value>
   </data>
   <data name="Frontend.032" xml:space="preserve">
-    <value>Groups</value>
+    <value>Groupes</value>
   </data>
   <data name="Frontend.033" xml:space="preserve">
-    <value>Tasks</value>
+    <value>Tâches</value>
   </data>
   <data name="Frontend.034" xml:space="preserve">
-    <value>Running tasks</value>
+    <value>Tâches en cours</value>
   </data>
   <data name="Frontend.035" xml:space="preserve">
-    <value>Range:</value>
+    <value>Champ :</value>
   </data>
   <data name="Frontend.036" xml:space="preserve">
-    <value>Tactic:</value>
+    <value>Tactique :</value>
   </data>
   <data name="Frontend.037" xml:space="preserve">
-    <value>Run</value>
+    <value>Exécution</value>
   </data>
   <data name="Frontend.038" xml:space="preserve">
     <value>Model:</value>
   </data>
   <data name="Frontend.039" xml:space="preserve">
-    <value>Manage AI models</value>
+    <value>Gérer les modèles AI</value>
   </data>
   <data name="Frontend.040" xml:space="preserve">
-    <value>Model parameters</value>
+    <value>Paramètres du modèle</value>
   </data>
   <data name="Frontend.041" xml:space="preserve">
-    <value>Model score:</value>
+    <value>Score du modèle :</value>
   </data>
   <data name="Frontend.042" xml:space="preserve">
-    <value>Status:</value>
+    <value>Statut :</value>
   </data>
   <data name="Frontend.043" xml:space="preserve">
-    <value>Disabled</value>
+    <value>Désactivés</value>
   </data>
   <data name="Frontend.044" xml:space="preserve">
-    <value>Enabled</value>
+    <value>Activé</value>
   </data>
   <data name="Frontend.045" xml:space="preserve">
-    <value>Groups</value>
+    <value>Groupes</value>
   </data>
   <data name="Frontend.046" xml:space="preserve">
-    <value>Jobs</value>
+    <value>Tâches</value>
   </data>
   <data name="Frontend.047" xml:space="preserve">
-    <value>Leave group</value>
+    <value>Quitter le groupe</value>
   </data>
   <data name="Frontend.048" xml:space="preserve">
-    <value>Start</value>
+    <value>Démarrer</value>
   </data>
   <data name="Frontend.049" xml:space="preserve">
-    <value>Start selected</value>
+    <value>Démarrer la sélection</value>
   </data>
   <data name="Frontend.050" xml:space="preserve">
-    <value>Stop selected</value>
+    <value>Arrêter la sélection</value>
   </data>
   <data name="Frontend.051" xml:space="preserve">
-    <value>Delete selected</value>
+    <value>Supprimer la sélection</value>
   </data>
   <data name="Frontend.052" xml:space="preserve">
-    <value>Tasks:</value>
+    <value>Tâches :</value>
   </data>
   <data name="Frontend.053" xml:space="preserve">
-    <value>Owner:</value>
+    <value>Propriétaire :</value>
   </data>
   <data name="Frontend.054" xml:space="preserve">
-    <value>Contact:</value>
+    <value>Contact :</value>
   </data>
   <data name="Frontend.055" xml:space="preserve">
-    <value>Group members:</value>
+    <value>Membres du groupe :</value>
   </data>
   <data name="Frontend.056" xml:space="preserve">
-    <value>Running task</value>
+    <value>Tâche en cours</value>
   </data>
   <data name="Frontend.057" xml:space="preserve">
-    <value>Started</value>
+    <value>Heure de début</value>
   </data>
   <data name="Frontend.058" xml:space="preserve">
-    <value>Duration</value>
+    <value>Durée</value>
   </data>
   <data name="Frontend.059" xml:space="preserve">
-    <value>Model name</value>
+    <value>Nom du modèle</value>
   </data>
   <data name="Frontend.060" xml:space="preserve">
-    <value>Task description</value>
+    <value>Description de la tâche</value>
   </data>
   <data name="Frontend.061" xml:space="preserve">
     <value>Actions</value>
   </data>
   <data name="Frontend.062" xml:space="preserve">
-    <value>Agent parameters</value>
+    <value>Paramètres de l'agent</value>
   </data>
   <data name="Frontend.063" xml:space="preserve">
-    <value>Run again</value>
+    <value>Exécuter à nouveau</value>
   </data>
   <data name="Frontend.064" xml:space="preserve">
-    <value>Force stop</value>
+    <value>Arrêt forcé</value>
   </data>
   <data name="Frontend.065" xml:space="preserve">
-    <value>Usage analytics</value>
+    <value>Analyse de l'utilisation</value>
   </data>
   <data name="Frontend.066" xml:space="preserve">
-    <value>Task start time:</value>
+    <value>Heure de début de la tâche :</value>
   </data>
   <data name="Frontend.067" xml:space="preserve">
-    <value>Task end time:</value>
+    <value>Heure de fin de la tâche :</value>
   </data>
   <data name="Frontend.068" xml:space="preserve">
-    <value>Score:</value>
+    <value>Score :</value>
   </data>
   <data name="Frontend.069" xml:space="preserve">
-    <value>Task review:</value>
+    <value>Évaluation de la tâche :</value>
   </data>
   <data name="Frontend.070" xml:space="preserve">
-    <value>Usage overview</value>
+    <value>Aperçu de l'utilisation</value>
   </data>
   <data name="Frontend.071" xml:space="preserve">
-    <value>Total messages</value>
+    <value>Nombre total de messages</value>
   </data>
   <data name="Frontend.072" xml:space="preserve">
-    <value>Total Token (input+output)</value>
+    <value>Token total (entrée+sortie)</value>
   </data>
   <data name="Frontend.073" xml:space="preserve">
-    <value>Average response time</value>
+    <value>Temps de réponse moyen</value>
   </data>
   <data name="Frontend.074" xml:space="preserve">
-    <value>Maximum duration</value>
+    <value>Durée maximale</value>
   </data>
   <data name="Frontend.075" xml:space="preserve">
     <value>Agents ·</value>
   </data>
   <data name="Frontend.076" xml:space="preserve">
-    <value>Task usage analytics</value>
+    <value>Analyse d'utilisation des tâches</value>
   </data>
   <data name="Frontend.077" xml:space="preserve">
-    <value>Task:</value>
+    <value>Tâche :</value>
   </data>
   <data name="Frontend.078" xml:space="preserve">
-    <value>to</value>
+    <value>à</value>
   </data>
   <data name="Frontend.079" xml:space="preserve">
-    <value>Started</value>
+    <value>Heure de début</value>
   </data>
   <data name="Frontend.080" xml:space="preserve">
-    <value>Finished</value>
+    <value>Heure de fin</value>
   </data>
   <data name="Frontend.081" xml:space="preserve">
-    <value>All Agents</value>
+    <value>Tous les Agents</value>
   </data>
   <data name="Frontend.082" xml:space="preserve">
-    <value>Search</value>
+    <value>Rechercher</value>
   </data>
   <data name="Frontend.083" xml:space="preserve">
-    <value>Reset</value>
+    <value>Réinitialiser</value>
   </data>
   <data name="Frontend.084" xml:space="preserve">
-    <value>Total Token</value>
+    <value>Token total</value>
   </data>
   <data name="Frontend.085" xml:space="preserve">
-    <value>Input / output Token</value>
+    <value>Token d'entrée / de sortie</value>
   </data>
   <data name="Frontend.086" xml:space="preserve">
-    <value>P95 / max duration</value>
+    <value>P95 / durée maximale</value>
   </data>
   <data name="Frontend.087" xml:space="preserve">
-    <value>Conversation rounds</value>
+    <value>Tours de conversation</value>
   </data>
   <data name="Frontend.088" xml:space="preserve">
-    <value>Round</value>
+    <value>Tour</value>
   </data>
   <data name="Frontend.089" xml:space="preserve">
     <value>Messages</value>
   </data>
   <data name="Frontend.090" xml:space="preserve">
-    <value>Input Tokens</value>
+    <value>Tokens d'entrée</value>
   </data>
   <data name="Frontend.091" xml:space="preserve">
-    <value>Output Tokens</value>
+    <value>Tokens de sortie</value>
   </data>
   <data name="Frontend.092" xml:space="preserve">
-    <value>Average response (ms)</value>
+    <value>Réponse moyenne (ms)</value>
   </data>
   <data name="Frontend.093" xml:space="preserve">
-    <value>Individual Agents</value>
+    <value>Agents individuels</value>
   </data>
   <data name="Frontend.094" xml:space="preserve">
-    <value>By time</value>
+    <value>Par période</value>
   </data>
   <data name="Frontend.095" xml:space="preserve">
-    <value>Time bucket (hours)</value>
+    <value>Tranche horaire (heures)</value>
   </data>
   <data name="Frontend.096" xml:space="preserve">
-    <value>Edit agent</value>
+    <value>Modifier l'agent</value>
   </data>
   <data name="Frontend.097" xml:space="preserve">
-    <value>Add agent</value>
+    <value>Ajouter un agent</value>
   </data>
   <data name="Frontend.098" xml:space="preserve">
-    <value>Agent name</value>
+    <value>Nom de l'agent</value>
   </data>
   <data name="Frontend.099" xml:space="preserve">
-    <value>Please fill in</value>
+    <value>Veuillez remplir</value>
   </data>
   <data name="Frontend.100" xml:space="preserve">
-    <value>Select</value>
+    <value>Sélectionner</value>
   </data>
   <data name="Frontend.101" xml:space="preserve">
-    <value>Manual</value>
+    <value>Manuel</value>
   </data>
   <data name="Frontend.102" xml:space="preserve">
-    <value>Select</value>
+    <value>Sélectionnez</value>
   </data>
   <data name="Frontend.103" xml:space="preserve">
-    <value>Manual entry</value>
+    <value>Saisie manuelle</value>
   </data>
   <data name="Frontend.104" xml:space="preserve">
-    <value>Enabled</value>
+    <value>Activé</value>
   </data>
   <data name="Frontend.105" xml:space="preserve">
-    <value>Enable agent</value>
+    <value>Activer l'agent</value>
   </data>
   <data name="Frontend.106" xml:space="preserve">
-    <value>External platform</value>
+    <value>Plateforme externe</value>
   </data>
   <data name="Frontend.107" xml:space="preserve">
-    <value>External platform parameters</value>
+    <value>Paramètres de plateforme externe</value>
   </data>
   <data name="Frontend.108" xml:space="preserve">
-    <value>Automatically attach all XNCF feature plugins</value>
+    <value>Joindre automatiquement tous les plugins de fonctions XNCF</value>
   </data>
   <data name="Frontend.109" xml:space="preserve">
-    <value>Manual selection</value>
+    <value>Sélection manuelle</value>
   </data>
   <data name="Frontend.110" xml:space="preserve">
-    <value>When enabled, all registered XNCF feature plugins are attached automatically, so the Agent can recognize and trigger the features of the matching Module</value>
+    <value>Si cette option est activée, tous les plugins de fonctions XNCF enregistrés sont joints automatiquement, afin que l'Agent reconnaisse et déclenche les fonctions du Module correspondant</value>
   </data>
   <data name="Frontend.111" xml:space="preserve">
-    <value>You can enter a Plugin class name, or a full name that includes the namespace</value>
+    <value>Vous pouvez saisir le nom de classe du Plugin, ou le nom complet avec l'espace de noms</value>
   </data>
   <data name="Frontend.112" xml:space="preserve">
-    <value>+ Add</value>
+    <value>+ Ajouter</value>
   </data>
   <data name="Frontend.113" xml:space="preserve">
-    <value>Available plugin types:</value>
+    <value>Types de plugin disponibles :</value>
   </data>
   <data name="Frontend.114" xml:space="preserve">
-    <value>Connected successfully</value>
+    <value>Connecté</value>
   </data>
   <data name="Frontend.115" xml:space="preserve">
-    <value>View tools</value>
+    <value>Voir les outils</value>
   </data>
   <data name="Frontend.116" xml:space="preserve">
-    <value>Connection failed:</value>
+    <value>Échec de la connexion :</value>
   </data>
   <data name="Frontend.117" xml:space="preserve">
-    <value>Test connection</value>
+    <value>Tester la connexion</value>
   </data>
   <data name="Frontend.118" xml:space="preserve">
-    <value>+ Add MCP Endpoint</value>
+    <value>+ Ajouter un MCP Endpoint</value>
   </data>
   <data name="Frontend.119" xml:space="preserve">
-    <value>Edit MCP Endpoint</value>
+    <value>Modifier le MCP Endpoint</value>
   </data>
   <data name="Frontend.120" xml:space="preserve">
-    <value>Add MCP Endpoint</value>
+    <value>Ajouter un MCP Endpoint</value>
   </data>
   <data name="Frontend.121" xml:space="preserve">
-    <value>Endpoint name (for example: mcp-server-NCF-7)</value>
+    <value>Nom de l'Endpoint (par exemple : mcp-server-NCF-7)</value>
   </data>
   <data name="Frontend.122" xml:space="preserve">
-    <value>Confirm</value>
+    <value>Confirmer</value>
   </data>
   <data name="Frontend.123" xml:space="preserve">
     <value>Notes</value>
   </data>
   <data name="Frontend.124" xml:space="preserve">
-    <value>Fill in (administrators only)</value>
+    <value>Renseignez (administrateurs uniquement)</value>
   </data>
   <data name="Frontend.125" xml:space="preserve">
-    <value>Edit group</value>
+    <value>Modifier le groupe</value>
   </data>
   <data name="Frontend.126" xml:space="preserve">
-    <value>Add group</value>
+    <value>Ajouter un groupe</value>
   </data>
   <data name="Frontend.127" xml:space="preserve">
-    <value>Group name</value>
+    <value>Nom du groupe</value>
   </data>
   <data name="Frontend.128" xml:space="preserve">
-    <value>Group members</value>
+    <value>Membres du groupe</value>
   </data>
   <data name="Frontend.129" xml:space="preserve">
-    <value>Search</value>
+    <value>Rechercher</value>
   </data>
   <data name="Frontend.130" xml:space="preserve">
-    <value>Selected:</value>
+    <value>Sélectionné :</value>
   </data>
   <data name="Frontend.131" xml:space="preserve">
     <value>Description</value>
   </data>
   <data name="Frontend.132" xml:space="preserve">
-    <value>Owner</value>
+    <value>Propriétaire</value>
   </data>
   <data name="Frontend.133" xml:space="preserve">
     <value>Contact</value>
@@ -559,385 +559,385 @@
     <value>Description</value>
   </data>
   <data name="Frontend.135" xml:space="preserve">
-    <value>Start group</value>
+    <value>Démarrer le groupe</value>
   </data>
   <data name="Frontend.136" xml:space="preserve">
-    <value>Select group</value>
+    <value>Sélectionner un groupe</value>
   </data>
   <data name="Frontend.137" xml:space="preserve">
-    <value>Task title</value>
+    <value>Titre de la tâche</value>
   </data>
   <data name="Frontend.138" xml:space="preserve">
-    <value>Select model</value>
+    <value>Sélectionner un modèle</value>
   </data>
   <data name="Frontend.139" xml:space="preserve">
-    <value>Personalized agent</value>
+    <value>Agent personnalisé</value>
   </data>
   <data name="Frontend.140" xml:space="preserve">
-    <value>Run Agent with personalized parameters</value>
+    <value>Exécuter l'Agent avec des paramètres personnalisés</value>
   </data>
   <data name="Frontend.141" xml:space="preserve">
-    <value>What can I help you with?</value>
+    <value>Que puis-je faire pour vous ?</value>
   </data>
   <data name="Frontend.142" xml:space="preserve">
-    <value>MCP tool list</value>
+    <value>Liste d'outils MCP</value>
   </data>
   <data name="Frontend.143" xml:space="preserve">
-    <value>Tool name</value>
+    <value>Nom de l'outil</value>
   </data>
   <data name="Frontend.144" xml:space="preserve">
-    <value>Parameters</value>
+    <value>Paramètres</value>
   </data>
   <data name="Frontend.145" xml:space="preserve">
-    <value>No parameters</value>
+    <value>Aucun paramètre</value>
   </data>
   <data name="Frontend.146" xml:space="preserve">
-    <value>No tools available</value>
+    <value>Aucun outil disponible</value>
   </data>
   <data name="Frontend.147" xml:space="preserve">
-    <value>Close</value>
+    <value>Fermer</value>
   </data>
   <data name="Frontend.148" xml:space="preserve">
-    <value>All</value>
+    <value>Tout</value>
   </data>
   <data name="Frontend.149" xml:space="preserve">
-    <value>Events</value>
+    <value>Événements</value>
   </data>
   <data name="Frontend.150" xml:space="preserve">
-    <value>Standby</value>
+    <value>En attente</value>
   </data>
   <data name="Frontend.151" xml:space="preserve">
-    <value>Paused</value>
+    <value>En pause</value>
   </data>
   <data name="Frontend.152" xml:space="preserve">
-    <value>Failed</value>
+    <value>Échoué</value>
   </data>
   <data name="Frontend.153" xml:space="preserve">
-    <value>Archive</value>
+    <value>Archiver</value>
   </data>
   <data name="Frontend.154" xml:space="preserve">
-    <value>Running</value>
+    <value>En cours</value>
   </data>
   <data name="Frontend.155" xml:space="preserve">
     <value>Chat</value>
   </data>
   <data name="Frontend.156" xml:space="preserve">
-    <value>Enter the Function Call name</value>
+    <value>Saisissez le nom du Function Call</value>
   </data>
   <data name="Frontend.157" xml:space="preserve">
-    <value>Refresh</value>
+    <value>Actualiser</value>
   </data>
   <data name="Frontend.158" xml:space="preserve">
-    <value>Manage PromptRange</value>
+    <value>Gérer PromptRange</value>
   </data>
   <data name="Frontend.159" xml:space="preserve">
-    <value>No description</value>
+    <value>Aucune description</value>
   </data>
   <data name="Frontend.160" xml:space="preserve">
-    <value>Parameters:</value>
+    <value>Paramètres :</value>
   </data>
   <data name="Frontend.161" xml:space="preserve">
-    <value>This Agent is not currently a member of any group.</value>
+    <value>Cet Agent ne fait actuellement partie d'aucun groupe.</value>
   </data>
   <data name="Frontend.162" xml:space="preserve">
-    <value>Please fill in</value>
+    <value>Veuillez remplir</value>
   </data>
   <data name="Frontend.163" xml:space="preserve">
-    <value>Target string</value>
+    <value>Chaîne cible</value>
   </data>
   <data name="Frontend.164" xml:space="preserve">
-    <value>Non-target string</value>
+    <value>Chaîne non cible</value>
   </data>
   <data name="Frontend.165" xml:space="preserve">
-    <value>Saved successfully</value>
+    <value>Enregistré</value>
   </data>
   <data name="Frontend.166" xml:space="preserve">
-    <value>Deleted successfully</value>
+    <value>Suppression réussie</value>
   </data>
   <data name="Frontend.167" xml:space="preserve">
-    <value>Success</value>
+    <value>Succès</value>
   </data>
   <data name="Frontend.168" xml:space="preserve">
-    <value>Operation failed</value>
+    <value>Erreur</value>
   </data>
   <data name="Frontend.169" xml:space="preserve">
-    <value>Select at least one item</value>
+    <value>Sélectionnez au moins un élément</value>
   </data>
   <data name="Frontend.170" xml:space="preserve">
-    <value>Continue?</value>
+    <value>Continuer ?</value>
   </data>
   <data name="Frontend.171" xml:space="preserve">
-    <value>Notice</value>
+    <value>Information</value>
   </data>
   <data name="Frontend.172" xml:space="preserve">
-    <value>Confirm</value>
+    <value>Confirmer</value>
   </data>
   <data name="Frontend.173" xml:space="preserve">
-    <value>Failed to load</value>
+    <value>Échec du chargement</value>
   </data>
   <data name="Frontend.174" xml:space="preserve">
-    <value>No content</value>
+    <value>Aucun contenu</value>
   </data>
   <data name="Frontend.175" xml:space="preserve">
-    <value>sec</value>
+    <value>s</value>
   </data>
   <data name="Frontend.176" xml:space="preserve">
     <value>min</value>
   </data>
   <data name="Frontend.177" xml:space="preserve">
-    <value>hr</value>
+    <value>h</value>
   </data>
   <data name="Frontend.178" xml:space="preserve">
-    <value>days</value>
+    <value>jours</value>
   </data>
   <data name="Frontend.179" xml:space="preserve">
-    <value>Copied successfully</value>
+    <value>Copié</value>
   </data>
   <data name="Frontend.180" xml:space="preserve">
-    <value>Copy failed</value>
+    <value>Échec de la copie</value>
   </data>
   <data name="Frontend.181" xml:space="preserve">
-    <value>Task description:</value>
+    <value>Description de la tâche :</value>
   </data>
   <data name="Frontend.182" xml:space="preserve">
-    <value>Group List</value>
+    <value>Liste des groupes</value>
   </data>
   <data name="Frontend.183" xml:space="preserve">
-    <value>Tasks</value>
+    <value>Tâches</value>
   </data>
   <data name="Frontend.184" xml:space="preserve">
-    <value>Last run</value>
+    <value>Dernière exécution</value>
   </data>
   <data name="Frontend.185" xml:space="preserve">
-    <value>Task List</value>
+    <value>Liste des tâches</value>
   </data>
   <data name="Frontend.186" xml:space="preserve">
-    <value>Unarchive</value>
+    <value>Désarchiver</value>
   </data>
   <data name="Frontend.187" xml:space="preserve">
-    <value>Archive</value>
+    <value>Archiver</value>
   </data>
   <data name="Frontend.188" xml:space="preserve">
-    <value>Task: (#)</value>
+    <value>Tâche : (#)</value>
   </data>
   <data name="Frontend.189" xml:space="preserve">
-    <value>Agent avatar</value>
+    <value>Avatar de l'Agent</value>
   </data>
   <data name="Frontend.190" xml:space="preserve">
-    <value>Endpoint URL (for example: http://localhost:5000/mcp/sse)</value>
+    <value>Endpoint URL (par exemple : http://localhost:5000/mcp/sse)</value>
   </data>
   <data name="Frontend.191" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Annuler</value>
   </data>
   <data name="Frontend.192" xml:space="preserve">
     <value>OK</value>
   </data>
   <data name="Frontend.193" xml:space="preserve">
-    <value>Aim:</value>
+    <value>Visée :</value>
   </data>
   <data name="Frontend.194" xml:space="preserve">
-    <value>Average score:</value>
+    <value>Score moyen :</value>
   </data>
   <data name="Frontend.195" xml:space="preserve">
-    <value>Highest score:</value>
+    <value>Meilleur score :</value>
   </data>
   <data name="Frontend.196" xml:space="preserve">
-    <value>[Elapsed (ms):]</value>
+    <value>[Durée (ms) :]</value>
   </data>
   <data name="Frontend.197" xml:space="preserve">
-    <value>Copy formatted HTML code</value>
+    <value>Copier le code HTML mis en forme</value>
   </data>
   <data name="Frontend.198" xml:space="preserve">
-    <value>Copy raw content (for example, markdown markers will be copied)</value>
+    <value>Copier le contenu brut (par exemple, les balises markdown seront copiées)</value>
   </data>
   <data name="Frontend.199" xml:space="preserve">
-    <value>Raw</value>
+    <value>Brut</value>
   </data>
   <data name="Frontend.200" xml:space="preserve">
-    <value>Close</value>
+    <value>Fermer</value>
   </data>
   <data name="Frontend.201" xml:space="preserve">
-    <value>Task Evaluation</value>
+    <value>Évaluation de la tâche</value>
   </data>
   <data name="Frontend.202" xml:space="preserve">
-    <value>Enter a score (0-10)</value>
+    <value>Saisissez une note (0-10)</value>
   </data>
   <data name="Frontend.203" xml:space="preserve">
-    <value>Enter an evaluation</value>
+    <value>Saisissez une évaluation</value>
   </data>
   <data name="Frontend.204" xml:space="preserve">
-    <value>Database sample</value>
+    <value>Exemple de base de données</value>
   </data>
   <data name="Frontend.205" xml:space="preserve">
-    <value>No executable tasks yet</value>
+    <value>Aucune tâche exécutable pour le moment</value>
   </data>
   <data name="Frontend.206" xml:space="preserve">
-    <value>Failed to load statistics</value>
+    <value>Échec du chargement des statistiques</value>
   </data>
   <data name="Frontend.207" xml:space="preserve">
-    <value>{0} failed</value>
+    <value>{0} échecs</value>
   </data>
   <data name="Frontend.208" xml:space="preserve">
-    <value>{0} succeeded</value>
+    <value>{0} réussites</value>
   </data>
   <data name="Frontend.209" xml:space="preserve">
-    <value>{0} failed: {1}</value>
+    <value>{0} a échoué : {1}</value>
   </data>
   <data name="Frontend.210" xml:space="preserve">
-    <value>Unknown error</value>
+    <value>Erreur inconnue</value>
   </data>
   <data name="Frontend.211" xml:space="preserve">
-    <value>Close now?</value>
+    <value>Fermer maintenant ?</value>
   </data>
   <data name="Frontend.212" xml:space="preserve">
-    <value>Disable Agent {0}?</value>
+    <value>Désactiver l'Agent {0} ?</value>
   </data>
   <data name="Frontend.213" xml:space="preserve">
-    <value>This Agent will not take part in later new tasks</value>
+    <value>Cet Agent ne participera pas aux nouvelles tâches suivantes</value>
   </data>
   <data name="Frontend.214" xml:space="preserve">
-    <value>Enable Agent {0}?</value>
+    <value>Activer l'Agent {0} ?</value>
   </data>
   <data name="Frontend.215" xml:space="preserve">
-    <value>Leave group {0}?</value>
+    <value>Quitter le groupe {0} ?</value>
   </data>
   <data name="Frontend.216" xml:space="preserve">
-    <value>After removal, task records you previously took part in will no longer be visible</value>
+    <value>Après le retrait, les enregistrements des tâches auxquelles vous avez participé ne seront plus visibles</value>
   </data>
   <data name="Frontend.217" xml:space="preserve">
-    <value>Confirm Action</value>
+    <value>Confirmer l'action</value>
   </data>
   <data name="Frontend.218" xml:space="preserve">
-    <value>Operation succeeded!</value>
+    <value>Opération réussie !</value>
   </data>
   <data name="Frontend.219" xml:space="preserve">
-    <value>Operation canceled</value>
+    <value>Opération annulée</value>
   </data>
   <data name="Frontend.220" xml:space="preserve">
-    <value>Agent "{0}" cannot be deleted right now.</value>
+    <value>L'Agent « {0} » ne peut pas être supprimé pour le moment.</value>
   </data>
   <data name="Frontend.221" xml:space="preserve">
-    <value>Groups as Owner: {0}</value>
+    <value>Groupes en tant que propriétaire : {0}</value>
   </data>
   <data name="Frontend.222" xml:space="preserve">
-    <value>Groups as Contact: {0}</value>
+    <value>Groupes en tant que contact : {0}</value>
   </data>
   <data name="Frontend.223" xml:space="preserve">
-    <value>Replace the Owner/Contact in the corresponding group before deleting.</value>
+    <value>Remplacez le Propriétaire/Contact du groupe correspondant avant de supprimer.</value>
   </data>
   <data name="Frontend.224" xml:space="preserve">
-    <value>Deletion Blocked</value>
+    <value>Suppression bloquée</value>
   </data>
   <data name="Frontend.225" xml:space="preserve">
-    <value>Got It</value>
+    <value>Compris</value>
   </data>
   <data name="Frontend.226" xml:space="preserve">
-    <value>Delete Agent "{0}"?</value>
+    <value>Supprimer l'Agent « {0} » ?</value>
   </data>
   <data name="Frontend.227" xml:space="preserve">
-    <value>Groups the member will leave: {0}</value>
+    <value>Groupes dont le membre sera retiré : {0}</value>
   </data>
   <data name="Frontend.228" xml:space="preserve">
-    <value>Message history related to this Agent will also be deleted and cannot be recovered.</value>
+    <value>L'historique des messages lié à cet Agent sera aussi supprimé et ne pourra pas être récupéré.</value>
   </data>
   <data name="Frontend.229" xml:space="preserve">
-    <value>Deleted successfully!</value>
+    <value>Supprimé avec succès !</value>
   </data>
   <data name="Frontend.230" xml:space="preserve">
-    <value>Deletion pre-check failed. Please try again later.</value>
+    <value>La vérification préalable à la suppression a échoué. Veuillez réessayer plus tard.</value>
   </data>
   <data name="Frontend.231" xml:space="preserve">
-    <value>Delete this data?</value>
+    <value>Supprimer ces données ?</value>
   </data>
   <data name="Frontend.232" xml:space="preserve">
-    <value>Select groups to delete first</value>
+    <value>Sélectionnez d'abord les groupes à supprimer</value>
   </data>
   <data name="Frontend.233" xml:space="preserve">
-    <value>Delete the selected data in batch?</value>
+    <value>Supprimer les données sélectionnées en lot ?</value>
   </data>
   <data name="Frontend.234" xml:space="preserve">
-    <value>Select tasks to start first</value>
+    <value>Sélectionnez d'abord les tâches à démarrer</value>
   </data>
   <data name="Frontend.235" xml:space="preserve">
-    <value>Start the selected data in batch?</value>
+    <value>Démarrer les données sélectionnées en lot ?</value>
   </data>
   <data name="Frontend.236" xml:space="preserve">
-    <value>Select tasks to delete first</value>
+    <value>Sélectionnez d'abord les tâches à supprimer</value>
   </data>
   <data name="Frontend.237" xml:space="preserve">
-    <value>Force stop this task?</value>
+    <value>Forcer l'arrêt de cette tâche ?</value>
   </data>
   <data name="Frontend.238" xml:space="preserve">
-    <value>Select tasks to stop first</value>
+    <value>Sélectionnez d'abord les tâches à arrêter</value>
   </data>
   <data name="Frontend.239" xml:space="preserve">
-    <value>Force-stop the selected tasks?</value>
+    <value>Forcer l'arrêt des tâches sélectionnées ?</value>
   </data>
   <data name="Frontend.240" xml:space="preserve">
-    <value>Not set</value>
+    <value>Non renseigné</value>
   </data>
   <data name="Frontend.241" xml:space="preserve">
-    <value>(Draft)</value>
+    <value>(Brouillon)</value>
   </data>
   <data name="Frontend.242" xml:space="preserve">
-    <value>Unnamed tool</value>
+    <value>Outil sans nom</value>
   </data>
   <data name="Frontend.243" xml:space="preserve">
-    <value>Connection test succeeded</value>
+    <value>Test de connexion réussi</value>
   </data>
   <data name="Frontend.244" xml:space="preserve">
-    <value>Connection test failed:</value>
+    <value>Échec du test de connexion :</value>
   </data>
   <data name="Frontend.245" xml:space="preserve">
-    <value>Connection test error:</value>
+    <value>Erreur du test de connexion :</value>
   </data>
   <data name="Frontend.246" xml:space="preserve">
-    <value>Failed to load plugin types</value>
+    <value>Échec du chargement des types de plugin</value>
   </data>
   <data name="Frontend.247" xml:space="preserve">
-    <value>Name and URL cannot be empty</value>
+    <value>Le nom et l'URL ne peuvent pas être vides</value>
   </data>
   <data name="Frontend.248" xml:space="preserve">
-    <value>endpoint parameter is empty</value>
+    <value>Le paramètre endpoint est vide</value>
   </data>
   <data name="Frontend.249" xml:space="preserve">
-    <value>No tool information available</value>
+    <value>Aucune information d'outil disponible</value>
   </data>
   <data name="Frontend.250" xml:space="preserve">
-    <value>Tool list ({0})</value>
+    <value>Liste d'outils ({0})</value>
   </data>
   <data name="Frontend.251" xml:space="preserve">
-    <value>No description</value>
+    <value>Aucune description</value>
   </data>
   <data name="Frontend.252" xml:space="preserve">
-    <value>Parameters:</value>
+    <value>Paramètres :</value>
   </data>
   <data name="Frontend.253" xml:space="preserve">
-    <value>No parameters</value>
+    <value>Aucun paramètre</value>
   </data>
   <data name="Frontend.254" xml:space="preserve">
-    <value>MCP tool list</value>
+    <value>Liste d'outils MCP</value>
   </data>
   <data name="Frontend.255" xml:space="preserve">
-    <value>Close</value>
+    <value>Fermer</value>
   </data>
   <data name="Frontend.256" xml:space="preserve">
-    <value>{0} years</value>
+    <value>{0} ans</value>
   </data>
   <data name="Frontend.257" xml:space="preserve">
-    <value>{0} days</value>
+    <value>{0} jours</value>
   </data>
   <data name="Frontend.258" xml:space="preserve">
-    <value>{0} hours</value>
+    <value>{0} heures</value>
   </data>
   <data name="Frontend.259" xml:space="preserve">
     <value>{0} minutes</value>
   </data>
   <data name="Frontend.260" xml:space="preserve">
-    <value>{0} seconds</value>
+    <value>{0} secondes</value>
   </data>
   <data name="Frontend.261" xml:space="preserve">
-    <value>Manage models</value>
+    <value>Gérer les modèles</value>
   </data>
   <data name="Frontend.262" xml:space="preserve">
     <value>ID de l'agent</value>
@@ -955,13 +955,13 @@
     <value>MCP Endpoint</value>
   </data>
   <data name="Frontend.267" xml:space="preserve">
-    <value>Endpoint name (for example: mcp-server-NCF-7)</value>
+    <value>Nom de l'Endpoint (par exemple : mcp-server-NCF-7)</value>
   </data>
   <data name="Frontend.268" xml:space="preserve">
     <value>URL de l'Endpoint (par exemple : http://localhost:5000/mcp/sse)</value>
   </data>
   <data name="Frontend.269" xml:space="preserve">
-    <value>MCP tool list</value>
+    <value>Liste d'outils MCP</value>
   </data>
   <data name="Frontend.270" xml:space="preserve">
     <value>Top P：</value>
@@ -982,172 +982,172 @@
     <value>Séquence d'arrêt :</value>
   </data>
   <data name="Frontend.276" xml:space="preserve">
-    <value>No available Chat AI Model was found. The database has {0} models, but none are Chat. Configure at least one Chat Model in the AIKernel Module first.</value>
+    <value>Aucun AI Model de type Chat disponible. La base de données contient {0} modèles, mais aucun n'est de type Chat. Configurez d'abord au moins un Chat Model dans le Module AIKernel.</value>
   </data>
   <data name="Frontend.277" xml:space="preserve">
-    <value>Failed to load: {0}</value>
+    <value>Échec du chargement : {0}</value>
   </data>
   <data name="Frontend.278" xml:space="preserve">
-    <value>Select a valid AI Model</value>
+    <value>Sélectionnez un AI Model valide</value>
   </data>
   <data name="Frontend.279" xml:space="preserve">
-    <value>No AI Model with ID {0} was found</value>
+    <value>Aucun AI Model avec l'ID {0}</value>
   </data>
   <data name="Frontend.280" xml:space="preserve">
-    <value>Model '{0}' is not a Chat type. Please select a Chat Model.</value>
+    <value>Model '{0}' n'est pas de type Chat. Veuillez sélectionner un Model de type Chat.</value>
   </data>
   <data name="Frontend.281" xml:space="preserve">
-    <value>Initialization completed successfully</value>
+    <value>Initialisation réussie</value>
   </data>
   <data name="Frontend.282" xml:space="preserve">
-    <value>Optimization request timed out: {0}</value>
+    <value>Délai de la requête d'optimisation dépassé : {0}</value>
   </data>
   <data name="Frontend.283" xml:space="preserve">
-    <value>Chat group not found: {0}</value>
+    <value>Groupe de Chat introuvable : {0}</value>
   </data>
   <data name="Frontend.284" xml:space="preserve">
-    <value>The selected AI model does not exist: {0}</value>
+    <value>Le modèle d'IA sélectionné n'existe pas : {0}</value>
   </data>
   <data name="Frontend.285" xml:space="preserve">
-    <value>Chat group [{0}] has no enabled agents available.</value>
+    <value>Le groupe de Chat [{0}] n'a aucun agent activé disponible.</value>
   </data>
   <data name="Frontend.286" xml:space="preserve">
-    <value>No valid admin agent (ID: {1}) was found in chat group [{0}].</value>
+    <value>Aucun agent administrateur valide (ID: {1}) n'a été trouvé dans le groupe de chat [{0}].</value>
   </data>
   <data name="Frontend.287" xml:space="preserve">
-    <value>Chat group [{0}] needs at least two enabled agents for multi-agent collaboration.</value>
+    <value>Le groupe de Chat [{0}] nécessite au moins deux agents activés pour la collaboration multi-agent.</value>
   </data>
   <data name="Frontend.288" xml:space="preserve">
-    <value>The multi-agent workflow is waiting for an external response, and the current execution path cannot continue automatically.</value>
+    <value>Le flux de travail multi-agent attend une réponse externe, et le chemin d'exécution actuel ne peut pas continuer automatiquement.</value>
   </data>
   <data name="Frontend.289" xml:space="preserve">
-    <value>System message: multi-agent orchestration failed ({0}), and fallback execution returned no text to display.</value>
+    <value>Message système : l'orchestration multi-agent a échoué ({0}), et l'exécution de repli n'a renvoyé aucun texte affichable.</value>
   </data>
   <data name="Frontend.290" xml:space="preserve">
-    <value>System message: the AI service returned 403 (Forbidden), and the current task cannot continue. Check model permissions, the API Key, or whether the selected model is available.</value>
+    <value>Message système : le service d'IA a renvoyé 403 (Forbidden) et la tâche actuelle ne peut pas continuer. Vérifiez les droits du modèle, l'API Key ou la disponibilité du modèle choisi.</value>
   </data>
   <data name="Frontend.291" xml:space="preserve">
-    <value>System message: AI service authentication failed (401). Check the API Key / Endpoint configuration.</value>
+    <value>Message système : l'authentification du service d'IA a échoué (401). Vérifiez la configuration de l'API Key / Endpoint.</value>
   </data>
   <data name="Frontend.292" xml:space="preserve">
-    <value>System message: the AI service call failed and the task was interrupted. Reason: {0}</value>
+    <value>Message système : l'appel au service d'IA a échoué et la tâche a été interrompue. Motif : {0}</value>
   </data>
   <data name="Frontend.293" xml:space="preserve">
-    <value>Model configuration is empty (AIModelDto == null)</value>
+    <value>La configuration du modèle est vide (AIModelDto == null)</value>
   </data>
   <data name="Frontend.294" xml:space="preserve">
-    <value>PromptCatalyzer ChatGroup was not found. Finish initialization first.</value>
+    <value>PromptCatalyzer ChatGroup introuvable. Terminez d'abord l'initialisation.</value>
   </data>
   <data name="Frontend.295" xml:space="preserve">
-    <value>PromptCatalyzer Agent was not found. Finish initialization first.</value>
+    <value>PromptCatalyzer Agent introuvable. Terminez d'abord l'initialisation.</value>
   </data>
   <data name="Frontend.296" xml:space="preserve">
-    <value>Agent conversation failed: {0}</value>
+    <value>Échec de la conversation de l'Agent : {0}</value>
   </data>
   <data name="Frontend.297" xml:space="preserve">
-    <value>Select or manually enter a PromptCode</value>
+    <value>Sélectionnez ou saisissez manuellement un PromptCode</value>
   </data>
   <data name="Frontend.298" xml:space="preserve">
-    <value>Enter Agent name</value>
+    <value>Saisissez le nom de l'Agent</value>
   </data>
   <data name="Frontend.299" xml:space="preserve">
-    <value>Enter a search term (name, PromptCode, or keyword)</value>
+    <value>Saisissez un terme de recherche (nom, PromptCode ou mot-clé)</value>
   </data>
   <data name="Frontend.300" xml:space="preserve">
-    <value>Enter a valid search term</value>
+    <value>Saisissez un terme de recherche valide</value>
   </data>
   <data name="Frontend.301" xml:space="preserve">
-    <value>Enabled successfully</value>
+    <value>Activé</value>
   </data>
   <data name="Frontend.302" xml:space="preserve">
-    <value>Disabled successfully</value>
+    <value>Désactivé</value>
   </data>
   <data name="Frontend.303" xml:space="preserve">
-    <value>Connected successfully</value>
+    <value>Connecté</value>
   </data>
   <data name="Frontend.304" xml:space="preserve">
-    <value>Connection failed</value>
+    <value>Échec de la connexion</value>
   </data>
   <data name="Frontend.305" xml:space="preserve">
-    <value>Agent ID not provided</value>
+    <value>Agent ID non fourni</value>
   </data>
   <data name="Frontend.306" xml:space="preserve">
-    <value>PromptCatalyzer initialization timed out (2 minutes)</value>
+    <value>L'initialisation de PromptCatalyzer a expiré (2 minutes)</value>
   </data>
   <data name="Frontend.307" xml:space="preserve">
-    <value>Prompt initialization failed: {0}</value>
+    <value>Échec de l'initialisation du Prompt : {0}</value>
   </data>
   <data name="Frontend.308" xml:space="preserve">
-    <value>The PromptCode returned by Prompt initialization is empty</value>
+    <value>Le PromptCode renvoyé par l'initialisation du Prompt est vide</value>
   </data>
   <data name="Frontend.309" xml:space="preserve">
-    <value>An optimization task is already running for this Prompt. Do not submit it again (for example, avoid double-clicking).</value>
+    <value>Une tâche d'optimisation est déjà en cours pour ce Prompt. Ne la soumettez pas de nouveau (par exemple, évitez le double clic).</value>
   </data>
   <data name="Frontend.310" xml:space="preserve">
-    <value>Prompt optimization request timed out (15 minutes)</value>
+    <value>La demande d'optimisation du Prompt a expiré (15 minutes)</value>
   </data>
   <data name="Frontend.311" xml:space="preserve">
-    <value>The ChatGroup to edit was not found. ID: {0}</value>
+    <value>ChatGroup à modifier introuvable. ID : {0}</value>
   </data>
   <data name="Frontend.312" xml:space="preserve">
-    <value>Failed to select group members: {0}</value>
+    <value>Échec de la sélection des membres du groupe : {0}</value>
   </data>
   <data name="Frontend.313" xml:space="preserve">
-    <value>Provide at least one group member (ID or name)</value>
+    <value>Indiquez au moins un membre du groupe (ID ou nom)</value>
   </data>
   <data name="Frontend.314" xml:space="preserve">
-    <value>No available Chat AI model was found, so a host Agent cannot be created automatically</value>
+    <value>Aucun modèle d'IA de type Chat disponible, un Agent hôte ne peut pas être créé automatiquement</value>
   </data>
   <data name="Frontend.315" xml:space="preserve">
-    <value>Input is empty. Pass an Agent ID, name, or PromptCode.</value>
+    <value>L'entrée est vide. Indiquez un ID d'Agent, un nom ou un PromptCode.</value>
   </data>
   <data name="Frontend.316" xml:space="preserve">
-    <value>No enabled Agent was found. ID: {0}</value>
+    <value>Aucun Agent activé trouvé. ID : {0}</value>
   </data>
   <data name="Frontend.317" xml:space="preserve">
-    <value>"{0}" matched multiple Agents. Please specify an ID: {1}</value>
+    <value>« {0} » correspond à plusieurs Agent. Veuillez indiquer un ID : {1}</value>
   </data>
   <data name="Frontend.318" xml:space="preserve">
-    <value>No matching Agent found: {0}</value>
+    <value>Aucun Agent correspondant : {0}</value>
   </data>
   <data name="Frontend.319" xml:space="preserve">
-    <value>Select at least one group!</value>
+    <value>Sélectionnez au moins un groupe !</value>
   </data>
   <data name="Frontend.320" xml:space="preserve">
-    <value>The task was created and started. Check its status in the ChatTask list.</value>
+    <value>La tâche a été créée et démarrée. Consultez son état dans la liste ChatTask.</value>
   </data>
   <data name="Frontend.321" xml:space="preserve">
-    <value>Select conversations to delete!</value>
+    <value>Sélectionnez les conversations à supprimer !</value>
   </data>
   <data name="Frontend.322" xml:space="preserve">
-    <value>Check the "Confirm deletion" box to confirm the deletion!</value>
+    <value>Cochez la case « Confirmer la suppression » pour confirmer la suppression !</value>
   </data>
   <data name="Frontend.323" xml:space="preserve">
-    <value>Group ID not provided</value>
+    <value>ID de groupe non fourni</value>
   </data>
   <data name="Frontend.324" xml:space="preserve">
-    <value>Task does not exist: {0}</value>
+    <value>La tâche n'existe pas : {0}</value>
   </data>
   <data name="Frontend.325" xml:space="preserve">
-    <value>Archived successfully</value>
+    <value>Archivé</value>
   </data>
   <data name="Frontend.326" xml:space="preserve">
-    <value>Unarchived successfully</value>
+    <value>Désarchivé</value>
   </data>
   <data name="Frontend.327" xml:space="preserve">
-    <value>Task ID not provided</value>
+    <value>ID de tâche non fourni</value>
   </data>
   <data name="Frontend.328" xml:space="preserve">
-    <value>No startable task found</value>
+    <value>Aucune tâche pouvant être démarrée</value>
   </data>
   <data name="Frontend.329" xml:space="preserve">
-    <value>Batch start finished: {0} succeeded, {1} skipped</value>
+    <value>Démarrage groupé terminé : {0} réussis, {1} ignorés</value>
   </data>
   <data name="Frontend.330" xml:space="preserve">
-    <value>Force stop finished: {0} succeeded, {1} skipped</value>
+    <value>Arrêt forcé terminé : {0} réussies, {1} ignorées</value>
   </data>
   <data name="Frontend.331" xml:space="preserve">
-    <value>Task deletion finished: {0} succeeded</value>
+    <value>Suppression des tâches terminée : {0} réussies</value>
   </data>
   <data name="Agents.Error.MissingRunRequest" xml:space="preserve">
     <value>Aucune demande d'exécution de groupe de chat n'a été fournie.</value>

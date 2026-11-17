@@ -253,31 +253,31 @@
     <value>Error al eliminar</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>Exception-throw test, parameters passed: {0} {1}</value>
+    <value>Prueba de lanzamiento de excepción, parámetros enviados: {0} {1}</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
-    <value>Divisor cannot be 0!</value>
+    <value>El divisor no puede ser 0!</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>Unknown operator: {0}</value>
+    <value>Operador desconocido: {0}</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>Unknown operator</value>
+    <value>Operador desconocido</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>Enter a valid URL!</value>
+    <value>Introduzca una URL válida!</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>The target host resolved to a non-public address. The connection was refused.</value>
+    <value>El host de destino se resolvió en una dirección no pública. Se rechazó la conexión.</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>Unable to connect to the target host that passed the public-address check.</value>
+    <value>No se puede conectar con el host de destino que superó la comprobación de dirección pública.</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>The target URL is not allowed.</value>
+    <value>No se permite acceder a la URL de destino.</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>The redirect target URL is not allowed.</value>
+    <value>No se permite acceder a la URL de destino de la redirección.</value>
   </data>
   <data name="Function.Sample.Name" xml:space="preserve">
     <value>Función de ejemplo</value>

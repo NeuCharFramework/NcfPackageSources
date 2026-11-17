@@ -100,829 +100,829 @@
     <value>Aléatoire</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>0 fields</value>
+    <value>0 champs</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
     <value>conditions</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>Center align 1</value>
+    <value>Centrer 1</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>Events</value>
+    <value>Événements</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>Event settings</value>
+    <value>Réglages de l'événement</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>View code</value>
+    <value>Voir le code</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
     <value>Position</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>Allow delete</value>
+    <value>Autoriser la suppression</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>Allow export</value>
+    <value>Autoriser l'export</value>
   </data>
   <data name="Frontend.010" xml:space="preserve">
-    <value>Allow sorting</value>
+    <value>Autoriser le tri</value>
   </data>
   <data name="Frontend.011" xml:space="preserve">
-    <value>Allow edit</value>
+    <value>Autoriser la modification</value>
   </data>
   <data name="Frontend.012" xml:space="preserve">
-    <value>Input parameters</value>
+    <value>Paramètres d'entrée</value>
   </data>
   <data name="Frontend.013" xml:space="preserve">
-    <value>All fields</value>
+    <value>Tous les champs</value>
   </data>
   <data name="Frontend.014" xml:space="preserve">
-    <value>Close page</value>
+    <value>Fermer la page</value>
   </data>
   <data name="Frontend.015" xml:space="preserve">
-    <value>Output parameters</value>
+    <value>Paramètres de sortie</value>
   </data>
   <data name="Frontend.016" xml:space="preserve">
-    <value>Pagination settings</value>
+    <value>Réglages de pagination</value>
   </data>
   <data name="Frontend.017" xml:space="preserve">
-    <value>Column name</value>
+    <value>Nom de colonne</value>
   </data>
   <data name="Frontend.018" xml:space="preserve">
-    <value>Column width</value>
+    <value>Largeur de colonne</value>
   </data>
   <data name="Frontend.019" xml:space="preserve">
-    <value>Column properties</value>
+    <value>Propriétés de colonne</value>
   </data>
   <data name="Frontend.020" xml:space="preserve">
-    <value>Column property settings</value>
+    <value>Paramètres des propriétés de colonne</value>
   </data>
   <data name="Frontend.021" xml:space="preserve">
-    <value>Column title</value>
+    <value>Titre de colonne</value>
   </data>
   <data name="Frontend.022" xml:space="preserve">
-    <value>Column management</value>
+    <value>Gestion des colonnes</value>
   </data>
   <data name="Frontend.023" xml:space="preserve">
-    <value>Column selection</value>
+    <value>Sélection de colonnes</value>
   </data>
   <data name="Frontend.024" xml:space="preserve">
-    <value>Create one</value>
+    <value>Créer un élément</value>
   </data>
   <data name="Frontend.025" xml:space="preserve">
-    <value>Create layout</value>
+    <value>Créer une disposition</value>
   </data>
   <data name="Frontend.026" xml:space="preserve">
-    <value>Delete</value>
+    <value>Supprimer</value>
   </data>
   <data name="Frontend.027" xml:space="preserve">
-    <value>Delete one</value>
+    <value>Supprimer un élément</value>
   </data>
   <data name="Frontend.028" xml:space="preserve">
-    <value>Delete one record</value>
+    <value>Supprimer un enregistrement</value>
   </data>
   <data name="Frontend.029" xml:space="preserve">
-    <value>Delete layout</value>
+    <value>Supprimer la disposition</value>
   </data>
   <data name="Frontend.030" xml:space="preserve">
-    <value>Dynamic Data Foundation</value>
+    <value>Fondation de données dynamiques</value>
   </data>
   <data name="Frontend.031" xml:space="preserve">
-    <value>Ascending</value>
+    <value>Croissant</value>
   </data>
   <data name="Frontend.032" xml:space="preserve">
-    <value>Double-click</value>
+    <value>Double-clic</value>
   </data>
   <data name="Frontend.033" xml:space="preserve">
-    <value>Publish</value>
+    <value>Publier</value>
   </data>
   <data name="Frontend.034" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Annuler</value>
   </data>
   <data name="Frontend.035" xml:space="preserve">
-    <value>Cancel button text</value>
+    <value>Texte du bouton Annuler</value>
   </data>
   <data name="Frontend.036" xml:space="preserve">
-    <value>Cancel action settings</value>
+    <value>Paramètres de l'action Annuler</value>
   </data>
   <data name="Frontend.037" xml:space="preserve">
-    <value>Hide when only one page</value>
+    <value>Masquer s'il n'y a qu'une page</value>
   </data>
   <data name="Frontend.038" xml:space="preserve">
-    <value>Right</value>
+    <value>Droite</value>
   </data>
   <data name="Frontend.039" xml:space="preserve">
-    <value>Align right</value>
+    <value>Aligner à droite</value>
   </data>
   <data name="Frontend.040" xml:space="preserve">
-    <value>Enable pagination</value>
+    <value>Activer la pagination</value>
   </data>
   <data name="Frontend.041" xml:space="preserve">
-    <value>Fixed column</value>
+    <value>Colonne fixe</value>
   </data>
   <data name="Frontend.042" xml:space="preserve">
-    <value>Fixed direction</value>
+    <value>Direction fixe</value>
   </data>
   <data name="Frontend.043" xml:space="preserve">
-    <value>Filled</value>
+    <value>Rempli</value>
   </data>
   <data name="Frontend.044" xml:space="preserve">
-    <value>Copy layout</value>
+    <value>Copier la disposition</value>
   </data>
   <data name="Frontend.045" xml:space="preserve">
-    <value>Greater than</value>
+    <value>Supérieur à</value>
   </data>
   <data name="Frontend.046" xml:space="preserve">
-    <value>Name</value>
+    <value>Nom</value>
   </data>
   <data name="Frontend.047" xml:space="preserve">
-    <value>Child component</value>
+    <value>Composant enfant</value>
   </data>
   <data name="Frontend.048" xml:space="preserve">
-    <value>Child component enable &amp; layout</value>
+    <value>Activation et disposition des sous-composants</value>
   </data>
   <data name="Frontend.049" xml:space="preserve">
-    <value>Field</value>
+    <value>Champ</value>
   </data>
   <data name="Frontend.050" xml:space="preserve">
-    <value>Field name</value>
+    <value>Nom du champ</value>
   </data>
   <data name="Frontend.051" xml:space="preserve">
-    <value>Field description</value>
+    <value>Description du champ</value>
   </data>
   <data name="Frontend.052" xml:space="preserve">
-    <value>Field query scope</value>
+    <value>Portée de requête du champ</value>
   </data>
   <data name="Frontend.053" xml:space="preserve">
-    <value>Alignment</value>
+    <value>Alignement</value>
   </data>
   <data name="Frontend.054" xml:space="preserve">
-    <value>Import</value>
+    <value>Importer</value>
   </data>
   <data name="Frontend.055" xml:space="preserve">
-    <value>Export</value>
+    <value>Exporter</value>
   </data>
   <data name="Frontend.056" xml:space="preserve">
-    <value>Less than</value>
+    <value>Inférieur à</value>
   </data>
   <data name="Frontend.057" xml:space="preserve">
-    <value>Display content</value>
+    <value>Contenu affiché</value>
   </data>
   <data name="Frontend.058" xml:space="preserve">
-    <value>Display content text</value>
+    <value>Texte du contenu affiché</value>
   </data>
   <data name="Frontend.059" xml:space="preserve">
-    <value>Display content text 1</value>
+    <value>Texte du contenu affiché 1</value>
   </data>
   <data name="Frontend.060" xml:space="preserve">
-    <value>Display type</value>
+    <value>Type d'affichage</value>
   </data>
   <data name="Frontend.061" xml:space="preserve">
-    <value>Properties</value>
+    <value>Propriétés</value>
   </data>
   <data name="Frontend.062" xml:space="preserve">
-    <value>Left</value>
+    <value>Gauche</value>
   </data>
   <data name="Frontend.063" xml:space="preserve">
-    <value>Align left</value>
+    <value>Aligner à gauche</value>
   </data>
   <data name="Frontend.064" xml:space="preserve">
-    <value>Include id</value>
+    <value>Inclure l'id</value>
   </data>
   <data name="Frontend.065" xml:space="preserve">
-    <value>Age</value>
+    <value>Âge</value>
   </data>
   <data name="Frontend.066" xml:space="preserve">
-    <value>Dialog settings</value>
+    <value>Réglages du dialogue</value>
   </data>
   <data name="Frontend.067" xml:space="preserve">
-    <value>Dialog</value>
+    <value>Dialogue</value>
   </data>
   <data name="Frontend.068" xml:space="preserve">
-    <value>Dialog settings</value>
+    <value>Réglages du dialogue</value>
   </data>
   <data name="Frontend.069" xml:space="preserve">
-    <value>This module was generated automatically</value>
+    <value>Ce module a été généré automatiquement</value>
   </data>
   <data name="Frontend.070" xml:space="preserve">
-    <value>Open dialog</value>
+    <value>Ouvrir le dialogue</value>
   </data>
   <data name="Frontend.071" xml:space="preserve">
-    <value>Open dialog</value>
+    <value>Ouvrir le dialogue</value>
   </data>
   <data name="Frontend.072" xml:space="preserve">
-    <value>Open page</value>
+    <value>Ouvrir la page</value>
   </data>
   <data name="Frontend.073" xml:space="preserve">
-    <value>Executable Methods</value>
+    <value>Méthodes exécutables</value>
   </data>
   <data name="Frontend.074" xml:space="preserve">
-    <value>Extension Modules</value>
+    <value>Modules d’extension</value>
   </data>
   <data name="Frontend.075" xml:space="preserve">
-    <value>Button</value>
+    <value>Bouton</value>
   </data>
   <data name="Frontend.076" xml:space="preserve">
-    <value>Button event</value>
+    <value>Événement du bouton</value>
   </data>
   <data name="Frontend.077" xml:space="preserve">
-    <value>Button name</value>
+    <value>Nom du bouton</value>
   </data>
   <data name="Frontend.078" xml:space="preserve">
-    <value>Button properties</value>
+    <value>Propriétés du bouton</value>
   </data>
   <data name="Frontend.079" xml:space="preserve">
-    <value>Button type</value>
+    <value>Type de bouton</value>
   </data>
   <data name="Frontend.080" xml:space="preserve">
-    <value>Button settings</value>
+    <value>Réglages du bouton</value>
   </data>
   <data name="Frontend.081" xml:space="preserve">
-    <value>Sort</value>
+    <value>Trier</value>
   </data>
   <data name="Frontend.082" xml:space="preserve">
-    <value>Sort field</value>
+    <value>Champ de tri</value>
   </data>
   <data name="Frontend.083" xml:space="preserve">
-    <value>Sort order</value>
+    <value>Ordre de tri</value>
   </data>
   <data name="Frontend.084" xml:space="preserve">
-    <value>Sort settings</value>
+    <value>Réglages de tri</value>
   </data>
   <data name="Frontend.085" xml:space="preserve">
-    <value>Outlined</value>
+    <value>Contour</value>
   </data>
   <data name="Frontend.086" xml:space="preserve">
     <value>Description</value>
   </data>
   <data name="Frontend.087" xml:space="preserve">
-    <value>Submit</value>
+    <value>Envoyer</value>
   </data>
   <data name="Frontend.088" xml:space="preserve">
-    <value>Submit failure state settings</value>
+    <value>Réglages de l'état d'échec d'envoi</value>
   </data>
   <data name="Frontend.089" xml:space="preserve">
-    <value>Submit success state settings</value>
+    <value>Réglages de l'état de succès d'envoi</value>
   </data>
   <data name="Frontend.090" xml:space="preserve">
-    <value>Message content</value>
+    <value>Contenu du message</value>
   </data>
   <data name="Frontend.091" xml:space="preserve">
-    <value>Hint text</value>
+    <value>Texte d'aide</value>
   </data>
   <data name="Frontend.092" xml:space="preserve">
-    <value>Message duration</value>
+    <value>Durée du message</value>
   </data>
   <data name="Frontend.093" xml:space="preserve">
-    <value>Message duration</value>
+    <value>Durée du message</value>
   </data>
   <data name="Frontend.094" xml:space="preserve">
-    <value>Tip: you can add fields only after adding a data table</value>
+    <value>Remarque : vous ne pouvez ajouter des champs qu'après avoir ajouté une table de données</value>
   </data>
   <data name="Frontend.095" xml:space="preserve">
     <value>Actions</value>
   </data>
   <data name="Frontend.096" xml:space="preserve">
-    <value>Action column</value>
+    <value>Colonne d'actions</value>
   </data>
   <data name="Frontend.097" xml:space="preserve">
-    <value>Data format</value>
+    <value>Format de données</value>
   </data>
   <data name="Frontend.098" xml:space="preserve">
-    <value>Data format text</value>
+    <value>Texte de format de données</value>
   </data>
   <data name="Frontend.099" xml:space="preserve">
-    <value>Data format text 1</value>
+    <value>Texte du format de données 1</value>
   </data>
   <data name="Frontend.100" xml:space="preserve">
-    <value>English identifier of the data model. It uniquely identifies the data model and cannot be duplicated.</value>
+    <value>Identifiant anglais du modèle de données. Il identifie le modèle de façon unique et ne peut pas être dupliqué.</value>
   </data>
   <data name="Frontend.101" xml:space="preserve">
-    <value>Data filtering</value>
+    <value>Filtrage des données</value>
   </data>
   <data name="Frontend.102" xml:space="preserve">
-    <value>Data type</value>
+    <value>Type de données</value>
   </data>
   <data name="Frontend.103" xml:space="preserve">
-    <value>Data table</value>
+    <value>Table de données</value>
   </data>
   <data name="Frontend.104" xml:space="preserve">
-    <value>Data table text</value>
+    <value>Texte de table de données</value>
   </data>
   <data name="Frontend.105" xml:space="preserve">
-    <value>Data table text 1</value>
+    <value>Texte de table de données 1</value>
   </data>
   <data name="Frontend.106" xml:space="preserve">
-    <value>Data grid</value>
+    <value>Grille de données</value>
   </data>
   <data name="Frontend.107" xml:space="preserve">
-    <value>Data table settings</value>
+    <value>Paramètres de la table de données</value>
   </data>
   <data name="Frontend.108" xml:space="preserve">
-    <value>Select data table</value>
+    <value>Sélectionner une table de données</value>
   </data>
   <data name="Frontend.109" xml:space="preserve">
-    <value>Data settings</value>
+    <value>Réglages des données</value>
   </data>
   <data name="Frontend.110" xml:space="preserve">
-    <value>Data details</value>
+    <value>Détails des données</value>
   </data>
   <data name="Frontend.111" xml:space="preserve">
-    <value>Datasets</value>
+    <value>Jeux de données</value>
   </data>
   <data name="Frontend.112" xml:space="preserve">
-    <value>Text</value>
+    <value>Texte</value>
   </data>
   <data name="Frontend.113" xml:space="preserve">
-    <value>Add</value>
+    <value>Ajouter</value>
   </data>
   <data name="Frontend.114" xml:space="preserve">
-    <value>Add field</value>
+    <value>Ajouter un champ</value>
   </data>
   <data name="Frontend.115" xml:space="preserve">
-    <value>Add data table</value>
+    <value>Ajouter une table de données</value>
   </data>
   <data name="Frontend.116" xml:space="preserve">
-    <value>Add interface</value>
+    <value>Ajouter une interface</value>
   </data>
   <data name="Frontend.117" xml:space="preserve">
-    <value>Add menu</value>
+    <value>Ajouter un menu</value>
   </data>
   <data name="Frontend.118" xml:space="preserve">
-    <value>Add page</value>
+    <value>Ajouter une page</value>
   </data>
   <data name="Frontend.119" xml:space="preserve">
-    <value>Add a background color to pagination buttons</value>
+    <value>Ajouter une couleur de fond aux boutons de pagination</value>
   </data>
   <data name="Frontend.120" xml:space="preserve">
-    <value>Use compact pagination</value>
+    <value>Utiliser une pagination compacte</value>
   </data>
   <data name="Frontend.121" xml:space="preserve">
     <value>Unique</value>
   </data>
   <data name="Frontend.122" xml:space="preserve">
-    <value>Required</value>
+    <value>Obligatoire</value>
   </data>
   <data name="Frontend.123" xml:space="preserve">
-    <value>Show zebra stripes</value>
+    <value>Afficher les bandes zébrées</value>
   </data>
   <data name="Frontend.124" xml:space="preserve">
-    <value>Show message</value>
+    <value>Afficher le message</value>
   </data>
   <data name="Frontend.125" xml:space="preserve">
-    <value>Show header</value>
+    <value>Afficher l'en-tête</value>
   </data>
   <data name="Frontend.126" xml:space="preserve">
-    <value>Show border</value>
+    <value>Afficher la bordure</value>
   </data>
   <data name="Frontend.127" xml:space="preserve">
-    <value>Standard column</value>
+    <value>Colonne standard</value>
   </data>
   <data name="Frontend.128" xml:space="preserve">
-    <value>Maximum length</value>
+    <value>Longueur maximale</value>
   </data>
   <data name="Frontend.129" xml:space="preserve">
-    <value>Maximum page buttons</value>
+    <value>Nombre maximal de boutons de page</value>
   </data>
   <data name="Frontend.130" xml:space="preserve">
-    <value>Minimum length</value>
+    <value>Longueur minimale</value>
   </data>
   <data name="Frontend.131" xml:space="preserve">
-    <value>View layout</value>
+    <value>Voir la mise en page</value>
   </data>
   <data name="Frontend.132" xml:space="preserve">
-    <value>Identifier id</value>
+    <value>Identifiant id</value>
   </data>
   <data name="Frontend.133" xml:space="preserve">
-    <value>Title content</value>
+    <value>Contenu du titre</value>
   </data>
   <data name="Frontend.134" xml:space="preserve">
-    <value>Title text</value>
+    <value>Texte du titre</value>
   </data>
   <data name="Frontend.135" xml:space="preserve">
     <value>Style</value>
   </data>
   <data name="Frontend.136" xml:space="preserve">
-    <value>Style settings</value>
+    <value>Paramètres de style</value>
   </data>
   <data name="Frontend.137" xml:space="preserve">
     <value>Format</value>
   </data>
   <data name="Frontend.138" xml:space="preserve">
-    <value>Format text</value>
+    <value>Texte de format</value>
   </data>
   <data name="Frontend.139" xml:space="preserve">
-    <value>Format text 2</value>
+    <value>Texte de format 2</value>
   </data>
   <data name="Frontend.140" xml:space="preserve">
-    <value>Items per page</value>
+    <value>Éléments par page</value>
   </data>
   <data name="Frontend.141" xml:space="preserve">
-    <value>Add</value>
+    <value>Ajouter</value>
   </data>
   <data name="Frontend.142" xml:space="preserve">
-    <value>Add column</value>
+    <value>Ajouter une colonne</value>
   </data>
   <data name="Frontend.143" xml:space="preserve">
-    <value>Add button</value>
+    <value>Ajouter un bouton</value>
   </data>
   <data name="Frontend.144" xml:space="preserve">
-    <value>Add sort rule</value>
+    <value>Ajouter une règle de tri</value>
   </data>
   <data name="Frontend.145" xml:space="preserve">
-    <value>Add filter condition</value>
+    <value>Ajouter une condition de filtre</value>
   </data>
   <data name="Frontend.146" xml:space="preserve">
-    <value>Add option</value>
+    <value>Ajouter une option</value>
   </data>
   <data name="Frontend.147" xml:space="preserve">
-    <value>Render layout page</value>
+    <value>Afficher la page de mise en page</value>
   </data>
   <data name="Frontend.148" xml:space="preserve">
-    <value>Click</value>
+    <value>Clic</value>
   </data>
   <data name="Frontend.149" xml:space="preserve">
-    <value>Click the right side to add a property</value>
+    <value>Cliquez à droite pour ajouter une propriété</value>
   </data>
   <data name="Frontend.150" xml:space="preserve">
-    <value>Click the right side to add a component</value>
+    <value>Cliquez à droite pour ajouter un composant</value>
   </data>
   <data name="Frontend.151" xml:space="preserve">
-    <value>Page settings</value>
+    <value>Paramètres d’interface</value>
   </data>
   <data name="Frontend.152" xml:space="preserve">
-    <value>Confirm</value>
+    <value>Confirmer</value>
   </data>
   <data name="Frontend.153" xml:space="preserve">
-    <value>Confirm</value>
+    <value>Confirmer</value>
   </data>
   <data name="Frontend.154" xml:space="preserve">
-    <value>Confirm button text</value>
+    <value>Texte du bouton de confirmation</value>
   </data>
   <data name="Frontend.155" xml:space="preserve">
-    <value>Confirm action settings</value>
+    <value>Paramètres de l'action de confirmation</value>
   </data>
   <data name="Frontend.156" xml:space="preserve">
-    <value>Disabled</value>
+    <value>Désactivé</value>
   </data>
   <data name="Frontend.157" xml:space="preserve">
-    <value>Equals</value>
+    <value>Égal à</value>
   </data>
   <data name="Frontend.158" xml:space="preserve">
-    <value>Filter</value>
+    <value>Filtre</value>
   </data>
   <data name="Frontend.159" xml:space="preserve">
-    <value>Filter settings</value>
+    <value>Paramètres du filtre</value>
   </data>
   <data name="Frontend.160" xml:space="preserve">
-    <value>Filter condition settings</value>
+    <value>Paramètres des conditions de filtre</value>
   </data>
   <data name="Frontend.161" xml:space="preserve">
-    <value>Type text</value>
+    <value>Texte de type</value>
   </data>
   <data name="Frontend.162" xml:space="preserve">
-    <value>Type text 1</value>
+    <value>Texte de type 1</value>
   </data>
   <data name="Frontend.163" xml:space="preserve">
-    <value>Component</value>
+    <value>Composant</value>
   </data>
   <data name="Frontend.164" xml:space="preserve">
-    <value>Component name</value>
+    <value>Nom du composant</value>
   </data>
   <data name="Frontend.165" xml:space="preserve">
-    <value>Component type</value>
+    <value>Type de composant</value>
   </data>
   <data name="Frontend.166" xml:space="preserve">
-    <value>Bound field</value>
+    <value>Champ lié</value>
   </data>
   <data name="Frontend.167" xml:space="preserve">
-    <value>Bound field text</value>
+    <value>Texte du champ lié</value>
   </data>
   <data name="Frontend.168" xml:space="preserve">
-    <value>Bound field text 1</value>
+    <value>Texte du champ lié 1</value>
   </data>
   <data name="Frontend.169" xml:space="preserve">
-    <value>Edit</value>
+    <value>Modifier</value>
   </data>
   <data name="Frontend.170" xml:space="preserve">
-    <value>Edit page</value>
+    <value>Modifier la page</value>
   </data>
   <data name="Frontend.171" xml:space="preserve">
-    <value>Generated automatically</value>
+    <value>Généré automatiquement</value>
   </data>
   <data name="Frontend.172" xml:space="preserve">
-    <value>Custom</value>
+    <value>Personnalisé</value>
   </data>
   <data name="Frontend.173" xml:space="preserve">
-    <value>Custom ID name</value>
+    <value>Nom d'ID personnalisé</value>
   </data>
   <data name="Frontend.174" xml:space="preserve">
-    <value>Custom column settings</value>
+    <value>Paramètres de colonnes personnalisées</value>
   </data>
   <data name="Frontend.175" xml:space="preserve">
-    <value>Custom button</value>
+    <value>Bouton personnalisé</value>
   </data>
   <data name="Frontend.176" xml:space="preserve">
-    <value>Form</value>
+    <value>Formulaire</value>
   </data>
   <data name="Frontend.177" xml:space="preserve">
-    <value>Form property settings</value>
+    <value>Paramètres des propriétés du formulaire</value>
   </data>
   <data name="Frontend.178" xml:space="preserve">
-    <value>Form execution method</value>
+    <value>Méthode d'exécution du formulaire</value>
   </data>
   <data name="Frontend.179" xml:space="preserve">
-    <value>Table</value>
+    <value>Tableau</value>
   </data>
   <data name="Frontend.180" xml:space="preserve">
-    <value>Table columns</value>
+    <value>Colonnes du tableau</value>
   </data>
   <data name="Frontend.181" xml:space="preserve">
-    <value>Table size</value>
+    <value>Taille du tableau</value>
   </data>
   <data name="Frontend.182" xml:space="preserve">
-    <value>Table style settings</value>
+    <value>Paramètres de style du tableau</value>
   </data>
   <data name="Frontend.183" xml:space="preserve">
-    <value>Settings</value>
+    <value>Réglages</value>
   </data>
   <data name="Frontend.184" xml:space="preserve">
-    <value>Visitor edit page</value>
+    <value>Page d'édition visiteur</value>
   </data>
   <data name="Frontend.185" xml:space="preserve">
-    <value>Details</value>
+    <value>Détails</value>
   </data>
   <data name="Frontend.186" xml:space="preserve">
-    <value>Select a data table before you can configure its fields</value>
+    <value>Sélectionnez d'abord une table de données pour configurer ses champs</value>
   </data>
   <data name="Frontend.187" xml:space="preserve">
-    <value>Enter a name</value>
+    <value>Saisissez un nom</value>
   </data>
   <data name="Frontend.188" xml:space="preserve">
-    <value>Enter identifier id</value>
+    <value>Saisissez l'id de l'identifiant</value>
   </data>
   <data name="Frontend.189" xml:space="preserve">
-    <value>Please enter</value>
+    <value>Saisissez</value>
   </data>
   <data name="Frontend.190" xml:space="preserve">
-    <value>Enter close page</value>
+    <value>Saisissez la page de fermeture</value>
   </data>
   <data name="Frontend.191" xml:space="preserve">
-    <value>Enter text</value>
+    <value>Saisissez du contenu</value>
   </data>
   <data name="Frontend.192" xml:space="preserve">
-    <value>Enter column width</value>
+    <value>Saisissez la largeur de colonne</value>
   </data>
   <data name="Frontend.193" xml:space="preserve">
-    <value>Enter a column title</value>
+    <value>Saisissez le titre de la colonne</value>
   </data>
   <data name="Frontend.194" xml:space="preserve">
-    <value>Enter Cancel button text</value>
+    <value>Saisissez le texte du bouton Annuler</value>
   </data>
   <data name="Frontend.195" xml:space="preserve">
-    <value>Enter a name</value>
+    <value>Saisissez un nom</value>
   </data>
   <data name="Frontend.196" xml:space="preserve">
-    <value>Enter field name</value>
+    <value>Saisissez le nom du champ</value>
   </data>
   <data name="Frontend.197" xml:space="preserve">
-    <value>Enter layout name</value>
+    <value>Saisissez le nom de la mise en page</value>
   </data>
   <data name="Frontend.198" xml:space="preserve">
-    <value>Enter button name</value>
+    <value>Saisissez le nom du bouton</value>
   </data>
   <data name="Frontend.199" xml:space="preserve">
-    <value>Enter a description</value>
+    <value>Saisissez une description</value>
   </data>
   <data name="Frontend.200" xml:space="preserve">
-    <value>Enter prompt content</value>
+    <value>Saisissez le contenu de l'invite</value>
   </data>
   <data name="Frontend.201" xml:space="preserve">
-    <value>Enter hint text</value>
+    <value>Saisissez le texte d'aide</value>
   </data>
   <data name="Frontend.202" xml:space="preserve">
-    <value>Enter prompt duration</value>
+    <value>Saisissez la durée de l'invite</value>
   </data>
   <data name="Frontend.203" xml:space="preserve">
-    <value>Enter title text</value>
+    <value>Saisissez le texte du titre</value>
   </data>
   <data name="Frontend.204" xml:space="preserve">
-    <value>Enter confirm button text</value>
+    <value>Saisissez le texte du bouton de confirmation</value>
   </data>
   <data name="Frontend.205" xml:space="preserve">
-    <value>Enter menu name</value>
+    <value>Saisissez le nom du menu</value>
   </data>
   <data name="Frontend.206" xml:space="preserve">
-    <value>Select</value>
+    <value>Sélectionnez</value>
   </data>
   <data name="Frontend.207" xml:space="preserve">
-    <value>Select an event</value>
+    <value>Sélectionnez un événement</value>
   </data>
   <data name="Frontend.208" xml:space="preserve">
-    <value>Select an interaction</value>
+    <value>Sélectionnez une interaction</value>
   </data>
   <data name="Frontend.209" xml:space="preserve">
-    <value>Select a position</value>
+    <value>Sélectionnez une position</value>
   </data>
   <data name="Frontend.210" xml:space="preserve">
-    <value>Select alignment</value>
+    <value>Sélectionnez l'alignement</value>
   </data>
   <data name="Frontend.211" xml:space="preserve">
-    <value>Select display content</value>
+    <value>Sélectionnez le contenu affiché</value>
   </data>
   <data name="Frontend.212" xml:space="preserve">
-    <value>Select button event</value>
+    <value>Sélectionnez l'événement du bouton</value>
   </data>
   <data name="Frontend.213" xml:space="preserve">
-    <value>Select button property</value>
+    <value>Sélectionnez la propriété du bouton</value>
   </data>
   <data name="Frontend.214" xml:space="preserve">
-    <value>Select button type</value>
+    <value>Sélectionnez le type de bouton</value>
   </data>
   <data name="Frontend.215" xml:space="preserve">
-    <value>Select data format</value>
+    <value>Sélectionnez le format de données</value>
   </data>
   <data name="Frontend.216" xml:space="preserve">
-    <value>Select data type</value>
+    <value>Sélectionnez le type de données</value>
   </data>
   <data name="Frontend.217" xml:space="preserve">
-    <value>Select a data table</value>
+    <value>Sélectionnez une table de données</value>
   </data>
   <data name="Frontend.218" xml:space="preserve">
-    <value>Select a format</value>
+    <value>Sélectionnez un format</value>
   </data>
   <data name="Frontend.219" xml:space="preserve">
-    <value>Select items per page</value>
+    <value>Sélectionnez le nombre par page</value>
   </data>
   <data name="Frontend.220" xml:space="preserve">
-    <value>Select a component</value>
+    <value>Sélectionnez un composant</value>
   </data>
   <data name="Frontend.221" xml:space="preserve">
-    <value>Select component name</value>
+    <value>Sélectionnez le nom du composant</value>
   </data>
   <data name="Frontend.222" xml:space="preserve">
-    <value>Select component type</value>
+    <value>Sélectionnez le type de composant</value>
   </data>
   <data name="Frontend.223" xml:space="preserve">
-    <value>Select bound field</value>
+    <value>Sélectionnez le champ lié</value>
   </data>
   <data name="Frontend.224" xml:space="preserve">
-    <value>Select a page</value>
+    <value>Sélectionnez une page</value>
   </data>
   <data name="Frontend.225" xml:space="preserve">
-    <value>Call data source method</value>
+    <value>Appeler la méthode de la source de données</value>
   </data>
   <data name="Frontend.226" xml:space="preserve">
-    <value>Open link</value>
+    <value>Ouvrir le lien</value>
   </data>
   <data name="Frontend.227" xml:space="preserve">
-    <value>Select interaction</value>
+    <value>Sélectionner l'interaction</value>
   </data>
   <data name="Frontend.228" xml:space="preserve">
-    <value>Select component</value>
+    <value>Sélectionner un composant</value>
   </data>
   <data name="Frontend.229" xml:space="preserve">
-    <value>Select page</value>
+    <value>Sélectionner une page</value>
   </data>
   <data name="Frontend.230" xml:space="preserve">
     <value>Options</value>
   </data>
   <data name="Frontend.231" xml:space="preserve">
-    <value>Option label</value>
+    <value>Libellé d'option</value>
   </data>
   <data name="Frontend.232" xml:space="preserve">
-    <value>Option value</value>
+    <value>Valeur d'option</value>
   </data>
   <data name="Frontend.233" xml:space="preserve">
-    <value>Option settings</value>
+    <value>Paramètres des options</value>
   </data>
   <data name="Frontend.234" xml:space="preserve">
-    <value>Link</value>
+    <value>Lien</value>
   </data>
   <data name="Frontend.235" xml:space="preserve">
-    <value>Length</value>
+    <value>Longueur</value>
   </data>
   <data name="Frontend.236" xml:space="preserve">
-    <value>Descending</value>
+    <value>Décroissant</value>
   </data>
   <data name="Frontend.237" xml:space="preserve">
-    <value>Align top</value>
+    <value>Aligner en haut</value>
   </data>
   <data name="Frontend.238" xml:space="preserve">
-    <value>Color</value>
+    <value>Couleur</value>
   </data>
   <data name="Frontend.239" xml:space="preserve">
-    <value>Home</value>
+    <value>Accueil</value>
   </data>
   <data name="Frontend.240" xml:space="preserve">
-    <value>lable font color</value>
+    <value>Couleur de police lable</value>
   </data>
   <data name="Frontend.241" xml:space="preserve">
-    <value>Min length: Max length:</value>
+    <value>Longueur min. : Longueur max. :</value>
   </data>
   <data name="Frontend.242" xml:space="preserve">
-    <value>Add on the right</value>
+    <value>Ajouter à droite</value>
   </data>
   <data name="Frontend.243" xml:space="preserve">
-    <value>DynamicData data table settings</value>
+    <value>Paramètres des tables de données DynamicData</value>
   </data>
   <data name="Frontend.244" xml:space="preserve">
-    <value>Name</value>
+    <value>Nom</value>
   </data>
   <data name="Frontend.245" xml:space="preserve">
-    <value>Yes</value>
+    <value>Oui</value>
   </data>
   <data name="Frontend.246" xml:space="preserve">
-    <value>No</value>
+    <value>Non</value>
   </data>
   <data name="Frontend.247" xml:space="preserve">
-    <value>Event Text</value>
+    <value>Texte de l'événement</value>
   </data>
   <data name="Frontend.248" xml:space="preserve">
-    <value>Event text 2</value>
+    <value>Texte d'événement 2</value>
   </data>
   <data name="Frontend.249" xml:space="preserve">
-    <value>Create DynamicData layout</value>
+    <value>Création de mise en page DynamicData</value>
   </data>
   <data name="Frontend.250" xml:space="preserve">
-    <value>Add an option</value>
+    <value>Ajoutez une option</value>
   </data>
   <data name="Frontend.251" xml:space="preserve">
-    <value>Select sort field</value>
+    <value>Sélectionnez le champ de tri</value>
   </data>
   <data name="Frontend.252" xml:space="preserve">
-    <value>Enter a name</value>
+    <value>Saisissez un nom</value>
   </data>
   <data name="Frontend.253" xml:space="preserve">
-    <value>Input parameters</value>
+    <value>Paramètres d'entrée</value>
   </data>
   <data name="Frontend.254" xml:space="preserve">
-    <value>Output parameters</value>
+    <value>Paramètres de sortie</value>
   </data>
   <data name="Frontend.255" xml:space="preserve">
-    <value>Cancel button text</value>
+    <value>Texte du bouton Annuler</value>
   </data>
   <data name="Frontend.256" xml:space="preserve">
-    <value>Confirm button text</value>
+    <value>Texte du bouton de confirmation</value>
   </data>
   <data name="Frontend.257" xml:space="preserve">
-    <value>Message duration</value>
+    <value>Durée du message</value>
   </data>
   <data name="Frontend.258" xml:space="preserve">
-    <value>Form execution method</value>
+    <value>Méthode d'exécution du formulaire</value>
   </data>
   <data name="Frontend.259" xml:space="preserve">
-    <value>DynamicData Home</value>
+    <value>Accueil DynamicData</value>
   </data>
   <data name="Frontend.260" xml:space="preserve">
-    <value>DynamicData interface settings</value>
+    <value>Paramètres de l'interface DynamicData</value>
   </data>
   <data name="Frontend.261" xml:space="preserve">
-    <value>Thumbnail</value>
+    <value>Miniature</value>
   </data>
   <data name="Frontend.262" xml:space="preserve">
-    <value>DynamicData layout render page</value>
+    <value>Page de rendu de la mise en page DynamicData</value>
   </data>
   <data name="Frontend.263" xml:space="preserve">
-    <value>Enter identifier Id</value>
+    <value>Saisissez l'Id de l'identifiant</value>
   </data>
   <data name="Frontend.264" xml:space="preserve">
-    <value>Select whether required</value>
+    <value>Indiquez si le champ est obligatoire</value>
   </data>
   <data name="Frontend.265" xml:space="preserve">
-    <value>Select whether unique</value>
+    <value>Indiquez si la valeur est unique</value>
   </data>
   <data name="Frontend.266" xml:space="preserve">
-    <value>Device management certificate (spot_checkasd)</value>
+    <value>Certificat de gestion des appareils (spot_checkasd)</value>
   </data>
   <data name="Frontend.267" xml:space="preserve">
-    <value>Bind data table 1, bind data table 2, bind data table 3Bind data table 1, bind data table 2, bind data table 3Bind data table 1, bind data table 2, bind data table 3</value>
+    <value>Lier la table de données 1, lier la table de données 2, lier la table de données 3Lier la table de données 1, lier la table de données 2, lier la table de données 3Lier la table de données 1, lier la table de données 2, lier la table de données 3</value>
   </data>
   <data name="Frontend.268" xml:space="preserve">
-    <value>Test name 1</value>
+    <value>Nom de test 1</value>
   </data>
   <data name="Frontend.269" xml:space="preserve">
-    <value>Description Text</value>
+    <value>Texte de description</value>
   </data>
   <data name="Frontend.270" xml:space="preserve">
-    <value>Enter a name and description</value>
+    <value>Saisissez un nom et une description</value>
   </data>
   <data name="Frontend.271" xml:space="preserve">
-    <value>Close now?</value>
+    <value>Fermer maintenant ?</value>
   </data>
   <data name="Frontend.272" xml:space="preserve">
-    <value>This will permanently delete this file. Continue?</value>
+    <value>Cela supprimera définitivement ce fichier. Continuer ?</value>
   </data>
   <data name="Frontend.273" xml:space="preserve">
-    <value>Notice</value>
+    <value>Information</value>
   </data>
   <data name="Frontend.274" xml:space="preserve">
-    <value>Deleted successfully!</value>
+    <value>Supprimé avec succès !</value>
   </data>
   <data name="Frontend.275" xml:space="preserve">
-    <value>Deletion cancelled</value>
+    <value>Suppression annulée</value>
   </data>
   <data name="Frontend.276" xml:space="preserve">
     <value>Menu 1</value>
@@ -931,97 +931,97 @@
     <value>Menu {0}</value>
   </data>
   <data name="Frontend.278" xml:space="preserve">
-    <value>Confirm deleting this record</value>
+    <value>Confirmer la suppression de cet enregistrement</value>
   </data>
   <data name="Frontend.279" xml:space="preserve">
-    <value>Deleted successfully</value>
+    <value>Suppression réussie</value>
   </data>
   <data name="Frontend.280" xml:space="preserve">
-    <value>Close current page</value>
+    <value>Fermer la page actuelle</value>
   </data>
   <data name="Frontend.281" xml:space="preserve">
-    <value>Input</value>
+    <value>Entrée</value>
   </data>
   <data name="Frontend.282" xml:space="preserve">
-    <value>Text input</value>
+    <value>Champ de texte</value>
   </data>
   <data name="Frontend.283" xml:space="preserve">
-    <value>Text area</value>
+    <value>Zone de texte</value>
   </data>
   <data name="Frontend.284" xml:space="preserve">
-    <value>Number input</value>
+    <value>Champ numérique</value>
   </data>
   <data name="Frontend.285" xml:space="preserve">
-    <value>Switch</value>
+    <value>Interrupteur</value>
   </data>
   <data name="Frontend.286" xml:space="preserve">
-    <value>Selector</value>
+    <value>Sélecteur</value>
   </data>
   <data name="Frontend.287" xml:space="preserve">
-    <value>Any-time picker</value>
+    <value>Sélecteur d'heure libre</value>
   </data>
   <data name="Frontend.288" xml:space="preserve">
-    <value>Date picker</value>
+    <value>Sélecteur de date</value>
   </data>
   <data name="Frontend.289" xml:space="preserve">
-    <value>Year picker</value>
+    <value>Sélecteur d'année</value>
   </data>
   <data name="Frontend.290" xml:space="preserve">
-    <value>Year picker - multiple</value>
+    <value>Sélecteur d'année - multiple</value>
   </data>
   <data name="Frontend.291" xml:space="preserve">
-    <value>Month picker</value>
+    <value>Sélecteur de mois</value>
   </data>
   <data name="Frontend.292" xml:space="preserve">
-    <value>Month picker - multiple</value>
+    <value>Sélecteur de mois - multiple</value>
   </data>
   <data name="Frontend.293" xml:space="preserve">
-    <value>Date picker - multiple</value>
+    <value>Sélecteur de date - multiple</value>
   </data>
   <data name="Frontend.294" xml:space="preserve">
-    <value>Week Picker</value>
+    <value>Sélecteur de semaine</value>
   </data>
   <data name="Frontend.295" xml:space="preserve">
-    <value>yyyy Week WW</value>
+    <value>yyyy semaine WW</value>
   </data>
   <data name="Frontend.296" xml:space="preserve">
-    <value>Date and time picker</value>
+    <value>Sélecteur de date et d'heure</value>
   </data>
   <data name="Frontend.297" xml:space="preserve">
-    <value>Checkbox</value>
+    <value>Case à cocher</value>
   </data>
   <data name="Frontend.298" xml:space="preserve">
-    <value>Radio Button</value>
+    <value>Bouton radio</value>
   </data>
   <data name="Frontend.299" xml:space="preserve">
-    <value>Mock data</value>
+    <value>Données simulées</value>
   </data>
   <data name="Frontend.300" xml:space="preserve">
-    <value>This is the layout name</value>
+    <value>Ceci est le nom de la mise en page</value>
   </data>
   <data name="Frontend.301" xml:space="preserve">
-    <value>Enabled</value>
+    <value>Activé</value>
   </data>
   <data name="Frontend.302" xml:space="preserve">
-    <value>Disabled</value>
+    <value>Désactivé</value>
   </data>
   <data name="Frontend.303" xml:space="preserve">
-    <value>Layout Name</value>
+    <value>Nom de la disposition</value>
   </data>
   <data name="Frontend.304" xml:space="preserve">
-    <value>Layout name is incorrect</value>
+    <value>Le nom de la mise en page est incorrect</value>
   </data>
   <data name="Frontend.305" xml:space="preserve">
-    <value>Your layout name is:</value>
+    <value>Le nom de votre mise en page est :</value>
   </data>
   <data name="Frontend.306" xml:space="preserve">
-    <value>Exception-throw test, parameters passed: {0} {1}</value>
+    <value>Test de levée d'exception, paramètres transmis : {0} {1}</value>
   </data>
   <data name="Frontend.307" xml:space="preserve">
-    <value>Divisor cannot be 0!</value>
+    <value>Le diviseur ne peut pas être 0 !</value>
   </data>
   <data name="Frontend.308" xml:space="preserve">
-    <value>Unknown operator: {0}</value>
+    <value>Opérateur inconnu : {0}</value>
   </data>
   <data name="Function.Sample.Name" xml:space="preserve">
     <value>Fonction d’exemple</value>

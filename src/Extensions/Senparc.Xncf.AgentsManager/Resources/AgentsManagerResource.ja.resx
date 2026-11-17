@@ -337,7 +337,7 @@
     <value>タスクの説明</value>
   </data>
   <data name="Frontend.061" xml:space="preserve">
-    <value>操作</value>
+    <value>アクション</value>
   </data>
   <data name="Frontend.062" xml:space="preserve">
     <value>Agentパラメータ</value>

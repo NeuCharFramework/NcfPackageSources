@@ -55,220 +55,220 @@
     <value>Enviar</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>Extension Modules</value>
+    <value>Módulos de extensión</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
-    <value>Module Management</value>
+    <value>Gestión de módulos</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>Weixin Management</value>
+    <value>Gestión de Weixin</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>Official account control center</value>
+    <value>Centro de control de la cuenta oficial</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>Official account count</value>
+    <value>Número de cuentas oficiales</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>Official accounts already in the system</value>
+    <value>Cuentas oficiales ya registradas en el sistema</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>Running account count</value>
+    <value>Número de cuentas en ejecución</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>Number of accounts that are active and connected to the WeChat server</value>
+    <value>Número de cuentas activas y conectadas al servidor de WeChat</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>Total WeChat users</value>
+    <value>Total de usuarios de WeChat</value>
   </data>
   <data name="Frontend.010" xml:space="preserve">
-    <value>Number of users who interacted on this platform or were fetched automatically as followers</value>
+    <value>Número de usuarios que interactuaron en esta plataforma o se obtuvieron automáticamente como seguidores</value>
   </data>
   <data name="Frontend.011" xml:space="preserve">
-    <value>New users today</value>
+    <value>Nuevos usuarios de hoy</value>
   </data>
   <data name="Frontend.012" xml:space="preserve">
-    <value>Number of users synced or added to the platform today</value>
+    <value>Número de usuarios sincronizados o añadidos a la plataforma hoy</value>
   </data>
   <data name="Frontend.013" xml:space="preserve">
-    <value>View users</value>
+    <value>Ver usuarios</value>
   </data>
   <data name="Frontend.014" xml:space="preserve">
-    <value>View groups</value>
+    <value>Ver grupos</value>
   </data>
   <data name="Frontend.015" xml:space="preserve">
-    <value>View tags</value>
+    <value>Ver etiquetas</value>
   </data>
   <data name="Frontend.016" xml:space="preserve">
-    <value>Conversation</value>
+    <value>Conversación</value>
   </data>
   <data name="Frontend.017" xml:space="preserve">
-    <value>Edit</value>
+    <value>Editar</value>
   </data>
   <data name="Frontend.018" xml:space="preserve">
-    <value>AccessToken credential validity</value>
+    <value>Vigencia de la credencial AccessToken</value>
   </data>
   <data name="Frontend.019" xml:space="preserve">
-    <value>AccessToken credential status</value>
+    <value>Estado de la credencial AccessToken</value>
   </data>
   <data name="Frontend.020" xml:space="preserve">
-    <value>Official Account management</value>
+    <value>Gestión de cuentas oficiales</value>
   </data>
   <data name="Frontend.021" xml:space="preserve">
-    <value>Add</value>
+    <value>Agregar</value>
   </data>
   <data name="Frontend.022" xml:space="preserve">
-    <value>Delete</value>
+    <value>Eliminar</value>
   </data>
   <data name="Frontend.023" xml:space="preserve">
-    <value>Name</value>
+    <value>Nombre</value>
   </data>
   <data name="Frontend.024" xml:space="preserve">
-    <value>Notes</value>
+    <value>Notas</value>
   </data>
   <data name="Frontend.025" xml:space="preserve">
-    <value>Description</value>
+    <value>Descripción</value>
   </data>
   <data name="Frontend.026" xml:space="preserve">
-    <value>Added time</value>
+    <value>Fecha de alta</value>
   </data>
   <data name="Frontend.027" xml:space="preserve">
-    <value>Message URL</value>
+    <value>URL del mensaje</value>
   </data>
   <data name="Frontend.028" xml:space="preserve">
-    <value>Open</value>
+    <value>Abrir</value>
   </data>
   <data name="Frontend.029" xml:space="preserve">
-    <value>Actions</value>
+    <value>Acciones</value>
   </data>
   <data name="Frontend.030" xml:space="preserve">
-    <value>User management</value>
+    <value>Gestión de usuarios</value>
   </data>
   <data name="Frontend.031" xml:space="preserve">
-    <value>Official account name</value>
+    <value>Nombre de la cuenta oficial</value>
   </data>
   <data name="Frontend.032" xml:space="preserve">
-    <value>Server address (URL) configured in the WeChat admin console</value>
+    <value>Dirección del servidor (URL) configurada en la consola de administración de WeChat</value>
   </data>
   <data name="Frontend.033" xml:space="preserve">
-    <value>[Your domain]</value>
+    <value>[Su dominio]</value>
   </data>
   <data name="Frontend.034" xml:space="preserve">
-    <value>[Your domain]</value>
+    <value>[Su dominio]</value>
   </data>
   <data name="Frontend.035" xml:space="preserve">
-    <value>Note: the "official account name" must match the name in [MpMessageHandler(name)] on the corresponding MessageHandler</value>
+    <value>Nota: el "nombre de la cuenta oficial" debe coincidir con el name de [MpMessageHandler(name)] en el MessageHandler correspondiente</value>
   </data>
   <data name="Frontend.036" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Cancelar</value>
   </data>
   <data name="Frontend.037" xml:space="preserve">
-    <value>Confirm</value>
+    <value>Confirmar</value>
   </data>
   <data name="Frontend.038" xml:space="preserve">
-    <value>Enter official account name</value>
+    <value>Ingrese el nombre de la cuenta oficial</value>
   </data>
   <data name="Frontend.039" xml:space="preserve">
-    <value>Enter AppId</value>
+    <value>Ingrese AppId</value>
   </data>
   <data name="Frontend.040" xml:space="preserve">
-    <value>Enter AppSecret</value>
+    <value>Ingrese AppSecret</value>
   </data>
   <data name="Frontend.041" xml:space="preserve">
-    <value>Enter Token</value>
+    <value>Ingrese Token</value>
   </data>
   <data name="Frontend.042" xml:space="preserve">
-    <value>Length must be between 1 and 100</value>
+    <value>La longitud debe estar entre 1 y 100</value>
   </data>
   <data name="Frontend.043" xml:space="preserve">
-    <value>Length must be between 1 and 500</value>
+    <value>La longitud debe estar entre 1 y 500</value>
   </data>
   <data name="Frontend.044" xml:space="preserve">
-    <value>Add Official Account</value>
+    <value>Añadir cuenta oficial</value>
   </data>
   <data name="Frontend.045" xml:space="preserve">
-    <value>Edit Official Account</value>
+    <value>Editar cuenta oficial</value>
   </data>
   <data name="Frontend.046" xml:space="preserve">
-    <value>Official account added successfully</value>
+    <value>Cuenta oficial agregada correctamente</value>
   </data>
   <data name="Frontend.047" xml:space="preserve">
-    <value>Official account updated successfully</value>
+    <value>Cuenta oficial actualizada correctamente</value>
   </data>
   <data name="Frontend.048" xml:space="preserve">
-    <value>Success</value>
+    <value>Correcto</value>
   </data>
   <data name="Frontend.049" xml:space="preserve">
-    <value>Warning</value>
+    <value>Advertencia</value>
   </data>
   <data name="Frontend.050" xml:space="preserve">
-    <value>Select at least one official account</value>
+    <value>Seleccione al menos una cuenta oficial</value>
   </data>
   <data name="Frontend.051" xml:space="preserve">
-    <value>Delete all selected items?</value>
+    <value>¿Eliminar todos los elementos seleccionados?</value>
   </data>
   <data name="Frontend.052" xml:space="preserve">
-    <value>Successfully deleted {0} items</value>
+    <value>Se eliminaron {0} elementos</value>
   </data>
   <data name="Frontend.053" xml:space="preserve">
-    <value>Add new followers</value>
+    <value>Agregar nuevos seguidores</value>
   </data>
   <data name="Frontend.054" xml:space="preserve">
-    <value>Sync all followers</value>
+    <value>Sincronizar todos los seguidores</value>
   </data>
   <data name="Frontend.055" xml:space="preserve">
-    <value>Note: if there are many users, this may take a very long time!</value>
+    <value>Nota: si hay muchos usuarios, esto puede tardar mucho tiempo.</value>
   </data>
   <data name="Frontend.056" xml:space="preserve">
-    <value>Nickname</value>
+    <value>Apodo</value>
   </data>
   <data name="Frontend.057" xml:space="preserve">
     <value>Avatar</value>
   </data>
   <data name="Frontend.058" xml:space="preserve">
-    <value>Gender</value>
+    <value>Género</value>
   </data>
   <data name="Frontend.059" xml:space="preserve">
-    <value>Male</value>
+    <value>Hombre</value>
   </data>
   <data name="Frontend.060" xml:space="preserve">
-    <value>Female</value>
+    <value>Mujer</value>
   </data>
   <data name="Frontend.061" xml:space="preserve">
-    <value>Unknown</value>
+    <value>Desconocido</value>
   </data>
   <data name="Frontend.062" xml:space="preserve">
-    <value>Region</value>
+    <value>Región</value>
   </data>
   <data name="Frontend.063" xml:space="preserve">
-    <value>Group</value>
+    <value>Grupo</value>
   </data>
   <data name="Frontend.064" xml:space="preserve">
-    <value>Followed At</value>
+    <value>Fecha de seguimiento</value>
   </data>
   <data name="Frontend.065" xml:space="preserve">
-    <value>Follow Status</value>
+    <value>Estado de seguimiento</value>
   </data>
   <data name="Frontend.066" xml:space="preserve">
-    <value>Following</value>
+    <value>Siguiendo</value>
   </data>
   <data name="Frontend.067" xml:space="preserve">
-    <value>Not Following</value>
+    <value>No seguido</value>
   </data>
   <data name="Frontend.068" xml:space="preserve">
-    <value>Follow Source</value>
+    <value>Origen del seguimiento</value>
   </data>
   <data name="Frontend.069" xml:space="preserve">
-    <value>Tags</value>
+    <value>Etiquetas</value>
   </data>
   <data name="Frontend.070" xml:space="preserve">
-    <value>None</value>
+    <value>Ninguno</value>
   </data>
   <data name="Frontend.071" xml:space="preserve">
-    <value>All Users</value>
+    <value>Todos los usuarios</value>
   </data>
   <data name="Frontend.072" xml:space="preserve">
-    <value>{0} Users</value>
+    <value>Usuarios de {0}</value>
   </data>
   <data name="User.AccountUsers" xml:space="preserve">
     <value>Usuarios de {0}</value>
@@ -277,7 +277,7 @@
     <value>Todos los usuarios</value>
   </data>
   <data name="Frontend.073" xml:space="preserve">
-    <value>[Your domain]/WeixinMp/{0}</value>
+    <value>[Su dominio]/WeixinMp/{0}</value>
   </data>
   <data name="Frontend.074" xml:space="preserve">
     <value>[Su dominio]/WeixinMp/{0}</value>

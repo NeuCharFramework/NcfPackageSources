@@ -253,31 +253,31 @@
     <value>Не удалось удалить</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>Exception-throw test, parameters passed: {0} {1}</value>
+    <value>Тест выброса исключения, передаваемые параметры: {0} {1}</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
-    <value>Divisor cannot be 0!</value>
+    <value>Делитель не может быть равен 0!</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>Unknown operator: {0}</value>
+    <value>Неизвестный оператор: {0}</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>Unknown operator</value>
+    <value>Неизвестный оператор</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>Enter a valid URL!</value>
+    <value>Укажите правильный URL!</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>The target host resolved to a non-public address. The connection was refused.</value>
+    <value>Целевой узел разрешился в непубличный адрес. Соединение отклонено.</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>Unable to connect to the target host that passed the public-address check.</value>
+    <value>Не удаётся подключиться к целевому узлу, прошедшему проверку публичного адреса.</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>The target URL is not allowed.</value>
+    <value>Доступ к целевому URL запрещён.</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>The redirect target URL is not allowed.</value>
+    <value>Доступ к целевому URL перенаправления запрещён.</value>
   </data>
   <data name="Function.Sample.Name" xml:space="preserve">
     <value>Пример функции</value>

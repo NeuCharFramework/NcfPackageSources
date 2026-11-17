@@ -253,31 +253,31 @@
     <value>削除に失敗しました</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>Exception-throw test, parameters passed: {0} {1}</value>
+    <value>例外を送出するテスト。引き渡しパラメーター：{0} {1}</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
-    <value>Divisor cannot be 0!</value>
+    <value>除数は0にできません！</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>Unknown operator: {0}</value>
+    <value>不明な演算子：{0}</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>Unknown operator</value>
+    <value>不明な演算子</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>Enter a valid URL!</value>
+    <value>正しい URL を入力してください！</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>The target host resolved to a non-public address. The connection was refused.</value>
+    <value>対象ホストが非公開アドレスに解決されたため、接続を拒否しました。</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>Unable to connect to the target host that passed the public-address check.</value>
+    <value>公開アドレスの確認を通過した対象ホストに接続できません。</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>The target URL is not allowed.</value>
+    <value>対象 URL へのアクセスは許可されていません。</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>The redirect target URL is not allowed.</value>
+    <value>リダイレクト先の URL へのアクセスは許可されていません。</value>
   </data>
   <data name="Function.Sample.Name" xml:space="preserve">
     <value>サンプル関数</value>

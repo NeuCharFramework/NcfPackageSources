@@ -105,202 +105,202 @@
     <value>La ida y vuelta de EventBus agotó el tiempo. Confirme que el host registró EventBus y examinó este ensamblado XNCF.</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>Color database management</value>
+    <value>Gestión de la base de datos Color</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
-    <value>Extension Modules</value>
+    <value>Módulos de extensión</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>Add color</value>
+    <value>Agregar color</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>Refresh</value>
+    <value>Actualizar</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>Debug information</value>
+    <value>Información de depuración</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>Debug information:</value>
+    <value>Información de depuración:</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>tableData length:</value>
+    <value>Longitud de tableData:</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>Vue instance OK:</value>
+    <value>Instancia de Vue correcta:</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>Yes</value>
+    <value>Sí</value>
   </data>
   <data name="Frontend.010" xml:space="preserve">
     <value>No</value>
   </data>
   <data name="Frontend.011" xml:space="preserve">
-    <value>First item:</value>
+    <value>Primer elemento:</value>
   </data>
   <data name="Frontend.012" xml:space="preserve">
-    <value>Simplified data display test:</value>
+    <value>Prueba de visualización simplificada de datos:</value>
   </data>
   <data name="Frontend.013" xml:space="preserve">
-    <value>Time:</value>
+    <value>Hora:</value>
   </data>
   <data name="Frontend.014" xml:space="preserve">
-    <value>No data to display!</value>
+    <value>No hay datos para mostrar!</value>
   </data>
   <data name="Frontend.015" xml:space="preserve">
-    <value>Red value (R)</value>
+    <value>Valor de rojo (R)</value>
   </data>
   <data name="Frontend.016" xml:space="preserve">
-    <value>Green value (G)</value>
+    <value>Valor de verde (G)</value>
   </data>
   <data name="Frontend.017" xml:space="preserve">
-    <value>Blue value (B)</value>
+    <value>Valor de azul (B)</value>
   </data>
   <data name="Frontend.018" xml:space="preserve">
-    <value>Color preview</value>
+    <value>Vista previa del color</value>
   </data>
   <data name="Frontend.019" xml:space="preserve">
-    <value>Created</value>
+    <value>Creado</value>
   </data>
   <data name="Frontend.020" xml:space="preserve">
-    <value>Updated at</value>
+    <value>Fecha de actualización</value>
   </data>
   <data name="Frontend.021" xml:space="preserve">
-    <value>Actions</value>
+    <value>Acciones</value>
   </data>
   <data name="Frontend.022" xml:space="preserve">
-    <value>Edit</value>
+    <value>Editar</value>
   </data>
   <data name="Frontend.023" xml:space="preserve">
-    <value>Random</value>
+    <value>Aleatorio</value>
   </data>
   <data name="Frontend.024" xml:space="preserve">
-    <value>Delete</value>
+    <value>Eliminar</value>
   </data>
   <data name="Frontend.025" xml:space="preserve">
-    <value>Additional note</value>
+    <value>Nota adicional</value>
   </data>
   <data name="Frontend.026" xml:space="preserve">
-    <value>Enter additional notes for the color...</value>
+    <value>Introduzca notas adicionales sobre el color...</value>
   </data>
   <data name="Frontend.027" xml:space="preserve">
-    <value>Random color</value>
+    <value>Color aleatorio</value>
   </data>
   <data name="Frontend.028" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Cancelar</value>
   </data>
   <data name="Frontend.029" xml:space="preserve">
-    <value>OK</value>
+    <value>Aceptar</value>
   </data>
   <data name="Frontend.030" xml:space="preserve">
-    <value>Edit color</value>
+    <value>Editar color</value>
   </data>
   <data name="Frontend.031" xml:space="preserve">
-    <value>Set the red value</value>
+    <value>Establezca el valor de rojo</value>
   </data>
   <data name="Frontend.032" xml:space="preserve">
-    <value>Red value must be between 0 and 255</value>
+    <value>El valor de rojo debe estar entre 0 y 255</value>
   </data>
   <data name="Frontend.033" xml:space="preserve">
-    <value>Set the green value</value>
+    <value>Establezca el valor de verde</value>
   </data>
   <data name="Frontend.034" xml:space="preserve">
-    <value>Green value must be between 0 and 255</value>
+    <value>El valor de verde debe estar entre 0 y 255</value>
   </data>
   <data name="Frontend.035" xml:space="preserve">
-    <value>Set the blue value</value>
+    <value>Establezca el valor de azul</value>
   </data>
   <data name="Frontend.036" xml:space="preserve">
-    <value>Blue value must be between 0 and 255</value>
+    <value>El valor de azul debe estar entre 0 y 255</value>
   </data>
   <data name="Frontend.037" xml:space="preserve">
-    <value>Failed to load data: {0}</value>
+    <value>Error al cargar los datos: {0}</value>
   </data>
   <data name="Frontend.038" xml:space="preserve">
-    <value>Operation completed</value>
+    <value>Operación completada</value>
   </data>
   <data name="Frontend.039" xml:space="preserve">
-    <value>Creation failed</value>
+    <value>Error al crear</value>
   </data>
   <data name="Frontend.040" xml:space="preserve">
-    <value>Update failed</value>
+    <value>Error al actualizar</value>
   </data>
   <data name="Frontend.041" xml:space="preserve">
-    <value>This will permanently delete this color. Continue?</value>
+    <value>Esto eliminará este color de forma permanente. ¿Continuar?</value>
   </data>
   <data name="Frontend.042" xml:space="preserve">
-    <value>Notice</value>
+    <value>Aviso</value>
   </data>
   <data name="Frontend.043" xml:space="preserve">
-    <value>Confirm</value>
+    <value>Confirmar</value>
   </data>
   <data name="Frontend.044" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Cancelar</value>
   </data>
   <data name="Frontend.045" xml:space="preserve">
-    <value>Delete failed</value>
+    <value>Error al eliminar</value>
   </data>
   <data name="Frontend.046" xml:space="preserve">
-    <value>Deletion cancelled</value>
+    <value>Eliminación cancelada</value>
   </data>
   <data name="Frontend.047" xml:space="preserve">
-    <value>Randomization failed</value>
+    <value>Error de aleatorización</value>
   </data>
   <data name="Frontend.048" xml:space="preserve">
-    <value>Data loaded successfully</value>
+    <value>Datos cargados correctamente</value>
   </data>
   <data name="Frontend.049" xml:space="preserve">
-    <value>Failed to load data: {0}</value>
+    <value>Error al cargar los datos: {0}</value>
   </data>
   <data name="Frontend.050" xml:space="preserve">
-    <value>Request parameters cannot be empty</value>
+    <value>Los parámetros de la solicitud no pueden estar vacíos</value>
   </data>
   <data name="Frontend.051" xml:space="preserve">
-    <value>Color created successfully</value>
+    <value>Color creado correctamente</value>
   </data>
   <data name="Frontend.052" xml:space="preserve">
-    <value>Failed to create: {0}</value>
+    <value>Error al crear: {0}</value>
   </data>
   <data name="Frontend.053" xml:space="preserve">
-    <value>The color does not exist.</value>
+    <value>El color no existe.</value>
   </data>
   <data name="Frontend.054" xml:space="preserve">
-    <value>Color updated successfully</value>
+    <value>Color actualizado correctamente</value>
   </data>
   <data name="Frontend.055" xml:space="preserve">
-    <value>Update failed: {0}</value>
+    <value>Error de actualización: {0}</value>
   </data>
   <data name="Frontend.056" xml:space="preserve">
-    <value>Color deleted successfully</value>
+    <value>Color eliminado correctamente</value>
   </data>
   <data name="Frontend.057" xml:space="preserve">
-    <value>Failed to delete: {0}</value>
+    <value>Error al eliminar: {0}</value>
   </data>
   <data name="Frontend.058" xml:space="preserve">
-    <value>Color randomized successfully</value>
+    <value>Color aleatorizado correctamente</value>
   </data>
   <data name="Frontend.059" xml:space="preserve">
-    <value>Randomization failed: {0}</value>
+    <value>Error al aleatorizar: {0}</value>
   </data>
   <data name="Frontend.060" xml:space="preserve">
-    <value>Failed to load: {0}</value>
+    <value>Error al cargar: {0}</value>
   </data>
   <data name="Frontend.061" xml:space="preserve">
-    <value>Divisor cannot be 0!</value>
+    <value>El divisor no puede ser 0!</value>
   </data>
   <data name="Frontend.062" xml:space="preserve">
-    <value>Unknown operator: {0}</value>
+    <value>Operador desconocido: {0}</value>
   </data>
   <data name="Frontend.063" xml:space="preserve">
-    <value>Exception-throw test, parameters passed: {0} {1}</value>
+    <value>Prueba de lanzamiento de excepción, parámetros enviados: {0} {1}</value>
   </data>
   <data name="Frontend.064" xml:space="preserve">
-    <value>The red value must be between 0 and 255</value>
+    <value>El valor de rojo debe estar entre 0 y 255</value>
   </data>
   <data name="Frontend.065" xml:space="preserve">
-    <value>The green value must be between 0 and 255</value>
+    <value>El valor de verde debe estar entre 0 y 255</value>
   </data>
   <data name="Frontend.066" xml:space="preserve">
-    <value>The blue value must be between 0 and 255</value>
+    <value>El valor de azul debe estar entre 0 y 255</value>
   </data>
 
 </root>

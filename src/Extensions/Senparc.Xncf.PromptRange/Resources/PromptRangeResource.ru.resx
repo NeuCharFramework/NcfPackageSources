@@ -104,528 +104,530 @@
   <data name="Model.EnterApi" xml:space="preserve"><value>Введите API модели</value></data>
   <data name="Model.EnterApiKey" xml:space="preserve"><value>Введите API key модели</value></data>
   <data name="Area.DatabaseSample" xml:space="preserve"><value>Пример работы с базой данных</value></data>
-  <data name="Frontend.001" xml:space="preserve"><value>Select range</value></data>
-  <data name="Frontend.002" xml:space="preserve"><value>Export plugins</value></data>
-  <data name="Frontend.003" xml:space="preserve"><value>Import plugins</value></data>
-  <data name="Frontend.004" xml:space="preserve"><value>Add range</value></data>
-  <data name="Frontend.005" xml:space="preserve"><value>Select a range</value></data>
-  <data name="Frontend.006" xml:space="preserve"><value>Rename range</value></data>
-  <data name="Frontend.007" xml:space="preserve"><value>Delete</value></data>
-  <data name="Frontend.008" xml:space="preserve"><value>Select tactic</value></data>
-  <data name="Frontend.009" xml:space="preserve"><value>Optimize</value></data>
-  <data name="Frontend.010" xml:space="preserve"><value>Map</value></data>
-  <data name="Frontend.011" xml:space="preserve"><value>Create agent</value></data>
-  <data name="Frontend.012" xml:space="preserve"><value>Select a tactic</value></data>
-  <data name="Frontend.013" xml:space="preserve"><value>Select a range first</value></data>
-  <data name="Frontend.014" xml:space="preserve"><value>Compare</value></data>
-  <data name="Frontend.015" xml:space="preserve"><value>Change tactic name</value></data>
-  <data name="Frontend.016" xml:space="preserve"><value>Set tactic name</value></data>
-  <data name="Frontend.017" xml:space="preserve"><value>Reset name</value></data>
-  <data name="Frontend.018" xml:space="preserve"><value>Select model</value></data>
-  <data name="Frontend.019" xml:space="preserve"><value>Refresh</value></data>
-  <data name="Frontend.020" xml:space="preserve"><value>Manage models</value></data>
-  <data name="Frontend.021" xml:space="preserve"><value>Please select a model</value></data>
-  <data name="Frontend.022" xml:space="preserve"><value>Unnamed model</value></data>
-  <data name="Frontend.023" xml:space="preserve"><value>Create or select a Range before continuing</value></data>
-  <data name="Frontend.024" xml:space="preserve"><value>Burst mode is on and the content is locked</value></data>
-  <data name="Frontend.025" xml:space="preserve"><value>Switch to another mode to make changes</value></data>
-  <data name="Frontend.026" xml:space="preserve"><value>Model parameters</value></data>
-  <data name="Frontend.027" xml:space="preserve"><value>Reset</value></data>
-  <data name="Frontend.028" xml:space="preserve"><value>Set AI scoring criteria</value></data>
-  <data name="Frontend.029" xml:space="preserve"><value>On</value></data>
-  <data name="Frontend.030" xml:space="preserve"><value>Off</value></data>
-  <data name="Frontend.031" xml:space="preserve"><value>Drag to adjust width | Double-click to restore the default</value></data>
-  <data name="Frontend.032" xml:space="preserve"><value>Request parameters</value></data>
-  <data name="Frontend.033" xml:space="preserve"><value>Audio file</value></data>
-  <data name="Frontend.034" xml:space="preserve"><value>Upload audio</value></data>
-  <data name="Frontend.035" xml:space="preserve"><value>Clear</value></data>
-  <data name="Frontend.036" xml:space="preserve"><value>Supported formats: flac / m4a / mp3 / mp4 / mpeg / mpga / oga / ogg / wav / webm</value></data>
-  <data name="Frontend.037" xml:space="preserve"><value>Recognition language</value></data>
-  <data name="Frontend.038" xml:space="preserve"><value>Optional, for example zh / en</value></data>
-  <data name="Frontend.039" xml:space="preserve"><value>Voice</value></data>
-  <data name="Frontend.040" xml:space="preserve"><value>Format</value></data>
-  <data name="Frontend.041" xml:space="preserve"><value>Select output format</value></data>
-  <data name="Frontend.042" xml:space="preserve"><value>Speed</value></data>
-  <data name="Frontend.043" xml:space="preserve"><value>Select a vector database</value></data>
-  <data name="Frontend.044" xml:space="preserve"><value>Optional, auto-generated</value></data>
-  <data name="Frontend.045" xml:space="preserve"><value>Test query</value></data>
-  <data name="Frontend.046" xml:space="preserve"><value>Optional, auto-query after the first Run</value></data>
-  <data name="Frontend.047" xml:space="preserve"><value>Enter text to synthesize</value></data>
-  <data name="Frontend.048" xml:space="preserve"><value>Enter Prompt content</value></data>
-  <data name="Frontend.049" xml:space="preserve"><value>Detected</value></data>
-  <data name="Frontend.050" xml:space="preserve"><value>variables</value></data>
-  <data name="Frontend.051" xml:space="preserve"><value>Defined</value></data>
-  <data name="Frontend.052" xml:space="preserve"><value>Undefined</value></data>
-  <data name="Frontend.053" xml:space="preserve"><value>Enter notes</value></data>
-  <data name="Frontend.054" xml:space="preserve"><value>Burst count:</value></data>
-  <data name="Frontend.055" xml:space="preserve"><value>Prompt request parameters</value></data>
-  <data name="Frontend.056" xml:space="preserve"><value>Prefix</value></data>
-  <data name="Frontend.057" xml:space="preserve"><value>Suffix</value></data>
-  <data name="Frontend.058" xml:space="preserve"><value>Variable name</value></data>
-  <data name="Frontend.059" xml:space="preserve"><value>Enter a variable name</value></data>
-  <data name="Frontend.060" xml:space="preserve"><value>Variable value</value></data>
-  <data name="Frontend.061" xml:space="preserve"><value>Enter a variable value</value></data>
-  <data name="Frontend.062" xml:space="preserve"><value>Actions</value></data>
-  <data name="Frontend.063" xml:space="preserve"><value>Add variable</value></data>
-  <data name="Frontend.064" xml:space="preserve"><value>Prompt version:</value></data>
-  <data name="Frontend.065" xml:space="preserve"><value>Range:</value></data>
-  <data name="Frontend.066" xml:space="preserve"><value>Tactic:</value></data>
-  <data name="Frontend.067" xml:space="preserve"><value>Aim:</value></data>
-  <data name="Frontend.068" xml:space="preserve"><value>Output</value></data>
-  <data name="Frontend.069" xml:space="preserve"><value>Average score:</value></data>
-  <data name="Frontend.070" xml:space="preserve"><value>Highest score:</value></data>
-  <data name="Frontend.071" xml:space="preserve"><value>Elapsed (ms):</value></data>
-  <data name="Frontend.072" xml:space="preserve"><value>Copy formatted HTML code</value></data>
-  <data name="Frontend.073" xml:space="preserve"><value>Copy raw content (for example, markdown markers will be copied)</value></data>
-  <data name="Frontend.074" xml:space="preserve"><value>Raw</value></data>
-  <data name="Frontend.075" xml:space="preserve"><value>The image was generated, but no accessible address was returned</value></data>
-  <data name="Frontend.076" xml:space="preserve"><value>Storage:</value></data>
-  <data name="Frontend.077" xml:space="preserve"><value>View original image</value></data>
-  <data name="Frontend.078" xml:space="preserve"><value>The audio was generated, but no accessible address was returned</value></data>
-  <data name="Frontend.079" xml:space="preserve"><value>Enter query text for vector search</value></data>
-  <data name="Frontend.080" xml:space="preserve"><value>Search</value></data>
-  <data name="Frontend.081" xml:space="preserve"><value>Input</value></data>
-  <data name="Frontend.082" xml:space="preserve"><value>AI score:</value></data>
-  <data name="Frontend.083" xml:space="preserve"><value>AI scoring...</value></data>
-  <data name="Frontend.084" xml:space="preserve"><value>Manual score:</value></data>
-  <data name="Frontend.085" xml:space="preserve"><value>Continue chat</value></data>
-  <data name="Frontend.086" xml:space="preserve"><value>AI score</value></data>
-  <data name="Frontend.087" xml:space="preserve"><value>Manual score</value></data>
-  <data name="Frontend.088" xml:space="preserve"><value>Please enter</value></data>
-  <data name="Frontend.089" xml:space="preserve"><value>Start scoring</value></data>
-  <data name="Frontend.090" xml:space="preserve"><value>Save</value></data>
-  <data name="Frontend.091" xml:space="preserve"><value>Cancel</value></data>
-  <data name="Frontend.092" xml:space="preserve"><value>No generated results</value></data>
-  <data name="Frontend.093" xml:space="preserve"><value>points</value></data>
-  <data name="Frontend.094" xml:space="preserve"><value>Score trend</value></data>
-  <data name="Frontend.095" xml:space="preserve"><value>Only one item has a score. A chart cannot draw a line from a single point.</value></data>
-  <data name="Frontend.096" xml:space="preserve"><value>Average score</value></data>
-  <data name="Frontend.097" xml:space="preserve"><value>Highest score</value></data>
-  <data name="Frontend.098" xml:space="preserve"><value>No Data</value></data>
-  <data name="Frontend.099" xml:space="preserve"><value>Version history</value></data>
-  <data name="Frontend.100" xml:space="preserve"><value>Enter a name</value></data>
-  <data name="Frontend.101" xml:space="preserve"><value>Public</value></data>
-  <data name="Frontend.102" xml:space="preserve"><value>Edit</value></data>
-  <data name="Frontend.103" xml:space="preserve"><value>Generate code</value></data>
-  <data name="Frontend.104" xml:space="preserve"><value>Tactic selection</value></data>
-  <data name="Frontend.105" xml:space="preserve"><value>Run mode</value></data>
-  <data name="Frontend.106" xml:space="preserve"><value>Tactic</value></data>
-  <data name="Frontend.107" xml:space="preserve"><value>Create top-level tactic</value></data>
-  <data name="Frontend.108" xml:space="preserve"><value>Will create:</value></data>
-  <data name="Frontend.109" xml:space="preserve"><value>Current:</value></data>
-  <data name="Frontend.110" xml:space="preserve"><value>(New)</value></data>
-  <data name="Frontend.111" xml:space="preserve"><value>Create parallel tactic</value></data>
-  <data name="Frontend.112" xml:space="preserve"><value>Create child tactic</value></data>
-  <data name="Frontend.113" xml:space="preserve"><value>Re-aim</value></data>
-  <data name="Frontend.114" xml:space="preserve"><value>Chat mode</value></data>
-  <data name="Frontend.115" xml:space="preserve"><value>Direct test</value></data>
-  <data name="Frontend.116" xml:space="preserve"><value>Enter it as a conversation, then Run</value></data>
-  <data name="Frontend.117" xml:space="preserve"><value>Test directly with the current Prompt</value></data>
-  <data name="Frontend.118" xml:space="preserve"><value>Continue-chat mode is locked to conversation mode</value></data>
-  <data name="Frontend.119" xml:space="preserve"><value>The current model does not support conversation mode and will run as a direct test</value></data>
-  <data name="Frontend.120" xml:space="preserve"><value>Conversation history</value></data>
-  <data name="Frontend.121" xml:space="preserve"><value>Collapse</value></data>
-  <data name="Frontend.122" xml:space="preserve"><value>Expand</value></data>
-  <data name="Frontend.123" xml:space="preserve"><value>View the Prompt used by the current conversation</value></data>
-  <data name="Frontend.124" xml:space="preserve"><value>Loading...</value></data>
-  <data name="Frontend.125" xml:space="preserve"><value>Total Token:</value></data>
-  <data name="Frontend.126" xml:space="preserve"><value>No conversation history</value></data>
-  <data name="Frontend.127" xml:space="preserve"><value>User</value></data>
-  <data name="Frontend.128" xml:space="preserve"><value>Assistant</value></data>
-  <data name="Frontend.129" xml:space="preserve"><value>Like</value></data>
-  <data name="Frontend.130" xml:space="preserve"><value>Liked</value></data>
-  <data name="Frontend.131" xml:space="preserve"><value>Dislike</value></data>
-  <data name="Frontend.132" xml:space="preserve"><value>Disliked</value></data>
-  <data name="Frontend.133" xml:space="preserve"><value>Saving...</value></data>
-  <data name="Frontend.134" xml:space="preserve"><value>Conversation input</value></data>
-  <data name="Frontend.135" xml:space="preserve"><value>Enter your next message... (Ctrl+Enter / Cmd+Enter to send)</value></data>
-  <data name="Frontend.136" xml:space="preserve"><value>Enter your question... (Ctrl+Enter / Cmd+Enter to send)</value></data>
-  <data name="Frontend.137" xml:space="preserve"><value>Entered content will be appended to the existing conversation</value></data>
-  <data name="Frontend.138" xml:space="preserve"><value>The entered content is passed to the backend API as the userMessage parameter</value></data>
-  <data name="Frontend.139" xml:space="preserve"><value>Shortcut: Ctrl+Enter (Windows) / Cmd+Enter (Mac)</value></data>
-  <data name="Frontend.140" xml:space="preserve"><value>Run</value></data>
-  <data name="Frontend.141" xml:space="preserve"><value>3D structure map</value></data>
-  <data name="Frontend.142" xml:space="preserve"><value>Reset view</value></data>
-  <data name="Frontend.143" xml:space="preserve"><value>Full screen</value></data>
-  <data name="Frontend.144" xml:space="preserve"><value>Fit view</value></data>
-  <data name="Frontend.145" xml:space="preserve"><value>🖱️ Mouse actions</value></data>
-  <data name="Frontend.146" xml:space="preserve"><value>Left-drag: rotate view</value></data>
-  <data name="Frontend.147" xml:space="preserve"><value>Right-drag: pan scene</value></data>
-  <data name="Frontend.148" xml:space="preserve"><value>Mouse wheel: zoom</value></data>
-  <data name="Frontend.149" xml:space="preserve"><value>Click node: highlight</value></data>
-  <data name="Frontend.150" xml:space="preserve"><value>Double-click node: open Tactic</value></data>
-  <data name="Frontend.151" xml:space="preserve"><value>⌨️ Keyboard shortcuts</value></data>
-  <data name="Frontend.152" xml:space="preserve"><value>W / A / S / D: pan forward, backward, left, and right</value></data>
-  <data name="Frontend.153" xml:space="preserve"><value>Q / E: depth pan (forward/backward)</value></data>
-  <data name="Frontend.154" xml:space="preserve"><value>R: Reset view</value></data>
-  <data name="Frontend.155" xml:space="preserve"><value>F: Fit view</value></data>
-  <data name="Frontend.156" xml:space="preserve"><value>+/-: zoom in/out</value></data>
-  <data name="Frontend.157" xml:space="preserve"><value>Shortcuts</value></data>
-  <data name="Frontend.158" xml:space="preserve"><value>nodes</value></data>
-  <data name="Frontend.159" xml:space="preserve"><value>Create an Agent from a PromptCode</value></data>
-  <data name="Frontend.160" xml:space="preserve"><value>Agent name</value></data>
-  <data name="Frontend.161" xml:space="preserve"><value>Enter Agent name</value></data>
-  <data name="Frontend.162" xml:space="preserve"><value>Scope</value></data>
-  <data name="Frontend.163" xml:space="preserve"><value>Range level</value></data>
-  <data name="Frontend.164" xml:space="preserve"><value>PromptCode contains only the Range name and matches every Tactic in that Range</value></data>
-  <data name="Frontend.165" xml:space="preserve"><value>Tactic level</value></data>
-  <data name="Frontend.166" xml:space="preserve"><value>PromptCode includes the Range name and Tactic number, and matches every Aim version under the current Tactic</value></data>
-  <data name="Frontend.167" xml:space="preserve"><value>Exact version</value></data>
-  <data name="Frontend.168" xml:space="preserve"><value>PromptCode is the full version number and matches the current Tactic exactly</value></data>
-  <data name="Frontend.169" xml:space="preserve"><value>Description</value></data>
-  <data name="Frontend.170" xml:space="preserve"><value>Description of the new Agent (optional)</value></data>
-  <data name="Frontend.171" xml:space="preserve"><value>Function Call names, separated by commas (optional)</value></data>
-  <data name="Frontend.172" xml:space="preserve"><value>Create</value></data>
-  <data name="Frontend.173" xml:space="preserve"><value>Add model</value></data>
-  <data name="Frontend.174" xml:space="preserve"><value>Model type</value></data>
-  <data name="Frontend.175" xml:space="preserve"><value>Select a model type</value></data>
-  <data name="Frontend.176" xml:space="preserve"><value>Model alias</value></data>
-  <data name="Frontend.177" xml:space="preserve"><value>Enter model alias</value></data>
-  <data name="Frontend.178" xml:space="preserve"><value>Model name</value></data>
-  <data name="Frontend.179" xml:space="preserve"><value>Enter model name</value></data>
-  <data name="Frontend.180" xml:space="preserve"><value>Enter API Version</value></data>
-  <data name="Frontend.181" xml:space="preserve"><value>Enter API key</value></data>
-  <data name="Frontend.182" xml:space="preserve"><value>Enter End Point</value></data>
-  <data name="Frontend.183" xml:space="preserve"><value>Enter Organization Id</value></data>
-  <data name="Frontend.184" xml:space="preserve"><value>Add range</value></data>
-  <data name="Frontend.185" xml:space="preserve"><value>Range name</value></data>
-  <data name="Frontend.186" xml:space="preserve"><value>Enter Range name</value></data>
-  <data name="Frontend.187" xml:space="preserve"><value>AI scoring criteria</value></data>
-  <data name="Frontend.188" xml:space="preserve"><value>Enter expected result</value></data>
-  <data name="Frontend.189" xml:space="preserve"><value>Note: after you set an expected result, AI scoring runs automatically from that expected result.</value></data>
-  <data name="Frontend.190" xml:space="preserve"><value>Close</value></data>
-  <data name="Frontend.191" xml:space="preserve"><value>Import plugin folder</value></data>
-  <data name="Frontend.192" xml:space="preserve"><value>You can upload an OpenAI / Semantic Kernel standard plugin folder to generate a Range automatically. (Select the entire plugin folder.)</value></data>
-  <data name="Frontend.193" xml:space="preserve"><value>Drag the folder here, or</value></data>
-  <data name="Frontend.194" xml:space="preserve"><value>click to upload</value></data>
-  <data name="Frontend.195" xml:space="preserve"><value>Upload again</value></data>
-  <data name="Frontend.196" xml:space="preserve"><value>File name</value></data>
-  <data name="Frontend.197" xml:space="preserve"><value>File path</value></data>
-  <data name="Frontend.198" xml:space="preserve"><value>Upload</value></data>
-  <data name="Frontend.199" xml:space="preserve"><value>Export plugin folder</value></data>
-  <data name="Frontend.200" xml:space="preserve"><value>Ranges and tactics</value></data>
-  <data name="Frontend.201" xml:space="preserve"><value>Select all</value></data>
-  <data name="Frontend.202" xml:space="preserve"><value>Invert selection</value></data>
-  <data name="Frontend.203" xml:space="preserve"><value>Expand all</value></data>
-  <data name="Frontend.204" xml:space="preserve"><value>Collapse all</value></data>
-  <data name="Frontend.205" xml:space="preserve"><value>Selected:</value></data>
-  <data name="Frontend.206" xml:space="preserve"><value>tactics</value></data>
-  <data name="Frontend.207" xml:space="preserve"><value>Confirm</value></data>
-  <data name="Frontend.208" xml:space="preserve"><value>Select or enter a note name</value></data>
-  <data name="Frontend.209" xml:space="preserve"><value>If you select an existing name, that name moves to the current Tactic and the original Tactic name is reset to "Not set"</value></data>
-  <data name="Frontend.210" xml:space="preserve"><value>Enter Tactic note name</value></data>
-  <data name="Frontend.211" xml:space="preserve"><value>Compare Prompt</value></data>
-  <data name="Frontend.212" xml:space="preserve"><value>Select Prompt A</value></data>
-  <data name="Frontend.213" xml:space="preserve"><value>Swap</value></data>
-  <data name="Frontend.214" xml:space="preserve"><value>Select Prompt B</value></data>
-  <data name="Frontend.215" xml:space="preserve"><value>Warning: you are comparing the same Prompt!</value></data>
-  <data name="Frontend.216" xml:space="preserve"><value>The two selected Prompts are the same (version number:</value></data>
-  <data name="Frontend.217" xml:space="preserve"><value>Select different Prompts to compare so you can see the differences.</value></data>
-  <data name="Frontend.218" xml:space="preserve"><value>Go to this Prompt</value></data>
-  <data name="Frontend.219" xml:space="preserve"><value>Field</value></data>
-  <data name="Frontend.220" xml:space="preserve"><value>Copy version number</value></data>
-  <data name="Frontend.221" xml:space="preserve"><value>Range</value></data>
-  <data name="Frontend.222" xml:space="preserve"><value>Tactic</value></data>
-  <data name="Frontend.223" xml:space="preserve"><value>Alias</value></data>
-  <data name="Frontend.224" xml:space="preserve"><value>Model</value></data>
-  <data name="Frontend.225" xml:space="preserve"><value>📄 Prompt content comparison</value></data>
-  <data name="Frontend.226" xml:space="preserve"><value>Different</value></data>
-  <data name="Frontend.227" xml:space="preserve"><value>🎯 Request parameter comparison</value></data>
-  <data name="Frontend.228" xml:space="preserve"><value>Parameters</value></data>
-  <data name="Frontend.229" xml:space="preserve"><value>(Not set)</value></data>
-  <data name="Frontend.230" xml:space="preserve"><value>Prompt A - variable configuration</value></data>
-  <data name="Frontend.231" xml:space="preserve"><value>Prompt B - variable configuration</value></data>
-  <data name="Frontend.232" xml:space="preserve"><value>Neither Prompt has variables configured</value></data>
-  <data name="Frontend.233" xml:space="preserve"><value>Select two Prompts to compare</value></data>
-  <data name="Frontend.234" xml:space="preserve"><value>AI automatic Prompt optimization (Agent)</value></data>
-  <data name="Frontend.235" xml:space="preserve"><value>Description</value></data>
-  <data name="Frontend.236" xml:space="preserve"><value>Optimization is done by the PromptCatalyzer Agent in the Agents Module through multi-turn conversation and tool calls. After you click start, wait for the conversation to finish (this may take several minutes). This page will then select the new version automatically, and you can Run and score as needed.</value></data>
-  <data name="Frontend.237" xml:space="preserve"><value>Optimization failed</value></data>
-  <data name="Frontend.238" xml:space="preserve"><value>Optimization requirements</value></data>
-  <data name="Frontend.239" xml:space="preserve"><value>For example: make the answers more creative, or reduce hallucinations...</value></data>
-  <data name="Frontend.240" xml:space="preserve"><value>After optimization</value></data>
-  <data name="Frontend.241" xml:space="preserve"><value>Run immediately after creation</value></data>
-  <data name="Frontend.242" xml:space="preserve"><value>After optimization, run one test automatically to check the new Prompt</value></data>
-  <data name="Frontend.243" xml:space="preserve"><value>Use AI scoring after Run</value></data>
-  <data name="Frontend.244" xml:space="preserve"><value>After a Run finishes, AI scoring runs automatically so you get quality feedback quickly</value></data>
-  <data name="Frontend.245" xml:space="preserve"><value>Start optimization</value></data>
-  <data name="Frontend.246" xml:space="preserve"><value>🚀 First use: initialize Prompt optimization</value></data>
-  <data name="Frontend.247" xml:space="preserve"><value>Welcome to AI automatic optimization!</value></data>
-  <data name="Frontend.248" xml:space="preserve"><value>First use requires initializing the PromptCatalyzer Agent.</value></data>
-  <data name="Frontend.249" xml:space="preserve"><value>Select an AI Model to drive optimization. The system will create the related resources automatically.</value></data>
-  <data name="Frontend.250" xml:space="preserve"><value>Select AI Model</value></data>
-  <data name="Frontend.251" xml:space="preserve"><value>Select an AI Model</value></data>
-  <data name="Frontend.252" xml:space="preserve"><value>Tip:</value></data>
-  <data name="Frontend.253" xml:space="preserve"><value>Default parameter preview</value></data>
-  <data name="Frontend.254" xml:space="preserve"><value>Controls output randomness: 0.0-1.0. Lower is more precise, higher is more creative.</value></data>
-  <data name="Frontend.255" xml:space="preserve"><value>(Balanced mode)</value></data>
-  <data name="Frontend.256" xml:space="preserve"><value>Nucleus sampling parameter: 0.0-1.0. It controls the range of word choices.</value></data>
-  <data name="Frontend.257" xml:space="preserve"><value>(High quality)</value></data>
-  <data name="Frontend.258" xml:space="preserve"><value>Maximum number of tokens to generate. This affects output length.</value></data>
-  <data name="Frontend.259" xml:space="preserve"><value>(Standard length)</value></data>
-  <data name="Frontend.260" xml:space="preserve"><value>Frequency penalty: -2.0 to 2.0. It reduces repeated words.</value></data>
-  <data name="Frontend.261" xml:space="preserve"><value>(No penalty)</value></data>
-  <data name="Frontend.262" xml:space="preserve"><value>ℹ️ These are initial parameters. You can adjust them in PromptRange after creation.</value></data>
-  <data name="Frontend.263" xml:space="preserve"><value>Initializing...</value></data>
-  <data name="Frontend.264" xml:space="preserve"><value>Initialize</value></data>
-  <data name="Frontend.265" xml:space="preserve"><value>Run</value></data>
-  <data name="Frontend.266" xml:space="preserve"><value>Burst</value></data>
-  <data name="Frontend.267" xml:space="preserve"><value>Draft</value></data>
-  <data name="Frontend.268" xml:space="preserve"><value>Saved successfully!</value></data>
-  <data name="Frontend.269" xml:space="preserve"><value>Deleted successfully</value></data>
-  <data name="Frontend.270" xml:space="preserve"><value>Delete failed</value></data>
-  <data name="Frontend.271" xml:space="preserve"><value>Deletion cancelled</value></data>
-  <data name="Frontend.272" xml:space="preserve"><value>Added successfully!</value></data>
-  <data name="Frontend.273" xml:space="preserve"><value>Request failed</value></data>
-  <data name="Frontend.274" xml:space="preserve"><value>Unknown error</value></data>
-  <data name="Frontend.275" xml:space="preserve"><value>Copy failed</value></data>
-  <data name="Frontend.276" xml:space="preserve"><value>Uploaded successfully</value></data>
-  <data name="Frontend.277" xml:space="preserve"><value>Uploaded file size cannot exceed 80MB!</value></data>
-  <data name="Frontend.278" xml:space="preserve"><value>Select at least one Range</value></data>
-  <data name="Frontend.279" xml:space="preserve"><value>Select at least one Tactic</value></data>
-  <data name="Frontend.280" xml:space="preserve"><value>Exported successfully!</value></data>
-  <data name="Frontend.281" xml:space="preserve"><value>Export failed</value></data>
-  <data name="Frontend.282" xml:space="preserve"><value>An error occurred during export</value></data>
-  <data name="Frontend.283" xml:space="preserve"><value>Refresh complete!</value></data>
-  <data name="Frontend.284" xml:space="preserve"><value>Please select a Prompt first!</value></data>
-  <data name="Frontend.285" xml:space="preserve"><value>Select a model!</value></data>
-  <data name="Frontend.286" xml:space="preserve"><value>Select a Tactic!</value></data>
-  <data name="Frontend.287" xml:space="preserve"><value>Enter content!</value></data>
-  <data name="Frontend.288" xml:space="preserve"><value>Select a folder</value></data>
-  <data name="Frontend.289" xml:space="preserve"><value>Upload an audio file first</value></data>
-  <data name="Frontend.290" xml:space="preserve"><value>Failed to read audio:</value></data>
-  <data name="Frontend.291" xml:space="preserve"><value>Failed to load vector database list</value></data>
-  <data name="Frontend.292" xml:space="preserve"><value>Embedding query failed</value></data>
-  <data name="Frontend.293" xml:space="preserve"><value>Failed to continue chat</value></data>
-  <data name="Frontend.294" xml:space="preserve"><value>Failed to load chat history</value></data>
-  <data name="Frontend.295" xml:space="preserve"><value>Failed to update feedback</value></data>
-  <data name="Frontend.296" xml:space="preserve"><value>The message ID is invalid. Refresh the page and try again.</value></data>
-  <data name="Frontend.297" xml:space="preserve"><value>The corresponding conversation record was not found. Refresh the page and try again.</value></data>
-  <data name="Frontend.298" xml:space="preserve"><value>This browser does not support streaming output. Switched to normal mode.</value></data>
-  <data name="Frontend.299" xml:space="preserve"><value>The live stream failed to connect and switched to normal mode (refresh the page to try again)</value></data>
-  <data name="Frontend.300" xml:space="preserve"><value>Streaming output</value></data>
-  <data name="Frontend.301" xml:space="preserve"><value>The Agent has finished. Refreshing Tactics and selecting the new version…</value></data>
-  <data name="Frontend.302" xml:space="preserve"><value>The Agent is reasoning and calling tools (this may take several minutes; do not close this window)…</value></data>
-  <data name="Frontend.303" xml:space="preserve"><value>Code copied</value></data>
-  <data name="Frontend.304" xml:space="preserve"><value>Failed to copy code</value></data>
+  <data name="Frontend.001" xml:space="preserve"><value>Выбрать диапазон</value></data>
+  <data name="Frontend.002" xml:space="preserve"><value>Экспорт plugins</value></data>
+  <data name="Frontend.003" xml:space="preserve"><value>Импорт plugins</value></data>
+  <data name="Frontend.004" xml:space="preserve"><value>Добавить диапазон</value></data>
+  <data name="Frontend.005" xml:space="preserve"><value>Выберите диапазон</value></data>
+  <data name="Frontend.006" xml:space="preserve"><value>Переименовать диапазон</value></data>
+  <data name="Frontend.007" xml:space="preserve"><value>Удалить</value></data>
+  <data name="Frontend.008" xml:space="preserve"><value>Выбрать тактику</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>Оптимизировать</value></data>
+  <data name="Frontend.010" xml:space="preserve"><value>Карта</value></data>
+  <data name="Frontend.011" xml:space="preserve"><value>Создать агента</value></data>
+  <data name="Frontend.012" xml:space="preserve"><value>Выберите тактику</value></data>
+  <data name="Frontend.013" xml:space="preserve"><value>Сначала выберите диапазон</value></data>
+  <data name="Frontend.014" xml:space="preserve"><value>Сравнить</value></data>
+  <data name="Frontend.015" xml:space="preserve"><value>Изменить имя тактики</value></data>
+  <data name="Frontend.016" xml:space="preserve"><value>Задать имя тактики</value></data>
+  <data name="Frontend.017" xml:space="preserve"><value>Сбросить имя</value></data>
+  <data name="Frontend.018" xml:space="preserve"><value>Выбрать модель</value></data>
+  <data name="Frontend.019" xml:space="preserve"><value>Обновить</value></data>
+  <data name="Frontend.020" xml:space="preserve"><value>Управление моделями</value></data>
+  <data name="Frontend.021" xml:space="preserve"><value>Выберите модель</value></data>
+  <data name="Frontend.022" xml:space="preserve"><value>Модель без имени</value></data>
+  <data name="Frontend.023" xml:space="preserve"><value>Создайте или выберите Диапазон, прежде чем продолжить</value></data>
+  <data name="Frontend.024" xml:space="preserve"><value>Включён режим Серия, содержимое заблокировано</value></data>
+  <data name="Frontend.025" xml:space="preserve"><value>Чтобы изменить, переключите режим</value></data>
+  <data name="Frontend.026" xml:space="preserve"><value>Параметры модели</value></data>
+  <data name="Frontend.027" xml:space="preserve"><value>Сбросить</value></data>
+  <data name="Frontend.028" xml:space="preserve"><value>Задать критерии оценки ИИ</value></data>
+  <data name="Frontend.029" xml:space="preserve"><value>Вкл.</value></data>
+  <data name="Frontend.030" xml:space="preserve"><value>Выкл.</value></data>
+  <data name="Frontend.031" xml:space="preserve"><value>Перетащите, чтобы изменить ширину | Дважды щёлкните, чтобы вернуть значение по умолчанию</value></data>
+  <data name="Frontend.032" xml:space="preserve"><value>Параметры запроса</value></data>
+  <data name="Frontend.033" xml:space="preserve"><value>Аудиофайл</value></data>
+  <data name="Frontend.034" xml:space="preserve"><value>Загрузить аудио</value></data>
+  <data name="Frontend.035" xml:space="preserve"><value>Очистить</value></data>
+  <data name="Frontend.036" xml:space="preserve"><value>Поддерживаемые форматы: flac / m4a / mp3 / mp4 / mpeg / mpga / oga / ogg / wav / webm</value></data>
+  <data name="Frontend.037" xml:space="preserve"><value>Язык распознавания</value></data>
+  <data name="Frontend.038" xml:space="preserve"><value>Необязательно, например zh / en</value></data>
+  <data name="Frontend.039" xml:space="preserve"><value>Голос</value></data>
+  <data name="Frontend.040" xml:space="preserve"><value>Формат</value></data>
+  <data name="Frontend.041" xml:space="preserve"><value>Выбрать формат вывода</value></data>
+  <data name="Frontend.042" xml:space="preserve"><value>Скорость</value></data>
+  <data name="Frontend.043" xml:space="preserve"><value>Выберите векторную базу данных</value></data>
+  <data name="Frontend.044" xml:space="preserve"><value>Необязательно, создаётся автоматически</value></data>
+  <data name="Frontend.045" xml:space="preserve"><value>Тестовый запрос</value></data>
+  <data name="Frontend.046" xml:space="preserve"><value>Необязательно, автозапрос после первого запуска</value></data>
+  <data name="Frontend.047" xml:space="preserve"><value>Введите текст для синтеза речи</value></data>
+  <data name="Frontend.048" xml:space="preserve"><value>Введите содержимое Prompt</value></data>
+  <data name="Frontend.049" xml:space="preserve"><value>Обнаружено</value></data>
+  <data name="Frontend.050" xml:space="preserve"><value>переменных</value></data>
+  <data name="Frontend.051" xml:space="preserve"><value>Определено</value></data>
+  <data name="Frontend.052" xml:space="preserve"><value>Не определено</value></data>
+  <data name="Frontend.053" xml:space="preserve"><value>Введите примечания</value></data>
+  <data name="Frontend.054" xml:space="preserve"><value>Число серий:</value></data>
+  <data name="Frontend.055" xml:space="preserve"><value>Параметры запроса Prompt</value></data>
+  <data name="Frontend.056" xml:space="preserve"><value>Префикс</value></data>
+  <data name="Frontend.057" xml:space="preserve"><value>Суффикс</value></data>
+  <data name="Frontend.058" xml:space="preserve"><value>Имя переменной</value></data>
+  <data name="Frontend.059" xml:space="preserve"><value>Введите имя переменной</value></data>
+  <data name="Frontend.060" xml:space="preserve"><value>Значение переменной</value></data>
+  <data name="Frontend.061" xml:space="preserve"><value>Введите значение переменной</value></data>
+  <data name="Frontend.062" xml:space="preserve"><value>Действия</value></data>
+  <data name="Frontend.063" xml:space="preserve"><value>Добавить переменную</value></data>
+  <data name="Frontend.064" xml:space="preserve"><value>Версия Prompt:</value></data>
+  <data name="Frontend.065" xml:space="preserve"><value>Диапазон:</value></data>
+  <data name="Frontend.066" xml:space="preserve"><value>Тактика:</value></data>
+  <data name="Frontend.067" xml:space="preserve"><value>Прицеливание:</value></data>
+  <data name="Frontend.068" xml:space="preserve"><value>Вывод</value></data>
+  <data name="Frontend.069" xml:space="preserve"><value>Средний балл:</value></data>
+  <data name="Frontend.070" xml:space="preserve"><value>Наивысший балл:</value></data>
+  <data name="Frontend.071" xml:space="preserve"><value>Затрачено (мс):</value></data>
+  <data name="Frontend.072" xml:space="preserve"><value>Копировать форматированный код HTML</value></data>
+  <data name="Frontend.073" xml:space="preserve"><value>Копировать исходное содержимое (например, будут скопированы маркеры markdown)</value></data>
+  <data name="Frontend.074" xml:space="preserve"><value>Исходный</value></data>
+  <data name="Frontend.075" xml:space="preserve"><value>Изображение создано, но доступный адрес не получен</value></data>
+  <data name="Frontend.076" xml:space="preserve"><value>Хранилище:</value></data>
+  <data name="Frontend.077" xml:space="preserve"><value>Просмотр исходного изображения</value></data>
+  <data name="Frontend.078" xml:space="preserve"><value>Аудио создано, но доступный адрес не получен</value></data>
+  <data name="Frontend.079" xml:space="preserve"><value>Введите текст для векторного поиска</value></data>
+  <data name="Frontend.080" xml:space="preserve"><value>Поиск</value></data>
+  <data name="Frontend.081" xml:space="preserve"><value>Ввод</value></data>
+  <data name="Frontend.082" xml:space="preserve"><value>Оценка AI:</value></data>
+  <data name="Frontend.083" xml:space="preserve"><value>Оценка ИИ...</value></data>
+  <data name="Frontend.084" xml:space="preserve"><value>Ручная оценка:</value></data>
+  <data name="Frontend.085" xml:space="preserve"><value>Продолжить чат</value></data>
+  <data name="Frontend.086" xml:space="preserve"><value>Оценка ИИ</value></data>
+  <data name="Frontend.087" xml:space="preserve"><value>Ручная оценка</value></data>
+  <data name="Frontend.088" xml:space="preserve"><value>Введите</value></data>
+  <data name="Frontend.089" xml:space="preserve"><value>Начать оценку</value></data>
+  <data name="Frontend.090" xml:space="preserve"><value>Сохранить</value></data>
+  <data name="Frontend.091" xml:space="preserve"><value>Отмена</value></data>
+  <data name="Frontend.092" xml:space="preserve"><value>Нет сгенерированных результатов</value></data>
+  <data name="Frontend.093" xml:space="preserve"><value>баллов</value></data>
+  <data name="Frontend.094" xml:space="preserve"><value>Динамика баллов</value></data>
+  <data name="Frontend.095" xml:space="preserve"><value>Оценка есть только у одного элемента. Диаграмма не может построить линию из одной точки.</value></data>
+  <data name="Frontend.096" xml:space="preserve"><value>Средняя оценка</value></data>
+  <data name="Frontend.097" xml:space="preserve"><value>Наивысший балл</value></data>
+  <data name="Frontend.098" xml:space="preserve"><value>Нет данных</value></data>
+  <data name="Frontend.099" xml:space="preserve"><value>История версий</value></data>
+  <data name="Frontend.100" xml:space="preserve"><value>Введите имя</value></data>
+  <data name="Frontend.101" xml:space="preserve"><value>Публичная</value></data>
+  <data name="Frontend.102" xml:space="preserve"><value>Изменить</value></data>
+  <data name="Frontend.103" xml:space="preserve"><value>Сгенерировать код</value></data>
+  <data name="Frontend.104" xml:space="preserve"><value>Выбор тактики</value></data>
+  <data name="Frontend.105" xml:space="preserve"><value>Режим запуска</value></data>
+  <data name="Frontend.106" xml:space="preserve"><value>Тактика</value></data>
+  <data name="Frontend.107" xml:space="preserve"><value>Создать тактику верхнего уровня</value></data>
+  <data name="Frontend.108" xml:space="preserve"><value>Будет создано:</value></data>
+  <data name="Frontend.109" xml:space="preserve"><value>Текущий:</value></data>
+  <data name="Frontend.110" xml:space="preserve"><value>(Новое)</value></data>
+  <data name="Frontend.111" xml:space="preserve"><value>Создать параллельную тактику</value></data>
+  <data name="Frontend.112" xml:space="preserve"><value>Создать дочернюю тактику</value></data>
+  <data name="Frontend.113" xml:space="preserve"><value>Прицелиться снова</value></data>
+  <data name="Frontend.114" xml:space="preserve"><value>Режим Chat</value></data>
+  <data name="Frontend.115" xml:space="preserve"><value>Прямой тест</value></data>
+  <data name="Frontend.116" xml:space="preserve"><value>Введите как диалог, затем выполните Запуск</value></data>
+  <data name="Frontend.117" xml:space="preserve"><value>Тестировать напрямую текущим Prompt</value></data>
+  <data name="Frontend.118" xml:space="preserve"><value>Режим продолжения чата зафиксирован как режим диалога</value></data>
+  <data name="Frontend.119" xml:space="preserve"><value>Текущая модель не поддерживает режим диалога и будет выполнена как прямой тест</value></data>
+  <data name="Frontend.120" xml:space="preserve"><value>История диалогов</value></data>
+  <data name="Frontend.121" xml:space="preserve"><value>Свернуть</value></data>
+  <data name="Frontend.122" xml:space="preserve"><value>Развернуть</value></data>
+  <data name="Frontend.123" xml:space="preserve"><value>Просмотреть Prompt текущего диалога</value></data>
+  <data name="Frontend.124" xml:space="preserve"><value>Загрузка...</value></data>
+  <data name="Frontend.125" xml:space="preserve"><value>Всего Token:</value></data>
+  <data name="Frontend.126" xml:space="preserve"><value>Нет истории диалогов</value></data>
+  <data name="Frontend.127" xml:space="preserve"><value>Пользователь</value></data>
+  <data name="Frontend.128" xml:space="preserve"><value>Ассистент</value></data>
+  <data name="Frontend.129" xml:space="preserve"><value>Нравится</value></data>
+  <data name="Frontend.130" xml:space="preserve"><value>Понравилось</value></data>
+  <data name="Frontend.131" xml:space="preserve"><value>Не нравится</value></data>
+  <data name="Frontend.132" xml:space="preserve"><value>Не понравилось</value></data>
+  <data name="Frontend.133" xml:space="preserve"><value>Сохранение...</value></data>
+  <data name="Frontend.134" xml:space="preserve"><value>Ввод диалога</value></data>
+  <data name="Frontend.135" xml:space="preserve"><value>Введите следующее сообщение... (Ctrl+Enter / Cmd+Enter для отправки)</value></data>
+  <data name="Frontend.136" xml:space="preserve"><value>Введите вопрос... (Ctrl+Enter / Cmd+Enter для отправки)</value></data>
+  <data name="Frontend.137" xml:space="preserve"><value>Введённый текст будет добавлен к существующему диалогу</value></data>
+  <data name="Frontend.138" xml:space="preserve"><value>Введённый текст передаётся в серверный API как параметр userMessage</value></data>
+  <data name="Frontend.139" xml:space="preserve"><value>Сочетание клавиш: Ctrl+Enter (Windows) / Cmd+Enter (Mac)</value></data>
+  <data name="Frontend.140" xml:space="preserve"><value>Запуск</value></data>
+  <data name="Frontend.141" xml:space="preserve"><value>Карта 3D-структуры</value></data>
+  <data name="Frontend.142" xml:space="preserve"><value>Сбросить вид</value></data>
+  <data name="Frontend.143" xml:space="preserve"><value>Полный экран</value></data>
+  <data name="Frontend.144" xml:space="preserve"><value>Вместить вид</value></data>
+  <data name="Frontend.145" xml:space="preserve"><value>🖱️ Действия мыши</value></data>
+  <data name="Frontend.146" xml:space="preserve"><value>Перетаскивание левой кнопкой: поворот вида</value></data>
+  <data name="Frontend.147" xml:space="preserve"><value>Перетаскивание правой кнопкой: сдвиг сцены</value></data>
+  <data name="Frontend.148" xml:space="preserve"><value>Колесо: масштаб</value></data>
+  <data name="Frontend.149" xml:space="preserve"><value>Щелчок по узлу: подсветка</value></data>
+  <data name="Frontend.150" xml:space="preserve"><value>Двойной щелчок по узлу: открыть тактику</value></data>
+  <data name="Frontend.151" xml:space="preserve"><value>⌨️ Сочетания клавиш</value></data>
+  <data name="Frontend.152" xml:space="preserve"><value>W / A / S / D: перемещение вперёд, назад, влево и вправо</value></data>
+  <data name="Frontend.153" xml:space="preserve"><value>Q / E: перемещение по глубине (вперёд/назад)</value></data>
+  <data name="Frontend.154" xml:space="preserve"><value>R: Сбросить вид</value></data>
+  <data name="Frontend.155" xml:space="preserve"><value>F: Вместить вид</value></data>
+  <data name="Frontend.156" xml:space="preserve"><value>+/-: увеличить/уменьшить</value></data>
+  <data name="Frontend.157" xml:space="preserve"><value>Сочетания клавиш</value></data>
+  <data name="Frontend.158" xml:space="preserve"><value>узлов</value></data>
+  <data name="Frontend.159" xml:space="preserve"><value>Создать Агента из PromptCode</value></data>
+  <data name="Frontend.160" xml:space="preserve"><value>Имя агента</value></data>
+  <data name="Frontend.161" xml:space="preserve"><value>Введите имя Агента</value></data>
+  <data name="Frontend.162" xml:space="preserve"><value>Охват</value></data>
+  <data name="Frontend.163" xml:space="preserve"><value>Уровень диапазона</value></data>
+  <data name="Frontend.164" xml:space="preserve"><value>PromptCode содержит только имя Диапазона и соответствует всем Тактикам этого Диапазона</value></data>
+  <data name="Frontend.165" xml:space="preserve"><value>Уровень тактики</value></data>
+  <data name="Frontend.166" xml:space="preserve"><value>PromptCode включает имя Диапазона и номер Тактики и соответствует всем версиям Прицеливания текущей Тактики</value></data>
+  <data name="Frontend.167" xml:space="preserve"><value>Точная версия</value></data>
+  <data name="Frontend.168" xml:space="preserve"><value>PromptCode — полный номер версии и точно соответствует текущей Тактике</value></data>
+  <data name="Frontend.169" xml:space="preserve"><value>Описание</value></data>
+  <data name="Frontend.170" xml:space="preserve"><value>Описание нового Агента (необязательно)</value></data>
+  <data name="Frontend.171" xml:space="preserve"><value>Имена Function Call через запятую (необязательно)</value></data>
+  <data name="Frontend.172" xml:space="preserve"><value>Создать</value></data>
+  <data name="Frontend.173" xml:space="preserve"><value>Добавить модель</value></data>
+  <data name="Frontend.174" xml:space="preserve"><value>Тип модели</value></data>
+  <data name="Frontend.175" xml:space="preserve"><value>Выберите тип модели</value></data>
+  <data name="Frontend.176" xml:space="preserve"><value>Псевдоним модели</value></data>
+  <data name="Frontend.177" xml:space="preserve"><value>Введите псевдоним модели</value></data>
+  <data name="Frontend.178" xml:space="preserve"><value>Название модели</value></data>
+  <data name="Frontend.179" xml:space="preserve"><value>Введите имя модели</value></data>
+  <data name="Frontend.180" xml:space="preserve"><value>Введите API Version</value></data>
+  <data name="Frontend.181" xml:space="preserve"><value>Введите API key</value></data>
+  <data name="Frontend.182" xml:space="preserve"><value>Введите End Point</value></data>
+  <data name="Frontend.183" xml:space="preserve"><value>Введите Organization Id</value></data>
+  <data name="Frontend.184" xml:space="preserve"><value>Добавить диапазон</value></data>
+  <data name="Frontend.185" xml:space="preserve"><value>Имя диапазона</value></data>
+  <data name="Frontend.186" xml:space="preserve"><value>Введите имя диапазона</value></data>
+  <data name="Frontend.187" xml:space="preserve"><value>Критерии оценки ИИ</value></data>
+  <data name="Frontend.188" xml:space="preserve"><value>Введите ожидаемый результат</value></data>
+  <data name="Frontend.189" xml:space="preserve"><value>Внимание: после задания ожидаемого результата оценка ИИ выполнится автоматически по этому результату.</value></data>
+  <data name="Frontend.190" xml:space="preserve"><value>Закрыть</value></data>
+  <data name="Frontend.191" xml:space="preserve"><value>Импорт папки plugin</value></data>
+  <data name="Frontend.192" xml:space="preserve"><value>Можно загрузить стандартную папку plugin OpenAI / Semantic Kernel, чтобы автоматически создать Диапазон. (Выберите всю папку plugin.)</value></data>
+  <data name="Frontend.193" xml:space="preserve"><value>Перетащите папку сюда или</value></data>
+  <data name="Frontend.194" xml:space="preserve"><value>нажмите, чтобы загрузить</value></data>
+  <data name="Frontend.195" xml:space="preserve"><value>Загрузить снова</value></data>
+  <data name="Frontend.196" xml:space="preserve"><value>Имя файла</value></data>
+  <data name="Frontend.197" xml:space="preserve"><value>Путь к файлу</value></data>
+  <data name="Frontend.198" xml:space="preserve"><value>Загрузить</value></data>
+  <data name="Frontend.199" xml:space="preserve"><value>Экспорт папки plugin</value></data>
+  <data name="Frontend.200" xml:space="preserve"><value>Диапазоны и тактики</value></data>
+  <data name="Frontend.201" xml:space="preserve"><value>Выбрать все</value></data>
+  <data name="Frontend.202" xml:space="preserve"><value>Инвертировать выбор</value></data>
+  <data name="Frontend.203" xml:space="preserve"><value>Развернуть все</value></data>
+  <data name="Frontend.204" xml:space="preserve"><value>Свернуть все</value></data>
+  <data name="Frontend.205" xml:space="preserve"><value>Выбрано:</value></data>
+  <data name="Frontend.206" xml:space="preserve"><value>тактик</value></data>
+  <data name="Frontend.207" xml:space="preserve"><value>Подтвердить</value></data>
+  <data name="Frontend.208" xml:space="preserve"><value>Выберите или введите имя примечания</value></data>
+  <data name="Frontend.209" xml:space="preserve"><value>Если выбрать существующее имя, оно переносится на текущую Тактику, а имя исходной Тактики сбрасывается на «Не задано»</value></data>
+  <data name="Frontend.210" xml:space="preserve"><value>Введите отображаемое имя тактики</value></data>
+  <data name="Frontend.211" xml:space="preserve"><value>Сравнить Prompt</value></data>
+  <data name="Frontend.212" xml:space="preserve"><value>Выбрать Prompt A</value></data>
+  <data name="Frontend.213" xml:space="preserve"><value>Обменять</value></data>
+  <data name="Frontend.214" xml:space="preserve"><value>Выбрать Prompt B</value></data>
+  <data name="Frontend.215" xml:space="preserve"><value>Предупреждение: вы сравниваете один и тот же Prompt!</value></data>
+  <data name="Frontend.216" xml:space="preserve"><value>Два выбранных Prompt совпадают (номер версии:</value></data>
+  <data name="Frontend.217" xml:space="preserve"><value>Выберите разные Prompt для сравнения, чтобы увидеть различия.</value></data>
+  <data name="Frontend.218" xml:space="preserve"><value>Перейти к этому Prompt</value></data>
+  <data name="Frontend.219" xml:space="preserve"><value>Поле</value></data>
+  <data name="Frontend.220" xml:space="preserve"><value>Копировать номер версии</value></data>
+  <data name="Frontend.221" xml:space="preserve"><value>Полигон</value></data>
+  <data name="Frontend.222" xml:space="preserve"><value>Тактика</value></data>
+  <data name="Frontend.223" xml:space="preserve"><value>Псевдоним</value></data>
+  <data name="Frontend.224" xml:space="preserve"><value>Модели</value></data>
+  <data name="Frontend.225" xml:space="preserve"><value>📄 Сравнение содержимого Prompt</value></data>
+  <data name="Frontend.226" xml:space="preserve"><value>Отличается</value></data>
+  <data name="Frontend.227" xml:space="preserve"><value>🎯 Сравнение параметров запроса</value></data>
+  <data name="Frontend.228" xml:space="preserve"><value>Параметры</value></data>
+  <data name="Frontend.229" xml:space="preserve"><value>(Не задано)</value></data>
+  <data name="Frontend.230" xml:space="preserve"><value>Prompt A — настройка переменных</value></data>
+  <data name="Frontend.231" xml:space="preserve"><value>Prompt B — настройка переменных</value></data>
+  <data name="Frontend.232" xml:space="preserve"><value>Ни у одного из двух Prompt не настроены переменные</value></data>
+  <data name="Frontend.233" xml:space="preserve"><value>Выберите два Prompt для сравнения</value></data>
+  <data name="Frontend.234" xml:space="preserve"><value>Автоматическая оптимизация Prompt с помощью ИИ (Agent)</value></data>
+  <data name="Frontend.235" xml:space="preserve"><value>Описание</value></data>
+  <data name="Frontend.236" xml:space="preserve"><value>Оптимизацию выполняет Агент PromptCatalyzer в Модуле Agents через многоходовой диалог и вызовы инструментов. После нажатия «Начать» дождитесь окончания диалога (это может занять несколько минут). Затем эта страница автоматически выберет новую версию, и можно будет выполнить Запуск и оценку по необходимости.</value></data>
+  <data name="Frontend.237" xml:space="preserve"><value>Ошибка оптимизации</value></data>
+  <data name="Frontend.238" xml:space="preserve"><value>Требования оптимизации</value></data>
+  <data name="Frontend.239" xml:space="preserve"><value>Например: сделать ответы более творческими или уменьшить галлюцинации...</value></data>
+  <data name="Frontend.240" xml:space="preserve"><value>После оптимизации</value></data>
+  <data name="Frontend.241" xml:space="preserve"><value>Запуск сразу после создания</value></data>
+  <data name="Frontend.242" xml:space="preserve"><value>После оптимизации автоматически выполняется тестовый Запуск, чтобы проверить новый Prompt</value></data>
+  <data name="Frontend.243" xml:space="preserve"><value>Использовать оценку ИИ после запуска</value></data>
+  <data name="Frontend.244" xml:space="preserve"><value>После завершения Запуска автоматически запускается оценка ИИ, чтобы быстро получить оценку качества</value></data>
+  <data name="Frontend.245" xml:space="preserve"><value>Начать оптимизацию</value></data>
+  <data name="Frontend.246" xml:space="preserve"><value>🚀 Первое использование: инициализация оптимизации Prompt</value></data>
+  <data name="Frontend.247" xml:space="preserve"><value>Добро пожаловать в автоматическую оптимизацию ИИ!</value></data>
+  <data name="Frontend.248" xml:space="preserve"><value>При первом использовании нужно инициализировать PromptCatalyzer Agent.</value></data>
+  <data name="Frontend.249" xml:space="preserve"><value>Выберите AI Model для оптимизации. Система автоматически создаст связанные ресурсы.</value></data>
+  <data name="Frontend.250" xml:space="preserve"><value>Выбрать AI Model</value></data>
+  <data name="Frontend.251" xml:space="preserve"><value>Выберите AI Model</value></data>
+  <data name="Frontend.252" xml:space="preserve"><value>Подсказка:</value></data>
+  <data name="Frontend.253" xml:space="preserve"><value>Просмотр параметров по умолчанию</value></data>
+  <data name="Frontend.254" xml:space="preserve"><value>Управляет случайностью вывода: 0.0-1.0. Ниже — точнее, выше — более творчески.</value></data>
+  <data name="Frontend.255" xml:space="preserve"><value>(Сбалансированный режим)</value></data>
+  <data name="Frontend.256" xml:space="preserve"><value>Параметр nucleus sampling: 0.0-1.0. Управляет диапазоном выбора слов.</value></data>
+  <data name="Frontend.257" xml:space="preserve"><value>(Высокое качество)</value></data>
+  <data name="Frontend.258" xml:space="preserve"><value>Максимальное число генерируемых token. Влияет на длину вывода.</value></data>
+  <data name="Frontend.259" xml:space="preserve"><value>(Стандартная длина)</value></data>
+  <data name="Frontend.260" xml:space="preserve"><value>Штраф за частоту: от -2.0 до 2.0. Уменьшает повторение слов.</value></data>
+  <data name="Frontend.261" xml:space="preserve"><value>(Без штрафа)</value></data>
+  <data name="Frontend.262" xml:space="preserve"><value>ℹ️ Это начальные параметры. После создания их можно изменить в PromptRange.</value></data>
+  <data name="Frontend.263" xml:space="preserve"><value>Инициализация...</value></data>
+  <data name="Frontend.264" xml:space="preserve"><value>Инициализировать</value></data>
+  <data name="Frontend.265" xml:space="preserve"><value>Запуск</value></data>
+  <data name="Frontend.266" xml:space="preserve"><value>Серия</value></data>
+  <data name="Frontend.267" xml:space="preserve"><value>Черновик</value></data>
+  <data name="Frontend.268" xml:space="preserve"><value>Успешно сохранено!</value></data>
+  <data name="Frontend.269" xml:space="preserve"><value>Удалено успешно</value></data>
+  <data name="Frontend.270" xml:space="preserve"><value>Ошибка удаления</value></data>
+  <data name="Frontend.271" xml:space="preserve"><value>Удаление отменено</value></data>
+  <data name="Frontend.272" xml:space="preserve"><value>Успешно добавлено!</value></data>
+  <data name="Frontend.273" xml:space="preserve"><value>Ошибка запроса</value></data>
+  <data name="Frontend.274" xml:space="preserve"><value>Неизвестная ошибка</value></data>
+  <data name="Frontend.275" xml:space="preserve"><value>Ошибка копирования</value></data>
+  <data name="Frontend.276" xml:space="preserve"><value>Загружено</value></data>
+  <data name="Frontend.277" xml:space="preserve"><value>Размер загружаемого файла не может превышать 80MB!</value></data>
+  <data name="Frontend.278" xml:space="preserve"><value>Выберите хотя бы один диапазон</value></data>
+  <data name="Frontend.279" xml:space="preserve"><value>Выберите хотя бы одну тактику</value></data>
+  <data name="Frontend.280" xml:space="preserve"><value>Экспорт выполнен!</value></data>
+  <data name="Frontend.281" xml:space="preserve"><value>Ошибка экспорта</value></data>
+  <data name="Frontend.282" xml:space="preserve"><value>Во время экспорта произошла ошибка</value></data>
+  <data name="Frontend.283" xml:space="preserve"><value>Обновление завершено!</value></data>
+  <data name="Frontend.284" xml:space="preserve"><value>Сначала выберите Prompt!</value></data>
+  <data name="Frontend.285" xml:space="preserve"><value>Выберите модель!</value></data>
+  <data name="Frontend.286" xml:space="preserve"><value>Выберите тактику!</value></data>
+  <data name="Frontend.287" xml:space="preserve"><value>Введите содержимое!</value></data>
+  <data name="Frontend.288" xml:space="preserve"><value>Выберите папку</value></data>
+  <data name="Frontend.289" xml:space="preserve"><value>Сначала загрузите аудиофайл</value></data>
+  <data name="Frontend.290" xml:space="preserve"><value>Не удалось прочитать аудио:</value></data>
+  <data name="Frontend.291" xml:space="preserve"><value>Не удалось загрузить список векторных баз</value></data>
+  <data name="Frontend.292" xml:space="preserve"><value>Запрос Embedding не выполнен</value></data>
+  <data name="Frontend.293" xml:space="preserve"><value>Не удалось продолжить чат</value></data>
+  <data name="Frontend.294" xml:space="preserve"><value>Не удалось загрузить историю чата</value></data>
+  <data name="Frontend.295" xml:space="preserve"><value>Не удалось обновить отзыв</value></data>
+  <data name="Frontend.296" xml:space="preserve"><value>Недействительный ID сообщения. Обновите страницу и повторите попытку.</value></data>
+  <data name="Frontend.297" xml:space="preserve"><value>Соответствующая запись диалога не найдена. Обновите страницу и повторите попытку.</value></data>
+  <data name="Frontend.298" xml:space="preserve"><value>Этот браузер не поддерживает потоковый вывод. Выполнен переход в обычный режим.</value></data>
+  <data name="Frontend.299" xml:space="preserve"><value>Не удалось подключить поток в реальном времени, включён обычный режим (обновите страницу, чтобы повторить)</value></data>
+  <data name="Frontend.300" xml:space="preserve"><value>Потоковый вывод</value></data>
+  <data name="Frontend.301" xml:space="preserve"><value>Agent завершил работу. Обновление Тактик и выбор новой версии…</value></data>
+  <data name="Frontend.302" xml:space="preserve"><value>Agent выполняет рассуждение и вызывает инструменты (это может занять несколько минут; не закрывайте это окно)…</value></data>
+  <data name="Frontend.303" xml:space="preserve"><value>Код скопирован</value></data>
+  <data name="Frontend.304" xml:space="preserve"><value>Не удалось скопировать код</value></data>
   <data name="Frontend.305" xml:space="preserve"><value>Copy</value></data>
-  <data name="Frontend.306" xml:space="preserve"><value>available Model</value></data>
-  <data name="Frontend.307" xml:space="preserve"><value>Optimization did not complete successfully</value></data>
-  <data name="Frontend.308" xml:space="preserve"><value>Optimization is in progress. Please do not click again.</value></data>
-  <data name="Frontend.309" xml:space="preserve"><value>Do not save</value></data>
-  <data name="Frontend.310" xml:space="preserve"><value>Save draft</value></data>
-  <data name="Frontend.311" xml:space="preserve"><value>Just now</value></data>
-  <data name="Frontend.312" xml:space="preserve"><value>minutes ago</value></data>
-  <data name="Frontend.313" xml:space="preserve"><value>hours ago</value></data>
-  <data name="Frontend.314" xml:space="preserve"><value>days ago</value></data>
-  <data name="Frontend.315" xml:space="preserve"><value>Creation failed. Make sure the AgentsManager Module is installed.</value></data>
-  <data name="Frontend.316" xml:space="preserve"><value>Failed to create Agent</value></data>
-  <data name="Frontend.317" xml:space="preserve"><value>Initialization failed</value></data>
-  <data name="Frontend.318" xml:space="preserve"><value>Initialization succeeded. Refreshing page data...</value></data>
-  <data name="Frontend.319" xml:space="preserve"><value>Failed to load the AI Model list</value></data>
-  <data name="Frontend.320" xml:space="preserve"><value>Created</value></data>
-  <data name="Frontend.321" xml:space="preserve"><value>Conversation appended</value></data>
-  <data name="Frontend.322" xml:space="preserve"><value>The conversation record ID is invalid. Refresh the page and try again.</value></data>
-  <data name="Frontend.323" xml:space="preserve"><value>Failed to export plugins</value></data>
-  <data name="Frontend.324" xml:space="preserve"><value>Confirm plugins export</value></data>
-  <data name="Frontend.325" xml:space="preserve"><value>All Tactics selected</value></data>
-  <data name="Frontend.326" xml:space="preserve"><value>Selection inverted</value></data>
-  <data name="Frontend.327" xml:space="preserve"><value>All selections cleared</value></data>
-  <data name="Frontend.328" xml:space="preserve"><value>Feedback canceled</value></data>
-  <data name="Frontend.329" xml:space="preserve"><value>Operation canceled</value></data>
-  <data name="Frontend.330" xml:space="preserve"><value>When on, Run, Burst, and continued conversation stream live; when off, output is returned as one block.</value></data>
-  <data name="Frontend.331" xml:space="preserve"><value>The current Prompt has no average score yet</value></data>
-  <data name="Frontend.332" xml:space="preserve"><value>This Range has no Runs yet. Run first, then come back!</value></data>
-  <data name="Frontend.333" xml:space="preserve"><value>Your data has been modified. Save it as a Draft?</value></data>
-  <data name="Frontend.334" xml:space="preserve"><value>Are you sure you want to leave this page?</value></data>
-  <data name="Frontend.335" xml:space="preserve"><value>Save as Draft</value></data>
-  <data name="Frontend.336" xml:space="preserve"><value>Stay on page</value></data>
-  <data name="Frontend.337" xml:space="preserve"><value>Penalize words already used</value></data>
-  <data name="Frontend.338" xml:space="preserve"><value>Penalize frequently used words</value></data>
-  <data name="Frontend.339" xml:space="preserve"><value>Controls how wide the word choice is. Higher values make the generated text include more uncommon words.</value></data>
-  <data name="Frontend.340" xml:space="preserve"><value>Stop sequences for generated text. When the model meets these sequences, it stops generating. (The input is split on English commas.)</value></data>
-  <data name="Frontend.341" xml:space="preserve"><value>Sampling temperature. A higher value such as 0.8 makes the output more random, while a lower value such as 0.2 makes it more deterministic.</value></data>
-  <data name="Frontend.342" xml:space="preserve"><value>The total number of request and response Tokens, or the maximum length of generated text. See the API documentation for details!</value></data>
-  <data name="Frontend.343" xml:space="preserve"><value>Notice</value></data>
-  <data name="Frontend.344" xml:space="preserve"><value>Improve Prompt quality and results</value></data>
-  <data name="Frontend.345" xml:space="preserve"><value>Coming soon</value></data>
-  <data name="Frontend.346" xml:space="preserve"><value>Unable to get the current Prompt information</value></data>
-  <data name="Frontend.347" xml:space="preserve"><value>Unable to get details for the current Prompt</value></data>
-  <data name="Frontend.348" xml:space="preserve"><value>Unable to get the version number (Prompt Code) of the current Prompt</value></data>
-  <data name="Frontend.349" xml:space="preserve"><value>Unable to get the version number</value></data>
-  <data name="Frontend.350" xml:space="preserve"><value>No valid score was obtained. The optimization prompt was skipped.</value></data>
-  <data name="Frontend.351" xml:space="preserve"><value>Unnamed</value></data>
-  <data name="Frontend.352" xml:space="preserve"><value>Unnamed vector database</value></data>
-  <data name="Frontend.353" xml:space="preserve"><value>Unknown tactic</value></data>
-  <data name="Frontend.354" xml:space="preserve"><value>Unknown range</value></data>
-  <data name="Frontend.355" xml:space="preserve"><value>Unknown tactic</value></data>
-  <data name="Frontend.356" xml:space="preserve"><value>Not set</value></data>
-  <data name="Frontend.357" xml:space="preserve"><value>No valid optimization result returned</value></data>
-  <data name="Frontend.358" xml:space="preserve"><value>No expected result is configured. AI scoring was skipped.</value></data>
-  <data name="Frontend.359" xml:space="preserve"><value>The model has been deleted. Select a model and Run again!</value></data>
-  <data name="Frontend.360" xml:space="preserve"><value>AI scoring in progress (same as manual AI scoring)…</value></data>
-  <data name="Frontend.361" xml:space="preserve"><value>Running (same as a manual Run; output is visible on the main screen)…</value></data>
-  <data name="Frontend.362" xml:space="preserve"><value>This will delete this expected result. Continue?</value></data>
-  <data name="Frontend.363" xml:space="preserve"><value>This action will permanently delete everything in this Range</value></data>
-  <data name="Frontend.364" xml:space="preserve"><value>This will permanently delete this Tactic</value></data>
-  <data name="Frontend.365" xml:space="preserve"><value>This will permanently delete this Tactic version. Continue?</value></data>
-  <data name="Frontend.366" xml:space="preserve"><value>This will reset this Tactic name</value></data>
-  <data name="Frontend.367" xml:space="preserve"><value>No usable AI Model could be found. Please configure a Chat Model in the AIKernel Module first.</value></data>
-  <data name="Frontend.368" xml:space="preserve"><value>The automatic Run returned no output record, so AI scoring was skipped. You can Run manually on the main screen and then score.</value></data>
-  <data name="Frontend.369" xml:space="preserve"><value>Set pre-AI scoring criteria</value></data>
-  <data name="Frontend.370" xml:space="preserve"><value>Enter an alias</value></data>
-  <data name="Frontend.371" xml:space="preserve"><value>Enter a prefix</value></data>
-  <data name="Frontend.372" xml:space="preserve"><value>Enter a suffix</value></data>
-  <data name="Frontend.373" xml:space="preserve"><value>Enter conversation content</value></data>
-  <data name="Frontend.374" xml:space="preserve"><value>Enter a new Tactic name</value></data>
-  <data name="Frontend.375" xml:space="preserve"><value>Enter the text to query</value></data>
-  <data name="Frontend.376" xml:space="preserve"><value>Select VectorDB</value></data>
-  <data name="Frontend.377" xml:space="preserve"><value>Select an AI Model</value></data>
-  <data name="Frontend.378" xml:space="preserve"><value>Select a tactic</value></data>
-  <data name="Frontend.379" xml:space="preserve"><value>Select a Run test mode</value></data>
-  <data name="Frontend.380" xml:space="preserve"><value>Select a model!</value></data>
-  <data name="Frontend.381" xml:space="preserve"><value>Select a Tactic before copying!</value></data>
-  <data name="Frontend.382" xml:space="preserve"><value>Enter Prompt</value></data>
-  <data name="Frontend.383" xml:space="preserve"><value>Run test</value></data>
-  <data name="Frontend.384" xml:space="preserve"><value>Expected result</value></data>
-  <data name="Frontend.385" xml:space="preserve"><value>Speech recognition input</value></data>
-  <data name="Frontend.386" xml:space="preserve"><value>Select a Tactic to determine the PromptCode</value></data>
-  <data name="Frontend.387" xml:space="preserve"><value>Optimize now</value></data>
-  <data name="Frontend.388" xml:space="preserve"><value>Not now</value></data>
-  <data name="Frontend.389" xml:space="preserve"><value>Confirm creation</value></data>
-  <data name="Frontend.390" xml:space="preserve"><value>Continue creation</value></data>
-  <data name="Frontend.391" xml:space="preserve"><value>Agent "{0}" was created successfully!</value></data>
-  <data name="Frontend.392" xml:space="preserve"><value>Copied [{0}]</value></data>
-  <data name="Frontend.393" xml:space="preserve"><value>Copied {0} [{1}]</value></data>
-  <data name="Frontend.394" xml:space="preserve"><value>PromptCode ({0}) is already used by {1} Agents. Create a new Agent anyway?</value></data>
-  <data name="Frontend.395" xml:space="preserve"><value>The current Prompt has an average score of {0}. Consider using AI automatic optimization to improve it. Click the "Optimize" button to start.</value></data>
-  <data name="Frontend.396" xml:space="preserve"><value>The current Prompt's {0} is {1} points (below {2} points). Use AI automatic optimization to improve the Prompt?</value></data>
-  <data name="Frontend.397" xml:space="preserve"><value>✅ Initialization succeeded! PromptCatalyzer Agent created. PromptCode: {0}</value></data>
-  <data name="Frontend.398" xml:space="preserve"><value>✅ Optimization complete&#10;&#10;New Prompt: {0}</value></data>
-  <data name="Frontend.399" xml:space="preserve"><value>Current Prompt average score: {0}</value></data>
-  <data name="Frontend.400" xml:space="preserve"><value>The image was generated, but no accessible address was returned.</value></data>
-  <data name="Frontend.401" xml:space="preserve"><value>Extension Modules</value></data>
-  <data name="Frontend.402" xml:space="preserve"><value>Prompt Range</value></data>
-  <data name="Frontend.403" xml:space="preserve"><value>Run: create a new Tactic from the current input, or from the selected Range and Tactic.</value></data>
-  <data name="Frontend.404" xml:space="preserve"><value>Burst: produce multiple results in a row from the currently selected Tactic.</value></data>
-  <data name="Frontend.405" xml:space="preserve"><value>Draft: save the current input and create a new Tactic.</value></data>
-  <data name="Frontend.406" xml:space="preserve"><value>Example: {{$</value></data>
-  <data name="Frontend.407" xml:space="preserve"><value>Example: }}</value></data>
-  <data name="Frontend.408" xml:space="preserve"><value>[Elapsed (ms):]</value></data>
-  <data name="Frontend.409" xml:space="preserve"><value>Token: (input / output)</value></data>
-  <data name="Frontend.410" xml:space="preserve"><value>(Click to view the Prompt used by the current conversation)</value></data>
-  <data name="Frontend.411" xml:space="preserve"><value>Cancel</value></data>
-  <data name="Frontend.412" xml:space="preserve"><value>OK</value></data>
-  <data name="Frontend.413" xml:space="preserve"><value>Initialization is required on first use</value></data>
-  <data name="Frontend.414" xml:space="preserve"><value>or</value></data>
-  <data name="Frontend.415" xml:space="preserve"><value>Expected result</value></data>
-  <data name="Frontend.416" xml:space="preserve"><value>Expected result 1</value></data>
-  <data name="Frontend.417" xml:space="preserve"><value>Expected result 2</value></data>
-  <data name="Frontend.418" xml:space="preserve"><value>Expected result 3</value></data>
-  <data name="Frontend.419" xml:space="preserve"><value>The image was generated, but no accessible address was returned.</value></data>
-  <data name="Frontend.420" xml:space="preserve"><value>Embedding query failed:</value></data>
-  <data name="Frontend.421" xml:space="preserve"><value>Confirm</value></data>
-  <data name="Frontend.422" xml:space="preserve"><value>Tactic name cannot be empty!</value></data>
-  <data name="Frontend.423" xml:space="preserve"><value>Name:</value></data>
-  <data name="Frontend.424" xml:space="preserve"><value>| Version:</value></data>
-  <data name="Frontend.425" xml:space="preserve"><value>Failed to continue chat:</value></data>
-  <data name="Frontend.426" xml:space="preserve"><value>Server error:</value></data>
-  <data name="Frontend.427" xml:space="preserve"><value>Prompt {0} version</value></data>
-  <data name="Frontend.428" xml:space="preserve"><value>Copied {0} [{1}]</value></data>
-  <data name="Frontend.429" xml:space="preserve"><value>Copied [{0}]</value></data>
-  <data name="Frontend.430" xml:space="preserve"><value>Failed to update feedback:</value></data>
-  <data name="Frontend.431" xml:space="preserve"><value>Custom name: {0}</value></data>
-  <data name="Frontend.432" xml:space="preserve"><value>Range: {0}</value></data>
-  <data name="Frontend.433" xml:space="preserve"><value>Version: {0}</value></data>
-  <data name="Frontend.434" xml:space="preserve"><value>Average score: {0}</value></data>
-  <data name="Frontend.435" xml:space="preserve"><value>Highest score: {0}</value></data>
-  <data name="Frontend.436" xml:space="preserve"><value>Time: {0}</value></data>
-  <data name="Frontend.437" xml:space="preserve"><value>Current</value></data>
-  <data name="Frontend.438" xml:space="preserve"><value>Failed to load chat history:</value></data>
-  <data name="Frontend.439" xml:space="preserve"><value>Select a Tactic first to determine the PromptCode</value></data>
-  <data name="Frontend.440" xml:space="preserve"><value>Invalid PromptCode</value></data>
-  <data name="Frontend.441" xml:space="preserve"><value>PromptCode ({0}) is already used by {1} Agents. Create a new Agent anyway?</value></data>
-  <data name="Frontend.442" xml:space="preserve"><value>Agent "{0}" was created successfully!</value></data>
-  <data name="Frontend.443" xml:space="preserve"><value>Creation failed:</value></data>
-  <data name="Frontend.444" xml:space="preserve"><value>THREE.js is not loaded. Refresh the page and try again.</value></data>
-  <data name="Frontend.445" xml:space="preserve"><value>Failed to load the model list</value></data>
-  <data name="Frontend.446" xml:space="preserve"><value>Failed to load the AI Model list:</value></data>
-  <data name="Frontend.447" xml:space="preserve"><value>Initialization failed:</value></data>
-  <data name="Frontend.448" xml:space="preserve"><value>The current Prompt's {0} is {1} points (below {2} points). Use AI automatic optimization to improve the Prompt?</value></data>
-  <data name="Frontend.449" xml:space="preserve"><value>💡 Suggested optimization</value></data>
-  <data name="Frontend.450" xml:space="preserve"><value>💡 Optimization suggestions</value></data>
-  <data name="Frontend.451" xml:space="preserve"><value>🚀 First use requires initializing PromptCatalyzer. Loading available AI Models...</value></data>
-  <data name="Frontend.452" xml:space="preserve"><value>Optimization failed:</value></data>
-  <data name="Frontend.453" xml:space="preserve"><value>A new version was created, but no Prompt Code in the list matched:</value></data>
-  <data name="Frontend.454" xml:space="preserve"><value>✅ Optimization complete\n\nNew Prompt: {0}</value></data>
-  <data name="Frontend.455" xml:space="preserve"><value>❌ Optimization failed:</value></data>
-  <data name="Frontend.456" xml:space="preserve"><value>{0} results</value></data>
-  <data name="Frontend.457" xml:space="preserve"><value>A{0} is {1} units in front of T (facing the camera)</value></data>
-  <data name="Frontend.458" xml:space="preserve"><value>📦 Range</value></data>
-  <data name="Frontend.459" xml:space="preserve"><value>Contains {0} results</value></data>
-  <data name="Frontend.460" xml:space="preserve"><value>🎯 Tactic node</value></data>
+  <data name="Frontend.306" xml:space="preserve"><value>доступных Model</value></data>
+  <data name="Frontend.307" xml:space="preserve"><value>Оптимизация не завершилась успешно</value></data>
+  <data name="Frontend.308" xml:space="preserve"><value>Оптимизация выполняется. Не нажимайте повторно.</value></data>
+  <data name="Frontend.309" xml:space="preserve"><value>Не сохранять</value></data>
+  <data name="Frontend.310" xml:space="preserve"><value>Сохранить черновик</value></data>
+  <data name="Frontend.311" xml:space="preserve"><value>Только что</value></data>
+  <data name="Frontend.312" xml:space="preserve"><value>мин. назад</value></data>
+  <data name="Frontend.313" xml:space="preserve"><value>ч. назад</value></data>
+  <data name="Frontend.314" xml:space="preserve"><value>дн. назад</value></data>
+  <data name="Frontend.315" xml:space="preserve"><value>Не удалось создать. Убедитесь, что Модуль AgentsManager установлен.</value></data>
+  <data name="Frontend.316" xml:space="preserve"><value>Не удалось создать Агента</value></data>
+  <data name="Frontend.317" xml:space="preserve"><value>Ошибка инициализации</value></data>
+  <data name="Frontend.318" xml:space="preserve"><value>Инициализация выполнена. Обновление данных страницы...</value></data>
+  <data name="Frontend.319" xml:space="preserve"><value>Не удалось загрузить список AI Model</value></data>
+  <data name="Frontend.320" xml:space="preserve"><value>Создано</value></data>
+  <data name="Frontend.321" xml:space="preserve"><value>Диалог добавлен</value></data>
+  <data name="Frontend.322" xml:space="preserve"><value>Недействительный ID записи диалога. Обновите страницу и повторите попытку.</value></data>
+  <data name="Frontend.323" xml:space="preserve"><value>Не удалось экспортировать plugins</value></data>
+  <data name="Frontend.324" xml:space="preserve"><value>Подтверждение экспорта plugins</value></data>
+  <data name="Frontend.325" xml:space="preserve"><value>Выбраны все тактики</value></data>
+  <data name="Frontend.326" xml:space="preserve"><value>Выбор инвертирован</value></data>
+  <data name="Frontend.327" xml:space="preserve"><value>Выбор очищен</value></data>
+  <data name="Frontend.328" xml:space="preserve"><value>Отзыв отменён</value></data>
+  <data name="Frontend.329" xml:space="preserve"><value>Операция отменена</value></data>
+  <data name="Frontend.330" xml:space="preserve"><value>Если включено, Запуск, Серия и продолжение диалога выводятся в реальном времени; если выключено, вывод приходит одним блоком.</value></data>
+  <data name="Frontend.331" xml:space="preserve"><value>У текущего Prompt пока нет средней оценки</value></data>
+  <data name="Frontend.332" xml:space="preserve"><value>В этом Диапазоне ещё не было Запусков. Сначала выполните Запуск, затем возвращайтесь!</value></data>
+  <data name="Frontend.333" xml:space="preserve"><value>Данные изменены. Сохранить как Черновик?</value></data>
+  <data name="Frontend.334" xml:space="preserve"><value>Вы уверены, что хотите покинуть эту страницу?</value></data>
+  <data name="Frontend.335" xml:space="preserve"><value>Сохранить как черновик</value></data>
+  <data name="Frontend.336" xml:space="preserve"><value>Остаться на странице</value></data>
+  <data name="Frontend.337" xml:space="preserve"><value>Штраф за уже использованные слова</value></data>
+  <data name="Frontend.338" xml:space="preserve"><value>Штраф за часто используемые слова</value></data>
+  <data name="Frontend.339" xml:space="preserve"><value>Управляет широтой выбора слов. Чем выше значение, тем больше редких слов в тексте.</value></data>
+  <data name="Frontend.340" xml:space="preserve"><value>Стоп-последовательности для создаваемого текста. Встретив их, модель прекращает генерацию. (Ввод разделяется по английским запятым.)</value></data>
+  <data name="Frontend.341" xml:space="preserve"><value>Температура выборки. Более высокое значение, например 0.8, делает вывод более случайным, а более низкое, например 0.2, — более определённым.</value></data>
+  <data name="Frontend.342" xml:space="preserve"><value>Общее число Token запроса и ответа или максимальная длина создаваемого текста. Подробности см. в документации API!</value></data>
+  <data name="Frontend.343" xml:space="preserve"><value>Уведомление</value></data>
+  <data name="Frontend.344" xml:space="preserve"><value>Повысить качество и результативность Prompt</value></data>
+  <data name="Frontend.345" xml:space="preserve"><value>Скоро</value></data>
+  <data name="Frontend.346" xml:space="preserve"><value>Не удалось получить сведения о текущем Prompt</value></data>
+  <data name="Frontend.347" xml:space="preserve"><value>Не удалось получить подробности текущего Prompt</value></data>
+  <data name="Frontend.348" xml:space="preserve"><value>Не удалось получить номер версии (Prompt Code) текущего Prompt</value></data>
+  <data name="Frontend.349" xml:space="preserve"><value>Не удалось получить номер версии</value></data>
+  <data name="Frontend.350" xml:space="preserve"><value>Действительная оценка не получена. Подсказка оптимизации пропущена.</value></data>
+  <data name="Frontend.351" xml:space="preserve"><value>Без имени</value></data>
+  <data name="Frontend.352" xml:space="preserve"><value>Векторная база данных без имени</value></data>
+  <data name="Frontend.353" xml:space="preserve"><value>Неизвестная тактика</value></data>
+  <data name="Frontend.354" xml:space="preserve"><value>Неизвестный диапазон</value></data>
+  <data name="Frontend.355" xml:space="preserve"><value>Неизвестная тактика</value></data>
+  <data name="Frontend.356" xml:space="preserve"><value>Не задано</value></data>
+  <data name="Frontend.357" xml:space="preserve"><value>Не возвращён допустимый результат оптимизации</value></data>
+  <data name="Frontend.358" xml:space="preserve"><value>Ожидаемый результат не задан. Оценка ИИ пропущена.</value></data>
+  <data name="Frontend.359" xml:space="preserve"><value>Модель удалена. Выберите модель и выполните Запуск снова!</value></data>
+  <data name="Frontend.360" xml:space="preserve"><value>Идёт оценка ИИ (так же, как ручная оценка ИИ)…</value></data>
+  <data name="Frontend.361" xml:space="preserve"><value>Идёт Запуск (как при ручном Запуске; вывод виден на главном экране)…</value></data>
+  <data name="Frontend.362" xml:space="preserve"><value>Ожидаемый результат будет удалён. Продолжить?</value></data>
+  <data name="Frontend.363" xml:space="preserve"><value>Это действие навсегда удалит всё содержимое этого Диапазона</value></data>
+  <data name="Frontend.364" xml:space="preserve"><value>Это навсегда удалит эту тактику</value></data>
+  <data name="Frontend.365" xml:space="preserve"><value>Эта версия Тактики будет удалена навсегда. Продолжить?</value></data>
+  <data name="Frontend.366" xml:space="preserve"><value>Это сбросит имя этой тактики</value></data>
+  <data name="Frontend.367" xml:space="preserve"><value>Не удалось найти пригодный AI Model. Сначала настройте Model типа Chat в Модуле AIKernel.</value></data>
+  <data name="Frontend.368" xml:space="preserve"><value>Автоматический Запуск не вернул запись вывода, оценка ИИ пропущена. Можно выполнить Запуск вручную на главном экране и затем поставить оценку.</value></data>
+  <data name="Frontend.369" xml:space="preserve"><value>Задайте критерии предварительной оценки ИИ</value></data>
+  <data name="Frontend.370" xml:space="preserve"><value>Введите псевдоним</value></data>
+  <data name="Frontend.371" xml:space="preserve"><value>Введите префикс</value></data>
+  <data name="Frontend.372" xml:space="preserve"><value>Введите суффикс</value></data>
+  <data name="Frontend.373" xml:space="preserve"><value>Введите текст диалога</value></data>
+  <data name="Frontend.374" xml:space="preserve"><value>Введите новое имя тактики</value></data>
+  <data name="Frontend.375" xml:space="preserve"><value>Введите текст для запроса</value></data>
+  <data name="Frontend.376" xml:space="preserve"><value>Выберите VectorDB</value></data>
+  <data name="Frontend.377" xml:space="preserve"><value>Выберите AI Model</value></data>
+  <data name="Frontend.378" xml:space="preserve"><value>Выберите тактику</value></data>
+  <data name="Frontend.379" xml:space="preserve"><value>Выберите режим тестового запуска</value></data>
+  <data name="Frontend.380" xml:space="preserve"><value>Выберите модель!</value></data>
+  <data name="Frontend.381" xml:space="preserve"><value>Выберите тактику перед копированием!</value></data>
+  <data name="Frontend.382" xml:space="preserve"><value>Ввести Prompt</value></data>
+  <data name="Frontend.383" xml:space="preserve"><value>Тестовый запуск</value></data>
+  <data name="Frontend.384" xml:space="preserve"><value>Ожидаемый результат</value></data>
+  <data name="Frontend.385" xml:space="preserve"><value>Ввод распознавания речи</value></data>
+  <data name="Frontend.386" xml:space="preserve"><value>Выберите Тактику, чтобы определить PromptCode</value></data>
+  <data name="Frontend.387" xml:space="preserve"><value>Оптимизировать сейчас</value></data>
+  <data name="Frontend.388" xml:space="preserve"><value>Не сейчас</value></data>
+  <data name="Frontend.389" xml:space="preserve"><value>Подтвердить создание</value></data>
+  <data name="Frontend.390" xml:space="preserve"><value>Продолжить создание</value></data>
+  <data name="Frontend.391" xml:space="preserve"><value>Агент «{0}» успешно создан!</value></data>
+  <data name="Frontend.392" xml:space="preserve"><value>Скопировано [{0}]</value></data>
+  <data name="Frontend.393" xml:space="preserve"><value>Скопировано {0} [{1}]</value></data>
+  <data name="Frontend.394" xml:space="preserve"><value>PromptCode ({0}) уже используют Агенты: {1}. Создать нового Агента?</value></data>
+  <data name="Frontend.395" xml:space="preserve"><value>Средняя оценка текущего Prompt — {0}. Рекомендуется улучшить его с помощью автоматической оптимизации ИИ. Нажмите кнопку «Оптимизировать», чтобы начать.</value></data>
+  <data name="Frontend.396" xml:space="preserve"><value>{0} текущего Prompt равен {1} баллам (ниже {2} баллов). Использовать автоматическую оптимизацию ИИ, чтобы улучшить Prompt?</value></data>
+  <data name="Frontend.397" xml:space="preserve"><value>✅ Инициализация выполнена! Создан PromptCatalyzer Agent. PromptCode: {0}</value></data>
+  <data name="Frontend.398" xml:space="preserve"><value>✅ Оптимизация завершена
+
+Новый Prompt: {0}</value></data>
+  <data name="Frontend.399" xml:space="preserve"><value>Средняя оценка текущего Prompt: {0}</value></data>
+  <data name="Frontend.400" xml:space="preserve"><value>Изображение создано, но доступный адрес не получен.</value></data>
+  <data name="Frontend.401" xml:space="preserve"><value>Модули расширения</value></data>
+  <data name="Frontend.402" xml:space="preserve"><value>Лаборатория промптов</value></data>
+  <data name="Frontend.403" xml:space="preserve"><value>Запуск: создать новую Тактику из текущего ввода либо из выбранных Диапазона и Тактики.</value></data>
+  <data name="Frontend.404" xml:space="preserve"><value>Серия: подряд выводит несколько результатов по выбранной Тактике.</value></data>
+  <data name="Frontend.405" xml:space="preserve"><value>Черновик: сохранить текущий ввод и создать новую Тактику.</value></data>
+  <data name="Frontend.406" xml:space="preserve"><value>Пример: {{$</value></data>
+  <data name="Frontend.407" xml:space="preserve"><value>Пример: }}</value></data>
+  <data name="Frontend.408" xml:space="preserve"><value>[Затрачено (мс):]</value></data>
+  <data name="Frontend.409" xml:space="preserve"><value>Token: (вход / выход)</value></data>
+  <data name="Frontend.410" xml:space="preserve"><value>(Нажмите, чтобы просмотреть Prompt текущего диалога)</value></data>
+  <data name="Frontend.411" xml:space="preserve"><value>Отмена</value></data>
+  <data name="Frontend.412" xml:space="preserve"><value>ОК</value></data>
+  <data name="Frontend.413" xml:space="preserve"><value>При первом использовании нужна инициализация</value></data>
+  <data name="Frontend.414" xml:space="preserve"><value>или</value></data>
+  <data name="Frontend.415" xml:space="preserve"><value>Ожидаемый результат</value></data>
+  <data name="Frontend.416" xml:space="preserve"><value>Ожидаемый результат 1</value></data>
+  <data name="Frontend.417" xml:space="preserve"><value>Ожидаемый результат 2</value></data>
+  <data name="Frontend.418" xml:space="preserve"><value>Ожидаемый результат 3</value></data>
+  <data name="Frontend.419" xml:space="preserve"><value>Изображение создано, но доступный адрес не получен.</value></data>
+  <data name="Frontend.420" xml:space="preserve"><value>Запрос Embedding не выполнен:</value></data>
+  <data name="Frontend.421" xml:space="preserve"><value>Подтвердить</value></data>
+  <data name="Frontend.422" xml:space="preserve"><value>Имя тактики не может быть пустым!</value></data>
+  <data name="Frontend.423" xml:space="preserve"><value>Название:</value></data>
+  <data name="Frontend.424" xml:space="preserve"><value>| Версия:</value></data>
+  <data name="Frontend.425" xml:space="preserve"><value>Не удалось продолжить чат:</value></data>
+  <data name="Frontend.426" xml:space="preserve"><value>Ошибка сервера:</value></data>
+  <data name="Frontend.427" xml:space="preserve"><value>Версия Prompt {0}</value></data>
+  <data name="Frontend.428" xml:space="preserve"><value>Скопировано {0} [{1}]</value></data>
+  <data name="Frontend.429" xml:space="preserve"><value>Скопировано [{0}]</value></data>
+  <data name="Frontend.430" xml:space="preserve"><value>Не удалось обновить отзыв:</value></data>
+  <data name="Frontend.431" xml:space="preserve"><value>Пользовательское имя: {0}</value></data>
+  <data name="Frontend.432" xml:space="preserve"><value>Диапазон: {0}</value></data>
+  <data name="Frontend.433" xml:space="preserve"><value>Версия: {0}</value></data>
+  <data name="Frontend.434" xml:space="preserve"><value>Средний балл: {0}</value></data>
+  <data name="Frontend.435" xml:space="preserve"><value>Наивысший балл: {0}</value></data>
+  <data name="Frontend.436" xml:space="preserve"><value>Время: {0}</value></data>
+  <data name="Frontend.437" xml:space="preserve"><value>Текущий</value></data>
+  <data name="Frontend.438" xml:space="preserve"><value>Не удалось загрузить историю чата:</value></data>
+  <data name="Frontend.439" xml:space="preserve"><value>Сначала выберите Тактику, чтобы определить PromptCode</value></data>
+  <data name="Frontend.440" xml:space="preserve"><value>Недопустимый PromptCode</value></data>
+  <data name="Frontend.441" xml:space="preserve"><value>PromptCode ({0}) уже используют Агенты: {1}. Создать нового Агента?</value></data>
+  <data name="Frontend.442" xml:space="preserve"><value>Агент «{0}» успешно создан!</value></data>
+  <data name="Frontend.443" xml:space="preserve"><value>Ошибка создания:</value></data>
+  <data name="Frontend.444" xml:space="preserve"><value>THREE.js не загружен. Обновите страницу и повторите попытку.</value></data>
+  <data name="Frontend.445" xml:space="preserve"><value>Не удалось загрузить список моделей</value></data>
+  <data name="Frontend.446" xml:space="preserve"><value>Не удалось загрузить список AI Model:</value></data>
+  <data name="Frontend.447" xml:space="preserve"><value>Ошибка инициализации:</value></data>
+  <data name="Frontend.448" xml:space="preserve"><value>{0} текущего Prompt равен {1} баллам (ниже {2} баллов). Использовать автоматическую оптимизацию ИИ, чтобы улучшить Prompt?</value></data>
+  <data name="Frontend.449" xml:space="preserve"><value>💡 Рекомендуемая оптимизация</value></data>
+  <data name="Frontend.450" xml:space="preserve"><value>💡 Рекомендации по оптимизации</value></data>
+  <data name="Frontend.451" xml:space="preserve"><value>🚀 При первом использовании нужно инициализировать PromptCatalyzer. Загрузка доступных AI Model...</value></data>
+  <data name="Frontend.452" xml:space="preserve"><value>Ошибка оптимизации:</value></data>
+  <data name="Frontend.453" xml:space="preserve"><value>Новая версия создана, но Prompt Code в списке не совпал:</value></data>
+  <data name="Frontend.454" xml:space="preserve"><value>✅ Оптимизация завершена\n\nНовый Prompt: {0}</value></data>
+  <data name="Frontend.455" xml:space="preserve"><value>❌ Ошибка оптимизации:</value></data>
+  <data name="Frontend.456" xml:space="preserve"><value>{0} результатов</value></data>
+  <data name="Frontend.457" xml:space="preserve"><value>A{0} находится на {1} ед. впереди T (лицом к камере)</value></data>
+  <data name="Frontend.458" xml:space="preserve"><value>📦 Диапазон</value></data>
+  <data name="Frontend.459" xml:space="preserve"><value>Содержит результатов: {0}</value></data>
+  <data name="Frontend.460" xml:space="preserve"><value>🎯 Узел тактики</value></data>
   <data name="Frontend.461" xml:space="preserve"><value>No.: T{0}</value></data>
-  <data name="Frontend.462" xml:space="preserve"><value>🎲 Aim point</value></data>
+  <data name="Frontend.462" xml:space="preserve"><value>🎲 Точка прицеливания</value></data>
   <data name="Frontend.463" xml:space="preserve"><value>No.: A{0}</value></data>
-  <data name="Frontend.464" xml:space="preserve"><value>Rank: {0}/{1}</value></data>
-  <data name="Frontend.465" xml:space="preserve"><value>👑 First place</value></data>
-  <data name="Frontend.466" xml:space="preserve"><value>Middle</value></data>
-  <data name="Frontend.467" xml:space="preserve"><value>Lower Tier</value></data>
-  <data name="Frontend.468" xml:space="preserve"><value>📊 Average score:</value></data>
-  <data name="Frontend.469" xml:space="preserve"><value>⭐ Highest score:</value></data>
-  <data name="Frontend.470" xml:space="preserve"><value>💡 Double-click to quickly select this Tactic</value></data>
-  <data name="Frontend.471" xml:space="preserve"><value>This will permanently delete model [{0}]. Continue?</value></data>
-  <data name="Frontend.472" xml:space="preserve"><value>Failed to load vector database list:</value></data>
-  <data name="Frontend.473" xml:space="preserve"><value>Enter a new Range name</value></data>
-  <data name="Frontend.474" xml:space="preserve"><value>Range name cannot be empty</value></data>
-  <data name="Frontend.475" xml:space="preserve"><value>(Draft)</value></data>
-  <data name="Frontend.476" xml:space="preserve"><value>Deleted successfully!</value></data>
-  <data name="Frontend.477" xml:space="preserve"><value>Copied successfully</value></data>
-  <data name="Frontend.478" xml:space="preserve"><value>Copy failed</value></data>
-  <data name="Frontend.479" xml:space="preserve"><value>Copy Code</value></data>
-  <data name="Frontend.480" xml:space="preserve"><value>Final score</value></data>
-  <data name="Frontend.481" xml:space="preserve"><value>{0}: {1} pts</value></data>
-  <data name="Frontend.482" xml:space="preserve"><value>Restored to the default layout width</value></data>
-  <data name="Frontend.483" xml:space="preserve"><value>Warning: you selected the same Prompt for comparison!</value></data>
-  <data name="Frontend.484" xml:space="preserve"><value>Failed to load Prompt A data</value></data>
-  <data name="Frontend.485" xml:space="preserve"><value>Failed to load Prompt B data</value></data>
-  <data name="Frontend.486" xml:space="preserve"><value>Failed to load Prompt details</value></data>
-  <data name="Frontend.487" xml:space="preserve"><value>Invalid Prompt ID</value></data>
-  <data name="Frontend.488" xml:space="preserve"><value>Unable to get Prompt details</value></data>
-  <data name="Frontend.489" xml:space="preserve"><value>Corresponding Range not found: {0}</value></data>
-  <data name="Frontend.490" xml:space="preserve"><value>No corresponding Prompt was found in the current Range</value></data>
-  <data name="Frontend.491" xml:space="preserve"><value>Switched to Prompt: {0}</value></data>
-  <data name="Frontend.492" xml:space="preserve"><value>Failed to switch Prompt. Please try again.</value></data>
-  <data name="Frontend.493" xml:space="preserve"><value>None</value></data>
-  <data name="Frontend.494" xml:space="preserve"><value>No content</value></data>
-  <data name="Frontend.495" xml:space="preserve"><value>Unknown model</value></data>
-  <data name="Frontend.496" xml:space="preserve"><value>Not set</value></data>
-  <data name="Frontend.497" xml:space="preserve"><value>Name: {0} | Version: {1} | Average: {2} | Highest: {3} {4}</value></data>
-  <data name="Frontend.498" xml:space="preserve"><value>Just now</value></data>
-  <data name="Frontend.499" xml:space="preserve"><value>{0} minutes ago</value></data>
-  <data name="Frontend.500" xml:space="preserve"><value>{0} hours ago</value></data>
-  <data name="Frontend.501" xml:space="preserve"><value>Yesterday {0}</value></data>
-  <data name="Frontend.502" xml:space="preserve"><value>{0} days ago</value></data>
-  <data name="Frontend.503" xml:space="preserve"><value>{0} days</value></data>
-  <data name="Frontend.504" xml:space="preserve"><value>{0} hours</value></data>
-  <data name="Frontend.505" xml:space="preserve"><value>{0} minutes</value></data>
-  <data name="Frontend.506" xml:space="preserve"><value>{0} seconds</value></data>
-  <data name="Frontend.507" xml:space="preserve"><value>0 seconds</value></data>
-  <data name="Frontend.508" xml:space="preserve"><value>No content to copy</value></data>
-  <data name="Frontend.509" xml:space="preserve"><value>No result to copy</value></data>
-  <data name="Frontend.510" xml:space="preserve"><value>The result is empty</value></data>
-  <data name="Frontend.511" xml:space="preserve"><value>No object to copy</value></data>
-  <data name="Frontend.512" xml:space="preserve"><value>JSON copied</value></data>
-  <data name="Frontend.513" xml:space="preserve"><value>Object serialization failed</value></data>
-  <data name="Frontend.514" xml:space="preserve"><value>Not a valid array</value></data>
-  <data name="Frontend.515" xml:space="preserve"><value>The array is empty</value></data>
-  <data name="Frontend.516" xml:space="preserve"><value>Array content copied</value></data>
-  <data name="Frontend.517" xml:space="preserve"><value>There is no HTML content to copy</value></data>
-  <data name="Frontend.518" xml:space="preserve"><value>HTML content copied</value></data>
-  <data name="Frontend.519" xml:space="preserve"><value>Failed to copy HTML content</value></data>
-  <data name="Frontend.520" xml:space="preserve"><value>Unknown</value></data>
-  <data name="Frontend.521" xml:space="preserve"><value>Unnamed</value></data>
-  <data name="Frontend.522" xml:space="preserve"><value>Unnamed vector database</value></data>
+  <data name="Frontend.464" xml:space="preserve"><value>Место: {0}/{1}</value></data>
+  <data name="Frontend.465" xml:space="preserve"><value>👑 Первое место</value></data>
+  <data name="Frontend.466" xml:space="preserve"><value>Середина</value></data>
+  <data name="Frontend.467" xml:space="preserve"><value>Нижний уровень</value></data>
+  <data name="Frontend.468" xml:space="preserve"><value>📊 Средний балл:</value></data>
+  <data name="Frontend.469" xml:space="preserve"><value>⭐ Наивысший балл:</value></data>
+  <data name="Frontend.470" xml:space="preserve"><value>💡 Дважды щёлкните, чтобы быстро выбрать эту Тактику</value></data>
+  <data name="Frontend.471" xml:space="preserve"><value>Модель [{0}] будет удалена навсегда. Продолжить?</value></data>
+  <data name="Frontend.472" xml:space="preserve"><value>Не удалось загрузить список векторных баз:</value></data>
+  <data name="Frontend.473" xml:space="preserve"><value>Введите новое имя диапазона</value></data>
+  <data name="Frontend.474" xml:space="preserve"><value>Имя диапазона не может быть пустым</value></data>
+  <data name="Frontend.475" xml:space="preserve"><value>(Черновик)</value></data>
+  <data name="Frontend.476" xml:space="preserve"><value>Успешно удалено!</value></data>
+  <data name="Frontend.477" xml:space="preserve"><value>Скопировано</value></data>
+  <data name="Frontend.478" xml:space="preserve"><value>Ошибка копирования</value></data>
+  <data name="Frontend.479" xml:space="preserve"><value>Копировать код</value></data>
+  <data name="Frontend.480" xml:space="preserve"><value>Итоговая оценка</value></data>
+  <data name="Frontend.481" xml:space="preserve"><value>{0}: {1} баллов</value></data>
+  <data name="Frontend.482" xml:space="preserve"><value>Восстановлена ширина макета по умолчанию</value></data>
+  <data name="Frontend.483" xml:space="preserve"><value>Предупреждение: для сравнения выбран один и тот же Prompt!</value></data>
+  <data name="Frontend.484" xml:space="preserve"><value>Не удалось загрузить данные Prompt A</value></data>
+  <data name="Frontend.485" xml:space="preserve"><value>Не удалось загрузить данные Prompt B</value></data>
+  <data name="Frontend.486" xml:space="preserve"><value>Не удалось загрузить сведения Prompt</value></data>
+  <data name="Frontend.487" xml:space="preserve"><value>Недействительный Prompt ID</value></data>
+  <data name="Frontend.488" xml:space="preserve"><value>Не удалось получить сведения о Prompt</value></data>
+  <data name="Frontend.489" xml:space="preserve"><value>Соответствующий Диапазон не найден: {0}</value></data>
+  <data name="Frontend.490" xml:space="preserve"><value>В текущем Диапазоне не найден соответствующий Prompt</value></data>
+  <data name="Frontend.491" xml:space="preserve"><value>Переключено на Prompt: {0}</value></data>
+  <data name="Frontend.492" xml:space="preserve"><value>Не удалось переключить Prompt. Повторите попытку.</value></data>
+  <data name="Frontend.493" xml:space="preserve"><value>Нет</value></data>
+  <data name="Frontend.494" xml:space="preserve"><value>Нет содержимого</value></data>
+  <data name="Frontend.495" xml:space="preserve"><value>Неизвестная модель</value></data>
+  <data name="Frontend.496" xml:space="preserve"><value>Не задано</value></data>
+  <data name="Frontend.497" xml:space="preserve"><value>Имя: {0} | Версия: {1} | Средняя: {2} | Наивысшая: {3} {4}</value></data>
+  <data name="Frontend.498" xml:space="preserve"><value>Только что</value></data>
+  <data name="Frontend.499" xml:space="preserve"><value>{0} мин назад</value></data>
+  <data name="Frontend.500" xml:space="preserve"><value>{0} ч назад</value></data>
+  <data name="Frontend.501" xml:space="preserve"><value>Вчера {0}</value></data>
+  <data name="Frontend.502" xml:space="preserve"><value>{0} дн. назад</value></data>
+  <data name="Frontend.503" xml:space="preserve"><value>{0} дн.</value></data>
+  <data name="Frontend.504" xml:space="preserve"><value>{0} ч</value></data>
+  <data name="Frontend.505" xml:space="preserve"><value>{0} мин.</value></data>
+  <data name="Frontend.506" xml:space="preserve"><value>{0} секунд</value></data>
+  <data name="Frontend.507" xml:space="preserve"><value>0 секунд</value></data>
+  <data name="Frontend.508" xml:space="preserve"><value>Нет содержимого для копирования</value></data>
+  <data name="Frontend.509" xml:space="preserve"><value>Нет результата для копирования</value></data>
+  <data name="Frontend.510" xml:space="preserve"><value>Результат пуст</value></data>
+  <data name="Frontend.511" xml:space="preserve"><value>Нет объекта для копирования</value></data>
+  <data name="Frontend.512" xml:space="preserve"><value>JSON скопирован</value></data>
+  <data name="Frontend.513" xml:space="preserve"><value>Ошибка сериализации объекта</value></data>
+  <data name="Frontend.514" xml:space="preserve"><value>Недопустимый массив</value></data>
+  <data name="Frontend.515" xml:space="preserve"><value>Массив пуст</value></data>
+  <data name="Frontend.516" xml:space="preserve"><value>Содержимое массива скопировано</value></data>
+  <data name="Frontend.517" xml:space="preserve"><value>Нет содержимого HTML для копирования</value></data>
+  <data name="Frontend.518" xml:space="preserve"><value>Содержимое HTML скопировано</value></data>
+  <data name="Frontend.519" xml:space="preserve"><value>Не удалось скопировать содержимое HTML</value></data>
+  <data name="Frontend.520" xml:space="preserve"><value>Неизвестно</value></data>
+  <data name="Frontend.521" xml:space="preserve"><value>Без имени</value></data>
+  <data name="Frontend.522" xml:space="preserve"><value>Векторная база данных без имени</value></data>
   <data name="Frontend.523" xml:space="preserve"><value>Исправленное содержимое:</value></data>
   <data name="Frontend.524" xml:space="preserve"><value>Prompt:</value></data>
   <data name="Frontend.525" xml:space="preserve"><value>Голос:</value></data>
@@ -642,7 +644,7 @@
   <data name="Frontend.536" xml:space="preserve"><value>Системное сообщение (Prompt)</value></data>
   <data name="Frontend.537" xml:space="preserve"><value>Сгенерированное изображение</value></data>
   <data name="Frontend.538" xml:space="preserve"><value>Вызов функции</value></data>
-  <data name="Frontend.539" xml:space="preserve"><value>Function Call names, separated by commas (optional)</value></data>
+  <data name="Frontend.539" xml:space="preserve"><value>Имена Function Call через запятую (необязательно)</value></data>
   <data name="Frontend.540" xml:space="preserve"><value>Версия API</value></data>
   <data name="Frontend.541" xml:space="preserve"><value>Введите версию API</value></data>
   <data name="Frontend.542" xml:space="preserve"><value>Ключ API</value></data>
@@ -658,109 +660,109 @@
   <data name="Frontend.552" xml:space="preserve"><value>Штраф за частоту</value></data>
   <data name="Frontend.553" xml:space="preserve"><value>Агент PromptCatalyzer</value></data>
   <data name="Frontend.554" xml:space="preserve"><value>Модель AI</value></data>
-  <data name="Frontend.555" xml:space="preserve"><value>No models found to delete!</value></data>
-  <data name="Frontend.556" xml:space="preserve"><value>Exception-throw test, parameters passed: {0} {1}</value></data>
-  <data name="Frontend.557" xml:space="preserve"><value>Delete failed</value></data>
-  <data name="Frontend.558" xml:space="preserve"><value>Average score {0}. Optimize the Prompt structure or model parameters, then test again.</value></data>
-  <data name="Frontend.559" xml:space="preserve"><value>Run results exist, but scoring is not finished, so quality is hard to judge.</value></data>
-  <data name="Frontend.560" xml:space="preserve"><value>A formal Tactic exists, but there are no Run results, so baseline data is missing.</value></data>
-  <data name="Frontend.561" xml:space="preserve"><value>This Draft version has already been used. Promote a stable version before continuing to collaborate.</value></data>
-  <data name="Frontend.562" xml:space="preserve"><value>No PromptItem with id {0} was found</value></data>
-  <data name="Frontend.563" xml:space="preserve"><value>No prompt Draft with ID {0} was found</value></data>
-  <data name="Frontend.564" xml:space="preserve"><value>prompt not found</value></data>
-  <data name="Frontend.565" xml:space="preserve"><value>Export directory does not exist: {0}</value></data>
-  <data name="Frontend.566" xml:space="preserve"><value>No files were found in the export directory: {0}</value></data>
-  <data name="Frontend.567" xml:space="preserve"><value>Cannot get parent directory: {0}</value></data>
-  <data name="Frontend.568" xml:space="preserve"><value>Failed to export plugins: {0}</value></data>
-  <data name="Frontend.569" xml:space="preserve"><value>Automatic scoring is unavailable when the expected result is empty</value></data>
-  <data name="Frontend.570" xml:space="preserve"><value>No PromptResult with ID {0} was found</value></data>
-  <data name="Frontend.571" xml:space="preserve"><value>The specified AI Model ID {0} does not exist</value></data>
-  <data name="Frontend.572" xml:space="preserve"><value>No available AI Model was found. Configure a Chat Model in the AIKernel Module first.</value></data>
-  <data name="Frontend.573" xml:space="preserve"><value>The PromptItem could not be queried after creation. ItemId: {0}</value></data>
-  <data name="Frontend.574" xml:space="preserve"><value>Initialization finished, but PromptItem is null (this should not happen)</value></data>
-  <data name="Frontend.575" xml:space="preserve"><value>Initialization succeeded: Model ID: {0}, PromptCode: {1}</value></data>
-  <data name="Frontend.576" xml:space="preserve"><value>The score must be between 0 and 10</value></data>
-  <data name="Frontend.577" xml:space="preserve"><value>No Range found for {0}</value></data>
-  <data name="Frontend.578" xml:space="preserve"><value>No Range found for {0}</value></data>
-  <data name="Frontend.579" xml:space="preserve"><value>IsTopTactic IsNewTactic IsNewSubTactic cannot all be True at the same time</value></data>
-  <data name="Frontend.580" xml:space="preserve"><value>RangeId must be a positive integer. The current value is {0}</value></data>
-  <data name="Frontend.581" xml:space="preserve"><value>Version generation error, please Run again</value></data>
-  <data name="Frontend.582" xml:space="preserve"><value>No promptItem found for {0}</value></data>
-  <data name="Frontend.583" xml:space="preserve"><value>No Tactic found for {0}</value></data>
-  <data name="Frontend.584" xml:space="preserve"><value>No PromptItem found for {0}</value></data>
-  <data name="Frontend.585" xml:space="preserve"><value>No Range found for {0}</value></data>
-  <data name="Frontend.586" xml:space="preserve"><value>No PromptItem matched the conditions. Check that the PromptRange name is correct, or whether every PromptItem result under its Range (PromptRange) is still unscored. The system must select the highest-scored PromptItem.</value></data>
-  <data name="Frontend.587" xml:space="preserve"><value>No AI model configuration was found for PromptItem ({0})</value></data>
-  <data name="Frontend.588" xml:space="preserve"><value>Prefix and suffix cannot be empty</value></data>
-  <data name="Frontend.589" xml:space="preserve"><value>Prompt content cannot be empty</value></data>
-  <data name="Frontend.590" xml:space="preserve"><value>Image generation succeeded, but no accessible image address was returned (ImageBytes / ImageUri are both empty)</value></data>
-  <data name="Frontend.591" xml:space="preserve"><value>TextToImage call failed: Kernel was not created</value></data>
-  <data name="Frontend.592" xml:space="preserve"><value>The TTS call succeeded, but no valid audio content was returned</value></data>
-  <data name="Frontend.593" xml:space="preserve"><value>The STT call succeeded, but no recognized text was returned</value></data>
-  <data name="Frontend.594" xml:space="preserve"><value>TextEmbedding execution content cannot be empty</value></data>
-  <data name="Frontend.595" xml:space="preserve"><value>TextEmbedding requires a VectorDB to be selected first</value></data>
-  <data name="Frontend.596" xml:space="preserve"><value>VectorDB not found (ID={0})</value></data>
-  <data name="Frontend.597" xml:space="preserve"><value>PromptResultId cannot be empty</value></data>
-  <data name="Frontend.598" xml:space="preserve"><value>Query content cannot be empty</value></data>
-  <data name="Frontend.599" xml:space="preserve"><value>PromptResult not found (ID={0})</value></data>
-  <data name="Frontend.600" xml:space="preserve"><value>The current result is not a TextEmbedding type, so the query test cannot run</value></data>
-  <data name="Frontend.601" xml:space="preserve"><value>The current TextEmbedding result is missing VectorDB information</value></data>
-  <data name="Frontend.602" xml:space="preserve"><value>User message cannot be empty</value></data>
-  <data name="Frontend.603" xml:space="preserve"><value>Only a chat-mode PromptResult can continue the chat</value></data>
-  <data name="Frontend.604" xml:space="preserve"><value>Score cannot be less than 0</value></data>
-  <data name="Frontend.605" xml:space="preserve"><value>No result found for {0}</value></data>
-  <data name="Frontend.606" xml:space="preserve"><value>The corresponding promptResult was not found</value></data>
-  <data name="Frontend.607" xml:space="preserve"><value>The corresponding promptItem was not found</value></data>
-  <data name="Frontend.608" xml:space="preserve"><value>This result has already been scored. Choose force refresh.</value></data>
-  <data name="Frontend.609" xml:space="preserve"><value>At least one Chat model must be set before automatic scoring (in the AIKernel Module)</value></data>
-  <data name="Frontend.610" xml:space="preserve"><value>Automatic score matching failed. The scored result string is: {0}, and the model returned {1},</value></data>
-  <data name="Frontend.611" xml:space="preserve"><value>AI call failed ({0}): model configuration is empty (AIModelDto == null)</value></data>
-  <data name="Frontend.612" xml:space="preserve"><value>Deployment name fallback configuration:</value></data>
-  <data name="Frontend.613" xml:space="preserve"><value>Deployment name fallback retry failed:</value></data>
-  <data name="Frontend.614" xml:space="preserve"><value>System default fallback configuration:</value></data>
-  <data name="Frontend.615" xml:space="preserve"><value>Retry of the default system chat configuration failed:</value></data>
-  <data name="Frontend.616" xml:space="preserve"><value>Available Chat model candidates:</value></data>
-  <data name="Frontend.617" xml:space="preserve"><value>(No available candidates)</value></data>
-  <data name="Frontend.618" xml:space="preserve"><value>(Failed to read candidates: {0} {1})</value></data>
-  <data name="Frontend.619" xml:space="preserve"><value>AgentKernel did not create an AgentSession. Check whether the AI model configuration is a Chat type.</value></data>
-  <data name="Frontend.620" xml:space="preserve"><value>AI call failed ({0}). {1}</value></data>
-  <data name="Frontend.621" xml:space="preserve"><value>; An upstream 403 (Forbidden) was detected. This is usually caused by model endpoint permissions, the API Key, the Deployment name, or account quota or policy.</value></data>
-  <data name="Frontend.622" xml:space="preserve"><value>System default chat configuration:</value></data>
-  <data name="Frontend.623" xml:space="preserve"><value>; The TLS/SSL connection was reset during transfer (Connection reset by peer). This is usually a network path, proxy, middlebox, or target-region reachability issue, not an error in the Prompt or model parameters themselves.</value></data>
-  <data name="Frontend.624" xml:space="preserve"><value>Original error chain:</value></data>
-  <data name="Frontend.625" xml:space="preserve"><value>SenparcAiSetting was not loaded (null)</value></data>
-  <data name="Frontend.626" xml:space="preserve"><value>Failed to read SenparcAiSetting: {0} {1}</value></data>
-  <data name="Frontend.627" xml:space="preserve"><value>Model configuration is empty (AIModelDto == null)</value></data>
-  <data name="Frontend.628" xml:space="preserve"><value>STT requires an uploaded audio file</value></data>
-  <data name="Frontend.629" xml:space="preserve"><value>Invalid STT audio path</value></data>
-  <data name="Frontend.630" xml:space="preserve"><value>STT audio path is not allowed</value></data>
-  <data name="Frontend.631" xml:space="preserve"><value>The STT audio file does not exist. Please upload it again.</value></data>
-  <data name="Frontend.632" xml:space="preserve"><value>The uploaded STT audio content is empty</value></data>
-  <data name="Frontend.633" xml:space="preserve"><value>The uploaded STT audio Base64 format is invalid</value></data>
-  <data name="Frontend.634" xml:space="preserve"><value>File path is not allowed</value></data>
-  <data name="Frontend.635" xml:space="preserve"><value>The file path is outside the allowed directory.</value></data>
-  <data name="Frontend.636" xml:space="preserve"><value>Failed to delete the result for {0}, msg: {1}</value></data>
-  <data name="Frontend.637" xml:space="preserve"><value>No model found for {0}</value></data>
-  <data name="Frontend.638" xml:space="preserve"><value>When using AzureOpenAI, ApiVersion and Endpoint cannot be empty</value></data>
-  <data name="Frontend.639" xml:space="preserve"><value>ApiVersion does not exist</value></data>
-  <data name="Frontend.640" xml:space="preserve"><value>The model was not found.</value></data>
-  <data name="Frontend.641" xml:space="preserve"><value>Failed to save the conversation record: no saved entity was found for Sequence={0}, RoleType={1}, or the ID is 0. PromptResultId={2}</value></data>
-  <data name="Frontend.642" xml:space="preserve"><value>No conversation record with ID {0} was found</value></data>
-  <data name="Frontend.643" xml:space="preserve"><value>No prompt Tactic found for {0}</value></data>
-  <data name="Frontend.644" xml:space="preserve"><value>No path found to export</value></data>
-  <data name="Frontend.645" xml:space="preserve"><value>File not found</value></data>
-  <data name="Frontend.646" xml:space="preserve"><value>File size exceeds the limit (50 M)</value></data>
-  <data name="Frontend.647" xml:space="preserve"><value>Invalid file format</value></data>
-  <data name="Frontend.648" xml:space="preserve"><value>Archive entry count exceeds the limit</value></data>
-  <data name="Frontend.649" xml:space="preserve"><value>Extracted archive exceeds the size limit</value></data>
-  <data name="Frontend.650" xml:space="preserve"><value>Archive contains duplicate paths</value></data>
-  <data name="Frontend.651" xml:space="preserve"><value>Invalid archive path format</value></data>
-  <data name="Frontend.652" xml:space="preserve"><value>Invalid {0} name</value></data>
-  <data name="Frontend.653" xml:space="preserve"><value>Archive contains a disallowed path</value></data>
-  <data name="Frontend.654" xml:space="preserve"><value>Archive contains path traversal</value></data>
-  <data name="Frontend.655" xml:space="preserve"><value>Archive contains an out-of-bounds path</value></data>
-  <data name="Frontend.656" xml:space="preserve"><value>No such model type: {0}</value></data>
-  <data name="Frontend.657" xml:space="preserve"><value>Transcribe the audio: {0}</value></data>
+  <data name="Frontend.555" xml:space="preserve"><value>Не найдено моделей для удаления!</value></data>
+  <data name="Frontend.556" xml:space="preserve"><value>Тест выброса исключения, передаваемые параметры: {0} {1}</value></data>
+  <data name="Frontend.557" xml:space="preserve"><value>Ошибка удаления</value></data>
+  <data name="Frontend.558" xml:space="preserve"><value>Средняя оценка {0}. Оптимизируйте структуру Prompt или параметры модели и проверьте снова.</value></data>
+  <data name="Frontend.559" xml:space="preserve"><value>Результаты Запуска уже есть, но оценка не завершена, поэтому сложно судить о качестве.</value></data>
+  <data name="Frontend.560" xml:space="preserve"><value>Формальная Тактика уже есть, но результатов Запуска нет, поэтому нет базовых данных.</value></data>
+  <data name="Frontend.561" xml:space="preserve"><value>Эта версия Черновика уже использовалась. Рекомендуется зафиксировать стабильную версию перед продолжением совместной работы.</value></data>
+  <data name="Frontend.562" xml:space="preserve"><value>PromptItem с id {0} не найден</value></data>
+  <data name="Frontend.563" xml:space="preserve"><value>Черновик prompt с ID {0} не найден</value></data>
+  <data name="Frontend.564" xml:space="preserve"><value>prompt не найден</value></data>
+  <data name="Frontend.565" xml:space="preserve"><value>Каталог экспорта не существует: {0}</value></data>
+  <data name="Frontend.566" xml:space="preserve"><value>В каталоге экспорта не найдено файлов: {0}</value></data>
+  <data name="Frontend.567" xml:space="preserve"><value>Не удалось получить родительский каталог: {0}</value></data>
+  <data name="Frontend.568" xml:space="preserve"><value>Не удалось экспортировать plugins: {0}</value></data>
+  <data name="Frontend.569" xml:space="preserve"><value>Автоматическая оценка недоступна, если ожидаемый результат пуст</value></data>
+  <data name="Frontend.570" xml:space="preserve"><value>PromptResult с ID {0} не найден</value></data>
+  <data name="Frontend.571" xml:space="preserve"><value>Указанный AI Model ID {0} не существует</value></data>
+  <data name="Frontend.572" xml:space="preserve"><value>Доступный AI Model не найден. Сначала настройте Model типа Chat в Модуле AIKernel.</value></data>
+  <data name="Frontend.573" xml:space="preserve"><value>PromptItem не удалось запросить после создания. ItemId: {0}</value></data>
+  <data name="Frontend.574" xml:space="preserve"><value>Инициализация завершена, но PromptItem равен null (этого не должно происходить)</value></data>
+  <data name="Frontend.575" xml:space="preserve"><value>Инициализация выполнена: Model ID: {0}, PromptCode: {1}</value></data>
+  <data name="Frontend.576" xml:space="preserve"><value>Оценка должна быть от 0 до 10</value></data>
+  <data name="Frontend.577" xml:space="preserve"><value>Диапазон для {0} не найден</value></data>
+  <data name="Frontend.578" xml:space="preserve"><value>Диапазон для {0} не найден</value></data>
+  <data name="Frontend.579" xml:space="preserve"><value>IsTopTactic IsNewTactic IsNewSubTactic не могут быть True одновременно</value></data>
+  <data name="Frontend.580" xml:space="preserve"><value>RangeId должен быть положительным целым числом. Текущее значение: {0}</value></data>
+  <data name="Frontend.581" xml:space="preserve"><value>Ошибка создания версии, запустите снова</value></data>
+  <data name="Frontend.582" xml:space="preserve"><value>promptItem для {0} не найден</value></data>
+  <data name="Frontend.583" xml:space="preserve"><value>Тактика для {0} не найдена</value></data>
+  <data name="Frontend.584" xml:space="preserve"><value>PromptItem для {0} не найден</value></data>
+  <data name="Frontend.585" xml:space="preserve"><value>Диапазон для {0} не найден</value></data>
+  <data name="Frontend.586" xml:space="preserve"><value>Нет PromptItem, соответствующего условиям. Проверьте точность имени PromptRange или то, что все результаты PromptItem в его Диапазоне (PromptRange) ещё не оценены. Система должна выбрать PromptItem с наивысшей оценкой.</value></data>
+  <data name="Frontend.587" xml:space="preserve"><value>Конфигурация модели ИИ для PromptItem ({0}) не найдена</value></data>
+  <data name="Frontend.588" xml:space="preserve"><value>Префикс и суффикс не могут быть пустыми</value></data>
+  <data name="Frontend.589" xml:space="preserve"><value>Содержимое Prompt не может быть пустым</value></data>
+  <data name="Frontend.590" xml:space="preserve"><value>Изображение создано, но доступный адрес не возвращён (ImageBytes / ImageUri пусты)</value></data>
+  <data name="Frontend.591" xml:space="preserve"><value>Вызов TextToImage не выполнен: Kernel не создан</value></data>
+  <data name="Frontend.592" xml:space="preserve"><value>Вызов TTS выполнен, но допустимое аудио не возвращено</value></data>
+  <data name="Frontend.593" xml:space="preserve"><value>Вызов STT выполнен, но распознанный текст не возвращён</value></data>
+  <data name="Frontend.594" xml:space="preserve"><value>Содержимое выполнения TextEmbedding не может быть пустым</value></data>
+  <data name="Frontend.595" xml:space="preserve"><value>Для TextEmbedding сначала нужно выбрать VectorDB</value></data>
+  <data name="Frontend.596" xml:space="preserve"><value>VectorDB не найден (ID={0})</value></data>
+  <data name="Frontend.597" xml:space="preserve"><value>PromptResultId не может быть пустым</value></data>
+  <data name="Frontend.598" xml:space="preserve"><value>Текст запроса не может быть пустым</value></data>
+  <data name="Frontend.599" xml:space="preserve"><value>PromptResult не найден (ID={0})</value></data>
+  <data name="Frontend.600" xml:space="preserve"><value>Текущий результат не относится к типу TextEmbedding, поэтому тест запроса выполнить нельзя</value></data>
+  <data name="Frontend.601" xml:space="preserve"><value>В текущем результате TextEmbedding нет сведений VectorDB</value></data>
+  <data name="Frontend.602" xml:space="preserve"><value>Сообщение пользователя не может быть пустым</value></data>
+  <data name="Frontend.603" xml:space="preserve"><value>Продолжить чат может только PromptResult в режиме чата</value></data>
+  <data name="Frontend.604" xml:space="preserve"><value>Балл не может быть меньше 0</value></data>
+  <data name="Frontend.605" xml:space="preserve"><value>Результат для {0} не найден</value></data>
+  <data name="Frontend.606" xml:space="preserve"><value>Соответствующий promptResult не найден</value></data>
+  <data name="Frontend.607" xml:space="preserve"><value>Соответствующий promptItem не найден</value></data>
+  <data name="Frontend.608" xml:space="preserve"><value>Этот результат уже оценён. Выберите принудительное обновление.</value></data>
+  <data name="Frontend.609" xml:space="preserve"><value>Для автоматической оценки нужно задать хотя бы одну модель типа Chat (в Модуле AIKernel)</value></data>
+  <data name="Frontend.610" xml:space="preserve"><value>Не удалось сопоставить результат автоматической оценки. Оценённая строка: {0}, модель вернула {1},</value></data>
+  <data name="Frontend.611" xml:space="preserve"><value>Вызов ИИ не выполнен ({0}): конфигурация модели пуста (AIModelDto == null)</value></data>
+  <data name="Frontend.612" xml:space="preserve"><value>Резервная конфигурация имени развёртывания:</value></data>
+  <data name="Frontend.613" xml:space="preserve"><value>Не удалась повторная попытка резервного имени развёртывания:</value></data>
+  <data name="Frontend.614" xml:space="preserve"><value>Резервная конфигурация системы по умолчанию:</value></data>
+  <data name="Frontend.615" xml:space="preserve"><value>Повтор системной конфигурации чата по умолчанию не выполнен:</value></data>
+  <data name="Frontend.616" xml:space="preserve"><value>Доступные кандидаты моделей Chat:</value></data>
+  <data name="Frontend.617" xml:space="preserve"><value>(Нет доступных кандидатов)</value></data>
+  <data name="Frontend.618" xml:space="preserve"><value>(Не удалось прочитать кандидатов: {0} {1})</value></data>
+  <data name="Frontend.619" xml:space="preserve"><value>AgentKernel не создал AgentSession. Проверьте, относится ли конфигурация модели ИИ к типу Chat.</value></data>
+  <data name="Frontend.620" xml:space="preserve"><value>Вызов ИИ не выполнен ({0}). {1}</value></data>
+  <data name="Frontend.621" xml:space="preserve"><value>; Обнаружен ответ 403 (Forbidden) от вышестоящей службы. Обычно это права конечной точки модели, API Key, имя Deployment или квота либо политика учётной записи.</value></data>
+  <data name="Frontend.622" xml:space="preserve"><value>Конфигурация чата системы по умолчанию:</value></data>
+  <data name="Frontend.623" xml:space="preserve"><value>; Соединение TLS/SSL было сброшено во время передачи (Connection reset by peer). Обычно это проблема сетевого пути, прокси, промежуточного устройства или доступности целевого региона, а не ошибка Prompt или параметров модели.</value></data>
+  <data name="Frontend.624" xml:space="preserve"><value>Исходная цепочка ошибок:</value></data>
+  <data name="Frontend.625" xml:space="preserve"><value>SenparcAiSetting не прочитан (null)</value></data>
+  <data name="Frontend.626" xml:space="preserve"><value>Не удалось прочитать SenparcAiSetting: {0} {1}</value></data>
+  <data name="Frontend.627" xml:space="preserve"><value>Конфигурация модели пуста (AIModelDto == null)</value></data>
+  <data name="Frontend.628" xml:space="preserve"><value>Для STT нужно загрузить аудиофайл</value></data>
+  <data name="Frontend.629" xml:space="preserve"><value>Недопустимый путь аудио STT</value></data>
+  <data name="Frontend.630" xml:space="preserve"><value>Путь аудио STT недопустим</value></data>
+  <data name="Frontend.631" xml:space="preserve"><value>Аудиофайл STT не существует. Загрузите его снова.</value></data>
+  <data name="Frontend.632" xml:space="preserve"><value>Загруженное аудио STT пусто</value></data>
+  <data name="Frontend.633" xml:space="preserve"><value>Неверный формат Base64 загруженного аудио STT</value></data>
+  <data name="Frontend.634" xml:space="preserve"><value>Путь к файлу недопустим</value></data>
+  <data name="Frontend.635" xml:space="preserve"><value>Путь к файлу находится вне разрешённого каталога.</value></data>
+  <data name="Frontend.636" xml:space="preserve"><value>Не удалось удалить результат для {0}, msg: {1}</value></data>
+  <data name="Frontend.637" xml:space="preserve"><value>Модель для {0} не найдена</value></data>
+  <data name="Frontend.638" xml:space="preserve"><value>При использовании AzureOpenAI поля ApiVersion и Endpoint не могут быть пустыми</value></data>
+  <data name="Frontend.639" xml:space="preserve"><value>ApiVersion не существует</value></data>
+  <data name="Frontend.640" xml:space="preserve"><value>Модель не найдена.</value></data>
+  <data name="Frontend.641" xml:space="preserve"><value>Не удалось сохранить запись диалога: не найдена сохранённая сущность для Sequence={0}, RoleType={1}, либо ID равен 0. PromptResultId={2}</value></data>
+  <data name="Frontend.642" xml:space="preserve"><value>Запись диалога с ID {0} не найдена</value></data>
+  <data name="Frontend.643" xml:space="preserve"><value>Тактика промпта для {0} не найдена</value></data>
+  <data name="Frontend.644" xml:space="preserve"><value>Не найден путь для экспорта</value></data>
+  <data name="Frontend.645" xml:space="preserve"><value>Файл не найден</value></data>
+  <data name="Frontend.646" xml:space="preserve"><value>Размер файла превышает ограничение (50 M)</value></data>
+  <data name="Frontend.647" xml:space="preserve"><value>Неверный формат файла</value></data>
+  <data name="Frontend.648" xml:space="preserve"><value>Число элементов архива превышает лимит</value></data>
+  <data name="Frontend.649" xml:space="preserve"><value>Размер архива после распаковки превышает лимит</value></data>
+  <data name="Frontend.650" xml:space="preserve"><value>Архив содержит повторяющиеся пути</value></data>
+  <data name="Frontend.651" xml:space="preserve"><value>Неверный формат пути в архиве</value></data>
+  <data name="Frontend.652" xml:space="preserve"><value>Недопустимое имя {0}</value></data>
+  <data name="Frontend.653" xml:space="preserve"><value>Архив содержит недопустимый путь</value></data>
+  <data name="Frontend.654" xml:space="preserve"><value>Архив содержит обход пути</value></data>
+  <data name="Frontend.655" xml:space="preserve"><value>Архив содержит путь за пределами каталога</value></data>
+  <data name="Frontend.656" xml:space="preserve"><value>Нет такого типа модели: {0}</value></data>
+  <data name="Frontend.657" xml:space="preserve"><value>Распознайте аудио: {0}</value></data>
   <data name="Function.PromptRange.ViewCodes.Name" xml:space="preserve">
     <value>Показать список PromptCode</value>
   </data>

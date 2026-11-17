@@ -55,220 +55,220 @@
     <value>Отправить</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>Extension Modules</value>
+    <value>Модули расширения</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
-    <value>Module Management</value>
+    <value>Управление модулями</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>Weixin Management</value>
+    <value>Управление Weixin</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>Official account control center</value>
+    <value>Центр управления официальным аккаунтом</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>Official account count</value>
+    <value>Число официальных аккаунтов</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>Official accounts already in the system</value>
+    <value>Официальные аккаунты, уже внесённые в систему</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>Running account count</value>
+    <value>Число запущенных аккаунтов</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>Number of accounts that are active and connected to the WeChat server</value>
+    <value>Число учётных записей, которые активны и подключены к серверу WeChat</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>Total WeChat users</value>
+    <value>Всего пользователей WeChat</value>
   </data>
   <data name="Frontend.010" xml:space="preserve">
-    <value>Number of users who interacted on this platform or were fetched automatically as followers</value>
+    <value>Число пользователей, которые взаимодействовали на этой платформе или были автоматически загружены как подписчики</value>
   </data>
   <data name="Frontend.011" xml:space="preserve">
-    <value>New users today</value>
+    <value>Новые пользователи за сегодня</value>
   </data>
   <data name="Frontend.012" xml:space="preserve">
-    <value>Number of users synced or added to the platform today</value>
+    <value>Число пользователей, синхронизированных или добавленных на платформу сегодня</value>
   </data>
   <data name="Frontend.013" xml:space="preserve">
-    <value>View users</value>
+    <value>Просмотр пользователей</value>
   </data>
   <data name="Frontend.014" xml:space="preserve">
-    <value>View groups</value>
+    <value>Просмотр групп</value>
   </data>
   <data name="Frontend.015" xml:space="preserve">
-    <value>View tags</value>
+    <value>Просмотр тегов</value>
   </data>
   <data name="Frontend.016" xml:space="preserve">
-    <value>Conversation</value>
+    <value>Диалог</value>
   </data>
   <data name="Frontend.017" xml:space="preserve">
-    <value>Edit</value>
+    <value>Изменить</value>
   </data>
   <data name="Frontend.018" xml:space="preserve">
-    <value>AccessToken credential validity</value>
+    <value>Срок действия учётных данных AccessToken</value>
   </data>
   <data name="Frontend.019" xml:space="preserve">
-    <value>AccessToken credential status</value>
+    <value>Состояние учётных данных AccessToken</value>
   </data>
   <data name="Frontend.020" xml:space="preserve">
-    <value>Official Account management</value>
+    <value>Управление официальными аккаунтами</value>
   </data>
   <data name="Frontend.021" xml:space="preserve">
-    <value>Add</value>
+    <value>Добавить</value>
   </data>
   <data name="Frontend.022" xml:space="preserve">
-    <value>Delete</value>
+    <value>Удалить</value>
   </data>
   <data name="Frontend.023" xml:space="preserve">
-    <value>Name</value>
+    <value>Имя</value>
   </data>
   <data name="Frontend.024" xml:space="preserve">
-    <value>Notes</value>
+    <value>Примечания</value>
   </data>
   <data name="Frontend.025" xml:space="preserve">
-    <value>Description</value>
+    <value>Описание</value>
   </data>
   <data name="Frontend.026" xml:space="preserve">
-    <value>Added time</value>
+    <value>Время добавления</value>
   </data>
   <data name="Frontend.027" xml:space="preserve">
-    <value>Message URL</value>
+    <value>URL сообщения</value>
   </data>
   <data name="Frontend.028" xml:space="preserve">
-    <value>Open</value>
+    <value>Открыть</value>
   </data>
   <data name="Frontend.029" xml:space="preserve">
-    <value>Actions</value>
+    <value>Действия</value>
   </data>
   <data name="Frontend.030" xml:space="preserve">
-    <value>User management</value>
+    <value>Управление пользователями</value>
   </data>
   <data name="Frontend.031" xml:space="preserve">
-    <value>Official account name</value>
+    <value>Имя официального аккаунта</value>
   </data>
   <data name="Frontend.032" xml:space="preserve">
-    <value>Server address (URL) configured in the WeChat admin console</value>
+    <value>Адрес сервера (URL), заданный в консоли администрирования WeChat</value>
   </data>
   <data name="Frontend.033" xml:space="preserve">
-    <value>[Your domain]</value>
+    <value>[Ваш домен]</value>
   </data>
   <data name="Frontend.034" xml:space="preserve">
-    <value>[Your domain]</value>
+    <value>[Ваш домен]</value>
   </data>
   <data name="Frontend.035" xml:space="preserve">
-    <value>Note: the "official account name" must match the name in [MpMessageHandler(name)] on the corresponding MessageHandler</value>
+    <value>Внимание: «имя официального аккаунта» должно совпадать с name в [MpMessageHandler(name)] у соответствующего MessageHandler</value>
   </data>
   <data name="Frontend.036" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Отмена</value>
   </data>
   <data name="Frontend.037" xml:space="preserve">
-    <value>Confirm</value>
+    <value>Подтвердить</value>
   </data>
   <data name="Frontend.038" xml:space="preserve">
-    <value>Enter official account name</value>
+    <value>Введите имя официального аккаунта</value>
   </data>
   <data name="Frontend.039" xml:space="preserve">
-    <value>Enter AppId</value>
+    <value>Введите AppId</value>
   </data>
   <data name="Frontend.040" xml:space="preserve">
-    <value>Enter AppSecret</value>
+    <value>Введите AppSecret</value>
   </data>
   <data name="Frontend.041" xml:space="preserve">
-    <value>Enter Token</value>
+    <value>Введите Token</value>
   </data>
   <data name="Frontend.042" xml:space="preserve">
-    <value>Length must be between 1 and 100</value>
+    <value>Длина должна быть от 1 до 100</value>
   </data>
   <data name="Frontend.043" xml:space="preserve">
-    <value>Length must be between 1 and 500</value>
+    <value>Длина должна быть от 1 до 500</value>
   </data>
   <data name="Frontend.044" xml:space="preserve">
-    <value>Add Official Account</value>
+    <value>Добавить официальный аккаунт</value>
   </data>
   <data name="Frontend.045" xml:space="preserve">
-    <value>Edit Official Account</value>
+    <value>Изменить официальный аккаунт</value>
   </data>
   <data name="Frontend.046" xml:space="preserve">
-    <value>Official account added successfully</value>
+    <value>Официальный аккаунт добавлен</value>
   </data>
   <data name="Frontend.047" xml:space="preserve">
-    <value>Official account updated successfully</value>
+    <value>Официальный аккаунт обновлён</value>
   </data>
   <data name="Frontend.048" xml:space="preserve">
-    <value>Success</value>
+    <value>Успешно</value>
   </data>
   <data name="Frontend.049" xml:space="preserve">
-    <value>Warning</value>
+    <value>Предупреждение</value>
   </data>
   <data name="Frontend.050" xml:space="preserve">
-    <value>Select at least one official account</value>
+    <value>Выберите хотя бы один официальный аккаунт</value>
   </data>
   <data name="Frontend.051" xml:space="preserve">
-    <value>Delete all selected items?</value>
+    <value>Удалить все выбранные элементы?</value>
   </data>
   <data name="Frontend.052" xml:space="preserve">
-    <value>Successfully deleted {0} items</value>
+    <value>Удалено элементов: {0}</value>
   </data>
   <data name="Frontend.053" xml:space="preserve">
-    <value>Add new followers</value>
+    <value>Добавить новых подписчиков</value>
   </data>
   <data name="Frontend.054" xml:space="preserve">
-    <value>Sync all followers</value>
+    <value>Синхронизировать всех подписчиков</value>
   </data>
   <data name="Frontend.055" xml:space="preserve">
-    <value>Note: if there are many users, this may take a very long time!</value>
+    <value>Внимание: при большом числе пользователей это может занять очень много времени!</value>
   </data>
   <data name="Frontend.056" xml:space="preserve">
-    <value>Nickname</value>
+    <value>Псевдоним</value>
   </data>
   <data name="Frontend.057" xml:space="preserve">
-    <value>Avatar</value>
+    <value>Аватар</value>
   </data>
   <data name="Frontend.058" xml:space="preserve">
-    <value>Gender</value>
+    <value>Пол</value>
   </data>
   <data name="Frontend.059" xml:space="preserve">
-    <value>Male</value>
+    <value>Муж.</value>
   </data>
   <data name="Frontend.060" xml:space="preserve">
-    <value>Female</value>
+    <value>Жен.</value>
   </data>
   <data name="Frontend.061" xml:space="preserve">
-    <value>Unknown</value>
+    <value>Неизвестно</value>
   </data>
   <data name="Frontend.062" xml:space="preserve">
-    <value>Region</value>
+    <value>Регион</value>
   </data>
   <data name="Frontend.063" xml:space="preserve">
-    <value>Group</value>
+    <value>Группа</value>
   </data>
   <data name="Frontend.064" xml:space="preserve">
-    <value>Followed At</value>
+    <value>Дата подписки</value>
   </data>
   <data name="Frontend.065" xml:space="preserve">
-    <value>Follow Status</value>
+    <value>Статус подписки</value>
   </data>
   <data name="Frontend.066" xml:space="preserve">
-    <value>Following</value>
+    <value>Подписан</value>
   </data>
   <data name="Frontend.067" xml:space="preserve">
-    <value>Not Following</value>
+    <value>Не подписан</value>
   </data>
   <data name="Frontend.068" xml:space="preserve">
-    <value>Follow Source</value>
+    <value>Источник подписки</value>
   </data>
   <data name="Frontend.069" xml:space="preserve">
-    <value>Tags</value>
+    <value>Теги</value>
   </data>
   <data name="Frontend.070" xml:space="preserve">
-    <value>None</value>
+    <value>Нет</value>
   </data>
   <data name="Frontend.071" xml:space="preserve">
-    <value>All Users</value>
+    <value>Все пользователи</value>
   </data>
   <data name="Frontend.072" xml:space="preserve">
-    <value>{0} Users</value>
+    <value>Пользователи {0}</value>
   </data>
   <data name="User.AccountUsers" xml:space="preserve">
     <value>Пользователи {0}</value>
@@ -277,10 +277,10 @@
     <value>Все пользователи</value>
   </data>
   <data name="Frontend.073" xml:space="preserve">
-    <value>[Your domain]/WeixinMp/{0}</value>
+    <value>[Ваш домен]/WeixinMp/{0}</value>
   </data>
   <data name="Frontend.074" xml:space="preserve">
-    <value>[Your domain]/WeixinMp/{0}</value>
+    <value>[Ваш домен]/WeixinMp/{0}</value>
   </data>
   <data name="Public.ToggleNavigation" xml:space="preserve">
     <value>Переключить навигацию</value>

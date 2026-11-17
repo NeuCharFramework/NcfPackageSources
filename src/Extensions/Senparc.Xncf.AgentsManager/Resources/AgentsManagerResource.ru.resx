@@ -157,787 +157,787 @@
     <value>Вы — профессиональный переводчик, владеющий языком {0}. Точно переведите текст и выведите только перевод.</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>AgentsManager Home</value>
+    <value>Главная AgentsManager</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
-    <value>Extension Modules</value>
+    <value>Модули расширения</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>Agents Manager</value>
+    <value>Управление агентами</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>Home</value>
+    <value>Главная</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>Agent</value>
+    <value>Агент</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>Agent list</value>
+    <value>Список агентов</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>Search by name</value>
+    <value>Поиск по имени</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>Sort by time</value>
+    <value>Сортировать по времени</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>Select status</value>
+    <value>Выбрать статус</value>
   </data>
   <data name="Frontend.010" xml:space="preserve">
-    <value>All agents</value>
+    <value>Все агенты</value>
   </data>
   <data name="Frontend.011" xml:space="preserve">
-    <value>No Data</value>
+    <value>Нет данных</value>
   </data>
   <data name="Frontend.012" xml:space="preserve">
-    <value>Panel view</value>
+    <value>Вид панели</value>
   </data>
   <data name="Frontend.013" xml:space="preserve">
-    <value>3D view</value>
+    <value>3D-вид</value>
   </data>
   <data name="Frontend.014" xml:space="preserve">
-    <value>Participating</value>
+    <value>Участвует</value>
   </data>
   <data name="Frontend.015" xml:space="preserve">
-    <value>Score</value>
+    <value>Оценка</value>
   </data>
   <data name="Frontend.016" xml:space="preserve">
-    <value>Edit</value>
+    <value>Изменить</value>
   </data>
   <data name="Frontend.017" xml:space="preserve">
-    <value>Details</value>
+    <value>Сведения</value>
   </data>
   <data name="Frontend.018" xml:space="preserve">
-    <value>Delete</value>
+    <value>Удалить</value>
   </data>
   <data name="Frontend.019" xml:space="preserve">
-    <value>All groups</value>
+    <value>Все группы</value>
   </data>
   <data name="Frontend.020" xml:space="preserve">
-    <value>Task status</value>
+    <value>Статус задачи</value>
   </data>
   <data name="Frontend.021" xml:space="preserve">
-    <value>Waiting</value>
+    <value>Ожидание</value>
   </data>
   <data name="Frontend.022" xml:space="preserve">
-    <value>Chatting</value>
+    <value>В чате</value>
   </data>
   <data name="Frontend.023" xml:space="preserve">
-    <value>Paused</value>
+    <value>Пауза</value>
   </data>
   <data name="Frontend.024" xml:space="preserve">
-    <value>Done</value>
+    <value>Готово</value>
   </data>
   <data name="Frontend.025" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Отмена</value>
   </data>
   <data name="Frontend.026" xml:space="preserve">
-    <value>Running groups only</value>
+    <value>Только выполняемые группы</value>
   </data>
   <data name="Frontend.027" xml:space="preserve">
-    <value>Quick-open group</value>
+    <value>Быстрое открытие группы</value>
   </data>
   <data name="Frontend.028" xml:space="preserve">
-    <value>Open group</value>
+    <value>Открыть группу</value>
   </data>
   <data name="Frontend.029" xml:space="preserve">
-    <value>Quick-open task</value>
+    <value>Быстрое открытие задачи</value>
   </data>
   <data name="Frontend.030" xml:space="preserve">
-    <value>Open task</value>
+    <value>Открыть задачу</value>
   </data>
   <data name="Frontend.031" xml:space="preserve">
-    <value>Hover a Group column to highlight its members; click a Group to lock or unlock it; the numbers at the top show running-task status counts for that group.</value>
+    <value>Наведите курсор на столбец Group, чтобы подсветить участников; щёлкните Group, чтобы заблокировать или разблокировать его; цифры сверху показывают статистику состояний выполняемых задач этой группы.</value>
   </data>
   <data name="Frontend.032" xml:space="preserve">
-    <value>Groups</value>
+    <value>Группы</value>
   </data>
   <data name="Frontend.033" xml:space="preserve">
-    <value>Tasks</value>
+    <value>Задачи</value>
   </data>
   <data name="Frontend.034" xml:space="preserve">
-    <value>Running tasks</value>
+    <value>Выполняемые задачи</value>
   </data>
   <data name="Frontend.035" xml:space="preserve">
-    <value>Range:</value>
+    <value>Диапазон:</value>
   </data>
   <data name="Frontend.036" xml:space="preserve">
-    <value>Tactic:</value>
+    <value>Тактика:</value>
   </data>
   <data name="Frontend.037" xml:space="preserve">
-    <value>Run</value>
+    <value>Запуск</value>
   </data>
   <data name="Frontend.038" xml:space="preserve">
     <value>Model:</value>
   </data>
   <data name="Frontend.039" xml:space="preserve">
-    <value>Manage AI models</value>
+    <value>Управление моделями AI</value>
   </data>
   <data name="Frontend.040" xml:space="preserve">
-    <value>Model parameters</value>
+    <value>Параметры модели</value>
   </data>
   <data name="Frontend.041" xml:space="preserve">
-    <value>Model score:</value>
+    <value>Оценка модели:</value>
   </data>
   <data name="Frontend.042" xml:space="preserve">
-    <value>Status:</value>
+    <value>Статус:</value>
   </data>
   <data name="Frontend.043" xml:space="preserve">
-    <value>Disabled</value>
+    <value>Отключено</value>
   </data>
   <data name="Frontend.044" xml:space="preserve">
-    <value>Enabled</value>
+    <value>Включено</value>
   </data>
   <data name="Frontend.045" xml:space="preserve">
-    <value>Groups</value>
+    <value>Группы</value>
   </data>
   <data name="Frontend.046" xml:space="preserve">
-    <value>Jobs</value>
+    <value>Задания</value>
   </data>
   <data name="Frontend.047" xml:space="preserve">
-    <value>Leave group</value>
+    <value>Выйти из группы</value>
   </data>
   <data name="Frontend.048" xml:space="preserve">
-    <value>Start</value>
+    <value>Запустить</value>
   </data>
   <data name="Frontend.049" xml:space="preserve">
-    <value>Start selected</value>
+    <value>Запустить выбранные</value>
   </data>
   <data name="Frontend.050" xml:space="preserve">
-    <value>Stop selected</value>
+    <value>Остановить выбранные</value>
   </data>
   <data name="Frontend.051" xml:space="preserve">
-    <value>Delete selected</value>
+    <value>Удалить выбранные</value>
   </data>
   <data name="Frontend.052" xml:space="preserve">
-    <value>Tasks:</value>
+    <value>Задачи:</value>
   </data>
   <data name="Frontend.053" xml:space="preserve">
-    <value>Owner:</value>
+    <value>Владелец:</value>
   </data>
   <data name="Frontend.054" xml:space="preserve">
-    <value>Contact:</value>
+    <value>Контакт:</value>
   </data>
   <data name="Frontend.055" xml:space="preserve">
-    <value>Group members:</value>
+    <value>Участники группы:</value>
   </data>
   <data name="Frontend.056" xml:space="preserve">
-    <value>Running task</value>
+    <value>Выполняемая задача</value>
   </data>
   <data name="Frontend.057" xml:space="preserve">
-    <value>Started</value>
+    <value>Время начала</value>
   </data>
   <data name="Frontend.058" xml:space="preserve">
-    <value>Duration</value>
+    <value>Длительность</value>
   </data>
   <data name="Frontend.059" xml:space="preserve">
-    <value>Model name</value>
+    <value>Название модели</value>
   </data>
   <data name="Frontend.060" xml:space="preserve">
-    <value>Task description</value>
+    <value>Описание задачи</value>
   </data>
   <data name="Frontend.061" xml:space="preserve">
-    <value>Actions</value>
+    <value>Действия</value>
   </data>
   <data name="Frontend.062" xml:space="preserve">
-    <value>Agent parameters</value>
+    <value>Параметры агента</value>
   </data>
   <data name="Frontend.063" xml:space="preserve">
-    <value>Run again</value>
+    <value>Запустить снова</value>
   </data>
   <data name="Frontend.064" xml:space="preserve">
-    <value>Force stop</value>
+    <value>Принудительная остановка</value>
   </data>
   <data name="Frontend.065" xml:space="preserve">
-    <value>Usage analytics</value>
+    <value>Аналитика использования</value>
   </data>
   <data name="Frontend.066" xml:space="preserve">
-    <value>Task start time:</value>
+    <value>Время начала задачи:</value>
   </data>
   <data name="Frontend.067" xml:space="preserve">
-    <value>Task end time:</value>
+    <value>Время окончания задачи:</value>
   </data>
   <data name="Frontend.068" xml:space="preserve">
-    <value>Score:</value>
+    <value>Оценка:</value>
   </data>
   <data name="Frontend.069" xml:space="preserve">
-    <value>Task review:</value>
+    <value>Оценка задачи:</value>
   </data>
   <data name="Frontend.070" xml:space="preserve">
-    <value>Usage overview</value>
+    <value>Обзор использования</value>
   </data>
   <data name="Frontend.071" xml:space="preserve">
-    <value>Total messages</value>
+    <value>Всего сообщений</value>
   </data>
   <data name="Frontend.072" xml:space="preserve">
-    <value>Total Token (input+output)</value>
+    <value>Всего Token (вход+выход)</value>
   </data>
   <data name="Frontend.073" xml:space="preserve">
-    <value>Average response time</value>
+    <value>Среднее время ответа</value>
   </data>
   <data name="Frontend.074" xml:space="preserve">
-    <value>Maximum duration</value>
+    <value>Максимальная длительность</value>
   </data>
   <data name="Frontend.075" xml:space="preserve">
-    <value>Agents ·</value>
+    <value>Агенты ·</value>
   </data>
   <data name="Frontend.076" xml:space="preserve">
-    <value>Task usage analytics</value>
+    <value>Аналитика использования задач</value>
   </data>
   <data name="Frontend.077" xml:space="preserve">
-    <value>Task:</value>
+    <value>Задача:</value>
   </data>
   <data name="Frontend.078" xml:space="preserve">
-    <value>to</value>
+    <value>до</value>
   </data>
   <data name="Frontend.079" xml:space="preserve">
-    <value>Started</value>
+    <value>Время начала</value>
   </data>
   <data name="Frontend.080" xml:space="preserve">
-    <value>Finished</value>
+    <value>Время завершения</value>
   </data>
   <data name="Frontend.081" xml:space="preserve">
-    <value>All Agents</value>
+    <value>Все Agents</value>
   </data>
   <data name="Frontend.082" xml:space="preserve">
-    <value>Search</value>
+    <value>Поиск</value>
   </data>
   <data name="Frontend.083" xml:space="preserve">
-    <value>Reset</value>
+    <value>Сбросить</value>
   </data>
   <data name="Frontend.084" xml:space="preserve">
-    <value>Total Token</value>
+    <value>Всего Token</value>
   </data>
   <data name="Frontend.085" xml:space="preserve">
-    <value>Input / output Token</value>
+    <value>Входной / выходной Token</value>
   </data>
   <data name="Frontend.086" xml:space="preserve">
-    <value>P95 / max duration</value>
+    <value>P95 / максимальная длительность</value>
   </data>
   <data name="Frontend.087" xml:space="preserve">
-    <value>Conversation rounds</value>
+    <value>Раунды диалога</value>
   </data>
   <data name="Frontend.088" xml:space="preserve">
-    <value>Round</value>
+    <value>Раунд</value>
   </data>
   <data name="Frontend.089" xml:space="preserve">
-    <value>Messages</value>
+    <value>Сообщения</value>
   </data>
   <data name="Frontend.090" xml:space="preserve">
-    <value>Input Tokens</value>
+    <value>Входные Token</value>
   </data>
   <data name="Frontend.091" xml:space="preserve">
-    <value>Output Tokens</value>
+    <value>Выходные Token</value>
   </data>
   <data name="Frontend.092" xml:space="preserve">
-    <value>Average response (ms)</value>
+    <value>Средний отклик (мс)</value>
   </data>
   <data name="Frontend.093" xml:space="preserve">
-    <value>Individual Agents</value>
+    <value>Отдельные Agents</value>
   </data>
   <data name="Frontend.094" xml:space="preserve">
-    <value>By time</value>
+    <value>По времени</value>
   </data>
   <data name="Frontend.095" xml:space="preserve">
-    <value>Time bucket (hours)</value>
+    <value>Временной интервал (часы)</value>
   </data>
   <data name="Frontend.096" xml:space="preserve">
-    <value>Edit agent</value>
+    <value>Изменить агента</value>
   </data>
   <data name="Frontend.097" xml:space="preserve">
-    <value>Add agent</value>
+    <value>Добавить агента</value>
   </data>
   <data name="Frontend.098" xml:space="preserve">
-    <value>Agent name</value>
+    <value>Имя агента</value>
   </data>
   <data name="Frontend.099" xml:space="preserve">
-    <value>Please fill in</value>
+    <value>Заполните</value>
   </data>
   <data name="Frontend.100" xml:space="preserve">
-    <value>Select</value>
+    <value>Выбрать</value>
   </data>
   <data name="Frontend.101" xml:space="preserve">
-    <value>Manual</value>
+    <value>Вручную</value>
   </data>
   <data name="Frontend.102" xml:space="preserve">
-    <value>Select</value>
+    <value>Выберите</value>
   </data>
   <data name="Frontend.103" xml:space="preserve">
-    <value>Manual entry</value>
+    <value>Ручной ввод</value>
   </data>
   <data name="Frontend.104" xml:space="preserve">
-    <value>Enabled</value>
+    <value>Включено</value>
   </data>
   <data name="Frontend.105" xml:space="preserve">
-    <value>Enable agent</value>
+    <value>Включить агента</value>
   </data>
   <data name="Frontend.106" xml:space="preserve">
-    <value>External platform</value>
+    <value>Внешняя платформа</value>
   </data>
   <data name="Frontend.107" xml:space="preserve">
-    <value>External platform parameters</value>
+    <value>Параметры внешней платформы</value>
   </data>
   <data name="Frontend.108" xml:space="preserve">
-    <value>Automatically attach all XNCF feature plugins</value>
+    <value>Автоматически подключать все функциональные плагины XNCF</value>
   </data>
   <data name="Frontend.109" xml:space="preserve">
-    <value>Manual selection</value>
+    <value>Ручной выбор</value>
   </data>
   <data name="Frontend.110" xml:space="preserve">
-    <value>When enabled, all registered XNCF feature plugins are attached automatically, so the Agent can recognize and trigger the features of the matching Module</value>
+    <value>Если включено, все зарегистрированные функциональные плагины XNCF подключаются автоматически, чтобы Агент распознавал и запускал функции соответствующего Модуля</value>
   </data>
   <data name="Frontend.111" xml:space="preserve">
-    <value>You can enter a Plugin class name, or a full name that includes the namespace</value>
+    <value>Можно ввести имя класса Plugin или полное имя с пространством имён</value>
   </data>
   <data name="Frontend.112" xml:space="preserve">
-    <value>+ Add</value>
+    <value>+ Добавить</value>
   </data>
   <data name="Frontend.113" xml:space="preserve">
-    <value>Available plugin types:</value>
+    <value>Доступные типы плагинов:</value>
   </data>
   <data name="Frontend.114" xml:space="preserve">
-    <value>Connected successfully</value>
+    <value>Подключение выполнено</value>
   </data>
   <data name="Frontend.115" xml:space="preserve">
-    <value>View tools</value>
+    <value>Просмотр инструментов</value>
   </data>
   <data name="Frontend.116" xml:space="preserve">
-    <value>Connection failed:</value>
+    <value>Ошибка подключения:</value>
   </data>
   <data name="Frontend.117" xml:space="preserve">
-    <value>Test connection</value>
+    <value>Проверить подключение</value>
   </data>
   <data name="Frontend.118" xml:space="preserve">
-    <value>+ Add MCP Endpoint</value>
+    <value>+ Добавить MCP Endpoint</value>
   </data>
   <data name="Frontend.119" xml:space="preserve">
-    <value>Edit MCP Endpoint</value>
+    <value>Изменить MCP Endpoint</value>
   </data>
   <data name="Frontend.120" xml:space="preserve">
-    <value>Add MCP Endpoint</value>
+    <value>Добавить MCP Endpoint</value>
   </data>
   <data name="Frontend.121" xml:space="preserve">
-    <value>Endpoint name (for example: mcp-server-NCF-7)</value>
+    <value>Имя Endpoint (например: mcp-server-NCF-7)</value>
   </data>
   <data name="Frontend.122" xml:space="preserve">
-    <value>Confirm</value>
+    <value>Подтвердить</value>
   </data>
   <data name="Frontend.123" xml:space="preserve">
-    <value>Notes</value>
+    <value>Примечания</value>
   </data>
   <data name="Frontend.124" xml:space="preserve">
-    <value>Fill in (administrators only)</value>
+    <value>Заполните (только для администраторов)</value>
   </data>
   <data name="Frontend.125" xml:space="preserve">
-    <value>Edit group</value>
+    <value>Изменить группу</value>
   </data>
   <data name="Frontend.126" xml:space="preserve">
-    <value>Add group</value>
+    <value>Добавить группу</value>
   </data>
   <data name="Frontend.127" xml:space="preserve">
-    <value>Group name</value>
+    <value>Имя группы</value>
   </data>
   <data name="Frontend.128" xml:space="preserve">
-    <value>Group members</value>
+    <value>Участники группы</value>
   </data>
   <data name="Frontend.129" xml:space="preserve">
-    <value>Search</value>
+    <value>Поиск</value>
   </data>
   <data name="Frontend.130" xml:space="preserve">
-    <value>Selected:</value>
+    <value>Выбрано:</value>
   </data>
   <data name="Frontend.131" xml:space="preserve">
-    <value>Description</value>
+    <value>Описание</value>
   </data>
   <data name="Frontend.132" xml:space="preserve">
-    <value>Owner</value>
+    <value>Владелец</value>
   </data>
   <data name="Frontend.133" xml:space="preserve">
-    <value>Contact</value>
+    <value>Контакт</value>
   </data>
   <data name="Frontend.134" xml:space="preserve">
-    <value>Description</value>
+    <value>Описание</value>
   </data>
   <data name="Frontend.135" xml:space="preserve">
-    <value>Start group</value>
+    <value>Запустить группу</value>
   </data>
   <data name="Frontend.136" xml:space="preserve">
-    <value>Select group</value>
+    <value>Выбрать группу</value>
   </data>
   <data name="Frontend.137" xml:space="preserve">
-    <value>Task title</value>
+    <value>Название задачи</value>
   </data>
   <data name="Frontend.138" xml:space="preserve">
-    <value>Select model</value>
+    <value>Выбрать модель</value>
   </data>
   <data name="Frontend.139" xml:space="preserve">
-    <value>Personalized agent</value>
+    <value>Персональный агент</value>
   </data>
   <data name="Frontend.140" xml:space="preserve">
-    <value>Run Agent with personalized parameters</value>
+    <value>Запустить Агента с индивидуальными параметрами</value>
   </data>
   <data name="Frontend.141" xml:space="preserve">
-    <value>What can I help you with?</value>
+    <value>Чем я могу помочь?</value>
   </data>
   <data name="Frontend.142" xml:space="preserve">
-    <value>MCP tool list</value>
+    <value>Список инструментов MCP</value>
   </data>
   <data name="Frontend.143" xml:space="preserve">
-    <value>Tool name</value>
+    <value>Имя инструмента</value>
   </data>
   <data name="Frontend.144" xml:space="preserve">
-    <value>Parameters</value>
+    <value>Параметры</value>
   </data>
   <data name="Frontend.145" xml:space="preserve">
-    <value>No parameters</value>
+    <value>Нет параметров</value>
   </data>
   <data name="Frontend.146" xml:space="preserve">
-    <value>No tools available</value>
+    <value>Нет доступных инструментов</value>
   </data>
   <data name="Frontend.147" xml:space="preserve">
-    <value>Close</value>
+    <value>Закрыть</value>
   </data>
   <data name="Frontend.148" xml:space="preserve">
-    <value>All</value>
+    <value>Все</value>
   </data>
   <data name="Frontend.149" xml:space="preserve">
-    <value>Events</value>
+    <value>События</value>
   </data>
   <data name="Frontend.150" xml:space="preserve">
-    <value>Standby</value>
+    <value>Ожидание</value>
   </data>
   <data name="Frontend.151" xml:space="preserve">
-    <value>Paused</value>
+    <value>Пауза</value>
   </data>
   <data name="Frontend.152" xml:space="preserve">
-    <value>Failed</value>
+    <value>Ошибка</value>
   </data>
   <data name="Frontend.153" xml:space="preserve">
-    <value>Archive</value>
+    <value>Архив</value>
   </data>
   <data name="Frontend.154" xml:space="preserve">
-    <value>Running</value>
+    <value>Выполняется</value>
   </data>
   <data name="Frontend.155" xml:space="preserve">
     <value>Chat</value>
   </data>
   <data name="Frontend.156" xml:space="preserve">
-    <value>Enter the Function Call name</value>
+    <value>Введите имя Function Call</value>
   </data>
   <data name="Frontend.157" xml:space="preserve">
-    <value>Refresh</value>
+    <value>Обновить</value>
   </data>
   <data name="Frontend.158" xml:space="preserve">
-    <value>Manage PromptRange</value>
+    <value>Управление PromptRange</value>
   </data>
   <data name="Frontend.159" xml:space="preserve">
-    <value>No description</value>
+    <value>Нет описания</value>
   </data>
   <data name="Frontend.160" xml:space="preserve">
-    <value>Parameters:</value>
+    <value>Параметры:</value>
   </data>
   <data name="Frontend.161" xml:space="preserve">
-    <value>This Agent is not currently a member of any group.</value>
+    <value>Этот Агент сейчас не входит ни в одну группу.</value>
   </data>
   <data name="Frontend.162" xml:space="preserve">
-    <value>Please fill in</value>
+    <value>Заполните</value>
   </data>
   <data name="Frontend.163" xml:space="preserve">
-    <value>Target string</value>
+    <value>Целевая строка</value>
   </data>
   <data name="Frontend.164" xml:space="preserve">
-    <value>Non-target string</value>
+    <value>Нецелевая строка</value>
   </data>
   <data name="Frontend.165" xml:space="preserve">
-    <value>Saved successfully</value>
+    <value>Сохранено</value>
   </data>
   <data name="Frontend.166" xml:space="preserve">
-    <value>Deleted successfully</value>
+    <value>Удалено успешно</value>
   </data>
   <data name="Frontend.167" xml:space="preserve">
-    <value>Success</value>
+    <value>Успешно</value>
   </data>
   <data name="Frontend.168" xml:space="preserve">
-    <value>Operation failed</value>
+    <value>Ошибка</value>
   </data>
   <data name="Frontend.169" xml:space="preserve">
-    <value>Select at least one item</value>
+    <value>Выберите хотя бы один пункт</value>
   </data>
   <data name="Frontend.170" xml:space="preserve">
-    <value>Continue?</value>
+    <value>Продолжить?</value>
   </data>
   <data name="Frontend.171" xml:space="preserve">
-    <value>Notice</value>
+    <value>Уведомление</value>
   </data>
   <data name="Frontend.172" xml:space="preserve">
-    <value>Confirm</value>
+    <value>Подтвердить</value>
   </data>
   <data name="Frontend.173" xml:space="preserve">
-    <value>Failed to load</value>
+    <value>Ошибка загрузки</value>
   </data>
   <data name="Frontend.174" xml:space="preserve">
-    <value>No content</value>
+    <value>Нет содержимого</value>
   </data>
   <data name="Frontend.175" xml:space="preserve">
-    <value>sec</value>
+    <value>с</value>
   </data>
   <data name="Frontend.176" xml:space="preserve">
-    <value>min</value>
+    <value>мин</value>
   </data>
   <data name="Frontend.177" xml:space="preserve">
-    <value>hr</value>
+    <value>ч</value>
   </data>
   <data name="Frontend.178" xml:space="preserve">
-    <value>days</value>
+    <value>дн.</value>
   </data>
   <data name="Frontend.179" xml:space="preserve">
-    <value>Copied successfully</value>
+    <value>Скопировано</value>
   </data>
   <data name="Frontend.180" xml:space="preserve">
-    <value>Copy failed</value>
+    <value>Ошибка копирования</value>
   </data>
   <data name="Frontend.181" xml:space="preserve">
-    <value>Task description:</value>
+    <value>Описание задачи:</value>
   </data>
   <data name="Frontend.182" xml:space="preserve">
-    <value>Group List</value>
+    <value>Список групп</value>
   </data>
   <data name="Frontend.183" xml:space="preserve">
-    <value>Tasks</value>
+    <value>Задачи</value>
   </data>
   <data name="Frontend.184" xml:space="preserve">
-    <value>Last run</value>
+    <value>Последний запуск</value>
   </data>
   <data name="Frontend.185" xml:space="preserve">
-    <value>Task List</value>
+    <value>Список задач</value>
   </data>
   <data name="Frontend.186" xml:space="preserve">
-    <value>Unarchive</value>
+    <value>Разархивировать</value>
   </data>
   <data name="Frontend.187" xml:space="preserve">
-    <value>Archive</value>
+    <value>Архив</value>
   </data>
   <data name="Frontend.188" xml:space="preserve">
-    <value>Task: (#)</value>
+    <value>Задача: (#)</value>
   </data>
   <data name="Frontend.189" xml:space="preserve">
-    <value>Agent avatar</value>
+    <value>Аватар Агента</value>
   </data>
   <data name="Frontend.190" xml:space="preserve">
-    <value>Endpoint URL (for example: http://localhost:5000/mcp/sse)</value>
+    <value>Endpoint URL (например: http://localhost:5000/mcp/sse)</value>
   </data>
   <data name="Frontend.191" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Отмена</value>
   </data>
   <data name="Frontend.192" xml:space="preserve">
-    <value>OK</value>
+    <value>ОК</value>
   </data>
   <data name="Frontend.193" xml:space="preserve">
-    <value>Aim:</value>
+    <value>Прицеливание:</value>
   </data>
   <data name="Frontend.194" xml:space="preserve">
-    <value>Average score:</value>
+    <value>Средний балл:</value>
   </data>
   <data name="Frontend.195" xml:space="preserve">
-    <value>Highest score:</value>
+    <value>Наивысший балл:</value>
   </data>
   <data name="Frontend.196" xml:space="preserve">
-    <value>[Elapsed (ms):]</value>
+    <value>[Затрачено (мс):]</value>
   </data>
   <data name="Frontend.197" xml:space="preserve">
-    <value>Copy formatted HTML code</value>
+    <value>Копировать форматированный код HTML</value>
   </data>
   <data name="Frontend.198" xml:space="preserve">
-    <value>Copy raw content (for example, markdown markers will be copied)</value>
+    <value>Копировать исходное содержимое (например, будут скопированы маркеры markdown)</value>
   </data>
   <data name="Frontend.199" xml:space="preserve">
-    <value>Raw</value>
+    <value>Исходный</value>
   </data>
   <data name="Frontend.200" xml:space="preserve">
-    <value>Close</value>
+    <value>Закрыть</value>
   </data>
   <data name="Frontend.201" xml:space="preserve">
-    <value>Task Evaluation</value>
+    <value>Оценка задачи</value>
   </data>
   <data name="Frontend.202" xml:space="preserve">
-    <value>Enter a score (0-10)</value>
+    <value>Введите оценку (0-10)</value>
   </data>
   <data name="Frontend.203" xml:space="preserve">
-    <value>Enter an evaluation</value>
+    <value>Введите оценку</value>
   </data>
   <data name="Frontend.204" xml:space="preserve">
-    <value>Database sample</value>
+    <value>Пример работы с базой данных</value>
   </data>
   <data name="Frontend.205" xml:space="preserve">
-    <value>No executable tasks yet</value>
+    <value>Пока нет выполняемых задач</value>
   </data>
   <data name="Frontend.206" xml:space="preserve">
-    <value>Failed to load statistics</value>
+    <value>Не удалось загрузить статистику</value>
   </data>
   <data name="Frontend.207" xml:space="preserve">
-    <value>{0} failed</value>
+    <value>{0} сбоев</value>
   </data>
   <data name="Frontend.208" xml:space="preserve">
-    <value>{0} succeeded</value>
+    <value>{0} успешно</value>
   </data>
   <data name="Frontend.209" xml:space="preserve">
-    <value>{0} failed: {1}</value>
+    <value>{0} не выполнено: {1}</value>
   </data>
   <data name="Frontend.210" xml:space="preserve">
-    <value>Unknown error</value>
+    <value>Неизвестная ошибка</value>
   </data>
   <data name="Frontend.211" xml:space="preserve">
-    <value>Close now?</value>
+    <value>Закрыть сейчас?</value>
   </data>
   <data name="Frontend.212" xml:space="preserve">
-    <value>Disable Agent {0}?</value>
+    <value>Отключить Агента {0}?</value>
   </data>
   <data name="Frontend.213" xml:space="preserve">
-    <value>This Agent will not take part in later new tasks</value>
+    <value>Этот Агент не будет участвовать в последующих новых задачах</value>
   </data>
   <data name="Frontend.214" xml:space="preserve">
-    <value>Enable Agent {0}?</value>
+    <value>Включить Агента {0}?</value>
   </data>
   <data name="Frontend.215" xml:space="preserve">
-    <value>Leave group {0}?</value>
+    <value>Выйти из группы {0}?</value>
   </data>
   <data name="Frontend.216" xml:space="preserve">
-    <value>After removal, task records you previously took part in will no longer be visible</value>
+    <value>После исключения записи задач, в которых вы участвовали, больше не будут видны</value>
   </data>
   <data name="Frontend.217" xml:space="preserve">
-    <value>Confirm Action</value>
+    <value>Подтвердить действие</value>
   </data>
   <data name="Frontend.218" xml:space="preserve">
-    <value>Operation succeeded!</value>
+    <value>Операция выполнена!</value>
   </data>
   <data name="Frontend.219" xml:space="preserve">
-    <value>Operation canceled</value>
+    <value>Операция отменена</value>
   </data>
   <data name="Frontend.220" xml:space="preserve">
-    <value>Agent "{0}" cannot be deleted right now.</value>
+    <value>Агента «{0}» сейчас нельзя удалить.</value>
   </data>
   <data name="Frontend.221" xml:space="preserve">
-    <value>Groups as Owner: {0}</value>
+    <value>Группы в роли владельца: {0}</value>
   </data>
   <data name="Frontend.222" xml:space="preserve">
-    <value>Groups as Contact: {0}</value>
+    <value>Группы в роли контакта: {0}</value>
   </data>
   <data name="Frontend.223" xml:space="preserve">
-    <value>Replace the Owner/Contact in the corresponding group before deleting.</value>
+    <value>Сначала замените Владельца/Контакта в соответствующей группе, затем удаляйте.</value>
   </data>
   <data name="Frontend.224" xml:space="preserve">
-    <value>Deletion Blocked</value>
+    <value>Удаление заблокировано</value>
   </data>
   <data name="Frontend.225" xml:space="preserve">
-    <value>Got It</value>
+    <value>Понятно</value>
   </data>
   <data name="Frontend.226" xml:space="preserve">
-    <value>Delete Agent "{0}"?</value>
+    <value>Удалить Агента «{0}»?</value>
   </data>
   <data name="Frontend.227" xml:space="preserve">
-    <value>Groups the member will leave: {0}</value>
+    <value>Группы, из которых будет исключён участник: {0}</value>
   </data>
   <data name="Frontend.228" xml:space="preserve">
-    <value>Message history related to this Agent will also be deleted and cannot be recovered.</value>
+    <value>История сообщений этого Агента также будет удалена без возможности восстановления.</value>
   </data>
   <data name="Frontend.229" xml:space="preserve">
-    <value>Deleted successfully!</value>
+    <value>Успешно удалено!</value>
   </data>
   <data name="Frontend.230" xml:space="preserve">
-    <value>Deletion pre-check failed. Please try again later.</value>
+    <value>Предварительная проверка удаления не выполнена. Повторите попытку позже.</value>
   </data>
   <data name="Frontend.231" xml:space="preserve">
-    <value>Delete this data?</value>
+    <value>Удалить эти данные?</value>
   </data>
   <data name="Frontend.232" xml:space="preserve">
-    <value>Select groups to delete first</value>
+    <value>Сначала выберите группы для удаления</value>
   </data>
   <data name="Frontend.233" xml:space="preserve">
-    <value>Delete the selected data in batch?</value>
+    <value>Удалить выбранные данные пакетом?</value>
   </data>
   <data name="Frontend.234" xml:space="preserve">
-    <value>Select tasks to start first</value>
+    <value>Сначала выберите задачи для запуска</value>
   </data>
   <data name="Frontend.235" xml:space="preserve">
-    <value>Start the selected data in batch?</value>
+    <value>Запустить выбранные данные пакетом?</value>
   </data>
   <data name="Frontend.236" xml:space="preserve">
-    <value>Select tasks to delete first</value>
+    <value>Сначала выберите задачи для удаления</value>
   </data>
   <data name="Frontend.237" xml:space="preserve">
-    <value>Force stop this task?</value>
+    <value>Принудительно остановить эту задачу?</value>
   </data>
   <data name="Frontend.238" xml:space="preserve">
-    <value>Select tasks to stop first</value>
+    <value>Сначала выберите задачи для остановки</value>
   </data>
   <data name="Frontend.239" xml:space="preserve">
-    <value>Force-stop the selected tasks?</value>
+    <value>Принудительно остановить выбранные задачи?</value>
   </data>
   <data name="Frontend.240" xml:space="preserve">
-    <value>Not set</value>
+    <value>Не задано</value>
   </data>
   <data name="Frontend.241" xml:space="preserve">
-    <value>(Draft)</value>
+    <value>(Черновик)</value>
   </data>
   <data name="Frontend.242" xml:space="preserve">
-    <value>Unnamed tool</value>
+    <value>Инструмент без имени</value>
   </data>
   <data name="Frontend.243" xml:space="preserve">
-    <value>Connection test succeeded</value>
+    <value>Проверка подключения успешна</value>
   </data>
   <data name="Frontend.244" xml:space="preserve">
-    <value>Connection test failed:</value>
+    <value>Проверка соединения не удалась:</value>
   </data>
   <data name="Frontend.245" xml:space="preserve">
-    <value>Connection test error:</value>
+    <value>Ошибка проверки соединения:</value>
   </data>
   <data name="Frontend.246" xml:space="preserve">
-    <value>Failed to load plugin types</value>
+    <value>Не удалось загрузить типы плагинов</value>
   </data>
   <data name="Frontend.247" xml:space="preserve">
-    <value>Name and URL cannot be empty</value>
+    <value>Имя и URL не могут быть пустыми</value>
   </data>
   <data name="Frontend.248" xml:space="preserve">
-    <value>endpoint parameter is empty</value>
+    <value>Параметр endpoint пуст</value>
   </data>
   <data name="Frontend.249" xml:space="preserve">
-    <value>No tool information available</value>
+    <value>Нет сведений об инструментах</value>
   </data>
   <data name="Frontend.250" xml:space="preserve">
-    <value>Tool list ({0})</value>
+    <value>Список инструментов ({0})</value>
   </data>
   <data name="Frontend.251" xml:space="preserve">
-    <value>No description</value>
+    <value>Нет описания</value>
   </data>
   <data name="Frontend.252" xml:space="preserve">
-    <value>Parameters:</value>
+    <value>Параметры:</value>
   </data>
   <data name="Frontend.253" xml:space="preserve">
-    <value>No parameters</value>
+    <value>Нет параметров</value>
   </data>
   <data name="Frontend.254" xml:space="preserve">
-    <value>MCP tool list</value>
+    <value>Список инструментов MCP</value>
   </data>
   <data name="Frontend.255" xml:space="preserve">
-    <value>Close</value>
+    <value>Закрыть</value>
   </data>
   <data name="Frontend.256" xml:space="preserve">
-    <value>{0} years</value>
+    <value>{0} г.</value>
   </data>
   <data name="Frontend.257" xml:space="preserve">
-    <value>{0} days</value>
+    <value>{0} дн.</value>
   </data>
   <data name="Frontend.258" xml:space="preserve">
-    <value>{0} hours</value>
+    <value>{0} ч.</value>
   </data>
   <data name="Frontend.259" xml:space="preserve">
-    <value>{0} minutes</value>
+    <value>{0} мин.</value>
   </data>
   <data name="Frontend.260" xml:space="preserve">
-    <value>{0} seconds</value>
+    <value>{0} с</value>
   </data>
   <data name="Frontend.261" xml:space="preserve">
-    <value>Manage models</value>
+    <value>Управление моделями</value>
   </data>
   <data name="Frontend.262" xml:space="preserve">
     <value>ID агента</value>
@@ -955,13 +955,13 @@
     <value>MCP Endpoint</value>
   </data>
   <data name="Frontend.267" xml:space="preserve">
-    <value>Endpoint name (for example: mcp-server-NCF-7)</value>
+    <value>Имя Endpoint (например: mcp-server-NCF-7)</value>
   </data>
   <data name="Frontend.268" xml:space="preserve">
     <value>URL Endpoint (например: http://localhost:5000/mcp/sse)</value>
   </data>
   <data name="Frontend.269" xml:space="preserve">
-    <value>MCP tool list</value>
+    <value>Список инструментов MCP</value>
   </data>
   <data name="Frontend.270" xml:space="preserve">
     <value>Top P：</value>
@@ -982,172 +982,172 @@
     <value>Стоп-последовательность:</value>
   </data>
   <data name="Frontend.276" xml:space="preserve">
-    <value>No available Chat AI Model was found. The database has {0} models, but none are Chat. Configure at least one Chat Model in the AIKernel Module first.</value>
+    <value>Доступный AI Model типа Chat не найден. В базе {0} моделей, но ни одна не относится к типу Chat. Сначала настройте хотя бы один Chat Model в Модуле AIKernel.</value>
   </data>
   <data name="Frontend.277" xml:space="preserve">
-    <value>Failed to load: {0}</value>
+    <value>Не удалось загрузить: {0}</value>
   </data>
   <data name="Frontend.278" xml:space="preserve">
-    <value>Select a valid AI Model</value>
+    <value>Выберите действительный AI Model</value>
   </data>
   <data name="Frontend.279" xml:space="preserve">
-    <value>No AI Model with ID {0} was found</value>
+    <value>AI Model с ID {0} не найден</value>
   </data>
   <data name="Frontend.280" xml:space="preserve">
-    <value>Model '{0}' is not a Chat type. Please select a Chat Model.</value>
+    <value>Model '{0}' не относится к типу Chat. Выберите Model типа Chat.</value>
   </data>
   <data name="Frontend.281" xml:space="preserve">
-    <value>Initialization completed successfully</value>
+    <value>Инициализация успешно завершена</value>
   </data>
   <data name="Frontend.282" xml:space="preserve">
-    <value>Optimization request timed out: {0}</value>
+    <value>Тайм-аут запроса оптимизации: {0}</value>
   </data>
   <data name="Frontend.283" xml:space="preserve">
-    <value>Chat group not found: {0}</value>
+    <value>Группа Chat не найдена: {0}</value>
   </data>
   <data name="Frontend.284" xml:space="preserve">
-    <value>The selected AI model does not exist: {0}</value>
+    <value>Выбранная модель ИИ не существует: {0}</value>
   </data>
   <data name="Frontend.285" xml:space="preserve">
-    <value>Chat group [{0}] has no enabled agents available.</value>
+    <value>В группе Chat [{0}] нет доступных включённых агентов.</value>
   </data>
   <data name="Frontend.286" xml:space="preserve">
-    <value>No valid admin agent (ID: {1}) was found in chat group [{0}].</value>
+    <value>В группе чата [{0}] не найден допустимый агент-администратор (ID: {1}).</value>
   </data>
   <data name="Frontend.287" xml:space="preserve">
-    <value>Chat group [{0}] needs at least two enabled agents for multi-agent collaboration.</value>
+    <value>Группе Chat [{0}] нужны как минимум два включённых агента для многоагентного сотрудничества.</value>
   </data>
   <data name="Frontend.288" xml:space="preserve">
-    <value>The multi-agent workflow is waiting for an external response, and the current execution path cannot continue automatically.</value>
+    <value>Многоагентный рабочий процесс ожидает внешний ответ, и текущий путь выполнения не может продолжиться автоматически.</value>
   </data>
   <data name="Frontend.289" xml:space="preserve">
-    <value>System message: multi-agent orchestration failed ({0}), and fallback execution returned no text to display.</value>
+    <value>Системное сообщение: многоагентная оркестрация не выполнена ({0}), и резервное выполнение не вернуло текст для отображения.</value>
   </data>
   <data name="Frontend.290" xml:space="preserve">
-    <value>System message: the AI service returned 403 (Forbidden), and the current task cannot continue. Check model permissions, the API Key, or whether the selected model is available.</value>
+    <value>Системное сообщение: служба ИИ вернула 403 (Forbidden), текущая задача не может продолжиться. Проверьте права модели, API Key или доступность выбранной модели.</value>
   </data>
   <data name="Frontend.291" xml:space="preserve">
-    <value>System message: AI service authentication failed (401). Check the API Key / Endpoint configuration.</value>
+    <value>Системное сообщение: аутентификация службы ИИ не выполнена (401). Проверьте конфигурацию API Key / Endpoint.</value>
   </data>
   <data name="Frontend.292" xml:space="preserve">
-    <value>System message: the AI service call failed and the task was interrupted. Reason: {0}</value>
+    <value>Системное сообщение: вызов службы ИИ не выполнен, задача прервана. Причина: {0}</value>
   </data>
   <data name="Frontend.293" xml:space="preserve">
-    <value>Model configuration is empty (AIModelDto == null)</value>
+    <value>Конфигурация модели пуста (AIModelDto == null)</value>
   </data>
   <data name="Frontend.294" xml:space="preserve">
-    <value>PromptCatalyzer ChatGroup was not found. Finish initialization first.</value>
+    <value>PromptCatalyzer ChatGroup не найден. Сначала завершите инициализацию.</value>
   </data>
   <data name="Frontend.295" xml:space="preserve">
-    <value>PromptCatalyzer Agent was not found. Finish initialization first.</value>
+    <value>PromptCatalyzer Agent не найден. Сначала завершите инициализацию.</value>
   </data>
   <data name="Frontend.296" xml:space="preserve">
-    <value>Agent conversation failed: {0}</value>
+    <value>Диалог Agent не выполнен: {0}</value>
   </data>
   <data name="Frontend.297" xml:space="preserve">
-    <value>Select or manually enter a PromptCode</value>
+    <value>Выберите или введите PromptCode вручную</value>
   </data>
   <data name="Frontend.298" xml:space="preserve">
-    <value>Enter Agent name</value>
+    <value>Введите имя Агента</value>
   </data>
   <data name="Frontend.299" xml:space="preserve">
-    <value>Enter a search term (name, PromptCode, or keyword)</value>
+    <value>Введите поисковый запрос (имя, PromptCode или ключевое слово)</value>
   </data>
   <data name="Frontend.300" xml:space="preserve">
-    <value>Enter a valid search term</value>
+    <value>Введите допустимый поисковый запрос</value>
   </data>
   <data name="Frontend.301" xml:space="preserve">
-    <value>Enabled successfully</value>
+    <value>Успешно включено</value>
   </data>
   <data name="Frontend.302" xml:space="preserve">
-    <value>Disabled successfully</value>
+    <value>Успешно отключено</value>
   </data>
   <data name="Frontend.303" xml:space="preserve">
-    <value>Connected successfully</value>
+    <value>Подключение выполнено</value>
   </data>
   <data name="Frontend.304" xml:space="preserve">
-    <value>Connection failed</value>
+    <value>Ошибка подключения</value>
   </data>
   <data name="Frontend.305" xml:space="preserve">
-    <value>Agent ID not provided</value>
+    <value>Agent ID не указан</value>
   </data>
   <data name="Frontend.306" xml:space="preserve">
-    <value>PromptCatalyzer initialization timed out (2 minutes)</value>
+    <value>Истекло время инициализации PromptCatalyzer (2 минуты)</value>
   </data>
   <data name="Frontend.307" xml:space="preserve">
-    <value>Prompt initialization failed: {0}</value>
+    <value>Инициализация Prompt не выполнена: {0}</value>
   </data>
   <data name="Frontend.308" xml:space="preserve">
-    <value>The PromptCode returned by Prompt initialization is empty</value>
+    <value>PromptCode, возвращённый при инициализации Prompt, пуст</value>
   </data>
   <data name="Frontend.309" xml:space="preserve">
-    <value>An optimization task is already running for this Prompt. Do not submit it again (for example, avoid double-clicking).</value>
+    <value>Для этого Prompt уже выполняется задача оптимизации. Не отправляйте её повторно (например, не щёлкайте дважды).</value>
   </data>
   <data name="Frontend.310" xml:space="preserve">
-    <value>Prompt optimization request timed out (15 minutes)</value>
+    <value>Истекло время запроса оптимизации Prompt (15 минут)</value>
   </data>
   <data name="Frontend.311" xml:space="preserve">
-    <value>The ChatGroup to edit was not found. ID: {0}</value>
+    <value>ChatGroup для редактирования не найден. ID: {0}</value>
   </data>
   <data name="Frontend.312" xml:space="preserve">
-    <value>Failed to select group members: {0}</value>
+    <value>Не удалось выбрать участников группы: {0}</value>
   </data>
   <data name="Frontend.313" xml:space="preserve">
-    <value>Provide at least one group member (ID or name)</value>
+    <value>Укажите хотя бы одного участника группы (ID или имя)</value>
   </data>
   <data name="Frontend.314" xml:space="preserve">
-    <value>No available Chat AI model was found, so a host Agent cannot be created automatically</value>
+    <value>Доступная модель ИИ типа Chat не найдена, поэтому ведущий Agent не может быть создан автоматически</value>
   </data>
   <data name="Frontend.315" xml:space="preserve">
-    <value>Input is empty. Pass an Agent ID, name, or PromptCode.</value>
+    <value>Ввод пуст. Передайте ID Agent, имя или PromptCode.</value>
   </data>
   <data name="Frontend.316" xml:space="preserve">
-    <value>No enabled Agent was found. ID: {0}</value>
+    <value>Включённый Agent не найден. ID: {0}</value>
   </data>
   <data name="Frontend.317" xml:space="preserve">
-    <value>"{0}" matched multiple Agents. Please specify an ID: {1}</value>
+    <value>«{0}» совпало с несколькими Agent. Укажите ID: {1}</value>
   </data>
   <data name="Frontend.318" xml:space="preserve">
-    <value>No matching Agent found: {0}</value>
+    <value>Подходящий Agent не найден: {0}</value>
   </data>
   <data name="Frontend.319" xml:space="preserve">
-    <value>Select at least one group!</value>
+    <value>Выберите хотя бы одну группу!</value>
   </data>
   <data name="Frontend.320" xml:space="preserve">
-    <value>The task was created and started. Check its status in the ChatTask list.</value>
+    <value>Задача создана и запущена. Статус смотрите в списке ChatTask.</value>
   </data>
   <data name="Frontend.321" xml:space="preserve">
-    <value>Select conversations to delete!</value>
+    <value>Выберите диалоги для удаления!</value>
   </data>
   <data name="Frontend.322" xml:space="preserve">
-    <value>Check the "Confirm deletion" box to confirm the deletion!</value>
+    <value>Установите флажок «Подтвердить удаление», чтобы подтвердить удаление!</value>
   </data>
   <data name="Frontend.323" xml:space="preserve">
-    <value>Group ID not provided</value>
+    <value>ID группы не указан</value>
   </data>
   <data name="Frontend.324" xml:space="preserve">
-    <value>Task does not exist: {0}</value>
+    <value>Задача не существует: {0}</value>
   </data>
   <data name="Frontend.325" xml:space="preserve">
-    <value>Archived successfully</value>
+    <value>Архивировано</value>
   </data>
   <data name="Frontend.326" xml:space="preserve">
-    <value>Unarchived successfully</value>
+    <value>Разархивировано</value>
   </data>
   <data name="Frontend.327" xml:space="preserve">
-    <value>Task ID not provided</value>
+    <value>ID задачи не указан</value>
   </data>
   <data name="Frontend.328" xml:space="preserve">
-    <value>No startable task found</value>
+    <value>Нет задач, которые можно запустить</value>
   </data>
   <data name="Frontend.329" xml:space="preserve">
-    <value>Batch start finished: {0} succeeded, {1} skipped</value>
+    <value>Пакетный запуск завершён: успешно {0}, пропущено {1}</value>
   </data>
   <data name="Frontend.330" xml:space="preserve">
-    <value>Force stop finished: {0} succeeded, {1} skipped</value>
+    <value>Принудительная остановка завершена: успешно {0}, пропущено {1}</value>
   </data>
   <data name="Frontend.331" xml:space="preserve">
-    <value>Task deletion finished: {0} succeeded</value>
+    <value>Удаление задач завершено: успешно {0}</value>
   </data>
   <data name="Agents.Error.MissingRunRequest" xml:space="preserve">
     <value>Запрос на запуск группы чата не предоставлен.</value>
