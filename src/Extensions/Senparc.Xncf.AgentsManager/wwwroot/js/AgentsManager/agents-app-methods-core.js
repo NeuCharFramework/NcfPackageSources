@@ -639,7 +639,7 @@ var AgentsAppMethodsCore = {
       }
       return ''
     },
-    // 获取 status color
+    // Get the status color.
     getStatusColor(item, showType) {
       // this.taskStateColor this.agentStateColor
       let statusColor = ''
