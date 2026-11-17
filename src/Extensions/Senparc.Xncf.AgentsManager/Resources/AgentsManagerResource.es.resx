@@ -1057,64 +1057,64 @@
     <value>Parámetros completos</value>
   </data>
   <data name="Frontend.301" xml:space="preserve">
-    <value>Habilitado correctamente</value>
+    <value>Publicar</value>
   </data>
   <data name="Frontend.302" xml:space="preserve">
-    <value>Deshabilitado correctamente</value>
+    <value>Desactivar</value>
   </data>
   <data name="Frontend.303" xml:space="preserve">
-    <value>Conectado correctamente</value>
+    <value>Activar</value>
   </data>
   <data name="Frontend.304" xml:space="preserve">
-    <value>Error de conexión</value>
+    <value>Rondas de conversación completadas:</value>
   </data>
   <data name="Frontend.305" xml:space="preserve">
-    <value>No se proporcionó el Agent ID</value>
+    <value>Tareas completadas:</value>
   </data>
   <data name="Frontend.306" xml:space="preserve">
-    <value>La inicialización de PromptCatalyzer agotó el tiempo de espera (2 minutos)</value>
+    <value>Tokens de entrada:</value>
   </data>
   <data name="Frontend.307" xml:space="preserve">
-    <value>Error de inicialización del Prompt: {0}</value>
+    <value>Tokens de salida:</value>
   </data>
   <data name="Frontend.308" xml:space="preserve">
-    <value>El PromptCode devuelto por la inicialización del Prompt está vacío</value>
+    <value>Tokens totales:</value>
   </data>
   <data name="Frontend.309" xml:space="preserve">
-    <value>Ya hay una tarea de optimización en curso para este Prompt. No la envíe de nuevo (por ejemplo, evite el doble clic).</value>
+    <value>Respuesta media:</value>
   </data>
   <data name="Frontend.310" xml:space="preserve">
-    <value>La solicitud de optimización del Prompt agotó el tiempo de espera (15 minutos)</value>
+    <value>Última actividad:</value>
   </data>
   <data name="Frontend.311" xml:space="preserve">
-    <value>No se encontró el ChatGroup que se va a editar. ID: {0}</value>
+    <value>No hay vinculaciones disponibles para seleccionar.</value>
   </data>
   <data name="Frontend.312" xml:space="preserve">
-    <value>Error al seleccionar miembros del grupo: {0}</value>
+    <value>No hay endpoints MCP disponibles para seleccionar.</value>
   </data>
   <data name="Frontend.313" xml:space="preserve">
-    <value>Indique al menos un miembro del grupo (ID o nombre)</value>
+    <value>{0} endpoints configurados</value>
   </data>
   <data name="Frontend.314" xml:space="preserve">
-    <value>No se encontró un modelo de IA de tipo Chat disponible, así que no se puede crear automáticamente un Agent anfitrión</value>
+    <value>Cargando la configuración del grupo</value>
   </data>
   <data name="Frontend.315" xml:space="preserve">
-    <value>La entrada está vacía. Indique un ID de Agent, un nombre o un PromptCode.</value>
+    <value>Inspeccionar</value>
   </data>
   <data name="Frontend.316" xml:space="preserve">
-    <value>No se encontró un Agent habilitado. ID: {0}</value>
+    <value>Permitir llamadas A2A</value>
   </data>
   <data name="Frontend.317" xml:space="preserve">
-    <value>"{0}" coincidió con varios Agent. Especifique un ID: {1}</value>
+    <value>Permitido explícitamente</value>
   </data>
   <data name="Frontend.318" xml:space="preserve">
-    <value>No se encontró un Agent coincidente: {0}</value>
+    <value>Vinculaciones de herramientas y Workflows</value>
   </data>
   <data name="Frontend.319" xml:space="preserve">
-    <value>Seleccione al menos un grupo!</value>
+    <value>Copiar</value>
   </data>
   <data name="Frontend.320" xml:space="preserve">
-    <value>La tarea se creó y se inició. Consulte el estado en la lista de ChatTask.</value>
+    <value>Usar conectores autorizados por cada Agent</value>
   </data>
   <data name="Frontend.321" xml:space="preserve">
     <value>Seleccione las conversaciones a eliminar!</value>
