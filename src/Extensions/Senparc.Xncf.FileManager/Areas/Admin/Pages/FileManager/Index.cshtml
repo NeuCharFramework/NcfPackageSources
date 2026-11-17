@@ -2235,27 +2235,27 @@
     <div class="file-manager-recycle-empty-body">
         <i class="el-icon-warning"></i>
         <div class="file-manager-recycle-empty-text">
-            <strong>文件清空后将彻底删除，无法恢复？</strong>
-            <p>确定继续吗？</p>
+            <strong>{{ ncfST('Frontend.125') }}</strong>
+            <p>{{ ncfST('Frontend.150') }}</p>
         </div>
     </div>
     <span slot="footer" class="dialog-footer">
-        <el-button :disabled="!!(recycleBin && recycleBin.emptying)" @@click.stop="cancelEmptyRecycleBin">取消</el-button>
-        <el-button type="danger" :loading="!!(recycleBin && recycleBin.emptying)" @@click.stop="confirmEmptyRecycleBin">确定</el-button>
+        <el-button :disabled="!!(recycleBin && recycleBin.emptying)" @@click.stop="cancelEmptyRecycleBin">{{ ncfST('Frontend.009') }}</el-button>
+        <el-button type="danger" :loading="!!(recycleBin && recycleBin.emptying)" @@click.stop="confirmEmptyRecycleBin">{{ ncfST('Frontend.024') }}</el-button>
     </span>
 </el-dialog>
 
 <el-dialog
-    title="标签管理"
+    :title="ncfST('Frontend.143')"
     :visible.sync="fileTagDialog.visible"
     width="520px"
     custom-class="file-tag-dialog"
     append-to-body
     @@closed="onFileTagDialogClosed">
     <div class="file-tag-dialog-toolbar">
-        <span class="file-tag-dialog-label">为文件设置标签</span>
+        <span class="file-tag-dialog-label">{{ ncfST('Frontend.069') }}</span>
     </div>
-    <p class="file-tag-dialog-hint">可选标签来自「标签管理」中已维护的数据；选择后将写入当前文件的标识字段。</p>
+    <p class="file-tag-dialog-hint">{{ ncfST('Frontend.094') }}</p>
     <el-select
         class="file-tag-dialog-select"
         v-model="fileTagDialog.selectedIds"
@@ -2263,7 +2263,7 @@
         filterable
         clearable
         collapse-tags
-        placeholder="请选择标签（来自标签管理）"
+        :placeholder="ncfST('Frontend.165')"
         :disabled="!(fileTagCatalogOptions && fileTagCatalogOptions.length)">
         <el-option-group
             v-for="group in fileTagCatalogGroups"
@@ -2288,48 +2288,48 @@
                 @@close="removeSelectedFileTag(item.id)">{{ item.name }}</el-tag>
         </template>
         <div v-else class="file-tag-dialog-empty">
-            <template v-if="fileTagCatalogOptions && fileTagCatalogOptions.length">请从上方选择标签</template>
-            <template v-else>暂无可用标签，请先在左侧「标签管理」中新增标签</template>
+            <template v-if="fileTagCatalogOptions && fileTagCatalogOptions.length">{{ ncfST('Frontend.159') }}</template>
+            <template v-else>{{ ncfST('Frontend.130') }}</template>
         </div>
     </div>
     <span slot="footer" class="dialog-footer">
-        <el-button @@click="fileTagDialog.visible=false">取消</el-button>
-        <el-button type="primary" @@click="submitFileTags" :loading="fileTagDialog.loading">确定</el-button>
+        <el-button @@click="fileTagDialog.visible=false">{{ ncfST('Frontend.009') }}</el-button>
+        <el-button type="primary" @@click="submitFileTags" :loading="fileTagDialog.loading">{{ ncfST('Frontend.024') }}</el-button>
     </span>
 </el-dialog>
 
 <el-dialog
-    :title="tagCategoryDialog.editing ? '编辑分类' : '新增分类'"
+    :title="tagCategoryDialog.editing ? ncfST('Frontend.186') : ncfST('Frontend.187')"
     :visible.sync="tagCategoryDialog.visible"
     width="520px"
     custom-class="tag-manage-dialog"
     append-to-body
     @@closed="onTagCategoryDialogClosed">
     <el-form ref="tagCategoryForm" :model="tagCategoryDialog.form" :rules="tagCategoryRules" label-width="100px" size="small">
-        <el-form-item label="分类名称" prop="name">
+        <el-form-item :label="ncfST('Frontend.082')" prop="name">
             <div class="tag-manage-name-field">
                 <el-input
                     v-model="tagCategoryDialog.form.name"
                     maxlength="50"
-                    placeholder="请输入分类名称，最多50个字符">
+                    :placeholder="ncfST('Frontend.161')">
                 </el-input>
                 <span class="tag-manage-lang-badge">CN</span>
             </div>
         </el-form-item>
-        <el-form-item label="分类描述" prop="description">
+        <el-form-item :label="ncfST('Frontend.083')" prop="description">
             <el-input
                 type="textarea"
                 v-model="tagCategoryDialog.form.description"
                 :rows="3"
                 maxlength="200"
                 show-word-limit
-                placeholder="分类描述">
+                :placeholder="ncfST('Frontend.083')">
             </el-input>
         </el-form-item>
-        <el-form-item label="所属分类" prop="parentId">
+        <el-form-item :label="ncfST('Frontend.081')" prop="parentId">
             <el-select
                 v-model="tagCategoryDialog.form.parentId"
-                placeholder="选择分类"
+                :placeholder="ncfST('Frontend.171')"
                 clearable
                 filterable
                 style="width: 100%;">
@@ -2341,10 +2341,10 @@
                 </el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="分类管理员" prop="admin">
+        <el-form-item :label="ncfST('Frontend.084')" prop="admin">
             <el-select
                 v-model="tagCategoryDialog.form.admin"
-                placeholder="请选择管理员"
+                :placeholder="ncfST('Frontend.166')"
                 clearable
                 filterable
                 allow-create
@@ -2360,43 +2360,43 @@
         </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
-        <el-button @@click="tagCategoryDialog.visible = false">取消</el-button>
-        <el-button type="primary" :loading="tagCategoryDialog.loading" @@click="submitTagCategory">保存</el-button>
+        <el-button @@click="tagCategoryDialog.visible = false">{{ ncfST('Frontend.009') }}</el-button>
+        <el-button type="primary" :loading="tagCategoryDialog.loading" @@click="submitTagCategory">{{ ncfST('Frontend.074') }}</el-button>
     </span>
 </el-dialog>
 
 <el-dialog
-    :title="tagCreateDialog.editing ? '编辑标签' : '新增标签'"
+    :title="tagCreateDialog.editing ? ncfST('Frontend.188') : ncfST('Frontend.189')"
     :visible.sync="tagCreateDialog.visible"
     width="520px"
     custom-class="tag-manage-dialog"
     append-to-body
     @@closed="onTagCreateDialogClosed">
     <el-form ref="tagCreateForm" :model="tagCreateDialog.form" :rules="tagCreateRules" label-width="100px" size="small">
-        <el-form-item label="标签名称" prop="name">
+        <el-form-item :label="ncfST('Frontend.140')" prop="name">
             <div class="tag-manage-name-field">
                 <el-input
                     v-model="tagCreateDialog.form.name"
                     maxlength="30"
-                    placeholder="请输入标签名称，最多30个字符">
+                    :placeholder="ncfST('Frontend.163')">
                 </el-input>
                 <span class="tag-manage-lang-badge">CN</span>
             </div>
         </el-form-item>
-        <el-form-item label="标签描述" prop="description">
+        <el-form-item :label="ncfST('Frontend.141')" prop="description">
             <el-input
                 type="textarea"
                 v-model="tagCreateDialog.form.description"
                 :rows="3"
                 maxlength="100"
                 show-word-limit
-                placeholder="请输入标签描述">
+                :placeholder="ncfST('Frontend.164')">
             </el-input>
         </el-form-item>
-        <el-form-item label="所属分类" prop="categoryId">
+        <el-form-item :label="ncfST('Frontend.081')" prop="categoryId">
             <el-select
                 v-model="tagCreateDialog.form.categoryId"
-                placeholder="选择分类"
+                :placeholder="ncfST('Frontend.171')"
                 clearable
                 filterable
                 style="width: 100%;">
@@ -2410,13 +2410,13 @@
         </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
-        <el-button @@click="tagCreateDialog.visible = false">取消</el-button>
-        <el-button type="primary" :loading="tagCreateDialog.loading" @@click="submitTagCreate">保存</el-button>
+        <el-button @@click="tagCreateDialog.visible = false">{{ ncfST('Frontend.009') }}</el-button>
+        <el-button type="primary" :loading="tagCreateDialog.loading" @@click="submitTagCreate">{{ ncfST('Frontend.074') }}</el-button>
     </span>
 </el-dialog>
 
 <el-dialog
-    :title="filePreviewDialog.fileName || '文件预览'"
+    :title="filePreviewDialog.fileName || ncfST('Frontend.190')"
     :visible.sync="filePreviewDialog.visible"
     width="92%"
     top="4vh"
@@ -2425,7 +2425,7 @@
     @@closed="onFilePreviewClosed">
     <div class="file-preview-toolbar">
         <span class="file-preview-toolbar-name">{{ filePreviewDialog.fileName }}</span>
-        <el-button size="mini" icon="el-icon-download" @@click="downloadFile(filePreviewDialog.row)" v-if="filePreviewDialog.row">下载</el-button>
+        <el-button size="mini" icon="el-icon-download" @@click="downloadFile(filePreviewDialog.row)" v-if="filePreviewDialog.row">{{ ncfST('Frontend.004') }}</el-button>
     </div>
     <div class="file-preview-body" v-loading="filePreviewDialog.loading">
         <iframe v-if="filePreviewDialog.mode === 'pdf'" class="file-preview-frame" :src="filePreviewDialog.url"></iframe>
