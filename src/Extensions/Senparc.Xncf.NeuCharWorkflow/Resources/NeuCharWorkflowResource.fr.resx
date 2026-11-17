@@ -473,57 +473,57 @@
   <data name="Frontend.453" xml:space="preserve"><value>Sortie dans la Console inférieure</value></data>
   <data name="Frontend.454" xml:space="preserve"><value>Le flux se termine ici</value></data>
   <data name="Frontend.455" xml:space="preserve"><value>Nœud intégré du Workflow.</value></data>
-  <data name="Frontend.456" xml:space="preserve"><value>Unable to insert node</value></data>
-  <data name="Frontend.457" xml:space="preserve"><value>End and trigger nodes cannot be inserted into an existing connection.</value></data>
-  <data name="Frontend.458" xml:space="preserve"><value>Unable to connect</value></data>
-  <data name="Frontend.459" xml:space="preserve"><value>The target already has an upstream connection, the connection would create a cycle, or the node does not support this connection. Use a Function, Aggregate, or Item-by-item merge node for many-to-one targets.</value></data>
-  <data name="Frontend.460" xml:space="preserve"><value>Optional parameters</value></data>
-  <data name="Frontend.461" xml:space="preserve"><value>Module unavailable</value></data>
-  <data name="Frontend.462" xml:space="preserve"><value>Connection succeeded</value></data>
-  <data name="Frontend.463" xml:space="preserve"><value>Not detected</value></data>
-  <data name="Frontend.464" xml:space="preserve"><value>Failed to load remote A2A Agents</value></data>
-  <data name="Frontend.465" xml:space="preserve"><value>Failed to load A2A publication settings</value></data>
-  <data name="Frontend.466" xml:space="preserve"><value>Failed to update status</value></data>
-  <data name="Frontend.467" xml:space="preserve"><value>Manual run</value></data>
-  <data name="Frontend.468" xml:space="preserve"><value>History</value></data>
-  <data name="Frontend.469" xml:space="preserve"><value>Run records</value></data>
-  <data name="Frontend.470" xml:space="preserve"><value>Webhook trigger</value></data>
-  <data name="Frontend.471" xml:space="preserve"><value>Scheduled trigger</value></data>
-  <data name="Frontend.472" xml:space="preserve"><value>When the condition is true</value></data>
-  <data name="Frontend.473" xml:space="preserve"><value>When the condition is false</value></data>
-  <data name="Frontend.474" xml:space="preserve"><value>Loop control (optional)</value></data>
-  <data name="Frontend.475" xml:space="preserve"><value>Loop body boundary</value></data>
-  <data name="Frontend.476" xml:space="preserve"><value>Human input prompt</value></data>
-  <data name="Frontend.477" xml:space="preserve"><value>Safe Code: variable assignment</value></data>
-  <data name="Frontend.478" xml:space="preserve"><value>Workflow variables</value></data>
-  <data name="Frontend.479" xml:space="preserve"><value>Workflow name</value></data>
-  <data name="Frontend.480" xml:space="preserve"><value>Workflow shortcuts</value></data>
-  <data name="Frontend.481" xml:space="preserve"><value>Workflow settings</value></data>
-  <data name="Frontend.482" xml:space="preserve"><value>Node status updated.</value></data>
-  <data name="Frontend.483" xml:space="preserve"><value>Status update</value></data>
-  <data name="Frontend.484" xml:space="preserve"><value>Before the run</value></data>
-  <data name="Frontend.485" xml:space="preserve"><value>End date</value></data>
-  <data name="Frontend.486" xml:space="preserve"><value>This task has no available run snapshot; it may predate replay support.</value></data>
+  <data name="Frontend.456" xml:space="preserve"><value>Impossible d’insérer le nœud</value></data>
+  <data name="Frontend.457" xml:space="preserve"><value>Les nœuds de fin ou de déclenchement ne peuvent pas être insérés dans une connexion existante.</value></data>
+  <data name="Frontend.458" xml:space="preserve"><value>Connexion impossible</value></data>
+  <data name="Frontend.459" xml:space="preserve"><value>La cible possède déjà une entrée, la connexion créerait une boucle ou le nœud ne prend pas en charge ce type de connexion. Pour une cible multi-vers-un, utilisez un nœud Function, d’agrégation ou de fusion élément par élément.</value></data>
+  <data name="Frontend.460" xml:space="preserve"><value>Paramètres facultatifs</value></data>
+  <data name="Frontend.461" xml:space="preserve"><value>Module indisponible</value></data>
+  <data name="Frontend.462" xml:space="preserve"><value>Connexion réussie</value></data>
+  <data name="Frontend.463" xml:space="preserve"><value>Non testé</value></data>
+  <data name="Frontend.464" xml:space="preserve"><value>Échec du chargement de l’Agent A2A distant</value></data>
+  <data name="Frontend.465" xml:space="preserve"><value>Échec du chargement de la configuration de publication A2A</value></data>
+  <data name="Frontend.466" xml:space="preserve"><value>Échec de la mise à jour de l’état</value></data>
+  <data name="Frontend.467" xml:space="preserve"><value>Exécution manuelle</value></data>
+  <data name="Frontend.468" xml:space="preserve"><value>Historique</value></data>
+  <data name="Frontend.469" xml:space="preserve"><value>Historique d’exécution</value></data>
+  <data name="Frontend.470" xml:space="preserve"><value>Déclencheur Webhook</value></data>
+  <data name="Frontend.471" xml:space="preserve"><value>Déclencheur planifié</value></data>
+  <data name="Frontend.472" xml:space="preserve"><value>Lorsque la condition est vraie</value></data>
+  <data name="Frontend.473" xml:space="preserve"><value>Lorsque la condition est fausse</value></data>
+  <data name="Frontend.474" xml:space="preserve"><value>Contrôle de boucle (facultatif)</value></data>
+  <data name="Frontend.475" xml:space="preserve"><value>Limite du corps de boucle</value></data>
+  <data name="Frontend.476" xml:space="preserve"><value>Invite de saisie humaine</value></data>
+  <data name="Frontend.477" xml:space="preserve"><value>Code sécurisé : affectation de variables</value></data>
+  <data name="Frontend.478" xml:space="preserve"><value>Variables du Workflow</value></data>
+  <data name="Frontend.479" xml:space="preserve"><value>Nom du Workflow</value></data>
+  <data name="Frontend.480" xml:space="preserve"><value>Actions rapides du Workflow</value></data>
+  <data name="Frontend.481" xml:space="preserve"><value>Paramètres du Workflow</value></data>
+  <data name="Frontend.482" xml:space="preserve"><value>L’état du nœud a été mis à jour.</value></data>
+  <data name="Frontend.483" xml:space="preserve"><value>Mise à jour de l’état</value></data>
+  <data name="Frontend.484" xml:space="preserve"><value>Avant le début de l’exécution</value></data>
+  <data name="Frontend.485" xml:space="preserve"><value>Date de fin</value></data>
+  <data name="Frontend.486" xml:space="preserve"><value>Cette tâche ne dispose d’aucun instantané d’exécution ; elle peut avoir été créée avant l’activation de la fonction de relecture.</value></data>
 
-  <data name="Frontend.487" xml:space="preserve"><value>{0} (task copy)</value></data>
-  <data name="Frontend.488" xml:space="preserve"><value>task copy</value></data>
+  <data name="Frontend.487" xml:space="preserve"><value>{0} (copie de tâche)</value></data>
+  <data name="Frontend.488" xml:space="preserve"><value>Copie de tâche</value></data>
 
-  <data name="Frontend.489" xml:space="preserve"><value>Assign values to declared Workflow variables in order. Only restricted formulas are allowed; JavaScript, network, file, and loop operations are not run.</value></data>
-  <data name="Frontend.490" xml:space="preserve"><value>Variable assignments, restricted formulas</value></data>
-  <data name="Frontend.491" xml:space="preserve"><value>The original input continues downstream</value></data>
-  <data name="Frontend.492" xml:space="preserve"><value>Close when the pointer leaves the node</value></data>
-  <data name="Frontend.493" xml:space="preserve"><value>Click elsewhere to close, or it closes automatically after 15 seconds</value></data>
-  <data name="Frontend.494" xml:space="preserve"><value>Function unavailable</value></data>
-  <data name="Frontend.495" xml:space="preserve"><value>Function unavailable</value></data>
-  <data name="Frontend.496" xml:space="preserve"><value>End nodes cannot be inserted into connections</value></data>
-  <data name="Frontend.497" xml:space="preserve"><value>Node unavailable</value></data>
-  <data name="Frontend.498" xml:space="preserve"><value>Output to the Console below</value></data>
-  <data name="Frontend.499" xml:space="preserve"><value>Output to the Console below using the template</value></data>
-  <data name="Frontend.500" xml:space="preserve"><value>Wait for Human input or external API resume</value></data>
-  <data name="Frontend.501" xml:space="preserve"><value>Workflow node</value></data>
-  <data name="Frontend.502" xml:space="preserve"><value>Current node unavailable</value></data>
-  <data name="Frontend.503" xml:space="preserve"><value>The node catalog is temporarily unavailable</value></data>
-  <data name="Frontend.504" xml:space="preserve"><value>The model list is temporarily unavailable</value></data>
-  <data name="Frontend.505" xml:space="preserve"><value>The selected Function parameter was removed or became unavailable after the module update</value></data>
-  <data name="Frontend.506" xml:space="preserve"><value>When not selected, AgentGroup inherits the group owner’s PromptRange model; it falls back to the default Chat model only when no model is available.</value></data>
+  <data name="Frontend.489" xml:space="preserve"><value>Affecte séquentiellement des valeurs aux variables du Workflow déclarées à l’avance. Seules les formules limitées sont autorisées ; JavaScript, le réseau, les fichiers et les boucles ne sont pas exécutés.</value></data>
+  <data name="Frontend.490" xml:space="preserve"><value>Affectation de variables et formules limitées</value></data>
+  <data name="Frontend.491" xml:space="preserve"><value>L’entrée d’origine continue vers les nœuds suivants</value></data>
+  <data name="Frontend.492" xml:space="preserve"><value>Fermer lorsque le pointeur quitte le nœud</value></data>
+  <data name="Frontend.493" xml:space="preserve"><value>Cliquez ailleurs pour fermer, ou fermeture automatique après 15 secondes</value></data>
+  <data name="Frontend.494" xml:space="preserve"><value>La fonction est devenue indisponible</value></data>
+  <data name="Frontend.495" xml:space="preserve"><value>La Function est devenue indisponible</value></data>
+  <data name="Frontend.496" xml:space="preserve"><value>Le nœud de fin ne peut pas être inséré dans une connexion</value></data>
+  <data name="Frontend.497" xml:space="preserve"><value>Nœud indisponible</value></data>
+  <data name="Frontend.498" xml:space="preserve"><value>Sortie dans la Console inférieure</value></data>
+  <data name="Frontend.499" xml:space="preserve"><value>Sortie selon le modèle dans la Console inférieure</value></data>
+  <data name="Frontend.500" xml:space="preserve"><value>En attente d’une saisie humaine ou de la récupération de l’API externe</value></data>
+  <data name="Frontend.501" xml:space="preserve"><value>Nœud du Workflow</value></data>
+  <data name="Frontend.502" xml:space="preserve"><value>Le nœud actuel est indisponible</value></data>
+  <data name="Frontend.503" xml:space="preserve"><value>Le catalogue de nœuds est indisponible</value></data>
+  <data name="Frontend.504" xml:space="preserve"><value>La liste des modèles est indisponible</value></data>
+  <data name="Frontend.505" xml:space="preserve"><value>Le paramètre de sélection Function associé a été supprimé ou est indisponible après la mise à jour du module</value></data>
+  <data name="Frontend.506" xml:space="preserve"><value>Sans sélection, AgentGroup hérite d’abord du modèle PromptRange du propriétaire du groupe ; en l’absence de modèle disponible, il utilise le modèle Chat par défaut du système</value></data>
 </root>
