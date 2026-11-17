@@ -169,7 +169,7 @@
                     },
                     chartBuilt: false,
                     chartOptions: {},
-                    activeNames: [] //默认打开折叠面板
+                    activeNames: [] // Open panels by default.
                 };
             },
             mounted() {
@@ -177,7 +177,7 @@
                 this.getDetail();
             },
             methods: {
-                // 获取数据
+                // Load data.
                 async getDetail() {
                     const res = await service.get('/Admin/WeixinManager/Index?handler=Ajax');
                     this.count = {
@@ -191,7 +191,7 @@
                     }
                     this.getCharData();
                 },
-                // 获取图表数据
+                // Load chart data.
                 async getCharData() {
                     let ids = [];
                     this.count.mpAccountDtos.map(res => {
@@ -204,7 +204,7 @@
                         app.getCharData();
                     }, 5000);
                 },
-                // 生成图表
+                // Render charts.
                 bildMpAccountChart(dataArr) {
                     for (var i = 0; i < dataArr.length; i++) {
                         var data = dataArr[i];
@@ -216,7 +216,7 @@
                             this.chartOptions[data.id + ''].options.series[0].data[0].name = status;
                         } else {
                             var id = 'chart_mpaccount_' + data.id;
-                            // 指定图表的配置项和数据
+                            // Define chart options and data.
                             this.chartOptions[data.id + ''] = {
                                 chartObj: echarts.init(document.getElementById(id)),
                                 options: {

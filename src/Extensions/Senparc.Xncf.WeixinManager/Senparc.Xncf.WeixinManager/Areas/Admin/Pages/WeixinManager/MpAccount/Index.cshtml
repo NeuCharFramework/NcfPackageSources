@@ -229,7 +229,7 @@
                 this.uid = resizeUrl().uid;
             },
             methods: {
-                // 打开用户管理
+                // Open user management.
                 openUserMan(id) {
                     window.location.href='/Admin/WeixinManager/WeixinUser?mpid=' + id + '&uid=' + this.uid
             },
@@ -279,7 +279,7 @@
                 //    //
                 //},
                 saveMpAccount: function () {
-                    //保存
+                    // Save.
                     var obj = JSON.parse(JSON.stringify(this.mpAccountForm));
                     obj.id = this.dialog.data.id;
                     this.$refs.ref_mpAccountForm.validate().then(res => {
