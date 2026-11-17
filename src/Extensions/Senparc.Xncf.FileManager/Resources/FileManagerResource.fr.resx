@@ -465,4 +465,17 @@
   <data name="Frontend.226" xml:space="preserve"><value>Utilisateur actuel</value></data>
   <data name="Frontend.227" xml:space="preserve"><value>Étiquettes du fichier mises à jour</value></data>
   <data name="Frontend.228" xml:space="preserve"><value>Étiquettes du fichier effacées</value></data>
+  <data name="Frontend.229" xml:space="preserve"><value>Corbeille vidée avec succès</value></data>
+  <data name="Frontend.230" xml:space="preserve"><value>Supprimés : {0} ; échecs : {1} : {2}</value></data>
+  <data name="Frontend.231" xml:space="preserve"><value>Certains fichiers n’ont pas pu être supprimés ; {0} restent dans la corbeille</value></data>
+  <data name="Frontend.232" xml:space="preserve"><value>Impossible de vider complètement la corbeille</value></data>
+  <data name="Frontend.233" xml:space="preserve"><value>Impossible de vider la corbeille : {0}</value></data>
+  <data name="Frontend.234" xml:space="preserve"><value>Envoyer des fichiers vers [/{0}] -- reprise de l’envoi prise en charge</value></data>
+  <data name="Frontend.235" xml:space="preserve"><value>Fichier sans nom</value></data>
+  <data name="Frontend.236" xml:space="preserve"><value>Le fichier sera déplacé vers la corbeille. Continuer ?</value></data>
+  <data name="Frontend.237" xml:space="preserve"><value>Supprimer : {0}</value></data>
+  <data name="Frontend.238" xml:space="preserve"><value>Déplacé vers la corbeille</value></data>
+  <data name="Frontend.239" xml:space="preserve"><value>Échec de la suppression : {0}</value></data>
+  <data name="Frontend.240" xml:space="preserve"><value>Ressource publiée</value></data>
+  <data name="Frontend.241" xml:space="preserve"><value>Ressource rendue privée</value></data>
 </root>

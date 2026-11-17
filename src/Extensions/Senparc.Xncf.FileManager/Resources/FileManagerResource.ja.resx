@@ -465,4 +465,17 @@
   <data name="Frontend.226" xml:space="preserve"><value>現在のユーザー</value></data>
   <data name="Frontend.227" xml:space="preserve"><value>ファイルタグを更新しました</value></data>
   <data name="Frontend.228" xml:space="preserve"><value>ファイルタグをクリアしました</value></data>
+  <data name="Frontend.229" xml:space="preserve"><value>ごみ箱を空にしました</value></data>
+  <data name="Frontend.230" xml:space="preserve"><value>{0}個を削除しました。失敗：{1}個：{2}</value></data>
+  <data name="Frontend.231" xml:space="preserve"><value>一部のファイルを削除できませんでした。ごみ箱に{0}個残っています</value></data>
+  <data name="Frontend.232" xml:space="preserve"><value>ごみ箱を完全に空にできませんでした</value></data>
+  <data name="Frontend.233" xml:space="preserve"><value>ごみ箱を空にできませんでした：{0}</value></data>
+  <data name="Frontend.234" xml:space="preserve"><value>[/{0}]へファイルをアップロード --再開可能なアップロードに対応</value></data>
+  <data name="Frontend.235" xml:space="preserve"><value>名前のないファイル</value></data>
+  <data name="Frontend.236" xml:space="preserve"><value>ファイルをごみ箱に移動します。続行しますか？</value></data>
+  <data name="Frontend.237" xml:space="preserve"><value>削除：{0}</value></data>
+  <data name="Frontend.238" xml:space="preserve"><value>ごみ箱に移動しました</value></data>
+  <data name="Frontend.239" xml:space="preserve"><value>削除に失敗しました：{0}</value></data>
+  <data name="Frontend.240" xml:space="preserve"><value>リソースを公開しました</value></data>
+  <data name="Frontend.241" xml:space="preserve"><value>リソースを非公開にしました</value></data>
 </root>

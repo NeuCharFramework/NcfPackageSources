@@ -465,4 +465,17 @@
   <data name="Frontend.226" xml:space="preserve"><value>Current user</value></data>
   <data name="Frontend.227" xml:space="preserve"><value>File tags updated</value></data>
   <data name="Frontend.228" xml:space="preserve"><value>File tags cleared</value></data>
+  <data name="Frontend.229" xml:space="preserve"><value>Recycle bin emptied successfully</value></data>
+  <data name="Frontend.230" xml:space="preserve"><value>Deleted {0}; failed {1}: {2}</value></data>
+  <data name="Frontend.231" xml:space="preserve"><value>Some files could not be deleted; {0} remain in the recycle bin</value></data>
+  <data name="Frontend.232" xml:space="preserve"><value>Could not empty the recycle bin completely</value></data>
+  <data name="Frontend.233" xml:space="preserve"><value>Failed to empty the recycle bin: {0}</value></data>
+  <data name="Frontend.234" xml:space="preserve"><value>Upload files to [/{0}] -- resumable upload supported</value></data>
+  <data name="Frontend.235" xml:space="preserve"><value>Unnamed file</value></data>
+  <data name="Frontend.236" xml:space="preserve"><value>This will move the file to the recycle bin. Continue?</value></data>
+  <data name="Frontend.237" xml:space="preserve"><value>Delete: {0}</value></data>
+  <data name="Frontend.238" xml:space="preserve"><value>Moved to the recycle bin</value></data>
+  <data name="Frontend.239" xml:space="preserve"><value>Delete failed: {0}</value></data>
+  <data name="Frontend.240" xml:space="preserve"><value>Resource published</value></data>
+  <data name="Frontend.241" xml:space="preserve"><value>Resource made private</value></data>
 </root>

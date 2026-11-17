@@ -465,4 +465,17 @@
   <data name="Frontend.226" xml:space="preserve"><value>Текущий пользователь</value></data>
   <data name="Frontend.227" xml:space="preserve"><value>Метки файла обновлены</value></data>
   <data name="Frontend.228" xml:space="preserve"><value>Метки файла очищены</value></data>
+  <data name="Frontend.229" xml:space="preserve"><value>Корзина успешно очищена</value></data>
+  <data name="Frontend.230" xml:space="preserve"><value>Удалено: {0}; ошибок: {1}: {2}</value></data>
+  <data name="Frontend.231" xml:space="preserve"><value>Некоторые файлы удалить не удалось; в корзине осталось: {0}</value></data>
+  <data name="Frontend.232" xml:space="preserve"><value>Не удалось полностью очистить корзину</value></data>
+  <data name="Frontend.233" xml:space="preserve"><value>Не удалось очистить корзину: {0}</value></data>
+  <data name="Frontend.234" xml:space="preserve"><value>Загрузка файлов в [/{0}] -- поддерживается возобновление</value></data>
+  <data name="Frontend.235" xml:space="preserve"><value>Файл без имени</value></data>
+  <data name="Frontend.236" xml:space="preserve"><value>Файл будет перемещён в корзину. Продолжить?</value></data>
+  <data name="Frontend.237" xml:space="preserve"><value>Удалить: {0}</value></data>
+  <data name="Frontend.238" xml:space="preserve"><value>Перемещено в корзину</value></data>
+  <data name="Frontend.239" xml:space="preserve"><value>Ошибка удаления: {0}</value></data>
+  <data name="Frontend.240" xml:space="preserve"><value>Ресурс опубликован</value></data>
+  <data name="Frontend.241" xml:space="preserve"><value>Ресурс сделан приватным</value></data>
 </root>

@@ -1211,8 +1211,8 @@
                             deletedCount: successFallback,
                             failedIds: remainingFallback.map(function (x) { return x.id; }),
                             message: remainingFallback.length === 0
-                                ? '一键清空成功'
-                                : ('已删除 ' + successFallback + ' 个，失败 ' + remainingFallback.length + ' 个' + (lastError ? '：' + lastError : ''))
+                                ? fileManagerText('Frontend.229', 'Recycle bin emptied successfully')
+                                : fileManagerText('Frontend.230', 'Deleted {0}; failed {1}: {2}', successFallback, remainingFallback.length, lastError || '')
                         };
                     }
 
@@ -1231,14 +1231,14 @@
                     if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
 
                     if (remaining.length === 0) {
-                        this.$message.success((result && result.message) || '一键清空成功');
+                        this.$message.success((result && result.message) || fileManagerText('Frontend.229', 'Recycle bin emptied successfully'));
                     } else if (remaining.length < items.length) {
-                        this.$message.warning((result && result.message) || ('部分文件删除失败，仍有 ' + remaining.length + ' 个留在回收站'));
+                        this.$message.warning((result && result.message) || fileManagerText('Frontend.231', 'Some files could not be deleted; {0} remain in the recycle bin', remaining.length));
                     } else {
-                        this.$message.error((result && result.message) || '一键清空失败，文件未能彻底删除');
+                        this.$message.error((result && result.message) || fileManagerText('Frontend.232', 'Could not empty the recycle bin completely'));
                     }
                 } catch (error) {
-                    this.$message.error('一键清空失败：' + errorMessage(error));
+                    this.$message.error(fileManagerText('Frontend.233', 'Failed to empty the recycle bin: {0}', errorMessage(error)));
                 } finally {
                     this.$set(this.recycleBin, 'emptying', false);
                 }
@@ -1409,7 +1409,7 @@
             },
             getUploadDialogTitle: function () {
                 const segments = [this.rootFolderName || '根目录'].concat((this.folderPath || []).map(function (item) { return item.name; }));
-                return '上传文件到 【/' + segments.join('/') + '】 --支持断点续传';
+                return fileManagerText('Frontend.234', 'Upload files to [/{0}] -- resumable upload supported', segments.join('/'));
             },
             handleRowCommand: function (command, row) {
                 if (command === 'download') return this.downloadFile(row);
@@ -1860,7 +1860,7 @@
                     this.$message.warning(fileManagerText('Frontend.131', 'No previewable content'));
                     return;
                 }
-                const fileName = row.fileName || row.name || '未命名文件';
+                const fileName = row.fileName || row.name || fileManagerText('Frontend.235', 'Unnamed file');
                 const kind = this.getPreviewKind(fileName);
                 const previewUrl = this.buildPreviewUrl(row.id);
                 this.filePreviewDialog = {
@@ -1951,20 +1951,20 @@
                 try {
                     const shortName = String(row.fileName || '').replace(/\.[^.]+$/, '') || row.fileName;
                     await this.$confirm(
-                        '此操作将文件放至回收站，是否继续？',
-                        '是否删除: ' + shortName,
+                        fileManagerText('Frontend.236', 'This will move the file to the recycle bin. Continue?'),
+                        fileManagerText('Frontend.237', 'Delete: {0}', shortName),
                         { type: 'warning', confirmButtonText: '确定', cancelButtonText: '取消' }
                     );
                     this.moveFileToRecycleBin(row);
-                    this.$message.success('已移至回收站');
+                    this.$message.success(fileManagerText('Frontend.238', 'Moved to the recycle bin'));
                 } catch (error) {
-                    if (error !== 'cancel') this.$message.error('删除失败：' + errorMessage(error));
+                    if (error !== 'cancel') this.$message.error(fileManagerText('Frontend.239', 'Delete failed: {0}', errorMessage(error)));
                 }
             },
             setPublication: async function (row, publish) {
                 try {
                     await post(pageUrl + '?handler=SetSiteAssetPublication', { id: row.id, publish: publish });
-                    this.$message.success(publish ? '资源已公开' : '资源已设为私有');
+                    this.$message.success(publish ? fileManagerText('Frontend.240', 'Resource published') : fileManagerText('Frontend.241', 'Resource made private'));
                     await this.getList();
                 } catch (error) {
                     this.$message.error('更新发布状态失败：' + errorMessage(error));

@@ -465,4 +465,17 @@
   <data name="Frontend.226" xml:space="preserve"><value>Usuario actual</value></data>
   <data name="Frontend.227" xml:space="preserve"><value>Etiquetas de archivo actualizadas</value></data>
   <data name="Frontend.228" xml:space="preserve"><value>Etiquetas de archivo borradas</value></data>
+  <data name="Frontend.229" xml:space="preserve"><value>Papelera vaciada correctamente</value></data>
+  <data name="Frontend.230" xml:space="preserve"><value>Eliminados {0}; fallidos {1}: {2}</value></data>
+  <data name="Frontend.231" xml:space="preserve"><value>No se pudieron eliminar algunos archivos; quedan {0} en la papelera</value></data>
+  <data name="Frontend.232" xml:space="preserve"><value>No se pudo vaciar completamente la papelera</value></data>
+  <data name="Frontend.233" xml:space="preserve"><value>No se pudo vaciar la papelera: {0}</value></data>
+  <data name="Frontend.234" xml:space="preserve"><value>Subir archivos a [/{0}] -- carga reanudable compatible</value></data>
+  <data name="Frontend.235" xml:space="preserve"><value>Archivo sin nombre</value></data>
+  <data name="Frontend.236" xml:space="preserve"><value>El archivo se moverá a la papelera. ¿Continuar?</value></data>
+  <data name="Frontend.237" xml:space="preserve"><value>Eliminar: {0}</value></data>
+  <data name="Frontend.238" xml:space="preserve"><value>Movido a la papelera</value></data>
+  <data name="Frontend.239" xml:space="preserve"><value>Error al eliminar: {0}</value></data>
+  <data name="Frontend.240" xml:space="preserve"><value>Recurso publicado</value></data>
+  <data name="Frontend.241" xml:space="preserve"><value>Recurso establecido como privado</value></data>
 </root>
