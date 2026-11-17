@@ -506,32 +506,32 @@
   <data name="FineTuning.TruncatedSamples" xml:space="preserve"><value>Усечено</value></data>
 
 
-  <data name="FineTuning.RuntimeEnabled" xml:space="preserve"><value>Enable local fine-tuning</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="FineTuning.RuntimeEnabledHelp" xml:space="preserve"><value>NCF connects to workers only after this is on. No site restart is required. Turning it off is saved and kept on the next startup.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="FineTuning.ManagedWorker" xml:space="preserve"><value>Start from NCF</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="FineTuning.ManagedWorkerHelp" xml:space="preserve"><value>NCF starts this worker with local Python and stops it when the site stops. Use a distinct port and data directory for each worker.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="FineTuning.BindHost" xml:space="preserve"><value>Bind address</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="FineTuning.RuntimeEnabled" xml:space="preserve"><value>Включить локальную тонкую настройку</value><comment>Переведено для этого языка.</comment></data>
+  <data name="FineTuning.RuntimeEnabledHelp" xml:space="preserve"><value>NCF подключается к worker только после включения. Перезапуск сайта не требуется. Отключение сохраняется и действует при следующем запуске.</value><comment>Переведено для этого языка.</comment></data>
+  <data name="FineTuning.ManagedWorker" xml:space="preserve"><value>Запустить из NCF</value><comment>Переведено для этого языка.</comment></data>
+  <data name="FineTuning.ManagedWorkerHelp" xml:space="preserve"><value>NCF запускает этот worker с локальным Python и останавливает его при остановке сайта. Используйте отдельные порт и каталог данных для каждого worker.</value><comment>Переведено для этого языка.</comment></data>
+  <data name="FineTuning.BindHost" xml:space="preserve"><value>Адрес привязки</value><comment>Переведено для этого языка.</comment></data>
   <data name="FineTuning.WorkerPort" xml:space="preserve"><value>Port</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="FineTuning.ModelsRoot" xml:space="preserve"><value>Models directory</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="FineTuning.ModelsRootHelp" xml:space="preserve"><value>Absolute path, for example ~/AIModels. Workers may share the models directory.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="FineTuning.DataRoot" xml:space="preserve"><value>Data directory</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="FineTuning.DataRootHelp" xml:space="preserve"><value>Leave empty to use a private directory under the site App_Data folder. It must not overlap the models directory or another worker's data directory.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="FineTuning.PythonPath" xml:space="preserve"><value>Python path</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="FineTuning.WorkerProjectPath" xml:space="preserve"><value>Worker project path</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="FineTuning.AutoStart" xml:space="preserve"><value>Start after the site starts</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="FineTuning.ModelsRoot" xml:space="preserve"><value>Каталог моделей</value><comment>Переведено для этого языка.</comment></data>
+  <data name="FineTuning.ModelsRootHelp" xml:space="preserve"><value>Абсолютный путь, например ~/AIModels. Workers могут использовать общий каталог моделей.</value><comment>Переведено для этого языка.</comment></data>
+  <data name="FineTuning.DataRoot" xml:space="preserve"><value>Каталог данных</value><comment>Переведено для этого языка.</comment></data>
+  <data name="FineTuning.DataRootHelp" xml:space="preserve"><value>Оставьте пустым, чтобы использовать отдельный каталог в App_Data сайта. Он не должен совпадать с каталогом моделей или данными другого worker.</value><comment>Переведено для этого языка.</comment></data>
+  <data name="FineTuning.PythonPath" xml:space="preserve"><value>Путь к Python</value><comment>Переведено для этого языка.</comment></data>
+  <data name="FineTuning.WorkerProjectPath" xml:space="preserve"><value>Путь к проекту worker</value><comment>Переведено для этого языка.</comment></data>
+  <data name="FineTuning.AutoStart" xml:space="preserve"><value>Запускать после запуска сайта</value><comment>Переведено для этого языка.</comment></data>
   <data name="FineTuning.GenerateSecret" xml:space="preserve"><value>Создать файл ключа</value><comment>Переведено для этого языка.</comment></data>
-  <data name="FineTuning.StartWorker" xml:space="preserve"><value>Start worker</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="FineTuning.StopWorker" xml:space="preserve"><value>Stop worker</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="FineTuning.RefreshWorkerStatus" xml:space="preserve"><value>Refresh status</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="FineTuning.WorkerProcess" xml:space="preserve"><value>Process</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="FineTuning.WorkerLogs" xml:space="preserve"><value>Recent logs</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="FineTuning.LaunchCommand" xml:space="preserve"><value>Start command</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="FineTuning.WorkerStarted" xml:space="preserve"><value>Worker started.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="FineTuning.WorkerStopped" xml:space="preserve"><value>Worker stopped.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="FineTuning.StartWorker" xml:space="preserve"><value>Запустить worker</value><comment>Переведено для этого языка.</comment></data>
+  <data name="FineTuning.StopWorker" xml:space="preserve"><value>Остановить worker</value><comment>Переведено для этого языка.</comment></data>
+  <data name="FineTuning.RefreshWorkerStatus" xml:space="preserve"><value>Обновить состояние</value><comment>Переведено для этого языка.</comment></data>
+  <data name="FineTuning.WorkerProcess" xml:space="preserve"><value>Процесс</value><comment>Переведено для этого языка.</comment></data>
+  <data name="FineTuning.WorkerLogs" xml:space="preserve"><value>Последние журналы</value><comment>Переведено для этого языка.</comment></data>
+  <data name="FineTuning.LaunchCommand" xml:space="preserve"><value>Команда запуска</value><comment>Переведено для этого языка.</comment></data>
+  <data name="FineTuning.WorkerStarted" xml:space="preserve"><value>Worker запущен.</value><comment>Переведено для этого языка.</comment></data>
+  <data name="FineTuning.WorkerStopped" xml:space="preserve"><value>Worker остановлен.</value><comment>Переведено для этого языка.</comment></data>
   <data name="FineTuning.SecretGenerated" xml:space="preserve"><value>Файл ключа создан. Ключ никогда не отображается на этой странице.</value><comment>Переведено для этого языка.</comment></data>
   <data name="FineTuning.SecretAlreadyExists" xml:space="preserve"><value>Файл ключа уже существует и оставлен без изменений.</value><comment>Переведено для этого языка.</comment></data>
-  <data name="FineTuning.SaveBeforeLaunch" xml:space="preserve"><value>Save first, then generate a key and start the worker.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="FineTuning.Optional" xml:space="preserve"><value>Optional</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="FineTuning.SaveBeforeLaunch" xml:space="preserve"><value>Сначала сохраните, затем создайте ключ и запустите worker.</value><comment>Переведено для этого языка.</comment></data>
+  <data name="FineTuning.Optional" xml:space="preserve"><value>Необязательно</value><comment>Переведено для этого языка.</comment></data>
   <data name="Frontend.400" xml:space="preserve"><value>Imported from NeuChar AI (DevId: {0})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
 
   <data name="Frontend.100" xml:space="preserve"><value>Create fine-tuning task</value></data>
