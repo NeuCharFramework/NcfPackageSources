@@ -1286,7 +1286,7 @@
                 } catch (e) { /* ignore quota */ }
             },
             buildFavoritePathText: function () {
-                const segments = [this.rootFolderName || '企业文档', this.orgName || ''].concat(
+                const segments = [this.rootFolderName || fileManagerText('Frontend.072', 'Enterprise documents'), this.orgName || ''].concat(
                     (this.folderPath || []).map(function (item) { return item.name; })
                 ).filter(function (name) { return !!name; });
                 return segments.join(' > ');
@@ -1363,7 +1363,14 @@
                 return value.toFixed(index === 0 ? 0 : 2) + ' ' + units[index];
             },
             fileTypeLabel: function (fileType) {
-                return ({ 0: '文本', 1: 'Word', 2: 'PowerPoint', 3: 'Excel', 4: '代码', 999: '其他' })[fileType] || '其他';
+                return ({
+                    0: fileManagerText('Frontend.020', 'Text'),
+                    1: 'Word',
+                    2: 'PowerPoint',
+                    3: 'Excel',
+                    4: fileManagerText('Frontend.005', 'Code'),
+                    999: fileManagerText('Frontend.006', 'Other')
+                })[fileType] || fileManagerText('Frontend.006', 'Other');
             },
             updatedByLabel: function (row) { return '-'; },
             filterFolderNode: function (value, data) {
@@ -1408,7 +1415,7 @@
                 if (this.$refs.upload) this.$refs.upload.clearFiles();
             },
             getUploadDialogTitle: function () {
-                const segments = [this.rootFolderName || '根目录'].concat((this.folderPath || []).map(function (item) { return item.name; }));
+                const segments = [this.rootFolderName || fileManagerText('Frontend.023', 'Root folder')].concat((this.folderPath || []).map(function (item) { return item.name; }));
                 return fileManagerText('Frontend.234', 'Upload files to [/{0}] -- resumable upload supported', segments.join('/'));
             },
             handleRowCommand: function (command, row) {
