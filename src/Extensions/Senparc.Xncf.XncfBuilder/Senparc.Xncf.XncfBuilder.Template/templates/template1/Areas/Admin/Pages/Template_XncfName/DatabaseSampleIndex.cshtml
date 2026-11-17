@@ -119,7 +119,7 @@
         </el-pagination>
     </div>
 
-    @* dialog for 添加颜色 *@
+    @* Dialog for adding a color *@
     <el-dialog title="添加颜色" :visible.sync="addFormDialogVisible" width="50%" :close-on-click-modal="false">
         <el-form :model="addForm" label-width="120px" :rules="addRules" ref="addForm">
             <el-form-item label="红色值 (R)" prop="red">
@@ -149,7 +149,7 @@
         </span>
     </el-dialog>
 
-    @* dialog for 编辑颜色 *@
+    @* Dialog for editing a color *@
     <el-dialog title="编辑颜色" :visible.sync="editFormDialogVisible" width="50%" :close-on-click-modal="false">
         <el-form :model="editForm" label-width="120px" :rules="editRules" ref="editForm">
             <el-form-item label="红色值 (R)" prop="red">
