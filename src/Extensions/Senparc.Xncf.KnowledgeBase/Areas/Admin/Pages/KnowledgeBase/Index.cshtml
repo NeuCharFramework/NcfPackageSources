@@ -440,41 +440,41 @@
                :close-on-press-escape="false" size="960px" append-to-body>
         <div class="drawerRtl">
             <div class="drawerRtl__header">
-                <div class="drawerRtl__header__title">管理知识库资料</div>
+                <div class="drawerRtl__header__title">{{ ncfST('Frontend.235') }}</div>
                 <div class="drawerRtl__header__close" @@click="handleElVisibleClose('drawerGroup')">&times;</div>
             </div>
             <div class="drawerRtl__body">
                 <el-form v-if="visible.drawerGroup" ref="groupELForm" :model="groupForm" :rules="groupFormRules"
                          :size="elSize" label-position="left" label-width="130px" class="drawerForm-container">
-                    <el-form-item label="内容类型">
-                        <el-select size="mini" v-model="groupForm.contentType" placeholder="请选择内容类型">
+                    <el-form-item :label="ncfST('Frontend.090')">
+                        <el-select size="mini" v-model="groupForm.contentType" :placeholder="ncfST('Frontend.090')">
                             <el-option v-for="item in contentTypeData" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-alert v-if="groupForm.contentType === 2"
-                              title="保存资料关联后，已构建的向量会失效；请返回列表点击“向量化”后再进行召回测试。"
+                              :title="ncfST('Frontend.186')"
                               type="warning" :closable="false" show-icon style="margin-bottom: 16px;">
                     </el-alert>
-                    <el-form-item v-if="groupForm.contentType === 2" label="选择知识库资料" prop="files">
+                    <el-form-item v-if="groupForm.contentType === 2" :label="ncfST('Frontend.254')" prop="files">
                         <div class="groupFMB">
                             <div class="df-wn flex-ac flex-jsb" style="gap: 10px;margin-bottom: 10px;">
                                 <div class="df-wn flex-ac" style="gap: 10px;">
                                     <el-input v-model="fileQueryList.filter" size="small"
-                                              placeholder="按文件名搜索" style="width:auto;"></el-input>
+                                              :placeholder="ncfST('Frontend.210')" style="width:auto;"></el-input>
                                     <el-button size="small" icon="el-icon-search"
-                                               @@click="handleConfigFileSearch">搜索</el-button>
+                                               @@click="handleConfigFileSearch">{{ ncfST('Frontend.114') }}</el-button>
                                 </div>
                             </div>
                             <div class="df-wn flex-ac flex-jsb" style="gap: 10px;margin-bottom: 10px;">
                                 <div class="df-wn flex-ac" style="gap: 10px;">
                                     <el-button size="small" type="primary" icon="el-icon-upload2"
-                                               @@click="handleElVisibleOpenBtn('dialogFile')">上传知识库资料</el-button>
+                                               @@click="handleElVisibleOpenBtn('dialogFile')">{{ ncfST('Frontend.180') }}</el-button>
                                     <el-button size="small" icon="el-icon-close"
-                                               @@click="clearConfigFileSelection">清空选择</el-button>
+                                               @@click="clearConfigFileSelection">{{ ncfST('Frontend.228') }}</el-button>
                                 </div>
                             </div>
                             <div class="df-wn flex-as flex-js" style="gap: 10px;margin-bottom: 10px;">
-                                <span class="groupFMB_ma_label">已选择资料:</span>
+                                <span class="groupFMB_ma_label">{{ ncfST('Frontend.206') }}</span>
                                 <div class="groupFMB_ma_list">
                                     <div class="df flex-ac flex-js" style="gap:10px">
                                         <div v-for="(item,index) in groupForm.files" :key="item.id"
@@ -490,24 +490,24 @@
                                       style="width: 100%;margin-bottom: 10px;border: 1px solid rgba(229, 229, 229, 1);"
                                       @@selection-change="handleConfigFileSelectionChange">
                                 <el-table-column type="selection" width="30"></el-table-column>
-                                <el-table-column prop="fileName" label="可关联资料" width="200"
+                                <el-table-column prop="fileName" :label="ncfST('Frontend.196')" width="200"
                                                  show-overflow-tooltip></el-table-column>
-                                <el-table-column prop="fileSize" label="文件大小" width="100">
+                                <el-table-column prop="fileSize" :label="ncfST('Frontend.014')" width="100">
                                 </el-table-column>
-                                <el-table-column label="上传时间" width="130" align="center">
+                                <el-table-column :label="ncfST('Frontend.003')" width="130" align="center">
                                     <template slot-scope="scope">
                                         {{ formaTableTime(scope.row.uploadTime) }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column fixed="right" label="操作" width="130" class-name="ncf-table-actions-column">
+                                <el-table-column fixed="right" :label="ncfST('Frontend.016')" width="130" class-name="ncf-table-actions-column">
                                     <template slot-scope="{ row }">
                                         <el-button size="small"
-                                                   @@click="removeConfigFileSelection(row)">取消选择</el-button>
+                                                   @@click="removeConfigFileSelection(row)">{{ ncfST('Frontend.194') }}</el-button>
                                     </template>
                                 </el-table-column>
                             </el-table>
                             <div class="df-wn flex-ac flex-jsb" style="margin-top:10px;flex-wrap:wrap;gap:8px;">
-                                <span class="el-pagination__total" style="margin-right:12px;">当前已选 {{ groupForm.files.length }} 份资料</span>
+                                <span class="el-pagination__total" style="margin-right:12px;">{{ ncfST('Frontend.269', groupForm.files.length) }}</span>
                                 <el-pagination :current-page.sync="fileQueryList.pageIndex"
                                                :page-size="fileQueryList.pageSize"
                                                :page-sizes="[10, 20, 50,100]"
@@ -519,20 +519,20 @@
                             </div>
                         </div>
                     </el-form-item>
-                    <el-form-item v-if="groupForm.contentType === 1 || groupForm.contentType === 3" label="内容">
-                        <el-input type="textarea" v-model="groupForm.content" :rows="4" placeholder="请填写"></el-input>
+                    <el-form-item v-if="groupForm.contentType === 1 || groupForm.contentType === 3" :label="ncfST('Frontend.090')">
+                        <el-input type="textarea" v-model="groupForm.content" :rows="4" :placeholder="ncfST('Frontend.162')"></el-input>
                     </el-form-item>
                 </el-form>
             </div>
             <div class="drawerRtl__footer text-right">
-                <el-button :size="elSize" @@click="handleElVisibleClose('drawerGroup')">取消</el-button>
-                <el-button :size="elSize" type="primary" @@click="handleElVisibleSubmit('drawerGroup')">确认</el-button>
+                <el-button :size="elSize" @@click="handleElVisibleClose('drawerGroup')">{{ ncfST('Frontend.097') }}</el-button>
+                <el-button :size="elSize" type="primary" @@click="handleElVisibleSubmit('drawerGroup')">{{ ncfST('Frontend.202') }}</el-button>
             </div>
         </div>
     </el-drawer>
 
     @* 配置页内上传 *@
-    <el-dialog title="上传知识库资料"
+    <el-dialog :title="ncfST('Frontend.180')"
                :visible.sync="visible.dialogFile"
                width="480px"
                :close-on-click-modal="false"
@@ -547,11 +547,11 @@
                    :on-success="configUploadSuccess"
                    :on-error="configUploadError"
                    :file-list="configUploadFileList">
-            <el-button slot="trigger" size="small" type="primary">选择资料文件</el-button>
-            <div slot="tip" class="el-upload__tip">仅支持可安全提取的文本和 Office 文件。上传后会自动勾选；仍需点击当前抽屉的“确认”才会关联到知识库。</div>
+            <el-button slot="trigger" size="small" type="primary">{{ ncfST('Frontend.255') }}</el-button>
+            <div slot="tip" class="el-upload__tip">{{ ncfST('Frontend.182') }}</div>
         </el-upload>
         <div slot="footer" class="dialog-footer">
-            <el-button size="mini" @@click="visible.dialogFile = false">关闭</el-button>
+            <el-button size="mini" @@click="visible.dialogFile = false">{{ ncfST('Frontend.092') }}</el-button>
         </div>
     </el-dialog>
 
@@ -567,16 +567,16 @@
                              :show-text="true">
                 </el-progress>
                 <span class="kb-embedding-float__summary-text">
-                    <template v-if="embeddingProgressStatus === 'success'">处理完成 {{ embeddingDoneCount }}/{{ embeddingTotalCount }}</template>
-                    <template v-else-if="embeddingProgressStatus === 'exception'">处理失败 {{ embeddingDoneCount }}/{{ embeddingTotalCount }}</template>
-                    <template v-else>正在处理 {{ embeddingDoneCount }}/{{ embeddingTotalCount }}</template>
+                    <template v-if="embeddingProgressStatus === 'success'">{{ ncfST('Frontend.270', embeddingDoneCount + '/' + embeddingTotalCount) }}</template>
+                    <template v-else-if="embeddingProgressStatus === 'exception'">{{ ncfST('Frontend.271', embeddingDoneCount + '/' + embeddingTotalCount) }}</template>
+                    <template v-else>{{ ncfST('Frontend.272', embeddingDoneCount + '/' + embeddingTotalCount) }}</template>
                 </span>
             </div>
             <i class="kb-embedding-float__toggle" :class="embeddingPanelCollapsed ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"></i>
         </div>
         <div class="kb-embedding-float__body" v-show="!embeddingPanelCollapsed">
             <div class="kb-embedding-float__task">
-                <span class="kb-embedding-float__task-name" :title="embeddingTaskName">{{ embeddingTaskName || '知识库向量化' }}</span>
+                <span class="kb-embedding-float__task-name" :title="embeddingTaskName">{{ embeddingTaskName || ncfST('Frontend.197') }}</span>
                 <div class="kb-embedding-float__task-bar">
                     <el-progress :percentage="embeddingProgressPercent"
                                  :status="embeddingProgressStatus"
@@ -602,12 +602,10 @@
             <div class="kb-embedding-result-toast__content">
                 <div class="kb-embedding-result-toast__title">{{ embeddingResultCard.title }}</div>
                 <div class="kb-embedding-result-toast__meta">
-                    您于 {{ embeddingResultCard.timeText }} 发起的 【{{ embeddingResultCard.taskName }}】
+                    {{ ncfST('Frontend.273', embeddingResultCard.timeText, embeddingResultCard.taskName) }}
                 </div>
                 <div class="kb-embedding-result-toast__stats">
-                    共处理 <em class="is-total">{{ embeddingResultCard.total }}</em> 条，
-                    成功 <em class="is-ok">{{ embeddingResultCard.success }}</em> 条，
-                    失败 <em class="is-fail">{{ embeddingResultCard.fail }}</em> 条
+                    {{ ncfST('Frontend.274', embeddingResultCard.total, embeddingResultCard.success, embeddingResultCard.fail) }}
                 </div>
                 <div class="kb-embedding-result-toast__detail" v-if="embeddingResultCard.detail">{{ embeddingResultCard.detail }}</div>
             </div>
