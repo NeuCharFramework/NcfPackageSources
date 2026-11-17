@@ -87,14 +87,14 @@
                     <tr v-for="item in accounts" :key="item.id">
                         <td>{{item.name}}<div class="claw-muted">#{{item.id}}</div></td>
                         <td :class="['claw-status', item.status==='错误'?'error':(item.status==='已停用'?'off':'')]">
-                            {{item.status || '未连接'}}
+                            {{statusText(item.status)}}
                             <div class="claw-muted" v-if="item.lastError">{{item.lastError}}</div>
                         </td>
                         <td>
                             <div>{{item.ilinkBotId || '-'}}</div>
                             <div class="claw-muted">{{item.ilinkUserId || '-'}}</div>
                             <div class="claw-muted" v-if="item.lastMessageFromUserId">
-                                最近发送人：{{item.lastMessageFromUserId}}
+                                {{ncfST('Frontend.157', item.lastMessageFromUserId)}}
                             </div>
                         </td>
                         <td>{{item.lastConnectedAt || '-'}}</td>
@@ -135,7 +135,7 @@
                                 <span v-if="item.enableNeuBell">NeuBell </span>
                                 <span v-if="item.enableWorkflow">Workflow</span>
                             </td>
-                            <td>{{item.enabled ? '启用' : '停用'}}</td>
+                            <td>{{enabledText(item.enabled)}}</td>
                             <td>
                                 <el-button size="mini" icon="el-icon-edit" @@click="editBinding(item)">{{ ncfST('Frontend.017') }}</el-button>
                                 <el-button size="mini" type="danger" icon="el-icon-delete" @@click="removeBinding(item)">{{ ncfST('Frontend.022') }}</el-button>
@@ -199,12 +199,12 @@
                              @@click="selectConversation(session.peerUserId)">
                             <div class="claw-session-peer">{{session.peerUserId}}</div>
                             <div class="claw-session-preview">{{session.lastText}}</div>
-                            <div class="claw-session-time">{{formatMessageTime(session.lastCreatedAt)}} · {{session.messageCount}} 条</div>
+                            <div class="claw-session-time">{{formatMessageTime(session.lastCreatedAt)}} · {{ncfST('Frontend.159', session.messageCount)}}</div>
                         </div>
                     </aside>
                     <section class="claw-chat-column">
                         <div class="claw-toolbar">
-                            <span class="claw-muted">当前会话：{{chat.peerUserId || ncfST('Frontend.091')}}</span>
+                            <span class="claw-muted">{{ncfST('Frontend.158')}}：{{chat.peerUserId || ncfST('Frontend.091')}}</span>
                             <el-button size="mini" icon="el-icon-refresh" @@click="loadMessages">{{ ncfST('Frontend.093') }}</el-button>
                             <el-button size="mini" icon="el-icon-setting" @@click="openBindings(currentAccount)">{{ ncfST('Frontend.118') }}</el-button>
                         </div>
@@ -216,7 +216,7 @@
                                  :key="message.id"
                                  :class="['claw-message', message.direction, message.status==='failed'?'failed':'']">
                                 <div class="claw-message-meta">
-                                    {{message.direction==='inbound'?'手机':'系统'}} · {{formatMessageTime(message.createdAt)}}
+                                    {{messageDirection(message.direction)}} · {{formatMessageTime(message.createdAt)}}
                                     <span v-if="message.status==='sending'">{{ ncfST('Frontend.081') }}</span>
                                     <span v-if="message.status==='sent'">{{ ncfST('Frontend.083') }}</span>
                                     <span v-if="message.status==='failed'">{{ ncfST('Frontend.082') }}</span>
@@ -265,7 +265,7 @@
                         <el-button v-if="chat.newCount > 0 && !chat.nearBottom"
                                    class="claw-new-messages"
                                    size="mini" type="primary" round
-                                   @@click="jumpToLatest">{{chat.newCount}} 条新消息</el-button>
+                                   @@click="jumpToLatest">{{ncfST('Frontend.151', chat.newCount)}}</el-button>
                         <div class="claw-media-actions">
                             <input ref="mediaFile" type="file" style="display:none" @@change="onMediaSelected">
                             <el-button size="mini" icon="el-icon-picture" @@click="chooseMedia('image')">{{ ncfST('Frontend.100') }}</el-button>
@@ -372,6 +372,21 @@
                 this.clearLoginPoll();
             },
             methods: {
+                statusText(status) {
+                    const key = String(status || '');
+                    const map = {
+                        '错误': 'Frontend.152',
+                        '已停用': 'Frontend.153',
+                        '未连接': 'Frontend.154'
+                    };
+                    return map[key] ? ncfST(map[key]) : (status || ncfST('Frontend.154'));
+                },
+                enabledText(enabled) {
+                    return enabled ? ncfST('Frontend.155') : ncfST('Frontend.156');
+                },
+                messageDirection(direction) {
+                    return direction === 'inbound' ? ncfST('Frontend.149') : ncfST('Frontend.150');
+                },
                 clearLoginPoll() {
                     if (this.loginPollHandle) {
                         clearTimeout(this.loginPollHandle);
@@ -390,8 +405,8 @@
                                 if (previous && previous.lastMessageAt && next.lastMessageAt
                                     && previous.lastMessageAt !== next.lastMessageAt) {
                                     this.$notify({
-                                        title: '收到微信消息',
-                                        message: next.name + ' 收到一条新的手机消息',
+                                        title: ncfST('Frontend.134'),
+                                        message: ncfST('Frontend.135', next.name),
                                         type: 'success',
                                         duration: 3500
                                     });
@@ -405,7 +420,7 @@
                             await this.loadMessages();
                         }
                     } catch (error) {
-                        const message = error.response?.data?.msg || error.message || '刷新微信连接状态失败';
+                        const message = error.response?.data?.msg || error.message || ncfST('Frontend.136');
                         if (this.accountLoadError !== message) this.$message.error(message);
                         this.accountLoadError = message;
                     } finally {
@@ -434,7 +449,7 @@
                     this.clearLoginPoll();
                     try {
                         const res = await service.post('/Admin/WeixinManager/WeixinClaw?handler=StartLogin', {
-                            name: '个人微信',
+                            name: ncfST('Frontend.084'),
                             promptRangeCode: ''
                         });
                         this.login = Object.assign({ visible: true }, res.data.data);
@@ -443,7 +458,7 @@
                     } catch (error) {
                         const message = error && error.response && error.response.data && error.response.data.msg
                             ? error.response.data.msg
-                            : (error && error.message) || '启动个人微信登录失败';
+                            : (error && error.message) || ncfST('Frontend.137');
                         this.$message.error(message);
                     }
                 },
@@ -475,7 +490,7 @@
                     } catch (error) {
                         const message = error && error.response && error.response.data && error.response.data.msg
                             ? error.response.data.msg
-                            : '查询登录状态失败，可点击“刷新状态”重试';
+                            : ncfST('Frontend.138');
                         this.login.error = message;
                     } finally {
                         this.loginPollInFlight = false;
@@ -493,7 +508,7 @@
                         text: ''
                     };
                     if (!item.hasMessageContext) {
-                        this.$message.info('请先在手机端向微信 ClawBot 发送一条文字消息，系统会自动保存回复所需上下文。');
+                        this.$message.info(ncfST('Frontend.139'));
                     }
                 },
                 openChat(item) {
@@ -563,13 +578,13 @@
                         await service.post(
                             '/Admin/WeixinManager/WeixinClaw?handler=SaveBindingProfile',
                             this.bindings.form);
-                        this.$message.success('绑定配置已保存。');
+                        this.$message.success(ncfST('Frontend.140'));
                         await this.loadBindingProfiles();
                         this.newBinding();
                     } catch (error) {
                         const message = error && error.response && error.response.data && error.response.data.msg
                             ? error.response.data.msg
-                            : (error && error.message) || '保存绑定配置失败';
+                            : (error && error.message) || ncfST('Frontend.141');
                         this.$message.error(message);
                     }
                 },
@@ -581,7 +596,7 @@
                         await this.loadBindingProfiles();
                         this.newBinding();
                     } catch (error) {
-                        this.$message.error('删除绑定配置失败');
+                        this.$message.error(ncfST('Frontend.142'));
                     }
                 },
                 async loadMessages(forceBottom) {
@@ -629,7 +644,7 @@
                     if (url) window.open(url, '_blank', 'noopener,noreferrer');
                 },
                 mediaPlaybackFailed(media) {
-                    this.$set(this.mediaPlaybackErrors, media.playbackUrl, '媒体无法播放。可下载原始文件；语音转换错误请查看服务日志，视频需使用浏览器支持的编码。');
+                    this.$set(this.mediaPlaybackErrors, media.playbackUrl, ncfST('Frontend.143'));
                 },
                 mediaPlaybackReady(media) {
                     this.$delete(this.mediaPlaybackErrors, media.playbackUrl);
@@ -675,9 +690,9 @@
                     if (this.chat.mediaFile) {
                         try {
                             await this.sendMedia();
-                            this.$message.success('媒体消息已提交。');
+                            this.$message.success(ncfST('Frontend.144'));
                         } catch (error) {
-                            this.$message.error(error.response?.data?.msg || error.message || '媒体发送失败');
+                            this.$message.error(error.response?.data?.msg || error.message || ncfST('Frontend.145'));
                         }
                         return;
                     }
@@ -687,14 +702,14 @@
                         const result = res.data.data || {};
                         this.$message.success(
                             result.contextTokenUsed
-                                ? '消息已提交，已使用最近微信会话上下文。'
-                                : '消息已提交到微信 Claw。');
+                                ? ncfST('Frontend.146')
+                                : ncfST('Frontend.147'));
                         await this.loadMessages();
                         await this.loadAccounts();
                     } catch (error) {
                         const message = error && error.response && error.response.data && error.response.data.msg
                             ? error.response.data.msg
-                            : (error && error.message) || '发送个人微信消息失败';
+                            : (error && error.message) || ncfST('Frontend.148');
                         this.$message.error(message);
                     } finally {
                         this.chat.sending = false;

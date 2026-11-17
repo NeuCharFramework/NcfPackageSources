@@ -409,4 +409,30 @@
   <data name="Frontend.131" xml:space="preserve"><value>会話記録はまだありません。スマートフォンからWeChat ClawBotにテキストを送信してください。</value></data>
   <data name="Frontend.132" xml:space="preserve"><value>個人WeChatアカウントを追加</value></data>
   <data name="Frontend.133" xml:space="preserve"><value>個人WeChatアカウントを編集</value></data>
+  <data name="Frontend.134" xml:space="preserve"><value>WeChatメッセージを受信しました</value></data>
+  <data name="Frontend.135" xml:space="preserve"><value>{0}から新しいスマートフォンメッセージを受信しました</value></data>
+  <data name="Frontend.136" xml:space="preserve"><value>WeChat接続状態の更新に失敗しました</value></data>
+  <data name="Frontend.137" xml:space="preserve"><value>個人WeChatログインの開始に失敗しました</value></data>
+  <data name="Frontend.138" xml:space="preserve"><value>ログイン状態の取得に失敗しました。「状態を更新」をクリックして再試行してください。</value></data>
+  <data name="Frontend.139" xml:space="preserve"><value>返信に必要なコンテキストを保存するため、先にスマートフォンからWeChat ClawBotへテキストを送信してください。</value></data>
+  <data name="Frontend.140" xml:space="preserve"><value>バインディング設定を保存しました。</value></data>
+  <data name="Frontend.141" xml:space="preserve"><value>バインディング設定の保存に失敗しました</value></data>
+  <data name="Frontend.142" xml:space="preserve"><value>バインディング設定の削除に失敗しました</value></data>
+  <data name="Frontend.143" xml:space="preserve"><value>メディアを再生できません。元のファイルをダウンロードしてください。音声変換エラーはサービスログを確認し、動画にはブラウザー対応コーデックを使用してください。</value></data>
+  <data name="Frontend.144" xml:space="preserve"><value>メディアメッセージを送信しました。</value></data>
+  <data name="Frontend.145" xml:space="preserve"><value>メディアの送信に失敗しました</value></data>
+  <data name="Frontend.146" xml:space="preserve"><value>最新のWeChat会話コンテキストを使用してメッセージを送信しました。</value></data>
+  <data name="Frontend.147" xml:space="preserve"><value>WeChat Clawへメッセージを送信しました。</value></data>
+  <data name="Frontend.148" xml:space="preserve"><value>個人WeChatメッセージの送信に失敗しました</value></data>
+  <data name="Frontend.149" xml:space="preserve"><value>スマートフォン</value></data>
+  <data name="Frontend.150" xml:space="preserve"><value>システム</value></data>
+  <data name="Frontend.151" xml:space="preserve"><value>新着メッセージ {0} 件</value></data>
+  <data name="Frontend.152" xml:space="preserve"><value>エラー</value></data>
+  <data name="Frontend.153" xml:space="preserve"><value>無効</value></data>
+  <data name="Frontend.154" xml:space="preserve"><value>未接続</value></data>
+  <data name="Frontend.155" xml:space="preserve"><value>有効</value></data>
+  <data name="Frontend.156" xml:space="preserve"><value>無効</value></data>
+  <data name="Frontend.157" xml:space="preserve"><value>最近の送信者：{0}</value></data>
+  <data name="Frontend.158" xml:space="preserve"><value>現在の会話</value></data>
+  <data name="Frontend.159" xml:space="preserve"><value>{0} 件</value></data>
 </root>

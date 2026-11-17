@@ -409,4 +409,30 @@
   <data name="Frontend.131" xml:space="preserve"><value>尚无会话记录。请在手机端向“微信 ClawBot”发送文字。</value></data>
   <data name="Frontend.132" xml:space="preserve"><value>添加个人微信账号</value></data>
   <data name="Frontend.133" xml:space="preserve"><value>编辑个人微信账号</value></data>
+  <data name="Frontend.134" xml:space="preserve"><value>收到微信消息</value></data>
+  <data name="Frontend.135" xml:space="preserve"><value>{0} 收到一条新的手机消息</value></data>
+  <data name="Frontend.136" xml:space="preserve"><value>刷新微信连接状态失败</value></data>
+  <data name="Frontend.137" xml:space="preserve"><value>启动个人微信登录失败</value></data>
+  <data name="Frontend.138" xml:space="preserve"><value>查询登录状态失败，可点击“刷新状态”重试</value></data>
+  <data name="Frontend.139" xml:space="preserve"><value>请先在手机端向微信 ClawBot 发送一条文字消息，系统会自动保存回复所需上下文。</value></data>
+  <data name="Frontend.140" xml:space="preserve"><value>绑定配置已保存。</value></data>
+  <data name="Frontend.141" xml:space="preserve"><value>保存绑定配置失败</value></data>
+  <data name="Frontend.142" xml:space="preserve"><value>删除绑定配置失败</value></data>
+  <data name="Frontend.143" xml:space="preserve"><value>媒体无法播放。可下载原始文件；语音转换错误请查看服务日志，视频需使用浏览器支持的编码。</value></data>
+  <data name="Frontend.144" xml:space="preserve"><value>媒体消息已提交。</value></data>
+  <data name="Frontend.145" xml:space="preserve"><value>媒体发送失败</value></data>
+  <data name="Frontend.146" xml:space="preserve"><value>消息已提交，已使用最近微信会话上下文。</value></data>
+  <data name="Frontend.147" xml:space="preserve"><value>消息已提交到微信 Claw。</value></data>
+  <data name="Frontend.148" xml:space="preserve"><value>发送个人微信消息失败</value></data>
+  <data name="Frontend.149" xml:space="preserve"><value>手机</value></data>
+  <data name="Frontend.150" xml:space="preserve"><value>系统</value></data>
+  <data name="Frontend.151" xml:space="preserve"><value>{0} 条新消息</value></data>
+  <data name="Frontend.152" xml:space="preserve"><value>错误</value></data>
+  <data name="Frontend.153" xml:space="preserve"><value>已停用</value></data>
+  <data name="Frontend.154" xml:space="preserve"><value>未连接</value></data>
+  <data name="Frontend.155" xml:space="preserve"><value>启用</value></data>
+  <data name="Frontend.156" xml:space="preserve"><value>停用</value></data>
+  <data name="Frontend.157" xml:space="preserve"><value>最近发送人：{0}</value></data>
+  <data name="Frontend.158" xml:space="preserve"><value>当前会话</value></data>
+  <data name="Frontend.159" xml:space="preserve"><value>{0} 条</value></data>
 </root>

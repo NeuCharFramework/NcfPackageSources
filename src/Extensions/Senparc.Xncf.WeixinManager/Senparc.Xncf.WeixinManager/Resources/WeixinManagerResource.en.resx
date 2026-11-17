@@ -409,4 +409,30 @@
   <data name="Frontend.131" xml:space="preserve"><value>No conversation records yet. Send a text to WeChat ClawBot from your phone.</value></data>
   <data name="Frontend.132" xml:space="preserve"><value>Add personal WeChat account</value></data>
   <data name="Frontend.133" xml:space="preserve"><value>Edit personal WeChat account</value></data>
+  <data name="Frontend.134" xml:space="preserve"><value>WeChat message received</value></data>
+  <data name="Frontend.135" xml:space="preserve"><value>{0} received a new phone message</value></data>
+  <data name="Frontend.136" xml:space="preserve"><value>Failed to refresh the WeChat connection status</value></data>
+  <data name="Frontend.137" xml:space="preserve"><value>Failed to start personal WeChat login</value></data>
+  <data name="Frontend.138" xml:space="preserve"><value>Failed to query login status. Click Refresh status to retry.</value></data>
+  <data name="Frontend.139" xml:space="preserve"><value>Send a text to WeChat ClawBot from your phone first so the context required for replies can be saved.</value></data>
+  <data name="Frontend.140" xml:space="preserve"><value>Binding configuration saved.</value></data>
+  <data name="Frontend.141" xml:space="preserve"><value>Failed to save the binding configuration</value></data>
+  <data name="Frontend.142" xml:space="preserve"><value>Failed to delete the binding configuration</value></data>
+  <data name="Frontend.143" xml:space="preserve"><value>Media cannot be played. Download the original file; check the service logs for voice conversion errors, and use a browser-supported video codec.</value></data>
+  <data name="Frontend.144" xml:space="preserve"><value>Media message submitted.</value></data>
+  <data name="Frontend.145" xml:space="preserve"><value>Failed to send media</value></data>
+  <data name="Frontend.146" xml:space="preserve"><value>Message submitted using the latest WeChat conversation context.</value></data>
+  <data name="Frontend.147" xml:space="preserve"><value>Message submitted to WeChat Claw.</value></data>
+  <data name="Frontend.148" xml:space="preserve"><value>Failed to send the personal WeChat message</value></data>
+  <data name="Frontend.149" xml:space="preserve"><value>Phone</value></data>
+  <data name="Frontend.150" xml:space="preserve"><value>System</value></data>
+  <data name="Frontend.151" xml:space="preserve"><value>{0} new messages</value></data>
+  <data name="Frontend.152" xml:space="preserve"><value>Error</value></data>
+  <data name="Frontend.153" xml:space="preserve"><value>Disabled</value></data>
+  <data name="Frontend.154" xml:space="preserve"><value>Not connected</value></data>
+  <data name="Frontend.155" xml:space="preserve"><value>Enabled</value></data>
+  <data name="Frontend.156" xml:space="preserve"><value>Disabled</value></data>
+  <data name="Frontend.157" xml:space="preserve"><value>Last sender: {0}</value></data>
+  <data name="Frontend.158" xml:space="preserve"><value>Current conversation</value></data>
+  <data name="Frontend.159" xml:space="preserve"><value>{0} messages</value></data>
 </root>

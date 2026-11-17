@@ -409,4 +409,30 @@
   <data name="Frontend.131" xml:space="preserve"><value>Aucun historique de conversation. Envoyez un texte à WeChat ClawBot depuis votre téléphone.</value></data>
   <data name="Frontend.132" xml:space="preserve"><value>Ajouter un compte WeChat personnel</value></data>
   <data name="Frontend.133" xml:space="preserve"><value>Modifier le compte WeChat personnel</value></data>
+  <data name="Frontend.134" xml:space="preserve"><value>Message WeChat reçu</value></data>
+  <data name="Frontend.135" xml:space="preserve"><value>{0} a reçu un nouveau message du téléphone</value></data>
+  <data name="Frontend.136" xml:space="preserve"><value>Impossible d’actualiser l’état de connexion WeChat</value></data>
+  <data name="Frontend.137" xml:space="preserve"><value>Impossible de démarrer la connexion WeChat personnelle</value></data>
+  <data name="Frontend.138" xml:space="preserve"><value>Impossible de consulter l’état de connexion. Cliquez sur Actualiser l’état pour réessayer.</value></data>
+  <data name="Frontend.139" xml:space="preserve"><value>Envoyez d’abord un texte à WeChat ClawBot depuis le téléphone afin d’enregistrer le contexte nécessaire aux réponses.</value></data>
+  <data name="Frontend.140" xml:space="preserve"><value>Configuration de liaison enregistrée.</value></data>
+  <data name="Frontend.141" xml:space="preserve"><value>Impossible d’enregistrer la configuration de liaison</value></data>
+  <data name="Frontend.142" xml:space="preserve"><value>Impossible de supprimer la configuration de liaison</value></data>
+  <data name="Frontend.143" xml:space="preserve"><value>Le média ne peut pas être lu. Téléchargez le fichier original ; consultez les journaux du service pour les erreurs de conversion audio et utilisez un codec vidéo pris en charge par le navigateur.</value></data>
+  <data name="Frontend.144" xml:space="preserve"><value>Message multimédia envoyé.</value></data>
+  <data name="Frontend.145" xml:space="preserve"><value>Impossible d’envoyer le média</value></data>
+  <data name="Frontend.146" xml:space="preserve"><value>Message envoyé avec le contexte de la dernière conversation WeChat.</value></data>
+  <data name="Frontend.147" xml:space="preserve"><value>Message envoyé à WeChat Claw.</value></data>
+  <data name="Frontend.148" xml:space="preserve"><value>Impossible d’envoyer le message WeChat personnel</value></data>
+  <data name="Frontend.149" xml:space="preserve"><value>Téléphone</value></data>
+  <data name="Frontend.150" xml:space="preserve"><value>Système</value></data>
+  <data name="Frontend.151" xml:space="preserve"><value>{0} nouveaux messages</value></data>
+  <data name="Frontend.152" xml:space="preserve"><value>Erreur</value></data>
+  <data name="Frontend.153" xml:space="preserve"><value>Désactivé</value></data>
+  <data name="Frontend.154" xml:space="preserve"><value>Non connecté</value></data>
+  <data name="Frontend.155" xml:space="preserve"><value>Activé</value></data>
+  <data name="Frontend.156" xml:space="preserve"><value>Désactivé</value></data>
+  <data name="Frontend.157" xml:space="preserve"><value>Dernier expéditeur : {0}</value></data>
+  <data name="Frontend.158" xml:space="preserve"><value>Conversation actuelle</value></data>
+  <data name="Frontend.159" xml:space="preserve"><value>{0} messages</value></data>
 </root>

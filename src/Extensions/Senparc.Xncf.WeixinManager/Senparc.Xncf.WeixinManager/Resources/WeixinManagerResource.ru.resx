@@ -409,4 +409,30 @@
   <data name="Frontend.131" xml:space="preserve"><value>Истории диалогов пока нет. Отправьте текст в WeChat ClawBot с телефона.</value></data>
   <data name="Frontend.132" xml:space="preserve"><value>Добавить личный аккаунт WeChat</value></data>
   <data name="Frontend.133" xml:space="preserve"><value>Изменить личный аккаунт WeChat</value></data>
+  <data name="Frontend.134" xml:space="preserve"><value>Получено сообщение WeChat</value></data>
+  <data name="Frontend.135" xml:space="preserve"><value>{0} получил новое сообщение с телефона</value></data>
+  <data name="Frontend.136" xml:space="preserve"><value>Не удалось обновить состояние подключения WeChat</value></data>
+  <data name="Frontend.137" xml:space="preserve"><value>Не удалось начать вход в личный WeChat</value></data>
+  <data name="Frontend.138" xml:space="preserve"><value>Не удалось получить состояние входа. Нажмите «Обновить состояние» и повторите попытку.</value></data>
+  <data name="Frontend.139" xml:space="preserve"><value>Сначала отправьте текст в WeChat ClawBot с телефона, чтобы сохранить контекст для ответа.</value></data>
+  <data name="Frontend.140" xml:space="preserve"><value>Настройки привязки сохранены.</value></data>
+  <data name="Frontend.141" xml:space="preserve"><value>Не удалось сохранить настройки привязки</value></data>
+  <data name="Frontend.142" xml:space="preserve"><value>Не удалось удалить настройки привязки</value></data>
+  <data name="Frontend.143" xml:space="preserve"><value>Медиафайл не воспроизводится. Скачайте исходный файл; для ошибок преобразования аудио проверьте журналы службы, а для видео используйте поддерживаемый браузером кодек.</value></data>
+  <data name="Frontend.144" xml:space="preserve"><value>Медиасообщение отправлено.</value></data>
+  <data name="Frontend.145" xml:space="preserve"><value>Не удалось отправить медиафайл</value></data>
+  <data name="Frontend.146" xml:space="preserve"><value>Сообщение отправлено с использованием последнего контекста разговора WeChat.</value></data>
+  <data name="Frontend.147" xml:space="preserve"><value>Сообщение отправлено в WeChat Claw.</value></data>
+  <data name="Frontend.148" xml:space="preserve"><value>Не удалось отправить сообщение в личный WeChat</value></data>
+  <data name="Frontend.149" xml:space="preserve"><value>Телефон</value></data>
+  <data name="Frontend.150" xml:space="preserve"><value>Система</value></data>
+  <data name="Frontend.151" xml:space="preserve"><value>Новых сообщений: {0}</value></data>
+  <data name="Frontend.152" xml:space="preserve"><value>Ошибка</value></data>
+  <data name="Frontend.153" xml:space="preserve"><value>Отключено</value></data>
+  <data name="Frontend.154" xml:space="preserve"><value>Не подключено</value></data>
+  <data name="Frontend.155" xml:space="preserve"><value>Включено</value></data>
+  <data name="Frontend.156" xml:space="preserve"><value>Отключено</value></data>
+  <data name="Frontend.157" xml:space="preserve"><value>Последний отправитель: {0}</value></data>
+  <data name="Frontend.158" xml:space="preserve"><value>Текущий разговор</value></data>
+  <data name="Frontend.159" xml:space="preserve"><value>Сообщений: {0}</value></data>
 </root>
