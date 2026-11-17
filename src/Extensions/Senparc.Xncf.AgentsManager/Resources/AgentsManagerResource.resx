@@ -1176,4 +1176,18 @@
   <data name="Frontend.549" xml:space="preserve"><value>确认删除远程 A2A 智能体“{0}”？已加入群组的智能体不可删除。</value></data>
   <data name="Frontend.550" xml:space="preserve"><value>删除失败</value></data>
   <data name="Frontend.551" xml:space="preserve"><value>已删除</value></data>
+  <data name="Frontend.552" xml:space="preserve"><value>当前还没有可执行的任务</value></data>
+  <data name="Frontend.553" xml:space="preserve"><value>加载任务成员失败</value></data>
+  <data name="Frontend.554" xml:space="preserve"><value>获取统计数据失败</value></data>
+  <data name="Frontend.555" xml:space="preserve"><value>暂无</value></data>
+  <data name="Frontend.556" xml:space="preserve"><value>未找到有效的聊天组，请重新从聊天组或任务详情打开启动窗口。</value></data>
+  <data name="Frontend.557" xml:space="preserve"><value>用户确认</value></data>
+  <data name="Frontend.558" xml:space="preserve"><value>用户拒绝</value></data>
+  <data name="Frontend.559" xml:space="preserve"><value>人工审批提交失败</value></data>
+  <data name="Frontend.560" xml:space="preserve"><value>已批准工具调用，任务继续执行</value></data>
+  <data name="Frontend.561" xml:space="preserve"><value>已拒绝工具调用，任务继续处理</value></data>
+  <data name="Frontend.562" xml:space="preserve"><value>请输入 Human 回复</value></data>
+  <data name="Frontend.563" xml:space="preserve"><value>Human 回复提交失败</value></data>
+  <data name="Frontend.564" xml:space="preserve"><value>Human 回复已提交</value></data>
+  <data name="Frontend.565" xml:space="preserve"><value>（未提供参数）</value></data>
 </root>

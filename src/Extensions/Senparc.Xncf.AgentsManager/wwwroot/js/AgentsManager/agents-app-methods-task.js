@@ -336,7 +336,7 @@ var AgentsAppMethodsTask = {
       //TODO:
       if (id == undefined) {
         app.$message({
-          message: '当前还没有可执行的任务',
+          message: ncfST('Frontend.552'),
           type: 'error',
           duration: 5 * 1000
         })
@@ -540,7 +540,7 @@ var AgentsAppMethodsTask = {
         const res = await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${chatGroupld}`)
         const data = res?.data ?? {}
         if (!data.success) {
-          throw new Error(data.errorMessage || data.data || '加载任务成员失败')
+          throw new Error(data.errorMessage || data.data || ncfST('Frontend.553'))
         }
 
         const groupDetail = data?.data ?? {}
@@ -578,7 +578,7 @@ var AgentsAppMethodsTask = {
         return taskMemberList
       } catch (err) {
         app.$message({
-          message: err?.message || '加载任务成员失败',
+          message: err?.message || ncfST('Frontend.553'),
           type: 'error',
           duration: 5 * 1000
         })
@@ -630,7 +630,7 @@ var AgentsAppMethodsTask = {
         const res = await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatGroupHistoryAppService/Xncf.AgentsManager_ChatGroupHistoryAppService.GetUsageAnalytics?${getInterfaceQueryStr(query)}`)
         const data = res?.data ?? {}
         if (!data.success) {
-          this.$message.error(data.errorMessage || data.data || '获取统计数据失败')
+        this.$message.error(data.errorMessage || data.data || ncfST('Frontend.554'))
           return
         }
 
@@ -643,7 +643,7 @@ var AgentsAppMethodsTask = {
         }
       } catch (e) {
         console.error(e)
-        this.$message.error('获取统计数据失败')
+        this.$message.error(ncfST('Frontend.554'))
       } finally {
         this.usageAnalyticsLoading = false
       }
@@ -705,7 +705,7 @@ var AgentsAppMethodsTask = {
       return numeric.toLocaleString('en-US')
     },
     formatActivityTime(value) {
-      return value ? formatDate(value) : '暂无'
+      return value ? formatDate(value) : ncfST('Frontend.555')
     },
     formatResponseMilliseconds(milliseconds, emptyText = '--') {
       const numeric = Number(milliseconds || 0)
@@ -754,7 +754,7 @@ var AgentsAppMethodsTask = {
     async handleTaskArchiveToggle(item) {
       if (!item || !item.id) return
       const nextArchived = !item.isArchived
-      const actionText = nextArchived ? ncfST('归档') : ncfST('取消归档')
+      const actionText = nextArchived ? ncfST('Frontend.187') : ncfST('Frontend.186')
       this.taskArchiveSavingId = item.id
       try {
         const response = await serviceAM.post(
@@ -762,11 +762,11 @@ var AgentsAppMethodsTask = {
         )
         const data = response?.data ?? {}
         if (!data.success) {
-          this.$message.error(data.errorMessage || data.data || ncfST('{0}失败', actionText))
+          this.$message.error(data.errorMessage || data.data || ncfST('Frontend.207', actionText))
           return
         }
 
-        this.$message.success(ncfST('{0}成功', actionText))
+        this.$message.success(ncfST('Frontend.208', actionText))
         const currentTaskId = Number(this.taskDetails?.id || 0)
         if (currentTaskId === Number(item.id) && this.taskArchiveScope !== 'all' && this.taskArchiveScope !== (nextArchived ? 'archived' : 'active')) {
           this.scrollbarTaskIndex = ''
@@ -778,7 +778,7 @@ var AgentsAppMethodsTask = {
         }
         this.gettaskListData('task')
       } catch (error) {
-        this.$message.error(ncfST('{0}失败：{1}', actionText, error?.message || ncfST('未知错误')))
+        this.$message.error(ncfST('Frontend.209', actionText, error?.message || ncfST('Frontend.210')))
       } finally {
         this.taskArchiveSavingId = 0
       }
@@ -859,7 +859,7 @@ var AgentsAppMethodsTask = {
         const chatGroupId = this.getGroupStartChatGroupId(serviceForm)
         if (!chatGroupId) {
           app.$message({
-            message: '未找到有效的聊天组，请重新从聊天组或任务详情打开启动窗口。',
+            message: ncfST('Frontend.556'),
             type: 'error',
             duration: 5 * 1000
           })
@@ -1325,7 +1325,7 @@ var AgentsAppMethodsTask = {
     formatToolApprovalArguments(rawArguments) {
       let value = rawArguments
       if (value === undefined || value === null || String(value).trim() === '') {
-        return '（未提供参数）'
+        return ncfST('Frontend.565')
       }
 
       for (let index = 0; index < 2 && typeof value === 'string'; index++) {
@@ -1383,22 +1383,22 @@ var AgentsAppMethodsTask = {
 
       this.toolApprovalSubmitting = true
       try {
-        const reason = approved ? '用户确认' : '用户拒绝'
+        const reason = approved ? ncfST('Frontend.557') : ncfST('Frontend.558')
         const query = getInterfaceQueryStr({ requestId, approved, reason })
         const response = await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.ResolveHumanRequest?${query}`)
         const data = response?.data ?? {}
         if (!data.success) {
-          this.$message.error(data.errorMessage || data.data || '人工审批提交失败')
+          this.$message.error(data.errorMessage || data.data || ncfST('Frontend.559'))
           return
         }
-        this.$message.success(approved ? '已批准工具调用，任务继续执行' : '已拒绝工具调用，任务继续处理')
+        this.$message.success(approved ? ncfST('Frontend.560') : ncfST('Frontend.561'))
         this.toolApprovalDialogVisible = false
         this.toolApprovalRequest = null
         this.toolApprovalArgumentText = ''
         this.$delete(this.humanApprovalRequests, requestId)
         this.$nextTick(() => this.showNextToolApproval())
       } catch (error) {
-        this.$message.error(error?.message || '人工审批提交失败')
+        this.$message.error(error?.message || ncfST('Frontend.559'))
       } finally {
         this.toolApprovalSubmitting = false
       }
@@ -1429,7 +1429,7 @@ var AgentsAppMethodsTask = {
       const requestId = String(this.humanReplyRequest?.humanRequestId || this.humanReplyRequest?.requestId || '')
       const input = String(this.humanReplyText || '').trim()
       if (!requestId || !input) {
-        this.$message.warning('请输入 Human 回复')
+      this.$message.warning(ncfST('Frontend.562'))
         return
       }
 
@@ -1440,7 +1440,7 @@ var AgentsAppMethodsTask = {
           { requestId, input })
         const data = response?.data ?? {}
         if (!data.success) {
-          this.$message.error(data.errorMessage || data.data || 'Human 回复提交失败')
+          this.$message.error(data.errorMessage || data.data || ncfST('Frontend.563'))
           return
         }
 
@@ -1449,9 +1449,9 @@ var AgentsAppMethodsTask = {
         this.humanReplyRequest = null
         this.humanReplyText = ''
         this.$delete(this.humanApprovalRequests, submittedRequestId)
-        this.$message.success('Human 回复已提交')
+        this.$message.success(ncfST('Frontend.564'))
       } catch (error) {
-        this.$message.error(error?.message || 'Human 回复提交失败')
+        this.$message.error(error?.message || ncfST('Frontend.563'))
       } finally {
         this.humanReplySubmitting = false
       }
