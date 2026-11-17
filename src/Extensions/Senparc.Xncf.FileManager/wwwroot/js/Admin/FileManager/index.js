@@ -822,9 +822,9 @@
                 if (!row) return;
                 const self = this;
                 const tip = row.nodeType === 'tag'
-                    ? '确定删除标签「' + row.name + '」吗？'
-                    : '确定删除分类「' + row.name + '」及其下属标签吗？';
-                this.$confirm(tip, '提示', { type: 'warning' }).then(function () {
+                    ? fileManagerText('Frontend.257', 'Delete tag “{0}”?', row.name)
+                    : fileManagerText('Frontend.258', 'Delete category “{0}” and its child tags?', row.name);
+                this.$confirm(tip, fileManagerText('Frontend.259', 'Notice'), { type: 'warning' }).then(function () {
                     if (row.nodeType === 'tag') {
                         self.tagManager.tags = (self.tagManager.tags || []).filter(function (item) { return item.id !== row.id; });
                         const category = (self.tagManager.list || []).find(function (item) { return item.id === row.categoryId; });
@@ -926,7 +926,7 @@
                         return;
                     }
                     if (form.parentId && form.parentId === currentId) {
-                        self.$message.warning('所属分类不能选择自己');
+                        self.$message.warning(fileManagerText('Frontend.260', 'A category cannot select itself'));
                         return;
                     }
                     const exists = (self.tagManager.list || []).some(function (row) {
@@ -943,7 +943,7 @@
                         if (editing) {
                             const target = (self.tagManager.list || []).find(function (row) { return row.id === currentId; });
                             if (!target) {
-                                self.$message.error('分类不存在');
+                                self.$message.error(fileManagerText('Frontend.261', 'Category does not exist'));
                                 return;
                             }
                             target.name = name;
@@ -998,7 +998,7 @@
                     }
                     const category = (self.tagManager.list || []).find(function (row) { return row.id === categoryId; });
                     if (!category) {
-                        self.$message.warning('所属分类不存在，请重新选择');
+                        self.$message.warning(fileManagerText('Frontend.262', 'The selected category does not exist. Select another.'));
                         return;
                     }
                     const dup = (self.tagManager.tags || []).some(function (tag) {
@@ -1017,7 +1017,7 @@
                         if (editing) {
                             const target = self.tagManager.tags.find(function (tag) { return tag.id === currentId; });
                             if (!target) {
-                                self.$message.error('标签不存在');
+                                self.$message.error(fileManagerText('Frontend.263', 'Tag does not exist'));
                                 return;
                             }
                             const oldCategoryId = target.categoryId;

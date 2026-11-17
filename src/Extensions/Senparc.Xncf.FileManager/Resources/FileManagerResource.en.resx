@@ -493,4 +493,11 @@
   <data name="Frontend.254" xml:space="preserve"><value>Confirm deletion</value></data>
   <data name="Frontend.255" xml:space="preserve"><value>Folder deleted</value></data>
   <data name="Frontend.256" xml:space="preserve"><value>Failed to delete the folder: {0}</value></data>
+  <data name="Frontend.257" xml:space="preserve"><value>Delete tag “{0}”?</value></data>
+  <data name="Frontend.258" xml:space="preserve"><value>Delete category “{0}” and its child tags?</value></data>
+  <data name="Frontend.259" xml:space="preserve"><value>Notice</value></data>
+  <data name="Frontend.260" xml:space="preserve"><value>A category cannot select itself</value></data>
+  <data name="Frontend.261" xml:space="preserve"><value>Category does not exist</value></data>
+  <data name="Frontend.262" xml:space="preserve"><value>The selected category does not exist. Select another.</value></data>
+  <data name="Frontend.263" xml:space="preserve"><value>Tag does not exist</value></data>
 </root>

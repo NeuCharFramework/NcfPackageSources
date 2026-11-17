@@ -493,4 +493,11 @@
   <data name="Frontend.254" xml:space="preserve"><value>Confirmer la suppression</value></data>
   <data name="Frontend.255" xml:space="preserve"><value>Dossier supprimé</value></data>
   <data name="Frontend.256" xml:space="preserve"><value>Impossible de supprimer le dossier : {0}</value></data>
+  <data name="Frontend.257" xml:space="preserve"><value>Supprimer l’étiquette « {0} » ?</value></data>
+  <data name="Frontend.258" xml:space="preserve"><value>Supprimer la catégorie « {0} » et ses étiquettes enfants ?</value></data>
+  <data name="Frontend.259" xml:space="preserve"><value>Information</value></data>
+  <data name="Frontend.260" xml:space="preserve"><value>Une catégorie ne peut pas se sélectionner elle-même</value></data>
+  <data name="Frontend.261" xml:space="preserve"><value>La catégorie n’existe pas</value></data>
+  <data name="Frontend.262" xml:space="preserve"><value>La catégorie sélectionnée n’existe pas. Sélectionnez-en une autre.</value></data>
+  <data name="Frontend.263" xml:space="preserve"><value>L’étiquette n’existe pas</value></data>
 </root>

@@ -493,4 +493,11 @@
   <data name="Frontend.254" xml:space="preserve"><value>削除を確認</value></data>
   <data name="Frontend.255" xml:space="preserve"><value>フォルダーを削除しました</value></data>
   <data name="Frontend.256" xml:space="preserve"><value>フォルダーの削除に失敗しました：{0}</value></data>
+  <data name="Frontend.257" xml:space="preserve"><value>タグ「{0}」を削除しますか？</value></data>
+  <data name="Frontend.258" xml:space="preserve"><value>カテゴリー「{0}」と配下のタグを削除しますか？</value></data>
+  <data name="Frontend.259" xml:space="preserve"><value>確認</value></data>
+  <data name="Frontend.260" xml:space="preserve"><value>カテゴリー自身は選択できません</value></data>
+  <data name="Frontend.261" xml:space="preserve"><value>カテゴリーが存在しません</value></data>
+  <data name="Frontend.262" xml:space="preserve"><value>選択したカテゴリーが存在しません。もう一度選択してください。</value></data>
+  <data name="Frontend.263" xml:space="preserve"><value>タグが存在しません</value></data>
 </root>

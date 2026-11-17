@@ -493,4 +493,11 @@
   <data name="Frontend.254" xml:space="preserve"><value>Подтвердить удаление</value></data>
   <data name="Frontend.255" xml:space="preserve"><value>Папка удалена</value></data>
   <data name="Frontend.256" xml:space="preserve"><value>Не удалось удалить папку: {0}</value></data>
+  <data name="Frontend.257" xml:space="preserve"><value>Удалить метку «{0}»?</value></data>
+  <data name="Frontend.258" xml:space="preserve"><value>Удалить категорию «{0}» и её дочерние метки?</value></data>
+  <data name="Frontend.259" xml:space="preserve"><value>Уведомление</value></data>
+  <data name="Frontend.260" xml:space="preserve"><value>Категория не может выбрать себя</value></data>
+  <data name="Frontend.261" xml:space="preserve"><value>Категория не существует</value></data>
+  <data name="Frontend.262" xml:space="preserve"><value>Выбранная категория не существует. Выберите другую.</value></data>
+  <data name="Frontend.263" xml:space="preserve"><value>Метка не существует</value></data>
 </root>

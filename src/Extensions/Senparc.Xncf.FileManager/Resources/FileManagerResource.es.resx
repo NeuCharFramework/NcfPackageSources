@@ -493,4 +493,11 @@
   <data name="Frontend.254" xml:space="preserve"><value>Confirmar eliminación</value></data>
   <data name="Frontend.255" xml:space="preserve"><value>Carpeta eliminada</value></data>
   <data name="Frontend.256" xml:space="preserve"><value>No se pudo eliminar la carpeta: {0}</value></data>
+  <data name="Frontend.257" xml:space="preserve"><value>¿Eliminar la etiqueta «{0}»?</value></data>
+  <data name="Frontend.258" xml:space="preserve"><value>¿Eliminar la categoría «{0}» y sus etiquetas secundarias?</value></data>
+  <data name="Frontend.259" xml:space="preserve"><value>Aviso</value></data>
+  <data name="Frontend.260" xml:space="preserve"><value>Una categoría no puede seleccionarse a sí misma</value></data>
+  <data name="Frontend.261" xml:space="preserve"><value>La categoría no existe</value></data>
+  <data name="Frontend.262" xml:space="preserve"><value>La categoría seleccionada no existe. Selecciona otra.</value></data>
+  <data name="Frontend.263" xml:space="preserve"><value>La etiqueta no existe</value></data>
 </root>

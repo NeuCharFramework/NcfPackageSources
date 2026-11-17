@@ -488,4 +488,11 @@
   <data name="Frontend.254" xml:space="preserve"><value>确认删除</value></data>
   <data name="Frontend.255" xml:space="preserve"><value>文件夹已删除</value></data>
   <data name="Frontend.256" xml:space="preserve"><value>删除文件夹失败：{0}</value></data>
+  <data name="Frontend.257" xml:space="preserve"><value>确定删除标签「{0}」吗？</value></data>
+  <data name="Frontend.258" xml:space="preserve"><value>确定删除分类「{0}」及其下属标签吗？</value></data>
+  <data name="Frontend.259" xml:space="preserve"><value>提示</value></data>
+  <data name="Frontend.260" xml:space="preserve"><value>所属分类不能选择自己</value></data>
+  <data name="Frontend.261" xml:space="preserve"><value>分类不存在</value></data>
+  <data name="Frontend.262" xml:space="preserve"><value>所属分类不存在，请重新选择</value></data>
+  <data name="Frontend.263" xml:space="preserve"><value>标签不存在</value></data>
 </root>
