@@ -1509,7 +1509,7 @@
                         <el-input
                             v-model="treeFilter"
                             size="small"
-                            placeholder="搜索目录"
+                            :placeholder="ncfST('Frontend.117')"
                             prefix-icon="el-icon-search"
                             clearable>
                         </el-input>
@@ -1553,28 +1553,28 @@
                             <el-input
                                 v-model="fileSearchKeyword"
                                 size="small"
-                                placeholder="搜索文件/文件夹"
+                                :placeholder="ncfST('Frontend.115')"
                                 prefix-icon="el-icon-search"
                                 clearable>
                             </el-input>
                         </div>
                         <div class="file-manager-top-actions">
-                            <el-button size="small" icon="el-icon-refresh" @@click="reloadFolderTree" title="刷新"></el-button>
+                            <el-button size="small" icon="el-icon-refresh" @@click="reloadFolderTree" :title="ncfST('Frontend.087')"></el-button>
                             <el-dropdown trigger="click" @@command="handleCreateCommand">
                                 <el-button size="small">
-                                    新建<i class="el-icon-arrow-down el-icon--right"></i>
+                                    {{ ncfST('Frontend.021') }}<i class="el-icon-arrow-down el-icon--right"></i>
                                 </el-button>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="folder">新建文件夹</el-dropdown-item>
+                                    <el-dropdown-item command="folder">{{ ncfST('Frontend.185') }}</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                             <el-dropdown trigger="click" @@command="handleUploadCommand">
                                 <el-button type="primary" size="small">
-                                    上传<i class="el-icon-arrow-down el-icon--right"></i>
+                                    {{ ncfST('Frontend.016') }}<i class="el-icon-arrow-down el-icon--right"></i>
                                 </el-button>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="files">上传文件</el-dropdown-item>
-                                    <el-dropdown-item command="folder">上传文件夹</el-dropdown-item>
+                                    <el-dropdown-item command="files">{{ ncfST('Frontend.002') }}</el-dropdown-item>
+                                    <el-dropdown-item command="folder">{{ ncfST('Frontend.066') }}</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </div>
@@ -1585,7 +1585,7 @@
                             v-if="canGoParent"
                             class="file-manager-back-link"
                             href="javascript:void(0)"
-                            @@click="enterParentFolder">返回上一级</a>
+                            @@click="enterParentFolder">{{ ncfST('Frontend.170') }}</a>
                         <span v-if="canGoParent" class="file-manager-nav-divider">|</span>
                         <el-breadcrumb separator="/">
                             <el-breadcrumb-item><a href="javascript:void(0)" @@click="enterFolder(null)">{{ rootFolderName }}</a></el-breadcrumb-item>
@@ -1601,12 +1601,12 @@
                             <template slot="empty">
                                 <div class="file-manager-empty">
                                     <i class="el-icon-document"></i>
-                                    <strong>暂无文档</strong>
-                                    <el-button type="primary" size="mini" @@click="showUploadDialog">上传文件</el-button>
+                                    <strong>{{ ncfST('Frontend.133') }}</strong>
+                                    <el-button type="primary" size="mini" @@click="showUploadDialog">{{ ncfST('Frontend.002') }}</el-button>
                                 </div>
                             </template>
                             <el-table-column type="selection" width="48"></el-table-column>
-                            <el-table-column label="文件名" min-width="260">
+                            <el-table-column :label="ncfST('Frontend.122')" min-width="260">
                                 <template slot-scope="scope">
                                     <div class="file-manager-file-name-cell">
                                         <div class="file-manager-file-name-main">
@@ -1614,7 +1614,7 @@
                                             <i
                                                 class="file-manager-favorite-star"
                                                 :class="isFileFavorited(scope.row) ? 'el-icon-star-on is-on' : 'el-icon-star-off'"
-                                                :title="isFileFavorited(scope.row) ? '取消收藏' : '收藏'"
+                                                :title="isFileFavorited(scope.row) ? ncfST('Frontend.090') : ncfST('Frontend.119')"
                                                 @@click.stop="toggleFavorite(scope.row)">
                                             </i>
                                         </div>
@@ -1629,33 +1629,33 @@
                                     </div>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="更新者" width="120" show-overflow-tooltip>
+                            <el-table-column :label="ncfST('Frontend.136')" width="120" show-overflow-tooltip>
                                 <template slot-scope="scope">{{ updatedByLabel(scope.row) }}</template>
                             </el-table-column>
-                            <el-table-column prop="fileSize" label="大小" width="110">
+                            <el-table-column prop="fileSize" :label="ncfST('Frontend.014')" width="110">
                                 <template slot-scope="scope">{{ formatFileSize(scope.row.fileSize) }}</template>
                             </el-table-column>
-                            <el-table-column prop="uploadTime" label="更新时间" width="170">
+                            <el-table-column prop="uploadTime" :label="ncfST('Frontend.135')" width="170">
                                 <template slot-scope="scope">{{ dateFormatter(scope.row.uploadTime) }}</template>
                             </el-table-column>
-                            <el-table-column label="操作" width="90" fixed="right" class-name="ncf-table-actions-column">
+                            <el-table-column :label="ncfST('Frontend.016')" width="90" fixed="right" class-name="ncf-table-actions-column">
                                 <template slot-scope="scope">
-                                    <el-tooltip content="更多操作" placement="top" :open-delay="180">
+                                    <el-tooltip :content="ncfST('Frontend.134')" placement="top" :open-delay="180">
                                     <el-dropdown trigger="click" @@command="handleRowCommand($event, scope.row)">
                                         <el-button type="text" size="mini" icon="el-icon-more"
-                                            class="ncf-table-action-more" title="更多操作" aria-label="更多操作"></el-button>
+                                            class="ncf-table-action-more" :title="ncfST('Frontend.134')" :aria-label="ncfST('Frontend.134')"></el-button>
                                         <el-dropdown-menu slot="dropdown">
-                                            <el-dropdown-item command="download" icon="el-icon-download">下载</el-dropdown-item>
-                                            <el-dropdown-item command="preview" icon="el-icon-view">在线预览</el-dropdown-item>
+                                            <el-dropdown-item command="download" icon="el-icon-download">{{ ncfST('Frontend.004') }}</el-dropdown-item>
+                                            <el-dropdown-item command="preview" icon="el-icon-view">{{ ncfST('Frontend.098') }}</el-dropdown-item>
                                             <el-dropdown-item v-if="isSiteAsset" command="togglePublish" icon="el-icon-s-promotion">{{ scope.row.accessLevel === 100 ? '取消公开' : '公开' }}</el-dropdown-item>
-                                            <el-dropdown-item v-if="isSiteAsset && scope.row.publicUrl" command="copyUrl" icon="el-icon-document-copy">复制 URL</el-dropdown-item>
-                                            <el-dropdown-item command="editNote" icon="el-icon-edit">编辑备注</el-dropdown-item>
+                                            <el-dropdown-item v-if="isSiteAsset && scope.row.publicUrl" command="copyUrl" icon="el-icon-document-copy">{{ ncfST('Frontend.099') }}</el-dropdown-item>
+                                            <el-dropdown-item command="editNote" icon="el-icon-edit">{{ ncfST('Frontend.156') }}</el-dropdown-item>
                                             <el-dropdown-item command="toggleQuickAccess" icon="el-icon-s-opportunity">
-                                                {{ isInQuickAccess(scope.row) ? '从快速访问移除' : '添加至快速访问' }}
+                                                {{ isInQuickAccess(scope.row) ? ncfST('Frontend.071') : ncfST('Frontend.147') }}
                                             </el-dropdown-item>
-                                            <el-dropdown-item command="manageTags" icon="el-icon-price-tag">标签管理</el-dropdown-item>
+                                            <el-dropdown-item command="manageTags" icon="el-icon-price-tag">{{ ncfST('Frontend.143') }}</el-dropdown-item>
                                             <el-dropdown-item command="delete" divided icon="el-icon-delete"
-                                                class="ncf-table-action-danger">删除</el-dropdown-item>
+                                                class="ncf-table-action-danger">{{ ncfST('Frontend.007') }}</el-dropdown-item>
                                         </el-dropdown-menu>
                                     </el-dropdown>
                                 </template>
