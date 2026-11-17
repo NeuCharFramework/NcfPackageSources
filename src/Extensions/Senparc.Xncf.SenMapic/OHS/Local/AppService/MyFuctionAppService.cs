@@ -135,7 +135,7 @@ namespace Senparc.Xncf.SenMapic.OHS.Local.AppService
                         return null;
                 }
 
-                logger.Append($"进行运算：{request.Number1} {theOperator} {request.Number2} = {calcResult}");
+                logger.Append($"Calculation: {request.Number1} {theOperator} {request.Number2} = {calcResult}");
 
                 Action<int> raisePower = power =>
                 {

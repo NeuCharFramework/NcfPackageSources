@@ -400,7 +400,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                 }
                 catch (Exception e)
                 {
-                    var ex = new Exception($"CurrentCrawlingUrlList出错，Url:{url}", e);
+                    var ex = new Exception($"CurrentCrawlingUrlList failed. URL: {url}", e);
                     SenparcTrace.BaseExceptionLog(ex);
                 }
                 UrlData urlData;
@@ -411,7 +411,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                 }
                 catch (Exception e)
                 {
-                    var ex = new Exception($"Sitemap出错！当前Url:{avaliableUrl}，ParentUrl:{parentUrl}", e);
+                    var ex = new Exception($"Sitemap failed. Current URL: {avaliableUrl}; parent URL: {parentUrl}", e);
                     SenparcTrace.BaseExceptionLog(ex);
                     urlData = new UrlData(avaliableUrl, -1, "", "", -1, 0.00, parentUrl, currentAvaliableUrl.LinkText);
                 }
@@ -463,7 +463,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             }
             catch (Exception e)
             {
-                var ex = new Exception($"Url:{url}。出错信息：{e.Message}", e);
+                var ex = new Exception($"URL: {url}. Error: {e.Message}", e);
                 SenparcTrace.BaseExceptionLog(ex);
             }
             finally

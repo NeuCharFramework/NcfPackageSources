@@ -362,7 +362,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
     /// </summary>
     public class FilterOmitWord
     {
-        public static readonly string[] OperatorKinds = new[] { "未知", "整个URL包含关键字", "URL参数中包含关键字", "以关键字开头", "以关键字结尾", "指定完整URL" };
+        public static readonly string[] OperatorKinds = new[] { "Unknown", "URL contains keyword", "URL parameters contain keyword", "Starts with keyword", "Ends with keyword", "Exact URL" };
         /// <summary>
         ///Legacy comment translated to English.
         /// </summary>
