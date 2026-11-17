@@ -1511,26 +1511,26 @@
   <data name="Frontend.338" xml:space="preserve"><value>URL de la Agent Card</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.339" xml:space="preserve"><value>La plantilla de Agent no tiene conectores autorizados; seleccionarlo aquí no lo invocará.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.340" xml:space="preserve"><value>Cuando un grupo tiene miembros Human, se pausa para una respuesta de texto al llegar al turno de Human.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.341" xml:space="preserve"><value>HIL level</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.342" xml:space="preserve"><value>Human does not call a model; this binding preserves the system Agent task policy and follows the group task by default.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.343" xml:space="preserve"><value>Human participant</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.344" xml:space="preserve"><value>Human turn</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.345" xml:space="preserve"><value>L0 fully automatic (plugins/MCP execute automatically)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.346" xml:space="preserve"><value>L1 risk-based approval (MCP default approval)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.347" xml:space="preserve"><value>L2 tool approval (confirm every tool first)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.348" xml:space="preserve"><value>L3 Human participant + tool approval</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.349" xml:space="preserve"><value>MCP tool permissions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.350" xml:space="preserve"><value>Context sharing</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.351" xml:space="preserve"><value>Do not authorize any connector</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.352" xml:space="preserve"><value>Do not bind a knowledge base</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.353" xml:space="preserve"><value>Leave unselected to use no connector this time</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.354" xml:space="preserve"><value>Personalized parameters</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.355" xml:space="preserve"><value>maintained here.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.356" xml:space="preserve"><value>Task instructions only</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.357" xml:space="preserve"><value>Select from the MCP list</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.358" xml:space="preserve"><value>Inherit from PromptRange</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.359" xml:space="preserve"><value>These endpoints come from the MCP module registry. Select one to add it as name + URL to the current configuration; it can be removed at any time.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.360" xml:space="preserve"><value>Task instructions + key conclusion from the current turn</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.341" xml:space="preserve"><value>Nivel HIL</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.342" xml:space="preserve"><value>Un Human no llama a un modelo; esta vinculación conserva la política de tareas del Agent del sistema y sigue la tarea del grupo de forma predeterminada.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.343" xml:space="preserve"><value>Participante Human</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.344" xml:space="preserve"><value>Turno Human</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.345" xml:space="preserve"><value>L0 totalmente automático (los plugins/MCP se ejecutan automáticamente)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.346" xml:space="preserve"><value>L1 aprobación basada en riesgo (aprobación MCP predeterminada)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.347" xml:space="preserve"><value>L2 aprobación de herramientas (confirmar cada herramienta primero)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.348" xml:space="preserve"><value>L3 participante Human + aprobación de herramientas</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.349" xml:space="preserve"><value>Permisos de herramientas MCP</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.350" xml:space="preserve"><value>Compartir contexto</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.351" xml:space="preserve"><value>No autorizar ningún conector</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.352" xml:space="preserve"><value>No vincular una base de conocimiento</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.353" xml:space="preserve"><value>Dejar sin seleccionar para no usar ningún conector en esta ocasión</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.354" xml:space="preserve"><value>Parámetros personalizados</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.355" xml:space="preserve"><value>mantenido aquí.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.356" xml:space="preserve"><value>Solo instrucciones de tarea</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.357" xml:space="preserve"><value>Seleccionar de la lista MCP</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.358" xml:space="preserve"><value>Heredar de PromptRange</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.359" xml:space="preserve"><value>Estos endpoints proceden del registro del módulo MCP. Selecciona uno para añadirlo como nombre + URL a la configuración actual; se puede eliminar en cualquier momento.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.360" xml:space="preserve"><value>Instrucciones de tarea + conclusión clave del turno actual</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.361" xml:space="preserve"><value>Task description and execution strategy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.362" xml:space="preserve"><value>Create a Prompt Range from the current plain-text Prompt and selected Chat model, run it once, score it with AI, and switch automatically to a range-level reference.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.363" xml:space="preserve"><value>For example X-A2A-Token</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
