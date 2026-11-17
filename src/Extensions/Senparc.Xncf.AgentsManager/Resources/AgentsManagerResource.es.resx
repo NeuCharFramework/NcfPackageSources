@@ -820,10 +820,10 @@
     <value>Grupos como propietario: {0}</value>
   </data>
   <data name="Frontend.222" xml:space="preserve">
-    <value>Grupos como contacto: {0}</value>
+    <value>Grupos como responsable: {0}</value>
   </data>
   <data name="Frontend.223" xml:space="preserve">
-    <value>Sustituya el Propietario/Contacto del grupo correspondiente antes de eliminar.</value>
+    <value>Sustituye al propietario/responsable en el grupo correspondiente antes de eliminar.</value>
   </data>
   <data name="Frontend.224" xml:space="preserve">
     <value>Eliminación bloqueada</value>
@@ -832,43 +832,43 @@
     <value>Entendido</value>
   </data>
   <data name="Frontend.226" xml:space="preserve">
-    <value>¿Eliminar el Agente "{0}"?</value>
+    <value>¿Eliminar el Agent «{0}»?</value>
   </data>
   <data name="Frontend.227" xml:space="preserve">
-    <value>Grupos de los que saldrá el miembro: {0}</value>
+    <value>Grupos que abandonará el miembro: {0}</value>
   </data>
   <data name="Frontend.228" xml:space="preserve">
-    <value>También se eliminará el historial de mensajes de este Agente y no se podrá recuperar.</value>
+    <value>El historial de mensajes relacionado con este Agent también se eliminará y no se podrá recuperar.</value>
   </data>
   <data name="Frontend.229" xml:space="preserve">
     <value>¡Eliminado correctamente!</value>
   </data>
   <data name="Frontend.230" xml:space="preserve">
-    <value>La comprobación previa a la eliminación falló. Inténtelo de nuevo más tarde.</value>
+    <value>La comprobación previa de eliminación falló. Inténtalo de nuevo más tarde.</value>
   </data>
   <data name="Frontend.231" xml:space="preserve">
     <value>¿Eliminar estos datos?</value>
   </data>
   <data name="Frontend.232" xml:space="preserve">
-    <value>Seleccione primero los grupos a eliminar</value>
+    <value>Selecciona primero los grupos que deseas eliminar</value>
   </data>
   <data name="Frontend.233" xml:space="preserve">
-    <value>¿Eliminar los datos seleccionados por lotes?</value>
+    <value>¿Eliminar por lotes los datos seleccionados?</value>
   </data>
   <data name="Frontend.234" xml:space="preserve">
-    <value>Seleccione primero las tareas a iniciar</value>
+    <value>Selecciona primero las tareas que deseas iniciar</value>
   </data>
   <data name="Frontend.235" xml:space="preserve">
-    <value>¿Iniciar los datos seleccionados por lotes?</value>
+    <value>¿Iniciar por lotes los datos seleccionados?</value>
   </data>
   <data name="Frontend.236" xml:space="preserve">
-    <value>Seleccione primero las tareas a eliminar</value>
+    <value>Selecciona primero las tareas que deseas eliminar</value>
   </data>
   <data name="Frontend.237" xml:space="preserve">
     <value>¿Forzar la detención de esta tarea?</value>
   </data>
   <data name="Frontend.238" xml:space="preserve">
-    <value>Seleccione primero las tareas a detener</value>
+    <value>Selecciona primero las tareas que deseas detener</value>
   </data>
   <data name="Frontend.239" xml:space="preserve">
     <value>¿Forzar la detención de las tareas seleccionadas?</value>
