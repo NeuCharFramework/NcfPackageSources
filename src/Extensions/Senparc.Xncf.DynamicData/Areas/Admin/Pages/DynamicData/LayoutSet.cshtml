@@ -36,10 +36,10 @@
             <el-button type="primary" :size="elSize" icon="el-icon-s-promotion" @@click="handleRelease">发布</el-button>
         </div>
     </div>
-    @* 详情内容 *@
+    @* Detail content *@
     <el-container style="flex-wrap: nowrap;">
         <div class="layoutSet-main">
-            @* 菜单 *@
+            @* Menu *@
             <div class="main_header df-wn flex-ac">
                 <div class="menu-area">
                     <div class="menu-list df-wn flex-ac">
@@ -62,13 +62,13 @@
                     <i class="el-icon-plus"></i>新增菜单
                 </div>
             </div>
-            @* 主体操作区域 *@
+            @* Main action area *@
             <div class="main_content">
-                @* 全局按钮 *@
+                @* Global buttons *@
                 <template>
                     <div class="globalButton-area"></div>
                 </template>
-                @* 组件区域 *@
+                @* Component area *@
                 <div v-for="(item,index) in layoutComponentsList" :key="index" class="component-area"
                     :class="{activeComponentArea:index === layoutComponentActive}" :draggable="true"
                     @@dragstart="handleDragstart(index)" @@dragenter="handleDragenter($event, index, 'layoutComponent')"
@@ -91,7 +91,7 @@
                                 <el-table-column v-for="(col, index) in item.columnData" :key="index"
                                     :column-key="col.columnkey" :prop="col.field" :label="col.name"
                                     :width="col.columnWidth" :render-header="renderHeader">
-                                    @* 自定义列 按钮 *@
+                                    @* Custom column button *@
                                     <div v-if="col.property === 'customColumn'"
                                         class="df flex-as table_customColumn_btnBox">
                                         <span v-for="(btn,bindex) in col.btnList" class="table_customColumn_btn"
@@ -115,31 +115,31 @@
                         <el-form v-if="item.columnData&&item.columnData.length" :label-position="item.formConfig ? item.formConfig.labelPosition : 'left'" label-width="100px" class="demo-ruleForm">
                             <el-form-item v-for="(fItem,fIndex) in item.columnData" :key="fIndex" :label="fItem.name"
                                 :prop="fItem.field" @@click.native.stop="handleFormItemMouseDown(index,fIndex)">
-                                @* 输入框 *@
+                                @* Input *@
                                 <el-input v-if="fItem.formItemType === 'input'" :type="fItem.type" v-model="fItem.value" :placeholder="fItem.placeholder"></el-input>
-                                @* 开关 *@
+                                @* Switch *@
                                 <el-switch v-if="fItem.formItemType === 'switch'" v-model="fItem.value"></el-switch>
-                                @* 下拉选择 *@
+                                @* Select *@
                                 <el-select v-if="fItem.formItemType === 'select'" v-model="fItem.value"
                                     :placeholder="fItem.placeholder">
                                     <el-option v-for="(optItem,optIndex) in fItem.optionData" :key="optIndex"
                                         :label="optItem.label" :value="optItem.value"></el-option>
                                 </el-select>
-                                @* 固定时间点 *@
+                                @* Fixed time point *@
                                 <el-time-select v-if="fItem.formItemType === 'timeSelect'" v-model="fItem.value" :picker-options="fItem.pickerOptions" :placeholder="fItem.placeholder">
                                 </el-time-select>
-                                @* 任意时间点 *@
+                                @* Arbitrary time point *@
                                 <el-time-picker v-if="fItem.formItemType === 'timePicker'" v-model="fItem.value" :placeholder="fItem.placeholder"></el-time-picker>
-                                @* 日期 时间 *@
+                                @* Date and time *@
                                 <el-date-picker v-if="fItem.formItemType === 'date'" :type="fItem.type" v-model="fItem.value" :placeholder="fItem.placeholder"></el-date-picker>
-                                @* 复选框 *@
+                                @* Checkbox *@
                                 <el-checkbox-group v-if="fItem.formItemType === 'checkbox'" v-model="fItem.value">
                                     <el-checkbox v-for="(checkItem,checkIndex) in fItem.optionData"
                                         :label="checkItem.value" :key="checkIndex">
                                         {{ checkItem.label }}
                                     </el-checkbox>
                                 </el-checkbox-group>
-                                @* 单选框 *@
+                                @* Radio button *@
                                 <el-radio-group v-if="fItem.formItemType === 'radio'" v-model="fItem.value">
                                     <el-radio v-for="(radioItem,radioIndex) in fItem.optionData"
                                         :label="radioItem.value" :key="radioIndex">
@@ -149,28 +149,28 @@
                             </el-form-item>
                             <el-form-item>
                             <el-button type="primary" @@click.stop="handleSubmitBtnEdit(item)">提交</el-button>
-                            @* <el-button @@click="resetForm('ruleForm')">重置</el-button> *@
+                            @* <el-button @@click="resetForm('ruleForm')">Reset</el-button> *@
                             </el-form-item>
                         </el-form>
                     </template>
-                    @* 组件占位 *@
+                    @* Component placeholder *@
                     <div v-if="componentOccupantShow(item)" class="occupant-area df-wn flex-ac flex-jc">
                         <img src="/image/DynamicData/icon-select_active.png" alt="" class="icon-select" />
                         <span style="user-select:none;">点击右侧添加属性</span>
                     </div>
-                    @* 上下移动 *@
+                    @* Move up or down *@
                     @* <i class="el-icon-circle-plus upper_add-Component" @@click="handleAddComponent(index)"></i>
                     <i class="el-icon-circle-plus down_add-Component" @@click="handleAddComponent(index+1)"></i> *@
                 </div>
 
-                @* 添加组件提示 *@
+                @* Add-component hint *@
                 <div class="add-Component_Tips df-wn flex-ac flex-jc" @@click="handleAddComponent()">
                     <img src="/image/DynamicData/icon-select.png" alt="" class="icon-select" />
                     <span style="user-select:none;">点击右侧添加组件</span>
                 </div>
             </div>
         </div>
-        @* 侧边栏 *@
+        @* Sidebar *@
         <div class="layoutSet-aside">
             <el-tabs v-model="tabsOverallActiveName" :before-leave="handleTabsLeave"
                 @@tab-click="handleTabsClickOverall">
@@ -199,7 +199,7 @@
                     </div>
                 </el-tab-pane>
                 <el-tab-pane label="设置" name="second">
-                    @* 表格设置管理 *@
+                    @* Table settings management *@
                     <div class="tabpane">
                         <div class="subsection-container df-wn flex-ac flex-jc">
                             <div class="subsection-item" :class="{'subsection-item_avtive':setUpActiveName === 'first'}"
@@ -208,18 +208,18 @@
                                 :class="{'subsection-item_avtive':setUpActiveName === 'second'}"
                                 @@click="handleSubsectionUpdate('setUpActiveName','second')">样式</div>
                         </div>
-                        @* 属性设置 *@
+                        @* Property settings *@
                         <template v-if="setUpActiveName === 'first'">
-                            @* 表格|表单 表和列属性 设置 *@
+                            @* Table/form and column property settings *@
                             <template v-if="['table','form'].includes(layoutComponentActiveType)">
-                                @* 表格提示 *@
+                                @* Table hint *@
                                 <div v-if="!columnForm.dataSheet" class="tips-container df-wn flex-ac">
                                     <i class="el-icon-warning-outline"></i>
                                     <span class="tipsText">
                                         请先选择数据表才能对表字段进行设置
                                     </span>
                                 </div>
-                                @* 列管理 *@
+                                @* Column management *@
                                 <div class="operation-title" style="margin-top:20px;">列管理</div>
                                 <el-form :model="columnForm" :size="elSize" label-position="top" label-width="80px" class="form-container">
                                     <el-form-item label="数据表选择" prop="dataSheet">
@@ -396,7 +396,7 @@
                                                                                 :size="elSize"
                                                                                 placeholder="请输入字段名称"></el-input>
                                                                         </el-form-item>
-                                                                        @* 选择项 *@
+                                                                        @* Selection options *@
                                                                         <el-form-item v-if="['checkbox', 'radio', 'select'].includes(addColumnForm.formItemType)" label="选项">
                                         <el-select v-model="addColumnForm.optionDataType"
                                             style="width:100%;margin-bottom:10px" placeholder="请选择">
@@ -479,7 +479,7 @@
                                     </el-form-item>
                                 </el-form>
                             </template>
-                            @* 表格 数据 设置 *@
+                            @* Table data settings *@
                             <template v-if="layoutComponentActiveType === 'table'">
                                 <div class="operation-title" style="margin-top:20px;">
                                     数据设置
@@ -636,7 +636,7 @@
                                     </el-form-item>
                                 </el-form>
                             </template>
-                            @* 表格 普通列属性 设置 *@
+                            @* Table standard-column property settings *@
                             <template v-if="layoutComponentActiveType === 'normalColumn'">
                                 <div class="operation-title" style="margin-top:20px;">
                                     列属性设置
@@ -694,7 +694,7 @@
                                     </el-form-item>
                                 </el-form>
                             </template>
-                            @* 表格 自定义列属性 设置 *@
+                            @* Table custom-column property settings *@
                             <template v-if="layoutComponentActiveType === 'customColumn'">
                                 <div class="operation-title" style="margin-top:20px;">自定义列设置</div>
                                 <el-form :model="addColumnForm" :size="elSize" label-position="top" label-width="80px" class="form-container">
@@ -774,7 +774,7 @@
                                     </el-form-item> *@
                                 </el-form>
                             </template>
-                            @* 表格 自定义列按钮属性 设置 *@
+                            @* Table custom-column button property settings *@
                             <template v-if="layoutComponentActiveType === 'columnEditBtn'">
                                 <div class="operation-title" style="margin-top:20px;">按钮设置</div>
                                 <el-form :model="customColumnBtnForm" :size="elSize" label-position="top"
@@ -811,7 +811,7 @@
                                         <el-checkbox v-model="customColumnBtnForm.customIDName">自定义ID名称</el-checkbox>
                                     </el-form-item>
                                 </el-form>
-                                @* 自定义列按钮事件 *@
+                                @* Custom-column button events *@
                                 <div class="operation-title" style="margin-top:20px;">事件设置</div>
                                 <el-form :model="customColumnBtnForm" :size="elSize" label-position="top"
                                     label-width="80px" class="form-container">
@@ -888,7 +888,7 @@
                                     </el-form-item>
                                 </el-form>
                             </template>
-                            @* 表单 单个组件属性 设置 *@
+                            @* Form component property settings *@
                             <template v-if="layoutComponentActiveType === 'formItem'">
                                 <div class="operation-title" style="margin-top:20px;">表单属性设置</div>
                                 <el-form :model="addColumnForm" :size="elSize" label-position="top" label-width="80px" class="form-container">
@@ -921,7 +921,7 @@
                                                                                 :size="elSize"
                                                                                 placeholder="请输入字段名称"></el-input>
                                                                         </el-form-item>
-                                                                        @* 选择项 *@
+                                                                        @* Selection options *@
                                                                         <el-form-item v-if="['checkbox', 'radio', 'select'].includes(addColumnForm.formItemType)" label="选项">
                                         <el-select v-model="addColumnForm.optionDataType"
                                             style="width:100%;margin-bottom:10px" placeholder="请选择">
@@ -1141,7 +1141,7 @@
                                     </el-form-item>
                                 </el-form> *@
                             </template>
-                            @* 表单 提交按钮属性 设置 *@
+                            @* Form submit-button property settings *@
                             <template v-if="layoutComponentActiveType === 'formSubmitBtn'">
                                 <div class="operation-title" style="margin-top:20px;">按钮设置</div>
                                 <el-form v-model="formSubmitBtnForm" :size="elSize" label-position="top"
@@ -1173,7 +1173,7 @@
                                         <el-checkbox v-model="formSubmitBtnForm.customIdname">自定义ID名称</el-checkbox>
                                     </el-form-item>
                                 </el-form>
-                                @* 事件设置 *@
+                                @* Event settings *@
                                 <div class="operation-title" style="margin-top:20px;">事件设置</div>
                                 <el-form v-model="eventSettingForm" :size="elSize" label-position="top"
                                     label-width="80px" class="form-container">
@@ -1293,9 +1293,9 @@
                         </template>
 
 
-                        @* 样式 设置 *@
+                        @* Style settings *@
                         <template v-if="setUpActiveName === 'second'">
-                            @* 表格 整体样式 设置 *@
+                            @* Table overall style settings *@
                             <template v-if="layoutComponentActiveType === 'table'">
                                 <div class="operation-title" style="margin-top:20px;">表格样式设置</div>
                                 <el-form :model="tableStyleForm" :size="elSize" label-position="top" label-width="80px" class="form-container">
@@ -1354,7 +1354,7 @@
                                         </table>
                                     </el-form-item>
                                 </el-form>
-                                @* 分页设置 *@
+                                @* Pagination settings *@
                                 <div class="operation-title" style="margin-top:20px;">分页设置</div>
                                 <el-form :model="paginationForm" :size="elSize" label-position="top" label-width="80px" class="form-container">
                                     <el-form-item>
@@ -1416,7 +1416,7 @@
                                     </el-form-item>
                                 </el-form>
                             </template>
-                            @* 表单 整体样式 设置 *@
+                            @* Form overall style settings *@
                             <template v-if="layoutComponentActiveType === 'form'">
                                 <div class="operation-title" style="margin-top:20px;">样式设置</div>
                                 <el-form :model="formStyleForm" :size="elSize" label-position="top" label-width="80px" class="form-container">
@@ -1438,23 +1438,23 @@
                                     </el-form-item>
                                 </el-form>
                             </template>
-                            @* 表格 普通列样式 设置 *@
+                            @* Table standard-column style settings *@
                             @* <template v-if="setUpActiveName === 'second'"></template> *@
 
-                            @* 表格 自定义列样式 设置 *@
+                            @* Table custom-column style settings *@
                             @* <template v-if="setUpActiveName === 'second'"></template> *@
 
-                            @* 表格 自定义列样式 设置 *@
+                            @* Table custom-column style settings *@
                             @* <template v-if="setUpActiveName === 'second'"></template> *@
 
-                            @* 表单 单个组件样式 设置 *@
+                            @* Form component style settings *@
                             @* <template v-if="setUpActiveName === 'second'"></template> *@
 
-                            @* 表单 按钮样式 设置 *@
+                            @* Form button style settings *@
                             @* <template v-if="setUpActiveName === 'second'"></template> *@
                         </template>
                     </div>
-                    @* 全局 按钮设置管理 *@
+                    @* Global button settings management *@
                 </el-tab-pane>
             </el-tabs>
         </div>
