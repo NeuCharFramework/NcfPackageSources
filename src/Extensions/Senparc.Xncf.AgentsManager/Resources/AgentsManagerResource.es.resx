@@ -157,997 +157,997 @@
     <value>Eres un traductor profesional que domina {0}. Traduce el texto con precisión y devuelve solo la traducción.</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>Inicio de AgentsManager||Inicio de AgentsManager</value>
+    <value>AgentsManager Home</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
-    <value>Módulos de extensión||Módulos de extensión</value>
+    <value>Extension Modules</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>Gestor de agentes||Gestor de agentes</value>
+    <value>Agents Manager</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>Inicio||Inicio</value>
+    <value>Home</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>Agente||Agente</value>
+    <value>Agent</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>Lista de agentes||Lista de agentes</value>
+    <value>Agent list</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>Buscar por nombre||Buscar por nombre</value>
+    <value>Search by name</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>Ordenar por hora||Ordenar por hora</value>
+    <value>Sort by time</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>Seleccionar estado||Seleccionar estado</value>
+    <value>Select status</value>
   </data>
   <data name="Frontend.010" xml:space="preserve">
-    <value>Todos los agentes||Todos los agentes</value>
+    <value>All agents</value>
   </data>
   <data name="Frontend.011" xml:space="preserve">
-    <value>Sin datos||Sin datos</value>
+    <value>No Data</value>
   </data>
   <data name="Frontend.012" xml:space="preserve">
-    <value>Vista de panel||Vista de panel</value>
+    <value>Panel view</value>
   </data>
   <data name="Frontend.013" xml:space="preserve">
-    <value>Vista 3D||Vista 3D</value>
+    <value>3D view</value>
   </data>
   <data name="Frontend.014" xml:space="preserve">
-    <value>Participando||Participando</value>
+    <value>Participating</value>
   </data>
   <data name="Frontend.015" xml:space="preserve">
-    <value>Puntuación||Puntuación</value>
+    <value>Score</value>
   </data>
   <data name="Frontend.016" xml:space="preserve">
-    <value>Editar||Editar</value>
+    <value>Edit</value>
   </data>
   <data name="Frontend.017" xml:space="preserve">
-    <value>Detalles||Detalles</value>
+    <value>Details</value>
   </data>
   <data name="Frontend.018" xml:space="preserve">
-    <value>Eliminar||Eliminar</value>
+    <value>Delete</value>
   </data>
   <data name="Frontend.019" xml:space="preserve">
-    <value>Todos los grupos||Todos los grupos</value>
+    <value>All groups</value>
   </data>
   <data name="Frontend.020" xml:space="preserve">
-    <value>Estado de la tarea||Estado de la tarea</value>
+    <value>Task status</value>
   </data>
   <data name="Frontend.021" xml:space="preserve">
-    <value>Esperando||Esperando</value>
+    <value>Waiting</value>
   </data>
   <data name="Frontend.022" xml:space="preserve">
-    <value>En chat||En chat</value>
+    <value>Chatting</value>
   </data>
   <data name="Frontend.023" xml:space="preserve">
-    <value>En pausa||En pausa</value>
+    <value>Paused</value>
   </data>
   <data name="Frontend.024" xml:space="preserve">
-    <value>Listo||Listo</value>
+    <value>Done</value>
   </data>
   <data name="Frontend.025" xml:space="preserve">
-    <value>Cancelar||Cancelar</value>
+    <value>Cancel</value>
   </data>
   <data name="Frontend.026" xml:space="preserve">
-    <value>Solo grupos en ejecución||Solo grupos en ejecución</value>
+    <value>Running groups only</value>
   </data>
   <data name="Frontend.027" xml:space="preserve">
-    <value>Apertura rápida del grupo||Apertura rápida del grupo</value>
+    <value>Quick-open group</value>
   </data>
   <data name="Frontend.028" xml:space="preserve">
-    <value>Abrir grupo||Abrir grupo</value>
+    <value>Open group</value>
   </data>
   <data name="Frontend.029" xml:space="preserve">
-    <value>Apertura rápida de la tarea||Apertura rápida de la tarea</value>
+    <value>Quick-open task</value>
   </data>
   <data name="Frontend.030" xml:space="preserve">
-    <value>Abrir tarea||Abrir tarea</value>
+    <value>Open task</value>
   </data>
   <data name="Frontend.031" xml:space="preserve">
-    <value>Pase el cursor sobre la columna de un Group para resaltar a sus miembros; haga clic en un Group para bloquearlo o desbloquearlo; los números superiores muestran el recuento de estados de las tareas en ejecución de ese grupo.||Pase el cursor sobre la columna de un Group para resaltar a sus miembros; haga clic en un Group para bloquearlo o desbloquearlo; los números superiores muestran el recuento de estados de las tareas en ejecución de ese grupo.</value>
+    <value>Hover a Group column to highlight its members; click a Group to lock or unlock it; the numbers at the top show running-task status counts for that group.</value>
   </data>
   <data name="Frontend.032" xml:space="preserve">
-    <value>Grupos||Grupos</value>
+    <value>Groups</value>
   </data>
   <data name="Frontend.033" xml:space="preserve">
-    <value>Tareas||Tareas</value>
+    <value>Tasks</value>
   </data>
   <data name="Frontend.034" xml:space="preserve">
-    <value>Tareas en ejecución||Tareas en ejecución</value>
+    <value>Running tasks</value>
   </data>
   <data name="Frontend.035" xml:space="preserve">
-    <value>Rango:||Rango:</value>
+    <value>Range:</value>
   </data>
   <data name="Frontend.036" xml:space="preserve">
-    <value>Táctica:||Táctica:</value>
+    <value>Tactic:</value>
   </data>
   <data name="Frontend.037" xml:space="preserve">
-    <value>Ejecución||Ejecución</value>
+    <value>Run</value>
   </data>
   <data name="Frontend.038" xml:space="preserve">
-    <value>Model:||Model:</value>
+    <value>Model:</value>
   </data>
   <data name="Frontend.039" xml:space="preserve">
-    <value>Administrar modelos de AI||Administrar modelos de AI</value>
+    <value>Manage AI models</value>
   </data>
   <data name="Frontend.040" xml:space="preserve">
-    <value>Parámetros del modelo||Parámetros del modelo</value>
+    <value>Model parameters</value>
   </data>
   <data name="Frontend.041" xml:space="preserve">
-    <value>Puntuación del modelo:||Puntuación del modelo:</value>
+    <value>Model score:</value>
   </data>
   <data name="Frontend.042" xml:space="preserve">
-    <value>Estado:||Estado:</value>
+    <value>Status:</value>
   </data>
   <data name="Frontend.043" xml:space="preserve">
-    <value>Deshabilitados||Deshabilitados</value>
+    <value>Disabled</value>
   </data>
   <data name="Frontend.044" xml:space="preserve">
-    <value>Habilitado||Habilitado</value>
+    <value>Enabled</value>
   </data>
   <data name="Frontend.045" xml:space="preserve">
-    <value>Grupos||Grupos</value>
+    <value>Groups</value>
   </data>
   <data name="Frontend.046" xml:space="preserve">
-    <value>Tareas||Tareas</value>
+    <value>Jobs</value>
   </data>
   <data name="Frontend.047" xml:space="preserve">
-    <value>Salir del grupo||Salir del grupo</value>
+    <value>Leave group</value>
   </data>
   <data name="Frontend.048" xml:space="preserve">
-    <value>Iniciar||Iniciar</value>
+    <value>Start</value>
   </data>
   <data name="Frontend.049" xml:space="preserve">
-    <value>Iniciar seleccionados||Iniciar seleccionados</value>
+    <value>Start selected</value>
   </data>
   <data name="Frontend.050" xml:space="preserve">
-    <value>Detener seleccionados||Detener seleccionados</value>
+    <value>Stop selected</value>
   </data>
   <data name="Frontend.051" xml:space="preserve">
-    <value>Eliminar seleccionados||Eliminar seleccionados</value>
+    <value>Delete selected</value>
   </data>
   <data name="Frontend.052" xml:space="preserve">
-    <value>Tareas:||Tareas:</value>
+    <value>Tasks:</value>
   </data>
   <data name="Frontend.053" xml:space="preserve">
-    <value>Propietario:||Propietario:</value>
+    <value>Owner:</value>
   </data>
   <data name="Frontend.054" xml:space="preserve">
-    <value>Contacto:||Contacto:</value>
+    <value>Contact:</value>
   </data>
   <data name="Frontend.055" xml:space="preserve">
-    <value>Miembros del grupo:||Miembros del grupo:</value>
+    <value>Group members:</value>
   </data>
   <data name="Frontend.056" xml:space="preserve">
-    <value>Tarea en ejecución||Tarea en ejecución</value>
+    <value>Running task</value>
   </data>
   <data name="Frontend.057" xml:space="preserve">
-    <value>Hora de inicio||Hora de inicio</value>
+    <value>Started</value>
   </data>
   <data name="Frontend.058" xml:space="preserve">
-    <value>Duración||Duración</value>
+    <value>Duration</value>
   </data>
   <data name="Frontend.059" xml:space="preserve">
-    <value>Nombre del modelo||Nombre del modelo</value>
+    <value>Model name</value>
   </data>
   <data name="Frontend.060" xml:space="preserve">
-    <value>Descripción de la tarea||Descripción de la tarea</value>
+    <value>Task description</value>
   </data>
   <data name="Frontend.061" xml:space="preserve">
-    <value>Acciones||Acciones</value>
+    <value>Actions</value>
   </data>
   <data name="Frontend.062" xml:space="preserve">
-    <value>Parámetros del agente||Parámetros del agente</value>
+    <value>Agent parameters</value>
   </data>
   <data name="Frontend.063" xml:space="preserve">
-    <value>Ejecutar de nuevo||Ejecutar de nuevo</value>
+    <value>Run again</value>
   </data>
   <data name="Frontend.064" xml:space="preserve">
-    <value>Forzar detención||Forzar detención</value>
+    <value>Force stop</value>
   </data>
   <data name="Frontend.065" xml:space="preserve">
-    <value>Analítica de uso||Analítica de uso</value>
+    <value>Usage analytics</value>
   </data>
   <data name="Frontend.066" xml:space="preserve">
-    <value>Hora de inicio de la tarea:||Hora de inicio de la tarea:</value>
+    <value>Task start time:</value>
   </data>
   <data name="Frontend.067" xml:space="preserve">
-    <value>Hora de fin de la tarea:||Hora de fin de la tarea:</value>
+    <value>Task end time:</value>
   </data>
   <data name="Frontend.068" xml:space="preserve">
-    <value>Puntuación:||Puntuación:</value>
+    <value>Score:</value>
   </data>
   <data name="Frontend.069" xml:space="preserve">
-    <value>Evaluación de la tarea:||Evaluación de la tarea:</value>
+    <value>Task review:</value>
   </data>
   <data name="Frontend.070" xml:space="preserve">
-    <value>Resumen de uso||Resumen de uso</value>
+    <value>Usage overview</value>
   </data>
   <data name="Frontend.071" xml:space="preserve">
-    <value>Total de mensajes||Total de mensajes</value>
+    <value>Total messages</value>
   </data>
   <data name="Frontend.072" xml:space="preserve">
-    <value>Token total (entrada+salida)||Token total (entrada+salida)</value>
+    <value>Total Token (input+output)</value>
   </data>
   <data name="Frontend.073" xml:space="preserve">
-    <value>Tiempo medio de respuesta||Tiempo medio de respuesta</value>
+    <value>Average response time</value>
   </data>
   <data name="Frontend.074" xml:space="preserve">
-    <value>Duración máxima||Duración máxima</value>
+    <value>Maximum duration</value>
   </data>
   <data name="Frontend.075" xml:space="preserve">
-    <value>Agentes ·||Agentes ·</value>
+    <value>Agents ·</value>
   </data>
   <data name="Frontend.076" xml:space="preserve">
-    <value>Analítica de uso de tareas||Analítica de uso de tareas</value>
+    <value>Task usage analytics</value>
   </data>
   <data name="Frontend.077" xml:space="preserve">
-    <value>Tarea:||Tarea:</value>
+    <value>Task:</value>
   </data>
   <data name="Frontend.078" xml:space="preserve">
-    <value>a||a</value>
+    <value>to</value>
   </data>
   <data name="Frontend.079" xml:space="preserve">
-    <value>Hora de inicio||Hora de inicio</value>
+    <value>Started</value>
   </data>
   <data name="Frontend.080" xml:space="preserve">
-    <value>Hora de finalización||Hora de finalización</value>
+    <value>Finished</value>
   </data>
   <data name="Frontend.081" xml:space="preserve">
-    <value>Todos los Agents||Todos los Agents</value>
+    <value>All Agents</value>
   </data>
   <data name="Frontend.082" xml:space="preserve">
-    <value>Buscar||Buscar</value>
+    <value>Search</value>
   </data>
   <data name="Frontend.083" xml:space="preserve">
-    <value>Restablecer||Restablecer</value>
+    <value>Reset</value>
   </data>
   <data name="Frontend.084" xml:space="preserve">
-    <value>Token total||Token total</value>
+    <value>Total Token</value>
   </data>
   <data name="Frontend.085" xml:space="preserve">
-    <value>Token de entrada / salida||Token de entrada / salida</value>
+    <value>Input / output Token</value>
   </data>
   <data name="Frontend.086" xml:space="preserve">
-    <value>P95 / duración máxima||P95 / duración máxima</value>
+    <value>P95 / max duration</value>
   </data>
   <data name="Frontend.087" xml:space="preserve">
-    <value>Rondas de conversación||Rondas de conversación</value>
+    <value>Conversation rounds</value>
   </data>
   <data name="Frontend.088" xml:space="preserve">
-    <value>Ronda||Ronda</value>
+    <value>Round</value>
   </data>
   <data name="Frontend.089" xml:space="preserve">
-    <value>Mensajes||Mensajes</value>
+    <value>Messages</value>
   </data>
   <data name="Frontend.090" xml:space="preserve">
-    <value>Tokens de entrada||Tokens de entrada</value>
+    <value>Input Tokens</value>
   </data>
   <data name="Frontend.091" xml:space="preserve">
-    <value>Tokens de salida||Tokens de salida</value>
+    <value>Output Tokens</value>
   </data>
   <data name="Frontend.092" xml:space="preserve">
-    <value>Respuesta media (ms)||Respuesta media (ms)</value>
+    <value>Average response (ms)</value>
   </data>
   <data name="Frontend.093" xml:space="preserve">
-    <value>Agents individuales||Agents individuales</value>
+    <value>Individual Agents</value>
   </data>
   <data name="Frontend.094" xml:space="preserve">
-    <value>Por tiempo||Por tiempo</value>
+    <value>By time</value>
   </data>
   <data name="Frontend.095" xml:space="preserve">
-    <value>Intervalo de tiempo (horas)||Intervalo de tiempo (horas)</value>
+    <value>Time bucket (hours)</value>
   </data>
   <data name="Frontend.096" xml:space="preserve">
-    <value>Editar agente||Editar agente</value>
+    <value>Edit agent</value>
   </data>
   <data name="Frontend.097" xml:space="preserve">
-    <value>Agregar agente||Agregar agente</value>
+    <value>Add agent</value>
   </data>
   <data name="Frontend.098" xml:space="preserve">
-    <value>Nombre del agente||Nombre del agente</value>
+    <value>Agent name</value>
   </data>
   <data name="Frontend.099" xml:space="preserve">
-    <value>Complete el campo||Complete el campo</value>
+    <value>Please fill in</value>
   </data>
   <data name="Frontend.100" xml:space="preserve">
-    <value>Seleccionar||Seleccionar</value>
+    <value>Select</value>
   </data>
   <data name="Frontend.101" xml:space="preserve">
-    <value>Manual||Manual</value>
+    <value>Manual</value>
   </data>
   <data name="Frontend.102" xml:space="preserve">
-    <value>Seleccione||Seleccione</value>
+    <value>Select</value>
   </data>
   <data name="Frontend.103" xml:space="preserve">
-    <value>Entrada manual||Entrada manual</value>
+    <value>Manual entry</value>
   </data>
   <data name="Frontend.104" xml:space="preserve">
-    <value>Habilitado||Habilitado</value>
+    <value>Enabled</value>
   </data>
   <data name="Frontend.105" xml:space="preserve">
-    <value>Habilitar agente||Habilitar agente</value>
+    <value>Enable agent</value>
   </data>
   <data name="Frontend.106" xml:space="preserve">
-    <value>Plataforma externa||Plataforma externa</value>
+    <value>External platform</value>
   </data>
   <data name="Frontend.107" xml:space="preserve">
-    <value>Parámetros de plataforma externa||Parámetros de plataforma externa</value>
+    <value>External platform parameters</value>
   </data>
   <data name="Frontend.108" xml:space="preserve">
-    <value>Adjuntar automáticamente todos los complementos de funciones XNCF||Adjuntar automáticamente todos los complementos de funciones XNCF</value>
+    <value>Automatically attach all XNCF feature plugins</value>
   </data>
   <data name="Frontend.109" xml:space="preserve">
-    <value>Selección manual||Selección manual</value>
+    <value>Manual selection</value>
   </data>
   <data name="Frontend.110" xml:space="preserve">
-    <value>Si está activado, se adjuntan automáticamente todos los complementos de funciones XNCF registrados, para que el Agente reconozca y active las funciones del Módulo correspondiente||Si está activado, se adjuntan automáticamente todos los complementos de funciones XNCF registrados, para que el Agente reconozca y active las funciones del Módulo correspondiente</value>
+    <value>When enabled, all registered XNCF feature plugins are attached automatically, so the Agent can recognize and trigger the features of the matching Module</value>
   </data>
   <data name="Frontend.111" xml:space="preserve">
-    <value>Puede introducir el nombre de clase del Plugin, o el nombre completo con espacio de nombres||Puede introducir el nombre de clase del Plugin, o el nombre completo con espacio de nombres</value>
+    <value>You can enter a Plugin class name, or a full name that includes the namespace</value>
   </data>
   <data name="Frontend.112" xml:space="preserve">
-    <value>+ Agregar||+ Agregar</value>
+    <value>+ Add</value>
   </data>
   <data name="Frontend.113" xml:space="preserve">
-    <value>Tipos de complemento disponibles:||Tipos de complemento disponibles:</value>
+    <value>Available plugin types:</value>
   </data>
   <data name="Frontend.114" xml:space="preserve">
-    <value>Conectado correctamente||Conectado correctamente</value>
+    <value>Connected successfully</value>
   </data>
   <data name="Frontend.115" xml:space="preserve">
-    <value>Ver herramientas||Ver herramientas</value>
+    <value>View tools</value>
   </data>
   <data name="Frontend.116" xml:space="preserve">
-    <value>Error de conexión:||Error de conexión:</value>
+    <value>Connection failed:</value>
   </data>
   <data name="Frontend.117" xml:space="preserve">
-    <value>Probar conexión||Probar conexión</value>
+    <value>Test connection</value>
   </data>
   <data name="Frontend.118" xml:space="preserve">
-    <value>+ Agregar MCP Endpoint||+ Agregar MCP Endpoint</value>
+    <value>+ Add MCP Endpoint</value>
   </data>
   <data name="Frontend.119" xml:space="preserve">
-    <value>Editar MCP Endpoint||Editar MCP Endpoint</value>
+    <value>Edit MCP Endpoint</value>
   </data>
   <data name="Frontend.120" xml:space="preserve">
-    <value>Agregar MCP Endpoint||Agregar MCP Endpoint</value>
+    <value>Add MCP Endpoint</value>
   </data>
   <data name="Frontend.121" xml:space="preserve">
-    <value>Nombre del Endpoint (por ejemplo: mcp-server-NCF-7)||Nombre del Endpoint (por ejemplo: mcp-server-NCF-7)</value>
+    <value>Endpoint name (for example: mcp-server-NCF-7)</value>
   </data>
   <data name="Frontend.122" xml:space="preserve">
-    <value>Confirmar||Confirmar</value>
+    <value>Confirm</value>
   </data>
   <data name="Frontend.123" xml:space="preserve">
-    <value>Notas||Notas</value>
+    <value>Notes</value>
   </data>
   <data name="Frontend.124" xml:space="preserve">
-    <value>Complete (solo administradores)||Complete (solo administradores)</value>
+    <value>Fill in (administrators only)</value>
   </data>
   <data name="Frontend.125" xml:space="preserve">
-    <value>Editar grupo||Editar grupo</value>
+    <value>Edit group</value>
   </data>
   <data name="Frontend.126" xml:space="preserve">
-    <value>Agregar grupo||Agregar grupo</value>
+    <value>Add group</value>
   </data>
   <data name="Frontend.127" xml:space="preserve">
-    <value>Nombre del grupo||Nombre del grupo</value>
+    <value>Group name</value>
   </data>
   <data name="Frontend.128" xml:space="preserve">
-    <value>Miembros del grupo||Miembros del grupo</value>
+    <value>Group members</value>
   </data>
   <data name="Frontend.129" xml:space="preserve">
-    <value>Buscar||Buscar</value>
+    <value>Search</value>
   </data>
   <data name="Frontend.130" xml:space="preserve">
-    <value>Seleccionado:||Seleccionado:</value>
+    <value>Selected:</value>
   </data>
   <data name="Frontend.131" xml:space="preserve">
-    <value>Descripción||Descripción</value>
+    <value>Description</value>
   </data>
   <data name="Frontend.132" xml:space="preserve">
-    <value>Propietario||Propietario</value>
+    <value>Owner</value>
   </data>
   <data name="Frontend.133" xml:space="preserve">
-    <value>Contacto||Contacto</value>
+    <value>Contact</value>
   </data>
   <data name="Frontend.134" xml:space="preserve">
-    <value>Descripción||Descripción</value>
+    <value>Description</value>
   </data>
   <data name="Frontend.135" xml:space="preserve">
-    <value>Iniciar grupo||Iniciar grupo</value>
+    <value>Start group</value>
   </data>
   <data name="Frontend.136" xml:space="preserve">
-    <value>Seleccionar grupo||Seleccionar grupo</value>
+    <value>Select group</value>
   </data>
   <data name="Frontend.137" xml:space="preserve">
-    <value>Título de la tarea||Título de la tarea</value>
+    <value>Task title</value>
   </data>
   <data name="Frontend.138" xml:space="preserve">
-    <value>Seleccionar modelo||Seleccionar modelo</value>
+    <value>Select model</value>
   </data>
   <data name="Frontend.139" xml:space="preserve">
-    <value>Agente personalizado||Agente personalizado</value>
+    <value>Personalized agent</value>
   </data>
   <data name="Frontend.140" xml:space="preserve">
-    <value>Ejecutar el Agente con parámetros personalizados||Ejecutar el Agente con parámetros personalizados</value>
+    <value>Run Agent with personalized parameters</value>
   </data>
   <data name="Frontend.141" xml:space="preserve">
-    <value>¿En qué puedo ayudarte?||¿En qué puedo ayudarte?</value>
+    <value>What can I help you with?</value>
   </data>
   <data name="Frontend.142" xml:space="preserve">
-    <value>Lista de herramientas MCP||Lista de herramientas MCP</value>
+    <value>MCP tool list</value>
   </data>
   <data name="Frontend.143" xml:space="preserve">
-    <value>Nombre de la herramienta||Nombre de la herramienta</value>
+    <value>Tool name</value>
   </data>
   <data name="Frontend.144" xml:space="preserve">
-    <value>Parámetros||Parámetros</value>
+    <value>Parameters</value>
   </data>
   <data name="Frontend.145" xml:space="preserve">
-    <value>Sin parámetros||Sin parámetros</value>
+    <value>No parameters</value>
   </data>
   <data name="Frontend.146" xml:space="preserve">
-    <value>No hay herramientas disponibles||No hay herramientas disponibles</value>
+    <value>No tools available</value>
   </data>
   <data name="Frontend.147" xml:space="preserve">
-    <value>Cerrar||Cerrar</value>
+    <value>Close</value>
   </data>
   <data name="Frontend.148" xml:space="preserve">
-    <value>Todo||Todo</value>
+    <value>All</value>
   </data>
   <data name="Frontend.149" xml:space="preserve">
-    <value>Eventos||Eventos</value>
+    <value>Events</value>
   </data>
   <data name="Frontend.150" xml:space="preserve">
-    <value>En espera||En espera</value>
+    <value>Standby</value>
   </data>
   <data name="Frontend.151" xml:space="preserve">
-    <value>En pausa||En pausa</value>
+    <value>Paused</value>
   </data>
   <data name="Frontend.152" xml:space="preserve">
-    <value>Fallido||Fallido</value>
+    <value>Failed</value>
   </data>
   <data name="Frontend.153" xml:space="preserve">
-    <value>Archivar||Archivar</value>
+    <value>Archive</value>
   </data>
   <data name="Frontend.154" xml:space="preserve">
-    <value>En curso||En curso</value>
+    <value>Running</value>
   </data>
   <data name="Frontend.155" xml:space="preserve">
-    <value>Chat||Chat</value>
+    <value>Chat</value>
   </data>
   <data name="Frontend.156" xml:space="preserve">
-    <value>Introduzca el nombre de Function Call||Introduzca el nombre de Function Call</value>
+    <value>Enter the Function Call name</value>
   </data>
   <data name="Frontend.157" xml:space="preserve">
-    <value>Actualizar||Actualizar</value>
+    <value>Refresh</value>
   </data>
   <data name="Frontend.158" xml:space="preserve">
-    <value>Administrar PromptRange||Administrar PromptRange</value>
+    <value>Manage PromptRange</value>
   </data>
   <data name="Frontend.159" xml:space="preserve">
-    <value>Sin descripción||Sin descripción</value>
+    <value>No description</value>
   </data>
   <data name="Frontend.160" xml:space="preserve">
-    <value>Parámetros:||Parámetros:</value>
+    <value>Parameters:</value>
   </data>
   <data name="Frontend.161" xml:space="preserve">
-    <value>Este Agente no pertenece actualmente a ningún grupo.||Este Agente no pertenece actualmente a ningún grupo.</value>
+    <value>This Agent is not currently a member of any group.</value>
   </data>
   <data name="Frontend.162" xml:space="preserve">
-    <value>Complete el campo||Complete el campo</value>
+    <value>Please fill in</value>
   </data>
   <data name="Frontend.163" xml:space="preserve">
-    <value>Cadena de destino||Cadena de destino</value>
+    <value>Target string</value>
   </data>
   <data name="Frontend.164" xml:space="preserve">
-    <value>Cadena no objetivo||Cadena no objetivo</value>
+    <value>Non-target string</value>
   </data>
   <data name="Frontend.165" xml:space="preserve">
-    <value>Guardado correctamente||Guardado correctamente</value>
+    <value>Saved successfully</value>
   </data>
   <data name="Frontend.166" xml:space="preserve">
-    <value>Eliminado correctamente||Eliminado correctamente</value>
+    <value>Deleted successfully</value>
   </data>
   <data name="Frontend.167" xml:space="preserve">
-    <value>Éxito||Éxito</value>
+    <value>Success</value>
   </data>
   <data name="Frontend.168" xml:space="preserve">
-    <value>Error||Error</value>
+    <value>Operation failed</value>
   </data>
   <data name="Frontend.169" xml:space="preserve">
-    <value>Seleccione al menos un elemento||Seleccione al menos un elemento</value>
+    <value>Select at least one item</value>
   </data>
   <data name="Frontend.170" xml:space="preserve">
-    <value>¿Continuar?||¿Continuar?</value>
+    <value>Continue?</value>
   </data>
   <data name="Frontend.171" xml:space="preserve">
-    <value>Aviso||Aviso</value>
+    <value>Notice</value>
   </data>
   <data name="Frontend.172" xml:space="preserve">
-    <value>Confirmar||Confirmar</value>
+    <value>Confirm</value>
   </data>
   <data name="Frontend.173" xml:space="preserve">
-    <value>Error al cargar||Error al cargar</value>
+    <value>Failed to load</value>
   </data>
   <data name="Frontend.174" xml:space="preserve">
-    <value>Sin contenido||Sin contenido</value>
+    <value>No content</value>
   </data>
   <data name="Frontend.175" xml:space="preserve">
-    <value>s||s</value>
+    <value>sec</value>
   </data>
   <data name="Frontend.176" xml:space="preserve">
-    <value>min||min</value>
+    <value>min</value>
   </data>
   <data name="Frontend.177" xml:space="preserve">
-    <value>h||h</value>
+    <value>hr</value>
   </data>
   <data name="Frontend.178" xml:space="preserve">
-    <value>días||días</value>
+    <value>days</value>
   </data>
   <data name="Frontend.179" xml:space="preserve">
-    <value>Copiado correctamente||Copiado correctamente</value>
+    <value>Copied successfully</value>
   </data>
   <data name="Frontend.180" xml:space="preserve">
-    <value>Error al copiar||Error al copiar</value>
+    <value>Copy failed</value>
   </data>
   <data name="Frontend.181" xml:space="preserve">
-    <value>Descripción de la tarea:||Descripción de la tarea:</value>
+    <value>Task description:</value>
   </data>
   <data name="Frontend.182" xml:space="preserve">
-    <value>Lista de grupos||Lista de grupos</value>
+    <value>Group List</value>
   </data>
   <data name="Frontend.183" xml:space="preserve">
-    <value>Tareas||Tareas</value>
+    <value>Tasks</value>
   </data>
   <data name="Frontend.184" xml:space="preserve">
-    <value>Última ejecución||Última ejecución</value>
+    <value>Last run</value>
   </data>
   <data name="Frontend.185" xml:space="preserve">
-    <value>Lista de tareas||Lista de tareas</value>
+    <value>Task List</value>
   </data>
   <data name="Frontend.186" xml:space="preserve">
-    <value>Desarchivar||Desarchivar</value>
+    <value>Unarchive</value>
   </data>
   <data name="Frontend.187" xml:space="preserve">
-    <value>Archivar||Archivar</value>
+    <value>Archive</value>
   </data>
   <data name="Frontend.188" xml:space="preserve">
-    <value>Tarea: (#)||Tarea: (#)</value>
+    <value>Task: (#)</value>
   </data>
   <data name="Frontend.189" xml:space="preserve">
-    <value>Avatar del Agente||Avatar del Agente</value>
+    <value>Agent avatar</value>
   </data>
   <data name="Frontend.190" xml:space="preserve">
-    <value>Endpoint URL (por ejemplo: http://localhost:5000/mcp/sse)||Endpoint URL (por ejemplo: http://localhost:5000/mcp/sse)</value>
+    <value>Endpoint URL (for example: http://localhost:5000/mcp/sse)</value>
   </data>
   <data name="Frontend.191" xml:space="preserve">
-    <value>Cancelar||Cancelar</value>
+    <value>Cancel</value>
   </data>
   <data name="Frontend.192" xml:space="preserve">
-    <value>Aceptar||Aceptar</value>
+    <value>OK</value>
   </data>
   <data name="Frontend.193" xml:space="preserve">
-    <value>Puntería:||Puntería:</value>
+    <value>Aim:</value>
   </data>
   <data name="Frontend.194" xml:space="preserve">
-    <value>Puntuación media:||Puntuación media:</value>
+    <value>Average score:</value>
   </data>
   <data name="Frontend.195" xml:space="preserve">
-    <value>Puntuación más alta:||Puntuación más alta:</value>
+    <value>Highest score:</value>
   </data>
   <data name="Frontend.196" xml:space="preserve">
-    <value>[Duración (ms):]||[Duración (ms):]</value>
+    <value>[Elapsed (ms):]</value>
   </data>
   <data name="Frontend.197" xml:space="preserve">
-    <value>Copiar código HTML con formato||Copiar código HTML con formato</value>
+    <value>Copy formatted HTML code</value>
   </data>
   <data name="Frontend.198" xml:space="preserve">
-    <value>Copiar el contenido original (por ejemplo, se copiarán las marcas markdown)||Copiar el contenido original (por ejemplo, se copiarán las marcas markdown)</value>
+    <value>Copy raw content (for example, markdown markers will be copied)</value>
   </data>
   <data name="Frontend.199" xml:space="preserve">
-    <value>Original||Original</value>
+    <value>Raw</value>
   </data>
   <data name="Frontend.200" xml:space="preserve">
-    <value>Cerrar||Cerrar</value>
+    <value>Close</value>
   </data>
   <data name="Frontend.201" xml:space="preserve">
-    <value>Evaluación de la tarea||Evaluación de la tarea</value>
+    <value>Task Evaluation</value>
   </data>
   <data name="Frontend.202" xml:space="preserve">
-    <value>Ingrese una puntuación (0-10)||Ingrese una puntuación (0-10)</value>
+    <value>Enter a score (0-10)</value>
   </data>
   <data name="Frontend.203" xml:space="preserve">
-    <value>Introduzca una evaluación||Introduzca una evaluación</value>
+    <value>Enter an evaluation</value>
   </data>
   <data name="Frontend.204" xml:space="preserve">
-    <value>Ejemplo de base de datos||Ejemplo de base de datos</value>
+    <value>Database sample</value>
   </data>
   <data name="Frontend.205" xml:space="preserve">
-    <value>Aún no hay tareas ejecutables||Aún no hay tareas ejecutables</value>
+    <value>No executable tasks yet</value>
   </data>
   <data name="Frontend.206" xml:space="preserve">
-    <value>Error al cargar las estadísticas||Error al cargar las estadísticas</value>
+    <value>Failed to load statistics</value>
   </data>
   <data name="Frontend.207" xml:space="preserve">
-    <value>{0} con error||{0} con error</value>
+    <value>{0} failed</value>
   </data>
   <data name="Frontend.208" xml:space="preserve">
-    <value>{0} correctos||{0} correctos</value>
+    <value>{0} succeeded</value>
   </data>
   <data name="Frontend.209" xml:space="preserve">
-    <value>{0} falló: {1}||{0} falló: {1}</value>
+    <value>{0} failed: {1}</value>
   </data>
   <data name="Frontend.210" xml:space="preserve">
-    <value>Error desconocido||Error desconocido</value>
+    <value>Unknown error</value>
   </data>
   <data name="Frontend.211" xml:space="preserve">
-    <value>¿Cerrar ahora?||¿Cerrar ahora?</value>
+    <value>Close now?</value>
   </data>
   <data name="Frontend.212" xml:space="preserve">
-    <value>¿Desactivar el Agente {0}?||¿Desactivar el Agente {0}?</value>
+    <value>Disable Agent {0}?</value>
   </data>
   <data name="Frontend.213" xml:space="preserve">
-    <value>Este Agente no participará en las nuevas tareas posteriores||Este Agente no participará en las nuevas tareas posteriores</value>
+    <value>This Agent will not take part in later new tasks</value>
   </data>
   <data name="Frontend.214" xml:space="preserve">
-    <value>¿Activar el Agente {0}?||¿Activar el Agente {0}?</value>
+    <value>Enable Agent {0}?</value>
   </data>
   <data name="Frontend.215" xml:space="preserve">
-    <value>¿Salir del grupo {0}?||¿Salir del grupo {0}?</value>
+    <value>Leave group {0}?</value>
   </data>
   <data name="Frontend.216" xml:space="preserve">
-    <value>Tras la eliminación, ya no verá los registros de las tareas en las que participó||Tras la eliminación, ya no verá los registros de las tareas en las que participó</value>
+    <value>After removal, task records you previously took part in will no longer be visible</value>
   </data>
   <data name="Frontend.217" xml:space="preserve">
-    <value>Confirmar acción||Confirmar acción</value>
+    <value>Confirm Action</value>
   </data>
   <data name="Frontend.218" xml:space="preserve">
-    <value>¡Operación correcta!||¡Operación correcta!</value>
+    <value>Operation succeeded!</value>
   </data>
   <data name="Frontend.219" xml:space="preserve">
-    <value>Operación cancelada||Operación cancelada</value>
+    <value>Operation canceled</value>
   </data>
   <data name="Frontend.220" xml:space="preserve">
-    <value>El Agente "{0}" no se puede eliminar en este momento.||El Agente "{0}" no se puede eliminar en este momento.</value>
+    <value>Agent "{0}" cannot be deleted right now.</value>
   </data>
   <data name="Frontend.221" xml:space="preserve">
-    <value>Grupos como propietario: {0}||Grupos como propietario: {0}</value>
+    <value>Groups as Owner: {0}</value>
   </data>
   <data name="Frontend.222" xml:space="preserve">
-    <value>Grupos como contacto: {0}||Grupos como contacto: {0}</value>
+    <value>Groups as Contact: {0}</value>
   </data>
   <data name="Frontend.223" xml:space="preserve">
-    <value>Sustituya el Propietario/Contacto del grupo correspondiente antes de eliminar.||Sustituya el Propietario/Contacto del grupo correspondiente antes de eliminar.</value>
+    <value>Replace the Owner/Contact in the corresponding group before deleting.</value>
   </data>
   <data name="Frontend.224" xml:space="preserve">
-    <value>Eliminación bloqueada||Eliminación bloqueada</value>
+    <value>Deletion Blocked</value>
   </data>
   <data name="Frontend.225" xml:space="preserve">
-    <value>Entendido||Entendido</value>
+    <value>Got It</value>
   </data>
   <data name="Frontend.226" xml:space="preserve">
-    <value>¿Eliminar el Agente "{0}"?||¿Eliminar el Agente "{0}"?</value>
+    <value>Delete Agent "{0}"?</value>
   </data>
   <data name="Frontend.227" xml:space="preserve">
-    <value>Grupos de los que saldrá el miembro: {0}||Grupos de los que saldrá el miembro: {0}</value>
+    <value>Groups the member will leave: {0}</value>
   </data>
   <data name="Frontend.228" xml:space="preserve">
-    <value>También se eliminará el historial de mensajes de este Agente y no se podrá recuperar.||También se eliminará el historial de mensajes de este Agente y no se podrá recuperar.</value>
+    <value>Message history related to this Agent will also be deleted and cannot be recovered.</value>
   </data>
   <data name="Frontend.229" xml:space="preserve">
-    <value>¡Eliminado correctamente!||¡Eliminado correctamente!</value>
+    <value>Deleted successfully!</value>
   </data>
   <data name="Frontend.230" xml:space="preserve">
-    <value>La comprobación previa a la eliminación falló. Inténtelo de nuevo más tarde.||La comprobación previa a la eliminación falló. Inténtelo de nuevo más tarde.</value>
+    <value>Deletion pre-check failed. Please try again later.</value>
   </data>
   <data name="Frontend.231" xml:space="preserve">
-    <value>¿Eliminar estos datos?||¿Eliminar estos datos?</value>
+    <value>Delete this data?</value>
   </data>
   <data name="Frontend.232" xml:space="preserve">
-    <value>Seleccione primero los grupos a eliminar||Seleccione primero los grupos a eliminar</value>
+    <value>Select groups to delete first</value>
   </data>
   <data name="Frontend.233" xml:space="preserve">
-    <value>¿Eliminar los datos seleccionados por lotes?||¿Eliminar los datos seleccionados por lotes?</value>
+    <value>Delete the selected data in batch?</value>
   </data>
   <data name="Frontend.234" xml:space="preserve">
-    <value>Seleccione primero las tareas a iniciar||Seleccione primero las tareas a iniciar</value>
+    <value>Select tasks to start first</value>
   </data>
   <data name="Frontend.235" xml:space="preserve">
-    <value>¿Iniciar los datos seleccionados por lotes?||¿Iniciar los datos seleccionados por lotes?</value>
+    <value>Start the selected data in batch?</value>
   </data>
   <data name="Frontend.236" xml:space="preserve">
-    <value>Seleccione primero las tareas a eliminar||Seleccione primero las tareas a eliminar</value>
+    <value>Select tasks to delete first</value>
   </data>
   <data name="Frontend.237" xml:space="preserve">
-    <value>¿Forzar la detención de esta tarea?||¿Forzar la detención de esta tarea?</value>
+    <value>Force stop this task?</value>
   </data>
   <data name="Frontend.238" xml:space="preserve">
-    <value>Seleccione primero las tareas a detener||Seleccione primero las tareas a detener</value>
+    <value>Select tasks to stop first</value>
   </data>
   <data name="Frontend.239" xml:space="preserve">
-    <value>¿Forzar la detención de las tareas seleccionadas?||¿Forzar la detención de las tareas seleccionadas?</value>
+    <value>Force-stop the selected tasks?</value>
   </data>
   <data name="Frontend.240" xml:space="preserve">
-    <value>No establecido||No establecido</value>
+    <value>Not set</value>
   </data>
   <data name="Frontend.241" xml:space="preserve">
-    <value>(Borrador)||(Borrador)</value>
+    <value>(Draft)</value>
   </data>
   <data name="Frontend.242" xml:space="preserve">
-    <value>Herramienta sin nombre||Herramienta sin nombre</value>
+    <value>Unnamed tool</value>
   </data>
   <data name="Frontend.243" xml:space="preserve">
-    <value>Prueba de conexión correcta||Prueba de conexión correcta</value>
+    <value>Connection test succeeded</value>
   </data>
   <data name="Frontend.244" xml:space="preserve">
-    <value>Prueba de conexión fallida:||Prueba de conexión fallida:</value>
+    <value>Connection test failed:</value>
   </data>
   <data name="Frontend.245" xml:space="preserve">
-    <value>Error en la prueba de conexión:||Error en la prueba de conexión:</value>
+    <value>Connection test error:</value>
   </data>
   <data name="Frontend.246" xml:space="preserve">
-    <value>Error al cargar los tipos de complemento||Error al cargar los tipos de complemento</value>
+    <value>Failed to load plugin types</value>
   </data>
   <data name="Frontend.247" xml:space="preserve">
-    <value>El nombre y la URL no pueden estar vacíos||El nombre y la URL no pueden estar vacíos</value>
+    <value>Name and URL cannot be empty</value>
   </data>
   <data name="Frontend.248" xml:space="preserve">
-    <value>El parámetro endpoint está vacío||El parámetro endpoint está vacío</value>
+    <value>endpoint parameter is empty</value>
   </data>
   <data name="Frontend.249" xml:space="preserve">
-    <value>No hay información de herramientas disponible||No hay información de herramientas disponible</value>
+    <value>No tool information available</value>
   </data>
   <data name="Frontend.250" xml:space="preserve">
-    <value>Lista de herramientas ({0})||Lista de herramientas ({0})</value>
+    <value>Tool list ({0})</value>
   </data>
   <data name="Frontend.251" xml:space="preserve">
-    <value>Sin descripción||Sin descripción</value>
+    <value>No description</value>
   </data>
   <data name="Frontend.252" xml:space="preserve">
-    <value>Parámetros:||Parámetros:</value>
+    <value>Parameters:</value>
   </data>
   <data name="Frontend.253" xml:space="preserve">
-    <value>Sin parámetros||Sin parámetros</value>
+    <value>No parameters</value>
   </data>
   <data name="Frontend.254" xml:space="preserve">
-    <value>Lista de herramientas MCP||Lista de herramientas MCP</value>
+    <value>MCP tool list</value>
   </data>
   <data name="Frontend.255" xml:space="preserve">
-    <value>Cerrar||Cerrar</value>
+    <value>Close</value>
   </data>
   <data name="Frontend.256" xml:space="preserve">
-    <value>{0} años||{0} años</value>
+    <value>{0} years</value>
   </data>
   <data name="Frontend.257" xml:space="preserve">
-    <value>{0} días||{0} días</value>
+    <value>{0} days</value>
   </data>
   <data name="Frontend.258" xml:space="preserve">
-    <value>{0} horas||{0} horas</value>
+    <value>{0} hours</value>
   </data>
   <data name="Frontend.259" xml:space="preserve">
-    <value>{0} minutos||{0} minutos</value>
+    <value>{0} minutes</value>
   </data>
   <data name="Frontend.260" xml:space="preserve">
-    <value>{0} segundos||{0} segundos</value>
+    <value>{0} seconds</value>
   </data>
   <data name="Frontend.261" xml:space="preserve">
-    <value>Administrar modelos||Administrar modelos</value>
+    <value>Manage models</value>
   </data>
   <data name="Frontend.262" xml:space="preserve">
-    <value>Agent ID||ID del agente</value>
+    <value>ID del agente</value>
   </data>
   <data name="Frontend.263" xml:space="preserve">
-    <value>SystemMessage||Mensaje del sistema</value>
+    <value>Mensaje del sistema</value>
   </data>
   <data name="Frontend.264" xml:space="preserve">
-    <value>None||Ninguno</value>
+    <value>Ninguno</value>
   </data>
   <data name="Frontend.265" xml:space="preserve">
-    <value>Function Calls||Llamada de función</value>
+    <value>Llamada de función</value>
   </data>
   <data name="Frontend.266" xml:space="preserve">
-    <value>MCP Endpoints||MCP Endpoint</value>
+    <value>MCP Endpoint</value>
   </data>
   <data name="Frontend.267" xml:space="preserve">
-    <value>Nombre del Endpoint (por ejemplo: mcp-server-NCF-7)||Nombre del Endpoint (por ejemplo: mcp-server-NCF-7)</value>
+    <value>Endpoint name (for example: mcp-server-NCF-7)</value>
   </data>
   <data name="Frontend.268" xml:space="preserve">
-    <value>Endpoint URL (por ejemplo: http://localhost:5000/mcp/sse)||URL del Endpoint (por ejemplo: http://localhost:5000/mcp/sse)</value>
+    <value>URL del Endpoint (por ejemplo: http://localhost:5000/mcp/sse)</value>
   </data>
   <data name="Frontend.269" xml:space="preserve">
-    <value>Lista de herramientas MCP||Lista de herramientas MCP</value>
+    <value>MCP tool list</value>
   </data>
   <data name="Frontend.270" xml:space="preserve">
-    <value>Top_p:||Top P：</value>
+    <value>Top P：</value>
   </data>
   <data name="Frontend.271" xml:space="preserve">
-    <value>MaxToken:||Número máximo de Token:</value>
+    <value>Número máximo de Token:</value>
   </data>
   <data name="Frontend.272" xml:space="preserve">
-    <value>Presence_penalty:||Penalización de presencia:</value>
+    <value>Penalización de presencia:</value>
   </data>
   <data name="Frontend.273" xml:space="preserve">
-    <value>Temperature:||Temperatura:</value>
+    <value>Temperatura:</value>
   </data>
   <data name="Frontend.274" xml:space="preserve">
-    <value>Frequeny_penalty:||Penalización de frecuencia:</value>
+    <value>Penalización de frecuencia:</value>
   </data>
   <data name="Frontend.275" xml:space="preserve">
-    <value>StopSequences:||Secuencia de parada:</value>
+    <value>Secuencia de parada:</value>
   </data>
   <data name="Frontend.276" xml:space="preserve">
-    <value>No se encontró un AI Model de tipo Chat disponible. La base de datos tiene {0} modelos, pero ninguno es de tipo Chat. Configure primero al menos un Chat Model en el Módulo AIKernel.||No se encontró un AI Model de tipo Chat disponible. La base de datos tiene {0} modelos, pero ninguno es de tipo Chat. Configure primero al menos un Chat Model en el Módulo AIKernel.</value>
+    <value>No available Chat AI Model was found. The database has {0} models, but none are Chat. Configure at least one Chat Model in the AIKernel Module first.</value>
   </data>
   <data name="Frontend.277" xml:space="preserve">
-    <value>Error al cargar: {0}||Error al cargar: {0}</value>
+    <value>Failed to load: {0}</value>
   </data>
   <data name="Frontend.278" xml:space="preserve">
-    <value>Seleccione un AI Model válido||Seleccione un AI Model válido</value>
+    <value>Select a valid AI Model</value>
   </data>
   <data name="Frontend.279" xml:space="preserve">
-    <value>No se encontró un AI Model con ID {0}||No se encontró un AI Model con ID {0}</value>
+    <value>No AI Model with ID {0} was found</value>
   </data>
   <data name="Frontend.280" xml:space="preserve">
-    <value>Model '{0}' no es de tipo Chat. Seleccione un Model de tipo Chat.||Model '{0}' no es de tipo Chat. Seleccione un Model de tipo Chat.</value>
+    <value>Model '{0}' is not a Chat type. Please select a Chat Model.</value>
   </data>
   <data name="Frontend.281" xml:space="preserve">
-    <value>Inicialización completada correctamente||Inicialización completada correctamente</value>
+    <value>Initialization completed successfully</value>
   </data>
   <data name="Frontend.282" xml:space="preserve">
-    <value>Tiempo de espera de la solicitud de optimización agotado: {0}||Tiempo de espera de la solicitud de optimización agotado: {0}</value>
+    <value>Optimization request timed out: {0}</value>
   </data>
   <data name="Frontend.283" xml:space="preserve">
-    <value>Grupo de Chat no encontrado: {0}||Grupo de Chat no encontrado: {0}</value>
+    <value>Chat group not found: {0}</value>
   </data>
   <data name="Frontend.284" xml:space="preserve">
-    <value>El modelo de IA seleccionado no existe: {0}||El modelo de IA seleccionado no existe: {0}</value>
+    <value>The selected AI model does not exist: {0}</value>
   </data>
   <data name="Frontend.285" xml:space="preserve">
-    <value>El grupo de Chat [{0}] no tiene agentes habilitados disponibles.||El grupo de Chat [{0}] no tiene agentes habilitados disponibles.</value>
+    <value>Chat group [{0}] has no enabled agents available.</value>
   </data>
   <data name="Frontend.286" xml:space="preserve">
-    <value>No se encontró un agente administrador válido (ID: {1}) en el grupo de chat [{0}].||No se encontró un agente administrador válido (ID: {1}) en el grupo de chat [{0}].</value>
+    <value>No valid admin agent (ID: {1}) was found in chat group [{0}].</value>
   </data>
   <data name="Frontend.287" xml:space="preserve">
-    <value>El grupo de Chat [{0}] necesita al menos dos agentes habilitados para la colaboración multiagente.||El grupo de Chat [{0}] necesita al menos dos agentes habilitados para la colaboración multiagente.</value>
+    <value>Chat group [{0}] needs at least two enabled agents for multi-agent collaboration.</value>
   </data>
   <data name="Frontend.288" xml:space="preserve">
-    <value>El flujo de trabajo multiagente espera una respuesta externa y la ruta de ejecución actual no puede continuar automáticamente.||El flujo de trabajo multiagente espera una respuesta externa y la ruta de ejecución actual no puede continuar automáticamente.</value>
+    <value>The multi-agent workflow is waiting for an external response, and the current execution path cannot continue automatically.</value>
   </data>
   <data name="Frontend.289" xml:space="preserve">
-    <value>Mensaje del sistema: la orquestación multiagente falló ({0}) y la ejecución de reserva no devolvió texto que se pueda mostrar.||Mensaje del sistema: la orquestación multiagente falló ({0}) y la ejecución de reserva no devolvió texto que se pueda mostrar.</value>
+    <value>System message: multi-agent orchestration failed ({0}), and fallback execution returned no text to display.</value>
   </data>
   <data name="Frontend.290" xml:space="preserve">
-    <value>Mensaje del sistema: el servicio de IA devolvió 403 (Forbidden) y la tarea actual no puede continuar. Compruebe los permisos del modelo, la API Key o la disponibilidad del modelo seleccionado.||Mensaje del sistema: el servicio de IA devolvió 403 (Forbidden) y la tarea actual no puede continuar. Compruebe los permisos del modelo, la API Key o la disponibilidad del modelo seleccionado.</value>
+    <value>System message: the AI service returned 403 (Forbidden), and the current task cannot continue. Check model permissions, the API Key, or whether the selected model is available.</value>
   </data>
   <data name="Frontend.291" xml:space="preserve">
-    <value>Mensaje del sistema: falló la autenticación del servicio de IA (401). Compruebe la configuración de API Key / Endpoint.||Mensaje del sistema: falló la autenticación del servicio de IA (401). Compruebe la configuración de API Key / Endpoint.</value>
+    <value>System message: AI service authentication failed (401). Check the API Key / Endpoint configuration.</value>
   </data>
   <data name="Frontend.292" xml:space="preserve">
-    <value>Mensaje del sistema: la llamada al servicio de IA falló y la tarea se interrumpió. Motivo: {0}||Mensaje del sistema: la llamada al servicio de IA falló y la tarea se interrumpió. Motivo: {0}</value>
+    <value>System message: the AI service call failed and the task was interrupted. Reason: {0}</value>
   </data>
   <data name="Frontend.293" xml:space="preserve">
-    <value>La configuración del modelo está vacía (AIModelDto == null)||La configuración del modelo está vacía (AIModelDto == null)</value>
+    <value>Model configuration is empty (AIModelDto == null)</value>
   </data>
   <data name="Frontend.294" xml:space="preserve">
-    <value>No se encontró PromptCatalyzer ChatGroup. Termine primero la inicialización.||No se encontró PromptCatalyzer ChatGroup. Termine primero la inicialización.</value>
+    <value>PromptCatalyzer ChatGroup was not found. Finish initialization first.</value>
   </data>
   <data name="Frontend.295" xml:space="preserve">
-    <value>No se encontró PromptCatalyzer Agent. Termine primero la inicialización.||No se encontró PromptCatalyzer Agent. Termine primero la inicialización.</value>
+    <value>PromptCatalyzer Agent was not found. Finish initialization first.</value>
   </data>
   <data name="Frontend.296" xml:space="preserve">
-    <value>Error en la conversación del Agent: {0}||Error en la conversación del Agent: {0}</value>
+    <value>Agent conversation failed: {0}</value>
   </data>
   <data name="Frontend.297" xml:space="preserve">
-    <value>Seleccione o introduzca manualmente un PromptCode||Seleccione o introduzca manualmente un PromptCode</value>
+    <value>Select or manually enter a PromptCode</value>
   </data>
   <data name="Frontend.298" xml:space="preserve">
-    <value>Ingrese el nombre del Agente||Ingrese el nombre del Agente</value>
+    <value>Enter Agent name</value>
   </data>
   <data name="Frontend.299" xml:space="preserve">
-    <value>Introduzca un término de búsqueda (nombre, PromptCode o palabra clave)||Introduzca un término de búsqueda (nombre, PromptCode o palabra clave)</value>
+    <value>Enter a search term (name, PromptCode, or keyword)</value>
   </data>
   <data name="Frontend.300" xml:space="preserve">
-    <value>Ingrese un término de búsqueda válido||Ingrese un término de búsqueda válido</value>
+    <value>Enter a valid search term</value>
   </data>
   <data name="Frontend.301" xml:space="preserve">
-    <value>Habilitado correctamente||Habilitado correctamente</value>
+    <value>Enabled successfully</value>
   </data>
   <data name="Frontend.302" xml:space="preserve">
-    <value>Deshabilitado correctamente||Deshabilitado correctamente</value>
+    <value>Disabled successfully</value>
   </data>
   <data name="Frontend.303" xml:space="preserve">
-    <value>Conectado correctamente||Conectado correctamente</value>
+    <value>Connected successfully</value>
   </data>
   <data name="Frontend.304" xml:space="preserve">
-    <value>Error de conexión||Error de conexión</value>
+    <value>Connection failed</value>
   </data>
   <data name="Frontend.305" xml:space="preserve">
-    <value>No se proporcionó el Agent ID||No se proporcionó el Agent ID</value>
+    <value>Agent ID not provided</value>
   </data>
   <data name="Frontend.306" xml:space="preserve">
-    <value>La inicialización de PromptCatalyzer agotó el tiempo de espera (2 minutos)||La inicialización de PromptCatalyzer agotó el tiempo de espera (2 minutos)</value>
+    <value>PromptCatalyzer initialization timed out (2 minutes)</value>
   </data>
   <data name="Frontend.307" xml:space="preserve">
-    <value>Error de inicialización del Prompt: {0}||Error de inicialización del Prompt: {0}</value>
+    <value>Prompt initialization failed: {0}</value>
   </data>
   <data name="Frontend.308" xml:space="preserve">
-    <value>El PromptCode devuelto por la inicialización del Prompt está vacío||El PromptCode devuelto por la inicialización del Prompt está vacío</value>
+    <value>The PromptCode returned by Prompt initialization is empty</value>
   </data>
   <data name="Frontend.309" xml:space="preserve">
-    <value>Ya hay una tarea de optimización en curso para este Prompt. No la envíe de nuevo (por ejemplo, evite el doble clic).||Ya hay una tarea de optimización en curso para este Prompt. No la envíe de nuevo (por ejemplo, evite el doble clic).</value>
+    <value>An optimization task is already running for this Prompt. Do not submit it again (for example, avoid double-clicking).</value>
   </data>
   <data name="Frontend.310" xml:space="preserve">
-    <value>La solicitud de optimización del Prompt agotó el tiempo de espera (15 minutos)||La solicitud de optimización del Prompt agotó el tiempo de espera (15 minutos)</value>
+    <value>Prompt optimization request timed out (15 minutes)</value>
   </data>
   <data name="Frontend.311" xml:space="preserve">
-    <value>No se encontró el ChatGroup que se va a editar. ID: {0}||No se encontró el ChatGroup que se va a editar. ID: {0}</value>
+    <value>The ChatGroup to edit was not found. ID: {0}</value>
   </data>
   <data name="Frontend.312" xml:space="preserve">
-    <value>Error al seleccionar miembros del grupo: {0}||Error al seleccionar miembros del grupo: {0}</value>
+    <value>Failed to select group members: {0}</value>
   </data>
   <data name="Frontend.313" xml:space="preserve">
-    <value>Indique al menos un miembro del grupo (ID o nombre)||Indique al menos un miembro del grupo (ID o nombre)</value>
+    <value>Provide at least one group member (ID or name)</value>
   </data>
   <data name="Frontend.314" xml:space="preserve">
-    <value>No se encontró un modelo de IA de tipo Chat disponible, así que no se puede crear automáticamente un Agent anfitrión||No se encontró un modelo de IA de tipo Chat disponible, así que no se puede crear automáticamente un Agent anfitrión</value>
+    <value>No available Chat AI model was found, so a host Agent cannot be created automatically</value>
   </data>
   <data name="Frontend.315" xml:space="preserve">
-    <value>La entrada está vacía. Indique un ID de Agent, un nombre o un PromptCode.||La entrada está vacía. Indique un ID de Agent, un nombre o un PromptCode.</value>
+    <value>Input is empty. Pass an Agent ID, name, or PromptCode.</value>
   </data>
   <data name="Frontend.316" xml:space="preserve">
-    <value>No se encontró un Agent habilitado. ID: {0}||No se encontró un Agent habilitado. ID: {0}</value>
+    <value>No enabled Agent was found. ID: {0}</value>
   </data>
   <data name="Frontend.317" xml:space="preserve">
-    <value>"{0}" coincidió con varios Agent. Especifique un ID: {1}||"{0}" coincidió con varios Agent. Especifique un ID: {1}</value>
+    <value>"{0}" matched multiple Agents. Please specify an ID: {1}</value>
   </data>
   <data name="Frontend.318" xml:space="preserve">
-    <value>No se encontró un Agent coincidente: {0}||No se encontró un Agent coincidente: {0}</value>
+    <value>No matching Agent found: {0}</value>
   </data>
   <data name="Frontend.319" xml:space="preserve">
-    <value>Seleccione al menos un grupo!||Seleccione al menos un grupo!</value>
+    <value>Select at least one group!</value>
   </data>
   <data name="Frontend.320" xml:space="preserve">
-    <value>La tarea se creó y se inició. Consulte el estado en la lista de ChatTask.||La tarea se creó y se inició. Consulte el estado en la lista de ChatTask.</value>
+    <value>The task was created and started. Check its status in the ChatTask list.</value>
   </data>
   <data name="Frontend.321" xml:space="preserve">
-    <value>Seleccione las conversaciones a eliminar!||Seleccione las conversaciones a eliminar!</value>
+    <value>Select conversations to delete!</value>
   </data>
   <data name="Frontend.322" xml:space="preserve">
-    <value>¡Marque la casilla "Confirmar eliminación" para confirmar la eliminación!||¡Marque la casilla "Confirmar eliminación" para confirmar la eliminación!</value>
+    <value>Check the "Confirm deletion" box to confirm the deletion!</value>
   </data>
   <data name="Frontend.323" xml:space="preserve">
-    <value>No se proporcionó el ID del grupo||No se proporcionó el ID del grupo</value>
+    <value>Group ID not provided</value>
   </data>
   <data name="Frontend.324" xml:space="preserve">
-    <value>La tarea no existe: {0}||La tarea no existe: {0}</value>
+    <value>Task does not exist: {0}</value>
   </data>
   <data name="Frontend.325" xml:space="preserve">
-    <value>Archivado correctamente||Archivado correctamente</value>
+    <value>Archived successfully</value>
   </data>
   <data name="Frontend.326" xml:space="preserve">
-    <value>Desarchivado correctamente||Desarchivado correctamente</value>
+    <value>Unarchived successfully</value>
   </data>
   <data name="Frontend.327" xml:space="preserve">
-    <value>No se proporcionó el ID de la tarea||No se proporcionó el ID de la tarea</value>
+    <value>Task ID not provided</value>
   </data>
   <data name="Frontend.328" xml:space="preserve">
-    <value>No se encontró ninguna tarea que se pueda iniciar||No se encontró ninguna tarea que se pueda iniciar</value>
+    <value>No startable task found</value>
   </data>
   <data name="Frontend.329" xml:space="preserve">
-    <value>Inicio por lotes finalizado: {0} correctos, {1} omitidos||Inicio por lotes finalizado: {0} correctos, {1} omitidos</value>
+    <value>Batch start finished: {0} succeeded, {1} skipped</value>
   </data>
   <data name="Frontend.330" xml:space="preserve">
-    <value>Detención forzada finalizada: {0} correctas, {1} omitidas||Detención forzada finalizada: {0} correctas, {1} omitidas</value>
+    <value>Force stop finished: {0} succeeded, {1} skipped</value>
   </data>
   <data name="Frontend.331" xml:space="preserve">
-    <value>Eliminación de tareas finalizada: {0} correctas||Eliminación de tareas finalizada: {0} correctas</value>
+    <value>Task deletion finished: {0} succeeded</value>
   </data>
   <data name="Agents.Error.MissingRunRequest" xml:space="preserve">
     <value>No se proporcionó ninguna solicitud de ejecución de grupo de chat.</value>
@@ -1502,195 +1502,195 @@
   </data>
 
 
-  <data name="Frontend.332" xml:space="preserve"><value>A2A Agent Card 仅公开名称、描述和技能；不会公开 Prompt、密钥或内部工具信息。||An A2A Agent Card exposes only the name, description, and skills; it does not expose Prompts, secrets, or internal tools.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.333" xml:space="preserve"><value>A2A 对外服务||A2A public service</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.334" xml:space="preserve"><value>A2A 远程||Remote A2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.335" xml:space="preserve"><value>A2A 远程智能体||Remote A2A Agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.336" xml:space="preserve"><value>A2A:Secrets:密钥名||A2A:Secrets:key-name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.337" xml:space="preserve"><value>Agent Card 名称||Agent Card name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.338" xml:space="preserve"><value>Agent Card 地址||Agent Card URL</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.339" xml:space="preserve"><value>Agent 模板没有授权的连接器，即使在这里选中也不会被调用。||The Agent template has no authorized connectors; selecting one here will not call it.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.340" xml:space="preserve"><value>Group 已配置 Human 成员时，会在轮到 Human 时暂停等待文本回复。||When a Group has Human members, it pauses for a text reply when the Human turn is reached.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.341" xml:space="preserve"><value>HIL 等级||HIL level</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.342" xml:space="preserve"><value>Human 不调用模型；该绑定用于保留其系统 Agent 的任务策略配置，默认跟随组任务。||Human does not call a model; this binding preserves the system Agent task policy and follows the group task by default.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.343" xml:space="preserve"><value>Human 参与者||Human participant</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.344" xml:space="preserve"><value>Human 回合||Human turn</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.345" xml:space="preserve"><value>L0 全自动（插件/MCP 自动执行）||L0 fully automatic (plugins/MCP execute automatically)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.346" xml:space="preserve"><value>L1 风险分层（MCP 默认审批）||L1 risk-based approval (MCP default approval)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.347" xml:space="preserve"><value>L2 工具审批（所有工具先确认）||L2 tool approval (confirm every tool first)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.348" xml:space="preserve"><value>L3 Human 参与者 + 工具审批||L3 Human participant + tool approval</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.349" xml:space="preserve"><value>MCP 工具权限||MCP tool permissions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.350" xml:space="preserve"><value>上下文共享||Context sharing</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.351" xml:space="preserve"><value>不授权任何连接器||Do not authorize any connector</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.352" xml:space="preserve"><value>不绑定知识库||Do not bind a knowledge base</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.353" xml:space="preserve"><value>不选则本次不使用连接器||Leave unselected to use no connector this time</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.354" xml:space="preserve"><value>个性化参数||Personalized parameters</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.355" xml:space="preserve"><value>中维护。||maintained here.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.356" xml:space="preserve"><value>仅任务指令||Task instructions only</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.357" xml:space="preserve"><value>从 MCP 列表选择||Select from the MCP list</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.358" xml:space="preserve"><value>从 PromptRange 继承||Inherit from PromptRange</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.359" xml:space="preserve"><value>以下端点来自 MCP 模块的登记列表，勾选后会以“名称 + URL”方式加入当前配置，可随时移除。||These endpoints come from the MCP module registry. Select one to add it as name + URL to the current configuration; it can be removed at any time.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.360" xml:space="preserve"><value>任务指令 + 当前轮关键结论||Task instructions + key conclusion from the current turn</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.361" xml:space="preserve"><value>任务描述与执行策略||Task description and execution strategy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.362" xml:space="preserve"><value>使用当前明文 Prompt 和所选 Chat 模型创建靶场，完成一次打靶及 AI 评分后，自动切换为靶场级引用。||Create a Prompt Range from the current plain-text Prompt and selected Chat model, run it once, score it with AI, and switch automatically to a range-level reference.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.363" xml:space="preserve"><value>例如 X-A2A-Token||For example X-A2A-Token</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.364" xml:space="preserve"><value>例如 X-API-Key||For example X-API-Key</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.365" xml:space="preserve"><value>例如 partner-ncf||For example partner-ncf</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.366" xml:space="preserve"><value>例如 research-agent||For example research-agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.367" xml:space="preserve"><value>例如：外部研究助手||For example: external research assistant</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.368" xml:space="preserve"><value>供远程系统选择 Agent 使用；不要填写 Prompt 或内部信息||Used by remote systems to choose an Agent; do not enter Prompts or internal information.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.369" xml:space="preserve"><value>保 存||Save</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.370" xml:space="preserve"><value>保存||Save</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.371" xml:space="preserve"><value>允许本地工具调用||Allow local tool calls</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.372" xml:space="preserve"><value>入站鉴权||Inbound authentication</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.373" xml:space="preserve"><value>公开描述||Public description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.374" xml:space="preserve"><value>公开标识||Public identifier</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.375" xml:space="preserve"><value>兼容 Plugin||Plugin compatibility</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.376" xml:space="preserve"><value>兼容强制审批||Compatible forced approval</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.377" xml:space="preserve"><value>兼容总开关：强制所有工具调用前审批||Compatibility switch: require approval before every tool call</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.378" xml:space="preserve"><value>兼容旧组：完整历史（仅无远程成员）||Legacy group compatibility: full history (only without remote members)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.379" xml:space="preserve"><value>删除智能体||Delete Agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.380" xml:space="preserve"><value>刷新数据||Refresh data</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.381" xml:space="preserve"><value>刷新状态||Refresh status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.382" xml:space="preserve"><value>加入 Human 文本参与者||Add a Human text participant</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.383" xml:space="preserve"><value>发布后将生成标准 Agent Card，供任意兼容 A2A 的系统发现和调用。||Publishing creates a standard Agent Card discoverable and callable by any A2A-compatible system.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.384" xml:space="preserve"><value>发布本地 Agent 为 A2A 服务||Publish local Agent as an A2A service</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.385" xml:space="preserve"><value>只允许小写字母、数字和连字符；地址在启用后保持稳定。||Only lowercase letters, digits, and hyphens are allowed; the address remains stable after enablement.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.386" xml:space="preserve"><value>只填写密钥名，不填写令牌正文||Enter only the secret name, not the token value</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.387" xml:space="preserve"><value>只显示当前管理员可用的 Workflow；保存 Agent 或 Workflow 时会再次检查权限与循环引用。||Only Workflows available to the current administrator are shown; permissions and circular references are checked again when saving an Agent or Workflow.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.388" xml:space="preserve"><value>只有这里选中的连接器能被这个 Agent 调用。留空表示没有外部工具权限。||Only connectors selected here can be called by this Agent. Leave empty to grant no external tool access.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.389" xml:space="preserve"><value>可提及的组员||Mentionable group members</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.390" xml:space="preserve"><value>可选，仅管理员可见||Optional; visible to administrators only</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.391" xml:space="preserve"><value>名称||Name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.392" xml:space="preserve"><value>启用对外服务||Enable public service</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.393" xml:space="preserve"><value>启用该组||Enable this group</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.394" xml:space="preserve"><value>复制||Copy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.395" xml:space="preserve"><value>复杂绑定集中在右侧抽屉，当前 Agent 编辑状态会保留。||Complex bindings are managed in the right drawer; the current Agent editing state is preserved.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.396" xml:space="preserve"><value>完整参数||Full parameters</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.397" xml:space="preserve"><value>对外服务已启用：通过鉴权的外部系统可以调用此 Agent。请确认 Prompt、知识库和回复内容均允许对外共享，并通过 HTTPS、网关限流和监控控制调用范围与模型成本。||Public service is enabled: authenticated external systems can call this Agent. Confirm that the Prompt, knowledge base, and responses may be shared, and control access and model cost with HTTPS, gateway limits, and monitoring.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.398" xml:space="preserve"><value>工具||Tools</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.399" xml:space="preserve"><value>工具与流程||Tools and workflows</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.400" xml:space="preserve"><value>工具调用审批||Tool-call approval</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.401" xml:space="preserve"><value>已记录的本地 Agent 累计/实时数据||Recorded cumulative/live data for local Agents</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.402" xml:space="preserve"><value>已连通||Connected</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.403" xml:space="preserve"><value>开启后会覆盖下方较宽松的工具权限；新配置建议直接使用 HIL 等级和分类权限。||When enabled, this overrides the more permissive tool permissions below; new configurations should use HIL levels and category permissions directly.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.404" xml:space="preserve"><value>开启后，外部请求可能间接触发该本地 Agent 已配置的 Function / MCP 工具，请只对受信任的调用方开放。||When enabled, external requests may indirectly trigger Functions or MCP tools configured for this local Agent. Open it only to trusted callers.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.405" xml:space="preserve"><value>当前 Group 已轮到 Human，任务正在等待文本回复。||The current Group is waiting for a Human turn and a text reply.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.406" xml:space="preserve"><value>当前未启用入站鉴权。请仅在隔离、受控网络中使用；公网或跨组织调用必须改用 Bearer Token 或自定义请求头。||Inbound authentication is disabled. Use this only on an isolated, controlled network; public or cross-organization calls must use a Bearer Token or custom header.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.407" xml:space="preserve"><value>当前群组没有可提及的组员。||The current group has no mentionable members.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.408" xml:space="preserve"><value>快速编辑||Quick edit</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.409" xml:space="preserve"><value>手动 Prompt 必须手动选择一个 Chat 类型 AIModel。||A manual Prompt requires manually selecting a Chat AIModel.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.410" xml:space="preserve"><value>手动 Prompt 没有 PromptRange 模型可继承，必须手动选择一个 Chat 类型 AIModel。||No PromptRange model is available to inherit for this manual Prompt; select a Chat AIModel manually.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.411" xml:space="preserve"><value>手动选择 AIModel||Select AIModel manually</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.412" xml:space="preserve"><value>执行前审批||Approve before execution</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.413" xml:space="preserve"><value>批准||Approve</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.414" xml:space="preserve"><value>技能公开描述||Public skill description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.415" xml:space="preserve"><value>技能标识 / 名称||Skill identifier / name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.416" xml:space="preserve"><value>拒绝||Reject</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.417" xml:space="preserve"><value>按名称筛选||Filter by name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.418" xml:space="preserve"><value>提交 Human 回复||Submit Human response</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.419" xml:space="preserve"><value>插件工具权限||Plugin tool permissions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.420" xml:space="preserve"><value>搜索名称、URL 或说明||Search name, URL, or description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.421" xml:space="preserve"><value>搜索名称、模块或说明||Search name, module, or description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.422" xml:space="preserve"><value>数据库仅保存密钥引用；实际令牌请在部署配置||The database stores only the secret reference; configure the actual token in deployment settings.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.423" xml:space="preserve"><value>新增||Add</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.424" xml:space="preserve"><value>新增远程 A2A||Add remote A2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.425" xml:space="preserve"><value>新建组默认启用。停用后不会创建新任务，也不会作为 Workflow 节点使用。||New groups are enabled by default. Disabled groups do not create new tasks or act as Workflow nodes.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.426" xml:space="preserve"><value>方块面积表示所选指标的相对大小；点击方块可直接编辑对应智能体。||Tile area represents the relative size of the selected metric; click a tile to edit the Agent.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.427" xml:space="preserve"><value>无鉴权||No authentication</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.428" xml:space="preserve"><value>无（仅适合受控网络）||None (controlled networks only)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.429" xml:space="preserve"><value>旧版向量数据需要在知识库中重新向量化，才能升级为 Agent 可安全隔离检索的发布集合。||Legacy vector data must be re-vectorized in the knowledge base before it can become a published collection for safe Agent-isolated retrieval.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.430" xml:space="preserve"><value>智能体统计图||Agent statistics chart</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.431" xml:space="preserve"><value>暂无可统计的智能体。||No Agents are available for statistics.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.432" xml:space="preserve"><value>最大对话轮数||Maximum chat rounds</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.433" xml:space="preserve"><value>未测试||Not tested</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.434" xml:space="preserve"><value>未绑定||Not bound</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.435" xml:space="preserve"><value>未绑定知识库||No knowledge base bound</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.436" xml:space="preserve"><value>本地||Local</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.437" xml:space="preserve"><value>本地 Agents||Local Agents</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.438" xml:space="preserve"><value>本地工具调用已开放。外部请求可能间接触发 Function / MCP 的读写或外部访问；请只对受信任的调用方开放。||Local tool calls are enabled. External requests may indirectly trigger Function/MCP writes or external access; open this only to trusted callers.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.439" xml:space="preserve"><value>本地成员||Local members</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.440" xml:space="preserve"><value>本次运行策略||Run policy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.441" xml:space="preserve"><value>本次连接器||Connectors for this run</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.442" xml:space="preserve"><value>查看任务||View tasks</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.443" xml:space="preserve"><value>查看该智能体关联的任务||View tasks associated with this Agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.444" xml:space="preserve"><value>此任务创建于策略记录功能启用之前，无法还原当时的 HIL 与工具权限。||This task was created before policy recording was enabled; its historical HIL and tool permissions cannot be restored.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.445" xml:space="preserve"><value>测试||Test</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.446" xml:space="preserve"><value>测试全部||Test all</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.447" xml:space="preserve"><value>测试失败||Test failed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.448" xml:space="preserve"><value>混合群组会采用所有远程成员要求中最严格的策略；本地群未设置时保持升级前行为。||Mixed groups use the strictest policy required by all remote members; without local group settings, pre-upgrade behavior is preserved.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.449" xml:space="preserve"><value>点击组员即可在下方任务描述的当前光标位置插入提及。||Click a member to insert a mention at the current cursor position in the task description below.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.450" xml:space="preserve"><value>状态||Status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.451" xml:space="preserve"><value>生成到 PromptRange 并打靶评分||Generate in PromptRange and run scoring</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.452" xml:space="preserve"><value>留空则使用 Card 名称||Leave empty to use the Card name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.453" xml:space="preserve"><value>留空则使用公开描述||Leave empty to use the public description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.454" xml:space="preserve"><value>留空则使用本地 Agent 名称||Leave empty to use the local Agent name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.455" xml:space="preserve"><value>禁止使用||Prohibited</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.456" xml:space="preserve"><value>稍后回复||Reply later</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.457" xml:space="preserve"><value>稍后处理||Handle later</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.458" xml:space="preserve"><value>管理绑定||Manage bindings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.459" xml:space="preserve"><value>管理资料||Manage materials</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.460" xml:space="preserve"><value>管理远程 A2A||Manage remote A2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.461" xml:space="preserve"><value>管理远程 A2A 智能体||Manage remote A2A Agents</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.462" xml:space="preserve"><value>类型||Type</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.463" xml:space="preserve"><value>绑定模型||Bind model</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.464" xml:space="preserve"><value>绑定知识库||Bind knowledge base</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.465" xml:space="preserve"><value>绑定知识库：||Knowledge base:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.466" xml:space="preserve"><value>统计图||Statistics chart</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.467" xml:space="preserve"><value>统计范围||Statistics scope</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.468" xml:space="preserve"><value>继承 HIL 等级||Inherit HIL level</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.469" xml:space="preserve"><value>编辑设置||Edit settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.470" xml:space="preserve"><value>自动执行||Automatic execution</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.471" xml:space="preserve"><value>自定义请求头||Custom request header</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.472" xml:space="preserve"><value>让模型按需调用 FunctionRender、Workflow 或兼容的 Plugin。||Let the model call FunctionRender, Workflow, or compatible Plugins as needed.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.473" xml:space="preserve"><value>设置||Settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.474" xml:space="preserve"><value>请求头名称||Request header name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.475" xml:space="preserve"><value>请输入文本，提交后任务将继续执行||Enter text; the task continues after submission</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.476" xml:space="preserve"><value>请选择 Chat 模型||Select a Chat model</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.477" xml:space="preserve"><value>资料||Materials</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.478" xml:space="preserve"><value>跟随组任务||Follow group task</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.479" xml:space="preserve"><value>运行轮次到达 Human 时任务会暂停，窗口提供文本输入；回复成功后继续 MAF 工作流。||When a run reaches a Human turn, the task pauses and the dialog accepts text; after a successful reply, the MAF Workflow continues.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.480" xml:space="preserve"><value>远程 A2A||Remote A2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.481" xml:space="preserve"><value>远程 A2A 成员||Remote A2A members</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.482" xml:space="preserve"><value>远程 A2A 智能体||Remote A2A Agents</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.483" xml:space="preserve"><value>远程成员默认仅收到任务指令和当前轮的文本结论；不会收到工具调用、原始模型内容或完整历史。||Remote members receive only task instructions and the current turn's text conclusion by default; tool calls, raw model content, and full history are not shared.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.484" xml:space="preserve"><value>远程成员默认：指令 + 关键结论||Remote member default: instructions + key conclusions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.485" xml:space="preserve"><value>远程智能体||Remote Agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.486" xml:space="preserve"><value>连接||Connection</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.487" xml:space="preserve"><value>连接器权限||Connector permissions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.488" xml:space="preserve"><value>连接超时（秒）||Connection timeout (seconds)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.489" xml:space="preserve"><value>部署密钥名||Deployment secret name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.490" xml:space="preserve"><value>配置 / 发布为 A2A Agent||Configure / publish as A2A Agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.491" xml:space="preserve"><value>鉴权方式||Authentication mode</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.492" xml:space="preserve"><value>最大输入字符数||Maximum input characters</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.493" xml:space="preserve"><value>本地工具调用已开放。外部请求可能间接触发 Function / MCP 的读写或外部访问，请只对受信任的调用方开放。||Local tool calls are enabled. External requests may indirectly trigger Function/MCP writes or external access; open this only to trusted callers.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.494" xml:space="preserve"><value>本地工具调用已开放。外部请求可能间接触发 Function / MCP 的读写或外部访问，请只对受信任的调用方开放。||Local tool calls are enabled. External requests may indirectly trigger Function/MCP writes or external access; open this only to trusted callers.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.495" xml:space="preserve"><value>本地工具调用已开放。外部请求可能间接触发 Function / MCP 的读写或外部访问；请只开放最小权限工具并仅信任明确的调用方。||Local tool calls are enabled. External requests may indirectly trigger Function/MCP writes or external access; open only the minimum required tools to explicitly trusted callers.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.496" xml:space="preserve"><value>合计||Total</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.497" xml:space="preserve"><value>完成轮次||Completed rounds</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.498" xml:space="preserve"><value>知识库||Knowledge base</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.499" xml:space="preserve"><value>管理 A2A 发布配置||Manage A2A publishing</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.500" xml:space="preserve"><value>发布为 A2A||Publish as A2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.501" xml:space="preserve"><value>停用||Disable</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.502" xml:space="preserve"><value>启用||Enable</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.503" xml:space="preserve"><value>完成对话轮数：||Completed conversation rounds:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.504" xml:space="preserve"><value>完成任务：||Completed tasks:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.505" xml:space="preserve"><value>输入 Token：||Input tokens:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.506" xml:space="preserve"><value>输出 Token：||Output tokens:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.507" xml:space="preserve"><value>总 Token：||Total tokens:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.508" xml:space="preserve"><value>平均响应：||Average response:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.509" xml:space="preserve"><value>最后活动：||Last activity:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.510" xml:space="preserve"><value>当前没有可选择的绑定。||No bindings are available for selection.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.511" xml:space="preserve"><value>当前没有可选择的 MCP 端点。||No MCP endpoints are available for selection.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.512" xml:space="preserve"><value>当前已配置 {0} 个 Endpoint||{0} endpoints are configured</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.513" xml:space="preserve"><value>正在加载 Group 配置||Loading Group configuration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.514" xml:space="preserve"><value>检测||Inspect</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.515" xml:space="preserve"><value>允许 A2A 调用||Allow A2A calls</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.516" xml:space="preserve"><value>显式允许||Explicitly allowed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.517" xml:space="preserve"><value>工具与流程绑定||Tool and workflow bindings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.518" xml:space="preserve"><value>一键复制||Copy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.332" xml:space="preserve"><value>An A2A Agent Card exposes only the name, description, and skills; it does not expose Prompts, secrets, or internal tools.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.333" xml:space="preserve"><value>A2A public service</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.334" xml:space="preserve"><value>Remote A2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.335" xml:space="preserve"><value>Remote A2A Agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.336" xml:space="preserve"><value>A2A:Secrets:key-name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.337" xml:space="preserve"><value>Agent Card name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.338" xml:space="preserve"><value>Agent Card URL</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.339" xml:space="preserve"><value>The Agent template has no authorized connectors; selecting one here will not call it.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.340" xml:space="preserve"><value>When a Group has Human members, it pauses for a text reply when the Human turn is reached.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.341" xml:space="preserve"><value>HIL level</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.342" xml:space="preserve"><value>Human does not call a model; this binding preserves the system Agent task policy and follows the group task by default.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.343" xml:space="preserve"><value>Human participant</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.344" xml:space="preserve"><value>Human turn</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.345" xml:space="preserve"><value>L0 fully automatic (plugins/MCP execute automatically)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.346" xml:space="preserve"><value>L1 risk-based approval (MCP default approval)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.347" xml:space="preserve"><value>L2 tool approval (confirm every tool first)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.348" xml:space="preserve"><value>L3 Human participant + tool approval</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.349" xml:space="preserve"><value>MCP tool permissions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.350" xml:space="preserve"><value>Context sharing</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.351" xml:space="preserve"><value>Do not authorize any connector</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.352" xml:space="preserve"><value>Do not bind a knowledge base</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.353" xml:space="preserve"><value>Leave unselected to use no connector this time</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.354" xml:space="preserve"><value>Personalized parameters</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.355" xml:space="preserve"><value>maintained here.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.356" xml:space="preserve"><value>Task instructions only</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.357" xml:space="preserve"><value>Select from the MCP list</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.358" xml:space="preserve"><value>Inherit from PromptRange</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.359" xml:space="preserve"><value>These endpoints come from the MCP module registry. Select one to add it as name + URL to the current configuration; it can be removed at any time.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.360" xml:space="preserve"><value>Task instructions + key conclusion from the current turn</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.361" xml:space="preserve"><value>Task description and execution strategy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.362" xml:space="preserve"><value>Create a Prompt Range from the current plain-text Prompt and selected Chat model, run it once, score it with AI, and switch automatically to a range-level reference.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.363" xml:space="preserve"><value>For example X-A2A-Token</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.364" xml:space="preserve"><value>For example X-API-Key</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.365" xml:space="preserve"><value>For example partner-ncf</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.366" xml:space="preserve"><value>For example research-agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.367" xml:space="preserve"><value>For example: external research assistant</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.368" xml:space="preserve"><value>Used by remote systems to choose an Agent; do not enter Prompts or internal information.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.369" xml:space="preserve"><value>Save</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.370" xml:space="preserve"><value>Save</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.371" xml:space="preserve"><value>Allow local tool calls</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.372" xml:space="preserve"><value>Inbound authentication</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.373" xml:space="preserve"><value>Public description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.374" xml:space="preserve"><value>Public identifier</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.375" xml:space="preserve"><value>Plugin compatibility</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.376" xml:space="preserve"><value>Compatible forced approval</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.377" xml:space="preserve"><value>Compatibility switch: require approval before every tool call</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.378" xml:space="preserve"><value>Legacy group compatibility: full history (only without remote members)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.379" xml:space="preserve"><value>Delete Agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.380" xml:space="preserve"><value>Refresh data</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.381" xml:space="preserve"><value>Refresh status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.382" xml:space="preserve"><value>Add a Human text participant</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.383" xml:space="preserve"><value>Publishing creates a standard Agent Card discoverable and callable by any A2A-compatible system.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.384" xml:space="preserve"><value>Publish local Agent as an A2A service</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.385" xml:space="preserve"><value>Only lowercase letters, digits, and hyphens are allowed; the address remains stable after enablement.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.386" xml:space="preserve"><value>Enter only the secret name, not the token value</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.387" xml:space="preserve"><value>Only Workflows available to the current administrator are shown; permissions and circular references are checked again when saving an Agent or Workflow.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.388" xml:space="preserve"><value>Only connectors selected here can be called by this Agent. Leave empty to grant no external tool access.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.389" xml:space="preserve"><value>Mentionable group members</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.390" xml:space="preserve"><value>Optional; visible to administrators only</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.391" xml:space="preserve"><value>Name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.392" xml:space="preserve"><value>Enable public service</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.393" xml:space="preserve"><value>Enable this group</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.394" xml:space="preserve"><value>Copy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.395" xml:space="preserve"><value>Complex bindings are managed in the right drawer; the current Agent editing state is preserved.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.396" xml:space="preserve"><value>Full parameters</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.397" xml:space="preserve"><value>Public service is enabled: authenticated external systems can call this Agent. Confirm that the Prompt, knowledge base, and responses may be shared, and control access and model cost with HTTPS, gateway limits, and monitoring.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.398" xml:space="preserve"><value>Tools</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.399" xml:space="preserve"><value>Tools and workflows</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.400" xml:space="preserve"><value>Tool-call approval</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.401" xml:space="preserve"><value>Recorded cumulative/live data for local Agents</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.402" xml:space="preserve"><value>Connected</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.403" xml:space="preserve"><value>When enabled, this overrides the more permissive tool permissions below; new configurations should use HIL levels and category permissions directly.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.404" xml:space="preserve"><value>When enabled, external requests may indirectly trigger Functions or MCP tools configured for this local Agent. Open it only to trusted callers.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.405" xml:space="preserve"><value>The current Group is waiting for a Human turn and a text reply.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.406" xml:space="preserve"><value>Inbound authentication is disabled. Use this only on an isolated, controlled network; public or cross-organization calls must use a Bearer Token or custom header.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.407" xml:space="preserve"><value>The current group has no mentionable members.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.408" xml:space="preserve"><value>Quick edit</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.409" xml:space="preserve"><value>A manual Prompt requires manually selecting a Chat AIModel.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.410" xml:space="preserve"><value>No PromptRange model is available to inherit for this manual Prompt; select a Chat AIModel manually.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.411" xml:space="preserve"><value>Select AIModel manually</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.412" xml:space="preserve"><value>Approve before execution</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.413" xml:space="preserve"><value>Approve</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.414" xml:space="preserve"><value>Public skill description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.415" xml:space="preserve"><value>Skill identifier / name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.416" xml:space="preserve"><value>Reject</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.417" xml:space="preserve"><value>Filter by name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.418" xml:space="preserve"><value>Submit Human response</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.419" xml:space="preserve"><value>Plugin tool permissions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.420" xml:space="preserve"><value>Search name, URL, or description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.421" xml:space="preserve"><value>Search name, module, or description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.422" xml:space="preserve"><value>The database stores only the secret reference; configure the actual token in deployment settings.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.423" xml:space="preserve"><value>Add</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.424" xml:space="preserve"><value>Add remote A2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.425" xml:space="preserve"><value>New groups are enabled by default. Disabled groups do not create new tasks or act as Workflow nodes.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.426" xml:space="preserve"><value>Tile area represents the relative size of the selected metric; click a tile to edit the Agent.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.427" xml:space="preserve"><value>No authentication</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.428" xml:space="preserve"><value>None (controlled networks only)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.429" xml:space="preserve"><value>Legacy vector data must be re-vectorized in the knowledge base before it can become a published collection for safe Agent-isolated retrieval.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.430" xml:space="preserve"><value>Agent statistics chart</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.431" xml:space="preserve"><value>No Agents are available for statistics.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.432" xml:space="preserve"><value>Maximum chat rounds</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.433" xml:space="preserve"><value>Not tested</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.434" xml:space="preserve"><value>Not bound</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.435" xml:space="preserve"><value>No knowledge base bound</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.436" xml:space="preserve"><value>Local</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.437" xml:space="preserve"><value>Local Agents</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.438" xml:space="preserve"><value>Local tool calls are enabled. External requests may indirectly trigger Function/MCP writes or external access; open this only to trusted callers.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.439" xml:space="preserve"><value>Local members</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.440" xml:space="preserve"><value>Run policy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.441" xml:space="preserve"><value>Connectors for this run</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.442" xml:space="preserve"><value>View tasks</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.443" xml:space="preserve"><value>View tasks associated with this Agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.444" xml:space="preserve"><value>This task was created before policy recording was enabled; its historical HIL and tool permissions cannot be restored.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.445" xml:space="preserve"><value>Test</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.446" xml:space="preserve"><value>Test all</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.447" xml:space="preserve"><value>Test failed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.448" xml:space="preserve"><value>Mixed groups use the strictest policy required by all remote members; without local group settings, pre-upgrade behavior is preserved.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.449" xml:space="preserve"><value>Click a member to insert a mention at the current cursor position in the task description below.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.450" xml:space="preserve"><value>Status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.451" xml:space="preserve"><value>Generate in PromptRange and run scoring</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.452" xml:space="preserve"><value>Leave empty to use the Card name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.453" xml:space="preserve"><value>Leave empty to use the public description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.454" xml:space="preserve"><value>Leave empty to use the local Agent name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.455" xml:space="preserve"><value>Prohibited</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.456" xml:space="preserve"><value>Reply later</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.457" xml:space="preserve"><value>Handle later</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.458" xml:space="preserve"><value>Manage bindings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.459" xml:space="preserve"><value>Manage materials</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.460" xml:space="preserve"><value>Manage remote A2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.461" xml:space="preserve"><value>Manage remote A2A Agents</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.462" xml:space="preserve"><value>Type</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.463" xml:space="preserve"><value>Bind model</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.464" xml:space="preserve"><value>Bind knowledge base</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.465" xml:space="preserve"><value>Knowledge base:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.466" xml:space="preserve"><value>Statistics chart</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.467" xml:space="preserve"><value>Statistics scope</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.468" xml:space="preserve"><value>Inherit HIL level</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.469" xml:space="preserve"><value>Edit settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.470" xml:space="preserve"><value>Automatic execution</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.471" xml:space="preserve"><value>Custom request header</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.472" xml:space="preserve"><value>Let the model call FunctionRender, Workflow, or compatible Plugins as needed.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.473" xml:space="preserve"><value>Settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.474" xml:space="preserve"><value>Request header name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.475" xml:space="preserve"><value>Enter text; the task continues after submission</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.476" xml:space="preserve"><value>Select a Chat model</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.477" xml:space="preserve"><value>Materials</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.478" xml:space="preserve"><value>Follow group task</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.479" xml:space="preserve"><value>When a run reaches a Human turn, the task pauses and the dialog accepts text; after a successful reply, the MAF Workflow continues.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.480" xml:space="preserve"><value>Remote A2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.481" xml:space="preserve"><value>Remote A2A members</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.482" xml:space="preserve"><value>Remote A2A Agents</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.483" xml:space="preserve"><value>Remote members receive only task instructions and the current turn's text conclusion by default; tool calls, raw model content, and full history are not shared.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.484" xml:space="preserve"><value>Remote member default: instructions + key conclusions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.485" xml:space="preserve"><value>Remote Agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.486" xml:space="preserve"><value>Connection</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.487" xml:space="preserve"><value>Connector permissions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.488" xml:space="preserve"><value>Connection timeout (seconds)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.489" xml:space="preserve"><value>Deployment secret name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.490" xml:space="preserve"><value>Configure / publish as A2A Agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.491" xml:space="preserve"><value>Authentication mode</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.492" xml:space="preserve"><value>Maximum input characters</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.493" xml:space="preserve"><value>Local tool calls are enabled. External requests may indirectly trigger Function/MCP writes or external access; open this only to trusted callers.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.494" xml:space="preserve"><value>Local tool calls are enabled. External requests may indirectly trigger Function/MCP writes or external access; open this only to trusted callers.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.495" xml:space="preserve"><value>Local tool calls are enabled. External requests may indirectly trigger Function/MCP writes or external access; open only the minimum required tools to explicitly trusted callers.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.496" xml:space="preserve"><value>Total</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.497" xml:space="preserve"><value>Completed rounds</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.498" xml:space="preserve"><value>Knowledge base</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.499" xml:space="preserve"><value>Manage A2A publishing</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.500" xml:space="preserve"><value>Publish as A2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.501" xml:space="preserve"><value>Disable</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.502" xml:space="preserve"><value>Enable</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.503" xml:space="preserve"><value>Completed conversation rounds:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.504" xml:space="preserve"><value>Completed tasks:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.505" xml:space="preserve"><value>Input tokens:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.506" xml:space="preserve"><value>Output tokens:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.507" xml:space="preserve"><value>Total tokens:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.508" xml:space="preserve"><value>Average response:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.509" xml:space="preserve"><value>Last activity:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.510" xml:space="preserve"><value>No bindings are available for selection.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.511" xml:space="preserve"><value>No MCP endpoints are available for selection.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.512" xml:space="preserve"><value>{0} endpoints are configured</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.513" xml:space="preserve"><value>Loading Group configuration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.514" xml:space="preserve"><value>Inspect</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.515" xml:space="preserve"><value>Allow A2A calls</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.516" xml:space="preserve"><value>Explicitly allowed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.517" xml:space="preserve"><value>Tool and workflow bindings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.518" xml:space="preserve"><value>Copy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
 
 
-  <data name="Frontend.520" xml:space="preserve"><value>使用各 Agent 已授权的连接器||Use connectors authorized by each Agent</value></data>
-  <data name="Frontend.521" xml:space="preserve"><value>只使用选中的连接器||Use only the selected connectors</value></data>
+  <data name="Frontend.520" xml:space="preserve"><value>Use connectors authorized by each Agent</value></data>
+  <data name="Frontend.521" xml:space="preserve"><value>Use only the selected connectors</value></data>
 </root>

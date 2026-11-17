@@ -105,202 +105,202 @@
     <value>Истекло время ожидания EventBus. Убедитесь, что хост зарегистрировал EventBus и просканировал эту сборку XNCF.</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>Управление базой данных Color||Управление базой данных Color</value>
+    <value>Color database management</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
-    <value>Модули расширения||Модули расширения</value>
+    <value>Extension Modules</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>Добавить цвет||Добавить цвет</value>
+    <value>Add color</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>Обновить||Обновить</value>
+    <value>Refresh</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>Отладочная информация||Отладочная информация</value>
+    <value>Debug information</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>Отладочная информация:||Отладочная информация:</value>
+    <value>Debug information:</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>Длина tableData:||Длина tableData:</value>
+    <value>tableData length:</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>Экземпляр Vue в порядке:||Экземпляр Vue в порядке:</value>
+    <value>Vue instance OK:</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>Да||Да</value>
+    <value>Yes</value>
   </data>
   <data name="Frontend.010" xml:space="preserve">
-    <value>Нет||Нет</value>
+    <value>No</value>
   </data>
   <data name="Frontend.011" xml:space="preserve">
-    <value>Первый элемент:||Первый элемент:</value>
+    <value>First item:</value>
   </data>
   <data name="Frontend.012" xml:space="preserve">
-    <value>Тест упрощённого отображения данных:||Тест упрощённого отображения данных:</value>
+    <value>Simplified data display test:</value>
   </data>
   <data name="Frontend.013" xml:space="preserve">
-    <value>Время:||Время:</value>
+    <value>Time:</value>
   </data>
   <data name="Frontend.014" xml:space="preserve">
-    <value>Нет данных для отображения!||Нет данных для отображения!</value>
+    <value>No data to display!</value>
   </data>
   <data name="Frontend.015" xml:space="preserve">
-    <value>Значение красного (R)||Значение красного (R)</value>
+    <value>Red value (R)</value>
   </data>
   <data name="Frontend.016" xml:space="preserve">
-    <value>Значение зелёного (G)||Значение зелёного (G)</value>
+    <value>Green value (G)</value>
   </data>
   <data name="Frontend.017" xml:space="preserve">
-    <value>Значение синего (B)||Значение синего (B)</value>
+    <value>Blue value (B)</value>
   </data>
   <data name="Frontend.018" xml:space="preserve">
-    <value>Предпросмотр цвета||Предпросмотр цвета</value>
+    <value>Color preview</value>
   </data>
   <data name="Frontend.019" xml:space="preserve">
-    <value>Создано||Создано</value>
+    <value>Created</value>
   </data>
   <data name="Frontend.020" xml:space="preserve">
-    <value>Время обновления||Время обновления</value>
+    <value>Updated at</value>
   </data>
   <data name="Frontend.021" xml:space="preserve">
-    <value>Действия||Действия</value>
+    <value>Actions</value>
   </data>
   <data name="Frontend.022" xml:space="preserve">
-    <value>Изменить||Изменить</value>
+    <value>Edit</value>
   </data>
   <data name="Frontend.023" xml:space="preserve">
-    <value>Случайно||Случайно</value>
+    <value>Random</value>
   </data>
   <data name="Frontend.024" xml:space="preserve">
-    <value>Удалить||Удалить</value>
+    <value>Delete</value>
   </data>
   <data name="Frontend.025" xml:space="preserve">
-    <value>Дополнительное примечание||Дополнительное примечание</value>
+    <value>Additional note</value>
   </data>
   <data name="Frontend.026" xml:space="preserve">
-    <value>Введите дополнительные примечания к цвету...||Введите дополнительные примечания к цвету...</value>
+    <value>Enter additional notes for the color...</value>
   </data>
   <data name="Frontend.027" xml:space="preserve">
-    <value>Случайный цвет||Случайный цвет</value>
+    <value>Random color</value>
   </data>
   <data name="Frontend.028" xml:space="preserve">
-    <value>Отмена||Отмена</value>
+    <value>Cancel</value>
   </data>
   <data name="Frontend.029" xml:space="preserve">
-    <value>ОК||ОК</value>
+    <value>OK</value>
   </data>
   <data name="Frontend.030" xml:space="preserve">
-    <value>Изменить цвет||Изменить цвет</value>
+    <value>Edit color</value>
   </data>
   <data name="Frontend.031" xml:space="preserve">
-    <value>Задайте значение красного||Задайте значение красного</value>
+    <value>Set the red value</value>
   </data>
   <data name="Frontend.032" xml:space="preserve">
-    <value>Значение красного должно быть от 0 до 255||Значение красного должно быть от 0 до 255</value>
+    <value>Red value must be between 0 and 255</value>
   </data>
   <data name="Frontend.033" xml:space="preserve">
-    <value>Задайте значение зелёного||Задайте значение зелёного</value>
+    <value>Set the green value</value>
   </data>
   <data name="Frontend.034" xml:space="preserve">
-    <value>Значение зелёного должно быть от 0 до 255||Значение зелёного должно быть от 0 до 255</value>
+    <value>Green value must be between 0 and 255</value>
   </data>
   <data name="Frontend.035" xml:space="preserve">
-    <value>Задайте значение синего||Задайте значение синего</value>
+    <value>Set the blue value</value>
   </data>
   <data name="Frontend.036" xml:space="preserve">
-    <value>Значение синего должно быть от 0 до 255||Значение синего должно быть от 0 до 255</value>
+    <value>Blue value must be between 0 and 255</value>
   </data>
   <data name="Frontend.037" xml:space="preserve">
-    <value>Не удалось загрузить данные: {0}||Не удалось загрузить данные: {0}</value>
+    <value>Failed to load data: {0}</value>
   </data>
   <data name="Frontend.038" xml:space="preserve">
-    <value>Операция завершена||Операция завершена</value>
+    <value>Operation completed</value>
   </data>
   <data name="Frontend.039" xml:space="preserve">
-    <value>Не удалось создать||Не удалось создать</value>
+    <value>Creation failed</value>
   </data>
   <data name="Frontend.040" xml:space="preserve">
-    <value>Ошибка обновления||Ошибка обновления</value>
+    <value>Update failed</value>
   </data>
   <data name="Frontend.041" xml:space="preserve">
-    <value>Этот цвет будет удалён навсегда. Продолжить?||Этот цвет будет удалён навсегда. Продолжить?</value>
+    <value>This will permanently delete this color. Continue?</value>
   </data>
   <data name="Frontend.042" xml:space="preserve">
-    <value>Уведомление||Уведомление</value>
+    <value>Notice</value>
   </data>
   <data name="Frontend.043" xml:space="preserve">
-    <value>Подтвердить||Подтвердить</value>
+    <value>Confirm</value>
   </data>
   <data name="Frontend.044" xml:space="preserve">
-    <value>Отмена||Отмена</value>
+    <value>Cancel</value>
   </data>
   <data name="Frontend.045" xml:space="preserve">
-    <value>Ошибка удаления||Ошибка удаления</value>
+    <value>Delete failed</value>
   </data>
   <data name="Frontend.046" xml:space="preserve">
-    <value>Удаление отменено||Удаление отменено</value>
+    <value>Deletion cancelled</value>
   </data>
   <data name="Frontend.047" xml:space="preserve">
-    <value>Ошибка рандомизации||Ошибка рандомизации</value>
+    <value>Randomization failed</value>
   </data>
   <data name="Frontend.048" xml:space="preserve">
-    <value>Данные успешно загружены||Данные успешно загружены</value>
+    <value>Data loaded successfully</value>
   </data>
   <data name="Frontend.049" xml:space="preserve">
-    <value>Не удалось загрузить данные: {0}||Не удалось загрузить данные: {0}</value>
+    <value>Failed to load data: {0}</value>
   </data>
   <data name="Frontend.050" xml:space="preserve">
-    <value>Параметры запроса не могут быть пустыми||Параметры запроса не могут быть пустыми</value>
+    <value>Request parameters cannot be empty</value>
   </data>
   <data name="Frontend.051" xml:space="preserve">
-    <value>Цвет создан||Цвет создан</value>
+    <value>Color created successfully</value>
   </data>
   <data name="Frontend.052" xml:space="preserve">
-    <value>Не удалось создать: {0}||Не удалось создать: {0}</value>
+    <value>Failed to create: {0}</value>
   </data>
   <data name="Frontend.053" xml:space="preserve">
-    <value>Цвет не существует.||Цвет не существует.</value>
+    <value>The color does not exist.</value>
   </data>
   <data name="Frontend.054" xml:space="preserve">
-    <value>Цвет обновлён||Цвет обновлён</value>
+    <value>Color updated successfully</value>
   </data>
   <data name="Frontend.055" xml:space="preserve">
-    <value>Ошибка обновления: {0}||Ошибка обновления: {0}</value>
+    <value>Update failed: {0}</value>
   </data>
   <data name="Frontend.056" xml:space="preserve">
-    <value>Цвет удалён||Цвет удалён</value>
+    <value>Color deleted successfully</value>
   </data>
   <data name="Frontend.057" xml:space="preserve">
-    <value>Не удалось удалить: {0}||Не удалось удалить: {0}</value>
+    <value>Failed to delete: {0}</value>
   </data>
   <data name="Frontend.058" xml:space="preserve">
-    <value>Цвет успешно случайно изменён||Цвет успешно случайно изменён</value>
+    <value>Color randomized successfully</value>
   </data>
   <data name="Frontend.059" xml:space="preserve">
-    <value>Не удалось выполнить случайный выбор: {0}||Не удалось выполнить случайный выбор: {0}</value>
+    <value>Randomization failed: {0}</value>
   </data>
   <data name="Frontend.060" xml:space="preserve">
-    <value>Не удалось загрузить: {0}||Не удалось загрузить: {0}</value>
+    <value>Failed to load: {0}</value>
   </data>
   <data name="Frontend.061" xml:space="preserve">
-    <value>Делитель не может быть равен 0!||Делитель не может быть равен 0!</value>
+    <value>Divisor cannot be 0!</value>
   </data>
   <data name="Frontend.062" xml:space="preserve">
-    <value>Неизвестный оператор: {0}||Неизвестный оператор: {0}</value>
+    <value>Unknown operator: {0}</value>
   </data>
   <data name="Frontend.063" xml:space="preserve">
-    <value>Тест выброса исключения, передаваемые параметры: {0} {1}||Тест выброса исключения, передаваемые параметры: {0} {1}</value>
+    <value>Exception-throw test, parameters passed: {0} {1}</value>
   </data>
   <data name="Frontend.064" xml:space="preserve">
-    <value>Значение красного должно быть от 0 до 255||Значение красного должно быть от 0 до 255</value>
+    <value>The red value must be between 0 and 255</value>
   </data>
   <data name="Frontend.065" xml:space="preserve">
-    <value>Значение зелёного должно быть от 0 до 255||Значение зелёного должно быть от 0 до 255</value>
+    <value>The green value must be between 0 and 255</value>
   </data>
   <data name="Frontend.066" xml:space="preserve">
-    <value>Значение синего должно быть от 0 до 255||Значение синего должно быть от 0 до 255</value>
+    <value>The blue value must be between 0 and 255</value>
   </data>
 
 </root>

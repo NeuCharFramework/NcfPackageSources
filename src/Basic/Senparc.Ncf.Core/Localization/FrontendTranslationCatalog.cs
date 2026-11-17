@@ -8,8 +8,9 @@ namespace Senparc.Ncf.Core.Localization;
 
 /// <summary>
 /// Builds frontend source-text translations from neutral and culture-specific
-/// resource entries. Frontend resource values use the format
-/// <c>neutral-source||localized-target</c>.
+/// resource entries. Each culture resource stores one final-language value.
+/// The legacy <c>source||target</c> format remains readable for compatibility
+/// with packages that have not yet migrated their resources.
 /// </summary>
 public static class FrontendTranslationCatalog
 {
@@ -23,19 +24,16 @@ public static class FrontendTranslationCatalog
         var activeCulture = CultureInfo.CurrentUICulture;
         var neutral = GetStrings(factory, resourceType, CultureInfo.InvariantCulture)
             .Where(item => item.Name.StartsWith("Frontend.", StringComparison.Ordinal))
-            .Select(item => new
-            {
-                item.Name,
-                Parts = Split(item.Value)
-            })
-            .Where(item => item.Parts.Length == 2)
-            .ToDictionary(item => item.Name, item => item.Parts, StringComparer.Ordinal);
+            .ToDictionary(
+                item => item.Name,
+                item => LegacyNeutralSource(item.Value),
+                StringComparer.Ordinal);
 
         var result = neutral.Values
-            .GroupBy(parts => parts[0], StringComparer.Ordinal)
+            .GroupBy(source => source, StringComparer.Ordinal)
             .ToDictionary(
                 group => group.Key,
-                group => group.First()[1],
+                group => group.First(),
                 StringComparer.Ordinal);
 
         var localized = factory.Create(resourceType)
@@ -43,33 +41,28 @@ public static class FrontendTranslationCatalog
             .Where(item => item.Name.StartsWith("Frontend.", StringComparison.Ordinal));
         foreach (var item in localized)
         {
-            var parts = Split(item.Value);
-            if (neutral.TryGetValue(item.Name, out var neutralParts))
+            var target = LegacyLocalizedTarget(item.Value);
+            if (neutral.TryGetValue(item.Name, out var neutralSource))
             {
-                var target = parts.Length == 2 ? parts[1] : item.Value;
                 // A culture resource can intentionally repeat the neutral source
                 // when a translation is missing. Keep the neutral target instead
                 // of letting that placeholder overwrite a real translation from
                 // another resource family.
                 if (!activeCulture.Name.StartsWith("zh", StringComparison.OrdinalIgnoreCase)
-                    && string.Equals(target, neutralParts[0], StringComparison.Ordinal))
+                    && string.Equals(target, neutralSource, StringComparison.Ordinal))
                 {
-                    target = neutralParts[1];
+                    target = neutralSource;
                 }
 
-                result[neutralParts[0]] = target;
-            }
-            else if (parts.Length == 2 && !result.ContainsKey(parts[0]))
-            {
-                result[parts[0]] = parts[1];
+                result[neutralSource] = target;
             }
         }
 
         if (activeCulture.Name.StartsWith("zh", StringComparison.OrdinalIgnoreCase))
         {
-            foreach (var parts in neutral.Values)
+            foreach (var source in neutral.Values)
             {
-                result[parts[0]] = parts[0];
+                result[source] = source;
             }
         }
 
@@ -95,6 +88,18 @@ public static class FrontendTranslationCatalog
         }
     }
 
-    private static string[] Split(string value) =>
+    private static string LegacyNeutralSource(string value)
+    {
+        var parts = SplitLegacy(value);
+        return parts.Length == 2 ? parts[0] : value ?? string.Empty;
+    }
+
+    private static string LegacyLocalizedTarget(string value)
+    {
+        var parts = SplitLegacy(value);
+        return parts.Length == 2 ? parts[1] : value ?? string.Empty;
+    }
+
+    private static string[] SplitLegacy(string value) =>
         (value ?? string.Empty).Split(new[] { "||" }, 2, StringSplitOptions.None);
 }

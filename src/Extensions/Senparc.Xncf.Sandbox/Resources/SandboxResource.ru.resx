@@ -104,95 +104,95 @@
   </data>
 
 
-  <data name="Frontend.001" xml:space="preserve"><value>扩展模块||Extension Modules</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.002" xml:space="preserve"><value>面板||Panel</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.003" xml:space="preserve"><value>沙箱面板||Sandbox panel</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.004" xml:space="preserve"><value>环境准备||Environment setup</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.005" xml:space="preserve"><value>沙箱运行概览||Sandbox runtime overview</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.006" xml:space="preserve"><value>已登记会话||Registered sessions</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.007" xml:space="preserve"><value>运行中||Running</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.008" xml:space="preserve"><value>交互式会话||Interactive sessions</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.009" xml:space="preserve"><value>刷新||Refresh</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.010" xml:space="preserve"><value>全部 Function||All Functions</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.011" xml:space="preserve"><value>环境文档||Environment docs</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.012" xml:space="preserve"><value>会话概览||Session overview</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.013" xml:space="preserve"><value>全部会话||All sessions</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.014" xml:space="preserve"><value>已登记||Registered</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.015" xml:space="preserve"><value>当前可用||Currently available</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.016" xml:space="preserve"><value>Notebook / 预览||Notebook / preview</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.017" xml:space="preserve"><value>待处理||Needs attention</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.018" xml:space="preserve"><value>失败或已过期||Failed or expired</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.019" xml:space="preserve"><value>Function 快捷操作||Function quick actions</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.020" xml:space="preserve"><value>打开模块 Function||Open module Function</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.021" xml:space="preserve"><value>创建沙箱||Create sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.022" xml:space="preserve"><value>执行代码||Execute code</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.023" xml:space="preserve"><value>销毁沙箱||Destroy sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.024" xml:space="preserve"><value>运行环境||Runtime environment</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.025" xml:space="preserve"><value>生命周期||Lifecycle</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.026" xml:space="preserve"><value>TTL 自动回收||Automatic TTL cleanup</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.027" xml:space="preserve"><value>检查环境||Check environment</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.028" xml:space="preserve"><value>沙箱会话||Sandbox sessions</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.029" xml:space="preserve"><value>模板||Template</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.030" xml:space="preserve"><value>别名||Alias</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.031" xml:space="preserve"><value>运行时||Runtime</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.032" xml:space="preserve"><value>状态||Status</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.033" xml:space="preserve"><value>端口||Port</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.034" xml:space="preserve"><value>附加端口||Additional ports</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.035" xml:space="preserve"><value>访问||Access</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.036" xml:space="preserve"><value>打开交互式会话||Open interactive session</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.037" xml:space="preserve"><value>打开||Open</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.038" xml:space="preserve"><value>操作||Actions</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.039" xml:space="preserve"><value>修改别名||Edit alias</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.040" xml:space="preserve"><value>设置别名||Set alias</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.041" xml:space="preserve"><value>延长或修改 TTL||Extend or edit TTL</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.042" xml:space="preserve"><value>销毁运行环境||Destroy runtime</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.043" xml:space="preserve"><value>永久删除会话记录||Permanently delete session record</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.044" xml:space="preserve"><value>会话别名||Session alias</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.045" xml:space="preserve"><value>留空表示清除别名||Leave blank to clear the alias</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.046" xml:space="preserve"><value>取消||Cancel</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.047" xml:space="preserve"><value>保存||Save</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.048" xml:space="preserve"><value>修改 TTL||Edit TTL</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.049" xml:space="preserve"><value>定时回收||Scheduled cleanup</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.050" xml:space="preserve"><value>永久保持||Keep forever</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.051" xml:space="preserve"><value>本机检测||Local check</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.052" xml:space="preserve"><value>重新检测||Check again</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.053" xml:space="preserve"><value>可用||Available</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.054" xml:space="preserve"><value>不可用||Unavailable</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.055" xml:space="preserve"><value>镜像仓库前缀||Image registry prefix</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.056" xml:space="preserve"><value>未配置（使用公开默认镜像；详见文档）||Not configured (public default images are used; see the documentation)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.057" xml:space="preserve"><value>手动配置清单（摘要）||Manual configuration checklist (summary)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.058" xml:space="preserve"><value>进入沙箱面板||Open Sandbox panel</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.059" xml:space="preserve"><value>文档链接：||Documentation: </value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.060" xml:space="preserve"><value>Docker 可用性、镜像前缀和部署说明统一在环境准备页检查。||Check Docker availability, image prefixes, and deployment notes on the environment setup page.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.061" xml:space="preserve"><value>不会||No</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.062" xml:space="preserve"><value>中配置前缀或覆盖项（说明见文档）。||Configure prefixes or overrides here; see the documentation.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.063" xml:space="preserve"><value>使用模块已注册的执行入口，参数校验和结果日志保持与模块 Function 页面一致。||Use the execution entry registered by the module; parameter validation and result logs match the module Function page.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.064" xml:space="preserve"><value>保存后从当前时刻重新计算，到期由后台自动销毁。||After saving, calculation starts from the current time and the session is destroyed automatically at expiry.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.065" xml:space="preserve"><value>创建||Create</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.066" xml:space="preserve"><value>在 Exec 模板会话中提交短任务代码。||Submit short task code in an Exec template session.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.067" xml:space="preserve"><value>在运行 NCF 的同一台机器上安装并启动 Docker（或兼容 CLI）。模块||Install and start Docker (or a compatible CLI) on the same machine running NCF. The module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.068" xml:space="preserve"><value>如需内网仓库，可在宿主||For an internal registry, configure it on the host</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.069" xml:space="preserve"><value>执行||Execute</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.070" xml:space="preserve"><value>按官方文档预拉所需镜像；具体镜像名称与版本以文档为准。||Pre-pull the required images according to the official documentation; use the documented image names and versions.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.071" xml:space="preserve"><value>检测通过后，打开模块 Function「创建沙箱」，在模板下拉中选择 Python Exec，执行即可；无需在命令行输入模板名。||After the check passes, open the module Function “Create sandbox”, choose Python Exec in the template list, and run it; no command-line template name is required.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.072" xml:space="preserve"><value>状态：||Status:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.073" xml:space="preserve"><value>的||of</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.074" xml:space="preserve"><value>自动安装 Docker。||Install Docker automatically.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.075" xml:space="preserve"><value>该会话不会被 TTL 扫描自动销毁，须由管理员手动销毁。||This session is not destroyed by the TTL scan and must be destroyed manually by an administrator.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.076" xml:space="preserve"><value>输入 SessionId，停止并清理指定会话。||Enter a SessionId to stop and clean up the specified session.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.077" xml:space="preserve"><value>选择运行模板与运行时，创建独立会话。||Choose an execution template and runtime to create an isolated session.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.078" xml:space="preserve"><value>通过站点反向代理访问交互式会话，访问链接不暴露容器 token。||Access interactive sessions through the site reverse proxy; links do not expose the container token.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.079" xml:space="preserve"><value>销毁||Destroy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.080" xml:space="preserve"><value>镜像仓库前缀：||Image registry prefix:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.081" xml:space="preserve"><value>集中查看会话状态，并通过模块 Function 创建、执行和清理隔离运行环境。||Review session status in one place and create, execute, and clean isolated environments through module Functions.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.082" xml:space="preserve"><value>状态更新于 {0}||Status updated {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.083" xml:space="preserve"><value>{0} 个会话||{0} sessions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.084" xml:space="preserve"><value>暂无沙箱会话||No sandbox sessions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.085" xml:space="preserve"><value>别名仅用于在列表、Function 结果与日志中识别会话；不影响运行环境。||Aliases identify sessions in lists, Function results, and logs; they do not affect the runtime environment.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.086" xml:space="preserve"><value>创建中||Creating</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.087" xml:space="preserve"><value>停止中||Stopping</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.088" xml:space="preserve"><value>已停止||Stopped</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.089" xml:space="preserve"><value>失败||Failed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.090" xml:space="preserve"><value>已过期||Expired</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.091" xml:space="preserve"><value>未知({0})||Unknown ({0})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.001" xml:space="preserve"><value>Extension Modules</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.002" xml:space="preserve"><value>Panel</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.003" xml:space="preserve"><value>Sandbox panel</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.004" xml:space="preserve"><value>Environment setup</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.005" xml:space="preserve"><value>Sandbox runtime overview</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.006" xml:space="preserve"><value>Registered sessions</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.007" xml:space="preserve"><value>Running</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.008" xml:space="preserve"><value>Interactive sessions</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.009" xml:space="preserve"><value>Refresh</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.010" xml:space="preserve"><value>All Functions</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.011" xml:space="preserve"><value>Environment docs</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.012" xml:space="preserve"><value>Session overview</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.013" xml:space="preserve"><value>All sessions</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.014" xml:space="preserve"><value>Registered</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.015" xml:space="preserve"><value>Currently available</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.016" xml:space="preserve"><value>Notebook / preview</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.017" xml:space="preserve"><value>Needs attention</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.018" xml:space="preserve"><value>Failed or expired</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.019" xml:space="preserve"><value>Function quick actions</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.020" xml:space="preserve"><value>Open module Function</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.021" xml:space="preserve"><value>Create sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.022" xml:space="preserve"><value>Execute code</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.023" xml:space="preserve"><value>Destroy sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.024" xml:space="preserve"><value>Runtime environment</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.025" xml:space="preserve"><value>Lifecycle</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.026" xml:space="preserve"><value>Automatic TTL cleanup</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.027" xml:space="preserve"><value>Check environment</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.028" xml:space="preserve"><value>Sandbox sessions</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.029" xml:space="preserve"><value>Template</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.030" xml:space="preserve"><value>Alias</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.031" xml:space="preserve"><value>Runtime</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.032" xml:space="preserve"><value>Status</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.033" xml:space="preserve"><value>Port</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.034" xml:space="preserve"><value>Additional ports</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.035" xml:space="preserve"><value>Access</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.036" xml:space="preserve"><value>Open interactive session</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.037" xml:space="preserve"><value>Open</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.038" xml:space="preserve"><value>Actions</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.039" xml:space="preserve"><value>Edit alias</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.040" xml:space="preserve"><value>Set alias</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.041" xml:space="preserve"><value>Extend or edit TTL</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.042" xml:space="preserve"><value>Destroy runtime</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.043" xml:space="preserve"><value>Permanently delete session record</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.044" xml:space="preserve"><value>Session alias</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.045" xml:space="preserve"><value>Leave blank to clear the alias</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.046" xml:space="preserve"><value>Cancel</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.047" xml:space="preserve"><value>Save</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.048" xml:space="preserve"><value>Edit TTL</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.049" xml:space="preserve"><value>Scheduled cleanup</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.050" xml:space="preserve"><value>Keep forever</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.051" xml:space="preserve"><value>Local check</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.052" xml:space="preserve"><value>Check again</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.053" xml:space="preserve"><value>Available</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.054" xml:space="preserve"><value>Unavailable</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.055" xml:space="preserve"><value>Image registry prefix</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.056" xml:space="preserve"><value>Not configured (public default images are used; see the documentation)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.057" xml:space="preserve"><value>Manual configuration checklist (summary)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.058" xml:space="preserve"><value>Open Sandbox panel</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.059" xml:space="preserve"><value>Documentation: </value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.060" xml:space="preserve"><value>Check Docker availability, image prefixes, and deployment notes on the environment setup page.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.061" xml:space="preserve"><value>No</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.062" xml:space="preserve"><value>Configure prefixes or overrides here; see the documentation.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.063" xml:space="preserve"><value>Use the execution entry registered by the module; parameter validation and result logs match the module Function page.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.064" xml:space="preserve"><value>After saving, calculation starts from the current time and the session is destroyed automatically at expiry.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.065" xml:space="preserve"><value>Create</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.066" xml:space="preserve"><value>Submit short task code in an Exec template session.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.067" xml:space="preserve"><value>Install and start Docker (or a compatible CLI) on the same machine running NCF. The module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.068" xml:space="preserve"><value>For an internal registry, configure it on the host</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.069" xml:space="preserve"><value>Execute</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.070" xml:space="preserve"><value>Pre-pull the required images according to the official documentation; use the documented image names and versions.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.071" xml:space="preserve"><value>After the check passes, open the module Function “Create sandbox”, choose Python Exec in the template list, and run it; no command-line template name is required.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.072" xml:space="preserve"><value>Status:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.073" xml:space="preserve"><value>of</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.074" xml:space="preserve"><value>Install Docker automatically.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.075" xml:space="preserve"><value>This session is not destroyed by the TTL scan and must be destroyed manually by an administrator.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.076" xml:space="preserve"><value>Enter a SessionId to stop and clean up the specified session.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.077" xml:space="preserve"><value>Choose an execution template and runtime to create an isolated session.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.078" xml:space="preserve"><value>Access interactive sessions through the site reverse proxy; links do not expose the container token.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.079" xml:space="preserve"><value>Destroy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.080" xml:space="preserve"><value>Image registry prefix:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.081" xml:space="preserve"><value>Review session status in one place and create, execute, and clean isolated environments through module Functions.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.082" xml:space="preserve"><value>Status updated {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.083" xml:space="preserve"><value>{0} sessions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.084" xml:space="preserve"><value>No sandbox sessions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.085" xml:space="preserve"><value>Aliases identify sessions in lists, Function results, and logs; they do not affect the runtime environment.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.086" xml:space="preserve"><value>Creating</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.087" xml:space="preserve"><value>Stopping</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.088" xml:space="preserve"><value>Stopped</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.089" xml:space="preserve"><value>Failed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.090" xml:space="preserve"><value>Expired</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.091" xml:space="preserve"><value>Unknown ({0})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
 </root>

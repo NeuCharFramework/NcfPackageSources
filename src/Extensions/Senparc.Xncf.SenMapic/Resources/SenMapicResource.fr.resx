@@ -253,31 +253,31 @@
     <value>Échec de la suppression</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>Test de levée d'exception, paramètres transmis : {0} {1}||Test de levée d'exception, paramètres transmis : {0} {1}</value>
+    <value>Exception-throw test, parameters passed: {0} {1}</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
-    <value>Le diviseur ne peut pas être 0 !||Le diviseur ne peut pas être 0 !</value>
+    <value>Divisor cannot be 0!</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>Opérateur inconnu : {0}||Opérateur inconnu : {0}</value>
+    <value>Unknown operator: {0}</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>Opérateur inconnu||Opérateur inconnu</value>
+    <value>Unknown operator</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>Saisissez une URL valide !||Saisissez une URL valide !</value>
+    <value>Enter a valid URL!</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>L'hôte cible a été résolu en une adresse non publique. La connexion a été refusée.||L'hôte cible a été résolu en une adresse non publique. La connexion a été refusée.</value>
+    <value>The target host resolved to a non-public address. The connection was refused.</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>Impossible de se connecter à l'hôte cible ayant réussi la vérification d'adresse publique.||Impossible de se connecter à l'hôte cible ayant réussi la vérification d'adresse publique.</value>
+    <value>Unable to connect to the target host that passed the public-address check.</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>L'accès à l'URL cible n'est pas autorisé.||L'accès à l'URL cible n'est pas autorisé.</value>
+    <value>The target URL is not allowed.</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>L'accès à l'URL cible de redirection n'est pas autorisé.||L'accès à l'URL cible de redirection n'est pas autorisé.</value>
+    <value>The redirect target URL is not allowed.</value>
   </data>
   <data name="Function.Sample.Name" xml:space="preserve">
     <value>Fonction d’exemple</value>

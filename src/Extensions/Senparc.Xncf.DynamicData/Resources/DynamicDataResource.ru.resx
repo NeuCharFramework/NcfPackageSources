@@ -100,928 +100,928 @@
     <value>Случайно</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>0 полей||0 полей</value>
+    <value>0 fields</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
-    <value>условий||условий</value>
+    <value>conditions</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>По центру 1||По центру 1</value>
+    <value>Center align 1</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>События||События</value>
+    <value>Events</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>Настройки события||Настройки события</value>
+    <value>Event settings</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>Просмотр кода||Просмотр кода</value>
+    <value>View code</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>Позиция||Позиция</value>
+    <value>Position</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>Разрешить удаление||Разрешить удаление</value>
+    <value>Allow delete</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>Разрешить экспорт||Разрешить экспорт</value>
+    <value>Allow export</value>
   </data>
   <data name="Frontend.010" xml:space="preserve">
-    <value>Разрешить сортировку||Разрешить сортировку</value>
+    <value>Allow sorting</value>
   </data>
   <data name="Frontend.011" xml:space="preserve">
-    <value>Разрешить изменение||Разрешить изменение</value>
+    <value>Allow edit</value>
   </data>
   <data name="Frontend.012" xml:space="preserve">
-    <value>Входные параметры||Входные параметры</value>
+    <value>Input parameters</value>
   </data>
   <data name="Frontend.013" xml:space="preserve">
-    <value>Все поля||Все поля</value>
+    <value>All fields</value>
   </data>
   <data name="Frontend.014" xml:space="preserve">
-    <value>Закрыть страницу||Закрыть страницу</value>
+    <value>Close page</value>
   </data>
   <data name="Frontend.015" xml:space="preserve">
-    <value>Выходные параметры||Выходные параметры</value>
+    <value>Output parameters</value>
   </data>
   <data name="Frontend.016" xml:space="preserve">
-    <value>Настройки страниц||Настройки страниц</value>
+    <value>Pagination settings</value>
   </data>
   <data name="Frontend.017" xml:space="preserve">
-    <value>Имя столбца||Имя столбца</value>
+    <value>Column name</value>
   </data>
   <data name="Frontend.018" xml:space="preserve">
-    <value>Ширина столбца||Ширина столбца</value>
+    <value>Column width</value>
   </data>
   <data name="Frontend.019" xml:space="preserve">
-    <value>Свойства столбца||Свойства столбца</value>
+    <value>Column properties</value>
   </data>
   <data name="Frontend.020" xml:space="preserve">
-    <value>Настройки свойств столбца||Настройки свойств столбца</value>
+    <value>Column property settings</value>
   </data>
   <data name="Frontend.021" xml:space="preserve">
-    <value>Заголовок столбца||Заголовок столбца</value>
+    <value>Column title</value>
   </data>
   <data name="Frontend.022" xml:space="preserve">
-    <value>Управление столбцами||Управление столбцами</value>
+    <value>Column management</value>
   </data>
   <data name="Frontend.023" xml:space="preserve">
-    <value>Выбор столбцов||Выбор столбцов</value>
+    <value>Column selection</value>
   </data>
   <data name="Frontend.024" xml:space="preserve">
-    <value>Создать одну||Создать одну</value>
+    <value>Create one</value>
   </data>
   <data name="Frontend.025" xml:space="preserve">
-    <value>Создать макет||Создать макет</value>
+    <value>Create layout</value>
   </data>
   <data name="Frontend.026" xml:space="preserve">
-    <value>Удалить||Удалить</value>
+    <value>Delete</value>
   </data>
   <data name="Frontend.027" xml:space="preserve">
-    <value>Удалить одну||Удалить одну</value>
+    <value>Delete one</value>
   </data>
   <data name="Frontend.028" xml:space="preserve">
-    <value>Удалить одну запись||Удалить одну запись</value>
+    <value>Delete one record</value>
   </data>
   <data name="Frontend.029" xml:space="preserve">
-    <value>Удалить макет||Удалить макет</value>
+    <value>Delete layout</value>
   </data>
   <data name="Frontend.030" xml:space="preserve">
-    <value>Основа динамических данных||Основа динамических данных</value>
+    <value>Dynamic Data Foundation</value>
   </data>
   <data name="Frontend.031" xml:space="preserve">
-    <value>По возрастанию||По возрастанию</value>
+    <value>Ascending</value>
   </data>
   <data name="Frontend.032" xml:space="preserve">
-    <value>Двойной щелчок||Двойной щелчок</value>
+    <value>Double-click</value>
   </data>
   <data name="Frontend.033" xml:space="preserve">
-    <value>Опубликовать||Опубликовать</value>
+    <value>Publish</value>
   </data>
   <data name="Frontend.034" xml:space="preserve">
-    <value>Отмена||Отмена</value>
+    <value>Cancel</value>
   </data>
   <data name="Frontend.035" xml:space="preserve">
-    <value>Текст кнопки Отмена||Текст кнопки Отмена</value>
+    <value>Cancel button text</value>
   </data>
   <data name="Frontend.036" xml:space="preserve">
-    <value>Настройки действия Отмена||Настройки действия Отмена</value>
+    <value>Cancel action settings</value>
   </data>
   <data name="Frontend.037" xml:space="preserve">
-    <value>Скрывать, если страница одна||Скрывать, если страница одна</value>
+    <value>Hide when only one page</value>
   </data>
   <data name="Frontend.038" xml:space="preserve">
-    <value>Справа||Справа</value>
+    <value>Right</value>
   </data>
   <data name="Frontend.039" xml:space="preserve">
-    <value>По правому краю||По правому краю</value>
+    <value>Align right</value>
   </data>
   <data name="Frontend.040" xml:space="preserve">
-    <value>Включить страницы||Включить страницы</value>
+    <value>Enable pagination</value>
   </data>
   <data name="Frontend.041" xml:space="preserve">
-    <value>Закрепленный столбец||Закрепленный столбец</value>
+    <value>Fixed column</value>
   </data>
   <data name="Frontend.042" xml:space="preserve">
-    <value>Фиксированное направление||Фиксированное направление</value>
+    <value>Fixed direction</value>
   </data>
   <data name="Frontend.043" xml:space="preserve">
-    <value>Заливка||Заливка</value>
+    <value>Filled</value>
   </data>
   <data name="Frontend.044" xml:space="preserve">
-    <value>Копировать макет||Копировать макет</value>
+    <value>Copy layout</value>
   </data>
   <data name="Frontend.045" xml:space="preserve">
-    <value>Больше||Больше</value>
+    <value>Greater than</value>
   </data>
   <data name="Frontend.046" xml:space="preserve">
-    <value>Имя||Имя</value>
+    <value>Name</value>
   </data>
   <data name="Frontend.047" xml:space="preserve">
-    <value>Дочерний компонент||Дочерний компонент</value>
+    <value>Child component</value>
   </data>
   <data name="Frontend.048" xml:space="preserve">
-    <value>Включение и макет дочерних компонентов||Включение и макет дочерних компонентов</value>
+    <value>Child component enable &amp; layout</value>
   </data>
   <data name="Frontend.049" xml:space="preserve">
-    <value>Поле||Поле</value>
+    <value>Field</value>
   </data>
   <data name="Frontend.050" xml:space="preserve">
-    <value>Имя поля||Имя поля</value>
+    <value>Field name</value>
   </data>
   <data name="Frontend.051" xml:space="preserve">
-    <value>Описание поля||Описание поля</value>
+    <value>Field description</value>
   </data>
   <data name="Frontend.052" xml:space="preserve">
-    <value>Область запроса поля||Область запроса поля</value>
+    <value>Field query scope</value>
   </data>
   <data name="Frontend.053" xml:space="preserve">
-    <value>Выравнивание||Выравнивание</value>
+    <value>Alignment</value>
   </data>
   <data name="Frontend.054" xml:space="preserve">
-    <value>Импорт||Импорт</value>
+    <value>Import</value>
   </data>
   <data name="Frontend.055" xml:space="preserve">
-    <value>Экспорт||Экспорт</value>
+    <value>Export</value>
   </data>
   <data name="Frontend.056" xml:space="preserve">
-    <value>Меньше||Меньше</value>
+    <value>Less than</value>
   </data>
   <data name="Frontend.057" xml:space="preserve">
-    <value>Отображаемое содержимое||Отображаемое содержимое</value>
+    <value>Display content</value>
   </data>
   <data name="Frontend.058" xml:space="preserve">
-    <value>Текст отображаемого содержимого||Текст отображаемого содержимого</value>
+    <value>Display content text</value>
   </data>
   <data name="Frontend.059" xml:space="preserve">
-    <value>Текст отображаемого содержимого 1||Текст отображаемого содержимого 1</value>
+    <value>Display content text 1</value>
   </data>
   <data name="Frontend.060" xml:space="preserve">
-    <value>Тип отображения||Тип отображения</value>
+    <value>Display type</value>
   </data>
   <data name="Frontend.061" xml:space="preserve">
-    <value>Свойства||Свойства</value>
+    <value>Properties</value>
   </data>
   <data name="Frontend.062" xml:space="preserve">
-    <value>Слева||Слева</value>
+    <value>Left</value>
   </data>
   <data name="Frontend.063" xml:space="preserve">
-    <value>По левому краю||По левому краю</value>
+    <value>Align left</value>
   </data>
   <data name="Frontend.064" xml:space="preserve">
-    <value>Передать id||Передать id</value>
+    <value>Include id</value>
   </data>
   <data name="Frontend.065" xml:space="preserve">
-    <value>Возраст||Возраст</value>
+    <value>Age</value>
   </data>
   <data name="Frontend.066" xml:space="preserve">
-    <value>Настройки диалога||Настройки диалога</value>
+    <value>Dialog settings</value>
   </data>
   <data name="Frontend.067" xml:space="preserve">
-    <value>Диалог||Диалог</value>
+    <value>Dialog</value>
   </data>
   <data name="Frontend.068" xml:space="preserve">
-    <value>Настройки диалога||Настройки диалога</value>
+    <value>Dialog settings</value>
   </data>
   <data name="Frontend.069" xml:space="preserve">
-    <value>Этот модуль создан автоматически||Этот модуль создан автоматически</value>
+    <value>This module was generated automatically</value>
   </data>
   <data name="Frontend.070" xml:space="preserve">
-    <value>Открыть диалог||Открыть диалог</value>
+    <value>Open dialog</value>
   </data>
   <data name="Frontend.071" xml:space="preserve">
-    <value>Открыть диалог||Открыть диалог</value>
+    <value>Open dialog</value>
   </data>
   <data name="Frontend.072" xml:space="preserve">
-    <value>Открыть страницу||Открыть страницу</value>
+    <value>Open page</value>
   </data>
   <data name="Frontend.073" xml:space="preserve">
-    <value>Исполняемые методы||Исполняемые методы</value>
+    <value>Executable Methods</value>
   </data>
   <data name="Frontend.074" xml:space="preserve">
-    <value>Модули расширения||Модули расширения</value>
+    <value>Extension Modules</value>
   </data>
   <data name="Frontend.075" xml:space="preserve">
-    <value>Кнопка||Кнопка</value>
+    <value>Button</value>
   </data>
   <data name="Frontend.076" xml:space="preserve">
-    <value>Событие кнопки||Событие кнопки</value>
+    <value>Button event</value>
   </data>
   <data name="Frontend.077" xml:space="preserve">
-    <value>Имя кнопки||Имя кнопки</value>
+    <value>Button name</value>
   </data>
   <data name="Frontend.078" xml:space="preserve">
-    <value>Свойства кнопки||Свойства кнопки</value>
+    <value>Button properties</value>
   </data>
   <data name="Frontend.079" xml:space="preserve">
-    <value>Тип кнопки||Тип кнопки</value>
+    <value>Button type</value>
   </data>
   <data name="Frontend.080" xml:space="preserve">
-    <value>Настройки кнопки||Настройки кнопки</value>
+    <value>Button settings</value>
   </data>
   <data name="Frontend.081" xml:space="preserve">
-    <value>Сортировка||Сортировка</value>
+    <value>Sort</value>
   </data>
   <data name="Frontend.082" xml:space="preserve">
-    <value>Поле сортировки||Поле сортировки</value>
+    <value>Sort field</value>
   </data>
   <data name="Frontend.083" xml:space="preserve">
-    <value>Порядок сортировки||Порядок сортировки</value>
+    <value>Sort order</value>
   </data>
   <data name="Frontend.084" xml:space="preserve">
-    <value>Настройки сортировки||Настройки сортировки</value>
+    <value>Sort settings</value>
   </data>
   <data name="Frontend.085" xml:space="preserve">
-    <value>Контур||Контур</value>
+    <value>Outlined</value>
   </data>
   <data name="Frontend.086" xml:space="preserve">
-    <value>Описание||Описание</value>
+    <value>Description</value>
   </data>
   <data name="Frontend.087" xml:space="preserve">
-    <value>Отправить||Отправить</value>
+    <value>Submit</value>
   </data>
   <data name="Frontend.088" xml:space="preserve">
-    <value>Настройки состояния ошибки отправки||Настройки состояния ошибки отправки</value>
+    <value>Submit failure state settings</value>
   </data>
   <data name="Frontend.089" xml:space="preserve">
-    <value>Настройки состояния успешной отправки||Настройки состояния успешной отправки</value>
+    <value>Submit success state settings</value>
   </data>
   <data name="Frontend.090" xml:space="preserve">
-    <value>Текст сообщения||Текст сообщения</value>
+    <value>Message content</value>
   </data>
   <data name="Frontend.091" xml:space="preserve">
-    <value>Текст подсказки||Текст подсказки</value>
+    <value>Hint text</value>
   </data>
   <data name="Frontend.092" xml:space="preserve">
-    <value>Длительность сообщения||Длительность сообщения</value>
+    <value>Message duration</value>
   </data>
   <data name="Frontend.093" xml:space="preserve">
-    <value>Длительность сообщения||Длительность сообщения</value>
+    <value>Message duration</value>
   </data>
   <data name="Frontend.094" xml:space="preserve">
-    <value>Подсказка: поля можно добавить только после создания таблицы данных||Подсказка: поля можно добавить только после создания таблицы данных</value>
+    <value>Tip: you can add fields only after adding a data table</value>
   </data>
   <data name="Frontend.095" xml:space="preserve">
-    <value>Действия||Действия</value>
+    <value>Actions</value>
   </data>
   <data name="Frontend.096" xml:space="preserve">
-    <value>Столбец действий||Столбец действий</value>
+    <value>Action column</value>
   </data>
   <data name="Frontend.097" xml:space="preserve">
-    <value>Формат данных||Формат данных</value>
+    <value>Data format</value>
   </data>
   <data name="Frontend.098" xml:space="preserve">
-    <value>Текст формата данных||Текст формата данных</value>
+    <value>Data format text</value>
   </data>
   <data name="Frontend.099" xml:space="preserve">
-    <value>Текст формата данных 1||Текст формата данных 1</value>
+    <value>Data format text 1</value>
   </data>
   <data name="Frontend.100" xml:space="preserve">
-    <value>Английский идентификатор модели данных. Он уникален для модели данных и не может повторяться.||Английский идентификатор модели данных. Он уникален для модели данных и не может повторяться.</value>
+    <value>English identifier of the data model. It uniquely identifies the data model and cannot be duplicated.</value>
   </data>
   <data name="Frontend.101" xml:space="preserve">
-    <value>Фильтрация данных||Фильтрация данных</value>
+    <value>Data filtering</value>
   </data>
   <data name="Frontend.102" xml:space="preserve">
-    <value>Тип данных||Тип данных</value>
+    <value>Data type</value>
   </data>
   <data name="Frontend.103" xml:space="preserve">
-    <value>Таблица данных||Таблица данных</value>
+    <value>Data table</value>
   </data>
   <data name="Frontend.104" xml:space="preserve">
-    <value>Текст таблицы данных||Текст таблицы данных</value>
+    <value>Data table text</value>
   </data>
   <data name="Frontend.105" xml:space="preserve">
-    <value>Текст таблицы данных 1||Текст таблицы данных 1</value>
+    <value>Data table text 1</value>
   </data>
   <data name="Frontend.106" xml:space="preserve">
-    <value>Сетка данных||Сетка данных</value>
+    <value>Data grid</value>
   </data>
   <data name="Frontend.107" xml:space="preserve">
-    <value>Настройки таблицы данных||Настройки таблицы данных</value>
+    <value>Data table settings</value>
   </data>
   <data name="Frontend.108" xml:space="preserve">
-    <value>Выбрать таблицу данных||Выбрать таблицу данных</value>
+    <value>Select data table</value>
   </data>
   <data name="Frontend.109" xml:space="preserve">
-    <value>Настройки данных||Настройки данных</value>
+    <value>Data settings</value>
   </data>
   <data name="Frontend.110" xml:space="preserve">
-    <value>Сведения о данных||Сведения о данных</value>
+    <value>Data details</value>
   </data>
   <data name="Frontend.111" xml:space="preserve">
-    <value>Наборы данных||Наборы данных</value>
+    <value>Datasets</value>
   </data>
   <data name="Frontend.112" xml:space="preserve">
-    <value>Текст||Текст</value>
+    <value>Text</value>
   </data>
   <data name="Frontend.113" xml:space="preserve">
-    <value>Добавить||Добавить</value>
+    <value>Add</value>
   </data>
   <data name="Frontend.114" xml:space="preserve">
-    <value>Добавить поле||Добавить поле</value>
+    <value>Add field</value>
   </data>
   <data name="Frontend.115" xml:space="preserve">
-    <value>Добавить таблицу данных||Добавить таблицу данных</value>
+    <value>Add data table</value>
   </data>
   <data name="Frontend.116" xml:space="preserve">
-    <value>Добавить интерфейс||Добавить интерфейс</value>
+    <value>Add interface</value>
   </data>
   <data name="Frontend.117" xml:space="preserve">
-    <value>Добавить меню||Добавить меню</value>
+    <value>Add menu</value>
   </data>
   <data name="Frontend.118" xml:space="preserve">
-    <value>Добавить страницу||Добавить страницу</value>
+    <value>Add page</value>
   </data>
   <data name="Frontend.119" xml:space="preserve">
-    <value>Добавить фон кнопкам постраничной навигации||Добавить фон кнопкам постраничной навигации</value>
+    <value>Add a background color to pagination buttons</value>
   </data>
   <data name="Frontend.120" xml:space="preserve">
-    <value>Компактная пагинация||Компактная пагинация</value>
+    <value>Use compact pagination</value>
   </data>
   <data name="Frontend.121" xml:space="preserve">
-    <value>Уникальный||Уникальный</value>
+    <value>Unique</value>
   </data>
   <data name="Frontend.122" xml:space="preserve">
-    <value>Обязательное||Обязательное</value>
+    <value>Required</value>
   </data>
   <data name="Frontend.123" xml:space="preserve">
-    <value>Показать зебру||Показать зебру</value>
+    <value>Show zebra stripes</value>
   </data>
   <data name="Frontend.124" xml:space="preserve">
-    <value>Показать сообщение||Показать сообщение</value>
+    <value>Show message</value>
   </data>
   <data name="Frontend.125" xml:space="preserve">
-    <value>Показать заголовок||Показать заголовок</value>
+    <value>Show header</value>
   </data>
   <data name="Frontend.126" xml:space="preserve">
-    <value>Показать границу||Показать границу</value>
+    <value>Show border</value>
   </data>
   <data name="Frontend.127" xml:space="preserve">
-    <value>Обычный столбец||Обычный столбец</value>
+    <value>Standard column</value>
   </data>
   <data name="Frontend.128" xml:space="preserve">
-    <value>Максимальная длина||Максимальная длина</value>
+    <value>Maximum length</value>
   </data>
   <data name="Frontend.129" xml:space="preserve">
-    <value>Максимум кнопок страниц||Максимум кнопок страниц</value>
+    <value>Maximum page buttons</value>
   </data>
   <data name="Frontend.130" xml:space="preserve">
-    <value>Минимальная длина||Минимальная длина</value>
+    <value>Minimum length</value>
   </data>
   <data name="Frontend.131" xml:space="preserve">
-    <value>Просмотр макета||Просмотр макета</value>
+    <value>View layout</value>
   </data>
   <data name="Frontend.132" xml:space="preserve">
-    <value>Идентификатор id||Идентификатор id</value>
+    <value>Identifier id</value>
   </data>
   <data name="Frontend.133" xml:space="preserve">
-    <value>Содержимое заголовка||Содержимое заголовка</value>
+    <value>Title content</value>
   </data>
   <data name="Frontend.134" xml:space="preserve">
-    <value>Текст заголовка||Текст заголовка</value>
+    <value>Title text</value>
   </data>
   <data name="Frontend.135" xml:space="preserve">
-    <value>Стиль||Стиль</value>
+    <value>Style</value>
   </data>
   <data name="Frontend.136" xml:space="preserve">
-    <value>Настройки стиля||Настройки стиля</value>
+    <value>Style settings</value>
   </data>
   <data name="Frontend.137" xml:space="preserve">
-    <value>Формат||Формат</value>
+    <value>Format</value>
   </data>
   <data name="Frontend.138" xml:space="preserve">
-    <value>Текст формата||Текст формата</value>
+    <value>Format text</value>
   </data>
   <data name="Frontend.139" xml:space="preserve">
-    <value>Текст формата 2||Текст формата 2</value>
+    <value>Format text 2</value>
   </data>
   <data name="Frontend.140" xml:space="preserve">
-    <value>Элементов на странице||Элементов на странице</value>
+    <value>Items per page</value>
   </data>
   <data name="Frontend.141" xml:space="preserve">
-    <value>Добавить||Добавить</value>
+    <value>Add</value>
   </data>
   <data name="Frontend.142" xml:space="preserve">
-    <value>Добавить столбец||Добавить столбец</value>
+    <value>Add column</value>
   </data>
   <data name="Frontend.143" xml:space="preserve">
-    <value>Добавить кнопку||Добавить кнопку</value>
+    <value>Add button</value>
   </data>
   <data name="Frontend.144" xml:space="preserve">
-    <value>Добавить правило сортировки||Добавить правило сортировки</value>
+    <value>Add sort rule</value>
   </data>
   <data name="Frontend.145" xml:space="preserve">
-    <value>Добавить условие фильтра||Добавить условие фильтра</value>
+    <value>Add filter condition</value>
   </data>
   <data name="Frontend.146" xml:space="preserve">
-    <value>Добавить вариант||Добавить вариант</value>
+    <value>Add option</value>
   </data>
   <data name="Frontend.147" xml:space="preserve">
-    <value>Отрисовать страницу макета||Отрисовать страницу макета</value>
+    <value>Render layout page</value>
   </data>
   <data name="Frontend.148" xml:space="preserve">
-    <value>Щелчок||Щелчок</value>
+    <value>Click</value>
   </data>
   <data name="Frontend.149" xml:space="preserve">
-    <value>Нажмите справа, чтобы добавить свойство||Нажмите справа, чтобы добавить свойство</value>
+    <value>Click the right side to add a property</value>
   </data>
   <data name="Frontend.150" xml:space="preserve">
-    <value>Нажмите справа, чтобы добавить компонент||Нажмите справа, чтобы добавить компонент</value>
+    <value>Click the right side to add a component</value>
   </data>
   <data name="Frontend.151" xml:space="preserve">
-    <value>Настройки интерфейса||Настройки интерфейса</value>
+    <value>Page settings</value>
   </data>
   <data name="Frontend.152" xml:space="preserve">
-    <value>Подтвердить||Подтвердить</value>
+    <value>Confirm</value>
   </data>
   <data name="Frontend.153" xml:space="preserve">
-    <value>Подтвердить||Подтвердить</value>
+    <value>Confirm</value>
   </data>
   <data name="Frontend.154" xml:space="preserve">
-    <value>Текст кнопки подтверждения||Текст кнопки подтверждения</value>
+    <value>Confirm button text</value>
   </data>
   <data name="Frontend.155" xml:space="preserve">
-    <value>Настройки действия подтверждения||Настройки действия подтверждения</value>
+    <value>Confirm action settings</value>
   </data>
   <data name="Frontend.156" xml:space="preserve">
-    <value>Отключено||Отключено</value>
+    <value>Disabled</value>
   </data>
   <data name="Frontend.157" xml:space="preserve">
-    <value>Равно||Равно</value>
+    <value>Equals</value>
   </data>
   <data name="Frontend.158" xml:space="preserve">
-    <value>Фильтр||Фильтр</value>
+    <value>Filter</value>
   </data>
   <data name="Frontend.159" xml:space="preserve">
-    <value>Настройки фильтра||Настройки фильтра</value>
+    <value>Filter settings</value>
   </data>
   <data name="Frontend.160" xml:space="preserve">
-    <value>Настройки условий фильтра||Настройки условий фильтра</value>
+    <value>Filter condition settings</value>
   </data>
   <data name="Frontend.161" xml:space="preserve">
-    <value>Текст типа||Текст типа</value>
+    <value>Type text</value>
   </data>
   <data name="Frontend.162" xml:space="preserve">
-    <value>Текст типа 1||Текст типа 1</value>
+    <value>Type text 1</value>
   </data>
   <data name="Frontend.163" xml:space="preserve">
-    <value>Компонент||Компонент</value>
+    <value>Component</value>
   </data>
   <data name="Frontend.164" xml:space="preserve">
-    <value>Имя компонента||Имя компонента</value>
+    <value>Component name</value>
   </data>
   <data name="Frontend.165" xml:space="preserve">
-    <value>Тип компонента||Тип компонента</value>
+    <value>Component type</value>
   </data>
   <data name="Frontend.166" xml:space="preserve">
-    <value>Привязанное поле||Привязанное поле</value>
+    <value>Bound field</value>
   </data>
   <data name="Frontend.167" xml:space="preserve">
-    <value>Текст привязанного поля||Текст привязанного поля</value>
+    <value>Bound field text</value>
   </data>
   <data name="Frontend.168" xml:space="preserve">
-    <value>Текст связанного поля 1||Текст связанного поля 1</value>
+    <value>Bound field text 1</value>
   </data>
   <data name="Frontend.169" xml:space="preserve">
-    <value>Изменить||Изменить</value>
+    <value>Edit</value>
   </data>
   <data name="Frontend.170" xml:space="preserve">
-    <value>Изменить страницу||Изменить страницу</value>
+    <value>Edit page</value>
   </data>
   <data name="Frontend.171" xml:space="preserve">
-    <value>Сгенерировано автоматически||Сгенерировано автоматически</value>
+    <value>Generated automatically</value>
   </data>
   <data name="Frontend.172" xml:space="preserve">
-    <value>Пользовательский||Пользовательский</value>
+    <value>Custom</value>
   </data>
   <data name="Frontend.173" xml:space="preserve">
-    <value>Пользовательское имя ID||Пользовательское имя ID</value>
+    <value>Custom ID name</value>
   </data>
   <data name="Frontend.174" xml:space="preserve">
-    <value>Настройки пользовательских столбцов||Настройки пользовательских столбцов</value>
+    <value>Custom column settings</value>
   </data>
   <data name="Frontend.175" xml:space="preserve">
-    <value>Пользовательская кнопка||Пользовательская кнопка</value>
+    <value>Custom button</value>
   </data>
   <data name="Frontend.176" xml:space="preserve">
-    <value>Форма||Форма</value>
+    <value>Form</value>
   </data>
   <data name="Frontend.177" xml:space="preserve">
-    <value>Настройки свойств формы||Настройки свойств формы</value>
+    <value>Form property settings</value>
   </data>
   <data name="Frontend.178" xml:space="preserve">
-    <value>Метод выполнения формы||Метод выполнения формы</value>
+    <value>Form execution method</value>
   </data>
   <data name="Frontend.179" xml:space="preserve">
-    <value>Таблица||Таблица</value>
+    <value>Table</value>
   </data>
   <data name="Frontend.180" xml:space="preserve">
-    <value>Столбцы таблицы||Столбцы таблицы</value>
+    <value>Table columns</value>
   </data>
   <data name="Frontend.181" xml:space="preserve">
-    <value>Размер таблицы||Размер таблицы</value>
+    <value>Table size</value>
   </data>
   <data name="Frontend.182" xml:space="preserve">
-    <value>Настройки стиля таблицы||Настройки стиля таблицы</value>
+    <value>Table style settings</value>
   </data>
   <data name="Frontend.183" xml:space="preserve">
-    <value>Настройки||Настройки</value>
+    <value>Settings</value>
   </data>
   <data name="Frontend.184" xml:space="preserve">
-    <value>Страница редактирования для посетителя||Страница редактирования для посетителя</value>
+    <value>Visitor edit page</value>
   </data>
   <data name="Frontend.185" xml:space="preserve">
-    <value>Сведения||Сведения</value>
+    <value>Details</value>
   </data>
   <data name="Frontend.186" xml:space="preserve">
-    <value>Сначала выберите таблицу данных, чтобы настроить её поля||Сначала выберите таблицу данных, чтобы настроить её поля</value>
+    <value>Select a data table before you can configure its fields</value>
   </data>
   <data name="Frontend.187" xml:space="preserve">
-    <value>Введите имя||Введите имя</value>
+    <value>Enter a name</value>
   </data>
   <data name="Frontend.188" xml:space="preserve">
-    <value>Введите id идентификатора||Введите id идентификатора</value>
+    <value>Enter identifier id</value>
   </data>
   <data name="Frontend.189" xml:space="preserve">
-    <value>Введите||Введите</value>
+    <value>Please enter</value>
   </data>
   <data name="Frontend.190" xml:space="preserve">
-    <value>Введите страницу закрытия||Введите страницу закрытия</value>
+    <value>Enter close page</value>
   </data>
   <data name="Frontend.191" xml:space="preserve">
-    <value>Введите текст||Введите текст</value>
+    <value>Enter text</value>
   </data>
   <data name="Frontend.192" xml:space="preserve">
-    <value>Введите ширину столбца||Введите ширину столбца</value>
+    <value>Enter column width</value>
   </data>
   <data name="Frontend.193" xml:space="preserve">
-    <value>Введите заголовок столбца||Введите заголовок столбца</value>
+    <value>Enter a column title</value>
   </data>
   <data name="Frontend.194" xml:space="preserve">
-    <value>Введите текст кнопки Отмена||Введите текст кнопки Отмена</value>
+    <value>Enter Cancel button text</value>
   </data>
   <data name="Frontend.195" xml:space="preserve">
-    <value>Введите имя||Введите имя</value>
+    <value>Enter a name</value>
   </data>
   <data name="Frontend.196" xml:space="preserve">
-    <value>Введите имя поля||Введите имя поля</value>
+    <value>Enter field name</value>
   </data>
   <data name="Frontend.197" xml:space="preserve">
-    <value>Введите имя макета||Введите имя макета</value>
+    <value>Enter layout name</value>
   </data>
   <data name="Frontend.198" xml:space="preserve">
-    <value>Введите имя кнопки||Введите имя кнопки</value>
+    <value>Enter button name</value>
   </data>
   <data name="Frontend.199" xml:space="preserve">
-    <value>Введите описание||Введите описание</value>
+    <value>Enter a description</value>
   </data>
   <data name="Frontend.200" xml:space="preserve">
-    <value>Введите текст подсказки||Введите текст подсказки</value>
+    <value>Enter prompt content</value>
   </data>
   <data name="Frontend.201" xml:space="preserve">
-    <value>Введите текст подсказки||Введите текст подсказки</value>
+    <value>Enter hint text</value>
   </data>
   <data name="Frontend.202" xml:space="preserve">
-    <value>Введите длительность подсказки||Введите длительность подсказки</value>
+    <value>Enter prompt duration</value>
   </data>
   <data name="Frontend.203" xml:space="preserve">
-    <value>Введите текст заголовка||Введите текст заголовка</value>
+    <value>Enter title text</value>
   </data>
   <data name="Frontend.204" xml:space="preserve">
-    <value>Введите текст кнопки подтверждения||Введите текст кнопки подтверждения</value>
+    <value>Enter confirm button text</value>
   </data>
   <data name="Frontend.205" xml:space="preserve">
-    <value>Введите имя меню||Введите имя меню</value>
+    <value>Enter menu name</value>
   </data>
   <data name="Frontend.206" xml:space="preserve">
-    <value>Выберите||Выберите</value>
+    <value>Select</value>
   </data>
   <data name="Frontend.207" xml:space="preserve">
-    <value>Выберите событие||Выберите событие</value>
+    <value>Select an event</value>
   </data>
   <data name="Frontend.208" xml:space="preserve">
-    <value>Выберите взаимодействие||Выберите взаимодействие</value>
+    <value>Select an interaction</value>
   </data>
   <data name="Frontend.209" xml:space="preserve">
-    <value>Выберите позицию||Выберите позицию</value>
+    <value>Select a position</value>
   </data>
   <data name="Frontend.210" xml:space="preserve">
-    <value>Выберите выравнивание||Выберите выравнивание</value>
+    <value>Select alignment</value>
   </data>
   <data name="Frontend.211" xml:space="preserve">
-    <value>Выберите отображаемое содержимое||Выберите отображаемое содержимое</value>
+    <value>Select display content</value>
   </data>
   <data name="Frontend.212" xml:space="preserve">
-    <value>Выберите событие кнопки||Выберите событие кнопки</value>
+    <value>Select button event</value>
   </data>
   <data name="Frontend.213" xml:space="preserve">
-    <value>Выберите свойство кнопки||Выберите свойство кнопки</value>
+    <value>Select button property</value>
   </data>
   <data name="Frontend.214" xml:space="preserve">
-    <value>Выберите тип кнопки||Выберите тип кнопки</value>
+    <value>Select button type</value>
   </data>
   <data name="Frontend.215" xml:space="preserve">
-    <value>Выберите формат данных||Выберите формат данных</value>
+    <value>Select data format</value>
   </data>
   <data name="Frontend.216" xml:space="preserve">
-    <value>Выберите тип данных||Выберите тип данных</value>
+    <value>Select data type</value>
   </data>
   <data name="Frontend.217" xml:space="preserve">
-    <value>Выберите таблицу данных||Выберите таблицу данных</value>
+    <value>Select a data table</value>
   </data>
   <data name="Frontend.218" xml:space="preserve">
-    <value>Выберите формат||Выберите формат</value>
+    <value>Select a format</value>
   </data>
   <data name="Frontend.219" xml:space="preserve">
-    <value>Выберите число элементов на странице||Выберите число элементов на странице</value>
+    <value>Select items per page</value>
   </data>
   <data name="Frontend.220" xml:space="preserve">
-    <value>Выберите компонент||Выберите компонент</value>
+    <value>Select a component</value>
   </data>
   <data name="Frontend.221" xml:space="preserve">
-    <value>Выберите имя компонента||Выберите имя компонента</value>
+    <value>Select component name</value>
   </data>
   <data name="Frontend.222" xml:space="preserve">
-    <value>Выберите тип компонента||Выберите тип компонента</value>
+    <value>Select component type</value>
   </data>
   <data name="Frontend.223" xml:space="preserve">
-    <value>Выберите связанное поле||Выберите связанное поле</value>
+    <value>Select bound field</value>
   </data>
   <data name="Frontend.224" xml:space="preserve">
-    <value>Выберите страницу||Выберите страницу</value>
+    <value>Select a page</value>
   </data>
   <data name="Frontend.225" xml:space="preserve">
-    <value>Вызвать метод источника данных||Вызвать метод источника данных</value>
+    <value>Call data source method</value>
   </data>
   <data name="Frontend.226" xml:space="preserve">
-    <value>Открыть ссылку||Открыть ссылку</value>
+    <value>Open link</value>
   </data>
   <data name="Frontend.227" xml:space="preserve">
-    <value>Выбрать взаимодействие||Выбрать взаимодействие</value>
+    <value>Select interaction</value>
   </data>
   <data name="Frontend.228" xml:space="preserve">
-    <value>Выбрать компонент||Выбрать компонент</value>
+    <value>Select component</value>
   </data>
   <data name="Frontend.229" xml:space="preserve">
-    <value>Выбрать страницу||Выбрать страницу</value>
+    <value>Select page</value>
   </data>
   <data name="Frontend.230" xml:space="preserve">
-    <value>Варианты||Варианты</value>
+    <value>Options</value>
   </data>
   <data name="Frontend.231" xml:space="preserve">
-    <value>Подпись варианта||Подпись варианта</value>
+    <value>Option label</value>
   </data>
   <data name="Frontend.232" xml:space="preserve">
-    <value>Значение варианта||Значение варианта</value>
+    <value>Option value</value>
   </data>
   <data name="Frontend.233" xml:space="preserve">
-    <value>Настройки опций||Настройки опций</value>
+    <value>Option settings</value>
   </data>
   <data name="Frontend.234" xml:space="preserve">
-    <value>Ссылка||Ссылка</value>
+    <value>Link</value>
   </data>
   <data name="Frontend.235" xml:space="preserve">
-    <value>Длина||Длина</value>
+    <value>Length</value>
   </data>
   <data name="Frontend.236" xml:space="preserve">
-    <value>По убыванию||По убыванию</value>
+    <value>Descending</value>
   </data>
   <data name="Frontend.237" xml:space="preserve">
-    <value>Выровнять по верху||Выровнять по верху</value>
+    <value>Align top</value>
   </data>
   <data name="Frontend.238" xml:space="preserve">
-    <value>Цвет||Цвет</value>
+    <value>Color</value>
   </data>
   <data name="Frontend.239" xml:space="preserve">
-    <value>Главная||Главная</value>
+    <value>Home</value>
   </data>
   <data name="Frontend.240" xml:space="preserve">
-    <value>Цвет шрифта lable||Цвет шрифта lable</value>
+    <value>lable font color</value>
   </data>
   <data name="Frontend.241" xml:space="preserve">
-    <value>Мин. длина: Макс. длина:||Мин. длина: Макс. длина:</value>
+    <value>Min length: Max length:</value>
   </data>
   <data name="Frontend.242" xml:space="preserve">
-    <value>Добавить справа||Добавить справа</value>
+    <value>Add on the right</value>
   </data>
   <data name="Frontend.243" xml:space="preserve">
-    <value>Настройки таблиц данных DynamicData||Настройки таблиц данных DynamicData</value>
+    <value>DynamicData data table settings</value>
   </data>
   <data name="Frontend.244" xml:space="preserve">
-    <value>Имя||Имя</value>
+    <value>Name</value>
   </data>
   <data name="Frontend.245" xml:space="preserve">
-    <value>Да||Да</value>
+    <value>Yes</value>
   </data>
   <data name="Frontend.246" xml:space="preserve">
-    <value>Нет||Нет</value>
+    <value>No</value>
   </data>
   <data name="Frontend.247" xml:space="preserve">
-    <value>Текст события||Текст события</value>
+    <value>Event Text</value>
   </data>
   <data name="Frontend.248" xml:space="preserve">
-    <value>Текст события 2||Текст события 2</value>
+    <value>Event text 2</value>
   </data>
   <data name="Frontend.249" xml:space="preserve">
-    <value>Создание макета DynamicData||Создание макета DynamicData</value>
+    <value>Create DynamicData layout</value>
   </data>
   <data name="Frontend.250" xml:space="preserve">
-    <value>Добавьте вариант||Добавьте вариант</value>
+    <value>Add an option</value>
   </data>
   <data name="Frontend.251" xml:space="preserve">
-    <value>Выберите поле сортировки||Выберите поле сортировки</value>
+    <value>Select sort field</value>
   </data>
   <data name="Frontend.252" xml:space="preserve">
-    <value>Введите имя||Введите имя</value>
+    <value>Enter a name</value>
   </data>
   <data name="Frontend.253" xml:space="preserve">
-    <value>Входные параметры||Входные параметры</value>
+    <value>Input parameters</value>
   </data>
   <data name="Frontend.254" xml:space="preserve">
-    <value>Выходные параметры||Выходные параметры</value>
+    <value>Output parameters</value>
   </data>
   <data name="Frontend.255" xml:space="preserve">
-    <value>Текст кнопки Отмена||Текст кнопки Отмена</value>
+    <value>Cancel button text</value>
   </data>
   <data name="Frontend.256" xml:space="preserve">
-    <value>Текст кнопки подтверждения||Текст кнопки подтверждения</value>
+    <value>Confirm button text</value>
   </data>
   <data name="Frontend.257" xml:space="preserve">
-    <value>Длительность сообщения||Длительность сообщения</value>
+    <value>Message duration</value>
   </data>
   <data name="Frontend.258" xml:space="preserve">
-    <value>Метод выполнения формы||Метод выполнения формы</value>
+    <value>Form execution method</value>
   </data>
   <data name="Frontend.259" xml:space="preserve">
-    <value>Главная DynamicData||Главная DynamicData</value>
+    <value>DynamicData Home</value>
   </data>
   <data name="Frontend.260" xml:space="preserve">
-    <value>Настройки интерфейса DynamicData||Настройки интерфейса DynamicData</value>
+    <value>DynamicData interface settings</value>
   </data>
   <data name="Frontend.261" xml:space="preserve">
-    <value>Миниатюра||Миниатюра</value>
+    <value>Thumbnail</value>
   </data>
   <data name="Frontend.262" xml:space="preserve">
-    <value>Страница отрисовки макета DynamicData||Страница отрисовки макета DynamicData</value>
+    <value>DynamicData layout render page</value>
   </data>
   <data name="Frontend.263" xml:space="preserve">
-    <value>Введите Id идентификатора||Введите Id идентификатора</value>
+    <value>Enter identifier Id</value>
   </data>
   <data name="Frontend.264" xml:space="preserve">
-    <value>Укажите, обязательное ли поле||Укажите, обязательное ли поле</value>
+    <value>Select whether required</value>
   </data>
   <data name="Frontend.265" xml:space="preserve">
-    <value>Укажите, уникально ли значение||Укажите, уникально ли значение</value>
+    <value>Select whether unique</value>
   </data>
   <data name="Frontend.266" xml:space="preserve">
-    <value>Сертификат управления устройствами (spot_checkasd)||Сертификат управления устройствами (spot_checkasd)</value>
+    <value>Device management certificate (spot_checkasd)</value>
   </data>
   <data name="Frontend.267" xml:space="preserve">
-    <value>Привязать таблицу данных 1, привязать таблицу данных 2, привязать таблицу данных 3Привязать таблицу данных 1, привязать таблицу данных 2, привязать таблицу данных 3Привязать таблицу данных 1, привязать таблицу данных 2, привязать таблицу данных 3||Привязать таблицу данных 1, привязать таблицу данных 2, привязать таблицу данных 3Привязать таблицу данных 1, привязать таблицу данных 2, привязать таблицу данных 3Привязать таблицу данных 1, привязать таблицу данных 2, привязать таблицу данных 3</value>
+    <value>Bind data table 1, bind data table 2, bind data table 3Bind data table 1, bind data table 2, bind data table 3Bind data table 1, bind data table 2, bind data table 3</value>
   </data>
   <data name="Frontend.268" xml:space="preserve">
-    <value>Тестовое имя 1||Тестовое имя 1</value>
+    <value>Test name 1</value>
   </data>
   <data name="Frontend.269" xml:space="preserve">
-    <value>Текст описания||Текст описания</value>
+    <value>Description Text</value>
   </data>
   <data name="Frontend.270" xml:space="preserve">
-    <value>Введите имя и описание||Введите имя и описание</value>
+    <value>Enter a name and description</value>
   </data>
   <data name="Frontend.271" xml:space="preserve">
-    <value>Закрыть сейчас?||Закрыть сейчас?</value>
+    <value>Close now?</value>
   </data>
   <data name="Frontend.272" xml:space="preserve">
-    <value>Этот файл будет удалён навсегда. Продолжить?||Этот файл будет удалён навсегда. Продолжить?</value>
+    <value>This will permanently delete this file. Continue?</value>
   </data>
   <data name="Frontend.273" xml:space="preserve">
-    <value>Уведомление||Уведомление</value>
+    <value>Notice</value>
   </data>
   <data name="Frontend.274" xml:space="preserve">
-    <value>Успешно удалено!||Успешно удалено!</value>
+    <value>Deleted successfully!</value>
   </data>
   <data name="Frontend.275" xml:space="preserve">
-    <value>Удаление отменено||Удаление отменено</value>
+    <value>Deletion cancelled</value>
   </data>
   <data name="Frontend.276" xml:space="preserve">
-    <value>Меню 1||Меню 1</value>
+    <value>Menu 1</value>
   </data>
   <data name="Frontend.277" xml:space="preserve">
-    <value>Меню {0}||Меню {0}</value>
+    <value>Menu {0}</value>
   </data>
   <data name="Frontend.278" xml:space="preserve">
-    <value>Подтвердить удаление этой записи||Подтвердить удаление этой записи</value>
+    <value>Confirm deleting this record</value>
   </data>
   <data name="Frontend.279" xml:space="preserve">
-    <value>Удалено успешно||Удалено успешно</value>
+    <value>Deleted successfully</value>
   </data>
   <data name="Frontend.280" xml:space="preserve">
-    <value>Закрыть текущую страницу||Закрыть текущую страницу</value>
+    <value>Close current page</value>
   </data>
   <data name="Frontend.281" xml:space="preserve">
-    <value>Поле ввода||Поле ввода</value>
+    <value>Input</value>
   </data>
   <data name="Frontend.282" xml:space="preserve">
-    <value>Текстовое поле||Текстовое поле</value>
+    <value>Text input</value>
   </data>
   <data name="Frontend.283" xml:space="preserve">
-    <value>Текстовая область||Текстовая область</value>
+    <value>Text area</value>
   </data>
   <data name="Frontend.284" xml:space="preserve">
-    <value>Числовое поле||Числовое поле</value>
+    <value>Number input</value>
   </data>
   <data name="Frontend.285" xml:space="preserve">
-    <value>Переключатель||Переключатель</value>
+    <value>Switch</value>
   </data>
   <data name="Frontend.286" xml:space="preserve">
-    <value>Выбор||Выбор</value>
+    <value>Selector</value>
   </data>
   <data name="Frontend.287" xml:space="preserve">
-    <value>Выбор произвольного времени||Выбор произвольного времени</value>
+    <value>Any-time picker</value>
   </data>
   <data name="Frontend.288" xml:space="preserve">
-    <value>Выбор даты||Выбор даты</value>
+    <value>Date picker</value>
   </data>
   <data name="Frontend.289" xml:space="preserve">
-    <value>Выбор года||Выбор года</value>
+    <value>Year picker</value>
   </data>
   <data name="Frontend.290" xml:space="preserve">
-    <value>Выбор года — несколько||Выбор года — несколько</value>
+    <value>Year picker - multiple</value>
   </data>
   <data name="Frontend.291" xml:space="preserve">
-    <value>Выбор месяца||Выбор месяца</value>
+    <value>Month picker</value>
   </data>
   <data name="Frontend.292" xml:space="preserve">
-    <value>Выбор месяца — несколько||Выбор месяца — несколько</value>
+    <value>Month picker - multiple</value>
   </data>
   <data name="Frontend.293" xml:space="preserve">
-    <value>Выбор даты — несколько||Выбор даты — несколько</value>
+    <value>Date picker - multiple</value>
   </data>
   <data name="Frontend.294" xml:space="preserve">
-    <value>Выбор недели||Выбор недели</value>
+    <value>Week Picker</value>
   </data>
   <data name="Frontend.295" xml:space="preserve">
-    <value>yyyy неделя WW||yyyy неделя WW</value>
+    <value>yyyy Week WW</value>
   </data>
   <data name="Frontend.296" xml:space="preserve">
-    <value>Выбор даты и времени||Выбор даты и времени</value>
+    <value>Date and time picker</value>
   </data>
   <data name="Frontend.297" xml:space="preserve">
-    <value>Флажок||Флажок</value>
+    <value>Checkbox</value>
   </data>
   <data name="Frontend.298" xml:space="preserve">
-    <value>Радиокнопка||Радиокнопка</value>
+    <value>Radio Button</value>
   </data>
   <data name="Frontend.299" xml:space="preserve">
-    <value>Имитационные данные||Имитационные данные</value>
+    <value>Mock data</value>
   </data>
   <data name="Frontend.300" xml:space="preserve">
-    <value>Это имя макета||Это имя макета</value>
+    <value>This is the layout name</value>
   </data>
   <data name="Frontend.301" xml:space="preserve">
-    <value>Включено||Включено</value>
+    <value>Enabled</value>
   </data>
   <data name="Frontend.302" xml:space="preserve">
-    <value>Отключено||Отключено</value>
+    <value>Disabled</value>
   </data>
   <data name="Frontend.303" xml:space="preserve">
-    <value>Название макета||Название макета</value>
+    <value>Layout Name</value>
   </data>
   <data name="Frontend.304" xml:space="preserve">
-    <value>Неверное имя макета||Неверное имя макета</value>
+    <value>Layout name is incorrect</value>
   </data>
   <data name="Frontend.305" xml:space="preserve">
-    <value>Имя вашего макета:||Имя вашего макета:</value>
+    <value>Your layout name is:</value>
   </data>
   <data name="Frontend.306" xml:space="preserve">
-    <value>Тест выброса исключения, передаваемые параметры: {0} {1}||Тест выброса исключения, передаваемые параметры: {0} {1}</value>
+    <value>Exception-throw test, parameters passed: {0} {1}</value>
   </data>
   <data name="Frontend.307" xml:space="preserve">
-    <value>Делитель не может быть равен 0!||Делитель не может быть равен 0!</value>
+    <value>Divisor cannot be 0!</value>
   </data>
   <data name="Frontend.308" xml:space="preserve">
-    <value>Неизвестный оператор: {0}||Неизвестный оператор: {0}</value>
+    <value>Unknown operator: {0}</value>
   </data>
   <data name="Function.Sample.Name" xml:space="preserve">
     <value>Пример функции</value>

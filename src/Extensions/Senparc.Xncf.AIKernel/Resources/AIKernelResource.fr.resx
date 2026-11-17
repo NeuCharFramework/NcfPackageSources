@@ -164,19 +164,19 @@
   <data name="Dashboard.TokenSpeed" xml:space="preserve"><value>Vitesse de sortie des tokens</value></data>
   <data name="Dashboard.UserSatisfaction" xml:space="preserve"><value>Satisfaction des utilisateurs</value></data>
   <data name="Dashboard.TotalMessages" xml:space="preserve"><value>Nombre total de messages</value></data>
-  <data name="Frontend.001" xml:space="preserve"><value>Cette entité a été supprimée ou n'existe pas !||Cette entité a été supprimée ou n'existe pas !</value></data>
-  <data name="Frontend.002" xml:space="preserve"><value>Erreur : aucun compte développeur NeuChar n'est configuré. Allez dans le Module [Administration du système], page des paramètres, et utilisez [Mettre à jour les informations du compte cloud NeuChar] pour lier un compte développeur NeuChar !||Erreur : aucun compte développeur NeuChar n'est configuré. Allez dans le Module [Administration du système], page des paramètres, et utilisez [Mettre à jour les informations du compte cloud NeuChar] pour lier un compte développeur NeuChar !</value></data>
-  <data name="Frontend.003" xml:space="preserve"><value>AppKey ou AppSecret est incorrect ! Veuillez les définir à nouveau !||AppKey ou AppSecret est incorrect ! Veuillez les définir à nouveau !</value></data>
-  <data name="Frontend.004" xml:space="preserve"><value>Le DeveloperId fourni ne correspond pas à l'AppKey configuré dans le système. Vérifiez-le ou mettez-le à jour, puis réessayez !||Le DeveloperId fourni ne correspond pas à l'AppKey configuré dans le système. Vérifiez-le ou mettez-le à jour, puis réessayez !</value></data>
-  <data name="Frontend.005" xml:space="preserve"><value>Mise à jour réussie.||Mise à jour réussie.</value></data>
-  <data name="Frontend.006" xml:space="preserve"><value>Entité introuvable !||Entité introuvable !</value></data>
-  <data name="Frontend.007" xml:space="preserve"><value>Pas encore pris en charge : le traitement du modèle {0} dans BuildSenparcAiSetting||Pas encore pris en charge : le traitement du modèle {0} dans BuildSenparcAiSetting</value></data>
-  <data name="Frontend.008" xml:space="preserve"><value>Senparc.Xncf.AIKernel ne prend pas encore en charge le type {0}||Senparc.Xncf.AIKernel ne prend pas encore en charge le type {0}</value></data>
-  <data name="Frontend.009" xml:space="preserve"><value>SenparcAiSetting ne peut pas être vide||SenparcAiSetting ne peut pas être vide</value></data>
-  <data name="Frontend.010" xml:space="preserve"><value>Les données du modèle n'existent pas. Vérifiez s'il est déployé et si vous avez l'autorisation !||Les données du modèle n'existent pas. Vérifiez s'il est déployé et si vous avez l'autorisation !</value></data>
-  <data name="Frontend.011" xml:space="preserve"><value>{0} modèles ont été ajoutés et les informations de {1} modèles ont été mises à jour.||{0} modèles ont été ajoutés et les informations de {1} modèles ont été mises à jour.</value></data>
-  <data name="Frontend.012" xml:space="preserve"><value>PromptRange ne prend pas encore en charge le type {0}||PromptRange ne prend pas encore en charge le type {0}</value></data>
-  <data name="Frontend.013" xml:space="preserve"><value>Au moins un modèle de type Chat doit être défini pour la notation automatique (dans le Module AIKernel)||Au moins un modèle de type Chat doit être défini pour la notation automatique (dans le Module AIKernel)</value></data>
+  <data name="Frontend.001" xml:space="preserve"><value>This entity was deleted or does not exist!</value></data>
+  <data name="Frontend.002" xml:space="preserve"><value>Error: no NeuChar developer account is configured. Go to the [System management] Module, open Settings, and use [Update NeuChar cloud account information] to bind a NeuChar developer account!</value></data>
+  <data name="Frontend.003" xml:space="preserve"><value>AppKey or AppSecret is incorrect! Please set them again!</value></data>
+  <data name="Frontend.004" xml:space="preserve"><value>The provided DeveloperId does not match the AppKey configured in the system. Check or update it and try again!</value></data>
+  <data name="Frontend.005" xml:space="preserve"><value>Updated successfully.</value></data>
+  <data name="Frontend.006" xml:space="preserve"><value>Entity not found!</value></data>
+  <data name="Frontend.007" xml:space="preserve"><value>Not supported yet: handling of model {0} in BuildSenparcAiSetting</value></data>
+  <data name="Frontend.008" xml:space="preserve"><value>Senparc.Xncf.AIKernel does not support the {0} type yet</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>SenparcAiSetting cannot be empty</value></data>
+  <data name="Frontend.010" xml:space="preserve"><value>Model data does not exist. Check whether it is deployed and whether you have permission!</value></data>
+  <data name="Frontend.011" xml:space="preserve"><value>Successfully added {0} models and updated {1} model records.</value></data>
+  <data name="Frontend.012" xml:space="preserve"><value>PromptRange does not support the {0} type yet</value></data>
+  <data name="Frontend.013" xml:space="preserve"><value>At least one Chat model must be set before automatic scoring (in the AIKernel Module)</value></data>
   <data name="Area.AIKernel.TokenMonitor" xml:space="preserve"><value>Moniteur Token</value></data>
   <data name="TokenMonitor.Title" xml:space="preserve"><value>Moniteur Token</value></data>
   <data name="TokenMonitor.TotalTokens" xml:space="preserve"><value>Tokens totaux</value></data>
@@ -532,8 +532,8 @@
   <data name="FineTuning.SecretAlreadyExists" xml:space="preserve"><value>Key file already exists and was left unchanged.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="FineTuning.SaveBeforeLaunch" xml:space="preserve"><value>Save first, then generate a key and start the worker.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="FineTuning.Optional" xml:space="preserve"><value>Optional</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.400" xml:space="preserve"><value>从 NeuChar AI 导入（DevId:{0}）||Imported from NeuChar AI (DevId: {0})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.400" xml:space="preserve"><value>Imported from NeuChar AI (DevId: {0})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
 
-  <data name="Frontend.100" xml:space="preserve"><value>创建微调任务||Create fine-tuning task</value></data>
-  <data name="Frontend.101" xml:space="preserve"><value>使用已批准的本地模型、数据集和训练参数创建微调任务。Worker、模型和数据集会自动载入，训练参数带有默认值，Workflow 可以按这些默认值直接运行。||Create a fine-tuning task with an approved local model, dataset, and training parameters. The Worker, model, and dataset load automatically, training parameters have defaults, and Workflow can run with those defaults.</value></data>
+  <data name="Frontend.100" xml:space="preserve"><value>Create fine-tuning task</value></data>
+  <data name="Frontend.101" xml:space="preserve"><value>Create a fine-tuning task with an approved local model, dataset, and training parameters. The Worker, model, and dataset load automatically, training parameters have defaults, and Workflow can run with those defaults.</value></data>
 </root>

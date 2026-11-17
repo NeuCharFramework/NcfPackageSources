@@ -164,57 +164,57 @@
   </data>
 
 
-  <data name="Frontend.001" xml:space="preserve"><value>仅显示已启用||Enabled only</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.002" xml:space="preserve"><value>以下为本站运行时已映射的 MCP 服务，只读展示，不属于客户端连接配置。||These are MCP services mapped by this site runtime. They are read-only and are not client connection settings.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.003" xml:space="preserve"><value>例如 1.0（可选）||For example 1.0 (optional)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.004" xml:space="preserve"><value>例如 http://localhost:3001/mcp/sse||For example http://localhost:3001/mcp/sse</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.005" xml:space="preserve"><value>保存||Save</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.006" xml:space="preserve"><value>保存前测试||Test before saving</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.007" xml:space="preserve"><value>关闭||Close</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.008" xml:space="preserve"><value>删除||Delete</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.009" xml:space="preserve"><value>刷新||Refresh</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.010" xml:space="preserve"><value>协议版本||Protocol version</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.011" xml:space="preserve"><value>参数列表||Parameters</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.012" xml:space="preserve"><value>参数名||Parameter name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.013" xml:space="preserve"><value>参数数||Parameter count</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.014" xml:space="preserve"><value>发布路由||Published route</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.015" xml:space="preserve"><value>取消||Cancel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.016" xml:space="preserve"><value>可选||Optional</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.017" xml:space="preserve"><value>可选，保存为 AuthConfig JSON（字段 token）||Optional; save as AuthConfig JSON with a token field</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.018" xml:space="preserve"><value>名称||Name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.019" xml:space="preserve"><value>否||No</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.020" xml:space="preserve"><value>启用||Enabled</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.021" xml:space="preserve"><value>复制||Copy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.022" xml:space="preserve"><value>客户端连接配置||Client connection configuration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.023" xml:space="preserve"><value>工具名称||Tool name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.024" xml:space="preserve"><value>必填||Required</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.025" xml:space="preserve"><value>所属模块||Owning module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.026" xml:space="preserve"><value>描述||Description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.027" xml:space="preserve"><value>搜索名称 / 地址 / 描述||Search name / address / description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.028" xml:space="preserve"><value>搜索服务 / 模块 / 地址||Search service / module / address</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.029" xml:space="preserve"><value>操作||Actions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.030" xml:space="preserve"><value>放大查看||Zoom in</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.031" xml:space="preserve"><value>新增 Endpoint||Add endpoint</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.032" xml:space="preserve"><value>是||Yes</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.033" xml:space="preserve"><value>最近测试||Last tested</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.034" xml:space="preserve"><value>服务名称||Service name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.035" xml:space="preserve"><value>未测试||Not tested</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.036" xml:space="preserve"><value>未获取到工具列表。请检查端点地址、协议类型与鉴权信息后重试。||No tool list was returned. Check the endpoint, protocol, and authentication, then retry.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.037" xml:space="preserve"><value>标题||Title</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.038" xml:space="preserve"><value>测试||Test</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.039" xml:space="preserve"><value>测试当前配置连接||Test the current configuration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.040" xml:space="preserve"><value>用于唯一标识该 MCP 端点||Uniquely identifies this MCP endpoint</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.041" xml:space="preserve"><value>端点地址||Endpoint address</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.042" xml:space="preserve"><value>端点类型||Endpoint type</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.043" xml:space="preserve"><value>类型||Type</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.044" xml:space="preserve"><value>编辑||Edit</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.045" xml:space="preserve"><value>访问端点||Access endpoint</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.046" xml:space="preserve"><value>输入 Schema（JSON）||Input Schema (JSON)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.047" xml:space="preserve"><value>本站发布的 MCP（{0}）||MCP services published by this site ({0})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.048" xml:space="preserve"><value>暂无匹配的本站 MCP 服务||No matching MCP service published by this site</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.049" xml:space="preserve"><value>发现 {0} 个工具（Function）||Found {0} tools (Functions)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.050" xml:space="preserve"><value>连接测试 - {0}||Connection test - {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.051" xml:space="preserve"><value>共发现 {0} 个工具（Function）。点击左侧箭头展开查看参数与输入 Schema。||Found {0} tools (Functions). Select the arrow on the left to view parameters and input schemas.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.052" xml:space="preserve"><value>发布开关、工具和访问权限由所属模块管理。地址基于当前访问站点生成，不代表已允许匿名访问或公网可达。||Publishing, tools, and access permissions are managed by the owning module. The address is generated from the current site and does not imply anonymous access or public reachability.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.053" xml:space="preserve"><value>工具 {0}||Tools {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.001" xml:space="preserve"><value>Enabled only</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.002" xml:space="preserve"><value>These are MCP services mapped by this site runtime. They are read-only and are not client connection settings.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.003" xml:space="preserve"><value>For example 1.0 (optional)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.004" xml:space="preserve"><value>For example http://localhost:3001/mcp/sse</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.005" xml:space="preserve"><value>Save</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.006" xml:space="preserve"><value>Test before saving</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.007" xml:space="preserve"><value>Close</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.008" xml:space="preserve"><value>Delete</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.009" xml:space="preserve"><value>Refresh</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.010" xml:space="preserve"><value>Protocol version</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.011" xml:space="preserve"><value>Parameters</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.012" xml:space="preserve"><value>Parameter name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.013" xml:space="preserve"><value>Parameter count</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.014" xml:space="preserve"><value>Published route</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.015" xml:space="preserve"><value>Cancel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.016" xml:space="preserve"><value>Optional</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.017" xml:space="preserve"><value>Optional; save as AuthConfig JSON with a token field</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.018" xml:space="preserve"><value>Name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.019" xml:space="preserve"><value>No</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.020" xml:space="preserve"><value>Enabled</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.021" xml:space="preserve"><value>Copy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.022" xml:space="preserve"><value>Client connection configuration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.023" xml:space="preserve"><value>Tool name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.024" xml:space="preserve"><value>Required</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.025" xml:space="preserve"><value>Owning module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.026" xml:space="preserve"><value>Description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.027" xml:space="preserve"><value>Search name / address / description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.028" xml:space="preserve"><value>Search service / module / address</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.029" xml:space="preserve"><value>Actions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.030" xml:space="preserve"><value>Zoom in</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.031" xml:space="preserve"><value>Add endpoint</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.032" xml:space="preserve"><value>Yes</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.033" xml:space="preserve"><value>Last tested</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.034" xml:space="preserve"><value>Service name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.035" xml:space="preserve"><value>Not tested</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.036" xml:space="preserve"><value>No tool list was returned. Check the endpoint, protocol, and authentication, then retry.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.037" xml:space="preserve"><value>Title</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.038" xml:space="preserve"><value>Test</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.039" xml:space="preserve"><value>Test the current configuration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.040" xml:space="preserve"><value>Uniquely identifies this MCP endpoint</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.041" xml:space="preserve"><value>Endpoint address</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.042" xml:space="preserve"><value>Endpoint type</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.043" xml:space="preserve"><value>Type</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.044" xml:space="preserve"><value>Edit</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.045" xml:space="preserve"><value>Access endpoint</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.046" xml:space="preserve"><value>Input Schema (JSON)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.047" xml:space="preserve"><value>MCP services published by this site ({0})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.048" xml:space="preserve"><value>No matching MCP service published by this site</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.049" xml:space="preserve"><value>Found {0} tools (Functions)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.050" xml:space="preserve"><value>Connection test - {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.051" xml:space="preserve"><value>Found {0} tools (Functions). Select the arrow on the left to view parameters and input schemas.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.052" xml:space="preserve"><value>Publishing, tools, and access permissions are managed by the owning module. The address is generated from the current site and does not imply anonymous access or public reachability.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.053" xml:space="preserve"><value>Tools {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
 </root>

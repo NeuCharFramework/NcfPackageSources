@@ -55,220 +55,220 @@
     <value>Отправить</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>Модули расширения||Модули расширения</value>
+    <value>Extension Modules</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
-    <value>Управление модулями||Управление модулями</value>
+    <value>Module Management</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>Управление Weixin||Управление Weixin</value>
+    <value>Weixin Management</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>Центр управления официальным аккаунтом||Центр управления официальным аккаунтом</value>
+    <value>Official account control center</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>Число официальных аккаунтов||Число официальных аккаунтов</value>
+    <value>Official account count</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>Официальные аккаунты, уже внесённые в систему||Официальные аккаунты, уже внесённые в систему</value>
+    <value>Official accounts already in the system</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>Число запущенных аккаунтов||Число запущенных аккаунтов</value>
+    <value>Running account count</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>Число учётных записей, которые активны и подключены к серверу WeChat||Число учётных записей, которые активны и подключены к серверу WeChat</value>
+    <value>Number of accounts that are active and connected to the WeChat server</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>Всего пользователей WeChat||Всего пользователей WeChat</value>
+    <value>Total WeChat users</value>
   </data>
   <data name="Frontend.010" xml:space="preserve">
-    <value>Число пользователей, которые взаимодействовали на этой платформе или были автоматически загружены как подписчики||Число пользователей, которые взаимодействовали на этой платформе или были автоматически загружены как подписчики</value>
+    <value>Number of users who interacted on this platform or were fetched automatically as followers</value>
   </data>
   <data name="Frontend.011" xml:space="preserve">
-    <value>Новые пользователи за сегодня||Новые пользователи за сегодня</value>
+    <value>New users today</value>
   </data>
   <data name="Frontend.012" xml:space="preserve">
-    <value>Число пользователей, синхронизированных или добавленных на платформу сегодня||Число пользователей, синхронизированных или добавленных на платформу сегодня</value>
+    <value>Number of users synced or added to the platform today</value>
   </data>
   <data name="Frontend.013" xml:space="preserve">
-    <value>Просмотр пользователей||Просмотр пользователей</value>
+    <value>View users</value>
   </data>
   <data name="Frontend.014" xml:space="preserve">
-    <value>Просмотр групп||Просмотр групп</value>
+    <value>View groups</value>
   </data>
   <data name="Frontend.015" xml:space="preserve">
-    <value>Просмотр тегов||Просмотр тегов</value>
+    <value>View tags</value>
   </data>
   <data name="Frontend.016" xml:space="preserve">
-    <value>Диалог||Диалог</value>
+    <value>Conversation</value>
   </data>
   <data name="Frontend.017" xml:space="preserve">
-    <value>Изменить||Изменить</value>
+    <value>Edit</value>
   </data>
   <data name="Frontend.018" xml:space="preserve">
-    <value>Срок действия учётных данных AccessToken||Срок действия учётных данных AccessToken</value>
+    <value>AccessToken credential validity</value>
   </data>
   <data name="Frontend.019" xml:space="preserve">
-    <value>Состояние учётных данных AccessToken||Состояние учётных данных AccessToken</value>
+    <value>AccessToken credential status</value>
   </data>
   <data name="Frontend.020" xml:space="preserve">
-    <value>Управление официальными аккаунтами||Управление официальными аккаунтами</value>
+    <value>Official Account management</value>
   </data>
   <data name="Frontend.021" xml:space="preserve">
-    <value>Добавить||Добавить</value>
+    <value>Add</value>
   </data>
   <data name="Frontend.022" xml:space="preserve">
-    <value>Удалить||Удалить</value>
+    <value>Delete</value>
   </data>
   <data name="Frontend.023" xml:space="preserve">
-    <value>Имя||Имя</value>
+    <value>Name</value>
   </data>
   <data name="Frontend.024" xml:space="preserve">
-    <value>Примечания||Примечания</value>
+    <value>Notes</value>
   </data>
   <data name="Frontend.025" xml:space="preserve">
-    <value>Описание||Описание</value>
+    <value>Description</value>
   </data>
   <data name="Frontend.026" xml:space="preserve">
-    <value>Время добавления||Время добавления</value>
+    <value>Added time</value>
   </data>
   <data name="Frontend.027" xml:space="preserve">
-    <value>URL сообщения||URL сообщения</value>
+    <value>Message URL</value>
   </data>
   <data name="Frontend.028" xml:space="preserve">
-    <value>Открыть||Открыть</value>
+    <value>Open</value>
   </data>
   <data name="Frontend.029" xml:space="preserve">
-    <value>Действия||Действия</value>
+    <value>Actions</value>
   </data>
   <data name="Frontend.030" xml:space="preserve">
-    <value>Управление пользователями||Управление пользователями</value>
+    <value>User management</value>
   </data>
   <data name="Frontend.031" xml:space="preserve">
-    <value>Имя официального аккаунта||Имя официального аккаунта</value>
+    <value>Official account name</value>
   </data>
   <data name="Frontend.032" xml:space="preserve">
-    <value>Адрес сервера (URL), заданный в консоли администрирования WeChat||Адрес сервера (URL), заданный в консоли администрирования WeChat</value>
+    <value>Server address (URL) configured in the WeChat admin console</value>
   </data>
   <data name="Frontend.033" xml:space="preserve">
-    <value>[Ваш домен]||[Ваш домен]</value>
+    <value>[Your domain]</value>
   </data>
   <data name="Frontend.034" xml:space="preserve">
-    <value>[Ваш домен]||[Ваш домен]</value>
+    <value>[Your domain]</value>
   </data>
   <data name="Frontend.035" xml:space="preserve">
-    <value>Внимание: «имя официального аккаунта» должно совпадать с name в [MpMessageHandler(name)] у соответствующего MessageHandler||Внимание: «имя официального аккаунта» должно совпадать с name в [MpMessageHandler(name)] у соответствующего MessageHandler</value>
+    <value>Note: the "official account name" must match the name in [MpMessageHandler(name)] on the corresponding MessageHandler</value>
   </data>
   <data name="Frontend.036" xml:space="preserve">
-    <value>Отмена||Отмена</value>
+    <value>Cancel</value>
   </data>
   <data name="Frontend.037" xml:space="preserve">
-    <value>Подтвердить||Подтвердить</value>
+    <value>Confirm</value>
   </data>
   <data name="Frontend.038" xml:space="preserve">
-    <value>Введите имя официального аккаунта||Введите имя официального аккаунта</value>
+    <value>Enter official account name</value>
   </data>
   <data name="Frontend.039" xml:space="preserve">
-    <value>Введите AppId||Введите AppId</value>
+    <value>Enter AppId</value>
   </data>
   <data name="Frontend.040" xml:space="preserve">
-    <value>Введите AppSecret||Введите AppSecret</value>
+    <value>Enter AppSecret</value>
   </data>
   <data name="Frontend.041" xml:space="preserve">
-    <value>Введите Token||Введите Token</value>
+    <value>Enter Token</value>
   </data>
   <data name="Frontend.042" xml:space="preserve">
-    <value>Длина должна быть от 1 до 100||Длина должна быть от 1 до 100</value>
+    <value>Length must be between 1 and 100</value>
   </data>
   <data name="Frontend.043" xml:space="preserve">
-    <value>Длина должна быть от 1 до 500||Длина должна быть от 1 до 500</value>
+    <value>Length must be between 1 and 500</value>
   </data>
   <data name="Frontend.044" xml:space="preserve">
-    <value>Добавить официальный аккаунт||Добавить официальный аккаунт</value>
+    <value>Add Official Account</value>
   </data>
   <data name="Frontend.045" xml:space="preserve">
-    <value>Изменить официальный аккаунт||Изменить официальный аккаунт</value>
+    <value>Edit Official Account</value>
   </data>
   <data name="Frontend.046" xml:space="preserve">
-    <value>Официальный аккаунт добавлен||Официальный аккаунт добавлен</value>
+    <value>Official account added successfully</value>
   </data>
   <data name="Frontend.047" xml:space="preserve">
-    <value>Официальный аккаунт обновлён||Официальный аккаунт обновлён</value>
+    <value>Official account updated successfully</value>
   </data>
   <data name="Frontend.048" xml:space="preserve">
-    <value>Успешно||Успешно</value>
+    <value>Success</value>
   </data>
   <data name="Frontend.049" xml:space="preserve">
-    <value>Предупреждение||Предупреждение</value>
+    <value>Warning</value>
   </data>
   <data name="Frontend.050" xml:space="preserve">
-    <value>Выберите хотя бы один официальный аккаунт||Выберите хотя бы один официальный аккаунт</value>
+    <value>Select at least one official account</value>
   </data>
   <data name="Frontend.051" xml:space="preserve">
-    <value>Удалить все выбранные элементы?||Удалить все выбранные элементы?</value>
+    <value>Delete all selected items?</value>
   </data>
   <data name="Frontend.052" xml:space="preserve">
-    <value>Удалено элементов: {0}||Удалено элементов: {0}</value>
+    <value>Successfully deleted {0} items</value>
   </data>
   <data name="Frontend.053" xml:space="preserve">
-    <value>Добавить новых подписчиков||Добавить новых подписчиков</value>
+    <value>Add new followers</value>
   </data>
   <data name="Frontend.054" xml:space="preserve">
-    <value>Синхронизировать всех подписчиков||Синхронизировать всех подписчиков</value>
+    <value>Sync all followers</value>
   </data>
   <data name="Frontend.055" xml:space="preserve">
-    <value>Внимание: при большом числе пользователей это может занять очень много времени!||Внимание: при большом числе пользователей это может занять очень много времени!</value>
+    <value>Note: if there are many users, this may take a very long time!</value>
   </data>
   <data name="Frontend.056" xml:space="preserve">
-    <value>Псевдоним||Псевдоним</value>
+    <value>Nickname</value>
   </data>
   <data name="Frontend.057" xml:space="preserve">
-    <value>Аватар||Аватар</value>
+    <value>Avatar</value>
   </data>
   <data name="Frontend.058" xml:space="preserve">
-    <value>Пол||Пол</value>
+    <value>Gender</value>
   </data>
   <data name="Frontend.059" xml:space="preserve">
-    <value>Муж.||Муж.</value>
+    <value>Male</value>
   </data>
   <data name="Frontend.060" xml:space="preserve">
-    <value>Жен.||Жен.</value>
+    <value>Female</value>
   </data>
   <data name="Frontend.061" xml:space="preserve">
-    <value>Неизвестно||Неизвестно</value>
+    <value>Unknown</value>
   </data>
   <data name="Frontend.062" xml:space="preserve">
-    <value>Регион||Регион</value>
+    <value>Region</value>
   </data>
   <data name="Frontend.063" xml:space="preserve">
-    <value>Группа||Группа</value>
+    <value>Group</value>
   </data>
   <data name="Frontend.064" xml:space="preserve">
-    <value>Дата подписки||Дата подписки</value>
+    <value>Followed At</value>
   </data>
   <data name="Frontend.065" xml:space="preserve">
-    <value>Статус подписки||Статус подписки</value>
+    <value>Follow Status</value>
   </data>
   <data name="Frontend.066" xml:space="preserve">
-    <value>Подписан||Подписан</value>
+    <value>Following</value>
   </data>
   <data name="Frontend.067" xml:space="preserve">
-    <value>Не подписан||Не подписан</value>
+    <value>Not Following</value>
   </data>
   <data name="Frontend.068" xml:space="preserve">
-    <value>Источник подписки||Источник подписки</value>
+    <value>Follow Source</value>
   </data>
   <data name="Frontend.069" xml:space="preserve">
-    <value>Теги||Теги</value>
+    <value>Tags</value>
   </data>
   <data name="Frontend.070" xml:space="preserve">
-    <value>Нет||Нет</value>
+    <value>None</value>
   </data>
   <data name="Frontend.071" xml:space="preserve">
-    <value>Все пользователи||Все пользователи</value>
+    <value>All Users</value>
   </data>
   <data name="Frontend.072" xml:space="preserve">
-    <value>Пользователи {0}||Пользователи {0}</value>
+    <value>{0} Users</value>
   </data>
   <data name="User.AccountUsers" xml:space="preserve">
     <value>Пользователи {0}</value>
@@ -277,10 +277,10 @@
     <value>Все пользователи</value>
   </data>
   <data name="Frontend.073" xml:space="preserve">
-    <value>[Ваш домен]/WeixinMp/{0}||[Ваш домен]/WeixinMp/{0}</value>
+    <value>[Your domain]/WeixinMp/{0}</value>
   </data>
   <data name="Frontend.074" xml:space="preserve">
-    <value>[Ваш домен]/WeixinMp/{0}||[Ваш домен]/WeixinMp/{0}</value>
+    <value>[Your domain]/WeixinMp/{0}</value>
   </data>
   <data name="Public.ToggleNavigation" xml:space="preserve">
     <value>Переключить навигацию</value>
@@ -314,60 +314,60 @@
   </data>
 
 
-  <data name="Frontend.075" xml:space="preserve"><value>&amp;nbsp;个人微信 Bot||Personal WeChat Bot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.076" xml:space="preserve"><value>/bind 绑定码||/bind pairing code</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.077" xml:space="preserve"><value>AIModelId（可选）||AIModelId (optional)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.078" xml:space="preserve"><value>WorkflowId（可选）||WorkflowId (optional)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.079" xml:space="preserve"><value>iLink 账号||iLink account</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.080" xml:space="preserve"><value>token 只在服务端以 Data Protection 保护形式保存，页面不会回显。||The token is protected with Data Protection on the server and is never shown again.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.081" xml:space="preserve"><value>· 发送中||· Sending</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.082" xml:space="preserve"><value>· 失败||· Failed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.083" xml:space="preserve"><value>· 已提交||· Submitted</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.084" xml:space="preserve"><value>个人微信 Bot||Personal WeChat Bot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.085" xml:space="preserve"><value>例如：主管理员||For example: super administrator</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.086" xml:space="preserve"><value>例如：我的个人微信||For example: my personal WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.087" xml:space="preserve"><value>保存||Save</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.088" xml:space="preserve"><value>保存绑定配置||Save binding settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.089" xml:space="preserve"><value>允许 NeuBell||Allow NeuBell</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.090" xml:space="preserve"><value>允许 Workflow||Allow Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.091" xml:space="preserve"><value>全部消息||All messages</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.092" xml:space="preserve"><value>关闭||Close</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.093" xml:space="preserve"><value>刷新||Refresh</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.094" xml:space="preserve"><value>刷新状态||Refresh status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.095" xml:space="preserve"><value>功能||Features</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.096" xml:space="preserve"><value>发送||Send</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.097" xml:space="preserve"><value>取消||Cancel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.098" xml:space="preserve"><value>启用绑定||Enable binding</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.099" xml:space="preserve"><value>启用长轮询||Enable long polling</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.100" xml:space="preserve"><value>图片||Image</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.101" xml:space="preserve"><value>媒体文件尚未准备好。||The media file is not ready yet.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.102" xml:space="preserve"><value>尚未连接个人微信。||Personal WeChat is not connected yet.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.103" xml:space="preserve"><value>当前账号全部收发记录||All sent and received records for this account</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.104" xml:space="preserve"><value>当前账号尚未配置绑定码。||No binding code has been configured for this account.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.105" xml:space="preserve"><value>微信登录二维码||WeChat login QR code</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.106" xml:space="preserve"><value>打开链接||Open link</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.107" xml:space="preserve"><value>扫描二维码连接个人微信||Scan the QR code to connect Personal WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.108" xml:space="preserve"><value>扫码连接||Connect by scanning</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.109" xml:space="preserve"><value>文件||File</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.110" xml:space="preserve"><value>新建绑定配置||New binding configuration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.111" xml:space="preserve"><value>最近消息||Recent messages</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.112" xml:space="preserve"><value>最近连接||Recent connections</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.113" xml:space="preserve"><value>状态||Status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.114" xml:space="preserve"><value>状态：||Status:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.115" xml:space="preserve"><value>由上层 handler 使用，可留空||Used by the upstream handler; may be empty</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.116" xml:space="preserve"><value>留空表示保留现有 token||Leave empty to keep the existing token</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.117" xml:space="preserve"><value>绑定码||Binding code</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.118" xml:space="preserve"><value>绑定配置||Binding configuration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.119" xml:space="preserve"><value>语音文件（SILK / MP3）||Audio file (SILK / MP3)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.120" xml:space="preserve"><value>请使用微信扫描二维码，并在手机上确认登录。||Scan the QR code with WeChat and confirm the login on your phone.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.121" xml:space="preserve"><value>输入微信要求的验证代码后点击刷新状态||Enter the verification code requested by WeChat, then refresh the status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.122" xml:space="preserve"><value>输入消息，发送到当前微信会话||Enter a message to send to the current WeChat conversation</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.123" xml:space="preserve"><value>配置名称||Configuration name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.124" xml:space="preserve"><value>验证代码||Verification code</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.125" xml:space="preserve"><value>企业微信打卡||WeCom attendance</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.126" xml:space="preserve"><value>获取企业微信打卡记录||Retrieve WeCom attendance records</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.127" xml:space="preserve"><value>获取打卡记录||Get attendance records</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.128" xml:space="preserve"><value>按成员账号和时间范围获取企业微信打卡记录，单次最长 30 天。||Retrieve WeCom attendance records by member account and time range, up to 30 days per request.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.129" xml:space="preserve"><value>企业微信凭证有效，可以获取打卡记录。||The WeCom credential is valid and can retrieve attendance records.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.130" xml:space="preserve"><value>企业微信打卡连接器目前只提供获取打卡记录。||The WeCom attendance connector currently only provides attendance record retrieval.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.075" xml:space="preserve"><value>Personal WeChat Bot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.076" xml:space="preserve"><value>/bind pairing code</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.077" xml:space="preserve"><value>AIModelId (optional)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.078" xml:space="preserve"><value>WorkflowId (optional)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.079" xml:space="preserve"><value>iLink account</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.080" xml:space="preserve"><value>The token is protected with Data Protection on the server and is never shown again.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.081" xml:space="preserve"><value>· Sending</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.082" xml:space="preserve"><value>· Failed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.083" xml:space="preserve"><value>· Submitted</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.084" xml:space="preserve"><value>Personal WeChat Bot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.085" xml:space="preserve"><value>For example: super administrator</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.086" xml:space="preserve"><value>For example: my personal WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.087" xml:space="preserve"><value>Save</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.088" xml:space="preserve"><value>Save binding settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.089" xml:space="preserve"><value>Allow NeuBell</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.090" xml:space="preserve"><value>Allow Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.091" xml:space="preserve"><value>All messages</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.092" xml:space="preserve"><value>Close</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.093" xml:space="preserve"><value>Refresh</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.094" xml:space="preserve"><value>Refresh status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.095" xml:space="preserve"><value>Features</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.096" xml:space="preserve"><value>Send</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.097" xml:space="preserve"><value>Cancel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.098" xml:space="preserve"><value>Enable binding</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.099" xml:space="preserve"><value>Enable long polling</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.100" xml:space="preserve"><value>Image</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.101" xml:space="preserve"><value>The media file is not ready yet.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.102" xml:space="preserve"><value>Personal WeChat is not connected yet.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.103" xml:space="preserve"><value>All sent and received records for this account</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.104" xml:space="preserve"><value>No binding code has been configured for this account.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.105" xml:space="preserve"><value>WeChat login QR code</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.106" xml:space="preserve"><value>Open link</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.107" xml:space="preserve"><value>Scan the QR code to connect Personal WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.108" xml:space="preserve"><value>Connect by scanning</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.109" xml:space="preserve"><value>File</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.110" xml:space="preserve"><value>New binding configuration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.111" xml:space="preserve"><value>Recent messages</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.112" xml:space="preserve"><value>Recent connections</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.113" xml:space="preserve"><value>Status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.114" xml:space="preserve"><value>Status:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.115" xml:space="preserve"><value>Used by the upstream handler; may be empty</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.116" xml:space="preserve"><value>Leave empty to keep the existing token</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.117" xml:space="preserve"><value>Binding code</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.118" xml:space="preserve"><value>Binding configuration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.119" xml:space="preserve"><value>Audio file (SILK / MP3)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.120" xml:space="preserve"><value>Scan the QR code with WeChat and confirm the login on your phone.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.121" xml:space="preserve"><value>Enter the verification code requested by WeChat, then refresh the status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.122" xml:space="preserve"><value>Enter a message to send to the current WeChat conversation</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.123" xml:space="preserve"><value>Configuration name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.124" xml:space="preserve"><value>Verification code</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.125" xml:space="preserve"><value>WeCom attendance</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.126" xml:space="preserve"><value>Retrieve WeCom attendance records</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.127" xml:space="preserve"><value>Get attendance records</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.128" xml:space="preserve"><value>Retrieve WeCom attendance records by member account and time range, up to 30 days per request.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.129" xml:space="preserve"><value>The WeCom credential is valid and can retrieve attendance records.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.130" xml:space="preserve"><value>The WeCom attendance connector currently only provides attendance record retrieval.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
 </root>

@@ -10,29 +10,29 @@
   <data name="Function.Connectors.Invoke.Name" xml:space="preserve"><value>调用连接器</value></data>
   <data name="Function.Connectors.Invoke.Description" xml:space="preserve"><value>调用一个已启用的连接器动作。在 Workflow 中添加 Function 节点后，选择连接器和动作即可。</value></data>
 
-  <data name="Frontend.001" xml:space="preserve"><value>交给 AI 的动作||交给 AI 的动作</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.002" xml:space="preserve"><value>例如：总部企业微信||例如：总部企业微信</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.003" xml:space="preserve"><value>保存||保存</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.004" xml:space="preserve"><value>先配置账号和密钥，再决定哪些动作可以交给 AI。Chat 里可以临时收窄，Workflow 的 Function 节点可以直接调用，Agent 模板则决定每个智能体能使用哪些连接器。||先配置账号和密钥，再决定哪些动作可以交给 AI。Chat 里可以临时收窄，Workflow 的 Function 节点可以直接调用，Agent 模板则决定每个智能体能使用哪些连接器。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.005" xml:space="preserve"><value>删除||删除</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.006" xml:space="preserve"><value>取消||取消</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.007" xml:space="preserve"><value>可用类型||可用类型</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.008" xml:space="preserve"><value>名称||名称</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.009" xml:space="preserve"><value>外部工具连接器||外部工具连接器</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.010" xml:space="preserve"><value>密钥只保存在服务端。编辑时留空表示继续使用已保存的密钥。||密钥只保存在服务端。编辑时留空表示继续使用已保存的密钥。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.011" xml:space="preserve"><value>已配置||已配置</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.012" xml:space="preserve"><value>扩展模块||扩展模块</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.013" xml:space="preserve"><value>测试||测试</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.014" xml:space="preserve"><value>类型由已安装模块提供。企业微信打卡来自微信管理模块。||类型由已安装模块提供。企业微信打卡来自微信管理模块。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.015" xml:space="preserve"><value>编辑||编辑</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.016" xml:space="preserve"><value>说明||说明</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.017" xml:space="preserve"><value>还没有模块注册连接器。安装并启用微信管理后，这里会出现企业微信打卡。||还没有模块注册连接器。安装并启用微信管理后，这里会出现企业微信打卡。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.018" xml:space="preserve"><value>还没有配置。选择上面的类型，填入企业微信 CorpId 和应用 Secret。||还没有配置。选择上面的类型，填入企业微信 CorpId 和应用 Secret。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.019" xml:space="preserve"><value>这个账号给哪个团队或场景使用||这个账号给哪个团队或场景使用</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.020" xml:space="preserve"><value>连接器||连接器</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.021" xml:space="preserve"><value>配置||配置</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.022" xml:space="preserve"><value>配置这个连接器||配置这个连接器</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.023" xml:space="preserve"><value>{0} 个动作||{0} 个动作</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.024" xml:space="preserve"><value>启用后可在 Chat、Workflow 和 Agent 中选择||启用后可在 Chat、Workflow 和 Agent 中选择</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
-  <data name="Frontend.025" xml:space="preserve"><value>请选择||请选择</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.001" xml:space="preserve"><value>交给 AI 的动作</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.002" xml:space="preserve"><value>例如：总部企业微信</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.003" xml:space="preserve"><value>保存</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.004" xml:space="preserve"><value>先配置账号和密钥，再决定哪些动作可以交给 AI。Chat 里可以临时收窄，Workflow 的 Function 节点可以直接调用，Agent 模板则决定每个智能体能使用哪些连接器。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.005" xml:space="preserve"><value>删除</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.006" xml:space="preserve"><value>取消</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.007" xml:space="preserve"><value>可用类型</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.008" xml:space="preserve"><value>名称</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.009" xml:space="preserve"><value>外部工具连接器</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.010" xml:space="preserve"><value>密钥只保存在服务端。编辑时留空表示继续使用已保存的密钥。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.011" xml:space="preserve"><value>已配置</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.012" xml:space="preserve"><value>扩展模块</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.013" xml:space="preserve"><value>测试</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.014" xml:space="preserve"><value>类型由已安装模块提供。企业微信打卡来自微信管理模块。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.015" xml:space="preserve"><value>编辑</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.016" xml:space="preserve"><value>说明</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.017" xml:space="preserve"><value>还没有模块注册连接器。安装并启用微信管理后，这里会出现企业微信打卡。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.018" xml:space="preserve"><value>还没有配置。选择上面的类型，填入企业微信 CorpId 和应用 Secret。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.019" xml:space="preserve"><value>这个账号给哪个团队或场景使用</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.020" xml:space="preserve"><value>连接器</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.021" xml:space="preserve"><value>配置</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.022" xml:space="preserve"><value>配置这个连接器</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.023" xml:space="preserve"><value>{0} 个动作</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.024" xml:space="preserve"><value>启用后可在 Chat、Workflow 和 Agent 中选择</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.025" xml:space="preserve"><value>请选择</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
 </root>
