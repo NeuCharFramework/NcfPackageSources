@@ -199,4 +199,20 @@
   <data name="Frontend.093" xml:space="preserve"><value>Dockerの準備ができていません。ドキュメントに従って手動インストールとイメージの事前取得を完了してください。</value></data>
   <data name="Frontend.094" xml:space="preserve"><value>NCFを実行している同じマシンにDocker（または互換CLI）をインストールして起動してください。モジュールはDockerを自動インストールしません。</value></data>
   <data name="Frontend.095" xml:space="preserve"><value>内部レジストリを使用する場合は、ホストのappsettings.jsonにあるSenparcXncfSandbox:Imagesでプレフィックスまたは上書きを設定してください。詳細はドキュメントを参照してください。</value></data>
+  <data name="Frontend.096" xml:space="preserve"><value>回収待ち</value></data>
+  <data name="Frontend.097" xml:space="preserve"><value>サンドボックスセッションの更新に失敗しました。サービスの状態を確認してください。</value></data>
+  <data name="Frontend.098" xml:space="preserve"><value>エイリアスを更新しました。</value></data>
+  <data name="Frontend.099" xml:space="preserve"><value>エイリアスを削除しました。</value></data>
+  <data name="Frontend.100" xml:space="preserve"><value>エイリアスの更新に失敗しました。セッションの状態を確認してください。</value></data>
+  <data name="Frontend.101" xml:space="preserve"><value>永久保持に設定しました。</value></data>
+  <data name="Frontend.102" xml:space="preserve"><value>TTLを更新しました。</value></data>
+  <data name="Frontend.103" xml:space="preserve"><value>TTLの更新に失敗しました。セッションの状態とTTL設定を確認してください。</value></data>
+  <data name="Frontend.104" xml:space="preserve"><value>破棄すると対応する実行環境を停止して削除します。続行しますか？</value></data>
+  <data name="Frontend.105" xml:space="preserve"><value>サンドボックスを破棄</value></data>
+  <data name="Frontend.106" xml:space="preserve"><value>サンドボックスセッションを破棄しました。</value></data>
+  <data name="Frontend.107" xml:space="preserve"><value>サンドボックスセッションの破棄に失敗しました。サービスログを確認してください。</value></data>
+  <data name="Frontend.108" xml:space="preserve"><value>この操作ではセッション記録を完全に削除し、元に戻せません。実行環境が破棄済みであることを確認して続行しますか？</value></data>
+  <data name="Frontend.109" xml:space="preserve"><value>セッション記録を削除</value></data>
+  <data name="Frontend.110" xml:space="preserve"><value>サンドボックスセッション記録を削除しました。</value></data>
+  <data name="Frontend.111" xml:space="preserve"><value>セッション記録の削除に失敗しました。先に実行環境を破棄するか、サービスログを確認してください。</value></data>
 </root>

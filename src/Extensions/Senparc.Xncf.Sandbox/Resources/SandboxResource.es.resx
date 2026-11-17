@@ -199,4 +199,20 @@
   <data name="Frontend.093" xml:space="preserve"><value>Docker no está listo: completa la instalación manual y descarga previamente las imágenes según la documentación.</value></data>
   <data name="Frontend.094" xml:space="preserve"><value>Instala y arranca Docker (o una CLI compatible) en la misma máquina que ejecuta NCF. El módulo no instala Docker automáticamente.</value></data>
   <data name="Frontend.095" xml:space="preserve"><value>Para un registro interno, configura el prefijo o las sobrescrituras en SenparcXncfSandbox:Images dentro del appsettings.json del host; consulta la documentación.</value></data>
+  <data name="Frontend.096" xml:space="preserve"><value>Esperando la limpieza</value></data>
+  <data name="Frontend.097" xml:space="preserve"><value>No se pudieron actualizar las sesiones Sandbox. Comprueba el estado del servicio.</value></data>
+  <data name="Frontend.098" xml:space="preserve"><value>Alias actualizado.</value></data>
+  <data name="Frontend.099" xml:space="preserve"><value>Alias eliminado.</value></data>
+  <data name="Frontend.100" xml:space="preserve"><value>No se pudo actualizar el alias. Comprueba el estado de la sesión.</value></data>
+  <data name="Frontend.101" xml:space="preserve"><value>Configurado para conservarse permanentemente.</value></data>
+  <data name="Frontend.102" xml:space="preserve"><value>TTL actualizado.</value></data>
+  <data name="Frontend.103" xml:space="preserve"><value>No se pudo actualizar el TTL. Comprueba el estado de la sesión y la configuración del TTL.</value></data>
+  <data name="Frontend.104" xml:space="preserve"><value>Al destruirlo se detendrá y eliminará el entorno de ejecución correspondiente. ¿Continuar?</value></data>
+  <data name="Frontend.105" xml:space="preserve"><value>Destruir sandbox</value></data>
+  <data name="Frontend.106" xml:space="preserve"><value>Sesión Sandbox destruida.</value></data>
+  <data name="Frontend.107" xml:space="preserve"><value>No se pudo destruir la sesión Sandbox. Comprueba los registros del servicio.</value></data>
+  <data name="Frontend.108" xml:space="preserve"><value>Esta operación eliminará permanentemente el registro de la sesión y no se puede deshacer. Confirma que el entorno de ejecución ya se ha destruido. ¿Continuar?</value></data>
+  <data name="Frontend.109" xml:space="preserve"><value>Eliminar registro de sesión</value></data>
+  <data name="Frontend.110" xml:space="preserve"><value>Registro de sesión Sandbox eliminado.</value></data>
+  <data name="Frontend.111" xml:space="preserve"><value>No se pudo eliminar el registro de la sesión. Destruye primero el entorno de ejecución o comprueba los registros del servicio.</value></data>
 </root>

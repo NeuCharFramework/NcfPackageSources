@@ -199,4 +199,20 @@
   <data name="Frontend.093" xml:space="preserve"><value>Docker не готов: выполните ручную установку и предварительно загрузите образы согласно документации.</value></data>
   <data name="Frontend.094" xml:space="preserve"><value>Установите и запустите Docker (или совместимый CLI) на той же машине, где работает NCF. Модуль не устанавливает Docker автоматически.</value></data>
   <data name="Frontend.095" xml:space="preserve"><value>Для внутреннего реестра настройте префикс или переопределения в SenparcXncfSandbox:Images файла appsettings.json на хосте; см. документацию.</value></data>
+  <data name="Frontend.096" xml:space="preserve"><value>Ожидание очистки</value></data>
+  <data name="Frontend.097" xml:space="preserve"><value>Не удалось обновить сессии Sandbox. Проверьте состояние службы.</value></data>
+  <data name="Frontend.098" xml:space="preserve"><value>Псевдоним обновлён.</value></data>
+  <data name="Frontend.099" xml:space="preserve"><value>Псевдоним очищен.</value></data>
+  <data name="Frontend.100" xml:space="preserve"><value>Не удалось обновить псевдоним. Проверьте состояние сессии.</value></data>
+  <data name="Frontend.101" xml:space="preserve"><value>Установлено постоянное хранение.</value></data>
+  <data name="Frontend.102" xml:space="preserve"><value>TTL обновлён.</value></data>
+  <data name="Frontend.103" xml:space="preserve"><value>Не удалось обновить TTL. Проверьте состояние сессии и настройку TTL.</value></data>
+  <data name="Frontend.104" xml:space="preserve"><value>После уничтожения среда выполнения будет остановлена и удалена. Продолжить?</value></data>
+  <data name="Frontend.105" xml:space="preserve"><value>Уничтожить песочницу</value></data>
+  <data name="Frontend.106" xml:space="preserve"><value>Сессия Sandbox уничтожена.</value></data>
+  <data name="Frontend.107" xml:space="preserve"><value>Не удалось уничтожить сессию Sandbox. Проверьте журналы службы.</value></data>
+  <data name="Frontend.108" xml:space="preserve"><value>Эта операция навсегда удалит запись сессии, отменить её нельзя. Убедитесь, что среда выполнения уничтожена. Продолжить?</value></data>
+  <data name="Frontend.109" xml:space="preserve"><value>Удалить запись сессии</value></data>
+  <data name="Frontend.110" xml:space="preserve"><value>Запись сессии Sandbox удалена.</value></data>
+  <data name="Frontend.111" xml:space="preserve"><value>Не удалось удалить запись сессии. Сначала уничтожьте среду выполнения или проверьте журналы службы.</value></data>
 </root>

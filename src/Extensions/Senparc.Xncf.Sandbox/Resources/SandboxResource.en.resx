@@ -199,4 +199,20 @@
   <data name="Frontend.093" xml:space="preserve"><value>Docker is not ready: complete the manual installation and pre-pull the images according to the documentation.</value></data>
   <data name="Frontend.094" xml:space="preserve"><value>Install and start Docker (or a compatible CLI) on the same machine running NCF. The module does not install Docker automatically.</value></data>
   <data name="Frontend.095" xml:space="preserve"><value>For an internal registry, configure the prefix or overrides in SenparcXncfSandbox:Images in the host appsettings.json; see the documentation.</value></data>
+  <data name="Frontend.096" xml:space="preserve"><value>Waiting for cleanup</value></data>
+  <data name="Frontend.097" xml:space="preserve"><value>Failed to refresh sandbox sessions. Check the service status.</value></data>
+  <data name="Frontend.098" xml:space="preserve"><value>Alias updated.</value></data>
+  <data name="Frontend.099" xml:space="preserve"><value>Alias cleared.</value></data>
+  <data name="Frontend.100" xml:space="preserve"><value>Failed to update the alias. Check the session status.</value></data>
+  <data name="Frontend.101" xml:space="preserve"><value>Set to keep permanently.</value></data>
+  <data name="Frontend.102" xml:space="preserve"><value>TTL updated.</value></data>
+  <data name="Frontend.103" xml:space="preserve"><value>Failed to update TTL. Check the session status and TTL setting.</value></data>
+  <data name="Frontend.104" xml:space="preserve"><value>The environment will be stopped and deleted after destruction. Continue?</value></data>
+  <data name="Frontend.105" xml:space="preserve"><value>Destroy sandbox</value></data>
+  <data name="Frontend.106" xml:space="preserve"><value>Sandbox session destroyed.</value></data>
+  <data name="Frontend.107" xml:space="preserve"><value>Failed to destroy the sandbox session. Check the service logs.</value></data>
+  <data name="Frontend.108" xml:space="preserve"><value>This permanently deletes the session record and cannot be undone. Confirm that the runtime environment has been destroyed. Continue?</value></data>
+  <data name="Frontend.109" xml:space="preserve"><value>Delete session record</value></data>
+  <data name="Frontend.110" xml:space="preserve"><value>Sandbox session record deleted.</value></data>
+  <data name="Frontend.111" xml:space="preserve"><value>Failed to delete the session record. Destroy the runtime environment first or check the service logs.</value></data>
 </root>

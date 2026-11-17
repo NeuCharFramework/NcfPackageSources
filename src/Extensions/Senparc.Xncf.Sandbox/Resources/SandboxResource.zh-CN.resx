@@ -199,4 +199,20 @@
   <data name="Frontend.093" xml:space="preserve"><value>Docker 尚未就绪：请先按文档完成手动安装与镜像预拉。</value></data>
   <data name="Frontend.094" xml:space="preserve"><value>请在运行 NCF 的同一台机器上安装并启动 Docker（或兼容 CLI）。模块不会自动安装 Docker。</value></data>
   <data name="Frontend.095" xml:space="preserve"><value>如需内网仓库，请在宿主 appsettings.json 的 SenparcXncfSandbox:Images 中配置前缀或覆盖项（说明见文档）。</value></data>
+  <data name="Frontend.096" xml:space="preserve"><value>等待回收</value></data>
+  <data name="Frontend.097" xml:space="preserve"><value>刷新沙箱会话失败，请检查服务状态。</value></data>
+  <data name="Frontend.098" xml:space="preserve"><value>别名已更新。</value></data>
+  <data name="Frontend.099" xml:space="preserve"><value>别名已清除。</value></data>
+  <data name="Frontend.100" xml:space="preserve"><value>更新别名失败，请检查会话状态。</value></data>
+  <data name="Frontend.101" xml:space="preserve"><value>已设为永久保持。</value></data>
+  <data name="Frontend.102" xml:space="preserve"><value>TTL 已更新。</value></data>
+  <data name="Frontend.103" xml:space="preserve"><value>更新 TTL 失败，请检查会话状态和 TTL 设置。</value></data>
+  <data name="Frontend.104" xml:space="preserve"><value>销毁后将停止并删除对应运行环境，是否继续？</value></data>
+  <data name="Frontend.105" xml:space="preserve"><value>销毁沙箱</value></data>
+  <data name="Frontend.106" xml:space="preserve"><value>沙箱会话已销毁。</value></data>
+  <data name="Frontend.107" xml:space="preserve"><value>销毁沙箱会话失败，请检查服务日志。</value></data>
+  <data name="Frontend.108" xml:space="preserve"><value>该操作将永久删除会话记录，且无法恢复。请确认运行环境已经销毁，是否继续？</value></data>
+  <data name="Frontend.109" xml:space="preserve"><value>删除会话记录</value></data>
+  <data name="Frontend.110" xml:space="preserve"><value>沙箱会话记录已删除。</value></data>
+  <data name="Frontend.111" xml:space="preserve"><value>删除会话记录失败，请先销毁运行环境或检查服务日志。</value></data>
 </root>

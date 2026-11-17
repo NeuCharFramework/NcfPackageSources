@@ -307,7 +307,7 @@
                         session: null,
                         alias: ''
                     },
-                    // 须 camelCase：与 axios/?handler=State 及 el-table prop 一致（首屏默认 PascalCase 会导致列空白）
+                    // Keep camelCase to match axios/?handler=State and el-table props.
                     sessions: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Sessions, jsonCamel))
                 };
             },
@@ -431,7 +431,7 @@
 
                     const remaining = expiresAt - this.nowTick;
                     if (remaining <= 0) {
-                        return '等待回收';
+                        return ncfST('Frontend.096');
                     }
 
                     const totalSeconds = Math.floor(remaining / 1000);
@@ -485,7 +485,7 @@
                     try {
                         await this.refreshState();
                     } catch (error) {
-                        this.$message.error('刷新沙箱会话失败，请检查服务状态。');
+                        this.$message.error(ncfST('Frontend.097'));
                     } finally {
                         this.loading = false;
                     }
@@ -522,10 +522,10 @@
                     try {
                         await axios.post('?handler=UpdateAlias', form);
                         dialog.visible = false;
-                        this.$message.success((dialog.alias || '').trim() ? '别名已更新。' : '别名已清除。');
+                        this.$message.success((dialog.alias || '').trim() ? ncfST('Frontend.098') : ncfST('Frontend.099'));
                         await this.reload();
                     } catch (error) {
-                        this.$message.error('更新别名失败，请检查会话状态。');
+                        this.$message.error(ncfST('Frontend.100'));
                     } finally {
                         dialog.saving = false;
                     }
@@ -558,10 +558,10 @@
                     try {
                         await axios.post('?handler=UpdateTtl', form);
                         dialog.visible = false;
-                        this.$message.success(dialog.keepAlive ? '已设为永久保持。' : 'TTL 已更新。');
+                        this.$message.success(dialog.keepAlive ? ncfST('Frontend.101') : ncfST('Frontend.102'));
                         await this.reload();
                     } catch (error) {
-                        this.$message.error('更新 TTL 失败，请检查会话状态和 TTL 设置。');
+                        this.$message.error(ncfST('Frontend.103'));
                     } finally {
                         dialog.saving = false;
                     }
@@ -573,9 +573,9 @@
 
                     if (this.$confirm) {
                         try {
-                            await this.$confirm('销毁后将停止并删除对应运行环境，是否继续？', '销毁沙箱', {
-                                confirmButtonText: '销毁',
-                                cancelButtonText: '取消',
+                            await this.$confirm(ncfST('Frontend.104'), ncfST('Frontend.105'), {
+                                confirmButtonText: ncfST('Frontend.079'),
+                                cancelButtonText: ncfST('Frontend.046'),
                                 type: 'warning'
                             });
                         } catch {
@@ -589,10 +589,10 @@
                     this.loading = true;
                     try {
                         await axios.post('?handler=Destroy', form);
-                        this.$message.success('沙箱会话已销毁。');
+                        this.$message.success(ncfST('Frontend.106'));
                         await this.reload();
                     } catch (error) {
-                        this.$message.error('销毁沙箱会话失败，请检查服务日志。');
+                        this.$message.error(ncfST('Frontend.107'));
                     } finally {
                         this.loading = false;
                     }
@@ -604,9 +604,9 @@
 
                     if (this.$confirm) {
                         try {
-                            await this.$confirm('该操作将永久删除会话记录，且无法恢复。请确认运行环境已经销毁，是否继续？', '删除会话记录', {
-                                confirmButtonText: '永久删除',
-                                cancelButtonText: '取消',
+                            await this.$confirm(ncfST('Frontend.108'), ncfST('Frontend.109'), {
+                                confirmButtonText: ncfST('Frontend.043'),
+                                cancelButtonText: ncfST('Frontend.046'),
                                 type: 'warning'
                             });
                         } catch {
@@ -620,10 +620,10 @@
                     this.loading = true;
                     try {
                         await axios.post('?handler=Delete', form);
-                        this.$message.success('沙箱会话记录已删除。');
+                        this.$message.success(ncfST('Frontend.110'));
                         await this.reload();
                     } catch (error) {
-                        this.$message.error('删除会话记录失败，请先销毁运行环境或检查服务日志。');
+                        this.$message.error(ncfST('Frontend.111'));
                     } finally {
                         this.loading = false;
                     }

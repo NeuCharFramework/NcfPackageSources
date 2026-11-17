@@ -199,4 +199,20 @@
   <data name="Frontend.093" xml:space="preserve"><value>Docker n’est pas prêt : terminez l’installation manuelle et pré-téléchargez les images conformément à la documentation.</value></data>
   <data name="Frontend.094" xml:space="preserve"><value>Installez et démarrez Docker (ou une CLI compatible) sur la même machine que NCF. Le module n’installe pas Docker automatiquement.</value></data>
   <data name="Frontend.095" xml:space="preserve"><value>Pour un registre interne, configurez le préfixe ou les remplacements dans SenparcXncfSandbox:Images du fichier appsettings.json de l’hôte ; consultez la documentation.</value></data>
+  <data name="Frontend.096" xml:space="preserve"><value>En attente du nettoyage</value></data>
+  <data name="Frontend.097" xml:space="preserve"><value>Impossible d’actualiser les sessions Sandbox. Vérifiez l’état du service.</value></data>
+  <data name="Frontend.098" xml:space="preserve"><value>Alias mis à jour.</value></data>
+  <data name="Frontend.099" xml:space="preserve"><value>Alias effacé.</value></data>
+  <data name="Frontend.100" xml:space="preserve"><value>Impossible de mettre à jour l’alias. Vérifiez l’état de la session.</value></data>
+  <data name="Frontend.101" xml:space="preserve"><value>Défini pour être conservé définitivement.</value></data>
+  <data name="Frontend.102" xml:space="preserve"><value>TTL mis à jour.</value></data>
+  <data name="Frontend.103" xml:space="preserve"><value>Impossible de mettre à jour le TTL. Vérifiez l’état de la session et le réglage du TTL.</value></data>
+  <data name="Frontend.104" xml:space="preserve"><value>La destruction arrêtera et supprimera l’environnement d’exécution correspondant. Continuer ?</value></data>
+  <data name="Frontend.105" xml:space="preserve"><value>Détruire le sandbox</value></data>
+  <data name="Frontend.106" xml:space="preserve"><value>Session Sandbox détruite.</value></data>
+  <data name="Frontend.107" xml:space="preserve"><value>Impossible de détruire la session Sandbox. Vérifiez les journaux du service.</value></data>
+  <data name="Frontend.108" xml:space="preserve"><value>Cette opération supprimera définitivement l’enregistrement de session et est irréversible. Confirmez que l’environnement d’exécution est détruit. Continuer ?</value></data>
+  <data name="Frontend.109" xml:space="preserve"><value>Supprimer l’enregistrement de session</value></data>
+  <data name="Frontend.110" xml:space="preserve"><value>Enregistrement de session Sandbox supprimé.</value></data>
+  <data name="Frontend.111" xml:space="preserve"><value>Impossible de supprimer l’enregistrement de session. Détruisez d’abord l’environnement d’exécution ou vérifiez les journaux du service.</value></data>
 </root>
