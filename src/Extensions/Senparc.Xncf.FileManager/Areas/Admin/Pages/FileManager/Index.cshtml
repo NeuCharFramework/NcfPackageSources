@@ -1926,7 +1926,7 @@
                     size="small"
                     icon="el-icon-delete"
                     :loading="!!recycleBin.emptying"
-                    @@click.stop.prevent="emptyRecycleBin">一键清空</el-button>
+                    @@click.stop.prevent="emptyRecycleBin">{{ ncfST('Frontend.064') }}</el-button>
             </div>
             <div class="file-manager-recycle-table-wrap">
                 <el-table
@@ -1938,11 +1938,11 @@
                     <template slot="empty">
                         <div class="file-manager-recycle-empty">
                             <i class="el-icon-document"></i>
-                            <strong>暂无文档</strong>
+                            <strong>{{ ncfST('Frontend.133') }}</strong>
                         </div>
                     </template>
                     <el-table-column type="selection" width="48"></el-table-column>
-                    <el-table-column label="文件名称" min-width="280">
+                    <el-table-column :label="ncfST('Frontend.122')" min-width="280">
                         <template slot-scope="scope">
                             <div class="file-manager-favorite-name-cell">
                                 <span class="file-manager-favorite-name" :title="scope.row.fileName">{{ scope.row.fileName }}</span>
@@ -1950,13 +1950,13 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="updatedBy" label="更新者" width="120" show-overflow-tooltip>
+                    <el-table-column prop="updatedBy" :label="ncfST('Frontend.136')" width="120" show-overflow-tooltip>
                         <template slot-scope="scope">{{ scope.row.updatedBy || updatedByLabel(scope.row) }}</template>
                     </el-table-column>
-                    <el-table-column prop="fileSize" label="大小" width="110">
+                    <el-table-column prop="fileSize" :label="ncfST('Frontend.014')" width="110">
                         <template slot-scope="scope">{{ formatFileSize(scope.row.fileSize) }}</template>
                     </el-table-column>
-                    <el-table-column prop="deletedAt" label="删除时间" width="180">
+                    <el-table-column prop="deletedAt" :label="ncfST('Frontend.086')" width="180">
                         <template slot-scope="scope">{{ dateFormatter(scope.row.deletedAt) }}</template>
                     </el-table-column>
                 </el-table>
@@ -1980,7 +1980,7 @@
                     <el-input
                         v-model="favoriteList.keyword"
                         size="small"
-                        placeholder="搜索文件/文件夹"
+                        :placeholder="ncfST('Frontend.115')"
                         prefix-icon="el-icon-search"
                         clearable
                         @@input="searchFavorites"
@@ -1998,17 +1998,17 @@
                     <template slot="empty">
                         <div class="file-manager-favorite-empty">
                             <i class="el-icon-document"></i>
-                            <strong>暂无文档</strong>
+                            <strong>{{ ncfST('Frontend.133') }}</strong>
                         </div>
                     </template>
-                    <el-table-column label="文件名称" min-width="280">
+                    <el-table-column :label="ncfST('Frontend.122')" min-width="280">
                         <template slot-scope="scope">
                             <div class="file-manager-favorite-name-cell">
                                 <div class="file-manager-file-name-main">
                                     <span class="file-manager-favorite-name" :title="scope.row.fileName">{{ scope.row.fileName }}</span>
                                     <i
                                         class="file-manager-favorite-star is-on el-icon-star-on"
-                                        title="取消收藏"
+                                        :title="ncfST('Frontend.090')"
                                         @@click.stop="toggleFavorite(scope.row)">
                                     </i>
                                 </div>
@@ -2016,13 +2016,13 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="updatedBy" label="更新者" width="120" show-overflow-tooltip>
+                    <el-table-column prop="updatedBy" :label="ncfST('Frontend.136')" width="120" show-overflow-tooltip>
                         <template slot-scope="scope">{{ scope.row.updatedBy || updatedByLabel(scope.row) }}</template>
                     </el-table-column>
-                    <el-table-column prop="fileSize" label="大小" width="110">
+                    <el-table-column prop="fileSize" :label="ncfST('Frontend.014')" width="110">
                         <template slot-scope="scope">{{ formatFileSize(scope.row.fileSize) }}</template>
                     </el-table-column>
-                    <el-table-column label="更新时间" width="180">
+                    <el-table-column :label="ncfST('Frontend.135')" width="180">
                         <template slot-scope="scope">{{ dateFormatter(scope.row.updatedAt || scope.row.uploadTime) }}</template>
                     </el-table-column>
                 </el-table>
@@ -2046,7 +2046,7 @@
                     <el-input
                         v-model="homePage.keyword"
                         size="small"
-                        placeholder="搜索文件/文件夹"
+                        :placeholder="ncfST('Frontend.115')"
                         prefix-icon="el-icon-search"
                         clearable
                         @@input="searchHomeRecent"
@@ -2056,19 +2056,19 @@
                 <div class="file-manager-home-actions">
                     <el-dropdown trigger="click" @@command="handleCreateCommand">
                         <el-button size="small">
-                            新建<i class="el-icon-arrow-down el-icon--right"></i>
+                            {{ ncfST('Frontend.021') }}<i class="el-icon-arrow-down el-icon--right"></i>
                         </el-button>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item command="folder">新建文件夹</el-dropdown-item>
+                            <el-dropdown-item command="folder">{{ ncfST('Frontend.185') }}</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                     <el-dropdown trigger="click" @@command="handleUploadCommand">
                         <el-button type="primary" size="small">
-                            上传<i class="el-icon-arrow-down el-icon--right"></i>
+                            {{ ncfST('Frontend.016') }}<i class="el-icon-arrow-down el-icon--right"></i>
                         </el-button>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item command="files">上传文件</el-dropdown-item>
-                            <el-dropdown-item command="folder">上传文件夹</el-dropdown-item>
+                            <el-dropdown-item command="files">{{ ncfST('Frontend.002') }}</el-dropdown-item>
+                            <el-dropdown-item command="folder">{{ ncfST('Frontend.066') }}</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                 </div>
@@ -2076,22 +2076,22 @@
 
             <div class="file-manager-home-banner" v-if="!(homePage.quickAccess && homePage.quickAccess.length)">
                 <div class="file-manager-home-banner-text">
-                    <h3>灵活使用快速访问，畅享高效工作!</h3>
-                    <p>可将常用的文件和文件夹添加至「快速访问」，方便查找和使用。点击列表“更多”即可手动添加或移除快速访问</p>
+                    <h3>{{ ncfST('Frontend.147') }}</h3>
+                    <p>{{ ncfST('Frontend.091') }}</p>
                 </div>
                 <div class="file-manager-home-banner-art" aria-hidden="true"></div>
             </div>
 
             <div class="file-manager-home-quick-access" v-else>
-                <div class="file-manager-home-quick-title">快速访问</div>
+                <div class="file-manager-home-quick-title">{{ ncfST('Frontend.107') }}</div>
                 <div class="file-manager-home-quick-list">
-                    <div class="file-manager-home-quick-card" v-for="item in homePage.quickAccess" :key="item.id" @@dblclick.native="previewFile(item)" title="双击预览">
+                    <div class="file-manager-home-quick-card" v-for="item in homePage.quickAccess" :key="item.id" @@dblclick.native="previewFile(item)" :title="ncfST('Frontend.089')">
                         <span class="file-manager-home-quick-icon"><i class="el-icon-document"></i></span>
                         <span class="file-manager-home-quick-name" :title="item.fileName">{{ item.fileName }}</span>
                         <el-dropdown trigger="click" @@command="handleQuickAccessCommand($event, item)">
                             <el-button type="text" class="file-manager-home-quick-more" icon="el-icon-more"></el-button>
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="remove">从快速访问移除</el-dropdown-item>
+                                <el-dropdown-item command="remove">{{ ncfST('Frontend.071') }}</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </div>
@@ -2100,8 +2100,8 @@
 
             <div class="file-manager-home-recent">
                 <div class="file-manager-home-recent-title">
-                    <span>最近访问</span>
-                    <i class="el-icon-sort" title="排序"></i>
+                    <span>{{ ncfST('Frontend.139') }}</span>
+                    <i class="el-icon-sort" :title="ncfST('Frontend.113')"></i>
                 </div>
                 <div class="file-manager-home-table-wrap">
                     <el-table
@@ -2113,18 +2113,18 @@
                         <template slot="empty">
                             <div class="file-manager-home-empty">
                                 <i class="el-icon-document"></i>
-                                <strong>暂无文档</strong>
+                                <strong>{{ ncfST('Frontend.133') }}</strong>
                             </div>
                         </template>
-                        <el-table-column prop="fileName" label="文件名称" min-width="200" show-overflow-tooltip sortable></el-table-column>
-                        <el-table-column prop="updatedBy" label="更新者" width="120" show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="fileSize" label="大小" width="110">
+                        <el-table-column prop="fileName" :label="ncfST('Frontend.122')" min-width="200" show-overflow-tooltip sortable></el-table-column>
+                        <el-table-column prop="updatedBy" :label="ncfST('Frontend.136')" width="120" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="fileSize" :label="ncfST('Frontend.014')" width="110">
                             <template slot-scope="scope">{{ formatFileSize(scope.row.fileSize) }}</template>
                         </el-table-column>
-                        <el-table-column prop="updatedAt" label="更新时间" width="170">
+                        <el-table-column prop="updatedAt" :label="ncfST('Frontend.135')" width="170">
                             <template slot-scope="scope">{{ dateFormatter(scope.row.updatedAt) }}</template>
                         </el-table-column>
-                        <el-table-column prop="accessedAt" label="访问时间" width="170">
+                        <el-table-column prop="accessedAt" :label="ncfST('Frontend.158')" width="170">
                             <template slot-scope="scope">{{ dateFormatter(scope.row.accessedAt) }}</template>
                         </el-table-column>
                     </el-table>
