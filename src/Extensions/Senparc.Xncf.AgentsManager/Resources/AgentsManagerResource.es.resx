@@ -937,64 +937,64 @@
     <value>{0} segundos</value>
   </data>
   <data name="Frontend.261" xml:space="preserve">
-    <value>Administrar modelos</value>
+    <value>Gestionar modelos</value>
   </data>
   <data name="Frontend.262" xml:space="preserve">
-    <value>ID del agente</value>
+    <value>Endpoint MCP</value>
   </data>
   <data name="Frontend.263" xml:space="preserve">
-    <value>Mensaje del sistema</value>
-  </data>
-  <data name="Frontend.264" xml:space="preserve">
-    <value>Ninguno</value>
-  </data>
-  <data name="Frontend.265" xml:space="preserve">
-    <value>Llamada de función</value>
-  </data>
-  <data name="Frontend.266" xml:space="preserve">
-    <value>MCP Endpoint</value>
-  </data>
-  <data name="Frontend.267" xml:space="preserve">
-    <value>Nombre del Endpoint (por ejemplo: mcp-server-NCF-7)</value>
-  </data>
-  <data name="Frontend.268" xml:space="preserve">
-    <value>URL del Endpoint (por ejemplo: http://localhost:5000/mcp/sse)</value>
-  </data>
-  <data name="Frontend.269" xml:space="preserve">
     <value>Lista de herramientas MCP</value>
   </data>
+  <data name="Frontend.264" xml:space="preserve">
+    <value>P superior:</value>
+  </data>
+  <data name="Frontend.265" xml:space="preserve">
+    <value>Mostrar todas las herramientas</value>
+  </data>
+  <data name="Frontend.266" xml:space="preserve">
+    <value>A2A</value>
+  </data>
+  <data name="Frontend.267" xml:space="preserve">
+    <value>A2A Endpoint</value>
+  </data>
+  <data name="Frontend.268" xml:space="preserve">
+    <value>Sin autenticación</value>
+  </data>
+  <data name="Frontend.269" xml:space="preserve">
+    <value>Conectado</value>
+  </data>
   <data name="Frontend.270" xml:space="preserve">
-    <value>Top P：</value>
+    <value>Top P:</value>
   </data>
   <data name="Frontend.271" xml:space="preserve">
-    <value>Número máximo de Token:</value>
-  </data>
-  <data name="Frontend.272" xml:space="preserve">
-    <value>Penalización de presencia:</value>
-  </data>
-  <data name="Frontend.273" xml:space="preserve">
     <value>Temperatura:</value>
   </data>
+  <data name="Frontend.272" xml:space="preserve">
+    <value>Límite de tokens:</value>
+  </data>
+  <data name="Frontend.273" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
   <data name="Frontend.274" xml:space="preserve">
-    <value>Penalización de frecuencia:</value>
+    <value>Cancelar</value>
   </data>
   <data name="Frontend.275" xml:space="preserve">
-    <value>Secuencia de parada:</value>
+    <value>Nombre de acceso público</value>
   </data>
   <data name="Frontend.276" xml:space="preserve">
-    <value>No se encontró un AI Model de tipo Chat disponible. La base de datos tiene {0} modelos, pero ninguno es de tipo Chat. Configure primero al menos un Chat Model en el Módulo AIKernel.</value>
+    <value>Dirección URL pública</value>
   </data>
   <data name="Frontend.277" xml:space="preserve">
-    <value>Error al cargar: {0}</value>
+    <value>Descripción pública</value>
   </data>
   <data name="Frontend.278" xml:space="preserve">
-    <value>Seleccione un AI Model válido</value>
+    <value>Identificador público</value>
   </data>
   <data name="Frontend.279" xml:space="preserve">
-    <value>No se encontró un AI Model con ID {0}</value>
+    <value>Compatibilidad de plugins</value>
   </data>
   <data name="Frontend.280" xml:space="preserve">
-    <value>Model '{0}' no es de tipo Chat. Seleccione un Model de tipo Chat.</value>
+    <value>Aprobación obligatoria compatible</value>
   </data>
   <data name="Frontend.281" xml:space="preserve">
     <value>Inicialización completada correctamente</value>
