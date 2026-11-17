@@ -442,4 +442,9 @@
   <data name="Frontend.193" xml:space="preserve"><value>Los artefactos de ajuste fino son siempre privados. Solo están disponibles para tareas de entrenamiento, administradores y endpoints de descarga autorizados; no se genera ninguna URL pública.</value></data>
   <data name="Frontend.194" xml:space="preserve"><value>Los recursos estáticos del sitio son privados de forma predeterminada. Tras publicarlos, se genera una URL /assets/ con huella SHA-256. No se aceptan HTML, SVG, JavaScript ni archivos comprimidos para evitar la inyección de scripts del mismo origen.</value></data>
   <data name="Frontend.195" xml:space="preserve"><value>Los archivos fuente de la base de conocimientos deben ser textos extraíbles de forma segura o archivos Office Open XML. No generan URL públicas y no se pueden publicar aquí.</value></data>
+  <data name="Frontend.206" xml:space="preserve"><value>Documentos</value></data>
+  <data name="Frontend.207" xml:space="preserve"><value>Imágenes</value></data>
+  <data name="Frontend.208" xml:space="preserve"><value>Vídeos</value></data>
+  <data name="Frontend.209" xml:space="preserve"><value>Audio</value></data>
+  <data name="Frontend.210" xml:space="preserve"><value>Otros</value></data>
 </root>

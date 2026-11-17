@@ -442,4 +442,9 @@
   <data name="Frontend.193" xml:space="preserve"><value>ファインチューニング成果物は常に非公開です。トレーニングタスク、管理者、許可されたダウンロードエンドポイントのみが利用でき、公開URLは生成されません。</value></data>
   <data name="Frontend.194" xml:space="preserve"><value>サイトの静的リソースは既定で非公開です。公開するとSHA-256フィンガープリント付きの/assets/ URLが生成されます。同一オリジンのスクリプトインジェクションを防ぐため、HTML、SVG、JavaScript、圧縮ファイルは受け付けません。</value></data>
   <data name="Frontend.195" xml:space="preserve"><value>ナレッジベースのソースファイルは、安全に抽出できるテキストまたはOffice Open XMLファイルである必要があります。公開URLは生成されず、ここから公開することもできません。</value></data>
+  <data name="Frontend.206" xml:space="preserve"><value>ドキュメント</value></data>
+  <data name="Frontend.207" xml:space="preserve"><value>画像</value></data>
+  <data name="Frontend.208" xml:space="preserve"><value>動画</value></data>
+  <data name="Frontend.209" xml:space="preserve"><value>音声</value></data>
+  <data name="Frontend.210" xml:space="preserve"><value>その他</value></data>
 </root>

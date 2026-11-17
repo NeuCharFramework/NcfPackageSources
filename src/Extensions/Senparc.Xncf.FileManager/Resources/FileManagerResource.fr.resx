@@ -442,4 +442,9 @@
   <data name="Frontend.193" xml:space="preserve"><value>Les artefacts de réglage fin sont toujours privés. Ils sont disponibles uniquement pour les tâches d'entraînement, les administrateurs et les endpoints de téléchargement autorisés ; aucune URL publique n'est générée.</value></data>
   <data name="Frontend.194" xml:space="preserve"><value>Les ressources statiques du site sont privées par défaut. Après publication, une URL /assets/ avec empreinte SHA-256 est générée. HTML, SVG, JavaScript et archives sont refusés pour prévenir l'injection de scripts de même origine.</value></data>
   <data name="Frontend.195" xml:space="preserve"><value>Les fichiers source de la base de connaissances doivent être du texte extractible en toute sécurité ou des fichiers Office Open XML. Ils ne génèrent pas d'URL publiques et ne peuvent pas être publiés ici.</value></data>
+  <data name="Frontend.206" xml:space="preserve"><value>Documents</value></data>
+  <data name="Frontend.207" xml:space="preserve"><value>Images</value></data>
+  <data name="Frontend.208" xml:space="preserve"><value>Vidéos</value></data>
+  <data name="Frontend.209" xml:space="preserve"><value>Audio</value></data>
+  <data name="Frontend.210" xml:space="preserve"><value>Autres</value></data>
 </root>

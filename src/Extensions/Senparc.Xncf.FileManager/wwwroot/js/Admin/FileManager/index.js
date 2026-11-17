@@ -111,18 +111,18 @@
                     sizeTotalLabel: '0B',
                     countTotalLabel: '0',
                     sizeSlices: [
-                        { name: '文档', value: 0, color: '#95de64' },
-                        { name: '图片', value: 0, color: '#597ef7' },
-                        { name: '视频', value: 0, color: '#ffd666' },
-                        { name: '音频', value: 0, color: '#ff9c6e' },
-                        { name: '其他', value: 0, color: '#91d5ff' }
+                        { name: fileManagerText('Frontend.206', 'Documents'), value: 0, color: '#95de64' },
+                        { name: fileManagerText('Frontend.207', 'Images'), value: 0, color: '#597ef7' },
+                        { name: fileManagerText('Frontend.208', 'Videos'), value: 0, color: '#ffd666' },
+                        { name: fileManagerText('Frontend.209', 'Audio'), value: 0, color: '#ff9c6e' },
+                        { name: fileManagerText('Frontend.210', 'Other'), value: 0, color: '#91d5ff' }
                     ],
                     countSlices: [
-                        { name: '文档', value: 0, color: '#95de64' },
-                        { name: '图片', value: 0, color: '#597ef7' },
-                        { name: '视频', value: 0, color: '#ffd666' },
-                        { name: '音频', value: 0, color: '#ff9c6e' },
-                        { name: '其他', value: 0, color: '#91d5ff' }
+                        { name: fileManagerText('Frontend.206', 'Documents'), value: 0, color: '#95de64' },
+                        { name: fileManagerText('Frontend.207', 'Images'), value: 0, color: '#597ef7' },
+                        { name: fileManagerText('Frontend.208', 'Videos'), value: 0, color: '#ffd666' },
+                        { name: fileManagerText('Frontend.209', 'Audio'), value: 0, color: '#ff9c6e' },
+                        { name: fileManagerText('Frontend.210', 'Other'), value: 0, color: '#91d5ff' }
                     ]
                 },
                 _dashboardCharts: null,
