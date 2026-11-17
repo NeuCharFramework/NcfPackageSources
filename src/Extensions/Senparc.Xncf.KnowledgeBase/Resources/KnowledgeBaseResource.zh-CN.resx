@@ -721,4 +721,9 @@
   <data name="Frontend.283" xml:space="preserve"><value>召回测试完成，请核对来源与内容。</value></data>
   <data name="Frontend.284" xml:space="preserve"><value>测试完成，但没有返回匹配片段。</value></data>
   <data name="Frontend.285" xml:space="preserve"><value>召回未完成</value></data>
+  <data name="Frontend.286" xml:space="preserve"><value>当前没有已选择的资料</value></data>
+  <data name="Frontend.287" xml:space="preserve"><value>仅取消当前知识库的待保存关联，不会删除文件。确认继续吗？</value></data>
+  <data name="Frontend.288" xml:space="preserve"><value>清空选择</value></data>
+  <data name="Frontend.289" xml:space="preserve"><value>确认关闭？</value></data>
+  <data name="Frontend.290" xml:space="preserve"><value>外部数据采集需要单独配置抓取、权限与清洗策略，本版本不会伪造保存成功。</value></data>
 </root>

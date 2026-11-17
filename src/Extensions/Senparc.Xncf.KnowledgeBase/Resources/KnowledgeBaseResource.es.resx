@@ -725,4 +725,9 @@
   <data name="Frontend.283" xml:space="preserve"><value>Prueba de recuperación completada. Comprueba las fuentes y el contenido.</value></data>
   <data name="Frontend.284" xml:space="preserve"><value>La prueba terminó, pero no devolvió fragmentos coincidentes.</value></data>
   <data name="Frontend.285" xml:space="preserve"><value>La recuperación no se completó</value></data>
+  <data name="Frontend.286" xml:space="preserve"><value>No hay materiales seleccionados</value></data>
+  <data name="Frontend.287" xml:space="preserve"><value>Esto solo cancela la asociación sin guardar de la base actual; los archivos no se eliminarán. ¿Continuar?</value></data>
+  <data name="Frontend.288" xml:space="preserve"><value>Limpiar selección</value></data>
+  <data name="Frontend.289" xml:space="preserve"><value>¿Cerrar sin guardar?</value></data>
+  <data name="Frontend.290" xml:space="preserve"><value>La recopilación externa requiere configurar por separado el rastreo, los permisos y la limpieza; esta versión no simulará un guardado correcto.</value></data>
 </root>

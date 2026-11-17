@@ -725,4 +725,9 @@
   <data name="Frontend.283" xml:space="preserve"><value>Recall test completed. Check the sources and content.</value></data>
   <data name="Frontend.284" xml:space="preserve"><value>Test completed, but no matching passages were returned.</value></data>
   <data name="Frontend.285" xml:space="preserve"><value>Recall did not complete</value></data>
+  <data name="Frontend.286" xml:space="preserve"><value>No materials are selected</value></data>
+  <data name="Frontend.287" xml:space="preserve"><value>This only cancels the unsaved association for the current knowledge base; files will not be deleted. Continue?</value></data>
+  <data name="Frontend.288" xml:space="preserve"><value>Clear selection</value></data>
+  <data name="Frontend.289" xml:space="preserve"><value>Close without saving?</value></data>
+  <data name="Frontend.290" xml:space="preserve"><value>External collection requires separate crawler, permission and cleaning configuration; this version will not fake a successful save.</value></data>
 </root>

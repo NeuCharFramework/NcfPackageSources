@@ -725,4 +725,9 @@
   <data name="Frontend.283" xml:space="preserve"><value>検索テストが完了しました。ソースと内容を確認してください。</value></data>
   <data name="Frontend.284" xml:space="preserve"><value>テストは完了しましたが、一致する文章が返されませんでした。</value></data>
   <data name="Frontend.285" xml:space="preserve"><value>検索が完了しませんでした</value></data>
+  <data name="Frontend.286" xml:space="preserve"><value>選択された資料はありません</value></data>
+  <data name="Frontend.287" xml:space="preserve"><value>現在のナレッジベースの未保存の関連付けだけを取り消します。ファイルは削除されません。続行しますか？</value></data>
+  <data name="Frontend.288" xml:space="preserve"><value>選択をクリア</value></data>
+  <data name="Frontend.289" xml:space="preserve"><value>保存せずに閉じますか？</value></data>
+  <data name="Frontend.290" xml:space="preserve"><value>外部データ収集には、取得、権限、クリーンアップの個別設定が必要です。このバージョンでは保存成功を偽装しません。</value></data>
 </root>

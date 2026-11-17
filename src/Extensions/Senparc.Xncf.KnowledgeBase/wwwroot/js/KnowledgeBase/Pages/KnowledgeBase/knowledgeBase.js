@@ -965,7 +965,7 @@ var app = new Vue({
                 } else {
                     that.$notify({
                         title: ncfST('Frontend.158'),
-                        message: '外部数据采集需要单独配置抓取、权限与清洗策略，本版本不会伪造保存成功。',
+                        message: ncfST('Frontend.290'),
                         type: 'warning',
                         duration: 4000
                     });
@@ -1121,11 +1121,11 @@ var app = new Vue({
         },
         clearConfigFileSelection() {
             if (!(this.groupForm.files || []).length) {
-                this.$message.info('当前没有已选择的资料')
+                this.$message.info(ncfST('Frontend.286'))
                 return
             }
-            this.$confirm('仅取消当前知识库的待保存关联，不会删除文件。确认继续吗？', '清空选择', {
-                confirmButtonText: '清空', cancelButtonText: '取消', type: 'warning'
+            this.$confirm(ncfST('Frontend.287'), ncfST('Frontend.288'), {
+                confirmButtonText: ncfST('Frontend.228'), cancelButtonText: ncfST('Frontend.097'), type: 'warning'
             }).then(() => {
                 this.groupForm.files = []
                 this.$nextTick(() => this.$refs.groupAgentTable?.clearSelection())
@@ -1188,15 +1188,15 @@ var app = new Vue({
         handleEmbeddingBtn(btnType, item) {
             const that = this;
             if (btnType === 'embedding') {
-                this.$confirm(`确认对知识库 "${item.name}" 进行向量化处理吗？`, '向量化确认', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
+                this.$confirm(`确认对知识库 "${item.name}" 进行向量化处理吗？`, ncfST('Frontend.159'), {
+                    confirmButtonText: ncfST('Frontend.007'),
+                    cancelButtonText: ncfST('Frontend.097'),
                     type: 'warning'
                 }).then(() => {
                     that.embeddingProgressPercent = 0;
                     that.embeddingProgressStatus = '';
                     that.embeddingProgressText = ncfST('Frontend.134');
-                    that.embeddingTaskName = item && item.name ? item.name : ('知识库-' + (item && item.id ? item.id : ''));
+                    that.embeddingTaskName = item && item.name ? item.name : (ncfST('Frontend.234') + '-' + (item && item.id ? item.id : ''));
                     that.embeddingDoneCount = 0;
                     that.embeddingTotalCount = 1;
                     that.embeddingPanelCollapsed = false;
@@ -1307,7 +1307,7 @@ var app = new Vue({
         //Legacy comment translated to English.
         handleElVisibleClose(btnType) {
             // drawerAgent dialogGroupAgent drawerGroup drawerGroupStart
-            this.$confirm('确认关闭？')
+            this.$confirm(ncfST('Frontend.289'))
                 .then(_ => {
                     let refName = '', formName = ''
                     // group

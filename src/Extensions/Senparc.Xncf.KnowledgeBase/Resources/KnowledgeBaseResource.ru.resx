@@ -725,4 +725,9 @@
   <data name="Frontend.283" xml:space="preserve"><value>Тест поиска завершён. Проверьте источники и содержимое.</value></data>
   <data name="Frontend.284" xml:space="preserve"><value>Тест завершён, но совпадающие фрагменты не возвращены.</value></data>
   <data name="Frontend.285" xml:space="preserve"><value>Поиск не завершён</value></data>
+  <data name="Frontend.286" xml:space="preserve"><value>Материалы не выбраны</value></data>
+  <data name="Frontend.287" xml:space="preserve"><value>Будет отменена только несохранённая связь текущей базы; файлы не удаляются. Продолжить?</value></data>
+  <data name="Frontend.288" xml:space="preserve"><value>Очистить выбор</value></data>
+  <data name="Frontend.289" xml:space="preserve"><value>Закрыть без сохранения?</value></data>
+  <data name="Frontend.290" xml:space="preserve"><value>Для внешнего сбора требуется отдельная настройка обхода, разрешений и очистки; эта версия не будет имитировать успешное сохранение.</value></data>
 </root>

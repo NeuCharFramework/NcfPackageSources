@@ -725,4 +725,9 @@
   <data name="Frontend.283" xml:space="preserve"><value>Test de récupération terminé. Vérifiez les sources et le contenu.</value></data>
   <data name="Frontend.284" xml:space="preserve"><value>Test terminé, mais aucun passage correspondant n’a été renvoyé.</value></data>
   <data name="Frontend.285" xml:space="preserve"><value>La récupération n’est pas terminée</value></data>
+  <data name="Frontend.286" xml:space="preserve"><value>Aucun document sélectionné</value></data>
+  <data name="Frontend.287" xml:space="preserve"><value>Cette action annule uniquement l’association non enregistrée de la base actuelle ; les fichiers ne seront pas supprimés. Continuer ?</value></data>
+  <data name="Frontend.288" xml:space="preserve"><value>Effacer la sélection</value></data>
+  <data name="Frontend.289" xml:space="preserve"><value>Fermer sans enregistrer ?</value></data>
+  <data name="Frontend.290" xml:space="preserve"><value>La collecte externe nécessite une configuration distincte du crawl, des autorisations et du nettoyage ; cette version ne simulera pas un enregistrement réussi.</value></data>
 </root>
