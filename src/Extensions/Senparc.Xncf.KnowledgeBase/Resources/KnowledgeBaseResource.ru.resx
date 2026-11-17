@@ -630,36 +630,36 @@
   <data name="Frontend.188" xml:space="preserve"><value>Отключено (по умолчанию)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.189" xml:space="preserve"><value>Откройте слева «Тест поиска», выберите эту базу знаний и введите реалистичный вопрос, чтобы проверить источники и сходство.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.190" xml:space="preserve"><value>Размер фрагмента / перекрытие</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.191" xml:space="preserve"><value>Chunking strategy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.192" xml:space="preserve"><value>Refresh</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.193" xml:space="preserve"><value>Run a test</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.194" xml:space="preserve"><value>Clear selection</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.195" xml:space="preserve"><value>Retrieved fragment details</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.196" xml:space="preserve"><value>Available materials</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.197" xml:space="preserve"><value>Vectorization status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.198" xml:space="preserve"><value>Vector database</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.199" xml:space="preserve"><value>Fixed length (default)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.200" xml:space="preserve"><value>Choose Configuration in the list to associate text or upload/select material files, then confirm the association.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.201" xml:space="preserve"><value>Characters · overlap</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.202" xml:space="preserve"><value>Done</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.203" xml:space="preserve"><value>Chat model</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.204" xml:space="preserve"><value>Enter a complete question a real user might ask instead of a single keyword.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.205" xml:space="preserve"><value>Vectorized</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.206" xml:space="preserve"><value>Selected materials:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.207" xml:space="preserve"><value>Start test</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.208" xml:space="preserve"><value>No persistent vector store is available. Configure Redis or Qdrant in AIKernel first; Memory cannot be used for knowledge bases.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.209" xml:space="preserve"><value>Open source</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.210" xml:space="preserve"><value>Search by file name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.211" xml:space="preserve"><value>By paragraph</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.212" xml:space="preserve"><value>Tip: changing material associations invalidates built vectors; be sure to vectorize again.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.213" xml:space="preserve"><value>Search and select a vectorized knowledge base</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.214" xml:space="preserve"><value>Search knowledge-base name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.215" xml:space="preserve"><value>New knowledge base</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.216" xml:space="preserve"><value>Getting started: create a knowledge base and configure Embedding and a vector store → associate materials in Configuration → choose Vectorize → verify results in Recall Test.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.217" xml:space="preserve"><value>No knowledge bases yet</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.218" xml:space="preserve"><value>More</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.219" xml:space="preserve"><value>Highest similarity</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.220" xml:space="preserve"><value>Not vectorized</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.191" xml:space="preserve"><value>Стратегия разбиения</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.192" xml:space="preserve"><value>Обновить</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.193" xml:space="preserve"><value>Запустить тест</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.194" xml:space="preserve"><value>Очистить выбор</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.195" xml:space="preserve"><value>Сведения о найденном фрагменте</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.196" xml:space="preserve"><value>Доступные материалы</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.197" xml:space="preserve"><value>Состояние векторизации</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.198" xml:space="preserve"><value>Векторная база данных</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.199" xml:space="preserve"><value>Фиксированная длина (по умолчанию)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.200" xml:space="preserve"><value>Выберите «Конфигурация» в списке, чтобы связать текст или загрузить/выбрать файлы материалов, затем подтвердите связь.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.201" xml:space="preserve"><value>Символы · перекрытие</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.202" xml:space="preserve"><value>Готово</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.203" xml:space="preserve"><value>Чат-модель</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.204" xml:space="preserve"><value>Введите полный вопрос, который мог бы задать реальный пользователь, а не одно ключевое слово.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.205" xml:space="preserve"><value>Векторизовано</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.206" xml:space="preserve"><value>Выбранные материалы:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.207" xml:space="preserve"><value>Начать тест</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.208" xml:space="preserve"><value>Нет доступного постоянного векторного хранилища. Сначала настройте Redis или Qdrant в AIKernel; Memory нельзя использовать для баз знаний.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.209" xml:space="preserve"><value>Открытый исходный код</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.210" xml:space="preserve"><value>Поиск по имени файла</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.211" xml:space="preserve"><value>По абзацам</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.212" xml:space="preserve"><value>Совет: изменение связей материалов делает созданные векторы недействительными; обязательно выполните векторизацию снова.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.213" xml:space="preserve"><value>Найти и выбрать векторизованную базу знаний</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.214" xml:space="preserve"><value>Поиск имени базы знаний</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.215" xml:space="preserve"><value>Новая база знаний</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.216" xml:space="preserve"><value>Начало работы: создайте базу знаний и настройте Embedding и векторное хранилище → свяжите материалы в «Конфигурации» → выберите «Векторизовать» → проверьте результаты в «Тесте поиска».</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.217" xml:space="preserve"><value>Баз знаний пока нет</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.218" xml:space="preserve"><value>Ещё</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.219" xml:space="preserve"><value>Наибольшее сходство</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.220" xml:space="preserve"><value>Не векторизовано</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.221" xml:space="preserve"><value>Тестовые записи на этой странице</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.222" xml:space="preserve"><value>Показать полный текст</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.223" xml:space="preserve"><value>Поиск и разбиение на фрагменты</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
