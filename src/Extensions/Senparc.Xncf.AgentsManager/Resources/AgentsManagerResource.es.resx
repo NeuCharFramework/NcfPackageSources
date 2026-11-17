@@ -886,13 +886,13 @@
     <value>Prueba de conexión correcta</value>
   </data>
   <data name="Frontend.244" xml:space="preserve">
-    <value>Prueba de conexión fallida:</value>
-  </data>
-  <data name="Frontend.245" xml:space="preserve">
     <value>Error en la prueba de conexión:</value>
   </data>
+  <data name="Frontend.245" xml:space="preserve">
+    <value>Error de la prueba de conexión:</value>
+  </data>
   <data name="Frontend.246" xml:space="preserve">
-    <value>Error al cargar los tipos de complemento</value>
+    <value>Error al cargar los tipos de plugins</value>
   </data>
   <data name="Frontend.247" xml:space="preserve">
     <value>El nombre y la URL no pueden estar vacíos</value>
