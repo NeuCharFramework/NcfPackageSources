@@ -146,7 +146,7 @@
   <data name="Frontend.042" xml:space="preserve"><value>Destroy runtime</value></data>
   <data name="Frontend.043" xml:space="preserve"><value>Permanently delete session record</value></data>
   <data name="Frontend.044" xml:space="preserve"><value>Session alias</value></data>
-  <data name="Frontend.045" xml:space="preserve"><value>Leave blank to clear the alias</value></data>
+  <data name="Frontend.045" xml:space="preserve"><value>Leave empty to clear the alias</value></data>
   <data name="Frontend.046" xml:space="preserve"><value>Cancel</value></data>
   <data name="Frontend.047" xml:space="preserve"><value>Save</value></data>
   <data name="Frontend.048" xml:space="preserve"><value>Edit TTL</value></data>
@@ -157,10 +157,10 @@
   <data name="Frontend.053" xml:space="preserve"><value>Available</value></data>
   <data name="Frontend.054" xml:space="preserve"><value>Unavailable</value></data>
   <data name="Frontend.055" xml:space="preserve"><value>Image registry prefix</value></data>
-  <data name="Frontend.056" xml:space="preserve"><value>Not configured (public default images are used; see the documentation)</value></data>
+  <data name="Frontend.056" xml:space="preserve"><value>Not configured (public default images are used; see documentation)</value></data>
   <data name="Frontend.057" xml:space="preserve"><value>Manual configuration checklist (summary)</value></data>
   <data name="Frontend.058" xml:space="preserve"><value>Open Sandbox panel</value></data>
-  <data name="Frontend.059" xml:space="preserve"><value>Documentation: </value></data>
+  <data name="Frontend.059" xml:space="preserve"><value>Documentation:</value></data>
 
 
   <data name="Frontend.060" xml:space="preserve"><value>Check Docker availability, image prefixes, and deployment notes on the environment setup page.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>

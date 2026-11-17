@@ -129,40 +129,40 @@
   <data name="Frontend.023" xml:space="preserve"><value>Уничтожить Sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.024" xml:space="preserve"><value>Среда выполнения</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.025" xml:space="preserve"><value>Жизненный цикл</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.026" xml:space="preserve"><value>Automatic TTL cleanup</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.027" xml:space="preserve"><value>Check environment</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.028" xml:space="preserve"><value>Sandbox sessions</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.029" xml:space="preserve"><value>Template</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.030" xml:space="preserve"><value>Alias</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.031" xml:space="preserve"><value>Runtime</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.032" xml:space="preserve"><value>Status</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.033" xml:space="preserve"><value>Port</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.034" xml:space="preserve"><value>Additional ports</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.035" xml:space="preserve"><value>Access</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.036" xml:space="preserve"><value>Open interactive session</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.037" xml:space="preserve"><value>Open</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.038" xml:space="preserve"><value>Actions</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.039" xml:space="preserve"><value>Edit alias</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.040" xml:space="preserve"><value>Set alias</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.041" xml:space="preserve"><value>Extend or edit TTL</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.042" xml:space="preserve"><value>Destroy runtime</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.043" xml:space="preserve"><value>Permanently delete session record</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.044" xml:space="preserve"><value>Session alias</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.045" xml:space="preserve"><value>Leave blank to clear the alias</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.046" xml:space="preserve"><value>Cancel</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.047" xml:space="preserve"><value>Save</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.048" xml:space="preserve"><value>Edit TTL</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.049" xml:space="preserve"><value>Scheduled cleanup</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.050" xml:space="preserve"><value>Keep forever</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.051" xml:space="preserve"><value>Local check</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.052" xml:space="preserve"><value>Check again</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.053" xml:space="preserve"><value>Available</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.054" xml:space="preserve"><value>Unavailable</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.055" xml:space="preserve"><value>Image registry prefix</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.056" xml:space="preserve"><value>Not configured (public default images are used; see the documentation)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.057" xml:space="preserve"><value>Manual configuration checklist (summary)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.058" xml:space="preserve"><value>Open Sandbox panel</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.059" xml:space="preserve"><value>Documentation: </value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.026" xml:space="preserve"><value>Автоматическая очистка TTL</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.027" xml:space="preserve"><value>Проверить среду</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.028" xml:space="preserve"><value>Сессии Sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.029" xml:space="preserve"><value>Шаблон</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.030" xml:space="preserve"><value>Псевдоним</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.031" xml:space="preserve"><value>Среда выполнения</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.032" xml:space="preserve"><value>Состояние</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.033" xml:space="preserve"><value>Порт</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.034" xml:space="preserve"><value>Дополнительные порты</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.035" xml:space="preserve"><value>Доступ</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.036" xml:space="preserve"><value>Открыть интерактивную сессию</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.037" xml:space="preserve"><value>Открыть</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.038" xml:space="preserve"><value>Действия</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.039" xml:space="preserve"><value>Изменить псевдоним</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.040" xml:space="preserve"><value>Задать псевдоним</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.041" xml:space="preserve"><value>Продлить или изменить TTL</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.042" xml:space="preserve"><value>Уничтожить среду выполнения</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.043" xml:space="preserve"><value>Безвозвратно удалить запись сессии</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.044" xml:space="preserve"><value>Псевдоним сессии</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.045" xml:space="preserve"><value>Оставьте пустым, чтобы удалить псевдоним</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.046" xml:space="preserve"><value>Отмена</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.047" xml:space="preserve"><value>Сохранить</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.048" xml:space="preserve"><value>Изменить TTL</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.049" xml:space="preserve"><value>Плановая очистка</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.050" xml:space="preserve"><value>Хранить бессрочно</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.051" xml:space="preserve"><value>Локальная проверка</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.052" xml:space="preserve"><value>Проверить снова</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.053" xml:space="preserve"><value>Доступно</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.054" xml:space="preserve"><value>Недоступно</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.055" xml:space="preserve"><value>Префикс реестра образов</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.056" xml:space="preserve"><value>Не настроено (используются общедоступные образы по умолчанию; см. документацию)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.057" xml:space="preserve"><value>Контрольный список ручной настройки (кратко)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.058" xml:space="preserve"><value>Открыть панель Sandbox</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.059" xml:space="preserve"><value>Документация:</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.060" xml:space="preserve"><value>Check Docker availability, image prefixes, and deployment notes on the environment setup page.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.061" xml:space="preserve"><value>No</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.062" xml:space="preserve"><value>Configure prefixes or overrides here; see the documentation.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>

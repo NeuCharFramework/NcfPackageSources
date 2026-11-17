@@ -129,40 +129,40 @@
   <data name="Frontend.023" xml:space="preserve"><value>Sandboxを破棄</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.024" xml:space="preserve"><value>実行環境</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.025" xml:space="preserve"><value>ライフサイクル</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.026" xml:space="preserve"><value>Automatic TTL cleanup</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.027" xml:space="preserve"><value>Check environment</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.028" xml:space="preserve"><value>Sandbox sessions</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.029" xml:space="preserve"><value>Template</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.030" xml:space="preserve"><value>Alias</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.031" xml:space="preserve"><value>Runtime</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.032" xml:space="preserve"><value>Status</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.033" xml:space="preserve"><value>Port</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.034" xml:space="preserve"><value>Additional ports</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.035" xml:space="preserve"><value>Access</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.036" xml:space="preserve"><value>Open interactive session</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.037" xml:space="preserve"><value>Open</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.038" xml:space="preserve"><value>Actions</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.039" xml:space="preserve"><value>Edit alias</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.040" xml:space="preserve"><value>Set alias</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.041" xml:space="preserve"><value>Extend or edit TTL</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.042" xml:space="preserve"><value>Destroy runtime</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.043" xml:space="preserve"><value>Permanently delete session record</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.044" xml:space="preserve"><value>Session alias</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.045" xml:space="preserve"><value>Leave blank to clear the alias</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.046" xml:space="preserve"><value>Cancel</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.047" xml:space="preserve"><value>Save</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.048" xml:space="preserve"><value>Edit TTL</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.049" xml:space="preserve"><value>Scheduled cleanup</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.050" xml:space="preserve"><value>Keep forever</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.051" xml:space="preserve"><value>Local check</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.052" xml:space="preserve"><value>Check again</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.053" xml:space="preserve"><value>Available</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.054" xml:space="preserve"><value>Unavailable</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.055" xml:space="preserve"><value>Image registry prefix</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.056" xml:space="preserve"><value>Not configured (public default images are used; see the documentation)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.057" xml:space="preserve"><value>Manual configuration checklist (summary)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.058" xml:space="preserve"><value>Open Sandbox panel</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.059" xml:space="preserve"><value>Documentation: </value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.026" xml:space="preserve"><value>TTL自動クリーンアップ</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.027" xml:space="preserve"><value>環境を確認</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.028" xml:space="preserve"><value>Sandboxセッション</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.029" xml:space="preserve"><value>テンプレート</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.030" xml:space="preserve"><value>エイリアス</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.031" xml:space="preserve"><value>ランタイム</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.032" xml:space="preserve"><value>状態</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.033" xml:space="preserve"><value>ポート</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.034" xml:space="preserve"><value>追加ポート</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.035" xml:space="preserve"><value>アクセス</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.036" xml:space="preserve"><value>対話型セッションを開く</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.037" xml:space="preserve"><value>開く</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.038" xml:space="preserve"><value>操作</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.039" xml:space="preserve"><value>エイリアスを編集</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.040" xml:space="preserve"><value>エイリアスを設定</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.041" xml:space="preserve"><value>TTLを延長または編集</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.042" xml:space="preserve"><value>実行環境を破棄</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.043" xml:space="preserve"><value>セッション記録を完全削除</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.044" xml:space="preserve"><value>セッションエイリアス</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.045" xml:space="preserve"><value>空欄でエイリアスを削除</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.046" xml:space="preserve"><value>キャンセル</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.047" xml:space="preserve"><value>保存</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.048" xml:space="preserve"><value>TTLを編集</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.049" xml:space="preserve"><value>スケジュールクリーンアップ</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.050" xml:space="preserve"><value>永久保持</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.051" xml:space="preserve"><value>ローカルチェック</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.052" xml:space="preserve"><value>再チェック</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.053" xml:space="preserve"><value>利用可能</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.054" xml:space="preserve"><value>利用不可</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.055" xml:space="preserve"><value>イメージレジストリプレフィックス</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.056" xml:space="preserve"><value>未設定（公開の既定イメージを使用。詳細はドキュメントを参照）</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.057" xml:space="preserve"><value>手動設定チェックリスト（概要）</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.058" xml:space="preserve"><value>Sandboxパネルを開く</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.059" xml:space="preserve"><value>ドキュメント：</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.060" xml:space="preserve"><value>Check Docker availability, image prefixes, and deployment notes on the environment setup page.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.061" xml:space="preserve"><value>No</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.062" xml:space="preserve"><value>Configure prefixes or overrides here; see the documentation.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
