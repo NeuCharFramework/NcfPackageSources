@@ -474,11 +474,20 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
                 {{ dateformatter(scope.row.lastUpdateTime) }}
             </template>
         </el-table-column>
-        <el-table-column label=""操作"" width=""auto"">
+        <el-table-column label=""操作"" width=""auto"" class-name=""ncf-table-actions-column"">
             <template slot-scope=""scope"">
-                <el-button type=""primary"" size=""mini"" @@click=""editColor(scope.row)"">编辑</el-button>
-                <el-button type=""warning"" size=""mini"" @@click=""randomizeColor(scope.row)"">随机</el-button>
-                <el-button type=""danger"" size=""mini"" @@click=""deleteColor(scope.row)"">删除</el-button>
+                <el-button type=""primary"" icon=""el-icon-edit"" size=""mini"" @@click=""editColor(scope.row)"">编辑</el-button>
+                <el-tooltip content=""更多操作"" placement=""top"" :open-delay=""180"">
+                    <el-dropdown trigger=""click"" placement=""bottom-end"">
+                        <el-button type=""text"" size=""mini"" icon=""el-icon-more""
+                            class=""ncf-table-action-more"" title=""更多操作"" aria-label=""更多操作""></el-button>
+                        <el-dropdown-menu slot=""dropdown"">
+                            <el-dropdown-item icon=""el-icon-refresh"" @@click.native=""randomizeColor(scope.row)"">随机</el-dropdown-item>
+                            <el-dropdown-item divided icon=""el-icon-delete"" class=""ncf-table-action-danger""
+                                @@click.native=""deleteColor(scope.row)"">删除</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                </el-tooltip>
             </template>
         </el-table-column>
     </el-table>

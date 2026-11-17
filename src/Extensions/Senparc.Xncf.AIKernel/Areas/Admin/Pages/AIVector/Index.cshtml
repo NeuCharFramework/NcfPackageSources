@@ -56,10 +56,10 @@
             </template>
         </el-table-column>
         @* 操作 *@
-        <el-table-column label="@XR["Vector.Actions"]" width="auto">
+        <el-table-column label="@XR["Vector.Actions"]" width="auto" class-name="ncf-table-actions-column">
             <template slot-scope="scope">
-                <el-button type="primary" size="mini" @@click="editModel(scope.row)">@XR["Vector.Edit"]</el-button>
-                <el-button type="danger" size="mini" @@click="deleteModel(scope.row)">@XR["Vector.Delete"]</el-button>
+                <el-button type="primary" icon="el-icon-edit" size="mini" @@click="editModel(scope.row)">@XR["Vector.Edit"]</el-button>
+                <el-button type="danger" icon="el-icon-delete" size="mini" @@click="deleteModel(scope.row)">@XR["Vector.Delete"]</el-button>
             </template>
         </el-table-column>
     </el-table>

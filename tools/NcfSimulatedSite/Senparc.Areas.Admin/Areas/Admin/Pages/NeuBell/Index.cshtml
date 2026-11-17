@@ -72,11 +72,22 @@
                 <el-switch v-model="scope.row.isEnabled" @@change="toggleEnabled(scope.row)"></el-switch>
             </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="200" fixed="right">
+        <el-table-column label="操作" align="center" width="150" fixed="right" class-name="ncf-table-actions-column">
             <template slot-scope="scope">
-                <el-button size="mini" icon="el-icon-s-promotion" :loading="scope.row.testing" @@click="sendTest(scope.row)">测试</el-button>
-                <el-button size="mini" icon="el-icon-edit" @@click="openEdit(scope.row)">编辑</el-button>
-                <el-button size="mini" type="danger" plain icon="el-icon-delete" @@click="removeRow(scope.row)">删除</el-button>
+                <el-button size="mini" type="success" plain icon="el-icon-s-promotion"
+                    :loading="scope.row.testing" @@click="sendTest(scope.row)">测试</el-button>
+                <el-button size="mini" type="primary" plain icon="el-icon-edit"
+                    @@click="openEdit(scope.row)">编辑</el-button>
+                <el-tooltip content="更多操作" placement="top" :open-delay="180">
+                    <el-dropdown trigger="click" placement="bottom-end">
+                        <el-button type="text" size="mini" icon="el-icon-more"
+                            class="ncf-table-action-more" title="更多操作" aria-label="更多操作"></el-button>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item class="ncf-table-action-danger" icon="el-icon-delete"
+                                @@click.native="removeRow(scope.row)">删除</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                </el-tooltip>
             </template>
         </el-table-column>
     </el-table>
@@ -123,10 +134,11 @@
                 <template slot-scope="scope">{{ scope.row.status === 'sending' ? '—' : (scope.row.elapsedMilliseconds + ' ms') }}</template>
             </el-table-column>
             <el-table-column label="结果" prop="result" min-width="160" show-overflow-tooltip></el-table-column>
-            <el-table-column label="操作" width="150" align="center" fixed="right">
+            <el-table-column label="操作" width="150" align="center" fixed="right" class-name="ncf-table-actions-column">
                 <template slot-scope="scope">
                     <el-button size="mini" type="text" icon="el-icon-document" @@click="showPayload(scope.row)">报文</el-button>
-                    <el-button size="mini" type="text" icon="el-icon-delete" @@click="removeLog(scope.row)">删除</el-button>
+                    <el-button size="mini" type="text" icon="el-icon-delete" class="ncf-table-action-danger"
+                        @@click="removeLog(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>

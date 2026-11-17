@@ -38,10 +38,11 @@
                     <span class="system-footer-preview" v-text="scope.row.footerContent"></span>
                 </template>
             </el-table-column>
-            <el-table-column label="@AR["Common.操作"]" align="center">
+            <el-table-column label="@AR["Common.操作"]" align="center" class-name="ncf-table-actions-column">
                 <template slot-scope="scope">
                     <el-button size="mini"
                                type="primary"
+                               icon="el-icon-edit"
                                v-has="['admin-edit']"
                                @@click="handleEdit(scope.$index, scope.row)">@AR["Common.编辑"]</el-button>
                 </template>

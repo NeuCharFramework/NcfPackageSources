@@ -180,7 +180,7 @@
                             <div style="color:#909399;font-size:12px;">{{ formatDate(scope.row.updatedAt) }}</div>
                         </template>
                     </el-table-column>
-                    <el-table-column label="操作" width="155" fixed="right">
+                    <el-table-column label="操作" width="155" fixed="right" class-name="ncf-table-actions-column">
                         <template slot-scope="scope">
                             <el-button
                                 v-if="scope.row.url && scope.row.isRunning"
@@ -231,10 +231,10 @@
                             <el-link v-if="scope.row.previewUrl" :href="scope.row.previewUrl" target="_blank" type="primary">打开 Sandbox 预览</el-link>
                         </template>
                     </el-table-column>
-                    <el-table-column label="操作" width="180" fixed="right">
+                    <el-table-column label="操作" width="180" fixed="right" class-name="ncf-table-actions-column">
                         <template slot-scope="scope">
-                            <el-button v-if="isAwaitingApproval(scope.row)" type="success" size="mini" @@click="applyDevelopment(scope.row)">人工合入</el-button>
-                            <el-button v-if="!scope.row.isTerminal" type="danger" size="mini" @@click="discardDevelopment(scope.row)">丢弃</el-button>
+                            <el-button v-if="isAwaitingApproval(scope.row)" type="success" size="mini" icon="el-icon-check" @@click="applyDevelopment(scope.row)">人工合入</el-button>
+                            <el-button v-if="!scope.row.isTerminal" type="danger" size="mini" icon="el-icon-delete" @@click="discardDevelopment(scope.row)">丢弃</el-button>
                         </template>
                     </el-table-column>
                 </el-table>

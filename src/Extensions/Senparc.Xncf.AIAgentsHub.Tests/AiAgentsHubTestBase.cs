@@ -247,22 +247,25 @@ namespace Senparc.Xncf.AIAgentsHub.Tests
         {
             //output the startup success marker
             var ready = "";
+            var startedAt = "";
             var cost = "";
 
             GlobalCulture.Create()
                .SetEnglish(() =>
                {
                    ready = "The start-up is ready";
+                   startedAt = "Started at: ";
                    cost = "Cost Time:";
                })
                .SetChinese(() =>
                {
                    ready = "启动工作准备就绪";
+                   startedAt = "启动时间：";
                    cost = "用时：";
                })
                .InvokeDefault();
 
-            Senparc.Ncf.Core.VersionManager.ShowSuccessTip($"\t\t{ready}\r\n\t\t{cost}{SystemTime.NowDiff(StartTime).TotalSeconds} s");
+            Senparc.Ncf.Core.VersionManager.ShowSuccessTip($"\t\t{ready}\r\n\t\t{startedAt}{StartTime:yyyy-MM-dd HH:mm:ss}\r\n\t\t{cost}{SystemTime.NowDiff(StartTime).TotalSeconds} s");
         }
     }
 }

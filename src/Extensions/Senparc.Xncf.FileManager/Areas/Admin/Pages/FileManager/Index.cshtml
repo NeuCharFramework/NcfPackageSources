@@ -1638,21 +1638,24 @@
                             <el-table-column prop="uploadTime" label="更新时间" width="170">
                                 <template slot-scope="scope">{{ dateFormatter(scope.row.uploadTime) }}</template>
                             </el-table-column>
-                            <el-table-column label="操作" width="120" fixed="right">
+                            <el-table-column label="操作" width="90" fixed="right" class-name="ncf-table-actions-column">
                                 <template slot-scope="scope">
+                                    <el-tooltip content="更多操作" placement="top" :open-delay="180">
                                     <el-dropdown trigger="click" @@command="handleRowCommand($event, scope.row)">
-                                        <el-button type="text" size="mini">更多<i class="el-icon-arrow-down el-icon--right"></i></el-button>
+                                        <el-button type="text" size="mini" icon="el-icon-more"
+                                            class="ncf-table-action-more" title="更多操作" aria-label="更多操作"></el-button>
                                         <el-dropdown-menu slot="dropdown">
-                                            <el-dropdown-item command="download">下载</el-dropdown-item>
+                                            <el-dropdown-item command="download" icon="el-icon-download">下载</el-dropdown-item>
                                             <el-dropdown-item command="preview" icon="el-icon-view">在线预览</el-dropdown-item>
-                                            <el-dropdown-item v-if="isSiteAsset" command="togglePublish">{{ scope.row.accessLevel === 100 ? '取消公开' : '公开' }}</el-dropdown-item>
-                                            <el-dropdown-item v-if="isSiteAsset && scope.row.publicUrl" command="copyUrl">复制 URL</el-dropdown-item>
-                                            <el-dropdown-item command="editNote">编辑备注</el-dropdown-item>
+                                            <el-dropdown-item v-if="isSiteAsset" command="togglePublish" icon="el-icon-s-promotion">{{ scope.row.accessLevel === 100 ? '取消公开' : '公开' }}</el-dropdown-item>
+                                            <el-dropdown-item v-if="isSiteAsset && scope.row.publicUrl" command="copyUrl" icon="el-icon-document-copy">复制 URL</el-dropdown-item>
+                                            <el-dropdown-item command="editNote" icon="el-icon-edit">编辑备注</el-dropdown-item>
                                             <el-dropdown-item command="toggleQuickAccess" icon="el-icon-s-opportunity">
                                                 {{ isInQuickAccess(scope.row) ? '从快速访问移除' : '添加至快速访问' }}
                                             </el-dropdown-item>
                                             <el-dropdown-item command="manageTags" icon="el-icon-price-tag">标签管理</el-dropdown-item>
-                                            <el-dropdown-item command="delete" divided icon="el-icon-delete">删除</el-dropdown-item>
+                                            <el-dropdown-item command="delete" divided icon="el-icon-delete"
+                                                class="ncf-table-action-danger">删除</el-dropdown-item>
                                         </el-dropdown-menu>
                                     </el-dropdown>
                                 </template>

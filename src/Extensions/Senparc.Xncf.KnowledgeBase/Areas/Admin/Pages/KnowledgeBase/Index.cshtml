@@ -141,18 +141,24 @@
                             {{ formaTableTime(scope.row.addTime) }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="操作" align="center" fixed="right" width="300">
+                    <el-table-column label="操作" align="center" fixed="right" width="300" class-name="ncf-table-actions-column">
                         <template slot-scope="scope">
-                            <el-button size="mini" type="primary" @@click="handleElVisibleOpenBtn('drawerGroup', scope.row)">配置</el-button>
-                            <el-button size="mini" type="success" @@click="handleEmbeddingBtn('embedding', scope.row)">向量化</el-button>
+                            <el-button size="mini" type="primary" icon="el-icon-setting"
+                                @@click="handleElVisibleOpenBtn('drawerGroup', scope.row)">配置</el-button>
+                            <el-button size="mini" type="success" icon="el-icon-data-analysis"
+                                @@click="handleEmbeddingBtn('embedding', scope.row)">向量化</el-button>
+                            <el-tooltip content="更多操作" placement="top" :open-delay="180">
                             <el-dropdown trigger="click" @@command="handleRowCommand($event, scope.row)">
-                                <el-button size="mini" type="text">更多<i class="el-icon-arrow-down el-icon--right"></i></el-button>
+                                <el-button size="mini" type="text" icon="el-icon-more"
+                                    class="ncf-table-action-more" title="更多操作" aria-label="更多操作"></el-button>
                                 <el-dropdown-menu slot="dropdown">
                                     <el-dropdown-item command="edit" icon="el-icon-edit">编辑</el-dropdown-item>
                                     <el-dropdown-item command="recall" icon="el-icon-search">召回测试</el-dropdown-item>
-                                    <el-dropdown-item command="delete" divided icon="el-icon-delete">删除</el-dropdown-item>
+                                <el-dropdown-item command="delete" divided icon="el-icon-delete"
+                                    class="ncf-table-action-danger">删除</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
+                            </el-tooltip>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -493,7 +499,7 @@
                                         {{ formaTableTime(scope.row.uploadTime) }}
                                     </template>
                                 </el-table-column>
-                                <el-table-column fixed="right" label="操作" width="130">
+                                <el-table-column fixed="right" label="操作" width="130" class-name="ncf-table-actions-column">
                                     <template slot-scope="{ row }">
                                         <el-button size="small"
                                                    @@click="removeConfigFileSelection(row)">取消选择</el-button>

@@ -1491,44 +1491,6 @@ height:100%;
     flex-shrink: 0;
 }
 
-.table-actions-column .cell {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 4px;
-    white-space: nowrap;
-    overflow: visible;
-}
-
-.table-actions-column .el-button {
-    margin-left: 0;
-}
-
-.table-action-more {
-    width: 28px;
-    min-width: 28px;
-    padding: 0;
-    margin-left: 2px !important;
-    font-size: 18px;
-    line-height: 28px;
-}
-
-.table-action-more:focus,
-.table-action-more:hover {
-    color: #2a82e4;
-    background-color: #eef6ff;
-}
-
-.el-dropdown-menu .table-action-danger {
-    color: #f56c6c;
-}
-
-.el-dropdown-menu .table-action-danger:hover {
-    color: #f56c6c;
-    background-color: #fff1f0;
-}
-
-
 /* 抽屉 表单容器 */
 .drawerForm-container {
     padding: 0px 20px;

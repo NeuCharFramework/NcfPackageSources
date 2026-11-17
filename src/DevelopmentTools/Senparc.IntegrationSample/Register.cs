@@ -24,6 +24,8 @@ using Senparc.Ncf.XncfBase;
 using Senparc.Weixin.WxOpen.AdvancedAPIs.WxApp.WxAppJson;
 using Senparc.Xncf.AreasBase;
 
+using Senparc.Ncf.Utility.Helpers;
+
 namespace Senparc.IntegrationSample
 {
     /// <summary>
@@ -112,7 +114,26 @@ namespace Senparc.IntegrationSample
         public static void ShowSuccessTip(this WebApplication app)
         {
             //output the startup success marker
-            Senparc.Ncf.Core.VersionManager.ShowSuccessTip($"\t\tStartup is ready\r\n\t\tStarted at: {StartTime:yyyy-MM-dd HH:mm:ss}\r\n\t\tElapsed: {SystemTime.NowDiff(StartTime).TotalSeconds} s");
+            var ready = "";
+            var startedAt = "";
+            var elapsed = "";
+
+            GlobalCulture.Create()
+                .SetEnglish(() =>
+                {
+                    ready = "Startup is ready";
+                    startedAt = "Started at: ";
+                    elapsed = "Elapsed: ";
+                })
+                .SetChinese(() =>
+                {
+                    ready = "启动工作准备就绪";
+                    startedAt = "启动时间：";
+                    elapsed = "用时：";
+                })
+                .InvokeDefault();
+
+            Senparc.Ncf.Core.VersionManager.ShowSuccessTip($"\t\t{ready}\r\n\t\t{startedAt}{StartTime:yyyy-MM-dd HH:mm:ss}\r\n\t\t{elapsed}{SystemTime.NowDiff(StartTime).TotalSeconds} s");
         }
 
     }

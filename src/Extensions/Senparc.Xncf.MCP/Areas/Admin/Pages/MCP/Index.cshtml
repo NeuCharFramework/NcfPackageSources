@@ -92,14 +92,25 @@
                             <span v-else style="color:#c0c4cc;">未测试</span>
                         </template>
                     </el-table-column>
-                    <el-table-column label="操作" width="230" align="center">
+                    <el-table-column label="操作" width="150" align="center" class-name="ncf-table-actions-column">
                         <template slot-scope="scope">
                             <el-button size="mini" type="success" icon="el-icon-connection"
                                 :loading="testLoadingId === scope.row.id" @@click="handleTest(scope.row)">测试</el-button>
-                            <el-button size="mini" type="primary" plain icon="el-icon-edit"
-                                @@click="handleEdit(scope.row)">编辑</el-button>
-                            <el-button size="mini" type="danger" plain icon="el-icon-delete"
-                                @@click="handleDelete(scope.row)">删除</el-button>
+                            <el-tooltip content="更多操作" placement="top" :open-delay="180">
+                                <el-dropdown trigger="click" placement="bottom-end">
+                                    <el-button type="text" size="mini" icon="el-icon-more"
+                                        class="ncf-table-action-more" title="更多操作" aria-label="更多操作"></el-button>
+                                    <el-dropdown-menu slot="dropdown">
+                                        <el-dropdown-item @@click.native="handleEdit(scope.row)" icon="el-icon-edit">
+                                            编辑
+                                        </el-dropdown-item>
+                                        <el-dropdown-item command="delete" divided class="ncf-table-action-danger"
+                                            @@click.native="handleDelete(scope.row)" icon="el-icon-delete">
+                                            删除
+                                        </el-dropdown-item>
+                                    </el-dropdown-menu>
+                                </el-dropdown>
+                            </el-tooltip>
                         </template>
                     </el-table-column>
                 </el-table>

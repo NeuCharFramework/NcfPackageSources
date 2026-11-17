@@ -71,12 +71,12 @@
                     <el-table-column label="过期时间" min-width="170">
                         <template slot-scope="scope">{{ formatDate(scope.row.expiresAt) }}</template>
                     </el-table-column>
-                    <el-table-column label="操作" width="170" fixed="right">
+                    <el-table-column label="操作" width="170" fixed="right" class-name="ncf-table-actions-column">
                         <template slot-scope="scope">
                             <form class="d-inline-block" method="post" asp-page-handler="Approve">
                                 <input type="hidden" name="Uid" value="@Model.Uid" />
                                 <input type="hidden" name="requestId" :value="scope.row.requestId" />
-                                <button type="submit" class="el-button el-button--primary el-button--mini">
+                                <button type="submit" class="el-button el-button--success el-button--mini">
                                     <i class="el-icon-check"></i><span>批准</span>
                                 </button>
                             </form>
@@ -115,7 +115,7 @@
                     <el-table-column label="状态" width="90">
                         <template slot-scope="scope"><el-tag type="success" size="small">已授权</el-tag></template>
                     </el-table-column>
-                    <el-table-column label="操作" width="100" fixed="right">
+                    <el-table-column label="操作" width="100" fixed="right" class-name="ncf-table-actions-column">
                         <template slot-scope="scope">
                             <form method="post" asp-page-handler="Revoke">
                                 <input type="hidden" name="Uid" value="@Model.Uid" />
