@@ -39,8 +39,8 @@ public sealed class ConnectorAppService : AppServiceBase
         "Function.Connectors.Invoke.Name",
         "Function.Connectors.Invoke.Description",
         typeof(Register),
-        "调用连接器",
-        "调用一个已启用的连接器动作。在 Workflow 中添加 Function 节点后，选择连接器和动作即可。",
+        "Invoke connector",
+        "Invoke an enabled connector action. Add a Function node in Workflow, then choose the connector and action.",
         AllowAiInvocation = true)]
     public Task<StringAppResponse> InvokeConfiguredConnector(InvokeConnectorRequest request)
     {
@@ -63,7 +63,7 @@ public sealed class ConnectorAppService : AppServiceBase
                 CancellationToken).ConfigureAwait(false);
             return result.Success
                 ? result.Output
-                : result.Error ?? "连接器调用失败。";
+                : result.Error ?? "Connector invocation failed.";
         });
     }
 

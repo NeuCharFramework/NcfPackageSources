@@ -33,8 +33,8 @@ public sealed partial class Register : XncfRegisterBase, IXncfRegister
     private static readonly XncfRegisterText RegisterText =
         XncfRegisterText.Create<ConnectorsResource>(
             "Module.Connectors",
-            "连接器",
-            "把外部工具配置成可选择的连接器。配置账号后，可在 Chat、Workflow 和 Agent 模板中按权限使用。");
+            "Connectors",
+            "Configure external tools as selectable connectors. After an account is configured, Chat, Workflow, and Agent templates can use them according to permissions.");
 
     public override string Name => "Senparc.Xncf.Connectors";
 

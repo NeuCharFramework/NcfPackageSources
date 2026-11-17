@@ -26,7 +26,7 @@ public sealed partial class Register : IAreaRegister
 
     public List<AreaPageMenuItem> AreaPageMenuItems =>
     [
-        new AreaPageMenuItem(GetAreaHomeUrl(), ConnectorsResource.Get("Area.Connectors.Config", "连接器配置"), "fa fa-plug")
+        new AreaPageMenuItem(GetAreaHomeUrl(), ConnectorsResource.Get("Area.Connectors.Config", "Connector setup"), "fa fa-plug")
     ];
 
     public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
