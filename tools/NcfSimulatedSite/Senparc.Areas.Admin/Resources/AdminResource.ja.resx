@@ -1302,26 +1302,26 @@
   <data name="Frontend.407" xml:space="preserve"><value>移動</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.408" xml:space="preserve"><value>行へ移動</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.409" xml:space="preserve"><value>既定のシステムプロンプトはPromptRangeで管理されます。現在のテキストは個人またはテナントの追加設定です。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.410" xml:space="preserve"><value>, use @@ to reference a file or path</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.411" xml:space="preserve"><value>, enter @@ to reference a file or path</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.412" xml:space="preserve"><value>Supports plain text and absolute http/https links using &amp;lt;a&amp;gt; tags; other HTML is encoded.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.413" xml:space="preserve"><value>Fork</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.414" xml:space="preserve"><value>Thinking</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.415" xml:space="preserve"><value>Waiting for tool approval</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.416" xml:space="preserve"><value>Replay event #{0} ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.417" xml:space="preserve"><value>Press Ctrl + Enter or Cmd + Enter to start</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.418" xml:space="preserve"><value>Fork</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.419" xml:space="preserve"><value>No active shares</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.420" xml:space="preserve"><value>{0} more</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.421" xml:space="preserve"><value>View preview</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.422" xml:space="preserve"><value>Return to text</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.423" xml:space="preserve"><value>Expand as tree</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.424" xml:space="preserve"><value>View source</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.425" xml:space="preserve"><value>Loading preview…</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.426" xml:space="preserve"><value>Missing Function:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.427" xml:space="preserve"><value>Select all filtered results</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.428" xml:space="preserve"><value>Selected {0} / {1}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.429" xml:space="preserve"><value>NeuBell · WebHook settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.410" xml:space="preserve"><value>、@@でファイルまたはパスを参照</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.411" xml:space="preserve"><value>、@@を入力してファイルまたはパスを参照</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.412" xml:space="preserve"><value>通常のテキストと絶対http/httpsリンクを持つ&lt;a&gt;タグに対応し、それ以外のHTMLはエンコードされます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.413" xml:space="preserve"><value>フォーク</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.414" xml:space="preserve"><value>思考中</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.415" xml:space="preserve"><value>ツールの確認待ち</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.416" xml:space="preserve"><value>再生イベント #{0} ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.417" xml:space="preserve"><value>Ctrl + EnterまたはCmd + Enterで開始</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.418" xml:space="preserve"><value>フォーク</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.419" xml:space="preserve"><value>有効な共有はありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.420" xml:space="preserve"><value>残り{0}件</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.421" xml:space="preserve"><value>プレビューを表示</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.422" xml:space="preserve"><value>テキストに戻る</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.423" xml:space="preserve"><value>ツリー表示</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.424" xml:space="preserve"><value>ソースを表示</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.425" xml:space="preserve"><value>プレビューを読み込み中…</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.426" xml:space="preserve"><value>Functionがありません：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.427" xml:space="preserve"><value>現在のフィルター結果をすべて選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.428" xml:space="preserve"><value>選択済み {0} / {1}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.429" xml:space="preserve"><value>NeuBell · WebHook設定</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.430" xml:space="preserve"><value>Edit WebHook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.431" xml:space="preserve"><value>Add WebHook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.432" xml:space="preserve"><value>Personal Weixin integration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>

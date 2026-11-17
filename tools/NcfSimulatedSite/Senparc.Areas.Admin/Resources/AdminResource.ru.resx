@@ -1302,26 +1302,26 @@
   <data name="Frontend.407" xml:space="preserve"><value>Перейти</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.408" xml:space="preserve"><value>Перейти к строке</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.409" xml:space="preserve"><value>Системный prompt по умолчанию управляется PromptRange; текущий текст содержит личные настройки или настройки арендатора.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.410" xml:space="preserve"><value>, use @@ to reference a file or path</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.411" xml:space="preserve"><value>, enter @@ to reference a file or path</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.412" xml:space="preserve"><value>Supports plain text and absolute http/https links using &amp;lt;a&amp;gt; tags; other HTML is encoded.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.413" xml:space="preserve"><value>Fork</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.414" xml:space="preserve"><value>Thinking</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.415" xml:space="preserve"><value>Waiting for tool approval</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.416" xml:space="preserve"><value>Replay event #{0} ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.417" xml:space="preserve"><value>Press Ctrl + Enter or Cmd + Enter to start</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.418" xml:space="preserve"><value>Fork</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.419" xml:space="preserve"><value>No active shares</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.420" xml:space="preserve"><value>{0} more</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.421" xml:space="preserve"><value>View preview</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.422" xml:space="preserve"><value>Return to text</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.423" xml:space="preserve"><value>Expand as tree</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.424" xml:space="preserve"><value>View source</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.425" xml:space="preserve"><value>Loading preview…</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.426" xml:space="preserve"><value>Missing Function:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.427" xml:space="preserve"><value>Select all filtered results</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.428" xml:space="preserve"><value>Selected {0} / {1}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.429" xml:space="preserve"><value>NeuBell · WebHook settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.410" xml:space="preserve"><value>, ссылка на файл или путь через @@</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.411" xml:space="preserve"><value>, введите @@ для ссылки на файл или путь</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.412" xml:space="preserve"><value>Поддерживает обычный текст и теги &lt;a&gt; с абсолютными ссылками http/https; остальной HTML кодируется.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.413" xml:space="preserve"><value>Ветка</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.414" xml:space="preserve"><value>Обдумывание</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.415" xml:space="preserve"><value>Ожидание подтверждения инструмента</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.416" xml:space="preserve"><value>Событие воспроизведения #{0} ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.417" xml:space="preserve"><value>Нажмите Ctrl + Enter или Cmd + Enter для запуска</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.418" xml:space="preserve"><value>Ветка</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.419" xml:space="preserve"><value>Нет действующих публикаций</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.420" xml:space="preserve"><value>Ещё элементов: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.421" xml:space="preserve"><value>Просмотреть предпросмотр</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.422" xml:space="preserve"><value>Вернуться к тексту</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.423" xml:space="preserve"><value>Древовидное представление</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.424" xml:space="preserve"><value>Просмотреть исходный код</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.425" xml:space="preserve"><value>Загрузка предпросмотра…</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.426" xml:space="preserve"><value>Отсутствует Function:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.427" xml:space="preserve"><value>Выбрать все результаты фильтра</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.428" xml:space="preserve"><value>Выбрано: {0} / {1}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.429" xml:space="preserve"><value>NeuBell · настройки WebHook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.430" xml:space="preserve"><value>Edit WebHook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.431" xml:space="preserve"><value>Add WebHook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.432" xml:space="preserve"><value>Personal Weixin integration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>

@@ -1302,26 +1302,26 @@
   <data name="Frontend.407" xml:space="preserve"><value>Ir a</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.408" xml:space="preserve"><value>Ir a la línea</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.409" xml:space="preserve"><value>PromptRange gestiona el prompt de sistema predeterminado; el texto actual contiene preferencias personales o del inquilino.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.410" xml:space="preserve"><value>, use @@ to reference a file or path</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.411" xml:space="preserve"><value>, enter @@ to reference a file or path</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.412" xml:space="preserve"><value>Supports plain text and absolute http/https links using &amp;lt;a&amp;gt; tags; other HTML is encoded.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.413" xml:space="preserve"><value>Fork</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.414" xml:space="preserve"><value>Thinking</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.415" xml:space="preserve"><value>Waiting for tool approval</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.416" xml:space="preserve"><value>Replay event #{0} ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.417" xml:space="preserve"><value>Press Ctrl + Enter or Cmd + Enter to start</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.418" xml:space="preserve"><value>Fork</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.419" xml:space="preserve"><value>No active shares</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.420" xml:space="preserve"><value>{0} more</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.421" xml:space="preserve"><value>View preview</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.422" xml:space="preserve"><value>Return to text</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.423" xml:space="preserve"><value>Expand as tree</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.424" xml:space="preserve"><value>View source</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.425" xml:space="preserve"><value>Loading preview…</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.426" xml:space="preserve"><value>Missing Function:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.427" xml:space="preserve"><value>Select all filtered results</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.428" xml:space="preserve"><value>Selected {0} / {1}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.429" xml:space="preserve"><value>NeuBell · WebHook settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.410" xml:space="preserve"><value>, referencia un archivo o ruta con @@</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.411" xml:space="preserve"><value>, introduce @@ para referenciar un archivo o ruta</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.412" xml:space="preserve"><value>Admite texto normal y etiquetas &lt;a&gt; con enlaces http/https absolutos; el resto del HTML se codifica.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.413" xml:space="preserve"><value>Bifurcar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.414" xml:space="preserve"><value>Pensando</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.415" xml:space="preserve"><value>Esperando la confirmación de la herramienta</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.416" xml:space="preserve"><value>Evento de reproducción #{0} ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.417" xml:space="preserve"><value>Pulsa Ctrl + Enter o Cmd + Enter para comenzar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.418" xml:space="preserve"><value>Bifurcar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.419" xml:space="preserve"><value>No hay recursos compartidos válidos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.420" xml:space="preserve"><value>Quedan {0} elementos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.421" xml:space="preserve"><value>Ver vista previa</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.422" xml:space="preserve"><value>Volver al texto</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.423" xml:space="preserve"><value>Vista de árbol</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.424" xml:space="preserve"><value>Ver código fuente</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.425" xml:space="preserve"><value>Cargando vista previa…</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.426" xml:space="preserve"><value>Falta la Function:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.427" xml:space="preserve"><value>Seleccionar todos los resultados filtrados</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.428" xml:space="preserve"><value>Seleccionados {0} / {1}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.429" xml:space="preserve"><value>NeuBell · configuración de WebHook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.430" xml:space="preserve"><value>Edit WebHook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.431" xml:space="preserve"><value>Add WebHook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.432" xml:space="preserve"><value>Personal Weixin integration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
