@@ -1393,4 +1393,14 @@
   <data name="Frontend.457" xml:space="preserve"><value>输入内容||输入内容</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
   <data name="Frontend.458" xml:space="preserve"><value>{0} 条新消息||{0} 条新消息</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
   <data name="Frontend.459" xml:space="preserve"><value>命令前缀||命令前缀</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+
+  <data name="WeixinClaw.Workflow.IntegrationDisabled" xml:space="preserve"><value>Workflow 集成未启用，或宿主未加载 NeuCharWorkflow 模块。</value></data>
+  <data name="WeixinClaw.Workflow.NoAvailable" xml:space="preserve"><value>当前没有可用 Workflow。</value></data>
+  <data name="WeixinClaw.Workflow.ListPrompt" xml:space="preserve"><value>可用 Workflow 列表如下。下一次请发送 /workflow &lt;WorkflowId&gt; &lt;输入&gt; 执行指定 Workflow：</value></data>
+  <data name="WeixinClaw.Workflow.NotFound" xml:space="preserve"><value>Workflow 不存在、未启用，或当前管理员没有访问权限。</value></data>
+  <data name="WeixinClaw.Workflow.Completed" xml:space="preserve"><value>Workflow「{0}」执行完成：
+{1}</value></data>
+  <data name="WeixinClaw.Workflow.Failed" xml:space="preserve"><value>Workflow「{0}」执行失败：{1}</value></data>
+  <data name="WeixinClaw.Workflow.HelpList" xml:space="preserve"><value>{0}workflow - 列出可用 Workflow 和 WorkflowId</value></data>
+  <data name="WeixinClaw.Workflow.HelpExecute" xml:space="preserve"><value>{0}workflow &lt;WorkflowId&gt; &lt;输入&gt; - 执行指定 Workflow</value></data>
 </root>

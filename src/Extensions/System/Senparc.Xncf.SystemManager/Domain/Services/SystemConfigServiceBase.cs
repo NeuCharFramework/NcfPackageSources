@@ -2,25 +2,13 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: SystemConfigServiceBase.cs
-
     File description: SystemConfigServiceBase related implementation
-
-    
-
-    
 
     Created by: Senparc - 20211128
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
-
-
 
 ----------------------------------------------------------------*/
 

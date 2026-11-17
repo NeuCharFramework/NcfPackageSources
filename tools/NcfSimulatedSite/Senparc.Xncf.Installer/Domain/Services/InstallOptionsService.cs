@@ -2,37 +2,19 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: InstallOptionsService.cs
-
     File description: Related implementation.
-
-    
-
-    
 
     Created by: Senparc - 20240312
 
-    
-
     Modified by: Senparc - 20260724
-
     Change description: v0.4.0 Updated module behavior and related support.
 
-
-
     Modified by: Senparc - 20260729
-
     Change description: v0.4.1 Updated module behavior and related support.
 
-
-
     Modified by: Senparc - 20261103
-
     Change description: v0.5.12 Updated module behavior and related support.
-
-
 
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Http;

@@ -1,15 +1,15 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: SandboxRequests.cs
     File description: Related implementation.
-    
-    
+    -
+
     Created by: Senparc - 20260808
-    
+
     Modified by: Senparc - 20260817
     Change description: v0.2.0 enhance the jupyter-csharp template and sandbox session management
--
 
     Modified by: Senparc - 20260817
     Change description: v0.2.0 Updated module behavior and related support.

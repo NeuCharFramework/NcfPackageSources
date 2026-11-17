@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: AdminChatAttachmentService.cs
     File description: AdminChatAttachmentService related definitions and implementation
-
 
     Created by: Senparc - 20261026
 

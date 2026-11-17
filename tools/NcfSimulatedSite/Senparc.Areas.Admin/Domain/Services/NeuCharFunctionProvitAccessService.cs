@@ -1,13 +1,14 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: NeuCharFunctionProvitAccessService.cs
     File description: Related implementation.
     Legacy comment translated to English.
     Legacy comment translated to English.
+    Change description: v0.9.1 Updated module behavior and related support.
 
     Created by: Senparc - 20260917
-    Change description: v0.9.1 Updated module behavior and related support.
 
     Modified by: Senparc - 20261005
     Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility

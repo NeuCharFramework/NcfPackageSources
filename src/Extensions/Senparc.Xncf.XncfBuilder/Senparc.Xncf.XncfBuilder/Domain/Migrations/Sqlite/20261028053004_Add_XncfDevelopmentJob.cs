@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20261028053004_Add_XncfDevelopmentJob.cs
     File description: 20261028053004_Add_XncfDevelopmentJob related definitions and implementation
-
 
     Created by: Senparc - 20261031
 

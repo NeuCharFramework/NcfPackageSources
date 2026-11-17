@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: WorkspaceSenparcEntities.cs
     File description: Workspace module database context
-    
-    
+
     Created by: Senparc - 20261021
-    
+
     Modified by: Senparc - 20261021
     Change description: v0.1.1 provide the Workspace module database context
 

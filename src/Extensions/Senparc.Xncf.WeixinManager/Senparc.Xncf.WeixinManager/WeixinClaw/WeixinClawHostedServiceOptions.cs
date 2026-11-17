@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: WeixinClawHostedServiceOptions.cs
     File description: WeixinClawHostedServiceOptions related definitions and implementation
-
 
     Created by: Senparc - 20261004
 

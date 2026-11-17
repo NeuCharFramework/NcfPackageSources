@@ -1,12 +1,12 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: 20261010172256_AddFineTuningControlPlane.Designer.cs
     File description: EF Core migration designer metadata
-    
-    
+
     Created by: Senparc - 20231021
-    
+
     Modified by: Senparc - 20261021
     Change description: v0.17.0 Updated module behavior and related support.
 

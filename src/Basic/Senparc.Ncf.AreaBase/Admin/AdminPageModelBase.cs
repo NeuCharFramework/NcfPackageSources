@@ -2,31 +2,16 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: AdminPageModelBase.cs
-
     File description: AdminPageModelBase related implementation
-
-    
-
-    
 
     Created by: Senparc - 20200724
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
 
-
-
     Modified by: Senparc - 20260729
-
     Change description: v0.22.0-preview3 Unify AdminOnly authorization policy naming and provide host registration extension
-
-
 
 ----------------------------------------------------------------*/
 

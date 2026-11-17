@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: 20260808150929_Add_NeuCharPivot_Workflow.cs
     File description: database migration and model snapshot
-
 
     Created by: Senparc - 20260809
 

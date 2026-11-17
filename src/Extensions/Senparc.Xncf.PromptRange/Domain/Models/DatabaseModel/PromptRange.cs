@@ -1,12 +1,12 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: PromptRange.cs
     File description: PromptRange related implementation
-    
-    
+
     Created by: Senparc - 20240105
-    
+
     Modified by: Senparc - 20260704
     Change description: vNext: add the standardized file header comment
 

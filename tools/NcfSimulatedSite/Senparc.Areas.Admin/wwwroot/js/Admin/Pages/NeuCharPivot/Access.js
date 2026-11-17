@@ -1,10 +1,12 @@
 /*----------------------------------------------------------------
+
     File name: Access.js
     File description: Related implementation.
     Legacy comment translated to English.
+    Change description: v0.9.1 Updated module behavior and related support.
 
     Created by: Senparc - 20260917
-    Change description: v0.9.1 Updated module behavior and related support.
+
 ----------------------------------------------------------------*/
 new Vue({
     el: '#app',

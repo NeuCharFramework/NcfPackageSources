@@ -1,3 +1,7 @@
+window.ncfWorkflowText = window.ncfWorkflowText || function (source) {
+    return typeof window.ncfST === 'function' ? window.ncfST(source) : source;
+};
+
 new Vue({
     el: '#app',
     data() {
@@ -244,12 +248,24 @@ new Vue({
             this.playTimer = null;
             this.playing = false;
         },
-        eventSummary(event) { return event.message || this.eventStatusText(event.status); },
+        eventSummary(event) {
+            return window.ncfWorkflowText(event.message || this.eventStatusText(event.status));
+        },
         eventStatusText(status) {
-            return { running: '执行中', success: '执行完成', failed: '执行失败', branch: '选择分支', console: 'Console 输出' }[status] || '状态更新';
+            const source = {
+                running: '执行中',
+                success: '执行完成',
+                failed: '执行失败',
+                branch: '选择分支',
+                console: 'Console 输出'
+            }[status] || '状态更新';
+            return window.ncfWorkflowText(source);
         },
         eventType(status) { return { success: 'success', failed: 'danger', running: 'warning', branch: 'primary' }[status] || 'info'; },
-        statusText(status) { return { success: '运行成功', failed: '运行失败' }[status] || '运行完成'; },
+        statusText(status) {
+            const source = { success: '运行成功', failed: '运行失败' }[status] || '运行完成';
+            return window.ncfWorkflowText(source);
+        },
         nodeTypeText(type) {
             return {
                 'manual-trigger': '手动触发', 'interval-trigger': '定时触发', 'webhook-trigger': 'Webhook 触发',

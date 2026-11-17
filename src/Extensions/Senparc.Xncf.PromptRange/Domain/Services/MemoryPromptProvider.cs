@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: MemoryPromptProvider.cs
     File description: MemoryPromptProvider related definitions and implementation
-
 
     Created by: Senparc - 20261103
 

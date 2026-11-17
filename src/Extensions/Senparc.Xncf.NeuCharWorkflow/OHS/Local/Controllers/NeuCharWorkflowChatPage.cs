@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: NeuCharWorkflowChatPage.cs
     File description: Self-contained Chat trigger page template with no external dependencies
-
 
     Created by: Senparc - 20260909
     Creation description: v0.4.0 add the Chat trigger

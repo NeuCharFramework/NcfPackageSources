@@ -2,31 +2,16 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: AIModelStudioRequest.cs
-
     File description: AIModelStudioRequest related implementation
-
-    
-
-    
 
     Created by: Senparc - 20240131
 
-    
-
     Modified by: Senparc - 20260702
-
     Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-
-
     Modified by: Senparc - 20260717
-
     Change description: v0.14.0-preview5 Updated module behavior and related support.
-
-
 
 ----------------------------------------------------------------*/
 

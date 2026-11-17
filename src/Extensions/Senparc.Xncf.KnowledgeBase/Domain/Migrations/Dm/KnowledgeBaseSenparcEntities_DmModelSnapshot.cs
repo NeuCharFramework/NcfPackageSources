@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: KnowledgeBaseSenparcEntities_DmModelSnapshot.cs
     File description: Related implementation.
-
 
     Created by: Senparc - 20200724
 

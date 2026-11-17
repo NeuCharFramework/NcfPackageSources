@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: WorkspaceRecord.cs
     File description: Workspace metadata entity
-    
-    
+
     Created by: Senparc - 20261021
-    
+
     Modified by: Senparc - 20261021
     Change description: v0.1.1 persist Workspace ownership and storage information
 

@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: PromptResult_UpdateChatFeedbackRequest.cs
     File description: PromptResult_UpdateChatFeedbackRequest related implementation
-    
-    
+
     Created by: Senparc - 20260704
-    
+
     Modified by: Senparc - 20260704
     Change description: vNext: add the standardized file header comment
 

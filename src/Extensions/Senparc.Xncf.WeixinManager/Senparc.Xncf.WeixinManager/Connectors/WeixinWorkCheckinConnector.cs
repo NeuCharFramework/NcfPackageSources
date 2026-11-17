@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: WeixinWorkCheckinConnector.cs
     File description: Related implementation.
-    
-    
+
     Created by: Senparc - 20261111
-    
+
     Modified by: Senparc - 20261111
     Change description: v0.24.18 Updated module behavior and related support.
 

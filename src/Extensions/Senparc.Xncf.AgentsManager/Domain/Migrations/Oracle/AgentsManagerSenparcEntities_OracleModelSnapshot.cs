@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: AgentsManagerSenparcEntities_OracleModelSnapshot.cs
     File description: database model snapshot
-
 
     Created by: Senparc - 20231021
 

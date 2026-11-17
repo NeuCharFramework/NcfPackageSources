@@ -2,49 +2,25 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: Index.cshtml.cs
-
     File description: Index.cshtml related implementation
-
-
-
-
 
     Created by: Senparc - 20250105
 
-
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
 
-
-
     Modified by: Senparc - 20260729
-
     Change description: v0.3.1-preview3 Updated module behavior and related support.
 
-
-
     Modified by: Senparc - 20260813
-
     Change description: v0.6.0-preview1 Updated module behavior and related support.
 
-
-
     Modified by: Senparc - 20260915
-
     Change description: v0.7.0 Updated module behavior and related support.
 
-
-
     Modified by: Senparc - 20261103
-
     Change description: v0.8.1 add FileId reference to AIFineTuningDataset and implement FineTuningFileReferenceProvider
-
-
 
 ----------------------------------------------------------------*/
 

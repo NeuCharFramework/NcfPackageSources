@@ -1,11 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: ChatTaskCancellationRegistry.cs
     File description: Related implementation.
+    Change description: v0.18.1 Updated module behavior and related support.
 
     Created by: Senparc - 20260927
-    Change description: v0.18.1 Updated module behavior and related support.
 
     Modified by: Senparc - 20261103
     Change description: v0.19.1 update AgentsManager with new features and improvements

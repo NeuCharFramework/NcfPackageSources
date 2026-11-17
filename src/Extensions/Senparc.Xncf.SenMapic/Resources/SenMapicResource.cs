@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: SenMapicResource.cs
     File description: SenMapicResource related implementation
-    
-    
+
     Created by: Senparc - 20260717
-    
+
     Modified by: Senparc - 20260717
     Change description: v0.3.0-preview2 Updated module behavior and related support.
 

@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: NeuCharWorkflowWebhookConfig.cs
     File description: Domain service and business workflow implementation
-
 
     Created by: Senparc - 20260809
 

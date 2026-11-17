@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: IBackgroundTenantProvider.cs
     File description: IBackgroundTenantProvider related definitions and implementation
-
 
     Created by: Senparc - 20261002
 

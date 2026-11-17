@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20261110164033_AddConnectorInstance.Designer.cs
     File description: database migration designer model
-
 
     Created by: Senparc - 20200724
 

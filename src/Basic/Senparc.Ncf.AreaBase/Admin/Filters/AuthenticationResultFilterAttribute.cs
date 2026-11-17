@@ -2,43 +2,22 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: AuthenticationResultFilterAttribute.cs
-
     File description: AuthenticationResultFilterAttribute related implementation
-
-
-
-
 
     Created by: Senparc - 20200724
 
-
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
 
-
-
     Modified by: Senparc - 20260731
-
     Change description: v0.23.0-preview4 will integrate core multilingual resources for the Handler missing and none permission prompts.
 
-
-
     Modified by: Senparc - 20260812
-
     Change description: Redirect to login when a valid management session has not been established to avoid incorrectly returning 403
 
-
-
     Modified by: Senparc - 20260813
-
     Change description: v0.23.3-preview7 Fixes the login redirection when the backend session expires and the persistence of data protection keys
-
-
 
 ----------------------------------------------------------------*/
 

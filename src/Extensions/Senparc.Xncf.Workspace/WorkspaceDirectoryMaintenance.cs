@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: WorkspaceDirectoryMaintenance.cs
     File description: Workspace directory usage statistics and content reset
-
 
     Created by: Senparc - 20261109
 

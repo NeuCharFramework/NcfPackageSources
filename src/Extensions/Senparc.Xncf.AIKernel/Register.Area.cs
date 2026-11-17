@@ -1,12 +1,12 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: Register.Area.cs
     File description: Register.Area related implementation
-    
-    
+
     Created by: Senparc - 20231220
-    
+
     Modified by: Senparc - 20260704
     Change description: vNext: add the standardized file header comment
 

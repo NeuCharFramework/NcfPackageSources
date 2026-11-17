@@ -2,31 +2,16 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: AiMessageContext.cs
-
     File description: AiMessageContext related implementation
-
-    
-
-    
 
     Created by: Senparc - 20250712
 
-    
-
     Modified by: Senparc - 20260702
-
     Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-
-
     Modified by: Senparc - 20261103
-
     Change description: v0.24.16 Updated module behavior and related support.
-
-
 
 ----------------------------------------------------------------*/
 

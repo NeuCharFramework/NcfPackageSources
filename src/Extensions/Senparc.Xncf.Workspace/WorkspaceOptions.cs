@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: WorkspaceOptions.cs
     File description: Workspace storage configuration
-    
-    
+
     Created by: Senparc - 20261015
-    
+
     Modified by: Senparc - 20261021
     Change description: v0.1.1 configure the Workspace root path and execution limits
 

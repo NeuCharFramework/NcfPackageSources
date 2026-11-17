@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20260906192159_Add_NeuBellWebHook.Designer.cs
     File description: Related implementation.
-
 
     Created by: Senparc - 20260809
 

@@ -2,37 +2,19 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: MyFunctionRequest.cs
-
     File description: MyFunctionRequest related implementation
-
-    
-
-    
 
     Created by: Senparc - 20250325
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
 
-
-
     Modified by: Senparc - 20260717
-
     Change description: v0.4.0-preview3 Updated module behavior and related support.
 
-
-
     Modified by: Senparc - 20261103
-
     Change description: v0.5.10 Remove DatabaseSample and related components from MCP extension
-
-
 
 ----------------------------------------------------------------*/
 

@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: 20260831034100_Add_NeuCharPivotBoard.cs
     File description: database migration and model snapshot
-
+    Change description: v0.7.0 Updated module behavior and related support.
 
     Created by: Senparc - 20260831
-    Change description: v0.7.0 Updated module behavior and related support.
 
     Modified by: Senparc - 20260915
     Change description: v0.8.0 Updated module behavior and related support.

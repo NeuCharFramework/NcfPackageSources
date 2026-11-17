@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20260802175647_Add_FooterContent.Designer.cs
     File description: Entity Framework database migration metadata definition.
-
 
     Created by: Senparc - 20211128
 

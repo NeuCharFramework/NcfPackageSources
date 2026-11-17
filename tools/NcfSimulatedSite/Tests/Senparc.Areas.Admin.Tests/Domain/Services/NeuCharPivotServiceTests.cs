@@ -1,8 +1,10 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: NeuCharPivotServiceTests.cs
     File description: Related implementation.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Areas.Admin.Domain.Services;

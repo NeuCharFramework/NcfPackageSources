@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20260803133030_Add_AgentTemplate_KnowledgeBaseId.Designer.cs
     File description: Entity Framework database migration metadata definition.
-
 
     Created by: Senparc - 20231021
 

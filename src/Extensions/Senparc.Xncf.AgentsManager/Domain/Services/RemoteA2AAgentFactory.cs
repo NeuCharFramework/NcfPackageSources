@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: RemoteA2AAgentFactory.cs
     File description: domain services and business-process implementation
-
 
     Created by: Senparc - 20260812
 

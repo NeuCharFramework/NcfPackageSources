@@ -1,9 +1,9 @@
-﻿/*-----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20260821135045_Add_AdminChatSessionWorkflows.Designer.cs
     File description: 20260821135045_Add_AdminChatSessionWorkflows.Designer.cs related implementation
-
 
     Created by: Senparc - 20260809
 

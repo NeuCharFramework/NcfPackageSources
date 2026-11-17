@@ -1,9 +1,10 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: NeuBellTest_Request.cs
     File description: Related implementation.
-
+    Legacy comment translated to English.
 
     Created by: Senparc - 20260805
 
@@ -15,7 +16,6 @@
 
     Modified by: Senparc - 20260910
     Change description: Updated module behavior and related support.
-    Legacy comment translated to English.
 
     Modified by: Senparc - 20260914
     Change description: Updated module behavior and related support.

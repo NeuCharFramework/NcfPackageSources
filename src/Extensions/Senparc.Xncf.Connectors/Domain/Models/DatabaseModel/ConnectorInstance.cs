@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: ConnectorInstance.cs
     File description: persisted connector account entity
-    
-    
+
     Created by: Senparc - 20261111
-    
+
     Modified by: Senparc - 20261111
     Change description: v0.1.0 store connector accounts and protected configuration
 

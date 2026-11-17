@@ -1,8 +1,10 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: NeuBellWebHookDispatcherTests.cs
     File description: Related implementation.
+    Legacy comment translated to English.
     Legacy comment translated to English.
 
     Created by: Senparc - 20260906
@@ -12,7 +14,6 @@
 
     Modified by: Senparc - 20260914
     Change description: v0.7.1 Updated module behavior and related support.
-    Legacy comment translated to English.
 
 ----------------------------------------------------------------*/
 

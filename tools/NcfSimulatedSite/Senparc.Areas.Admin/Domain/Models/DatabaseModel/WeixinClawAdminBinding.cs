@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: WeixinClawAdminBinding.cs
     File description: WeixinClawAdminBinding.cs implementation and project behavior.
-
 
     Created by: Senparc - 20260926
 

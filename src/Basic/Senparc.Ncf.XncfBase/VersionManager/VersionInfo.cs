@@ -2,25 +2,13 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: VersionInfo.cs
-
     File description: VersionInfo related implementation
-
-    
-
-    
 
     Created by: Senparc - 20231104
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
-
-
 
 ----------------------------------------------------------------*/
 

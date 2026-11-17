@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: 20260913220801_AddChatMessages.cs
     File description: database migration and model snapshot
-
 
     Created by: Senparc - 20260913
 

@@ -406,4 +406,23 @@
   <data name="Frontend.388" xml:space="preserve"><value>例如：共 {0} 项：||Example: {0} items:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.389" xml:space="preserve"><value>{0} 个待处理请求||{0} pending requests</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.390" xml:space="preserve"><value>显示更多步骤（{0} / {1}）||Show more steps ({0} / {1})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+
+  <data name="Frontend.391" xml:space="preserve"><value>测试运行就绪||Test run ready</value></data>
+  <data name="Frontend.392" xml:space="preserve"><value>正在校验参数和节点引用||Validating parameters and node references</value></data>
+  <data name="Frontend.393" xml:space="preserve"><value>正在中止工作流，等待当前节点响应取消||Aborting the workflow and waiting for the current node to acknowledge cancellation</value></data>
+  <data name="Frontend.394" xml:space="preserve"><value>等待 Human 输入或审批，Workflow 已暂停||Waiting for Human input or approval; the Workflow is paused</value></data>
+  <data name="Frontend.395" xml:space="preserve"><value>工作流运行中，编辑已锁定||The Workflow is running; editing is locked</value></data>
+  <data name="Frontend.396" xml:space="preserve"><value>最近一次测试运行成功||The latest test run succeeded</value></data>
+  <data name="Frontend.397" xml:space="preserve"><value>最近一次测试运行失败||The latest test run failed</value></data>
+  <data name="Frontend.398" xml:space="preserve"><value>开始执行节点。||Starting node execution.</value></data>
+  <data name="Frontend.399" xml:space="preserve"><value>节点执行完成。||Node execution completed.</value></data>
+  <data name="Frontend.400" xml:space="preserve"><value>执行中||Running</value></data>
+  <data name="Frontend.401" xml:space="preserve"><value>执行完成||Execution completed</value></data>
+  <data name="Frontend.402" xml:space="preserve"><value>执行失败||Execution failed</value></data>
+  <data name="Frontend.403" xml:space="preserve"><value>选择分支||Branch selected</value></data>
+  <data name="Frontend.404" xml:space="preserve"><value>Console 输出||Console output</value></data>
+  <data name="Frontend.405" xml:space="preserve"><value>状态更新||Status updated</value></data>
+  <data name="Frontend.406" xml:space="preserve"><value>运行成功||Run succeeded</value></data>
+  <data name="Frontend.407" xml:space="preserve"><value>运行失败||Run failed</value></data>
+  <data name="Frontend.408" xml:space="preserve"><value>运行完成||Run completed</value></data>
 </root>

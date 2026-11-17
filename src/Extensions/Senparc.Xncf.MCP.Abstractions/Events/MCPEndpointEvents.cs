@@ -1,18 +1,18 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: MCPEndpointEvents.cs
     File description: Related implementation.
-
+    Legacy comment translated to English.
 
     Created by: Senparc - 20260327
-    
+
     Modified by: Senparc - 20260704
     Change description: vNext: add the standardized file header comment
 
     Modified by: Senparc - 20260924
     Change description: v0.1.0 Updated module behavior and related support.
-    Legacy comment translated to English.
 
     Modified by: Senparc - 20261005
     Change description: v0.1.0 0.1.0 feat: add MCP endpoint selection feature in AgentsManager

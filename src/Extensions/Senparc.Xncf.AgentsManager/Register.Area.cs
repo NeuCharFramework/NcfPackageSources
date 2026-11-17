@@ -2,31 +2,16 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: Register.Area.cs
-
     File description: Register.Area implementation
-
-    
-
-    
 
     Created by: Senparc - 20240616
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext add the standardized file header
 
-
-
     Modified by: Senparc - 20260717
-
     Change description: v0.12.0-preview6 integrate AgentsManager with unified localization and refine UI copy
-
-
 
 ----------------------------------------------------------------*/
 

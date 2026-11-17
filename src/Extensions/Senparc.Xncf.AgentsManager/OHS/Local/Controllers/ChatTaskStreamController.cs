@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: ChatTaskStreamController.cs
     File description: Related implementation.
-    
-    
+
     Created by: Senparc - 20260626
-    
+
     Modified by: Senparc - 20260701
     Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
@@ -21,6 +21,7 @@
 
     Modified by: Senparc - 20260705
     Change description: v0.11.2-preview4 Updated module behavior and related support.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;

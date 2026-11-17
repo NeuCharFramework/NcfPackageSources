@@ -1,6 +1,7 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: Board.cshtml.cs
     File description: Related implementation.
     Legacy comment translated to English.

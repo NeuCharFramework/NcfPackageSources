@@ -2,37 +2,19 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: XncfRegisterBase.cs
-
     File description: XncfRegisterBase related implementation
-
-    
-
-    
 
     Created by: Senparc - 20200724
 
-    
-
     Modified by: Senparc - 20260702
-
     Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-
-
     Modified by: Senparc - 20260804
-
     Change description: v0.24.0-preview5 Updated module behavior and related support.
 
-
-
     Modified by: Senparc - 20261108
-
     Change description: Updated module behavior and related support.
-
-
 
 ----------------------------------------------------------------*/
 

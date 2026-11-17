@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20260914174349_Add_AdminChatMessageTrajectory.Designer.cs
     File description: Related implementation.
-
 
     Created by: Senparc - 20200724
 

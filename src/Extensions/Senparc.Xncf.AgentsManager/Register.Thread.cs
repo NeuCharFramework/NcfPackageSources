@@ -1,12 +1,12 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: Register.Thread.cs
     File description: Register.Thread related implementation
-    
-    
+
     Created by: Senparc - 20241216
-    
+
     Modified by: Senparc - 20260704
     Change description: vNext: add the standardized file header comment
 

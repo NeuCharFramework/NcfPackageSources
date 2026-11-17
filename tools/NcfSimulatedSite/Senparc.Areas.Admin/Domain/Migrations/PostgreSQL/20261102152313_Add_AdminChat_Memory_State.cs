@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20261102152313_Add_AdminChat_Memory_State.cs
     File description: 20261102152313_Add_AdminChat_Memory_State related definitions and implementation
-
 
     Created by: Senparc - 20211114
 

@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: MCPSenparcEntities_SqliteModelSnapshot.cs
     File description: MCPSenparcEntities_SqliteModelSnapshot.cs implementation and project behavior.
-
 
     Created by: Senparc - 20200724
 

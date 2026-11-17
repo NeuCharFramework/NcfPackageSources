@@ -2,31 +2,16 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: PagerBarExtension.cs
-
     File description: PagerBarExtension related implementation
-
-    
-
-    
 
     Created by: Senparc - 20200724
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
 
-
-
     Modified by: Senparc - 20260731
-
     Change description: v0.22.0-preview4 Updated module behavior and related support.
-
-
 
 ----------------------------------------------------------------*/
 

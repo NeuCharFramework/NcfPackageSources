@@ -2,25 +2,13 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: PromptItemVersion.cs
-
     File description: PromptItemVersion related implementation
-
-    
-
-    
 
     Created by: Senparc - 20240713
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
-
-
 
 ----------------------------------------------------------------*/
 

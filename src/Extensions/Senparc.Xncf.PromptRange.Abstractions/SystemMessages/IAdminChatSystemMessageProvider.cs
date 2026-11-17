@@ -1,4 +1,5 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: IAdminChatSystemMessageProvider.cs

@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20260926120052_Add_WeixinClawAdminIntegration.Designer.cs
     File description: 20260926120052_Add_WeixinClawAdminIntegration.Designer.cs implementation and project behavior.
-
 
     Created by: Senparc - 20200724
 

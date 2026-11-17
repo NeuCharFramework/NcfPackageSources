@@ -2,25 +2,13 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: MyFunctionRequest.cs
-
     File description: Related implementation.
-
-    
-
-    
 
     Created by: Senparc - 20211031
 
-    
-
     Modified by: Senparc - 20260724
-
     Change description: v0.3.0 Updated module behavior and related support.
-
-
 
 ----------------------------------------------------------------*/
 using Senparc.Ncf.XncfBase.FunctionRenders;

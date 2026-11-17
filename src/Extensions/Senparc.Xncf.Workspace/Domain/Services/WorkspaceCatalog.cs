@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: WorkspaceCatalog.cs
     File description: aggregate Workspace usage by administrator and clear content within permission boundaries
-
 
     Created by: Senparc - 20261109
 

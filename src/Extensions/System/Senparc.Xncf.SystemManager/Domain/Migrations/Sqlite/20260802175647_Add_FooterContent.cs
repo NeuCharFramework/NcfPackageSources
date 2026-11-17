@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20260802175647_Add_FooterContent.cs
     File description: Entity Framework database migration implementation.
-
 
     Created by: Senparc - 20250120
 

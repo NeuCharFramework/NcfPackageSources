@@ -2,31 +2,16 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: DatabaseMigrationRequest.cs
-
     File description: DatabaseMigrationRequest related implementation
-
-    
-
-    
 
     Created by: Senparc - 20211016
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: v0.36.2-preview1 Updated module behavior and related support.
 
-
-
     Modified by: Senparc - 20260717
-
     Change description: v0.37.0-preview5 Updated module behavior and related support.
-
-
 
 ----------------------------------------------------------------*/
 using Microsoft.Extensions.DependencyInjection;

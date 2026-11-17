@@ -1,10 +1,12 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: SandboxNotebookBuilderTests.cs
     File description: Related implementation.
 
     Created by: Senparc - 20260918
+
     Modified by: Senparc - 20260918
     Change description: v0.3.3 Updated module behavior and related support.
 

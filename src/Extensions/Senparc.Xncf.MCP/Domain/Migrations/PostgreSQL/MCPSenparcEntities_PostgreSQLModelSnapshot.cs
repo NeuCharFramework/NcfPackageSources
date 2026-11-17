@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: MCPSenparcEntities_PostgreSQLModelSnapshot.cs
     File description: MCPSenparcEntities_PostgreSQLModelSnapshot.cs implementation and project behavior.
-
 
     Created by: Senparc - 20200724
 

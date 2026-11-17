@@ -2,25 +2,13 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: AIModel_Request.cs
-
     File description: AIModel_Request related implementation
-
-    
-
-    
 
     Created by: Senparc - 20240103
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
-
-
 
 ----------------------------------------------------------------*/
 

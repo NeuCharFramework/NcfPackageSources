@@ -1,9 +1,10 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: ChatGroupTextHelpers.cs
     File description: Related implementation.
-    
+
     Created by: Senparc - 20260927
     Creation description: Related implementation.
 

@@ -2,25 +2,13 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: IxncfMcp.cs
-
     File description: IxncfMcp related implementation
-
-    
-
-    
 
     Created by: Senparc - 20250620
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
-
-
 
 ----------------------------------------------------------------*/
 

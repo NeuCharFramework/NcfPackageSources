@@ -1,10 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: DesktopBridgePairingModels.cs
     File description: Related implementation.
 
     Created by: Senparc - 20260801
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.DesktopBridge.Models;

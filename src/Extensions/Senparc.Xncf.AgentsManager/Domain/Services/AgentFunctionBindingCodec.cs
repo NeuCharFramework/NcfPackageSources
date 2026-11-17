@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: AgentFunctionBindingCodec.cs
     File description: AgentFunctionBindingCodec.cs related implementation
-
 
     Created by: Senparc - 20260822
 

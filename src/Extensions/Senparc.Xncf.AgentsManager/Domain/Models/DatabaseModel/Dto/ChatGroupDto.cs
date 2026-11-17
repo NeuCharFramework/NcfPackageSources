@@ -2,31 +2,16 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: ChatGroupDto.cs
-
     File description: ChatGroupDto related implementation
-
-
-
-
 
     Created by: Senparc - 20240616
 
-
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
 
-
-
     Modified by: Senparc - 20260813
-
     Change description: v0.15.0-preview11 Updated module behavior and related support.
-
-
 
 ----------------------------------------------------------------*/
 

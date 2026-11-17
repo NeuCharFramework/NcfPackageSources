@@ -1,12 +1,12 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: 20261106160005_Add_AdminChatSession_HasUnread.Designer.cs
     File description: Related implementation.
-    
-    
+
     Created by: Senparc - 20200724
-    
+
     Modified by: Senparc - 20261110
     Change description: v0.12.27 Updated module behavior and related support.
 

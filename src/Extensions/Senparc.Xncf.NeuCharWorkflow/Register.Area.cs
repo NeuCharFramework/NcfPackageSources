@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: Register.Area.cs
     File description: Workflow orchestration, replay, Webhook, and parallel execution
-
 
     Created by: Senparc - 20260810
 

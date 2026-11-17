@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: WorkflowDependencyContracts.cs
     File description: WorkflowDependencyContracts.cs related implementation
-
 
     Created by: Senparc - 20260822
 

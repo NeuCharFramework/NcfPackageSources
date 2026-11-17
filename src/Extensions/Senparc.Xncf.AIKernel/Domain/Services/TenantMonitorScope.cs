@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: TenantMonitorScope.cs
     File description: TenantMonitorScope related definitions and implementation
-
 
     Created by: Senparc - 20261001
 

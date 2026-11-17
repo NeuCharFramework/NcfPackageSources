@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: PublishedA2AAgentController.cs
     File description: HTTP controller and remote interface
-
 
     Created by: Senparc - 20260813
 

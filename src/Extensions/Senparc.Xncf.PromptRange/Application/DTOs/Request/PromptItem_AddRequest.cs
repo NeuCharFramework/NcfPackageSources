@@ -1,17 +1,18 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: PromptItem_AddRequest.cs
     File description: Related implementation.
-    
-    
+
     Created by: Senparc - 20231021
-    
+
     Modified by: Senparc - 20260702
     Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
     Modified by: Senparc - 20260705
-    Change description: v0.16.4-preview3 Updated module behavior and related support.*/
+
+----------------------------------------------------------------*/
 
 using System;
 using System.Collections.Generic;

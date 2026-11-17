@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: Register.cs
     File description: Workspace module registration
-    
-    
+
     Created by: Senparc - 20261015
-    
+
     Modified by: Senparc - 20261021
     Change description: v0.1.1 register metadata storage and migrate the database on installation
 

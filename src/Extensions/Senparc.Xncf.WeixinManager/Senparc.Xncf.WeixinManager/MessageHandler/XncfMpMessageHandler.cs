@@ -1,12 +1,12 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: XncfMpMessageHandler.cs
     File description: XncfMpMessageHandler related implementation
-    
-    
+
     Created by: Senparc - 20250712
-    
+
     Modified by: Senparc - 20260702
     Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 

@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: WeixinClawAccountService.cs
     File description: WeixinClawAccountService.cs implementation and project behavior.
-
 
     Created by: Senparc - 20260920
 

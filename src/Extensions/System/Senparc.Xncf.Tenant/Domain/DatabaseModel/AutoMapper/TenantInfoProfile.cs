@@ -2,25 +2,13 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: TenantInfoProfile.cs
-
     File description: TenantInfoProfile related implementation
-
-    
-
-    
 
     Created by: Senparc - 20211222
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
-
-
 
 ----------------------------------------------------------------*/
 

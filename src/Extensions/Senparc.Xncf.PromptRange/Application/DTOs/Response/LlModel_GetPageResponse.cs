@@ -1,12 +1,12 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: LlModel_GetPageResponse.cs
     File description: LlModel_GetPageResponse related implementation
-    
-    
+
     Created by: Senparc - 20260704
-    
+
     Modified by: Senparc - 20260704
     Change description: vNext: add the standardized file header comment
 

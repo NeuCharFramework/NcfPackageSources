@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20261024023159_AddWorkspaceRecord.cs
     File description: 20261024023159_AddWorkspaceRecord related definitions and implementation
-
 
     Created by: Senparc - 20211211
 

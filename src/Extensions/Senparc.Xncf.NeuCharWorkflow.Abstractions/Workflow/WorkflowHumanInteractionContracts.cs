@@ -1,11 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: WorkflowHumanInteractionContracts.cs
     File description: Related implementation.
+    Change description: Updated module behavior and related support.
 
     Created by: Senparc - 20260815
-    Change description: Updated module behavior and related support.
 
     Modified by: Senparc - 20260817
     Change description: v0.2.0 Updated module behavior and related support.

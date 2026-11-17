@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: WeixinClawProtocol.cs
     File description: WeixinClawProtocol.cs implementation and project behavior.
-
 
     Created by: Senparc - 20260920
 

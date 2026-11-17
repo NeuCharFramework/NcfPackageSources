@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: ChatGroupResponse.cs
     File description: ChatGroupResponse related implementation
-
 
     Created by: Senparc - 20260704
 

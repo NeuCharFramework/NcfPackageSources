@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: AgentsManagerResource.cs
     File description: AgentsManagerResource related implementation
-    
-    
+
     Created by: Senparc - 20260717
-    
+
     Modified by: Senparc - 20260717
     Change description: v0.12.0-preview6 Updated module behavior and related support.
 

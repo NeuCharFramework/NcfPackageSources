@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20260803133048_Add_AgentTemplate_KnowledgeBaseId.cs
     File description: Entity Framework database migration implementation.
-
 
     Created by: Senparc - 20260803
 

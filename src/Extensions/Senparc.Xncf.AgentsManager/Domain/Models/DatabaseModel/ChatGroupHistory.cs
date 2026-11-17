@@ -2,37 +2,19 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: ChatGroupHistory.cs
-
     File description: Related implementation.
-
-
-
-
 
     Created by: Senparc - 20240616
 
-
-
     Modified by: Senparc - 20260701
-
     Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
-
-
 
     Modified by: Senparc - 20260702
-
     Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-
-
     Modified by: Senparc - 20260813
-
     Change description: v0.15.0-preview11 Updated module behavior and related support.
-
-
 
 ----------------------------------------------------------------*/
 

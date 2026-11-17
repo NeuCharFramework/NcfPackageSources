@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: WeixinClawBindingProfileDto.cs
     File description: WeixinClawBindingProfileDto.cs implementation and project behavior.
-
 
     Created by: Senparc - 20260928
 

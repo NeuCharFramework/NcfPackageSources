@@ -2,31 +2,17 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: RequestTenantSnapshot.cs
-
     File description: Related implementation.
-
-    
+    Change description: vNext Updated module behavior and related support.
 
     Created by: Senparc - 20261028
 
-    Change description: vNext Updated module behavior and related support.
-
-
-
     Modified by: Senparc - 20261028
-
     Change description: Updated module behavior and related support.
 
-
-
     Modified by: Senparc - 20261103
-
     Change description: v0.30.3-preview9 Updated module behavior and related support.
-
-
 
 ----------------------------------------------------------------*/
 

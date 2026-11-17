@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: WeixinClawAiMessageHandler.cs
     File description: WeixinClawAiMessageHandler related definitions and implementation
-
 
     Created by: Senparc - 20260925
 

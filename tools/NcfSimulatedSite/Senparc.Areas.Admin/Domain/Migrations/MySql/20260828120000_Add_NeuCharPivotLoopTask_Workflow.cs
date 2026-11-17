@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20260828120000_Add_NeuCharPivotLoopTask_Workflow.cs
     File description: database migration definition
-
 
     Created by: Senparc - 20260828
 

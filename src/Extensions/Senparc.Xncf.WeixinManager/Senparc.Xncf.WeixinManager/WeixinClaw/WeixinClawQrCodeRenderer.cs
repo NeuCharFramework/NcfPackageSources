@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: WeixinClawQrCodeRenderer.cs
     File description: WeixinClawQrCodeRenderer.cs implementation and project behavior.
-
 
     Created by: Senparc - 20260926
 

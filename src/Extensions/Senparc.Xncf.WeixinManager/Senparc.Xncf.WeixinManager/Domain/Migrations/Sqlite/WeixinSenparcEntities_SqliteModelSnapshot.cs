@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: WeixinSenparcEntities_SqliteModelSnapshot.cs
     File description: WeixinSenparcEntities_SqliteModelSnapshot.cs implementation and project behavior.
-
 
     Created by: Senparc - 20250712
 

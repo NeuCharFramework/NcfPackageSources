@@ -405,4 +405,23 @@
   <data name="Frontend.388" xml:space="preserve"><value>例如：共 {0} 项：||Example: {0} items:</value></data>
   <data name="Frontend.389" xml:space="preserve"><value>{0} 个待处理请求||{0} pending requests</value></data>
   <data name="Frontend.390" xml:space="preserve"><value>显示更多步骤（{0} / {1}）||Show more steps ({0} / {1})</value></data>
+
+  <data name="Frontend.391" xml:space="preserve"><value>测试运行就绪||测试运行就绪</value></data>
+  <data name="Frontend.392" xml:space="preserve"><value>正在校验参数和节点引用||正在校验参数和节点引用</value></data>
+  <data name="Frontend.393" xml:space="preserve"><value>正在中止工作流，等待当前节点响应取消||正在中止工作流，等待当前节点响应取消</value></data>
+  <data name="Frontend.394" xml:space="preserve"><value>等待 Human 输入或审批，Workflow 已暂停||等待 Human 输入或审批，Workflow 已暂停</value></data>
+  <data name="Frontend.395" xml:space="preserve"><value>工作流运行中，编辑已锁定||工作流运行中，编辑已锁定</value></data>
+  <data name="Frontend.396" xml:space="preserve"><value>最近一次测试运行成功||最近一次测试运行成功</value></data>
+  <data name="Frontend.397" xml:space="preserve"><value>最近一次测试运行失败||最近一次测试运行失败</value></data>
+  <data name="Frontend.398" xml:space="preserve"><value>开始执行节点。||开始执行节点。</value></data>
+  <data name="Frontend.399" xml:space="preserve"><value>节点执行完成。||节点执行完成。</value></data>
+  <data name="Frontend.400" xml:space="preserve"><value>执行中||执行中</value></data>
+  <data name="Frontend.401" xml:space="preserve"><value>执行完成||执行完成</value></data>
+  <data name="Frontend.402" xml:space="preserve"><value>执行失败||执行失败</value></data>
+  <data name="Frontend.403" xml:space="preserve"><value>选择分支||选择分支</value></data>
+  <data name="Frontend.404" xml:space="preserve"><value>Console 输出||Console 输出</value></data>
+  <data name="Frontend.405" xml:space="preserve"><value>状态更新||状态更新</value></data>
+  <data name="Frontend.406" xml:space="preserve"><value>运行成功||运行成功</value></data>
+  <data name="Frontend.407" xml:space="preserve"><value>运行失败||运行失败</value></data>
+  <data name="Frontend.408" xml:space="preserve"><value>运行完成||运行完成</value></data>
 </root>

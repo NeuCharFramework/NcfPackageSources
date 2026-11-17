@@ -1,6 +1,7 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: Register.cs
     File description: module registration and initialization logic
 

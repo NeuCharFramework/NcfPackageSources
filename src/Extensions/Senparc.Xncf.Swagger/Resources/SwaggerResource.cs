@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: SwaggerResource.cs
     File description: SwaggerResource related implementation
-    
-    
+
     Created by: Senparc - 20260717
-    
+
     Modified by: Senparc - 20260717
     Change description: v0.19.0-preview2 Updated module behavior and related support.
 

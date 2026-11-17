@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: NeuCharWorkflowChatController.cs
     File description: Chat trigger page and anonymous HTTP entry points
-
 
     Created by: Senparc - 20260909
     Creation description: v0.4.0 add the Chat trigger

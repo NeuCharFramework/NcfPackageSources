@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20260911095338_Add_AdminChatHarnessTrajectory.cs
     File description: Related implementation.
-
 
     Created by: Senparc - 20211212
 

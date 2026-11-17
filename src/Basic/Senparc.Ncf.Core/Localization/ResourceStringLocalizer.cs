@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: ResourceStringLocalizer.cs
     File description: ResourceStringLocalizer related implementation
-    
-    
+
     Created by: Senparc - 20260717
-    
+
     Modified by: Senparc - 20260717
     Change description: v0.25.0-preview2 add unify resource localization base facilities and support FunctionRender dynamic text
 

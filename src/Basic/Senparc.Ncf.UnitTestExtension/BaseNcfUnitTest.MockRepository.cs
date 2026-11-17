@@ -2,25 +2,13 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: BaseNcfUnitTest.MockRepository.cs
-
     File description: BaseNcfUnitTest.MockRepository related implementation
-
-    
-
-    
 
     Created by: Senparc - 20240720
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
-
-
 
 ----------------------------------------------------------------*/
 

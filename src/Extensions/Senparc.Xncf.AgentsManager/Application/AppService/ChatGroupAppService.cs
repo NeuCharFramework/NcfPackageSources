@@ -1,6 +1,7 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: ChatGroupAppService.cs
     File description: ChatGroupAppService related implementation
 

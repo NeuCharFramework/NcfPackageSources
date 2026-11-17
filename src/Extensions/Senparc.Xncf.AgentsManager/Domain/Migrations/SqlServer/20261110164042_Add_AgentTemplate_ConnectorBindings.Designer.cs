@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20261110164042_Add_AgentTemplate_ConnectorBindings.Designer.cs
     File description: database migration designer model
-
 
     Created by: Senparc - 20231021
 

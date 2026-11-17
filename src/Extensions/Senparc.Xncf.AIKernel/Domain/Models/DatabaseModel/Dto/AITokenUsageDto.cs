@@ -1,9 +1,10 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: AITokenUsageDto.cs
     File description: AITokenUsageDto related implementation
-    
+
     Created by: Senparc - 20260904
 
     Modified by: Senparc - 20260915

@@ -1,10 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: DatabaseInstallStateTests.cs
     File description: Test for classification of exceptions in the initial installation of the database and schema upgrade
 
     Created by: Senparc - 20260803
+
 ----------------------------------------------------------------*/
 
 using System;

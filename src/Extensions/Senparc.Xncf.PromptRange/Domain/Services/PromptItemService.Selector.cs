@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: PromptItemService.Selector.cs
     File description: PromptItemService.Selector related definitions and implementation
-
 
     Created by: Senparc - 20261102
 

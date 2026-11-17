@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: NcfFolderService.cs
     File description: NcfFolderService related implementation
-
 
     Created by: Senparc - 20251224
 

@@ -2,25 +2,13 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: Program.cs
-
     File description: Related implementation.
-
-    
-
-    
 
     Created by: Senparc - 20250321
 
-    
-
     Modified by: Senparc - 20260726
-
     Change description: v0.0.1 Updated module behavior and related support.
-
-
 
 ----------------------------------------------------------------*/
 using Microsoft.Extensions.Logging;

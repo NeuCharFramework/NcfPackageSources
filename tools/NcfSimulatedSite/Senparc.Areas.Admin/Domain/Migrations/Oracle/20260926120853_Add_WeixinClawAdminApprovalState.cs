@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20260926120853_Add_WeixinClawAdminApprovalState.cs
     File description: 20260926120853_Add_WeixinClawAdminApprovalState.cs implementation and project behavior.
-
 
     Created by: Senparc - 20260926
 

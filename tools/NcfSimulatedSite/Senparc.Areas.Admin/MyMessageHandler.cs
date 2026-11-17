@@ -2,25 +2,13 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: MyMessageHandler.cs
-
     File description: MyMessageHandler related implementation
-
-    
-
-    
 
     Created by: Senparc - 20241028
 
-    
-
     Modified by: Senparc - 20260702
-
     Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
-
-
 
 ----------------------------------------------------------------*/
 

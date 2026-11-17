@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: WorkspaceDocumentTools.cs
     File description: WorkspaceDocumentTools related definitions and implementation
-
 
     Created by: Senparc - 20261026
 

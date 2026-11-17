@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: SystemManagerResource.cs
     File description: SystemManagerResource related implementation
-    
-    
+
     Created by: Senparc - 20260717
-    
+
     Modified by: Senparc - 20260717
     Change description: v0.15.0-preview3 integrate shared resource localization and improve feature text for the SystemManager module
 

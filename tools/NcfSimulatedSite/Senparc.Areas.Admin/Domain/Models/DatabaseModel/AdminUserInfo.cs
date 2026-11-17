@@ -2,25 +2,13 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: AdminUserInfo.cs
-
     File description: Related implementation.
-
-    
-
-    
 
     Created by: Senparc - 20241028
 
-    
-
     Modified by: Senparc - 20260724
-
     Change description: v0.1.0 enhance batch module updates and improve the multilingual management interface
-
-
 
 ----------------------------------------------------------------*/
 using Senparc.CO2NET.Extensions;

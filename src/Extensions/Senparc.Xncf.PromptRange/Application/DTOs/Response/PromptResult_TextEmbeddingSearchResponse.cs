@@ -1,14 +1,15 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: PromptResult_TextEmbeddingSearchResponse.cs
     File description: PromptResult_TextEmbeddingSearchResponse related implementation
-    
-    
+
     Created by: Senparc - 20260705
 
     Modified by: Senparc - 20260705
-    Change description: v0.16.4-preview3 Updated module behavior and related support.*/
+
+----------------------------------------------------------------*/
 
 using System.Collections.Generic;
 

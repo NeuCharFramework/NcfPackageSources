@@ -2,37 +2,19 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: TerminalAppService.cs
-
     File description: TerminalAppService related implementation
-
-    
-
-    
 
     Created by: Senparc - 20211016
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
 
-
-
     Modified by: Senparc - 20260717
-
     Change description: v0.22.0-preview2 Updated module behavior and related support.
 
-
-
     Modified by: Senparc - 20260729
-
     Change description: v0.22.1-preview3 Updated module behavior and related support.
-
-
 
 ----------------------------------------------------------------*/
 

@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: NcfFolder.cs
     File description: NcfFolder related implementation
-
 
     Created by: Senparc - 20260104
 

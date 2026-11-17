@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20260911075557_Add_NeuBellWebHookLog.cs
     File description: Related implementation.
-
 
     Created by: Senparc - 20211114
 

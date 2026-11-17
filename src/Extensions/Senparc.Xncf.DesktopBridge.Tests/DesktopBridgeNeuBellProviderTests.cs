@@ -1,10 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: DesktopBridgeNeuBellProviderTests.cs
     File description: Related implementation.
 
     Created by: Senparc - 20260802
+
 ----------------------------------------------------------------*/
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;

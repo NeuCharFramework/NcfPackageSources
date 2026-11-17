@@ -2,31 +2,16 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: Register.cs
-
     File description: module registration and initialization logic
-
-    
-
-    
 
     Created by: Senparc - 20241028
 
-    
-
     Modified by: Senparc - 20260724
-
     Change description: v0.4.0 Updated module behavior and related support.
 
-
-
     Modified by: Senparc - 20261111
-
     Change description: v0.5.14 unify XNCF Register display metadata and localization resource keys
-
-
 
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Builder;

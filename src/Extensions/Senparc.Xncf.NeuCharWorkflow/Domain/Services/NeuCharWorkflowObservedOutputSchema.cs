@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: NeuCharWorkflowObservedOutputSchema.cs
     File description: Related implementation.
-
 
     Created by: Senparc - 20260811
 

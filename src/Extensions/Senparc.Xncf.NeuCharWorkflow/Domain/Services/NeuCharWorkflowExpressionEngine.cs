@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: NeuCharWorkflowExpressionEngine.cs
     File description: Restricted expression interpreter for Workflow text templates
-
 
     Created by: Senparc - 20260811
 

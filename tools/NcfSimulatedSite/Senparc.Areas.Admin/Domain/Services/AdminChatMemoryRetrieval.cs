@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: AdminChatMemoryRetrieval.cs
     File description: AdminChatMemoryRetrieval related definitions and implementation
-
 
     Created by: Senparc - 20261103
 

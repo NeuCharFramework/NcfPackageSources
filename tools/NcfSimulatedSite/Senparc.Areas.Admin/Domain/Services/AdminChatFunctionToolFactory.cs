@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: AdminChatFunctionToolFactory.cs
     File description: AdminChatFunctionToolFactory.cs related implementation
-
 
     Created by: Senparc - 20260820
 

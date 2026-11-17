@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: PromptAudioController.cs
     File description: Related implementation.
-    
-    
+
     Created by: Senparc - 20260705
 
     Modified by: Senparc - 20260705
@@ -12,7 +12,7 @@
     Modified by: Senparc - 20260729
     Change description: v0.17.1-preview6 Updated module behavior and related support.
 
-    Change description: v0.16.4-preview3 Updated module behavior and related support.*/
+----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;

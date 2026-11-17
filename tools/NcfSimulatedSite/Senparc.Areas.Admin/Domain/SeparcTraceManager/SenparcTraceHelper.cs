@@ -2,25 +2,13 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: SenparcTraceHelper.cs
-
     File description: Related implementation.
-
-
-
-
 
     Created by: Senparc - 20241028
 
-
-
     Modified by: Senparc - 20260813
-
     Change description: v0.5.0 Updated module behavior and related support.
-
-
 
 ----------------------------------------------------------------*/
 

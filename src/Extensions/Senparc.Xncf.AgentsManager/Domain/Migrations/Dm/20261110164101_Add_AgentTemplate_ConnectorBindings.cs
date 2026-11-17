@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20261110164101_Add_AgentTemplate_ConnectorBindings.cs
     File description: database migration definition
-
 
     Created by: Senparc - 20250120
 

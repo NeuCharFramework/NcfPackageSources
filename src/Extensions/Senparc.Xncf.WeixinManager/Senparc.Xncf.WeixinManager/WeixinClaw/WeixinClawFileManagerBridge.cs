@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: WeixinClawFileManagerBridge.cs
     File description: WeixinClawFileManagerBridge related definitions and implementation
-
 
     Created by: Senparc - 20261001
 

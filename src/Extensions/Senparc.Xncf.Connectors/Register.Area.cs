@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: Register.Area.cs
     File description: Related implementation.
-    
-    
+
     Created by: Senparc - 20261111
-    
+
     Modified by: Senparc - 20261111
     Change description: v0.1.0 register the connector admin menu
 

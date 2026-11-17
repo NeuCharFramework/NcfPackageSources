@@ -1,9 +1,9 @@
-﻿/*-----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20260828120000_Add_NeuCharPivotLoopTask_Workflow.Designer.cs
     File description: 20260828120000_Add_NeuCharPivotLoopTask_Workflow.Designer.cs related implementation
-
 
     Created by: Senparc - 20260809
 

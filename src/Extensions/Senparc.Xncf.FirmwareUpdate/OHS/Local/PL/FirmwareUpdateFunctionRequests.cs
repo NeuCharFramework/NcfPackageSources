@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: FirmwareUpdateFunctionRequests.cs
     File description: FirmwareUpdateFunctionRequests related implementation
-    
-    
+
     Created by: Senparc - 20260504
-    
+
     Modified by: Senparc - 20260704
     Change description: vNext: add the standardized file header comment
 

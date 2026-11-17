@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20260802183821_Add_XncfPreview.cs
     File description: Entity Framework database migration implementation.
-
 
     Created by: Senparc - 20260803
 

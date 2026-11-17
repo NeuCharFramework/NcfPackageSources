@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20261110164024_AddConnectorInstance.cs
     File description: database migration definition
-
 
     Created by: Senparc - 20211114
 

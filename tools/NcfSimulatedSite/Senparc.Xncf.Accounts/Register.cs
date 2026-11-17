@@ -2,31 +2,16 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: Register.cs
-
     File description: module registration and initialization logic
-
-    
-
-    
 
     Created by: Senparc - 20200818
 
-    
-
     Modified by: Senparc - 20260724
-
     Change description: v0.3.0 Updated module behavior and related support.
 
-
-
     Modified by: Senparc - 20261111
-
     Change description: v0.3.12 unify XNCF Register display metadata and localization resource keys
-
-
 
 ----------------------------------------------------------------*/
 using Senparc.Ncf.Core.Enums;

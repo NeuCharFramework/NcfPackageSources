@@ -1,10 +1,12 @@
 /*----------------------------------------------------------------
+
     File name: Board.js
     File description: Related implementation.
     Legacy comment translated to English.
 
     Modified by: Senparc - 20261101
     Change description: Updated module behavior and related support.
+
 ----------------------------------------------------------------*/
 new Vue({
     el: '#app',

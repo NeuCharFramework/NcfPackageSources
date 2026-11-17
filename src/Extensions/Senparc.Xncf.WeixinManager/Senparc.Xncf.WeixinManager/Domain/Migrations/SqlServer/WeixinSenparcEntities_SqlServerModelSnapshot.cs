@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: WeixinSenparcEntities_SqlServerModelSnapshot.cs
     File description: WeixinSenparcEntities_SqlServerModelSnapshot.cs implementation and project behavior.
-
 
     Created by: Senparc - 20250712
 

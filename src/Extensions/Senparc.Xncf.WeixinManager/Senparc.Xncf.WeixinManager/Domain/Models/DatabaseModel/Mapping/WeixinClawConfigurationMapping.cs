@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: WeixinClawConfigurationMapping.cs
     File description: WeixinClawConfigurationMapping.cs implementation and project behavior.
-
 
     Created by: Senparc - 20260920
 

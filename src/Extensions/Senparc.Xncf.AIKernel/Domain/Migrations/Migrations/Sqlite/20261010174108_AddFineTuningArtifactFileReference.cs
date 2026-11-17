@@ -1,12 +1,12 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: 20261010174108_AddFineTuningArtifactFileReference.cs
     File description: EF Core database migration
-    
-    
+
     Created by: Senparc - 20261014
-    
+
     Modified by: Senparc - 20261021
     Change description: v0.17.0 Updated module behavior and related support.
 

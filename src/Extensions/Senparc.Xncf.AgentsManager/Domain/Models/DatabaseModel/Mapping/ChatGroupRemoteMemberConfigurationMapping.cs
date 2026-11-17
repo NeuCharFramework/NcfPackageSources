@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: ChatGroupRemoteMemberConfigurationMapping.cs
     File description: data model, DTO, and mapping definitions
-
 
     Created by: Senparc - 20260812
 

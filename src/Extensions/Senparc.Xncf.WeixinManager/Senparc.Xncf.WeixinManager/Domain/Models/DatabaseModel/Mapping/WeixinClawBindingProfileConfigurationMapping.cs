@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: WeixinClawBindingProfileConfigurationMapping.cs
     File description: WeixinClawBindingProfileConfigurationMapping.cs implementation and project behavior.
-
 
     Created by: Senparc - 20260928
 

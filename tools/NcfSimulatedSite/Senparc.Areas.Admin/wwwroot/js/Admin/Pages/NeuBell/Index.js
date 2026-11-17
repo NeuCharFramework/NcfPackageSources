@@ -1,7 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     File name: Index.js
     File description: Related implementation.
     Legacy comment translated to English.
+
 ----------------------------------------------------------------*/
 //Legacy comment translated to English.
 window.NeuBellWebHookUi = {

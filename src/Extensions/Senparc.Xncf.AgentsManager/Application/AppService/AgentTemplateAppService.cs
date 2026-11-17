@@ -1,6 +1,7 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: AgentTemplateAppService.cs
     File description: Related implementation.
 

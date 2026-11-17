@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: WorkflowClientServiceBase.cs
     File description: Domain services and business workflow implementation
-
 
     Created by: Senparc - 20260810
 

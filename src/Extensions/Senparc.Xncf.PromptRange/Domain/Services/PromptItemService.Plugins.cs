@@ -2,31 +2,16 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: PromptItemService.Plugins.cs
-
     File description: PromptItemService.Plugins related implementation
-
-    
-
-    
 
     Created by: Senparc - 20240207
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
 
-
-
     Modified by: Senparc - 20260729
-
     Change description: v0.17.1-preview6 Updated module behavior and related support.
-
-
 
 ----------------------------------------------------------------*/
 

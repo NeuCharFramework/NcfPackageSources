@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: SkillContracts.cs
     File description: Related implementation.
-    
-    
+
     Created by: Senparc - 20261016
-    
+
     Modified by: Senparc - 20261021
     Change description: v0.3.0-preview6 Updated module behavior and related support.
 

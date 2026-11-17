@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20260928054543_AddWeixinClawMessageRecordRunId.cs
     File description: 20260928054543_AddWeixinClawMessageRecordRunId.cs implementation and project behavior.
-
 
     Created by: Senparc - 20210105
 

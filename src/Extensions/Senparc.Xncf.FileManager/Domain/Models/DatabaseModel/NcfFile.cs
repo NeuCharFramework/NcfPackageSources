@@ -2,37 +2,19 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: NcfFile.cs
-
     File description: NcfFile related implementation
-
-
-
-
 
     Created by: Senparc - 20250112
 
-
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
 
-
-
     Modified by: Senparc - 20260813
-
     Change description: v0.6.0-preview1 Updated module behavior and related support.
 
-
-
     Modified by: Senparc - 20261103
-
     Change description: v0.8.1 add SourceFileId, SourceType, and SourceUrl columns to PromptRange table for PostgreSQL, SQL Server, and SQLite
-
-
 
 ----------------------------------------------------------------*/
 

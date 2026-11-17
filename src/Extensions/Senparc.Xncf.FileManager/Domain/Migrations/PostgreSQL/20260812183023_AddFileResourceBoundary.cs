@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: 20260812183023_AddFileResourceBoundary.cs
     File description: database migration and model snapshot
-
 
     Created by: Senparc - 20260813
 

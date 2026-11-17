@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: WeixinClawMediaPlaybackService.cs
     File description: WeixinClawMediaPlaybackService related definitions and implementation
-
 
     Created by: Senparc - 20261004
 

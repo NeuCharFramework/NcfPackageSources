@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: SandboxSenparcEntities_DmModelSnapshot.cs
     File description: SandboxSenparcEntities_DmModelSnapshot.cs implementation and project behavior.
-
 
     Created by: Senparc - 20260808
 

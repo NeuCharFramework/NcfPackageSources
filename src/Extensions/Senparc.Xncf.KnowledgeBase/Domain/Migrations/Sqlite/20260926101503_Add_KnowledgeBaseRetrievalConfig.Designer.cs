@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20260926101503_Add_KnowledgeBaseRetrievalConfig.Designer.cs
     File description: Entity Framework database migration metadata definition.
-
 
     Created by: Senparc - 20260926
 

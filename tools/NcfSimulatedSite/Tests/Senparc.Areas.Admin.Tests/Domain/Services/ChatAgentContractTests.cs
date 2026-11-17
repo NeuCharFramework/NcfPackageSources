@@ -1,8 +1,10 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: ChatAgentContractTests.cs
     File description: Related implementation.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Shared.Abstractions.ChatAgent;

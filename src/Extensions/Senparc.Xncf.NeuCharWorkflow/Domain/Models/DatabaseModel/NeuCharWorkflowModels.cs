@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: NeuCharWorkflowModels.cs
     File description: Data models, DTOs, and mapping definitions
-
 
     Created by: Senparc - 20260810
 

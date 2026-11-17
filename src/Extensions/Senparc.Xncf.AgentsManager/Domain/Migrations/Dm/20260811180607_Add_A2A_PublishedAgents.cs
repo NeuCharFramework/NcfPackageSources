@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: 20260811180607_Add_A2A_PublishedAgents.cs
     File description: database migration and model snapshot
-
 
     Created by: Senparc - 20260813
 

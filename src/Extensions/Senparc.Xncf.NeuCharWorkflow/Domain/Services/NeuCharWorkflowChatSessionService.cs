@@ -1,6 +1,7 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: NeuCharWorkflowChatSessionService.cs
     File description: In-process Chat trigger sessions, message history, and run-state tracking
 

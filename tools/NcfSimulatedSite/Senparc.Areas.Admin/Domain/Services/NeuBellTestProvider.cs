@@ -1,9 +1,10 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: NeuBellTestProvider.cs
     File description: Related implementation.
-
+    Legacy comment translated to English.
 
     Created by: Senparc - 20260805
 
@@ -15,7 +16,6 @@
 
     Modified by: Senparc - 20260914
     Change description: v0.7.1 add SendAndGetItem（sendandreturn NeuBellItem），
-    Legacy comment translated to English.
 
     Modified by: Senparc - 20260916
     Change description: v0.9.0 Updated module behavior and related support.

@@ -1,12 +1,12 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: 20261015080326_Add_AdminChatWorkspace.Designer.cs
     File description: EF Core migration designer metadata
-    
-    
+
     Created by: Senparc - 20200724
-    
+
     Modified by: Senparc - 20261021
     Change description: v0.11.1 Updated module behavior and related support.
 

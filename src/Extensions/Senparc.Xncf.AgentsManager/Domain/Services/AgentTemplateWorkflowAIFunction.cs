@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: AgentTemplateWorkflowAIFunction.cs
     File description: AgentTemplateWorkflowAIFunction.cs related implementation
-
 
     Created by: Senparc - 20260822
 

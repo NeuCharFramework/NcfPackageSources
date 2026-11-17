@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: WeixinClawMessageRecordService.cs
     File description: WeixinClawMessageRecordService.cs implementation and project behavior.
-
 
     Created by: Senparc - 20260927
 

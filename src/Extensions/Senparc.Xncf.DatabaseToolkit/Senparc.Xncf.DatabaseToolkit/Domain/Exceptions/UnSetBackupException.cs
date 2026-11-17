@@ -2,25 +2,13 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: UnSetBackupException.cs
-
     File description: UnSetBackupException related implementation
-
-    
-
-    
 
     Created by: Senparc - 20211012
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
-
-
 
 ----------------------------------------------------------------*/
 

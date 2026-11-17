@@ -1,12 +1,12 @@
-﻿/*-----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: 20260817074916_Add_AgentTemplate_ModelBinding.cs
     File description: AgentTemplate model-binding database migration
-    
-    
+
     Created by: Senparc - 20260817
-    
+
     Modified by: Senparc - 20260817
     Change description: v0.16.0 Updated module behavior and related support.
 

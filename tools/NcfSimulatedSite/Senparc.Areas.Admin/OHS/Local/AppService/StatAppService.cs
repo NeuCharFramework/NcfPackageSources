@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: StatAppService.cs
     File description: StatAppService.cs related implementation
-
 
     Created by: Senparc - 20241028
 

@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20260905054730_Add_TokenMonitor.Designer.cs
     File description: Related implementation.
-
 
     Created by: Senparc - 20200724
 

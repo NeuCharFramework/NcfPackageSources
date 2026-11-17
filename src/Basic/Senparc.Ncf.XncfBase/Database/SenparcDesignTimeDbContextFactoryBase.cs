@@ -2,31 +2,16 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: SenparcDesignTimeDbContextFactoryBase.cs
-
     File description: SenparcDesignTimeDbContextFactoryBase related implementation
-
-    
-
-    
 
     Created by: Senparc - 20200724
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
 
-
-
     Modified by: Senparc - 20260804
-
     Change description: v0.24.0-preview5 Updated module behavior and related support.
-
-
 
 ----------------------------------------------------------------*/
 

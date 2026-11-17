@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: WorkspaceMetadataStore.cs
     File description: Workspace metadata persistence
-    
-    
+
     Created by: Senparc - 20261021
-    
+
     Modified by: Senparc - 20261021
     Change description: v0.1.1 save and update Workspace metadata
 

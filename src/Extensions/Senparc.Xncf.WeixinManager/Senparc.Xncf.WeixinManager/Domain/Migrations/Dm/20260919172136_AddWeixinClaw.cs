@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20260919172136_AddWeixinClaw.cs
     File description: 20260919172136_AddWeixinClaw.cs implementation and project behavior.
-
 
     Created by: Senparc - 20260920
 

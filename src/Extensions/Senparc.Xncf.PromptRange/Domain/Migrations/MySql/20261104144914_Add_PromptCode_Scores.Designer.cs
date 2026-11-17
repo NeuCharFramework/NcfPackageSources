@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20261104144914_Add_PromptCode_Scores.Designer.cs
     File description: PromptCode scoring design-time migration model
-
 
     Created by: Senparc - 20231021
 

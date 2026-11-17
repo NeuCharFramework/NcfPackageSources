@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: WeixinClawMediaFormat.cs
     File description: WeixinClawMediaFormat related definitions and implementation
-
 
     Created by: Senparc - 20261004
 

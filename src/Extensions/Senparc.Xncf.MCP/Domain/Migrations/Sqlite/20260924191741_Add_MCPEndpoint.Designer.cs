@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20260924191741_Add_MCPEndpoint.Designer.cs
     File description: 20260924191741_Add_MCPEndpoint.Designer.cs implementation and project behavior.
-
 
     Created by: Senparc - 20211128
 

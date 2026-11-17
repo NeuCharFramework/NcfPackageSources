@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: FileManagerSenparcEntities_DmModelSnapshot.cs
     File description: database migration and model snapshot
-
 
     Created by: Senparc - 20200724
 

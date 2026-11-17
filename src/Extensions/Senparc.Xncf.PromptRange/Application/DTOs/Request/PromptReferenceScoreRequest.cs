@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: PromptReferenceScoreRequest.cs
     File description: Prompt reference scoring request parameters
-
 
     Created by: Senparc - 20261104
 

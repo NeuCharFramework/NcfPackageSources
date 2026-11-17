@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: Index.cshtml.cs
     File description: Index.cshtml related feature implementation
-    
-    
+
     Created by: Senparc - 20241028
-    
+
     Modified by: Senparc - 20260705
     Change description: v0.0.3 Updated module behavior and related support.
 

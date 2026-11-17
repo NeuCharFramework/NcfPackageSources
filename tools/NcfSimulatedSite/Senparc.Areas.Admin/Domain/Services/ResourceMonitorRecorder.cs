@@ -1,4 +1,5 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: ResourceMonitorRecorder.cs
@@ -7,13 +8,13 @@
     Legacy comment translated to English.
     Legacy comment translated to English.
     Legacy comment translated to English.
-      Legacy comment translated to English.
-      Legacy comment translated to English.
-      Legacy comment translated to English.
-      Legacy comment translated to English.
+    Legacy comment translated to English.
+    Legacy comment translated to English.
+    Legacy comment translated to English.
+    Legacy comment translated to English.
+    Change description: v0.12.0 Updated module behavior and related support.
 
     Created by: Senparc - 20260926
-    Change description: v0.12.0 Updated module behavior and related support.
 
     Modified by: Senparc - 20261102
     Change description: v0.12.7 Updated module behavior and related support.

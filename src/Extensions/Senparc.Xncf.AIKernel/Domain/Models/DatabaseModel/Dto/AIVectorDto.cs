@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: AIVectorDto.cs
     File description: AIVectorDto related implementation
-    
-    
+
     Created by: Senparc - 20250402
-    
+
     Modified by: Senparc - 20260704
     Change description: vNext: add the standardized file header comment
 

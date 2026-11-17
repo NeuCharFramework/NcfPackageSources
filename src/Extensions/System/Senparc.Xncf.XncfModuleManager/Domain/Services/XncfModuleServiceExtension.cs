@@ -2,37 +2,19 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: XncfModuleServiceExtension.cs
-
     File description: XncfModuleServiceExtension related implementation
-
-    
-
-    
 
     Created by: Senparc - 20211128
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
 
-
-
     Modified by: Senparc - 20261001
-
     Change description: Updated module behavior and related support.
 
-
-
     Modified by: Senparc - 20261103
-
     Change description: v0.15.11 Updated module behavior and related support.
-
-
 
 ----------------------------------------------------------------*/
 

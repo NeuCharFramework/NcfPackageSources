@@ -2,37 +2,19 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: BuildXncfAppService.AI.MCP.cs
-
     File description: BuildXncfAppService.AI.MCP related implementation
-
-    
-
-    
 
     Created by: Senparc - 20250524
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
 
-
-
     Modified by: Senparc - 20260717
-
     Change description: v0.37.0-preview5 Updated module behavior and related support.
 
-
-
     Modified by: Senparc - 20260804
-
     Change description: v0.39.0-preview8 Updated module behavior and related support.
-
-
 
 ----------------------------------------------------------------*/
 

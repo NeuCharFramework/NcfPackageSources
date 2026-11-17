@@ -2,37 +2,19 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: Register.Database.cs
-
     File description: Register.Database related implementation
-
-
-
-
 
     Created by: Senparc - 20240616
 
-
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
 
-
-
     Modified by: Senparc - 20260804
-
     Change description: v0.14.0-preview9 Updated module behavior and related support.
 
-
-
     Modified by: Senparc - 20260813
-
     Change description: v0.15.0-preview11 Updated module behavior and related support.
-
-
 
 ----------------------------------------------------------------*/
 

@@ -1,6 +1,7 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: AgentTemplateDto.cs
     File description: AgentTemplateDto related implementation
 

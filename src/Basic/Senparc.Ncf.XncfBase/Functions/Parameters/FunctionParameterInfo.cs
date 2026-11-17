@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: FunctionParameterInfo.cs
     File description: FunctionParameterInfo related implementation
-
 
     Created by: Senparc - 20200724
 

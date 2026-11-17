@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20260926153325_AddWeixinClawMessageContext.cs
     File description: 20260926153325_AddWeixinClawMessageContext.cs implementation and project behavior.
-
 
     Created by: Senparc - 20250712
 

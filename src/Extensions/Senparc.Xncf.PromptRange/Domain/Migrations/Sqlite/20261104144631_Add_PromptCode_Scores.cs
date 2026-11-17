@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20261104144631_Add_PromptCode_Scores.cs
     File description: PromptCode scoring database migration
-
 
     Created by: Senparc - 20261104
 

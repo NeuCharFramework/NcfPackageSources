@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: WeixinClawMessageContent.cs
     File description: WeixinClawMessageContent.cs implementation and project behavior.
-
 
     Created by: Senparc - 20260930
 

@@ -1,8 +1,10 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: NeuCharParameterProtectorTests.cs
     File description: Related implementation.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.DataProtection;

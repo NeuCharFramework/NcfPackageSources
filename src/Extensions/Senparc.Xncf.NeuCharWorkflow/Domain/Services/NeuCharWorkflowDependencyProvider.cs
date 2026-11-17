@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: NeuCharWorkflowDependencyProvider.cs
     File description: NeuCharWorkflowDependencyProvider.cs related implementation
-
 
     Created by: Senparc - 20260822
 

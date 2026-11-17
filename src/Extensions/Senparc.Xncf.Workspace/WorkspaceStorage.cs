@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: WorkspaceStorage.cs
     File description: Workspace file and command storage
-    
-    
+
     Created by: Senparc - 20261015
-    
+
     Modified by: Senparc - 20261021
     Change description: v0.1.1 enforce policy-based Workspace file access and commands
 

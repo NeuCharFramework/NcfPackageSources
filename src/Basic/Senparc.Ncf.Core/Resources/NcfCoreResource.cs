@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: NcfCoreResource.cs
     File description: Related implementation.
-    
-    
+
     Created by: Senparc - 20260730
-    
+
     Modified by: Senparc - 20260731
     Change description: v0.27.0-preview4 Updated module behavior and related support.
 

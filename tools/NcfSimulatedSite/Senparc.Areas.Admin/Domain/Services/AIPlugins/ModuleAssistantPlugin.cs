@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: ModuleAssistantPlugin.cs
     File description: Related implementation.
-    
-    
+
     Created by: Senparc - 20260327
-    
+
     Modified by: Senparc - 20260724
     Change description: v0.1.0 enhance batch module updates and improve the multilingual management interface
 

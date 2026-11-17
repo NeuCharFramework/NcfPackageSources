@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: AdminChatWorkspaceAssetService.cs
     File description: AdminChatWorkspaceAssetService related definitions and implementation
-
 
     Created by: Senparc - 20261024
 

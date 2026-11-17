@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20260915083439_Add_NeuBellWebHookMethodAndBody.Designer.cs
     File description: generated target model code for database migration
-
 
     Created by: Senparc - 20200724
 

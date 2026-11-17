@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20260928034739_AddWeixinClawMessageRecordContextToken.Designer.cs
     File description: 20260928034739_AddWeixinClawMessageRecordContextToken.Designer.cs implementation and project behavior.
-
 
     Created by: Senparc - 20231021
 

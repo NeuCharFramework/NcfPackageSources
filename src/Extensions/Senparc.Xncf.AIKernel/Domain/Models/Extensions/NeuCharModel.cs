@@ -2,43 +2,22 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: NeuCharModel.cs
-
     File description: NeuCharModel related implementation
-
-    
-
-    
 
     Created by: Senparc - 20240827
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
 
-
-
     Modified by: Senparc - 20260718
-
     Change description: Updated module behavior and related support.
-
-
 
     Modified by: Senparc - 20260722
-
     Change description: Updated module behavior and related support.
 
-
-
     Modified by: Senparc - 20260724
-
     Change description: v0.14.0-preview5 Updated module behavior and related support.
-
-
 
 ----------------------------------------------------------------*/
 

@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20260924192500_Add_MCPEndpoint.cs
     File description: 20260924192500_Add_MCPEndpoint.cs implementation and project behavior.
-
 
     Created by: Senparc - 20211211
 

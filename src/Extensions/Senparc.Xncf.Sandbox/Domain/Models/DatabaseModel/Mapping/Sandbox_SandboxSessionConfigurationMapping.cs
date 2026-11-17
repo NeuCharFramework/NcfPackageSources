@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: Sandbox_SandboxSessionConfigurationMapping.cs
     File description: Sandbox_SandboxSessionConfigurationMapping.cs implementation and project behavior.
-
 
     Created by: Senparc - 20260808
 

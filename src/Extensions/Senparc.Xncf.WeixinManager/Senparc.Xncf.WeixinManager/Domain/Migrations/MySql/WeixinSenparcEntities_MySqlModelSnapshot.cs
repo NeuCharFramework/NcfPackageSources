@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: WeixinSenparcEntities_MySqlModelSnapshot.cs
     File description: WeixinSenparcEntities_MySqlModelSnapshot.cs implementation and project behavior.
-
 
     Created by: Senparc - 20250712
 

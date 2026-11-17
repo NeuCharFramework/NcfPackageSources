@@ -1,12 +1,12 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: PromptItemAppService.cs
     File description: Related implementation.
-    
-    
+
     Created by: Senparc - 20231021
-    
+
     Modified by: Senparc - 20260702
     Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
@@ -17,7 +17,6 @@
 
     Modified by: Senparc - 20261102
     Change description: Updated module behavior and related support.
-
     Change description: v0.16.4-preview3 Updated module behavior and related support.
 
     Modified by: Senparc - 20261103

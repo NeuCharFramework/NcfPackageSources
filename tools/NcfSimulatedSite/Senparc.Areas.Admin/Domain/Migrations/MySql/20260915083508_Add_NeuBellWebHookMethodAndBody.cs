@@ -1,11 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20260915083508_Add_NeuBellWebHookMethodAndBody.cs
     File description: database migration and model snapshot
+    Change description: v0.7.1 Updated module behavior and related support.
 
     Created by: Senparc - 20260915
-    Change description: v0.7.1 Updated module behavior and related support.
 
     Modified by: Senparc - 20260916
     Change description: v0.9.0 Updated module behavior and related support.

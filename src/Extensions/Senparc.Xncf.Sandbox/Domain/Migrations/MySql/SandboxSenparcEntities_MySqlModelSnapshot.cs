@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: SandboxSenparcEntities_MySqlModelSnapshot.cs
     File description: SandboxSenparcEntities_MySqlModelSnapshot.cs implementation and project behavior.
-
 
     Created by: Senparc - 20260808
 

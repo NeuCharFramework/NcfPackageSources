@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20260831033939_Add_NeuCharPivotBoard.cs
     File description: Related implementation.
-
 
     Created by: Senparc - 20211211
 

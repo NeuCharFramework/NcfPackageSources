@@ -1,122 +1,32 @@
 /*----------------------------------------------------------------
 
-
-
     Copyright (C) 2026 Senparc
 
-
-
-  
-
-
-
     File name: Register.cs
-
-
-
     File description: module registration and initialization logic
-
-
-
-
-
-
-
-
-
-
 
     Created by: Senparc - 20241028
 
-
-
-
-
-
-
     Modified by: Senparc - 20260702
-
-
-
     Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-
-
-
-
-
-
     Modified by: Senparc - 20260804
-
-
-
     Change description: v0.35.0 Updated module behavior and related support.
 
-
-
-
-
-
-
     Modified by: Senparc - 20260812
-
-
-
     Change description: Updated module behavior and related support.
-
-
-
-
-
-
 
     Modified by: Senparc - 20260813
-
-
-
     Change description: v0.36.0 Updated module behavior and related support.
 
-
-
-
-
-
-
     Modified by: Senparc - 20260822
-
-
-
     Change description: v0.37.0 Updated module behavior and related support.
 
-
-
-
-
-
-
     Modified by: Senparc - 20261110
-
-
-
     Change description: Updated module behavior and related support.
 
-
-
-
-
-
-
     Modified by: Senparc - 20261111
-
-
-
     Change description: v0.39.8 Updated module behavior and related support.
-
-
-
-
-
-
 
 ----------------------------------------------------------------*/
 

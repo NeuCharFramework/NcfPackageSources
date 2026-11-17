@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: AdminWeixinClawMessageHandler.cs
     File description: AdminWeixinClawMessageHandler.cs implementation and project behavior.
-
 
     Created by: Senparc - 20260926
 
@@ -16,7 +16,9 @@
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
+using Senparc.Areas.Admin;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
 using Senparc.Areas.Admin.Domain.Services;
 using Senparc.Ncf.Shared.Abstractions.NeuBell;
@@ -50,6 +52,7 @@ public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
     private readonly IWorkflowFunctionCallingProvider _workflowProvider;
     private readonly WeixinClawAdminIntegrationOptions _options;
     private readonly ILogger<AdminWeixinClawMessageHandler> _logger;
+    private readonly IStringLocalizer<AdminResource> _localizer;
 
     public AdminWeixinClawMessageHandler(
         IWeixinClawMessageSender sender,
@@ -63,6 +66,7 @@ public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
         NeuBellSnapshotService snapshotService,
         IOptions<WeixinClawAdminIntegrationOptions> options,
         ILogger<AdminWeixinClawMessageHandler> logger,
+        IStringLocalizer<AdminResource> localizer,
         IWorkflowFunctionCallingProvider workflowProvider = null)
     {
         _sender = sender;
@@ -76,6 +80,7 @@ public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
         _snapshotService = snapshotService;
         _options = options.Value;
         _logger = logger;
+        _localizer = localizer;
         _workflowProvider = workflowProvider;
     }
 
@@ -414,7 +419,7 @@ public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
     {
         if (!_options.EnableWorkflow || _workflowProvider == null)
         {
-            await ReplyAsync(context, "Workflow 集成未启用，或宿主未加载 NeuCharWorkflow 模块。", cancellationToken).ConfigureAwait(false);
+            await ReplyAsync(context, _localizer["WeixinClaw.Workflow.IntegrationDisabled"].Value, cancellationToken).ConfigureAwait(false);
             return;
         }
 
@@ -433,11 +438,11 @@ public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
         if (workflowId <= 0)
         {
             var names = available.Count == 0
-                ? "当前没有可用 Workflow。"
+                ? _localizer["WeixinClaw.Workflow.NoAvailable"].Value
                 : string.Join(Environment.NewLine, available.Select(item => $"{item.Id}: {item.Name}"));
             await ReplyAsync(
                 context,
-                "可用 Workflow 列表如下。下一次请发送 /workflow <WorkflowId> <输入> 执行指定 Workflow：" + Environment.NewLine + names,
+                _localizer["WeixinClaw.Workflow.ListPrompt"].Value + Environment.NewLine + names,
                 cancellationToken).ConfigureAwait(false);
             return;
         }
@@ -445,7 +450,7 @@ public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
         var descriptor = available.FirstOrDefault(item => item.Id == workflowId);
         if (descriptor == null)
         {
-            await ReplyAsync(context, "Workflow 不存在、未启用，或当前管理员没有访问权限。", cancellationToken).ConfigureAwait(false);
+            await ReplyAsync(context, _localizer["WeixinClaw.Workflow.NotFound"].Value, cancellationToken).ConfigureAwait(false);
             return;
         }
 
@@ -456,8 +461,8 @@ public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
             new Dictionary<string, object?>(),
             cancellationToken).ConfigureAwait(false);
         var response = result.Success
-            ? $"Workflow「{descriptor.Name}」执行完成：{Environment.NewLine}{result.Output}"
-            : $"Workflow「{descriptor.Name}」执行失败：{result.ErrorMessage}";
+            ? _localizer["WeixinClaw.Workflow.Completed", descriptor.Name, result.Output].Value
+            : _localizer["WeixinClaw.Workflow.Failed", descriptor.Name, result.ErrorMessage].Value;
         await ReplyAsync(context, response, cancellationToken).ConfigureAwait(false);
     }
 
@@ -569,8 +574,8 @@ public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
         };
         if (binding.EnableWorkflow && _options.EnableWorkflow)
         {
-            lines.Add($"{prefix}workflow - 列出可用 Workflow 和 WorkflowId");
-            lines.Add($"{prefix}workflow <WorkflowId> <输入> - 执行指定 Workflow");
+            lines.Add(_localizer["WeixinClaw.Workflow.HelpList", prefix].Value);
+            lines.Add(_localizer["WeixinClaw.Workflow.HelpExecute", prefix].Value);
         }
         if (_options.EnableHarness)
         {

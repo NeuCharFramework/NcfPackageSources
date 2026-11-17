@@ -2,25 +2,13 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: AgentsManagerException.cs
-
     File description: AgentsManagerException related implementation
-
-    
-
-    
 
     Created by: Senparc - 20250531
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
-
-
 
 ----------------------------------------------------------------*/
 

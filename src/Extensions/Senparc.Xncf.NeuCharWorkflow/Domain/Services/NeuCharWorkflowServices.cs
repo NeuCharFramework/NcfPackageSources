@@ -1,9 +1,10 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: NeuCharWorkflowServices.cs
     File description: domain services and business-process implementation
-
+    -
 
     Created by: Senparc - 20260810
 
@@ -15,8 +16,6 @@
 
     Modified by: Senparc - 20260822
     Change description: v0.2.0 enhance workflow function calls, task control, and replay management
-
--
 
     Modified by: Senparc - 20260829
     Change description: v0.3.0 add workflow analysis queries and admin-side visualization

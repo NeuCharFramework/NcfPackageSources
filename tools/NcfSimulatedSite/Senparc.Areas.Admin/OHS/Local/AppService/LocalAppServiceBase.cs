@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: LocalAppServiceBase.cs
     File description: LocalAppServiceBase.cs implementation and project behavior.
-
 
     Created by: Senparc - 20241028
 

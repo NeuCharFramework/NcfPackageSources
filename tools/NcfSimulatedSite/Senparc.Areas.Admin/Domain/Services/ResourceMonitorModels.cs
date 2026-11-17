@@ -1,12 +1,13 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: ResourceMonitorModels.cs
     File description: Related implementation.
     Legacy comment translated to English.
+    Change description: v0.12.0 Updated module behavior and related support.
 
     Created by: Senparc - 20260926
-    Change description: v0.12.0 Updated module behavior and related support.
 
     Modified by: Senparc - 20261103
     Change description: v0.12.15 Admin home resource monitor - per-Web-process CPU/memory lines + nonlinear 24h time-axis chart

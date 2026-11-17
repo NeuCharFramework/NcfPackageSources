@@ -2,37 +2,19 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: Start.cshtml.cs
-
     File description: Start.cshtml.cs related implementation
-
-
-
-
 
     Created by: Senparc - 20241028
 
-
-
     Modified by: Senparc - 20260729
-
     Change description: v0.2.0 enhance admin interaction and secure desktop Admin Chat synchronization
 
-
-
     Modified by: Senparc - 20260813
-
     Change description: v0.5.0 Updated module behavior and related support.
 
-
-
     Modified by: Senparc - 20260829
-
     Change description: v0.7.0 Updated module behavior and related support.
-
-
 
 ----------------------------------------------------------------*/
 

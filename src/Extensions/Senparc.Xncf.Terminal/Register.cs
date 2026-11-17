@@ -2,43 +2,22 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: Register.cs
-
     File description: Register related implementation
-
-    
-
-    
 
     Created by: Senparc - 20200724
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
 
-
-
     Modified by: Senparc - 20260717
-
     Change description: v0.22.0-preview2 Updated module behavior and related support.
 
-
-
     Modified by: Senparc - 20260729
-
     Change description: v0.22.1-preview3 Updated module behavior and related support.
 
-
-
     Modified by: Senparc - 20261111
-
     Change description: v0.22.12 unify XNCF Register display metadata and localization resource keys
-
-
 
 ----------------------------------------------------------------*/
 

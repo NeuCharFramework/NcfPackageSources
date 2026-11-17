@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: Skill.cshtml.cs
     File description: Related implementation.
-    
-    
+
     Created by: Senparc - 20261020
-    
+
     Modified by: Senparc - 20261021
     Change description: v0.20.0 Updated module behavior and related support.
 

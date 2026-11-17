@@ -2,25 +2,13 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: TenantRule.cs
-
     File description: TenantRule related implementation
-
-    
-
-    
 
     Created by: Senparc - 20210212
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
-
-
 
 ----------------------------------------------------------------*/
 

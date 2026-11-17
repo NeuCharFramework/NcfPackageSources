@@ -1,12 +1,12 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: 20260703153547_Add_IsArchived.Designer.cs
     File description: database migration designer code
-    
-    
+
     Created by: Senparc - 20231021
-    
+
     Modified by: Senparc - 20260704
     Change description: v0.11.0-preview2 Updated module behavior and related support.
 

@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: McpConnectionTestService.cs
     File description: Related implementation.
     Legacy comment translated to English.
-
 
     Created by: Senparc - 20260924
 

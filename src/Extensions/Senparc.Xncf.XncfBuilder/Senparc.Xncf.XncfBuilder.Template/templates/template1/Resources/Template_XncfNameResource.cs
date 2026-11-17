@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: Template_XncfNameResource.cs
     File description: Template_XncfNameResource related implementation
-    
-    
+
     Created by: Senparc - 20260717
-    
+
     Modified by: Senparc - 20260717
     Change description: v1.1.0 update feature parameters and page localization for the sample XNCF module
 

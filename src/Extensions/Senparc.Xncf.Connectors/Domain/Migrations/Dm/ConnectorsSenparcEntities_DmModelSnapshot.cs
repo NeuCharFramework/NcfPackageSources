@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: ConnectorsSenparcEntities_DmModelSnapshot.cs
     File description: database model snapshot
-
 
     Created by: Senparc - 20200724
 

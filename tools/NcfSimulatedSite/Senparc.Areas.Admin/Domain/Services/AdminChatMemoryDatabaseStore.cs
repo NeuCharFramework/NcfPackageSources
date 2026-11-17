@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: AdminChatMemoryDatabaseStore.cs
     File description: AdminChatMemoryDatabaseStore related definitions and implementation
-
 
     Created by: Senparc - 20261103
 

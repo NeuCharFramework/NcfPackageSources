@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: 20260809152332_InitialCreate.cs
     File description: database migration and model snapshot
-
 
     Created by: Senparc - 20260810
 

@@ -2,31 +2,16 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: AIModelAppService.cs
-
     File description: AIModelAppService related implementation
-
-    
-
-    
 
     Created by: Senparc - 20231229
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
 
-
-
     Modified by: Senparc - 20260915
-
     Change description: v0.16.0 Updated module behavior and related support.
-
-
 
 ----------------------------------------------------------------*/
 

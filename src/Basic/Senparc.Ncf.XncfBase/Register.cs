@@ -1,56 +1,29 @@
-﻿/*-----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: Register.cs
-
     File description: Register related implementation
-
-    
-
-    
 
     Created by: Senparc - 20200724
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
 
-
-
     Modified by: Senparc - 20260804
-
     Change description: v0.24.0-preview5 Updated module behavior and related support.
 
-
-
     Modified by: Senparc - 20260817
-
     Change description: v0.25.1-preview8 Updated module behavior and related support.
 
-
-
     Modified by: Senparc - 20260822
-
     Change description: v0.26.0 Updated module behavior and related support.
 
-
-
     Modified by: Senparc - 20261002
-
     Change description: Updated module behavior and related support.
 
-
-
     Modified by: Senparc - 20261103
-
     Change description: v0.28.1 add bulk file upload functionality to Sandbox Lab
-
-
 
 ----------------------------------------------------------------*/
 

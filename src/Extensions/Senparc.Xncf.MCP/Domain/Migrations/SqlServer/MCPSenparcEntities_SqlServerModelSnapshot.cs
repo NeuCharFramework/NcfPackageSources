@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: MCPSenparcEntities_SqlServerModelSnapshot.cs
     File description: MCPSenparcEntities_SqlServerModelSnapshot.cs implementation and project behavior.
-
 
     Created by: Senparc - 20200724
 

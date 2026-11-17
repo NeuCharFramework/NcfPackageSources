@@ -1,8 +1,10 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: NeuCharPivotGlobalFunctionService.cs
     File description: Related implementation.
+    Legacy comment translated to English.
 
     Created by: Senparc - 20260829
 
@@ -11,7 +13,6 @@
 
     Modified by: Senparc - 20260917
     Change description: v0.9.1 add Function global Provit database access strategy (DB overrides code properties)，
-    Legacy comment translated to English.
 
     Modified by: Senparc - 20261005
     Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility

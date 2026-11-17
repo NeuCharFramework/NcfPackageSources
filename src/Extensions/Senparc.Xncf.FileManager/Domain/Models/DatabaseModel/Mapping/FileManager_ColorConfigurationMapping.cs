@@ -2,25 +2,13 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: FileManager_ColorConfigurationMapping.cs
-
     File description: FileManager_ColorConfigurationMapping related implementation
-
-    
-
-    
 
     Created by: Senparc - 20250105
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
-
-
 
 ----------------------------------------------------------------*/
 

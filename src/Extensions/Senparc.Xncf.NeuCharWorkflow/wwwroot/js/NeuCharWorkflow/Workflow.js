@@ -1,6 +1,9 @@
 // The page body is rendered inside the shared #app Vue root. Vue deliberately
 // removes <script> tags while compiling that root, so resolve this template
 // before mounting the root instead of using the deferred "#id" form.
+window.ncfWorkflowText = window.ncfWorkflowText || function (source) {
+    return typeof window.ncfST === 'function' ? window.ncfST(source) : source;
+};
 const MaxWorkflowConsoleEvents = 5000;
 const MaxWorkflowLoopIterations = 100000;
 const WorkflowFormulaDefinitions = [
@@ -489,13 +492,13 @@ new Vue({
             };
         },
         runStatusText() {
-            if (this.run.validating) return '正在校验参数和节点引用';
-            if (this.run.aborting) return '正在中止工作流，等待当前节点响应取消';
-            if (this.run.running && this.run.humanInteractions.length) return '等待 Human 输入或审批，Workflow 已暂停';
-            if (this.run.running) return '工作流运行中，编辑已锁定';
-            if (this.run.status === 'success') return '最近一次测试运行成功';
-            if (this.run.status === 'failed') return '最近一次测试运行失败';
-            return '测试运行就绪';
+            if (this.run.validating) return window.ncfWorkflowText('正在校验参数和节点引用');
+            if (this.run.aborting) return window.ncfWorkflowText('正在中止工作流，等待当前节点响应取消');
+            if (this.run.running && this.run.humanInteractions.length) return window.ncfWorkflowText('等待 Human 输入或审批，Workflow 已暂停');
+            if (this.run.running) return window.ncfWorkflowText('工作流运行中，编辑已锁定');
+            if (this.run.status === 'success') return window.ncfWorkflowText('最近一次测试运行成功');
+            if (this.run.status === 'failed') return window.ncfWorkflowText('最近一次测试运行失败');
+            return window.ncfWorkflowText('测试运行就绪');
         },
         webhookUrl() {
             return this.form.id

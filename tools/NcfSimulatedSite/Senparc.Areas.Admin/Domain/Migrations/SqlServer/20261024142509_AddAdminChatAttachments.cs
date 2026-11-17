@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20261024142509_AddAdminChatAttachments.cs
     File description: 20261024142509_AddAdminChatAttachments related definitions and implementation
-
 
     Created by: Senparc - 20210105
 

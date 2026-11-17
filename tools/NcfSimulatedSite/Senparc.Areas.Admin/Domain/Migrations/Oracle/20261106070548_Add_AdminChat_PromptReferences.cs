@@ -1,12 +1,12 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: 20261106070548_Add_AdminChat_PromptReferences.cs
     File description: Related implementation.
-    
-    
+
     Created by: Senparc - 20250120
-    
+
     Modified by: Senparc - 20261110
     Change description: v0.12.27 Updated module behavior and related support.
 

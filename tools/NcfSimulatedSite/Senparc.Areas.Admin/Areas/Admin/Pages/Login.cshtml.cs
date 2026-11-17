@@ -2,25 +2,13 @@
 
     Copyright (C) 2026 Senparc
 
-
-
     File name: Login.cshtml.cs
-
     File description: Login.cshtml related definitions and implementation
-
-
-
-
 
     Created by: Senparc - 20241028
 
-
-
     Modified by: Senparc - 20261103
-
     Change description: v0.12.15 add image captcha for admin login (required after 2 failed attempts)
-
-
 
 ----------------------------------------------------------------*/
 

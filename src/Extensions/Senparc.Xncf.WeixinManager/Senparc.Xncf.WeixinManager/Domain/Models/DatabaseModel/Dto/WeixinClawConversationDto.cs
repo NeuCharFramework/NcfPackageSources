@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: WeixinClawConversationDto.cs
     File description: WeixinClawConversationDto.cs implementation and project behavior.
-
 
     Created by: Senparc - 20260930
 

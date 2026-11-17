@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: Register.Thread.cs
     File description: Register.Thread related implementation
-
 
     Created by: Senparc - 20260504
 

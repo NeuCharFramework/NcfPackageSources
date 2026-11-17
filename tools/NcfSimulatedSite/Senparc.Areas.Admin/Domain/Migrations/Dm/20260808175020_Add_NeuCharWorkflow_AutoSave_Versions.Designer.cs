@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: 20260808175020_Add_NeuCharWorkflow_AutoSave_Versions.Designer.cs
     File description: database migration and model snapshot
-
 
     Created by: Senparc - 20260809
 

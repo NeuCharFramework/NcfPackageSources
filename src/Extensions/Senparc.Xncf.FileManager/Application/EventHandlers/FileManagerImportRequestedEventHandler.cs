@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: FileManagerImportRequestedEventHandler.cs
     File description: FileManagerImportRequestedEventHandler related definitions and implementation
-
 
     Created by: Senparc - 20261001
 

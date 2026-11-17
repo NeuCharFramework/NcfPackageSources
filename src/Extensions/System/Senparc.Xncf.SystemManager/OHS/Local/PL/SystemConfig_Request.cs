@@ -1,12 +1,12 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: SystemConfig_Request.cs
     File description: SystemConfig_Request related implementation
-    
-    
+
     Created by: Senparc - 20240827
-    
+
     Modified by: Senparc - 20260704
     Change description: vNext: add the standardized file header comment
 

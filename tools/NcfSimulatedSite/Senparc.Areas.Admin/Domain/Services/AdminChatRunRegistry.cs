@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: AdminChatRunRegistry.cs
     File description: Related implementation.
-
 
     Created by: Senparc - 20261107
 

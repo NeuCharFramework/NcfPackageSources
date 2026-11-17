@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: BackgroundTenantScopeFactory.cs
     File description: BackgroundTenantScopeFactory related definitions and implementation
-
 
     Created by: Senparc - 20261002
 

@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: ConnectorAppService.cs
     File description: application service for connector configuration and invocation
-    
-    
+
     Created by: Senparc - 20261111
-    
+
     Modified by: Senparc - 20261111
     Change description: v0.1.0 provide application services for connector configuration and invocation
 

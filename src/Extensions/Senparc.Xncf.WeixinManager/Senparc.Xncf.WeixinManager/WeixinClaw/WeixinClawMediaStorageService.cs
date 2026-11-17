@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: WeixinClawMediaStorageService.cs
     File description: WeixinClawMediaStorageService.cs implementation and project behavior.
-
 
     Created by: Senparc - 20260930
 

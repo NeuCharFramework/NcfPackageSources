@@ -1,46 +1,14 @@
 /*----------------------------------------------------------------
 
-
-
     Copyright (C) 2026 Senparc
 
-
-
-  
-
-
-
     File name: ConnectorAIFunction.cs
-
-
-
     File description: Related implementation.
-
-
-
-    
-
-
 
     Created by: Senparc - 20261110
 
-
-
-    
-
-
-
     Modified by: Senparc - 20261111
-
-
-
     Change description: v0.19.3 Updated module behavior and related support.
-
-
-
-
-
-
 
 ----------------------------------------------------------------*/
 

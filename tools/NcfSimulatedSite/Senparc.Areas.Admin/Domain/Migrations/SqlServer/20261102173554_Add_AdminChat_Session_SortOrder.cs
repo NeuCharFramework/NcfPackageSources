@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20261102173554_Add_AdminChat_Session_SortOrder.cs
     File description: 20261102173554_Add_AdminChat_Session_SortOrder related definitions and implementation
-
 
     Created by: Senparc - 20210105
 

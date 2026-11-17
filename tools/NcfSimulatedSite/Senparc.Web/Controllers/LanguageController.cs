@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: LanguageController.cs
     File description: Related implementation.
-    
-    
+
     Created by: Senparc - 20260403
-    
+
     Modified by: Senparc - 20260724
     Change description: v0.34.0 Updated module behavior and related support.
 

@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: SandboxSenparcEntities_SqliteModelSnapshot.cs
     File description: SandboxSenparcEntities_SqliteModelSnapshot.cs implementation and project behavior.
-
 
     Created by: Senparc - 20200724
 

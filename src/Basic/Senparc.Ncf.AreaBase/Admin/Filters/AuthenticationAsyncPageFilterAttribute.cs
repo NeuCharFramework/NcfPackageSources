@@ -2,31 +2,16 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: AuthenticationAsyncPageFilterAttribute.cs
-
     File description: AuthenticationAsyncPageFilterAttribute related implementation
-
-    
-
-    
 
     Created by: Senparc - 20200724
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
 
-
-
     Modified by: Senparc - 20260731
-
     Change description: v0.23.0-preview4 will integrate Ajax none permission prompt with core multilingual resources
-
-
 
 ----------------------------------------------------------------*/
 

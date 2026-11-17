@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: InternalEventBusRoundTripEvents.cs
     File description: template internal EventBus request-response round-trip events
-
 
     Created by: Senparc - 20260725
 

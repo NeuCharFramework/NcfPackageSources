@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: SenMapicTaskService.cs
     File description: SenMapicTaskService related implementation
-    
-    
+
     Created by: Senparc - 20250114
-    
+
     Modified by: Senparc - 20260704
     Change description: vNext: add the standardized file header comment
 

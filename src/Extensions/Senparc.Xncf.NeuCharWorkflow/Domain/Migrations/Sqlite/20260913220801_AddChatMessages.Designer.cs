@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20260913220801_AddChatMessages.Designer.cs
     File description: Related implementation.
-
 
     Created by: Senparc - 20231021
 

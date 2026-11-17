@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: ModelPreparationOptions.cs
     File description: Related implementation.
-    
-    
+
     Created by: Senparc - 20261014
-    
+
     Modified by: Senparc - 20261021
     Change description: v0.17.0 Updated module behavior and related support.
 

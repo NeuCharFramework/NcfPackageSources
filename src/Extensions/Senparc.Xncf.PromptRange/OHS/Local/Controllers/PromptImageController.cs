@@ -1,12 +1,11 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: PromptImageController.cs
     File description: Related implementation.
-    
-    
-    Created by: Senparc - 20260704
 
+    Created by: Senparc - 20260704
 
     Modified by: Senparc - 20260705
     Change description: v0.16.3-preview2 Updated module behavior and related support.

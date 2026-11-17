@@ -1,10 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: ReloadPageResource.cs
     File description: ReloadPageResource related implementation
 
     Created by: Senparc - 20261111
+
     Modified by: Senparc - 20261111
     Change description: v0.12.14 integrate ReloadPage Register display metadata with shared resource localization
 

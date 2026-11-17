@@ -1,6 +1,7 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: NeuCharWorkflowChatConfig.cs
     File description: Persistent configuration for the Chat trigger
 

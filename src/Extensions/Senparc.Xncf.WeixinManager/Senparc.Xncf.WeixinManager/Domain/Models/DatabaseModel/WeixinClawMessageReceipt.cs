@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: WeixinClawMessageReceipt.cs
     File description: WeixinClawMessageReceipt.cs implementation and project behavior.
-
 
     Created by: Senparc - 20260920
 

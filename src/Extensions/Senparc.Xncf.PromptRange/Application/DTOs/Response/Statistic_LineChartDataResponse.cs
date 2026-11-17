@@ -1,12 +1,12 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: Statistic_LineChartDataResponse.cs
     File description: Statistic_LineChartDataResponse related implementation
-    
-    
+
     Created by: Senparc - 20260704
-    
+
     Modified by: Senparc - 20260704
     Change description: vNext: add the standardized file header comment
 

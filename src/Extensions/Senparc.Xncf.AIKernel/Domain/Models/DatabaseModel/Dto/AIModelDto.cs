@@ -2,31 +2,16 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: AIModelDto.cs
-
     File description: AIModelDto related implementation
-
-    
-
-    
 
     Created by: Senparc - 20231220
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
 
-
-
     Modified by: Senparc - 20260915
-
     Change description: v0.16.0 Updated module behavior and related support.
-
-
 
 ----------------------------------------------------------------*/
 

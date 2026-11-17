@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: FileTemplate_GetListResponse.cs
     File description: FileTemplate_GetListResponse related implementation
-    
-    
+
     Created by: Senparc - 20250710
-    
+
     Modified by: Senparc - 20260704
     Change description: vNext: add the standardized file header comment
 

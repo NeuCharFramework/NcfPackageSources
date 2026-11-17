@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20261003081833_Add_FineTuningWorkers.Designer.cs
     File description: AIKernel database fine-tuning Worker migration model
-
 
     Created by: Senparc - 20200724
 

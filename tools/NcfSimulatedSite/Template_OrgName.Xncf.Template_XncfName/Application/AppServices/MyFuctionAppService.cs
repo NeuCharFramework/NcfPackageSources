@@ -1,12 +1,12 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: MyFuctionAppService.cs
     File description: XNCF template sample implementation
-    
-    
+
     Created by: Senparc - 20211031
-    
+
     Modified by: Senparc - 20260726
     Change description: v1.1.0 Updated module behavior and related support.
 

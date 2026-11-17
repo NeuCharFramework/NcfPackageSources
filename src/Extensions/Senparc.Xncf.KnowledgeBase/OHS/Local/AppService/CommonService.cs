@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: CommonService.cs
     File description: CommonService related implementation
-
 
     Created by: Senparc - 20260213
 

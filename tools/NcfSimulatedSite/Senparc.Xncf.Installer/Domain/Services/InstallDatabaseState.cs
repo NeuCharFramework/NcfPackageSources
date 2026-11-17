@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: InstallDatabaseState.cs
     File description: InstallDatabaseState.cs related implementation
-
 
     Created by: Senparc - 20260728
 

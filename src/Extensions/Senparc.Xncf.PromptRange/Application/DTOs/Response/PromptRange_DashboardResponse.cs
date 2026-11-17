@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: PromptRange_DashboardResponse.cs
     File description: Related implementation.
-    
-    
+
     Created by: Senparc - 20260704
-    
+
     Modified by: Senparc - 20260704
     Change description: Updated module behavior and related support.
 
@@ -15,6 +15,7 @@
 
     Modified by: Senparc - 20260705
     Change description: v0.16.4-preview3 Updated module behavior and related support.
+
 ----------------------------------------------------------------*/
 
 using System;

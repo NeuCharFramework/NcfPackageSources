@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: WeixinClawLoginService.cs
     File description: WeixinClawLoginService.cs implementation and project behavior.
-
 
     Created by: Senparc - 20260920
 

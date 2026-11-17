@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: NcfFileManagerGateway.cs
     File description: NcfFileManagerGateway.cs implementation and project behavior.
-
 
     Created by: Senparc - 20260930
 

@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: Index.cshtml.cs
     File description: Index.cshtml.cs implementation and project behavior.
-
 
     Created by: Senparc - 20260920
 

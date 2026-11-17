@@ -2,31 +2,16 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: SenMapicEngineExtension.cs
-
     File description: SenMapicEngineExtension related implementation
-
-    
-
-    
 
     Created by: Senparc - 20250113
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
 
-
-
     Modified by: Senparc - 20260729
-
     Change description: v0.3.1-preview3 Updated module behavior and related support.
-
-
 
 ----------------------------------------------------------------*/
 

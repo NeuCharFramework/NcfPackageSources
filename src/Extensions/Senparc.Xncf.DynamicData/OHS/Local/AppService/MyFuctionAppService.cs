@@ -2,31 +2,16 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: MyFuctionAppService.cs
-
     File description: MyFuctionAppService related implementation
-
-    
-
-    
 
     Created by: Senparc - 20240718
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
 
-
-
     Modified by: Senparc - 20260717
-
     Change description: v0.6.0-preview2 integrate shared resource localization and improve feature text for the DynamicData module
-
-
 
 ----------------------------------------------------------------*/
 

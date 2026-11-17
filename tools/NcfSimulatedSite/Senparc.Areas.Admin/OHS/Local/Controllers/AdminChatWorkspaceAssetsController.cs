@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: AdminChatWorkspaceAssetsController.cs
     File description: AdminChatWorkspaceAssetsController related definitions and implementation
-
 
     Created by: Senparc - 20261024
 

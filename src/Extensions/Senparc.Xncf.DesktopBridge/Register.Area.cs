@@ -1,10 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: Register.Area.cs
     File description: Related implementation.
 
     Created by: Senparc - 20260801
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;

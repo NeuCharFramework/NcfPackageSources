@@ -2,31 +2,16 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: DatabaseBackupRequest.cs
-
     File description: DatabaseBackupRequest related implementation
-
-    
-
-    
 
     Created by: Senparc - 20211014
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
 
-
-
     Modified by: Senparc - 20260717
-
     Change description: v0.26.0-preview2 Updated module behavior and related support.
-
-
 
 ----------------------------------------------------------------*/
 

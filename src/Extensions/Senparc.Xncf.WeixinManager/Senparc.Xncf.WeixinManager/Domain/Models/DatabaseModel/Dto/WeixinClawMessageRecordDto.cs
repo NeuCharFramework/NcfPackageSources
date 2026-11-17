@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: WeixinClawMessageRecordDto.cs
     File description: WeixinClawMessageRecordDto.cs implementation and project behavior.
-
 
     Created by: Senparc - 20260927
 

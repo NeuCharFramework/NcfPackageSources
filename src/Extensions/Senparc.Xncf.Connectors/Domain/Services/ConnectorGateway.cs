@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: ConnectorGateway.cs
     File description: invoke configured connector actions by catalog and authorization
-    
-    
+
     Created by: Senparc - 20261111
-    
+
     Modified by: Senparc - 20261111
     Change description: v0.1.0 Updated module behavior and related support.
 

@@ -1,12 +1,12 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: Register.cs
     File description: XNCF template sample implementation
-    
-    
+
     Created by: Senparc - 20200818
-    
+
     Modified by: Senparc - 20260726
     Change description: v1.1.0 Updated module behavior and related support.
 

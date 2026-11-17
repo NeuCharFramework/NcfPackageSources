@@ -2,25 +2,13 @@
 
     Copyright (C) 2026 Senparc
 
-
-
     File name: SystemManagerSenparcEntities_SqlServerModelSnapshot.cs
-
     File description: Related implementation.
-
-
-
-
 
     Created by: Senparc - 20200724
 
-
-
     Modified by: Senparc - 20260804
-
     Change description: v0.15.3-preview6 Updated module behavior and related support.
-
-
 
 ----------------------------------------------------------------*/
 

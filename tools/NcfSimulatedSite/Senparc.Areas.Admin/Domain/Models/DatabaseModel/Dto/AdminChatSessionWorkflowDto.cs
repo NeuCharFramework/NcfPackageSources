@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: AdminChatSessionWorkflowDto.cs
     File description: AdminChatSessionWorkflowDto.cs related implementation
-
 
     Created by: Senparc - 20260821
 

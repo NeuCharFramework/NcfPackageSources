@@ -1,10 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: FooterContentSanitizerTests.cs
     File description: Footer default value and secure link rendering test
 
     Created by: Senparc - 20260802
+
 ----------------------------------------------------------------*/
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;

@@ -2,25 +2,13 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: AIAgentsHub_ColorConfigurationMapping.cs
-
     File description: AIAgentsHub_ColorConfigurationMapping related implementation
-
-    
-
-    
 
     Created by: Senparc - 20240311
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
-
-
 
 ----------------------------------------------------------------*/
 

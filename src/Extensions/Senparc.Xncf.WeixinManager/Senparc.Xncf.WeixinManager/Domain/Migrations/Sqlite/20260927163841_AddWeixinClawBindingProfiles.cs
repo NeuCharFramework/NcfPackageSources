@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20260927163841_AddWeixinClawBindingProfiles.cs
     File description: 20260927163841_AddWeixinClawBindingProfiles.cs implementation and project behavior.
-
 
     Created by: Senparc - 20260926
 

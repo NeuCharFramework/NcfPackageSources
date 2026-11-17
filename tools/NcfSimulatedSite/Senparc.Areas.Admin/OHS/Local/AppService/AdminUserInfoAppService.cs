@@ -1,56 +1,29 @@
-﻿/*-----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: AdminUserInfoAppService.cs
-
     File description: Related implementation.
-
-    
-
-    
 
     Created by: Senparc - 20241028
 
-    
-
     Modified by: Senparc - 20260724
-
     Change description: v0.1.0 enhance batch module updates and improve the multilingual management interface
 
-
-
     Modified by: Senparc - 20260729
-
     Change description: v0.2.0 enhance admin interaction and secure desktop Admin Chat synchronization
 
-
-
     Modified by: Senparc - 20260822
-
     Change description: v0.6.0 Updated module behavior and related support.
 
-
-
     Modified by: Senparc - 20260829
-
     Change description: v0.7.0 Updated module behavior and related support.
 
-
-
     Modified by: Senparc - 20260915
-
     Change description: v0.8.0 Updated module behavior and related support.
 
-
-
     Modified by: Senparc - 20261103
-
     Change description: v0.12.15 Remove DatabaseSample and related components from MCP extension
-
-
 
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Mvc;

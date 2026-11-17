@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: PromptSelectorResponse.cs
     File description: PromptSelectorResponse related definitions and implementation
-
 
     Created by: Senparc - 20261102
 

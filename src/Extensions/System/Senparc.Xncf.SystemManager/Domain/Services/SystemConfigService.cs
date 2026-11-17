@@ -2,31 +2,16 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: SystemConfigService.cs
-
     File description: SystemConfigService related implementation
-
-    
-
-    
 
     Created by: Senparc - 20211128
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
 
-
-
     Modified by: Senparc - 20260804
-
     Change description: v0.15.3-preview6 Updated module behavior and related support.
-
-
 
 ----------------------------------------------------------------*/
 

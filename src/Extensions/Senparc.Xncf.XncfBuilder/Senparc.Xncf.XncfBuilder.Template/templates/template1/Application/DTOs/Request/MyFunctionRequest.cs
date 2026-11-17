@@ -1,12 +1,12 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: MyFunctionRequest.cs
     File description: MyFunctionRequest related implementation
-    
-    
+
     Created by: Senparc - 20211031
-    
+
     Modified by: Senparc - 20260717
     Change description: v1.1.0 update feature parameters and page localization for the sample XNCF module
 

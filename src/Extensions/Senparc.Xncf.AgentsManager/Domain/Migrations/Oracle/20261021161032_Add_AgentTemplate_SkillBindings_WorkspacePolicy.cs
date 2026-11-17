@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20261021161032_Add_AgentTemplate_SkillBindings_WorkspacePolicy.cs
     File description: 20261021161032_Add_AgentTemplate_SkillBindings_WorkspacePolicy related definitions and implementation
-
 
     Created by: Senparc - 20250120
 

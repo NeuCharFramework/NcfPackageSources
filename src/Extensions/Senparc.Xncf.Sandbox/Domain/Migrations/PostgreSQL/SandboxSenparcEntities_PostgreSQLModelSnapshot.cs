@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: SandboxSenparcEntities_PostgreSQLModelSnapshot.cs
     File description: SandboxSenparcEntities_PostgreSQLModelSnapshot.cs implementation and project behavior.
-
 
     Created by: Senparc - 20260808
 

@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: Chat.cshtml.cs
     File description: Chat.cshtml.cs implementation and project behavior.
-
 
     Created by: Senparc - 20260325
 

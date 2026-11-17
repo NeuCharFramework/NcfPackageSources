@@ -2,31 +2,16 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: Register.cs
-
     File description: Register related implementation
-
-    
-
-    
 
     Created by: Senparc - 20211124
 
-    
-
     Modified by: Senparc - 20260704
-
     Change description: vNext: add the standardized file header comment
 
-
-
     Modified by: Senparc - 20261111
-
     Change description: v0.12.14 integrate EmailExtension Register display metadata with shared resource localization
-
-
 
 ----------------------------------------------------------------*/
 

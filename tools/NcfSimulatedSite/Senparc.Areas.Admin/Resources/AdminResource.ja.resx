@@ -1349,4 +1349,14 @@
   <data name="Frontend.457" xml:space="preserve"><value>输入内容||Input text</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.458" xml:space="preserve"><value>{0} 条新消息||{0} new messages</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.459" xml:space="preserve"><value>命令前缀||Command prefix</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+
+  <data name="WeixinClaw.Workflow.IntegrationDisabled" xml:space="preserve"><value>Workflow integration is disabled or the host has not loaded the NeuCharWorkflow module.</value></data>
+  <data name="WeixinClaw.Workflow.NoAvailable" xml:space="preserve"><value>No Workflows are currently available.</value></data>
+  <data name="WeixinClaw.Workflow.ListPrompt" xml:space="preserve"><value>Available Workflows are listed below. Send /workflow &lt;WorkflowId&gt; &lt;input&gt; next time to run a specific Workflow:</value></data>
+  <data name="WeixinClaw.Workflow.NotFound" xml:space="preserve"><value>The Workflow does not exist, is disabled, or the current administrator has no access.</value></data>
+  <data name="WeixinClaw.Workflow.Completed" xml:space="preserve"><value>Workflow "{0}" completed:
+{1}</value></data>
+  <data name="WeixinClaw.Workflow.Failed" xml:space="preserve"><value>Workflow "{0}" failed: {1}</value></data>
+  <data name="WeixinClaw.Workflow.HelpList" xml:space="preserve"><value>{0}workflow - List available Workflows and Workflow IDs</value></data>
+  <data name="WeixinClaw.Workflow.HelpExecute" xml:space="preserve"><value>{0}workflow &lt;WorkflowId&gt; &lt;input&gt; - Execute the specified Workflow</value></data>
 </root>

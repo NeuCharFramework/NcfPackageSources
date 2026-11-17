@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20261021161945_Add_PromptRange_SkillArtifactSource.cs
     File description: 20261021161945_Add_PromptRange_SkillArtifactSource related definitions and implementation
-
 
     Created by: Senparc - 20261022
 

@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: WorkspaceFilesController.cs
     File description: WorkspaceFilesController related definitions and implementation
-
 
     Created by: Senparc - 20261102
 

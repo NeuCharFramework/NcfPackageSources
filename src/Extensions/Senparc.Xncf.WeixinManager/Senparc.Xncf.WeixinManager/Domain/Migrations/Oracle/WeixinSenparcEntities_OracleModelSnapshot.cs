@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: WeixinSenparcEntities_OracleModelSnapshot.cs
     File description: WeixinSenparcEntities_OracleModelSnapshot.cs implementation and project behavior.
-
 
     Created by: Senparc - 20231021
 

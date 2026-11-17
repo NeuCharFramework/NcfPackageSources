@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: AdminChatWorkspaceToolFactory.cs
     File description: Related implementation.
-    
-    
+
     Created by: Senparc - 20261015
-    
+
     Modified by: Senparc - 20261021
     Change description: v0.11.1 Updated module behavior and related support.
 

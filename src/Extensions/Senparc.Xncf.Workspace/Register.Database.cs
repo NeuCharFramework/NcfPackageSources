@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: Register.Database.cs
     File description: Workspace database registration
-    
-    
+
     Created by: Senparc - 20261021
-    
+
     Modified by: Senparc - 20261021
     Change description: v0.1.1 register the Workspace database module
 

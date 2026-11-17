@@ -1,19 +1,18 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: ChatTask.cs
     File description: ChatTask related implementation
-    
-    
+    -
+
     Created by: Senparc - 20241016
-    
+
     Modified by: Senparc - 20260704
     Change description: v0.11.0-preview2 Updated module behavior and related support.
 
     Modified by: Senparc - 20260817
     Change description: v0.16.0 Updated module behavior and related support.
-
--
 
     Modified by: Senparc - 20260817
     Change description: v0.16.0 Updated module behavior and related support.

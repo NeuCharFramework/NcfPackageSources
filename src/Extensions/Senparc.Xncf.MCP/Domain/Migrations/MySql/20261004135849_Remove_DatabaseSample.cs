@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20261004135849_Remove_DatabaseSample.cs
     File description: 20261004135849_Remove_DatabaseSample related definitions and implementation
-
 
     Created by: Senparc - 20211211
 

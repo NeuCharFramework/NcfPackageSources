@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20260802183806_Add_XncfPreview.Designer.cs
     File description: Entity Framework database migration metadata definition.
-
 
     Created by: Senparc - 20231021
 

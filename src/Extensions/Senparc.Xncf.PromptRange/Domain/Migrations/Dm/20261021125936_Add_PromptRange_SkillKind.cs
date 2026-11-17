@@ -1,9 +1,9 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: 20261021125936_Add_PromptRange_SkillKind.cs
     File description: 20261021125936_Add_PromptRange_SkillKind related definitions and implementation
-
 
     Created by: Senparc - 20210105
 

@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
     File name: NeuCharWorkflowNeuBellProvider.cs
     File description: Workflow notifications and task-based NeuBell consumption
-
 
     Created by: Senparc - 20260810
 

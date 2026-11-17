@@ -2,25 +2,13 @@
 
     Copyright (C) 2026 Senparc
 
-  
-
     File name: Edit.cshtml.cs
-
     File description: Edit.cshtml.cs related implementation
-
-    
-
-    
 
     Created by: Senparc - 20241028
 
-    
-
     Modified by: Senparc - 20260729
-
     Change description: v0.2.0 enhance admin interaction and secure desktop Admin Chat synchronization
-
-
 
 ----------------------------------------------------------------*/
 

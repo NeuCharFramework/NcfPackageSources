@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
+
     File name: Program.cs
     File description: Program related implementation
-
 
     Created by: Senparc - 20241028
 
