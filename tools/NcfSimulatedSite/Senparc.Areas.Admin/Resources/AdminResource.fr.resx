@@ -1099,26 +1099,26 @@
   <data name="Frontend.204" xml:space="preserve"><value>Workflow : tous</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.205" xml:space="preserve"><value>Workflow : liés</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.206" xml:space="preserve"><value>Workflow : non liés</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.207" xml:space="preserve"><value>Last failure</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.208" xml:space="preserve"><value>Available / total</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.209" xml:space="preserve"><value>Enabled / configured</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.210" xml:space="preserve"><value>Removed in the current version</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.211" xml:space="preserve"><value>Succeeded / failed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.212" xml:space="preserve"><value>Run</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.213" xml:space="preserve"><value>Running / countdown</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.214" xml:space="preserve"><value>Run status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.215" xml:space="preserve"><value>Search modules, Functions, or Workflows</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.207" xml:space="preserve"><value>Dernier échec</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.208" xml:space="preserve"><value>Disponibles / total</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.209" xml:space="preserve"><value>Activés / configurés</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.210" xml:space="preserve"><value>Supprimé dans la version actuelle</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.211" xml:space="preserve"><value>Réussis / échoués</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.212" xml:space="preserve"><value>Exécuter</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.213" xml:space="preserve"><value>En cours / compte à rebours</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.214" xml:space="preserve"><value>État d’exécution</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.215" xml:space="preserve"><value>Rechercher des modules, Functions ou Workflows</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.216" xml:space="preserve"><value>Module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.217" xml:space="preserve"><value>Module navigation</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.218" xml:space="preserve"><value>Module disabled</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.219" xml:space="preserve"><value>Module status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.220" xml:space="preserve"><value>Module status: unavailable</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.221" xml:space="preserve"><value>Module status: all</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.222" xml:space="preserve"><value>Module status: available</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.223" xml:space="preserve"><value>No matching NeuCharPivot entries</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.224" xml:space="preserve"><value>Aggregate</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.225" xml:space="preserve"><value>This module is not installed or enabled. Functions keep their configuration but cannot run.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.226" xml:space="preserve"><value>Adjust the filters, or open Settings / Execute → NeuCharPivot in any module to generate an operation panel first.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.217" xml:space="preserve"><value>Navigation des modules</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.218" xml:space="preserve"><value>Module fermé</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.219" xml:space="preserve"><value>État du module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.220" xml:space="preserve"><value>État du module : indisponible</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.221" xml:space="preserve"><value>État du module : tous</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.222" xml:space="preserve"><value>État du module : disponible</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.223" xml:space="preserve"><value>Aucun NeuCharPivot correspondant</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.224" xml:space="preserve"><value>Agrégation</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.225" xml:space="preserve"><value>Ce module n’est pas installé ou activé ; les Functions conservent leur configuration mais ne peuvent pas être exécutées.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.226" xml:space="preserve"><value>Ajustez les filtres ou ouvrez « Configuration / Exécuter → NeuCharPivot » dans un module pour générer d’abord un panneau d’actions.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.227" xml:space="preserve"><value>Reset filters</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.228" xml:space="preserve"><value>Review module panels, parameterized Functions, LoopTask countdowns, and post-completion Workflows in one place.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.229" xml:space="preserve"><value>Function global Provit access control</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
