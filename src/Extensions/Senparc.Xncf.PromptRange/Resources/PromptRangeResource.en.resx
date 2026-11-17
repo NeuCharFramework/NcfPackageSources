@@ -868,4 +868,10 @@ Attachments provide an index only; they do not mean that you have read the conte
   <data name="Frontend.785" xml:space="preserve"><value>Enter the expected result</value></data>
   <data name="Frontend.786" xml:space="preserve"><value>Select at least one range</value></data>
   <data name="Frontend.787" xml:space="preserve"><value>Select at least one prompt</value></data>
+
+  <data name="Frontend.788" xml:space="preserve"><value>PromptCode {0} is already used by {1} Agents. Continue creating a new Agent?</value></data>
+  <data name="Frontend.789" xml:space="preserve"><value>Confirm creation</value></data>
+  <data name="Frontend.790" xml:space="preserve"><value>Continue creation</value></data>
+  <data name="Frontend.791" xml:space="preserve"><value>Agent “{0}” created successfully!</value></data>
+  <data name="Frontend.792" xml:space="preserve"><value>Fullscreen request failed:</value></data>
 </root>

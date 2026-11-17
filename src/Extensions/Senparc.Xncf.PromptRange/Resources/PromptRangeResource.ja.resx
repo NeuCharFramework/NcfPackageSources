@@ -868,4 +868,10 @@ Attachments provide an index only; they do not mean that you have read the conte
   <data name="Frontend.785" xml:space="preserve"><value>期待する結果を入力</value></data>
   <data name="Frontend.786" xml:space="preserve"><value>少なくとも1つの靶場を選択</value></data>
   <data name="Frontend.787" xml:space="preserve"><value>少なくとも1つの靶道を選択</value></data>
+
+  <data name="Frontend.788" xml:space="preserve"><value>PromptCode「{0}」はすでに{1}個のAgentで使用されています。新しいAgentを作成しますか？</value></data>
+  <data name="Frontend.789" xml:space="preserve"><value>作成を確認</value></data>
+  <data name="Frontend.790" xml:space="preserve"><value>作成を続ける</value></data>
+  <data name="Frontend.791" xml:space="preserve"><value>Agent「{0}」を作成しました。</value></data>
+  <data name="Frontend.792" xml:space="preserve"><value>全画面表示の要求に失敗しました：</value></data>
 </root>

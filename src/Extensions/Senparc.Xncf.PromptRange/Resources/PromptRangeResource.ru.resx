@@ -868,4 +868,10 @@ Attachments provide an index only; they do not mean that you have read the conte
   <data name="Frontend.785" xml:space="preserve"><value>Введите ожидаемый результат</value></data>
   <data name="Frontend.786" xml:space="preserve"><value>Выберите хотя бы один диапазон</value></data>
   <data name="Frontend.787" xml:space="preserve"><value>Выберите хотя бы один prompt</value></data>
+
+  <data name="Frontend.788" xml:space="preserve"><value>PromptCode {0} уже используется Agent: {1}. Продолжить создание нового Agent?</value></data>
+  <data name="Frontend.789" xml:space="preserve"><value>Подтвердить создание</value></data>
+  <data name="Frontend.790" xml:space="preserve"><value>Продолжить создание</value></data>
+  <data name="Frontend.791" xml:space="preserve"><value>Agent «{0}» успешно создан!</value></data>
+  <data name="Frontend.792" xml:space="preserve"><value>Не удалось запросить полноэкранный режим:</value></data>
 </root>

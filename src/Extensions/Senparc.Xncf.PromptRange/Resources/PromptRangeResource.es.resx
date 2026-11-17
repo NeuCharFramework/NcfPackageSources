@@ -868,4 +868,10 @@ Attachments provide an index only; they do not mean that you have read the conte
   <data name="Frontend.785" xml:space="preserve"><value>Introduce el resultado esperado</value></data>
   <data name="Frontend.786" xml:space="preserve"><value>Selecciona al menos un rango</value></data>
   <data name="Frontend.787" xml:space="preserve"><value>Selecciona al menos un prompt</value></data>
+
+  <data name="Frontend.788" xml:space="preserve"><value>El PromptCode {0} ya lo usan {1} Agents. ¿Continuar creando un Agent nuevo?</value></data>
+  <data name="Frontend.789" xml:space="preserve"><value>Confirmar creación</value></data>
+  <data name="Frontend.790" xml:space="preserve"><value>Continuar con la creación</value></data>
+  <data name="Frontend.791" xml:space="preserve"><value>¡Agent «{0}» creado correctamente!</value></data>
+  <data name="Frontend.792" xml:space="preserve"><value>Error en la solicitud de pantalla completa:</value></data>
 </root>

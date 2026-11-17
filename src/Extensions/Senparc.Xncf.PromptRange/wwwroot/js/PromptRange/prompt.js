@@ -4133,9 +4133,9 @@ var app = new Vue({
             if (this.createAgentExistingList.length > 0) {
                 try {
                     await this.$confirm(
-                        `当前 PromptCode（${promptCode}）已有 ${this.createAgentExistingList.length} 个智能体使用。是否继续创建新智能体？`,
-                        '确认创建',
-                        { confirmButtonText: '继续创建', cancelButtonText: '取消', type: 'warning' }
+                        ncfST('当前 PromptCode（{0}）已有 {1} 个智能体使用。是否继续创建新智能体？', promptCode, this.createAgentExistingList.length),
+                        ncfST('确认创建'),
+                        { confirmButtonText: ncfST('继续创建'), cancelButtonText: ncfST('取消'), type: 'warning' }
                     )
                 } catch {
                     return
@@ -4162,7 +4162,7 @@ var app = new Vue({
                     agentData
                 )
                 if (res.data && res.data.success) {
-                    this.$message({ message: `智能体「${this.createAgentForm.name}」创建成功！`, type: 'success' })
+                    this.$message({ message: ncfST('智能体「{0}」创建成功！', this.createAgentForm.name), type: 'success' })
                     this.createAgentDialogVisible = false
                 } else {
                     this.$message({ message: ncfST('创建失败：') + (res.data?.msg || ncfST('未知错误')), type: 'error' })
@@ -4253,7 +4253,7 @@ var app = new Vue({
             if (!container) return
             if (!document.fullscreenElement) {
                 container.requestFullscreen().catch(e => {
-                    console.warn('全屏请求失败:', e)
+                    console.warn(ncfST('全屏请求失败:'), e)
                 })
             } else {
                 document.exitFullscreen()
