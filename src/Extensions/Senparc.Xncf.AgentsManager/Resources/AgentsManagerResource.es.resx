@@ -406,10 +406,10 @@
     <value>Restablecer</value>
   </data>
   <data name="Frontend.084" xml:space="preserve">
-    <value>Token total</value>
+    <value>Total de tokens</value>
   </data>
   <data name="Frontend.085" xml:space="preserve">
-    <value>Token de entrada / salida</value>
+    <value>Tokens de entrada / salida</value>
   </data>
   <data name="Frontend.086" xml:space="preserve">
     <value>P95 / duración máxima</value>
@@ -439,19 +439,19 @@
     <value>Por tiempo</value>
   </data>
   <data name="Frontend.095" xml:space="preserve">
-    <value>Intervalo de tiempo (horas)</value>
+    <value>Intervalo temporal (horas)</value>
   </data>
   <data name="Frontend.096" xml:space="preserve">
-    <value>Editar agente</value>
+    <value>Editar Agent</value>
   </data>
   <data name="Frontend.097" xml:space="preserve">
-    <value>Agregar agente</value>
+    <value>Añadir Agent</value>
   </data>
   <data name="Frontend.098" xml:space="preserve">
-    <value>Nombre del agente</value>
+    <value>Nombre del Agent</value>
   </data>
   <data name="Frontend.099" xml:space="preserve">
-    <value>Complete el campo</value>
+    <value>Completa este campo</value>
   </data>
   <data name="Frontend.100" xml:space="preserve">
     <value>Seleccionar</value>
