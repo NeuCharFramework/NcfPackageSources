@@ -408,7 +408,7 @@
   <data name="Frontend.302" xml:space="preserve"><value>Agent выполняет рассуждение и вызывает инструменты (это может занять несколько минут; не закрывайте это окно)…</value></data>
   <data name="Frontend.303" xml:space="preserve"><value>Код скопирован</value></data>
   <data name="Frontend.304" xml:space="preserve"><value>Не удалось скопировать код</value></data>
-  <data name="Frontend.305" xml:space="preserve"><value>Copy</value></data>
+  <data name="Frontend.305" xml:space="preserve"><value>Копировать</value></data>
   <data name="Frontend.306" xml:space="preserve"><value>доступных Model</value></data>
   <data name="Frontend.307" xml:space="preserve"><value>Оптимизация не завершилась успешно</value></data>
   <data name="Frontend.308" xml:space="preserve"><value>Оптимизация выполняется. Не нажимайте повторно.</value></data>
@@ -566,9 +566,9 @@
   <data name="Frontend.458" xml:space="preserve"><value>📦 Диапазон</value></data>
   <data name="Frontend.459" xml:space="preserve"><value>Содержит результатов: {0}</value></data>
   <data name="Frontend.460" xml:space="preserve"><value>🎯 Узел тактики</value></data>
-  <data name="Frontend.461" xml:space="preserve"><value>No.: T{0}</value></data>
+  <data name="Frontend.461" xml:space="preserve"><value>Номер: T{0}</value></data>
   <data name="Frontend.462" xml:space="preserve"><value>🎲 Точка прицеливания</value></data>
-  <data name="Frontend.463" xml:space="preserve"><value>No.: A{0}</value></data>
+  <data name="Frontend.463" xml:space="preserve"><value>Номер: A{0}</value></data>
   <data name="Frontend.464" xml:space="preserve"><value>Место: {0}/{1}</value></data>
   <data name="Frontend.465" xml:space="preserve"><value>👑 Первое место</value></data>
   <data name="Frontend.466" xml:space="preserve"><value>Середина</value></data>
@@ -649,7 +649,7 @@
   <data name="Frontend.541" xml:space="preserve"><value>Введите версию API</value></data>
   <data name="Frontend.542" xml:space="preserve"><value>Ключ API</value></data>
   <data name="Frontend.543" xml:space="preserve"><value>Введите ключ API</value></data>
-  <data name="Frontend.544" xml:space="preserve"><value>Endpoint</value></data>
+  <data name="Frontend.544" xml:space="preserve"><value>Конечная точка</value></data>
   <data name="Frontend.545" xml:space="preserve"><value>Введите Endpoint</value></data>
   <data name="Frontend.546" xml:space="preserve"><value>ID организации</value></data>
   <data name="Frontend.547" xml:space="preserve"><value>Введите ID организации</value></data>

@@ -408,7 +408,7 @@
   <data name="Frontend.302" xml:space="preserve"><value>L'Agent raisonne et appelle des outils (cela peut prendre plusieurs minutes ; ne fermez pas cette fenêtre)…</value></data>
   <data name="Frontend.303" xml:space="preserve"><value>Code copié</value></data>
   <data name="Frontend.304" xml:space="preserve"><value>Échec de la copie du code</value></data>
-  <data name="Frontend.305" xml:space="preserve"><value>Copy</value></data>
+  <data name="Frontend.305" xml:space="preserve"><value>Copier</value></data>
   <data name="Frontend.306" xml:space="preserve"><value>Model disponibles</value></data>
   <data name="Frontend.307" xml:space="preserve"><value>L'optimisation ne s'est pas terminée correctement</value></data>
   <data name="Frontend.308" xml:space="preserve"><value>L'optimisation est en cours. Veuillez ne pas cliquer de nouveau.</value></data>

@@ -408,7 +408,7 @@
   <data name="Frontend.302" xml:space="preserve"><value>El Agent está razonando y llamando a herramientas (puede tardar varios minutos; no cierre esta ventana)…</value></data>
   <data name="Frontend.303" xml:space="preserve"><value>Código copiado</value></data>
   <data name="Frontend.304" xml:space="preserve"><value>Error al copiar el código</value></data>
-  <data name="Frontend.305" xml:space="preserve"><value>Copy</value></data>
+  <data name="Frontend.305" xml:space="preserve"><value>Copiar</value></data>
   <data name="Frontend.306" xml:space="preserve"><value>Model disponibles</value></data>
   <data name="Frontend.307" xml:space="preserve"><value>La optimización no se completó correctamente</value></data>
   <data name="Frontend.308" xml:space="preserve"><value>La optimización está en curso. No vuelva a hacer clic.</value></data>
@@ -586,7 +586,7 @@ Nuevo Prompt: {0}</value></data>
   <data name="Frontend.478" xml:space="preserve"><value>Error al copiar</value></data>
   <data name="Frontend.479" xml:space="preserve"><value>Copiar código</value></data>
   <data name="Frontend.480" xml:space="preserve"><value>Puntuación final</value></data>
-  <data name="Frontend.481" xml:space="preserve"><value>{0}: {1} pts</value></data>
+  <data name="Frontend.481" xml:space="preserve"><value>{0}: {1} puntos</value></data>
   <data name="Frontend.482" xml:space="preserve"><value>Se restauró el ancho de diseño predeterminado</value></data>
   <data name="Frontend.483" xml:space="preserve"><value>Advertencia: ha seleccionado el mismo Prompt para comparar.</value></data>
   <data name="Frontend.484" xml:space="preserve"><value>Error al cargar los datos de Prompt A</value></data>
