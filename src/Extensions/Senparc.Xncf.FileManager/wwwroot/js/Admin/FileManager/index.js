@@ -241,11 +241,11 @@
             },
             scopeHint: function () {
                 if (this.isFineTuning) {
-                    return '微调产物始终保持私有，仅供训练任务、管理员和授权的下载接口使用，不会生成公开 URL。';
+                    return fileManagerText('Frontend.193', 'Fine-tuning artifacts are always private.');
                 }
                 return this.isSiteAsset
-                    ? '站点静态资源默认私有；公开后会生成带 SHA-256 指纹的 /assets/ URL。为防止同源脚本注入，不接受 HTML、SVG、JavaScript 或压缩包。'
-                    : '知识库源文件只能是可安全提取的文本和 Office Open XML 文件。它们不会生成公开 URL，也不能在此处发布。';
+                    ? fileManagerText('Frontend.194', 'Site static resources are private by default.')
+                    : fileManagerText('Frontend.195', 'Knowledge-base source files must be safely extractable text or Office Open XML files.');
             },
             uploadExtensionHint: function () {
                 if (this.uploadSettings && this.uploadSettings.allowedTypesText) {
