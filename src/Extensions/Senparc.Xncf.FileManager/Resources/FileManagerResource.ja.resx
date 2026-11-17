@@ -433,6 +433,12 @@
   <data name="Frontend.197" xml:space="preserve"><value>JSONL、JSON、ZIP、およびトレーニング実行時に生成されるその他の非公開成果物をサポートします。</value></data>
   <data name="Frontend.198" xml:space="preserve"><value>JPG、PNG、GIF、WebP、AVIF、ICO、音声/動画、フォント形式をサポートします。</value></data>
   <data name="Frontend.199" xml:space="preserve"><value>テキスト、JSON/XML/YAML、コード、DOCX、XLSX、PPTXをサポートします。</value></data>
+  <data name="Frontend.200" xml:space="preserve"><value>旧版Office形式（.doc/.xls/.ppt）はオンラインプレビューに対応していません。ダウンロードして確認してください。</value></data>
+  <data name="Frontend.201" xml:space="preserve"><value>このファイルタイプはオンラインプレビューに対応していません。ダウンロードして確認してください。</value></data>
+  <data name="Frontend.202" xml:space="preserve"><value>ドキュメントは空です。</value></data>
+  <data name="Frontend.203" xml:space="preserve"><value>Excelファイルにプレビュー可能なワークシートがありません。</value></data>
+  <data name="Frontend.204" xml:space="preserve"><value>このファイルタイプはオンラインプレビューに対応していません。</value></data>
+  <data name="Frontend.205" xml:space="preserve"><value>プレビューに失敗しました：{0}</value></data>
   <data name="Frontend.193" xml:space="preserve"><value>ファインチューニング成果物は常に非公開です。トレーニングタスク、管理者、許可されたダウンロードエンドポイントのみが利用でき、公開URLは生成されません。</value></data>
   <data name="Frontend.194" xml:space="preserve"><value>サイトの静的リソースは既定で非公開です。公開するとSHA-256フィンガープリント付きの/assets/ URLが生成されます。同一オリジンのスクリプトインジェクションを防ぐため、HTML、SVG、JavaScript、圧縮ファイルは受け付けません。</value></data>
   <data name="Frontend.195" xml:space="preserve"><value>ナレッジベースのソースファイルは、安全に抽出できるテキストまたはOffice Open XMLファイルである必要があります。公開URLは生成されず、ここから公開することもできません。</value></data>

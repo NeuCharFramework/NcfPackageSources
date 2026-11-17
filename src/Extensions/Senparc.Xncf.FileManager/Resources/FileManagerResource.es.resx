@@ -433,6 +433,12 @@
   <data name="Frontend.197" xml:space="preserve"><value>Admite JSONL, JSON, ZIP y otros artefactos privados generados por el entrenamiento.</value></data>
   <data name="Frontend.198" xml:space="preserve"><value>Admite JPG, PNG, GIF, WebP, AVIF, ICO, audio/vídeo y fuentes.</value></data>
   <data name="Frontend.199" xml:space="preserve"><value>Admite texto, JSON/XML/YAML, código, DOCX, XLSX y PPTX.</value></data>
+  <data name="Frontend.200" xml:space="preserve"><value>Los formatos Office antiguos (.doc/.xls/.ppt) no se pueden previsualizar en línea. Descarga el archivo para verlo.</value></data>
+  <data name="Frontend.201" xml:space="preserve"><value>Este tipo de archivo no se puede previsualizar en línea. Intenta descargarlo.</value></data>
+  <data name="Frontend.202" xml:space="preserve"><value>El documento está vacío.</value></data>
+  <data name="Frontend.203" xml:space="preserve"><value>El archivo Excel no contiene hojas de cálculo previsualizables.</value></data>
+  <data name="Frontend.204" xml:space="preserve"><value>Este tipo de archivo no admite vista previa en línea.</value></data>
+  <data name="Frontend.205" xml:space="preserve"><value>Error de previsualización: {0}</value></data>
   <data name="Frontend.193" xml:space="preserve"><value>Los artefactos de ajuste fino son siempre privados. Solo están disponibles para tareas de entrenamiento, administradores y endpoints de descarga autorizados; no se genera ninguna URL pública.</value></data>
   <data name="Frontend.194" xml:space="preserve"><value>Los recursos estáticos del sitio son privados de forma predeterminada. Tras publicarlos, se genera una URL /assets/ con huella SHA-256. No se aceptan HTML, SVG, JavaScript ni archivos comprimidos para evitar la inyección de scripts del mismo origen.</value></data>
   <data name="Frontend.195" xml:space="preserve"><value>Los archivos fuente de la base de conocimientos deben ser textos extraíbles de forma segura o archivos Office Open XML. No generan URL públicas y no se pueden publicar aquí.</value></data>

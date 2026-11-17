@@ -1881,19 +1881,19 @@
                     }
                     if (kind === 'legacy-office') {
                         this.filePreviewDialog.mode = 'error';
-                        this.filePreviewDialog.error = '旧版 Office 格式（.doc/.xls/.ppt）暂不支持在线预览，请下载后查看。';
+                        this.filePreviewDialog.error = fileManagerText('Frontend.200', 'Legacy Office formats cannot be previewed online.');
                         return;
                     }
                     if (kind === 'unsupported') {
                         this.filePreviewDialog.mode = 'error';
-                        this.filePreviewDialog.error = '该文件类型暂不支持在线预览，请尝试下载后查看。';
+                        this.filePreviewDialog.error = fileManagerText('Frontend.201', 'This file type cannot be previewed online.');
                         return;
                     }
                     if (kind === 'docx' && typeof mammoth !== 'undefined') {
                         const arrayBuffer = await this.fetchPreviewArrayBuffer(row.id);
                         const result = await mammoth.convertToHtml({ arrayBuffer: arrayBuffer });
                         this.filePreviewDialog.mode = 'html';
-                        this.filePreviewDialog.html = result.value || '<p>文档为空</p>';
+                        this.filePreviewDialog.html = result.value || '<p>' + fileManagerText('Frontend.202', 'The document is empty.') + '</p>';
                         return;
                     }
                     if (kind === 'xlsx' && typeof XLSX !== 'undefined') {
@@ -1902,7 +1902,7 @@
                         const sheetName = workbook.SheetNames && workbook.SheetNames[0];
                         if (!sheetName) {
                             this.filePreviewDialog.mode = 'error';
-                            this.filePreviewDialog.error = 'Excel 文件中没有可预览的工作表。';
+                            this.filePreviewDialog.error = fileManagerText('Frontend.203', 'The Excel file has no previewable worksheets.');
                             return;
                         }
                         this.filePreviewDialog.mode = 'excel';
@@ -1937,10 +1937,10 @@
                         return;
                     }
                     this.filePreviewDialog.mode = 'error';
-                    this.filePreviewDialog.error = '暂不支持该文件类型的在线预览。';
+                    this.filePreviewDialog.error = fileManagerText('Frontend.204', 'This file type does not support online preview.');
                 } catch (error) {
                     this.filePreviewDialog.mode = 'error';
-                    this.filePreviewDialog.error = '预览失败：' + errorMessage(error);
+                    this.filePreviewDialog.error = fileManagerText('Frontend.205', 'Preview failed: {0}', errorMessage(error));
                 } finally {
                     this.filePreviewDialog.loading = false;
                 }
