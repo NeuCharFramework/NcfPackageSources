@@ -16,10 +16,10 @@ var AgentsAppMethodsCore = {
 
       //Legacy comment translated to English.
       if (regex.test(str)) {
-        console.log('目标字符串');
+        console.log(ncfST('目标字符串'));
         return true;
       } else {
-        console.log('非目标字符串');
+        console.log(ncfST('非目标字符串'));
         return false;
       }
     },
@@ -101,7 +101,7 @@ var AgentsAppMethodsCore = {
     },
     async refreshAgentStatistics() {
       await this.getAgentListData('agent')
-      this.$message.success('统计数据已刷新')
+      this.$message.success(ncfST('统计数据已刷新'))
     },
     handleAgentStatisticTileClick(agent) {
       if (!agent) return

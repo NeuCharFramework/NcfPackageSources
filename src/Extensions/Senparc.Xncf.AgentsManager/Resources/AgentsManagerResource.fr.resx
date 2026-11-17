@@ -1693,4 +1693,11 @@
 
   <data name="Frontend.520" xml:space="preserve"><value>Use connectors authorized by each Agent</value></data>
   <data name="Frontend.521" xml:space="preserve"><value>Use only the selected connectors</value></data>
+  <data name="Frontend.522" xml:space="preserve"><value>Chaîne cible</value></data>
+  <data name="Frontend.523" xml:space="preserve"><value>Chaîne non cible</value></data>
+  <data name="Frontend.524" xml:space="preserve"><value>Statistiques actualisées</value></data>
+  <data name="Frontend.525" xml:space="preserve"><value>Impossible de charger les membres du groupe</value></data>
+  <data name="Frontend.526" xml:space="preserve"><value>Impossible d’actualiser la liste complète des membres ; seuls les membres déjà chargés sont affichés</value></data>
+  <data name="Frontend.527" xml:space="preserve"><value>Des modifications ne sont pas enregistrées. Fermer quand même ?</value></data>
+  <data name="Frontend.528" xml:space="preserve"><value>Confirmer l’action</value></data>
 </root>

@@ -1693,4 +1693,11 @@
 
   <data name="Frontend.520" xml:space="preserve"><value>Use connectors authorized by each Agent</value></data>
   <data name="Frontend.521" xml:space="preserve"><value>Use only the selected connectors</value></data>
+  <data name="Frontend.522" xml:space="preserve"><value>Целевая строка</value></data>
+  <data name="Frontend.523" xml:space="preserve"><value>Строка вне цели</value></data>
+  <data name="Frontend.524" xml:space="preserve"><value>Статистика обновлена</value></data>
+  <data name="Frontend.525" xml:space="preserve"><value>Не удалось загрузить участников группы</value></data>
+  <data name="Frontend.526" xml:space="preserve"><value>Не удалось обновить полный список участников; показаны только уже загруженные участники</value></data>
+  <data name="Frontend.527" xml:space="preserve"><value>Есть несохранённые изменения. Всё равно закрыть?</value></data>
+  <data name="Frontend.528" xml:space="preserve"><value>Подтвердить действие</value></data>
 </root>

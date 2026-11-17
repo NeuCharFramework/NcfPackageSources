@@ -1119,4 +1119,11 @@
 
   <data name="Frontend.520" xml:space="preserve"><value>使用各 Agent 已授权的连接器</value></data>
   <data name="Frontend.521" xml:space="preserve"><value>只使用选中的连接器</value></data>
+  <data name="Frontend.522" xml:space="preserve"><value>目标字符串</value></data>
+  <data name="Frontend.523" xml:space="preserve"><value>非目标字符串</value></data>
+  <data name="Frontend.524" xml:space="preserve"><value>统计数据已刷新</value></data>
+  <data name="Frontend.525" xml:space="preserve"><value>加载群组成员失败</value></data>
+  <data name="Frontend.526" xml:space="preserve"><value>无法刷新完整组员列表，当前仅显示已加载的组员</value></data>
+  <data name="Frontend.527" xml:space="preserve"><value>当前修改尚未保存，确认关闭？</value></data>
+  <data name="Frontend.528" xml:space="preserve"><value>操作确认</value></data>
 </root>

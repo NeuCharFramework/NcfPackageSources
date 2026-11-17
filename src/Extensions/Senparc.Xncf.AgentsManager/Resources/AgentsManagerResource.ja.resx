@@ -1693,4 +1693,11 @@
 
   <data name="Frontend.520" xml:space="preserve"><value>各エージェントが承認したコネクターを使用</value></data>
   <data name="Frontend.521" xml:space="preserve"><value>選択したコネクターのみ使用</value></data>
+  <data name="Frontend.522" xml:space="preserve"><value>対象文字列</value></data>
+  <data name="Frontend.523" xml:space="preserve"><value>対象外文字列</value></data>
+  <data name="Frontend.524" xml:space="preserve"><value>統計データを更新しました</value></data>
+  <data name="Frontend.525" xml:space="preserve"><value>グループメンバーの読み込みに失敗しました</value></data>
+  <data name="Frontend.526" xml:space="preserve"><value>メンバー一覧を完全に更新できないため、読み込み済みのメンバーのみ表示しています</value></data>
+  <data name="Frontend.527" xml:space="preserve"><value>未保存の変更があります。このまま閉じますか？</value></data>
+  <data name="Frontend.528" xml:space="preserve"><value>操作を確認</value></data>
 </root>
