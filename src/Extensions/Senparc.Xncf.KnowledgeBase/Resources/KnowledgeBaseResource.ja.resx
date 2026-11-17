@@ -680,41 +680,41 @@
   <data name="Frontend.238" xml:space="preserve"><value>語彙の重み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.239" xml:space="preserve"><value>語彙ハイブリッド</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.240" xml:space="preserve"><value>語彙ハイブリッド（追加のモデル呼び出しなし）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.241" xml:space="preserve"><value>Semantic vector retrieval</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.242" xml:space="preserve"><value>Enter content (optional)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.243" xml:space="preserve"><value>Enter a knowledge-base name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.244" xml:space="preserve"><value>Select an Embedding model</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.245" xml:space="preserve"><value>Select a Redis or Qdrant vector store</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.246" xml:space="preserve"><value>Select a chunking strategy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.247" xml:space="preserve"><value>Select a chat model</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.248" xml:space="preserve"><value>Select a reranking mode</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.249" xml:space="preserve"><value>Follow knowledge-base settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.250" xml:space="preserve"><value>Returned fragments</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.251" xml:space="preserve"><value>Returned fragment count (Top K)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.252" xml:space="preserve"><value>No test results yet</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.253" xml:space="preserve"><value>Results appear here after selecting a knowledge base and entering a question.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.254" xml:space="preserve"><value>Select knowledge-base materials</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.255" xml:space="preserve"><value>Select material files</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.256" xml:space="preserve"><value>Recursive structure (recommended for long documents)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.257" xml:space="preserve"><value>Reranking candidate count</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.258" xml:space="preserve"><value>Reranking model</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.259" xml:space="preserve"><value>Reranking</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.260" xml:space="preserve"><value>Reranking (this test)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.261" xml:space="preserve"><value>Return up to {0} segments</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.262" xml:space="preserve"><value>{0} segments</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.263" xml:space="preserve"><value>Duration: {0} ms</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.264" xml:space="preserve"><value>Item {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.265" xml:space="preserve"><value>Reranking score</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.266" xml:space="preserve"><value>Original rank #{0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.267" xml:space="preserve"><value>Source:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.268" xml:space="preserve"><value>Lexical score share of the fused score</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.269" xml:space="preserve"><value>{0} materials selected</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.270" xml:space="preserve"><value>Processed {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.271" xml:space="preserve"><value>Failed {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.272" xml:space="preserve"><value>Processing {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.273" xml:space="preserve"><value>Your request for [{1}] was started at {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.274" xml:space="preserve"><value>Processed {0}; succeeded {1}; failed {2}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.275" xml:space="preserve"><value>Current knowledge-base configuration:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.276" xml:space="preserve"><value>Item {0} · Similarity</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.277" xml:space="preserve"><value>· Original rerank position {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.241" xml:space="preserve"><value>意味ベースのベクトル検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.242" xml:space="preserve"><value>内容を入力（任意）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.243" xml:space="preserve"><value>ナレッジベース名を入力</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.244" xml:space="preserve"><value>埋め込みモデルを選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.245" xml:space="preserve"><value>RedisまたはQdrantのベクトルストアを選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.246" xml:space="preserve"><value>チャンク分割戦略を選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.247" xml:space="preserve"><value>チャットモデルを選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.248" xml:space="preserve"><value>再ランキングモードを選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.249" xml:space="preserve"><value>ナレッジベース設定に従う</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.250" xml:space="preserve"><value>返されたフラグメント</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.251" xml:space="preserve"><value>返されたフラグメント数（Top K）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.252" xml:space="preserve"><value>テスト結果はまだありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.253" xml:space="preserve"><value>ナレッジベースを選択して質問を入力すると、ここに結果が表示されます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.254" xml:space="preserve"><value>ナレッジベース資料を選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.255" xml:space="preserve"><value>資料ファイルを選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.256" xml:space="preserve"><value>再帰構造（長い文書に推奨）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.257" xml:space="preserve"><value>再ランキング候補数</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.258" xml:space="preserve"><value>再ランキングモデル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.259" xml:space="preserve"><value>再ランキング</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.260" xml:space="preserve"><value>再ランキング（このテスト）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.261" xml:space="preserve"><value>最大{0}個のフラグメントを返す</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.262" xml:space="preserve"><value>{0}個のフラグメント</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.263" xml:space="preserve"><value>所要時間：{0} ms</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.264" xml:space="preserve"><value>項目 {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.265" xml:space="preserve"><value>再ランキングスコア</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.266" xml:space="preserve"><value>元の順位 #{0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.267" xml:space="preserve"><value>ソース：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.268" xml:space="preserve"><value>統合スコアに占める語彙スコアの割合</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.269" xml:space="preserve"><value>{0}個の資料を選択中</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.270" xml:space="preserve"><value>処理済み {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.271" xml:space="preserve"><value>失敗 {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.272" xml:space="preserve"><value>処理中 {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.273" xml:space="preserve"><value>[{1}]へのリクエストは{0}に開始されました</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.274" xml:space="preserve"><value>処理済み {0}、成功 {1}、失敗 {2}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.275" xml:space="preserve"><value>現在のナレッジベース構成：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.276" xml:space="preserve"><value>項目 {0} · 類似度</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.277" xml:space="preserve"><value>· 元の再ランキング位置 {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
 </root>
