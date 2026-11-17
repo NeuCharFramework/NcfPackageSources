@@ -447,4 +447,9 @@
   <data name="Frontend.208" xml:space="preserve"><value>動画</value></data>
   <data name="Frontend.209" xml:space="preserve"><value>音声</value></data>
   <data name="Frontend.210" xml:space="preserve"><value>その他</value></data>
+  <data name="Frontend.211" xml:space="preserve"><value>アップロードするファイルを選択してください。</value></data>
+  <data name="Frontend.212" xml:space="preserve"><value>フォルダーのアップロードが完了し、元のディレクトリ構造が保持されました。</value></data>
+  <data name="Frontend.213" xml:space="preserve"><value>アップロードに成功しました。サイトで参照するには、サイトの静的リソースを明示的に公開する必要があります。</value></data>
+  <data name="Frontend.214" xml:space="preserve"><value>アップロードに失敗しました：{0}</value></data>
+  <data name="Frontend.215" xml:space="preserve"><value>対象フォルダーを利用できません。ルートフォルダーに戻りました。</value></data>
 </root>

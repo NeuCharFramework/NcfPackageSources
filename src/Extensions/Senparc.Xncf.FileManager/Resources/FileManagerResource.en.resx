@@ -447,4 +447,9 @@
   <data name="Frontend.208" xml:space="preserve"><value>Videos</value></data>
   <data name="Frontend.209" xml:space="preserve"><value>Audio</value></data>
   <data name="Frontend.210" xml:space="preserve"><value>Other</value></data>
+  <data name="Frontend.211" xml:space="preserve"><value>Select files to upload.</value></data>
+  <data name="Frontend.212" xml:space="preserve"><value>Folder upload completed; the original directory structure was preserved.</value></data>
+  <data name="Frontend.213" xml:space="preserve"><value>Upload succeeded; site static resources must still be explicitly published before the site can reference them.</value></data>
+  <data name="Frontend.214" xml:space="preserve"><value>Upload failed: {0}</value></data>
+  <data name="Frontend.215" xml:space="preserve"><value>The target folder is unavailable. Returned to the root folder.</value></data>
 </root>

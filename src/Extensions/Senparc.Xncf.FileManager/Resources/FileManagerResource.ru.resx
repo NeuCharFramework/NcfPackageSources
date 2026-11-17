@@ -447,4 +447,9 @@
   <data name="Frontend.208" xml:space="preserve"><value>Видео</value></data>
   <data name="Frontend.209" xml:space="preserve"><value>Аудио</value></data>
   <data name="Frontend.210" xml:space="preserve"><value>Другое</value></data>
+  <data name="Frontend.211" xml:space="preserve"><value>Выберите файлы для загрузки.</value></data>
+  <data name="Frontend.212" xml:space="preserve"><value>Загрузка папки завершена; исходная структура каталогов сохранена.</value></data>
+  <data name="Frontend.213" xml:space="preserve"><value>Загрузка выполнена; статические ресурсы сайта всё ещё необходимо явно опубликовать, прежде чем сайт сможет их использовать.</value></data>
+  <data name="Frontend.214" xml:space="preserve"><value>Ошибка загрузки: {0}</value></data>
+  <data name="Frontend.215" xml:space="preserve"><value>Целевая папка недоступна. Выполнен возврат в корневую папку.</value></data>
 </root>

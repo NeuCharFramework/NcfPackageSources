@@ -1767,7 +1767,7 @@
                     } catch (error) {
                         this.currentFolderId = null;
                         this.folderPath = [];
-                        this.$message.warning('目标文件夹不可用，已回到根目录。');
+                        this.$message.warning(fileManagerText('Frontend.215', 'The target folder is unavailable. Returned to the root folder.'));
                     }
                 } else {
                     this.folderPath = [];
@@ -2060,7 +2060,7 @@
                 return batches;
             },
             submitUpload: async function () {
-                if (!this.uploadDialog.fileList.length) { this.$message.warning('请选择要上传的文件'); return; }
+                if (!this.uploadDialog.fileList.length) { this.$message.warning(fileManagerText('Frontend.211', 'Select files to upload.')); return; }
                 this.uploadDialog.uploading = true;
                 this.uploadDialog.progress = 0;
                 let uploadedCount = 0;
@@ -2084,14 +2084,14 @@
                         this.uploadDialog.progress = Math.round(uploadedCount * 100 / files.length);
                     }
                     this.$message.success(this.uploadDialog.mode === 'folder'
-                        ? '文件夹上传完成，已保留原始目录结构。'
-                        : '上传成功；站点静态资源仍需显式公开后才可被站点引用。');
+                        ? fileManagerText('Frontend.212', 'Folder upload completed; the original directory structure was preserved.')
+                        : fileManagerText('Frontend.213', 'Upload succeeded; site static resources must still be explicitly published before the site can reference them.'));
                     this.uploadDialog.visible = false;
                     this.reloadFolderTree();
                     await this.getList();
                 } catch (error) {
                     const partialMessage = uploadedCount > 0 ? '，已完成 ' + uploadedCount + ' 个文件' : '';
-                    this.$message.error('上传失败' + partialMessage + '：' + errorMessage(error));
+                    this.$message.error(fileManagerText('Frontend.214', 'Upload failed: {0}', partialMessage ? partialMessage + ': ' + errorMessage(error) : errorMessage(error)));
                 } finally {
                     this.uploadDialog.uploading = false;
                 }

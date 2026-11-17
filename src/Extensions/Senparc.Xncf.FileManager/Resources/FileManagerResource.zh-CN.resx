@@ -443,4 +443,9 @@
   <data name="Frontend.208" xml:space="preserve"><value>视频</value></data>
   <data name="Frontend.209" xml:space="preserve"><value>音频</value></data>
   <data name="Frontend.210" xml:space="preserve"><value>其他</value></data>
+  <data name="Frontend.211" xml:space="preserve"><value>请选择要上传的文件。</value></data>
+  <data name="Frontend.212" xml:space="preserve"><value>文件夹上传完成，已保留原始目录结构。</value></data>
+  <data name="Frontend.213" xml:space="preserve"><value>上传成功；站点静态资源仍需显式公开后才可被站点引用。</value></data>
+  <data name="Frontend.214" xml:space="preserve"><value>上传失败：{0}</value></data>
+  <data name="Frontend.215" xml:space="preserve"><value>目标文件夹不可用，已回到根目录。</value></data>
 </root>
