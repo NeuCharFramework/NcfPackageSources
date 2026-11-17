@@ -56,6 +56,12 @@ public class IndexModel(
         return workflow == null ? NotFound() : Ok(workflow);
     }
 
+    public async Task<IActionResult> OnGetObservedOutputSchemasAsync(int id) =>
+        Ok(await workflowAppService.GetObservedOutputSchemasAsync(
+            id,
+            CurrentAdminUserId,
+            HttpContext.RequestAborted).ConfigureAwait(false));
+
     public async Task<IActionResult> OnGetDesignerDataAsync() =>
         Ok(await workflowAppService.GetDesignerDataAsync(HttpContext.RequestAborted).ConfigureAwait(false));
 

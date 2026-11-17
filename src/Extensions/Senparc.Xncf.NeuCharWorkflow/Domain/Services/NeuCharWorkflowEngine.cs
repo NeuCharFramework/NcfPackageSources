@@ -149,6 +149,41 @@ public sealed class NeuCharWorkflowEngine
         NeuCharFunctionDescriptor Descriptor,
         string DefaultParametersJson);
 
+    private sealed class WorkflowGraphIndex
+    {
+        public WorkflowGraphIndex(NeuCharWorkflowGraph graph)
+        {
+            NodesById = graph.Nodes.ToDictionary(node => node.Id, StringComparer.Ordinal);
+            OutgoingBySource = graph.Edges
+                .GroupBy(edge => edge.Source, StringComparer.Ordinal)
+                .ToDictionary(
+                    group => group.Key,
+                    group => (IReadOnlyList<NeuCharWorkflowEdge>)group.ToList(),
+                    StringComparer.Ordinal);
+            IncomingByTarget = graph.Edges
+                .GroupBy(edge => edge.Target, StringComparer.Ordinal)
+                .ToDictionary(
+                    group => group.Key,
+                    group => (IReadOnlyList<NeuCharWorkflowEdge>)group.ToList(),
+                    StringComparer.Ordinal);
+        }
+
+        public IReadOnlyDictionary<string, NeuCharWorkflowNode> NodesById { get; }
+        public IReadOnlyDictionary<string, IReadOnlyList<NeuCharWorkflowEdge>> OutgoingBySource { get; }
+        public IReadOnlyDictionary<string, IReadOnlyList<NeuCharWorkflowEdge>> IncomingByTarget { get; }
+        public Dictionary<string, string?> LoopBoundaryIds { get; } = new(StringComparer.Ordinal);
+
+        public IReadOnlyList<NeuCharWorkflowEdge> Outgoing(string nodeId) =>
+            OutgoingBySource.TryGetValue(nodeId, out var edges)
+                ? edges
+                : Array.Empty<NeuCharWorkflowEdge>();
+
+        public IReadOnlyList<NeuCharWorkflowEdge> Incoming(string nodeId) =>
+            IncomingByTarget.TryGetValue(nodeId, out var edges)
+                ? edges
+                : Array.Empty<NeuCharWorkflowEdge>();
+    }
+
     /// <summary>
     /// Runtime state for one explicit loop body. The graph remains acyclic: each iteration
     /// travels from the loop node to its loop-end marker, and only the final marker completion
@@ -351,10 +386,11 @@ public sealed class NeuCharWorkflowEngine
         }
 
         EnsureAcyclic(graph);
+        var graphIndex = new WorkflowGraphIndex(graph);
         foreach (var loop in graph.Nodes.Where(node =>
                      node.Type.Equals("loop", StringComparison.OrdinalIgnoreCase)))
         {
-            var loopBoundaryError = ValidateLoopBoundary(graph, loop);
+            var loopBoundaryError = ValidateLoopBoundary(graphIndex, loop);
             if (loopBoundaryError != null)
             {
                 throw new InvalidOperationException(loopBoundaryError);
@@ -826,6 +862,7 @@ public sealed class NeuCharWorkflowEngine
         bool parseInputAsJson = false)
     {
         var graph = ParseAndValidateGraph(workflow.GraphJson);
+        var graphIndex = new WorkflowGraphIndex(graph);
         var trace = new List<string>();
         var workflowPath = new HashSet<int>(ancestorWorkflowIds ?? Array.Empty<int>());
         if (!workflowPath.Add(workflow.Id))
@@ -1043,7 +1080,7 @@ public sealed class NeuCharWorkflowEngine
 
                     trace.Add($"{node.Name ?? node.Type}: loop={loopCount}");
                     Report(progress, node, "loop", $"For 循环将按顺序执行下游 {loopCount} 次。", loopCount.ToString(CultureInfo.InvariantCulture));
-                    var boundaryNodeId = FindLoopBoundaryNodeId(graph, node.Id);
+                    var boundaryNodeId = FindLoopBoundaryNodeId(graphIndex, node.Id);
                     var bodyEntry = outgoing.SingleOrDefault();
                     var newLoopState = boundaryNodeId == null
                         ? null
@@ -2805,10 +2842,10 @@ public sealed class NeuCharWorkflowEngine
     /// fan-out/joins remain rejected because one loop iteration must have one unambiguous
     /// continue/break completion.
     /// </summary>
-    private static string? ValidateLoopBoundary(NeuCharWorkflowGraph graph, NeuCharWorkflowNode loop)
+    private static string? ValidateLoopBoundary(WorkflowGraphIndex index, NeuCharWorkflowNode loop)
     {
-        var nodeMap = graph.Nodes.ToDictionary(node => node.Id, StringComparer.Ordinal);
-        var outgoing = graph.Edges.Where(edge => edge.Source == loop.Id).ToList();
+        var nodeMap = index.NodesById;
+        var outgoing = index.Outgoing(loop.Id);
         if (outgoing.Count == 0)
         {
             return null;
@@ -2819,7 +2856,7 @@ public sealed class NeuCharWorkflowEngine
             return $"循环节点“{loop.Name ?? loop.Id}”必须连接一个循环体入口。";
         }
 
-        var boundaryId = FindLoopBoundaryNodeId(graph, loop.Id);
+        var boundaryId = FindLoopBoundaryNodeId(index, loop.Id);
         // No explicit boundary means this is an old workflow. Preserve it until the author
         // inserts a loop-end node to opt into bounded body semantics.
         if (boundaryId == null)
@@ -2828,7 +2865,7 @@ public sealed class NeuCharWorkflowEngine
         }
 
         var pathError = ValidateLoopScopePath(
-            graph,
+            index,
             loop.Id,
             outgoing[0].Target,
             boundaryId,
@@ -2843,7 +2880,7 @@ public sealed class NeuCharWorkflowEngine
     }
 
     private static string? ValidateLoopScopePath(
-        NeuCharWorkflowGraph graph,
+        WorkflowGraphIndex index,
         string loopId,
         string currentId,
         string boundaryId,
@@ -2852,7 +2889,7 @@ public sealed class NeuCharWorkflowEngine
     {
         if (string.Equals(currentId, boundaryId, StringComparison.Ordinal))
         {
-            var boundaryIncoming = graph.Edges.Where(edge => edge.Target == boundaryId).ToList();
+            var boundaryIncoming = index.Incoming(boundaryId);
             if (boundaryIncoming.Count == 0 || boundaryIncoming.Any(edge =>
                     !string.Equals(edge.TargetHandle, "continue", StringComparison.OrdinalIgnoreCase) &&
                     !string.Equals(edge.TargetHandle, "break", StringComparison.OrdinalIgnoreCase)))
@@ -2861,7 +2898,7 @@ public sealed class NeuCharWorkflowEngine
             }
             var nodeMapForBoundary = nodeMap;
             if (boundaryIncoming.Any(edge =>
-                    !IsNodeInLoopScope(graph, loopId, edge.Source, boundaryId)))
+                    !IsNodeInLoopScope(index, loopId, edge.Source, boundaryId)))
             {
                 return "循环结束节点不能接收循环体外的连接。";
             }
@@ -2893,7 +2930,7 @@ public sealed class NeuCharWorkflowEngine
             return $"循环节点“{loopId}”当前只支持普通节点组成的单一路径；循环体不支持结束、并行、聚合或逐项合流节点。";
         }
 
-        var incoming = graph.Edges.Where(edge => edge.Target == currentId).ToList();
+        var incoming = index.Incoming(currentId);
         if (incoming.Count != 1)
         {
             return $"循环体节点“{current.Name ?? current.Id}”不能被多个路径合流或被循环外路径共享。";
@@ -2903,21 +2940,21 @@ public sealed class NeuCharWorkflowEngine
         // then continue the parent path after the child's loop-end marker.
         if (current.Type.Equals("loop", StringComparison.OrdinalIgnoreCase))
         {
-            var nestedError = ValidateLoopBoundary(graph, current);
+            var nestedError = ValidateLoopBoundary(index, current);
             if (nestedError != null)
             {
                 return nestedError;
             }
-            var nestedBoundary = FindLoopBoundaryNodeId(graph, current.Id);
-            var afterNested = graph.Edges.Where(edge => edge.Source == nestedBoundary).ToList();
+            var nestedBoundary = FindLoopBoundaryNodeId(index, current.Id);
+            var afterNested = index.Outgoing(nestedBoundary!);
             if (afterNested.Count != 1)
             {
                 return $"嵌套循环“{current.Name ?? current.Id}”结束后必须连接一个后续节点。";
             }
-            return ValidateLoopScopePath(graph, loopId, afterNested[0].Target, boundaryId, nodeMap, path);
+            return ValidateLoopScopePath(index, loopId, afterNested[0].Target, boundaryId, nodeMap, path);
         }
 
-        var outgoing = graph.Edges.Where(edge => edge.Source == currentId).ToList();
+        var outgoing = index.Outgoing(currentId);
         if (current.Type.Equals("condition", StringComparison.OrdinalIgnoreCase))
         {
             foreach (var edge in outgoing)
@@ -2931,7 +2968,7 @@ public sealed class NeuCharWorkflowEngine
                     }
                     continue;
                 }
-                var error = ValidateLoopScopePath(graph, loopId, edge.Target, boundaryId, nodeMap, new HashSet<string>(path));
+                var error = ValidateLoopScopePath(index, loopId, edge.Target, boundaryId, nodeMap, new HashSet<string>(path));
                 if (error != null) return error;
             }
             if (outgoing.Count == 0 || !outgoing.Any(edge => edge.SourceHandle is "true" or "false"))
@@ -2945,16 +2982,19 @@ public sealed class NeuCharWorkflowEngine
         {
             return $"循环体节点“{current.Name ?? current.Id}”必须是一条连接到循环结束的单一路径。";
         }
-        return ValidateLoopScopePath(graph, loopId, outgoing[0].Target, boundaryId, nodeMap, path);
+        return ValidateLoopScopePath(index, loopId, outgoing[0].Target, boundaryId, nodeMap, path);
     }
 
-    private static string? FindLoopBoundaryNodeId(NeuCharWorkflowGraph graph, string loopNodeId)
+    private static string? FindLoopBoundaryNodeId(WorkflowGraphIndex index, string loopNodeId)
     {
+        if (index.LoopBoundaryIds.TryGetValue(loopNodeId, out var cachedBoundaryId))
+        {
+            return cachedBoundaryId;
+        }
+
         var reachable = new HashSet<string>(StringComparer.Ordinal);
         var boundaryIds = new HashSet<string>(StringComparer.Ordinal);
-        var queue = new Queue<string>(graph.Edges
-            .Where(edge => edge.Source == loopNodeId)
-            .Select(edge => edge.Target));
+        var queue = new Queue<string>(index.Outgoing(loopNodeId).Select(edge => edge.Target));
         while (queue.Count > 0)
         {
             var current = queue.Dequeue();
@@ -2963,7 +3003,7 @@ public sealed class NeuCharWorkflowEngine
                 continue;
             }
 
-            var node = graph.Nodes.FirstOrDefault(item => item.Id == current);
+            index.NodesById.TryGetValue(current, out var node);
             if (node?.Type.Equals("loop-end", StringComparison.OrdinalIgnoreCase) == true)
             {
                 var owner = GetString(node.Config, "loopId");
@@ -2974,30 +3014,30 @@ public sealed class NeuCharWorkflowEngine
                 }
             }
 
-            foreach (var edge in graph.Edges.Where(edge => edge.Source == current))
+            foreach (var edge in index.Outgoing(current))
             {
                 queue.Enqueue(edge.Target);
             }
         }
 
-        return boundaryIds.Count switch
+        var boundaryId = boundaryIds.Count switch
         {
             0 => null,
             1 => boundaryIds.Single(),
             _ => throw new InvalidOperationException($"循环节点“{loopNodeId}”的循环体只能有一个“循环结束”节点。")
         };
+        index.LoopBoundaryIds[loopNodeId] = boundaryId;
+        return boundaryId;
     }
 
     private static bool IsNodeInLoopScope(
-        NeuCharWorkflowGraph graph,
+        WorkflowGraphIndex index,
         string loopNodeId,
         string targetNodeId,
         string boundaryNodeId)
     {
         var reachable = new HashSet<string>(StringComparer.Ordinal);
-        var queue = new Queue<string>(graph.Edges
-            .Where(edge => edge.Source == loopNodeId)
-            .Select(edge => edge.Target));
+        var queue = new Queue<string>(index.Outgoing(loopNodeId).Select(edge => edge.Target));
         while (queue.Count > 0)
         {
             var current = queue.Dequeue();
@@ -3010,7 +3050,7 @@ public sealed class NeuCharWorkflowEngine
                 return true;
             }
 
-            var node = graph.Nodes.FirstOrDefault(item => item.Id == current);
+            index.NodesById.TryGetValue(current, out var node);
             if (node?.Type.Equals("loop-end", StringComparison.OrdinalIgnoreCase) == true)
             {
                 var owner = GetString(node.Config, "loopId");
@@ -3020,7 +3060,7 @@ public sealed class NeuCharWorkflowEngine
                 }
             }
 
-            foreach (var edge in graph.Edges.Where(edge => edge.Source == current))
+            foreach (var edge in index.Outgoing(current))
             {
                 queue.Enqueue(edge.Target);
             }

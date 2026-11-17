@@ -128,16 +128,16 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             return await this.GetResponseAsync<ResourceMonitorData>(async (response, logger) =>
             {
                 var cache = CO2NET.Cache.CacheStrategyFactory.GetObjectCacheStrategyInstance();
+                var windows = await Task.WhenAll(
+                    ReadResourceMonitorWindowAsync(cache, ResourceMonitorRecorder.CacheKeyFine, "fine", 10),
+                    ReadResourceMonitorWindowAsync(cache, ResourceMonitorRecorder.CacheKeyMid, "mid", 60),
+                    ReadResourceMonitorWindowAsync(cache, ResourceMonitorRecorder.CacheKeyCoarse, "coarse", 300))
+                    .ConfigureAwait(false);
                 var data = new ResourceMonitorData
                 {
                     Now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
                     SampleIntervalSeconds = ResourceMonitorRecorder.SampleIntervalSeconds,
-                    Windows = new List<ResourceMonitorWindow>
-                    {
-                        await ReadResourceMonitorWindowAsync(cache, ResourceMonitorRecorder.CacheKeyFine, "fine", 10).ConfigureAwait(false),
-                        await ReadResourceMonitorWindowAsync(cache, ResourceMonitorRecorder.CacheKeyMid, "mid", 60).ConfigureAwait(false),
-                        await ReadResourceMonitorWindowAsync(cache, ResourceMonitorRecorder.CacheKeyCoarse, "coarse", 300).ConfigureAwait(false)
-                    }
+                    Windows = windows.ToList()
                 };
                 logger.Append($"GetResourceMonitor fine={data.Windows[0].Points.Count}, mid={data.Windows[1].Points.Count}, coarse={data.Windows[2].Points.Count}");
                 return data;

@@ -148,19 +148,30 @@ public sealed class NeuCharWorkflowAppService
         var editableGraphTask = _workflowEngine.BuildEditableGraphJsonAsync(
             workflow.GraphJson,
             cancellationToken);
-        var observedSchemasTask = GetObservedOutputSchemasAsync(workflow.Id);
-        await Task.WhenAll(editableGraphTask, observedSchemasTask).ConfigureAwait(false);
-        var editableGraphJson = await editableGraphTask.ConfigureAwait(false);
-        var observedSchemas = await observedSchemasTask.ConfigureAwait(false);
-        var runningCount = await GetRunningCountAsync(
+        var runningCountTask = GetRunningCountAsync(
             adminUserId,
             workflow.Id,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
+        await Task.WhenAll(editableGraphTask, runningCountTask).ConfigureAwait(false);
         return ToDetail(
             workflow,
-            editableGraphJson,
-            runningCount: runningCount,
-            observedOutputSchemas: observedSchemas);
+            editableGraphTask.Result,
+            runningCount: runningCountTask.Result,
+            observedOutputSchemas: Array.Empty<NeuCharWorkflowObservedOutputSchema>());
+    }
+
+    public async Task<IReadOnlyList<NeuCharWorkflowObservedOutputSchema>> GetObservedOutputSchemasAsync(
+        int workflowId,
+        int adminUserId,
+        CancellationToken cancellationToken = default)
+    {
+        if (await GetOwnedWorkflowAsync(workflowId, adminUserId).ConfigureAwait(false) == null)
+        {
+            return Array.Empty<NeuCharWorkflowObservedOutputSchema>();
+        }
+
+        return await ReadObservedOutputSchemasAsync(workflowId, cancellationToken)
+            .ConfigureAwait(false);
     }
 
     public async Task<WorkflowDesignerData> GetDesignerDataAsync(CancellationToken cancellationToken = default)
@@ -1570,13 +1581,18 @@ public sealed class NeuCharWorkflowAppService
         string.Equals(workflow.TriggerConfigJson, triggerConfigJson, StringComparison.Ordinal) &&
         workflow.AutoSaveMinutes == autoSaveMinutes;
 
-    private async Task<IReadOnlyList<NeuCharWorkflowObservedOutputSchema>> GetObservedOutputSchemasAsync(int workflowId)
+    private async Task<IReadOnlyList<NeuCharWorkflowObservedOutputSchema>> ReadObservedOutputSchemasAsync(
+        int workflowId,
+        CancellationToken cancellationToken)
     {
         var result = new Dictionary<string, NeuCharWorkflowObservedOutputSchema>(StringComparer.Ordinal);
-        var replayEvents = await _executionLogService.GetRecentCompletedReplayEventsAsync(workflowId)
+        var replayEvents = await _executionLogService.GetRecentCompletedReplayEventsAsync(
+                workflowId,
+                cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         foreach (var replayEventsJson in replayEvents)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             AddObservedSchemas(result, replayEventsJson);
         }
         return result.Values.ToList();

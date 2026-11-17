@@ -915,6 +915,18 @@ new Vue({
                 });
             }
         },
+        async loadObservedOutputSchemas(workflowId) {
+            const id = Number(workflowId || 0);
+            if (!id) return;
+            try {
+                const response = await service.get(`/Admin/NeuCharWorkflow/Index?handler=ObservedOutputSchemas&id=${id}`);
+                if (Number(this.form.id) !== id) return;
+                this.observedOutputSchemas = NeuCharWorkflowUi.unwrap(response) || [];
+            } catch (_) {
+                // Observed fields are optional editor hints; a history read must not
+                // delay or prevent opening the workflow.
+            }
+        },
         async loadChatModels() {
             try {
                 const response = await service.post(
@@ -1110,6 +1122,7 @@ new Vue({
                     ? item.observedOutputSchemas
                     : [];
                 this.editing = true;
+                this.loadObservedOutputSchemas(item.id || id);
                 this.setSelectedNodes(graph.nodes.length ? [graph.nodes[0]] : [], { openInspector: false });
                 this.selectionBox = this.emptySelectionBox();
                 this.cancelConnection();
