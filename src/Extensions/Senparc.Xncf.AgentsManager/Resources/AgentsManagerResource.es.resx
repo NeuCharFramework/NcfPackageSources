@@ -1571,26 +1571,26 @@
   <data name="Frontend.398" xml:space="preserve"><value>Herramientas</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.399" xml:space="preserve"><value>Herramientas y Workflows</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.400" xml:space="preserve"><value>Aprobación de llamadas de herramientas</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.401" xml:space="preserve"><value>Recorded cumulative/live data for local Agents</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.402" xml:space="preserve"><value>Connected</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.403" xml:space="preserve"><value>When enabled, this overrides the more permissive tool permissions below; new configurations should use HIL levels and category permissions directly.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.404" xml:space="preserve"><value>When enabled, external requests may indirectly trigger Functions or MCP tools configured for this local Agent. Open it only to trusted callers.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.405" xml:space="preserve"><value>The current Group is waiting for a Human turn and a text reply.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.406" xml:space="preserve"><value>Inbound authentication is disabled. Use this only on an isolated, controlled network; public or cross-organization calls must use a Bearer Token or custom header.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.407" xml:space="preserve"><value>The current group has no mentionable members.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.408" xml:space="preserve"><value>Quick edit</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.409" xml:space="preserve"><value>A manual Prompt requires manually selecting a Chat AIModel.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.410" xml:space="preserve"><value>No PromptRange model is available to inherit for this manual Prompt; select a Chat AIModel manually.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.411" xml:space="preserve"><value>Select AIModel manually</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.412" xml:space="preserve"><value>Approve before execution</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.413" xml:space="preserve"><value>Approve</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.414" xml:space="preserve"><value>Public skill description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.415" xml:space="preserve"><value>Skill identifier / name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.416" xml:space="preserve"><value>Reject</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.417" xml:space="preserve"><value>Filter by name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.418" xml:space="preserve"><value>Submit Human response</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.419" xml:space="preserve"><value>Plugin tool permissions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.420" xml:space="preserve"><value>Search name, URL, or description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.401" xml:space="preserve"><value>Datos acumulados/en tiempo real registrados para Agents locales</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.402" xml:space="preserve"><value>Conectado</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.403" xml:space="preserve"><value>Al activarlo, se anulan los permisos de herramientas más permisivos de abajo; las configuraciones nuevas deben usar directamente niveles HIL y permisos por categoría.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.404" xml:space="preserve"><value>Al activarlo, las solicitudes externas pueden activar indirectamente Functions o herramientas MCP configuradas para este Agent local. Ábrelo solo a emisores de confianza.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.405" xml:space="preserve"><value>El grupo actual espera el turno de Human y una respuesta de texto.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.406" xml:space="preserve"><value>La autenticación entrante está desactivada. Úsala solo en una red aislada y controlada; las llamadas públicas o entre organizaciones deben usar un Bearer Token o un encabezado personalizado.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.407" xml:space="preserve"><value>El grupo actual no tiene miembros mencionables.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.408" xml:space="preserve"><value>Edición rápida</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.409" xml:space="preserve"><value>Un Prompt manual requiere seleccionar manualmente un modelo Chat AI.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.410" xml:space="preserve"><value>No hay ningún modelo PromptRange disponible para heredar en este Prompt manual; selecciona manualmente un modelo Chat AI.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.411" xml:space="preserve"><value>Seleccionar AIModel manualmente</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.412" xml:space="preserve"><value>Aprobar antes de ejecutar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.413" xml:space="preserve"><value>Aprobar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.414" xml:space="preserve"><value>Descripción pública de la Skill</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.415" xml:space="preserve"><value>Identificador / nombre de la Skill</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.416" xml:space="preserve"><value>Rechazar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.417" xml:space="preserve"><value>Filtrar por nombre</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.418" xml:space="preserve"><value>Enviar respuesta Human</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.419" xml:space="preserve"><value>Permisos de herramientas de plugins</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.420" xml:space="preserve"><value>Buscar por nombre, URL o descripción</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.421" xml:space="preserve"><value>Search name, module, or description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.422" xml:space="preserve"><value>The database stores only the secret reference; configure the actual token in deployment settings.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.423" xml:space="preserve"><value>Add</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
