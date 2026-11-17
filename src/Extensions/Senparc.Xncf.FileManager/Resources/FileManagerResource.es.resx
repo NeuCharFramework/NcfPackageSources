@@ -455,4 +455,14 @@
   <data name="Frontend.216" xml:space="preserve"><value>El archivo “{0}” de tipo {1} ha sido filtrado y no se puede subir.</value></data>
   <data name="Frontend.217" xml:space="preserve"><value>El tipo del archivo “{0}” no está en la lista de tipos permitidos.</value></data>
   <data name="Frontend.218" xml:space="preserve"><value>El archivo “{0}” supera {1} MB y no se puede subir.</value></data>
+  <data name="Frontend.219" xml:space="preserve"><value>Carpeta seleccionada “{0}” con {1} archivos; tras la carga se restaurará la estructura original en el árbol izquierdo.</value></data>
+  <data name="Frontend.220" xml:space="preserve"><value>Sin categoría</value></data>
+  <data name="Frontend.221" xml:space="preserve"><value>La función «{0}» estará disponible próximamente</value></data>
+  <data name="Frontend.222" xml:space="preserve"><value>Subcategoría</value></data>
+  <data name="Frontend.223" xml:space="preserve"><value>Categoría</value></data>
+  <data name="Frontend.224" xml:space="preserve"><value>Etiqueta</value></data>
+  <data name="Frontend.225" xml:space="preserve"><value>Desactivado</value></data>
+  <data name="Frontend.226" xml:space="preserve"><value>Usuario actual</value></data>
+  <data name="Frontend.227" xml:space="preserve"><value>Etiquetas de archivo actualizadas</value></data>
+  <data name="Frontend.228" xml:space="preserve"><value>Etiquetas de archivo borradas</value></data>
 </root>

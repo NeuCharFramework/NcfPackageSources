@@ -455,4 +455,14 @@
   <data name="Frontend.216" xml:space="preserve"><value>File “{0}” with type {1} has been filtered and cannot be uploaded.</value></data>
   <data name="Frontend.217" xml:space="preserve"><value>File “{0}” has a type that is not in the allowed upload list.</value></data>
   <data name="Frontend.218" xml:space="preserve"><value>File “{0}” exceeds {1} MB and cannot be uploaded.</value></data>
+  <data name="Frontend.219" xml:space="preserve"><value>Selected folder “{0}” with {1} files; the original directory structure will be restored in the left file tree after upload.</value></data>
+  <data name="Frontend.220" xml:space="preserve"><value>Uncategorized</value></data>
+  <data name="Frontend.221" xml:space="preserve"><value>The “{0}” feature is coming soon</value></data>
+  <data name="Frontend.222" xml:space="preserve"><value>Subcategory</value></data>
+  <data name="Frontend.223" xml:space="preserve"><value>Category</value></data>
+  <data name="Frontend.224" xml:space="preserve"><value>Tag</value></data>
+  <data name="Frontend.225" xml:space="preserve"><value>Disabled</value></data>
+  <data name="Frontend.226" xml:space="preserve"><value>Current user</value></data>
+  <data name="Frontend.227" xml:space="preserve"><value>File tags updated</value></data>
+  <data name="Frontend.228" xml:space="preserve"><value>File tags cleared</value></data>
 </root>

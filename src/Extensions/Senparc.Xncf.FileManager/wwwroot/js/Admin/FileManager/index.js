@@ -139,7 +139,7 @@
                     treeExpandKey: 0
                 },
                 tagManagerStorageKey: 'ncf.fileManager.tagManager',
-                tagAdminOptions: ['管理员', '当前用户'],
+                tagAdminOptions: [fileManagerText('Frontend.153', 'Administrator'), fileManagerText('Frontend.226', 'Current user')],
                 tagCategoryDialog: {
                     visible: false,
                     loading: false,
@@ -271,7 +271,7 @@
             },
             uploadFolderSummary: function () {
                 if (this.uploadDialog.mode !== 'folder' || !this.uploadDialog.fileList.length) return '';
-                return '已选择文件夹“' + this.uploadDialog.folderRootName + '”，共 ' + this.uploadDialog.fileList.length + ' 个文件；上传后会在左侧文件树中还原原始目录结构。';
+                return fileManagerText('Frontend.219', 'Selected folder “{0}” with {1} files; the original directory structure will be restored in the left file tree after upload.', this.uploadDialog.folderRootName, this.uploadDialog.fileList.length);
             },
             tagCategorySelectOptions: function () {
                 const list = (this.tagManager && this.tagManager.list) || [];
@@ -296,7 +296,7 @@
                 categories.forEach(function (cat) { known[cat.id] = true; });
                 const orphanTags = tags.filter(function (tag) { return !tag.categoryId || !known[tag.categoryId]; });
                 if (orphanTags.length) {
-                    groups.push({ id: '__other__', name: '未分类', tags: orphanTags });
+                    groups.push({ id: '__other__', name: fileManagerText('Frontend.220', 'Uncategorized'), tags: orphanTags });
                 }
                 return groups;
             },
@@ -387,7 +387,7 @@
                     return;
                 }
                 this.activeNavKey = item.key;
-                this.$message.info('「' + item.label + '」功能即将开放');
+                this.$message.info(fileManagerText('Frontend.221', 'The “{0}” feature is coming soon.', item.label));
             },
             initDashboardDefaults: function () {
                 const end = new Date();
@@ -645,7 +645,7 @@
 
                 categories.forEach(function (cat) {
                     const hasParent = !!(cat.parentId && categoryMap[cat.parentId]);
-                    cat.type = hasParent ? '二级分类' : '一级分类';
+                    cat.type = hasParent ? fileManagerText('Frontend.222', 'Subcategory') : fileManagerText('Frontend.223', 'Category');
                     cat.level = hasParent ? 2 : 1;
                     if (hasParent) {
                         categoryMap[cat.parentId].children.push(cat);
@@ -656,7 +656,7 @@
                 (this.tagManager.tags || []).forEach(function (row) {
                     const tag = Object.assign({}, row, {
                         nodeType: 'tag',
-                        type: '标签',
+                        type: fileManagerText('Frontend.224', 'Tag'),
                         tagCount: '-',
                         admin: '-',
                         children: []
@@ -850,7 +850,7 @@
             toggleTagRowStatus: function (row) {
                 if (!row) return;
                 const enabled = this.isTagRowEnabled(row);
-                const nextStatus = enabled ? '已停用' : '启用';
+                const nextStatus = enabled ? fileManagerText('Frontend.225', 'Disabled') : fileManagerText('Frontend.095', 'Enabled');
                 const now = this.formatTagDateTime(new Date());
                 if (row.nodeType === 'tag') {
                     const tag = (this.tagManager.tags || []).find(function (item) { return item.id === row.id; });
@@ -877,7 +877,7 @@
                 }
                 const idMap = {};
                 ids.forEach(function (id) { idMap[id] = true; });
-                const nextStatus = enabled ? '启用' : '已停用';
+                const nextStatus = enabled ? fileManagerText('Frontend.095', 'Enabled') : fileManagerText('Frontend.225', 'Disabled');
                 const now = this.formatTagDateTime(new Date());
                 (this.tagManager.list || []).forEach(function (cat) {
                     if (idMap[cat.id]) {
@@ -1684,7 +1684,7 @@
                     this.$set(row, 'tags', items.map(function (item) { return item.name; }));
                     this.$set(row, 'tagIds', items.map(function (item) { return item.id; }));
                     this.fileTagDialog.visible = false;
-                    this.$message.success(items.length ? '文件标签已更新' : '已清空文件标签');
+                    this.$message.success(items.length ? fileManagerText('Frontend.227', 'File tags updated') : fileManagerText('Frontend.228', 'File tags cleared'));
                 } finally {
                     this.fileTagDialog.loading = false;
                 }

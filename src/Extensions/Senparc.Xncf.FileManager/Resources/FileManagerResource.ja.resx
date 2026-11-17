@@ -455,4 +455,14 @@
   <data name="Frontend.216" xml:space="preserve"><value>種類{1}のファイル「{0}」はフィルターされているため、アップロードできません。</value></data>
   <data name="Frontend.217" xml:space="preserve"><value>ファイル「{0}」の種類は許可されたアップロード一覧にありません。</value></data>
   <data name="Frontend.218" xml:space="preserve"><value>ファイル「{0}」は{1} MBを超えているため、アップロードできません。</value></data>
+  <data name="Frontend.219" xml:space="preserve"><value>フォルダー「{0}」を選択しました（{1}ファイル）。アップロード後、左側のファイルツリーに元のディレクトリ構造が復元されます。</value></data>
+  <data name="Frontend.220" xml:space="preserve"><value>未分類</value></data>
+  <data name="Frontend.221" xml:space="preserve"><value>「{0}」機能は近日公開予定です</value></data>
+  <data name="Frontend.222" xml:space="preserve"><value>サブカテゴリー</value></data>
+  <data name="Frontend.223" xml:space="preserve"><value>カテゴリー</value></data>
+  <data name="Frontend.224" xml:space="preserve"><value>タグ</value></data>
+  <data name="Frontend.225" xml:space="preserve"><value>無効</value></data>
+  <data name="Frontend.226" xml:space="preserve"><value>現在のユーザー</value></data>
+  <data name="Frontend.227" xml:space="preserve"><value>ファイルタグを更新しました</value></data>
+  <data name="Frontend.228" xml:space="preserve"><value>ファイルタグをクリアしました</value></data>
 </root>

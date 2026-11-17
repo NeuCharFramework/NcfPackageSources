@@ -455,4 +455,14 @@
   <data name="Frontend.216" xml:space="preserve"><value>Файл «{0}» типа {1} отфильтрован и не может быть загружен.</value></data>
   <data name="Frontend.217" xml:space="preserve"><value>Тип файла «{0}» отсутствует в списке разрешённых.</value></data>
   <data name="Frontend.218" xml:space="preserve"><value>Файл «{0}» превышает {1} МБ и не может быть загружен.</value></data>
+  <data name="Frontend.219" xml:space="preserve"><value>Выбрана папка «{0}» с файлами: {1}; после загрузки исходная структура каталогов будет восстановлена в дереве слева.</value></data>
+  <data name="Frontend.220" xml:space="preserve"><value>Без категории</value></data>
+  <data name="Frontend.221" xml:space="preserve"><value>Функция «{0}» скоро будет доступна</value></data>
+  <data name="Frontend.222" xml:space="preserve"><value>Подкатегория</value></data>
+  <data name="Frontend.223" xml:space="preserve"><value>Категория</value></data>
+  <data name="Frontend.224" xml:space="preserve"><value>Метка</value></data>
+  <data name="Frontend.225" xml:space="preserve"><value>Отключено</value></data>
+  <data name="Frontend.226" xml:space="preserve"><value>Текущий пользователь</value></data>
+  <data name="Frontend.227" xml:space="preserve"><value>Метки файла обновлены</value></data>
+  <data name="Frontend.228" xml:space="preserve"><value>Метки файла очищены</value></data>
 </root>

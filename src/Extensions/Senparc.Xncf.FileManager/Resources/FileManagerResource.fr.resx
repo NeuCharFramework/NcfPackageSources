@@ -455,4 +455,14 @@
   <data name="Frontend.216" xml:space="preserve"><value>Le fichier « {0} » de type {1} a été filtré et ne peut pas être envoyé.</value></data>
   <data name="Frontend.217" xml:space="preserve"><value>Le type du fichier « {0} » ne figure pas dans la liste autorisée.</value></data>
   <data name="Frontend.218" xml:space="preserve"><value>Le fichier « {0} » dépasse {1} Mo et ne peut pas être envoyé.</value></data>
+  <data name="Frontend.219" xml:space="preserve"><value>Dossier « {0} » sélectionné avec {1} fichiers ; l’arborescence d’origine sera restaurée dans l’arbre de fichiers après l’envoi.</value></data>
+  <data name="Frontend.220" xml:space="preserve"><value>Sans catégorie</value></data>
+  <data name="Frontend.221" xml:space="preserve"><value>La fonctionnalité « {0} » sera bientôt disponible</value></data>
+  <data name="Frontend.222" xml:space="preserve"><value>Sous-catégorie</value></data>
+  <data name="Frontend.223" xml:space="preserve"><value>Catégorie</value></data>
+  <data name="Frontend.224" xml:space="preserve"><value>Étiquette</value></data>
+  <data name="Frontend.225" xml:space="preserve"><value>Désactivé</value></data>
+  <data name="Frontend.226" xml:space="preserve"><value>Utilisateur actuel</value></data>
+  <data name="Frontend.227" xml:space="preserve"><value>Étiquettes du fichier mises à jour</value></data>
+  <data name="Frontend.228" xml:space="preserve"><value>Étiquettes du fichier effacées</value></data>
 </root>
