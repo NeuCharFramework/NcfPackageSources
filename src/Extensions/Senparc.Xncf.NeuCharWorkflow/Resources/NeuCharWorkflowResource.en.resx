@@ -15,7 +15,7 @@
   <data name="Designer.Introduction" xml:space="preserve"><value>Compose Functions, system nodes, and Agents. Parameters, types, connections, and module state are checked before save and run.</value></data>
   <data name="Action.Refresh" xml:space="preserve"><value>Refresh</value></data>
   <data name="Action.NewWorkflow" xml:space="preserve"><value>New workflow</value></data>
-  <data name="Frontend.001" xml:space="preserve"><value>Tasks</value></data>
+  <data name="Frontend.001" xml:space="preserve"><value>Task list</value></data>
   <data name="Frontend.002" xml:space="preserve"><value>Run replay</value></data>
   <data name="Frontend.003" xml:space="preserve"><value>Refresh</value></data>
   <data name="Frontend.004" xml:space="preserve"><value>Quick cleanup</value></data>
@@ -23,21 +23,21 @@
   <data name="Frontend.006" xml:space="preserve"><value>Task statistics</value></data>
   <data name="Frontend.007" xml:space="preserve"><value>All tasks</value></data>
   <data name="Frontend.008" xml:space="preserve"><value>Running</value></data>
-  <data name="Frontend.009" xml:space="preserve"><value>Succeeded</value></data>
-  <data name="Frontend.010" xml:space="preserve"><value>Failed</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>Run succeeded</value></data>
+  <data name="Frontend.010" xml:space="preserve"><value>Run failed</value></data>
   <data name="Frontend.011" xml:space="preserve"><value>Workflow</value></data>
   <data name="Frontend.012" xml:space="preserve"><value>Status</value></data>
-  <data name="Frontend.013" xml:space="preserve"><value>Started at</value></data>
-  <data name="Frontend.014" xml:space="preserve"><value>Completed at</value></data>
-  <data name="Frontend.015" xml:space="preserve"><value>Progress / result</value></data>
+  <data name="Frontend.013" xml:space="preserve"><value>Start time</value></data>
+  <data name="Frontend.014" xml:space="preserve"><value>Completion time</value></data>
+  <data name="Frontend.015" xml:space="preserve"><value>Current progress / result</value></data>
   <data name="Frontend.016" xml:space="preserve"><value>Actions</value></data>
   <data name="Frontend.017" xml:space="preserve"><value>Abort</value></data>
   <data name="Frontend.018" xml:space="preserve"><value>View run</value></data>
   <data name="Frontend.019" xml:space="preserve"><value>Replay run</value></data>
   <data name="Frontend.020" xml:space="preserve"><value>No snapshot</value></data>
   <data name="Frontend.021" xml:space="preserve"><value>No more records</value></data>
-  <data name="Frontend.022" xml:space="preserve"><value>Back to tasks</value></data>
-  <data name="Frontend.023" xml:space="preserve"><value>View workflow tasks</value></data>
+  <data name="Frontend.022" xml:space="preserve"><value>Back to task list</value></data>
+  <data name="Frontend.023" xml:space="preserve"><value>View tasks for this Workflow</value></data>
   <data name="Frontend.024" xml:space="preserve"><value>View analytics</value></data>
   <data name="Frontend.025" xml:space="preserve"><value>Execution steps</value></data>
   <data name="Frontend.026" xml:space="preserve"><value>Input parameters</value></data>
@@ -47,24 +47,24 @@
 
   <data name="Frontend.030" xml:space="preserve"><value>Analytics</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.031" xml:space="preserve"><value>Workflow analytics</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.032" xml:space="preserve"><value>Runtime health, external resource calls, and replayable execution records.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.032" xml:space="preserve"><value>Run health, external resource calls, and replayable execution records.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.033" xml:space="preserve"><value>Analytics filters</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.034" xml:space="preserve"><value>to</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.035" xml:space="preserve"><value>Start date</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.036" xml:space="preserve"><value>End date</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.037" xml:space="preserve"><value>All workflows</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.037" xml:space="preserve"><value>All Workflows</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.038" xml:space="preserve"><value>All statuses</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.039" xml:space="preserve"><value>All resource types</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.040" xml:space="preserve"><value>All external resources</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.041" xml:space="preserve"><value>Search workflows, resources, or errors</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.042" xml:space="preserve"><value>Search</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.042" xml:space="preserve"><value>Query</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.043" xml:space="preserve"><value>Reset</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.044" xml:space="preserve"><value>Run overview</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.045" xml:space="preserve"><value>Total runs</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.046" xml:space="preserve"><value>Success rate</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.047" xml:space="preserve"><value>Average duration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.048" xml:space="preserve"><value>Run trend</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.049" xml:space="preserve"><value>Grouped by start date</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.049" xml:space="preserve"><value>Statistics by start date</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.050" xml:space="preserve"><value>{0} days</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.051" xml:space="preserve"><value>No run records match the current filters.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.052" xml:space="preserve"><value>External resource calls</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
