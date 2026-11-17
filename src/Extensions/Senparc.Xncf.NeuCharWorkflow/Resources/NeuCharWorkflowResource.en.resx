@@ -390,38 +390,38 @@
   <data name="Frontend.372" xml:space="preserve"><value>Interval seconds</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.373" xml:space="preserve"><value>Interval trigger</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.374" xml:space="preserve"><value>Page title</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.375" xml:space="preserve"><value>Greeting shown when the chat page opens for the first time; leave empty to use the default</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.375" xml:space="preserve"><value>Greeting shown when the chat page opens for the first time; leave empty to use the default.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.376" xml:space="preserve"><value>Default</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.377" xml:space="preserve"><value>; POST JSON must provide at least</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.378" xml:space="preserve"><value>No run details match the current filters.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.378" xml:space="preserve"><value>No run details in the current filter range.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.379" xml:space="preserve"><value>After a run, this area shows validation results, the current node, execution status, and Console node output.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.380" xml:space="preserve"><value>Page {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.381" xml:space="preserve"><value>Parameters ({0}/50)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.382" xml:space="preserve"><value>{0} nodes selected</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.383" xml:space="preserve"><value>{0} downstream branches</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.383" xml:space="preserve"><value>{0} following branches</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.384" xml:space="preserve"><value>Up to {0} files</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.385" xml:space="preserve"><value>Allow external programs holding the key to submit input</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.386" xml:space="preserve"><value>Only admin users may process it</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.386" xml:space="preserve"><value>Allow admin users only</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.387" xml:space="preserve"><value>Allow configured plugins and MCP tools</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.388" xml:space="preserve"><value>Example: {0} items:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.388" xml:space="preserve"><value>For example: {0} items:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.389" xml:space="preserve"><value>{0} pending requests</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.390" xml:space="preserve"><value>Show more steps ({0} / {1})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
 
   <data name="Frontend.391" xml:space="preserve"><value>Test run ready</value></data>
   <data name="Frontend.392" xml:space="preserve"><value>Validating parameters and node references</value></data>
-  <data name="Frontend.393" xml:space="preserve"><value>Aborting the workflow and waiting for the current node to acknowledge cancellation</value></data>
-  <data name="Frontend.394" xml:space="preserve"><value>Waiting for Human input or approval; the Workflow is paused</value></data>
-  <data name="Frontend.395" xml:space="preserve"><value>The Workflow is running; editing is locked</value></data>
+  <data name="Frontend.393" xml:space="preserve"><value>Aborting Workflow; waiting for the current node to cancel</value></data>
+  <data name="Frontend.394" xml:space="preserve"><value>Waiting for Human input or approval; Workflow is paused</value></data>
+  <data name="Frontend.395" xml:space="preserve"><value>Workflow is running; editing is locked</value></data>
   <data name="Frontend.396" xml:space="preserve"><value>The latest test run succeeded</value></data>
   <data name="Frontend.397" xml:space="preserve"><value>The latest test run failed</value></data>
   <data name="Frontend.398" xml:space="preserve"><value>Starting node execution.</value></data>
   <data name="Frontend.399" xml:space="preserve"><value>Node execution completed.</value></data>
   <data name="Frontend.400" xml:space="preserve"><value>Running</value></data>
-  <data name="Frontend.401" xml:space="preserve"><value>Execution completed</value></data>
+  <data name="Frontend.401" xml:space="preserve"><value>Execution complete</value></data>
   <data name="Frontend.402" xml:space="preserve"><value>Execution failed</value></data>
-  <data name="Frontend.403" xml:space="preserve"><value>Branch selected</value></data>
+  <data name="Frontend.403" xml:space="preserve"><value>Select branch</value></data>
   <data name="Frontend.404" xml:space="preserve"><value>Console output</value></data>
-  <data name="Frontend.405" xml:space="preserve"><value>Status updated</value></data>
+  <data name="Frontend.405" xml:space="preserve"><value>Status update</value></data>
   <data name="Frontend.406" xml:space="preserve"><value>Run succeeded</value></data>
   <data name="Frontend.407" xml:space="preserve"><value>Run failed</value></data>
   <data name="Frontend.408" xml:space="preserve"><value>Run completed</value></data>

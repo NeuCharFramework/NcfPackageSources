@@ -390,30 +390,30 @@
   <data name="Frontend.372" xml:space="preserve"><value>間隔秒数</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.373" xml:space="preserve"><value>間隔トリガー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.374" xml:space="preserve"><value>ページタイトル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.375" xml:space="preserve"><value>Greeting shown when the chat page opens for the first time; leave empty to use the default</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.376" xml:space="preserve"><value>Default</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.377" xml:space="preserve"><value>; POST JSON must provide at least</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.378" xml:space="preserve"><value>No run details match the current filters.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.379" xml:space="preserve"><value>After a run, this area shows validation results, the current node, execution status, and Console node output.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.380" xml:space="preserve"><value>Page {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.381" xml:space="preserve"><value>Parameters ({0}/50)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.382" xml:space="preserve"><value>{0} nodes selected</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.383" xml:space="preserve"><value>{0} downstream branches</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.384" xml:space="preserve"><value>Up to {0} files</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.385" xml:space="preserve"><value>Allow external programs holding the key to submit input</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.386" xml:space="preserve"><value>Only admin users may process it</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.387" xml:space="preserve"><value>Allow configured plugins and MCP tools</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.388" xml:space="preserve"><value>Example: {0} items:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.389" xml:space="preserve"><value>{0} pending requests</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.390" xml:space="preserve"><value>Show more steps ({0} / {1})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.375" xml:space="preserve"><value>チャットページを初めて開いたときに表示する挨拶。空欄の場合は既定文を使用</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.376" xml:space="preserve"><value>既定</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.377" xml:space="preserve"><value>；POST JSONで少なくとも必要：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.378" xml:space="preserve"><value>現在のフィルター範囲に実行詳細はありません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.379" xml:space="preserve"><value>実行後、検証結果、現在のノード、実行状態、Consoleノードの出力をここに表示します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.380" xml:space="preserve"><value>{0}ページ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.381" xml:space="preserve"><value>パラメーター（{0}/50）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.382" xml:space="preserve"><value>{0}個のノードを選択済み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.383" xml:space="preserve"><value>後続分岐：{0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.384" xml:space="preserve"><value>最大{0}ファイル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.385" xml:space="preserve"><value>キーを持つ外部プログラムによる入力送信を許可</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.386" xml:space="preserve"><value>管理者ユーザーのみ処理可能</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.387" xml:space="preserve"><value>設定済みプラグインとMCPツールの使用を許可</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.388" xml:space="preserve"><value>例：合計{0}項目：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.389" xml:space="preserve"><value>保留中の要求：{0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.390" xml:space="preserve"><value>さらにステップを表示（{0} / {1}）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
 
-  <data name="Frontend.391" xml:space="preserve"><value>テスト実行の準備が完了しました</value></data>
+  <data name="Frontend.391" xml:space="preserve"><value>テスト実行の準備完了</value></data>
   <data name="Frontend.392" xml:space="preserve"><value>パラメーターとノード参照を検証中</value></data>
-  <data name="Frontend.393" xml:space="preserve"><value>Workflowを中止し、現在のノードのキャンセル応答を待っています</value></data>
-  <data name="Frontend.394" xml:space="preserve"><value>人間の入力または承認を待機中。Workflowは一時停止しています</value></data>
+  <data name="Frontend.393" xml:space="preserve"><value>Workflowを中止中。現在のノードのキャンセル応答を待機</value></data>
+  <data name="Frontend.394" xml:space="preserve"><value>Human入力または承認を待機中。Workflowは一時停止しています</value></data>
   <data name="Frontend.395" xml:space="preserve"><value>Workflow実行中。編集はロックされています</value></data>
-  <data name="Frontend.396" xml:space="preserve"><value>直近のテスト実行は成功しました</value></data>
-  <data name="Frontend.397" xml:space="preserve"><value>直近のテスト実行は失敗しました</value></data>
+  <data name="Frontend.396" xml:space="preserve"><value>直近のテスト実行は成功</value></data>
+  <data name="Frontend.397" xml:space="preserve"><value>直近のテスト実行は失敗</value></data>
   <data name="Frontend.398" xml:space="preserve"><value>ノードの実行を開始します。</value></data>
   <data name="Frontend.399" xml:space="preserve"><value>ノードの実行が完了しました。</value></data>
   <data name="Frontend.400" xml:space="preserve"><value>実行中</value></data>
@@ -421,7 +421,7 @@
   <data name="Frontend.402" xml:space="preserve"><value>実行失敗</value></data>
   <data name="Frontend.403" xml:space="preserve"><value>分岐を選択</value></data>
   <data name="Frontend.404" xml:space="preserve"><value>Console出力</value></data>
-  <data name="Frontend.405" xml:space="preserve"><value>状態を更新</value></data>
+  <data name="Frontend.405" xml:space="preserve"><value>状態更新</value></data>
   <data name="Frontend.406" xml:space="preserve"><value>実行成功</value></data>
   <data name="Frontend.407" xml:space="preserve"><value>実行失敗</value></data>
   <data name="Frontend.408" xml:space="preserve"><value>実行完了</value></data>
