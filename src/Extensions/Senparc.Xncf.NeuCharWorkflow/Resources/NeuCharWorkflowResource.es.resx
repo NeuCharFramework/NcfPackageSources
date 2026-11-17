@@ -584,4 +584,17 @@
   <data name="Frontend.561" xml:space="preserve"><value>Texto/matriz</value></data>
   <data name="Frontend.562" xml:space="preserve"><value>Tipo</value></data>
   <data name="Frontend.563" xml:space="preserve"><value>Tiempo</value></data>
+
+  <data name="Frontend.564" xml:space="preserve"><value>Devuelve uno de dos valores según la condición. El primer parámetro es la condición; los dos siguientes son los valores verdadero y falso.</value></data>
+  <data name="Frontend.565" xml:space="preserve"><value>Devuelve el primer valor no vacío de varios parámetros; puedes añadir más parámetros manualmente.</value></data>
+  <data name="Frontend.566" xml:space="preserve"><value>Comprueba si un texto contiene una subcadena o si una matriz contiene el elemento indicado.</value></data>
+  <data name="Frontend.567" xml:space="preserve"><value>Comprueba si el texto comienza con el contenido indicado.</value></data>
+  <data name="Frontend.568" xml:space="preserve"><value>Comprueba si el texto termina con el contenido indicado.</value></data>
+  <data name="Frontend.569" xml:space="preserve"><value>Comprueba si el valor es null, texto vacío o una matriz vacía.</value></data>
+  <data name="Frontend.570" xml:space="preserve"><value>Comprueba si el valor es null; el texto vacío y las matrices vacías no se consideran null.</value></data>
+  <data name="Frontend.571" xml:space="preserve"><value>Extrae texto según la posición inicial y la longitud; deja la longitud vacía para extraer hasta el final.</value></data>
+  <data name="Frontend.572" xml:space="preserve"><value>Elimina espacios, saltos de línea y otros caracteres en blanco al principio y al final del texto.</value></data>
+  <data name="Frontend.573" xml:space="preserve"><value>Convierte el texto a minúsculas.</value></data>
+  <data name="Frontend.574" xml:space="preserve"><value>Convierte el texto a mayúsculas.</value></data>
+  <data name="Frontend.575" xml:space="preserve"><value>Reemplaza el contenido indicado del texto por contenido nuevo.</value></data>
 </root>

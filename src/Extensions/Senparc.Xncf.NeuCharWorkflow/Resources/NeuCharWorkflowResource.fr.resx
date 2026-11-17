@@ -584,4 +584,17 @@
   <data name="Frontend.561" xml:space="preserve"><value>Texte/tableau</value></data>
   <data name="Frontend.562" xml:space="preserve"><value>Type</value></data>
   <data name="Frontend.563" xml:space="preserve"><value>Temps</value></data>
+
+  <data name="Frontend.564" xml:space="preserve"><value>Renvoie l’une de deux valeurs selon une condition. Le premier paramètre est la condition ; les deux suivants sont les valeurs vraie et fausse.</value></data>
+  <data name="Frontend.565" xml:space="preserve"><value>Renvoie la première valeur non vide parmi plusieurs paramètres ; vous pouvez ajouter d’autres paramètres manuellement.</value></data>
+  <data name="Frontend.566" xml:space="preserve"><value>Vérifie si un texte contient une sous-chaîne ou si un tableau contient l’élément indiqué.</value></data>
+  <data name="Frontend.567" xml:space="preserve"><value>Vérifie si le texte commence par le contenu indiqué.</value></data>
+  <data name="Frontend.568" xml:space="preserve"><value>Vérifie si le texte se termine par le contenu indiqué.</value></data>
+  <data name="Frontend.569" xml:space="preserve"><value>Vérifie si la valeur est null, un texte vide ou un tableau vide.</value></data>
+  <data name="Frontend.570" xml:space="preserve"><value>Vérifie si la valeur est null ; un texte vide et un tableau vide ne sont pas considérés comme null.</value></data>
+  <data name="Frontend.571" xml:space="preserve"><value>Extrait un texte selon la position de début et la longueur ; laissez la longueur vide pour aller jusqu’à la fin.</value></data>
+  <data name="Frontend.572" xml:space="preserve"><value>Supprime les espaces, retours à la ligne et autres espaces au début et à la fin du texte.</value></data>
+  <data name="Frontend.573" xml:space="preserve"><value>Convertit le texte en minuscules.</value></data>
+  <data name="Frontend.574" xml:space="preserve"><value>Convertit le texte en majuscules.</value></data>
+  <data name="Frontend.575" xml:space="preserve"><value>Remplace le contenu indiqué dans le texte par un nouveau contenu.</value></data>
 </root>

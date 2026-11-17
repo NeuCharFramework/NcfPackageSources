@@ -584,4 +584,17 @@
   <data name="Frontend.561" xml:space="preserve"><value>文本/数组</value></data>
   <data name="Frontend.562" xml:space="preserve"><value>类型</value></data>
   <data name="Frontend.563" xml:space="preserve"><value>时间</value></data>
+
+  <data name="Frontend.564" xml:space="preserve"><value>根据条件返回两个值之一。第一个参数为条件，后两个参数分别是真值和假值。</value></data>
+  <data name="Frontend.565" xml:space="preserve"><value>从多个参数中返回第一个非空值；可以继续手动添加更多参数。</value></data>
+  <data name="Frontend.566" xml:space="preserve"><value>判断文本是否包含子文本，或数组是否包含指定项。</value></data>
+  <data name="Frontend.567" xml:space="preserve"><value>判断文本是否以指定内容开头。</value></data>
+  <data name="Frontend.568" xml:space="preserve"><value>判断文本是否以指定内容结尾。</value></data>
+  <data name="Frontend.569" xml:space="preserve"><value>判断值是否为 null、空文本或空数组。</value></data>
+  <data name="Frontend.570" xml:space="preserve"><value>判断值是否为 null；空文本和空数组不视为 null。</value></data>
+  <data name="Frontend.571" xml:space="preserve"><value>按起始位置和长度截取文本；长度参数可以留空以截取到末尾。</value></data>
+  <data name="Frontend.572" xml:space="preserve"><value>删除文本首尾的空格、换行等空白字符。</value></data>
+  <data name="Frontend.573" xml:space="preserve"><value>将文本转换为小写。</value></data>
+  <data name="Frontend.574" xml:space="preserve"><value>将文本转换为大写。</value></data>
+  <data name="Frontend.575" xml:space="preserve"><value>将文本中的指定内容替换为新内容。</value></data>
 </root>

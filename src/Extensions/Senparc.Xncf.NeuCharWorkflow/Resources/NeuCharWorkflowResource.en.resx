@@ -584,4 +584,17 @@
   <data name="Frontend.561" xml:space="preserve"><value>Text/array</value></data>
   <data name="Frontend.562" xml:space="preserve"><value>Type</value></data>
   <data name="Frontend.563" xml:space="preserve"><value>Time</value></data>
+
+  <data name="Frontend.564" xml:space="preserve"><value>Returns one of two values based on a condition. The first parameter is the condition; the next two are the true and false values.</value></data>
+  <data name="Frontend.565" xml:space="preserve"><value>Returns the first non-empty value from multiple parameters; more parameters can be added manually.</value></data>
+  <data name="Frontend.566" xml:space="preserve"><value>Checks whether text contains a substring or an array contains the specified item.</value></data>
+  <data name="Frontend.567" xml:space="preserve"><value>Checks whether text starts with the specified content.</value></data>
+  <data name="Frontend.568" xml:space="preserve"><value>Checks whether text ends with the specified content.</value></data>
+  <data name="Frontend.569" xml:space="preserve"><value>Checks whether a value is null, empty text, or an empty array.</value></data>
+  <data name="Frontend.570" xml:space="preserve"><value>Checks whether a value is null; empty text and empty arrays are not considered null.</value></data>
+  <data name="Frontend.571" xml:space="preserve"><value>Extracts text by start position and length; leave length empty to extract to the end.</value></data>
+  <data name="Frontend.572" xml:space="preserve"><value>Removes spaces, line breaks, and other whitespace from both ends of text.</value></data>
+  <data name="Frontend.573" xml:space="preserve"><value>Converts text to lowercase.</value></data>
+  <data name="Frontend.574" xml:space="preserve"><value>Converts text to uppercase.</value></data>
+  <data name="Frontend.575" xml:space="preserve"><value>Replaces the specified content in text with new content.</value></data>
 </root>

@@ -53,6 +53,7 @@ const WorkflowFormulaDefinitions = [
 WorkflowFormulaDefinitions.forEach(definition => {
     definition.label = ncfWorkflowText(definition.label);
     definition.category = ncfWorkflowText(definition.category);
+    definition.description = ncfWorkflowText(definition.description);
 });
 const workflowNodePickerTemplateElement = typeof document !== 'undefined'
     ? document.getElementById('workflow-node-picker-template')

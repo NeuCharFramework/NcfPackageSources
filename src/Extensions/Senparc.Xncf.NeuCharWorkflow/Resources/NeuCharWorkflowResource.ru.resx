@@ -584,4 +584,17 @@
   <data name="Frontend.561" xml:space="preserve"><value>Текст/массив</value></data>
   <data name="Frontend.562" xml:space="preserve"><value>Тип</value></data>
   <data name="Frontend.563" xml:space="preserve"><value>Время</value></data>
+
+  <data name="Frontend.564" xml:space="preserve"><value>Возвращает одно из двух значений в зависимости от условия. Первый параметр — условие, следующие два — значения для истины и лжи.</value></data>
+  <data name="Frontend.565" xml:space="preserve"><value>Возвращает первое непустое значение из нескольких параметров; дополнительные параметры можно добавить вручную.</value></data>
+  <data name="Frontend.566" xml:space="preserve"><value>Проверяет, содержит ли текст подстроку или массив указанный элемент.</value></data>
+  <data name="Frontend.567" xml:space="preserve"><value>Проверяет, начинается ли текст с указанного содержимого.</value></data>
+  <data name="Frontend.568" xml:space="preserve"><value>Проверяет, заканчивается ли текст указанным содержимым.</value></data>
+  <data name="Frontend.569" xml:space="preserve"><value>Проверяет, является ли значение null, пустым текстом или пустым массивом.</value></data>
+  <data name="Frontend.570" xml:space="preserve"><value>Проверяет, является ли значение null; пустой текст и пустой массив не считаются null.</value></data>
+  <data name="Frontend.571" xml:space="preserve"><value>Извлекает текст по начальной позиции и длине; оставьте длину пустой, чтобы извлечь до конца.</value></data>
+  <data name="Frontend.572" xml:space="preserve"><value>Удаляет пробелы, переводы строк и другие пробельные символы с начала и конца текста.</value></data>
+  <data name="Frontend.573" xml:space="preserve"><value>Преобразует текст в нижний регистр.</value></data>
+  <data name="Frontend.574" xml:space="preserve"><value>Преобразует текст в верхний регистр.</value></data>
+  <data name="Frontend.575" xml:space="preserve"><value>Заменяет указанное содержимое текста новым содержимым.</value></data>
 </root>

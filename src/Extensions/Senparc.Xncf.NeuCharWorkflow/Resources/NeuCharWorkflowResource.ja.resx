@@ -584,4 +584,17 @@
   <data name="Frontend.561" xml:space="preserve"><value>テキスト/配列</value></data>
   <data name="Frontend.562" xml:space="preserve"><value>型</value></data>
   <data name="Frontend.563" xml:space="preserve"><value>時間</value></data>
+
+  <data name="Frontend.564" xml:space="preserve"><value>条件に応じて2つの値のいずれかを返します。第1引数は条件で、続く2つは真の場合と偽の場合の値です。</value></data>
+  <data name="Frontend.565" xml:space="preserve"><value>複数のパラメーターから最初の空でない値を返します。パラメーターは手動で追加できます。</value></data>
+  <data name="Frontend.566" xml:space="preserve"><value>テキストに部分文字列が含まれるか、配列に指定項目が含まれるかを判定します。</value></data>
+  <data name="Frontend.567" xml:space="preserve"><value>テキストが指定した内容で始まるかを判定します。</value></data>
+  <data name="Frontend.568" xml:space="preserve"><value>テキストが指定した内容で終わるかを判定します。</value></data>
+  <data name="Frontend.569" xml:space="preserve"><value>値がnull、空のテキスト、または空の配列かを判定します。</value></data>
+  <data name="Frontend.570" xml:space="preserve"><value>値がnullかを判定します。空のテキストと空の配列はnullとはみなしません。</value></data>
+  <data name="Frontend.571" xml:space="preserve"><value>開始位置と長さに従ってテキストを切り出します。長さを空欄にすると末尾まで切り出します。</value></data>
+  <data name="Frontend.572" xml:space="preserve"><value>テキストの先頭と末尾から空白や改行などを削除します。</value></data>
+  <data name="Frontend.573" xml:space="preserve"><value>テキストを小文字に変換します。</value></data>
+  <data name="Frontend.574" xml:space="preserve"><value>テキストを大文字に変換します。</value></data>
+  <data name="Frontend.575" xml:space="preserve"><value>テキスト内の指定内容を新しい内容に置き換えます。</value></data>
 </root>
