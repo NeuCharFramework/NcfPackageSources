@@ -406,4 +406,7 @@
   <data name="Connector.WeCom.Error.TimeOrder" xml:space="preserve"><value>The end time must be later than the start time.</value></data>
   <data name="Connector.WeCom.Error.TimeRange" xml:space="preserve"><value>WeCom allows at most 30 days of attendance records per request.</value></data>
   <data name="Connector.WeCom.Error.InvalidType" xml:space="preserve"><value>The attendance type must be 1 (work), 2 (off-site), or 3 (all).</value></data>
+  <data name="Frontend.131" xml:space="preserve"><value>No conversation records yet. Send a text to WeChat ClawBot from your phone.</value></data>
+  <data name="Frontend.132" xml:space="preserve"><value>Add personal WeChat account</value></data>
+  <data name="Frontend.133" xml:space="preserve"><value>Edit personal WeChat account</value></data>
 </root>

@@ -406,4 +406,7 @@
   <data name="Connector.WeCom.Error.TimeOrder" xml:space="preserve"><value>La hora de finalización debe ser posterior a la hora de inicio.</value></data>
   <data name="Connector.WeCom.Error.TimeRange" xml:space="preserve"><value>WeCom permite como máximo 30 días de registros de asistencia por solicitud.</value></data>
   <data name="Connector.WeCom.Error.InvalidType" xml:space="preserve"><value>El tipo de asistencia debe ser 1 (laboral), 2 (fuera de la oficina) o 3 (todo).</value></data>
+  <data name="Frontend.131" xml:space="preserve"><value>Aún no hay registros de conversación. Envía un texto al WeChat ClawBot desde el teléfono.</value></data>
+  <data name="Frontend.132" xml:space="preserve"><value>Añadir cuenta personal de WeChat</value></data>
+  <data name="Frontend.133" xml:space="preserve"><value>Editar cuenta personal de WeChat</value></data>
 </root>

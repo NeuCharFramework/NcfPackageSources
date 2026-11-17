@@ -405,4 +405,7 @@
   <data name="Connector.WeCom.Error.TimeOrder" xml:space="preserve"><value>结束时间需要晚于开始时间。</value></data>
   <data name="Connector.WeCom.Error.TimeRange" xml:space="preserve"><value>企业微信单次最多获取 30 天打卡记录。</value></data>
   <data name="Connector.WeCom.Error.InvalidType" xml:space="preserve"><value>打卡类型只能是 1（上下班）、2（外出）或 3（全部）。</value></data>
+  <data name="Frontend.131" xml:space="preserve"><value>尚无会话记录。请在手机端向“微信 ClawBot”发送文字。</value></data>
+  <data name="Frontend.132" xml:space="preserve"><value>添加个人微信账号</value></data>
+  <data name="Frontend.133" xml:space="preserve"><value>编辑个人微信账号</value></data>
 </root>

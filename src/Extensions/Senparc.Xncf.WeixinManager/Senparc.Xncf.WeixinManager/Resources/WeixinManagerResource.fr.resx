@@ -406,4 +406,7 @@
   <data name="Connector.WeCom.Error.TimeOrder" xml:space="preserve"><value>L'heure de fin doit être postérieure à l'heure de début.</value></data>
   <data name="Connector.WeCom.Error.TimeRange" xml:space="preserve"><value>WeCom autorise au maximum 30 jours de relevés de présence par requête.</value></data>
   <data name="Connector.WeCom.Error.InvalidType" xml:space="preserve"><value>Le type de présence doit être 1 (travail), 2 (hors site) ou 3 (tous).</value></data>
+  <data name="Frontend.131" xml:space="preserve"><value>Aucun historique de conversation. Envoyez un texte à WeChat ClawBot depuis votre téléphone.</value></data>
+  <data name="Frontend.132" xml:space="preserve"><value>Ajouter un compte WeChat personnel</value></data>
+  <data name="Frontend.133" xml:space="preserve"><value>Modifier le compte WeChat personnel</value></data>
 </root>

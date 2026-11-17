@@ -406,4 +406,7 @@
   <data name="Connector.WeCom.Error.TimeOrder" xml:space="preserve"><value>Время окончания должно быть позже времени начала.</value></data>
   <data name="Connector.WeCom.Error.TimeRange" xml:space="preserve"><value>WeCom позволяет получать не более 30 дней записей о посещаемости за один запрос.</value></data>
   <data name="Connector.WeCom.Error.InvalidType" xml:space="preserve"><value>Тип посещаемости должен быть 1 (рабочая), 2 (внешняя) или 3 (вся).</value></data>
+  <data name="Frontend.131" xml:space="preserve"><value>Истории диалогов пока нет. Отправьте текст в WeChat ClawBot с телефона.</value></data>
+  <data name="Frontend.132" xml:space="preserve"><value>Добавить личный аккаунт WeChat</value></data>
+  <data name="Frontend.133" xml:space="preserve"><value>Изменить личный аккаунт WeChat</value></data>
 </root>

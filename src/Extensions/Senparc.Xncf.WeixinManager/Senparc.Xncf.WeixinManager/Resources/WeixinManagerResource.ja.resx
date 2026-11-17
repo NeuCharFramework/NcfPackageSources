@@ -406,4 +406,7 @@
   <data name="Connector.WeCom.Error.TimeOrder" xml:space="preserve"><value>終了時刻は開始時刻より後にしてください。</value></data>
   <data name="Connector.WeCom.Error.TimeRange" xml:space="preserve"><value>WeComでは1回の要求につき最大30日分の勤怠記録を取得できます。</value></data>
   <data name="Connector.WeCom.Error.InvalidType" xml:space="preserve"><value>勤怠種別は1（勤務）、2（社外）、3（すべて）のいずれかです。</value></data>
+  <data name="Frontend.131" xml:space="preserve"><value>会話記録はまだありません。スマートフォンからWeChat ClawBotにテキストを送信してください。</value></data>
+  <data name="Frontend.132" xml:space="preserve"><value>個人WeChatアカウントを追加</value></data>
+  <data name="Frontend.133" xml:space="preserve"><value>個人WeChatアカウントを編集</value></data>
 </root>
