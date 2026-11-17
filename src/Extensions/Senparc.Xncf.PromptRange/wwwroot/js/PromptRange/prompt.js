@@ -7610,7 +7610,7 @@ var app = new Vue({
                     let _index = this.modelOpt.findIndex(item => item.value == this.promptDetail.modelId)
                     if (_index === -1 && !this.modelid) {
                         this.$message({
-                            message: '模型已被删除，请选择模型后重新打靶！',
+                            message: ncfST('模型已被删除，请选择模型后重新打靶！'),
                             type: 'warning'
                         })
                         return
@@ -7630,7 +7630,7 @@ var app = new Vue({
                         this.saveManualScore(this.outputList[index], index)
                     } else {
                         this.$message({
-                            message: '请设置预 AI 评分标准',
+                            message: ncfST('请设置预 AI 评分标准'),
                             type: 'warning'
                         })
                     }
@@ -7994,7 +7994,7 @@ var app = new Vue({
                             this.getModelOptData()
                             this.$message({
                                 type: res.data.success ? 'success' : 'error',
-                                message: res.data.success ? '删除成功' : '删除失败'
+                                message: res.data.success ? ncfST('删除成功') : ncfST('删除失败')
                             });
                         }
                     })
@@ -8053,7 +8053,7 @@ var app = new Vue({
                 this.waitRefreshModel = false
                 //Legacy comment translated to English.
                 this.$message({
-                    message: '刷新完成！',
+                    message: ncfST('刷新完成！'),
                     type: 'success'
                 })
             })
@@ -8116,7 +8116,7 @@ var app = new Vue({
                 const res = await servicePR.post('/api/Senparc.Xncf.AIKernel/AIVectorAppService/Xncf.AIKernel_AIVectorAppService.GetListAsync', {})
                 if (!res.data.success) {
                     this.$message({
-                        message: res.data.errorMessage || res.data.data || '向量库列表加载失败',
+                        message: res.data.errorMessage || res.data.data || ncfST('向量库列表加载失败'),
                         type: 'error',
                         duration: 5 * 1000
                     })
@@ -8138,7 +8138,7 @@ var app = new Vue({
                 }
             } catch (e) {
                 this.$message({
-                    message: '向量库列表加载失败：' + (e.message || '未知错误'),
+                    message: ncfST('向量库列表加载失败：') + (e.message || ncfST('未知错误')),
                     type: 'error',
                     duration: 5 * 1000
                 })
@@ -8192,7 +8192,7 @@ var app = new Vue({
                 this.promptChangeHandel(file.name || 'audio', 'content')
             } catch (e) {
                 this.$message({
-                    message: '读取音频失败：' + (e.message || '未知错误'),
+                    message: ncfST('读取音频失败：') + (e.message || ncfST('未知错误')),
                     type: 'error',
                     duration: 5 * 1000
                 })
@@ -8212,7 +8212,7 @@ var app = new Vue({
         ensurePromptContentForCurrentModel() {
             if (this.isTextEmbeddingModelSelected && !this.embeddingForm.vectorDbId) {
                 this.$message({
-                    message: '请选择 VectorDB',
+                    message: ncfST('请选择 VectorDB'),
                     type: 'warning',
                     duration: 3000
                 })
@@ -8223,7 +8223,7 @@ var app = new Vue({
             }
             if (!this.sttForm.audioBase64 && !this.sttForm.audioLocalRelativePath) {
                 this.$message({
-                    message: '请先上传音频文件',
+                    message: ncfST('请先上传音频文件'),
                     type: 'warning',
                     duration: 3000
                 })
