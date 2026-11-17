@@ -248,6 +248,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     {
                         AreaHomeUrl = xncfRegister.GetAreaHomeUrl(),
                         MenuName = xncfRegister.MenuName,
+                        Description = xncfRegister.Description,
                         Icon = xncfRegister.Icon,
                         Version = xncfRegister.Version,
                         Uid = xncfRegister.Uid,

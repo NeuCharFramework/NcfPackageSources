@@ -57,6 +57,10 @@ namespace Senparc.Areas.Admin.OHS.Local.PL
             /// </summary>
             public string MenuName { get; set; }
             /// <summary>
+            /// 当前文化下的模块描述
+            /// </summary>
+            public string Description { get; set; }
+            /// <summary>
             /// 图标
             /// </summary>
             public string Icon { get; set; }

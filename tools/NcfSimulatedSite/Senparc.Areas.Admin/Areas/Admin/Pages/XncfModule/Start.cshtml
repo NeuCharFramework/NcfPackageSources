@@ -7,7 +7,7 @@
 @section breadcrumbs {
     <el-breadcrumb-item>@AR["Xncf.ExtensionModules"]</el-breadcrumb-item>
     <el-breadcrumb-item>@AR["Xncf.Title"]</el-breadcrumb-item>
-    <el-breadcrumb-item v-if="data.xncfModule">{{data.xncfModule.menuName}}</el-breadcrumb-item>
+    <el-breadcrumb-item v-if="data.xncfRegister">{{data.xncfRegister.menuName}}</el-breadcrumb-item>
 }
 @section Style{
     <link rel="stylesheet" href="~/css/Admin/Pages/NeuCharPivot/common.css" />
@@ -16,7 +16,7 @@
 <div>
     <el-container v-if="data.xncfModule" direction="vertical" class="module-start-shell">
         <el-header class="module-header">
-            <span class="start-title"><i :class="data.xncfRegister.icon"></i>&nbsp;{{data.xncfModule.menuName}} <span class="module-header-v">@AR["Xncf.Module"] {{data.xncfModule.version}}</span></span>
+            <span class="start-title"><i :class="data.xncfRegister.icon"></i>&nbsp;{{data.xncfRegister.menuName}} <span class="module-header-v">@AR["Xncf.Module"] {{data.xncfModule.version}}</span></span>
             <span class="module-header-actions">
                 <el-button size="mini" icon="el-icon-document" @@click="updateLogVisible=true">@AR["Xncf.UpdateLog"]</el-button>
                 <el-button size="mini" icon="el-icon-chat-line-round" @@click="openModuleChat">ChatAgent</el-button>
@@ -33,7 +33,7 @@
                 <span><i class="fa fa-rocket"></i> {{data.xncfRegister.functionCount}} Functions</span>
                 <span :class="data.xncfModule.state===1?'start-green':'start-gray'"><i class="fa fa-sliders"></i> {{xNcfModules_State[data.xncfModule.state]}}</span>
             </div>
-            <div class="module-summary-description">{{data.xncfModule.description}}</div>
+            <div class="module-summary-description">{{data.xncfRegister.description}}</div>
             <div class="module-summary-actions">
                 <el-button v-if="data.xncfModule.version!==data.xncfRegister.version" size="mini" type="warning" @@click="updataVersion"><i class="fa fa-gift"></i> @AR["Xncf.UpdateNow"]</el-button>
                 <el-button v-if="data.xncfModule.state!==1" size="mini" type="success" @@click="updataState('1')">@AR["Xncf.Open"]</el-button>
@@ -311,7 +311,7 @@
 
     <el-drawer title="ChatAgent · 当前 XNCF 模块" :visible.sync="chat.visible" direction="rtl" size="420px" custom-class="chat-agent-drawer">
         <div class="chat-agent-body">
-            <p>当前引用：<strong>{{data.xncfModule.menuName}}</strong></p>
+            <p>当前引用：<strong>{{data.xncfRegister.menuName}}</strong></p>
             <el-input type="textarea" :rows="6" v-model="chat.message" placeholder="例如：把高频操作放在第一组，并只暴露必要参数"></el-input>
             <el-select v-model="pivot.aiModelId" placeholder="选择 AI 算力"><el-option v-for="model in pivot.aiModels" :key="model.id" :label="model.name" :value="model.id"></el-option></el-select>
             <el-button type="primary" :loading="pivot.loading" @@click="refinePivotFromChat">发送并更新 Pivot</el-button>
