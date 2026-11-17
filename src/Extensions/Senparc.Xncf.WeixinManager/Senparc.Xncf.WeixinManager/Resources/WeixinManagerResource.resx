@@ -369,4 +369,40 @@
   <data name="Frontend.128" xml:space="preserve"><value>按成员账号和时间范围获取企业微信打卡记录，单次最长 30 天。</value></data>
   <data name="Frontend.129" xml:space="preserve"><value>企业微信凭证有效，可以获取打卡记录。</value></data>
   <data name="Frontend.130" xml:space="preserve"><value>企业微信打卡连接器目前只提供获取打卡记录。</value></data>
+  <data name="Connector.WeCom.Name" xml:space="preserve"><value>企业微信打卡</value></data>
+  <data name="Connector.WeCom.Description" xml:space="preserve"><value>使用企业微信应用的 CorpId 和 Secret 获取打卡记录。配置后可在对话、Workflow 和 Agent 模板中选择。</value></data>
+  <data name="Connector.WeCom.CorpId.Label" xml:space="preserve"><value>企业 ID</value></data>
+  <data name="Connector.WeCom.CorpId.Description" xml:space="preserve"><value>企业微信管理后台的 CorpId。</value></data>
+  <data name="Connector.WeCom.CorpSecret.Label" xml:space="preserve"><value>应用 Secret</value></data>
+  <data name="Connector.WeCom.CorpSecret.Description" xml:space="preserve"><value>需要具备打卡数据权限的自建应用 Secret。编辑时留空会继续使用已保存的密钥。</value></data>
+  <data name="Connector.WeCom.CorpSecret.Placeholder" xml:space="preserve"><value>应用 Secret</value></data>
+  <data name="Connector.WeCom.DefaultType.Label" xml:space="preserve"><value>默认打卡类型</value></data>
+  <data name="Connector.WeCom.DefaultType.Description" xml:space="preserve"><value>调用时如果没有另外指定，就使用这个类型。</value></data>
+  <data name="Connector.WeCom.Type.All" xml:space="preserve"><value>全部打卡</value></data>
+  <data name="Connector.WeCom.Type.Work" xml:space="preserve"><value>上下班打卡</value></data>
+  <data name="Connector.WeCom.Type.Outside" xml:space="preserve"><value>外出打卡</value></data>
+  <data name="Connector.WeCom.Action.GetRecords.Name" xml:space="preserve"><value>获取打卡记录</value></data>
+  <data name="Connector.WeCom.Action.GetRecords.Description" xml:space="preserve"><value>按成员账号和时间范围获取企业微信打卡记录，单次最长 30 天。</value></data>
+  <data name="Connector.WeCom.Parameter.UserIds.Label" xml:space="preserve"><value>成员账号</value></data>
+  <data name="Connector.WeCom.Parameter.UserIds.Description" xml:space="preserve"><value>企业微信 userid，多个用逗号或空格分隔。</value></data>
+  <data name="Connector.WeCom.Parameter.StartTime.Label" xml:space="preserve"><value>开始时间</value></data>
+  <data name="Connector.WeCom.Parameter.StartTime.Description" xml:space="preserve"><value>例如 2026-11-01 或 2026-11-01 09:00。留空则从今天 0 点开始。</value></data>
+  <data name="Connector.WeCom.Parameter.EndTime.Label" xml:space="preserve"><value>结束时间</value></data>
+  <data name="Connector.WeCom.Parameter.EndTime.Description" xml:space="preserve"><value>留空则到当前时间。</value></data>
+  <data name="Connector.WeCom.Parameter.Type.Label" xml:space="preserve"><value>打卡类型</value></data>
+  <data name="Connector.WeCom.Parameter.Type.Description" xml:space="preserve"><value>1 上下班，2 外出，3 全部。</value></data>
+  <data name="Connector.WeCom.Error.MissingCredentials" xml:space="preserve"><value>请先填写企业 ID 和应用 Secret。</value></data>
+  <data name="Connector.WeCom.Test.Valid" xml:space="preserve"><value>企业微信凭证有效，可以获取打卡记录。</value></data>
+  <data name="Connector.WeCom.Test.Rejected" xml:space="preserve"><value>企业微信拒绝了凭证：{0}</value></data>
+  <data name="Connector.WeCom.Test.Unreachable" xml:space="preserve"><value>无法连接企业微信，请检查 CorpId、Secret 和服务器网络。</value></data>
+  <data name="Connector.WeCom.Error.UnsupportedAction" xml:space="preserve"><value>企业微信打卡连接器目前只提供获取打卡记录。</value></data>
+  <data name="Connector.WeCom.Error.Token" xml:space="preserve"><value>获取企业微信访问凭证失败：{0}</value></data>
+  <data name="Connector.WeCom.Error.Api" xml:space="preserve"><value>企业微信返回错误：{0}</value></data>
+  <data name="Connector.WeCom.Error.Invocation" xml:space="preserve"><value>获取打卡记录失败，请确认应用有打卡权限，且成员账号正确。错误信息：{0}</value></data>
+  <data name="Connector.WeCom.Error.UserRequired" xml:space="preserve"><value>请提供至少一名企业微信成员的 userid。</value></data>
+  <data name="Connector.WeCom.Error.UserLimit" xml:space="preserve"><value>单次最多查询 100 名成员。</value></data>
+  <data name="Connector.WeCom.Error.InvalidTime" xml:space="preserve"><value>时间格式无法识别，请使用 2026-11-01 或 2026-11-01 09:00。</value></data>
+  <data name="Connector.WeCom.Error.TimeOrder" xml:space="preserve"><value>结束时间需要晚于开始时间。</value></data>
+  <data name="Connector.WeCom.Error.TimeRange" xml:space="preserve"><value>企业微信单次最多获取 30 天打卡记录。</value></data>
+  <data name="Connector.WeCom.Error.InvalidType" xml:space="preserve"><value>打卡类型只能是 1（上下班）、2（外出）或 3（全部）。</value></data>
 </root>

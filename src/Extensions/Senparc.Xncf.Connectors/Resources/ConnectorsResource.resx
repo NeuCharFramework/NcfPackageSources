@@ -34,4 +34,28 @@
   <data name="Frontend.023" xml:space="preserve"><value>{0} 个动作</value></data>
   <data name="Frontend.024" xml:space="preserve"><value>启用后可在 Chat、Workflow 和 Agent 中选择</value></data>
   <data name="Frontend.025" xml:space="preserve"><value>请选择</value></data>
+  <data name="Frontend.026" xml:space="preserve"><value>扩展模块</value></data>
+  <data name="Frontend.027" xml:space="preserve"><value>启用</value></data>
+  <data name="Frontend.028" xml:space="preserve"><value>停用</value></data>
+  <data name="Frontend.029" xml:space="preserve"><value>未填写说明</value></data>
+  <data name="Frontend.030" xml:space="preserve"><value>尚未测试连接</value></data>
+  <data name="Frontend.031" xml:space="preserve"><value>{0} 个</value></data>
+  <data name="Frontend.032" xml:space="preserve"><value>编辑连接器</value></data>
+  <data name="Frontend.033" xml:space="preserve"><value>配置连接器</value></data>
+  <data name="Frontend.034" xml:space="preserve"><value>已保存，留空则不修改</value></data>
+  <data name="Frontend.035" xml:space="preserve"><value>保存失败</value></data>
+  <data name="Frontend.036" xml:space="preserve"><value>已保存</value></data>
+  <data name="Frontend.037" xml:space="preserve"><value>保存失败，请稍后重试。</value></data>
+  <data name="Frontend.038" xml:space="preserve"><value>连接成功</value></data>
+  <data name="Frontend.039" xml:space="preserve"><value>连接失败</value></data>
+  <data name="Frontend.040" xml:space="preserve"><value>测试失败，请稍后重试。</value></data>
+  <data name="Frontend.041" xml:space="preserve"><value>删除连接器「{0}」？已授权给 Agent 的引用会同时失效。</value></data>
+  <data name="Frontend.042" xml:space="preserve"><value>删除失败</value></data>
+  <data name="Parameter.Connectors.Instance" xml:space="preserve"><value>连接器||选择已经配置并启用的连接器</value></data>
+  <data name="Parameter.Connectors.Action" xml:space="preserve"><value>动作||选择要执行的连接器动作</value></data>
+  <data name="Parameter.Connectors.StartTime" xml:space="preserve"><value>开始时间||打卡记录开始时间，例如 2026-11-01 或 2026-11-01 09:00。留空则从今天 0 点开始</value></data>
+  <data name="Parameter.Connectors.EndTime" xml:space="preserve"><value>结束时间||打卡记录结束时间。留空则到当前时间，且与开始时间最多间隔 30 天</value></data>
+  <data name="Parameter.Connectors.UserIds" xml:space="preserve"><value>成员账号||企业微信 userid，多个用逗号或空格分隔</value></data>
+  <data name="Parameter.Connectors.CheckinType" xml:space="preserve"><value>打卡类型||1 上下班，2 外出，3 全部。留空默认全部</value></data>
+  <data name="Parameter.Connectors.Arguments" xml:space="preserve"><value>附加参数||JSON 对象。已填写的专用字段优先，适合其他连接器动作</value></data>
 </root>

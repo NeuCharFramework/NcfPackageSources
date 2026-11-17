@@ -364,10 +364,46 @@
   <data name="Frontend.122" xml:space="preserve"><value>Enter a message to send to the current WeChat conversation</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.123" xml:space="preserve"><value>Configuration name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.124" xml:space="preserve"><value>Verification code</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.125" xml:space="preserve"><value>WeCom attendance</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.126" xml:space="preserve"><value>Retrieve WeCom attendance records</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.127" xml:space="preserve"><value>Get attendance records</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.128" xml:space="preserve"><value>Retrieve WeCom attendance records by member account and time range, up to 30 days per request.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.129" xml:space="preserve"><value>The WeCom credential is valid and can retrieve attendance records.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.130" xml:space="preserve"><value>The WeCom attendance connector currently only provides attendance record retrieval.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.125" xml:space="preserve"><value>Посещаемость WeCom</value></data>
+  <data name="Frontend.126" xml:space="preserve"><value>Получить записи о посещаемости WeCom</value></data>
+  <data name="Frontend.127" xml:space="preserve"><value>Получить записи о посещаемости</value></data>
+  <data name="Frontend.128" xml:space="preserve"><value>Получает записи о посещаемости WeCom по учётной записи сотрудника и диапазону времени, не более 30 дней за запрос.</value></data>
+  <data name="Frontend.129" xml:space="preserve"><value>Учётные данные WeCom действительны, записи о посещаемости можно получить.</value></data>
+  <data name="Frontend.130" xml:space="preserve"><value>Подключатель посещаемости WeCom позволяет только получать записи о посещаемости.</value></data>
+  <data name="Connector.WeCom.Name" xml:space="preserve"><value>Посещаемость WeCom</value></data>
+  <data name="Connector.WeCom.Description" xml:space="preserve"><value>Использует CorpId и Secret приложения WeCom для получения записей о посещаемости. После настройки подключатель можно выбрать в Chat, Workflow и шаблонах Agent.</value></data>
+  <data name="Connector.WeCom.CorpId.Label" xml:space="preserve"><value>Корпоративный ID</value></data>
+  <data name="Connector.WeCom.CorpId.Description" xml:space="preserve"><value>CorpId из консоли администрирования WeCom.</value></data>
+  <data name="Connector.WeCom.CorpSecret.Label" xml:space="preserve"><value>Secret приложения</value></data>
+  <data name="Connector.WeCom.CorpSecret.Description" xml:space="preserve"><value>Secret собственного приложения с разрешением на данные о посещаемости. При редактировании оставьте поле пустым, чтобы сохранить сохранённый секрет.</value></data>
+  <data name="Connector.WeCom.CorpSecret.Placeholder" xml:space="preserve"><value>Secret приложения</value></data>
+  <data name="Connector.WeCom.DefaultType.Label" xml:space="preserve"><value>Тип посещаемости по умолчанию</value></data>
+  <data name="Connector.WeCom.DefaultType.Description" xml:space="preserve"><value>Используется, если в запросе не указан другой тип.</value></data>
+  <data name="Connector.WeCom.Type.All" xml:space="preserve"><value>Вся посещаемость</value></data>
+  <data name="Connector.WeCom.Type.Work" xml:space="preserve"><value>Рабочая посещаемость</value></data>
+  <data name="Connector.WeCom.Type.Outside" xml:space="preserve"><value>Внешняя посещаемость</value></data>
+  <data name="Connector.WeCom.Action.GetRecords.Name" xml:space="preserve"><value>Получить записи о посещаемости</value></data>
+  <data name="Connector.WeCom.Action.GetRecords.Description" xml:space="preserve"><value>Получает записи о посещаемости WeCom по учётной записи сотрудника и диапазону времени, не более 30 дней за запрос.</value></data>
+  <data name="Connector.WeCom.Parameter.UserIds.Label" xml:space="preserve"><value>Учётные записи сотрудников</value></data>
+  <data name="Connector.WeCom.Parameter.UserIds.Description" xml:space="preserve"><value>Userid пользователей WeCom через запятую или пробел.</value></data>
+  <data name="Connector.WeCom.Parameter.StartTime.Label" xml:space="preserve"><value>Время начала</value></data>
+  <data name="Connector.WeCom.Parameter.StartTime.Description" xml:space="preserve"><value>Например, 2026-11-01 или 2026-11-01 09:00. Оставьте пустым, чтобы начать с полуночи сегодня.</value></data>
+  <data name="Connector.WeCom.Parameter.EndTime.Label" xml:space="preserve"><value>Время окончания</value></data>
+  <data name="Connector.WeCom.Parameter.EndTime.Description" xml:space="preserve"><value>Оставьте пустым, чтобы использовать текущее время.</value></data>
+  <data name="Connector.WeCom.Parameter.Type.Label" xml:space="preserve"><value>Тип посещаемости</value></data>
+  <data name="Connector.WeCom.Parameter.Type.Description" xml:space="preserve"><value>1 рабочая, 2 внешняя, 3 вся.</value></data>
+  <data name="Connector.WeCom.Error.MissingCredentials" xml:space="preserve"><value>Сначала укажите корпоративный ID и Secret приложения.</value></data>
+  <data name="Connector.WeCom.Test.Valid" xml:space="preserve"><value>Учётные данные WeCom действительны, записи о посещаемости можно получить.</value></data>
+  <data name="Connector.WeCom.Test.Rejected" xml:space="preserve"><value>WeCom отклонил учётные данные: {0}</value></data>
+  <data name="Connector.WeCom.Test.Unreachable" xml:space="preserve"><value>Не удалось подключиться к WeCom. Проверьте CorpId, Secret и сеть сервера.</value></data>
+  <data name="Connector.WeCom.Error.UnsupportedAction" xml:space="preserve"><value>Подключатель посещаемости WeCom в настоящее время предоставляет только получение записей о посещаемости.</value></data>
+  <data name="Connector.WeCom.Error.Token" xml:space="preserve"><value>Не удалось получить учётные данные доступа WeCom: {0}</value></data>
+  <data name="Connector.WeCom.Error.Api" xml:space="preserve"><value>WeCom вернул ошибку: {0}</value></data>
+  <data name="Connector.WeCom.Error.Invocation" xml:space="preserve"><value>Не удалось получить записи о посещаемости. Убедитесь, что приложение имеет разрешение на посещаемость, а учётные записи сотрудников указаны правильно. Подробности: {0}</value></data>
+  <data name="Connector.WeCom.Error.UserRequired" xml:space="preserve"><value>Укажите хотя бы один userid сотрудника WeCom.</value></data>
+  <data name="Connector.WeCom.Error.UserLimit" xml:space="preserve"><value>За один запрос можно проверить не более 100 сотрудников.</value></data>
+  <data name="Connector.WeCom.Error.InvalidTime" xml:space="preserve"><value>Не удалось распознать формат времени. Используйте 2026-11-01 или 2026-11-01 09:00.</value></data>
+  <data name="Connector.WeCom.Error.TimeOrder" xml:space="preserve"><value>Время окончания должно быть позже времени начала.</value></data>
+  <data name="Connector.WeCom.Error.TimeRange" xml:space="preserve"><value>WeCom позволяет получать не более 30 дней записей о посещаемости за один запрос.</value></data>
+  <data name="Connector.WeCom.Error.InvalidType" xml:space="preserve"><value>Тип посещаемости должен быть 1 (рабочая), 2 (внешняя) или 3 (вся).</value></data>
 </root>

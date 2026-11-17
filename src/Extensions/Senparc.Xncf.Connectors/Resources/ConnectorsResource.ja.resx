@@ -1,34 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root><resheader name="resmimetype"><value>text/microsoft-resx</value></resheader><resheader name="version"><value>2.0</value></resheader><resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader><resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
-  <data name="Module.Connectors.MenuName" xml:space="preserve"><value>Connectors</value></data>
-  <data name="Module.Connectors.Description" xml:space="preserve"><value>Configure external tools as selectable connectors. After an account is configured, Chat, Workflow and Agent templates can use it according to permissions.</value></data>
+  <data name="Module.Connectors.MenuName" xml:space="preserve"><value>コネクター</value></data>
+  <data name="Module.Connectors.Description" xml:space="preserve"><value>外部ツールを選択可能なコネクターとして設定します。アカウントを設定すると、権限に応じてChat、Workflow、Agentテンプレートから利用できます。</value></data>
 
-  <data name="Area.Connectors.Config" xml:space="preserve"><value>Connector setup</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Function.Connectors.Invoke.Name" xml:space="preserve"><value>Invoke connector</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Function.Connectors.Invoke.Description" xml:space="preserve"><value>Invoke an enabled connector action. Add a Function node in Workflow, then choose the connector and action.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.001" xml:space="preserve"><value>Actions available to AI</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.002" xml:space="preserve"><value>Example: corporate WeCom</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.003" xml:space="preserve"><value>Save</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.004" xml:space="preserve"><value>Configure the account and secret first, then choose which actions AI may use. Chat can narrow access temporarily, Workflow Function nodes can call connectors directly, and Agent templates control connector access per Agent.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.005" xml:space="preserve"><value>Delete</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.006" xml:space="preserve"><value>Cancel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.007" xml:space="preserve"><value>Available types</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.008" xml:space="preserve"><value>Name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.009" xml:space="preserve"><value>External tool connector</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.010" xml:space="preserve"><value>Secrets are stored only on the server. Leave the field empty while editing to keep the saved secret.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.011" xml:space="preserve"><value>Configured</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.012" xml:space="preserve"><value>Extension module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.013" xml:space="preserve"><value>Test</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.014" xml:space="preserve"><value>Types are provided by installed modules. Corporate WeCom attendance is provided by Weixin Management.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.015" xml:space="preserve"><value>Edit</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.016" xml:space="preserve"><value>Description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.017" xml:space="preserve"><value>No module has registered a connector yet. Install and enable Weixin Management to see corporate WeCom attendance here.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.018" xml:space="preserve"><value>Nothing is configured. Select a type above and enter the corporate WeCom CorpId and application Secret.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.019" xml:space="preserve"><value>Which team or scenario uses this account?</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.020" xml:space="preserve"><value>Connector</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.021" xml:space="preserve"><value>Configure</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.022" xml:space="preserve"><value>Configure this connector</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.023" xml:space="preserve"><value>{0} actions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.024" xml:space="preserve"><value>Available for selection in Chat, Workflow, and Agent after enabling</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.025" xml:space="preserve"><value>Please select</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Area.Connectors.Config" xml:space="preserve"><value>コネクター設定</value></data>
+  <data name="Function.Connectors.Invoke.Name" xml:space="preserve"><value>コネクターを呼び出す</value></data>
+  <data name="Function.Connectors.Invoke.Description" xml:space="preserve"><value>有効なコネクターアクションを呼び出します。WorkflowにFunctionノードを追加し、コネクターとアクションを選択してください。</value></data>
+  <data name="Frontend.001" xml:space="preserve"><value>AIで利用できるアクション</value></data>
+  <data name="Frontend.002" xml:space="preserve"><value>例: 法人WeCom</value></data>
+  <data name="Frontend.003" xml:space="preserve"><value>保存</value></data>
+  <data name="Frontend.004" xml:space="preserve"><value>まずアカウントとSecretを設定し、AIに許可するアクションを選択します。Chatでは一時的にアクセスを絞り、WorkflowのFunctionノードではコネクターを直接呼び出し、Agentテンプレートでは各Agentのコネクターアクセスを制御できます。</value></data>
+  <data name="Frontend.005" xml:space="preserve"><value>削除</value></data>
+  <data name="Frontend.006" xml:space="preserve"><value>キャンセル</value></data>
+  <data name="Frontend.007" xml:space="preserve"><value>利用可能な種類</value></data>
+  <data name="Frontend.008" xml:space="preserve"><value>名前</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>外部ツールコネクター</value></data>
+  <data name="Frontend.010" xml:space="preserve"><value>Secretはサーバーにのみ保存されます。編集時に空欄にすると保存済みのSecretを維持します。</value></data>
+  <data name="Frontend.011" xml:space="preserve"><value>設定済み</value></data>
+  <data name="Frontend.012" xml:space="preserve"><value>拡張モジュール</value></data>
+  <data name="Frontend.013" xml:space="preserve"><value>テスト</value></data>
+  <data name="Frontend.014" xml:space="preserve"><value>種類はインストール済みモジュールが提供します。法人WeComの勤怠はWeixin Managementが提供します。</value></data>
+  <data name="Frontend.015" xml:space="preserve"><value>編集</value></data>
+  <data name="Frontend.016" xml:space="preserve"><value>説明</value></data>
+  <data name="Frontend.017" xml:space="preserve"><value>コネクターを登録したモジュールはまだありません。Weixin Managementをインストールして有効にすると、ここに法人WeComの勤怠が表示されます。</value></data>
+  <data name="Frontend.018" xml:space="preserve"><value>設定された項目はありません。上の種類を選択し、法人WeComのCorpIdとアプリケーションSecretを入力してください。</value></data>
+  <data name="Frontend.019" xml:space="preserve"><value>このアカウントを使用するチームまたはシナリオ</value></data>
+  <data name="Frontend.020" xml:space="preserve"><value>コネクター</value></data>
+  <data name="Frontend.021" xml:space="preserve"><value>設定</value></data>
+  <data name="Frontend.022" xml:space="preserve"><value>このコネクターを設定</value></data>
+  <data name="Frontend.023" xml:space="preserve"><value>{0} 件のアクション</value></data>
+  <data name="Frontend.024" xml:space="preserve"><value>有効にするとChat、Workflow、Agentで選択できます</value></data>
+  <data name="Frontend.025" xml:space="preserve"><value>選択してください</value></data>
+  <data name="Frontend.026" xml:space="preserve"><value>拡張モジュール</value></data>
+  <data name="Frontend.027" xml:space="preserve"><value>有効</value></data>
+  <data name="Frontend.028" xml:space="preserve"><value>無効</value></data>
+  <data name="Frontend.029" xml:space="preserve"><value>説明はありません</value></data>
+  <data name="Frontend.030" xml:space="preserve"><value>接続はまだテストされていません</value></data>
+  <data name="Frontend.031" xml:space="preserve"><value>{0}</value></data>
+  <data name="Frontend.032" xml:space="preserve"><value>コネクターを編集</value></data>
+  <data name="Frontend.033" xml:space="preserve"><value>コネクターを設定</value></data>
+  <data name="Frontend.034" xml:space="preserve"><value>保存済み。変更しない場合は空欄にしてください</value></data>
+  <data name="Frontend.035" xml:space="preserve"><value>保存に失敗しました</value></data>
+  <data name="Frontend.036" xml:space="preserve"><value>保存しました</value></data>
+  <data name="Frontend.037" xml:space="preserve"><value>保存に失敗しました。後でもう一度お試しください。</value></data>
+  <data name="Frontend.038" xml:space="preserve"><value>接続に成功しました</value></data>
+  <data name="Frontend.039" xml:space="preserve"><value>接続に失敗しました</value></data>
+  <data name="Frontend.040" xml:space="preserve"><value>テストに失敗しました。後でもう一度お試しください。</value></data>
+  <data name="Frontend.041" xml:space="preserve"><value>コネクター「{0}」を削除しますか？Agentに許可された参照も使用できなくなります。</value></data>
+  <data name="Frontend.042" xml:space="preserve"><value>削除に失敗しました</value></data>
+  <data name="Parameter.Connectors.Instance" xml:space="preserve"><value>コネクター||設定済みで有効なコネクターを選択</value></data>
+  <data name="Parameter.Connectors.Action" xml:space="preserve"><value>アクション||実行するコネクターアクションを選択</value></data>
+  <data name="Parameter.Connectors.StartTime" xml:space="preserve"><value>開始時刻||勤怠記録の開始時刻。例: 2026-11-01 または 2026-11-01 09:00。空欄の場合は本日の0時から開始</value></data>
+  <data name="Parameter.Connectors.EndTime" xml:space="preserve"><value>終了時刻||勤怠記録の終了時刻。空欄の場合は現在時刻を使用し、範囲は最大30日</value></data>
+  <data name="Parameter.Connectors.UserIds" xml:space="preserve"><value>メンバーアカウント||WeComのuseridをカンマまたは空白で区切って指定</value></data>
+  <data name="Parameter.Connectors.CheckinType" xml:space="preserve"><value>勤怠種別||1 勤務、2 社外、3 すべて。空欄の場合はすべてを使用</value></data>
+  <data name="Parameter.Connectors.Arguments" xml:space="preserve"><value>追加パラメーター||JSONオブジェクト。入力済みの専用項目を優先し、他のコネクターアクションに使用可能</value></data>
 </root>

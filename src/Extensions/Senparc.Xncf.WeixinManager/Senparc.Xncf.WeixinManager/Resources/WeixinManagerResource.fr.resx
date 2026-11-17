@@ -364,10 +364,46 @@
   <data name="Frontend.122" xml:space="preserve"><value>Enter a message to send to the current WeChat conversation</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.123" xml:space="preserve"><value>Configuration name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.124" xml:space="preserve"><value>Verification code</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.125" xml:space="preserve"><value>WeCom attendance</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.126" xml:space="preserve"><value>Retrieve WeCom attendance records</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.127" xml:space="preserve"><value>Get attendance records</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.128" xml:space="preserve"><value>Retrieve WeCom attendance records by member account and time range, up to 30 days per request.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.129" xml:space="preserve"><value>The WeCom credential is valid and can retrieve attendance records.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.130" xml:space="preserve"><value>The WeCom attendance connector currently only provides attendance record retrieval.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.125" xml:space="preserve"><value>Présence WeCom</value></data>
+  <data name="Frontend.126" xml:space="preserve"><value>Récupérer les relevés de présence WeCom</value></data>
+  <data name="Frontend.127" xml:space="preserve"><value>Obtenir les relevés de présence</value></data>
+  <data name="Frontend.128" xml:space="preserve"><value>Récupère les relevés de présence WeCom par compte membre et plage horaire, jusqu'à 30 jours par requête.</value></data>
+  <data name="Frontend.129" xml:space="preserve"><value>Les identifiants WeCom sont valides et peuvent récupérer les relevés de présence.</value></data>
+  <data name="Frontend.130" xml:space="preserve"><value>Le connecteur de présence WeCom ne permet actuellement que la récupération des relevés.</value></data>
+  <data name="Connector.WeCom.Name" xml:space="preserve"><value>Présence WeCom</value></data>
+  <data name="Connector.WeCom.Description" xml:space="preserve"><value>Utilise le CorpId et le Secret d'une application WeCom pour récupérer les relevés de présence. Après configuration, le connecteur peut être sélectionné dans Chat, Workflow et les modèles Agent.</value></data>
+  <data name="Connector.WeCom.CorpId.Label" xml:space="preserve"><value>ID d'entreprise</value></data>
+  <data name="Connector.WeCom.CorpId.Description" xml:space="preserve"><value>Le CorpId de la console d'administration WeCom.</value></data>
+  <data name="Connector.WeCom.CorpSecret.Label" xml:space="preserve"><value>Secret de l'application</value></data>
+  <data name="Connector.WeCom.CorpSecret.Description" xml:space="preserve"><value>Le Secret d'une application interne disposant de l'autorisation d'accès aux données de présence. Laissez le champ vide lors de la modification pour conserver le secret enregistré.</value></data>
+  <data name="Connector.WeCom.CorpSecret.Placeholder" xml:space="preserve"><value>Secret de l'application</value></data>
+  <data name="Connector.WeCom.DefaultType.Label" xml:space="preserve"><value>Type de présence par défaut</value></data>
+  <data name="Connector.WeCom.DefaultType.Description" xml:space="preserve"><value>Utilisé lorsqu'un autre type n'est pas indiqué dans l'appel.</value></data>
+  <data name="Connector.WeCom.Type.All" xml:space="preserve"><value>Toutes les présences</value></data>
+  <data name="Connector.WeCom.Type.Work" xml:space="preserve"><value>Présence au travail</value></data>
+  <data name="Connector.WeCom.Type.Outside" xml:space="preserve"><value>Présence hors site</value></data>
+  <data name="Connector.WeCom.Action.GetRecords.Name" xml:space="preserve"><value>Obtenir les relevés de présence</value></data>
+  <data name="Connector.WeCom.Action.GetRecords.Description" xml:space="preserve"><value>Récupère les relevés de présence WeCom par compte membre et plage horaire, jusqu'à 30 jours par requête.</value></data>
+  <data name="Connector.WeCom.Parameter.UserIds.Label" xml:space="preserve"><value>Comptes des membres</value></data>
+  <data name="Connector.WeCom.Parameter.UserIds.Description" xml:space="preserve"><value>Userid WeCom séparés par des virgules ou des espaces.</value></data>
+  <data name="Connector.WeCom.Parameter.StartTime.Label" xml:space="preserve"><value>Heure de début</value></data>
+  <data name="Connector.WeCom.Parameter.StartTime.Description" xml:space="preserve"><value>Par exemple, 2026-11-01 ou 2026-11-01 09:00. Laissez vide pour commencer à minuit aujourd'hui.</value></data>
+  <data name="Connector.WeCom.Parameter.EndTime.Label" xml:space="preserve"><value>Heure de fin</value></data>
+  <data name="Connector.WeCom.Parameter.EndTime.Description" xml:space="preserve"><value>Laissez vide pour utiliser l'heure actuelle.</value></data>
+  <data name="Connector.WeCom.Parameter.Type.Label" xml:space="preserve"><value>Type de présence</value></data>
+  <data name="Connector.WeCom.Parameter.Type.Description" xml:space="preserve"><value>1 travail, 2 hors site, 3 tous.</value></data>
+  <data name="Connector.WeCom.Error.MissingCredentials" xml:space="preserve"><value>Renseignez d'abord l'ID d'entreprise et le Secret de l'application.</value></data>
+  <data name="Connector.WeCom.Test.Valid" xml:space="preserve"><value>Les identifiants WeCom sont valides et peuvent récupérer les relevés de présence.</value></data>
+  <data name="Connector.WeCom.Test.Rejected" xml:space="preserve"><value>WeCom a refusé les identifiants : {0}</value></data>
+  <data name="Connector.WeCom.Test.Unreachable" xml:space="preserve"><value>Impossible de se connecter à WeCom. Vérifiez le CorpId, le Secret et le réseau du serveur.</value></data>
+  <data name="Connector.WeCom.Error.UnsupportedAction" xml:space="preserve"><value>Le connecteur de présence WeCom ne permet actuellement que la récupération des relevés.</value></data>
+  <data name="Connector.WeCom.Error.Token" xml:space="preserve"><value>Impossible d'obtenir les identifiants d'accès WeCom : {0}</value></data>
+  <data name="Connector.WeCom.Error.Api" xml:space="preserve"><value>WeCom a renvoyé une erreur : {0}</value></data>
+  <data name="Connector.WeCom.Error.Invocation" xml:space="preserve"><value>Impossible de récupérer les relevés de présence. Vérifiez que l'application dispose de l'autorisation de présence et que les comptes membres sont corrects. Détails : {0}</value></data>
+  <data name="Connector.WeCom.Error.UserRequired" xml:space="preserve"><value>Indiquez au moins un userid de membre WeCom.</value></data>
+  <data name="Connector.WeCom.Error.UserLimit" xml:space="preserve"><value>Une requête peut consulter au maximum 100 membres.</value></data>
+  <data name="Connector.WeCom.Error.InvalidTime" xml:space="preserve"><value>Le format de l'heure n'est pas reconnu. Utilisez 2026-11-01 ou 2026-11-01 09:00.</value></data>
+  <data name="Connector.WeCom.Error.TimeOrder" xml:space="preserve"><value>L'heure de fin doit être postérieure à l'heure de début.</value></data>
+  <data name="Connector.WeCom.Error.TimeRange" xml:space="preserve"><value>WeCom autorise au maximum 30 jours de relevés de présence par requête.</value></data>
+  <data name="Connector.WeCom.Error.InvalidType" xml:space="preserve"><value>Le type de présence doit être 1 (travail), 2 (hors site) ou 3 (tous).</value></data>
 </root>

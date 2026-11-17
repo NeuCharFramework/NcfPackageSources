@@ -370,4 +370,40 @@
   <data name="Frontend.128" xml:space="preserve"><value>Retrieve WeCom attendance records by member account and time range, up to 30 days per request.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.129" xml:space="preserve"><value>The WeCom credential is valid and can retrieve attendance records.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.130" xml:space="preserve"><value>The WeCom attendance connector currently only provides attendance record retrieval.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Connector.WeCom.Name" xml:space="preserve"><value>WeCom attendance</value></data>
+  <data name="Connector.WeCom.Description" xml:space="preserve"><value>Use a WeCom application's CorpId and Secret to retrieve attendance records. After configuration, it can be selected in Chat, Workflow, and Agent templates.</value></data>
+  <data name="Connector.WeCom.CorpId.Label" xml:space="preserve"><value>Corporate ID</value></data>
+  <data name="Connector.WeCom.CorpId.Description" xml:space="preserve"><value>The CorpId from the WeCom administration console.</value></data>
+  <data name="Connector.WeCom.CorpSecret.Label" xml:space="preserve"><value>Application Secret</value></data>
+  <data name="Connector.WeCom.CorpSecret.Description" xml:space="preserve"><value>The Secret of a self-built application with attendance-data permission. Leave it empty while editing to keep the saved secret.</value></data>
+  <data name="Connector.WeCom.CorpSecret.Placeholder" xml:space="preserve"><value>Application Secret</value></data>
+  <data name="Connector.WeCom.DefaultType.Label" xml:space="preserve"><value>Default attendance type</value></data>
+  <data name="Connector.WeCom.DefaultType.Description" xml:space="preserve"><value>Used when the call does not specify another type.</value></data>
+  <data name="Connector.WeCom.Type.All" xml:space="preserve"><value>All attendance</value></data>
+  <data name="Connector.WeCom.Type.Work" xml:space="preserve"><value>Work attendance</value></data>
+  <data name="Connector.WeCom.Type.Outside" xml:space="preserve"><value>Off-site attendance</value></data>
+  <data name="Connector.WeCom.Action.GetRecords.Name" xml:space="preserve"><value>Get attendance records</value></data>
+  <data name="Connector.WeCom.Action.GetRecords.Description" xml:space="preserve"><value>Retrieve WeCom attendance records by member account and time range, up to 30 days per request.</value></data>
+  <data name="Connector.WeCom.Parameter.UserIds.Label" xml:space="preserve"><value>Member accounts</value></data>
+  <data name="Connector.WeCom.Parameter.UserIds.Description" xml:space="preserve"><value>WeCom userids separated by commas or spaces.</value></data>
+  <data name="Connector.WeCom.Parameter.StartTime.Label" xml:space="preserve"><value>Start time</value></data>
+  <data name="Connector.WeCom.Parameter.StartTime.Description" xml:space="preserve"><value>For example, 2026-11-01 or 2026-11-01 09:00. Leave empty to start at midnight today.</value></data>
+  <data name="Connector.WeCom.Parameter.EndTime.Label" xml:space="preserve"><value>End time</value></data>
+  <data name="Connector.WeCom.Parameter.EndTime.Description" xml:space="preserve"><value>Leave empty to use the current time.</value></data>
+  <data name="Connector.WeCom.Parameter.Type.Label" xml:space="preserve"><value>Attendance type</value></data>
+  <data name="Connector.WeCom.Parameter.Type.Description" xml:space="preserve"><value>1 work, 2 off-site, 3 all.</value></data>
+  <data name="Connector.WeCom.Error.MissingCredentials" xml:space="preserve"><value>Enter the Corporate ID and application Secret first.</value></data>
+  <data name="Connector.WeCom.Test.Valid" xml:space="preserve"><value>The WeCom credential is valid and can retrieve attendance records.</value></data>
+  <data name="Connector.WeCom.Test.Rejected" xml:space="preserve"><value>WeCom rejected the credential: {0}</value></data>
+  <data name="Connector.WeCom.Test.Unreachable" xml:space="preserve"><value>Unable to connect to WeCom. Check the CorpId, Secret, and server network.</value></data>
+  <data name="Connector.WeCom.Error.UnsupportedAction" xml:space="preserve"><value>The WeCom attendance connector currently only provides attendance record retrieval.</value></data>
+  <data name="Connector.WeCom.Error.Token" xml:space="preserve"><value>Failed to obtain the WeCom access credential: {0}</value></data>
+  <data name="Connector.WeCom.Error.Api" xml:space="preserve"><value>WeCom returned an error: {0}</value></data>
+  <data name="Connector.WeCom.Error.Invocation" xml:space="preserve"><value>Failed to retrieve attendance records. Confirm that the application has attendance permission and that the member accounts are correct. Details: {0}</value></data>
+  <data name="Connector.WeCom.Error.UserRequired" xml:space="preserve"><value>Provide at least one WeCom member userid.</value></data>
+  <data name="Connector.WeCom.Error.UserLimit" xml:space="preserve"><value>A single request can query at most 100 members.</value></data>
+  <data name="Connector.WeCom.Error.InvalidTime" xml:space="preserve"><value>The time format is not recognized. Use 2026-11-01 or 2026-11-01 09:00.</value></data>
+  <data name="Connector.WeCom.Error.TimeOrder" xml:space="preserve"><value>The end time must be later than the start time.</value></data>
+  <data name="Connector.WeCom.Error.TimeRange" xml:space="preserve"><value>WeCom allows at most 30 days of attendance records per request.</value></data>
+  <data name="Connector.WeCom.Error.InvalidType" xml:space="preserve"><value>The attendance type must be 1 (work), 2 (off-site), or 3 (all).</value></data>
 </root>

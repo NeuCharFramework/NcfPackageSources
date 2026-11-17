@@ -364,10 +364,46 @@
   <data name="Frontend.122" xml:space="preserve"><value>Enter a message to send to the current WeChat conversation</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.123" xml:space="preserve"><value>Configuration name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.124" xml:space="preserve"><value>Verification code</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.125" xml:space="preserve"><value>WeCom attendance</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.126" xml:space="preserve"><value>Retrieve WeCom attendance records</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.127" xml:space="preserve"><value>Get attendance records</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.128" xml:space="preserve"><value>Retrieve WeCom attendance records by member account and time range, up to 30 days per request.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.129" xml:space="preserve"><value>The WeCom credential is valid and can retrieve attendance records.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.130" xml:space="preserve"><value>The WeCom attendance connector currently only provides attendance record retrieval.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.125" xml:space="preserve"><value>Asistencia de WeCom</value></data>
+  <data name="Frontend.126" xml:space="preserve"><value>Obtener registros de asistencia de WeCom</value></data>
+  <data name="Frontend.127" xml:space="preserve"><value>Obtener registros de asistencia</value></data>
+  <data name="Frontend.128" xml:space="preserve"><value>Obtén registros de asistencia de WeCom por cuenta de miembro y rango de tiempo, hasta 30 días por solicitud.</value></data>
+  <data name="Frontend.129" xml:space="preserve"><value>La credencial de WeCom es válida y puede obtener registros de asistencia.</value></data>
+  <data name="Frontend.130" xml:space="preserve"><value>El conector de asistencia de WeCom solo permite obtener registros de asistencia.</value></data>
+  <data name="Connector.WeCom.Name" xml:space="preserve"><value>Asistencia de WeCom</value></data>
+  <data name="Connector.WeCom.Description" xml:space="preserve"><value>Usa el CorpId y el Secret de una aplicación de WeCom para obtener registros de asistencia. Tras configurarlo, se puede seleccionar en Chat, Workflow y las plantillas de Agent.</value></data>
+  <data name="Connector.WeCom.CorpId.Label" xml:space="preserve"><value>ID corporativo</value></data>
+  <data name="Connector.WeCom.CorpId.Description" xml:space="preserve"><value>El CorpId de la consola de administración de WeCom.</value></data>
+  <data name="Connector.WeCom.CorpSecret.Label" xml:space="preserve"><value>Secret de la aplicación</value></data>
+  <data name="Connector.WeCom.CorpSecret.Description" xml:space="preserve"><value>El Secret de una aplicación propia con permiso para los datos de asistencia. Déjalo vacío al editar para conservar el secreto guardado.</value></data>
+  <data name="Connector.WeCom.CorpSecret.Placeholder" xml:space="preserve"><value>Secret de la aplicación</value></data>
+  <data name="Connector.WeCom.DefaultType.Label" xml:space="preserve"><value>Tipo de asistencia predeterminado</value></data>
+  <data name="Connector.WeCom.DefaultType.Description" xml:space="preserve"><value>Se usa cuando la llamada no especifica otro tipo.</value></data>
+  <data name="Connector.WeCom.Type.All" xml:space="preserve"><value>Toda la asistencia</value></data>
+  <data name="Connector.WeCom.Type.Work" xml:space="preserve"><value>Asistencia laboral</value></data>
+  <data name="Connector.WeCom.Type.Outside" xml:space="preserve"><value>Asistencia fuera de la oficina</value></data>
+  <data name="Connector.WeCom.Action.GetRecords.Name" xml:space="preserve"><value>Obtener registros de asistencia</value></data>
+  <data name="Connector.WeCom.Action.GetRecords.Description" xml:space="preserve"><value>Obtén registros de asistencia de WeCom por cuenta de miembro y rango de tiempo, hasta 30 días por solicitud.</value></data>
+  <data name="Connector.WeCom.Parameter.UserIds.Label" xml:space="preserve"><value>Cuentas de miembros</value></data>
+  <data name="Connector.WeCom.Parameter.UserIds.Description" xml:space="preserve"><value>userid de WeCom separados por comas o espacios.</value></data>
+  <data name="Connector.WeCom.Parameter.StartTime.Label" xml:space="preserve"><value>Hora de inicio</value></data>
+  <data name="Connector.WeCom.Parameter.StartTime.Description" xml:space="preserve"><value>Por ejemplo, 2026-11-01 o 2026-11-01 09:00. Déjalo vacío para comenzar a medianoche de hoy.</value></data>
+  <data name="Connector.WeCom.Parameter.EndTime.Label" xml:space="preserve"><value>Hora de finalización</value></data>
+  <data name="Connector.WeCom.Parameter.EndTime.Description" xml:space="preserve"><value>Déjalo vacío para usar la hora actual.</value></data>
+  <data name="Connector.WeCom.Parameter.Type.Label" xml:space="preserve"><value>Tipo de asistencia</value></data>
+  <data name="Connector.WeCom.Parameter.Type.Description" xml:space="preserve"><value>1 laboral, 2 fuera de la oficina, 3 todo.</value></data>
+  <data name="Connector.WeCom.Error.MissingCredentials" xml:space="preserve"><value>Introduce primero el ID corporativo y el Secret de la aplicación.</value></data>
+  <data name="Connector.WeCom.Test.Valid" xml:space="preserve"><value>La credencial de WeCom es válida y puede obtener registros de asistencia.</value></data>
+  <data name="Connector.WeCom.Test.Rejected" xml:space="preserve"><value>WeCom rechazó la credencial: {0}</value></data>
+  <data name="Connector.WeCom.Test.Unreachable" xml:space="preserve"><value>No se puede conectar con WeCom. Comprueba el CorpId, el Secret y la red del servidor.</value></data>
+  <data name="Connector.WeCom.Error.UnsupportedAction" xml:space="preserve"><value>El conector de asistencia de WeCom solo permite obtener registros de asistencia.</value></data>
+  <data name="Connector.WeCom.Error.Token" xml:space="preserve"><value>No se pudo obtener la credencial de acceso de WeCom: {0}</value></data>
+  <data name="Connector.WeCom.Error.Api" xml:space="preserve"><value>WeCom devolvió un error: {0}</value></data>
+  <data name="Connector.WeCom.Error.Invocation" xml:space="preserve"><value>No se pudieron obtener los registros de asistencia. Confirma que la aplicación tiene permiso de asistencia y que las cuentas de los miembros son correctas. Detalles: {0}</value></data>
+  <data name="Connector.WeCom.Error.UserRequired" xml:space="preserve"><value>Proporciona al menos un userid de miembro de WeCom.</value></data>
+  <data name="Connector.WeCom.Error.UserLimit" xml:space="preserve"><value>Una solicitud puede consultar como máximo 100 miembros.</value></data>
+  <data name="Connector.WeCom.Error.InvalidTime" xml:space="preserve"><value>No se reconoce el formato de hora. Usa 2026-11-01 o 2026-11-01 09:00.</value></data>
+  <data name="Connector.WeCom.Error.TimeOrder" xml:space="preserve"><value>La hora de finalización debe ser posterior a la hora de inicio.</value></data>
+  <data name="Connector.WeCom.Error.TimeRange" xml:space="preserve"><value>WeCom permite como máximo 30 días de registros de asistencia por solicitud.</value></data>
+  <data name="Connector.WeCom.Error.InvalidType" xml:space="preserve"><value>El tipo de asistencia debe ser 1 (laboral), 2 (fuera de la oficina) o 3 (todo).</value></data>
 </root>

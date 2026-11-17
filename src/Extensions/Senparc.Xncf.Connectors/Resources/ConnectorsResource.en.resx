@@ -35,4 +35,28 @@
   <data name="Frontend.023" xml:space="preserve"><value>{0} actions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.024" xml:space="preserve"><value>Available for selection in Chat, Workflow, and Agent after enabling</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.025" xml:space="preserve"><value>Please select</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.026" xml:space="preserve"><value>Extension modules</value></data>
+  <data name="Frontend.027" xml:space="preserve"><value>Enabled</value></data>
+  <data name="Frontend.028" xml:space="preserve"><value>Disabled</value></data>
+  <data name="Frontend.029" xml:space="preserve"><value>No description provided</value></data>
+  <data name="Frontend.030" xml:space="preserve"><value>Connection not tested yet</value></data>
+  <data name="Frontend.031" xml:space="preserve"><value>{0}</value></data>
+  <data name="Frontend.032" xml:space="preserve"><value>Edit connector</value></data>
+  <data name="Frontend.033" xml:space="preserve"><value>Configure connector</value></data>
+  <data name="Frontend.034" xml:space="preserve"><value>Saved; leave empty to keep it unchanged</value></data>
+  <data name="Frontend.035" xml:space="preserve"><value>Save failed</value></data>
+  <data name="Frontend.036" xml:space="preserve"><value>Saved</value></data>
+  <data name="Frontend.037" xml:space="preserve"><value>Save failed. Please try again later.</value></data>
+  <data name="Frontend.038" xml:space="preserve"><value>Connection succeeded</value></data>
+  <data name="Frontend.039" xml:space="preserve"><value>Connection failed</value></data>
+  <data name="Frontend.040" xml:space="preserve"><value>Test failed. Please try again later.</value></data>
+  <data name="Frontend.041" xml:space="preserve"><value>Delete connector "{0}"? References authorized for Agents will also stop working.</value></data>
+  <data name="Frontend.042" xml:space="preserve"><value>Delete failed</value></data>
+  <data name="Parameter.Connectors.Instance" xml:space="preserve"><value>Connector||Select a configured and enabled connector</value></data>
+  <data name="Parameter.Connectors.Action" xml:space="preserve"><value>Action||Select the connector action to execute</value></data>
+  <data name="Parameter.Connectors.StartTime" xml:space="preserve"><value>Start time||Attendance record start time, for example 2026-11-01 or 2026-11-01 09:00. Leave empty to start at midnight today</value></data>
+  <data name="Parameter.Connectors.EndTime" xml:space="preserve"><value>End time||Attendance record end time. Leave empty to use the current time; the range can be at most 30 days</value></data>
+  <data name="Parameter.Connectors.UserIds" xml:space="preserve"><value>Member accounts||WeCom userids separated by commas or spaces</value></data>
+  <data name="Parameter.Connectors.CheckinType" xml:space="preserve"><value>Attendance type||1 work, 2 off-site, 3 all. Leave empty to use all</value></data>
+  <data name="Parameter.Connectors.Arguments" xml:space="preserve"><value>Additional arguments||JSON object. Filled-in dedicated fields take priority; suitable for other connector actions</value></data>
 </root>

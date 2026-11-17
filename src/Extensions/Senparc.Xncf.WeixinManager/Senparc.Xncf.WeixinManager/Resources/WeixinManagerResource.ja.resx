@@ -364,10 +364,46 @@
   <data name="Frontend.122" xml:space="preserve"><value>Enter a message to send to the current WeChat conversation</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.123" xml:space="preserve"><value>Configuration name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.124" xml:space="preserve"><value>Verification code</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.125" xml:space="preserve"><value>WeCom attendance</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.126" xml:space="preserve"><value>Retrieve WeCom attendance records</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.127" xml:space="preserve"><value>Get attendance records</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.128" xml:space="preserve"><value>Retrieve WeCom attendance records by member account and time range, up to 30 days per request.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.129" xml:space="preserve"><value>The WeCom credential is valid and can retrieve attendance records.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.130" xml:space="preserve"><value>The WeCom attendance connector currently only provides attendance record retrieval.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.125" xml:space="preserve"><value>WeCom勤怠</value></data>
+  <data name="Frontend.126" xml:space="preserve"><value>WeCom勤怠記録を取得</value></data>
+  <data name="Frontend.127" xml:space="preserve"><value>勤怠記録を取得</value></data>
+  <data name="Frontend.128" xml:space="preserve"><value>メンバーアカウントと時間範囲でWeComの勤怠記録を取得します。1回の要求は最大30日です。</value></data>
+  <data name="Frontend.129" xml:space="preserve"><value>WeComの認証情報は有効で、勤怠記録を取得できます。</value></data>
+  <data name="Frontend.130" xml:space="preserve"><value>WeCom勤怠コネクターは現在、勤怠記録の取得のみを提供しています。</value></data>
+  <data name="Connector.WeCom.Name" xml:space="preserve"><value>WeCom勤怠</value></data>
+  <data name="Connector.WeCom.Description" xml:space="preserve"><value>WeComアプリのCorpIdとSecretを使用して勤怠記録を取得します。設定後、Chat、Workflow、Agentテンプレートで選択できます。</value></data>
+  <data name="Connector.WeCom.CorpId.Label" xml:space="preserve"><value>企業ID</value></data>
+  <data name="Connector.WeCom.CorpId.Description" xml:space="preserve"><value>WeCom管理コンソールのCorpIdです。</value></data>
+  <data name="Connector.WeCom.CorpSecret.Label" xml:space="preserve"><value>アプリケーションSecret</value></data>
+  <data name="Connector.WeCom.CorpSecret.Description" xml:space="preserve"><value>勤怠データ権限を持つ自作アプリのSecretです。編集時に空欄にすると保存済みのSecretを使用します。</value></data>
+  <data name="Connector.WeCom.CorpSecret.Placeholder" xml:space="preserve"><value>アプリケーションSecret</value></data>
+  <data name="Connector.WeCom.DefaultType.Label" xml:space="preserve"><value>既定の勤怠種別</value></data>
+  <data name="Connector.WeCom.DefaultType.Description" xml:space="preserve"><value>呼び出し時に別の種別を指定しない場合に使用します。</value></data>
+  <data name="Connector.WeCom.Type.All" xml:space="preserve"><value>すべての勤怠</value></data>
+  <data name="Connector.WeCom.Type.Work" xml:space="preserve"><value>勤務勤怠</value></data>
+  <data name="Connector.WeCom.Type.Outside" xml:space="preserve"><value>社外勤怠</value></data>
+  <data name="Connector.WeCom.Action.GetRecords.Name" xml:space="preserve"><value>勤怠記録を取得</value></data>
+  <data name="Connector.WeCom.Action.GetRecords.Description" xml:space="preserve"><value>メンバーアカウントと時間範囲でWeComの勤怠記録を取得します。1回の要求は最大30日です。</value></data>
+  <data name="Connector.WeCom.Parameter.UserIds.Label" xml:space="preserve"><value>メンバーアカウント</value></data>
+  <data name="Connector.WeCom.Parameter.UserIds.Description" xml:space="preserve"><value>WeComのuseridをカンマまたは空白で区切って指定します。</value></data>
+  <data name="Connector.WeCom.Parameter.StartTime.Label" xml:space="preserve"><value>開始時刻</value></data>
+  <data name="Connector.WeCom.Parameter.StartTime.Description" xml:space="preserve"><value>例: 2026-11-01 または 2026-11-01 09:00。空欄の場合は本日の0時から開始します。</value></data>
+  <data name="Connector.WeCom.Parameter.EndTime.Label" xml:space="preserve"><value>終了時刻</value></data>
+  <data name="Connector.WeCom.Parameter.EndTime.Description" xml:space="preserve"><value>空欄の場合は現在時刻を使用します。</value></data>
+  <data name="Connector.WeCom.Parameter.Type.Label" xml:space="preserve"><value>勤怠種別</value></data>
+  <data name="Connector.WeCom.Parameter.Type.Description" xml:space="preserve"><value>1 勤務、2 社外、3 すべて。</value></data>
+  <data name="Connector.WeCom.Error.MissingCredentials" xml:space="preserve"><value>企業IDとアプリケーションSecretを先に入力してください。</value></data>
+  <data name="Connector.WeCom.Test.Valid" xml:space="preserve"><value>WeComの認証情報は有効で、勤怠記録を取得できます。</value></data>
+  <data name="Connector.WeCom.Test.Rejected" xml:space="preserve"><value>WeComが認証情報を拒否しました: {0}</value></data>
+  <data name="Connector.WeCom.Test.Unreachable" xml:space="preserve"><value>WeComに接続できません。CorpId、Secret、サーバーのネットワークを確認してください。</value></data>
+  <data name="Connector.WeCom.Error.UnsupportedAction" xml:space="preserve"><value>WeCom勤怠コネクターは現在、勤怠記録の取得のみを提供しています。</value></data>
+  <data name="Connector.WeCom.Error.Token" xml:space="preserve"><value>WeComアクセストークンを取得できませんでした: {0}</value></data>
+  <data name="Connector.WeCom.Error.Api" xml:space="preserve"><value>WeComからエラーが返されました: {0}</value></data>
+  <data name="Connector.WeCom.Error.Invocation" xml:space="preserve"><value>勤怠記録を取得できませんでした。アプリに勤怠権限があり、メンバーアカウントが正しいことを確認してください。詳細: {0}</value></data>
+  <data name="Connector.WeCom.Error.UserRequired" xml:space="preserve"><value>WeComメンバーのuseridを少なくとも1つ指定してください。</value></data>
+  <data name="Connector.WeCom.Error.UserLimit" xml:space="preserve"><value>1回の要求で照会できるメンバーは最大100人です。</value></data>
+  <data name="Connector.WeCom.Error.InvalidTime" xml:space="preserve"><value>時刻形式を認識できません。2026-11-01 または 2026-11-01 09:00 を使用してください。</value></data>
+  <data name="Connector.WeCom.Error.TimeOrder" xml:space="preserve"><value>終了時刻は開始時刻より後にしてください。</value></data>
+  <data name="Connector.WeCom.Error.TimeRange" xml:space="preserve"><value>WeComでは1回の要求につき最大30日分の勤怠記録を取得できます。</value></data>
+  <data name="Connector.WeCom.Error.InvalidType" xml:space="preserve"><value>勤怠種別は1（勤務）、2（社外）、3（すべて）のいずれかです。</value></data>
 </root>
