@@ -660,26 +660,26 @@
   <data name="Frontend.218" xml:space="preserve"><value>Plus</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.219" xml:space="preserve"><value>Similarité la plus élevée</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.220" xml:space="preserve"><value>Non vectorisé</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.221" xml:space="preserve"><value>Test records on this page</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.222" xml:space="preserve"><value>View full text</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.223" xml:space="preserve"><value>Retrieval and chunking</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.224" xml:space="preserve"><value>Retrieval method</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.225" xml:space="preserve"><value>Test time</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.226" xml:space="preserve"><value>Test result</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.227" xml:space="preserve"><value>Test question</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.228" xml:space="preserve"><value>Clear selection</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.229" xml:space="preserve"><value>Choose Vectorize and wait for completion; the status changes to Vectorized when successful.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.230" xml:space="preserve"><value>Choose New knowledge base, enter a name, and select an Embedding model, vector database, and chat model.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.231" xml:space="preserve"><value>Use a realistic question to inspect returned material fragments. Similarity scores help with ranking and are not recall percentages.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.232" xml:space="preserve"><value>Leave empty to use this knowledge base's chat model</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.233" xml:space="preserve"><value>Knowledge-base guide</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.234" xml:space="preserve"><value>Knowledge bases</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.235" xml:space="preserve"><value>Manage knowledge-base materials</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.236" xml:space="preserve"><value>The system vectorizes questions and material fragments, then ranks them by semantic similarity. Score ranges vary by model and store, so they are not fixed percentages or recall rates.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.237" xml:space="preserve"><value>If results are poor, return to Configuration, adjust materials, vectorize again, and retest.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.238" xml:space="preserve"><value>Lexical weight</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.239" xml:space="preserve"><value>Lexical hybrid</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.240" xml:space="preserve"><value>Lexical hybrid (no extra model call)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.221" xml:space="preserve"><value>Enregistrements de test de cette page</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.222" xml:space="preserve"><value>Voir le texte complet</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.223" xml:space="preserve"><value>Récupération et segmentation</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.224" xml:space="preserve"><value>Méthode de récupération</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.225" xml:space="preserve"><value>Heure du test</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.226" xml:space="preserve"><value>Résultat du test</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.227" xml:space="preserve"><value>Question du test</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.228" xml:space="preserve"><value>Effacer la sélection</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.229" xml:space="preserve"><value>Choisissez Vectoriser et attendez la fin ; l'état devient Vectorisé en cas de réussite.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.230" xml:space="preserve"><value>Choisissez Nouvelle base de connaissances, saisissez un nom et sélectionnez un modèle Embedding, une base vectorielle et un modèle de chat.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.231" xml:space="preserve"><value>Utilisez une question réaliste pour examiner les fragments de ressources renvoyés. Les scores de similarité aident au classement et ne sont pas des pourcentages de rappel.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.232" xml:space="preserve"><value>Laissez vide pour utiliser le modèle de chat de cette base de connaissances</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.233" xml:space="preserve"><value>Guide de la base de connaissances</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.234" xml:space="preserve"><value>Bases de connaissances</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.235" xml:space="preserve"><value>Gérer les ressources de la base de connaissances</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.236" xml:space="preserve"><value>Le système vectorise les questions et les fragments de ressources, puis les classe par similarité sémantique. Les plages de scores varient selon le modèle et le magasin, et ne correspondent donc pas à des pourcentages fixes ou à des taux de rappel.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.237" xml:space="preserve"><value>Si les résultats sont insuffisants, revenez à Configuration, ajustez les ressources, vectorisez à nouveau et relancez le test.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.238" xml:space="preserve"><value>Poids lexical</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.239" xml:space="preserve"><value>Hybride lexical</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.240" xml:space="preserve"><value>Hybride lexical (sans appel supplémentaire au modèle)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.241" xml:space="preserve"><value>Semantic vector retrieval</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.242" xml:space="preserve"><value>Enter content (optional)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.243" xml:space="preserve"><value>Enter a knowledge-base name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
