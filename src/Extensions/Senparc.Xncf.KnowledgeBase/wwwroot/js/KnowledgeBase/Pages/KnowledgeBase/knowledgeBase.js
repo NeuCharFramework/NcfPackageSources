@@ -93,20 +93,20 @@ var app = new Vue({
                 content: []
             },
             colData: [
-                { title: "Embedding模型Id", istrue: false },
-                { title: "向量数据库Id", istrue: false },
-                { title: "对话模型Id", istrue: false },
-                { title: "名称", istrue: true },
-                { title: "内容", istrue: true },
+                { title: ncfST('Frontend.177'), istrue: false },
+                { title: ncfST('Frontend.198'), istrue: false },
+                { title: ncfST('Frontend.203'), istrue: false },
+                { title: ncfST('Frontend.011'), istrue: true },
+                { title: ncfST('Frontend.090'), istrue: true },
             ],
             checkBoxGroup: [
-                "Embedding模型Id", "向量数据库Id", "对话模型Id", "名称", "内容"
+                ncfST('Frontend.177'), ncfST('Frontend.198'), ncfST('Frontend.203'), ncfST('Frontend.011'), ncfST('Frontend.090')
             ],
             checkedColumns: [],
             contentTypeData: [
-                { value: 1, label: '输入' },
-                { value: 2, label: '文件' },
-                { value: 3, label: '采集外部数据' }
+                { value: 1, label: ncfST('Frontend.090') },
+                { value: 2, label: ncfST('Frontend.255') },
+                { value: 3, label: ncfST('Frontend.254') }
             ],
             keyword: '',
             multipleSelection: '',
@@ -136,7 +136,7 @@ var app = new Vue({
             dialogVisible: false,
             dialog:
             {
-                title: '添加知识库',
+                title: ncfST('Frontend.215'),
                 visible: false,
                 data:
                 {
@@ -155,15 +155,15 @@ var app = new Vue({
                 {
                     name:
                         [
-                            { required: true, message: "请输入知识库名称", trigger: "blur" }
+                            { required: true, message: ncfST('Frontend.243'), trigger: "blur" }
                         ],
                     embeddingModelId:
                         [
-                            { required: true, message: "请选择 Embedding 模型", trigger: "change" }
+                            { required: true, message: ncfST('Frontend.244'), trigger: "change" }
                         ],
                     vectorDBId:
                         [
-                            { required: true, message: "请选择向量数据库", trigger: "change" }
+                            { required: true, message: ncfST('Frontend.245'), trigger: "change" }
                         ]
                 },
                 updateLoading: false,
@@ -244,10 +244,10 @@ var app = new Vue({
                 const ready = this.isKnowledgeBaseReady(item);
                 return {
                     id: item.id,
-                    name: item.name || ('知识库-' + item.id),
+                        name: item.name || (ncfST('Frontend.234') + '-' + item.id),
                     ready: ready,
                     retrievalConfig: item.retrievalConfig || null,
-                    label: (item.name || ('知识库-' + item.id)) + (ready ? '' : '（尚未向量化）')
+                    label: (item.name || (ncfST('Frontend.234') + '-' + item.id)) + (ready ? '' : '（' + ncfST('Frontend.220') + '）')
                 };
             });
         },
@@ -257,20 +257,20 @@ var app = new Vue({
         recallRerankSummary() {
             const kb = this.selectedKnowledgeBase;
             if (!kb) {
-                return '未选择知识库';
+                return ncfST('Frontend.103');
             }
             const cfg = kb.retrievalConfig || {};
             const mode = cfg.rerankMode || 'None';
             if (mode === 'None') {
-                return '重排关闭（仅按向量相似度排序）';
+                return ncfST('Frontend.188');
             }
             const candidates = cfg.rerankCandidateCount || 20;
             if (mode === 'Lexical') {
                 const weight = cfg.lexicalWeight == null ? 0.35 : cfg.lexicalWeight;
-                return '词法混合重排（候选 ' + candidates + ' 个，词法权重 ' + weight + '）';
+                return ncfST('Frontend.240') + ' (' + candidates + ', ' + ncfST('Frontend.238') + ' ' + weight + ')';
             }
             const modelText = cfg.rerankModelId > 0 ? ('指定模型 #' + cfg.rerankModelId) : '使用知识库对话模型';
-            return 'LLM 重排（候选 ' + candidates + ' 个，' + modelText + '）';
+            return ncfST('Frontend.179') + ' (' + candidates + ', ' + modelText + ')';
         },
         recordTotal() {
             return this.recordList.length;
