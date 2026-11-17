@@ -216,39 +216,39 @@
   <data name="Frontend.198" xml:space="preserve"><value>タスクのみ表示し、自動消費しない</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.199" xml:space="preserve"><value>入力プレースホルダー、数式、挿入した変数を使用できます</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.200" xml:space="preserve"><value>右辺値</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.201" xml:space="preserve"><value>{"input":"Human text"}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.202" xml:space="preserve"><value>Name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.203" xml:space="preserve"><value>Next node</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.204" xml:space="preserve"><value>When enabled, connect the node's break port to the current Loop End break input; the other result continues through the true/false branch.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.205" xml:space="preserve"><value>and all formula functions; assignments affect only this run.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.206" xml:space="preserve"><value>Add a node here</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.207" xml:space="preserve"><value>Insert node inline</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.208" xml:space="preserve"><value>Declare the default value here for later restricted formulas</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.209" xml:space="preserve"><value>Copy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.210" xml:space="preserve"><value>Copy URL</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.211" xml:space="preserve"><value>Copy access key</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.212" xml:space="preserve"><value>External resume key</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.213" xml:space="preserve"><value>The external endpoint accepts only this node key. The key is encrypted and never shown when the editor is reopened. Existing waits continue using the key captured when their runs started.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.214" xml:space="preserve"><value>A sub-workflow runs as an independent execution record; the parent receives only its final output. Nesting is limited to 8 levels, and the target must belong to the current user and be enabled.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.215" xml:space="preserve"><value>A Safe Code node always passes through the original input and changes only declared vars. Within one execution wave, Safe Code runs in canvas order before other independent nodes.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.216" xml:space="preserve"><value>Safe Code: variable assignment</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.217" xml:space="preserve"><value>Import</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.218" xml:space="preserve"><value>Export</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.219" xml:space="preserve"><value>No variables have been declared. Add a variable before assigning it in a Safe Code node.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.220" xml:space="preserve"><value>No assignments have been configured. Add at least one.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.221" xml:space="preserve"><value>Snap to nearby grid</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.222" xml:space="preserve"><value>Nearby grid alignment uses limited-distance snapping and overlap prevention; it preserves reading order and avoids lengthening connections.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.223" xml:space="preserve"><value>For nested loops, select the matching loop node so an inner Loop End is not mistaken for the outer loop.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.224" xml:space="preserve"><value>Workflow variables</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.225" xml:space="preserve"><value>Workflow name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.226" xml:space="preserve"><value>Workflow shortcuts</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.227" xml:space="preserve"><value>Workflow settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.228" xml:space="preserve"><value>Left-hand value</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.229" xml:space="preserve"><value>Defined parameters can be read from Query, Form, or the JSON request body; without defined parameters, the entire request becomes workflow input.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.230" xml:space="preserve"><value>Parallel branch</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.231" xml:space="preserve"><value>A Parallel node dispatches the same input to all following branches at once; branches run independently.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.232" xml:space="preserve"><value>Apply</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.233" xml:space="preserve"><value>Starts with</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.201" xml:space="preserve"><value>{"input":"人間テキスト"}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.202" xml:space="preserve"><value>名前</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.203" xml:space="preserve"><value>後続ノード</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.204" xml:space="preserve"><value>有効にすると、ノードのbreakポートを現在の「ループ終了」のbreak入力に接続します。もう一方の結果は真/偽分岐へ進みます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.205" xml:space="preserve"><value>およびすべての数式関数。代入は今回の実行だけに影響します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.206" xml:space="preserve"><value>ここにノードを追加</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.207" xml:space="preserve"><value>接続上にノードを挿入</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.208" xml:space="preserve"><value>ここで既定値を宣言し、後続の制限付き数式で使用</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.209" xml:space="preserve"><value>コピー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.210" xml:space="preserve"><value>URLをコピー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.211" xml:space="preserve"><value>アクセスキーをコピー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.212" xml:space="preserve"><value>外部復旧キー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.213" xml:space="preserve"><value>外部エンドポイントはこのノードキーのみ受け付けます。キーは暗号化保存され、エディターを再度開いても表示されません。キー変更後も、待機中の古いリクエストは実行開始時のキーを使用します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.214" xml:space="preserve"><value>子Workflowは独立した実行記録として動作し、親フローは最終出力だけを受け取ります。最大8階層までネストでき、対象は現在のユーザーに属し、有効である必要があります。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.215" xml:space="preserve"><value>安全コードノードは常に元の入力を透過し、varsで宣言された変数だけを変更します。同じ実行波では、他の独立ノードを開始する前にキャンバス順で安全コードを実行します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.216" xml:space="preserve"><value>安全コード：変数代入</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.217" xml:space="preserve"><value>インポート</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.218" xml:space="preserve"><value>エクスポート</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.219" xml:space="preserve"><value>変数がまだ宣言されていません。安全コードノードで代入する前に変数を追加してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.220" xml:space="preserve"><value>代入がまだ設定されていません。少なくとも1つ追加してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.221" xml:space="preserve"><value>近いグリッドにスナップ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.222" xml:space="preserve"><value>近いグリッドへの整列は、限られた距離の吸着と重なり防止だけを行います。現在の読み順を優先し、接続が長くならないようにします。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.223" xml:space="preserve"><value>ネストしたループでは対応するループノードを選択し、内側の「ループ終了」が外側と誤認されないようにします。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.224" xml:space="preserve"><value>Workflow変数</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.225" xml:space="preserve"><value>Workflow名</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.226" xml:space="preserve"><value>Workflowクイック操作</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.227" xml:space="preserve"><value>Workflow設定</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.228" xml:space="preserve"><value>左辺値</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.229" xml:space="preserve"><value>定義済みパラメーターはQuery、Form、JSONリクエスト本文から読み取れます。パラメーターが未定義の場合、リクエスト全体がWorkflow入力になります。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.230" xml:space="preserve"><value>並列分岐</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.231" xml:space="preserve"><value>並列ノードは同じ入力をすべての後続分岐に同時に分配し、各分岐は独立して実行されます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.232" xml:space="preserve"><value>適用</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.233" xml:space="preserve"><value>前方一致</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.234" xml:space="preserve"><value>No tools are currently exposed to the standalone Agent; tool permissions and approval levels are retained but will not trigger.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.235" xml:space="preserve"><value>This round requires Human input. After submission, the Workflow continues waiting or proceeds downstream.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.236" xml:space="preserve"><value>Controls the hierarchy reading direction for automatic layout; vertical by default</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
