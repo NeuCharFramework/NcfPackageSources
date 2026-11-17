@@ -1225,26 +1225,26 @@
   <data name="Frontend.328" xml:space="preserve"><value>Suzhou Senparc Network Technology Co., Ltd.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.329" xml:space="preserve"><value>Function Calling parameters</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.330" xml:space="preserve"><value>XNCF module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.331" xml:space="preserve"><value>Accept regular input parameters only</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.331" xml:space="preserve"><value>Accepts regular input parameters only</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.332" xml:space="preserve"><value>Open</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.333" xml:space="preserve"><value>Search Workflow name / description / parameters</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.334" xml:space="preserve"><value>No enabled Workflows are available</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.334" xml:space="preserve"><value>No enabled Workflow is available</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.335" xml:space="preserve"><value>Clear selection</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.336" xml:space="preserve"><value>AI quick chat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.337" xml:space="preserve"><value>Admin Chat quick chat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.338" xml:space="preserve"><value>NeuBell reminders</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.339" xml:space="preserve"><value>Only browser logs captured after this page loaded are shown; server stdout is not included.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.338" xml:space="preserve"><value>NeuBell reminder</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.339" xml:space="preserve"><value>Shows only browser logs captured after this page loaded; server stdout is not included.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.340" xml:space="preserve"><value>Close all</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.341" xml:space="preserve"><value>Switch to the full page</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.342" xml:space="preserve"><value>No module currently provides NeuBell information.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.343" xml:space="preserve"><value>No logs yet</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.343" xml:space="preserve"><value>No logs</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.344" xml:space="preserve"><value>Server time</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.345" xml:space="preserve"><value>Browser Console</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.346" xml:space="preserve"><value>Consume</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.347" xml:space="preserve"><value>Consume all</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.348" xml:space="preserve"><value>Clear</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.349" xml:space="preserve"><value>Choose which module reminders appear in the Footer. The setting is saved in this account's browser.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.350" xml:space="preserve"><value>Supports plain text and absolute http/https links using &lt;a&gt; tags; other HTML is encoded.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.349" xml:space="preserve"><value>Choose module reminders to show in the Footer. The setting is saved in this account’s browser.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.350" xml:space="preserve"><value>Supports plain text and &lt;a&gt; tags with absolute http/https links; other HTML is encoded.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.351" xml:space="preserve"><value>1 hour</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.352" xml:space="preserve"><value>24 hours</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.353" xml:space="preserve"><value>7 days</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
