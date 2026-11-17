@@ -1631,26 +1631,26 @@
   <data name="Frontend.458" xml:space="preserve"><value>Gestionar vinculaciones</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.459" xml:space="preserve"><value>Gestionar materiales</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.460" xml:space="preserve"><value>Gestionar A2A remoto</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.461" xml:space="preserve"><value>Manage remote A2A Agents</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.462" xml:space="preserve"><value>Type</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.463" xml:space="preserve"><value>Bind model</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.464" xml:space="preserve"><value>Bind knowledge base</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.465" xml:space="preserve"><value>Knowledge base:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.466" xml:space="preserve"><value>Statistics chart</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.467" xml:space="preserve"><value>Statistics scope</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.468" xml:space="preserve"><value>Inherit HIL level</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.469" xml:space="preserve"><value>Edit settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.470" xml:space="preserve"><value>Automatic execution</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.471" xml:space="preserve"><value>Custom request header</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.472" xml:space="preserve"><value>Let the model call FunctionRender, Workflow, or compatible Plugins as needed.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.473" xml:space="preserve"><value>Settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.474" xml:space="preserve"><value>Request header name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.475" xml:space="preserve"><value>Enter text; the task continues after submission</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.476" xml:space="preserve"><value>Select a Chat model</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.477" xml:space="preserve"><value>Materials</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.478" xml:space="preserve"><value>Follow group task</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.479" xml:space="preserve"><value>When a run reaches a Human turn, the task pauses and the dialog accepts text; after a successful reply, the MAF Workflow continues.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.480" xml:space="preserve"><value>Remote A2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.461" xml:space="preserve"><value>Gestionar Agents A2A remotos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.462" xml:space="preserve"><value>Tipo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.463" xml:space="preserve"><value>Vincular modelo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.464" xml:space="preserve"><value>Vincular base de conocimiento</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.465" xml:space="preserve"><value>Base de conocimiento:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.466" xml:space="preserve"><value>Gráfico de estadísticas</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.467" xml:space="preserve"><value>Ámbito de estadísticas</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.468" xml:space="preserve"><value>Heredar nivel HIL</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.469" xml:space="preserve"><value>Editar configuración</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.470" xml:space="preserve"><value>Ejecución automática</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.471" xml:space="preserve"><value>Encabezado de solicitud personalizado</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.472" xml:space="preserve"><value>Permitir que el modelo llame a FunctionRender, Workflow o plugins compatibles cuando sea necesario.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.473" xml:space="preserve"><value>Configuración</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.474" xml:space="preserve"><value>Nombre del encabezado de solicitud</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.475" xml:space="preserve"><value>Introduce texto; la tarea continúa después de enviarlo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.476" xml:space="preserve"><value>Selecciona un modelo Chat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.477" xml:space="preserve"><value>Materiales</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.478" xml:space="preserve"><value>Seguir la tarea del grupo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.479" xml:space="preserve"><value>Cuando una ejecución llega a un turno Human, la tarea se pausa y el diálogo acepta texto; después de una respuesta correcta, el Workflow MAF continúa.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.480" xml:space="preserve"><value>A2A remoto</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.481" xml:space="preserve"><value>Remote A2A members</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.482" xml:space="preserve"><value>Remote A2A Agents</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.483" xml:space="preserve"><value>Remote members receive only task instructions and the current turn's text conclusion by default; tool calls, raw model content, and full history are not shared.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
