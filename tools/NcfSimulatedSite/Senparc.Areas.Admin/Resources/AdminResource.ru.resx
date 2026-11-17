@@ -1479,9 +1479,9 @@
 
   <data name="Frontend.557" xml:space="preserve"><value>Запишите причину изменения политики для последующего аудита</value></data>
 
-  <data name="Frontend.558" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Frontend.558" xml:space="preserve"><value>Отмена</value></data>
 
-  <data name="Frontend.559" xml:space="preserve"><value>Save policy</value></data>
+  <data name="Frontend.559" xml:space="preserve"><value>Сохранить политику</value></data>
 
   <data name="Frontend.560" xml:space="preserve"><value>Пакетная настройка ограничений</value></data>
 

@@ -1479,9 +1479,9 @@
 
   <data name="Frontend.557" xml:space="preserve"><value>後の監査のため、このポリシー変更の理由を記録します</value></data>
 
-  <data name="Frontend.558" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Frontend.558" xml:space="preserve"><value>キャンセル</value></data>
 
-  <data name="Frontend.559" xml:space="preserve"><value>Save policy</value></data>
+  <data name="Frontend.559" xml:space="preserve"><value>ポリシーを保存</value></data>
 
   <data name="Frontend.560" xml:space="preserve"><value>一括制限設定</value></data>
 

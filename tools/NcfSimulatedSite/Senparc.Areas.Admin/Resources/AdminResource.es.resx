@@ -1479,9 +1479,9 @@
 
   <data name="Frontend.557" xml:space="preserve"><value>Registra el motivo de este cambio de política para auditorías posteriores</value></data>
 
-  <data name="Frontend.558" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Frontend.558" xml:space="preserve"><value>Cancelar</value></data>
 
-  <data name="Frontend.559" xml:space="preserve"><value>Save policy</value></data>
+  <data name="Frontend.559" xml:space="preserve"><value>Guardar política</value></data>
 
   <data name="Frontend.560" xml:space="preserve"><value>Configuración restringida masiva</value></data>
 

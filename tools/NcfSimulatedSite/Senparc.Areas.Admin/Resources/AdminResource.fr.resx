@@ -1479,9 +1479,9 @@
 
   <data name="Frontend.557" xml:space="preserve"><value>Enregistrez la raison de cette modification pour faciliter les audits ultérieurs</value></data>
 
-  <data name="Frontend.558" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Frontend.558" xml:space="preserve"><value>Annuler</value></data>
 
-  <data name="Frontend.559" xml:space="preserve"><value>Save policy</value></data>
+  <data name="Frontend.559" xml:space="preserve"><value>Enregistrer la stratégie</value></data>
 
   <data name="Frontend.560" xml:space="preserve"><value>Paramètres restreints groupés</value></data>
 
