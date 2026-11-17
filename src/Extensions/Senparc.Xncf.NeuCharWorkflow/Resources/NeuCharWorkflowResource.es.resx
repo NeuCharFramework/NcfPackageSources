@@ -116,54 +116,54 @@
   <data name="Frontend.098" xml:space="preserve"><value>Haz clic en un paso a la izquierda o usa los controles de reproducción para restaurar paso a paso los estados de ejecución de los nodos.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.099" xml:space="preserve"><value>Parámetro {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.100" xml:space="preserve"><value>Falta el nombre de campo en los metadatos de parámetros de Function; solo se pueden guardar borradores hasta corregir o actualizar el módulo.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.101" xml:space="preserve"><value>{0} seconds</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.102" xml:space="preserve"><value>{0} minutes {1} seconds</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.103" xml:space="preserve"><value>Failed to load Workflow analytics.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.104" xml:space="preserve"><value>Failed to load the Workflow task list.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.105" xml:space="preserve"><value>Failed to refresh the Workflow task list.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.106" xml:space="preserve"><value>Failed to load more Workflow tasks.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.107" xml:space="preserve"><value>Loading run records…</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.108" xml:space="preserve"><value>Before the run</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.109" xml:space="preserve"><value>Step {0} / {1}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.110" xml:space="preserve"><value>The task identifier required for replay is missing.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.111" xml:space="preserve"><value>Replay data was not found.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.112" xml:space="preserve"><value>Unable to load the task replay. Running tasks must finish first; older tasks may not have a saved snapshot.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.113" xml:space="preserve"><value>Unable to create a workflow draft from this replay.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.114" xml:space="preserve"><value>Failed to copy the workflow.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.115" xml:space="preserve"><value>Wait</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.116" xml:space="preserve"><value>Condition</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.117" xml:space="preserve"><value>Agent group</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.118" xml:space="preserve"><value>Aggregate</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.119" xml:space="preserve"><value>Send NeuBell</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.120" xml:space="preserve"><value>Status update</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.121" xml:space="preserve"><value>Previous step</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.122" xml:space="preserve"><value>Next step</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.123" xml:space="preserve"><value>Beginning</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.124" xml:space="preserve"><value>End</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.125" xml:space="preserve"><value>Copy current workflow and edit</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.126" xml:space="preserve"><value>View latest workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.127" xml:space="preserve"><value>Succeeded</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.128" xml:space="preserve"><value>Failed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.129" xml:space="preserve"><value>Agent tools</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.130" xml:space="preserve"><value>The Agent or A2A connection does not exist, its module is disabled, or it was removed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.131" xml:space="preserve"><value>The Agent requested a tool call. Confirm whether to allow this call.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.132" xml:space="preserve"><value>Chat trigger</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.133" xml:space="preserve"><value>Chat trigger settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.134" xml:space="preserve"><value>Console output</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.135" xml:space="preserve"><value>Function parameter metadata could not be read. Check the module log.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.136" xml:space="preserve"><value>HIL level</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.137" xml:space="preserve"><value>Human participant</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.138" xml:space="preserve"><value>JSON file</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.139" xml:space="preserve"><value>YAML file</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.140" xml:space="preserve"><value>L0 fully automatic</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.141" xml:space="preserve"><value>L1 risk-based approval (MCP default approval)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.142" xml:space="preserve"><value>L2 approval before every tool call</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.143" xml:space="preserve"><value>L3 Human participant + tool approval</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.144" xml:space="preserve"><value>MCP tool permissions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.145" xml:space="preserve"><value>Webhook usage guide</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.146" xml:space="preserve"><value>Webhook trigger settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.147" xml:space="preserve"><value>Workflow waiting for Human</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.148" xml:space="preserve"><value>break successor node</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.101" xml:space="preserve"><value>{0} s</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.102" xml:space="preserve"><value>{0} min {1} s</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.103" xml:space="preserve"><value>No se pudieron cargar las estadísticas de Workflow.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.104" xml:space="preserve"><value>No se pudo cargar la lista de tareas de Workflow.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.105" xml:space="preserve"><value>No se pudo actualizar la lista de tareas de Workflow.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.106" xml:space="preserve"><value>No se pudieron cargar más tareas de Workflow.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.107" xml:space="preserve"><value>Leyendo registros de ejecución…</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.108" xml:space="preserve"><value>Antes del inicio</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.109" xml:space="preserve"><value>Paso {0} / {1}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.110" xml:space="preserve"><value>Falta el identificador de tarea necesario para la revisión.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.111" xml:space="preserve"><value>No se encontraron datos de revisión de la tarea.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.112" xml:space="preserve"><value>No se puede leer la revisión de la tarea. Las tareas en ejecución deben terminar; las tareas antiguas quizá no guardaron una instantánea.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.113" xml:space="preserve"><value>No se puede crear un borrador de Workflow desde la revisión actual.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.114" xml:space="preserve"><value>No se pudo copiar el Workflow.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.115" xml:space="preserve"><value>Esperando</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.116" xml:space="preserve"><value>Condición</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.117" xml:space="preserve"><value>Grupo de Agents</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.118" xml:space="preserve"><value>Agregación</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.119" xml:space="preserve"><value>Enviar NeuBell</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.120" xml:space="preserve"><value>Actualización de estado</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.121" xml:space="preserve"><value>Paso anterior</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.122" xml:space="preserve"><value>Paso siguiente</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.123" xml:space="preserve"><value>Inicio</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.124" xml:space="preserve"><value>Final</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.125" xml:space="preserve"><value>Copiar y editar el Workflow actual</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.126" xml:space="preserve"><value>Ver el Workflow más reciente</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.127" xml:space="preserve"><value>Correcto</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.128" xml:space="preserve"><value>Fallido</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.129" xml:space="preserve"><value>Herramienta de Agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.130" xml:space="preserve"><value>El Agent o la conexión A2A no existe, su módulo está desactivado o fue eliminado</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.131" xml:space="preserve"><value>El Agent solicita ejecutar una herramienta; confirma si se permite esta llamada.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.132" xml:space="preserve"><value>Activador de Chat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.133" xml:space="preserve"><value>Configuración del activador de Chat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.134" xml:space="preserve"><value>Contenido de salida de Console</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.135" xml:space="preserve"><value>Error al leer los metadatos de parámetros de Function; comprueba el registro del módulo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.136" xml:space="preserve"><value>Nivel HIL</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.137" xml:space="preserve"><value>Participante humano</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.138" xml:space="preserve"><value>Archivo JSON</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.139" xml:space="preserve"><value>Archivo YAML</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.140" xml:space="preserve"><value>L0 totalmente automático</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.141" xml:space="preserve"><value>Aprobación basada en riesgos L1 (aprobación MCP predeterminada)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.142" xml:space="preserve"><value>Aprobación L2 antes de cada llamada de herramienta</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.143" xml:space="preserve"><value>Participante humano L3 + aprobación de herramientas</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.144" xml:space="preserve"><value>Permisos de herramientas MCP</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.145" xml:space="preserve"><value>Notas de uso de Webhook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.146" xml:space="preserve"><value>Configuración del activador Webhook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.147" xml:space="preserve"><value>Workflow esperando a un humano</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.148" xml:space="preserve"><value>Nodos posteriores a break</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.149" xml:space="preserve"><value>Do not enable break</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.150" xml:space="preserve"><value>Not equal</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.151" xml:space="preserve"><value>Any method (GET/POST and others)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
