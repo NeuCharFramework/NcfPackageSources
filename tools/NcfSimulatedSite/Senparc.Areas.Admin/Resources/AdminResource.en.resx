@@ -1144,34 +1144,34 @@
   <data name="Frontend.247" xml:space="preserve"><value>Bulk restricted</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.248" xml:space="preserve"><value>Bulk restricted settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.249" xml:space="preserve"><value>Bulk open</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.250" xml:space="preserve"><value>Batch restore Inherit</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.251" xml:space="preserve"><value>Batch clear</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.252" xml:space="preserve"><value>Batch disable</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.250" xml:space="preserve"><value>Bulk restore inheritance</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.251" xml:space="preserve"><value>Bulk clear</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.252" xml:space="preserve"><value>Bulk disable</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.253" xml:space="preserve"><value>Search module / Function</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.254" xml:space="preserve"><value>Database policy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.255" xml:space="preserve"><value>Not set (using code baseline)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.255" xml:space="preserve"><value>Not set (code baseline)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.256" xml:space="preserve"><value>Module unavailable</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.257" xml:space="preserve"><value>Module cleared</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.258" xml:space="preserve"><value>The module is cleared, so its code baseline cannot be read; the database policy is authoritative.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.258" xml:space="preserve"><value>Module cleared; the code baseline cannot be read, so the database record is authoritative.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.259" xml:space="preserve"><value>Mode</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.260" xml:space="preserve"><value>Clear</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.261" xml:space="preserve"><value>Effective policy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.262" xml:space="preserve"><value>Target information</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.263" xml:space="preserve"><value>Deny</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.264" xml:space="preserve"><value>The policy remains as an orphan after saving and becomes effective automatically when the module is reinstalled.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.263" xml:space="preserve"><value>Disabled</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.264" xml:space="preserve"><value>Retained as redundant after saving; takes effect automatically after module reinstall</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.265" xml:space="preserve"><value>Policy mode</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.266" xml:space="preserve"><value>Inherit code</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.267" xml:space="preserve"><value>Record why this policy changed for later auditing</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.267" xml:space="preserve"><value>Record the reason for this policy change for later auditing</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.268" xml:space="preserve"><value>Settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.269" xml:space="preserve"><value>Configure global Provit access policy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.270" xml:space="preserve"><value>Access control</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.271" xml:space="preserve"><value>Enter a permission resource code</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.272" xml:space="preserve"><value>Enter a permission resource code, such as sandbox.execute; any match allows access.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.273" xml:space="preserve"><value>Select administrator users</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.274" xml:space="preserve"><value>Select administrator users; any match allows access.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.271" xml:space="preserve"><value>Enter permission resource codes</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.272" xml:space="preserve"><value>Enter permission resource codes (for example sandbox.execute; any match grants access)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.273" xml:space="preserve"><value>Select admin users</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.274" xml:space="preserve"><value>Select admin users (any match grants access)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.275" xml:space="preserve"><value>Select or enter role codes</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.276" xml:space="preserve"><value>Select or enter role codes; any match allows access.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.277" xml:space="preserve"><value>(none)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.276" xml:space="preserve"><value>Select or enter role codes (any match grants access)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.277" xml:space="preserve"><value>(None)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.278" xml:space="preserve"><value>Edit with Chat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.279" xml:space="preserve"><value>ChatAgent · Current XNCF module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.280" xml:space="preserve"><value>ChatAgent summarizes all Functions into a declarative quick-action panel. It never executes AI-generated scripts or arbitrary internal methods.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
