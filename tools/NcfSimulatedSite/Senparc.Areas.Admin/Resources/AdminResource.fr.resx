@@ -1042,37 +1042,37 @@
   <data name="Frontend.147" xml:space="preserve"><value>Duration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.148" xml:space="preserve"><value>Request body template</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.149" xml:space="preserve"><value>Request method</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.150" xml:space="preserve"><value>Request logs</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.151" xml:space="preserve"><value>No WebHooks yet</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.152" xml:space="preserve"><value>Notification time (ISO 8601) ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.153" xml:space="preserve"><value>Configured requests include X-NeuBell-Signature (HMAC-SHA256)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.154" xml:space="preserve"><value> (same format as Workflow text templates,</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.155" xml:space="preserve"><value>NeuCharPivot panels</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.156" xml:space="preserve"><value>Provit Block list (drag to reorder)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.157" xml:space="preserve"><value>admin-home (Admin home)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.158" xml:space="preserve"><value>One-line description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.159" xml:space="preserve"><value>Theme color</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.160" xml:space="preserve"><value>For example: Admin home operations panel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.161" xml:space="preserve"><value>Columns</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.162" xml:space="preserve"><value>Create panel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.163" xml:space="preserve"><value>Send</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.164" xml:space="preserve"><value>Block title</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.165" xml:space="preserve"><value>Bind a Provit Panel to a page such as admin-home, combine Provit Blocks from any XNCF module, and create or edit it with AI Chat.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.166" xml:space="preserve"><value>Disabled</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.167" xml:space="preserve"><value>References were prefilled from missing blocks on the home page</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.168" xml:space="preserve"><value>Search panel name or page key</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.169" xml:space="preserve"><value>No blocks yet. Choose Add block to select a Pivot Function from any XNCF module.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.170" xml:space="preserve"><value>Module UID:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.150" xml:space="preserve"><value>Journaux des requêtes</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.151" xml:space="preserve"><value>Aucun WebHook pour le moment</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.152" xml:space="preserve"><value>Heure de notification (ISO 8601) ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.153" xml:space="preserve"><value>Les requêtes configurées incluent X-NeuBell-Signature (HMAC-SHA256)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.154" xml:space="preserve"><value>(même format que les modèles de texte Workflow,</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.155" xml:space="preserve"><value>Panneau NeuCharPivot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.156" xml:space="preserve"><value>Liste des Provit Block (faites glisser pour réordonner)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.157" xml:space="preserve"><value>admin-home (accueil Admin)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.158" xml:space="preserve"><value>Description en une ligne</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.159" xml:space="preserve"><value>Couleur du thème</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.160" xml:space="preserve"><value>Par exemple : panneau d’opérations de l’accueil Admin</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.161" xml:space="preserve"><value>Nombre de colonnes</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.162" xml:space="preserve"><value>Créer un panneau</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.163" xml:space="preserve"><value>Envoyer</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.164" xml:space="preserve"><value>Titre du bloc</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.165" xml:space="preserve"><value>Liez un panneau (Provit Panel) à une page comme admin-home, combinez des Provit Block de n’importe quel module XNCF et permettez leur création ou modification via AI Chat.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.166" xml:space="preserve"><value>Désactivé</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.167" xml:space="preserve"><value>Références préremplies à partir des blocs manquants de la page d’accueil</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.168" xml:space="preserve"><value>Rechercher un nom de panneau ou un identifiant de page</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.169" xml:space="preserve"><value>Aucun bloc pour le moment. Cliquez sur « Ajouter un bloc » pour choisir une Pivot Function d’un module XNCF.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.170" xml:space="preserve"><value>UID du module :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.171" xml:space="preserve"><value>Orange</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.172" xml:space="preserve"><value>Add Provit Block</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.173" xml:space="preserve"><value>Add block</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.174" xml:space="preserve"><value>Gray</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.175" xml:space="preserve"><value>Choose Create panel in the upper right to bind the panel to a page such as admin-home.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.176" xml:space="preserve"><value>Tell AI what you need in one sentence, for example: add host monitoring and a todo block, then use three columns</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.177" xml:space="preserve"><value>Purple</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.178" xml:space="preserve"><value>Green</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.179" xml:space="preserve"><value>Blue</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.180" xml:space="preserve"><value>No panels yet</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.172" xml:space="preserve"><value>Ajouter un Provit Block</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.173" xml:space="preserve"><value>Ajouter un bloc</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.174" xml:space="preserve"><value>Gris</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.175" xml:space="preserve"><value>Cliquez sur « Créer un panneau » en haut à droite pour lier le panneau à une page comme admin-home.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.176" xml:space="preserve"><value>Décrivez votre besoin à l’IA en une phrase, par exemple : ajouter la surveillance de l’hôte et les tâches en trois colonnes</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.177" xml:space="preserve"><value>Violet</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.178" xml:space="preserve"><value>Vert</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.179" xml:space="preserve"><value>Bleu</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.180" xml:space="preserve"><value>Aucun panneau pour le moment</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.181" xml:space="preserve"><value>Select Function</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.182" xml:space="preserve"><value>Select a Pivot Function from any XNCF module as a block for this panel.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.183" xml:space="preserve"><value>Select module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
