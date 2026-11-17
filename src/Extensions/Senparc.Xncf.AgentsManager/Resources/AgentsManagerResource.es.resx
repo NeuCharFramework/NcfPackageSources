@@ -460,16 +460,16 @@
     <value>Manual</value>
   </data>
   <data name="Frontend.102" xml:space="preserve">
-    <value>Seleccione</value>
+    <value>Seleccionar</value>
   </data>
   <data name="Frontend.103" xml:space="preserve">
     <value>Entrada manual</value>
   </data>
   <data name="Frontend.104" xml:space="preserve">
-    <value>Habilitado</value>
+    <value>Activado</value>
   </data>
   <data name="Frontend.105" xml:space="preserve">
-    <value>Habilitar agente</value>
+    <value>Activar Agent</value>
   </data>
   <data name="Frontend.106" xml:space="preserve">
     <value>Plataforma externa</value>
@@ -478,22 +478,22 @@
     <value>Parámetros de plataforma externa</value>
   </data>
   <data name="Frontend.108" xml:space="preserve">
-    <value>Adjuntar automáticamente todos los complementos de funciones XNCF</value>
+    <value>Adjuntar automáticamente todos los plugins de funciones XNCF</value>
   </data>
   <data name="Frontend.109" xml:space="preserve">
     <value>Selección manual</value>
   </data>
   <data name="Frontend.110" xml:space="preserve">
-    <value>Si está activado, se adjuntan automáticamente todos los complementos de funciones XNCF registrados, para que el Agente reconozca y active las funciones del Módulo correspondiente</value>
+    <value>Al activarlo, se adjuntan automáticamente todos los plugins de funciones XNCF registrados para que el Agent reconozca y active las funciones del módulo correspondiente</value>
   </data>
   <data name="Frontend.111" xml:space="preserve">
-    <value>Puede introducir el nombre de clase del Plugin, o el nombre completo con espacio de nombres</value>
+    <value>Puedes introducir el nombre de la clase Plugin o el nombre completo con espacio de nombres</value>
   </data>
   <data name="Frontend.112" xml:space="preserve">
-    <value>+ Agregar</value>
+    <value>+ Añadir</value>
   </data>
   <data name="Frontend.113" xml:space="preserve">
-    <value>Tipos de complemento disponibles:</value>
+    <value>Tipos de plugins disponibles:</value>
   </data>
   <data name="Frontend.114" xml:space="preserve">
     <value>Conectado correctamente</value>
@@ -508,13 +508,13 @@
     <value>Probar conexión</value>
   </data>
   <data name="Frontend.118" xml:space="preserve">
-    <value>+ Agregar MCP Endpoint</value>
+    <value>+ Añadir endpoint MCP</value>
   </data>
   <data name="Frontend.119" xml:space="preserve">
-    <value>Editar MCP Endpoint</value>
+    <value>Editar endpoint MCP</value>
   </data>
   <data name="Frontend.120" xml:space="preserve">
-    <value>Agregar MCP Endpoint</value>
+    <value>Añadir endpoint MCP</value>
   </data>
   <data name="Frontend.121" xml:space="preserve">
     <value>Nombre del Endpoint (por ejemplo: mcp-server-NCF-7)</value>
