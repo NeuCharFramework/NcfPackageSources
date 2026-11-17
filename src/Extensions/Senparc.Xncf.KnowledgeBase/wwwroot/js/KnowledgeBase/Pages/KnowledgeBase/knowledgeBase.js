@@ -198,16 +198,16 @@ var app = new Vue({
             },
             groupFormRules: {
                 name: [
-                    { required: true, message: '请填写', trigger: 'blur' },
+                    { required: true, message: ncfST('Frontend.162'), trigger: 'blur' },
                 ],
                 members: [
-                    { required: true, message: '请填写', trigger: 'change' },
+                    { required: true, message: ncfST('Frontend.162'), trigger: 'change' },
                 ],
                 adminAgentTemplateId: [
-                    { required: true, message: '请填写', trigger: 'change' },
+                    { required: true, message: ncfST('Frontend.162'), trigger: 'change' },
                 ],
                 enterAgentTemplateId: [
-                    { required: true, message: '请选择', trigger: 'change' },
+                    { required: true, message: ncfST('Frontend.138'), trigger: 'change' },
                 ],
                 // description: [
                 //     { required: true, message: 'please enter a value', trigger: 'blur' },
@@ -269,7 +269,7 @@ var app = new Vue({
                 const weight = cfg.lexicalWeight == null ? 0.35 : cfg.lexicalWeight;
                 return ncfST('Frontend.240') + ' (' + candidates + ', ' + ncfST('Frontend.238') + ' ' + weight + ')';
             }
-            const modelText = cfg.rerankModelId > 0 ? ('指定模型 #' + cfg.rerankModelId) : '使用知识库对话模型';
+            const modelText = cfg.rerankModelId > 0 ? ('#' + cfg.rerankModelId) : ncfST('Frontend.232');
             return ncfST('Frontend.179') + ' (' + candidates + ', ' + modelText + ')';
         },
         recordTotal() {
