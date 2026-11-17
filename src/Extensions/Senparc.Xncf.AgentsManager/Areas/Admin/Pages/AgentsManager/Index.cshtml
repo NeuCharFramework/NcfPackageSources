@@ -2184,19 +2184,19 @@
                         <div v-else class="groupStartMentions__empty">当前群组没有可提及的组员。</div>
                     </div>
                 </el-form-item>
-                <el-form-item label="本次连接器">
+                <el-form-item :label="ncfST('Frontend.441')">
                     <el-switch v-model="groupStartForm.limitConnectors"
-                               active-text="只使用选中的连接器"
-                               inactive-text="使用各 Agent 已授权的连接器"></el-switch>
+                               :active-text="ncfST('Frontend.521')"
+                               :inactive-text="ncfST('Frontend.520')"></el-switch>
                     <div v-if="groupStartForm.limitConnectors" style="margin-top:10px;">
                         <el-select v-model="groupStartForm.connectorInstanceIds" multiple filterable clearable
-                                   style="width:100%" placeholder="不选则本次不使用连接器"
+                                   style="width:100%" :placeholder="ncfST('Frontend.353')"
                                    :loading="connectorOptionsLoading">
                             <el-option v-for="item in connectorOptions" :key="item.instanceId"
                                        :label="item.name + ' · ' + item.connectorName" :value="item.instanceId"></el-option>
                         </el-select>
                     </div>
-                    <div class="form-help-text">Agent 模板没有授权的连接器，即使在这里选中也不会被调用。</div>
+                    <div class="form-help-text">{{ ncfST('Frontend.339') }}</div>
                 </el-form-item>
                 <el-form-item label="任务描述" prop="promptCommand">
                     <el-input ref="groupStartPromptCommand" type="textarea" v-model="groupStartForm.promptCommand" :rows="8"
