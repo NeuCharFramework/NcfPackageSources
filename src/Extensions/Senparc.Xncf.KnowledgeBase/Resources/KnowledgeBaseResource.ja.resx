@@ -630,36 +630,36 @@
   <data name="Frontend.188" xml:space="preserve"><value>オフ（既定）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.189" xml:space="preserve"><value>左側の検索テストを開き、このナレッジベースを選択して現実的な質問を入力し、ソースと類似度を確認してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.190" xml:space="preserve"><value>チャンクサイズ / オーバーラップ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.191" xml:space="preserve"><value>Chunking strategy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.192" xml:space="preserve"><value>Refresh</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.193" xml:space="preserve"><value>Run a test</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.194" xml:space="preserve"><value>Clear selection</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.195" xml:space="preserve"><value>Retrieved fragment details</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.196" xml:space="preserve"><value>Available materials</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.197" xml:space="preserve"><value>Vectorization status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.198" xml:space="preserve"><value>Vector database</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.199" xml:space="preserve"><value>Fixed length (default)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.200" xml:space="preserve"><value>Choose Configuration in the list to associate text or upload/select material files, then confirm the association.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.201" xml:space="preserve"><value>Characters · overlap</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.202" xml:space="preserve"><value>Done</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.203" xml:space="preserve"><value>Chat model</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.204" xml:space="preserve"><value>Enter a complete question a real user might ask instead of a single keyword.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.205" xml:space="preserve"><value>Vectorized</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.206" xml:space="preserve"><value>Selected materials:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.207" xml:space="preserve"><value>Start test</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.208" xml:space="preserve"><value>No persistent vector store is available. Configure Redis or Qdrant in AIKernel first; Memory cannot be used for knowledge bases.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.209" xml:space="preserve"><value>Open source</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.210" xml:space="preserve"><value>Search by file name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.211" xml:space="preserve"><value>By paragraph</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.212" xml:space="preserve"><value>Tip: changing material associations invalidates built vectors; be sure to vectorize again.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.213" xml:space="preserve"><value>Search and select a vectorized knowledge base</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.214" xml:space="preserve"><value>Search knowledge-base name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.215" xml:space="preserve"><value>New knowledge base</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.216" xml:space="preserve"><value>Getting started: create a knowledge base and configure Embedding and a vector store → associate materials in Configuration → choose Vectorize → verify results in Recall Test.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.217" xml:space="preserve"><value>No knowledge bases yet</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.218" xml:space="preserve"><value>More</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.219" xml:space="preserve"><value>Highest similarity</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.220" xml:space="preserve"><value>Not vectorized</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.191" xml:space="preserve"><value>チャンク分割戦略</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.192" xml:space="preserve"><value>再読み込み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.193" xml:space="preserve"><value>テストを実行</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.194" xml:space="preserve"><value>選択をクリア</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.195" xml:space="preserve"><value>取得したフラグメントの詳細</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.196" xml:space="preserve"><value>利用可能な資料</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.197" xml:space="preserve"><value>ベクトル化の状態</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.198" xml:space="preserve"><value>ベクトルデータベース</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.199" xml:space="preserve"><value>固定長（既定）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.200" xml:space="preserve"><value>リストの「構成」を選択してテキストを関連付けるか、資料ファイルをアップロード/選択し、関連付けを確認します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.201" xml:space="preserve"><value>文字数 · オーバーラップ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.202" xml:space="preserve"><value>完了</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.203" xml:space="preserve"><value>チャットモデル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.204" xml:space="preserve"><value>単一のキーワードではなく、実際のユーザーが尋ねそうな完全な質問を入力してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.205" xml:space="preserve"><value>ベクトル化済み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.206" xml:space="preserve"><value>選択した資料：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.207" xml:space="preserve"><value>テストを開始</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.208" xml:space="preserve"><value>永続ベクトルストアが利用できません。まずAIKernelでRedisまたはQdrantを構成してください。ナレッジベースではMemoryを使用できません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.209" xml:space="preserve"><value>オープンソース</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.210" xml:space="preserve"><value>ファイル名で検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.211" xml:space="preserve"><value>段落単位</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.212" xml:space="preserve"><value>ヒント：資料の関連付けを変更すると構築済みのベクトルが無効になります。必ず再度ベクトル化してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.213" xml:space="preserve"><value>ベクトル化済みのナレッジベースを検索して選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.214" xml:space="preserve"><value>ナレッジベース名を検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.215" xml:space="preserve"><value>新しいナレッジベース</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.216" xml:space="preserve"><value>開始するには：ナレッジベースを作成し、埋め込みとベクトルストアを構成 → 構成で資料を関連付け → ベクトル化を選択 → 検索テストで結果を確認します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.217" xml:space="preserve"><value>ナレッジベースはまだありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.218" xml:space="preserve"><value>その他</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.219" xml:space="preserve"><value>最高類似度</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.220" xml:space="preserve"><value>未ベクトル化</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.221" xml:space="preserve"><value>このページのテスト記録</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.222" xml:space="preserve"><value>全文を表示</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.223" xml:space="preserve"><value>検索とチャンク分割</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
