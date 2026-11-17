@@ -330,53 +330,53 @@
   <data name="Frontend.098" xml:space="preserve"><value>オンラインプレビュー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.099" xml:space="preserve"><value>URLをコピー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.100" xml:space="preserve"><value>インポート</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.101" xml:space="preserve"><value>Export</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.102" xml:space="preserve"><value>Show current space used by the enterprise document library</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.103" xml:space="preserve"><value>Use Enterprise Documents on the left to manage knowledge-base materials; site static resources can be switched with the scope parameter in the address bar.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.104" xml:space="preserve"><value>Used space</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.105" xml:space="preserve"><value>Start date</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.106" xml:space="preserve"><value>Fine-tuning artifacts</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.107" xml:space="preserve"><value>Quick Access</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.108" xml:space="preserve"><value>Restore defaults</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.109" xml:space="preserve"><value>Got it</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.110" xml:space="preserve"><value>Category</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.111" xml:space="preserve"><value>Capacity share by file type</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.112" xml:space="preserve"><value>File-count share by file type</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.113" xml:space="preserve"><value>Sort</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.114" xml:space="preserve"><value>Search</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.115" xml:space="preserve"><value>Search files/folders</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.116" xml:space="preserve"><value>Search tag names</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.117" xml:space="preserve"><value>Search directories</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.118" xml:space="preserve"><value>Use one extension per line or separate extensions with commas. A leading dot is recommended, such as .docx. Leave empty for no allow-list restriction; the filter below still applies.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.119" xml:space="preserve"><value>Favorite</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.120" xml:space="preserve"><value>Data dashboard</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.121" xml:space="preserve"><value>File count statistics</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.122" xml:space="preserve"><value>File name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.123" xml:space="preserve"><value>File size statistics</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.124" xml:space="preserve"><value>File library capacity</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.125" xml:space="preserve"><value>Clearing files will permanently delete them and cannot be undone. Continue?</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.126" xml:space="preserve"><value>File resource management</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.127" xml:space="preserve"><value>File resource management guide</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.128" xml:space="preserve"><value>Add category</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.129" xml:space="preserve"><value>Add tag</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.130" xml:space="preserve"><value>No tags are available. Add a tag in Tag Management on the left first.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.131" xml:space="preserve"><value>No previewable content</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.132" xml:space="preserve"><value>No data</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.133" xml:space="preserve"><value>No documents</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.134" xml:space="preserve"><value>More</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.135" xml:space="preserve"><value>Updated at</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.136" xml:space="preserve"><value>Updated by</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.137" xml:space="preserve"><value>Last updated by</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.138" xml:space="preserve"><value>Last updated at</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.139" xml:space="preserve"><value>Last accessed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.140" xml:space="preserve"><value>Tag name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.141" xml:space="preserve"><value>Tag description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.142" xml:space="preserve"><value>Tag count</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.143" xml:space="preserve"><value>Tag Management</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.144" xml:space="preserve"><value>One extension per line, for example: .docx
+  <data name="Frontend.101" xml:space="preserve"><value>エクスポート</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.102" xml:space="preserve"><value>企業文書ライブラリの現在の使用容量を表示</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.103" xml:space="preserve"><value>左側の企業文書でナレッジベース資料を管理します。サイトの静的リソースはアドレスバーのscopeパラメーターで切り替えられます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.104" xml:space="preserve"><value>使用済み容量</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.105" xml:space="preserve"><value>開始日</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.106" xml:space="preserve"><value>ファインチューニング成果物</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.107" xml:space="preserve"><value>クイックアクセス</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.108" xml:space="preserve"><value>既定値に戻す</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.109" xml:space="preserve"><value>了解</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.110" xml:space="preserve"><value>カテゴリー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.111" xml:space="preserve"><value>ファイルタイプ別の容量比率</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.112" xml:space="preserve"><value>ファイルタイプ別のファイル数比率</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.113" xml:space="preserve"><value>並べ替え</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.114" xml:space="preserve"><value>検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.115" xml:space="preserve"><value>ファイル/フォルダーを検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.116" xml:space="preserve"><value>タグ名を検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.117" xml:space="preserve"><value>ディレクトリを検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.118" xml:space="preserve"><value>1行に1つの拡張子を入力するか、カンマで区切ってください。.docxのように先頭のドットを推奨します。空欄にすると許可リストの制限はなくなりますが、下のフィルターは適用されます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.119" xml:space="preserve"><value>お気に入り</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.120" xml:space="preserve"><value>データダッシュボード</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.121" xml:space="preserve"><value>ファイル数の統計</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.122" xml:space="preserve"><value>ファイル名</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.123" xml:space="preserve"><value>ファイルサイズの統計</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.124" xml:space="preserve"><value>ファイルライブラリの容量</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.125" xml:space="preserve"><value>ファイルをクリアすると完全に削除され、元に戻せません。続行しますか？</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.126" xml:space="preserve"><value>ファイルリソース管理</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.127" xml:space="preserve"><value>ファイルリソース管理ガイド</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.128" xml:space="preserve"><value>カテゴリーを追加</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.129" xml:space="preserve"><value>タグを追加</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.130" xml:space="preserve"><value>利用可能なタグがありません。まず左側のタグ管理でタグを追加してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.131" xml:space="preserve"><value>プレビュー可能なコンテンツがありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.132" xml:space="preserve"><value>データなし</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.133" xml:space="preserve"><value>ドキュメントなし</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.134" xml:space="preserve"><value>その他</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.135" xml:space="preserve"><value>更新日時</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.136" xml:space="preserve"><value>更新者</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.137" xml:space="preserve"><value>最終更新者</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.138" xml:space="preserve"><value>最終更新日時</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.139" xml:space="preserve"><value>最終アクセス</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.140" xml:space="preserve"><value>タグ名</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.141" xml:space="preserve"><value>タグの説明</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.142" xml:space="preserve"><value>タグ数</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.143" xml:space="preserve"><value>タグ管理</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.144" xml:space="preserve"><value>1行に1つの拡張子。例：.docx
 .xlsx
 .pdf</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.145" xml:space="preserve"><value>One extension per line, for example: .exe
+  <data name="Frontend.145" xml:space="preserve"><value>1行に1つの拡張子。例：.exe
 .bat
 .js</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.146" xml:space="preserve"><value>Clear list</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
