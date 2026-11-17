@@ -150,17 +150,17 @@
                 },
                 tagCategoryRules: {
                     name: [
-                        { required: true, message: '请输入分类名称', trigger: 'blur' },
-                        { max: 50, message: '分类名称最多50个字符', trigger: 'blur' }
+                        { required: true, message: fileManagerText('Frontend.161', 'Enter a category name, up to 50 characters'), trigger: 'blur' },
+                        { max: 50, message: fileManagerText('Frontend.161', 'Enter a category name, up to 50 characters'), trigger: 'blur' }
                     ]
                 },
                 tagCreateRules: {
                     name: [
-                        { required: true, message: '请输入标签名称', trigger: 'blur' },
-                        { max: 30, message: '标签名称最多30个字符', trigger: 'blur' }
+                        { required: true, message: fileManagerText('Frontend.163', 'Enter a tag name, up to 30 characters'), trigger: 'blur' },
+                        { max: 30, message: fileManagerText('Frontend.163', 'Enter a tag name, up to 30 characters'), trigger: 'blur' }
                     ],
                     categoryId: [
-                        { required: true, message: '请选择所属分类', trigger: 'change' }
+                        { required: true, message: fileManagerText('Frontend.171', 'Select category'), trigger: 'change' }
                     ]
                 },
                 recycleBin: {
