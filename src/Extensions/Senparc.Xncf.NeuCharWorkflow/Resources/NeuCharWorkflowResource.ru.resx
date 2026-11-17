@@ -597,4 +597,17 @@
   <data name="Frontend.573" xml:space="preserve"><value>Преобразует текст в нижний регистр.</value></data>
   <data name="Frontend.574" xml:space="preserve"><value>Преобразует текст в верхний регистр.</value></data>
   <data name="Frontend.575" xml:space="preserve"><value>Заменяет указанное содержимое текста новым содержимым.</value></data>
+
+  <data name="Frontend.576" xml:space="preserve"><value>Разделяет текст по разделителю и возвращает массив.</value></data>
+  <data name="Frontend.577" xml:space="preserve"><value>Объединяет текст; если параметры содержат массивы, объединяет их элементы в новый массив.</value></data>
+  <data name="Frontend.578" xml:space="preserve"><value>Возвращает длину текста или количество элементов массива.</value></data>
+  <data name="Frontend.579" xml:space="preserve"><value>Псевдоним length; возвращает длину текста или количество элементов массива.</value></data>
+  <data name="Frontend.580" xml:space="preserve"><value>Оборачивает одиночное значение в массив; если значение уже является массивом, возвращает его копию.</value></data>
+  <data name="Frontend.581" xml:space="preserve"><value>Возвращает первый элемент массива или текста.</value></data>
+  <data name="Frontend.582" xml:space="preserve"><value>Возвращает последний элемент массива или текста.</value></data>
+  <data name="Frontend.583" xml:space="preserve"><value>Читает элемент массива или текста по индексу, начинающемуся с нуля.</value></data>
+  <data name="Frontend.584" xml:space="preserve"><value>Объединяет элементы массива в текст с указанным разделителем.</value></data>
+  <data name="Frontend.585" xml:space="preserve"><value>Сортирует массив; можно указать путь к полю и направление asc/desc.</value></data>
+  <data name="Frontend.586" xml:space="preserve"><value>Смысловой псевдоним sort для стабильной сортировки по пути поля объекта.</value></data>
+  <data name="Frontend.587" xml:space="preserve"><value>Возвращает копию элементов массива в обратном порядке.</value></data>
 </root>

@@ -597,4 +597,17 @@
   <data name="Frontend.573" xml:space="preserve"><value>Convertit le texte en minuscules.</value></data>
   <data name="Frontend.574" xml:space="preserve"><value>Convertit le texte en majuscules.</value></data>
   <data name="Frontend.575" xml:space="preserve"><value>Remplace le contenu indiqué dans le texte par un nouveau contenu.</value></data>
+
+  <data name="Frontend.576" xml:space="preserve"><value>Divise le texte selon un séparateur et renvoie un tableau.</value></data>
+  <data name="Frontend.577" xml:space="preserve"><value>Concatène du texte ; lorsque les paramètres contiennent des tableaux, leurs éléments sont réunis dans un nouveau tableau.</value></data>
+  <data name="Frontend.578" xml:space="preserve"><value>Renvoie la longueur du texte ou le nombre d’éléments du tableau.</value></data>
+  <data name="Frontend.579" xml:space="preserve"><value>Alias de length ; renvoie la longueur du texte ou le nombre d’éléments du tableau.</value></data>
+  <data name="Frontend.580" xml:space="preserve"><value>Encapsule une valeur unique dans un tableau ; si la valeur est déjà un tableau, renvoie une copie.</value></data>
+  <data name="Frontend.581" xml:space="preserve"><value>Renvoie le premier élément d’un tableau ou d’un texte.</value></data>
+  <data name="Frontend.582" xml:space="preserve"><value>Renvoie le dernier élément d’un tableau ou d’un texte.</value></data>
+  <data name="Frontend.583" xml:space="preserve"><value>Lit un élément de tableau ou de texte avec un index commençant à zéro.</value></data>
+  <data name="Frontend.584" xml:space="preserve"><value>Assemble les éléments d’un tableau en texte avec le séparateur indiqué.</value></data>
+  <data name="Frontend.585" xml:space="preserve"><value>Trie un tableau ; un chemin de champ et une direction asc/desc peuvent être indiqués.</value></data>
+  <data name="Frontend.586" xml:space="preserve"><value>Alias sémantique de sort qui effectue un tri stable selon le chemin d’un champ d’objet.</value></data>
+  <data name="Frontend.587" xml:space="preserve"><value>Renvoie une copie inversée des éléments du tableau.</value></data>
 </root>

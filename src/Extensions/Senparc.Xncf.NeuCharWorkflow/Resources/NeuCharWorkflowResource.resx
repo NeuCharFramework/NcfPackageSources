@@ -596,4 +596,17 @@
   <data name="Frontend.573" xml:space="preserve"><value>将文本转换为小写。</value></data>
   <data name="Frontend.574" xml:space="preserve"><value>将文本转换为大写。</value></data>
   <data name="Frontend.575" xml:space="preserve"><value>将文本中的指定内容替换为新内容。</value></data>
+
+  <data name="Frontend.576" xml:space="preserve"><value>按分隔符拆分文本并返回数组。</value></data>
+  <data name="Frontend.577" xml:space="preserve"><value>连接文本；当参数中包含数组时，按数组项连接为一个新数组。</value></data>
+  <data name="Frontend.578" xml:space="preserve"><value>返回文本长度或数组项数。</value></data>
+  <data name="Frontend.579" xml:space="preserve"><value>length 的别名，返回文本长度或数组项数。</value></data>
+  <data name="Frontend.580" xml:space="preserve"><value>将单值包装为数组；已经是数组时返回数组副本。</value></data>
+  <data name="Frontend.581" xml:space="preserve"><value>返回数组或文本的第一项。</value></data>
+  <data name="Frontend.582" xml:space="preserve"><value>返回数组或文本的最后一项。</value></data>
+  <data name="Frontend.583" xml:space="preserve"><value>按从 0 开始的索引读取数组或文本项。</value></data>
+  <data name="Frontend.584" xml:space="preserve"><value>使用指定分隔符把数组项连接成文本。</value></data>
+  <data name="Frontend.585" xml:space="preserve"><value>对数组排序；可选字段路径和 asc/desc 排序方向。</value></data>
+  <data name="Frontend.586" xml:space="preserve"><value>sort 的语义别名，按对象字段路径稳定排序。</value></data>
+  <data name="Frontend.587" xml:space="preserve"><value>返回数组项的反向副本。</value></data>
 </root>

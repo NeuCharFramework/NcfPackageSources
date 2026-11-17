@@ -597,4 +597,17 @@
   <data name="Frontend.573" xml:space="preserve"><value>Convierte el texto a minúsculas.</value></data>
   <data name="Frontend.574" xml:space="preserve"><value>Convierte el texto a mayúsculas.</value></data>
   <data name="Frontend.575" xml:space="preserve"><value>Reemplaza el contenido indicado del texto por contenido nuevo.</value></data>
+
+  <data name="Frontend.576" xml:space="preserve"><value>Divide el texto por un delimitador y devuelve una matriz.</value></data>
+  <data name="Frontend.577" xml:space="preserve"><value>Concatena texto; cuando los parámetros contienen matrices, une sus elementos en una matriz nueva.</value></data>
+  <data name="Frontend.578" xml:space="preserve"><value>Devuelve la longitud del texto o el número de elementos de la matriz.</value></data>
+  <data name="Frontend.579" xml:space="preserve"><value>Alias de length; devuelve la longitud del texto o el número de elementos de la matriz.</value></data>
+  <data name="Frontend.580" xml:space="preserve"><value>Envuelve un valor único en una matriz; si ya es una matriz, devuelve una copia.</value></data>
+  <data name="Frontend.581" xml:space="preserve"><value>Devuelve el primer elemento de una matriz o un texto.</value></data>
+  <data name="Frontend.582" xml:space="preserve"><value>Devuelve el último elemento de una matriz o un texto.</value></data>
+  <data name="Frontend.583" xml:space="preserve"><value>Lee un elemento de matriz o texto mediante un índice basado en cero.</value></data>
+  <data name="Frontend.584" xml:space="preserve"><value>Une los elementos de una matriz en texto mediante el delimitador indicado.</value></data>
+  <data name="Frontend.585" xml:space="preserve"><value>Ordena una matriz; se puede indicar una ruta de campo y la dirección asc/desc.</value></data>
+  <data name="Frontend.586" xml:space="preserve"><value>Alias semántico de sort que ordena de forma estable por la ruta de un campo del objeto.</value></data>
+  <data name="Frontend.587" xml:space="preserve"><value>Devuelve una copia invertida de los elementos de la matriz.</value></data>
 </root>

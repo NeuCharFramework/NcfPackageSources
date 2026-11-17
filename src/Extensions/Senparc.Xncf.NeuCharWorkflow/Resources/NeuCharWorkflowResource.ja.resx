@@ -597,4 +597,17 @@
   <data name="Frontend.573" xml:space="preserve"><value>テキストを小文字に変換します。</value></data>
   <data name="Frontend.574" xml:space="preserve"><value>テキストを大文字に変換します。</value></data>
   <data name="Frontend.575" xml:space="preserve"><value>テキスト内の指定内容を新しい内容に置き換えます。</value></data>
+
+  <data name="Frontend.576" xml:space="preserve"><value>区切り文字でテキストを分割し、配列を返します。</value></data>
+  <data name="Frontend.577" xml:space="preserve"><value>テキストを連結します。パラメーターに配列が含まれる場合は、項目を連結して新しい配列を作成します。</value></data>
+  <data name="Frontend.578" xml:space="preserve"><value>テキストの長さまたは配列の項目数を返します。</value></data>
+  <data name="Frontend.579" xml:space="preserve"><value>lengthの別名で、テキストの長さまたは配列の項目数を返します。</value></data>
+  <data name="Frontend.580" xml:space="preserve"><value>単一の値を配列にラップします。すでに配列の場合は配列のコピーを返します。</value></data>
+  <data name="Frontend.581" xml:space="preserve"><value>配列またはテキストの最初の項目を返します。</value></data>
+  <data name="Frontend.582" xml:space="preserve"><value>配列またはテキストの最後の項目を返します。</value></data>
+  <data name="Frontend.583" xml:space="preserve"><value>0から始まるインデックスで配列またはテキストの項目を読み取ります。</value></data>
+  <data name="Frontend.584" xml:space="preserve"><value>指定した区切り文字で配列の項目をテキストに連結します。</value></data>
+  <data name="Frontend.585" xml:space="preserve"><value>配列を並べ替えます。任意でフィールドパスとasc/descの方向を指定できます。</value></data>
+  <data name="Frontend.586" xml:space="preserve"><value>sortの意味上の別名で、オブジェクトのフィールドパスにより安定ソートします。</value></data>
+  <data name="Frontend.587" xml:space="preserve"><value>配列項目の逆順コピーを返します。</value></data>
 </root>

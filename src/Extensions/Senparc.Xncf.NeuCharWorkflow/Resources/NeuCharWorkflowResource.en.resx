@@ -597,4 +597,17 @@
   <data name="Frontend.573" xml:space="preserve"><value>Converts text to lowercase.</value></data>
   <data name="Frontend.574" xml:space="preserve"><value>Converts text to uppercase.</value></data>
   <data name="Frontend.575" xml:space="preserve"><value>Replaces the specified content in text with new content.</value></data>
+
+  <data name="Frontend.576" xml:space="preserve"><value>Splits text by a delimiter and returns an array.</value></data>
+  <data name="Frontend.577" xml:space="preserve"><value>Concatenates text; when parameters contain arrays, joins their items into a new array.</value></data>
+  <data name="Frontend.578" xml:space="preserve"><value>Returns the text length or the number of array items.</value></data>
+  <data name="Frontend.579" xml:space="preserve"><value>An alias for length; returns the text length or the number of array items.</value></data>
+  <data name="Frontend.580" xml:space="preserve"><value>Wraps a single value in an array; returns an array copy when the value is already an array.</value></data>
+  <data name="Frontend.581" xml:space="preserve"><value>Returns the first item of an array or text.</value></data>
+  <data name="Frontend.582" xml:space="preserve"><value>Returns the last item of an array or text.</value></data>
+  <data name="Frontend.583" xml:space="preserve"><value>Reads an array or text item by a zero-based index.</value></data>
+  <data name="Frontend.584" xml:space="preserve"><value>Joins array items into text using the specified delimiter.</value></data>
+  <data name="Frontend.585" xml:space="preserve"><value>Sorts an array; an optional field path and asc/desc direction can be specified.</value></data>
+  <data name="Frontend.586" xml:space="preserve"><value>A semantic alias for sort that performs stable sorting by an object field path.</value></data>
+  <data name="Frontend.587" xml:space="preserve"><value>Returns a reversed copy of the array items.</value></data>
 </root>
