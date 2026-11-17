@@ -1142,4 +1142,8 @@
   <data name="Frontend.516" xml:space="preserve"><value>显式允许||Explicitly allowed</value></data>
   <data name="Frontend.517" xml:space="preserve"><value>工具与流程绑定||Tool and workflow bindings</value></data>
   <data name="Frontend.518" xml:space="preserve"><value>一键复制||Copy</value></data>
+
+
+  <data name="Frontend.520" xml:space="preserve"><value>使用各 Agent 已授权的连接器||使用各 Agent 已授权的连接器</value></data>
+  <data name="Frontend.521" xml:space="preserve"><value>只使用选中的连接器||只使用选中的连接器</value></data>
 </root>

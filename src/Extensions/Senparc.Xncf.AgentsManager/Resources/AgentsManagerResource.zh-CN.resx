@@ -1115,4 +1115,8 @@
   <data name="Frontend.516" xml:space="preserve"><value>显式允许||显式允许</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
   <data name="Frontend.517" xml:space="preserve"><value>工具与流程绑定||工具与流程绑定</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
   <data name="Frontend.518" xml:space="preserve"><value>一键复制||一键复制</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+
+
+  <data name="Frontend.520" xml:space="preserve"><value>使用各 Agent 已授权的连接器||使用各 Agent 已授权的连接器</value></data>
+  <data name="Frontend.521" xml:space="preserve"><value>只使用选中的连接器||只使用选中的连接器</value></data>
 </root>
