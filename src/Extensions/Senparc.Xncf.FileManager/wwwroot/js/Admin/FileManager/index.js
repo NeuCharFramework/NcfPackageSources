@@ -4,6 +4,10 @@
     const maxTotalUploadBytes = 100 * 1024 * 1024;
     const maxFileSizeBytes = 50 * 1024 * 1024;
 
+    function fileManagerText(key, fallback) {
+        return typeof window.ncfST === 'function' ? window.ncfST(key) : fallback;
+    }
+
     function resolveSystemName() {
         const name = (window.__NCF_SYSTEM_NAME__ || '').toString().trim();
         return name || 'NCF';
@@ -85,7 +89,7 @@
                 treeFilter: '',
                 fileSearchKeyword: '',
                 orgName: resolveSystemName(),
-                rootFolderName: '企业文档',
+                rootFolderName: fileManagerText('Frontend.072', 'Enterprise documents'),
                 activeNavKey: 'enterprise',
                 dashboard: {
                     capacityRange: '7d',
@@ -97,8 +101,8 @@
                     capacityTrend: [],
                     orgUsages: [
                         { name: resolveSystemName(), size: '0B' },
-                        { name: '企业文档根目录', size: '0B' },
-                        { name: '知识库资料', size: '0B' }
+                        { name: fileManagerText('Frontend.072', 'Enterprise documents') + ' root', size: '0B' },
+                        { name: fileManagerText('Frontend.149', 'Knowledge-base materials'), size: '0B' }
                     ],
                     sizeTotalLabel: '0B',
                     countTotalLabel: '0',
@@ -193,15 +197,15 @@
                     blockedTypesText: ''
                 },
                 navItems: [
-                    { key: 'home', label: '首页', icon: 'el-icon-s-home' },
-                    { key: 'favorite', label: '收藏', icon: 'el-icon-star-off' },
-                    { key: 'enterprise', label: '企业文档', icon: 'el-icon-folder', scope: 100 },
-                    { key: 'fine-tuning', label: '微调产物', icon: 'el-icon-s-data', scope: 300 },
-                    { key: 'recycle', label: '回收站', icon: 'el-icon-delete' },
+                    { key: 'home', label: fileManagerText('Frontend.029', 'Home'), icon: 'el-icon-s-home' },
+                    { key: 'favorite', label: fileManagerText('Frontend.119', 'Favorite'), icon: 'el-icon-star-off' },
+                    { key: 'enterprise', label: fileManagerText('Frontend.072', 'Enterprise documents'), icon: 'el-icon-folder', scope: 100 },
+                    { key: 'fine-tuning', label: fileManagerText('Frontend.106', 'Fine-tuning artifacts'), icon: 'el-icon-s-data', scope: 300 },
+                    { key: 'recycle', label: fileManagerText('Frontend.096', 'Recycle bin'), icon: 'el-icon-delete' },
                     { key: 'divider', label: '', divider: true },
-                    { key: 'dashboard', label: '数据面板', icon: 'el-icon-data-line' },
-                    { key: 'tags', label: '标签管理', icon: 'el-icon-price-tag' },
-                    { key: 'settings', label: '设置', icon: 'el-icon-setting' }
+                    { key: 'dashboard', label: fileManagerText('Frontend.120', 'Data dashboard'), icon: 'el-icon-data-line' },
+                    { key: 'tags', label: fileManagerText('Frontend.143', 'Tag Management'), icon: 'el-icon-price-tag' },
+                    { key: 'settings', label: fileManagerText('Frontend.157', 'Settings'), icon: 'el-icon-setting' }
                 ]
             };
         },
@@ -221,8 +225,10 @@
             isSiteAsset: function () { return this.resourceScope === 200; },
             isFineTuning: function () { return this.resourceScope === 300; },
             resourceScopeName: function () {
-                if (this.isFineTuning) return '微调产物';
-                return this.isSiteAsset ? '站点静态资源' : '知识库资料';
+                if (this.isFineTuning) return fileManagerText('Frontend.106', 'Fine-tuning artifacts');
+                return this.isSiteAsset
+                    ? fileManagerText('Frontend.152', 'Site resources')
+                    : fileManagerText('Frontend.149', 'Knowledge-base materials');
             },
             canGoParent: function () { return this.currentFolderId != null; },
             displayTableData: function () {
