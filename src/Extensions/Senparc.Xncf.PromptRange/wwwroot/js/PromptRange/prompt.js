@@ -305,55 +305,55 @@ var app = new Vue({
             //Legacy comment translated to English.
             rules: {
                 fieldName: [
-                    { required: true, message: '请输入靶场名称', trigger: 'blur' }
+                    { required: true, message: ncfST('请输入靶场名称'), trigger: 'blur' }
                 ],
                 tactics: [
-                    { required: true, message: '请选择战术', trigger: 'change' }
+                    { required: true, message: ncfST('请选择战术'), trigger: 'change' }
                 ],
                 prefix: [
-                    { required: true, message: '请输入前缀', trigger: 'blur' }
+                    { required: true, message: ncfST('请输入前缀'), trigger: 'blur' }
                 ],
                 suffix: [
-                    { required: true, message: '请输入后缀', trigger: 'blur' }
+                    { required: true, message: ncfST('请输入后缀'), trigger: 'blur' }
                 ],
                 variableValue: [
-                    { required: true, message: '请输入变量值', trigger: 'blur' }
+                    { required: true, message: ncfST('请输入变量值'), trigger: 'blur' }
                 ],
                 modelType: [
-                    { required: true, message: '请选择模型类型', trigger: 'change' }
+                    { required: true, message: ncfST('请选择模型类型'), trigger: 'change' }
                 ],
                 alias: [
-                    { required: true, message: '请输入别名', trigger: 'blur' }
+                    { required: true, message: ncfST('请输入别名'), trigger: 'blur' }
                 ],
                 deploymentName: [
-                    { required: true, message: '请输入模型名称', trigger: 'blur' }
+                    { required: true, message: ncfST('请输入模型名称'), trigger: 'blur' }
                 ],
                 apiVersion: [
-                    { required: true, message: '请输入API Version', trigger: 'blur' }
+                    { required: true, message: ncfST('请输入API Version'), trigger: 'blur' }
                 ],
                 apiKey: [
-                    { required: true, message: '请输入API key', trigger: 'blur' }
+                    { required: true, message: ncfST('请输入API key'), trigger: 'blur' }
                 ],
                 variableName: [
-                    { required: true, message: '请输入变量名', trigger: 'blur' }
+                    { required: true, message: ncfST('请输入变量名'), trigger: 'blur' }
                 ],
                 endpoint: [
-                    { required: true, message: '请输入End Point', trigger: 'blur' }
+                    { required: true, message: ncfST('请输入End Point'), trigger: 'blur' }
                 ],
                 organizationId: [
-                    { required: true, message: '请输入Organization Id', trigger: 'blur' }
+                    { required: true, message: ncfST('请输入Organization Id'), trigger: 'blur' }
                 ],
                 aiResultVal: [
-                    { required: true, message: '请输入期望结果', trigger: 'blur' }
+                    { required: true, message: ncfST('请输入期望结果'), trigger: 'blur' }
                 ],
                 rangeIdList: [
-                    { type: 'array', required: true, message: '请至少选择一个靶场', trigger: 'change' }
+                    { type: 'array', required: true, message: ncfST('请至少选择一个靶场'), trigger: 'change' }
                 ],
                 promptIdList: [
-                    { type: 'array', required: true, message: '请至少选择一个靶道', trigger: 'change' }
+                    { type: 'array', required: true, message: ncfST('请至少选择一个靶道'), trigger: 'change' }
                 ],
                 checkList: [
-                    { type: 'array', required: true, message: '请至少选择一个靶道', trigger: 'change' }
+                    { type: 'array', required: true, message: ncfST('请至少选择一个靶道'), trigger: 'change' }
                 ],
             },
             versionData: [],

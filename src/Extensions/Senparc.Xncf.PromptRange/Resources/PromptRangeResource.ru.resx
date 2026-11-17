@@ -851,4 +851,21 @@ Attachments provide an index only; they do not mean that you have read the conte
   <data name="Frontend.769" xml:space="preserve"><value>Для этого PromptCode уже есть Agent: {0} — {1}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.770" xml:space="preserve"><value>Заметки:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.771" xml:space="preserve"><value>Опубликовано</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+
+  <data name="Frontend.772" xml:space="preserve"><value>Введите название диапазона</value></data>
+  <data name="Frontend.773" xml:space="preserve"><value>Выберите тактику</value></data>
+  <data name="Frontend.774" xml:space="preserve"><value>Введите префикс</value></data>
+  <data name="Frontend.775" xml:space="preserve"><value>Введите суффикс</value></data>
+  <data name="Frontend.776" xml:space="preserve"><value>Введите значение переменной</value></data>
+  <data name="Frontend.777" xml:space="preserve"><value>Выберите тип модели</value></data>
+  <data name="Frontend.778" xml:space="preserve"><value>Введите псевдоним</value></data>
+  <data name="Frontend.779" xml:space="preserve"><value>Введите название модели</value></data>
+  <data name="Frontend.780" xml:space="preserve"><value>Введите версию API</value></data>
+  <data name="Frontend.781" xml:space="preserve"><value>Введите API-ключ</value></data>
+  <data name="Frontend.782" xml:space="preserve"><value>Введите имя переменной</value></data>
+  <data name="Frontend.783" xml:space="preserve"><value>Введите конечную точку</value></data>
+  <data name="Frontend.784" xml:space="preserve"><value>Введите ID организации</value></data>
+  <data name="Frontend.785" xml:space="preserve"><value>Введите ожидаемый результат</value></data>
+  <data name="Frontend.786" xml:space="preserve"><value>Выберите хотя бы один диапазон</value></data>
+  <data name="Frontend.787" xml:space="preserve"><value>Выберите хотя бы один prompt</value></data>
 </root>

@@ -1364,4 +1364,21 @@ workspace_write 的 relativePath 必须是非空的 Workspace 相对文件路径
   <data name="Frontend.769" xml:space="preserve"><value>当前 PromptCode 下已有 {0} 个智能体：{1}</value></data>
   <data name="Frontend.770" xml:space="preserve"><value>备注:</value></data>
   <data name="Frontend.771" xml:space="preserve"><value>已发布</value></data>
+
+  <data name="Frontend.772" xml:space="preserve"><value>请输入靶场名称</value></data>
+  <data name="Frontend.773" xml:space="preserve"><value>请选择战术</value></data>
+  <data name="Frontend.774" xml:space="preserve"><value>请输入前缀</value></data>
+  <data name="Frontend.775" xml:space="preserve"><value>请输入后缀</value></data>
+  <data name="Frontend.776" xml:space="preserve"><value>请输入变量值</value></data>
+  <data name="Frontend.777" xml:space="preserve"><value>请选择模型类型</value></data>
+  <data name="Frontend.778" xml:space="preserve"><value>请输入别名</value></data>
+  <data name="Frontend.779" xml:space="preserve"><value>请输入模型名称</value></data>
+  <data name="Frontend.780" xml:space="preserve"><value>请输入API Version</value></data>
+  <data name="Frontend.781" xml:space="preserve"><value>请输入API key</value></data>
+  <data name="Frontend.782" xml:space="preserve"><value>请输入变量名</value></data>
+  <data name="Frontend.783" xml:space="preserve"><value>请输入End Point</value></data>
+  <data name="Frontend.784" xml:space="preserve"><value>请输入Organization Id</value></data>
+  <data name="Frontend.785" xml:space="preserve"><value>请输入期望结果</value></data>
+  <data name="Frontend.786" xml:space="preserve"><value>请至少选择一个靶场</value></data>
+  <data name="Frontend.787" xml:space="preserve"><value>请至少选择一个靶道</value></data>
 </root>

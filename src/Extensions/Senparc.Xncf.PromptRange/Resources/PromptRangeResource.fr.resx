@@ -851,4 +851,21 @@ Attachments provide an index only; they do not mean that you have read the conte
   <data name="Frontend.769" xml:space="preserve"><value>{0} Agents existent déjà pour ce PromptCode : {1}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.770" xml:space="preserve"><value>Notes :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.771" xml:space="preserve"><value>Publié</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+
+  <data name="Frontend.772" xml:space="preserve"><value>Saisissez le nom du champ</value></data>
+  <data name="Frontend.773" xml:space="preserve"><value>Sélectionnez une tactique</value></data>
+  <data name="Frontend.774" xml:space="preserve"><value>Saisissez le préfixe</value></data>
+  <data name="Frontend.775" xml:space="preserve"><value>Saisissez le suffixe</value></data>
+  <data name="Frontend.776" xml:space="preserve"><value>Saisissez la valeur de la variable</value></data>
+  <data name="Frontend.777" xml:space="preserve"><value>Sélectionnez un type de modèle</value></data>
+  <data name="Frontend.778" xml:space="preserve"><value>Saisissez un alias</value></data>
+  <data name="Frontend.779" xml:space="preserve"><value>Saisissez le nom du modèle</value></data>
+  <data name="Frontend.780" xml:space="preserve"><value>Saisissez la version de l’API</value></data>
+  <data name="Frontend.781" xml:space="preserve"><value>Saisissez la clé API</value></data>
+  <data name="Frontend.782" xml:space="preserve"><value>Saisissez le nom de la variable</value></data>
+  <data name="Frontend.783" xml:space="preserve"><value>Saisissez le point de terminaison</value></data>
+  <data name="Frontend.784" xml:space="preserve"><value>Saisissez l’ID de l’organisation</value></data>
+  <data name="Frontend.785" xml:space="preserve"><value>Saisissez le résultat attendu</value></data>
+  <data name="Frontend.786" xml:space="preserve"><value>Sélectionnez au moins un champ</value></data>
+  <data name="Frontend.787" xml:space="preserve"><value>Sélectionnez au moins un prompt</value></data>
 </root>

@@ -851,4 +851,21 @@ Attachments provide an index only; they do not mean that you have read the conte
   <data name="Frontend.769" xml:space="preserve"><value>Ya hay {0} Agents para este PromptCode: {1}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.770" xml:space="preserve"><value>Notas:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.771" xml:space="preserve"><value>Publicado</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+
+  <data name="Frontend.772" xml:space="preserve"><value>Introduce el nombre del rango</value></data>
+  <data name="Frontend.773" xml:space="preserve"><value>Selecciona una táctica</value></data>
+  <data name="Frontend.774" xml:space="preserve"><value>Introduce el prefijo</value></data>
+  <data name="Frontend.775" xml:space="preserve"><value>Introduce el sufijo</value></data>
+  <data name="Frontend.776" xml:space="preserve"><value>Introduce el valor de la variable</value></data>
+  <data name="Frontend.777" xml:space="preserve"><value>Selecciona un tipo de modelo</value></data>
+  <data name="Frontend.778" xml:space="preserve"><value>Introduce un alias</value></data>
+  <data name="Frontend.779" xml:space="preserve"><value>Introduce el nombre del modelo</value></data>
+  <data name="Frontend.780" xml:space="preserve"><value>Introduce la versión de API</value></data>
+  <data name="Frontend.781" xml:space="preserve"><value>Introduce la clave API</value></data>
+  <data name="Frontend.782" xml:space="preserve"><value>Introduce el nombre de la variable</value></data>
+  <data name="Frontend.783" xml:space="preserve"><value>Introduce el endpoint</value></data>
+  <data name="Frontend.784" xml:space="preserve"><value>Introduce el ID de organización</value></data>
+  <data name="Frontend.785" xml:space="preserve"><value>Introduce el resultado esperado</value></data>
+  <data name="Frontend.786" xml:space="preserve"><value>Selecciona al menos un rango</value></data>
+  <data name="Frontend.787" xml:space="preserve"><value>Selecciona al menos un prompt</value></data>
 </root>

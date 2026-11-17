@@ -851,4 +851,21 @@ Attachments provide an index only; they do not mean that you have read the conte
   <data name="Frontend.769" xml:space="preserve"><value>{0} agents already exist for the current PromptCode: {1}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.770" xml:space="preserve"><value>Notes:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.771" xml:space="preserve"><value>Published</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+
+  <data name="Frontend.772" xml:space="preserve"><value>Enter the range name</value></data>
+  <data name="Frontend.773" xml:space="preserve"><value>Select a tactic</value></data>
+  <data name="Frontend.774" xml:space="preserve"><value>Enter the prefix</value></data>
+  <data name="Frontend.775" xml:space="preserve"><value>Enter the suffix</value></data>
+  <data name="Frontend.776" xml:space="preserve"><value>Enter the variable value</value></data>
+  <data name="Frontend.777" xml:space="preserve"><value>Select a model type</value></data>
+  <data name="Frontend.778" xml:space="preserve"><value>Enter an alias</value></data>
+  <data name="Frontend.779" xml:space="preserve"><value>Enter the model name</value></data>
+  <data name="Frontend.780" xml:space="preserve"><value>Enter the API version</value></data>
+  <data name="Frontend.781" xml:space="preserve"><value>Enter the API key</value></data>
+  <data name="Frontend.782" xml:space="preserve"><value>Enter the variable name</value></data>
+  <data name="Frontend.783" xml:space="preserve"><value>Enter the endpoint</value></data>
+  <data name="Frontend.784" xml:space="preserve"><value>Enter the organization ID</value></data>
+  <data name="Frontend.785" xml:space="preserve"><value>Enter the expected result</value></data>
+  <data name="Frontend.786" xml:space="preserve"><value>Select at least one range</value></data>
+  <data name="Frontend.787" xml:space="preserve"><value>Select at least one prompt</value></data>
 </root>

@@ -851,4 +851,21 @@ Attachments provide an index only; they do not mean that you have read the conte
   <data name="Frontend.769" xml:space="preserve"><value>このPromptCodeには既に{0}個のAgentがあります：{1}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.770" xml:space="preserve"><value>メモ：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.771" xml:space="preserve"><value>公開済み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+
+  <data name="Frontend.772" xml:space="preserve"><value>靶場名を入力</value></data>
+  <data name="Frontend.773" xml:space="preserve"><value>戦術を選択</value></data>
+  <data name="Frontend.774" xml:space="preserve"><value>プレフィックスを入力</value></data>
+  <data name="Frontend.775" xml:space="preserve"><value>サフィックスを入力</value></data>
+  <data name="Frontend.776" xml:space="preserve"><value>変数値を入力</value></data>
+  <data name="Frontend.777" xml:space="preserve"><value>モデル種別を選択</value></data>
+  <data name="Frontend.778" xml:space="preserve"><value>エイリアスを入力</value></data>
+  <data name="Frontend.779" xml:space="preserve"><value>モデル名を入力</value></data>
+  <data name="Frontend.780" xml:space="preserve"><value>APIバージョンを入力</value></data>
+  <data name="Frontend.781" xml:space="preserve"><value>APIキーを入力</value></data>
+  <data name="Frontend.782" xml:space="preserve"><value>変数名を入力</value></data>
+  <data name="Frontend.783" xml:space="preserve"><value>エンドポイントを入力</value></data>
+  <data name="Frontend.784" xml:space="preserve"><value>組織IDを入力</value></data>
+  <data name="Frontend.785" xml:space="preserve"><value>期待する結果を入力</value></data>
+  <data name="Frontend.786" xml:space="preserve"><value>少なくとも1つの靶場を選択</value></data>
+  <data name="Frontend.787" xml:space="preserve"><value>少なくとも1つの靶道を選択</value></data>
 </root>
