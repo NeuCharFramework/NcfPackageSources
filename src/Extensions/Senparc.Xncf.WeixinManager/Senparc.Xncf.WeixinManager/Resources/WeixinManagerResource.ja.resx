@@ -314,56 +314,56 @@
   </data>
 
 
-  <data name="Frontend.075" xml:space="preserve"><value>Personal WeChat Bot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.076" xml:space="preserve"><value>/bind pairing code</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.077" xml:space="preserve"><value>AIModelId (optional)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.078" xml:space="preserve"><value>WorkflowId (optional)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.079" xml:space="preserve"><value>iLink account</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.080" xml:space="preserve"><value>The token is protected with Data Protection on the server and is never shown again.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.081" xml:space="preserve"><value>· Sending</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.082" xml:space="preserve"><value>· Failed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.083" xml:space="preserve"><value>· Submitted</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.084" xml:space="preserve"><value>Personal WeChat Bot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.085" xml:space="preserve"><value>For example: super administrator</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.086" xml:space="preserve"><value>For example: my personal WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.087" xml:space="preserve"><value>Save</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.088" xml:space="preserve"><value>Save binding settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.089" xml:space="preserve"><value>Allow NeuBell</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.090" xml:space="preserve"><value>Allow Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.091" xml:space="preserve"><value>All messages</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.092" xml:space="preserve"><value>Close</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.093" xml:space="preserve"><value>Refresh</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.094" xml:space="preserve"><value>Refresh status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.095" xml:space="preserve"><value>Features</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.096" xml:space="preserve"><value>Send</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.097" xml:space="preserve"><value>Cancel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.098" xml:space="preserve"><value>Enable binding</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.099" xml:space="preserve"><value>Enable long polling</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.100" xml:space="preserve"><value>Image</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.101" xml:space="preserve"><value>The media file is not ready yet.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.102" xml:space="preserve"><value>Personal WeChat is not connected yet.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.103" xml:space="preserve"><value>All sent and received records for this account</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.104" xml:space="preserve"><value>No binding code has been configured for this account.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.105" xml:space="preserve"><value>WeChat login QR code</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.106" xml:space="preserve"><value>Open link</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.107" xml:space="preserve"><value>Scan the QR code to connect Personal WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.108" xml:space="preserve"><value>Connect by scanning</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.109" xml:space="preserve"><value>File</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.110" xml:space="preserve"><value>New binding configuration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.111" xml:space="preserve"><value>Recent messages</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.112" xml:space="preserve"><value>Recent connections</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.113" xml:space="preserve"><value>Status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.114" xml:space="preserve"><value>Status:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.115" xml:space="preserve"><value>Used by the upstream handler; may be empty</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.116" xml:space="preserve"><value>Leave empty to keep the existing token</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.117" xml:space="preserve"><value>Binding code</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.118" xml:space="preserve"><value>Binding configuration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.119" xml:space="preserve"><value>Audio file (SILK / MP3)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.120" xml:space="preserve"><value>Scan the QR code with WeChat and confirm the login on your phone.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.121" xml:space="preserve"><value>Enter the verification code requested by WeChat, then refresh the status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.122" xml:space="preserve"><value>Enter a message to send to the current WeChat conversation</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.123" xml:space="preserve"><value>Configuration name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.124" xml:space="preserve"><value>Verification code</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.075" xml:space="preserve"><value>個人WeChatボット</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.076" xml:space="preserve"><value>/bindペアリングコード</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.077" xml:space="preserve"><value>AIModelId（任意）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.078" xml:space="preserve"><value>WorkflowId（任意）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.079" xml:space="preserve"><value>iLinkアカウント</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.080" xml:space="preserve"><value>トークンはサーバー上でData Protectionにより保護され、再表示されることはありません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.081" xml:space="preserve"><value>· 送信中</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.082" xml:space="preserve"><value>· 失敗</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.083" xml:space="preserve"><value>· 送信済み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.084" xml:space="preserve"><value>個人WeChatボット</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.085" xml:space="preserve"><value>例：スーパー管理者</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.086" xml:space="preserve"><value>例：自分の個人WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.087" xml:space="preserve"><value>保存</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.088" xml:space="preserve"><value>バインディング設定を保存</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.089" xml:space="preserve"><value>NeuBellを許可</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.090" xml:space="preserve"><value>Workflowを許可</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.091" xml:space="preserve"><value>すべてのメッセージ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.092" xml:space="preserve"><value>閉じる</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.093" xml:space="preserve"><value>再読み込み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.094" xml:space="preserve"><value>状態を更新</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.095" xml:space="preserve"><value>機能</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.096" xml:space="preserve"><value>送信</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.097" xml:space="preserve"><value>キャンセル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.098" xml:space="preserve"><value>バインディングを有効化</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.099" xml:space="preserve"><value>ロングポーリングを有効化</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.100" xml:space="preserve"><value>画像</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.101" xml:space="preserve"><value>メディアファイルはまだ準備できていません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.102" xml:space="preserve"><value>個人WeChatはまだ接続されていません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.103" xml:space="preserve"><value>このアカウントの送受信記録すべて</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.104" xml:space="preserve"><value>このアカウントにはバインディングコードが設定されていません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.105" xml:space="preserve"><value>WeChatログインQRコード</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.106" xml:space="preserve"><value>リンクを開く</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.107" xml:space="preserve"><value>QRコードをスキャンして個人WeChatに接続</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.108" xml:space="preserve"><value>スキャンして接続</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.109" xml:space="preserve"><value>ファイル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.110" xml:space="preserve"><value>新しいバインディング設定</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.111" xml:space="preserve"><value>最近のメッセージ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.112" xml:space="preserve"><value>最近の接続</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.113" xml:space="preserve"><value>状態</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.114" xml:space="preserve"><value>状態：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.115" xml:space="preserve"><value>上流ハンドラーで使用します。空欄でも構いません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.116" xml:space="preserve"><value>既存のトークンを保持するには空欄にします</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.117" xml:space="preserve"><value>バインディングコード</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.118" xml:space="preserve"><value>バインディング設定</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.119" xml:space="preserve"><value>音声ファイル（SILK / MP3）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.120" xml:space="preserve"><value>WeChatでQRコードをスキャンし、スマートフォンでログインを確認してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.121" xml:space="preserve"><value>WeChatから要求された確認コードを入力し、状態を更新してください</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.122" xml:space="preserve"><value>現在のWeChat会話に送信するメッセージを入力してください</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.123" xml:space="preserve"><value>構成名</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.124" xml:space="preserve"><value>確認コード</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.125" xml:space="preserve"><value>WeCom勤怠</value></data>
   <data name="Frontend.126" xml:space="preserve"><value>WeCom勤怠記録を取得</value></data>
   <data name="Frontend.127" xml:space="preserve"><value>勤怠記録を取得</value></data>
