@@ -1537,17 +1537,17 @@
 
   <data name="Frontend.586" xml:space="preserve"><value>Bulk operation failed</value></data>
 
-  <data name="Frontend.600" xml:space="preserve"><value>Choose which module reminders appear in the Footer. The setting is saved in this account’s browser.</value></data>
-  <data name="Frontend.601" xml:space="preserve"><value>No modules are currently providing NeuBell information.</value></data>
-  <data name="Frontend.602" xml:space="preserve"><value>Consume all</value></data>
-  <data name="Frontend.603" xml:space="preserve"><value>Consume</value></data>
-  <data name="Frontend.604" xml:space="preserve"><value>NeuBell reminders</value></data>
-  <data name="Frontend.605" xml:space="preserve"><value>Close all</value></data>
-  <data name="Frontend.606" xml:space="preserve"><value>Collapse</value></data>
-  <data name="Frontend.607" xml:space="preserve"><value>{0} more; click to expand</value></data>
-  <data name="Frontend.608" xml:space="preserve"><value>NeuBell test reminder</value></data>
-  <data name="Frontend.609" xml:space="preserve"><value>Sent by a Function; consume this item from the Function or clear all reminders in the current subscription.</value></data>
-  <data name="Frontend.610" xml:space="preserve"><value>DesktopBridge remote connection review</value></data>
-  <data name="Frontend.611" xml:space="preserve"><value>{0} device pairing requests are awaiting review.</value></data>
-  <data name="Frontend.612" xml:space="preserve"><value>No device pairing requests are pending.</value></data>
+  <data name="Frontend.600" xml:space="preserve"><value>Выберите уведомления модулей, отображаемые в Footer. Настройка сохраняется в браузере этой учётной записи.</value></data>
+  <data name="Frontend.601" xml:space="preserve"><value>Сейчас ни один модуль не предоставляет сведения NeuBell.</value></data>
+  <data name="Frontend.602" xml:space="preserve"><value>Потребить всё</value></data>
+  <data name="Frontend.603" xml:space="preserve"><value>Потребить</value></data>
+  <data name="Frontend.604" xml:space="preserve"><value>Уведомления NeuBell</value></data>
+  <data name="Frontend.605" xml:space="preserve"><value>Закрыть всё</value></data>
+  <data name="Frontend.606" xml:space="preserve"><value>Свернуть</value></data>
+  <data name="Frontend.607" xml:space="preserve"><value>Ещё {0}; нажмите для раскрытия</value></data>
+  <data name="Frontend.608" xml:space="preserve"><value>Тестовое уведомление NeuBell</value></data>
+  <data name="Frontend.609" xml:space="preserve"><value>Отправлено Function; обработайте это уведомление в Function или очистите все уведомления текущей подписки.</value></data>
+  <data name="Frontend.610" xml:space="preserve"><value>Проверка удалённых подключений DesktopBridge</value></data>
+  <data name="Frontend.611" xml:space="preserve"><value>Ожидают обработки запросы сопряжения устройств: {0}.</value></data>
+  <data name="Frontend.612" xml:space="preserve"><value>Нет ожидающих запросов сопряжения устройств.</value></data>
 </root>
