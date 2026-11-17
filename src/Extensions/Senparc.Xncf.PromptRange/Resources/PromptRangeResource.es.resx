@@ -874,4 +874,8 @@ Attachments provide an index only; they do not mean that you have read the conte
   <data name="Frontend.790" xml:space="preserve"><value>Continuar con la creación</value></data>
   <data name="Frontend.791" xml:space="preserve"><value>¡Agent «{0}» creado correctamente!</value></data>
   <data name="Frontend.792" xml:space="preserve"><value>Error en la solicitud de pantalla completa:</value></data>
+
+  <data name="Frontend.793" xml:space="preserve"><value>20% superior</value></data>
+  <data name="Frontend.794" xml:space="preserve"><value>40% superior</value></data>
+  <data name="Frontend.795" xml:space="preserve"><value>20% inferior</value></data>
 </root>

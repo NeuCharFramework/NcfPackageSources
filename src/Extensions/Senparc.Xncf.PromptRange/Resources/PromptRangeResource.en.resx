@@ -874,4 +874,8 @@ Attachments provide an index only; they do not mean that you have read the conte
   <data name="Frontend.790" xml:space="preserve"><value>Continue creation</value></data>
   <data name="Frontend.791" xml:space="preserve"><value>Agent “{0}” created successfully!</value></data>
   <data name="Frontend.792" xml:space="preserve"><value>Fullscreen request failed:</value></data>
+
+  <data name="Frontend.793" xml:space="preserve"><value>Top 20%</value></data>
+  <data name="Frontend.794" xml:space="preserve"><value>Top 40%</value></data>
+  <data name="Frontend.795" xml:space="preserve"><value>Bottom 20%</value></data>
 </root>

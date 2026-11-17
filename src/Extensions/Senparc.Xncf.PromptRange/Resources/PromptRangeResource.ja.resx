@@ -874,4 +874,8 @@ Attachments provide an index only; they do not mean that you have read the conte
   <data name="Frontend.790" xml:space="preserve"><value>作成を続ける</value></data>
   <data name="Frontend.791" xml:space="preserve"><value>Agent「{0}」を作成しました。</value></data>
   <data name="Frontend.792" xml:space="preserve"><value>全画面表示の要求に失敗しました：</value></data>
+
+  <data name="Frontend.793" xml:space="preserve"><value>上位20%</value></data>
+  <data name="Frontend.794" xml:space="preserve"><value>上位40%</value></data>
+  <data name="Frontend.795" xml:space="preserve"><value>下位20%</value></data>
 </root>

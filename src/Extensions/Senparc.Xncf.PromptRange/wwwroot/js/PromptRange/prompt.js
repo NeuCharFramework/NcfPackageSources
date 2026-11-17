@@ -6247,24 +6247,24 @@ var app = new Vue({
                             if (node.type === 'range') {
                                 // rangeinformation
                                 tooltipContent = `
-                                    <div style="font-weight: bold; margin-bottom: 8px; color: #4ecdc4;">📦 靶场</div>
+                                    <div style="font-weight: bold; margin-bottom: 8px; color: #4ecdc4;">${ncfST('📦 靶场')}</div>
                                     <div>${node.name}</div>
-                                    ${node.prompts && node.prompts.length > 0 ? `<div style="margin-top: 4px; color: #aaa;">包含 ${node.prompts.length} 个结果</div>` : ''}
+                                    ${node.prompts && node.prompts.length > 0 ? `<div style="margin-top: 4px; color: #aaa;">${ncfST('包含 {0} 个结果', node.prompts.length)}</div>` : ''}
                                 `
                             } else if (node.type === 'tactic') {
                                 // Tactic information
                                 const tacticNumber = nodeData.key.replace('T', '')
                                 tooltipContent = `
-                                    <div style="font-weight: bold; margin-bottom: 8px; color: #95e1d3;">🎯 战术节点</div>
-                                    <div>编号: T${tacticNumber}</div>
-                                    ${node.prompts && node.prompts.length > 0 ? `<div style="margin-top: 4px; color: #aaa;">${node.prompts.length} 个结果</div>` : ''}
+                                    <div style="font-weight: bold; margin-bottom: 8px; color: #95e1d3;">${ncfST('🎯 战术节点')}</div>
+                                    <div>${ncfST('编号: T{0}', tacticNumber)}</div>
+                                    ${node.prompts && node.prompts.length > 0 ? `<div style="margin-top: 4px; color: #aaa;">${ncfST('{0} 个结果', node.prompts.length)}</div>` : ''}
                                 `
                             } else if (node.type === 'aiming') {
                                 //Legacy comment translated to English.
                                 const aimingNumber = nodeData.key.match(/-A(\d+)$/)?.[1] || nodeData.key
                                 tooltipContent = `
-                                    <div style="font-weight: bold; margin-bottom: 8px; color: #a8e6cf;">🎲 瞄准点</div>
-                                    <div>编号: A${aimingNumber}</div>
+                                    <div style="font-weight: bold; margin-bottom: 8px; color: #a8e6cf;">${ncfST('🎲 瞄准点')}</div>
+                                    <div>${ncfST('编号: A{0}', aimingNumber)}</div>
                                 `
                                 
                                 //Legacy comment translated to English.
@@ -6331,14 +6331,14 @@ var app = new Vue({
                                                     const total = allScores.length
                                                     const isFirst = rank === 1
                                                     
-                                                    rankText = `排名: ${rank}/${total}`
+                                                    rankText = ncfST('排名: {0}/{1}', rank, total)
                                                     
                                                     //Legacy comment translated to English.
                                                     if (isFirst) {
                                                         scoreColor = '#b24df5'  //Legacy comment translated to English.
                                                         scoreSize = '26px'
                                                         scoreEmoji = '🥇'
-                                                        rankBadge = '<span style="background: linear-gradient(135deg, #b24df5 0%, #da6aff 50%, #b24df5 100%); color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 11px; margin-left: 6px; font-weight: bold; box-shadow: 0 2px 8px rgba(178,77,245,0.5);">👑 第一名</span>'
+                                                        rankBadge = `<span style="background: linear-gradient(135deg, #b24df5 0%, #da6aff 50%, #b24df5 100%); color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 11px; margin-left: 6px; font-weight: bold; box-shadow: 0 2px 8px rgba(178,77,245,0.5);">${ncfST('👑 第一名')}</span>`
                                                     }
                                                     //Legacy comment translated to English.
                                                     else if (percentile >= 80) {
@@ -6346,31 +6346,31 @@ var app = new Vue({
                                                         scoreColor = '#00d4aa'
                                                         scoreSize = '24px'
                                                         scoreEmoji = '🏆'
-                                                        rankBadge = '<span style="background: #00d4aa; color: #000; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">Top 20%</span>'
+                                                        rankBadge = `<span style="background: #00d4aa; color: #000; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">${ncfST('Top 20%')}</span>`
                                                     } else if (percentile >= 60) {
                                                         // 20-40%
                                                         scoreColor = '#52c41a'
                                                         scoreSize = '22px'
                                                         scoreEmoji = '✨'
-                                                        rankBadge = '<span style="background: #52c41a; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">Top 40%</span>'
+                                                        rankBadge = `<span style="background: #52c41a; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">${ncfST('Top 40%')}</span>`
                                                     } else if (percentile >= 40) {
                                                         // 40-60%
                                                         scoreColor = '#faad14'
                                                         scoreSize = '20px'
                                                         scoreEmoji = '📊'
-                                                        rankBadge = '<span style="background: #faad14; color: #000; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">中游</span>'
+                                                        rankBadge = `<span style="background: #faad14; color: #000; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">${ncfST('中游')}</span>`
                                                     } else if (percentile >= 20) {
                                                         // 60-80%
                                                         scoreColor = '#ff7875'
                                                         scoreSize = '18px'
                                                         scoreEmoji = '📉'
-                                                        rankBadge = '<span style="background: #ff7875; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">靠后</span>'
+                                                        rankBadge = `<span style="background: #ff7875; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">${ncfST('靠后')}</span>`
                                                     } else {
                                                         // Bottom 20%
                                                         scoreColor = '#f5222d'
                                                         scoreSize = '18px'
                                                         scoreEmoji = '📊'
-                                                        rankBadge = '<span style="background: #f5222d; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">Bottom 20%</span>'
+                                                        rankBadge = `<span style="background: #f5222d; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">${ncfST('Bottom 20%')}</span>`
                                                     }
                                                 }
                                                 

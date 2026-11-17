@@ -1387,4 +1387,8 @@ workspace_write 的 relativePath 必须是非空的 Workspace 相对文件路径
   <data name="Frontend.790" xml:space="preserve"><value>继续创建</value></data>
   <data name="Frontend.791" xml:space="preserve"><value>智能体「{0}」创建成功！</value></data>
   <data name="Frontend.792" xml:space="preserve"><value>全屏请求失败:</value></data>
+
+  <data name="Frontend.793" xml:space="preserve"><value>Top 20%</value></data>
+  <data name="Frontend.794" xml:space="preserve"><value>Top 40%</value></data>
+  <data name="Frontend.795" xml:space="preserve"><value>Bottom 20%</value></data>
 </root>
