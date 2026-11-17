@@ -519,7 +519,7 @@
   <data name="FineTuning.PythonPath" xml:space="preserve"><value>Python path</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="FineTuning.WorkerProjectPath" xml:space="preserve"><value>Worker project path</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="FineTuning.AutoStart" xml:space="preserve"><value>Start after the site starts</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="FineTuning.GenerateSecret" xml:space="preserve"><value>Generate key file</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="FineTuning.GenerateSecret" xml:space="preserve"><value>キーファイルを生成</value><comment>この言語向けに翻訳済み。</comment></data>
   <data name="FineTuning.StartWorker" xml:space="preserve"><value>Start worker</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="FineTuning.StopWorker" xml:space="preserve"><value>Stop worker</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="FineTuning.RefreshWorkerStatus" xml:space="preserve"><value>Refresh status</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
@@ -528,8 +528,8 @@
   <data name="FineTuning.LaunchCommand" xml:space="preserve"><value>Start command</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="FineTuning.WorkerStarted" xml:space="preserve"><value>Worker started.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="FineTuning.WorkerStopped" xml:space="preserve"><value>Worker stopped.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="FineTuning.SecretGenerated" xml:space="preserve"><value>Key file created. The key is never shown on this page.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="FineTuning.SecretAlreadyExists" xml:space="preserve"><value>Key file already exists and was left unchanged.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="FineTuning.SecretGenerated" xml:space="preserve"><value>キーファイルを作成しました。キーはこのページに表示されません。</value><comment>この言語向けに翻訳済み。</comment></data>
+  <data name="FineTuning.SecretAlreadyExists" xml:space="preserve"><value>キーファイルは既に存在するため、変更していません。</value><comment>この言語向けに翻訳済み。</comment></data>
   <data name="FineTuning.SaveBeforeLaunch" xml:space="preserve"><value>Save first, then generate a key and start the worker.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="FineTuning.Optional" xml:space="preserve"><value>Optional</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.400" xml:space="preserve"><value>Imported from NeuChar AI (DevId: {0})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
