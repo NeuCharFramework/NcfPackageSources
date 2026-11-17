@@ -526,4 +526,17 @@
   <data name="Frontend.504" xml:space="preserve"><value>モデル一覧は利用できません</value></data>
   <data name="Frontend.505" xml:space="preserve"><value>関連するFunction選択パラメーターはモジュール更新後に削除されたか利用できません</value></data>
   <data name="Frontend.506" xml:space="preserve"><value>未選択の場合、AgentGroupはまずグループ所有者のPromptRangeモデルを継承し、利用可能なモデルがない場合はシステム既定のChatモデルにフォールバックします</value></data>
+  <data name="Frontend.507" xml:space="preserve"><value>現在のWorkflow</value></data>
+  <data name="Frontend.508" xml:space="preserve"><value>「{0}」を中止します。</value></data>
+  <data name="Frontend.509" xml:space="preserve"><value>中止を確認</value></data>
+  <data name="Frontend.510" xml:space="preserve"><value>中止</value></data>
+  <data name="Frontend.511" xml:space="preserve"><value>実行を続ける</value></data>
+  <data name="Frontend.512" xml:space="preserve"><value>中止確認を表示できません。</value></data>
+  <data name="Frontend.513" xml:space="preserve"><value>手動中止を要求しました。タスクは失敗としてマークされます。</value></data>
+  <data name="Frontend.514" xml:space="preserve"><value>Workflowタスクの中止に失敗しました。</value></data>
+  <data name="Frontend.515" xml:space="preserve"><value>クリーンアップできる完了済みタスク記録はありません。実行中のタスクは常に保持されます。</value></data>
+  <data name="Frontend.516" xml:space="preserve"><value>クイッククリーンアップを確認</value></data>
+  <data name="Frontend.517" xml:space="preserve"><value>完了済みタスク記録を{0}件削除します（成功 {1}件、失敗 {2}件）。実行中のタスク、Workflow定義、バージョンには影響せず、削除後は復元できません。</value></data>
+  <data name="Frontend.518" xml:space="preserve"><value>{0}件をクリーンアップ</value></data>
+  <data name="Frontend.519" xml:space="preserve"><value>完了済みタスク記録を{0}件クリーンアップしました。</value></data>
 </root>

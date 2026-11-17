@@ -526,4 +526,17 @@
   <data name="Frontend.504" xml:space="preserve"><value>La liste des modèles est indisponible</value></data>
   <data name="Frontend.505" xml:space="preserve"><value>Le paramètre de sélection Function associé a été supprimé ou est indisponible après la mise à jour du module</value></data>
   <data name="Frontend.506" xml:space="preserve"><value>Sans sélection, AgentGroup hérite d’abord du modèle PromptRange du propriétaire du groupe ; en l’absence de modèle disponible, il utilise le modèle Chat par défaut du système</value></data>
+  <data name="Frontend.507" xml:space="preserve"><value>Workflow actuel</value></data>
+  <data name="Frontend.508" xml:space="preserve"><value>Le Workflow « {0} » sera interrompu.</value></data>
+  <data name="Frontend.509" xml:space="preserve"><value>Confirmer l’interruption</value></data>
+  <data name="Frontend.510" xml:space="preserve"><value>Interrompre</value></data>
+  <data name="Frontend.511" xml:space="preserve"><value>Continuer l’exécution</value></data>
+  <data name="Frontend.512" xml:space="preserve"><value>Impossible d’afficher la confirmation d’interruption.</value></data>
+  <data name="Frontend.513" xml:space="preserve"><value>L’interruption manuelle a été demandée ; la tâche sera marquée comme échouée.</value></data>
+  <data name="Frontend.514" xml:space="preserve"><value>Impossible d’interrompre la tâche du Workflow.</value></data>
+  <data name="Frontend.515" xml:space="preserve"><value>Aucun enregistrement de tâche terminée à nettoyer ; les tâches en cours sont toujours conservées.</value></data>
+  <data name="Frontend.516" xml:space="preserve"><value>Confirmer le nettoyage rapide</value></data>
+  <data name="Frontend.517" xml:space="preserve"><value>{0} enregistrements de tâches terminées seront définitivement supprimés ({1} réussis, {2} échoués). Les tâches en cours, les définitions de Workflow et les versions ne sont pas affectées ; la suppression est irréversible.</value></data>
+  <data name="Frontend.518" xml:space="preserve"><value>Nettoyer {0}</value></data>
+  <data name="Frontend.519" xml:space="preserve"><value>{0} enregistrements de tâches terminées nettoyés.</value></data>
 </root>

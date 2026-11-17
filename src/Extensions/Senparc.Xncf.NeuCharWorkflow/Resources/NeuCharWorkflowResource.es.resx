@@ -526,4 +526,17 @@
   <data name="Frontend.504" xml:space="preserve"><value>La lista de modelos no está disponible</value></data>
   <data name="Frontend.505" xml:space="preserve"><value>El parámetro de selección de Function asociado se eliminó o ya no está disponible tras actualizar el módulo</value></data>
   <data name="Frontend.506" xml:space="preserve"><value>Si no se selecciona, AgentGroup hereda primero el modelo PromptRange del propietario del grupo; si no hay un modelo disponible, usa el modelo Chat predeterminado del sistema</value></data>
+  <data name="Frontend.507" xml:space="preserve"><value>Workflow actual</value></data>
+  <data name="Frontend.508" xml:space="preserve"><value>Se interrumpirá “{0}”.</value></data>
+  <data name="Frontend.509" xml:space="preserve"><value>Confirmar interrupción</value></data>
+  <data name="Frontend.510" xml:space="preserve"><value>Interrumpir</value></data>
+  <data name="Frontend.511" xml:space="preserve"><value>Seguir ejecutando</value></data>
+  <data name="Frontend.512" xml:space="preserve"><value>No se puede mostrar la confirmación de interrupción.</value></data>
+  <data name="Frontend.513" xml:space="preserve"><value>Se solicitó la interrupción manual; la tarea se marcará como fallida.</value></data>
+  <data name="Frontend.514" xml:space="preserve"><value>No se pudo interrumpir la tarea de Workflow.</value></data>
+  <data name="Frontend.515" xml:space="preserve"><value>No hay registros de tareas completadas para limpiar; las tareas en ejecución siempre se conservan.</value></data>
+  <data name="Frontend.516" xml:space="preserve"><value>Confirmar limpieza rápida</value></data>
+  <data name="Frontend.517" xml:space="preserve"><value>Se eliminarán permanentemente {0} registros de tareas completadas ({1} correctos, {2} fallidos). Las tareas en ejecución, las definiciones de Workflow y las versiones no se verán afectadas, y la eliminación no se puede deshacer.</value></data>
+  <data name="Frontend.518" xml:space="preserve"><value>Limpiar {0}</value></data>
+  <data name="Frontend.519" xml:space="preserve"><value>Se limpiaron {0} registros de tareas completadas.</value></data>
 </root>

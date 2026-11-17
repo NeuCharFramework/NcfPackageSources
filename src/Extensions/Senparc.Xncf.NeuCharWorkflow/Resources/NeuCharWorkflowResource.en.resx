@@ -526,4 +526,17 @@
   <data name="Frontend.504" xml:space="preserve"><value>The model list is temporarily unavailable</value></data>
   <data name="Frontend.505" xml:space="preserve"><value>The selected Function parameter was removed or became unavailable after the module update</value></data>
   <data name="Frontend.506" xml:space="preserve"><value>When not selected, AgentGroup inherits the group owner’s PromptRange model; it falls back to the default Chat model only when no model is available.</value></data>
+  <data name="Frontend.507" xml:space="preserve"><value>Current Workflow</value></data>
+  <data name="Frontend.508" xml:space="preserve"><value>Abort “{0}”.</value></data>
+  <data name="Frontend.509" xml:space="preserve"><value>Confirm abort</value></data>
+  <data name="Frontend.510" xml:space="preserve"><value>Abort</value></data>
+  <data name="Frontend.511" xml:space="preserve"><value>Continue running</value></data>
+  <data name="Frontend.512" xml:space="preserve"><value>Unable to show the abort confirmation.</value></data>
+  <data name="Frontend.513" xml:space="preserve"><value>Manual abort requested; the task will be marked as failed.</value></data>
+  <data name="Frontend.514" xml:space="preserve"><value>Failed to abort the Workflow task.</value></data>
+  <data name="Frontend.515" xml:space="preserve"><value>No completed task records can be cleaned up; running tasks are always retained.</value></data>
+  <data name="Frontend.516" xml:space="preserve"><value>Confirm quick cleanup</value></data>
+  <data name="Frontend.517" xml:space="preserve"><value>This will permanently delete {0} completed task records ({1} succeeded, {2} failed). Running tasks, Workflow definitions, and versions are not affected, and deletion cannot be undone.</value></data>
+  <data name="Frontend.518" xml:space="preserve"><value>Clean up {0}</value></data>
+  <data name="Frontend.519" xml:space="preserve"><value>Cleaned up {0} completed task records.</value></data>
 </root>

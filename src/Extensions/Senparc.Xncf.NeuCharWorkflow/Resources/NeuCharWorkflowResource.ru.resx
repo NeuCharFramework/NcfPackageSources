@@ -526,4 +526,17 @@
   <data name="Frontend.504" xml:space="preserve"><value>Список моделей недоступен</value></data>
   <data name="Frontend.505" xml:space="preserve"><value>Связанный параметр выбора Function удалён или недоступен после обновления модуля</value></data>
   <data name="Frontend.506" xml:space="preserve"><value>Если ничего не выбрано, AgentGroup сначала наследует модель PromptRange владельца группы; при отсутствии доступной модели используется системная Chat-модель по умолчанию</value></data>
+  <data name="Frontend.507" xml:space="preserve"><value>Текущий Workflow</value></data>
+  <data name="Frontend.508" xml:space="preserve"><value>Остановить «{0}».</value></data>
+  <data name="Frontend.509" xml:space="preserve"><value>Подтвердить остановку</value></data>
+  <data name="Frontend.510" xml:space="preserve"><value>Остановить</value></data>
+  <data name="Frontend.511" xml:space="preserve"><value>Продолжить выполнение</value></data>
+  <data name="Frontend.512" xml:space="preserve"><value>Не удалось показать подтверждение остановки.</value></data>
+  <data name="Frontend.513" xml:space="preserve"><value>Запрошена ручная остановка; задача будет отмечена как неуспешная.</value></data>
+  <data name="Frontend.514" xml:space="preserve"><value>Не удалось остановить задачу Workflow.</value></data>
+  <data name="Frontend.515" xml:space="preserve"><value>Нет завершённых записей задач для очистки; выполняющиеся задачи всегда сохраняются.</value></data>
+  <data name="Frontend.516" xml:space="preserve"><value>Подтвердить быструю очистку</value></data>
+  <data name="Frontend.517" xml:space="preserve"><value>Будет безвозвратно удалено завершённых задач: {0} (успешных {1}, неуспешных {2}). Выполняющиеся задачи, определения Workflow и версии не затрагиваются; удаление нельзя отменить.</value></data>
+  <data name="Frontend.518" xml:space="preserve"><value>Очистить {0}</value></data>
+  <data name="Frontend.519" xml:space="preserve"><value>Очищено завершённых записей задач: {0}.</value></data>
 </root>

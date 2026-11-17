@@ -253,15 +253,15 @@ new Vue({
             }
             try {
                 if (this.$confirm) {
-                    await this.$confirm(`将中止“${task.workflowName || '当前工作流'}”的运行。`, '确认中止运行', {
-                        confirmButtonText: '中止',
-                        cancelButtonText: '继续运行',
+                    await this.$confirm(ncfST('将中止“{0}”的运行。', task.workflowName || ncfST('当前工作流')), ncfST('确认中止运行'), {
+                        confirmButtonText: ncfST('中止'),
+                        cancelButtonText: ncfST('继续运行'),
                         type: 'warning'
                     });
                 }
             } catch (error) {
                 if (error !== 'cancel' && error !== 'close') {
-                    this.$message.error(this.errorMessage(error, '无法显示中止确认。'));
+                    this.$message.error(this.errorMessage(error, ncfST('无法显示中止确认。')));
                 }
                 return;
             }
@@ -272,10 +272,10 @@ new Vue({
                     runId: task.runId || null,
                     executionLogId: task.executionLogId || null
                 }, { customAlert: true });
-                this.$message.success('已请求手动中止，任务将标记为失败。');
+                this.$message.success(ncfST('已请求手动中止，任务将标记为失败。'));
                 await this.refreshTasks();
             } catch (error) {
-                this.$message.error(this.errorMessage(error, '中止 Workflow 任务失败。'));
+                this.$message.error(this.errorMessage(error, ncfST('中止 Workflow 任务失败。')));
             } finally {
                 this.abortingTaskId = '';
             }
@@ -288,17 +288,17 @@ new Vue({
                 const preview = NeuCharWorkflowUi.unwrap(previewResponse) || {};
                 const completedCount = Number(preview.completedCount || 0);
                 if (completedCount <= 0) {
-                    this.$message.info('没有可清理的已完成任务记录；运行中的任务会始终保留。');
+                    this.$message.info(ncfST('没有可清理的已完成任务记录；运行中的任务会始终保留。'));
                     return;
                 }
 
                 if (this.$confirm) {
                     await this.$confirm(
-                        `将永久删除 ${completedCount} 条已完成任务记录（成功 ${Number(preview.succeededCount || 0)} 条，失败 ${Number(preview.failedCount || 0)} 条）。运行中的任务、工作流定义和版本不会受影响，删除后无法恢复。`,
-                        '确认快速清理',
+                        ncfST('将永久删除 {0} 条已完成任务记录（成功 {1} 条，失败 {2} 条）。运行中的任务、工作流定义和版本不会受影响，删除后无法恢复。', completedCount, Number(preview.succeededCount || 0), Number(preview.failedCount || 0)),
+                        ncfST('确认快速清理'),
                         {
-                            confirmButtonText: `清理 ${completedCount} 条`,
-                            cancelButtonText: '取消',
+                            confirmButtonText: ncfST('清理 {0} 条', completedCount),
+                            cancelButtonText: ncfST('取消'),
                             type: 'warning',
                             closeOnClickModal: false
                         });
@@ -308,11 +308,11 @@ new Vue({
                     cutoff: preview.cutoff
                 }, { customAlert: true });
                 const result = NeuCharWorkflowUi.unwrap(resultResponse) || {};
-                this.$message.success(`已清理 ${Number(result.deletedCount || 0)} 条已完成任务记录。`);
+                this.$message.success(ncfST('已清理 {0} 条已完成任务记录。', Number(result.deletedCount || 0)));
                 await this.loadTasks();
             } catch (error) {
                 if (error !== 'cancel' && error !== 'close') {
-                    this.$message.error(this.errorMessage(error, '快速清理 Workflow 任务失败。'));
+                    this.$message.error(this.errorMessage(error, ncfST('快速清理 Workflow 任务失败。')));
                 }
             } finally {
                 this.cleaning = false;

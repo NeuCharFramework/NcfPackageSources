@@ -525,4 +525,17 @@
   <data name="Frontend.504" xml:space="preserve"><value>模型列表暂不可用</value></data>
   <data name="Frontend.505" xml:space="preserve"><value>关联的 Function 选择参数已在模块更新后删除或不可用</value></data>
   <data name="Frontend.506" xml:space="preserve"><value>未选择时，AgentGroup 先继承群主的 PromptRange 模型；没有可用模型时才回退系统默认 Chat 模型。</value></data>
+  <data name="Frontend.507" xml:space="preserve"><value>当前工作流</value></data>
+  <data name="Frontend.508" xml:space="preserve"><value>将中止“{0}”的运行。</value></data>
+  <data name="Frontend.509" xml:space="preserve"><value>确认中止运行</value></data>
+  <data name="Frontend.510" xml:space="preserve"><value>中止</value></data>
+  <data name="Frontend.511" xml:space="preserve"><value>继续运行</value></data>
+  <data name="Frontend.512" xml:space="preserve"><value>无法显示中止确认。</value></data>
+  <data name="Frontend.513" xml:space="preserve"><value>已请求手动中止，任务将标记为失败。</value></data>
+  <data name="Frontend.514" xml:space="preserve"><value>中止 Workflow 任务失败。</value></data>
+  <data name="Frontend.515" xml:space="preserve"><value>没有可清理的已完成任务记录；运行中的任务会始终保留。</value></data>
+  <data name="Frontend.516" xml:space="preserve"><value>确认快速清理</value></data>
+  <data name="Frontend.517" xml:space="preserve"><value>将永久删除 {0} 条已完成任务记录（成功 {1} 条，失败 {2} 条）。运行中的任务、工作流定义和版本不会受影响，删除后无法恢复。</value></data>
+  <data name="Frontend.518" xml:space="preserve"><value>清理 {0} 条</value></data>
+  <data name="Frontend.519" xml:space="preserve"><value>已清理 {0} 条已完成任务记录。</value></data>
 </root>
