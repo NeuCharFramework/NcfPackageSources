@@ -13,7 +13,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Module.AgentsManager.MenuName" xml:space="preserve">
-    <value>Agents 管理</value>
+    <value>エージェント管理</value>
   </data>
   <data name="Module.AgentsManager.Description" xml:space="preserve">
     <value>AI エージェントと関連設定を管理します</value>
@@ -22,13 +22,13 @@
     <value>ホーム</value>
   </data>
   <data name="Parameter.Agents.Template.Name" xml:space="preserve">
-    <value>名前||Agent テンプレート名</value>
+    <value>名前||エージェントテンプレート名</value>
   </data>
   <data name="Parameter.Agents.Template.Id" xml:space="preserve">
     <value>ID||0 で新規作成</value>
   </data>
   <data name="Parameter.Agents.Template.SystemMessage" xml:space="preserve">
-    <value>SystemMessage||システムメッセージの PromptRangeCode。検索、選択、手動入力に対応</value>
+    <value>システムメッセージ||システムメッセージの PromptRangeCode。検索、選択、手動入力に対応</value>
   </data>
   <data name="Parameter.Agents.Template.Description" xml:space="preserve">
     <value>説明||テンプレートの説明。モデルの動作には影響しません</value>
@@ -40,19 +40,19 @@
     <value>プラットフォーム引数||キーなどの接続引数</value>
   </data>
   <data name="Parameter.Agents.Template.FunctionCalls" xml:space="preserve">
-    <value>Function Calls||カンマ区切りの Function Call 名</value>
+    <value>関数呼び出し||カンマ区切りの関数呼び出し名</value>
   </data>
   <data name="Parameter.Agents.Create.Name" xml:space="preserve">
-    <value>Agent 名||新しい Agent の名前</value>
+    <value>エージェント名||新しいエージェントの名前</value>
   </data>
   <data name="Parameter.Agents.Create.ManualPromptCode" xml:space="preserve">
-    <value>PromptCode を手動入力||レンジ名、タクティック接頭辞、完全版に対応。SystemMessage の手動入力時は必須</value>
+    <value>PromptCode を手動入力||レンジ名、タクティック接頭辞、完全版に対応。システムメッセージを手動入力する場合は必須</value>
   </data>
   <data name="Parameter.Agents.Create.Description" xml:space="preserve">
-    <value>説明||新しい Agent の説明（任意）</value>
+    <value>説明||新しいエージェントの説明（任意）</value>
   </data>
   <data name="Parameter.Agents.Create.FunctionCalls" xml:space="preserve">
-    <value>Function Calls||カンマ区切りの Function Call 名（任意）</value>
+    <value>関数呼び出し||カンマ区切りの関数呼び出し名（任意）</value>
   </data>
   <data name="Parameter.Agents.Search.Query" xml:space="preserve">
     <value>検索語||名前、PromptCode、キーワード。最大 10 件、合計 500 文字まで</value>
@@ -61,7 +61,7 @@
     <value>最大件数||キーワードごとに最大 10 件。既定 5</value>
   </data>
   <data name="Parameter.Agents.Chat.Search.Query" xml:space="preserve">
-    <value>検索語||ChatGroup 名または用途のキーワード</value>
+    <value>検索語||チャットグループ名または用途のキーワード</value>
   </data>
   <data name="Parameter.Agents.Chat.Search.TopN" xml:space="preserve">
     <value>最大結果数||既定値 5、最大 10</value>
@@ -85,16 +85,16 @@
     <value>メンバー（手動）||名前、ID、PromptCode。複数はカンマ、セミコロン、改行で区切ります</value>
   </data>
   <data name="Parameter.Agents.Chat.Admin" xml:space="preserve">
-    <value>グループ所有者||最高評価のホスト Agent を自動使用。手動入力は互換用です</value>
+    <value>グループ所有者||最高評価のホストエージェントを自動使用。手動入力は互換用です</value>
   </data>
   <data name="Parameter.Agents.Chat.AdminManual" xml:space="preserve">
     <value>所有者（手動）||名前、ID、PromptCode（任意）</value>
   </data>
   <data name="Parameter.Agents.Chat.Contact" xml:space="preserve">
-    <value>連絡 Agent||最高評価のホスト Agent を自動使用。手動入力は互換用です</value>
+    <value>連絡エージェント||最高評価のホストエージェントを自動使用。手動入力は互換用です</value>
   </data>
   <data name="Parameter.Agents.Chat.ContactManual" xml:space="preserve">
-    <value>連絡 Agent（手動）||名前、ID、PromptCode（任意）</value>
+    <value>連絡エージェント（手動）||名前、ID、PromptCode（任意）</value>
   </data>
   <data name="Parameter.Agents.Chat.Description" xml:space="preserve">
     <value>説明||グループの説明</value>
@@ -103,19 +103,19 @@
     <value>グループを選択||実行するグループを選択</value>
   </data>
   <data name="Parameter.Agents.Chat.AIModel" xml:space="preserve">
-    <value>AI モデル||このタスクに使う外部 AI モデル</value>
+    <value>AIモデル||このタスクに使う外部AIモデル</value>
   </data>
   <data name="Parameter.Agents.Chat.Individuation" xml:space="preserve">
-    <value>パーソナライズ Agent||</value>
+    <value>パーソナライズされたエージェント||</value>
   </data>
   <data name="Common.Yes" xml:space="preserve">
     <value>はい</value>
   </data>
   <data name="Agents.Chat.Individuation.Help" xml:space="preserve">
-    <value>個別の AI パラメーターで Agent を実行</value>
+    <value>個別のAIパラメーターでエージェントを実行</value>
   </data>
   <data name="Parameter.Agents.Chat.Command" xml:space="preserve">
-    <value>何をお手伝いしますか||Agents に依頼する作業を説明してください</value>
+    <value>何をお手伝いしますか||エージェントに依頼する作業を説明してください</value>
   </data>
   <data name="Parameter.Agents.Chat.SelectDelete" xml:space="preserve">
     <value>削除する会話||会話とすべてのメッセージ、タスクを削除</value>
@@ -127,7 +127,7 @@
     <value>{0}（作成日時：{1:g}）</value>
   </data>
   <data name="Agents.Plugin.Crawl.Description" xml:space="preserve">
-    <value>Web ページをクロールして関連内容を返します</value>
+    <value>Webページをクロールして関連内容を返します</value>
   </data>
   <data name="Agents.Plugin.Crawl.Url" xml:space="preserve">
     <value>クロール URL</value>
@@ -157,13 +157,13 @@
     <value>あなたは {0} に堪能なプロの翻訳者です。ユーザーの文章を正確に翻訳し、訳文のみ出力してください。</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>AgentsManagerホーム</value>
+    <value>エージェントマネージャーのホーム</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
     <value>拡張モジュール</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>Agentsマネージャー</value>
+    <value>エージェントマネージャー</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
     <value>ホーム</value>
@@ -172,7 +172,7 @@
     <value>エージェント</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>Agentリスト</value>
+    <value>エージェント一覧</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
     <value>名前で検索</value>
@@ -271,7 +271,7 @@
     <value>モデル：</value>
   </data>
   <data name="Frontend.039" xml:space="preserve">
-    <value>AIモデルを管理する</value>
+    <value>AIモデルを管理</value>
   </data>
   <data name="Frontend.040" xml:space="preserve">
     <value>モデルパラメータ</value>
@@ -340,7 +340,7 @@
     <value>アクション</value>
   </data>
   <data name="Frontend.062" xml:space="preserve">
-    <value>Agentパラメータ</value>
+    <value>エージェントパラメーター</value>
   </data>
   <data name="Frontend.063" xml:space="preserve">
     <value>テストを再実行</value>
@@ -370,7 +370,7 @@
     <value>総メッセージ</value>
   </data>
   <data name="Frontend.072" xml:space="preserve">
-    <value>合計Token（入力+出力）</value>
+    <value>合計トークン（入力+出力）</value>
   </data>
   <data name="Frontend.073" xml:space="preserve">
     <value>平均応答時間</value>
@@ -397,7 +397,7 @@
     <value>完了</value>
   </data>
   <data name="Frontend.081" xml:space="preserve">
-    <value>すべてのAgents</value>
+    <value>すべてのエージェント</value>
   </data>
   <data name="Frontend.082" xml:space="preserve">
     <value>検索する</value>
@@ -406,10 +406,10 @@
     <value>リセット</value>
   </data>
   <data name="Frontend.084" xml:space="preserve">
-    <value>合計Token</value>
+    <value>合計トークン</value>
   </data>
   <data name="Frontend.085" xml:space="preserve">
-    <value>入出力Token</value>
+    <value>入出力トークン</value>
   </data>
   <data name="Frontend.086" xml:space="preserve">
     <value>P95 / 最大期間</value>
@@ -433,7 +433,7 @@
     <value>平均応答時間（ミリ秒）</value>
   </data>
   <data name="Frontend.093" xml:space="preserve">
-    <value>個人Agents</value>
+    <value>個人エージェント</value>
   </data>
   <data name="Frontend.094" xml:space="preserve">
     <value>時間別</value>
@@ -448,7 +448,7 @@
     <value>エージェントを追加</value>
   </data>
   <data name="Frontend.098" xml:space="preserve">
-    <value>Agent名</value>
+    <value>エージェント名</value>
   </data>
   <data name="Frontend.099" xml:space="preserve">
     <value>ご記入をお願いします。</value>
@@ -478,16 +478,16 @@
     <value>外部プラットフォームのパラメーター</value>
   </data>
   <data name="Frontend.108" xml:space="preserve">
-    <value>すべてのXNCF機能プラグインを自動的に添付する</value>
+    <value>すべてのXNCF機能プラグインを自動的に添付</value>
   </data>
   <data name="Frontend.109" xml:space="preserve">
     <value>手動選択</value>
   </data>
   <data name="Frontend.110" xml:space="preserve">
-    <value>有効にすると、登録されているすべてのXNCF機能プラグインが自動的に添付されるため、Agentは一致するモジュールの機能を認識してトリガーできます。</value>
+    <value>有効にすると、登録されているすべてのXNCF機能プラグインが自動的に添付され、エージェントは一致するモジュールの機能を認識して呼び出せます。</value>
   </data>
   <data name="Frontend.111" xml:space="preserve">
-    <value>Pluginクラス名、または名前空間を含む完全な名前を入力できます</value>
+    <value>プラグインクラス名、または名前空間を含む完全な名前を入力できます</value>
   </data>
   <data name="Frontend.112" xml:space="preserve">
     <value>+追加</value>
@@ -508,16 +508,16 @@
     <value>接続をテスト</value>
   </data>
   <data name="Frontend.118" xml:space="preserve">
-    <value>+ MCP Endpointを追加</value>
+    <value>+ MCPエンドポイントを追加</value>
   </data>
   <data name="Frontend.119" xml:space="preserve">
-    <value>MCP Endpointを編集</value>
+    <value>MCPエンドポイントを編集</value>
   </data>
   <data name="Frontend.120" xml:space="preserve">
-    <value>MCP Endpointを追加</value>
+    <value>MCPエンドポイントを追加</value>
   </data>
   <data name="Frontend.121" xml:space="preserve">
-    <value>Endpoint名（例：mcp-server-NCF-7）</value>
+    <value>エンドポイント名（例：mcp-server-NCF-7）</value>
   </data>
   <data name="Frontend.122" xml:space="preserve">
     <value>確認</value>
@@ -574,13 +574,13 @@
     <value>パーソナライズされたエージェント</value>
   </data>
   <data name="Frontend.140" xml:space="preserve">
-    <value>パーソナライズされたパラメータでAgentを実行する</value>
+    <value>パーソナライズされたパラメーターでエージェントを実行</value>
   </data>
   <data name="Frontend.141" xml:space="preserve">
     <value>- どうしました？</value>
   </data>
   <data name="Frontend.142" xml:space="preserve">
-    <value>MCPツールリスト</value>
+    <value>MCPツール一覧</value>
   </data>
   <data name="Frontend.143" xml:space="preserve">
     <value>ツール名。</value>
@@ -622,7 +622,7 @@
     <value>チャットする</value>
   </data>
   <data name="Frontend.156" xml:space="preserve">
-    <value>Function通話名を入力してください</value>
+    <value>関数呼び出し名を入力してください</value>
   </data>
   <data name="Frontend.157" xml:space="preserve">
     <value>再読み込みする</value>
@@ -637,7 +637,7 @@
     <value>パラメーター :</value>
   </data>
   <data name="Frontend.161" xml:space="preserve">
-    <value>このAgentは現在、どのグループにも属していません。</value>
+    <value>このエージェントは現在、どのグループにも属していません。</value>
   </data>
   <data name="Frontend.162" xml:space="preserve">
     <value>ご記入をお願いします。</value>
@@ -721,7 +721,7 @@
     <value>タスク: (#)</value>
   </data>
   <data name="Frontend.189" xml:space="preserve">
-    <value>Agentのアバター</value>
+    <value>エージェントのアバター</value>
   </data>
   <data name="Frontend.190" xml:space="preserve">
     <value>エンドポイント URL（例：http://localhost:5000/mcp/sse）</value>
@@ -790,13 +790,13 @@
     <value>今すぐ閉じますか？</value>
   </data>
   <data name="Frontend.212" xml:space="preserve">
-    <value>Agent {0}を無効にしますか？</value>
+    <value>エージェント {0}を無効にしますか？</value>
   </data>
   <data name="Frontend.213" xml:space="preserve">
-    <value>このAgentは、今後の新しいタスクに参加しません</value>
+    <value>このエージェントは、今後の新しいタスクに参加しません</value>
   </data>
   <data name="Frontend.214" xml:space="preserve">
-    <value>Agent {0}を有効にしますか？</value>
+    <value>エージェント {0}を有効にしますか？</value>
   </data>
   <data name="Frontend.215" xml:space="preserve">
     <value>グループ「{0}」を退出しますか？</value>
@@ -814,7 +814,7 @@
     <value>操作がキャンセルされました</value>
   </data>
   <data name="Frontend.220" xml:space="preserve">
-    <value>Agent「{0}」を現在削除できません。</value>
+    <value>エージェント「{0}」を現在削除できません。</value>
   </data>
   <data name="Frontend.221" xml:space="preserve">
     <value>オーナーとしてのグループ：{0}</value>
@@ -832,13 +832,13 @@
     <value>了解です</value>
   </data>
   <data name="Frontend.226" xml:space="preserve">
-    <value>Agent「{0}」を削除しますか？</value>
+    <value>エージェント「{0}」を削除しますか？</value>
   </data>
   <data name="Frontend.227" xml:space="preserve">
     <value>メンバーが脱退するグループ：{0}</value>
   </data>
   <data name="Frontend.228" xml:space="preserve">
-    <value>このAgentに関連するメッセージ履歴も削除され、復元できなくなります。</value>
+    <value>このエージェントに関連するメッセージ履歴も削除され、復元できなくなります。</value>
   </data>
   <data name="Frontend.229" xml:space="preserve">
     <value>正常に削除されました</value>
@@ -916,7 +916,7 @@
     <value>パラメータはありません。</value>
   </data>
   <data name="Frontend.254" xml:space="preserve">
-    <value>MCPツールリスト</value>
+    <value>MCPツール一覧</value>
   </data>
   <data name="Frontend.255" xml:space="preserve">
     <value>閉じる</value>
@@ -955,19 +955,19 @@
     <value>MCPエンドポイント</value>
   </data>
   <data name="Frontend.267" xml:space="preserve">
-    <value>Endpoint名（例：mcp-server-NCF-7）</value>
+    <value>エンドポイント名（例：mcp-server-NCF-7）</value>
   </data>
   <data name="Frontend.268" xml:space="preserve">
     <value>エンドポイント URL（例：http://localhost:5000/mcp/sse）</value>
   </data>
   <data name="Frontend.269" xml:space="preserve">
-    <value>MCPツールリスト</value>
+    <value>MCPツール一覧</value>
   </data>
   <data name="Frontend.270" xml:space="preserve">
-    <value>上部P：</value>
+    <value>上限P：</value>
   </data>
   <data name="Frontend.271" xml:space="preserve">
-    <value>Tokenの最大数：</value>
+    <value>トークンの最大数：</value>
   </data>
   <data name="Frontend.272" xml:space="preserve">
     <value>存在ペナルティ：</value>
@@ -1024,10 +1024,10 @@
     <value>システムメッセージ：マルチエージェントオーケストレーションに失敗しました（{0}）。フォールバック実行では、表示するテキストが返されませんでした。</value>
   </data>
   <data name="Frontend.290" xml:space="preserve">
-    <value>システムメッセージ：AIサービスが403（Forbidden）を返し、現在のタスクを続行できません。モデルの権限、APIキー、または選択したモデルが利用可能かどうかを確認してください。</value>
+    <value>システムメッセージ：AIサービスが403（アクセス拒否）を返し、現在のタスクを続行できません。モデルの権限、APIキー、または選択したモデルが利用可能かどうかを確認してください。</value>
   </data>
   <data name="Frontend.291" xml:space="preserve">
-    <value>システムメッセージ：AIサービスの認証に失敗しました（401）。APIキー/Endpointの設定を確認してください。</value>
+    <value>システムメッセージ：AIサービスの認証に失敗しました（401）。APIキーとエンドポイントの設定を確認してください。</value>
   </data>
   <data name="Frontend.292" xml:space="preserve">
     <value>システムメッセージ：AIサービス呼び出しに失敗し、タスクが中断されました。理由：{0}</value>
@@ -1036,19 +1036,19 @@
     <value>モデル構成が空です（AIModelDto == null）</value>
   </data>
   <data name="Frontend.294" xml:space="preserve">
-    <value>PromptCatalyzer ChatGroupが見つかりませんでした。最初に初期化を完了してください。</value>
+    <value>PromptCatalyzerのチャットグループが見つかりませんでした。最初に初期化を完了してください。</value>
   </data>
   <data name="Frontend.295" xml:space="preserve">
-    <value>PromptCatalyzer Agentが見つかりませんでした。最初に初期化を完了してください。</value>
+    <value>PromptCatalyzerのエージェントが見つかりませんでした。最初に初期化を完了してください。</value>
   </data>
   <data name="Frontend.296" xml:space="preserve">
-    <value>Agentの会話に失敗しました：{0}</value>
+    <value>エージェントとの会話に失敗しました：{0}</value>
   </data>
   <data name="Frontend.297" xml:space="preserve">
     <value>PromptCodeを選択するか、手動で入力してください</value>
   </data>
   <data name="Frontend.298" xml:space="preserve">
-    <value>Agentの名前を入力してください</value>
+    <value>エージェントの名前を入力してください</value>
   </data>
   <data name="Frontend.299" xml:space="preserve">
     <value>検索語（名前、PromptCode、またはキーワード）を入力してください</value>
@@ -1069,7 +1069,7 @@
     <value>接続に失敗しました。</value>
   </data>
   <data name="Frontend.305" xml:space="preserve">
-    <value>Agent IDが提供されていません</value>
+    <value>エージェントIDが指定されていません</value>
   </data>
   <data name="Frontend.306" xml:space="preserve">
     <value>PromptCatalyzerの初期化がタイムアウトしました（2分）</value>
@@ -1087,7 +1087,7 @@
     <value>プロンプト最適化リクエストがタイムアウトしました（15分）</value>
   </data>
   <data name="Frontend.311" xml:space="preserve">
-    <value>編集するChatGroupが見つかりませんでした。ID：{0}</value>
+    <value>編集するチャットグループが見つかりませんでした。ID：{0}</value>
   </data>
   <data name="Frontend.312" xml:space="preserve">
     <value>グループメンバーの選択に失敗しました：{0}</value>
@@ -1096,25 +1096,25 @@
     <value>少なくとも1人のグループメンバー（IDまたは名前）を入力してください</value>
   </data>
   <data name="Frontend.314" xml:space="preserve">
-    <value>利用可能なチャットAIモデルが見つからなかったため、ホストAgentを自動的に作成できません</value>
+    <value>利用可能なチャットAIモデルが見つからなかったため、ホストエージェントを自動的に作成できません</value>
   </data>
   <data name="Frontend.315" xml:space="preserve">
-    <value>入力が空です。Agent ID、名前、またはPromptCodeを渡してください。</value>
+    <value>入力が空です。エージェントID、名前、またはPromptCodeを指定してください。</value>
   </data>
   <data name="Frontend.316" xml:space="preserve">
-    <value>有効なAgentが見つかりませんでした。ID：{0}</value>
+    <value>有効なエージェントが見つかりませんでした。ID：{0}</value>
   </data>
   <data name="Frontend.317" xml:space="preserve">
-    <value>「{0}」は複数のAgentsと一致しました。IDを指定してください：{1}</value>
+    <value>「{0}」は複数のエージェントと一致しました。IDを指定してください：{1}</value>
   </data>
   <data name="Frontend.318" xml:space="preserve">
-    <value>一致するAgentが見つかりません：{0}</value>
+    <value>一致するエージェントが見つかりません：{0}</value>
   </data>
   <data name="Frontend.319" xml:space="preserve">
     <value>最低一つのグループを選択</value>
   </data>
   <data name="Frontend.320" xml:space="preserve">
-    <value>タスクが作成され、開始されました。ChatTaskリストでそのステータスを確認してください。</value>
+    <value>タスクが作成され、開始されました。チャットタスク一覧でステータスを確認してください。</value>
   </data>
   <data name="Frontend.321" xml:space="preserve">
     <value>削除する会話を選択してください！</value>
@@ -1162,19 +1162,19 @@
     <value>タスクのプロンプトがありません。</value>
   </data>
   <data name="Agents.Error.ChatGroupNotFound" xml:space="preserve">
-    <value>Chat グループが見つかりません: {0}</value>
+    <value>チャットグループが見つかりません: {0}</value>
   </data>
   <data name="Agents.Error.ChatGroupDisabled" xml:space="preserve">
-    <value>Chat グループ「{0}」は無効なため、新しい実行タスクを開始できません。</value>
+    <value>チャットグループ「{0}」は無効なため、新しい実行タスクを開始できません。</value>
   </data>
   <data name="Agents.Error.AiModelNotFound" xml:space="preserve">
     <value>選択した AI モデルは存在しません: {0}</value>
   </data>
   <data name="Agents.Error.NoEnabledAgents" xml:space="preserve">
-    <value>Chat グループ [{0}] には有効なエージェントがありません。</value>
+    <value>チャットグループ [{0}] には有効なエージェントがありません。</value>
   </data>
   <data name="Agents.Error.MultiAgentMinMembers" xml:space="preserve">
-    <value>Chat グループ [{0}] のマルチエージェント協働には、有効なエージェントが少なくとも 2 つ必要です。</value>
+    <value>チャットグループ [{0}] のマルチエージェント協働には、有効なエージェントが少なくとも2つ必要です。</value>
   </data>
   <data name="Agents.Error.AdminAgentNotFound" xml:space="preserve">
     <value>チャットグループ [{0}] に有効な管理者エージェント（ID: {1}）が見つかりません。</value>
@@ -1459,10 +1459,10 @@
     <value>スタンバイ</value>
   </data>
   <data name="Function.Agents.TemplateManagement.Name" xml:space="preserve">
-    <value>Agent テンプレート管理</value>
+    <value>エージェントテンプレート管理</value>
   </data>
   <data name="Function.Agents.TemplateManagement.Description" xml:space="preserve">
-    <value>AgentTemplate を作成・編集します。ChatGroup のメンバーを構成するときは、まず「Agent テンプレートを検索」を使い、タスクに適した役割を持つ有効なテンプレートを優先してください。既存 Agent で不足する場合のみ新しい Agent を作成します。新しい Agent にはプレーンテキストの System Prompt を使用できます。その後、適切な Agent を ChatGroup に設定してください。</value>
+    <value>エージェントテンプレートを作成・編集します。チャットグループのメンバーを構成するときは、まず「エージェントテンプレートを検索」を使い、タスクに適した役割を持つ有効なテンプレートを優先してください。既存のエージェントで不足する場合のみ新しいエージェントを作成します。新しいエージェントにはプレーンテキストのシステムプロンプトを使用できます。その後、適切なエージェントをチャットグループに設定してください。</value>
   </data>
   <data name="Function.Agents.CreateFromPromptCode.Name" xml:space="preserve">
     <value>PromptCode からエージェントを作成</value>
@@ -1471,28 +1471,28 @@
     <value>範囲、タクティクス、完全指定の PromptCode からエージェントを作成します</value>
   </data>
   <data name="Function.Agents.SearchTemplate.Name" xml:space="preserve">
-    <value>Agent テンプレートを検索して ID を返す</value>
+    <value>エージェントテンプレートを検索してIDを返す</value>
   </data>
   <data name="Function.Agents.SearchTemplate.Description" xml:space="preserve">
-    <value>AgentTemplate または ChatGroup の作成前に、名前、役割のキーワード、PromptCode で既存 AgentTemplate を検索して候補を返します。タスクに適した有効なテンプレートを優先してください。複数キーワードに対応します。</value>
+    <value>エージェントテンプレートまたはチャットグループの作成前に、名前、役割のキーワード、PromptCodeで既存のエージェントテンプレートを検索して候補を返します。タスクに適した有効なテンプレートを優先してください。複数キーワードに対応します。</value>
   </data>
   <data name="Function.Agents.SearchChatGroup.Name" xml:space="preserve">
-    <value>ChatGroup を検索して ID を返す</value>
+    <value>チャットグループを検索してIDを返す</value>
   </data>
   <data name="Function.Agents.SearchChatGroup.Description" xml:space="preserve">
-    <value>ChatGroup を作成する前に、名前または用途のキーワードで既存グループを検索し、ID、説明、メンバーを最大 10 件返します。必ず適切な既存グループを確認して再利用し、名前だけを理由に重複作成しないでください。</value>
+    <value>チャットグループを作成する前に、名前または用途のキーワードで既存グループを検索し、ID、説明、メンバーを最大10件返します。必ず適切な既存グループを確認して再利用し、名前だけを理由に重複作成しないでください。</value>
   </data>
   <data name="Function.Agents.ManageChatGroup.Name" xml:space="preserve">
-    <value>ChatGroup を管理</value>
+    <value>チャットグループを管理</value>
   </data>
   <data name="Function.Agents.ManageChatGroup.Description" xml:space="preserve">
-    <value>まずタスクに適した役割を持つ既存 AgentTemplate を検索して優先し、次にタスクのキーワードで「ChatGroup を検索」を呼び出して、名前、用途、メンバーが適したグループを再利用してください。既存 Agent で不足する場合のみ、プレーンテキストの System Prompt を使って AgentTemplate を作成します。適切な ChatGroup がない場合は、作成するグループ名、Agent、用途をユーザーに説明し、明示的な確認を待ってから「新規グループ」を選択してください。用途の説明は必須で、システムが [AdminChat:AutoGenerated] マーカーを追加します。</value>
+    <value>まずタスクに適した役割を持つ既存のエージェントテンプレートを検索して優先し、次にタスクのキーワードで「チャットグループを検索」を呼び出して、名前、用途、メンバーが適したグループを再利用してください。既存のエージェントで不足する場合のみ、プレーンテキストのシステムプロンプトを使ってエージェントテンプレートを作成します。適切なチャットグループがない場合は、作成するグループ名、エージェント、用途をユーザーに説明し、明示的な確認を待ってから「新規グループ」を選択してください。用途の説明は必須で、システムが [AdminChat:AutoGenerated] マーカーを追加します。</value>
   </data>
   <data name="Function.Agents.StartChatGroup.Name" xml:space="preserve">
-    <value>ChatGroup を開始</value>
+    <value>チャットグループを開始</value>
   </data>
   <data name="Function.Agents.StartChatGroup.Description" xml:space="preserve">
-    <value>タスクに適した既存の ChatGroup を開始します。新規作成の前に既存グループを確認し、ユーザーの明示的な確認を得てください。</value>
+    <value>タスクに適した既存のチャットグループを開始します。新規作成の前に既存グループを確認し、ユーザーの明示的な確認を得てください。</value>
   </data>
   <data name="Function.Agents.DeleteConversation.Name" xml:space="preserve">
     <value>会話を削除</value>
@@ -1502,193 +1502,193 @@
   </data>
 
 
-  <data name="Frontend.332" xml:space="preserve"><value>A2A Agentカードには、名前、説明、スキルのみが表示されます。プロンプト、シークレット、内部ツールは表示されません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.333" xml:space="preserve"><value>A2A公共サービス</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.334" xml:space="preserve"><value>リモートA2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.335" xml:space="preserve"><value>リモートA2A Agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.336" xml:space="preserve"><value>A2A:シークレット:キー名</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.337" xml:space="preserve"><value>Agentカード名</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.338" xml:space="preserve"><value>AgentカードURL</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.339" xml:space="preserve"><value>Agentテンプレートには、承認されたコネクタがありません。ここで選択しても呼び出されません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.340" xml:space="preserve"><value>グループに人間のメンバーがいる場合、人間のターンになるとテキストによる返信を待つよう一時停止します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.341" xml:space="preserve"><value>HILレベル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.342" xml:space="preserve"><value>人間はモデルを呼び出しません。このバインディングは、システムAgentタスクポリシーを維持し、デフォルトでグルー​​プタスクに従います。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.343" xml:space="preserve"><value>人間の参加者</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.344" xml:space="preserve"><value>人間のターン</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.345" xml:space="preserve"><value>L0全自動（プラグイン/MCPが自動的に実行されます）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.346" xml:space="preserve"><value>L1リスクベースの承認（MCPデフォルトの承認）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.347" xml:space="preserve"><value>L2ツールの承認（最初にすべてのツールを確認）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.348" xml:space="preserve"><value>L3 ヒューマンパートシパント + ツールの承認</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.349" xml:space="preserve"><value>MCPツールの権限</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.350" xml:space="preserve"><value>コンテキストの共有</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.351" xml:space="preserve"><value>コネクタを承認しない</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.352" xml:space="preserve"><value>ナレッジベースをバインドしない</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.353" xml:space="preserve"><value>今回はコネクタを使用しない場合は、選択解除したままにします</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.354" xml:space="preserve"><value>パーソナライズされたパラメーター</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.355" xml:space="preserve"><value>ここで管理されています。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.356" xml:space="preserve"><value>タスクの指示のみ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.357" xml:space="preserve"><value>MCPリストから選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.358" xml:space="preserve"><value>PromptRangeから継承</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.359" xml:space="preserve"><value>これらのエンドポイントは、MCPモジュールレジストリからのものです。いずれかを選択して、名前 + URL として現在の構成に追加します。これはいつでも削除できます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.360" xml:space="preserve"><value>タスクの指示 + 現在のターンの主な結論</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.361" xml:space="preserve"><value>タスクの説明と実行戦略</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.362" xml:space="preserve"><value>現在のプレーンテキストのプロンプトと選択したチャットモデルからプロンプト範囲を作成し、1回実行してAIでスコアを付け、範囲レベルの参照に自動的に切り替えます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.363" xml:space="preserve"><value>例：X-A2A-Token</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.364" xml:space="preserve"><value>例：X-API-Key</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.365" xml:space="preserve"><value>例：パートナー-ncf</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.366" xml:space="preserve"><value>例：リサーチエージェント</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.367" xml:space="preserve"><value>例：外部リサーチアシスタント</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.368" xml:space="preserve"><value>リモートシステムがAgentを選択するために使用します。プロンプトや内部情報を入力しないでください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.369" xml:space="preserve"><value>保存</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.370" xml:space="preserve"><value>保存</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.371" xml:space="preserve"><value>ローカルツールの呼び出しを許可する</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.372" xml:space="preserve"><value>受信認証</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.373" xml:space="preserve"><value>説明</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.374" xml:space="preserve"><value>公開識別子</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.375" xml:space="preserve"><value>Pluginの互換性</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.376" xml:space="preserve"><value>互換性のある強制承認</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.377" xml:space="preserve"><value>互換性スイッチ：すべてのツール呼び出しの前に承認を求める</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.378" xml:space="preserve"><value>従来のグループとの互換性：完全な履歴（リモートメンバーがいない場合のみ）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.379" xml:space="preserve"><value>Agentを削除</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.380" xml:space="preserve"><value>データを更新</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.381" xml:space="preserve"><value>状態を更新</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.382" xml:space="preserve"><value>人間のテキスト参加者を追加する</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.383" xml:space="preserve"><value>公開すると、標準のAgentカードが作成され、A2A互換システムから検出および呼び出しが可能になります。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.384" xml:space="preserve"><value>ローカルのAgentをA2Aサービスとして公開する</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.385" xml:space="preserve"><value>小文字、数字、ハイフンのみが使用できます。有効化後はアドレスは変更されません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.386" xml:space="preserve"><value>トークン値ではなく、シークレット名のみを入力してください</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.387" xml:space="preserve"><value>現在の管理者が利用できるワークフローのみが表示されます。AgentまたはWorkflowを保存する際に、権限と循環参照が再度チェックされます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.388" xml:space="preserve"><value>ここで選択されたコネクタのみが、このAgentによって呼び出されることができます。外部ツールへのアクセスを許可しない場合は、空のままにしてください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.389" xml:space="preserve"><value>メンション可能なグループメンバー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.390" xml:space="preserve"><value>オプション。管理者のみに表示されます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.391" xml:space="preserve"><value>氏名</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.392" xml:space="preserve"><value>公開サービスを有効にする</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.393" xml:space="preserve"><value>このグループを有効にする</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.394" xml:space="preserve"><value>コピー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.395" xml:space="preserve"><value>複雑なバインディングは右側のドロワーで管理され、現在のAgent編集状態が保持されます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.396" xml:space="preserve"><value>すべてのパラメータ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.397" xml:space="preserve"><value>パブリックサービスが有効になっています。認証された外部システムはこのAgentを呼び出すことができます。プロンプト、ナレッジベース、および応答を共有できることを確認し、HTTPS、ゲートウェイ制限、およびモニタリングを使用してアクセスとモデルコストを制御します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.398" xml:space="preserve"><value>ツール</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.399" xml:space="preserve"><value>ツールとワークフロー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.400" xml:space="preserve"><value>ツール呼び出しの承認</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.401" xml:space="preserve"><value>ローカルAgentsの記録された累積/ライブデータ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.402" xml:space="preserve"><value>接続済み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.403" xml:space="preserve"><value>有効にすると、以下のより寛容なツールの権限が上書きされます。新しい構成では、HILレベルとカテゴリの権限を直接使用する必要があります。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.404" xml:space="preserve"><value>有効にすると、外部リクエストが間接的に、このローカルAgent用に構成された関数またはMCPツールをトリガーする可能性があります。信頼できる発信者だけに公開してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.405" xml:space="preserve"><value>現在のグループは、人間のターンとテキストによる返信を待っています。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.406" xml:space="preserve"><value>受信認証が無効になっています。これは、分離された制御されたネットワークでのみ使用してください。パブリックコールまたは組織間コールでは、Bearer Tokenまたはカスタムヘッダーを使用する必要があります。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.407" xml:space="preserve"><value>現在のグループにはメンション可能なメンバーがいません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.408" xml:space="preserve"><value>クイック編集</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.409" xml:space="preserve"><value>手動プロンプトには、チャットAIモデルを手動で選択する必要があります。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.410" xml:space="preserve"><value>この手動プロンプトに継承できるPromptRangeモデルはありません。チャットAIモデルを手動で選択してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.411" xml:space="preserve"><value>AIモデルを手動で選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.412" xml:space="preserve"><value>実行前に承認する</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.413" xml:space="preserve"><value>承認</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.414" xml:space="preserve"><value>公開スキル説明</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.415" xml:space="preserve"><value>スキルの識別子/名前</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.416" xml:space="preserve"><value>許可しない</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.417" xml:space="preserve"><value>名称でフィルタ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.418" xml:space="preserve"><value>人間による回答を送信</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.419" xml:space="preserve"><value>Pluginツールの権限</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.420" xml:space="preserve"><value>名前、URL、または説明を検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.421" xml:space="preserve"><value>名前、モジュール、または説明を検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.422" xml:space="preserve"><value>データベースにはシークレット参照のみが保存されます。実際のトークンはデプロイ設定で構成します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.423" xml:space="preserve"><value>追加</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.424" xml:space="preserve"><value>リモートA2Aを追加</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.425" xml:space="preserve"><value>新しいグループはデフォルトで有効になっています。無効化されたグループは、新しいタスクを作成したり、Workflowノードとして機能したりすることはありません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.426" xml:space="preserve"><value>タイルの面積は、選択した指標の相対的な大きさを表します。タイルをクリックしてAgentを編集します。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.427" xml:space="preserve"><value>認証なし</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.428" xml:space="preserve"><value>なし（制御されたネットワークのみ）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.429" xml:space="preserve"><value>レガシーベクトルデータを、安全なAgent分離検索用の公開コレクションにするには、ナレッジベースで再ベクトル化する必要があります。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.430" xml:space="preserve"><value>Agent統計チャート</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.431" xml:space="preserve"><value>統計に使用できるAgentsはありません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.432" xml:space="preserve"><value>最大チャットラウンド数</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.433" xml:space="preserve"><value>未検証</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.434" xml:space="preserve"><value>バインドされていません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.435" xml:space="preserve"><value>関連付けられているナレッジベースはありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.436" xml:space="preserve"><value>ローカル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.437" xml:space="preserve"><value>ローカルAgents</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.438" xml:space="preserve"><value>ローカルツールの呼び出しが有効になっています。外部リクエストは、間接的にFunction/MCPの書き込みまたは外部アクセスをトリガーする可能性があります。これは、信頼できる呼び出し元にのみ開放してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.439" xml:space="preserve"><value>地域のメンバー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.440" xml:space="preserve"><value>ポリシーを実行</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.441" xml:space="preserve"><value>この実行のコネクタ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.442" xml:space="preserve"><value>タスクを表示</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.443" xml:space="preserve"><value>このAgentに関連付けられているタスクを表示</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.444" xml:space="preserve"><value>このタスクは、ポリシーの記録が有効になる前に作成されました。その履歴のHILとツールの権限を復元することはできません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.445" xml:space="preserve"><value>テスト</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.446" xml:space="preserve"><value>すべてテスト</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.447" xml:space="preserve"><value>テスト失敗。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.448" xml:space="preserve"><value>混合グループでは、すべてのリモートメンバーに求められる最も厳格なポリシーが適用されます。ローカルグループの設定がない場合、アップグレード前の動作が維持されます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.449" xml:space="preserve"><value>メンバーをクリックすると、下のタスクの説明でカーソルがある位置にメンションが挿入されます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.450" xml:space="preserve"><value>ステータス</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.451" xml:space="preserve"><value>PromptRangeで生成し、スコアリングを実行する</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.452" xml:space="preserve"><value>カード名を使用するには空のままにします</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.453" xml:space="preserve"><value>公開用の説明文を使用するには、空のままにしてください</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.454" xml:space="preserve"><value>ローカルのAgent名を使用するには、空のままにします</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.455" xml:space="preserve"><value>禁止</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.456" xml:space="preserve"><value>後で返信する</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.457" xml:space="preserve"><value>後で対応する</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.458" xml:space="preserve"><value>バインディングを管理</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.459" xml:space="preserve"><value>素材を管理する</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.460" xml:space="preserve"><value>リモートA2Aを管理</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.461" xml:space="preserve"><value>リモートA2A Agentsを管理</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.462" xml:space="preserve"><value>タイプ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.463" xml:space="preserve"><value>モデルをバインド</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.464" xml:space="preserve"><value>ナレッジベース</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.465" xml:space="preserve"><value>ナレッジベース</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.466" xml:space="preserve"><value>統計チャート</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.467" xml:space="preserve"><value>統計の範囲</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.468" xml:space="preserve"><value>HILレベルを継承</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.469" xml:space="preserve"><value>設定を編集</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.470" xml:space="preserve"><value>自動実行</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.471" xml:space="preserve"><value>カスタムリクエストヘッダー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.472" xml:space="preserve"><value>必要に応じて、モデルにFunctionRender、Workflow、または互換性のあるプラグインを呼び出させます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.473" xml:space="preserve"><value>設定</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.474" xml:space="preserve"><value>リクエストヘッダー名</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.475" xml:space="preserve"><value>テキストを入力してください。送信後にタスクが続行されます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.476" xml:space="preserve"><value>チャットモデルを選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.477" xml:space="preserve"><value>マテリアル</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.478" xml:space="preserve"><value>グループタスクをフォロー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.479" xml:space="preserve"><value>実行が人間のターンに達すると、タスクが一時停止し、ダイアログがテキストを受け入れます。正常に返信されると、MAF Workflowが続行されます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.480" xml:space="preserve"><value>リモートA2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.481" xml:space="preserve"><value>リモートA2Aメンバー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.482" xml:space="preserve"><value>リモートA2A Agents</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.483" xml:space="preserve"><value>リモートメンバーには、デフォルトでタスクの指示と現在のターンのテキスト結論のみが送信されます。ツール呼び出し、生のモデルコンテンツ、および完全な履歴は共有されません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.484" xml:space="preserve"><value>リモートメンバーのデフォルト：手順 + 主要な結論</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.485" xml:space="preserve"><value>リモートAgent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.486" xml:space="preserve"><value>Connection（つながり）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.487" xml:space="preserve"><value>コネクタの権限</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.488" xml:space="preserve"><value>接続タイムアウト (秒)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.489" xml:space="preserve"><value>デプロイシークレット名</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.490" xml:space="preserve"><value>A2A Agentとして構成/公開</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.491" xml:space="preserve"><value>認証モード</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.492" xml:space="preserve"><value>最大入力文字数</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.493" xml:space="preserve"><value>ローカルツールの呼び出しが有効になっています。外部リクエストは、間接的にFunction/MCPの書き込みまたは外部アクセスをトリガーする可能性があります。これは、信頼できる呼び出し元にのみ開放してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.494" xml:space="preserve"><value>ローカルツールの呼び出しが有効になっています。外部リクエストは、間接的にFunction/MCPの書き込みまたは外部アクセスをトリガーする可能性があります。これは、信頼できる呼び出し元にのみ開放してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.495" xml:space="preserve"><value>ローカルツール呼び出しが有効です。外部リクエストによってFunction/MCPへの書き込みや外部アクセスが間接的に発生する可能性があるため、信頼できる呼び出し元に必要最小限だけ公開してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.496" xml:space="preserve"><value>合計</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.497" xml:space="preserve"><value>完了したラウンド</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.498" xml:space="preserve"><value>ナレッジベース</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.499" xml:space="preserve"><value>A2A公開を管理</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.500" xml:space="preserve"><value>A2Aとして公開</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.501" xml:space="preserve"><value>無効化</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.502" xml:space="preserve"><value>有効化</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.503" xml:space="preserve"><value>完了した会話ラウンド:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.504" xml:space="preserve"><value>完了したタスク:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.505" xml:space="preserve"><value>入力トークン:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.506" xml:space="preserve"><value>出力トークン:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.507" xml:space="preserve"><value>合計トークン:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.508" xml:space="preserve"><value>平均応答:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.509" xml:space="preserve"><value>最終アクティビティ:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.510" xml:space="preserve"><value>選択可能なバインディングはありません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.511" xml:space="preserve"><value>選択可能なMCPエンドポイントはありません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.512" xml:space="preserve"><value>{0}個のエンドポイントが設定されています</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.513" xml:space="preserve"><value>グループ設定を読み込み中</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.514" xml:space="preserve"><value>確認</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.515" xml:space="preserve"><value>A2A呼び出しを許可</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.516" xml:space="preserve"><value>明示的に許可</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.517" xml:space="preserve"><value>ツールとWorkflowのバインディング</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.518" xml:space="preserve"><value>コピー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.332" xml:space="preserve"><value>A2Aエージェントカードには、名前、説明、スキルのみが表示されます。プロンプト、シークレット、内部ツールは表示されません。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.333" xml:space="preserve"><value>A2A公共サービス</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.334" xml:space="preserve"><value>リモートA2A</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.335" xml:space="preserve"><value>リモートA2Aエージェント</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.336" xml:space="preserve"><value>A2A:シークレット:キー名</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.337" xml:space="preserve"><value>エージェントカード名</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.338" xml:space="preserve"><value>エージェントカードURL</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.339" xml:space="preserve"><value>エージェントテンプレートには、承認されたコネクターがありません。ここで選択しても呼び出されません。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.340" xml:space="preserve"><value>グループに人間のメンバーがいる場合、人間のターンになるとテキストによる返信を待つよう一時停止します。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.341" xml:space="preserve"><value>HILレベル</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.342" xml:space="preserve"><value>人間はモデルを呼び出しません。このバインディングは、システムエージェントのタスクポリシーを維持し、デフォルトでグループタスクに従います。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.343" xml:space="preserve"><value>人間の参加者</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.344" xml:space="preserve"><value>人間のターン</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.345" xml:space="preserve"><value>L0全自動（プラグイン/MCPが自動的に実行されます）</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.346" xml:space="preserve"><value>L1リスクベースの承認（MCPデフォルトの承認）</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.347" xml:space="preserve"><value>L2ツールの承認（最初にすべてのツールを確認）</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.348" xml:space="preserve"><value>L3 ヒューマンパートシパント + ツールの承認</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.349" xml:space="preserve"><value>MCPツールの権限</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.350" xml:space="preserve"><value>コンテキストの共有</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.351" xml:space="preserve"><value>コネクタを承認しない</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.352" xml:space="preserve"><value>ナレッジベースをバインドしない</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.353" xml:space="preserve"><value>今回はコネクタを使用しない場合は、選択解除したままにします</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.354" xml:space="preserve"><value>パーソナライズされたパラメーター</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.355" xml:space="preserve"><value>ここで管理されています。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.356" xml:space="preserve"><value>タスクの指示のみ</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.357" xml:space="preserve"><value>MCPリストから選択</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.358" xml:space="preserve"><value>PromptRangeから継承</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.359" xml:space="preserve"><value>これらのエンドポイントは、MCPモジュールレジストリからのものです。いずれかを選択して、名前 + URL として現在の構成に追加します。これはいつでも削除できます。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.360" xml:space="preserve"><value>タスクの指示 + 現在のターンの主な結論</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.361" xml:space="preserve"><value>タスクの説明と実行戦略</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.362" xml:space="preserve"><value>現在のプレーンテキストのプロンプトと選択したチャットモデルからプロンプト範囲を作成し、1回実行してAIでスコアを付け、範囲レベルの参照に自動的に切り替えます。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.363" xml:space="preserve"><value>例：X-A2A-Token</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.364" xml:space="preserve"><value>例：X-API-Key</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.365" xml:space="preserve"><value>例：パートナー-ncf</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.366" xml:space="preserve"><value>例：リサーチエージェント</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.367" xml:space="preserve"><value>例：外部リサーチアシスタント</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.368" xml:space="preserve"><value>リモートシステムがエージェントを選択するために使用します。プロンプトや内部情報を入力しないでください。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.369" xml:space="preserve"><value>保存</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.370" xml:space="preserve"><value>保存</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.371" xml:space="preserve"><value>ローカルツールの呼び出しを許可する</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.372" xml:space="preserve"><value>受信認証</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.373" xml:space="preserve"><value>説明</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.374" xml:space="preserve"><value>公開識別子</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.375" xml:space="preserve"><value>プラグインの互換性</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.376" xml:space="preserve"><value>互換性のある強制承認</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.377" xml:space="preserve"><value>互換性スイッチ：すべてのツール呼び出しの前に承認を求める</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.378" xml:space="preserve"><value>従来のグループとの互換性：完全な履歴（リモートメンバーがいない場合のみ）</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.379" xml:space="preserve"><value>エージェントを削除</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.380" xml:space="preserve"><value>データを更新</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.381" xml:space="preserve"><value>状態を更新</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.382" xml:space="preserve"><value>人間のテキスト参加者を追加する</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.383" xml:space="preserve"><value>公開すると、標準のエージェントカードが作成され、A2A互換システムから検出および呼び出しが可能になります。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.384" xml:space="preserve"><value>ローカルのエージェントをA2Aサービスとして公開</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.385" xml:space="preserve"><value>小文字、数字、ハイフンのみが使用できます。有効化後はアドレスは変更されません。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.386" xml:space="preserve"><value>トークン値ではなく、シークレット名のみを入力してください</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.387" xml:space="preserve"><value>現在の管理者が利用できるワークフローのみが表示されます。エージェントまたはワークフローを保存する際に、権限と循環参照が再度チェックされます。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.388" xml:space="preserve"><value>ここで選択したコネクターのみを、このエージェントが呼び出せます。外部ツールへのアクセスを許可しない場合は、空のままにしてください。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.389" xml:space="preserve"><value>メンション可能なグループメンバー</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.390" xml:space="preserve"><value>オプション。管理者のみに表示されます。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.391" xml:space="preserve"><value>氏名</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.392" xml:space="preserve"><value>公開サービスを有効にする</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.393" xml:space="preserve"><value>このグループを有効にする</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.394" xml:space="preserve"><value>コピー</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.395" xml:space="preserve"><value>複雑なバインディングは右側のドロワーで管理され、現在のエージェント編集状態が保持されます。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.396" xml:space="preserve"><value>すべてのパラメータ</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.397" xml:space="preserve"><value>パブリックサービスが有効になっています。認証された外部システムはこのエージェントを呼び出すことができます。プロンプト、ナレッジベース、および応答を共有できることを確認し、HTTPS、ゲートウェイ制限、および監視を使用してアクセスとモデルコストを制御します。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.398" xml:space="preserve"><value>ツール</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.399" xml:space="preserve"><value>ツールとワークフロー</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.400" xml:space="preserve"><value>ツール呼び出しの承認</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.401" xml:space="preserve"><value>ローカルエージェントの記録済み累積データとライブデータ</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.402" xml:space="preserve"><value>接続済み</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.403" xml:space="preserve"><value>有効にすると、以下のより寛容なツールの権限が上書きされます。新しい構成では、HILレベルとカテゴリの権限を直接使用する必要があります。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.404" xml:space="preserve"><value>有効にすると、外部リクエストが間接的に、このローカルエージェント用に構成された関数またはMCPツールを呼び出す可能性があります。信頼できる呼び出し元だけに公開してください。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.405" xml:space="preserve"><value>現在のグループは、人間のターンとテキストによる返信を待っています。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.406" xml:space="preserve"><value>受信認証が無効になっています。これは、分離された制御されたネットワークでのみ使用してください。公開呼び出しまたは組織間呼び出しでは、Bearerトークンまたはカスタムヘッダーを使用する必要があります。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.407" xml:space="preserve"><value>現在のグループにはメンション可能なメンバーがいません。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.408" xml:space="preserve"><value>クイック編集</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.409" xml:space="preserve"><value>手動プロンプトには、チャットAIモデルを手動で選択する必要があります。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.410" xml:space="preserve"><value>この手動プロンプトに継承できるPromptRangeモデルはありません。チャットAIモデルを手動で選択してください。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.411" xml:space="preserve"><value>AIモデルを手動で選択</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.412" xml:space="preserve"><value>実行前に承認する</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.413" xml:space="preserve"><value>承認</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.414" xml:space="preserve"><value>公開スキル説明</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.415" xml:space="preserve"><value>スキルの識別子/名前</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.416" xml:space="preserve"><value>許可しない</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.417" xml:space="preserve"><value>名称でフィルタ</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.418" xml:space="preserve"><value>人間による回答を送信</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.419" xml:space="preserve"><value>プラグインツールの権限</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.420" xml:space="preserve"><value>名前、URL、または説明を検索</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.421" xml:space="preserve"><value>名前、モジュール、または説明を検索</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.422" xml:space="preserve"><value>データベースにはシークレット参照のみが保存されます。実際のトークンはデプロイ設定で構成します。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.423" xml:space="preserve"><value>追加</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.424" xml:space="preserve"><value>リモートA2Aを追加</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.425" xml:space="preserve"><value>新しいグループはデフォルトで有効になっています。無効化されたグループは、新しいタスクを作成したり、ワークフローノードとして機能したりすることはありません。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.426" xml:space="preserve"><value>タイルの面積は、選択した指標の相対的な大きさを表します。タイルをクリックしてエージェントを編集します。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.427" xml:space="preserve"><value>認証なし</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.428" xml:space="preserve"><value>なし（制御されたネットワークのみ）</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.429" xml:space="preserve"><value>レガシーベクトルデータを、安全なエージェント分離検索用の公開コレクションにするには、ナレッジベースで再ベクトル化する必要があります。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.430" xml:space="preserve"><value>エージェント統計チャート</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.431" xml:space="preserve"><value>統計に使用できるエージェントはありません。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.432" xml:space="preserve"><value>最大チャットラウンド数</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.433" xml:space="preserve"><value>未検証</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.434" xml:space="preserve"><value>バインドされていません</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.435" xml:space="preserve"><value>関連付けられているナレッジベースはありません</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.436" xml:space="preserve"><value>ローカル</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.437" xml:space="preserve"><value>ローカルエージェント</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.438" xml:space="preserve"><value>ローカルツールの呼び出しが有効になっています。外部リクエストは、間接的に関数またはMCPの書き込みや外部アクセスを引き起こす可能性があります。これは、信頼できる呼び出し元にのみ公開してください。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.439" xml:space="preserve"><value>地域のメンバー</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.440" xml:space="preserve"><value>ポリシーを実行</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.441" xml:space="preserve"><value>この実行のコネクタ</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.442" xml:space="preserve"><value>タスクを表示</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.443" xml:space="preserve"><value>このエージェントに関連付けられているタスクを表示</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.444" xml:space="preserve"><value>このタスクは、ポリシーの記録が有効になる前に作成されました。その履歴のHILとツールの権限を復元することはできません。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.445" xml:space="preserve"><value>テスト</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.446" xml:space="preserve"><value>すべてテスト</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.447" xml:space="preserve"><value>テスト失敗。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.448" xml:space="preserve"><value>混合グループでは、すべてのリモートメンバーに求められる最も厳格なポリシーが適用されます。ローカルグループの設定がない場合、アップグレード前の動作が維持されます。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.449" xml:space="preserve"><value>メンバーをクリックすると、下のタスクの説明でカーソルがある位置にメンションが挿入されます。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.450" xml:space="preserve"><value>ステータス</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.451" xml:space="preserve"><value>PromptRangeで生成し、スコアリングを実行する</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.452" xml:space="preserve"><value>カード名を使用するには空のままにします</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.453" xml:space="preserve"><value>公開用の説明文を使用するには、空のままにしてください</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.454" xml:space="preserve"><value>ローカルのエージェント名を使用するには、空のままにします</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.455" xml:space="preserve"><value>禁止</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.456" xml:space="preserve"><value>後で返信する</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.457" xml:space="preserve"><value>後で対応する</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.458" xml:space="preserve"><value>バインディングを管理</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.459" xml:space="preserve"><value>素材を管理する</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.460" xml:space="preserve"><value>リモートA2Aを管理</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.461" xml:space="preserve"><value>リモートA2Aエージェントを管理</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.462" xml:space="preserve"><value>タイプ</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.463" xml:space="preserve"><value>モデルをバインド</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.464" xml:space="preserve"><value>ナレッジベース</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.465" xml:space="preserve"><value>ナレッジベース</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.466" xml:space="preserve"><value>統計チャート</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.467" xml:space="preserve"><value>統計の範囲</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.468" xml:space="preserve"><value>HILレベルを継承</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.469" xml:space="preserve"><value>設定を編集</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.470" xml:space="preserve"><value>自動実行</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.471" xml:space="preserve"><value>カスタムリクエストヘッダー</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.472" xml:space="preserve"><value>必要に応じて、モデルにFunctionRender、ワークフロー、または互換性のあるプラグインを呼び出させます。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.473" xml:space="preserve"><value>設定</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.474" xml:space="preserve"><value>リクエストヘッダー名</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.475" xml:space="preserve"><value>テキストを入力してください。送信後にタスクが続行されます。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.476" xml:space="preserve"><value>チャットモデルを選択</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.477" xml:space="preserve"><value>マテリアル</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.478" xml:space="preserve"><value>グループタスクをフォロー</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.479" xml:space="preserve"><value>実行が人間のターンに達すると、タスクが一時停止し、ダイアログがテキストを受け入れます。正常に返信されると、MAFワークフローが続行されます。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.480" xml:space="preserve"><value>リモートA2A</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.481" xml:space="preserve"><value>リモートA2Aメンバー</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.482" xml:space="preserve"><value>リモートA2Aエージェント</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.483" xml:space="preserve"><value>リモートメンバーには、デフォルトでタスクの指示と現在のターンのテキスト結論のみが送信されます。ツール呼び出し、生のモデルコンテンツ、および完全な履歴は共有されません。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.484" xml:space="preserve"><value>リモートメンバーのデフォルト：手順 + 主要な結論</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.485" xml:space="preserve"><value>リモートエージェント</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.486" xml:space="preserve"><value>接続</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.487" xml:space="preserve"><value>コネクタの権限</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.488" xml:space="preserve"><value>接続タイムアウト (秒)</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.489" xml:space="preserve"><value>デプロイシークレット名</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.490" xml:space="preserve"><value>A2Aエージェントとして構成・公開</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.491" xml:space="preserve"><value>認証モード</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.492" xml:space="preserve"><value>最大入力文字数</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.493" xml:space="preserve"><value>ローカルツールの呼び出しが有効になっています。外部リクエストは、間接的に関数またはMCPの書き込みや外部アクセスを引き起こす可能性があります。これは、信頼できる呼び出し元にのみ公開してください。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.494" xml:space="preserve"><value>ローカルツールの呼び出しが有効になっています。外部リクエストは、間接的に関数またはMCPの書き込みや外部アクセスを引き起こす可能性があります。これは、信頼できる呼び出し元にのみ公開してください。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.495" xml:space="preserve"><value>ローカルツールの呼び出しが有効です。外部リクエストによって関数またはMCPへの書き込みや外部アクセスが間接的に発生する可能性があるため、信頼できる呼び出し元に必要最小限だけ公開してください。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.496" xml:space="preserve"><value>合計</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.497" xml:space="preserve"><value>完了したラウンド</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.498" xml:space="preserve"><value>ナレッジベース</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.499" xml:space="preserve"><value>A2A公開を管理</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.500" xml:space="preserve"><value>A2Aとして公開</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.501" xml:space="preserve"><value>無効化</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.502" xml:space="preserve"><value>有効化</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.503" xml:space="preserve"><value>完了した会話ラウンド:</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.504" xml:space="preserve"><value>完了したタスク:</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.505" xml:space="preserve"><value>入力トークン:</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.506" xml:space="preserve"><value>出力トークン:</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.507" xml:space="preserve"><value>合計トークン:</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.508" xml:space="preserve"><value>平均応答:</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.509" xml:space="preserve"><value>最終アクティビティ:</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.510" xml:space="preserve"><value>選択可能なバインディングはありません。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.511" xml:space="preserve"><value>選択可能なMCPエンドポイントはありません。</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.512" xml:space="preserve"><value>{0}個のエンドポイントが設定されています</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.513" xml:space="preserve"><value>グループ設定を読み込み中</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.514" xml:space="preserve"><value>確認</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.515" xml:space="preserve"><value>A2A呼び出しを許可</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.516" xml:space="preserve"><value>明示的に許可</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.517" xml:space="preserve"><value>ツールとワークフローのバインディング</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
+  <data name="Frontend.518" xml:space="preserve"><value>コピー</value><comment>ロケールのキー整合性を保つため、中立リソースを基に補完しました。</comment></data>
 
 
   <data name="Frontend.520" xml:space="preserve"><value>各エージェントが承認したコネクターを使用</value></data>
@@ -1700,5 +1700,5 @@
   <data name="Frontend.526" xml:space="preserve"><value>メンバー一覧を完全に更新できないため、読み込み済みのメンバーのみ表示しています</value></data>
   <data name="Frontend.527" xml:space="preserve"><value>未保存の変更があります。このまま閉じますか？</value></data>
   <data name="Frontend.528" xml:space="preserve"><value>操作を確認</value></data>
-  <data name="Frontend.529" xml:space="preserve"><value>未検証</value></data><data name="Frontend.530" xml:space="preserve"><value>利用可能</value></data><data name="Frontend.531" xml:space="preserve"><value>利用不可</value></data><data name="Frontend.532" xml:space="preserve"><value>停止中</value></data><data name="Frontend.533" xml:space="preserve"><value>接続テストに失敗しました</value></data><data name="Frontend.534" xml:space="preserve"><value>テスト可能なリモートA2A Agentがありません</value></data><data name="Frontend.535" xml:space="preserve"><value>すべて成功：{0}個のリモートA2A Agentが利用可能です</value></data><data name="Frontend.536" xml:space="preserve"><value>リモートA2A一括テスト結果</value></data><data name="Frontend.537" xml:space="preserve"><value>了解</value></data><data name="Frontend.538" xml:space="preserve"><value>リモートA2A Agentの読み込みに失敗しました</value></data><data name="Frontend.539" xml:space="preserve"><value>ローカルAgentを先に保存してから、A2A公開を設定してください</value></data><data name="Frontend.540" xml:space="preserve"><value>A2A公開設定の読み込みに失敗しました</value></data><data name="Frontend.541" xml:space="preserve"><value>保存に失敗しました</value></data><data name="Frontend.542" xml:space="preserve"><value>リモートA2A Agentを保存しました</value></data><data name="Frontend.543" xml:space="preserve"><value>リモートA2A Agentの保存に失敗しました</value></data><data name="Frontend.544" xml:space="preserve"><value>A2A Agent Cardに接続しました</value></data><data name="Frontend.545" xml:space="preserve"><value>接続の一括テストに失敗しました</value></data><data name="Frontend.546" xml:space="preserve"><value>状態の更新に失敗しました</value></data><data name="Frontend.547" xml:space="preserve"><value>状態を更新しました</value></data><data name="Frontend.548" xml:space="preserve"><value>削除を確認</value></data><data name="Frontend.549" xml:space="preserve"><value>リモートA2A Agent「{0}」を削除しますか？グループに追加済みのAgentは削除できません。</value></data><data name="Frontend.550" xml:space="preserve"><value>削除に失敗しました</value></data><data name="Frontend.551" xml:space="preserve"><value>削除しました</value></data>
+  <data name="Frontend.529" xml:space="preserve"><value>未検証</value></data><data name="Frontend.530" xml:space="preserve"><value>利用可能</value></data><data name="Frontend.531" xml:space="preserve"><value>利用不可</value></data><data name="Frontend.532" xml:space="preserve"><value>停止中</value></data><data name="Frontend.533" xml:space="preserve"><value>接続テストに失敗しました</value></data><data name="Frontend.534" xml:space="preserve"><value>テスト可能なリモートA2Aエージェントがありません</value></data><data name="Frontend.535" xml:space="preserve"><value>すべて成功：{0}個のリモートA2Aエージェントが利用可能です</value></data><data name="Frontend.536" xml:space="preserve"><value>リモートA2A一括テスト結果</value></data><data name="Frontend.537" xml:space="preserve"><value>了解</value></data><data name="Frontend.538" xml:space="preserve"><value>リモートA2Aエージェントの読み込みに失敗しました</value></data><data name="Frontend.539" xml:space="preserve"><value>ローカルエージェントを先に保存してから、A2A公開を設定してください</value></data><data name="Frontend.540" xml:space="preserve"><value>A2A公開設定の読み込みに失敗しました</value></data><data name="Frontend.541" xml:space="preserve"><value>保存に失敗しました</value></data><data name="Frontend.542" xml:space="preserve"><value>リモートA2Aエージェントを保存しました</value></data><data name="Frontend.543" xml:space="preserve"><value>リモートA2Aエージェントの保存に失敗しました</value></data><data name="Frontend.544" xml:space="preserve"><value>A2Aエージェントカードに接続しました</value></data><data name="Frontend.545" xml:space="preserve"><value>接続の一括テストに失敗しました</value></data><data name="Frontend.546" xml:space="preserve"><value>状態の更新に失敗しました</value></data><data name="Frontend.547" xml:space="preserve"><value>状態を更新しました</value></data><data name="Frontend.548" xml:space="preserve"><value>削除を確認</value></data><data name="Frontend.549" xml:space="preserve"><value>リモートA2Aエージェント「{0}」を削除しますか？グループに追加済みのエージェントは削除できません。</value></data><data name="Frontend.550" xml:space="preserve"><value>削除に失敗しました</value></data><data name="Frontend.551" xml:space="preserve"><value>削除しました</value></data>
 </root>
