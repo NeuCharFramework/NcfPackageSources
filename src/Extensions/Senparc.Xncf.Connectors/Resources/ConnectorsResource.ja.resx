@@ -55,4 +55,19 @@
   <data name="Parameter.Connectors.UserIds" xml:space="preserve"><value>メンバーアカウント||WeComのuseridをカンマまたは空白で区切って指定</value></data>
   <data name="Parameter.Connectors.CheckinType" xml:space="preserve"><value>勤怠種別||1 勤務、2 社外、3 すべて。空欄の場合はすべてを使用</value></data>
   <data name="Parameter.Connectors.Arguments" xml:space="preserve"><value>追加パラメーター||JSONオブジェクト。入力済みの専用項目を優先し、他のコネクターアクションに使用可能</value></data>
+  <data name="Error.NameRequired" xml:space="preserve"><value>コネクター名を入力してください。</value></data>
+  <data name="Error.TypeNotFound" xml:space="preserve"><value>コネクターの種類が見つかりません。対応するモジュールがインストールされていることを確認してください。</value></data>
+  <data name="Error.InstanceNotFound" xml:space="preserve"><value>コネクターが見つかりません。</value></data>
+  <data name="Error.TypeChangeForbidden" xml:space="preserve"><value>保存済みのコネクターの種類は変更できません。新しいコネクターを作成してください。</value></data>
+  <data name="Error.FieldRequired" xml:space="preserve"><value>{0}を入力してください。</value></data>
+  <data name="Error.OptionInvalid" xml:space="preserve"><value>{0}の選択肢が無効です。</value></data>
+  <data name="Error.ActionRequired" xml:space="preserve"><value>AIに渡すアクションを1つ以上選択してください。</value></data>
+  <data name="Error.TypeNotInstalled" xml:space="preserve"><value>コネクターの種類がインストールされていません。</value></data>
+  <data name="Error.TestFailed" xml:space="preserve"><value>接続テストに失敗しました。アカウントとSecretを確認してください。</value></data>
+  <data name="Error.Disabled" xml:space="preserve"><value>コネクターが存在しないか、無効になっています。</value></data>
+  <data name="Error.ActionNotFound" xml:space="preserve"><value>このコネクターには要求されたアクションがありません。</value></data>
+  <data name="Error.ActionNotEnabled" xml:space="preserve"><value>このアクションはコネクターで有効になっていません。</value></data>
+  <data name="Error.InvocationFailed" xml:space="preserve"><value>コネクターの呼び出しに失敗しました。後でもう一度お試しいただくか、アカウント権限を確認してください。</value></data>
+  <data name="Message.Saved" xml:space="preserve"><value>コネクターを保存しました。</value></data>
+  <data name="Message.Deleted" xml:space="preserve"><value>コネクターを削除しました。</value></data>
 </root>

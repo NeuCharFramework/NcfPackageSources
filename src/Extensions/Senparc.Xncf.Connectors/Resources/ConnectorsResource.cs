@@ -20,4 +20,7 @@ public sealed class ConnectorsResource
 {
     public static string Get(string key, string? fallback = null) =>
         ResourceStringLocalizer.Get(typeof(ConnectorsResource), key, fallback);
+
+    public static string Format(string key, string fallback, params object[] arguments) =>
+        ResourceStringLocalizer.Format(typeof(ConnectorsResource), key, fallback, arguments);
 }

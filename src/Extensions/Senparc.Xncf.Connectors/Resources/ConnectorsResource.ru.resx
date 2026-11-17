@@ -55,4 +55,19 @@
   <data name="Parameter.Connectors.UserIds" xml:space="preserve"><value>Учётные записи сотрудников||Userid пользователей WeCom через запятую или пробел</value></data>
   <data name="Parameter.Connectors.CheckinType" xml:space="preserve"><value>Тип посещаемости||1 рабочая, 2 внешняя, 3 вся. Оставьте пустым, чтобы использовать всю</value></data>
   <data name="Parameter.Connectors.Arguments" xml:space="preserve"><value>Дополнительные параметры||Объект JSON. Заполненные специальные поля имеют приоритет; подходит для других действий подключателя</value></data>
+  <data name="Error.NameRequired" xml:space="preserve"><value>Введите имя коннектора.</value></data>
+  <data name="Error.TypeNotFound" xml:space="preserve"><value>Тип коннектора не найден. Убедитесь, что соответствующий модуль установлен.</value></data>
+  <data name="Error.InstanceNotFound" xml:space="preserve"><value>Коннектор не найден.</value></data>
+  <data name="Error.TypeChangeForbidden" xml:space="preserve"><value>Тип сохранённого коннектора нельзя изменить. Создайте новый коннектор.</value></data>
+  <data name="Error.FieldRequired" xml:space="preserve"><value>Заполните поле «{0}».</value></data>
+  <data name="Error.OptionInvalid" xml:space="preserve"><value>Выбранный вариант для «{0}» недействителен.</value></data>
+  <data name="Error.ActionRequired" xml:space="preserve"><value>Выберите хотя бы одно действие, которое можно передать ИИ.</value></data>
+  <data name="Error.TypeNotInstalled" xml:space="preserve"><value>Тип коннектора не установлен.</value></data>
+  <data name="Error.TestFailed" xml:space="preserve"><value>Проверка подключения не выполнена. Проверьте учётную запись и секрет.</value></data>
+  <data name="Error.Disabled" xml:space="preserve"><value>Коннектор не существует или отключён.</value></data>
+  <data name="Error.ActionNotFound" xml:space="preserve"><value>У этого коннектора нет запрошенного действия.</value></data>
+  <data name="Error.ActionNotEnabled" xml:space="preserve"><value>Это действие не включено для коннектора.</value></data>
+  <data name="Error.InvocationFailed" xml:space="preserve"><value>Не удалось вызвать коннектор. Повторите попытку позже или проверьте права учётной записи.</value></data>
+  <data name="Message.Saved" xml:space="preserve"><value>Коннектор сохранён.</value></data>
+  <data name="Message.Deleted" xml:space="preserve"><value>Коннектор удалён.</value></data>
 </root>

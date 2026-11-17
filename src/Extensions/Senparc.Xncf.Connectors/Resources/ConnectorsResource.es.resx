@@ -55,4 +55,19 @@
   <data name="Parameter.Connectors.UserIds" xml:space="preserve"><value>Cuentas de miembros||userid de WeCom separados por comas o espacios</value></data>
   <data name="Parameter.Connectors.CheckinType" xml:space="preserve"><value>Tipo de asistencia||1 laboral, 2 fuera de la oficina, 3 todo. Déjalo vacío para usar todo</value></data>
   <data name="Parameter.Connectors.Arguments" xml:space="preserve"><value>Parámetros adicionales||Objeto JSON. Los campos específicos rellenados tienen prioridad; es adecuado para otras acciones de conectores</value></data>
+  <data name="Error.NameRequired" xml:space="preserve"><value>Introduce el nombre del conector.</value></data>
+  <data name="Error.TypeNotFound" xml:space="preserve"><value>No se encontró ningún tipo de conector. Confirma que el módulo correspondiente está instalado.</value></data>
+  <data name="Error.InstanceNotFound" xml:space="preserve"><value>No se encontró el conector.</value></data>
+  <data name="Error.TypeChangeForbidden" xml:space="preserve"><value>Un conector guardado no se puede cambiar a otro tipo. Crea uno nuevo.</value></data>
+  <data name="Error.FieldRequired" xml:space="preserve"><value>Completa {0}.</value></data>
+  <data name="Error.OptionInvalid" xml:space="preserve"><value>La opción seleccionada para {0} no es válida.</value></data>
+  <data name="Error.ActionRequired" xml:space="preserve"><value>Selecciona al menos una acción que se pueda entregar a la IA.</value></data>
+  <data name="Error.TypeNotInstalled" xml:space="preserve"><value>El tipo de conector no está instalado.</value></data>
+  <data name="Error.TestFailed" xml:space="preserve"><value>La prueba de conexión falló. Comprueba la cuenta y el secreto.</value></data>
+  <data name="Error.Disabled" xml:space="preserve"><value>El conector no existe o está desactivado.</value></data>
+  <data name="Error.ActionNotFound" xml:space="preserve"><value>Este conector no tiene la acción solicitada.</value></data>
+  <data name="Error.ActionNotEnabled" xml:space="preserve"><value>Esta acción no está habilitada para el conector.</value></data>
+  <data name="Error.InvocationFailed" xml:space="preserve"><value>Falló la invocación del conector. Inténtalo más tarde o comprueba los permisos de la cuenta.</value></data>
+  <data name="Message.Saved" xml:space="preserve"><value>Conector guardado.</value></data>
+  <data name="Message.Deleted" xml:space="preserve"><value>Conector eliminado.</value></data>
 </root>

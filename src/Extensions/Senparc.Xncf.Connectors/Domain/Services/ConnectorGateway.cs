@@ -14,6 +14,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Senparc.Xncf.Connectors;
 using Senparc.Xncf.Connectors.Abstractions;
 using Senparc.Xncf.Connectors.Domain.Models.DatabaseModel;
 
@@ -81,12 +82,12 @@ public sealed class ConnectorGateway : IConnectorGateway
     {
         if (input == null || string.IsNullOrWhiteSpace(input.Name))
         {
-            return (false, "请填写连接器名称。", null);
+            return (false, ConnectorsResource.Get("Error.NameRequired", "Please enter a connector name."), null);
         }
 
         if (string.IsNullOrWhiteSpace(input.ConnectorKey) || !_providers.TryGetValue(input.ConnectorKey.Trim(), out var provider))
         {
-            return (false, "没有找到这个连接器类型。请确认对应模块已经安装。", null);
+            return (false, ConnectorsResource.Get("Error.TypeNotFound", "No connector type was found. Confirm that the corresponding module is installed."), null);
         }
 
         var descriptor = provider.Describe();
@@ -97,12 +98,12 @@ public sealed class ConnectorGateway : IConnectorGateway
                 cancellationToken).ConfigureAwait(false);
         if (!string.IsNullOrWhiteSpace(input.InstanceId) && existing == null)
         {
-            return (false, "要修改的连接器不存在。", null);
+            return (false, ConnectorsResource.Get("Error.InstanceNotFound", "The connector to update was not found."), null);
         }
 
         if (existing != null && !string.Equals(existing.ConnectorKey, descriptor.Key, StringComparison.OrdinalIgnoreCase))
         {
-            return (false, "已保存的连接器不能改成另一种类型。请新建一个连接器。", null);
+            return (false, ConnectorsResource.Get("Error.TypeChangeForbidden", "A saved connector cannot be changed to another type. Create a new connector instead."), null);
         }
 
         var previous = ConnectorConfigurationCodec.Read(existing?.ConfigJson);
@@ -121,7 +122,7 @@ public sealed class ConnectorGateway : IConnectorGateway
                     }
                     else if (field.Required)
                     {
-                        return (false, $"请填写{field.Label}。", null);
+                        return (false, ConnectorsResource.Format("Error.FieldRequired", "Please fill in {0}.", field.Label), null);
                     }
                 }
                 else
@@ -136,7 +137,7 @@ public sealed class ConnectorGateway : IConnectorGateway
             {
                 if (field.Required)
                 {
-                    return (false, $"请填写{field.Label}。", null);
+                    return (false, ConnectorsResource.Format("Error.FieldRequired", "Please fill in {0}.", field.Label), null);
                 }
 
                 continue;
@@ -146,7 +147,7 @@ public sealed class ConnectorGateway : IConnectorGateway
                 && field.Options.Count > 0
                 && field.Options.All(option => !string.Equals(option.Value, incoming, StringComparison.Ordinal)))
             {
-                return (false, $"{field.Label}的选项无效。", null);
+                return (false, ConnectorsResource.Format("Error.OptionInvalid", "The selected option for {0} is invalid.", field.Label), null);
             }
 
             merged[field.Key] = incoming;
@@ -159,7 +160,7 @@ public sealed class ConnectorGateway : IConnectorGateway
             .ToArray();
         if (enabledActions.Length == 0)
         {
-            return (false, "请至少选择一个可以交给 AI 的动作。", null);
+            return (false, ConnectorsResource.Get("Error.ActionRequired", "Select at least one action that can be given to AI."), null);
         }
 
         var entity = existing ?? new ConnectorInstance(input.Name, descriptor.Key, input.Description);
@@ -184,7 +185,7 @@ public sealed class ConnectorGateway : IConnectorGateway
             entity.ConnectorKey,
             entity.Enabled,
             enabledActions.Length);
-        return (true, "连接器已保存。", entity.PublicId);
+        return (true, ConnectorsResource.Get("Message.Saved", "Connector saved."), entity.PublicId);
     }
 
     public async Task<(bool Success, string Message)> DeleteAsync(string instanceId, CancellationToken cancellationToken)
@@ -194,13 +195,13 @@ public sealed class ConnectorGateway : IConnectorGateway
             .ConfigureAwait(false);
         if (entity == null)
         {
-            return (false, "连接器不存在。");
+            return (false, ConnectorsResource.Get("Error.InstanceNotFound", "The connector was not found."));
         }
 
         entity.Flag = true;
         await _db.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         _logger.LogInformation("[Connector] deleted instance={InstanceId}", instanceId);
-        return (true, "连接器已删除。");
+        return (true, ConnectorsResource.Get("Message.Deleted", "Connector deleted."));
     }
 
     public async Task<ConnectorTestResult> TestAsync(string instanceId, CancellationToken cancellationToken)
@@ -210,7 +211,7 @@ public sealed class ConnectorGateway : IConnectorGateway
             .ConfigureAwait(false);
         if (entity == null || !_providers.TryGetValue(entity.ConnectorKey, out var provider))
         {
-            return new ConnectorTestResult(false, "连接器不存在或类型未安装。");
+            return new ConnectorTestResult(false, ConnectorsResource.Get("Error.TypeNotInstalled", "The connector does not exist or its type is not installed."));
         }
 
         ConnectorTestResult result;
@@ -221,7 +222,7 @@ public sealed class ConnectorGateway : IConnectorGateway
         catch (Exception exception)
         {
             _logger.LogWarning(exception, "[Connector] test failed instance={InstanceId}", instanceId);
-            result = new ConnectorTestResult(false, "测试连接失败，请检查账号和密钥。");
+            result = new ConnectorTestResult(false, ConnectorsResource.Get("Error.TestFailed", "Connection test failed. Check the account and secret."));
         }
 
         entity.RecordTest(result.Success, result.Message);
@@ -242,12 +243,12 @@ public sealed class ConnectorGateway : IConnectorGateway
             .ConfigureAwait(false);
         if (entity == null || !entity.Enabled)
         {
-            return ConnectorInvocationResult.Fail("连接器不存在或未启用。");
+            return ConnectorInvocationResult.Fail(ConnectorsResource.Get("Error.Disabled", "The connector does not exist or is disabled."));
         }
 
         if (!_providers.TryGetValue(entity.ConnectorKey, out var provider))
         {
-            return ConnectorInvocationResult.Fail("连接器类型未安装。");
+            return ConnectorInvocationResult.Fail(ConnectorsResource.Get("Error.TypeNotInstalled", "The connector type is not installed."));
         }
 
         var descriptor = provider.Describe();
@@ -255,14 +256,14 @@ public sealed class ConnectorGateway : IConnectorGateway
             string.Equals(item.Key, actionKey, StringComparison.OrdinalIgnoreCase));
         if (action == null)
         {
-            return ConnectorInvocationResult.Fail("这个连接器没有所请求的动作。");
+            return ConnectorInvocationResult.Fail(ConnectorsResource.Get("Error.ActionNotFound", "This connector does not have the requested action."));
         }
 
         var enabledActions = ConnectorConfigurationCodec.ReadList(entity.EnabledActionsJson);
         if (enabledActions.Count > 0
             && enabledActions.All(item => !string.Equals(item, action.Key, StringComparison.OrdinalIgnoreCase)))
         {
-            return ConnectorInvocationResult.Fail("这个动作没有在连接器里启用。");
+            return ConnectorInvocationResult.Fail(ConnectorsResource.Get("Error.ActionNotEnabled", "This action is not enabled for the connector."));
         }
 
         var normalized = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
@@ -295,7 +296,7 @@ public sealed class ConnectorGateway : IConnectorGateway
         catch (Exception exception)
         {
             _logger.LogWarning(exception, "[Connector] invoke failed instance={InstanceId} action={ActionKey}", entity.PublicId, action.Key);
-            return ConnectorInvocationResult.Fail("连接器调用失败，请稍后重试或检查账号权限。");
+            return ConnectorInvocationResult.Fail(ConnectorsResource.Get("Error.InvocationFailed", "Connector invocation failed. Try again later or check account permissions."));
         }
     }
 

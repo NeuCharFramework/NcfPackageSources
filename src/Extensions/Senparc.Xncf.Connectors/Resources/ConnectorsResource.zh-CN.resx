@@ -59,4 +59,19 @@
   <data name="Parameter.Connectors.UserIds" xml:space="preserve"><value>成员账号||企业微信 userid，多个用逗号或空格分隔</value></data>
   <data name="Parameter.Connectors.CheckinType" xml:space="preserve"><value>打卡类型||1 上下班，2 外出，3 全部。留空默认全部</value></data>
   <data name="Parameter.Connectors.Arguments" xml:space="preserve"><value>附加参数||JSON 对象。已填写的专用字段优先，适合其他连接器动作</value></data>
+  <data name="Error.NameRequired" xml:space="preserve"><value>请输入连接器名称。</value></data>
+  <data name="Error.TypeNotFound" xml:space="preserve"><value>未找到连接器类型，请确认对应模块已安装。</value></data>
+  <data name="Error.InstanceNotFound" xml:space="preserve"><value>未找到连接器。</value></data>
+  <data name="Error.TypeChangeForbidden" xml:space="preserve"><value>已保存的连接器不能修改为其他类型，请新建连接器。</value></data>
+  <data name="Error.FieldRequired" xml:space="preserve"><value>请填写 {0}。</value></data>
+  <data name="Error.OptionInvalid" xml:space="preserve"><value>{0} 的选项无效。</value></data>
+  <data name="Error.ActionRequired" xml:space="preserve"><value>请至少选择一个可以交给 AI 的动作。</value></data>
+  <data name="Error.TypeNotInstalled" xml:space="preserve"><value>连接器类型未安装。</value></data>
+  <data name="Error.TestFailed" xml:space="preserve"><value>连接测试失败，请检查账号和密钥。</value></data>
+  <data name="Error.Disabled" xml:space="preserve"><value>连接器不存在或未启用。</value></data>
+  <data name="Error.ActionNotFound" xml:space="preserve"><value>连接器没有所请求的动作。</value></data>
+  <data name="Error.ActionNotEnabled" xml:space="preserve"><value>该动作未在连接器中启用。</value></data>
+  <data name="Error.InvocationFailed" xml:space="preserve"><value>连接器调用失败，请稍后重试或检查账号权限。</value></data>
+  <data name="Message.Saved" xml:space="preserve"><value>连接器已保存。</value></data>
+  <data name="Message.Deleted" xml:space="preserve"><value>连接器已删除。</value></data>
 </root>
