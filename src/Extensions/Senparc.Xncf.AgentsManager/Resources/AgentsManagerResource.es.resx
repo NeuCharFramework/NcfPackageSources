@@ -940,181 +940,181 @@
     <value>Gestionar modelos</value>
   </data>
   <data name="Frontend.262" xml:space="preserve">
-    <value>Endpoint MCP</value>
+    <value>ID del Agent</value>
   </data>
   <data name="Frontend.263" xml:space="preserve">
-    <value>Lista de herramientas MCP</value>
+    <value>Mensaje del sistema</value>
   </data>
   <data name="Frontend.264" xml:space="preserve">
-    <value>P superior:</value>
+    <value>Ninguno</value>
   </data>
   <data name="Frontend.265" xml:space="preserve">
-    <value>Mostrar todas las herramientas</value>
+    <value>Function Call</value>
   </data>
   <data name="Frontend.266" xml:space="preserve">
-    <value>A2A</value>
+    <value>Endpoint MCP</value>
   </data>
   <data name="Frontend.267" xml:space="preserve">
-    <value>A2A Endpoint</value>
+    <value>Nombre del endpoint (por ejemplo: mcp-server-NCF-7)</value>
   </data>
   <data name="Frontend.268" xml:space="preserve">
-    <value>Sin autenticación</value>
+    <value>URL del endpoint (por ejemplo: http://localhost:5000/mcp/sse)</value>
   </data>
   <data name="Frontend.269" xml:space="preserve">
-    <value>Conectado</value>
+    <value>Lista de herramientas MCP</value>
   </data>
   <data name="Frontend.270" xml:space="preserve">
     <value>Top P:</value>
   </data>
   <data name="Frontend.271" xml:space="preserve">
-    <value>Temperatura:</value>
+    <value>Número máximo de tokens:</value>
   </data>
   <data name="Frontend.272" xml:space="preserve">
-    <value>Límite de tokens:</value>
+    <value>Penalización de presencia:</value>
   </data>
   <data name="Frontend.273" xml:space="preserve">
-    <value>Guardar</value>
+    <value>Temperatura:</value>
   </data>
   <data name="Frontend.274" xml:space="preserve">
-    <value>Cancelar</value>
+    <value>Penalización de frecuencia:</value>
   </data>
   <data name="Frontend.275" xml:space="preserve">
-    <value>Nombre de acceso público</value>
+    <value>Secuencia de parada:</value>
   </data>
   <data name="Frontend.276" xml:space="preserve">
-    <value>Dirección URL pública</value>
+    <value>No se encontró ningún modelo de IA de Chat disponible. La base de datos tiene {0} modelos, pero ninguno es de Chat. Configura primero al menos un modelo de Chat en el módulo AIKernel.</value>
   </data>
   <data name="Frontend.277" xml:space="preserve">
-    <value>Descripción pública</value>
+    <value>Error al cargar: {0}</value>
   </data>
   <data name="Frontend.278" xml:space="preserve">
-    <value>Identificador público</value>
+    <value>Selecciona un modelo de IA válido</value>
   </data>
   <data name="Frontend.279" xml:space="preserve">
-    <value>Compatibilidad de plugins</value>
+    <value>No se encontró ningún modelo de IA con el ID {0}</value>
   </data>
   <data name="Frontend.280" xml:space="preserve">
-    <value>Aprobación obligatoria compatible</value>
+    <value>El modelo «{0}» no es de tipo Chat. Selecciona un modelo de Chat.</value>
   </data>
   <data name="Frontend.281" xml:space="preserve">
-    <value>Interruptor de compatibilidad: exigir aprobación antes de cada llamada de herramienta</value>
+    <value>Inicialización completada correctamente</value>
   </data>
   <data name="Frontend.282" xml:space="preserve">
-    <value>Compatibilidad de grupo heredado: historial completo (solo sin miembros remotos)</value>
+    <value>La solicitud de optimización agotó el tiempo de espera: {0}</value>
   </data>
   <data name="Frontend.283" xml:space="preserve">
-    <value>Eliminar Agent</value>
+    <value>No se encontró el grupo de Chat: {0}</value>
   </data>
   <data name="Frontend.284" xml:space="preserve">
-    <value>Actualizar datos</value>
+    <value>El modelo de IA seleccionado no existe: {0}</value>
   </data>
   <data name="Frontend.285" xml:space="preserve">
-    <value>Actualizar estado</value>
+    <value>El grupo de Chat [{0}] no tiene Agents habilitados disponibles.</value>
   </data>
   <data name="Frontend.286" xml:space="preserve">
-    <value>Añadir participante de texto humano</value>
+    <value>No se encontró un Agent administrador válido (ID: {1}) en el grupo de Chat [{0}].</value>
   </data>
   <data name="Frontend.287" xml:space="preserve">
-    <value>La publicación crea una Agent Card estándar, detectable y utilizable por cualquier sistema compatible con A2A.</value>
+    <value>El grupo de Chat [{0}] necesita al menos dos Agents habilitados para la colaboración multi-Agent.</value>
   </data>
   <data name="Frontend.288" xml:space="preserve">
-    <value>Publicar Agent local como servicio A2A</value>
+    <value>El Workflow multi-Agent está esperando una respuesta externa y la ruta actual no puede continuar automáticamente.</value>
   </data>
   <data name="Frontend.289" xml:space="preserve">
-    <value>Solo se permiten letras minúsculas, dígitos y guiones; la dirección permanece estable después de activarla.</value>
+    <value>Mensaje del sistema: la orquestación multi-Agent falló ({0}) y la ejecución alternativa no devolvió texto para mostrar.</value>
   </data>
   <data name="Frontend.290" xml:space="preserve">
-    <value>Introduce solo el nombre del secreto, no el valor del token</value>
+    <value>Mensaje del sistema: el servicio de IA devolvió 403 (Forbidden) y la tarea actual no puede continuar. Comprueba los permisos del modelo, la API Key o si el modelo seleccionado está disponible.</value>
   </data>
   <data name="Frontend.291" xml:space="preserve">
-    <value>Solo se muestran los Workflows disponibles para el administrador actual; los permisos y las referencias circulares se vuelven a comprobar al guardar un Agent o Workflow.</value>
+    <value>Mensaje del sistema: falló la autenticación del servicio de IA (401). Comprueba la configuración de la API Key / Endpoint.</value>
   </data>
   <data name="Frontend.292" xml:space="preserve">
-    <value>Solo los conectores seleccionados aquí pueden ser invocados por este Agent. Déjalo vacío para no conceder acceso a herramientas externas.</value>
+    <value>Mensaje del sistema: falló la llamada al servicio de IA y la tarea se interrumpió. Motivo: {0}</value>
   </data>
   <data name="Frontend.293" xml:space="preserve">
-    <value>Miembros de grupo mencionables</value>
+    <value>La configuración del modelo está vacía (AIModelDto == null)</value>
   </data>
   <data name="Frontend.294" xml:space="preserve">
-    <value>Opcional; visible solo para administradores</value>
+    <value>No se encontró el ChatGroup de PromptCatalyzer. Completa primero la inicialización.</value>
   </data>
   <data name="Frontend.295" xml:space="preserve">
-    <value>Nombre</value>
+    <value>No se encontró el Agent de PromptCatalyzer. Completa primero la inicialización.</value>
   </data>
   <data name="Frontend.296" xml:space="preserve">
-    <value>Activar servicio público</value>
+    <value>La conversación del Agent falló: {0}</value>
   </data>
   <data name="Frontend.297" xml:space="preserve">
-    <value>Activar este grupo</value>
+    <value>Selecciona o introduce manualmente un PromptCode</value>
   </data>
   <data name="Frontend.298" xml:space="preserve">
-    <value>Copiar</value>
+    <value>Introduce el nombre del Agent</value>
   </data>
   <data name="Frontend.299" xml:space="preserve">
-    <value>Las vinculaciones complejas se gestionan en el panel derecho; se conserva el estado actual de edición del Agent.</value>
+    <value>Introduce un término de búsqueda (nombre, PromptCode o palabra clave)</value>
   </data>
   <data name="Frontend.300" xml:space="preserve">
-    <value>Parámetros completos</value>
+    <value>Introduce un término de búsqueda válido</value>
   </data>
   <data name="Frontend.301" xml:space="preserve">
-    <value>Publicar</value>
+    <value>Activado correctamente</value>
   </data>
   <data name="Frontend.302" xml:space="preserve">
-    <value>Desactivar</value>
+    <value>Desactivado correctamente</value>
   </data>
   <data name="Frontend.303" xml:space="preserve">
-    <value>Activar</value>
+    <value>Conectado correctamente</value>
   </data>
   <data name="Frontend.304" xml:space="preserve">
-    <value>Rondas de conversación completadas:</value>
+    <value>Error de conexión</value>
   </data>
   <data name="Frontend.305" xml:space="preserve">
-    <value>Tareas completadas:</value>
+    <value>No se proporcionó el ID del Agent</value>
   </data>
   <data name="Frontend.306" xml:space="preserve">
-    <value>Tokens de entrada:</value>
+    <value>La inicialización de PromptCatalyzer agotó el tiempo de espera (2 minutos)</value>
   </data>
   <data name="Frontend.307" xml:space="preserve">
-    <value>Tokens de salida:</value>
+    <value>Error al inicializar el Prompt: {0}</value>
   </data>
   <data name="Frontend.308" xml:space="preserve">
-    <value>Tokens totales:</value>
+    <value>El PromptCode devuelto por la inicialización del Prompt está vacío</value>
   </data>
   <data name="Frontend.309" xml:space="preserve">
-    <value>Respuesta media:</value>
+    <value>Ya hay una tarea de optimización en ejecución para este Prompt. No la envíes de nuevo (por ejemplo, evita hacer doble clic).</value>
   </data>
   <data name="Frontend.310" xml:space="preserve">
-    <value>Última actividad:</value>
+    <value>La solicitud de optimización del Prompt agotó el tiempo de espera (15 minutos)</value>
   </data>
   <data name="Frontend.311" xml:space="preserve">
-    <value>No hay vinculaciones disponibles para seleccionar.</value>
+    <value>No se encontró el ChatGroup que se va a editar. ID: {0}</value>
   </data>
   <data name="Frontend.312" xml:space="preserve">
-    <value>No hay endpoints MCP disponibles para seleccionar.</value>
+    <value>No se pudieron seleccionar los miembros del grupo: {0}</value>
   </data>
   <data name="Frontend.313" xml:space="preserve">
-    <value>{0} endpoints configurados</value>
+    <value>Proporciona al menos un miembro del grupo (ID o nombre)</value>
   </data>
   <data name="Frontend.314" xml:space="preserve">
-    <value>Cargando la configuración del grupo</value>
+    <value>No se encontró ningún modelo de IA de Chat disponible, por lo que no se puede crear automáticamente un Agent host</value>
   </data>
   <data name="Frontend.315" xml:space="preserve">
-    <value>Inspeccionar</value>
+    <value>La entrada está vacía. Proporciona un ID, nombre o PromptCode del Agent.</value>
   </data>
   <data name="Frontend.316" xml:space="preserve">
-    <value>Permitir llamadas A2A</value>
+    <value>No se encontró un Agent habilitado. ID: {0}</value>
   </data>
   <data name="Frontend.317" xml:space="preserve">
-    <value>Permitido explícitamente</value>
+    <value>«{0}» coincidió con varios Agents. Especifica un ID: {1}</value>
   </data>
   <data name="Frontend.318" xml:space="preserve">
-    <value>Vinculaciones de herramientas y Workflows</value>
+    <value>No se encontró ningún Agent coincidente: {0}</value>
   </data>
   <data name="Frontend.319" xml:space="preserve">
-    <value>Copiar</value>
+    <value>Selecciona al menos un grupo.</value>
   </data>
   <data name="Frontend.320" xml:space="preserve">
-    <value>Usar conectores autorizados por cada Agent</value>
+    <value>La tarea se creó y se inició. Comprueba su estado en la lista ChatTask.</value>
   </data>
   <data name="Frontend.321" xml:space="preserve">
     <value>¡Selecciona primero las conversaciones que deseas eliminar!</value>
@@ -1651,48 +1651,48 @@
   <data name="Frontend.478" xml:space="preserve"><value>Seguir la tarea del grupo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.479" xml:space="preserve"><value>Cuando una ejecución llega a un turno Human, la tarea se pausa y el diálogo acepta texto; después de una respuesta correcta, el Workflow MAF continúa.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.480" xml:space="preserve"><value>A2A remoto</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.481" xml:space="preserve"><value>Remote A2A members</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.482" xml:space="preserve"><value>Remote A2A Agents</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.483" xml:space="preserve"><value>Remote members receive only task instructions and the current turn's text conclusion by default; tool calls, raw model content, and full history are not shared.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.484" xml:space="preserve"><value>Remote member default: instructions + key conclusions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.485" xml:space="preserve"><value>Remote Agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.486" xml:space="preserve"><value>Connection</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.487" xml:space="preserve"><value>Connector permissions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.488" xml:space="preserve"><value>Connection timeout (seconds)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.489" xml:space="preserve"><value>Deployment secret name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.490" xml:space="preserve"><value>Configure / publish as A2A Agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.491" xml:space="preserve"><value>Authentication mode</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.492" xml:space="preserve"><value>Maximum input characters</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.493" xml:space="preserve"><value>Local tool calls are enabled. External requests may indirectly trigger Function/MCP writes or external access; open this only to trusted callers.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.494" xml:space="preserve"><value>Local tool calls are enabled. External requests may indirectly trigger Function/MCP writes or external access; open this only to trusted callers.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.495" xml:space="preserve"><value>Local tool calls are enabled. External requests may indirectly trigger Function/MCP writes or external access; open only the minimum required tools to explicitly trusted callers.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.481" xml:space="preserve"><value>Miembros A2A remotos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.482" xml:space="preserve"><value>Agents A2A remotos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.483" xml:space="preserve"><value>De forma predeterminada, los miembros remotos reciben solo las instrucciones de la tarea y la conclusión textual del turno actual; no se comparten llamadas a herramientas, contenido sin procesar del modelo ni el historial completo.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.484" xml:space="preserve"><value>Predeterminado para miembros remotos: instrucciones + conclusiones clave</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.485" xml:space="preserve"><value>Agent remoto</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.486" xml:space="preserve"><value>Conexión</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.487" xml:space="preserve"><value>Permisos de conectores</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.488" xml:space="preserve"><value>Tiempo de espera de conexión (segundos)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.489" xml:space="preserve"><value>Nombre del secreto de implementación</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.490" xml:space="preserve"><value>Configurar / publicar como Agent A2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.491" xml:space="preserve"><value>Modo de autenticación</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.492" xml:space="preserve"><value>Número máximo de caracteres de entrada</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.493" xml:space="preserve"><value>Las llamadas de herramientas locales están activadas. Las solicitudes externas pueden activar indirectamente escrituras de Function/MCP o accesos externos; ábrelo solo a emisores de confianza.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.494" xml:space="preserve"><value>Las llamadas de herramientas locales están activadas. Las solicitudes externas pueden activar indirectamente escrituras de Function/MCP o accesos externos; ábrelo solo a emisores de confianza.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.495" xml:space="preserve"><value>Las llamadas de herramientas locales están activadas. Las solicitudes externas pueden activar indirectamente escrituras de Function/MCP o accesos externos; abre solo las herramientas mínimas necesarias a emisores expresamente de confianza.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.496" xml:space="preserve"><value>Total</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.497" xml:space="preserve"><value>Completed rounds</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.498" xml:space="preserve"><value>Knowledge base</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.499" xml:space="preserve"><value>Manage A2A publishing</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.500" xml:space="preserve"><value>Publish as A2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.501" xml:space="preserve"><value>Disable</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.502" xml:space="preserve"><value>Enable</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.503" xml:space="preserve"><value>Completed conversation rounds:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.504" xml:space="preserve"><value>Completed tasks:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.505" xml:space="preserve"><value>Input tokens:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.506" xml:space="preserve"><value>Output tokens:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.507" xml:space="preserve"><value>Total tokens:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.508" xml:space="preserve"><value>Average response:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.509" xml:space="preserve"><value>Last activity:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.510" xml:space="preserve"><value>No bindings are available for selection.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.511" xml:space="preserve"><value>No MCP endpoints are available for selection.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.512" xml:space="preserve"><value>{0} endpoints are configured</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.513" xml:space="preserve"><value>Loading Group configuration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.514" xml:space="preserve"><value>Inspect</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.515" xml:space="preserve"><value>Allow A2A calls</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.516" xml:space="preserve"><value>Explicitly allowed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.517" xml:space="preserve"><value>Tool and workflow bindings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.518" xml:space="preserve"><value>Copy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.497" xml:space="preserve"><value>Rondas completadas</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.498" xml:space="preserve"><value>Base de conocimiento</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.499" xml:space="preserve"><value>Gestionar la publicación A2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.500" xml:space="preserve"><value>Publicar como A2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.501" xml:space="preserve"><value>Desactivar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.502" xml:space="preserve"><value>Activar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.503" xml:space="preserve"><value>Rondas de conversación completadas:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.504" xml:space="preserve"><value>Tareas completadas:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.505" xml:space="preserve"><value>Tokens de entrada:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.506" xml:space="preserve"><value>Tokens de salida:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.507" xml:space="preserve"><value>Tokens totales:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.508" xml:space="preserve"><value>Respuesta media:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.509" xml:space="preserve"><value>Última actividad:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.510" xml:space="preserve"><value>No hay vinculaciones disponibles para seleccionar.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.511" xml:space="preserve"><value>No hay endpoints MCP disponibles para seleccionar.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.512" xml:space="preserve"><value>Hay {0} endpoints configurados</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.513" xml:space="preserve"><value>Cargando la configuración del grupo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.514" xml:space="preserve"><value>Inspeccionar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.515" xml:space="preserve"><value>Permitir llamadas A2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.516" xml:space="preserve"><value>Permitido explícitamente</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.517" xml:space="preserve"><value>Vinculaciones de herramientas y Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.518" xml:space="preserve"><value>Copiar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
 
 
-  <data name="Frontend.520" xml:space="preserve"><value>Use connectors authorized by each Agent</value></data>
-  <data name="Frontend.521" xml:space="preserve"><value>Use only the selected connectors</value></data>
+  <data name="Frontend.520" xml:space="preserve"><value>Usar los conectores autorizados por cada Agent</value></data>
+  <data name="Frontend.521" xml:space="preserve"><value>Usar solo los conectores seleccionados</value></data>
   <data name="Frontend.522" xml:space="preserve"><value>Cadena objetivo</value></data>
   <data name="Frontend.523" xml:space="preserve"><value>Cadena no objetivo</value></data>
   <data name="Frontend.524" xml:space="preserve"><value>Estadísticas actualizadas</value></data>
