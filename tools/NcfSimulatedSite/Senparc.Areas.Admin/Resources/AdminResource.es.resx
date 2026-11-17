@@ -1243,30 +1243,30 @@
   <data name="Frontend.348" xml:space="preserve"><value>Borrar</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.349" xml:space="preserve"><value>Elige los recordatorios de módulos que se muestran en el Footer. La configuración se guarda en el navegador de esta cuenta.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.350" xml:space="preserve"><value>Admite texto normal y etiquetas &lt;a&gt; con enlaces http/https absolutos; el resto del HTML se codifica.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.351" xml:space="preserve"><value>1 hour</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.352" xml:space="preserve"><value>24 hours</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.353" xml:space="preserve"><value>7 days</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.354" xml:space="preserve"><value>AdminChat commands</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.355" xml:space="preserve"><value>Anonymous HTML snapshot sharing</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.356" xml:space="preserve"><value>Harness task trajectory</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.357" xml:space="preserve"><value>Workspace PDF preview</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.358" xml:space="preserve"><value>Workspace name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.359" xml:space="preserve"><value>Workspace files and paths</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.360" xml:space="preserve"><value>Workspace assets</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.361" xml:space="preserve"><value>Previous chunk</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.362" xml:space="preserve"><value>Upload material</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.363" xml:space="preserve"><value>Next chunk</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.364" xml:space="preserve"><value>Download / Save as</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.365" xml:space="preserve"><value>Download current directory (.zip)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.366" xml:space="preserve"><value>Do not use Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.367" xml:space="preserve"><value>Start directly without referencing a module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.368" xml:space="preserve"><value>Add callable modules or Workflows to this conversation</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.369" xml:space="preserve"><value>Choose a Workspace for this conversation</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.370" xml:space="preserve"><value>Authorize compressed images to be sent to the vision model for this turn only; this may use additional Tokens.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.371" xml:space="preserve"><value>Remove from this turn and delete the Workspace file</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.372" xml:space="preserve"><value>Anyone with the link can view this snapshot.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.373" xml:space="preserve"><value>Task trajectory</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.374" xml:space="preserve"><value>For example: a Yield C# sample project</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.351" xml:space="preserve"><value>1 hora</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.352" xml:space="preserve"><value>24 horas</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.353" xml:space="preserve"><value>7 días</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.354" xml:space="preserve"><value>Comando de AdminChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.355" xml:space="preserve"><value>Compartir instantánea HTML anónima</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.356" xml:space="preserve"><value>Traza de tareas de Harness</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.357" xml:space="preserve"><value>Vista previa de PDF de Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.358" xml:space="preserve"><value>Nombre del Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.359" xml:space="preserve"><value>Archivos y rutas de Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.360" xml:space="preserve"><value>Activos de Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.361" xml:space="preserve"><value>Sección anterior</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.362" xml:space="preserve"><value>Subir materiales</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.363" xml:space="preserve"><value>Sección siguiente</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.364" xml:space="preserve"><value>Descargar / guardar como</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.365" xml:space="preserve"><value>Descargar el directorio actual (.zip)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.366" xml:space="preserve"><value>No usar Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.367" xml:space="preserve"><value>Comenzar directamente sin referenciar módulos</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.368" xml:space="preserve"><value>Añadir módulos o Workflows invocables a la conversación actual</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.369" xml:space="preserve"><value>Seleccionar un Workspace para la conversación actual</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.370" xml:space="preserve"><value>Autorizar el envío de una imagen comprimida al modelo visual solo en este turno; puede consumir tokens adicionales.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.371" xml:space="preserve"><value>Quitar de este turno y eliminar los archivos de Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.372" xml:space="preserve"><value>Cualquiera que tenga el enlace puede ver esta instantánea.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.373" xml:space="preserve"><value>Traza de tareas</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.374" xml:space="preserve"><value>Por ejemplo: proyecto de ejemplo Yield C#</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.375" xml:space="preserve"><value>Save file</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.376" xml:space="preserve"><value>Allow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.377" xml:space="preserve"><value>Allow AI to write files</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
