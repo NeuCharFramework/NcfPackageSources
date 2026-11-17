@@ -577,13 +577,13 @@
                 const countChart = this.getOrCreateChart(this.$refs.countChart);
                 if (countChart) {
                     countChart.setOption({
-                        tooltip: { trigger: 'item', formatter: '{b}: {c} 个 ({d}%)' },
+                        tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
                         legend: { bottom: 0, data: (this.dashboard.countSlices || []).map(function (x) { return x.name; }) },
                         series: [{
                             type: 'pie',
                             radius: ['48%', '68%'],
                             center: ['50%', '46%'],
-                            label: { formatter: '{b}\\n{c}个' },
+                            label: { formatter: '{b}\\n{c}' },
                             data: (countSlices.length ? countSlices : this.dashboard.countSlices).map(function (x) {
                                 return { name: x.name, value: Number(x.value || 0), itemStyle: { color: x.color } };
                             }),
