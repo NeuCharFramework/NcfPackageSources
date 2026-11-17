@@ -1,76 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root><resheader name="resmimetype"><value>text/microsoft-resx</value></resheader><resheader name="version"><value>2.0</value></resheader><resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader><resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <data name="Module.Workspace.MenuName" xml:space="preserve"><value>Workspace</value></data>
-  <data name="Module.Workspace.Description" xml:space="preserve"><value>Provides isolated file access, desktop editing and secure runtime support through a cross-platform Workspace Agent.</value></data>
+  <data name="Module.Workspace.Description" xml:space="preserve"><value>クロスプラットフォームのWorkspace Agentを通じて、分離されたファイルアクセス、デスクトップ編集、安全な実行環境を提供します。</value></data>
 
-  <data name="Area.Menu.Admin" xml:space="preserve"><value>Workspace and remote editing</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.001" xml:space="preserve"><value>Extension Modules</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.002" xml:space="preserve"><value>Remote editing</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.003" xml:space="preserve"><value>Secure remote Workspace</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.004" xml:space="preserve"><value>My Workspaces</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.005" xml:space="preserve"><value>Other administrators</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.006" xml:space="preserve"><value>Current tenant total</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.007" xml:space="preserve"><value>Create Workspace</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.008" xml:space="preserve"><value>No Workspaces yet</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.009" xml:space="preserve"><value>Other administrators' Workspaces</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.010" xml:space="preserve"><value>Connection guide</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.011" xml:space="preserve"><value>Connect in VS Code / Cursor</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.012" xml:space="preserve"><value>Manage device pairing</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.013" xml:space="preserve"><value>Files</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.014" xml:space="preserve"><value>Directories</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.015" xml:space="preserve"><value>Used</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.016" xml:space="preserve"><value>Upload</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.017" xml:space="preserve"><value>Clear</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.018" xml:space="preserve"><value>Enter a name and choose Create Workspace to share files securely between AI chat and the remote editor.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.019" xml:space="preserve"><value>No other administrator Workspaces exist in the current tenant</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.020" xml:space="preserve"><value>Device not paired? Open device sessions to complete pairing.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.021" xml:space="preserve"><value>Just now</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.022" xml:space="preserve"><value>{0} minutes ago</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.023" xml:space="preserve"><value>{0} hours ago</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.024" xml:space="preserve"><value>{0} days ago</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.025" xml:space="preserve"><value>{0} months ago</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.026" xml:space="preserve"><value>{0} years ago</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.027" xml:space="preserve"><value>Could not read the Workspace upload limit.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.028" xml:space="preserve"><value>{0} is empty or exceeds {1}.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.029" xml:space="preserve"><value>The upload response for {0} is invalid.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.030" xml:space="preserve"><value>{0} was uploaded to Workspace/input.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.031" xml:space="preserve"><value>Manual Workspace upload failed:</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.032" xml:space="preserve"><value>Manual Workspace upload failed.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.033" xml:space="preserve"><value>This will clear administrator #{0}'s Workspace “{1}”. Files will be deleted and input, output, and logs will be reset to empty directories. The Workspace itself will remain. This cannot be undone.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.034" xml:space="preserve"><value>This will clear your Workspace “{0}”. Files will be deleted and input, output, and logs will be reset to empty directories. The Workspace itself will remain. This cannot be undone.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.035" xml:space="preserve"><value>Workspaces and remote editing</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.036" xml:space="preserve"><value>Files are stored in isolated directories shared by AdminChat, VS Code, and Cursor. Review file counts and usage here, or clear a Workspace back to its initial empty layout.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.037" xml:space="preserve"><value>Current account #{0} · per-Workspace quota {1} · file counts and usage exclude the Workspace manifest.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.038" xml:space="preserve"><value>Other administrators include only Workspaces in the current tenant that are not owned by you.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Area.Menu.Admin" xml:space="preserve"><value>Workspaceとリモート編集</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.001" xml:space="preserve"><value>拡張モジュール</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.002" xml:space="preserve"><value>リモート編集</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.003" xml:space="preserve"><value>安全なリモートWorkspace</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.004" xml:space="preserve"><value>自分のWorkspace</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.005" xml:space="preserve"><value>他の管理者</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.006" xml:space="preserve"><value>現在のテナント合計</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.007" xml:space="preserve"><value>Workspaceを作成</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.008" xml:space="preserve"><value>Workspaceはまだありません</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.009" xml:space="preserve"><value>他の管理者のWorkspace</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.010" xml:space="preserve"><value>接続ガイド</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.011" xml:space="preserve"><value>VS Code / Cursorで接続</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.012" xml:space="preserve"><value>デバイスのペアリングを管理</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.013" xml:space="preserve"><value>ファイル</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.014" xml:space="preserve"><value>ディレクトリ</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.015" xml:space="preserve"><value>使用済み</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.016" xml:space="preserve"><value>アップロード</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.017" xml:space="preserve"><value>クリア</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.018" xml:space="preserve"><value>名前を入力して「Workspaceを作成」を選ぶと、AIチャットとリモートエディター間でファイルを安全に共有できます。</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.019" xml:space="preserve"><value>現在のテナントに他の管理者のWorkspaceはありません</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.020" xml:space="preserve"><value>デバイスがペアリングされていませんか？デバイスセッションを開いてペアリングを完了してください。</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.021" xml:space="preserve"><value>たった今</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.022" xml:space="preserve"><value>{0}分前</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.023" xml:space="preserve"><value>{0}時間前</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.024" xml:space="preserve"><value>{0}日前</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.025" xml:space="preserve"><value>{0}か月前</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.026" xml:space="preserve"><value>{0}年前</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.027" xml:space="preserve"><value>Workspaceのアップロード上限を読み取れませんでした。</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.028" xml:space="preserve"><value>{0}は空か、{1}を超えています。</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.029" xml:space="preserve"><value>{0}のアップロード応答が無効です。</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.030" xml:space="preserve"><value>{0}をWorkspace/inputにアップロードしました。</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.031" xml:space="preserve"><value>Workspaceの手動アップロードに失敗しました：</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.032" xml:space="preserve"><value>Workspaceの手動アップロードに失敗しました。</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.033" xml:space="preserve"><value>管理者#{0}のWorkspace「{1}」をクリアします。ファイルを削除し、input、output、logsを空のディレクトリに戻します。Workspace自体は残ります。この操作は元に戻せません。</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.034" xml:space="preserve"><value>自分のWorkspace「{0}」をクリアします。ファイルを削除し、input、output、logsを空のディレクトリに戻します。Workspace自体は残ります。この操作は元に戻せません。</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.035" xml:space="preserve"><value>Workspaceとリモート編集</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.036" xml:space="preserve"><value>ファイルはAdminChat、VS Code、Cursorが共有する分離ディレクトリに保存されます。ここでファイル数と使用量を確認したり、Workspaceを初期状態の空の構成に戻したりできます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.037" xml:space="preserve"><value>現在のアカウント #{0} · Workspaceごとのクォータ {1} · ファイル数と使用量にはWorkspaceマニフェストを含みません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.038" xml:space="preserve"><value>他の管理者には、現在のテナント内で自分が所有していないWorkspaceのみが含まれます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.039" xml:space="preserve"><value>{0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.040" xml:space="preserve"><value>Name the new task, for example: order-system refactor</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.041" xml:space="preserve"><value>Created {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.042" xml:space="preserve"><value>Accessed {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.043" xml:space="preserve"><value>These Workspaces are not owned by the current account. Super administrators can review usage and clear content; actions are logged.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.044" xml:space="preserve"><value>Only Workspaces in the same tenant with another owner are shown here.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.045" xml:space="preserve"><value>Administrator #{0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.046" xml:space="preserve"><value>Install the “NCF Workspace” extension</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.047" xml:space="preserve"><value>Run “NCF: Connect Workspace”</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.048" xml:space="preserve"><value>Enter the site address and confirm pairing in the browser</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.049" xml:space="preserve"><value>Choose a Workspace; its files open as a remote folder</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.050" xml:space="preserve"><value>The Workspace itself remains. This action cannot be undone.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.051" xml:space="preserve"><value>No other administrator Workspaces exist in the current tenant</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.052" xml:space="preserve"><value>Device not paired? Open device sessions to complete pairing.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.040" xml:space="preserve"><value>新しいタスク名を入力してください。例：注文システムのリファクタリング</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.041" xml:space="preserve"><value>作成日時：{0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.042" xml:space="preserve"><value>アクセス日時：{0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.043" xml:space="preserve"><value>これらのWorkspaceは現在のアカウントが所有していません。スーパー管理者は使用量を確認して内容をクリアできます。操作はログに記録されます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.044" xml:space="preserve"><value>ここには、同じテナント内で別の所有者がいるWorkspaceのみが表示されます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.045" xml:space="preserve"><value>管理者 #{0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.046" xml:space="preserve"><value>「NCF Workspace」拡張機能をインストール</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.047" xml:space="preserve"><value>「NCF: Connect Workspace」を実行</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.048" xml:space="preserve"><value>サイトアドレスを入力し、ブラウザーでペアリングを確認</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.049" xml:space="preserve"><value>Workspaceを選択すると、そのファイルがリモートフォルダーとして開きます</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.050" xml:space="preserve"><value>Workspace自体は残ります。この操作は元に戻せません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.051" xml:space="preserve"><value>現在のテナントに他の管理者のWorkspaceはありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.052" xml:space="preserve"><value>デバイスがペアリングされていませんか？デバイスセッションを開いてペアリングを完了してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.053" xml:space="preserve"><value>Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.054" xml:space="preserve"><value>Mine</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.055" xml:space="preserve"><value>Other administrator</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.056" xml:space="preserve"><value>Create Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.057" xml:space="preserve"><value>Current account</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Server.IdentityInvalid" xml:space="preserve"><value>The current administrator identity is invalid. Please sign in again.||The current administrator identity is invalid. Please sign in again.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Server.UsageReadFailed" xml:space="preserve"><value>Failed to read Workspace usage. Please retry later.||Failed to read Workspace usage. Please retry later.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Server.NameRequired" xml:space="preserve"><value>Enter a Workspace name.||Enter a Workspace name.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Server.Created" xml:space="preserve"><value>Workspace created. Connect with VS Code or Cursor.||Workspace created. Connect with VS Code or Cursor.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Server.ClearedOther" xml:space="preserve"><value>Cleared administrator #{0}'s Workspace "{1}". Its content was reset to the empty initial layout.||Cleared administrator #{0}'s Workspace "{1}". Its content was reset to the empty initial layout.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Server.ClearedOwn" xml:space="preserve"><value>Cleared Workspace "{0}". Its content was reset to the empty initial layout.||Cleared Workspace "{0}". Its content was reset to the empty initial layout.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Server.SelectionRequired" xml:space="preserve"><value>Select a Workspace to clear.||Select a Workspace to clear.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Server.NotFound" xml:space="preserve"><value>The Workspace does not exist or is outside the current administrator's scope.||The Workspace does not exist or is outside the current administrator's scope.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Server.ClearFailed" xml:space="preserve"><value>Failed to clear the Workspace. Please retry later.||Failed to clear the Workspace. Please retry later.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
-  <data name="Frontend.058" xml:space="preserve"><value>{0} files ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.059" xml:space="preserve"><value>Current account #{0} · per-Workspace quota · file count and capacity exclude the Workspace manifest.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.060" xml:space="preserve"><value>{0} files · {1}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.054" xml:space="preserve"><value>自分のWorkspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.055" xml:space="preserve"><value>他の管理者</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.056" xml:space="preserve"><value>Workspaceを作成</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.057" xml:space="preserve"><value>現在のアカウント</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Server.IdentityInvalid" xml:space="preserve"><value>現在の管理者IDが無効です。もう一度ログインしてください。||現在の管理者IDが無効です。もう一度ログインしてください。</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Server.UsageReadFailed" xml:space="preserve"><value>Workspaceの使用量を読み取れませんでした。後でもう一度お試しください。||Workspaceの使用量を読み取れませんでした。後でもう一度お試しください。</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Server.NameRequired" xml:space="preserve"><value>Workspace名を入力してください。||Workspace名を入力してください。</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Server.Created" xml:space="preserve"><value>Workspaceを作成しました。VS CodeまたはCursorで接続してください。||Workspaceを作成しました。VS CodeまたはCursorで接続してください。</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Server.ClearedOther" xml:space="preserve"><value>管理者#{0}のWorkspace「{1}」をクリアしました。内容は初期状態の空の構成に戻りました。||管理者#{0}のWorkspace「{1}」をクリアしました。内容は初期状態の空の構成に戻りました。</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Server.ClearedOwn" xml:space="preserve"><value>Workspace「{0}」をクリアしました。内容は初期状態の空の構成に戻りました。||Workspace「{0}」をクリアしました。内容は初期状態の空の構成に戻りました。</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Server.SelectionRequired" xml:space="preserve"><value>クリアするWorkspaceを選択してください。||クリアするWorkspaceを選択してください。</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Server.NotFound" xml:space="preserve"><value>Workspaceが存在しないか、現在の管理者の対象範囲外です。||Workspaceが存在しないか、現在の管理者の対象範囲外です。</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Server.ClearFailed" xml:space="preserve"><value>Workspaceのクリアに失敗しました。後でもう一度お試しください。||Workspaceのクリアに失敗しました。後でもう一度お試しください。</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.058" xml:space="preserve"><value>{0}ファイル ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.059" xml:space="preserve"><value>現在のアカウント #{0} · Workspaceごとのクォータ · ファイル数と容量にはWorkspaceマニフェストを含みません。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.060" xml:space="preserve"><value>{0}ファイル · {1}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
 </root>
