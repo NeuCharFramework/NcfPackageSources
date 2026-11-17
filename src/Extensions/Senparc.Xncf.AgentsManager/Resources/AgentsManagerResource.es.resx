@@ -598,7 +598,7 @@
     <value>Cerrar</value>
   </data>
   <data name="Frontend.148" xml:space="preserve">
-    <value>Todo</value>
+    <value>Todos</value>
   </data>
   <data name="Frontend.149" xml:space="preserve">
     <value>Eventos</value>
@@ -607,7 +607,7 @@
     <value>En espera</value>
   </data>
   <data name="Frontend.151" xml:space="preserve">
-    <value>En pausa</value>
+    <value>Pausado</value>
   </data>
   <data name="Frontend.152" xml:space="preserve">
     <value>Fallido</value>
@@ -616,19 +616,19 @@
     <value>Archivar</value>
   </data>
   <data name="Frontend.154" xml:space="preserve">
-    <value>En curso</value>
+    <value>En ejecución</value>
   </data>
   <data name="Frontend.155" xml:space="preserve">
     <value>Chat</value>
   </data>
   <data name="Frontend.156" xml:space="preserve">
-    <value>Introduzca el nombre de Function Call</value>
+    <value>Introduce el nombre de la Function Call</value>
   </data>
   <data name="Frontend.157" xml:space="preserve">
     <value>Actualizar</value>
   </data>
   <data name="Frontend.158" xml:space="preserve">
-    <value>Administrar PromptRange</value>
+    <value>Gestionar PromptRange</value>
   </data>
   <data name="Frontend.159" xml:space="preserve">
     <value>Sin descripción</value>
