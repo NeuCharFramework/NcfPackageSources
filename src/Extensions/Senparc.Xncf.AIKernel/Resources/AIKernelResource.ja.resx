@@ -329,7 +329,7 @@
   <data name="FineTuning.Tip.maxSequenceLength" xml:space="preserve"><value>例あたりの Token 上限（32–32,768）。長い例は切り詰められることがあります。上限を大きくすると、より多くのメモリが必要です。</value></data>
   <data name="FineTuning.Parameter.loraRank" xml:space="preserve"><value>LoRA ランク</value></data>
   <data name="FineTuning.Tip.loraRank" xml:space="preserve"><value>低ランクアダプターの次元（1–256）。ランクを大きくすると、学習可能なパラメータとメモリ使用量が増えます。</value></data>
-  <data name="FineTuning.Parameter.loraAlpha" xml:space="preserve"><value>LoRA alpha</value></data>
+  <data name="FineTuning.Parameter.loraAlpha" xml:space="preserve"><value>LoRAアルファ</value></data>
   <data name="FineTuning.Tip.loraAlpha" xml:space="preserve"><value>Adapter のスケーリング係数（1–1,024）。通常は LoRA のランクとの関係で考えます。</value></data>
   <data name="FineTuning.Parameter.loraDropout" xml:space="preserve"><value>LoRA ドロップアウト</value></data>
   <data name="FineTuning.Tip.loraDropout" xml:space="preserve"><value>Adapter のドロップアウト確率（0–0.9）。バックエンド対応は worker が検証します。</value></data>
@@ -532,8 +532,8 @@
   <data name="FineTuning.SecretAlreadyExists" xml:space="preserve"><value>キーファイルは既に存在するため、変更していません。</value><comment>この言語向けに翻訳済み。</comment></data>
   <data name="FineTuning.SaveBeforeLaunch" xml:space="preserve"><value>先に保存し、キーを生成してからworkerを開始してください。</value><comment>この言語向けに翻訳済み。</comment></data>
   <data name="FineTuning.Optional" xml:space="preserve"><value>任意</value><comment>この言語向けに翻訳済み。</comment></data>
-  <data name="Frontend.400" xml:space="preserve"><value>Imported from NeuChar AI (DevId: {0})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.400" xml:space="preserve"><value>NeuChar AIからインポート（DevId: {0}）</value><comment>この言語向けに翻訳済み。</comment></data>
 
-  <data name="Frontend.100" xml:space="preserve"><value>Create fine-tuning task</value></data>
-  <data name="Frontend.101" xml:space="preserve"><value>Create a fine-tuning task with an approved local model, dataset, and training parameters. The Worker, model, and dataset load automatically, training parameters have defaults, and Workflow can run with those defaults.</value></data>
+  <data name="Frontend.100" xml:space="preserve"><value>ファインチューニングタスクを作成</value></data>
+  <data name="Frontend.101" xml:space="preserve"><value>承認済みのローカルモデル、データセット、学習パラメーターを使用してファインチューニングタスクを作成します。Worker、モデル、データセットは自動的に読み込まれ、学習パラメーターには既定値が設定されます。Workflowはその値で実行できます。</value></data>
 </root>

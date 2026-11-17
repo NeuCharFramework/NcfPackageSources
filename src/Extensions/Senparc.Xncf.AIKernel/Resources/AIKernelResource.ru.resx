@@ -532,8 +532,8 @@
   <data name="FineTuning.SecretAlreadyExists" xml:space="preserve"><value>Файл ключа уже существует и оставлен без изменений.</value><comment>Переведено для этого языка.</comment></data>
   <data name="FineTuning.SaveBeforeLaunch" xml:space="preserve"><value>Сначала сохраните, затем создайте ключ и запустите worker.</value><comment>Переведено для этого языка.</comment></data>
   <data name="FineTuning.Optional" xml:space="preserve"><value>Необязательно</value><comment>Переведено для этого языка.</comment></data>
-  <data name="Frontend.400" xml:space="preserve"><value>Imported from NeuChar AI (DevId: {0})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.400" xml:space="preserve"><value>Импортировано из NeuChar AI (DevId: {0})</value><comment>Переведено для этого языка.</comment></data>
 
-  <data name="Frontend.100" xml:space="preserve"><value>Create fine-tuning task</value></data>
-  <data name="Frontend.101" xml:space="preserve"><value>Create a fine-tuning task with an approved local model, dataset, and training parameters. The Worker, model, and dataset load automatically, training parameters have defaults, and Workflow can run with those defaults.</value></data>
+  <data name="Frontend.100" xml:space="preserve"><value>Создать задачу тонкой настройки</value></data>
+  <data name="Frontend.101" xml:space="preserve"><value>Создайте задачу тонкой настройки с утверждённой локальной моделью, набором данных и параметрами обучения. Worker, модель и набор данных загружаются автоматически; параметры обучения имеют значения по умолчанию, а Workflow может выполняться с ними.</value></data>
 </root>
