@@ -630,4 +630,6 @@
 
   <data name="Frontend.604" xml:space="preserve"><value>Returns the current UTC time as ISO text.</value></data>
   <data name="Frontend.605" xml:space="preserve"><value>Formats a date using the specified format; the default format is used when the format parameter is empty.</value></data>
+  <data name="Frontend.606" xml:space="preserve"><value>Pause</value></data>
+  <data name="Frontend.607" xml:space="preserve"><value>Play</value></data>
 </root>

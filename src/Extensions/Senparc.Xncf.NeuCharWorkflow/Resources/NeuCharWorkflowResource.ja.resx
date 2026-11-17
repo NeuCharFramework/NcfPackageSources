@@ -630,4 +630,6 @@
 
   <data name="Frontend.604" xml:space="preserve"><value>現在のUTC時刻をISOテキストで返します。</value></data>
   <data name="Frontend.605" xml:space="preserve"><value>指定した形式で日付をフォーマットします。形式を空欄にすると既定の形式を使用します。</value></data>
+  <data name="Frontend.606" xml:space="preserve"><value>一時停止</value></data>
+  <data name="Frontend.607" xml:space="preserve"><value>再生</value></data>
 </root>

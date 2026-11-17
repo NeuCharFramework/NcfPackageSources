@@ -630,4 +630,6 @@
 
   <data name="Frontend.604" xml:space="preserve"><value>Devuelve la hora UTC actual como texto ISO.</value></data>
   <data name="Frontend.605" xml:space="preserve"><value>Formatea una fecha con el formato indicado; usa el formato predeterminado si el parámetro está vacío.</value></data>
+  <data name="Frontend.606" xml:space="preserve"><value>Pausar</value></data>
+  <data name="Frontend.607" xml:space="preserve"><value>Reproducir</value></data>
 </root>

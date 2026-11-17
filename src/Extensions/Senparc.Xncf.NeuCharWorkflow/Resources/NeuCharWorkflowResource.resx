@@ -629,4 +629,6 @@
 
   <data name="Frontend.604" xml:space="preserve"><value>返回当前 UTC 时间的 ISO 文本。</value></data>
   <data name="Frontend.605" xml:space="preserve"><value>按指定格式格式化日期；格式参数留空时使用默认格式。</value></data>
+  <data name="Frontend.606" xml:space="preserve"><value>暂停</value></data>
+  <data name="Frontend.607" xml:space="preserve"><value>播放</value></data>
 </root>
