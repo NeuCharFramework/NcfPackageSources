@@ -1419,29 +1419,29 @@
 
   <data name="Frontend.527" xml:space="preserve"><value>Настройки</value></data>
 
-  <data name="Frontend.528" xml:space="preserve"><value>Clear</value></data>
+  <data name="Frontend.528" xml:space="preserve"><value>Очистить</value></data>
 
-  <data name="Frontend.529" xml:space="preserve"><value>Configure global Provit access policy</value></data>
+  <data name="Frontend.529" xml:space="preserve"><value>Настроить глобальную политику доступа Provit</value></data>
 
-  <data name="Frontend.530" xml:space="preserve"><value>Target information</value></data>
+  <data name="Frontend.530" xml:space="preserve"><value>Сведения о цели</value></data>
 
-  <data name="Frontend.531" xml:space="preserve"><value>Unknown version</value></data>
+  <data name="Frontend.531" xml:space="preserve"><value>Неизвестная версия</value></data>
 
-  <data name="Frontend.532" xml:space="preserve"><value>The policy remains as an orphan and becomes effective after module reinstall</value></data>
+  <data name="Frontend.532" xml:space="preserve"><value>После сохранения сохраняется как избыточная и вступает в силу после переустановки модуля</value></data>
 
-  <data name="Frontend.533" xml:space="preserve"><value>The Function no longer exists; the policy remains as an orphan</value></data>
+  <data name="Frontend.533" xml:space="preserve"><value>Function больше не существует; политика сохранена как избыточная</value></data>
 
-  <data name="Frontend.534" xml:space="preserve"><value>(none)</value></data>
+  <data name="Frontend.534" xml:space="preserve"><value>(Нет)</value></data>
 
-  <data name="Frontend.535" xml:space="preserve"><value>Description</value></data>
+  <data name="Frontend.535" xml:space="preserve"><value>Описание</value></data>
 
-  <data name="Frontend.536" xml:space="preserve"><value>Code baseline (FunctionRenderAttribute)</value></data>
+  <data name="Frontend.536" xml:space="preserve"><value>Базовая политика кода (FunctionRenderAttribute)</value></data>
 
-  <data name="Frontend.537" xml:space="preserve"><value>Available in global Provit</value></data>
+  <data name="Frontend.537" xml:space="preserve"><value>Разрешено в глобальном Provit</value></data>
 
-  <data name="Frontend.538" xml:space="preserve"><value>Unavailable in global Provit</value></data>
+  <data name="Frontend.538" xml:space="preserve"><value>Не разрешено в глобальном Provit</value></data>
 
-  <data name="Frontend.539" xml:space="preserve"><value>The module was removed, so the code baseline cannot be read; the database policy is authoritative.</value></data>
+  <data name="Frontend.539" xml:space="preserve"><value>Модуль очищен, поэтому базовую политику кода прочитать нельзя; главной считается политика базы данных.</value></data>
 
   <data name="Frontend.540" xml:space="preserve"><value>Текущая политика базы данных</value></data>
 
@@ -1463,21 +1463,21 @@
 
   <data name="Frontend.549" xml:space="preserve"><value>Ограничено</value></data>
 
-  <data name="Frontend.550" xml:space="preserve"><value>Disabled</value></data>
+  <data name="Frontend.550" xml:space="preserve"><value>Отключено</value></data>
 
-  <data name="Frontend.551" xml:space="preserve"><value>Select or enter role codes (any match grants access)</value></data>
+  <data name="Frontend.551" xml:space="preserve"><value>Выберите или введите коды ролей (любое совпадение разрешает доступ)</value></data>
 
-  <data name="Frontend.552" xml:space="preserve"><value>Allowed roles</value></data>
+  <data name="Frontend.552" xml:space="preserve"><value>Разрешённые роли</value></data>
 
-  <data name="Frontend.553" xml:space="preserve"><value>Allowed permission codes</value></data>
+  <data name="Frontend.553" xml:space="preserve"><value>Разрешённые коды разрешений</value></data>
 
-  <data name="Frontend.554" xml:space="preserve"><value>Enter permission codes (for example sandbox.execute; any match grants access)</value></data>
+  <data name="Frontend.554" xml:space="preserve"><value>Введите коды разрешений (например sandbox.execute; любое совпадение разрешает доступ)</value></data>
 
-  <data name="Frontend.555" xml:space="preserve"><value>Allowed users</value></data>
+  <data name="Frontend.555" xml:space="preserve"><value>Разрешённые пользователи</value></data>
 
-  <data name="Frontend.556" xml:space="preserve"><value>Select admin users (any match grants access)</value></data>
+  <data name="Frontend.556" xml:space="preserve"><value>Выберите администраторов (любое совпадение разрешает доступ)</value></data>
 
-  <data name="Frontend.557" xml:space="preserve"><value>Record the reason for this policy change for later auditing</value></data>
+  <data name="Frontend.557" xml:space="preserve"><value>Запишите причину изменения политики для последующего аудита</value></data>
 
   <data name="Frontend.558" xml:space="preserve"><value>Cancel</value></data>
 

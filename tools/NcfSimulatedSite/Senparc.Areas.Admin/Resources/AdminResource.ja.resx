@@ -1419,29 +1419,29 @@
 
   <data name="Frontend.527" xml:space="preserve"><value>設定</value></data>
 
-  <data name="Frontend.528" xml:space="preserve"><value>Clear</value></data>
+  <data name="Frontend.528" xml:space="preserve"><value>クリア</value></data>
 
-  <data name="Frontend.529" xml:space="preserve"><value>Configure global Provit access policy</value></data>
+  <data name="Frontend.529" xml:space="preserve"><value>グローバルProvitアクセスポリシーを設定</value></data>
 
-  <data name="Frontend.530" xml:space="preserve"><value>Target information</value></data>
+  <data name="Frontend.530" xml:space="preserve"><value>対象情報</value></data>
 
-  <data name="Frontend.531" xml:space="preserve"><value>Unknown version</value></data>
+  <data name="Frontend.531" xml:space="preserve"><value>不明なバージョン</value></data>
 
-  <data name="Frontend.532" xml:space="preserve"><value>The policy remains as an orphan and becomes effective after module reinstall</value></data>
+  <data name="Frontend.532" xml:space="preserve"><value>保存後は孤立設定として保持され、モジュール再インストール後に有効になります</value></data>
 
-  <data name="Frontend.533" xml:space="preserve"><value>The Function no longer exists; the policy remains as an orphan</value></data>
+  <data name="Frontend.533" xml:space="preserve"><value>Functionは存在しません。ポリシーは孤立設定として保持されます</value></data>
 
-  <data name="Frontend.534" xml:space="preserve"><value>(none)</value></data>
+  <data name="Frontend.534" xml:space="preserve"><value>（なし）</value></data>
 
-  <data name="Frontend.535" xml:space="preserve"><value>Description</value></data>
+  <data name="Frontend.535" xml:space="preserve"><value>説明</value></data>
 
-  <data name="Frontend.536" xml:space="preserve"><value>Code baseline (FunctionRenderAttribute)</value></data>
+  <data name="Frontend.536" xml:space="preserve"><value>コードの基準（FunctionRenderAttribute）</value></data>
 
-  <data name="Frontend.537" xml:space="preserve"><value>Available in global Provit</value></data>
+  <data name="Frontend.537" xml:space="preserve"><value>グローバルProvitで許可</value></data>
 
-  <data name="Frontend.538" xml:space="preserve"><value>Unavailable in global Provit</value></data>
+  <data name="Frontend.538" xml:space="preserve"><value>グローバルProvitで不許可</value></data>
 
-  <data name="Frontend.539" xml:space="preserve"><value>The module was removed, so the code baseline cannot be read; the database policy is authoritative.</value></data>
+  <data name="Frontend.539" xml:space="preserve"><value>モジュールはクリア済みでコードの基準を読み取れないため、データベースポリシーを基準にします。</value></data>
 
   <data name="Frontend.540" xml:space="preserve"><value>現在のデータベースポリシー</value></data>
 
@@ -1463,21 +1463,21 @@
 
   <data name="Frontend.549" xml:space="preserve"><value>制限付き</value></data>
 
-  <data name="Frontend.550" xml:space="preserve"><value>Disabled</value></data>
+  <data name="Frontend.550" xml:space="preserve"><value>無効</value></data>
 
-  <data name="Frontend.551" xml:space="preserve"><value>Select or enter role codes (any match grants access)</value></data>
+  <data name="Frontend.551" xml:space="preserve"><value>ロールコードを選択または入力（いずれかに一致すれば許可）</value></data>
 
-  <data name="Frontend.552" xml:space="preserve"><value>Allowed roles</value></data>
+  <data name="Frontend.552" xml:space="preserve"><value>許可するロール</value></data>
 
-  <data name="Frontend.553" xml:space="preserve"><value>Allowed permission codes</value></data>
+  <data name="Frontend.553" xml:space="preserve"><value>許可する権限コード</value></data>
 
-  <data name="Frontend.554" xml:space="preserve"><value>Enter permission codes (for example sandbox.execute; any match grants access)</value></data>
+  <data name="Frontend.554" xml:space="preserve"><value>権限コードを入力（例：sandbox.execute。いずれかに一致すれば許可）</value></data>
 
-  <data name="Frontend.555" xml:space="preserve"><value>Allowed users</value></data>
+  <data name="Frontend.555" xml:space="preserve"><value>許可するユーザー</value></data>
 
-  <data name="Frontend.556" xml:space="preserve"><value>Select admin users (any match grants access)</value></data>
+  <data name="Frontend.556" xml:space="preserve"><value>管理者ユーザーを選択（いずれかに一致すれば許可）</value></data>
 
-  <data name="Frontend.557" xml:space="preserve"><value>Record the reason for this policy change for later auditing</value></data>
+  <data name="Frontend.557" xml:space="preserve"><value>後の監査のため、このポリシー変更の理由を記録します</value></data>
 
   <data name="Frontend.558" xml:space="preserve"><value>Cancel</value></data>
 

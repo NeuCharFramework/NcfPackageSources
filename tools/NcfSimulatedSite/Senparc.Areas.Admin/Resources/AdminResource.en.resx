@@ -1429,21 +1429,21 @@
 
   <data name="Frontend.531" xml:space="preserve"><value>Unknown version</value></data>
 
-  <data name="Frontend.532" xml:space="preserve"><value>The policy remains as an orphan and becomes effective after module reinstall</value></data>
+  <data name="Frontend.532" xml:space="preserve"><value>Retained as an orphan after saving; becomes effective after module reinstall</value></data>
 
   <data name="Frontend.533" xml:space="preserve"><value>The Function no longer exists; the policy remains as an orphan</value></data>
 
-  <data name="Frontend.534" xml:space="preserve"><value>(none)</value></data>
+  <data name="Frontend.534" xml:space="preserve"><value>(None)</value></data>
 
   <data name="Frontend.535" xml:space="preserve"><value>Description</value></data>
 
   <data name="Frontend.536" xml:space="preserve"><value>Code baseline (FunctionRenderAttribute)</value></data>
 
-  <data name="Frontend.537" xml:space="preserve"><value>Available in global Provit</value></data>
+  <data name="Frontend.537" xml:space="preserve"><value>Allowed in global Provit</value></data>
 
-  <data name="Frontend.538" xml:space="preserve"><value>Unavailable in global Provit</value></data>
+  <data name="Frontend.538" xml:space="preserve"><value>Not allowed in global Provit</value></data>
 
-  <data name="Frontend.539" xml:space="preserve"><value>The module was removed, so the code baseline cannot be read; the database policy is authoritative.</value></data>
+  <data name="Frontend.539" xml:space="preserve"><value>The module was cleared, so the code baseline cannot be read; the database policy is authoritative.</value></data>
 
   <data name="Frontend.540" xml:space="preserve"><value>Current database policy</value></data>
 

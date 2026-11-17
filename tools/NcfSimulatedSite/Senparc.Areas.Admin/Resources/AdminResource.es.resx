@@ -1419,29 +1419,29 @@
 
   <data name="Frontend.527" xml:space="preserve"><value>Configuración</value></data>
 
-  <data name="Frontend.528" xml:space="preserve"><value>Clear</value></data>
+  <data name="Frontend.528" xml:space="preserve"><value>Limpiar</value></data>
 
-  <data name="Frontend.529" xml:space="preserve"><value>Configure global Provit access policy</value></data>
+  <data name="Frontend.529" xml:space="preserve"><value>Configurar la política de acceso global a Provit</value></data>
 
-  <data name="Frontend.530" xml:space="preserve"><value>Target information</value></data>
+  <data name="Frontend.530" xml:space="preserve"><value>Información del objetivo</value></data>
 
-  <data name="Frontend.531" xml:space="preserve"><value>Unknown version</value></data>
+  <data name="Frontend.531" xml:space="preserve"><value>Versión desconocida</value></data>
 
-  <data name="Frontend.532" xml:space="preserve"><value>The policy remains as an orphan and becomes effective after module reinstall</value></data>
+  <data name="Frontend.532" xml:space="preserve"><value>Se conserva como huérfana tras guardar y se aplica al reinstalar el módulo</value></data>
 
-  <data name="Frontend.533" xml:space="preserve"><value>The Function no longer exists; the policy remains as an orphan</value></data>
+  <data name="Frontend.533" xml:space="preserve"><value>La Function ya no existe; la política se conserva como huérfana</value></data>
 
-  <data name="Frontend.534" xml:space="preserve"><value>(none)</value></data>
+  <data name="Frontend.534" xml:space="preserve"><value>(Ninguno)</value></data>
 
-  <data name="Frontend.535" xml:space="preserve"><value>Description</value></data>
+  <data name="Frontend.535" xml:space="preserve"><value>Descripción</value></data>
 
-  <data name="Frontend.536" xml:space="preserve"><value>Code baseline (FunctionRenderAttribute)</value></data>
+  <data name="Frontend.536" xml:space="preserve"><value>Base del código (FunctionRenderAttribute)</value></data>
 
-  <data name="Frontend.537" xml:space="preserve"><value>Available in global Provit</value></data>
+  <data name="Frontend.537" xml:space="preserve"><value>Permitido en Provit global</value></data>
 
-  <data name="Frontend.538" xml:space="preserve"><value>Unavailable in global Provit</value></data>
+  <data name="Frontend.538" xml:space="preserve"><value>No permitido en Provit global</value></data>
 
-  <data name="Frontend.539" xml:space="preserve"><value>The module was removed, so the code baseline cannot be read; the database policy is authoritative.</value></data>
+  <data name="Frontend.539" xml:space="preserve"><value>El módulo se eliminó y no se puede leer la base del código; la política de base de datos es la autoridad.</value></data>
 
   <data name="Frontend.540" xml:space="preserve"><value>Política de base de datos actual</value></data>
 
@@ -1463,21 +1463,21 @@
 
   <data name="Frontend.549" xml:space="preserve"><value>Restringido</value></data>
 
-  <data name="Frontend.550" xml:space="preserve"><value>Disabled</value></data>
+  <data name="Frontend.550" xml:space="preserve"><value>Deshabilitado</value></data>
 
-  <data name="Frontend.551" xml:space="preserve"><value>Select or enter role codes (any match grants access)</value></data>
+  <data name="Frontend.551" xml:space="preserve"><value>Selecciona o introduce códigos de rol (cualquier coincidencia concede acceso)</value></data>
 
-  <data name="Frontend.552" xml:space="preserve"><value>Allowed roles</value></data>
+  <data name="Frontend.552" xml:space="preserve"><value>Roles permitidos</value></data>
 
-  <data name="Frontend.553" xml:space="preserve"><value>Allowed permission codes</value></data>
+  <data name="Frontend.553" xml:space="preserve"><value>Códigos de permiso permitidos</value></data>
 
-  <data name="Frontend.554" xml:space="preserve"><value>Enter permission codes (for example sandbox.execute; any match grants access)</value></data>
+  <data name="Frontend.554" xml:space="preserve"><value>Introduce códigos de permisos (por ejemplo sandbox.execute; cualquier coincidencia concede acceso)</value></data>
 
-  <data name="Frontend.555" xml:space="preserve"><value>Allowed users</value></data>
+  <data name="Frontend.555" xml:space="preserve"><value>Usuarios permitidos</value></data>
 
-  <data name="Frontend.556" xml:space="preserve"><value>Select admin users (any match grants access)</value></data>
+  <data name="Frontend.556" xml:space="preserve"><value>Selecciona usuarios administradores (cualquier coincidencia concede acceso)</value></data>
 
-  <data name="Frontend.557" xml:space="preserve"><value>Record the reason for this policy change for later auditing</value></data>
+  <data name="Frontend.557" xml:space="preserve"><value>Registra el motivo de este cambio de política para auditorías posteriores</value></data>
 
   <data name="Frontend.558" xml:space="preserve"><value>Cancel</value></data>
 
