@@ -26,7 +26,7 @@
             <span>智能体</span>
         </span>
         <div class="tabPane-container" :class="{'studio-layout':agentListViewMode === 'three' && scrollbarAgentIndex === ''}">
-            @* 侧边 *@
+            @* Sidebar *@
             <div class="sidebar-container">
                 <div class="sidebar-head-container">
                     <div class="df-wn flex-ac flex-jsb sidebar-title-row">
@@ -85,10 +85,10 @@
                         style="flex-grow: 1;font-size: 14px;color: #5e6d82;margin-top:150px;">暂无数据</div>
                 </el-scrollbar>
             </div>
-            @* 主体内容 *@
+            @* Main content *@
             <div class="main-container"
                 :class="[scrollbarAgentIndex === ''? 'agent-container':'agentDetails-container']">
-                @* 智能体列表 *@
+                @* Agent list *@
                 <template v-if="scrollbarAgentIndex === ''">
                     <div class="agent-view-mode-row">
                         <el-radio-group v-model="agentListViewMode" size="mini" @@change="handleAgentListViewModeChange">
@@ -198,7 +198,7 @@
                         </el-scrollbar>
                     </div>
                 </template>
-                @* 智能体详情 *@
+                @* Agent details *@
                 <template v-else-if="agentDetails">
                     <div class="df-wn flex-ac flex-js agentDetails-head">
                         <div class="df-wn flex-ac flex-js agentDetails-head-item1">
@@ -352,7 +352,7 @@
                         </div>
                         <div class="agentDetails-main-right">
                             <template v-if="agentDetailsTabsActiveName === 'first'">
-                                @* 组详情 *@
+                                @* Group details *@
                                 <template v-if="agentDetailsGroupShowType === '1'">
                                     <div class="df-wn flex-ac flex-js groupInfoRow">
                                         <template
@@ -464,7 +464,7 @@
                                         </el-table-column>
                                     </el-table>
                                 </template>
-                                @* 任务详情 *@
+                                @* Task details *@
                                 <template v-else-if="agentDetailsGroupShowType === '2'">
                                     <div class="df-wn flex-ac flex-js task-header">
                                         <template v-if="agentDetailsGroupDetailsTaskDetails">
@@ -472,7 +472,7 @@
                                                 <div class="df-wn flex-ac backgroupbox" style="top: -11px;"
                                                     @@click="returnGroup('agentGroupTask')">
                                                     <i class="icon fas fa-reply"></i>
-                                                    @* <span class="text">返回</span> *@
+                                                    @* <span class="text">Back</span> *@
                                                 </div>
                                                 <div class="task-header1 text-ellipsis"
                                                     :title="agentDetailsGroupDetailsTaskDetails.name">
@@ -517,7 +517,7 @@
                                                 <div class="lable">任务描述:</div>
                                                 <div class="value">
                                                     <span class="text-ellipsis">{{ agentDetailsGroupDetailsTaskDetails.promptCommand }}</span>
-                                                    @* 详情 type="primary" *@
+                                                    @* Details button *@
                                                     <el-button type="text" size="mini"
                                                         @@click="viewTaskDescription(agentDetailsGroupDetailsTaskDetails)">详情</el-button>
                                                 </div>
@@ -534,7 +534,7 @@
                                             <div class="itembox">
                                                 <div class="lable">任务评价:</div>
                                                 <div class="value">
-                                                    @* 编辑 type="primary" *@
+                                                    @* Edit button *@
                                                     <el-button type="text" size="mini"
                                                         @@click="taskEvaluation(agentDetailsGroupDetailsTaskDetails)">编辑</el-button>
                                                 </div>
@@ -656,7 +656,7 @@
                                             <div class="lable">任务描述:</div>
                                             <div class="value">
                                                 <span class="text-ellipsis">{{ agentDetailsTaskDetails.promptCommand }}</span>
-                                                @* 详情 type="primary" *@
+                                                @* Details button *@
                                                 <el-button type="text" size="mini"
                                                     @@click="viewTaskDescription(agentDetailsTaskDetails)">详情</el-button>
                                             </div>
@@ -673,7 +673,7 @@
                                         <div class="itembox">
                                             <div class="lable">任务评价:</div>
                                             <div class="value">
-                                                @* 编辑 type="primary" *@
+                                                @* Edit button *@
                                                 <el-button type="text" size="mini"
                                                     @@click="taskEvaluation(agentDetailsTaskDetails)">编辑</el-button>
                                             </div>
@@ -763,7 +763,7 @@
             <span>组</span>
         </span>
         <div class="tabPane-container">
-            @* 侧边 *@
+            @* Sidebar *@
             <div class="sidebar-container">
                 <div class="sidebar-head-container">
                     <div class="df-wn flex-ac flex-jsb sidebar-title-row">
@@ -828,9 +828,9 @@
                         style="flex-grow: 1;font-size: 14px;color: #5e6d82;margin-top:150px;">暂无数据</div>
                 </el-scrollbar>
             </div>
-            @* 主体内容 *@
+            @* Main content *@
             <div class="main-container group-container">
-                @* 组全部 *@
+                @* All groups *@
                 <template v-if="groupShowType === '1'">
                     <div class="df-wn flex-ac flex-js groupInfoRow">
                         <div class="groupInfoRow-name text-ellipsis">
@@ -902,7 +902,7 @@
                         </el-table-column>
                     </el-table>
                 </template>
-                @* 组详情 *@
+                @* Group details *@
                 <template v-else-if="groupShowType === '2'">
                     <div class="df-wn flex-ac flex-js groupInfoRow">
                         <template v-if="groupDetails&&groupDetails.chatGroupDto">
@@ -1001,14 +1001,14 @@
                         </el-table-column>
                     </el-table>
                 </template>
-                @* 任务详情 *@
+                @* Task details *@
                 <template v-else-if="groupShowType === '3'">
                     <div class="df-wn flex-ac flex-js task-header">
                         <template v-if="groupTaskDetails">
                             <div class="task-header_left">
                                 <div class="df-wn flex-ac backgroupbox" @@click="returnGroup('groupTask')">
                                     <i class="icon fas fa-reply"></i>
-                                    @* <span class="text">返回</span> *@
+                                    @* <span class="text">Back</span> *@
                                 </div>
                                 <div class="task-header1 text-ellipsis" :title="groupTaskDetails.name">
                                     {{ groupTaskDetails.name }}
@@ -1047,7 +1047,7 @@
                                 <div class="lable">任务描述:</div>
                                 <div class="value">
                                     <span class="text-ellipsis">{{ groupTaskDetails.promptCommand }}</span>
-                                    @* 详情 type="primary" *@
+                                    @* Details button *@
                                     <el-button type="text" size="mini"
                                         @@click="viewTaskDescription(groupTaskDetails)">详情</el-button>
                                 </div>
@@ -1064,7 +1064,7 @@
                             <div class="itembox">
                                 <div class="lable">任务评价:</div>
                                 <div class="value">
-                                    @* 编辑 type="primary" *@
+                                    @* Edit button *@
                                     <el-button type="text" size="mini"
                                         @@click="taskEvaluation(groupTaskDetails)">编辑</el-button>
                                 </div>
@@ -1151,7 +1151,7 @@
             <span>任务</span>
         </span>
         <div class="tabPane-container">
-                @* 侧边 *@
+                @* Sidebar *@
             <div class="sidebar-container">
                 <div class="sidebar-head-container sidebar-head-container-task">
                     <div class="df-wn flex-ac flex-jsb sidebar-title-row">
@@ -1218,9 +1218,9 @@
                         style="flex-grow: 1;font-size: 14px;color: #5e6d82;margin-top:150px;">暂无数据</div>
                 </el-scrollbar>
             </div>
-            @* 主体内容 *@
+            @* Main content *@
             <div class="main-container agent-container">
-                @* 全部任务 *@
+                @* All tasks *@
                 <template v-if="scrollbarTaskIndex === ''">
                     <div class="df-wn flex-ac flex-js groupInfoRow">
                         <div class="groupInfoRow-name text-ellipsis">
@@ -1331,7 +1331,7 @@
                             <div class="lable">任务描述:</div>
                             <div class="value">
                                 <span class="text-ellipsis">{{ taskDetails.promptCommand }}</span>
-                                @* 详情 type="primary" *@
+                                @* Details button *@
                                 <el-button type="text" size="mini"
                                     @@click="viewTaskDescription(taskDetails)">详情</el-button>
                             </div>
@@ -1348,7 +1348,7 @@
                         <div class="itembox">
                             <div class="lable">任务评价:</div>
                             <div class="value">
-                                @* 编辑 type="primary" *@
+                                @* Edit button *@
                                 <el-button type="text" size="mini" @@click="taskEvaluation(taskDetails)">编辑</el-button>
                             </div>
                         </div>
@@ -1509,16 +1509,16 @@
     </el-tabs>
 </el-dialog>
 
-@* 抽屉 新增|编辑 智能体 540px *@
+@* Agent create/edit drawer (540px). *@
 <el-drawer :visible.sync="visible.drawerAgent" direction="rtl" :with-header="false" :wrapper-closable="false"
     :close-on-press-escape="false" size="960px">
     <div class="drawerRtl">
-        @* 内容中的头（包括标题和关闭图标） *@
+        @* Content header, including the title and close icon. *@
         <div class="drawerRtl__header">
             <div class="drawerRtl__header__title">{{ agentForm.id ? (agentForm.isSystemAgent ? '编辑系统 Agent' : '编辑智能体') : '新增智能体' }}</div>
             <div class="drawerRtl__header__close" @@click="handleElVisibleClose('drawerAgent')">&times;</div>
         </div>
-        @* 内容中的主体内容 *@
+        @* Main content area. *@
         <div class="drawerRtl__body">
             <el-form v-if="visible.drawerAgent" ref="agentELForm" :model="agentForm" :rules="agentFormRules"
                 :size="elSize" label-position="left" label-width="130px" class="drawerForm-container">
@@ -1739,14 +1739,14 @@
                 </el-form-item>
             </el-form>
         </div>
-        @* 内容中固定的footer *@
+        @* Fixed content footer. *@
         <div class="drawerRtl__footer text-right">
             <el-button :size="elSize" @@click="handleElVisibleClose('drawerAgent')">取消</el-button>
             <el-button :size="elSize" type="primary" @@click="handleElVisibleSubmit('drawerAgent')">确认</el-button>
         </div>
     </div>
 </el-drawer>
-@* 抽屉 FunctionRender / Workflow / Plugin 绑定 *@
+@* FunctionRender / Workflow / Plugin binding drawer. *@
 <el-drawer :visible.sync="visible.drawerFunctionBindings" direction="rtl" :with-header="false"
     :wrapper-closable="false" :close-on-press-escape="false" size="620px">
     <div class="drawerRtl function-binding-drawer">
@@ -1804,7 +1804,7 @@
         </div>
     </div>
 </el-drawer>
-@* 抽屉 从 MCP 列表选择 Endpoint（经 EventBus 查询 MCP 模块） *@
+@* MCP endpoint selection drawer; the MCP module is queried through EventBus. *@
 <el-drawer :visible.sync="visible.drawerMcpSelect" direction="rtl" :with-header="false"
     :wrapper-closable="true" size="620px">
     <div class="drawerRtl mcp-select-drawer">
@@ -1855,7 +1855,7 @@
         </div>
     </div>
 </el-drawer>
-@* 抽屉 远程 A2A 智能体管理 *@
+@* Remote A2A agent management drawer. *@
 <el-drawer :visible.sync="visible.drawerRemoteAgent" direction="rtl" :with-header="false" :wrapper-closable="false"
     :close-on-press-escape="false" size="900px">
     <div class="drawerRtl">
@@ -1941,16 +1941,16 @@
         <el-button :size="elSize" type="primary" @@click="saveRemoteAgent">保存</el-button>
     </span>
 </el-dialog>
-@* 抽屉 新增|编辑 组 *@
+@* Group create/edit drawer. *@
 <el-drawer :visible.sync="visible.drawerGroup" direction="rtl" :with-header="false" :wrapper-closable="false"
     :close-on-press-escape="false" size="960px">
     <div class="drawerRtl">
-        @* 内容中的头（包括标题和关闭图标） *@
+        @* Content header, including the title and close icon. *@
         <div class="drawerRtl__header">
             <div class="drawerRtl__header__title">{{ groupForm.id ? '编辑组' : '新增组' }} </div>
             <div class="drawerRtl__header__close" @@click="handleElVisibleClose('drawerGroup')">&times;</div>
         </div>
-        @* 内容中的主体内容 *@
+        @* Main content area. *@
         <div class="drawerRtl__body">
             <el-form v-if="visible.drawerGroup" ref="groupELForm" :model="groupForm" :rules="groupFormRules"
                 :size="elSize" label-position="left" label-width="130px" class="drawerForm-container">
@@ -2072,23 +2072,23 @@
                 </el-form-item>
             </el-form>
         </div>
-        @* 内容中固定的footer *@
+        @* Fixed content footer. *@
         <div class="drawerRtl__footer text-right">
             <el-button :size="elSize" @@click="handleElVisibleClose('drawerGroup')">取消</el-button>
             <el-button :size="elSize" type="primary" @@click="handleElVisibleSubmit('drawerGroup')">确认</el-button>
         </div>
     </div>
 </el-drawer>
-@* 抽屉 启动 组 *@
+@* Start group drawer. *@
 <el-drawer :visible.sync="visible.drawerGroupStart" direction="rtl" :with-header="false" :wrapper-closable="false"
     :close-on-press-escape="false" size="960px">
     <div class="drawerRtl">
-        @* 内容中的头（包括标题和关闭图标） *@
+        @* Content header, including the title and close icon. *@
         <div class="drawerRtl__header">
             <div class="drawerRtl__header__title">启动群组</div>
             <div class="drawerRtl__header__close" @@click="handleElVisibleClose('drawerGroupStart')">&times;</div>
         </div>
-        @* 内容中的主体内容 *@
+        @* Main content area. *@
         <div class="drawerRtl__body">
             <el-form v-if="visible.drawerGroupStart" ref="groupStartELForm" :model="groupStartForm"
                 :rules="groupStartFormRules" :size="elSize" label-position="left" label-width="130px"
@@ -2210,14 +2210,14 @@
                 </el-form-item>
             </el-form>
         </div>
-        @* 内容中固定的footer *@
+        @* Fixed content footer. *@
         <div class="drawerRtl__footer text-right">
             <el-button :size="elSize" @@click="handleElVisibleClose('drawerGroupStart')">取消</el-button>
             <el-button :size="elSize" type="primary" @@click="handleElVisibleSubmit('drawerGroupStart')">确认</el-button>
         </div>
     </div>
 </el-drawer>
-@* Dialog 智能体 新增 *@
+@* Add-agent dialog. *@
 <el-dialog :title="agentForm.id ? (agentForm.isSystemAgent ? '编辑系统 Agent' : '编辑智能体') : '新增智能体'" :visible.sync="visible.dialogGroupAgent" :show-close="false"
     :close-on-click-modal="false" :close-on-press-escape="false">
     <el-form v-if="visible.dialogGroupAgent" ref="agentELForm" :model="agentForm" :rules="agentFormRules" :size="elSize"
@@ -2420,7 +2420,7 @@
         <el-button type="primary" @@click="handleElVisibleSubmit('dialogGroupAgent')">确 定</el-button>
     </div>
 </el-dialog>
-@* Dialog Carousel 智能体 参数列表 *@
+@* Agent parameter carousel dialog. *@
 <el-dialog title="智能体参数" :visible.sync="visible.dialogAgentParameter" :show-close="false" :close-on-click-modal="false"
     :close-on-press-escape="false" width="80%">
     <div class="dialog-agentParameters">
@@ -2549,7 +2549,7 @@
         <el-button type="primary" @@click="handleElVisibleClose('dialogAgentParameter')">关 闭</el-button>
     </div>
 </el-dialog>
-@* Dialog 任务描述 *@
+@* Task description dialog. *@
 <el-dialog title="任务描述与执行策略" :visible.sync="visible.dialogTaskDescription" :show-close="false" :close-on-click-modal="false"
     :close-on-press-escape="false" width="720px">
     <div class="dialog-describeContent">
@@ -2586,7 +2586,7 @@
         <el-button @@click="handleElVisibleClose('dialogTaskDescription')">关 闭</el-button>
     </div>
 </el-dialog>
-@* Dialog 任务评价 *@
+@* Task evaluation dialog. *@
 <el-dialog title="任务评价" :visible.sync="visible.dialogTaskEvaluation" :show-close="false" :close-on-click-modal="false"
     :close-on-press-escape="false">
     <el-form v-if="visible.dialogTaskEvaluation" ref="evaluationELForm" :model="evaluationForm"
@@ -2606,7 +2606,7 @@
         <el-button @@click="handleElVisibleClose('dialogTaskEvaluation')">取 消</el-button>
     </div>
 </el-dialog>
-@* Dialog MCP工具列表 *@
+@* MCP tool list dialog. *@
 <el-dialog title="MCP 工具列表" :visible.sync="visible.dialogMcpTools" :append-to-body="true" width="80%" :show-close="true" :destroy-on-close="false" center>
     <div v-if="currentMcpTools && currentMcpTools.length > 0">
         <el-table :data="currentMcpTools" style="width: 100%">
@@ -2631,7 +2631,7 @@
         <el-button type="primary" @@click="visible.dialogMcpTools = false">关闭</el-button>
     </div>
 </el-dialog>
-@* Dialog Human 文本回合：NeuBell 点击只导航，提交成功后由业务路径消费提醒 *@
+@* Human text-turn dialog; NeuBell clicks only navigate and the business path consumes the notice after submission. *@
 <el-dialog title="工具调用审批" :visible.sync="toolApprovalDialogVisible" width="760px"
     :before-close="deferToolApproval" :close-on-click-modal="false" :close-on-press-escape="false">
     <template v-if="toolApprovalRequest">
@@ -2670,7 +2670,7 @@
         <el-button type="primary" @@click="submitHumanReply" :loading="humanReplySubmitting">提交 Human 回复</el-button>
     </div>
 </el-dialog>
-@* Dialog 将本地 Agent 发布为标准 A2A 服务 *@
+@* Publish the local Agent as a standard A2A service dialog. *@
 <el-dialog title="发布本地 Agent 为 A2A 服务" :visible.sync="visible.dialogPublishedA2A" width="720px"
     :show-close="false" :close-on-click-modal="false" :close-on-press-escape="false">
     <el-alert type="warning" :closable="false" title="A2A Agent Card 仅公开名称、描述和技能；不会公开 Prompt、密钥或内部工具信息。" show-icon></el-alert>
