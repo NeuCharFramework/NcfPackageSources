@@ -110,19 +110,19 @@
   <data name="Frontend.004" xml:space="preserve"><value>レンジを追加</value></data>
   <data name="Frontend.005" xml:space="preserve"><value>レンジを選択</value></data>
   <data name="Frontend.006" xml:space="preserve"><value>レンジの名前を変更</value></data>
-  <data name="Frontend.007" xml:space="preserve"><value>Delete</value></data>
+  <data name="Frontend.007" xml:space="preserve"><value>削除</value></data>
   <data name="Frontend.008" xml:space="preserve"><value>タクティクスを選択</value></data>
-  <data name="Frontend.009" xml:space="preserve"><value>Optimize</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>最適化</value></data>
   <data name="Frontend.010" xml:space="preserve"><value>マップ</value></data>
   <data name="Frontend.011" xml:space="preserve"><value>エージェントを作成</value></data>
   <data name="Frontend.012" xml:space="preserve"><value>タクティクスを選択</value></data>
   <data name="Frontend.013" xml:space="preserve"><value>先にレンジを選択</value></data>
-  <data name="Frontend.014" xml:space="preserve"><value>Compare</value></data>
+  <data name="Frontend.014" xml:space="preserve"><value>比較</value></data>
   <data name="Frontend.015" xml:space="preserve"><value>タクティクス名を変更</value></data>
   <data name="Frontend.016" xml:space="preserve"><value>タクティクス名を設定</value></data>
   <data name="Frontend.017" xml:space="preserve"><value>名前をリセット</value></data>
   <data name="Frontend.018" xml:space="preserve"><value>モデルを選択</value></data>
-  <data name="Frontend.019" xml:space="preserve"><value>Refresh</value></data>
+  <data name="Frontend.019" xml:space="preserve"><value>更新</value></data>
   <data name="Frontend.020" xml:space="preserve"><value>モデルを管理</value></data>
   <data name="Frontend.021" xml:space="preserve"><value>モデルを選択してください</value></data>
   <data name="Frontend.022" xml:space="preserve"><value>名称未設定のモデル</value></data>
@@ -140,30 +140,30 @@
   <data name="Frontend.034" xml:space="preserve"><value>音声をアップロード</value></data>
   <data name="Frontend.035" xml:space="preserve"><value>クリア</value></data>
   <data name="Frontend.036" xml:space="preserve"><value>対応している形式：flac / m4a / mp3 / mp4 / mpeg / mpga / oga / ogg / wav / webm</value></data>
-  <data name="Frontend.037" xml:space="preserve"><value>Recognition language</value></data>
+  <data name="Frontend.037" xml:space="preserve"><value>言語を認識</value></data>
   <data name="Frontend.038" xml:space="preserve"><value>空欄でも構いません。例：zh / en</value></data>
-  <data name="Frontend.039" xml:space="preserve"><value>Voice</value></data>
-  <data name="Frontend.040" xml:space="preserve"><value>Format</value></data>
+  <data name="Frontend.039" xml:space="preserve"><value>音声</value></data>
+  <data name="Frontend.040" xml:space="preserve"><value>形式</value></data>
   <data name="Frontend.041" xml:space="preserve"><value>出力形式を選択</value></data>
-  <data name="Frontend.042" xml:space="preserve"><value>Speed</value></data>
+  <data name="Frontend.042" xml:space="preserve"><value>速度</value></data>
   <data name="Frontend.043" xml:space="preserve"><value>ベクトルデータベースを選択</value></data>
   <data name="Frontend.044" xml:space="preserve"><value>省略可、自動で生成</value></data>
   <data name="Frontend.045" xml:space="preserve"><value>テストクエリ</value></data>
   <data name="Frontend.046" xml:space="preserve"><value>省略可、初回の実行後に自動で検索</value></data>
   <data name="Frontend.047" xml:space="preserve"><value>音声合成するテキストを入力</value></data>
   <data name="Frontend.048" xml:space="preserve"><value>Prompt内容を入力</value></data>
-  <data name="Frontend.049" xml:space="preserve"><value>Detected</value></data>
+  <data name="Frontend.049" xml:space="preserve"><value>検出</value></data>
   <data name="Frontend.050" xml:space="preserve"><value>個の変数</value></data>
   <data name="Frontend.051" xml:space="preserve"><value>定義済み</value></data>
-  <data name="Frontend.052" xml:space="preserve"><value>Undefined</value></data>
+  <data name="Frontend.052" xml:space="preserve"><value>未定義</value></data>
   <data name="Frontend.053" xml:space="preserve"><value>メモを入力</value></data>
   <data name="Frontend.054" xml:space="preserve"><value>バースト回数：</value></data>
   <data name="Frontend.055" xml:space="preserve"><value>Promptリクエストパラメータ</value></data>
   <data name="Frontend.056" xml:space="preserve"><value>プレフィックス</value></data>
   <data name="Frontend.057" xml:space="preserve"><value>サフィックス</value></data>
-  <data name="Frontend.058" xml:space="preserve"><value>Variable name</value></data>
+  <data name="Frontend.058" xml:space="preserve"><value>変数名</value></data>
   <data name="Frontend.059" xml:space="preserve"><value>変数名を入力</value></data>
-  <data name="Frontend.060" xml:space="preserve"><value>Variable value</value></data>
+  <data name="Frontend.060" xml:space="preserve"><value>変数値</value></data>
   <data name="Frontend.061" xml:space="preserve"><value>変数の値を入力</value></data>
   <data name="Frontend.062" xml:space="preserve"><value>アクション</value></data>
   <data name="Frontend.063" xml:space="preserve"><value>変数を追加</value></data>
@@ -171,9 +171,9 @@
   <data name="Frontend.065" xml:space="preserve"><value>レンジ:</value></data>
   <data name="Frontend.066" xml:space="preserve"><value>タクティクス:</value></data>
   <data name="Frontend.067" xml:space="preserve"><value>エイム:</value></data>
-  <data name="Frontend.068" xml:space="preserve"><value>Output</value></data>
-  <data name="Frontend.069" xml:space="preserve"><value>Average score:</value></data>
-  <data name="Frontend.070" xml:space="preserve"><value>Highest score:</value></data>
+  <data name="Frontend.068" xml:space="preserve"><value>出力</value></data>
+  <data name="Frontend.069" xml:space="preserve"><value>平均スコア：</value></data>
+  <data name="Frontend.070" xml:space="preserve"><value>最高スコア：</value></data>
   <data name="Frontend.071" xml:space="preserve"><value>所要時間（ミリ秒）：</value></data>
   <data name="Frontend.072" xml:space="preserve"><value>書式付き HTML コードをコピー</value></data>
   <data name="Frontend.073" xml:space="preserve"><value>元の内容をコピーします（markdown の記号もコピーされます）</value></data>
@@ -183,8 +183,8 @@
   <data name="Frontend.077" xml:space="preserve"><value>元画像を表示</value></data>
   <data name="Frontend.078" xml:space="preserve"><value>音声は生成されましたが、アクセスできるアドレスは得られませんでした</value></data>
   <data name="Frontend.079" xml:space="preserve"><value>検索テキストを入力してベクトル検索</value></data>
-  <data name="Frontend.080" xml:space="preserve"><value>Search</value></data>
-  <data name="Frontend.081" xml:space="preserve"><value>Input</value></data>
+  <data name="Frontend.080" xml:space="preserve"><value>検索</value></data>
+  <data name="Frontend.081" xml:space="preserve"><value>入力</value></data>
   <data name="Frontend.082" xml:space="preserve"><value>AIスコア:</value></data>
   <data name="Frontend.083" xml:space="preserve"><value>AIで採点中...</value></data>
   <data name="Frontend.084" xml:space="preserve"><value>手動スコア:</value></data>
@@ -200,20 +200,20 @@
   <data name="Frontend.094" xml:space="preserve"><value>スコア推移</value></data>
   <data name="Frontend.095" xml:space="preserve"><value>スコアがあるのは 1 件だけです。1 点では折れ線グラフを描けません。</value></data>
   <data name="Frontend.096" xml:space="preserve"><value>平均スコア</value></data>
-  <data name="Frontend.097" xml:space="preserve"><value>Highest score</value></data>
+  <data name="Frontend.097" xml:space="preserve"><value>最高スコア</value></data>
   <data name="Frontend.098" xml:space="preserve"><value>データなし</value></data>
   <data name="Frontend.099" xml:space="preserve"><value>バージョン履歴</value></data>
   <data name="Frontend.100" xml:space="preserve"><value>名前を入力</value></data>
-  <data name="Frontend.101" xml:space="preserve"><value>Public</value></data>
-  <data name="Frontend.102" xml:space="preserve"><value>Edit</value></data>
+  <data name="Frontend.101" xml:space="preserve"><value>公開</value></data>
+  <data name="Frontend.102" xml:space="preserve"><value>編集</value></data>
   <data name="Frontend.103" xml:space="preserve"><value>コードを生成</value></data>
   <data name="Frontend.104" xml:space="preserve"><value>タクティクス選択</value></data>
   <data name="Frontend.105" xml:space="preserve"><value>実行モード</value></data>
   <data name="Frontend.106" xml:space="preserve"><value>タクティクス</value></data>
   <data name="Frontend.107" xml:space="preserve"><value>最上位タクティクスを作成</value></data>
-  <data name="Frontend.108" xml:space="preserve"><value>Will create:</value></data>
-  <data name="Frontend.109" xml:space="preserve"><value>Current:</value></data>
-  <data name="Frontend.110" xml:space="preserve"><value>(New)</value></data>
+  <data name="Frontend.108" xml:space="preserve"><value>作成内容：</value></data>
+  <data name="Frontend.109" xml:space="preserve"><value>現在：</value></data>
+  <data name="Frontend.110" xml:space="preserve"><value>（新規）</value></data>
   <data name="Frontend.111" xml:space="preserve"><value>並行タクティクスを作成</value></data>
   <data name="Frontend.112" xml:space="preserve"><value>子タクティクスを作成</value></data>
   <data name="Frontend.113" xml:space="preserve"><value>再エイム</value></data>
@@ -223,9 +223,9 @@
   <data name="Frontend.117" xml:space="preserve"><value>現在の Prompt をそのまま使ってテストします</value></data>
   <data name="Frontend.118" xml:space="preserve"><value>チャット継続モードは会話モードにロックされています</value></data>
   <data name="Frontend.119" xml:space="preserve"><value>現在のモデルは会話モードに対応していないため、直接テストとして実行します</value></data>
-  <data name="Frontend.120" xml:space="preserve"><value>Conversation history</value></data>
+  <data name="Frontend.120" xml:space="preserve"><value>会話履歴</value></data>
   <data name="Frontend.121" xml:space="preserve"><value>折りたたむ</value></data>
-  <data name="Frontend.122" xml:space="preserve"><value>Expand</value></data>
+  <data name="Frontend.122" xml:space="preserve"><value>展開</value></data>
   <data name="Frontend.123" xml:space="preserve"><value>現在の会話で使っている Prompt を表示</value></data>
   <data name="Frontend.124" xml:space="preserve"><value>読み込み中...</value></data>
   <data name="Frontend.125" xml:space="preserve"><value>Tokenの合計：</value></data>
@@ -234,19 +234,19 @@
   <data name="Frontend.128" xml:space="preserve"><value>アシスタント</value></data>
   <data name="Frontend.129" xml:space="preserve"><value>いいね</value></data>
   <data name="Frontend.130" xml:space="preserve"><value>いいね済み</value></data>
-  <data name="Frontend.131" xml:space="preserve"><value>Dislike</value></data>
+  <data name="Frontend.131" xml:space="preserve"><value>低評価</value></data>
   <data name="Frontend.132" xml:space="preserve"><value>低評価済み</value></data>
   <data name="Frontend.133" xml:space="preserve"><value>保存しています...</value></data>
-  <data name="Frontend.134" xml:space="preserve"><value>Conversation input</value></data>
+  <data name="Frontend.134" xml:space="preserve"><value>会話入力</value></data>
   <data name="Frontend.135" xml:space="preserve"><value>次のメッセージを入力してください... (Ctrl+Enter / Cmd+Enter で送信)</value></data>
   <data name="Frontend.136" xml:space="preserve"><value>質問を入力してください... (Ctrl+Enter / Cmd+Enter で送信)</value></data>
   <data name="Frontend.137" xml:space="preserve"><value>入力内容は既存の会話に追加されます</value></data>
   <data name="Frontend.138" xml:space="preserve"><value>入力内容は userMessage パラメーターとしてバックエンド API に渡されます</value></data>
   <data name="Frontend.139" xml:space="preserve"><value>ショートカット：Ctrl+Enter (Windows) / Cmd+Enter (Mac)</value></data>
-  <data name="Frontend.140" xml:space="preserve"><value>Run</value></data>
+  <data name="Frontend.140" xml:space="preserve"><value>実行</value></data>
   <data name="Frontend.141" xml:space="preserve"><value>3D構造マップ</value></data>
   <data name="Frontend.142" xml:space="preserve"><value>視点をリセット</value></data>
-  <data name="Frontend.143" xml:space="preserve"><value>Full screen</value></data>
+  <data name="Frontend.143" xml:space="preserve"><value>全画面</value></data>
   <data name="Frontend.144" xml:space="preserve"><value>ビューに合わせる</value></data>
   <data name="Frontend.145" xml:space="preserve"><value>🖱️ マウス操作</value></data>
   <data name="Frontend.146" xml:space="preserve"><value>左ドラッグ：視点を回転</value></data>
@@ -265,17 +265,17 @@
   <data name="Frontend.159" xml:space="preserve"><value>PromptCode からエージェントを作成</value></data>
   <data name="Frontend.160" xml:space="preserve"><value>エージェント名</value></data>
   <data name="Frontend.161" xml:space="preserve"><value>エージェント名を入力</value></data>
-  <data name="Frontend.162" xml:space="preserve"><value>Scope</value></data>
+  <data name="Frontend.162" xml:space="preserve"><value>対象範囲</value></data>
   <data name="Frontend.163" xml:space="preserve"><value>レンジレベル</value></data>
   <data name="Frontend.164" xml:space="preserve"><value>PromptCode にはレンジ名だけが含まれ、そのレンジ内のすべてのタクティクスに一致します</value></data>
   <data name="Frontend.165" xml:space="preserve"><value>タクティクスレベル</value></data>
   <data name="Frontend.166" xml:space="preserve"><value>PromptCode にはレンジ名とタクティクス番号が含まれ、現在のタクティクス配下のすべてのエイムバージョンに一致します</value></data>
   <data name="Frontend.167" xml:space="preserve"><value>完全なバージョン</value></data>
   <data name="Frontend.168" xml:space="preserve"><value>PromptCode は完全なバージョン番号で、現在のタクティクスに完全一致します</value></data>
-  <data name="Frontend.169" xml:space="preserve"><value>Description</value></data>
+  <data name="Frontend.169" xml:space="preserve"><value>説明</value></data>
   <data name="Frontend.170" xml:space="preserve"><value>新しいエージェントの説明（任意）</value></data>
   <data name="Frontend.171" xml:space="preserve"><value>Function Call 名。複数ある場合はカンマ区切り（任意）</value></data>
-  <data name="Frontend.172" xml:space="preserve"><value>Create</value></data>
+  <data name="Frontend.172" xml:space="preserve"><value>作成</value></data>
   <data name="Frontend.173" xml:space="preserve"><value>モデルを追加</value></data>
   <data name="Frontend.174" xml:space="preserve"><value>モデル種類</value></data>
   <data name="Frontend.175" xml:space="preserve"><value>モデル種類を選択してください</value></data>
@@ -308,9 +308,9 @@
   <data name="Frontend.202" xml:space="preserve"><value>選択を反転</value></data>
   <data name="Frontend.203" xml:space="preserve"><value>すべて展開</value></data>
   <data name="Frontend.204" xml:space="preserve"><value>すべて折りたたむ</value></data>
-  <data name="Frontend.205" xml:space="preserve"><value>Selected:</value></data>
+  <data name="Frontend.205" xml:space="preserve"><value>選択済み：</value></data>
   <data name="Frontend.206" xml:space="preserve"><value>個のタクティクス</value></data>
-  <data name="Frontend.207" xml:space="preserve"><value>Confirm</value></data>
+  <data name="Frontend.207" xml:space="preserve"><value>確認</value></data>
   <data name="Frontend.208" xml:space="preserve"><value>メモ名を選択または入力</value></data>
   <data name="Frontend.209" xml:space="preserve"><value>既存の名前を選ぶと、その名前は現在のタクティクスへ移り、元のタクティクス名は「未設定」に戻ります</value></data>
   <data name="Frontend.210" xml:space="preserve"><value>タクティクスのメモ名を入力</value></data>
@@ -332,18 +332,18 @@
   <data name="Frontend.226" xml:space="preserve"><value>差分あり</value></data>
   <data name="Frontend.227" xml:space="preserve"><value>🎯 リクエストパラメータの比較</value></data>
   <data name="Frontend.228" xml:space="preserve"><value>パラメータ</value></data>
-  <data name="Frontend.229" xml:space="preserve"><value>(Not set)</value></data>
+  <data name="Frontend.229" xml:space="preserve"><value>（未設定）</value></data>
   <data name="Frontend.230" xml:space="preserve"><value>Prompt A - 変数の設定</value></data>
   <data name="Frontend.231" xml:space="preserve"><value>Prompt B - 変数の設定</value></data>
   <data name="Frontend.232" xml:space="preserve"><value>どちらの Prompt にも変数が設定されていません</value></data>
   <data name="Frontend.233" xml:space="preserve"><value>比較する Prompt を 2 つ選択してください</value></data>
   <data name="Frontend.234" xml:space="preserve"><value>AI による Prompt の自動最適化（Agent）</value></data>
-  <data name="Frontend.235" xml:space="preserve"><value>Description</value></data>
+  <data name="Frontend.235" xml:space="preserve"><value>説明</value></data>
   <data name="Frontend.236" xml:space="preserve"><value>最適化は、Agents モジュールの PromptCatalyzer エージェントが、複数ターンの会話とツール呼び出しで行います。開始をクリックしたら、会話が終わるまでお待ちください（数分かかることがあります）。その後、このページが新しいバージョンを自動で選び、必要に応じて実行や採点ができます。</value></data>
-  <data name="Frontend.237" xml:space="preserve"><value>Optimization failed</value></data>
+  <data name="Frontend.237" xml:space="preserve"><value>最適化に失敗しました</value></data>
   <data name="Frontend.238" xml:space="preserve"><value>最適化の要件</value></data>
   <data name="Frontend.239" xml:space="preserve"><value>例：回答をより創造的にする、またはハルシネーションを減らす...</value></data>
-  <data name="Frontend.240" xml:space="preserve"><value>After optimization</value></data>
+  <data name="Frontend.240" xml:space="preserve"><value>最適化後の処理</value></data>
   <data name="Frontend.241" xml:space="preserve"><value>作成後すぐに実行</value></data>
   <data name="Frontend.242" xml:space="preserve"><value>最適化の完了後、テスト実行を 1 回自動で行い、新しい Prompt の効果を確認します</value></data>
   <data name="Frontend.243" xml:space="preserve"><value>実行後に AI 採点を使う</value></data>
@@ -360,15 +360,15 @@
   <data name="Frontend.254" xml:space="preserve"><value>出力のランダム性を制御します：0.0-1.0。低いほど正確で、高いほど創造的になります。</value></data>
   <data name="Frontend.255" xml:space="preserve"><value>(バランスモード)</value></data>
   <data name="Frontend.256" xml:space="preserve"><value>ニュークリアスサンプリングのパラメーター：0.0-1.0。語の選択範囲を制御します。</value></data>
-  <data name="Frontend.257" xml:space="preserve"><value>(High quality)</value></data>
+  <data name="Frontend.257" xml:space="preserve"><value>（高品質）</value></data>
   <data name="Frontend.258" xml:space="preserve"><value>生成する token の最大数。出力の長さに影響します。</value></data>
   <data name="Frontend.259" xml:space="preserve"><value>(標準の長さ)</value></data>
   <data name="Frontend.260" xml:space="preserve"><value>頻度ペナルティ：-2.0 から 2.0。同じ語の繰り返しを減らします。</value></data>
   <data name="Frontend.261" xml:space="preserve"><value>(ペナルティなし)</value></data>
   <data name="Frontend.262" xml:space="preserve"><value>ℹ️ これらは初期パラメーターです。作成後に PromptRange で調整できます。</value></data>
   <data name="Frontend.263" xml:space="preserve"><value>初期化しています...</value></data>
-  <data name="Frontend.264" xml:space="preserve"><value>Initialize</value></data>
-  <data name="Frontend.265" xml:space="preserve"><value>Run</value></data>
+  <data name="Frontend.264" xml:space="preserve"><value>初期化を開始</value></data>
+  <data name="Frontend.265" xml:space="preserve"><value>実行</value></data>
   <data name="Frontend.266" xml:space="preserve"><value>バースト</value></data>
   <data name="Frontend.267" xml:space="preserve"><value>下書き</value></data>
   <data name="Frontend.268" xml:space="preserve"><value>保存しました！</value></data>
@@ -386,7 +386,7 @@
   <data name="Frontend.280" xml:space="preserve"><value>エクスポートしました！</value></data>
   <data name="Frontend.281" xml:space="preserve"><value>エクスポート失敗</value></data>
   <data name="Frontend.282" xml:space="preserve"><value>エクスポート中にエラーが発生しました</value></data>
-  <data name="Frontend.283" xml:space="preserve"><value>Refresh complete!</value></data>
+  <data name="Frontend.283" xml:space="preserve"><value>更新しました！</value></data>
   <data name="Frontend.284" xml:space="preserve"><value>先に Prompt を選択してください！</value></data>
   <data name="Frontend.285" xml:space="preserve"><value>モデルを1つ選択してください！</value></data>
   <data name="Frontend.286" xml:space="preserve"><value>タクティクスを1つ選択してください！</value></data>
@@ -408,16 +408,16 @@
   <data name="Frontend.302" xml:space="preserve"><value>Agent が推論し、ツールを呼び出しています（数分かかることがあります。このウィンドウを閉じないでください）…</value></data>
   <data name="Frontend.303" xml:space="preserve"><value>コードをコピーしました</value></data>
   <data name="Frontend.304" xml:space="preserve"><value>コードのコピーに失敗</value></data>
-  <data name="Frontend.305" xml:space="preserve"><value>Copy</value></data>
+  <data name="Frontend.305" xml:space="preserve"><value>コピー</value></data>
   <data name="Frontend.306" xml:space="preserve"><value>利用可能な Model</value></data>
   <data name="Frontend.307" xml:space="preserve"><value>最適化は正常に完了しませんでした</value></data>
   <data name="Frontend.308" xml:space="preserve"><value>最適化を実行中です。繰り返しクリックしないでください。</value></data>
   <data name="Frontend.309" xml:space="preserve"><value>保存しない</value></data>
   <data name="Frontend.310" xml:space="preserve"><value>下書きを保存</value></data>
   <data name="Frontend.311" xml:space="preserve"><value>たった今</value></data>
-  <data name="Frontend.312" xml:space="preserve"><value>minutes ago</value></data>
-  <data name="Frontend.313" xml:space="preserve"><value>hours ago</value></data>
-  <data name="Frontend.314" xml:space="preserve"><value>days ago</value></data>
+  <data name="Frontend.312" xml:space="preserve"><value>分前</value></data>
+  <data name="Frontend.313" xml:space="preserve"><value>時間前</value></data>
+  <data name="Frontend.314" xml:space="preserve"><value>日前</value></data>
   <data name="Frontend.315" xml:space="preserve"><value>作成に失敗しました。AgentsManager モジュールがインストールされているか確認してください。</value></data>
   <data name="Frontend.316" xml:space="preserve"><value>エージェントの作成に失敗しました</value></data>
   <data name="Frontend.317" xml:space="preserve"><value>初期化に失敗しました</value></data>
@@ -446,20 +446,20 @@
   <data name="Frontend.340" xml:space="preserve"><value>テキスト生成時の停止語シーケンスを設定します。これらの語順に達すると、モデルは生成を止めます。（入力は英字のカンマで分割されます）</value></data>
   <data name="Frontend.341" xml:space="preserve"><value>サンプリング温度です。0.8 のように高い値では出力がよりランダムになり、0.2 のように低い値ではより確定的になります。</value></data>
   <data name="Frontend.342" xml:space="preserve"><value>リクエストとレスポンスの Token 合計、または生成テキストの最大長です。詳細は API ドキュメントを参照してください！</value></data>
-  <data name="Frontend.343" xml:space="preserve"><value>Notice</value></data>
+  <data name="Frontend.343" xml:space="preserve"><value>お知らせ</value></data>
   <data name="Frontend.344" xml:space="preserve"><value>Prompt の品質と効果を高めます</value></data>
-  <data name="Frontend.345" xml:space="preserve"><value>Coming soon</value></data>
+  <data name="Frontend.345" xml:space="preserve"><value>近日公開</value></data>
   <data name="Frontend.346" xml:space="preserve"><value>現在の Prompt 情報を取得できません</value></data>
   <data name="Frontend.347" xml:space="preserve"><value>現在の Prompt の詳細を取得できません</value></data>
   <data name="Frontend.348" xml:space="preserve"><value>現在の Prompt のバージョン番号（Prompt Code）を取得できません</value></data>
   <data name="Frontend.349" xml:space="preserve"><value>バージョン番号を取得できません</value></data>
   <data name="Frontend.350" xml:space="preserve"><value>有効なスコアを取得できなかったため、最適化の案内をスキップしました</value></data>
-  <data name="Frontend.351" xml:space="preserve"><value>Unnamed</value></data>
+  <data name="Frontend.351" xml:space="preserve"><value>名前なし</value></data>
   <data name="Frontend.352" xml:space="preserve"><value>名称未設定のベクトルデータベース</value></data>
   <data name="Frontend.353" xml:space="preserve"><value>不明なタクティクス</value></data>
   <data name="Frontend.354" xml:space="preserve"><value>不明なレンジ</value></data>
   <data name="Frontend.355" xml:space="preserve"><value>不明なタクティクス</value></data>
-  <data name="Frontend.356" xml:space="preserve"><value>Not set</value></data>
+  <data name="Frontend.356" xml:space="preserve"><value>未設定</value></data>
   <data name="Frontend.357" xml:space="preserve"><value>有効な最適化結果が返されませんでした</value></data>
   <data name="Frontend.358" xml:space="preserve"><value>期待結果が未設定のため、AI 採点をスキップしました</value></data>
   <data name="Frontend.359" xml:space="preserve"><value>モデルは削除されています。モデルを選び直して、もう一度実行してください！</value></data>
@@ -488,7 +488,7 @@
   <data name="Frontend.382" xml:space="preserve"><value>Promptを入力</value></data>
   <data name="Frontend.383" xml:space="preserve"><value>実行テスト</value></data>
   <data name="Frontend.384" xml:space="preserve"><value>期待される結果</value></data>
-  <data name="Frontend.385" xml:space="preserve"><value>Speech recognition input</value></data>
+  <data name="Frontend.385" xml:space="preserve"><value>音声認識入力</value></data>
   <data name="Frontend.386" xml:space="preserve"><value>PromptCode を決めるには、タクティクスを選択してください</value></data>
   <data name="Frontend.387" xml:space="preserve"><value>今すぐ最適化</value></data>
   <data name="Frontend.388" xml:space="preserve"><value>今はしない</value></data>
@@ -511,13 +511,13 @@
   <data name="Frontend.403" xml:space="preserve"><value>実行: 現在入力した内容、または選択中のレンジとタクティクスから、新しいタクティクスを作成します。</value></data>
   <data name="Frontend.404" xml:space="preserve"><value>バースト：現在選択中のタクティクスの情報に基づき、結果を連続して出力します。</value></data>
   <data name="Frontend.405" xml:space="preserve"><value>下書き：現在の入力内容を保存し、新しいタクティクスを作成します。</value></data>
-  <data name="Frontend.406" xml:space="preserve"><value>Example: {{$</value></data>
-  <data name="Frontend.407" xml:space="preserve"><value>Example: }}</value></data>
+  <data name="Frontend.406" xml:space="preserve"><value>例：{{$</value></data>
+  <data name="Frontend.407" xml:space="preserve"><value>例：}}</value></data>
   <data name="Frontend.408" xml:space="preserve"><value>[所要時間（ミリ秒）：]</value></data>
   <data name="Frontend.409" xml:space="preserve"><value>Token: （入力と出力）</value></data>
   <data name="Frontend.410" xml:space="preserve"><value>（クリックして、現在の会話で使っている Prompt を表示）</value></data>
   <data name="Frontend.411" xml:space="preserve"><value>キャンセル</value></data>
-  <data name="Frontend.412" xml:space="preserve"><value>OK</value></data>
+  <data name="Frontend.412" xml:space="preserve"><value>確認</value></data>
   <data name="Frontend.413" xml:space="preserve"><value>初回利用時は初期化が必要です</value></data>
   <data name="Frontend.414" xml:space="preserve"><value>または</value></data>
   <data name="Frontend.415" xml:space="preserve"><value>期待される結果</value></data>
@@ -526,9 +526,9 @@
   <data name="Frontend.418" xml:space="preserve"><value>期待される結果3</value></data>
   <data name="Frontend.419" xml:space="preserve"><value>画像は生成されましたが、アクセスできるアドレスは得られませんでした。</value></data>
   <data name="Frontend.420" xml:space="preserve"><value>Embedding クエリに失敗しました：</value></data>
-  <data name="Frontend.421" xml:space="preserve"><value>Confirm</value></data>
+  <data name="Frontend.421" xml:space="preserve"><value>確認</value></data>
   <data name="Frontend.422" xml:space="preserve"><value>タクティクス名は空にできません！</value></data>
-  <data name="Frontend.423" xml:space="preserve"><value>Name:</value></data>
+  <data name="Frontend.423" xml:space="preserve"><value>名前：</value></data>
   <data name="Frontend.424" xml:space="preserve"><value>| バージョン：</value></data>
   <data name="Frontend.425" xml:space="preserve"><value>チャットの続行に失敗：</value></data>
   <data name="Frontend.426" xml:space="preserve"><value>サーバーエラー：</value></data>
@@ -541,23 +541,23 @@
   <data name="Frontend.433" xml:space="preserve"><value>バージョン：{0}</value></data>
   <data name="Frontend.434" xml:space="preserve"><value>平均スコア：{0}</value></data>
   <data name="Frontend.435" xml:space="preserve"><value>最高スコア：{0}</value></data>
-  <data name="Frontend.436" xml:space="preserve"><value>Time: {0}</value></data>
-  <data name="Frontend.437" xml:space="preserve"><value>Current</value></data>
+  <data name="Frontend.436" xml:space="preserve"><value>時刻：{0}</value></data>
+  <data name="Frontend.437" xml:space="preserve"><value>現在</value></data>
   <data name="Frontend.438" xml:space="preserve"><value>チャット履歴の読み込みに失敗：</value></data>
   <data name="Frontend.439" xml:space="preserve"><value>PromptCode を決めるには、先にタクティクスを選択してください</value></data>
   <data name="Frontend.440" xml:space="preserve"><value>無効な PromptCode</value></data>
   <data name="Frontend.441" xml:space="preserve"><value>現在の PromptCode（{0}）は、すでに {1} 件のエージェントが使用しています。新しいエージェントを作成しますか？</value></data>
   <data name="Frontend.442" xml:space="preserve"><value>エージェント「{0}」を作成しました！</value></data>
-  <data name="Frontend.443" xml:space="preserve"><value>Creation failed:</value></data>
+  <data name="Frontend.443" xml:space="preserve"><value>作成に失敗しました：</value></data>
   <data name="Frontend.444" xml:space="preserve"><value>THREE.js が読み込まれていません。ページを更新して再試行してください。</value></data>
   <data name="Frontend.445" xml:space="preserve"><value>モデル一覧の読み込みに失敗しました</value></data>
   <data name="Frontend.446" xml:space="preserve"><value>AI Model の一覧を読み込めませんでした:</value></data>
-  <data name="Frontend.447" xml:space="preserve"><value>Initialization failed:</value></data>
+  <data name="Frontend.447" xml:space="preserve"><value>初期化に失敗しました：</value></data>
   <data name="Frontend.448" xml:space="preserve"><value>現在の Prompt の{0}は {1} 点です（{2} 点未満）。AI 自動最適化で Prompt を改善しますか？</value></data>
   <data name="Frontend.449" xml:space="preserve"><value>💡 推奨する最適化</value></data>
   <data name="Frontend.450" xml:space="preserve"><value>💡 最適化の提案</value></data>
   <data name="Frontend.451" xml:space="preserve"><value>🚀 初回利用には PromptCatalyzer の初期化が必要です。利用できる AI Model を読み込んでいます...</value></data>
-  <data name="Frontend.452" xml:space="preserve"><value>Optimization failed:</value></data>
+  <data name="Frontend.452" xml:space="preserve"><value>最適化に失敗しました：</value></data>
   <data name="Frontend.453" xml:space="preserve"><value>新しいバージョンは作成されましたが、一覧の Prompt Code と一致しませんでした：</value></data>
   <data name="Frontend.454" xml:space="preserve"><value>✅ 最適化が完了しました\n\n新しい Prompt：{0}</value></data>
   <data name="Frontend.455" xml:space="preserve"><value>❌ 最適化に失敗：</value></data>
@@ -566,15 +566,15 @@
   <data name="Frontend.458" xml:space="preserve"><value>📦 レンジ</value></data>
   <data name="Frontend.459" xml:space="preserve"><value>{0} 件の結果を含みます</value></data>
   <data name="Frontend.460" xml:space="preserve"><value>🎯 タクティクスノード</value></data>
-  <data name="Frontend.461" xml:space="preserve"><value>No.: T{0}</value></data>
+  <data name="Frontend.461" xml:space="preserve"><value>番号：T{0}</value></data>
   <data name="Frontend.462" xml:space="preserve"><value>🎲 エイムポイント</value></data>
-  <data name="Frontend.463" xml:space="preserve"><value>No.: A{0}</value></data>
+  <data name="Frontend.463" xml:space="preserve"><value>番号：A{0}</value></data>
   <data name="Frontend.464" xml:space="preserve"><value>ランク: {0}/{1}</value></data>
-  <data name="Frontend.465" xml:space="preserve"><value>👑 First place</value></data>
-  <data name="Frontend.466" xml:space="preserve"><value>Middle</value></data>
-  <data name="Frontend.467" xml:space="preserve"><value>Lower Tier</value></data>
+  <data name="Frontend.465" xml:space="preserve"><value>👑 1位</value></data>
+  <data name="Frontend.466" xml:space="preserve"><value>中位</value></data>
+  <data name="Frontend.467" xml:space="preserve"><value>下位</value></data>
   <data name="Frontend.468" xml:space="preserve"><value>📊 平均スコア：</value></data>
-  <data name="Frontend.469" xml:space="preserve"><value>⭐ Highest score:</value></data>
+  <data name="Frontend.469" xml:space="preserve"><value>⭐ 最高スコア：</value></data>
   <data name="Frontend.470" xml:space="preserve"><value>💡 ダブルクリックでこのタクティクスをすばやく選択できます</value></data>
   <data name="Frontend.471" xml:space="preserve"><value>モデル【{0}】を完全に削除します。続行しますか?</value></data>
   <data name="Frontend.472" xml:space="preserve"><value>ベクトルデータベース一覧の読み込みに失敗：</value></data>
@@ -601,18 +601,18 @@
   <data name="Frontend.493" xml:space="preserve"><value>なし</value></data>
   <data name="Frontend.494" xml:space="preserve"><value>コンテンツなし</value></data>
   <data name="Frontend.495" xml:space="preserve"><value>不明なモデル</value></data>
-  <data name="Frontend.496" xml:space="preserve"><value>Not set</value></data>
+  <data name="Frontend.496" xml:space="preserve"><value>未設定</value></data>
   <data name="Frontend.497" xml:space="preserve"><value>名称：{0} | バージョン：{1} | 平均：{2} | 最高：{3} {4}</value></data>
   <data name="Frontend.498" xml:space="preserve"><value>たった今</value></data>
-  <data name="Frontend.499" xml:space="preserve"><value>{0} minutes ago</value></data>
-  <data name="Frontend.500" xml:space="preserve"><value>{0} hours ago</value></data>
-  <data name="Frontend.501" xml:space="preserve"><value>Yesterday {0}</value></data>
-  <data name="Frontend.502" xml:space="preserve"><value>{0} days ago</value></data>
-  <data name="Frontend.503" xml:space="preserve"><value>{0} days</value></data>
-  <data name="Frontend.504" xml:space="preserve"><value>{0} hours</value></data>
-  <data name="Frontend.505" xml:space="preserve"><value>{0} minutes</value></data>
-  <data name="Frontend.506" xml:space="preserve"><value>{0} seconds</value></data>
-  <data name="Frontend.507" xml:space="preserve"><value>0 seconds</value></data>
+  <data name="Frontend.499" xml:space="preserve"><value>{0}分前</value></data>
+  <data name="Frontend.500" xml:space="preserve"><value>{0}時間前</value></data>
+  <data name="Frontend.501" xml:space="preserve"><value>昨日 {0}</value></data>
+  <data name="Frontend.502" xml:space="preserve"><value>{0}日前</value></data>
+  <data name="Frontend.503" xml:space="preserve"><value>{0}日</value></data>
+  <data name="Frontend.504" xml:space="preserve"><value>{0}時間</value></data>
+  <data name="Frontend.505" xml:space="preserve"><value>{0}分</value></data>
+  <data name="Frontend.506" xml:space="preserve"><value>{0}秒</value></data>
+  <data name="Frontend.507" xml:space="preserve"><value>0秒</value></data>
   <data name="Frontend.508" xml:space="preserve"><value>コピーできる内容がありません</value></data>
   <data name="Frontend.509" xml:space="preserve"><value>コピーできる結果がありません</value></data>
   <data name="Frontend.510" xml:space="preserve"><value>結果は空です</value></data>
@@ -625,8 +625,8 @@
   <data name="Frontend.517" xml:space="preserve"><value>コピーできる HTML の内容がありません</value></data>
   <data name="Frontend.518" xml:space="preserve"><value>HTML内容をコピーしました</value></data>
   <data name="Frontend.519" xml:space="preserve"><value>HTML内容のコピーに失敗しました</value></data>
-  <data name="Frontend.520" xml:space="preserve"><value>Unknown</value></data>
-  <data name="Frontend.521" xml:space="preserve"><value>Unnamed</value></data>
+  <data name="Frontend.520" xml:space="preserve"><value>不明</value></data>
+  <data name="Frontend.521" xml:space="preserve"><value>名前なし</value></data>
   <data name="Frontend.522" xml:space="preserve"><value>名称未設定のベクトルデータベース</value></data>
   <data name="Frontend.523" xml:space="preserve"><value>改訂内容：</value></data>
   <data name="Frontend.524" xml:space="preserve"><value>プロンプト：</value></data>
@@ -649,7 +649,7 @@
   <data name="Frontend.541" xml:space="preserve"><value>API バージョンを入力</value></data>
   <data name="Frontend.542" xml:space="preserve"><value>APIキー</value></data>
   <data name="Frontend.543" xml:space="preserve"><value>API キーを入力</value></data>
-  <data name="Frontend.544" xml:space="preserve"><value>Endpoint</value></data>
+  <data name="Frontend.544" xml:space="preserve"><value>エンドポイント</value></data>
   <data name="Frontend.545" xml:space="preserve"><value>Endpointを入力</value></data>
   <data name="Frontend.546" xml:space="preserve"><value>組織 ID</value></data>
   <data name="Frontend.547" xml:space="preserve"><value>組織 ID を入力</value></data>
