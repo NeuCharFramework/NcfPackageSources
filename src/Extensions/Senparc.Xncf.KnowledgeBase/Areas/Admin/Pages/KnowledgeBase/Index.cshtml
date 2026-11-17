@@ -182,39 +182,39 @@
                 <div class="recall-test-wrap">
                     <div class="recall-test-heading">
                         <div>
-                            <h1>召回测试</h1>
-                            <p>用一个真实问题检查知识库返回了哪些资料片段。相似度分数用于排序参考，不等同于“召回率”。</p>
+                            <h1>{{ ncfST('Frontend.195') }}</h1>
+                            <p>{{ ncfST('Frontend.231') }}</p>
                         </div>
-                        <el-button size="small" icon="el-icon-setting" @@click="visible.searchSettingsDrawer = true">检索设置</el-button>
+                        <el-button size="small" icon="el-icon-setting" @@click="visible.searchSettingsDrawer = true">{{ ncfST('Frontend.220') }}</el-button>
                     </div>
 
                     <el-alert class="recall-test-guide" type="info" :closable="false" show-icon
-                              title="使用步骤：选择已完成向量化的知识库 → 输入用户会问的问题 → 查看来源和相似度 → 不理想时回到“配置”调整资料并重新向量化。">
+                              :title="ncfST('Frontend.184')">
                     </el-alert>
 
                     <div class="recall-test-layout">
                         <section class="recall-test-left">
                             <el-card shadow="never">
-                                <div slot="header" class="panel-heading"><span>发起一次测试</span></div>
+                                <div slot="header" class="panel-heading"><span>{{ ncfST('Frontend.193') }}</span></div>
                                 <div class="knowledge-base-select-row">
-                                    <label class="kb-select-label">知识库</label>
-                                    <el-select v-model="selectedKnowledgeBaseId" filterable clearable placeholder="搜索并选择已向量化的知识库" class="kb-select">
+                                    <label class="kb-select-label">@XR["Area.KnowledgeBase.Management"]</label>
+                                    <el-select v-model="selectedKnowledgeBaseId" filterable clearable :placeholder="ncfST('Frontend.213')" class="kb-select">
                                         <el-option v-for="item in recallKnowledgeBaseList" :key="item.id" :label="item.label" :value="item.id" :disabled="!item.ready"></el-option>
                                     </el-select>
                                 </div>
-                                <p class="field-tip" v-if="selectedKnowledgeBase">{{ selectedKnowledgeBase.ready ? '该知识库已完成向量化，可以开始测试。' : '该知识库尚未向量化，请先执行向量化。' }}</p>
+                                <p class="field-tip" v-if="selectedKnowledgeBase">{{ selectedKnowledgeBase.ready ? ncfST('Frontend.205') : ncfST('Frontend.280') }}</p>
 
                                 <div class="query-box">
                                     <div class="query-box-header">
-                                        <label class="query-label">测试问题</label>
+                                        <label class="query-label">{{ ncfST('Frontend.227') }}</label>
                                         <span class="char-count">{{ recallContent.length }}/200</span>
                                     </div>
                                     <el-input type="textarea" v-model="recallContent" :maxlength="200" :rows="8"
-                                              placeholder="例如：如何创建一个新的知识库？" class="query-textarea"></el-input>
-                                    <p class="field-tip">尽量输入真实用户会问的完整问题，避免只输入一个关键词。</p>
+                                              :placeholder="ncfST('Frontend.185')" class="query-textarea"></el-input>
+                                    <p class="field-tip">{{ ncfST('Frontend.204') }}</p>
                                     <div class="query-actions">
-                                        <span>本次最多返回 {{ topK }} 个片段</span>
-                                        <el-button type="primary" icon="el-icon-video-play" @@click="doRecall" :loading="recallLoading">开始测试</el-button>
+                                        <span>{{ ncfST('Frontend.261', topK) }}</span>
+                                        <el-button type="primary" icon="el-icon-video-play" @@click="doRecall" :loading="recallLoading">{{ ncfST('Frontend.207') }}</el-button>
                                     </div>
                                 </div>
                             </el-card>
@@ -223,41 +223,41 @@
                         <section class="recall-test-right">
                             <el-card shadow="never" class="result-panel">
                                 <div slot="header" class="panel-heading">
-                                    <span>测试结果 <em v-if="recallResults.length">{{ recallResults.length }} 个片段</em></span>
-                                    <span v-if="lastElapsedMilliseconds != null" class="result-duration">耗时 {{ lastElapsedMilliseconds }} ms</span>
+                                    <span>{{ ncfST('Frontend.226') }} <em v-if="recallResults.length">{{ ncfST('Frontend.262', recallResults.length) }}</em></span>
+                                    <span v-if="lastElapsedMilliseconds != null" class="result-duration">{{ ncfST('Frontend.263', lastElapsedMilliseconds) }}</span>
                                 </div>
                                 <div v-if="recallResults.length" class="recall-cards">
                                     <article v-for="item in recallResults" :key="item.rank" class="recall-card">
                                         <div class="recall-card-meta">
-                                            <strong>第 {{ item.rank }} 条</strong>
-                                            <el-tag size="mini" type="info">相似度 {{ formatScore(item.score) }}</el-tag>
+                                            <strong>{{ ncfST('Frontend.264', item.rank) }}</strong>
+                                            <el-tag size="mini" type="info">{{ ncfST('Frontend.276', formatScore(item.score)) }}</el-tag>
                                             <template v-if="item.rerankMode && item.rerankMode !== 'None'">
-                                                <el-tag size="mini" type="warning">{{ item.rerankMode === 'Llm' ? 'LLM 重排' : '词法重排' }}</el-tag>
-                                                <el-tag size="mini" type="success" v-if="item.rerankScore != null">重排分 {{ formatScore(item.rerankScore) }}</el-tag>
-                                                <el-tag size="mini" v-if="item.originalRank && item.originalRank !== item.rank">原排名 #{{ item.originalRank }}</el-tag>
+                                                <el-tag size="mini" type="warning">{{ item.rerankMode === 'Llm' ? ncfST('Frontend.178') : ncfST('Frontend.239') }}</el-tag>
+                                                <el-tag size="mini" type="success" v-if="item.rerankScore != null">{{ ncfST('Frontend.265') }} {{ formatScore(item.rerankScore) }}</el-tag>
+                                                <el-tag size="mini" v-if="item.originalRank && item.originalRank !== item.rank">{{ ncfST('Frontend.266', item.originalRank) }}</el-tag>
                                             </template>
                                         </div>
                                         <p class="recall-card-content">{{ item.content }}</p>
-                                        <div class="recall-card-source"><i class="el-icon-document"></i> 来源：{{ item.sourceName || '未提供来源名称' }}</div>
+                                        <div class="recall-card-source"><i class="el-icon-document"></i> {{ ncfST('Frontend.267') }}{{ item.sourceName || '—' }}</div>
                                         <div class="recall-card-actions">
-                                            <a v-if="item.sourceLink" :href="item.sourceLink" target="_blank" rel="noopener noreferrer">打开来源 <i class="el-icon-top-right"></i></a>
-                                            <el-button type="text" size="mini" @@click="openParagraphDetail(item)">查看全文</el-button>
+                                            <a v-if="item.sourceLink" :href="item.sourceLink" target="_blank" rel="noopener noreferrer">{{ ncfST('Frontend.209') }} <i class="el-icon-top-right"></i></a>
+                                            <el-button type="text" size="mini" @@click="openParagraphDetail(item)">{{ ncfST('Frontend.222') }}</el-button>
                                         </div>
                                     </article>
                                 </div>
-                                <div v-else class="empty-result"><i class="el-icon-search"></i><strong>还没有测试结果</strong><span>选择知识库并输入问题后，结果会显示在这里。</span></div>
+                                <div v-else class="empty-result"><i class="el-icon-search"></i><strong>{{ ncfST('Frontend.252') }}</strong><span>{{ ncfST('Frontend.253') }}</span></div>
                             </el-card>
                         </section>
                     </div>
 
                     <section class="records-section">
-                        <div class="records-title">本页测试记录</div>
+                        <div class="records-title">{{ ncfST('Frontend.221') }}</div>
                         <el-table :data="recordPageList" size="small" border>
-                            <el-table-column prop="queryContent" label="测试问题" min-width="220" show-overflow-tooltip></el-table-column>
-                            <el-table-column prop="knowledgeBaseName" label="知识库" min-width="150" show-overflow-tooltip></el-table-column>
-                            <el-table-column prop="resultCount" label="返回片段" width="100" align="center"></el-table-column>
-                            <el-table-column label="最高相似度" width="120" align="center"><template slot-scope="scope">{{ formatScore(scope.row.highestScore) }}</template></el-table-column>
-                            <el-table-column prop="time" label="测试时间" width="170" align="center"></el-table-column>
+                            <el-table-column prop="queryContent" :label="ncfST('Frontend.227')" min-width="220" show-overflow-tooltip></el-table-column>
+                            <el-table-column prop="knowledgeBaseName" label='@XR["Area.KnowledgeBase.Management"]' min-width="150" show-overflow-tooltip></el-table-column>
+                            <el-table-column prop="resultCount" :label="ncfST('Frontend.250')" width="100" align="center"></el-table-column>
+                            <el-table-column :label="ncfST('Frontend.219')" width="120" align="center"><template slot-scope="scope">{{ formatScore(scope.row.highestScore) }}</template></el-table-column>
+                            <el-table-column prop="time" :label="ncfST('Frontend.225')" width="170" align="center"></el-table-column>
                         </el-table>
                         <el-pagination class="records-pagination" :current-page.sync="recordPage" :page-sizes="[5, 10, 15, 20]"
                                        :page-size.sync="recordPageSize" :total="recordTotal" layout="total, sizes, prev, pager, next"
@@ -271,15 +271,15 @@
         @* —— 使用指南 —— *@
         <div class="kb-guide-panel" v-show="activeNavKey === 'guide'">
             <div class="kb-guide-card">
-                <h3>知识库使用指南</h3>
+                <h3>{{ ncfST('Frontend.233') }}</h3>
                 <ol>
-                    <li>点击「新建知识库」，填写名称并选择 Embedding 模型、向量数据库与对话模型。</li>
-                    <li>在列表中点击「配置」，关联文本内容或上传/勾选资料文件，确认保存关联。</li>
-                    <li>点击「向量化」，等待进度完成；成功后状态会显示为「已向量化」。</li>
-                    <li>切换到左侧「召回测试」，选择该知识库并输入真实问题，核验召回来源与相似度。</li>
-                    <li>若结果不理想，回到「配置」调整资料后重新向量化再测。</li>
+                    <li>{{ ncfST('Frontend.230') }}</li>
+                    <li>{{ ncfST('Frontend.200') }}</li>
+                    <li>{{ ncfST('Frontend.229') }}</li>
+                    <li>{{ ncfST('Frontend.189') }}</li>
+                    <li>{{ ncfST('Frontend.237') }}</li>
                 </ol>
-                <div class="kb-guide-tip">提示：修改资料关联后，已构建的向量会失效，请务必重新执行向量化。</div>
+                <div class="kb-guide-tip">{{ ncfST('Frontend.212') }}</div>
             </div>
         </div>
     </div>
