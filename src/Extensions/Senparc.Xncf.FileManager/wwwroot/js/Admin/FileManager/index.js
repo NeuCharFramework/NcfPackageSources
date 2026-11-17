@@ -491,6 +491,8 @@
                 const sizeMb = trend.map(function (x) {
                     return Number(((Number(x.totalSizeBytes || 0)) / (1024 * 1024)).toFixed(2));
                 });
+                const fileCountLabel = fileManagerText('Frontend.121', 'File count');
+                const fileSizeLabel = fileManagerText('Frontend.123', 'File size');
 
                 const capacityChart = this.getOrCreateChart(this.$refs.capacityChart);
                 if (capacityChart) {
@@ -502,33 +504,33 @@
                                 if (!params || !params.length) return '';
                                 var lines = [params[0].axisValue];
                                 params.forEach(function (p) {
-                                    var unit = p.seriesName === '文件数量' ? ' 个' : ' MB';
+                                    var unit = p.seriesName === fileCountLabel ? '' : ' MB';
                                     lines.push(p.marker + p.seriesName + '：' + p.data + unit);
                                 });
                                 return lines.join('<br/>');
                             }
                         },
-                        legend: { bottom: 0, data: ['文件数量', '总大小'] },
+                        legend: { bottom: 0, data: [fileCountLabel, fileSizeLabel] },
                         grid: { left: 48, right: 56, top: 28, bottom: 48 },
                         xAxis: { type: 'category', boundaryGap: false, data: labels },
                         yAxis: [
                             {
                                 type: 'value',
-                                name: '数量',
+                                name: fileCountLabel,
                                 minInterval: 1,
                                 axisLabel: { formatter: '{value}' },
                                 splitLine: { lineStyle: { type: 'dashed' } }
                             },
                             {
                                 type: 'value',
-                                name: '大小',
+                                name: fileSizeLabel,
                                 axisLabel: { formatter: '{value}MB' },
                                 splitLine: { show: false }
                             }
                         ],
                         series: [
                             {
-                                name: '文件数量',
+                                name: fileCountLabel,
                                 type: 'line',
                                 smooth: true,
                                 yAxisIndex: 0,
@@ -536,7 +538,7 @@
                                 areaStyle: { opacity: 0.08 }
                             },
                             {
-                                name: '总大小',
+                                name: fileSizeLabel,
                                 type: 'line',
                                 smooth: true,
                                 yAxisIndex: 1,
