@@ -283,10 +283,10 @@
     <value>Estado:</value>
   </data>
   <data name="Frontend.043" xml:space="preserve">
-    <value>Deshabilitados</value>
+    <value>Desactivado</value>
   </data>
   <data name="Frontend.044" xml:space="preserve">
-    <value>Habilitado</value>
+    <value>Activado</value>
   </data>
   <data name="Frontend.045" xml:space="preserve">
     <value>Grupos</value>
@@ -313,10 +313,10 @@
     <value>Tareas:</value>
   </data>
   <data name="Frontend.053" xml:space="preserve">
-    <value>Propietario:</value>
+    <value>Propietario del grupo:</value>
   </data>
   <data name="Frontend.054" xml:space="preserve">
-    <value>Contacto:</value>
+    <value>Responsable:</value>
   </data>
   <data name="Frontend.055" xml:space="preserve">
     <value>Miembros del grupo:</value>
@@ -325,7 +325,7 @@
     <value>Tarea en ejecución</value>
   </data>
   <data name="Frontend.057" xml:space="preserve">
-    <value>Hora de inicio</value>
+    <value>Inicio</value>
   </data>
   <data name="Frontend.058" xml:space="preserve">
     <value>Duración</value>
