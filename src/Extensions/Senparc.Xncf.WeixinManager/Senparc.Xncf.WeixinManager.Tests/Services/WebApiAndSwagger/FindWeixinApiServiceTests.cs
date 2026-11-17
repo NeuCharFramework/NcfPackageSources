@@ -45,7 +45,7 @@ namespace Senparc.Xncf.WeixinManager.Services.WebApiAndSwagger.Tests
 
                 var kw = "Token";
                 PlatformType? platformType = null;
-                bool? isAsync = false;//搜索同步方法
+                bool? isAsync = false;//searchsynchronous methods
 
                 var result = finWeixinApiService.FindWeixinApiResult(platformType.ToString(), isAsync, kw);
 
@@ -61,8 +61,8 @@ namespace Senparc.Xncf.WeixinManager.Services.WebApiAndSwagger.Tests
                 Console.WriteLine("FindWeixinApiResultTest Test 3");
 
                 var kw = "Token";
-                PlatformType? platformType = PlatformType.WeChat_OfficialAccount;//搜索 Senparc.Weixin.MP 程序集
-                bool? isAsync = true;//搜索异步方法
+                PlatformType? platformType = PlatformType.WeChat_OfficialAccount;//Legacy comment translated to English.
+                bool? isAsync = true;//searchasynchronous methods
 
                 var result = finWeixinApiService.FindWeixinApiResult(platformType.ToString(), isAsync, kw);
 

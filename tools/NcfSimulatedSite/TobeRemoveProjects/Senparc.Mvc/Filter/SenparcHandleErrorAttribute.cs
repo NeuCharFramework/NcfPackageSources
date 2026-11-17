@@ -13,7 +13,7 @@ namespace Senparc.Mvc.Filter
 
     //        //Record Log
     //        //LogUtility.WebLogger.Error(
-    //        //    string.Format("SenparcHandle错误。IP：{0}。页面：{1}",
+    //        //    string.Format("SenparcHandleerror。IP：{0}。page：{1}",
     //        //        filterContext.HttpContext.Request.UserHostName,
     //        //        filterContext.HttpContext.Request.Url.PathAndQuery),
     //        //    filterContext.Exception);
@@ -63,7 +63,7 @@ namespace Senparc.Mvc.Filter
 
     //        var url = filterContext.HttpContext.Request.Url.PathAndQuery;
 
-    //        Log.LogUtility.WebLogger.Error("500错误:{0} Url:{1}\r\n{2} IP:{3}".With(exception.Message, url, exception.InnerException != null ? exception.InnerException.StackTrace : null, filterContext.HttpContext.Request.UserHostAddress), exception);
+    //        Log.LogUtility.WebLogger.Error("500error:{0} Url:{1}\r\n{2} IP:{3}".With(exception.Message, url, exception.InnerException != null ? exception.InnerException.StackTrace : null, filterContext.HttpContext.Request.UserHostAddress), exception);
 
     //        // Certain versions of IIS will sometimes use their own error page when
     //        // they detect a server error. Setting this property indicates that we

@@ -1,17 +1,32 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：Register.Area.cs
-    文件功能描述：Register.Area 相关实现
-    
-    
-    创建标识：Senparc - 20240718
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.6.0-preview2 为 DynamicData 模块接入统一资源本地化并优化功能文案
+    Copyright (C) 2026 Senparc
+
+  
+
+    File name: Register.Area.cs
+
+    File description: Register.Area related implementation
+
+    
+
+    
+
+    Created by: Senparc - 20240718
+
+    
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260717
+
+    Change description: v0.6.0-preview2 integrate shared resource localization and improve feature text for the DynamicData module
+
+
 
 ----------------------------------------------------------------*/
 
@@ -28,16 +43,16 @@ using Microsoft.Extensions.Hosting;
 
 namespace Senparc.Xncf.DynamicData
 {
-    public partial class Register : IAreaRegister, //注册 XNCF 页面接口（按需选用）
-                                    IXncfRazorRuntimeCompilation  //赋能 RazorPage 运行时编译
+    public partial class Register : IAreaRegister, //register the XNCF page interface (optional)
+                                    IXncfRazorRuntimeCompilation  //enable RazorPage runtime compilation
     {
-        #region IAreaRegister 接口
+        #region Legacy section
 
       //  public string HomeUrl => "/Admin/DynamicData/Index";
 
       //  public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-      //                   new AreaPageMenuItem(GetAreaHomeUrl(),"首页","fa fa-laptop"),
-			 		//	 new AreaPageMenuItem(GetAreaUrl($"/Admin/DynamicData/DatabaseSample"),"数据库操作示例","fa fa-bookmark-o")
+      //Legacy comment translated to English.
+			 		//Legacy comment translated to English.
 			 		//};
 
         public string HomeUrl => "/Admin/DynamicData/";
@@ -51,7 +66,7 @@ namespace Senparc.Xncf.DynamicData
         {
             builder.AddRazorPagesOptions(options =>
             {
-                //此处可配置页面权限
+                //configure page permissions here
             });
 
             SenparcTrace.SendCustomLog("DynamicData 启动", "完成 Area:Senparc.Xncf.DynamicData 注册");
@@ -61,7 +76,7 @@ namespace Senparc.Xncf.DynamicData
 
         #endregion
 
-        #region IXncfRazorRuntimeCompilation 接口
+        #region Legacy section
         public string LibraryPath => Path.GetFullPath(Path.Combine(SiteConfig.WebRootPath, "..", "..", "Senparc.Xncf.DynamicData"));
         #endregion
     }

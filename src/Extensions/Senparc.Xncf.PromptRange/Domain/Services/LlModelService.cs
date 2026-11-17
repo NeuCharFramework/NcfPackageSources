@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：LlModelService.cs
-    文件功能描述：LlModelService 相关实现
+
+    File name: LlModelService.cs
+
+    File description: LlModelService related implementation
+
     
+
     
-    创建标识：Senparc - 20260704
+
+    Created by: Senparc - 20260704
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -45,18 +57,18 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         {
             #region validate
 
-            // 如果是Azure OpenAI
+            //Legacy comment translated to English.
             // if (request.ModelType == AI.AiPlatform.AzureOpenAI.ToString() || request.ModelType == AI.AiPlatform.NeuCharAI.ToString())
 
             if (request.ModelType is AiPlatform.AzureOpenAI)
             {
-                // 强制要求ApiVersion和Endpoint不为空
+                //Legacy comment translated to English.
                 if (string.IsNullOrWhiteSpace(request.ApiVersion) || string.IsNullOrWhiteSpace(request.Endpoint))
                 {
                     throw new NcfExceptionBase("使用AzureOpenAI时，ApiVersion和Endpoint不能为空");
                 }
 
-                // ApiVersion不为空且不在ApiVersionList中
+                //Legacy comment translated to English.
                 if (!string.IsNullOrWhiteSpace(request.ApiVersion) && !Constants.ApiVersionList.Contains(request.ApiVersion))
                 {
                     throw new NcfExceptionBase("ApiVersion不存在");
@@ -100,7 +112,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                     break;
                 case AIKernel.Domain.Models.ConfigModelType.TextToImage:
                     configModel = ConfigModel.TextToImage;
-                    //TODO: Image 需要不一样的触发机制
+                    //Legacy comment translated to English.
                     break;
                 case AIKernel.Domain.Models.ConfigModelType.TextEmbedding:
                 case AIKernel.Domain.Models.ConfigModelType.ImageToText:

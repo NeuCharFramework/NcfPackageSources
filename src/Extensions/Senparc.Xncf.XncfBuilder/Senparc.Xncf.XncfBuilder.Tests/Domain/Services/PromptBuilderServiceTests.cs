@@ -20,7 +20,7 @@
 //namespace Senparc.Xncf.XncfBuilder.Domain.Services.Tests
 //{
 //    /// <summary>
-//    /// PromptBuilder 测试
+//    /// PromptBuilder test
 //    /// </summary>
 //    [TestClass()]
 //    public class PromptBuilderServiceTest : XncfBuilderTestBase
@@ -29,7 +29,7 @@
 
 //        public PromptBuilderServiceTest()
 //        {
-//            //说明：skprompt 的 maxToken 在文件中配置
+//Legacy comment translated to English.
 //            //var promptParameter = new PromptConfigParameter()
 //            //{
 //            //    MaxTokens = 2000,
@@ -50,24 +50,24 @@
 //        {
 //            //var entityName = "MyTestClass";
 
-//            var input = $"创建一个类用作一个单独的领域模型，这个领域用于控制所有的 Prompt 核心业务逻辑，包括使用 Prompt 操作大预言模型所需的所有必要的参数，用于管理一组相关联的 Prompt，并统一配置其参数。生成的属性中需要包含常规的 LLM 被调用时的所需的参数，尽可能完整，包括但不仅限于： MaxToken、Temperature、TopP、FrequencyPenalty、ResultsPerPrompt、StopSequences、ChatSystemPrompt、TokenSelectionBiases，等等；除此以外，属性还需要包含用于评估 Prompt 效果所需要的必要参数，以及 Name 等常规实体类应该有的参数。";
+//Legacy comment translated to English.
 
 //            var projectPath = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "XncfBuilderTest");
 
 //            try
 //            {
-//                File.Delete(projectPath);//删除目录，全部重新生成
+//Legacy comment translated to English.
 //            }
 //            catch { }
 //            finally
 //            {
-//                CO2NET.Helpers.FileHelper.TryCreateDirectory(projectPath);//重建目录
+//Legacy comment translated to English.
 //            }
 
 
 //            var @namespace = "Senparc.Xncf.UnitTestProject.Models.DatabaseModel";
 
-//            #region Entity 生成
+//            #region Entity generate
 
 //            var setting = Senparc.AI.Config.SenparcAiSetting;
 //            var entityResult = await _promptBuilderService.RunPromptAsync(setting, PromptBuildType.EntityClass, input, null, null, projectPath, @namespace);
@@ -89,10 +89,10 @@
 
 //            await Console.Out.WriteLineAsync("\n===========\n");
 
-//            //从 promptGroupFileContent 分析获得类名
+//Legacy comment translated to English.
 //            var className = new Regex(@"public class (\w+)").Match(promptGroupFileContent).Groups[1].Value;
 
-//            #region Entity DTO 生成
+//            #region Entity DTO generate
 
 //            var entityCode = promptGroupFileContent;// entityResult.ResponseText.GetObject<List<FileGenerateResult>>()[0].EntityCode;
 

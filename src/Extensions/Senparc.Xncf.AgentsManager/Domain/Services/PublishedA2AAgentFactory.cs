@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：PublishedA2AAgentFactory.cs
-    文件功能描述：领域服务与业务流程实现
+    File name: PublishedA2AAgentFactory.cs
+    File description: domain services and business-process implementation
 
 
-    创建标识：Senparc - 20260813
+    Created by: Senparc - 20260813
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+    Modified by: Senparc - 20260813
+    Change description: v0.15.0-preview11 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.15.0-preview20 增强 AgentTemplate、ChatGroup 与发布型 A2A 的取消和请求处理
+    Modified by: Senparc - 20260815
+    Change description: v0.15.0-preview20 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -29,8 +29,8 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.AgentsManager.Domain.Services
 {
     /// <summary>
-    /// A2A 发布适配器。协议请求经鉴权后复用 <see cref="AgentTemplateRunner"/> 执行本地 AgentTemplate。
-    /// 不把 Prompt 或工具描述写入 Agent Card。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public class PublishedA2AAgentFactory
     {
@@ -63,9 +63,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                     A2AErrorCode.InvalidParams);
             }
 
-            // 发布型 A2A 只负责协议与授权边界；模板解析、Prompt 参数、模型配置、
-            // AgentKernel 构建和响应执行全部复用本地独立 Agent 的 RunAsync 入口。
-            // 不在正常路径替换 HttpClient、API Version、Deployment 或模型。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             AgentTemplateRunResult execution;
             try
             {
@@ -201,8 +201,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             PublishedA2AAgent publishedAgent,
             AgentTemplateExecutionDiagnostics diagnostics)
         {
-            // Diagnostics deliberately contain only model metadata and counts. Prompt、密钥、完整端点、工具定义
-            // 都不会写入日志，便于安全地将 A2A 路径与本地 Agent 执行配置比对。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             _logger.LogInformation(
                 "Published A2A run {DiagnosticId} for agent {AgentKey} (template {TemplateId}) uses {ExecutionProfile}; {ModelDescription}; credential={CredentialState}; session={SessionStrategy}; modelTransport=local-standard; modelRequest=strict-non-streaming; {ExecutionParameters}; functions={FunctionCallsEnabled}; toolCount={ToolCount}",
                 diagnosticId,

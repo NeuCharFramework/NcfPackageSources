@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：AjaxReturnModel.cs
-    文件功能描述：AjaxReturnModel 相关实现
+
+    File name: AjaxReturnModel.cs
+
+    File description: AjaxReturnModel related implementation
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -20,7 +32,7 @@ namespace Senparc.Ncf.Core
 {
 
     /// <summary>
-    /// ajax返回模型
+    /// ajaxreturnmodel
     /// </summary>
     public class AjaxReturnModel
     {
@@ -30,9 +42,9 @@ namespace Senparc.Ncf.Core
     }
 
     /// <summary>
-    /// ajax返回模型
+    /// ajaxreturnmodel
     /// </summary>
-    /// <typeparam name="T">返回的对象</typeparam>
+    /// <typeparam name="T">Object to return</typeparam>
     public class AjaxReturnModel<T> : AjaxReturnModel
     {
         public T Data { get; set; }

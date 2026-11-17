@@ -80,27 +80,27 @@ namespace Senparc.Ncf.Core.Cache.Tests
             var expectedValue = new TestClass { Property = "NewValue" };
             var cacheStrategy = base._serviceProvider.GetService<IBaseObjectCacheStrategy>();
 
-            // 设置短暂的过期时间（例如，1秒）  
+            // Settings with a short expiration time (for example, 1 second)  
             int timeoutSeconds = 1;
-            await cacheStrategy.RemoveFromCacheAsync(cacheKey.ToUpper()); // 确保缓存为空  
+            await cacheStrategy.RemoveFromCacheAsync(cacheKey.ToUpper()); // Ensure cache is empty  
 
-            // Act: 缓存一个值  
+            // Act: Cache a value  
             var result = await MethodCache.GetMethodCacheAsync<TestClass>(
                 cacheKey,
                 () => Task.FromResult(expectedValue),
                 timeoutSeconds
             );
 
-            // Assert: 确保值已缓存  
+            // Assert: Ensure that the value has been cached  
             Assert.AreEqual(expectedValue, result);
 
-            // 等待超过过期时间  
+            // Wait time exceeded the expiration time  
             await Task.Delay((timeoutSeconds + 1) * 1000);
 
-            // Act: 再次获取缓存  
+            // Act: Get the cache again  
             var expiredResult = await cacheStrategy.GetAsync<TestClass>(cacheKey.ToUpper());
 
-            // Assert: 缓存项应为null（已过期）  
+            // Assert: Cache item should be null (expired)  
             Assert.IsNull(expiredResult);
         }
 

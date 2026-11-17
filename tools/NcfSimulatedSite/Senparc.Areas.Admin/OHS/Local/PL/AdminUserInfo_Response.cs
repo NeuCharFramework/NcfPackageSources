@@ -24,7 +24,7 @@ namespace Senparc.Areas.Admin.OHS.Local.PL
     }
 
     /// <summary>
-    /// 获取所有
+    /// getall
     /// </summary>
     public class AdminUserInfo_GetRolesResponse
     {

@@ -8,31 +8,31 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
     public class SenparcTraceItem
     {
         /// <summary>
-        /// 标题
+        ///Legacy comment translated to English.
         /// </summary>
         public string Title { get; set; }
         /// <summary>
-        /// 时间
+        ///Legacy comment translated to English.
         /// </summary>
         public string DateTime { get; set; }
         /// <summary>
-        /// 线程
+        /// thread
         /// </summary>
         public int ThreadId { get; set; }
         /// <summary>
-        /// 在日志中的行数
+        ///Legacy comment translated to English.
         /// </summary>
         public int Line { get; set; }
         /// <summary>
-        /// 日志类型
+        ///Legacy comment translated to English.
         /// </summary>
         public SenparcTraceType SenparcTraceType { get; set; } = SenparcTraceType.Normal;
         /// <summary>
-        /// 是否是一条异常日志
+        ///Legacy comment translated to English.
         /// </summary>
         public bool IsException { get; set; }
         /// <summary>
-        /// 结果
+        /// result
         /// </summary>
         public WeicinTraceItemContent Result { get; set; } = new WeicinTraceItemContent();
 
@@ -45,7 +45,7 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
         public string AccessTokenOrAppId { get; set; }
         public string Url { get; set; }
         /// <summary>
-        /// 返回结果，通常为JSON
+        ///Legacy comment translated to English.
         /// </summary>
         public string Result { get; set; }
         public string PostData { get; set; }

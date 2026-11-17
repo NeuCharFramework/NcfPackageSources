@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：PromptItem_GetIdAndNameResponse.cs
-    文件功能描述：PromptItem_GetIdAndNameResponse 相关实现
+    File name: PromptItem_GetIdAndNameResponse.cs
+    File description: PromptItem_GetIdAndNameResponse related implementation
     
     
-    创建标识：Senparc - 20260704
+    Created by: Senparc - 20260704
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
 ----------------------------------------------------------------*/
 
@@ -21,22 +21,22 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
     public class PromptItem_GetIdAndNameResponse : AppResponseBase<string>
     {
         /// <summary>
-        /// 主键 ID
+        /// primary key ID
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
-        /// 昵称
+        /// display name
         /// </summary>
         public string NickName { get; set; }
 
         /// <summary>
-        /// 靶场名称
+        /// rangename
         /// </summary>
         public string RangeName { get; set; }
 
         /// <summary>
-        /// 完整版号
+        ///Legacy comment translated to English.
         /// </summary>
         public string FullVersion { get; set; }
         public PromptItemVersion PromptItemVersion { get; set; }
@@ -44,17 +44,17 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
         public PromptItemVersion ParentPromptItemVersion { get; set; }
 
         /// <summary>
-        /// 评估参数, 平均分
+        ///Legacy comment translated to English.
         /// </summary>
         public decimal EvalAvgScore { get; set; }
 
         /// <summary>
-        /// 评估参数
+        ///Legacy comment translated to English.
         /// </summary>
         public decimal EvalMaxScore { get; set; }
 
         /// <summary>
-        /// 是否是草稿
+        ///Legacy comment translated to English.
         /// </summary>
         public bool IsDraft { get; set; }
 

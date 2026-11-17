@@ -12,19 +12,19 @@ namespace Senparc.Areas.Admin.OHS.Local.PL
     public class Module_StatResponse
     {
         /// <summary>
-        /// 已安装模块数量
+        ///Legacy comment translated to English.
         /// </summary>
         public int InstalledXncfCount { get; set; }
         /// <summary>
-        /// 待更新模块数量
+        ///Legacy comment translated to English.
         /// </summary>
         public int UpdateVersionXncfCount { get; set; }
         /// <summary>
-        /// 新模块数量
+        ///Legacy comment translated to English.
         /// </summary>
         public int NewXncfCount { get; set; }
         /// <summary>
-        /// 异常模块数量
+        ///Legacy comment translated to English.
         /// </summary>
         public int MissingXncfCount { get; set; }
     }
@@ -32,15 +32,15 @@ namespace Senparc.Areas.Admin.OHS.Local.PL
     public class Module_GetItemResponse
     {
         /// <summary>
-        /// 必须刷新页面，MustUpdate 为 true 时，必定有异常信息
+        ///Legacy comment translated to English.
         /// </summary>
         public bool MustUpdate { get; set; }
         /// <summary>
-        /// 模块信息
+        ///Legacy comment translated to English.
         /// </summary>
         public XncfModuleDto XncfModule { get; set; }
         /// <summary>
-        /// XNCF 模块注册信息
+        ///Legacy comment translated to English.
         /// </summary>
         public Response_XncfRegister XncfRegister { get; set; }
 
@@ -49,47 +49,47 @@ namespace Senparc.Areas.Admin.OHS.Local.PL
         public class Response_XncfRegister
         {
             /// <summary>
-            /// 主页 URL
+            ///Legacy comment translated to English.
             /// </summary>
             public string AreaHomeUrl { get; set; }
             /// <summary>
-            /// 菜单显示名称
+            ///Legacy comment translated to English.
             /// </summary>
             public string MenuName { get; set; }
             /// <summary>
-            /// 当前文化下的模块描述
+            ///Legacy comment translated to English.
             /// </summary>
             public string Description { get; set; }
             /// <summary>
-            /// 图标
+            /// icon
             /// </summary>
             public string Icon { get; set; }
             /// <summary>
-            /// 版本
+            /// version
             /// </summary>
             public string Version { get; set; }
             /// <summary>
-            /// 唯一编号
+            ///Legacy comment translated to English.
             /// </summary>
             public string Uid { get; set; }
 
             /// <summary>
-            /// 子菜单项目列表
+            ///Legacy comment translated to English.
             /// </summary>
             public List<Ncf.Core.Areas.AreaPageMenuItem> AreaPageMenuItems { get; set; }
 
             /// <summary>
-            /// 接口
+            /// interface
             /// </summary>
             public List<string> Interfaces { get; set; }
 
             /// <summary>
-            /// “执行方法”数量统计
+            ///Legacy comment translated to English.
             /// </summary>
             public int FunctionCount { get; set; }
 
             /// <summary>
-            /// 线程信息
+            /// threadinformation
             /// </summary>
             public IEnumerable<Response_XncfRegister_RegisteredThreadInfo> RegisteredThreadInfo { get; set; }
 
@@ -97,22 +97,22 @@ namespace Senparc.Areas.Admin.OHS.Local.PL
             public class Response_XncfRegister_RegisteredThreadInfo
             {
                 /// <summary>
-                /// 线程信息
+                /// threadinformation
                 /// </summary>
                 public RegisteredThreadInfo_Key Key { get; set; }
                 /// <summary>
-                /// 线程状态详情
+                ///Legacy comment translated to English.
                 /// </summary>
                 public RegisteredThreadInfo_Value Value { get; set; }
 
                 public class RegisteredThreadInfo_Key
                 {
                     /// <summary>
-                    /// 线程名称
+                    /// threadname
                     /// </summary>
                     public string Name { get; set; }
                     /// <summary>
-                    /// 线程故事
+                    ///Legacy comment translated to English.
                     /// </summary>
                     public string StoryHtml { get; set; }
                 }

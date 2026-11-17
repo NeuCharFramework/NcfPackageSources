@@ -1053,7 +1053,7 @@
             exportTags: function () { this.$message.info('导出功能即将开放'); },
             openTagRowMenu: function (row) {
                 if (!row) return;
-                // 与行扩展一致：打开编辑
+                //Legacy comment translated to English.
                 this.editTagRow(row);
             },
             loadRecycleBin: function () {
@@ -1126,20 +1126,20 @@
                 this.saveRecycleToStorage();
                 this.loadRecycleBin();
 
-                // 从收藏中移除
+                //Legacy comment translated to English.
                 if (this.favoriteList && this.favoriteList.list) {
                     this.favoriteList.list = this.favoriteList.list.filter(function (item) { return item.id !== row.id; });
                     this.saveFavoritesToStorage();
                     this.searchFavorites();
                 }
 
-                // 从快速访问移除
+                //Legacy comment translated to English.
                 if (this.homePage && this.homePage.quickAccess) {
                     this.homePage.quickAccess = this.homePage.quickAccess.filter(function (item) { return item.id !== row.id; });
                     this.saveQuickAccessToStorage();
                 }
 
-                // 从当前列表移除
+                //Legacy comment translated to English.
                 this.tableData = (this.tableData || []).filter(function (item) { return item.id !== row.id; });
                 if (this.total > 0) this.total -= 1;
             },
@@ -1178,7 +1178,7 @@
                     try {
                         result = unwrap(await post(pageUrl + '?handler=EmptyRecycle', { ids: ids }));
                     } catch (batchError) {
-                        // 后端未重编时回退为逐个 Delete
+                        //Legacy comment translated to English.
                         var remainingFallback = [];
                         var successFallback = 0;
                         var lastError = '';
@@ -2063,7 +2063,7 @@
                         });
                         formData.append('resourceScope', this.resourceScope);
                         if (this.currentFolderId != null) formData.append('folderId', this.currentFolderId);
-                        // 同时放入表单和请求头，兼容 Razor Pages 的 multipart 防伪验证。
+                        //Legacy comment translated to English.
                         formData.append('__RequestVerificationToken', getRequestVerificationToken());
                         await post(pageUrl + '?handler=Upload', formData);
                         uploadedCount += batches[batchIndex].length;

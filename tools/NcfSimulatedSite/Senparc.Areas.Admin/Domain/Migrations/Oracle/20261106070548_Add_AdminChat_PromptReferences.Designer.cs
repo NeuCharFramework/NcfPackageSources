@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：20261106070548_Add_AdminChat_PromptReferences.Designer.cs
-    文件功能描述：EF Core Oracle 迁移设计器，记录 Add_AdminChat_PromptReferences 的模型快照
+    File name: 20261106070548_Add_AdminChat_PromptReferences.Designer.cs
+    File description: Related implementation.
     
     
-    创建标识：Senparc - 20200724
+    Created by: Senparc - 20200724
     
-    修改标识：Senparc - 20261110
-    修改描述：v0.12.27 将 PromptReferencesJson 列类型改为 NCLOB，避免长文本被截断
+    Modified by: Senparc - 20261110
+    Change description: v0.12.27 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

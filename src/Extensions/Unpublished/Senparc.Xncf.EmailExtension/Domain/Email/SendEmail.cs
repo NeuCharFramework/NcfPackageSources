@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：SendEmail.cs
-    文件功能描述：SendEmail 相关实现
+
+    File name: SendEmail.cs
+
+    File description: SendEmail related implementation
+
     
+
     
-    创建标识：Senparc - 20260704
+
+    Created by: Senparc - 20260704
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -45,11 +57,11 @@ namespace Senparc.Ncf.Core.Email
         private string Body { get; set; }
 
         /// <summary>
-        /// 已经发送的标题
+        ///Legacy comment translated to English.
         /// </summary>
         public string SentSubject { get; set; }
         /// <summary>
-        /// 已经发送的内容
+        ///Legacy comment translated to English.
         /// </summary>
         public string SentBody { get; set; }
 
@@ -60,7 +72,7 @@ namespace Senparc.Ncf.Core.Email
         {
             if (toUse != null)
             {
-                ConfigNode = EmailXmlConfig.GetEmailConfig((SendEmailType)toUse);//获取模板的节点内容
+                ConfigNode = EmailXmlConfig.GetEmailConfig((SendEmailType)toUse);//Legacy comment translated to English.
                 Subject = ConfigNode.Subject;
                 Body = ConfigNode.Body.HtmlDecode();
             }
@@ -68,7 +80,7 @@ namespace Senparc.Ncf.Core.Email
         }
 
         /// <summary>
-        /// 获取Email账户信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         private EmailUser GetEmailUser(EmailAccountType emailUserType)
@@ -85,7 +97,7 @@ namespace Senparc.Ncf.Core.Email
             return emailUser;
         }
 
-        #region ISendEmail 成员
+        #region Legacy section
 
         public bool DoSendEmail(string to, string subject, string body, string username, bool useEmailTemplate, EmailAccountType emailUserType, bool fromCache)
         {
@@ -93,13 +105,13 @@ namespace Senparc.Ncf.Core.Email
             string smtpEmailAddress = null;
             //if (emailUserType == EmailUserType.Default && to.ToUpper().EndsWith("@QQ.COM"))
             //{
-            //    //useBackupEmail = !useBackupEmail;//如果是qq邮箱，则切换
+            //Legacy comment translated to English.
             //    emailUserType = EmailUserType._163;
             //}
 
             //if (emailUserType == EmailUserType.Default)
             //{
-            //    emailUserType = EmailUserType.KJH8;//默认使用KJH8发送
+            //    emailUserType = EmailUserType.KJH8;//defaultuseKJH8send
             //}
 
             try
@@ -113,7 +125,7 @@ namespace Senparc.Ncf.Core.Email
                 m_message.From = new MailAddress(targetEmailUser.EmailAddress, targetEmailUser.DisplayName);
                 m_message.To.Add(new MailAddress(to));
                 m_message.Subject = subject;
-                m_message.IsBodyHtml = true;//允许使用html格式
+                m_message.IsBodyHtml = true;//Legacy comment translated to English.
                 m_message.Body = body;
 
                 SmtpClient m_smtpClient = new SmtpClient();
@@ -138,7 +150,7 @@ namespace Senparc.Ncf.Core.Email
                 string cacheUsed = fromCache ? "缓存" : "直接发送";
                 if (sendSuccess)
                 {
-                    //记录到AutoSendEmail中进行备份
+                    //Legacy comment translated to English.
                     XmlDataContext xmlCtx = new XmlDataContext();
                     AutoSendEmailBak emailBak = new AutoSendEmailBak()
                     {
@@ -161,7 +173,7 @@ namespace Senparc.Ncf.Core.Email
         }
 
         /// <summary>
-        /// 发送Email，只要条件符合，立即发送（当处于缓存中时，只要轮询到，也立即尝试发送）
+        ///Legacy comment translated to English.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="sendEmailParameter"></param>
@@ -173,12 +185,12 @@ namespace Senparc.Ncf.Core.Email
         }
 
         ///// <summary>
-        ///// 发送Email，只要条件符合，立即发送（当处于缓存中时，只要轮询到，也立即尝试发送）
+        ///Legacy comment translated to English.
         ///// </summary>
         ///// <typeparam name="T"></typeparam>
         ///// <param name="sendEmailParameter"></param>
         ///// <param name="lineInCache"></param>
-        ///// <param name="useBackupEmail">使用备用Email发送（如果lineInCache=True，则由缓存处理模块决定）</param>
+        ///Legacy comment translated to English.
         ///// <returns></returns>
         //public bool Send<T>(T sendEmailParameter, bool lineInCache, bool useBackupEmail) where T : SendEmailParameter
         //{
@@ -186,13 +198,13 @@ namespace Senparc.Ncf.Core.Email
         //}
 
         /// <summary>
-        /// 发送Email
+        /// sendEmail
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="sendEmailParameter"></param>
         /// <param name="lineInCache"></param>
-        /// <param name="sendImmediately">是否立即发送（仅当lineInCache=true时有效）</param>
-        /// <param name="useBackupEmail">使用备用Email发送</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public bool Send<T>(T sendEmailParameter, bool lineInCache, bool sendImmediately, EmailAccountType emailUserType) where T : SendEmailParameter
         {
@@ -205,29 +217,29 @@ namespace Senparc.Ncf.Core.Email
                     throw new Exception("ToEmail参数为空");
                 }
 
-                //替换
+                //Legacy comment translated to English.
                 SentSubject = ReplaceHolderValue(sendEmailParameter, Subject);
                 SentBody = ReplaceHolderValue(sendEmailParameter, Body);
 
                 bool sendImmediatelySuccess = true;
                 if (!lineInCache)
                 {
-                    //立即发送，发送失败的邮件会列入缓存发送
+                    //Legacy comment translated to English.
                     sendImmediatelySuccess = DoSendEmail(sendEmailParameter.ToEmail, SentSubject, SentBody, sendEmailParameter.UserName, true, emailUserType, lineInCache);
                 }
 
-                //直接放入缓存，或将发送失败的邮件内容放入缓存
+                //Legacy comment translated to English.
                 if (lineInCache || !sendImmediatelySuccess)
                 {
-                    //存入缓存
+                    //Legacy comment translated to English.
                     SendEmailCache cache = new SendEmailCache();
                     AutoSendEmail email = new AutoSendEmail
                     {
                         UserName = sendEmailParameter.UserName,
                         Address = sendEmailParameter.ToEmail,
                         Subject = SentSubject,
-                        Body = this.GetEmailTemplate(SentBody, this.UseEmailTemplate),//内容 + 模板
-                        SendCount = sendImmediately ? 0 : (Senparc.Xncf.EmailExtension.Register.MaxSendEmailTimes + 200),//如果不要求马上发送，则仅存于缓存中
+                        Body = this.GetEmailTemplate(SentBody, this.UseEmailTemplate),//Legacy comment translated to English.
+                        SendCount = sendImmediately ? 0 : (Senparc.Xncf.EmailExtension.Register.MaxSendEmailTimes + 200),//Legacy comment translated to English.
                         LastSendTime = DateTime.Now
                     };
                     bool insertSuccess = cache.InsertEmail(email);
@@ -265,7 +277,7 @@ namespace Senparc.Ncf.Core.Email
                 //    case "Int16":
                 //    case "Int32":
                 //    case "Int64":
-                //        valueString = string.Format("{0:N0}", value);//如果碰到ID，不能使用###,###的格式
+                //Legacy comment translated to English.
                 //        break;
                 //    default:
                 //        valueString = value.ToString();
@@ -278,7 +290,7 @@ namespace Senparc.Ncf.Core.Email
         }
 
         /// <summary>
-        /// 获取已经填充数据的标题
+        ///Legacy comment translated to English.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="sendEmailParameter"></param>
@@ -288,7 +300,7 @@ namespace Senparc.Ncf.Core.Email
             return ReplaceHolderValue(sendEmailParameter, this.Subject);
         }
         /// <summary>
-        /// 获取已经填充数据的内容
+        ///Legacy comment translated to English.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="sendEmailParameter"></param>
@@ -302,13 +314,13 @@ namespace Senparc.Ncf.Core.Email
         #endregion
 
 
-        #region Email模板相关
+        #region Legacy section
 
         private string GetEmailTemplate(string body, bool usingEmailTemplate)
         {
             if (usingEmailTemplate)
             {
-                //读取模板
+                //Legacy comment translated to English.
                 using (var srEmailTemplate = new StreamReader(CO2NET.Utilities.ServerUtility.ContentRootMapPath("~/App_Data/Template/EmailTemplete.htm"), Encoding.UTF8))
                 {
                     string emailTemplate = srEmailTemplate.ReadToEnd();

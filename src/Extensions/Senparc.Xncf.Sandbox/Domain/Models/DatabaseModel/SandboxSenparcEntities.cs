@@ -12,5 +12,5 @@ public class SandboxSenparcEntities : XncfDatabaseDbContext
 
     public DbSet<SandboxSession> SandboxSessions { get; set; } = null!;
 
-    //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
+    //DOT REMOVE OR MODIFY THIS LINE - Entities Point
 }

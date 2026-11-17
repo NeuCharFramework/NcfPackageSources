@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：Program.cs
-    文件功能描述：Program 相关实现
+
+    File name: Program.cs
+
+    File description: Program related implementation
+
     
+
     
-    创建标识：Senparc - 20241028
+
+    Created by: Senparc - 20241028
+
     
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    Modified by: Senparc - 20260702
+
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
+
+
 
 ----------------------------------------------------------------*/
 
@@ -41,9 +53,9 @@ builder.Services.AddProblemDetails();
 builder.Services.AddDaprClient();
 builder.Services.AddControllers().AddDapr();
 
-//激活 Xncf 扩展引擎（必须）
+//Legacy comment translated to English.
 var logMsg = builder.StartWebEngine(new[] { "Senparc.Xncf.Accounts" });
-//如果不需要启用 Areas，可以只使用 services.StartEngine() 方法
+//Legacy comment translated to English.
 
 Console.WriteLine("============ logMsg =============");
 Console.WriteLine(logMsg);
@@ -56,16 +68,16 @@ if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
-//Use NCF（必须）
+//Use NCF（must）
 IOptions<SenparcCoreSetting> senparcCoreSetting = app.Services.GetService<IOptions<SenparcCoreSetting>>();
 
-//启动 CO2NET 全局注册，必须！
-//关于 UseSenparcGlobal() 的更多用法见 CO2NET Demo：https://github.com/Senparc/Senparc.CO2NET/blob/master/Sample/Senparc.CO2NET.Sample.netcore3/Startup.cs
+//start CO2NET global registration，must！
+//Legacy comment translated to English.
 var registerService = app.UseSenparcGlobal(app.Environment);
 
-//XncfModules（必须）
+//XncfModules（must）
 app.UseXncfModules(registerService, senparcCoreSetting.Value)
-//指定数据库（必须）
+//Legacy comment translated to English.
    .UseNcfDatabase<BySettingDatabaseConfiguration>();
 
 using (var scope = app.Services.CreateScope())

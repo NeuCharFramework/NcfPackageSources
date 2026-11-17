@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：FineTuningFunctionRequests.cs
-    文件功能描述：供 Function 与 Workflow 调用的微调请求
+    File name: FineTuningFunctionRequests.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20261106
+    Created by: Senparc - 20261106
 
-    修改标识：Senparc - 20261106
-    修改描述：自动载入微调 Worker、模型和数据集，并为训练参数提供默认值
+    Modified by: Senparc - 20261106
+    Change description: Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

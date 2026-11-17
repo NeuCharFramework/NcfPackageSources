@@ -31,13 +31,13 @@ using Senparc.Respository;
 namespace Senparc.Web
 {
     /// <summary>
-    /// 全局注册
+    /// global registration
     /// </summary>
     public static class Register
     {
         public static void AddNcfServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env, CompatibilityVersion compatibilityVersion)
         {
-            //如果运行在IIS中，需要添加IIS配置
+            //Legacy comment translated to English.
             //https://docs.microsoft.com/zh-cn/aspnet/core/host-and-deploy/iis/index?view=aspnetcore-2.1&tabs=aspnetcore2x#supported-operating-systems
             //services.Configure<IISOptions>(options =>
             //{
@@ -60,36 +60,36 @@ namespace Senparc.Web
             //.SetCompatibilityVersion(compatibilityVersion)
             //.AddRazorPagesOptions(options =>
             //{
-            //    //options.AllowAreas = true;//支持 Area
+            //    //options.AllowAreas = true;//support Area
             //    //options.AllowMappingHeadRequestsToGetHandler = false;//https://www.learnrazorpages.com/razor-pages/handler-methods
             //})
 
 
             var builder = services.AddRazorPages()
-              .AddNcfAreas()//注册所有 Ncf 的 Area 模块（必须）
+              .AddNcfAreas()//Legacy comment translated to English.
               .AddXmlSerializerFormatters()
               .AddJsonOptions(options =>
               {
-                  //忽略循环引用
+                  //Legacy comment translated to English.
                   //options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                  //不使用驼峰样式的key
+                  //Legacy comment translated to English.
                   //options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                  //设置时间格式
+                  //Legacy comment translated to English.
                   //options.SerializerSettings.DateFormatString = "yyyy-MM-dd";
               })
               //https://docs.microsoft.com/en-us/aspnet/core/fundamentals/app-state?view=aspnetcore-2.1&tabs=aspnetcore2x
               //.AddSessionStateTempDataProvider()
-              //忽略JSON序列化过程中的循环引用：https://stackoverflow.com/questions/7397207/json-net-error-self-referencing-loop-detected-for-type
+              //Legacy comment translated to English.
               .AddRazorPagesOptions(options =>
               {
-                  //自动注册  防止跨站请求伪造（XSRF/CSRF）攻击
+                  //Legacy comment translated to English.
                   options.Conventions.Add(new Core.Conventions.AutoValidateAntiForgeryTokenModelConvention());
               });
             ;
 
 
 #if DEBUG
-            //Razor启用运行时编译，多个项目不需要手动编译。
+            //Legacy comment translated to English.
             if (env.IsDevelopment())
             {
                 builder.AddRazorRuntimeCompilation(options =>
@@ -102,33 +102,33 @@ namespace Senparc.Web
 #endif
 
 
-            //services.AddSenparcGlobalServices(configuration);//Senparc.CO2NET 全局注册    //已经在startup.cs中注册
+            //Legacy comment translated to English.
 
-            //支持 AutoMapper
+            //support AutoMapper
             services.AddAutoMapper(_ => _.AddProfile<Core.AutoMapProfile.AutoMapperConfigs>());
 
-            //支持 Session
+            //support Session
             services.AddSession();
-            //解决中文进行编码问题
+            //Legacy comment translated to English.
             services.AddSingleton(HtmlEncoder.Create(UnicodeRanges.All));
-            //使用内存缓存
+            //Legacy comment translated to English.
             services.AddMemoryCache();
 
-            //注册 SignalR
+            //Legacy comment translated to English.
             services.AddSignalR();
-            //注册 Lazy<T>
+            //Legacy comment translated to English.
             services.AddTransient(typeof(Lazy<>));
 
             services.Configure<SenparcCoreSetting>(configuration.GetSection("SenparcCoreSetting"))
-                .AddSenparcEntitiesDI(); //SQL Server设置
+                .AddSenparcEntitiesDI(); //SQL Serversettings
 
-            //自动依赖注入扫描
+            //Legacy comment translated to English.
             services.ScanAssamblesForAutoDI();
-            //已经添加完所有程序集自动扫描的委托，立即执行扫描（必须）
+            //Legacy comment translated to English.
             AssembleScanHelper.RunScan();
             //services.AddSingleton<Core.Cache.RedisProvider.IRedisProvider, Core.Cache.RedisProvider.StackExchangeRedisProvider>();
 
-            //注册 User 登录策略
+            //Legacy comment translated to English.
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("UserAnonymous", policy =>

@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：SandboxImageResolver.cs
-    文件功能描述：将模板默认镜像解析为最终 docker image 引用
+    File name: SandboxImageResolver.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260808
+    Created by: Senparc - 20260808
 
 ----------------------------------------------------------------*/
 
@@ -30,7 +30,7 @@ public sealed class SandboxImageResolver : ISandboxImageResolver
         _options = options?.Value ?? new SandboxImageOptions();
     }
 
-    /// <summary>供单元测试直接构造。</summary>
+    ///Legacy comment translated to English.
     public SandboxImageResolver(SandboxImageOptions options)
     {
         _options = options ?? new SandboxImageOptions();
@@ -71,7 +71,7 @@ public sealed class SandboxImageResolver : ISandboxImageResolver
         }
 
         // python:3.12-alpine -> {prefix}/python:3.12-alpine
-        // mcr.microsoft.com/dotnet/sdk:10.0 -> {prefix}/sdk:10.0（更推荐用 Overrides 写全名）
+        //Legacy comment translated to English.
         var leaf = image.Contains('/')
             ? image[(image.LastIndexOf('/') + 1)..]
             : image;

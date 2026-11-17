@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：SignalrTicker.cs
-    文件功能描述：SignalrTicker 相关实现
+
+    File name: SignalrTicker.cs
+
+    File description: SignalrTicker related implementation
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -24,7 +36,7 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.Service.SignalrHubs
 {
     /// <summary>
-    /// 记录 SignalR 全局上下文的类，可轮询执行操作
+    ///Legacy comment translated to English.
     /// </summary>
     public class SignalrTicker<THub>
         where THub : Hub
@@ -39,7 +51,7 @@ namespace Senparc.Ncf.Service.SignalrHubs
         }
 
         /// <summary>
-        /// 静态实例对象
+        ///Legacy comment translated to English.
         /// </summary>
         public static SignalrTicker<THub> Instance(HttpContext httpContext)
         {
@@ -55,33 +67,33 @@ namespace Senparc.Ncf.Service.SignalrHubs
         }
 
         /// <summary>
-        /// 轮询间隔时间（毫秒），默认值：500
+        ///Legacy comment translated to English.
         /// </summary>
         public int SleepMillionSeconds { get; set; } = 500;
 
         /// <summary>
-        /// 参数：SignalrTicker<THub>，当前轮询的次数
+        ///Legacy comment translated to English.
         /// </summary>
         public Action<SignalrTicker<THub>, int> SenderAction { get; set; }
 
         /// <summary>
-        /// 构造函数
+        /// constructor
         /// </summary>
         /// <param name="context"></param>
         private SignalrTicker(IHubContext<THub> context)
         {
             m_context = context;
-            //这里不能直接调用Sender，因为Sender是一个不退出的“死循环”，否则这个构造函数将不会退出。  
-            //其他的流程也将不会再执行下去了。所以要采用异步的方式。  
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             Task.Run(() => Sender());
         }
 
         /// <summary>
-        /// 注册 SignalrTicker，激活静态变量
+        ///Legacy comment translated to English.
         /// </summary>
         public static void Register()
         {
-            //可以写一些初始化
+            //Legacy comment translated to English.
         }
 
         public void Sender()

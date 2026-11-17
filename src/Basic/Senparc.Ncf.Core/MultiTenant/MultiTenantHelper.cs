@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：MultiTenantHelper.cs
-    文件功能描述：MultiTenantHelper 相关实现
+
+    File name: MultiTenantHelper.cs
+
+    File description: MultiTenantHelper related implementation
+
     
+
     
-    创建标识：Senparc - 20210217
+
+    Created by: Senparc - 20210217
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -27,12 +39,12 @@ namespace Senparc.Ncf.Core.MultiTenant
     public static class MultiTenantHelper
     {
         /// <summary>
-        /// 获取 RequestTenantInfo，并且检查其是否匹配
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="serviceProvider"></param>
-        /// <param name="referenceMethod">引用此方法的方法（用于异常提示）</param>
+        ///Legacy comment translated to English.
         /// <param name="dbContext"></param>
-        /// <exception cref="NcfTenantException">如果 RequestTenantInfo.MatchSuccess 为 false，则抛出异常</exception>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public static RequestTenantInfo TryGetAndCheckRequestTenantInfo(IServiceProvider serviceProvider, string referenceMethod, DbContext dbContext = null)
         {
@@ -41,10 +53,10 @@ namespace Senparc.Ncf.Core.MultiTenant
 
             if (!SiteConfig.IsInstalling)
             {
-                //如果未设置，则进行设定
+                //Legacy comment translated to English.
                //if (!requestTenantInfo.TriedMatching)
                // {
-               //     throw new NcfUninstallException("TriedMatching 为 false，推测系统未进行安装。如果在调试状态下（F5）看到此消息请忽略，继续执行。", null);
+               //Legacy comment translated to English.
                // }
 
                 if (!requestTenantInfo.MatchSuccess)

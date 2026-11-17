@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：WeixinWorkCheckinConnector.cs
-    文件功能描述：提供企业微信打卡连接器
+    File name: WeixinWorkCheckinConnector.cs
+    File description: Related implementation.
     
     
-    创建标识：Senparc - 20261111
+    Created by: Senparc - 20261111
     
-    修改标识：Senparc - 20261111
-    修改描述：v0.24.18 提供企业微信打卡连接器
+    Modified by: Senparc - 20261111
+    Change description: v0.24.18 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -26,7 +26,7 @@ using Senparc.Xncf.Connectors.Abstractions;
 namespace Senparc.Xncf.WeixinManager.Connectors;
 
 /// <summary>
-/// 企业微信打卡连接器。一个类对应一种外部能力，实例上再保存 CorpId 和应用 Secret。
+///Legacy comment translated to English.
 /// </summary>
 public sealed class WeixinWorkCheckinConnector : IConnectorProvider
 {

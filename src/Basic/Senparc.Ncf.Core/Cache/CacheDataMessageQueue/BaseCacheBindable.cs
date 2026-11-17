@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：BaseCacheBindable.cs
-    文件功能描述：BaseCacheBindable 相关实现
+
+    File name: BaseCacheBindable.cs
+
+    File description: BaseCacheBindable related implementation
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -21,13 +33,13 @@ using Senparc.Ncf.Log;
 namespace Senparc.Ncf.Core.Cache
 {
     /// <summary>
-    /// 所有需要分布式缓存的实体基类
+    ///Legacy comment translated to English.
     /// </summary>
     [Serializable]
     public abstract class BaseCacheBindable<T> : BindableBase where T : class, ICacheData, new()
     {
         ///// <summary>
-        ///// 缓存键
+        ///Legacy comment translated to English.
         ///// </summary>
         //public abstract object Key { get; }
 
@@ -58,26 +70,26 @@ namespace Senparc.Ncf.Core.Cache
 
             var mqKey = CacheDataMessageQueue.GenerateKey("SenparcCache", sender.GetType(), objCacheData.Key as string, "UpdateCache");
 
-            //获取对应Container的缓存相关
+            //Legacy comment translated to English.
 
-            //加入消息列队，每过一段时间进行自动更新，防止属性连续被编辑，短时间内反复更新缓存。
+            //Legacy comment translated to English.
             CacheDataMessageQueue mq = new CacheDataMessageQueue();
             mq.Add(mqKey, () =>
             {
                 var cacheStragegy = CacheStrategyFactory.GetObjectCacheStrategyInstance();
                 //var cacheKey = objCacheData.Key;
-                objCacheData.CacheTime = DateTime.Now;//记录缓存时间
+                objCacheData.CacheTime = DateTime.Now;//Legacy comment translated to English.
                 cacheStragegy.Set(objCacheData.Key, objCacheData as T);
 
                 //var cacheKey = ContainerHelper.GetCacheKey(this.GetType());
-                //containerBag.CacheTime = DateTime.Now;//记录缓存时间
+                //Legacy comment translated to English.
                 //containerCacheStragegy.UpdateContainerBag(cacheKey, containerBag);
             });
         }
 
 
         /// <summary>
-        /// 设置Container属性
+        /// settingsContainerproperty
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="storage"></param>

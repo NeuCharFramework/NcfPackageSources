@@ -1,20 +1,20 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：FunctionRenderAiSchemaBuilder.cs
-    文件功能描述：FunctionRender AI schema 元数据扩展
+    File name: FunctionRenderAiSchemaBuilder.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20260918
+    Created by: Senparc - 20260918
 
-    修改标识：Senparc - 20260917
-    修改描述：v0.28.0 增强 FunctionRender AI schema 的选择元数据支持
+    Modified by: Senparc - 20260917
+    Change description: v0.28.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261101
-    修改描述：增加 Function 文件引用及批量文件参数的 AI schema 元数据
+    Modified by: Senparc - 20261101
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.28.1 add bulk file upload functionality to Sandbox Lab
+    Modified by: Senparc - 20261103
+    Change description: v0.28.1 add bulk file upload functionality to Sandbox Lab
 
 ----------------------------------------------------------------*/
 

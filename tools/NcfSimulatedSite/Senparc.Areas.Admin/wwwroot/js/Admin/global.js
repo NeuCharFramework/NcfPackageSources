@@ -1,31 +1,31 @@
-﻿// 退出
+﻿//Legacy comment translated to English.
 Vue.prototype.loginout = function () {
     window.location.href = '/Admin/Login?handler=Logout&ReturnUrl=' + escape(window.location.pathname + window.location.search);
 };
 
-// 格式化添加时间等 2020 - 06 - 19T09: 41: 51.1905692
+//Legacy comment translated to English.
 function formaTableTime(value) {
     return value ? value.replace('T', '  ').substr(0, 17) : ncfT('Admin.Common.NoTime');
 }
 
 /**
- * 复制内容
- * @param {any} value 值 
- * @param {any} toastText 提示内容
+ * Legacy comment translated to English.
+ * English documentation comment. 
+ * English documentation comment.
  */
 function copyToClipboard(value, toastText) {
     $('#clipboardContainer').val(value);
     $('#clipboardContainer').select();
     toastText = toastText || ncfT('Admin.Common.CopySuccess');
     try {
-        document.execCommand("copy"); // 执行浏览器复制命令
+        document.execCommand("copy"); //Legacy comment translated to English.
         base.swal.toast(toastText);
     } finally {
         //Execute Finally
     }
 }
 
-// 处理剪切url id
+//Legacy comment translated to English.
 function resizeUrl() {
     let url = window.location.href;
     let obj = {};
@@ -43,9 +43,13 @@ function resizeUrl() {
 }
 
 /**
- * 将数值四舍五入(保留2位小数)后格式化成金额形式
- * @param {any} num 数值(Number或者String)
- * @returns {any} 金额格式的字符串,如'1,234,567.45'
+
+ * Legacy comment translated to English.
+
+ * English documentation comment.
+
+ * English documentation comment.
+
  */
 function formatCurrency(num) {
     num = num.toString().replace(/\$|\,/g, '');
@@ -225,7 +229,7 @@ function formatCurrency(num) {
             return;
         }
 
-        // 标签页里的页面各自有一套脚本。会话提醒只留给外壳，避免每个 iframe 都弹出一次。
+        //Legacy comment translated to English.
         if (window.top !== window || document.body.classList.contains('ncf-admin-embedded')) {
             return;
         }

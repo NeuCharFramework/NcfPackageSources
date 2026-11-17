@@ -1,14 +1,26 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：AIModel_Request.cs
-    文件功能描述：AIModel_Request 相关实现
+
+    File name: AIModel_Request.cs
+
+    File description: AIModel_Request related implementation
+
     
+
     
-    创建标识：Senparc - 20240103
+
+    Created by: Senparc - 20240103
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -27,12 +39,12 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
     public class PagedResponse<T>
     {
         /// <summary>
-        /// 总数
+        ///Legacy comment translated to English.
         /// </summary>
         public int Total { get; set; }
 
         /// <summary>
-        /// 数据
+        /// data
         /// </summary>
         public IEnumerable<T> Data { get; set; }
 
@@ -46,17 +58,17 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
     public class PagedRequest
     {
         /// <summary>
-        /// 页码
+        ///Legacy comment translated to English.
         /// </summary>
         public int Page { get; set; }
 
         /// <summary>
-        /// 每页大小
+        ///Legacy comment translated to English.
         /// </summary>
         public int Size { get; set; }
 
         /// <summary>
-        /// 排序
+        ///Legacy comment translated to English.
         /// </summary>
         public string Order { get; set; } = "Id desc";
     }
@@ -64,32 +76,32 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
     public class AIModel_GetListRequest : PagedRequest
     {
         /// <summary>
-        /// 代号
+        /// code
         /// </summary>
         public string Alias { get; set; }
 
         /// <summary>
-        /// 部署名称
+        /// deployment name
         /// </summary>
         public string DeploymentName { get; set; }
 
         /// <summary>
-        /// 端点
+        ///Legacy comment translated to English.
         /// </summary>
         public string Endpoint { get; set; }
 
         /// <summary>
-        /// AI平台
+        ///Legacy comment translated to English.
         /// </summary>
         public AiPlatform AiPlatform { get; set; }
 
         /// <summary>
-        /// 组织ID
+        ///Legacy comment translated to English.
         /// </summary>
         public string OrganizationId { get; set; }
 
         /// <summary>
-        /// 是否显示
+        /// whetherdisplay
         /// </summary>
         public bool? Show { get; set; }
     }
@@ -97,72 +109,72 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
     public class AIModel_CreateOrEditRequest
     {
         /// <summary>
-        /// 主键 ID
+        /// primary key ID
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
-        /// 代号
+        /// code
         /// </summary>
         public string Alias { get; set; }
 
         /// <summary>
-        /// 模型名称
+        /// model name
         /// </summary>
         public string ModelId { get; set; }
 
         /// <summary>
-        /// 部署名称
+        /// deployment name
         /// </summary>
         public string DeploymentName { get; set; }
 
         /// <summary>
-        /// 端点
+        ///Legacy comment translated to English.
         /// </summary>
         public string Endpoint { get; set; } = "";
 
         /// <summary>
-        /// AI平台
+        ///Legacy comment translated to English.
         /// </summary>
         public AiPlatform AiPlatform { get; set; }
 
         /// <summary>
-        /// 模型类型
+        /// modeltype
         /// </summary>
         public ConfigModelType ConfigModelType { get; set; }
 
         /// <summary>
-        /// 组织ID
+        ///Legacy comment translated to English.
         /// </summary>
         public string OrganizationId { get; set; } = "";
 
         /// <summary>
-        /// API密钥
+        ///Legacy comment translated to English.
         /// </summary>
         public string ApiKey { get; set; }
 
         /// <summary>
-        /// API版本
+        /// APIversion
         /// </summary>
         public string ApiVersion { get; set; }
 
         /// <summary>
-        /// 备注
+        ///Legacy comment translated to English.
         /// </summary>
         public string Note { get; set; }
 
         /// <summary>
-        /// 最大令牌
+        ///Legacy comment translated to English.
         /// </summary>
         public int MaxToken { get; set; }
 
         /// <summary>
-        /// 是否显示
+        /// whetherdisplay
         /// </summary>
         public bool Show { get; set; }
 
         /// <summary>
-        /// 是否共享
+        /// whether shared
         /// </summary>
         public bool IsShared { get; set; }
     }
@@ -170,22 +182,22 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
     public class AIModel_EditRequest
     {
         /// <summary>
-        /// 主键 ID
+        /// primary key ID
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
-        /// 代号
+        /// code
         /// </summary>
         public string Alias { get; set; }
 
         /// <summary>
-        /// 是否显示
+        /// whetherdisplay
         /// </summary>
         public bool Show { get; set; }
 
         /// <summary>
-        /// 是否共享
+        /// whether shared
         /// </summary>
         public bool IsShared { get; set; }
     }

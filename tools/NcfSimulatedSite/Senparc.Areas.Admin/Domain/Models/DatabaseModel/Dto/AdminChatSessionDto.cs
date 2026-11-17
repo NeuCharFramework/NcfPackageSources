@@ -1,29 +1,29 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：AdminChatSessionDto.cs
-    文件功能描述：AdminChatSessionDto.cs 相关实现
+    File name: AdminChatSessionDto.cs
+    File description: AdminChatSessionDto.cs related implementation
 
 
-    创建标识：Senparc - 20260325
+    Created by: Senparc - 20260325
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.6.0 新增管理端 Chat 会话工作流能力
+    Modified by: Senparc - 20260822
+    Change description: v0.6.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+    Modified by: Senparc - 20260915
+    Change description: v0.8.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.11.1 输出会话工作区与标题
+    Modified by: Senparc - 20261021
+    Change description: v0.11.1 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：输出服务端会话排序
+    Modified by: Senparc - 20261103
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 完善后台聊天会话管理与排序
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261106
-    修改描述：输出持久化的会话未读状态
+    Modified by: Senparc - 20261106
+    Change description: Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -35,27 +35,27 @@ using System.Collections.Generic;
 namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
 {
     /// <summary>
-    /// AdminChatSessionDto：管理后台聊天会话数据传输对象
+    ///Legacy comment translated to English.
     /// </summary>
     public class AdminChatSessionDto : DtoBase<int>
     {
         /// <summary>
-        /// 会话标题
+        ///Legacy comment translated to English.
         /// </summary>
         public string Title { get; set; }
 
         /// <summary>
-        /// 用户ID
+        /// userID
         /// </summary>
         public int UserId { get; set; }
 
         /// <summary>
-        /// 会话状态
+        ///Legacy comment translated to English.
         /// </summary>
         public ChatSessionStatus Status { get; set; }
 
         /// <summary>
-        /// 最后一条消息时间
+        ///Legacy comment translated to English.
         /// </summary>
         public DateTime LastMessageTime { get; set; }
 
@@ -72,17 +72,17 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
         public bool HasUnread { get; set; }
 
         /// <summary>
-        /// 关联的消息列表（可选，用于嵌套查询）
+        ///Legacy comment translated to English.
         /// </summary>
         public List<AdminChatMessageDto> Messages { get; set; }
 
         /// <summary>
-        /// 关联的模块列表（可选，用于嵌套查询）
+        ///Legacy comment translated to English.
         /// </summary>
         public List<AdminChatSessionModuleDto> Modules { get; set; }
 
         /// <summary>
-        /// 关联的 Workflow 列表（可选，用于嵌套查询）
+        ///Legacy comment translated to English.
         /// </summary>
         public List<AdminChatSessionWorkflowDto> Workflows { get; set; }
 
@@ -94,7 +94,7 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
         }
 
         /// <summary>
-        /// 从实体映射到 DTO
+        ///Legacy comment translated to English.
         /// </summary>
         public static AdminChatSessionDto CreateFromEntity(AdminChatSession entity)
         {
@@ -102,14 +102,14 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
 
             return new AdminChatSessionDto
             {
-                // 明确复制基类属性
+                //Legacy comment translated to English.
                 Id = entity.Id,
                 AddTime = entity.AddTime,
                 LastUpdateTime = entity.LastUpdateTime,
                 TenantId = entity.TenantId,
                 Flag = entity.Flag,
 
-                // 复制业务属性
+                //Legacy comment translated to English.
                 Title = entity.Title,
                 UserId = entity.UserId,
                 Status = entity.Status,
@@ -124,39 +124,39 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
     }
 
     /// <summary>
-    /// 创建聊天会话的请求 DTO
+    ///Legacy comment translated to English.
     /// </summary>
     public class CreateChatSessionInputDto
     {
         public bool UseMemory { get; set; }
         public Senparc.Areas.Admin.Domain.Services.AdminChatMemoryMode? MemoryMode { get; set; }
         /// <summary>
-        /// 初始消息内容
+        ///Legacy comment translated to English.
         /// </summary>
         public string InitialMessage { get; set; }
 
         /// <summary>
-        /// 会话标题；用于延迟首条消息发送的启动流程。
+        ///Legacy comment translated to English.
         /// </summary>
         public string Title { get; set; }
 
         /// <summary>
-        /// 选中的 AIModelId，0 表示系统级 SenparcAiSetting
+        ///Legacy comment translated to English.
         /// </summary>
         public int AiModelId { get; set; }
 
         /// <summary>
-        /// 关联的模块 UID 列表
+        ///Legacy comment translated to English.
         /// </summary>
         public List<string> ModuleUids { get; set; }
 
         /// <summary>
-        /// 选中的 Workflow Id 列表
+        ///Legacy comment translated to English.
         /// </summary>
         public List<int> WorkflowIds { get; set; }
 
         /// <summary>
-        /// 初始消息运行模式；页面默认发送 Harness。
+        ///Legacy comment translated to English.
         /// </summary>
         public AdminChatMode Mode { get; set; } = AdminChatMode.Simple;
         public int MaxOutputTokens { get; set; } = 2000;

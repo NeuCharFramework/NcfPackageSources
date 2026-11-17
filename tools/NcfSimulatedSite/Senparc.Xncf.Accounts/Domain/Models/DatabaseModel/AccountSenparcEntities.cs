@@ -13,27 +13,27 @@ namespace Senparc.Xncf.Accounts.Models
 
 
         /// <summary>
-        /// 用户信息
+        /// userinformation
         /// </summary>
         public virtual DbSet<Account> Accounts { get; set; }
 
         /// <summary>
-        /// 用户支付日志
+        ///Legacy comment translated to English.
         /// </summary>
 
         public virtual DbSet<AccountPayLog> AccountPayLogs { get; set; }
 
         /// <summary>
-        /// 用户积分日志
+        ///Legacy comment translated to English.
         /// </summary>
         public virtual DbSet<PointsLog> PointsLogs { get; set; }
 
-        //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
+        //DOT REMOVE OR MODIFY THIS LINE - Entities Point
         //ex. public DbSet<Color> Colors { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //使用 [XncfAutoConfigurationMapping] 可自动执行
+            //Legacy comment translated to English.
             //modelBuilder.ApplyConfiguration(new AccountConfigurationMapping());
             //modelBuilder.ApplyConfiguration(new AccountPayLogConfigurationMapping());
             //modelBuilder.ApplyConfiguration(new PointsLogConfigurationMapping());
@@ -41,7 +41,7 @@ namespace Senparc.Xncf.Accounts.Models
     }
 
     /// <summary>
-    /// 设计时 DbContext 创建（仅在开发时创建 Code-First 的数据库 Migration 使用，在生产环境不会执行）
+    /// design-time DbContext creation (used only to create Code-First database migrations during development; not executed in production)
     /// </summary>
     public class SenparcDbContextFactoryHeler
     {

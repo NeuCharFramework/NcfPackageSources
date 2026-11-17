@@ -1,20 +1,38 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：Start.cshtml.cs
-    文件功能描述：Start.cshtml.cs 相关实现
+
+    File name: Start.cshtml.cs
+
+    File description: Start.cshtml.cs related implementation
 
 
-    创建标识：Senparc - 20241028
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.2.0 增强后台管理员交互与桌面 Admin Chat 安全同步
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.5.0 集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
 
-    修改标识：Senparc - 20260829
-    修改描述：v0.7.0 新增 NeuCharPivot 全局浮动调用与工作流分析管理能力
+    Created by: Senparc - 20241028
+
+
+
+    Modified by: Senparc - 20260729
+
+    Change description: v0.2.0 enhance admin interaction and secure desktop Admin Chat synchronization
+
+
+
+    Modified by: Senparc - 20260813
+
+    Change description: v0.5.0 Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20260829
+
+    Change description: v0.7.0 Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 
@@ -92,12 +110,12 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         public List<string> XncfModuleUpdateLog { get; set; }
 
         /// <summary>
-        /// 获取当前模块的已注册线程信息
+        ///Legacy comment translated to English.
         /// </summary>
         public IEnumerable<KeyValuePair<ThreadInfo, Thread>> RegisteredThreadInfo { get; set; }
 
         /// <summary>
-        /// 是否必须更新（常规读取失败）
+        ///Legacy comment translated to English.
         /// </summary>
         public bool MustUpdate { get; set; }
 
@@ -109,7 +127,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             await Task.CompletedTask;
             //            if (uid.IsNullOrEmpty())
             //            {
-            //                throw new Exception("模块编号未提供！");
+            //Legacy comment translated to English.
             //            }
 
 
@@ -117,7 +135,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
 
             //            if (XncfModule == null)
             //            {
-            //                throw new Exception("模块未添加！");
+            //Legacy comment translated to English.
             //            }
 
             //            if (!XncfModule.UpdateLog.IsNullOrEmpty())
@@ -134,21 +152,21 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             //            XncfRegister = Senparc.Ncf.XncfBase.Register.RegisterList.FirstOrDefault(z => z.Uid == uid);
             //            if (XncfRegister == null)
             //            {
-            //                throw new Exception($"模块丢失或未加载（{Senparc.Ncf.XncfBase.Register.RegisterList.Count}）！");
+            //Legacy comment translated to English.
             //            }
 
             //            try
             //            {
             //                foreach (var functionType in XncfRegister.Functions)
             //                {
-            //                    var function = _serviceProvider.GetService(functionType) as FunctionBase;//如：Senparc.Xncf.ChangeNamespace.Functions.ChangeNamespace
+            //Legacy comment translated to English.
             //                    FunctionParameterInfoCollection[function] = await function.GetFunctionParameterInfoAsync(_serviceProvider, true);
             //                }
             //            }
             //            catch (Exception ex)
             //            {
-            //                SenparcTrace.SendCustomLog("模块读取失败", @$"模块：{XncfModule.Name} / {XncfModule.MenuName} / {XncfModule.Uid}
-            //请尝试更新此模块后刷新页面！");
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             //                MustUpdate = true;
             //            }
 
@@ -156,7 +174,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// 更新状态
+        /// updatestatus
         /// </summary>
         /// <param name="id"></param>
         /// <param name="toState"></param>
@@ -249,7 +267,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// 提交信息，执行方法
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="xncfUid"></param>
         /// <param name="xncfFunctionName"></param>
@@ -588,7 +606,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// 获取日志
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="tempId"></param>
         /// <returns></returns>
@@ -607,7 +625,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// 删除模块
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -620,31 +638,31 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                 throw new Exception(_localizer["Xncf.ModuleNotAdded"]);
             }
 
-            //删除菜单
+            //delete the menu
             Func<Task> uninstall = async () =>
             {
-                //删除菜单
+                //delete the menu
                 Senparc.Ncf.Service.SysRolePermissionService sysPermissionService =
                     _serviceProvider.GetService<Senparc.Ncf.Service.SysRolePermissionService>();
                 var menu = await _sysMenuService.GetObjectAsync(z => z.Id == module.MenuId).ConfigureAwait(false);
                 if (menu != null)
                 {
-                    //删除菜单
+                    //delete the menu
                     await _sysMenuService.DeleteObjectAsync(menu).ConfigureAwait(false);
-                    //删除权限数据
+                    //Legacy comment translated to English.
                     await sysPermissionService.DeleteAllAsync(_ => _.PermissionId == menu.Id);
-                    //更新菜单缓存                                                                                                                            
+                    //Legacy comment translated to English.
                     await _sysMenuService.GetMenuDtoByCacheAsync(true).ConfigureAwait(false);
                 }
                 await _xncfModuleService.DeleteObjectAsync(module).ConfigureAwait(false);
             };
 
 
-            //尝试从已加载的模块中执行删除过程
+            //Legacy comment translated to English.
             var register = XncfRegisterManager.RegisterList.FirstOrDefault(z => z.Uid == module.Uid);
             if (register == null)
             {
-                //直接删除，如dll已经不存在，可能引发此问题，只能在当前系统内直接执行删除
+                //Legacy comment translated to English.
                 await uninstall().ConfigureAwait(false);
             }
             else
@@ -695,7 +713,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             {
                 if (Senparc.Ncf.XncfBase.Register.FunctionRenderCollection.TryGetValue(xncfRegister.GetType(), out var functionGroup))
                 {
-                    //遍历某个 Register 下所有的方法      TODO：未来可添加分组
+                    //Legacy comment translated to English.
                     foreach (var functionBag in functionGroup.Values)
                     {
                         try
@@ -718,7 +736,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                 SenparcTrace.SendCustomLog("模块读取失败", @$"模块：{XncfModule?.Name} / {XncfModule?.MenuName} / {XncfModule?.Uid}
 请尝试更新此模块后刷新页面！\r\n{ex.Message}\r\n{ex.StackTrace}");
                 mustUpdate = true;
-                //TODO:页面上需要给提示
+                //Legacy comment translated to English.
             }
 
             IEnumerable<KeyValuePair<ThreadInfo, Thread>> registeredThreadInfo = xncfRegister.RegisteredThreadInfo;

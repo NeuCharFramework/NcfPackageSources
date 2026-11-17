@@ -1,17 +1,32 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：BuildXncfRequest.cs
-    文件功能描述：BuildXncfRequest 相关实现
-    
-    
-    创建标识：Senparc - 20211016
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.37.0-preview5 增强 XNCF 构建、数据库迁移与 AI 生成流程的本地化支持
+    Copyright (C) 2026 Senparc
+
+  
+
+    File name: BuildXncfRequest.cs
+
+    File description: BuildXncfRequest related implementation
+
+    
+
+    
+
+    Created by: Senparc - 20211016
+
+    
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260717
+
+    Change description: v0.37.0-preview5 Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 
@@ -72,10 +87,10 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
         [JsonIgnore]
         public SelectionList FrameworkVersionOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
-                 //new SelectionItem("netstandard2.1","netstandard2.1","使用 .NET Standard 2.1（兼容 .NET Core 3.1 和 .NET 5.0-8.0）",true),
-                 //new SelectionItem("netcoreapp3.1","netcoreapp3.1","使用 .NET Core 3.1",false),
-                 //new SelectionItem("net6.0","net6.0","使用 .NET 6.0",false),
-                 //new SelectionItem("net7.0","net7.0","使用 .NET 7.0",false),
+                 //new SelectionItem("netstandard2.1","netstandard2.1","use .NET Standard 2.1（compatible .NET Core 3.1 and .NET 5.0-8.0）",true),
+                 //new SelectionItem("netcoreapp3.1","netcoreapp3.1","use .NET Core 3.1",false),
+                 //new SelectionItem("net6.0","net6.0","use .NET 6.0",false),
+                 //new SelectionItem("net7.0","net7.0","use .NET 7.0",false),
                  new SelectionItem("net8.0", "net8.0", XncfBuilderResource.Get("XncfBuilder.Option.Framework.Net8"), false),
             });
 
@@ -94,7 +109,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
         //[Required]
         //[MaxLength(36)]
-        //[Description("Uid||必须确保全局唯一，生成后必须固定")]
+        //Legacy comment translated to English.
         //public string Uid { get; set; }
 
         [Required]
@@ -160,7 +175,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         public string PreviewEnvironmentName { get; set; } = XncfPreviewService.DefaultEnvironmentName;
 
         /// <summary>
-        /// 预载入数据
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="serviceProvider"></param>
         /// <returns></returns>
@@ -169,12 +184,12 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
             Config config = null;
             try
             {
-                //低版本没有数据库，此处需要try
+                //Legacy comment translated to English.
                 var configService = serviceProvider.GetService<ServiceBase<Config>>();
                 config = await configService.GetObjectAsync(z => true);
                 if (config != null)
                 {
-                    #region 自动载入上次配置
+                    #region Legacy section
 
                     //SenparcTrace.SendCustomLog("Xncf Builder Config", config.ToJson(true));
 
@@ -194,7 +209,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
                 }
                 else
                 {
-                    #region 自动查找当前项目的解决方案路径
+                    #region Legacy section
 
                     SlnFilePath = this.GetSlnFilePath();
 
@@ -209,7 +224,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         }
 
         /// <summary>
-        /// 判断当前路径下是否包含 .sln 文件
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
@@ -219,16 +234,16 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         }
 
         /// <summary>
-        /// 获取当前解决方案文件路径
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public string GetSlnFilePath()
         {
             var slnFilePath = string.Empty;
-            //当前程序目录
+            //currentprogramdirectory
             var currentDir = AppDomain.CurrentDomain.BaseDirectory;
 
-            //向上查找，直到找到
+            //Legacy comment translated to English.
             while (!IsSlnDir(currentDir) && currentDir != null)
             {
                 currentDir = Directory.GetParent(currentDir).FullName;

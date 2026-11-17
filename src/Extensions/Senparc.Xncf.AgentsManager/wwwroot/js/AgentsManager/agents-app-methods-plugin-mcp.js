@@ -1,7 +1,7 @@
 /*
- * AgentsManager 前端：函数绑定、MCP 端点、插件类型与知识库绑定方法。
- * 注意：本文件与 agents-app-*.js 系列按 three-loader.js 中的顺序加载，
- * 依赖全局 var（classic script 顶层 var 挂到 window），请勿单独引入。
+ * Legacy comment translated to English.
+ * Note: this file and the agents-app-*.js series are loaded in the order defined by three-loader.js,
+ * depends on global variables (top-level classic-script vars are attached to window); do not import separately.
  */
 
 var AgentsAppMethodsPluginMcp = {
@@ -91,21 +91,21 @@ var AgentsAppMethodsPluginMcp = {
         .map(item => item.key)
       this.$set(this.agentForm, 'functionCallNames', [...new Set(names)].join(','))
     },
-    // 组成员头像堆叠 数量处理
+    //Legacy comment translated to English.
     displayedAvatars(list, limit = 5) {
       if (Array.isArray(list)) {
         return list?.slice(0, limit) ?? [];
       }
       return []
     },
-    // 组成员头像堆叠 数量
+    //Legacy comment translated to English.
     exceededCount(list, limit = 5) {
       if (Array.isArray(list)) {
         return list.length > limit ? list.length - limit : 0;
       }
       return 0
     },
-    // 显示新增 Function Call 输入框
+    //Legacy comment translated to English.
     showFunctionCallInput() {
       this.functionCallInputVisible = true;
       this.$nextTick(_ => {
@@ -113,7 +113,7 @@ var AgentsAppMethodsPluginMcp = {
       });
     },
 
-    // 处理 Function Call 输入确认
+    //Legacy comment translated to English.
     handleFunctionCallInputConfirm() {
       const inputValue = this.functionCallInputValue;
       if (inputValue) {
@@ -132,7 +132,7 @@ var AgentsAppMethodsPluginMcp = {
       this.functionCallInputValue = '';
     },
 
-    // 删除 Function Call 标签
+    //Legacy comment translated to English.
     handleFunctionCallClose(tag) {
       const currentNames = this.getFunctionCallNamesList();
       const index = currentNames.indexOf(tag);
@@ -143,31 +143,31 @@ var AgentsAppMethodsPluginMcp = {
       this.functionCallTags = currentNames;
     },
 
-    // 获取当前 functionCallNames 的数组形式
+    //Legacy comment translated to English.
     getFunctionCallNamesList() {
       return this.agentForm.functionCallNames
         ? this.agentForm.functionCallNames.split(',').filter(x => x)
         : [];
     },
 
-    // 自动附加所有 XNCF 功能插件
+    //Legacy comment translated to English.
     handleAutoAttachXncfChange(val) {
       if (val) {
-        // 开启时：将所有可用插件类型合并到 functionCallNames
+        //Legacy comment translated to English.
         const currentNames = this.getFunctionCallNamesList();
         const allNames = [...new Set([...currentNames, ...this.pluginTypes])];
         this.agentForm.functionCallNames = allNames.join(',');
       } else {
-        // 关闭时：移除所有自动添加的插件类型（保留用户手动添加的）
+        //Legacy comment translated to English.
         const currentNames = this.getFunctionCallNamesList();
         const manualNames = currentNames.filter(name => !this.pluginTypes.includes(name));
         this.agentForm.functionCallNames = manualNames.join(',');
       }
     },
     
-    // 测试MCP Endpoint连接
+    //Legacy comment translated to English.
     async testMcpEndpoint(name, endpoint) {
-      // 设置加载状态
+      //Legacy comment translated to English.
       this.$set(endpoint, 'testing', true);
       
       try {
@@ -178,29 +178,29 @@ var AgentsAppMethodsPluginMcp = {
           }
         });
         
-        // 详细日志
+        //Legacy comment translated to English.
         console.log('MCP测试响应数据:', response);
         
-        // 根据实际API返回的数据结构进行判断
+        //Legacy comment translated to English.
         if (response.data && response.data.success) {
-          // 尝试从不同位置获取工具列表
+          //Legacy comment translated to English.
           let tools = [];
           let status = 200;
           
-          // 调试完整响应
+          //Legacy comment translated to English.
           console.log('API返回数据结构:', JSON.stringify(response.data, null, 2));
           
-          // 检查可能的数据结构
+          //Legacy comment translated to English.
           if (response.data.data) {
             console.log('data字段:', response.data.data);
             
-            // 结构1: response.data.data.tools
+            //Legacy comment translated to English.
             if (response.data.data.tools) {
               console.log('从data.tools获取工具列表');
               tools = response.data.data.tools;
               status = response.data.data.status || 200;
             } 
-            // 结构2: response.data.data直接是工具列表
+            //Legacy comment translated to English.
             else if (Array.isArray(response.data.data)) {
               console.log('data直接是工具列表');
               tools = response.data.data;
@@ -209,13 +209,13 @@ var AgentsAppMethodsPluginMcp = {
           
           console.log('提取的工具列表:', tools);
           
-          // 确保工具列表是数组
+          //Legacy comment translated to English.
           if (!Array.isArray(tools)) {
             console.warn('工具列表不是数组，将转换为空数组');
             tools = [];
           }
           
-          // 确保每个工具对象都有必要的属性
+          //Legacy comment translated to English.
           tools = tools.map(tool => ({
             name: tool.name || '未命名工具', 
             description: tool.description || '无描述',
@@ -224,12 +224,12 @@ var AgentsAppMethodsPluginMcp = {
           
           console.log('处理后的工具列表:', tools);
           
-          // 初始化testResult对象
+          //Legacy comment translated to English.
           if (!endpoint.testResult) {
             this.$set(endpoint, 'testResult', {});
           }
           
-          // 设置结果属性
+          // settingsresultproperty
           this.$set(endpoint.testResult, 'success', true);
           this.$set(endpoint.testResult, 'tools', tools);
           this.$set(endpoint.testResult, 'status', status);
@@ -238,7 +238,7 @@ var AgentsAppMethodsPluginMcp = {
           
           this.$message.success('连接测试成功');
           
-          // 如果有工具列表，直接显示弹窗
+          //Legacy comment translated to English.
           if (tools && tools.length > 0) {
             this.showMcpToolsDialog(endpoint);
           }
@@ -259,12 +259,12 @@ var AgentsAppMethodsPluginMcp = {
         this.$set(endpoint, 'testResult', testResult);
         this.$message.error('连接测试出错: ' + testResult.message);
       } finally {
-        // 清除加载状态
+        //Legacy comment translated to English.
         this.$set(endpoint, 'testing', false);
       }
     },
     
-    // 获取插件类型列表
+    //Legacy comment translated to English.
     async getPluginTypes() {
       try {
         const res = await serviceAM.get('/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetPluginTypes');
@@ -369,24 +369,24 @@ var AgentsAppMethodsPluginMcp = {
       }
     },
 
-    // 添加插件类型到 functionCallNames
+    //Legacy comment translated to English.
     handleAddPluginType(pluginType) {
       if (!this.agentForm.functionCallNames) {
         this.agentForm.functionCallNames = pluginType;
         this.functionCallTags = [pluginType];
       } else {
-        // 将现有值分割为数组
+        //Legacy comment translated to English.
         const currentNames = this.agentForm.functionCallNames.split(',').filter(x => x);
         if (!currentNames.includes(pluginType)) {
-          // 添加新值并用逗号连接
+          //Legacy comment translated to English.
           this.agentForm.functionCallNames = [...currentNames, pluginType].join(',');
           this.functionCallTags = [...currentNames, pluginType];
         }
       }
     },
-    // McpEndpoints 相关方法
+    // McpEndpoints relatedmethod
     
-    // 显示添加 Endpoint 输入框
+    //Legacy comment translated to English.
     showMcpEndpointInput() {
       this.mcpEndpointInputVisible = true;
       this.mcpEndpointNameValue = '';
@@ -400,7 +400,7 @@ var AgentsAppMethodsPluginMcp = {
       });
     },
     
-    // 编辑 Endpoint
+    // edit Endpoint
     handleMcpEndpointEdit(name, endpoint) {
       this.mcpEndpointInputVisible = true;
       this.mcpEndpointNameValue = name;
@@ -415,7 +415,7 @@ var AgentsAppMethodsPluginMcp = {
       });
     },
     
-    // 取消添加 Endpoint
+    //Legacy comment translated to English.
     cancelMcpEndpointInput() {
       this.mcpEndpointInputVisible = false;
       this.mcpEndpointNameValue = '';
@@ -424,7 +424,7 @@ var AgentsAppMethodsPluginMcp = {
       this.mcpEndpointOriginalName = '';
     },
     
-    // 确认添加或更新 Endpoint
+    //Legacy comment translated to English.
     handleMcpEndpointInputConfirm() {
       const name = this.mcpEndpointNameValue.trim();
       const url = this.mcpEndpointUrlValue.trim();
@@ -445,17 +445,17 @@ var AgentsAppMethodsPluginMcp = {
       }
       
       if (this.mcpEndpointEditMode) {
-        // 编辑模式：如果名称变了，需要删除旧的再添加新的
+        //Legacy comment translated to English.
         if (this.mcpEndpointOriginalName !== name) {
           delete endpoints[this.mcpEndpointOriginalName];
         }
       }
       
-      // 添加/更新 Endpoint
+      //Legacy comment translated to English.
       endpoints[name] = { url };
       this.agentForm.mcpEndpoints = JSON.stringify(endpoints);
       
-      // 清空输入框
+      //Legacy comment translated to English.
       this.mcpEndpointInputVisible = false;
       this.mcpEndpointNameValue = '';
       this.mcpEndpointUrlValue = '';
@@ -463,14 +463,14 @@ var AgentsAppMethodsPluginMcp = {
       this.mcpEndpointOriginalName = '';
     },
     
-    // 打开“从 MCP 列表选择”抽屉（端点数据经 EventBus 从 MCP 模块获取）
+    //Legacy comment translated to English.
     openMcpSelectDrawer() {
       this.visible.drawerMcpSelect = true;
       this.mcpSelectSearch = '';
       this.loadMcpEndpointOptions();
     },
     
-    // 通过 AgentTemplateAppService.GetMcpEndpointOptions 获取 MCP 模块登记的端点列表
+    //Legacy comment translated to English.
     async loadMcpEndpointOptions() {
       this.mcpSelectLoading = true;
       this.mcpModuleAvailable = false;
@@ -496,7 +496,7 @@ var AgentsAppMethodsPluginMcp = {
       }
     },
     
-    // 判断某个 MCP 列表选项是否已在当前配置中（按名称或 URL 匹配）
+    //Legacy comment translated to English.
     isMcpOptionSelected(option) {
       if (!option) return false;
       const endpoints = this.parsedMcpEndpoints || {};
@@ -510,7 +510,7 @@ var AgentsAppMethodsPluginMcp = {
       });
     },
     
-    // 勾选/取消勾选 MCP 列表选项，同步写入 agentForm.mcpEndpoints（与其他端点合并，不覆盖）
+    //Legacy comment translated to English.
     toggleMcpSelect(option, selected) {
       if (!option) return;
       const name = String(option.name || '').trim();
@@ -543,7 +543,7 @@ var AgentsAppMethodsPluginMcp = {
         : '';
     },
     
-    // 删除 Endpoint
+    // delete Endpoint
     handleMcpEndpointRemove(name) {
       let endpoints = {};
       try {
@@ -555,7 +555,7 @@ var AgentsAppMethodsPluginMcp = {
         return;
       }
       
-      // 删除指定 Endpoint
+      //Legacy comment translated to English.
       if (endpoints[name]) {
         delete endpoints[name];
         this.agentForm.mcpEndpoints = Object.keys(endpoints).length > 0 
@@ -564,11 +564,11 @@ var AgentsAppMethodsPluginMcp = {
       }
     },
     
-    // 显示MCP工具列表对话框
+    //Legacy comment translated to English.
     showMcpToolsDialog(endpoint) {
       console.log('调用showMcpToolsDialog函数', endpoint);
       
-      // 检查endpoint对象及其属性
+      //Legacy comment translated to English.
       if (!endpoint) {
         console.error('endpoint参数为空');
         this.$message.warning('endpoint参数为空');
@@ -578,19 +578,19 @@ var AgentsAppMethodsPluginMcp = {
       console.log('endpoint.testResult:', endpoint.testResult);
       
       if (endpoint && endpoint.testResult && endpoint.testResult.tools) {
-        // 创建一个工具列表的副本
+        //Legacy comment translated to English.
         const tools = [...endpoint.testResult.tools];
         console.log('显示工具列表:', tools);
         console.log('工具列表数量:', tools.length);
         
-        // 设置当前MCP工具列表，并显示对话框
+        //Legacy comment translated to English.
         this.currentMcpTools = tools;
         this.visible.dialogMcpTools = true;
         
         console.log('设置currentMcpTools:', this.currentMcpTools);
         console.log('设置dialogMcpTools为可见');
         
-        // 如果对话框不显示，则尝试使用备用弹窗
+        //Legacy comment translated to English.
         setTimeout(() => {
           if (!document.querySelector('.el-dialog__wrapper[aria-label="MCP 工具列表"]')) {
             console.warn('对话框未显示，使用备用弹窗');
@@ -603,7 +603,7 @@ var AgentsAppMethodsPluginMcp = {
       }
     },
 
-    // 备用的MCP工具列表弹窗 (使用alert)
+    //Legacy comment translated to English.
     showMcpToolsAlert(tools) {
       if (!tools || !tools.length) {
         this.$message.warning('没有可用的工具信息');

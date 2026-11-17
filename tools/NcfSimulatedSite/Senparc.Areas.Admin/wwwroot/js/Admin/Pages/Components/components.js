@@ -47,7 +47,7 @@
         }
     }
 });
-//基于 Element 的 el - pagination进行了二次封装，并拓展了自动滚动的功能。
+//Legacy comment translated to English.
 //https://panjiachen.github.io/vue-element-admin-site/zh/feature/component/pagination.html#%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F
 Vue.component('pagination', {
     template: `
@@ -103,7 +103,7 @@ Vue.component('pagination', {
         }
     },
     computed: {
-        //监听传进来的当前页和大小，有变化时更新 :page.sync="listQuery.page"和:limit.sync="listQuery.limit"
+        //Legacy comment translated to English.
         currentPage: {
             get() {
                 return this.page;

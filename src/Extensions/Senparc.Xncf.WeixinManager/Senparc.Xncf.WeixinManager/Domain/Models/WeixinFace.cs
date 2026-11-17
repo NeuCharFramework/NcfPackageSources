@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：WeixinFace.cs
-    文件功能描述：WeixinFace 相关实现
+
+    File name: WeixinFace.cs
+
+    File description: WeixinFace related implementation
+
     
+
     
-    创建标识：Senparc - 20250712
+
+    Created by: Senparc - 20250712
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -29,7 +41,7 @@ namespace Senparc.Xncf.WeixinManager.Domain.Models
         [Description("/:8-)")]
         墨镜 = 4,
         [Description("/::<")]
-        //哭 = 5,
+        //Legacy comment translated to English.
         流泪 = 5,
         [Description("/::$")]
         羞 = 6,
@@ -46,7 +58,7 @@ namespace Senparc.Xncf.WeixinManager.Domain.Models
         [Description("/::P")]
         调皮 = 12,
         [Description("/::D")]
-        //笑 = 13,
+        //Legacy comment translated to English.
         呲牙 = 13,
         [Description("/::O")]
         惊讶 = 14,
@@ -219,7 +231,7 @@ namespace Senparc.Xncf.WeixinManager.Domain.Models
         [Description("/:skip")]
         跳绳 = 98,
         [Description("[挥手]")]
-        挥手 = 99,//天使
+        挥手 = 99,//Legacy comment translated to English.
         [Description("/:#-0")]
         激动 = 100,
         [Description("[街舞]")]

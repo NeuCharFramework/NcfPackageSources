@@ -2,14 +2,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：XncfBuilderSenparcEntities_OracleModelSnapshot.cs
-    文件功能描述：XncfBuilderSenparcEntities_OracleModelSnapshot 相关定义与实现
+    File name: XncfBuilderSenparcEntities_OracleModelSnapshot.cs
+    File description: XncfBuilderSenparcEntities_OracleModelSnapshot related definitions and implementation
 
 
-    创建标识：Senparc - 20200724
+    Created by: Senparc - 20200724
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.41.7 更新数据库迁移模型快照
+    Modified by: Senparc - 20261103
+    Change description: v0.41.7 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

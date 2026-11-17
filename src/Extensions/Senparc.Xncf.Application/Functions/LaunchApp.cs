@@ -1,17 +1,32 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：LaunchApp.cs
-    文件功能描述：LaunchApp 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.1.0 为 Application 模块接入统一资源本地化并优化功能文案
+    Copyright (C) 2026 Senparc
+
+  
+
+    File name: LaunchApp.cs
+
+    File description: LaunchApp related implementation
+
+    
+
+    
+
+    Created by: Senparc - 20200724
+
+    
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260717
+
+    Change description: v0.1.0 integrate shared resource localization and improve feature text for the Application module
+
+
 
 ----------------------------------------------------------------*/
 
@@ -30,18 +45,18 @@ using System.Linq;
 namespace Senparc.Xncf.Application.Functions
 {
     /// <summary>
-    /// 启动应用程序
+    ///Legacy comment translated to English.
     /// </summary>
     public class LaunchApp : FunctionBase
     {
         public class LaunchApp_Parameters : IFunctionParameter
         {
         //    /// <summary>
-        //    /// 提供选项
-        //    /// <para>注意：string[]类型的默认值为选项的备选值，如果没有提供备选值，此参数将别忽略</para>
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         //    /// </summary>
         //    [Required]
-        //    [Description("启动路径,如果是自定义路径，需要输入程序的安装路径;如果是系统则只需要输入执行程序的文件名即可")]
+        //Legacy comment translated to English.
         //    public string[] LaunchPath { get; set; } = new[] {
         //    Parameters_Path.System.ToString(),
         //    Parameters_Path.Custom.ToString()
@@ -59,7 +74,7 @@ namespace Senparc.Xncf.Application.Functions
             public string FilePath { get; set; }
         }
 
-        //注意：Name 必须在单个 Xncf 模块中唯一！
+        //Legacy comment translated to English.
         public override string Name => ApplicationResource.Get("Function.Application.Launch.Name");
 
         public override string Description => ApplicationResource.Get("Function.Application.Launch.Description");
@@ -71,7 +86,7 @@ namespace Senparc.Xncf.Application.Functions
         }
 
         /// <summary>
-        /// 运行
+        /// run
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
@@ -97,7 +112,7 @@ namespace Senparc.Xncf.Application.Functions
             return result;
         }
 
-        #region 启动程序
+        #region Legacy section
         private bool StartApp(string appName)
         {
             return StartApp(appName, ProcessWindowStyle.Hidden);

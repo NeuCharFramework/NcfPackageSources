@@ -1,13 +1,13 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：DesktopActivityEventHandler.cs
-    文件功能描述：将任意集成事件安全映射为桌面活动消息
+    File name: DesktopActivityEventHandler.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260725
+    Created by: Senparc - 20260725
 
-    修改标识：Senparc - 20260726
-    修改描述：v0.1.0-preview2 同步模块功能与兼容性改进
+    Modified by: Senparc - 20260726
+    Change description: v0.1.0-preview2 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -52,7 +52,7 @@ public sealed class DesktopActivityEventHandler : IIntegrationEventHandler<IInte
         }
         catch (Exception ex)
         {
-            // 桌面提示属于旁路能力，任何映射失败都不能影响原业务事件。
+            //Legacy comment translated to English.
             _logger?.LogWarning(ex, "DesktopBridge failed to map event {EventType}", @event.GetType().FullName);
         }
 

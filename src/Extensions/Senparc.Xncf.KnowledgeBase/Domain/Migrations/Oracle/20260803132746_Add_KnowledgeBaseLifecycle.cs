@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：20260803132746_Add_KnowledgeBaseLifecycle.cs
-    文件功能描述：实现 Entity Framework 数据库迁移。
+    File name: 20260803132746_Add_KnowledgeBaseLifecycle.cs
+    File description: Entity Framework database migration implementation.
 
 
-    创建标识：Senparc - 20260803
+    Created by: Senparc - 20260803
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.5.0-preview6 新增知识库生命周期管理与 Agent 模板集成
+    Modified by: Senparc - 20260804
+    Change description: v0.5.0-preview6 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

@@ -1,26 +1,26 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：AIFineTuningAppService.cs
-    文件功能描述：本地模型微调应用服务
+    File name: AIFineTuningAppService.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20261009
+    Created by: Senparc - 20261009
 
-    修改标识：Senparc - 20261009
-    修改描述：v0.16.4 完善 AIKernel 本地微调 Worker、数据库配置与本地化管理能力
+    Modified by: Senparc - 20261009
+    Change description: v0.16.4 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.17.0 开放微调导入、导出与产物查询
+    Modified by: Senparc - 20261021
+    Change description: v0.17.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.17.0 enhance job management and telemetry features
+    Modified by: Senparc - 20261103
+    Change description: v0.17.0 enhance job management and telemetry features
 
-    修改标识：Senparc - 20261106
-    修改描述：微调 Function 自动载入 Worker、模型和数据集，并允许 Workflow 按默认值执行
+    Modified by: Senparc - 20261106
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261106
-    修改描述：支持在 NCF 启动后配置并启停多个本机微调 Worker
+    Modified by: Senparc - 20261106
+    Change description: Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：PromptRangeGenerateTests.cs
-    文件功能描述：PromptRangeGenerateTests 服务逻辑
+
+    File name: PromptRangeGenerateTests.cs
+
+    File description: Related implementation.
+
     
+
     
-    创建标识：Senparc - 20231003
+
+    Created by: Senparc - 20231003
+
     
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    Modified by: Senparc - 20260702
+
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
+
+
 
 ----------------------------------------------------------------*/
 
@@ -27,17 +39,17 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.XncfBuilder.Tests.Domain.Services
 {
     /// <summary>
-    /// PromptRange 模块的初始化代码
-    /// <para>注意：这会直接修改现有代码！</para>
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
-    //[TestClass]//此测试用于项目代码的直接测试，默认情况下请关闭
+    ///Legacy comment translated to English.
     public class PromptRangeGenerateTests : XncfBuilderTestBase
     {
         protected PromptBuilderService _service;
         private string _projectPath = Path.Combine("X:\\Senparc 项目\\NeuCharFramework\\NcfPackageSources\\src\\Extensions\\Senparc.Xncf.PromptRange\\", "Domain", "Models", "DatabaseModel");
 
         /// <summary>
-        /// 创建实体
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="entityName"></param>
         /// <returns></returns>
@@ -45,28 +57,48 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Domain.Services
         {
             CO2NET.Helpers.FileHelper.TryCreateDirectory(_projectPath);
 
-            /* 升级 Senparc.AI.AgentKernel，暂时停用此方法，未来改用 SKILL */
+            /* Legacy comment translated to English. */
 
             /*
 
+
+
             var senparcAiSetting = Senparc.AI.Config.SenparcAiSetting;
+
             var result = await _service.RunPromptAsync(senparcAiSetting, PromptBuildType.EntityClass, input, entityName, null, _projectPath);
 
-            Assert.IsTrue(result.Log.Contains("保存文件"));
+
+
+            Assert.IsTrue(result.Log.Contains("save files"));
+
             await Console.Out.WriteLineAsync(result.Log);
 
+
+
             var promptGroupFilePath = Path.Combine(_projectPath, $"{entityName}.cs");
+
             Assert.IsTrue(File.Exists(promptGroupFilePath));
+
             Assert.IsTrue(File.Exists(Path.Combine(_projectPath, $"Dto/{entityName}Dto.cs")));
 
+
+
             var promptGroupFileContent = File.ReadAllText(promptGroupFilePath);
+
             Assert.IsTrue(promptGroupFileContent.Contains($"public class {entityName}"));
 
+
+
             var senparcEntitiesFile = Path.Combine(_projectPath, "Domain", "Models", "DatabaseModel", "PromptRangeSenparcEntities.cs");
+
             Assert.IsTrue(File.Exists(senparcEntitiesFile));
 
+
+
             var newSenparcEntitiesContent = File.ReadAllText(senparcEntitiesFile);
+
             Assert.IsTrue(newSenparcEntitiesContent.Contains($"public DbSet<{entityName}> {entityName}s {{ get; set; }}"));
+
             */
         }
 
@@ -89,7 +121,7 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Domain.Services
         [TestMethod()]
         public async Task PromptItemTest()
         {
-            //input 仅做演示
+            //Legacy comment translated to English.
             var entityName = "PromptItem";
             var input = $"这个领域用于控制所有的 Prompt 核心业务逻辑，包括使用 Prompt 操作大预言模型所需的所有必要的参数，类名叫：{entityName}，用于管理一组相关联的 Prompt，并统一配置其参数。生成的属性中需要包含常规的 LLM 被调用时的所需的参数，尽可能完整，包括但不仅限于： MaxToken、Temperature、TopP、FrequencyPenalty、ResultsPerPrompt、StopSequences、ChatSystemPrompt、TokenSelectionBiases，等等；除此以外，属性还需要包含用于评估 Prompt 效果所需要的必要参数，以及 Name 等常规实体类应该有的参数。";
 

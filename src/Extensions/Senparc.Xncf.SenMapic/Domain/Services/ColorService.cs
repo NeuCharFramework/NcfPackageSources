@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：ColorService.cs
-    文件功能描述：ColorService 相关实现
+
+    File name: ColorService.cs
+
+    File description: ColorService related implementation
+
     
+
     
-    创建标识：Senparc - 20250113
+
+    Created by: Senparc - 20250113
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -40,9 +52,9 @@ namespace Senparc.Xncf.SenMapic.Domain.Services
         public async Task<ColorDto> GetOrInitColor()
         {
             var color = await base.GetObjectAsync(z => true);
-            if (color == null)//如果是纯第一次安装，理论上不会有残留数据
+            if (color == null)//Legacy comment translated to English.
             {
-                //创建默认颜色
+                //create default colors
                 ColorDto colorDto = await this.CreateNewColor().ConfigureAwait(false);
                 return colorDto;
             }
@@ -52,7 +64,7 @@ namespace Senparc.Xncf.SenMapic.Domain.Services
 
         public async Task<ColorDto> Brighten()
         {
-            //TODO:异步方法需要添加排序功能
+            //TODO: add sorting to the asynchronous method
             var obj = await this.GetObjectAsync(z => true, z => z.Id, OrderingType.Descending);
             obj.Brighten();
             await base.SaveObjectAsync(obj).ConfigureAwait(false);
@@ -61,7 +73,7 @@ namespace Senparc.Xncf.SenMapic.Domain.Services
 
         public async Task<ColorDto> Darken()
         {
-            //TODO:异步方法需要添加排序功能
+            //TODO: add sorting to the asynchronous method
             var obj = await this.GetObjectAsync(z => true, z => z.Id, OrderingType.Descending);
             obj.Darken();
             await base.SaveObjectAsync(obj).ConfigureAwait(false);
@@ -70,13 +82,13 @@ namespace Senparc.Xncf.SenMapic.Domain.Services
 
         public async Task<ColorDto> Random()
         {
-            //TODO:异步方法需要添加排序功能
+            //TODO: add sorting to the asynchronous method
             var obj = this.GetObject(z => true, z => z.Id, OrderingType.Descending);
             obj.Random();
             await base.SaveObjectAsync(obj).ConfigureAwait(false);
             return base.Mapper.Map<ColorDto>(obj);
         }
 
-        //TODO: 更多业务方法可以写到这里
+        //TODO: more business methods can be added here
     }
 }

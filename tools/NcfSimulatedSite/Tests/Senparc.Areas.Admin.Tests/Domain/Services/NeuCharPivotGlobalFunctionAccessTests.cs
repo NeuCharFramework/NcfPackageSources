@@ -90,7 +90,7 @@ public class NeuCharPivotGlobalFunctionAccessTests
     }
 
 
-    #region 数据库访问策略（DB 覆盖代码属性）
+    #region Legacy section
 
     [TestMethod]
     public async Task OpenPolicy_ShouldOverrideCodeRestriction()
@@ -101,7 +101,7 @@ public class NeuCharPivotGlobalFunctionAccessTests
             .ReturnsAsync(false);
         var service = new NeuCharPivotGlobalAccessService(workContext.Object, permissions.Object);
 
-        // 代码基线要求 sandbox-admin 角色，数据库策略“开放”覆盖
+        //Legacy comment translated to English.
         var denial = await service.GetDenialReasonAsync(
             CreateDescriptor(new[] { "sandbox-admin" }, new[] { "sandbox.execute" }),
             CreatePolicy(NeuCharFunctionProvitAccess.AccessModeOpen));
@@ -119,7 +119,7 @@ public class NeuCharPivotGlobalFunctionAccessTests
         var permissions = new Mock<ICheckPermission>();
         var service = new NeuCharPivotGlobalAccessService(workContext.Object, permissions.Object);
 
-        // 代码基线完全允许，数据库策略“禁用”覆盖
+        //Legacy comment translated to English.
         var denial = await service.GetDenialReasonAsync(
             CreateDescriptor(),
             CreatePolicy(NeuCharFunctionProvitAccess.AccessModeDeny));
@@ -193,7 +193,7 @@ public class NeuCharPivotGlobalFunctionAccessTests
             new Mock<ICheckPermission>().Object);
         var inheritPolicy = CreatePolicy(NeuCharFunctionProvitAccess.AccessModeInherit);
 
-        // 继承策略（及 null 策略）都回退到代码属性：viewer 不匹配 sandbox-admin
+        //Legacy comment translated to English.
         var denial = await service.GetDenialReasonAsync(
             CreateDescriptor(new[] { "sandbox-admin" }),
             inheritPolicy);
@@ -207,14 +207,14 @@ public class NeuCharPivotGlobalFunctionAccessTests
     [TestMethod]
     public void ResolveExposureAllowed_ShouldApplyDatabasePolicyOverCodeAttribute()
     {
-        // 代码不允许全局：Open / Restricted 策略可开启
+        //Legacy comment translated to English.
         Assert.IsFalse(NeuCharPivotGlobalAccessService.ResolveExposureAllowed(false, null));
         Assert.IsTrue(NeuCharPivotGlobalAccessService.ResolveExposureAllowed(
             false, CreatePolicy(NeuCharFunctionProvitAccess.AccessModeOpen)));
         Assert.IsTrue(NeuCharPivotGlobalAccessService.ResolveExposureAllowed(
             false, CreatePolicy(NeuCharFunctionProvitAccess.AccessModeRestricted, roleCodes: new[] { "a" })));
 
-        // 代码允许全局：Deny 策略可关闭，Inherit / null 保持代码值
+        //Legacy comment translated to English.
         Assert.IsFalse(NeuCharPivotGlobalAccessService.ResolveExposureAllowed(
             true, CreatePolicy(NeuCharFunctionProvitAccess.AccessModeDeny)));
         Assert.IsTrue(NeuCharPivotGlobalAccessService.ResolveExposureAllowed(

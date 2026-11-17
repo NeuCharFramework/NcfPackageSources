@@ -1,20 +1,20 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：Template_XncfNameResource.cs
-    文件功能描述：Template_XncfNameResource 相关实现
+    File name: Template_XncfNameResource.cs
+    File description: Template_XncfNameResource related implementation
     
     
-    创建标识：Senparc - 20260717
+    Created by: Senparc - 20260717
     
-    修改标识：Senparc - 20260717
-    修改描述：v1.1.0 更新示例 XNCF 模块的功能参数与页面本地化能力
+    Modified by: Senparc - 20260717
+    Change description: v1.1.0 update feature parameters and page localization for the sample XNCF module
 
-    修改标识：Senparc - 20260724
-    修改描述：v1.1.0 完善 XNCF 模板页面与资源的多语言支持
+    Modified by: Senparc - 20260724
+    Change description: v1.1.0 improve multilingual support for XNCF template pages and resources
 
-    修改标识：Senparc - 20260726
-    修改描述：v1.1.0 补充示例模板 EventBus 请求-响应回环与多语言能力
+    Modified by: Senparc - 20260726
+    Change description: v1.1.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 #nullable enable

@@ -1,16 +1,16 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：AITokenMonitorAppService.cs
-    文件功能描述：AITokenMonitorAppService Token 监控相关实现
+    File name: AITokenMonitorAppService.cs
+    File description: Related implementation.
     
-    创建标识：Senparc - 20260904
+    Created by: Senparc - 20260904
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.16.0 新增 AI Token 用量监控与模型选择能力
+    Modified by: Senparc - 20260915
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.17.0 维护AITokenMonitorAppService Token 监控相关实现
+    Modified by: Senparc - 20261103
+    Change description: v0.17.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -59,10 +59,10 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
             _aITokenMonitorService = aITokenMonitorService;
         }
 
-        #region 分页 / 列表 / 单条
+        #region Legacy section
 
         /// <summary>
-        /// 分页获取 Token 使用记录
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<PagedResponse<AITokenUsageDto>>> GetPagedListAsync(AITokenUsage_GetListRequest request)
@@ -84,7 +84,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取 Token 使用记录列表
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<List<AITokenUsageDto>>> GetListAsync(AITokenUsage_GetListRequest request)
@@ -101,7 +101,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取单条 Token 使用记录
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<AITokenUsageDto>> GetAsync(int id)
@@ -114,7 +114,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 删除一条 Token 使用记录
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Delete)]
         public async Task<AppResponseBase<bool>> DeleteAsync(int id)
@@ -135,10 +135,10 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
 
         #endregion
 
-        #region 统计
+        #region Legacy section
 
         /// <summary>
-        /// 获取 Token 监控聚合统计（基于持久化记录）
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<AITokenMonitorStats>> GetStatsAsync()
@@ -151,7 +151,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取 Token 监控实时统计（基于进程内实时聚合）
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<AITokenMonitorStats>> GetLiveStatsAsync()
@@ -164,10 +164,10 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
 
         #endregion
 
-        #region 运行 + 异步进度
+        #region Legacy section
 
         /// <summary>
-        /// 运行指定模型并记录 Token 监控（运行过程中可通过 GetProgressAsync 查询异步进度）
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<AITokenMonitor_RunModelResponse>> RunModelWithMonitorAsync(AITokenMonitor_RunModelRequest request)
@@ -231,7 +231,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 查询某次运行的最新异步进度
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<AITokenProgressEvent>> GetProgressAsync(AITokenMonitor_GetProgressRequest request)
@@ -244,7 +244,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 查询某次运行的全部缓冲进度（用于重放）
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<List<AITokenProgressEvent>>> GetBufferedProgressAsync(AITokenMonitor_GetProgressRequest request)

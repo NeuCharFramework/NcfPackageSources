@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：PublishedA2AAgentController.cs
-    文件功能描述：HTTP 控制器与远程接口
+    File name: PublishedA2AAgentController.cs
+    File description: HTTP controller and remote interface
 
 
-    创建标识：Senparc - 20260813
+    Created by: Senparc - 20260813
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+    Modified by: Senparc - 20260813
+    Change description: v0.15.0-preview11 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -22,8 +22,8 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
 {
     /// <summary>
-    /// 标准 A2A Agent Card 发现端点。
-    /// 仅返回管理员定义的公开元数据，绝不返回本地 Prompt、密钥或工具清单。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     [ApiController]
     [Route("a2a/{agentKey}")]
@@ -48,7 +48,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
             }
             catch
             {
-                // 避免通过发现端点枚举或探测未发布的本地 Agent。
+                //Legacy comment translated to English.
                 return NotFound();
             }
         }

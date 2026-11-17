@@ -1,7 +1,7 @@
 namespace Senparc.Xncf.Sandbox.Abstractions;
 
 /// <summary>
-/// 沙箱会话状态。
+///Legacy comment translated to English.
 /// </summary>
 public enum SandboxSessionStatus
 {

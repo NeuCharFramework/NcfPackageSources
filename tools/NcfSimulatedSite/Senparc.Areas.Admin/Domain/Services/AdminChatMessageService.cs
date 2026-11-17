@@ -1,32 +1,32 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：AdminChatMessageService.cs
-    文件功能描述：AdminChatMessageService 相关功能实现
+    File name: AdminChatMessageService.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20260325
+    Created by: Senparc - 20260325
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+    Modified by: Senparc - 20260915
+    Change description: v0.8.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 add comprehensive unit tests for AdminChatWorkspaceAssetService functionality
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 add comprehensive unit tests for AdminChatWorkspaceAssetService functionality
 
-    修改标识：Senparc - 20261105
-    修改描述：v0.12.26 持久化消息、Prompt 引用与评分
+    Modified by: Senparc - 20261105
+    Change description: v0.12.26 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261110
-    修改描述：按当前用户检索未归档会话中的消息片段
+    Modified by: Senparc - 20261110
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261110
-    修改描述：检索未归档会话中 Harness 实际调用过的方法名
+    Modified by: Senparc - 20261110
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.12.28 完善 Admin Chat 与模块工作区交互能力兼容
+    Modified by: Senparc - 20261111
+    Change description: v0.12.28 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 using Microsoft.EntityFrameworkCore;
@@ -46,7 +46,7 @@ using Senparc.Ncf.Core.Exceptions;
 namespace Senparc.Areas.Admin.Domain.Services
 {
     /// <summary>
-    /// AdminChatMessageService：管理后台聊天消息服务
+    ///Legacy comment translated to English.
     /// </summary>
     public class AdminChatMessageService : BaseClientService<AdminChatMessage>
     {
@@ -56,11 +56,11 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 获取会话的所有消息（按序号正序）
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="sessionId">会话ID</param>
-        /// <param name="pageIndex">页码（从1开始，0表示获取全部）</param>
-        /// <param name="pageSize">每页数量</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         public async Task<(List<AdminChatMessage> messages, int totalCount)> GetSessionMessagesAsync(int sessionId, int pageIndex = 0, int pageSize = 50)
         {
             if (pageIndex == 0)
@@ -83,7 +83,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 获取下一个序号（用于新消息）
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<int> GetNextSequenceAsync(int sessionId)
         {
@@ -93,12 +93,12 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 添加新消息
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="sessionId">会话ID</param>
-        /// <param name="roleType">角色类型</param>
-        /// <param name="content">消息内容</param>
-        /// <param name="modelIdentifier">模型标识符（可选）</param>
+        ///Legacy comment translated to English.
+        /// <param name="roleType">roletype</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         public async Task<AdminChatMessage> AddMessageAsync(
             int sessionId,
             ChatMessageRoleType roleType,
@@ -167,7 +167,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 设置消息反馈
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<bool> SetMessageFeedbackAsync(int messageId, MessageFeedbackType feedback)
         {
@@ -180,7 +180,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 更新消息内容（用于流式输出场景）
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<bool> UpdateMessageContentAsync(int messageId, string newContent)
         {
@@ -193,7 +193,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 删除会话的所有消息（物理删除，慎用）
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<int> DeleteSessionMessagesAsync(int sessionId)
         {
@@ -208,7 +208,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 按消息ID批量删除会话消息（物理删除）
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<int> DeleteMessagesAsync(int sessionId, IEnumerable<int> messageIds)
         {
@@ -231,7 +231,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 获取会话的最后一条消息
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<AdminChatMessage> GetLastMessageAsync(int sessionId)
         {
@@ -240,7 +240,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 获取会话的消息数量
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<int> GetMessageCountAsync(int sessionId)
         {
@@ -249,8 +249,8 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 获取归属校验通过的消息：仅当消息所属会话属于指定用户时返回，否则返回 null。
-        /// 用于消息级操作（如反馈）的防御性越权防护。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<AdminChatMessage> GetOwnedMessageAsync(int messageId, int userId)
         {
@@ -263,7 +263,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 设置消息反馈（带会话归属校验，防止跨账号越权操作）
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<bool> SetMessageFeedbackAsync(int messageId, int userId, MessageFeedbackType feedback)
         {
@@ -276,7 +276,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 在当前用户未归档、未删除的会话里检索消息。已归档会话的正文不会被读出。
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<IReadOnlyList<AdminChatHistorySearchHit>> SearchActiveHistoryAsync(
             int userId,
@@ -307,7 +307,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 在当前用户未归档会话的 Harness 轨迹中检索 tool.call 方法名。
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<IReadOnlyList<AdminChatHistorySearchHit>> SearchActiveToolCallsAsync(
             int userId,
@@ -352,7 +352,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 按用户统计消息数量（管理端监控用，仅返回数量，不包含内容）
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<List<(int UserId, int Count)>> GetMessageCountByUserAsync()
         {

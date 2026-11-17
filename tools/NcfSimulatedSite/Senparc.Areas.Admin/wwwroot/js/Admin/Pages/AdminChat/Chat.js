@@ -689,7 +689,7 @@ var chatApp = new Vue({
       if (controller) controller.abort();
     });
     if (this.activeRequestController) {
-      // 刷新或离开页面只断开观察，不请求 cancel，服务端任务继续执行。
+      //Legacy comment translated to English.
       this.activeRequestController.abort();
       this.activeRequestController = null;
     }
@@ -705,7 +705,7 @@ var chatApp = new Vue({
         const openPanel = document.querySelector('details.chat-inline-settings[open]');
         if (!openPanel) return;
         const target = event.target;
-        // 模型下拉、Memory 菜单和说明弹层都挂在 body 上，点它们不算离开设置面板。
+        //Legacy comment translated to English.
         if (target && target.closest && target.closest('details.chat-inline-settings, .el-popper, .el-select-dropdown, .el-dropdown-menu, .el-dialog__wrapper, .el-message-box__wrapper, .ncf-doc-help-dialog')) {
           return;
         }

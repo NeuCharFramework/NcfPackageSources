@@ -1,16 +1,16 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：SandboxNcfPreviewPaths.cs
-    文件功能描述：Sandbox NCF 预览反向代理路径约定
+    File name: SandboxNcfPreviewPaths.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260814
+    Created by: Senparc - 20260814
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.2.0 增加 NCF 预览沙箱工作负载
+    Modified by: Senparc - 20260815
+    Change description: v0.2.0 add the NCF preview sandbox workload
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 enhance sandbox preview, Jupyter workspace, and session lifecycle management
 
 ----------------------------------------------------------------*/
 

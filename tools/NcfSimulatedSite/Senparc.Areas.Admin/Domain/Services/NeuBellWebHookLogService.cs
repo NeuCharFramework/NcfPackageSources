@@ -1,26 +1,26 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：NeuBellWebHookLogService.cs
-    文件功能描述：NeuBell WebHook 请求日志服务：
-    记录每一次发往 WebHook（WebAPI）的请求数据与结果
+    File name: NeuBellWebHookLogService.cs
+    File description: Related implementation.
+    Legacy comment translated to English.
 
-    创建标识：Senparc - 20260910
+    Created by: Senparc - 20260910
 
-    修改标识：Senparc - 20260914
-    修改描述：v0.7.1 请求日志新增 HttpMethod（实际请求方式）记录
+    Modified by: Senparc - 20260914
+    Change description: v0.7.1 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+    Modified by: Senparc - 20260915
+    Change description: v0.8.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260916
-    修改描述：v0.9.0 增强 Admin Chat 取消与推理轨迹，并扩展 NeuBell WebHook 请求能力
+    Modified by: Senparc - 20260916
+    Change description: v0.9.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 维护NeuBell WebHook 请求日志服务：
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -32,12 +32,12 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.Domain.Services;
 
 /// <summary>
-/// 纽铃 WebHook 请求日志服务契约（供 Dispatcher 依赖，便于测试替换）
+///Legacy comment translated to English.
 /// </summary>
 public interface INeuBellWebHookLogService
 {
     /// <summary>
-    /// 创建一条“发送中”的日志（请求发出前调用）
+    ///Legacy comment translated to English.
     /// </summary>
     Task<NeuBellWebHookLog> CreatePendingAsync(
         string eventKind,
@@ -49,7 +49,7 @@ public interface INeuBellWebHookLogService
         int adminUserId);
 
     /// <summary>
-    /// 记录请求结果（请求完成或失败后调用）
+    ///Legacy comment translated to English.
     /// </summary>
     Task CompleteAsync(
         int logId,
@@ -60,7 +60,7 @@ public interface INeuBellWebHookLogService
 }
 
 /// <summary>
-/// 纽铃 WebHook 请求日志服务
+///Legacy comment translated to English.
 /// </summary>
 public sealed class NeuBellWebHookLogService : BaseClientService<NeuBellWebHookLog>, INeuBellWebHookLogService
 {

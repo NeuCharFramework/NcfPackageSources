@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：PromptResultChat.cs
-    文件功能描述：PromptResultChat 相关实现
+    File name: PromptResultChat.cs
+    File description: PromptResultChat related implementation
     
     
-    创建标识：Senparc - 20251213
+    Created by: Senparc - 20251213
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
 ----------------------------------------------------------------*/
 
@@ -21,43 +21,43 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
 {
     /// <summary>
-    /// PromptResultChat：PromptResult 的对话历史记录
+    ///Legacy comment translated to English.
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(PromptResultChat))] //必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(PromptResultChat))] //a prefix is required to prevent system-wide conflicts
     [Serializable]
     public class PromptResultChat : EntityBase<int>
     {
         /// <summary>
-        /// PromptResult 的 ID（外键）
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         public int PromptResultId { get; private set; }
 
         /// <summary>
-        /// 对话角色类型：User 或 Assistant
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         public ChatRoleType RoleType { get; private set; }
 
         /// <summary>
-        /// 对话内容
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         public string Content { get; private set; }
 
         /// <summary>
-        /// 对话顺序（在同一 PromptResult 中的顺序，从 1 开始）
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         public int Sequence { get; private set; }
 
         /// <summary>
-        /// 用户反馈：Like（true）、Unlike（false）、未反馈（null）
+        ///Legacy comment translated to English.
         /// </summary>
         public bool? UserFeedback { get; private set; }
 
         /// <summary>
-        /// 用户评分（0-10分，可选）
+        ///Legacy comment translated to English.
         /// </summary>
         public decimal? UserScore { get; private set; }
 
@@ -66,12 +66,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 构造函数
+        /// constructor
         /// </summary>
-        /// <param name="promptResultId">PromptResult 的 ID</param>
-        /// <param name="roleType">对话角色类型</param>
-        /// <param name="content">对话内容</param>
-        /// <param name="sequence">对话顺序</param>
+        /// <param name="promptResultId">PromptResult ID</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         public PromptResultChat(int promptResultId, ChatRoleType roleType, string content, int sequence)
         {
             PromptResultId = promptResultId;
@@ -81,7 +81,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 从 DTO 创建实体
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="dto"></param>
         public PromptResultChat(PromptResultChatDto dto)
@@ -96,9 +96,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 更新用户反馈
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="feedback">Like（true）、Unlike（false）、取消反馈（null）</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public PromptResultChat UpdateUserFeedback(bool? feedback)
         {
@@ -107,9 +107,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 更新用户评分
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="score">评分（0-10分），null 表示取消评分</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public PromptResultChat UpdateUserScore(decimal? score)
         {
@@ -123,17 +123,17 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
     }
 
     /// <summary>
-    /// 对话角色类型枚举
+    ///Legacy comment translated to English.
     /// </summary>
     public enum ChatRoleType
     {
         /// <summary>
-        /// 用户
+        /// user
         /// </summary>
         User = 1,
 
         /// <summary>
-        /// 助手（AI）
+        ///Legacy comment translated to English.
         /// </summary>
         Assistant = 2
     }

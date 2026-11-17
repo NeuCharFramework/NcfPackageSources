@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：NeuCharParameterProtector.cs
-    文件功能描述：NeuChar Loop Task 与 Workflow 敏感参数字段级保护
+    File name: NeuCharParameterProtector.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20260809
+    Created by: Senparc - 20260809
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.5.0 集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
+    Modified by: Senparc - 20260813
+    Change description: v0.5.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -22,7 +22,7 @@ using System.Text.Json.Nodes;
 namespace Senparc.Areas.Admin.Domain.Services;
 
 /// <summary>
-/// 只保护 Function 声明为 Password 的字段。普通参数保持可查询，密文绝不返回给浏览器。
+///Legacy comment translated to English.
 /// </summary>
 public sealed class NeuCharParameterProtector
 {

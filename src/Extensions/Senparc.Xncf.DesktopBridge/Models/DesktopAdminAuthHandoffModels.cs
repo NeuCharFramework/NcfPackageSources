@@ -1,13 +1,13 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：DesktopAdminAuthHandoffModels.cs
-    文件功能描述：WebView Cookie 到桌面 Admin JWT 的一次性换票协议
+    File name: DesktopAdminAuthHandoffModels.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260804
+    Created by: Senparc - 20260804
 
-    修改标识：Senparc - 20260808
-    修改描述：v0.4.0-preview4 新增桌面管理员一次性换票协议模型
+    Modified by: Senparc - 20260808
+    Change description: v0.4.0-preview4 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

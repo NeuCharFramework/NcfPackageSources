@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：MCPSenparcEntities_PostgreSQLModelSnapshot.cs
-    文件功能描述：MCPSenparcEntities_PostgreSQLModelSnapshot.cs implementation and project behavior.
+    File name: MCPSenparcEntities_PostgreSQLModelSnapshot.cs
+    File description: MCPSenparcEntities_PostgreSQLModelSnapshot.cs implementation and project behavior.
 
 
-    创建标识：Senparc - 20200724
+    Created by: Senparc - 20200724
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.5.6 0.5.6 feat: add MCP endpoint selection feature in AgentsManager
+    Modified by: Senparc - 20261005
+    Change description: v0.5.6 0.5.6 feat: add MCP endpoint selection feature in AgentsManager
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.5.10 更新数据库迁移模型快照
+    Modified by: Senparc - 20261103
+    Change description: v0.5.10 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

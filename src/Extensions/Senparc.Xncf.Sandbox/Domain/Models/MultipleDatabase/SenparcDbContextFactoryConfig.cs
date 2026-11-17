@@ -6,14 +6,14 @@ using System.Text;
 namespace Senparc.Xncf.Sandbox.Models
 {
     /// <summary>
-    /// SenparcDbContextFactory 的公共配置
+    /// shared configuration for SenparcDbContextFactory
     /// </summary>
     public static class SenparcDbContextFactoryConfig
     {
         private static string? _rootDirectoryPath;
 
         /// <summary>
-        /// 用于寻找 App_Data 文件夹，从而找到数据库连接字符串配置信息
+        /// used to find the App_Data folder and then locate the database connection-string configuration
         /// </summary>
         public static string RootDirectoryPath
         {
@@ -21,13 +21,13 @@ namespace Senparc.Xncf.Sandbox.Models
             {
                 if (_rootDirectoryPath == null)
                 {
-                    var projectPath = Path.GetFullPath($"..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}", AppContext.BaseDirectory);//项目根目录
+                    var projectPath = Path.GetFullPath($"..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}", AppContext.BaseDirectory);//Legacy comment translated to English.
 
-                    var webPath = Path.GetFullPath($"..{Path.DirectorySeparatorChar}Senparc.Web",/*找到 Web目录，以获取统一的数据库连接字符串配置*/
+                    var webPath = Path.GetFullPath($"..{Path.DirectorySeparatorChar}Senparc.Web",/*find the Web directory to obtain the unified database connection-string configuration*/
                                                    projectPath);
                     if (Directory.Exists(webPath))
                     {
-                        _rootDirectoryPath = webPath;//优先使用Web统一配置
+                        _rootDirectoryPath = webPath;//prefer the unified Web configuration
                     }
                     else
                     {

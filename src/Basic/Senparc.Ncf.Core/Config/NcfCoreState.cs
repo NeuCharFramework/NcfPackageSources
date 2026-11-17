@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：NcfCoreState.cs
-    文件功能描述：NcfCoreState 相关实现
+
+    File name: NcfCoreState.cs
+
+    File description: NcfCoreState related implementation
+
     
+
     
-    创建标识：Senparc - 20240331
+
+    Created by: Senparc - 20240331
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -20,16 +32,16 @@ using System.Text;
 namespace Senparc.Ncf.Core.Config
 {
     /// <summary>
-    /// NCF 系统状态
+    ///Legacy comment translated to English.
     /// </summary>
     public record class NcfCoreState
     {
-        #region 单例
+        #region Legacy section
 
         NcfCoreState() { }
 
         /// <summary>
-        /// DatabaseConfigurationFactory 的全局单例
+        ///Legacy comment translated to English.
         /// </summary>
         public static NcfCoreState Instance
         {
@@ -49,43 +61,43 @@ namespace Senparc.Ncf.Core.Config
         #endregion
 
         /// <summary>
-        /// 已经完成所有 AddXncfModule 的应用
+        ///Legacy comment translated to English.
         /// </summary>
         public bool AllAddXncfModuleApplied { get; set; }
         /// <summary>
-        /// 已经完成所有 UseXncfModuleApplied 的应用
+        ///Legacy comment translated to English.
         /// </summary>
         public bool AllUseXncfModuleApplied { get; set; }
         /// <summary>
-        /// 已经完成所有 AuthorizeConfig 的应用，即所有 Area 的权限配置已经完成，以及所有 IAreaRegister 接口已经执行完成
+        ///Legacy comment translated to English.
         /// </summary>
         public bool AllAuthorizeConfigApplied { get; set; }
 
         /// <summary>
-        /// 任意一个 XNCF 模块的数据库注册已经载入
+        ///Legacy comment translated to English.
         /// </summary>
         public bool AynDatabaseXncfLoaded { get; set; }
         /// <summary>
-        /// 所有 XNCF 模块的数据库注册已经载入
+        ///Legacy comment translated to English.
         /// </summary>
         public bool AllDatabaseXncfLoaded { get; set; }
 
         /// <summary>
-        /// 任意一个 XNCF 模块的线程注册已经载入
+        ///Legacy comment translated to English.
         /// </summary>
         public bool AnyThreadXncfLoaded { get; set; }
         /// <summary>
-        /// 所有 XNCF 模块的线程注册已经载入
+        ///Legacy comment translated to English.
         /// </summary>
         public bool AllThreadXncfLoaded { get; set; }
 
         /// <summary>
-        ///  XNCF 模块的 AddXncfDatabaseModule 方法已经载入（任意一个）
+        ///Legacy comment translated to English.
         /// </summary>
         public bool AnyAddXncfDatabaseModuleApplied { get; set; }
 
         /// <summary>
-        /// 被包含的 dll 的文件名，“.Xncf.”会被必定包含在里面
+        ///Legacy comment translated to English.
         /// </summary>
         public List<string> DllFilePatterns { get; set; }
 

@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：ConnectorInstance.cs
-    文件功能描述：已保存的连接器账号实体
+    File name: ConnectorInstance.cs
+    File description: persisted connector account entity
     
     
-    创建标识：Senparc - 20261111
+    Created by: Senparc - 20261111
     
-    修改标识：Senparc - 20261111
-    修改描述：v0.1.0 保存连接器账号与受保护的配置
+    Modified by: Senparc - 20261111
+    Change description: v0.1.0 store connector accounts and protected configuration
 
 ----------------------------------------------------------------*/
 

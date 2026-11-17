@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：LlModel_GetPageResponse.cs
-    文件功能描述：LlModel_GetPageResponse 相关实现
+    File name: LlModel_GetPageResponse.cs
+    File description: LlModel_GetPageResponse related implementation
     
     
-    创建标识：Senparc - 20260704
+    Created by: Senparc - 20260704
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
 ----------------------------------------------------------------*/
 
@@ -34,12 +34,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
         // public int Id { get; set; }
 
         /// <summary>
-        /// 模型名称
+        /// model name
         /// </summary>
         public string Alias { get; set; }
 
         /// <summary>
-        /// 用户名
+        /// user name
         /// </summary>
         public string Developer => "admin";
 

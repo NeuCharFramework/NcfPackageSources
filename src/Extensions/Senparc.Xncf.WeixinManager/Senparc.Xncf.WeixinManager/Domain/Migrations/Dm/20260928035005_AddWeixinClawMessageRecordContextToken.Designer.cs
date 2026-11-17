@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：20260928035005_AddWeixinClawMessageRecordContextToken.Designer.cs
-    文件功能描述：20260928035005_AddWeixinClawMessageRecordContextToken.Designer.cs implementation and project behavior.
+    File name: 20260928035005_AddWeixinClawMessageRecordContextToken.Designer.cs
+    File description: 20260928035005_AddWeixinClawMessageRecordContextToken.Designer.cs implementation and project behavior.
 
 
-    创建标识：Senparc - 20250712
+    Created by: Senparc - 20250712
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.24.9 0.24.9 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
+    Modified by: Senparc - 20261005
+    Change description: v0.24.9 0.24.9 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.24.16 支持 AddWeixinClawMessageRecordContextToken 数据库迁移
+    Modified by: Senparc - 20261103
+    Change description: v0.24.16 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

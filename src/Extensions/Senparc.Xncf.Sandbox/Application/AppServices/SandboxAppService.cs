@@ -1,36 +1,36 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：SandboxAppService.cs
-    文件功能描述：沙箱 Function / OHS 入口
+    File name: SandboxAppService.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260808
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 支持创建与更新沙箱会话 TTL/永久保持
+    Created by: Senparc - 20260808
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 enhance sandbox preview, Jupyter workspace, and session lifecycle management
 
-    修改标识：Senparc - 20260829
-    修改描述：v0.3.0 支持从全局 NeuCharPivot 受控调用 Sandbox Function
+    Modified by: Senparc - 20260829
+    Change description: v0.3.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260829
-    修改描述：补充 Lab 文件列举的树状 Data 和执行日志
+    Modified by: Senparc - 20260829
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20260918
-    修改描述：v0.3.3 增加 Notebook 创建、别名修改与交互式标准输入 Function
+    Modified by: Senparc - 20260918
+    Change description: v0.3.3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
+    Modified by: Senparc - 20261005
+    Change description: v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
-    修改标识：Senparc - 20261018
-    修改描述：避免 Notebook 语言缺失时静默生成 Python Notebook
+    Modified by: Senparc - 20261018
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.3.5 缺少模板或语言时拒绝静默回退到 Python
+    Modified by: Senparc - 20261021
+    Change description: v0.3.5 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.4.0 add bulk file upload functionality to Sandbox Lab
+    Modified by: Senparc - 20261103
+    Change description: v0.4.0 add bulk file upload functionality to Sandbox Lab
 
 ----------------------------------------------------------------*/
 
@@ -264,7 +264,7 @@ public class SandboxAppService : AppServiceBase
                 if (!names.Add(fileName))
                 {
                     response.Success = false;
-                    response.ErrorMessage = $"批量上传中存在重复文件名：{fileName}";
+                    response.ErrorMessage = $"批量上传中存在重复File name: {fileName}";
                     return null;
                 }
 

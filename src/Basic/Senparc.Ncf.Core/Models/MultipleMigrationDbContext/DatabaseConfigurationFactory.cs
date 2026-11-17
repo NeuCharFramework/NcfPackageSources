@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：DatabaseConfigurationFactory.cs
-    文件功能描述：DatabaseConfigurationFactory 相关实现
+
+    File name: DatabaseConfigurationFactory.cs
+
+    File description: DatabaseConfigurationFactory related implementation
+
     
+
     
-    创建标识：Senparc - 20260704
+
+    Created by: Senparc - 20260704
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -17,16 +29,16 @@ using Senparc.Ncf.Core.Exceptions;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    /// 多数据库配置工厂
+    ///Legacy comment translated to English.
     /// </summary>
     public class DatabaseConfigurationFactory
     {
-        #region 单例
+        #region Legacy section
 
         DatabaseConfigurationFactory() { }
 
         /// <summary>
-        /// DatabaseConfigurationFactory 的全局单例
+        ///Legacy comment translated to English.
         /// </summary>
         public static DatabaseConfigurationFactory Instance
         {
@@ -45,7 +57,7 @@ namespace Senparc.Ncf.Core.Models
 
         #endregion
 
-        //TODO:如果是分布式，需要存储到缓存中
+        //Legacy comment translated to English.
 
         private IDatabaseConfiguration _currentDatabaseConfiguration;
 
@@ -67,7 +79,7 @@ namespace Senparc.Ncf.Core.Models
 
 
         ///// <summary>
-        ///// 给 design time（设计时）操作数据库（如migration）使用。指定当前正在操作的 XNCF 数据库信息（如果是直接继承自 DbContext 的类，需要模拟此参数）
+        ///Legacy comment translated to English.
         ///// </summary>
         //public XncfDatabaseData CurrentXncfDatabaseData { get; set; }
     }

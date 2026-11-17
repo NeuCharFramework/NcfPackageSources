@@ -1,29 +1,29 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：Index.cshtml.cs
-    文件功能描述：Index.cshtml 相关实现
+    File name: Index.cshtml.cs
+    File description: Index.cshtml related implementation
     
     
-    创建标识：Senparc - 20250105
+    Created by: Senparc - 20250105
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.5.0-preview6 新增知识库生命周期管理与 Agent 模板集成
+    Modified by: Senparc - 20260804
+    Change description: v0.5.0-preview6 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.7.0 增强知识库向量发布状态识别
+    Modified by: Senparc - 20260815
+    Change description: v0.7.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.7.0 保持知识库页面与向量状态服务兼容
+    Modified by: Senparc - 20260822
+    Change description: v0.7.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.7.2 修复知识库管理端敏感信息泄露并优化检索交互
+    Modified by: Senparc - 20260915
+    Change description: v0.7.2 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.8.0 upgrade KnowledgeBase retrieval with configurable chunking and re-ranking (backward compatible)
+    Modified by: Senparc - 20261103
+    Change description: v0.8.0 upgrade KnowledgeBase retrieval with configurable chunking and re-ranking (backward compatible)
 
 ----------------------------------------------------------------*/
 

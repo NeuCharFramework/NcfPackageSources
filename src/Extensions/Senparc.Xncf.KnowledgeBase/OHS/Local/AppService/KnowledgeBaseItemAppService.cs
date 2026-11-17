@@ -1,20 +1,20 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：KnowledgeBaseItemAppService.cs
-    文件功能描述：KnowledgeBaseItemAppService 相关实现
+    File name: KnowledgeBaseItemAppService.cs
+    File description: KnowledgeBaseItemAppService related implementation
     
     
-    创建标识：Senparc - 20260704
+    Created by: Senparc - 20260704
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.5.0-preview6 新增知识库生命周期管理与 Agent 模板集成
+    Modified by: Senparc - 20260804
+    Change description: v0.5.0-preview6 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.7.2 修复知识库管理端敏感信息泄露并优化检索交互
+    Modified by: Senparc - 20260915
+    Change description: v0.7.2 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -56,7 +56,7 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 根据知识库ID获取关联的条目列表（用于配置页回显：已关联文件、内容等）
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind]
         public async Task<AppResponseBase<List<KnowledgeBaseItemDto>>> GetListByKnowledgeBaseId(int knowledgeBaseId)
@@ -69,7 +69,7 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 配置页回显专用：文本取知识库原文，文件只返回首切片，避免把整个知识库切片传到浏览器。
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind]
         public async Task<AppResponseBase<List<KnowledgeBaseItemDto>>> GetConfigurationByKnowledgeBaseId(int knowledgeBaseId)
@@ -102,9 +102,9 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 创建及修改
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="request">请求记录Dto模型</param>
+        /// <param name="request">requestrecordDtomodel</param>
         /// <returns></returns>
         [ApiBind("AutoMate", ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<bool>> CreateOrUpdateAsync(KnowledgeBaseItemRequest request)

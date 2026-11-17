@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：FineTuningMigrationResult.cs
-    文件功能描述：描述微调迁移结果
+    File name: FineTuningMigrationResult.cs
+    File description: Related implementation.
     
     
-    创建标识：Senparc - 20261014
+    Created by: Senparc - 20261014
     
-    修改标识：Senparc - 20261021
-    修改描述：v0.17.0 描述微调迁移结果
+    Modified by: Senparc - 20261021
+    Change description: v0.17.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.17.0 add AITokenUsageRecorder and related services for token usage tracking
+    Modified by: Senparc - 20261103
+    Change description: v0.17.0 add AITokenUsageRecorder and related services for token usage tracking
 
 ----------------------------------------------------------------*/
 

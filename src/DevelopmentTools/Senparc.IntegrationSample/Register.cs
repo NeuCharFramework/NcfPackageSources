@@ -1,14 +1,26 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：Register.cs
-    文件功能描述：Register 相关实现
+
+    File name: Register.cs
+
+    File description: Register related implementation
+
     
+
     
-    创建标识：Senparc - 20230426
+
+    Created by: Senparc - 20230426
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -27,7 +39,7 @@ using Senparc.Xncf.AreasBase;
 namespace Senparc.IntegrationSample
 {
     /// <summary>
-    /// 全局注册
+    /// global registration
     /// </summary>
     public static class Register
     {
@@ -40,7 +52,7 @@ namespace Senparc.IntegrationSample
 
         public static void AddNcf(this WebApplicationBuilder builder)
         {
-            //激活 Xncf 扩展引擎（必须）
+            //Legacy comment translated to English.
             var logMsg = builder.StartWebEngine(new[] { "Senparc.IntegrationSample.AreaTests","Senparc.Weixin.MP" });
             Console.WriteLine("============ logMsg =============");
             Console.WriteLine(logMsg);
@@ -55,42 +67,45 @@ namespace Senparc.IntegrationSample
         {
             var env = app.Environment;
 
-            // 启动 CO2NET 全局注册，必须！
-            // 关于 UseSenparcGlobal() 的更多用法见 CO2NET Demo：https://github.com/Senparc/Senparc.CO2NET/blob/master/Sample/Senparc.CO2NET.Sample.netcore3/Startup.cs
+            // start CO2NET global registration，must！
+            //Legacy comment translated to English.
             var registerService = app
-                //全局注册
+                //global registration
                 .UseSenparcGlobal(env, null, globalRegister =>
                 {
-                    //配置全局使用Redis缓存（按需，独立）
-                    if (UseRedis(null, out var redisConfigurationStr))//这里为了方便不同环境的开发者进行配置，做成了判断的方式，实际开发环境一般是确定的，这里的if条件可以忽略
+                    //Legacy comment translated to English.
+                    if (UseRedis(null, out var redisConfigurationStr))//Legacy comment translated to English.
                     {
-                        /* 说明：
-                         * 1、Redis 的连接字符串信息会从 Config.SenparcSetting.Cache_Redis_Configuration 自动获取并注册，如不需要修改，下方方法可以忽略
-                        /* 2、如需手动修改，可以通过下方 SetConfigurationOption 方法手动设置 Redis 链接信息（仅修改配置，不立即启用）
+                        /* description：
+
+                         * Legacy comment translated to English.
+
+                        Legacy comment translated to English.
+
                          */
                         CO2NET.Cache.CsRedis.Register.SetConfigurationOption(redisConfigurationStr);
 
-                        //以下会立即将全局缓存设置为 Redis
-                        CO2NET.Cache.CsRedis.Register.UseKeyValueRedisNow(); //键值对缓存策略（推荐）
-                        /*Senparc.CO2NET.Cache.CsRedis.Register.UseHashRedisNow();*/ //HashSet储存格式的缓存策略 
+                        //Legacy comment translated to English.
+                        CO2NET.Cache.CsRedis.Register.UseKeyValueRedisNow(); //Legacy comment translated to English.
+                        /*Senparc.CO2NET.Cache.CsRedis.Register.UseHashRedisNow();*/ //Legacy comment translated to English.
 
-                        //也可以通过以下方式自定义当前需要启用的缓存策略
-                        //CacheStrategyFactory.RegisterObjectCacheStrategy(() => RedisObjectCacheStrategy.Instance);//键值对
+                        //Legacy comment translated to English.
+                        //CacheStrategyFactory.RegisterObjectCacheStrategy(() => RedisObjectCacheStrategy.Instance);//key-value pair
                         //CacheStrategyFactory.RegisterObjectCacheStrategy(() => RedisHashSetObjectCacheStrategy.Instance);//HashSet
                     }
-                    //如果这里不进行Redis缓存启用，则目前还是默认使用内存缓存 
+                    //Legacy comment translated to English.
                 });
 
-            //XncfModules（必须）
+            //XncfModules（must）
             app.UseXncfModules(registerService);
 
-            //必须在 UseXncfModules 之后
+            //mustin UseXncfModules after
             app.UseNcfDatabase(typeof(TDatabaseConfiguration));
 
         }
 
         /// <summary>
-        /// 判断当前配置是否满足使用 Redis（根据是否已经修改了默认配置字符串判断）
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="senparcSetting"></param>
         /// <returns></returns>
@@ -98,17 +113,17 @@ namespace Senparc.IntegrationSample
         {
             senparcSetting ??= Senparc.CO2NET.Config.SenparcSetting;
             redisConfigurationStr = senparcSetting.Cache_Redis_Configuration;
-            var useRedis = !string.IsNullOrEmpty(redisConfigurationStr) && redisConfigurationStr != "#{Cache_Redis_Configuration}#"/*默认值，不启用*/;
+            var useRedis = !string.IsNullOrEmpty(redisConfigurationStr) && redisConfigurationStr != "#{Cache_Redis_Configuration}#"/*default value; disabled*/;
             return useRedis;
         }
 
         /// <summary>
-        /// 输出启动成功标志
+        /// output the startup success marker
         /// </summary>
         /// <param name="app"></param>
         public static void ShowSuccessTip(this WebApplication app)
         {
-            //输出启动成功标志
+            //output the startup success marker
             Senparc.Ncf.Core.VersionManager.ShowSuccessTip($"\t\tStartup is ready\r\n\t\tStarted at: {StartTime:yyyy-MM-dd HH:mm:ss}\r\n\t\tElapsed: {SystemTime.NowDiff(StartTime).TotalSeconds} s");
         }
 

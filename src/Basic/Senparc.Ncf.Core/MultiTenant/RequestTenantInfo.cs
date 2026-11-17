@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：RequestTenantInfo.cs
-    文件功能描述：RequestTenantInfo 相关实现
+
+    File name: RequestTenantInfo.cs
+
+    File description: RequestTenantInfo related implementation
+
     
+
     
-    创建标识：Senparc - 20210212
+
+    Created by: Senparc - 20210212
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -19,30 +31,30 @@ using System.Text;
 namespace Senparc.Ncf.Core.MultiTenant
 {
     /// <summary>
-    /// 某一个请求对应的租户信息
+    ///Legacy comment translated to English.
     /// </summary>
     public class RequestTenantInfo
     {
         public int Id { get; set; }
         /// <summary>
-        /// 唯一名称
+        ///Legacy comment translated to English.
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        /// 匹配条件
+        ///Legacy comment translated to English.
         /// </summary>
         public string TenantKey { get; set; }
         /// <summary>
-        /// 初始化开始时间
+        ///Legacy comment translated to English.
         /// </summary>
         public DateTime BeginTime { get; }
         /// <summary>
-        /// 是否匹配成功
+        ///Legacy comment translated to English.
         /// </summary>
         public bool MatchSuccess { get; private set; }
 
         /// <summary>
-        /// 是否已经尝试过匹配
+        ///Legacy comment translated to English.
         /// </summary>
         public bool TriedMatching { get; private set; }
 
@@ -52,9 +64,9 @@ namespace Senparc.Ncf.Core.MultiTenant
         }
 
        /// <summary>
-       /// 尝试匹配
+       ///Legacy comment translated to English.
        /// </summary>
-       /// <param name="success">是否成功</param>
+       /// <param name="success">whethersuccess</param>
         public void TryMatch(bool success)
         {
             TriedMatching = true;

@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：TenantInfoDbData.cs
-    文件功能描述：TenantInfoDbData 相关实现
+
+    File name: TenantInfoDbData.cs
+
+    File description: TenantInfoDbData related implementation
+
     
+
     
-    创建标识：Senparc - 20260704
+
+    Created by: Senparc - 20260704
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -45,11 +57,11 @@ namespace Senparc.Xncf.Tenant.Domain.Models
         }
 
         /// <summary>
-        /// 关闭连接（长时间保持一个连接操作会导致数据库操作时间逐渐变长）
+        ///Legacy comment translated to English.
         /// </summary>
         public override void CloseConnection()
         {
-            //COCONET 升级到.net core的过程中注释掉
+            //Legacy comment translated to English.
             //BaseDataContext.Database.Connection.Close();
             dataContext = null;
         }
@@ -63,7 +75,7 @@ namespace Senparc.Xncf.Tenant.Domain.Models
                     //var connectionString = Ncf.Core.Config.SenparcDatabaseConfigs.ClientConnectionString;
 
                     //dataContext = SenparcDI.GetService<SenparcEntities>();
-                    //TODO:当前采用注入可以保证HttpContext单例，如果要全局单例，可采用单件模式（需要先解决释放的问题）
+                    //Legacy comment translated to English.
                 }
                 return dataContext;
             }

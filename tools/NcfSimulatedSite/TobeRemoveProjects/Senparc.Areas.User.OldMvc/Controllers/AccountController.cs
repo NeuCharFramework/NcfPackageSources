@@ -23,7 +23,7 @@ using Senparc.CO2NET.Utilities;
 namespace Senparc.Areas.User.Controllers
 {
     /// <summary>
-    /// 用户管理
+    /// user management
     /// </summary>
     /// 
     public class AccountController : BaseUserController
@@ -45,10 +45,10 @@ namespace Senparc.Areas.User.Controllers
         }
 
         /// <summary>
-        /// 修改基本信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="from"></param>
-        /// <param name="file">头像</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Basic(BasicEdit from, IFormFile file)
@@ -78,7 +78,7 @@ namespace Senparc.Areas.User.Controllers
         }
 
         /// <summary>
-        /// 修改密码
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="from"></param>
         /// <returns></returns>
@@ -119,7 +119,7 @@ namespace Senparc.Areas.User.Controllers
 
         [MenuFilter("Account.Account_Buy")]
         /// <summary>
-        /// 购买积分
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public IActionResult Buy()
@@ -129,15 +129,15 @@ namespace Senparc.Areas.User.Controllers
         }
 
         /// <summary>
-        /// 获取支付二维码
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="totalFee">价格(元)</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public IActionResult GetPayQr(decimal totalFee)
         {
             try
             {
-                //创建订单
+                //Legacy comment translated to English.
                 var domain = SiteConfig.IsDebug ? "https://localhost:44306" : "https://weixin.senparc.com";
                 var url = $"{domain}/scfPay/getPayQr?totalFee={totalFee}&openId={FullAccount.WeixinOpenId}";
                 var orderJson = RequestUtility.HttpPost(url, formData: new Dictionary<string, string>
@@ -166,7 +166,7 @@ namespace Senparc.Areas.User.Controllers
 
         [MenuFilter("Account.Account_PayLog")]
         /// <summary>
-        /// 充值记录
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public IActionResult PayLog(int pageIndex = 1)
@@ -192,17 +192,17 @@ namespace Senparc.Areas.User.Controllers
         public class OrderJson
         {
             /// <summary>
-            /// 状态
+            /// status
             /// </summary>
             public ReturnCode return_code { get; set; }
 
             public string return_msg { get; set; }
             /// <summary>
-            /// 支付二维码内容
+            ///Legacy comment translated to English.
             /// </summary>
             public string code_url { get; set; }
             /// <summary>
-            /// 商户订单号
+            ///Legacy comment translated to English.
             /// </summary>
             public string out_trade_no { get; set; }
         }

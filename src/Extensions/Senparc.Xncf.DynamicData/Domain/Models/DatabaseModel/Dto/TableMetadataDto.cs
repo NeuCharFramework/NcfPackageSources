@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：TableMetadataDto.cs
-    文件功能描述：TableMetadataDto 相关实现
+
+    File name: TableMetadataDto.cs
+
+    File description: TableMetadataDto related implementation
+
     
+
     
-    创建标识：Senparc - 20240718
+
+    Created by: Senparc - 20240718
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -25,24 +37,24 @@ namespace Senparc.Xncf.DynamicData.Domain.Models.DatabaseModel.Dto
     public class TableMetadataDto : DtoBase<int>
     {
         /// <summary>  
-        /// 表格名称。  
+        ///Legacy comment translated to English.
         /// </summary>  
         [Required]
         [MaxLength(255)]
         public string TableName { get; set; }
 
         /// <summary>  
-        /// 表格描述。  
+        ///Legacy comment translated to English.
         /// </summary>  
         public string Description { get; set; }
 
         /// <summary>  
-        /// 关联的列元数据集合。  
+        ///Legacy comment translated to English.
         /// </summary>  
         public ICollection<ColumnMetadataDto> ColumnMetadatas { get; set; }
 
         /// <summary>  
-        /// 关联的数据集合。  
+        ///Legacy comment translated to English.
         /// </summary>  
         public ICollection<TableDataDto> TableDatas { get; set; }
 

@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：WeixinClawAdminBinding.cs
-    文件功能描述：WeixinClawAdminBinding.cs implementation and project behavior.
+    File name: WeixinClawAdminBinding.cs
+    File description: WeixinClawAdminBinding.cs implementation and project behavior.
 
 
-    创建标识：Senparc - 20260926
+    Created by: Senparc - 20260926
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 enhance WeixinClaw integration with new message handling and UI improvements
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 enhance WeixinClaw integration with new message handling and UI improvements
 
 ----------------------------------------------------------------*/
 
@@ -25,8 +25,8 @@ using System.Text.Json;
 namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel;
 
 /// <summary>
-/// 将一个个人微信 Claw 对话绑定到一个 Admin 管理员和 Admin Chat 会话。
-/// 此表属于 Admin 上层，不属于 WeixinManager 通道层。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 [Table(Register.DATABASE_PREFIX + nameof(WeixinClawAdminBinding))]
 [Serializable]

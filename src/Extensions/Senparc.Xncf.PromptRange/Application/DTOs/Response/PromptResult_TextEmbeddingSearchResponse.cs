@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：PromptResult_TextEmbeddingSearchResponse.cs
-    文件功能描述：PromptResult_TextEmbeddingSearchResponse 相关实现
+    File name: PromptResult_TextEmbeddingSearchResponse.cs
+    File description: PromptResult_TextEmbeddingSearchResponse related implementation
     
     
-    创建标识：Senparc - 20260705
+    Created by: Senparc - 20260705
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.16.4-preview3 增强文生图重试机制并兼容 TLS1.2/TLS1.3----------------------------------------------------------------*/
+    Modified by: Senparc - 20260705
+    Change description: v0.16.4-preview3 Updated module behavior and related support.*/
 
 using System.Collections.Generic;
 

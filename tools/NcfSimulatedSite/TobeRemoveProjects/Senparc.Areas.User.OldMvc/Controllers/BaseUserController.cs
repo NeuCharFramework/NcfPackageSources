@@ -36,7 +36,7 @@ namespace Senparc.Areas.User.Controllers
         {
             get
             {
-                //是否已经登录
+                //Legacy comment translated to English.
                 var authenticate = HttpContext.AuthenticateAsync(UserAuthorizeAttribute.AuthenticationScheme)
                     .GetAwaiter().GetResult();
 
@@ -72,7 +72,7 @@ namespace Senparc.Areas.User.Controllers
                 //{
                 //    if (!ModelState.IsValid)
                 //    {
-                //        vd.MessagerList.Add(new Messager(MessageType.danger, "提交信息有错误，请检查。"));
+                //Legacy comment translated to English.
                 //    }
                 //}
             }
@@ -103,7 +103,7 @@ namespace Senparc.Areas.User.Controllers
         [NonAction]
         public override ActionResult RenderError(string message, Exception ex = null)
         {
-            //保留原有的controller和action信息
+            //preserve the original controller and action information
             ViewData["FakeControllerName"] = RouteData.Values["controller"] as string;
             ViewData["FakeActionName"] = RouteData.Values["action"] as string;
 
@@ -111,10 +111,10 @@ namespace Senparc.Areas.User.Controllers
         }
 
         /// <summary>
-        /// 显示Json结果
+        /// displayJsonresult
         /// </summary>
-        /// <param name="success">是否成功</param>
-        /// <param name="result">数据，如果失败，可以为字符串的说明</param>
+        /// <param name="success">whethersuccess</param>
+        ///Legacy comment translated to English.
         /// <param name="jsonSerializerSettings"></param>
         /// <param name="jsonpCallbackFunction"></param>
         /// <returns></returns>
@@ -134,7 +134,7 @@ namespace Senparc.Areas.User.Controllers
             }
             //return Json(json, jsonRequestBehavior);
             //https://stackoverflow.com/questions/4155014/json-asp-net-mvc-maxjsonlength-exception
-            //解决JSON JavaScriptSerializer 进行序列化或反序列化时出错。字符串的长度超过了为 maxJsonLength 属性设置的值
+            //Legacy comment translated to English.
 
             jsonSerializerSettings = jsonSerializerSettings ?? new Newtonsoft.Json.JsonSerializerSettings();
             return new JsonResult(json);

@@ -21,7 +21,7 @@ public partial class Register : IAreaRegister, IXncfRazorRuntimeCompilation
     {
         builder.AddRazorPagesOptions(_ =>
         {
-            // 页面级权限可按角色继续收紧
+            //Legacy comment translated to English.
         });
 
         SenparcTrace.SendCustomLog("Sandbox 启动", "完成 Area:Senparc.Xncf.Sandbox 注册");

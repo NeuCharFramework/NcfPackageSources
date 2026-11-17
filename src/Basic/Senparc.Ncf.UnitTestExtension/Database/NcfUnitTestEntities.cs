@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：NcfUnitTestEntities.cs
-    文件功能描述：NcfUnitTestEntities 相关实现
+
+    File name: NcfUnitTestEntities.cs
+
+    File description: NcfUnitTestEntities related implementation
+
     
+
     
-    创建标识：Senparc - 20260704
+
+    Created by: Senparc - 20260704
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -22,8 +34,8 @@ using Senparc.Xncf.SystemCore.Domain.Database;
 namespace Senparc.Ncf.UnitTestExtension.Database
 {
     /// <summary>
-    /// 模拟 SenparcEntities 或各个 XNCF 模块中的 xxxSenparcEntities。
-    /// 在单元测试过程中，这个类将取代 NCF 运行时的 SenparcEntities，集成所有模块的 DbSet 对象
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public class NcfUnitTestEntities : BasePoolEntities //DbContext
     {

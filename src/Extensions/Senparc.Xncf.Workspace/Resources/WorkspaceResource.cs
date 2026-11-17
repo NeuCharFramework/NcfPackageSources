@@ -1,13 +1,13 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：WorkspaceResource.cs
-    文件功能描述：XNCF 注册本地化显示元数据
+    File name: WorkspaceResource.cs
+    File description: localized display metadata for XNCF registration
     
-    创建标识：Senparc - 20261111
+    Created by: Senparc - 20261111
     
-    修改标识：Senparc - 20261111
-    修改描述：v0.2.7 统一 XNCF Register 显示元数据与多语言资源键
+    Modified by: Senparc - 20261111
+    Change description: v0.2.7 unify XNCF Register display metadata and localization resource keys
 
 ----------------------------------------------------------------*/
 

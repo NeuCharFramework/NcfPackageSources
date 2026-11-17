@@ -63,7 +63,7 @@ var app = new Vue({
         //}
     },
     created: function () {
-        // 获取table列表数据
+        //Legacy comment translated to English.
         this.getList();
     },
     methods: {

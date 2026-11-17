@@ -1,12 +1,12 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：SandboxPortMappingTests.cs
-    文件功能描述：附加端口映射解析回归测试
+    File name: SandboxPortMappingTests.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260918
-    修改标识：Senparc - 20260918
-    修改描述：v0.3.3 新增附加端口映射解析回归测试
+    Created by: Senparc - 20260918
+    Modified by: Senparc - 20260918
+    Change description: v0.3.3 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

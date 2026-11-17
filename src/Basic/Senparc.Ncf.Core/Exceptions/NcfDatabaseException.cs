@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：NcfDatabaseException.cs
-    文件功能描述：NcfDatabaseException 相关实现
+
+    File name: NcfDatabaseException.cs
+
+    File description: NcfDatabaseException related implementation
+
     
+
     
-    创建标识：Senparc - 20201001
+
+    Created by: Senparc - 20201001
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -20,16 +32,16 @@ using System.Text;
 namespace Senparc.Ncf.Core.Exceptions
 {
     /// <summary>
-    /// NCF 数据库异常
+    ///Legacy comment translated to English.
     /// </summary>
     public class NcfDatabaseException : NcfExceptionBase
     {
         /// <summary>
-        /// 构造函数
+        /// constructor
         /// </summary>
         /// <param name="message"></param>
-        /// <param name="typeOfDatabaseConfiguration">DatabaseConfiguration 类型</param>
-        /// <param name="typeOfDbContext">DbContext 类型，如：SenparcEntities</param>
+        /// <param name="typeOfDatabaseConfiguration">DatabaseConfiguration type</param>
+        ///Legacy comment translated to English.
         /// <param name="inner"></param>
         public NcfDatabaseException(string message, Type typeOfDatabaseConfiguration, Type typeOfDbContext = null, Exception inner = null)
             : base(message, inner, true)

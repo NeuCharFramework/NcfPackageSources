@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：SystemManagerSenparcEntities.cs
-    文件功能描述：SystemManagerSenparcEntities 相关实现
+
+    File name: SystemManagerSenparcEntities.cs
+
+    File description: SystemManagerSenparcEntities related implementation
+
     
+
     
-    创建标识：Senparc - 20211128
+
+    Created by: Senparc - 20211128
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -21,7 +33,7 @@ using Senparc.Ncf.Core.Models.DataBaseModel;
 namespace Senparc.Xncf.SystemManager.Domain.DatabaseModel
 {
     /// <summary>
-    /// 当前上下文不应该和租户无关
+    ///Legacy comment translated to English.
     /// </summary>
     public class SystemManagerSenparcEntities : XncfDatabaseDbContext
     {
@@ -30,16 +42,16 @@ namespace Senparc.Xncf.SystemManager.Domain.DatabaseModel
         }
 
         /// <summary>
-        /// 系统设置
+        ///Legacy comment translated to English.
         /// </summary>
         public DbSet<SystemConfig> SystemConfigs { get; set; }
 
         public DbSet<FeedBack> FeedBacks { get; set; }
 
-        //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
+        //DOT REMOVE OR MODIFY THIS LINE - Entities Point
         //ex. public DbSet<Color> Colors { get; set; }
 
-        //如无特殊需需要，OnModelCreating 方法可以不用写，已经在 Register 中要求注册
+        //Legacy comment translated to English.
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
         //}

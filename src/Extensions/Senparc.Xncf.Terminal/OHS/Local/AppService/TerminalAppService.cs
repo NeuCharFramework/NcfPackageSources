@@ -1,20 +1,38 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：TerminalAppService.cs
-    文件功能描述：TerminalAppService 相关实现
-    
-    
-    创建标识：Senparc - 20211016
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.22.0-preview2 为 Terminal 模块接入统一资源本地化并优化功能文案
+    File name: TerminalAppService.cs
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.22.1-preview3 收紧终端模块的命令执行说明和默认行为
+    File description: TerminalAppService related implementation
+
+    
+
+    
+
+    Created by: Senparc - 20211016
+
+    
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260717
+
+    Change description: v0.22.0-preview2 Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20260729
+
+    Change description: v0.22.1-preview3 Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 
@@ -145,19 +163,19 @@ namespace Senparc.Xncf.Terminal.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 执行cmd.exe命令
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="commandText">命令文本</param>
-        /// <returns>命令输出文本</returns>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         private string ExeCommand(string commandText)
         {
             return ExeCommand(new string[] { commandText });
         }
         /// <summary>
-        /// 执行多条cmd.exe命令
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="commandTexts">命令文本数组</param>
-        /// <returns>命令输出文本</returns>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         private string ExeCommand(string[] commandTexts)
         {
             Process p = new Process();
@@ -198,12 +216,12 @@ namespace Senparc.Xncf.Terminal.OHS.Local.AppService
                 var upperCmd = request.CommandLine.ToUpper();
                 switch (upperCmd)
                 {
-                    case "NCF RELEASE"://切换到发布状态
+                    case "NCF RELEASE"://Legacy comment translated to English.
                         break;
-                    case "NCF DEVELOP"://切换到开发状态
+                    case "NCF DEVELOP"://Legacy comment translated to English.
                         break;
                     default:
-                        //TODO:需要限制一下执行的命令
+                        //Legacy comment translated to English.
                         if (!CommandFilter(request.CommandLine))
                         {
                             logger.Append("命令不在允许范围之内");

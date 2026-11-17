@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：FirmwareUpdateConfig.cs
-    文件功能描述：FirmwareUpdateConfig 相关实现
+    File name: FirmwareUpdateConfig.cs
+    File description: FirmwareUpdateConfig related implementation
     
     
-    创建标识：Senparc - 20260504
+    Created by: Senparc - 20260504
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
 ----------------------------------------------------------------*/
 
@@ -18,24 +18,24 @@ using Senparc.Ncf.Core.Models;
 namespace Senparc.Xncf.FirmwareUpdate;
 
 /// <summary>
-/// NCF 安装包镜像任务配置（单行配置）
+///Legacy comment translated to English.
 /// </summary>
 [Table(Register.DATABASE_PREFIX + nameof(FirmwareUpdateConfig))]
 [Serializable]
 public class FirmwareUpdateConfig : EntityBase<int>
 {
     /// <summary>
-    /// 是否启用定时从 GitHub 同步安装包
+    ///Legacy comment translated to English.
     /// </summary>
     public bool AutoMirrorEnabled { get; set; }
 
     /// <summary>
-    /// 检查/同步周期（小时），范围 1–24
+    ///Legacy comment translated to English.
     /// </summary>
     public int UpdateIntervalHours { get; set; } = 24;
 
     /// <summary>
-    /// 上次按周期成功完成同步的 UTC 时间
+    ///Legacy comment translated to English.
     /// </summary>
     public DateTime? LastPeriodicSyncUtc { get; set; }
 }

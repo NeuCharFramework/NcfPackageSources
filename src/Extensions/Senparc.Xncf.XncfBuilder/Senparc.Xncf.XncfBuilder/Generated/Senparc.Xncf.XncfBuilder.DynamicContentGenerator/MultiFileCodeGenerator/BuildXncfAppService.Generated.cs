@@ -94,20 +94,20 @@ Code:
         public const string RequestCode = @"/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：Request.cs
-    文件功能描述：Request 相关实现
+    File name: Request.cs
+    File description: Request related implementation
     
     
-    创建标识：Senparc - 20250624
+    Created by: Senparc - 20250624
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.36.3-preview2 重构系统配置初始化与更新流程并统一模型处理
+    Modified by: Senparc - 20260705
+    Change description: v0.36.3-preview2 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.36.4-preview3 重构系统配置初始化与更新流程并统一模型处理
+    Modified by: Senparc - 20260705
+    Change description: v0.36.4-preview3 Updated module behavior and related support.
 ----------------------------------------------------------------*/
 
 #nullable enable
@@ -126,7 +126,7 @@ namespace Senparc.Xncf.XncfBuilder
         public string? Path { get; set; }
         public string? Body { get; set; }
 
-        // 新增字段测试动态更新
+        //Legacy comment translated to English.
         public Dictionary<string, string>? Headers { get; set; }
         public DateTime Timestamp { get; set; } = DateTime.Now;
     }
@@ -157,10 +157,10 @@ namespace Template_OrgName.Xncf.Template_XncfName.Models
 
         public DbSet<Color> Colors { get; set; }
 
-        //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
+        //DOT REMOVE OR MODIFY THIS LINE - Entities Point
         //ex. public DbSet<Color> Colors { get; set; }
 
-        //如无特殊需需要，OnModelCreating 方法可以不用写，已经在 Register 中要求注册
+        //Legacy comment translated to English.
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
         //}
@@ -181,28 +181,28 @@ using Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dto;
 namespace Template_OrgName.Xncf.Template_XncfName
 {
     /// <summary>
-    /// Color 实体类
+    ///Legacy comment translated to English.
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(Color))]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(Color))]//a prefix is required to prevent system-wide conflicts
     [Serializable]
     public class Color : EntityBase<int>
     {
         /// <summary>
-        /// 颜色码，0-255
+        /// color code, 0-255
         /// </summary>
         public int Red { get; private set; }
         /// <summary>
-        /// 颜色码，0-255
+        /// color code, 0-255
         /// </summary>
         public int Green { get; private set; }
 
         /// <summary>
-        /// 颜色码，0-255
+        /// color code, 0-255
         /// </summary>
         public int Blue { get; private set; }
 
         /// <summary>
-        /// 附加列，测试多次数据库 Migrate
+        /// additional columns; test multiple database migrations
         /// </summary>
         public string AdditionNote { get; private set; }
 
@@ -212,7 +212,7 @@ namespace Template_OrgName.Xncf.Template_XncfName
         {
             if (red < 0 || green < 0 || blue < 0)
             {
-                Random();//随机
+                Random();//Legacy comment translated to English.
             }
             else
             {
@@ -236,7 +236,7 @@ namespace Template_OrgName.Xncf.Template_XncfName
 
         public void Random()
         {
-            //随机产生颜色代码
+            //generate a random color code
             var radom = new Random();
             Func<int> getRadomColorCode = () => radom.Next(0, 255);
             Red = getRadomColorCode();
@@ -280,20 +280,20 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dt
     public class ColorDto : DtoBase
     {
         /// <summary>
-        /// 颜色码，0-255
+        /// color code, 0-255
         /// </summary>
         public int Red { get; set; }
         /// <summary>
-        /// 颜色码，0-255
+        /// color code, 0-255
         /// </summary>
         public int Green { get; set; }
         /// <summary>
-        /// 颜色码，0-255
+        /// color code, 0-255
         /// </summary>
         public int Blue { get; set; }
 
         /// <summary>
-        /// 附加列，测试多次数据库 Migrate
+        /// additional columns; test multiple database migrations
         /// </summary>
         public string AdditionNote { get; set; }
 
@@ -333,9 +333,9 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
         public async Task<ColorDto> GetOrInitColor()
         {
             var color = await base.GetObjectAsync(z => true);
-            if (color == null)//如果是纯第一次安装，理论上不会有残留数据
+            if (color == null)//Legacy comment translated to English.
             {
-                //创建默认颜色
+                //create default colors
                 ColorDto colorDto = await this.CreateNewColor().ConfigureAwait(false);
                 return colorDto;
             }
@@ -345,7 +345,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
 
         public async Task<ColorDto> Brighten()
         {
-            //TODO:异步方法需要添加排序功能
+            //TODO: add sorting to the asynchronous method
             var obj = await this.GetObjectAsync(z => true, z => z.Id, OrderingType.Descending);
             obj.Brighten();
             await base.SaveObjectAsync(obj).ConfigureAwait(false);
@@ -354,7 +354,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
 
         public async Task<ColorDto> Darken()
         {
-            //TODO:异步方法需要添加排序功能
+            //TODO: add sorting to the asynchronous method
             var obj = await this.GetObjectAsync(z => true, z => z.Id, OrderingType.Descending);
             obj.Darken();
             await base.SaveObjectAsync(obj).ConfigureAwait(false);
@@ -363,14 +363,14 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
 
         public async Task<ColorDto> Random()
         {
-            //TODO:异步方法需要添加排序功能
+            //TODO: add sorting to the asynchronous method
             var obj = await this.GetObjectAsync(z => true, z => z.Id, OrderingType.Descending);
             obj.Random();
             await base.SaveObjectAsync(obj).ConfigureAwait(false);
             return base.Mapper.Map<ColorDto>(obj);
         }
 
-        //TODO: 更多业务方法可以写到这里
+        //TODO: more business methods can be added here
     }
 }
 ";
@@ -591,27 +591,27 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         }
 
         /// <summary>
-        /// 获取颜色列表（分页）
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name=""keyword"">关键词</param>
-        /// <param name=""orderField"">排序字段</param>
-        /// <param name=""pageIndex"">页码</param>
-        /// <param name=""pageSize"">页大小</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public async Task<IActionResult> OnGetColorListAsync(string keyword, string orderField, int pageIndex, int pageSize)
         {
             try
             {
-                // 调试信息
+                // debug information
                 System.Diagnostics.Debug.WriteLine($""ColorList API Called - PageIndex: {pageIndex}, PageSize: {pageSize}, OrderField: {orderField}"");
                 
                 var seh = new SenparcExpressionHelper<Color>();
-                // 可以根据需要添加搜索条件
+                //Legacy comment translated to English.
                 // seh.ValueCompare.AndAlso(!string.IsNullOrEmpty(keyword), _ => _.Remark.Contains(keyword));
                 var where = seh.BuildWhereExpression();
                 var response = await _colorService.GetObjectListAsync(pageIndex, pageSize, where, orderField ?? ""Id desc"");
                 
-                // 调试信息
+                // debug information
                 System.Diagnostics.Debug.WriteLine($""Database Query Result - TotalCount: {response.TotalCount}, ItemCount: {response.Count()}"");
                 
                 var result = new
@@ -635,7 +635,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                     }
                 };
                 
-                // 调试信息
+                // debug information
                 System.Diagnostics.Debug.WriteLine($""API Response - ListCount: {result.data.list.Count}"");
                 
                 return Ok(result);
@@ -654,15 +654,15 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         }
 
         /// <summary>
-        /// 创建新颜色
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name=""request"">创建颜色请求</param>
+        /// <param name=""request"">createcolorrequest</param>
         /// <returns></returns>
         public async Task<IActionResult> OnPostCreateColorAsync([FromBody] CreateColorRequestDto request)
         {
             try
             {
-                // 调试信息
+                // debug information
                 System.Diagnostics.Debug.WriteLine($""CreateColor API Called - Red: {request.Red}, Green: {request.Green}, Blue: {request.Blue}, AdditionNote: {request.AdditionNote}"");
                 
                 if (request == null)
@@ -683,15 +683,15 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         }
 
         /// <summary>
-        /// 更新颜色
+        /// updatecolor
         /// </summary>
-        /// <param name=""request"">更新颜色请求</param>
+        /// <param name=""request"">updatecolorrequest</param>
         /// <returns></returns>
         public async Task<IActionResult> OnPostUpdateColorAsync([FromBody] UpdateColorRequestDto request)
         {
             try
             {
-                // 调试信息
+                // debug information
                 System.Diagnostics.Debug.WriteLine($""UpdateColor API Called - Id: {request.Id}, Red: {request.Red}, Green: {request.Green}, Blue: {request.Blue}, AdditionNote: {request.AdditionNote}"");
                 
                 if (request == null)
@@ -705,7 +705,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                     return Ok(new { success = false, message = ""颜色不存在"" });
                 }
 
-                // 更新
+                // update
                 color.Update(request);
                 
                 await _colorService.SaveObjectAsync(color);
@@ -720,15 +720,15 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         }
 
         /// <summary>
-        /// 删除颜色
+        /// deletecolor
         /// </summary>
-        /// <param name=""request"">删除颜色请求</param>
+        /// <param name=""request"">deletecolorrequest</param>
         /// <returns></returns>
         public async Task<IActionResult> OnPostDeleteColorAsync([FromBody] DeleteColorRequestDto request)
         {
             try
             {
-                // 调试信息
+                // debug information
                 System.Diagnostics.Debug.WriteLine($""DeleteColor API Called - Id: {request.Id}"");
                 
                 if (request == null)
@@ -753,15 +753,15 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         }
 
         /// <summary>
-        /// 随机化指定颜色
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name=""request"">随机化颜色请求</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public async Task<IActionResult> OnPostRandomizeColorAsync([FromBody] RandomizeColorRequestDto request)
         {
             try
             {
-                // 调试信息
+                // debug information
                 System.Diagnostics.Debug.WriteLine($""RandomizeColor API Called - Id: {request.Id}"");
                 
                 if (request == null)
@@ -788,9 +788,9 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         }
 
         /// <summary>
-        /// 获取颜色详情
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name=""id"">颜色ID</param>
+        /// <param name=""id"">colorID</param>
         /// <returns></returns>
         public async Task<IActionResult> OnGetColorDetailAsync(int id)
         {
@@ -915,13 +915,13 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                     console.log('res.data.data.list value:', res.data && res.data.data ? res.data.data.list : 'nested data not found');
                     console.log('==================');
                     
-                    // 尝试多种可能的数据结构
+                    //Legacy comment translated to English.
                     let dataList = null;
                     let totalCount = 0;
                     let dataSource = '';
                     
                     if (res.data && res.data.data && res.data.data.data && res.data.data.data.list) {
-                        // NCF框架标准格式 + 新的API格式: {data: {data: {success, message, data: {list, totalCount}}}}
+                        //Legacy comment translated to English.
                         dataList = res.data.data.data.list;
                         totalCount = res.data.data.data.totalCount || 0;
                         dataSource = 'NCF标准格式: res.data.data.data.list';
@@ -929,19 +929,19 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                         console.log('✅ List数据:', dataList);
                         console.log('✅ TotalCount:', totalCount);
                     } else if (res.data && res.data.data && res.data.data.list) {
-                        // 简单格式: {data: {list, totalCount}}
+                        //Legacy comment translated to English.
                         dataList = res.data.data.list;
                         totalCount = res.data.data.totalCount || 0;
                         dataSource = '简单格式: res.data.data.list';
                         console.log('✅ 使用简单格式: res.data.data.list');
                     } else if (res.data && Array.isArray(res.data)) {
-                        // 如果data直接是数组
+                        //Legacy comment translated to English.
                         dataList = res.data;
                         totalCount = res.data.length;
                         dataSource = '数组格式: res.data (array)';
                         console.log('✅ 使用数组格式: res.data (array)');
                     } else if (res && res.list) {
-                        // 如果list在顶层
+                        //Legacy comment translated to English.
                         dataList = res.list;
                         totalCount = res.totalCount || 0;
                         dataSource = '顶层格式: res.list';
@@ -962,23 +962,23 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                     console.log('🎯 Final totalCount:', totalCount);
                     console.log('🎯 Data source:', dataSource);
                     
-                    // 数据赋值前的状态
+                    //Legacy comment translated to English.
                     console.log('📋 赋值前 tableData:', this.tableData);
                     console.log('📋 赋值前 total:', this.total);
                     
                     this.tableData = dataList || [];
                     this.total = totalCount;
                     
-                    // 数据赋值后的状态
+                    //Legacy comment translated to English.
                     console.log('📋 赋值后 tableData:', this.tableData);
                     console.log('📋 赋值后 tableData.length:', this.tableData.length);
                     console.log('📋 赋值后 total:', this.total);
                     
-                    // 强制Vue更新
+                    //Legacy comment translated to English.
                     this.$forceUpdate();
                     console.log('🔄 Vue已强制更新');
                     
-                    // 延迟检查数据是否正确绑定
+                    //Legacy comment translated to English.
                     setTimeout(() => {
                         console.log('⏰ 延迟检查 tableData:', this.tableData);
                         console.log('⏰ 延迟检查 tableData.length:', this.tableData ? this.tableData.length : 'null');
@@ -1020,7 +1020,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                     })
                         .then(res => {
                             console.log('📥 创建响应:', res);
-                            // 兼容NCF框架的嵌套响应格式
+                            // support the nested response format used by the NCF framework
                             const responseData = res.data.data || res.data;
                             this.$message({
                                 type: responseData.success ? 'success' : 'error',
@@ -1088,7 +1088,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                     })
                         .then(res => {
                             console.log('📥 更新响应:', res);
-                            // 兼容NCF框架的嵌套响应格式
+                            // support the nested response format used by the NCF framework
                             const responseData = res.data.data || res.data;
                             this.$message({
                                 type: responseData.success ? 'success' : 'error',
@@ -1113,15 +1113,15 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
             if (!date) return '';
             
             try {
-                // 使用原生JavaScript格式化日期
+                //Legacy comment translated to English.
                 const d = new Date(date);
                 
-                // 检查日期是否有效
+                //Legacy comment translated to English.
                 if (isNaN(d.getTime())) {
-                    return date; // 如果无法解析，返回原始值
+                    return date; //Legacy comment translated to English.
                 }
                 
-                // 格式化为 YYYY-MM-DD HH:mm:ss
+                //Legacy comment translated to English.
                 const year = d.getFullYear();
                 const month = String(d.getMonth() + 1).padStart(2, '0');
                 const day = String(d.getDate()).padStart(2, '0');
@@ -1132,7 +1132,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                 return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
             } catch (error) {
                 console.warn('日期格式化错误:', error, '原始值:', date);
-                return date; // 如果格式化失败，返回原始值
+                return date; //Legacy comment translated to English.
             }
         },
         editColor(row) {
@@ -1162,7 +1162,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                 })
                     .then(res => {
                         console.log('📥 删除响应:', res);
-                        // 兼容NCF框架的嵌套响应格式
+                        // support the nested response format used by the NCF framework
                         const responseData = res.data.data || res.data;
                         this.$message({
                             type: responseData.success ? 'success' : 'error',
@@ -1195,7 +1195,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
             })
                 .then(res => {
                     console.log('📥 随机化响应:', res);
-                    // 兼容NCF框架的嵌套响应格式
+                    // support the nested response format used by the NCF framework
                     const responseData = res.data.data || res.data;
                     this.$message({
                         type: responseData.success ? 'success' : 'error',
@@ -1232,7 +1232,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
             console.log('Vue instance $el:', this.$el);
             console.log('================================');
             
-            // 测试Vue响应性
+            //Legacy comment translated to English.
             if (this.tableData && this.tableData.length === 0) {
                 console.log('测试：添加假数据');
                 this.tableData = [

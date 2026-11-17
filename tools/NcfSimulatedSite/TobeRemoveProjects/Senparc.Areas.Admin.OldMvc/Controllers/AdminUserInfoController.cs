@@ -97,7 +97,7 @@ namespace Senparc.Areas.Admin.Controllers
 
             if (!model.Password.IsNullOrEmpty())
             {
-                userInfo.Password = this._adminUserInfoService.GetPassword(model.Password, userInfo.PasswordSalt, false);//生成密码
+                userInfo.Password = this._adminUserInfoService.GetPassword(model.Password, userInfo.PasswordSalt, false);//Legacy comment translated to English.
             }
 
             await this.TryUpdateModelAsync(userInfo, "", z => z.Note, z => z.UserName);

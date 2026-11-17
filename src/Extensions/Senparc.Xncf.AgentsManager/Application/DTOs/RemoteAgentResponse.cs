@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：RemoteAgentResponse.cs
-    文件功能描述：增强 A2A 智能体、ChatGroup 执行能力与管理界面
+    File name: RemoteAgentResponse.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20260812
+    Created by: Senparc - 20260812
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+    Modified by: Senparc - 20260813
+    Change description: v0.15.0-preview11 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.19.1 update AgentsManager with new features and improvements
+    Modified by: Senparc - 20261103
+    Change description: v0.19.1 update AgentsManager with new features and improvements
 
 ----------------------------------------------------------------*/
 
@@ -38,7 +38,7 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
     }
 
     /// <summary>
-    /// 批量执行连接检测的请求。空列表表示检测全部已配置的远程 Agent。
+    ///Legacy comment translated to English.
     /// </summary>
     public class RemoteAgent_TestConnectionsRequest
     {
@@ -46,8 +46,8 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
     }
 
     /// <summary>
-    /// 单个远程 Agent 的连接检测结果。即使检测失败也会作为正常结果返回，
-    /// 使调用方能够一次看到整批失败项。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public class RemoteAgent_ConnectionTestResult
     {

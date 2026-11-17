@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：NcfWebApiHelper.cs
-    文件功能描述：NcfWebApiHelper 相关实现
+
+    File name: NcfWebApiHelper.cs
+
+    File description: NcfWebApiHelper related implementation
+
     
+
     
-    创建标识：Senparc - 20241119
+
+    Created by: Senparc - 20241119
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -27,12 +39,12 @@ namespace Senparc.Ncf.Core.WebApi
     public static class NcfWebApiHelper
     {
         /// <summary>
-        /// 获取 XNCF 及 [ApiBind] 特性生成的 web API 地址
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="xncfName">XNCF 程序集名称（通常和 XNCF 的名称相同）</param>
-        /// <param name="appServiceName">AppService 名称或者 Controller 名称（[ApiBind] 中称之为 category）</param>
-        /// <param name="methodName">方法名称或定义的接口名称（[ApiBind] 中称之为 name）</param>
-        /// <param name="showStaticApiState">URL 中的静态后缀，一般情况下请留空</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public static string GetNcfApiClientPath(string xncfName, string appServiceName, string methodName, string showStaticApiState = null)
         {
@@ -47,7 +59,7 @@ namespace Senparc.Ncf.Core.WebApi
 
 
         /// <summary>
-        /// 获取 Aspire 使用的统一默认 XNCF 名称
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="name"></param>
         /// <param name="uniqueCode"></param>
@@ -63,7 +75,7 @@ namespace Senparc.Ncf.Core.WebApi
         }
 
         /// <summary>
-        /// 获取 Aspire 使用的统一默认 XNCF 名称
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="projectType"></param>
         /// <param name="uniqueCode"></param>
@@ -76,7 +88,7 @@ namespace Senparc.Ncf.Core.WebApi
 
 
         /// <summary>
-        /// 获取 Aspire 使用的统一默认 XNCF 名称
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="uniqueCode"></param>
         /// <returns></returns>

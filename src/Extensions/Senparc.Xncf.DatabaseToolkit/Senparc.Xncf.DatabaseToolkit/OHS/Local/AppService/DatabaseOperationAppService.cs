@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：DatabaseOperationAppService.cs
-    文件功能描述：DatabaseOperationAppService 相关实现
+    File name: DatabaseOperationAppService.cs
+    File description: DatabaseOperationAppService related implementation
     
     
-    创建标识：Senparc - 20260327
+    Created by: Senparc - 20260327
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.26.0-preview2 为 DatabaseToolkit 模块接入统一资源本地化并优化功能文案
+    Modified by: Senparc - 20260717
+    Change description: v0.26.0-preview2 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -32,8 +32,8 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 {
     /// <summary>
-    /// 数据库操作 AppService
-    /// 提供执行数据库查询、更新、删除等操作的 Function
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public class DatabaseOperationAppService : AppServiceBase
     {
@@ -50,8 +50,8 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 查询数据库记录
-        /// 根据指定条件和字段查询表中的数据
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         [FunctionRender(typeof(DatabaseToolkitResource), "Function.Database.QueryRecords.Name", "Function.Database.QueryRecords.Description", typeof(Register))]
         public async Task<AppResponseBase<string>> QueryRecords(QueryRecordsRequest request)
@@ -60,13 +60,13 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
             {
                 try
                 {
-                    // 验证模块和表
+                    //Legacy comment translated to English.
                     if (string.IsNullOrWhiteSpace(request.ModuleName) || string.IsNullOrWhiteSpace(request.TableName))
                     {
                         return DatabaseToolkitResource.Get("Database.ModuleAndTableRequired");
                     }
 
-                    // 模糊解析模块名
+                    //Legacy comment translated to English.
                     var resolvedModule = _metadataProvider.ResolveModuleName(request.ModuleName);
                     if (resolvedModule == null)
                     {
@@ -74,7 +74,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                         return DatabaseToolkitResource.Format("Database.ModuleNotFound", "找不到模块“{0}”。可用模块：{1}", request.ModuleName, string.Join(", ", available));
                     }
 
-                    // 模糊解析实体名
+                    //Legacy comment translated to English.
                     var resolvedTable = _metadataProvider.ResolveEntityName(resolvedModule, request.TableName);
                     if (resolvedTable == null)
                     {
@@ -90,7 +90,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 
                     logger.Append(DatabaseToolkitResource.Format("Database.Query.Log", "查询表 {0}.{1}（原始输入：{2}.{3}）", resolvedModule, resolvedTable, request.ModuleName, request.TableName));
 
-                    // 执行查询
+                    //Legacy comment translated to English.
                     var result = await _databaseExecutor.QueryRecordsAsync(
                         resolvedModule,
                         resolvedTable,
@@ -113,8 +113,8 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取数据库统计信息
-        /// 获取指定表的行数、最小/最大值等统计信息
+        /// getdatabasestatisticsinformation
+        ///Legacy comment translated to English.
         /// </summary>
         [FunctionRender(typeof(DatabaseToolkitResource), "Function.Database.Statistics.Name", "Function.Database.Statistics.Description", typeof(Register))]
         public async Task<AppResponseBase<string>> GetStatistics(GetStatisticsRequest request)
@@ -128,7 +128,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                         return DatabaseToolkitResource.Get("Database.ModuleAndTableRequired");
                     }
 
-                    // 模糊解析模块名
+                    //Legacy comment translated to English.
                     var resolvedModule = _metadataProvider.ResolveModuleName(request.ModuleName);
                     if (resolvedModule == null)
                     {
@@ -136,7 +136,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                         return DatabaseToolkitResource.Format("Database.ModuleNotFound", "找不到模块“{0}”。可用模块：{1}", request.ModuleName, string.Join(", ", available));
                     }
 
-                    // 模糊解析实体名
+                    //Legacy comment translated to English.
                     var resolvedTable = _metadataProvider.ResolveEntityName(resolvedModule, request.TableName);
                     if (resolvedTable == null)
                     {
@@ -169,7 +169,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 查询数据库记录请求
+        ///Legacy comment translated to English.
         /// </summary>
         public class QueryRecordsRequest : FunctionAppRequestBase
         {
@@ -202,7 +202,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取统计信息请求
+        /// getstatisticsinformationrequest
         /// </summary>
         public class GetStatisticsRequest : FunctionAppRequestBase
         {

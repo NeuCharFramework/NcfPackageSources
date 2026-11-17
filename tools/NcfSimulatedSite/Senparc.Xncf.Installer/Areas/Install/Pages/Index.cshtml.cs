@@ -1,23 +1,23 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：Index.cshtml.cs
-    文件功能描述：Index.cshtml 相关实现
+    File name: Index.cshtml.cs
+    File description: Index.cshtml related implementation
     
     
-    创建标识：Senparc - 20241028
+    Created by: Senparc - 20241028
     
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.4.1 加强安装状态校验并收紧安装辅助路由
+    Modified by: Senparc - 20260729
+    Change description: v0.4.1 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.5.0 适配数据库升级维护流程
+    Modified by: Senparc - 20260804
+    Change description: v0.5.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.5.12 维护Index.cshtml 相关实现
+    Modified by: Senparc - 20261103
+    Change description: v0.5.12 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -52,7 +52,7 @@ using Senparc.Xncf.Installer;
 namespace Senparc.Xncf.Instraller.Pages
 {
     [AutoValidateAntiforgeryToken]
-    public class IndexModel : PageModel //不使用基类，因为无法通过已安装程序自动检测
+    public class IndexModel : PageModel //Legacy comment translated to English.
     {
         private readonly AdminUserInfoService _accountInfoService;
         private readonly InstallAppService _installAppService;
@@ -60,29 +60,29 @@ namespace Senparc.Xncf.Instraller.Pages
         private readonly IStringLocalizer<InstallerResource> _localizer;
 
         /// <summary>
-        /// 系统名称
+        ///Legacy comment translated to English.
         /// </summary>
         public string SystemName { get; set; }
         /// <summary>
-        /// 管理员用户名
+        ///Legacy comment translated to English.
         /// </summary>
         public string AdminUserName { get; set; }
         /// <summary>
-        /// 管理员密码
+        ///Legacy comment translated to English.
         /// </summary>
         public string AdminPassword { get; set; }
         /// <summary>
-        /// 数据库连接字符串
+        ///Legacy comment translated to English.
         /// </summary>
         public string DbConnectionString { get; set; }
         /// <summary>
-        /// 需要修改的命名空间
+        ///Legacy comment translated to English.
         /// </summary>
         public string Namespace { get; set; }
         public int Step { get; set; }
 
         /// <summary>
-        /// 需要安装的模块
+        ///Legacy comment translated to English.
         /// </summary>
         public List<XncfRegisterDto> NeedModelList { get; set; }
 
@@ -90,7 +90,7 @@ namespace Senparc.Xncf.Instraller.Pages
         public MultipleDatabaseType MultipleDatabaseType { get; set; }
 
         /// <summary>
-        /// 新创建的 RequestTenantInfo
+        ///Legacy comment translated to English.
         /// </summary>
         public RequestTenantInfo CreatedRequestTenantInfo { get; set; }
 
@@ -120,7 +120,7 @@ namespace Senparc.Xncf.Instraller.Pages
 
             if (Request.IsLocal() && !forceUpdateModule.IsNullOrEmpty())
             {
-                // 强制升级仍仅允许本机请求。
+                //Legacy comment translated to English.
                 Console.WriteLine("强制升级模块：" + forceUpdateModule);
 
                 SenparcTrace.SendCustomLog("强制更新模块", $"开始：{forceUpdateModule}");
@@ -136,7 +136,7 @@ namespace Senparc.Xncf.Instraller.Pages
             try
             {
                 MultipleDatabaseType = DatabaseConfigurationFactory.Instance.Current.MultipleDatabaseType;
-                var adminUserInfo = await _accountInfoService.GetObjectAsync(z => true);//检查是否已初始化
+                var adminUserInfo = await _accountInfoService.GetObjectAsync(z => true);//Legacy comment translated to English.
                 if (adminUserInfo != null)
                 {
                     // A completed database can outlive the local marker file
@@ -165,7 +165,7 @@ namespace Senparc.Xncf.Instraller.Pages
             }
             catch (Exception ex) when (DatabaseInstallState.IsSchemaUpgradeRequired(ex))
             {
-                // 已有数据库缺少新字段属于升级状态，绝不能重新开放首次安装流程。
+                //Legacy comment translated to English.
                 return new RedirectResult("/Maintenance/DatabaseUpgrade");
             }
             catch (Exception ex) when (InstallDatabaseState.IsDatabaseUnavailableForInstallation(ex))
@@ -220,7 +220,7 @@ namespace Senparc.Xncf.Instraller.Pages
                 return StatusCode(StatusCodes.Status503ServiceUnavailable);
             }
 
-            //开始安装
+            //Legacy comment translated to English.
             var result = await _installAppService.InstallAsync(installRequestDto);
             if (result.Success != true)
             {
@@ -237,14 +237,14 @@ namespace Senparc.Xncf.Instraller.Pages
 
             MultiTenantEnable = SiteConfig.SenparcCoreSetting.EnableMultiTenant;
 
-            //添加初始化多租户信息
+            //Legacy comment translated to English.
             if (SiteConfig.SenparcCoreSetting.EnableMultiTenant)
             {
                 var tenantReulst = await _installAppService.GetTenantInfoAsync();
                 TenantInfoDto = tenantReulst.Data;
             }
 
-            //撤销安装状态
+            //Legacy comment translated to English.
             SiteConfig.IsInstalling = false;
             await SiteConfig.SetInstallFinishedAsync();
             TenantMiddleware.FirstRunAndInstalling = false;

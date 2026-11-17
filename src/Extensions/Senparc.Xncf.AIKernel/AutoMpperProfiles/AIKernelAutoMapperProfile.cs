@@ -1,17 +1,32 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：AIKernelAutoMapperProfile.cs
-    文件功能描述：AIKernelAutoMapperProfile 相关实现
-    
-    
-    创建标识：Senparc - 20231229
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.16.0 新增 AI Token 用量监控与模型选择能力
+    Copyright (C) 2026 Senparc
+
+  
+
+    File name: AIKernelAutoMapperProfile.cs
+
+    File description: AIKernelAutoMapperProfile related implementation
+
+    
+
+    
+
+    Created by: Senparc - 20231229
+
+    
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260915
+
+    Change description: v0.16.0 Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 

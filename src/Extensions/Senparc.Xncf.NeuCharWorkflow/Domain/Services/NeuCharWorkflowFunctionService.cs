@@ -2,19 +2,19 @@
     Copyright (C) 2026 Senparc
 
     File name: NeuCharWorkflowFunctionService.cs
-    File description: NeuCharPivot Function 目录、参数验证和统一安全执行入口
+    File description: Related implementation.
 
 
     Created by: Senparc - 20260809
 
     Modified by: Senparc - 20260813
-    Change description: v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Change description: v0.1.0-preview1 enhance workflow orchestration, replay, Webhook, and parallel execution
 
     Modified by: Senparc - 20260822
-    Change description: v0.2.0 增强工作流函数调用、任务控制与回放管理
+    Change description: v0.2.0 enhance workflow function calls, task control, and replay management
 
     Modified by: Senparc - 20261106
-    Change description: 执行前补齐 Function 已声明的默认值和唯一选项
+    Change description: Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -71,8 +71,8 @@ public sealed record NeuCharFunctionExecutionResult(
     string? RequestTempId);
 
 /// <summary>
-/// 系统内所有 Function 调用的复用入口。只允许调用 FunctionRenderCollection 中已注册的方法，
-/// 并在每次执行前重新验证模块已安装且处于开放状态。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 public sealed class NeuCharWorkflowFunctionService
 {

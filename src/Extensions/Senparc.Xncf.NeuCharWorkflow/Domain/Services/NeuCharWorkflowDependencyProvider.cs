@@ -2,13 +2,13 @@
     Copyright (C) 2026 Senparc
 
     File name: NeuCharWorkflowDependencyProvider.cs
-    File description: NeuCharWorkflowDependencyProvider.cs 相关实现
+    File description: NeuCharWorkflowDependencyProvider.cs related implementation
 
 
     Created by: Senparc - 20260822
 
     Modified by: Senparc - 20260822
-    Change description: v0.2.0 增强工作流函数调用、任务控制与回放管理
+    Change description: v0.2.0 enhance workflow function calls, task control, and replay management
 
 ----------------------------------------------------------------*/
 

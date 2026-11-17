@@ -12,7 +12,7 @@ using Senparc.Weixin;
 namespace Senparc.Mvc.Filter
 {
     /// <summary>
-    /// 跟踪页面执行时间
+    ///Legacy comment translated to English.
     /// </summary>
     [SuppressMessage("Microsoft.Performance", "CA1813:AvoidUnsealedAttributes",
       Justification = "Unsealed so that subclassed types can set properties in the default constructor or override our behavior.")]
@@ -20,23 +20,23 @@ namespace Senparc.Mvc.Filter
     public class TrackPageLoadPerformanceAttribute : ActionFilterAttribute
     {
         /// <summary>
-        /// 在指定的ActionName下，记录页面时间（*为所有，多个ActionName使用英文,分开）
+        ///Legacy comment translated to English.
         /// </summary>
         public string RecordActionName { get; set; }
 
-        private const int WARM_LOAD_SECONDS = 2;//报警时间（秒）
+        private const int WARM_LOAD_SECONDS = 2;//Legacy comment translated to English.
 
-        //创建字典来记录开始时间，key是访问的线程Id.
+        //Legacy comment translated to English.
         private readonly Dictionary<int, DateTime> _start = new Dictionary<int, DateTime>();
 
-        //创建字典来记录当前访问的页面Url.
+        //Legacy comment translated to English.
         private readonly Dictionary<int, string> _url = new Dictionary<int, string>();
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            //过滤掉ChildAction, 因为ChildAction实际上不是一个单独的页面
+            //Legacy comment translated to English.
 
-            //COCONET 目前已经没有ChildAction的概念？
+            //Legacy comment translated to English.
             //https://www.davepaquette.com/archive/2016/01/02/goodbye-child-actions-hello-view-components.aspx
             //if (filterContext.IsChildAction)
             //{
@@ -67,9 +67,9 @@ namespace Senparc.Mvc.Filter
             try
             {
 
-                //计算出当前页面访问耗时
+                //Legacy comment translated to English.
                 var costSeconds = (DateTime.Now - _start[currentThreadId]).TotalSeconds;
-                if (costSeconds > 2)//如果耗时超过2秒，就是用log4net打印出，具体是哪个页面访问超过了2秒，具体使用了多长时间。
+                if (costSeconds > 2)//Legacy comment translated to English.
                 {
                     LogUtility.TrackPageLoadPerformance.Warn($"页面执行时间超过{WARM_LOAD_SECONDS}秒。时间：{costSeconds}，地址：{_url[currentThreadId]}");
                 }

@@ -26,30 +26,30 @@ namespace Senparc.Mvc
 
             var modelType = bingdingType.GetGenericArguments()[0];
             var listType = typeof(List<>).MakeGenericType(modelType);
-            Profix = modelType.Name + ".";//类名作为前缀
+            Profix = modelType.Name + ".";//Legacy comment translated to English.
 
             //var obj = bingdingType.Assembly.CreateInstance(bingdingType.FullName);
-            var list = Activator.CreateInstance(listType);//获取List<T>实例
-            var addMethod = listType.GetMethod("Add");//List<T>.Add方法
+            var list = Activator.CreateInstance(listType);//Legacy comment translated to English.
+            var addMethod = listType.GetMethod("Add");//List<T>.Addmethod
 
             var formCollection = bindingContext.HttpContext.Request.Form;
 
             var valueCollection = new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase);
             var properties = modelType.GetProperties();
-            var recordCount = 0;//总共记录条数
-            //收集所有可用属性
+            var recordCount = 0;//Legacy comment translated to English.
+            //Legacy comment translated to English.
             foreach (var prop in properties)
             {
                 var formKey = Profix + prop.Name;
                 var formValues = formCollection[formKey];
                 if (formValues.Count > 0)
                 {
-                    //存在
+                    //Legacy comment translated to English.
                     if (recordCount == 0)
                     {
-                        //计算记录数量
+                        //Legacy comment translated to English.
                         recordCount = formValues.Count;
-                        //Senparc.Log.LogUtility.ReportLogger.DebugFormat("recordCount数量：{0},字段：{1}", recordCount, formKey);
+                        //Legacy comment translated to English.
                     }
                     if (formValues.Count != recordCount)
                     {
@@ -61,13 +61,13 @@ namespace Senparc.Mvc
 
             for (int i = 0; i < recordCount; i++)
             {
-                //这里默认为所有属性条数一致，如果不一致或出错，自然抛出错误
+                //Legacy comment translated to English.
                 var entity = Activator.CreateInstance(modelType);
                 foreach (var item in valueCollection)
                 {
-                    ReflectorUtility.SetPropertyValue(entity, modelType, item.Key, item.Value[i]);//设置字段
+                    ReflectorUtility.SetPropertyValue(entity, modelType, item.Key, item.Value[i]);//Legacy comment translated to English.
                 }
-                addMethod.Invoke((object)list, new object[] { entity });//加入列表
+                addMethod.Invoke((object)list, new object[] { entity });//Legacy comment translated to English.
             }
 
             /*return Task*/;

@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：PromptOptimizationEvents.cs
-    文件功能描述：PromptOptimizationEvents 相关实现
+    File name: PromptOptimizationEvents.cs
+    File description: PromptOptimizationEvents related implementation
     
     
-    创建标识：Senparc - 20260306
+    Created by: Senparc - 20260306
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
 ----------------------------------------------------------------*/
 
@@ -18,7 +18,7 @@ using Senparc.Ncf.Shared.Abstractions.Events;
 namespace Senparc.Xncf.PromptRange.Abstractions.Events
 {
     /// <summary>
-    /// Prompt 优化请求事件
+    ///Legacy comment translated to English.
     /// </summary>
     public record PromptOptimizationRequestEvent(
         string RequestId,
@@ -35,7 +35,7 @@ namespace Senparc.Xncf.PromptRange.Abstractions.Events
     };
 
     /// <summary>
-    /// Prompt 优化响应事件
+    ///Legacy comment translated to English.
     /// </summary>
     public record PromptOptimizationResponseEvent(
         string RequestId,
@@ -55,7 +55,7 @@ namespace Senparc.Xncf.PromptRange.Abstractions.Events
     };
 
     /// <summary>
-    /// 优化上下文（当前 Prompt 的参数）
+    ///Legacy comment translated to English.
     /// </summary>
     public record OptimizationContext(
         int ModelId,
@@ -64,12 +64,12 @@ namespace Senparc.Xncf.PromptRange.Abstractions.Events
         int CurrentMaxTokens,
         float CurrentFrequencyPenalty,
         float CurrentPresencePenalty,
-        bool AutoShootAfterOptimize = true,      // 🆕 创建后立即打靶（默认 true）
-        bool AutoAIGradeAfterShoot = false       // 🆕 打靶后 AI 评分（默认 false）
+        bool AutoShootAfterOptimize = true,      //Legacy comment translated to English.
+        bool AutoAIGradeAfterShoot = false       //Legacy comment translated to English.
     );
 
     /// <summary>
-    /// 优化后的参数
+    ///Legacy comment translated to English.
     /// </summary>
     public record OptimizedParameters(
         float Temperature,

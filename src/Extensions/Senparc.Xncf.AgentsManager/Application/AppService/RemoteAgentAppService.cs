@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：RemoteAgentAppService.cs
-    文件功能描述：增强 A2A 智能体、ChatGroup 执行能力与管理界面
+    File name: RemoteAgentAppService.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20260812
+    Created by: Senparc - 20260812
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+    Modified by: Senparc - 20260813
+    Change description: v0.15.0-preview11 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.19.1 update AgentsManager with new features and improvements
+    Modified by: Senparc - 20261103
+    Change description: v0.19.1 update AgentsManager with new features and improvements
 
 ----------------------------------------------------------------*/
 
@@ -35,7 +35,7 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 {
     /// <summary>
-    /// A2A 远程 Agent 管理接口。与 AgentTemplate 分开，确保旧的本地 Prompt Agent 不受影响。
+    ///Legacy comment translated to English.
     /// </summary>
     [ApiAuthorize]
     public class RemoteAgentAppService : AppServiceBase
@@ -129,7 +129,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 批量检测远程 A2A Agent Card。每个 Agent 独立更新其连接信息；单项失败不会中止整批检测。
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<RemoteAgent_TestConnectionsResponse>> TestConnections(

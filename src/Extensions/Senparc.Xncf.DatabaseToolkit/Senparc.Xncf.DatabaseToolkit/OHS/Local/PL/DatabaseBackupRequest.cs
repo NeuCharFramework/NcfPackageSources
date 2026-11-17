@@ -1,17 +1,32 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：DatabaseBackupRequest.cs
-    文件功能描述：DatabaseBackupRequest 相关实现
-    
-    
-    创建标识：Senparc - 20211014
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.26.0-preview2 为 DatabaseToolkit 模块接入统一资源本地化并优化功能文案
+    Copyright (C) 2026 Senparc
+
+  
+
+    File name: DatabaseBackupRequest.cs
+
+    File description: DatabaseBackupRequest related implementation
+
+    
+
+    
+
+    Created by: Senparc - 20211014
+
+    
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260717
+
+    Change description: v0.26.0-preview2 Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 

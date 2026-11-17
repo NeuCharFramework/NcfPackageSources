@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：EmailExtensionResource.cs
-    文件功能描述：EmailExtensionResource 相关实现
+    File name: EmailExtensionResource.cs
+    File description: EmailExtensionResource related implementation
 
-    创建标识：Senparc - 20261111
-    修改标识：Senparc - 20261111
-    修改描述：v0.12.14 将 EmailExtension Register 显示元数据接入统一资源本地化
+    Created by: Senparc - 20261111
+    Modified by: Senparc - 20261111
+    Change description: v0.12.14 integrate EmailExtension Register display metadata with shared resource localization
 
 ----------------------------------------------------------------*/
 #nullable enable

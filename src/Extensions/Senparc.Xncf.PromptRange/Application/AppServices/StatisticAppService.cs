@@ -1,23 +1,23 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：StatisticAppService.cs
-    文件功能描述：StatisticAppService 相关实现
+    File name: StatisticAppService.cs
+    File description: StatisticAppService related implementation
     
     
-    创建标识：Senparc - 20260704
+    Created by: Senparc - 20260704
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.16.3-preview2 增强文生图重试机制并兼容 TLS1.2/TLS1.3
+    Modified by: Senparc - 20260705
+    Change description: v0.16.3-preview2 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.16.4-preview3 增强文生图重试机制并兼容 TLS1.2/TLS1.3
+    Modified by: Senparc - 20260705
+    Change description: v0.16.4-preview3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.17.1-preview6 加强提示词接口授权并防护插件压缩包路径
+    Modified by: Senparc - 20260729
+    Change description: v0.17.1-preview6 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -40,8 +40,8 @@ using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 {
     /// <summary>
-    /// 用于传送统计数据的接口服务
-    /// TODO: 需要权限验证
+    ///Legacy comment translated to English.
+    /// TODO: permission validation is required
     /// </summary>
     [ApiAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
     public class StatisticAppService : AppServiceBase

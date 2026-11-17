@@ -1,6 +1,6 @@
 ﻿namespace Senparc.Mvc
 {
-    //新的缓存方法参考：https://weblogs.asp.net/imranbaloch/output-caching-in-aspnet5-mvc6
+    //Legacy comment translated to English.
 
     //public class CacheFilterAttribute : ActionFilterAttribute
     //{

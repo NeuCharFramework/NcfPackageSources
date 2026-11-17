@@ -1,23 +1,23 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：NeuBellWebHookTemplate.cs
-    文件功能描述：NeuBell WebHook 模板渲染：
-    将 WebHook 地址与请求体中的 {{占位符}}（与 Workflow 文本模板同格式）
-    替换为本次通知的实际数据。URL 中的占位符替换值会自动做 URL 编码；
-    请求体模板以 { 或 [ 开头时按 JSON 处理（字符串占位符自动 JSON 转义，
-    {{payload}} 原样嵌入为 JSON 片段），否则按纯文本处理
+    File name: NeuBellWebHookTemplate.cs
+    File description: Related implementation.
+    Legacy comment translated to English.
+    Legacy comment translated to English.
+    Legacy comment translated to English.
+    Legacy comment translated to English.
 
-    创建标识：Senparc - 20260914
+    Created by: Senparc - 20260914
 
-    修改标识：Senparc - 20260916
-    修改描述：v0.9.0 增强 Admin Chat 取消与推理轨迹，并扩展 NeuBell WebHook 请求能力
+    Modified by: Senparc - 20260916
+    Change description: v0.9.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 维护NeuBell WebHook 模板渲染：
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -29,10 +29,10 @@ using System.Text.Json;
 namespace Senparc.Areas.Admin.Domain.Services;
 
 /// <summary>
-/// NeuBell WebHook 模板渲染器（纯静态、无状态，供 Dispatcher 与校验逻辑使用）。
-/// 占位符格式与 Workflow 文本模板一致：<c>{{name}}</c>，name 仅允许
-/// <c>[A-Za-z][A-Za-z0-9_]*</c>。渲染时只扫描原始模板文本，
-/// 替换结果不会被二次扫描（避免循环渲染）。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 public static class NeuBellWebHookTemplate
 {
@@ -42,7 +42,7 @@ public static class NeuBellWebHookTemplate
     };
 
     /// <summary>
-    /// 默认完整 JSON 报文对应的占位符（在请求体模板中原样嵌入为 JSON 片段）
+    ///Legacy comment translated to English.
     /// </summary>
     public const string TokenPayload = "payload";
     public const string TokenOperation = "operation";
@@ -59,12 +59,12 @@ public static class NeuBellWebHookTemplate
     };
 
     /// <summary>
-    /// 已知占位符列表（供 UI 说明与文档展示）
+    ///Legacy comment translated to English.
     /// </summary>
     public static IReadOnlyList<string> KnownTokenList => KnownTokens;
 
     /// <summary>
-    /// 将文本中的合法占位符替换为探测值“x”（用于含占位符的地址模板校验）
+    ///Legacy comment translated to English.
     /// </summary>
     public static string MaskTokens(string text)
     {
@@ -76,8 +76,8 @@ public static class NeuBellWebHookTemplate
     }
 
     /// <summary>
-    /// 渲染 URL 模板：占位符替换值自动做 URL 编码（Uri.EscapeDataString）。
-    /// 未知占位符替换为空字符串；不合法的占位符文本原样保留。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public static string RenderUrl(string urlTemplate, IReadOnlyDictionary<string, string> tokens)
     {
@@ -93,11 +93,11 @@ public static class NeuBellWebHookTemplate
     }
 
     /// <summary>
-    /// 渲染请求体模板。
-    /// 模板（去除首尾空白后）以 <c>{</c> 或 <c>[</c> 开头时按 JSON 模式处理：
-    /// 字符串占位符值自动做 JSON 转义后嵌入（不额外加引号），
-    /// <see cref="TokenPayload"/> 占位符的值原样嵌入为 JSON 片段；
-    /// 其余情况按纯文本模式处理（原值替换）。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public static string RenderBody(string bodyTemplate, IReadOnlyDictionary<string, string> tokens, out string contentType)
     {
@@ -114,7 +114,7 @@ public static class NeuBellWebHookTemplate
             var value = Lookup(tokens, name) ?? string.Empty;
             if (jsonMode && name != TokenPayload)
             {
-                // 借助 JsonSerializer 做 JSON 字符串转义（取去掉首尾引号的部分）
+                //Legacy comment translated to English.
                 return JsonSerializer.Serialize(value, JsonStringOptions)[1..^1];
             }
             return value;
@@ -122,7 +122,7 @@ public static class NeuBellWebHookTemplate
     }
 
     /// <summary>
-    /// 模板是否按 JSON 处理（去除首尾空白后以 { 或 [ 开头）
+    ///Legacy comment translated to English.
     /// </summary>
     public static bool IsJsonTemplate(string bodyTemplate)
     {

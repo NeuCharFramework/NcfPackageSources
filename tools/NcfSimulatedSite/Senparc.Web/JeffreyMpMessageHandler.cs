@@ -23,7 +23,7 @@ namespace Senparc.Web
         private readonly ServiceProvider _services;
 
 
-        //特殊的构造函数
+        //Legacy comment translated to English.
         public JeffreyMpMessageHandler(MpAccountDto mpAccountDto, Stream stream, PostModel postModel, int maxRecordCount, ServiceProvider services) : this(stream, postModel, maxRecordCount)
         {
             this._mpAccountDto = mpAccountDto;

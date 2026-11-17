@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：SandboxResource.cs
-    文件功能描述：SandboxResource 相关实现
+    File name: SandboxResource.cs
+    File description: SandboxResource related implementation
     
     
-    创建标识：Senparc - 20260717
+    Created by: Senparc - 20260717
     
-    修改标识：Senparc - 20260717
-    修改描述：v1.1.0 更新示例 XNCF 模块的功能参数与页面本地化能力
+    Modified by: Senparc - 20260717
+    Change description: v1.1.0 update feature parameters and page localization for the sample XNCF module
 
-    修改标识：Senparc - 20260724
-    修改描述：v1.1.0 完善 XNCF 模板页面与资源的多语言支持
+    Modified by: Senparc - 20260724
+    Change description: v1.1.0 improve multilingual support for XNCF template pages and resources
 
 ----------------------------------------------------------------*/
 #nullable enable

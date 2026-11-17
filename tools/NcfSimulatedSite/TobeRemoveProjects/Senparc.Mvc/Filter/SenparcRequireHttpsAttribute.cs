@@ -15,7 +15,7 @@ namespace Senparc.Mvc.Filter
         {
             if (SiteConfig.IsTestSite)
             {
-                return;//如果是测试站，则忽略验证
+                return;//Legacy comment translated to English.
             }
 
             base.OnAuthorization(filterContext);

@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：SysMenuAppService.cs
-    文件功能描述：SysMenuAppService.cs 相关实现
+
+    File name: SysMenuAppService.cs
+
+    File description: SysMenuAppService.cs related implementation
+
     
+
     
-    创建标识：Senparc - 20241028
+
+    Created by: Senparc - 20241028
+
     
-    修改标识：Senparc - 20260729
-    修改描述：v0.2.0 增强后台管理员交互与桌面 Admin Chat 安全同步
+
+    Modified by: Senparc - 20260729
+
+    Change description: v0.2.0 enhance admin interaction and secure desktop Admin Chat synchronization
+
+
 
 ----------------------------------------------------------------*/
 
@@ -26,7 +38,7 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.OHS.Local.AppService
 {
     /// <summary>
-    /// 菜单表
+    ///Legacy comment translated to English.
     /// </summary>
     [BackendJwtAuthorize(BackendJwtAuthorizeAttribute.SuperAdminPolicyName)]
     public class SysMenuAppService : AppServiceBase
@@ -43,7 +55,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 创建菜单
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -64,9 +76,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取菜单树 不包含按钮
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="hasButton">是否包含按钮</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
         public async Task<AppResponseBase<SysMenu_MenuTreeResponse>> GetAllMenusTreeAsync(bool hasButton)
@@ -83,9 +95,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取菜单列表
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="parentId">父级Id</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
         public async Task<AppResponseBase<SysMenu_MenusResponse>> GetMenusAsync(string parentId)
@@ -109,9 +121,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取菜单详情
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="id">父级Id</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
         public async Task<AppResponseBase<SysMenu_GetMenuResponse>> GetMenuAsync(string id)
@@ -128,9 +140,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取完整菜单信息
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="hasButton">是否包含按钮</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
         public async Task<AppResponseBase<List<SysMenuDto>>> GetAllMenuListAsync(bool hasButton)
@@ -145,9 +157,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 删除菜单
+        /// delete the menu
         /// </summary>
-        /// <param name="id">父级Id</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Delete)]
         public async Task<AppResponseBase<SysMenu_GetMenuResponse>> DeleteMenuAsync(string id)

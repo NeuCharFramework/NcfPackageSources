@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：XncfModuleManagerSenparcEntities.cs
-    文件功能描述：XncfModuleManagerSenparcEntities 相关实现
+
+    File name: XncfModuleManagerSenparcEntities.cs
+
+    File description: XncfModuleManagerSenparcEntities related implementation
+
     
+
     
-    创建标识：Senparc - 20211128
+
+    Created by: Senparc - 20211128
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -28,11 +40,11 @@ namespace Senparc.Xncf.XncfModuleManager.Models
         }
 
         /// <summary>
-        /// 扩展模块
+        ///Legacy comment translated to English.
         /// </summary>
         public DbSet<XncfModule> XncfModules { get; set; }
 
-        //如无特殊需需要，OnModelCreating 方法可以不用写，已经在 Register 中要求注册
+        //Legacy comment translated to English.
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
         //}

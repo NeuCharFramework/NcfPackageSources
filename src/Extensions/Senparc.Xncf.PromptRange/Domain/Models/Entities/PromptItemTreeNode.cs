@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：PromptItemTreeNode.cs
-    文件功能描述：PromptItemTreeNode 相关实现
+
+    File name: PromptItemTreeNode.cs
+
+    File description: PromptItemTreeNode related implementation
+
     
+
     
-    创建标识：Senparc - 20240713
+
+    Created by: Senparc - 20240713
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 

@@ -6,60 +6,60 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
 {
     /// <summary>
-    /// AdminChatSessionModule：管理后台聊天会话-模块关联
+    ///Legacy comment translated to English.
     /// </summary>
     [Table(Register.DATABASE_PREFIX + nameof(AdminChatSessionModule))]
     [Serializable]
     public class AdminChatSessionModule : EntityBase<int>
     {
         /// <summary>
-        /// 会话ID（外键到 AdminChatSession）
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         public int SessionId { get; private set; }
 
         /// <summary>
-        /// XNCF 模块唯一标识符
+        ///Legacy comment translated to English.
         /// </summary>
         [Required, MaxLength(200)]
         public string XncfModuleUid { get; private set; }
 
         /// <summary>
-        /// 模块名称（冗余存储，便于快速查询）
+        ///Legacy comment translated to English.
         /// </summary>
         [Required, MaxLength(200)]
         public string ModuleName { get; private set; }
 
         /// <summary>
-        /// 模块版本（冗余存储）
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(50)]
         public string ModuleVersion { get; private set; }
 
         /// <summary>
-        /// 添加到会话的时间
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         public DateTime AddedTime { get; private set; }
 
         /// <summary>
-        /// 导航属性：关联的会话
+        ///Legacy comment translated to English.
         /// </summary>
         [ForeignKey(nameof(SessionId))]
         public virtual AdminChatSession Session { get; private set; }
 
         /// <summary>
-        /// 私有构造函数（供 EF Core 使用）
+        ///Legacy comment translated to English.
         /// </summary>
         private AdminChatSessionModule() { }
 
         /// <summary>
-        /// 创建新的会话-模块关联
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="sessionId">会话ID</param>
-        /// <param name="xncfModuleUid">XNCF 模块 UID</param>
-        /// <param name="moduleName">模块名称</param>
-        /// <param name="moduleVersion">模块版本</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         public AdminChatSessionModule(int sessionId, string xncfModuleUid, string moduleName, string moduleVersion)
         {
             SessionId = sessionId;

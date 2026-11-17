@@ -1,20 +1,20 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：WeixinSenparcEntities.cs
-    文件功能描述：WeixinSenparcEntities 相关实现
+    File name: WeixinSenparcEntities.cs
+    File description: WeixinSenparcEntities related implementation
     
     
-    创建标识：Senparc - 20250712
+    Created by: Senparc - 20250712
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.24.9 0.24.9 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
+    Modified by: Senparc - 20261005
+    Change description: v0.24.9 0.24.9 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.24.16 add WeixinClawBindingProfile management and UI enhancements
+    Modified by: Senparc - 20261103
+    Change description: v0.24.16 add WeixinClawBindingProfile management and UI enhancements
 
 ----------------------------------------------------------------*/
 

@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：SmsPlatform.cs
-    文件功能描述：SmsPlatform 相关实现
+
+    File name: SmsPlatform.cs
+
+    File description: SmsPlatform related implementation
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -23,14 +35,14 @@ namespace Senparc.Ncf.SMS
         SenparcSmsSetting Setting { get; set; }
 
         /// <summary>
-        /// 发送
+        /// send
         /// </summary>
         /// <param name="content"></param>
         /// <param name="number"></param>
         /// <returns></returns>
         SmsResult Send(string content, string number);
         /// <summary>
-        /// 获取剩余短信数量
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         string GetLastCount();

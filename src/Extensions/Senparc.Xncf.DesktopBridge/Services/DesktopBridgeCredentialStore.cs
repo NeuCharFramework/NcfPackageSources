@@ -1,19 +1,19 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：DesktopBridgeCredentialStore.cs
-    文件功能描述：DesktopBridge 配对请求和短期会话凭据存储
+    File name: DesktopBridgeCredentialStore.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260801
+    Created by: Senparc - 20260801
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.3.0-preview3 新增桌面端同步提供程序
+    Modified by: Senparc - 20260804
+    Change description: v0.3.0-preview3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.3.0-preview3 将同步提供程序统一更名为 NeuBell/纽铃
+    Modified by: Senparc - 20260804
+    Change description: v0.3.0-preview3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.4.8 维护DesktopBridge 配对请求和短期会话凭据存储
+    Modified by: Senparc - 20261103
+    Change description: v0.4.8 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

@@ -1,26 +1,50 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：Register.cs
-    文件功能描述：Register 相关实现
+
+    File name: Register.cs
+
+    File description: Register related implementation
 
 
-    创建标识：Senparc - 20250105
 
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.3.0-preview2 为 FileManager 模块接入统一资源本地化并优化功能文案
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.6.0-preview1 完善文件资源边界、安全删除策略与静态资源管理
+    Created by: Senparc - 20250105
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.8.1 enhance file management capabilities with new upload stream method and service registration
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.8.3 统一 XNCF Register 显示元数据与多语言资源键
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260717
+
+    Change description: v0.3.0-preview2 Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20260813
+
+    Change description: v0.6.0-preview1 Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20261103
+
+    Change description: v0.8.1 enhance file management capabilities with new upload stream method and service registration
+
+
+
+    Modified by: Senparc - 20261111
+
+    Change description: v0.8.3 unify XNCF Register display metadata and localization resource keys
+
+
 
 ----------------------------------------------------------------*/
 
@@ -59,13 +83,13 @@ namespace Senparc.Xncf.FileManager
             "文件管理",
             "管理系统文件");
 
-        #region IXncfRegister 接口
+        #region Legacy section
 
         public override string Name => "Senparc.Xncf.FileManager";
 
-        public override string Uid => "BC7769FE-E094-4EAF-9B1F-D82670D1D691";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
+        public override string Uid => "BC7769FE-E094-4EAF-9B1F-D82670D1D691";//Legacy comment translated to English.
 
-        public override string Version => "0.7.3";//必须填写版本号
+        public override string Version => "0.7.3";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 
@@ -75,21 +99,21 @@ namespace Senparc.Xncf.FileManager
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
-            //安装或升级版本时更新数据库
+            //update the database when installing or upgrading a version
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 
-            //根据安装或更新不同条件执行逻辑
+            //execute logic according to the installation or update condition
             switch (installOrUpdate)
             {
                 case InstallOrUpdate.Install:
-                    //新安装
-            #region 初始化数据库数据
+                    //new installation
+            #region Legacy section
                     var colorService = serviceProvider.GetService<ColorAppService>();
                     var colorResult = await colorService.GetOrInitColorAsync();
             #endregion
                     break;
                 case InstallOrUpdate.Update:
-                    //更新
+                    //update
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -98,14 +122,14 @@ namespace Senparc.Xncf.FileManager
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
-            #region 删除数据库（演示）
+            #region Legacy section
 
             var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
             FileManagerSenparcEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as FileManagerSenparcEntities;
 
-            //指定需要删除的数据实体
+            //specify the data entities to delete
 
-            //注意：这里作为演示，在卸载模块的时候删除了所有本模块创建的表，实际操作过程中，请谨慎操作，并且按照删除顺序对实体进行排序！
+            //Note: this is a demonstration that deletes all tables created by this module during uninstallation. In production, proceed carefully and order entities by their deletion dependencies.
             var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.TryGetXncfDatabaseDbContextType).Keys.ToArray();
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
 

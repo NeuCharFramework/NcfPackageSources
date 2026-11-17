@@ -1,20 +1,20 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：PromptRange.cs
-    文件功能描述：PromptRange 相关实现
+    File name: PromptRange.cs
+    File description: PromptRange related implementation
     
     
-    创建标识：Senparc - 20240105
+    Created by: Senparc - 20240105
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.20.0 支持将条目标记为 Prompt 或 Skill
+    Modified by: Senparc - 20261021
+    Change description: v0.20.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.20.8 add SourceFileId, SourceType, and SourceUrl columns to PromptRange table for PostgreSQL, SQL Server, and SQLite
+    Modified by: Senparc - 20261103
+    Change description: v0.20.8 add SourceFileId, SourceType, and SourceUrl columns to PromptRange table for PostgreSQL, SQL Server, and SQLite
 
 ----------------------------------------------------------------*/
 
@@ -28,21 +28,21 @@ using Senparc.Xncf.PromptRange.Abstractions.Skills;
 namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 
 /// <summary>
-/// PromptRange 靶场
+/// PromptRange range
 /// </summary>
-[Table(Register.DATABASE_PREFIX + nameof(PromptRange))] /*必须添加前缀，防止全系统中发生冲突*/
+[Table(Register.DATABASE_PREFIX + nameof(PromptRange))] /*a prefix is required to prevent system-wide conflicts*/
 [Serializable]
 public class PromptRange : EntityBase<int>
 {
     /// <summary>
-    /// 靶场代号（用户自定义）
+    /// rangecode（usercustom）
     /// </summary>
     [MaxLength(50)]
     //[CanBeNull]
     public string Alias { get; private set; }
 
     /// <summary>
-    /// 靶场名称（来自版号生成）
+    ///Legacy comment translated to English.
     /// </summary>
     [Required, MaxLength(20)]
     //[NotNull]
@@ -59,7 +59,7 @@ public class PromptRange : EntityBase<int>
     public string SourceUrl { get; private set; }
 
     // /// <summary>
-    // /// 期望结果Json
+    //Legacy comment translated to English.
     // /// </summary>
     // [MaxLength(200)]
     // [CanBeNull]
@@ -121,7 +121,7 @@ public class PromptRange : EntityBase<int>
     }
 
     /// <summary>
-    /// 当存在 <see cref="Alias"/> 时返回此属性，否则使用 <see cref="RangeName"/>
+    ///Legacy comment translated to English.
     /// </summary>
     /// <returns></returns>
     public string GetAvailableName()

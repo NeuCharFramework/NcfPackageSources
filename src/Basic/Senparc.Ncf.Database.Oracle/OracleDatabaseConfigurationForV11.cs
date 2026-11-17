@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：OracleDatabaseConfigurationForV11.cs
-    文件功能描述：OracleDatabaseConfigurationForV11 相关实现
+
+    File name: OracleDatabaseConfigurationForV11.cs
+
+    File description: OracleDatabaseConfigurationForV11 related implementation
+
     
+
     
-    创建标识：Senparc - 20220818
+
+    Created by: Senparc - 20220818
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -29,8 +41,8 @@ using Senparc.CO2NET.Extensions;
 namespace Senparc.Ncf.Database.Oracle
 {
     /// <summary>
-    /// Oracle V11 数据库配置（包括 V11.2 等版本）
-    /// <para>注意：如果使用 Oracle 12 或以上版本，请直接使用 OracleDatabaseConfiguration</para>
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public class OracleDatabaseConfigurationForV11 : OracleDatabaseConfiguration
     {

@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：GlobalUsings.Localization.cs
-    文件功能描述：GlobalUsings.Localization 相关实现
+    File name: GlobalUsings.Localization.cs
+    File description: GlobalUsings.Localization related implementation
     
     
-    创建标识：Senparc - 20260717
+    Created by: Senparc - 20260717
     
-    修改标识：Senparc - 20260717
-    修改描述：v0.22.0-preview2 为 Terminal 模块接入统一资源本地化并优化功能文案
+    Modified by: Senparc - 20260717
+    Change description: v0.22.0-preview2 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 global using Senparc.Xncf.Terminal;

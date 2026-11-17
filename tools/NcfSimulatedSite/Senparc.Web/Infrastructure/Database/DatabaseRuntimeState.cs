@@ -1,13 +1,13 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：DatabaseRuntimeState.cs
-    文件功能描述：保存一次性数据库启动检查结果
+    File name: DatabaseRuntimeState.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260803
+    Created by: Senparc - 20260803
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.35.0 新增数据库升级维护流程与多平台下载入口
+    Modified by: Senparc - 20260804
+    Change description: v0.35.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -51,7 +51,7 @@ public sealed record DatabaseRuntimeState(
 }
 
 /// <summary>
-/// 启动时检查一次并复用结果，避免每个 HTTP 请求重复访问迁移历史表。
+///Legacy comment translated to English.
 /// </summary>
 public sealed class DatabaseRuntimeStateStore
 {

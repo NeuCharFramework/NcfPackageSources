@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：NcfCoreResource.cs
-    文件功能描述：提供 NCF 核心验证与授权消息的共享本地化资源访问入口
+    File name: NcfCoreResource.cs
+    File description: Related implementation.
     
     
-    创建标识：Senparc - 20260730
+    Created by: Senparc - 20260730
     
-    修改标识：Senparc - 20260731
-    修改描述：v0.27.0-preview4 新增核心验证与授权消息的共享本地化资源入口
+    Modified by: Senparc - 20260731
+    Change description: v0.27.0-preview4 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 using Senparc.Ncf.Core.Localization;

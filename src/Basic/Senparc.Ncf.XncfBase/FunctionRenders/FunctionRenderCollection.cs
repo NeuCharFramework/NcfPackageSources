@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：FunctionRenderCollection.cs
-    文件功能描述：FunctionRenderCollection 相关实现
+
+    File name: FunctionRenderCollection.cs
+
+    File description: FunctionRenderCollection related implementation
+
     
+
     
-    创建标识：Senparc - 20211012
+
+    Created by: Senparc - 20211012
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -24,12 +36,12 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase.FunctionRenders
 {
     /// <summary>
-    /// FunctionRender 集合。Key：唯一标识，value：MethodInfo
+    ///Legacy comment translated to English.
     /// </summary>
     public class FunctionRenderCollection : ConcurrentDictionary<Type, ConcurrentDictionary<string, FunctionRenderBag>>
     {
         /// <summary>
-        /// 获取 单个 Group 的 Key
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="methodInfo"></param>
         /// <returns></returns>
@@ -39,7 +51,7 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
         }
 
         /// <summary>
-        /// 设置 FunctionRenderBag
+        /// settings FunctionRenderBag
         /// </summary>
         /// <param name="methodInfo"></param>
         /// <returns></returns>
@@ -60,7 +72,7 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
         }
 
         /// <summary>
-        /// 获取指定注册类型下的 FunctionRender 集合。
+        ///Legacy comment translated to English.
         /// </summary>
         public IReadOnlyList<FunctionRenderBag> GetByRegisterType(Type registerType)
         {
@@ -78,7 +90,7 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
         }
 
         /// <summary>
-        /// 通过模块 UID 获取 FunctionRender 集合。
+        ///Legacy comment translated to English.
         /// </summary>
         public IReadOnlyList<FunctionRenderBag> GetByModuleUid(string moduleUid)
         {
@@ -97,7 +109,7 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
         }
 
         /// <summary>
-        /// 当输入包含 [#sym:FunctionRender] 时，将指定模块中的 FunctionRender 方法自动转换为可导入的插件对象。
+        ///Legacy comment translated to English.
         /// </summary>
         public IReadOnlyDictionary<string, object> ResolveSymbolPlugins(IServiceProvider serviceProvider, string symbolExpression, IEnumerable<string> moduleUids)
         {

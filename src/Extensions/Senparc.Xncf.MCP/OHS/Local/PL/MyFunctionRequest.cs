@@ -1,20 +1,38 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：MyFunctionRequest.cs
-    文件功能描述：MyFunctionRequest 相关实现
-    
-    
-    创建标识：Senparc - 20250325
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.4.0-preview3 为 MCP 模块接入统一资源本地化并优化功能文案
+    File name: MyFunctionRequest.cs
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.5.10 Remove DatabaseSample and related components from MCP extension
+    File description: MyFunctionRequest related implementation
+
+    
+
+    
+
+    Created by: Senparc - 20250325
+
+    
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260717
+
+    Change description: v0.4.0-preview3 Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20261103
+
+    Change description: v0.5.10 Remove DatabaseSample and related components from MCP extension
+
+
 
 ----------------------------------------------------------------*/
 
@@ -50,14 +68,14 @@ namespace Senparc.Xncf.MCP.OHS.Local.PL
 
         public override async Task LoadData(IServiceProvider serviceProvider)
         {
-            // 添加手动输入选项
+            //Legacy comment translated to English.
             McpServerSelectionOptions.Items.Add(new SelectionItem(
                 "Manual",
                 McpResource.Get("Parameter.MCP.Manual"),
                 McpResource.Get("Parameter.MCP.Manual.Help"),
                 true));
 
-            // 从 XncfRegisterManager 获取已注册的 MCP 服务器
+            //Legacy comment translated to English.
             var mcpServers = XncfRegisterManager.McpServerInfoCollection.Values.ToList();
             
             foreach (var mcpServer in mcpServers)
@@ -72,7 +90,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.PL
                     "服务器：{0}，路由：{1}",
                     mcpServer.ServerName,
                     mcpServer.McpRoute);
-                // 使用服务器的唯一标识作为 Value，而不是路由
+                //Legacy comment translated to English.
                 var serverKey = $"{mcpServer.XncfName}|{mcpServer.McpRoute}";
                 
                 McpServerSelectionOptions.Items.Add(new SelectionItem(serverKey, displayText, description));

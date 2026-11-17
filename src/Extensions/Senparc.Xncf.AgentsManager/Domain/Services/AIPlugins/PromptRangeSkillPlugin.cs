@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：PromptRangeSkillPlugin.cs
-    文件功能描述：把 PromptRange Skill 暴露给 Agent 调用
+    File name: PromptRangeSkillPlugin.cs
+    File description: Related implementation.
     
     
-    创建标识：Senparc - 20261016
+    Created by: Senparc - 20261016
     
-    修改标识：Senparc - 20261021
-    修改描述：v0.19.0 按绑定策略调用 PromptRange Skill
+    Modified by: Senparc - 20261021
+    Change description: v0.19.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.19.1 update AdminChat with PromptRange Skill integration
+    Modified by: Senparc - 20261103
+    Change description: v0.19.1 update AdminChat with PromptRange Skill integration
 
 ----------------------------------------------------------------*/
 

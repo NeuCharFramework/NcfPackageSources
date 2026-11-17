@@ -8,7 +8,7 @@
     Created by: Senparc - 20260810
 
     Modified by: Senparc - 20260813
-    Change description: v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Change description: v0.1.0-preview1 enhance workflow orchestration, replay, Webhook, and parallel execution
 
 ----------------------------------------------------------------*/
 

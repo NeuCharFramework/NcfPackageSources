@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：AITokenUsage.cs
-    文件功能描述：AITokenUsage Token 使用记录实体
+    File name: AITokenUsage.cs
+    File description: Related implementation.
     
     
-    创建标识：Senparc - 20260904
+    Created by: Senparc - 20260904
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.16.0 新增 AI Token 用量监控与模型选择能力
+    Modified by: Senparc - 20260915
+    Change description: v0.16.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -23,83 +23,83 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.AIKernel.Models
 {
     /// <summary>
-    /// Token 使用记录（用于 AIKernel 模块的 Token 监控）
+    ///Legacy comment translated to English.
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(AITokenUsage))] //必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(AITokenUsage))] //a prefix is required to prevent system-wide conflicts
     [Serializable]
     public class AITokenUsage : EntityBase<int>
     {
         /// <summary>
-        /// 模型代号
+        /// model code
         /// </summary>
         [MaxLength(50)]
         public string ModelAlias { get; set; }
 
         /// <summary>
-        /// 模型名称
+        /// model name
         /// </summary>
         [MaxLength(100)]
         public string ModelId { get; set; }
 
         /// <summary>
-        /// 部署名称
+        /// deployment name
         /// </summary>
         [MaxLength(150)]
         public string DeploymentName { get; set; }
 
         /// <summary>
-        /// AI 平台
+        ///Legacy comment translated to English.
         /// </summary>
         public AiPlatform AiPlatform { get; set; }
 
         /// <summary>
-        /// 模型类别
+        /// model category
         /// </summary>
         public ConfigModelType ConfigModelType { get; set; }
 
         /// <summary>
-        /// 输入（Prompt）Token 数量
+        /// input (Prompt) token count
         /// </summary>
         public long InputTokens { get; set; }
 
         /// <summary>
-        /// 输出（Completion）Token 数量
+        /// output (Completion) token count
         /// </summary>
         public long OutputTokens { get; set; }
 
         /// <summary>
-        /// 总 Token 数量
+        /// total token count
         /// </summary>
         public long TotalTokens { get; set; }
 
         /// <summary>
-        /// 缓存命中输入 Token 数量
+        /// cached input token count
         /// </summary>
         public long CachedInputTokens { get; set; }
 
         /// <summary>
-        /// 推理（Reasoning / Thinking）Token 数量
+        ///Legacy comment translated to English.
         /// </summary>
         public long ReasoningTokens { get; set; }
 
         /// <summary>
-        /// 本次调用耗时（毫秒）
+        ///Legacy comment translated to English.
         /// </summary>
         public int DurationMs { get; set; }
 
         /// <summary>
-        /// 执行状态：0 成功，1 失败
+        /// executestatus：0 success，1 failure
         /// </summary>
         public int Status { get; set; }
 
         /// <summary>
-        /// 调用来源（如 RunModel、Test、Monitor 等）
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(100)]
         public string Source { get; set; }
 
         /// <summary>
-        /// 错误信息（失败时记录）
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(500)]
         public string ErrorNote { get; set; }

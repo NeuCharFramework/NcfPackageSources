@@ -1,21 +1,21 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：DiagnosticAIFunction.cs
-    文件功能描述：DiagnosticAIFunction.cs 功能实现
+    File name: DiagnosticAIFunction.cs
+    File description: Related implementation.
     
     
-    创建标识：Senparc - 20260817
+    Created by: Senparc - 20260817
     
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
 -
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 支持 AgentTemplate 模型绑定、空输出 Token 重试与 Human-in-the-Loop
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
+    Modified by: Senparc - 20260822
+    Change description: v0.16.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：PromptRangeItemHelper.cs
-    文件功能描述：PromptRangeItemHelper 相关实现
+    File name: PromptRangeItemHelper.cs
+    File description: PromptRangeItemHelper related implementation
     
     
-    创建标识：Senparc - 20260704
+    Created by: Senparc - 20260704
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
 ----------------------------------------------------------------*/
 
@@ -33,7 +33,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Extensions
     {
         public static async Task LoadPromptRangeItemSelection(IServiceProvider serviceProvider, SelectionList SystemMessagePromptCodeSelection)
         {
-            //载入 PromptRange
+            //Legacy comment translated to English.
             SystemMessagePromptCodeSelection.Items.Add(new SelectionItem()
             {
                 Value = "0",

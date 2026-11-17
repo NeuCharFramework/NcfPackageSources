@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：IEntityBase.cs
-    文件功能描述：IEntityBase 相关实现
+
+    File name: IEntityBase.cs
+
+    File description: IEntityBase related implementation
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -19,16 +31,16 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    /// 所有实体的最底层接口（支持软删除）
+    ///Legacy comment translated to English.
     /// </summary>
     public interface IEntityBase : ISoftDelete
     {
         /// <summary>
-        /// 添加时间
+        /// creation time
         /// </summary>
         DateTime AddTime { get; set; }
         /// <summary>
-        /// 更新时间
+        ///Legacy comment translated to English.
         /// </summary>
         DateTime LastUpdateTime { get; set; }
     }
@@ -36,7 +48,7 @@ namespace Senparc.Ncf.Core.Models
     public interface IEntityBase<TKey> : IEntityBase
     {
         /// <summary>
-        /// 主键
+        ///Legacy comment translated to English.
         /// </summary>
         TKey Id { get; set; }
     }

@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：BindableBase.cs
-    文件功能描述：BindableBase 相关实现
+
+    File name: BindableBase.cs
+
+    File description: BindableBase related implementation
+
     
+
     
-    创建标识：Senparc - 20201116
+
+    Created by: Senparc - 20201116
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -23,7 +35,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.Entities
 {
     /// <summary>
-    /// 用于实现INotifyPropertyChanged
+    ///Legacy comment translated to English.
     /// </summary>
     [Serializable]
     public abstract class BindableBase : INotifyPropertyChanged
@@ -39,11 +51,11 @@ namespace Senparc.Ncf.Core.Entities
                 eventHandler(this, new PropertyChangedEventArgs(propertyName));
             }
 
-            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));//需要VS2015+或新编译器支持
+            //Legacy comment translated to English.
         }
 
         /// <summary>
-        /// 设置属性
+        /// settingsproperty
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="storage"></param>

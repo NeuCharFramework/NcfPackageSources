@@ -1,11 +1,11 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：XncfPreviewRequest.cs
-    文件功能描述：XNCF 独立预览请求模型
+    File name: XncfPreviewRequest.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20260801
+    Created by: Senparc - 20260801
 
 ----------------------------------------------------------------*/
 

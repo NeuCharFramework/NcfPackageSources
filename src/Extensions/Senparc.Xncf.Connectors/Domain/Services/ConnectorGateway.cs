@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：ConnectorGateway.cs
-    文件功能描述：按目录和授权调用已配置的连接器动作
+    File name: ConnectorGateway.cs
+    File description: invoke configured connector actions by catalog and authorization
     
     
-    创建标识：Senparc - 20261111
+    Created by: Senparc - 20261111
     
-    修改标识：Senparc - 20261111
-    修改描述：v0.1.0 按目录和授权调用连接器动作
+    Modified by: Senparc - 20261111
+    Change description: v0.1.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

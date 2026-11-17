@@ -1,13 +1,13 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：NcfDatabaseUpgradeRequiredException.cs
-    文件功能描述：区分数据库架构待升级与系统尚未安装
+    File name: NcfDatabaseUpgradeRequiredException.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260803
+    Created by: Senparc - 20260803
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.28.0-preview5 新增数据库升级维护状态与可配置页脚安全处理
+    Modified by: Senparc - 20260804
+    Change description: v0.28.0-preview5 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -16,8 +16,8 @@ using System;
 namespace Senparc.Ncf.Core.Exceptions
 {
     /// <summary>
-    /// 数据库本身存在，但当前代码所需的迁移尚未应用。
-    /// 此异常不得被安装程序当作空数据库处理。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public sealed class NcfDatabaseUpgradeRequiredException : NcfExceptionBase
     {

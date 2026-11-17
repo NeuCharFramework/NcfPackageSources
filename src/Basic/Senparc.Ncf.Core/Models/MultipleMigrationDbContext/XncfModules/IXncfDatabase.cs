@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：IXncfDatabase.cs
-    文件功能描述：IXncfDatabase 相关实现
+
+    File name: IXncfDatabase.cs
+
+    File description: IXncfDatabase related implementation
+
     
+
     
-    创建标识：Senparc - 20260704
+
+    Created by: Senparc - 20260704
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -23,41 +35,41 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    /// XNCF 模块数据库配置
+    ///Legacy comment translated to English.
     /// </summary>
     public interface IXncfDatabase
     {
         /// <summary>
-        /// 数据库表全局唯一的前缀，务必避免和其他模块重复
+        ///Legacy comment translated to English.
         /// </summary>
         string DatabaseUniquePrefix { get; }
         /// <summary>
-        /// 创建数据库模型
+        /// createdatabasemodel
         /// </summary>
         void OnModelCreating(ModelBuilder modelBuilder);
 
         ///// <summary>
-        ///// 设置数据库，主要提供给使用
+        ///Legacy comment translated to English.
         ///// </summary>
         ///// <param name="dbContextOptionsAction"></param>
-        ///// <param name="assemblyName">MigrationsAssembly 的程序集名称，如果为 null，为默认使用当前 XncfDatabaseDbContextType 所在的程序集</param>
+        ///Legacy comment translated to English.
         //void DbContextOptionsAction(IRelationalDbContextOptionsBuilderInfrastructure dbContextOptionsAction,
         //                            string assemblyName = null);
 
         ///// <summary>
-        ///// XncfDatabaseDbContext 类型
+        ///// XncfDatabaseDbContext type
         ///// </summary>
         //Type XncfDatabaseDbContextType { get; }
 
         /// <summary>
-        /// 添加数据库模块
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="services"></param>
         void AddXncfDatabaseModule(IServiceCollection services);
 
 
         /// <summary>
-        /// 尝试获取 当前配置下的数据库上下文类型，如果未找到对应数据库，会抛出异常：<see cref="NcfDatabaseException"/>）
+        ///Legacy comment translated to English.
         /// </summary>
         /// <exception cref="NcfDatabaseException"></exception>
         /// <returns></returns>

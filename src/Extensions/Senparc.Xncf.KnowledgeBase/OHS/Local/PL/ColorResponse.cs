@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：ColorResponse.cs
-    文件功能描述：ColorResponse 相关实现
+
+    File name: ColorResponse.cs
+
+    File description: ColorResponse related implementation
+
     
+
     
-    创建标识：Senparc - 20250105
+
+    Created by: Senparc - 20250105
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -23,19 +35,19 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.PL
     public class Color_GetOrInitColorResponse
     {
         /// <summary>
-        /// 颜色码，0-255
+        /// color code, 0-255
         /// </summary>
         public int Red { get; private set; }
         /// <summary>
-        /// 颜色码，0-255
+        /// color code, 0-255
         /// </summary>
         public int Green { get; private set; }
         /// <summary>
-        /// 颜色码，0-255
+        /// color code, 0-255
         /// </summary>
         public int Blue { get; private set; }
         /// <summary>
-        /// 花费时间
+        /// elapsed time
         /// </summary>
         public double CostMillionSeconds { get; set; }
 

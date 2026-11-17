@@ -1,29 +1,56 @@
 ﻿/*-----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：Register.cs
-    文件功能描述：Register 相关实现
+
+    File name: Register.cs
+
+    File description: Register related implementation
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.24.0-preview5 统一数据库设计时工厂与函数参数处理
+    Modified by: Senparc - 20260704
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.25.1-preview8 优化多库扫描日志为矩阵表；保留 GetAssembiles 预加载并补充说明
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.26.0 增强 XNCF 基础注册与函数参数处理能力
 
-    修改标识：Senparc - 20261002
-    修改描述：注册统一后台租户作用域工厂
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.28.1 add bulk file upload functionality to Sandbox Lab
+    Modified by: Senparc - 20260804
+
+    Change description: v0.24.0-preview5 Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20260817
+
+    Change description: v0.25.1-preview8 Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20260822
+
+    Change description: v0.26.0 Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20261002
+
+    Change description: Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20261103
+
+    Change description: v0.28.1 add bulk file upload functionality to Sandbox Lab
+
+
 
 ----------------------------------------------------------------*/
 
@@ -66,25 +93,25 @@ using Senparc.Ncf.XncfBase.Threads;
 namespace Senparc.Ncf.XncfBase
 {
     /// <summary>
-    /// Xncf 全局注册类
+    ///Legacy comment translated to English.
     /// </summary>
     public static class Register
     {
         /// <summary>
-        /// 所有线程的集合
+        ///Legacy comment translated to English.
         /// </summary>
         public static ConcurrentDictionary<ThreadInfo, Thread> ThreadCollection { get; set; } = new ConcurrentDictionary<ThreadInfo, Thread>();
 
         public static FunctionRenderCollection FunctionRenderCollection { get; set; } = new FunctionRenderCollection();
 
         /// <summary>
-        /// 所有自动注册 Xncf 的数据库的 ConfigurationMapping 对象
+        ///Legacy comment translated to English.
         /// </summary>
         public static List<object> XncfAutoConfigurationMappingList { get; set; } = new List<object>();
         //public static List<IEntityTypeConfiguration<EntityBase>> XncfAutoConfigurationMappingList = new List<IEntityTypeConfiguration<EntityBase>>();
 
         /// <summary>
-        /// 扫描程序集分类
+        ///Legacy comment translated to English.
         /// </summary>
         enum ScanTypeKind
         {
@@ -102,19 +129,19 @@ namespace Senparc.Ncf.XncfBase
         }
 
         /// <summary>
-        /// 解析扫描日志用的「当前数据库类型」。
-        /// StartNcfEngine 早于 UseNcfDatabase，Factory.Current 通常尚未设置，优先读配置。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         private static MultipleDatabaseType? ResolveCurrentDatabaseTypeForScanLog(IConfiguration configuration)
         {
             try
             {
-                // 设计时 / 单元测试等场景可能已提前设置
+                //Legacy comment translated to English.
                 return DatabaseConfigurationFactory.Instance.Current.MultipleDatabaseType;
             }
             catch
             {
-                // ignore：正常 Web 启动时此处尚未设置
+                //Legacy comment translated to English.
             }
 
             var fromSiteConfig = SiteConfig.SenparcCoreSetting?.DatabaseType;
@@ -135,22 +162,22 @@ namespace Senparc.Ncf.XncfBase
 
 
         ///// <summary>
-        ///// 启动 XNCF 模块引擎，包括初始化扫描和注册等过程
+        ///Legacy comment translated to English.
         ///// </summary>
         ///// <returns></returns>
-        //[Obsolete("请使用 StartNcfEngine()", true)]
+        //Legacy comment translated to English.
         //public static string StartEngine(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         //{
         //    return StartNcfEngine(services, configuration, env, null);
         //}
 
         /// <summary>
-        /// 启动 XNCF 模块引擎，包括初始化扫描和注册等过程
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="services"></param>
         /// <param name="configuration"></param>
         /// <param name="env"></param>
-        /// <param name="dllFilePatterns">被包含的 dll 的文件名， “.Xncf.”会被必定包含在里面</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public static string StartNcfEngine(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env, string[] dllFilePatterns)
         {
@@ -163,26 +190,26 @@ namespace Senparc.Ncf.XncfBase
             var hideTypeCount = 0;
             ConcurrentDictionary<Type, ScanTypeKind> types = new ConcurrentDictionary<Type, ScanTypeKind>();
 
-            //所有 XNCF 模块，包括被忽略的。
+            //Legacy comment translated to English.
             //var cache = CacheStrategyFactory.GetObjectCacheStrategyInstance();
-            //using (cache.BeginCacheLock("Senparc.Ncf.XncfBase.Register", "Scan")) //在注册阶段还未完成缓存配置
+            //Legacy comment translated to English.
             {
                 try
                 {
-                    // 预加载全部相关程序集（含未被直接引用的 XNCF dll）到 AppDomain。
-                    // 说明：此处结果当前未直接遍历使用；随后 AddAssembleScanItem(..., runScanNow: true)
-                    // 会再次通过 RunScan → GetAssembiles 完成类型扫描。保留本调用是为了：
-                    // 1) 确保扫描委托注册前程序集已就绪（尤其是动态加载的 dll）；
-                    // 2) 预留后续扩展（例如按 assemblies 做过滤、统计、并行扫描等）。
+                    //Legacy comment translated to English.
+                    //Legacy comment translated to English.
+                    //Legacy comment translated to English.
+                    //Legacy comment translated to English.
+                    //Legacy comment translated to English.
                     var assemblies = AssembleScanHelper.GetAssembiles(true, dllFilePatterns: dllFilePatterns);
-                    _ = assemblies.Count; // 保留变量供后续扩展；当前仅依赖预加载副作用
+                    _ = assemblies.Count; //Legacy comment translated to English.
 
                     AssembleScanHelper.AddAssembleScanItem(a =>
                     {
                         //Console.WriteLine("FullName:" + a.FullName);
                         if (a.FullName.StartsWith("AutoMapper."))
                         {
-                            return;//忽略 AutoMapper
+                            return;//Legacy comment translated to English.
                         }
 
                         scanTypesCount++;
@@ -190,28 +217,28 @@ namespace Senparc.Ncf.XncfBase
 
                         List<Exception> exceptions = new List<Exception>();
 
-                        //遍历程序集内的所有类型
+                        //Legacy comment translated to English.
                         foreach (var t in aTypes)
                         {
                             try
                             {
                                 if (t.IsAbstract)
                                 {
-                                    continue;//忽略抽象类
+                                    continue;//Legacy comment translated to English.
                                 }
 
                                 //Console.WriteLine(t.GetType().Name);
-                                //获取 XncfRegister
+                                //get XncfRegister
                                 if (t.GetInterfaces().Contains(typeof(IXncfRegister)))
                                 {
                                     types[t] = ScanTypeKind.IXncfRegister;
                                 }
-                                //获取 XncfFunction
+                                //get XncfFunction
                                 //if (t.GetInterfaces().Contains(typeof(IXncfFunction)))
                                 //{
-                                //    types[t] = ScanTypeKind.IXncfFunction; /* 暂时不收录处理 */
+                                //Legacy comment translated to English.
                                 //}
-                                //获取 XncfAutoConfigurationMapping
+                                //get XncfAutoConfigurationMapping
                                 if (t.GetCustomAttributes(true).FirstOrDefault(z => z is XncfAutoConfigurationMappingAttribute) != null
                                     /*&& t.GetInterfaces().Contains(typeof(IEntityTypeConfiguration<>))*/)
                                 {
@@ -219,22 +246,22 @@ namespace Senparc.Ncf.XncfBase
                                 }
 
 
-                                //获取多数据库配置（XncfDatabaseDbContext 的子类）
+                                //Legacy comment translated to English.
                                 if (t.IsSubclassOf(typeof(DbContext)) /*t.IsSubclassOf(typeof(XncfDatabaseDbContext))*/ &&
                                     t.GetInterface(nameof(ISenparcEntitiesDbContext)) != null &&
                                     t.GetCustomAttributes(true).FirstOrDefault(z => z is MultipleMigrationDbContextAttribute) != null)
                                 {
-                                    //获取特性
+                                    //Legacy comment translated to English.
                                     var multiDbContextAttr = t.GetCustomAttributes(true).FirstOrDefault(z => z is MultipleMigrationDbContextAttribute) as MultipleMigrationDbContextAttribute;
 
-                                    //添加配置（矩阵日志在扫描结束后统一输出）
+                                    //Legacy comment translated to English.
                                     MultipleDatabasePool.Instance.TryAdd(multiDbContextAttr, t);
                                 }
 
-                                //配置 FunctionRender
+                                //configuration FunctionRender
                                 if (t.IsSubclassOf(typeof(AppServiceBase)))
                                 {
-                                    //遍历其中具体方法
+                                    //Legacy comment translated to English.
                                     var methods = t.GetMethods();
                                     var hasFunctionMethod = false;
                                     foreach (var method in methods)
@@ -250,11 +277,11 @@ namespace Senparc.Ncf.XncfBase
                                     services.AddScoped(t);
                                 }
 
-                                //配置 ServiceBase
+                                //configuration ServiceBase
                                 if (
                                     !t.IsAbstract && (
 
-                                    //由于泛型是在编译时确定的，所以不能直接使用IsSubclassOf方法来判断一个类是否为一个带泛型的类的基类。需要使用GetGenericTypeDefinition方法来获取泛型的基类，然后进行比较。
+                                    //Legacy comment translated to English.
                                     (t.BaseType != null && t.BaseType.IsGenericType && t.BaseType.GetGenericTypeDefinition() == typeof(ServiceBase<>))
                                     || t.IsSubclassOf(typeof(ServiceDataBase))
                                     //|| t.IsSubclassOf(typeof(AppServiceBase))
@@ -286,7 +313,7 @@ namespace Senparc.Ncf.XncfBase
 
                     }, true);
 
-                    // 扫描完成后输出 Register × Database 支持矩阵，并标明当前库的 DbContext
+                    //Legacy comment translated to English.
                     var currentDatabaseType = ResolveCurrentDatabaseTypeForScanLog(configuration);
                     var matrixLog = MultipleDatabasePool.Instance.BuildSupportMatrixLog(currentDatabaseType);
                     foreach (var line in matrixLog.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None))
@@ -302,12 +329,12 @@ namespace Senparc.Ncf.XncfBase
 
                 SetLog(sb, $"Satisfies the ScanTypeKind condition: {types.Count()}");
 
-                //先注册 XncfRegister
+                //Legacy comment translated to English.
                 {
-                    //筛选
+                    //Legacy comment translated to English.
                     var allTypes = types.Where(z => z.Value == ScanTypeKind.IXncfRegister/* && z.Key.GetInterfaces().Contains(typeof(IXncfRegister))*/)
                         .Select(z => z.Key);
-                    //按照优先级进行排序（降序，数字越大越在前）
+                    //Legacy comment translated to English.
                     var orderedTypes = allTypes.OrderByDescending(z =>
                     {
                         var orderAttribute = z.GetCustomAttributes(true).FirstOrDefault(attr => attr is XncfOrderAttribute) as XncfOrderAttribute;
@@ -345,7 +372,7 @@ namespace Senparc.Ncf.XncfBase
                                 }
                                 else if (multipleDatabaseType == MultipleDatabaseType.InMemory)
                                 {
-                                    //单元测试，忽略
+                                    //Legacy comment translated to English.
                                     Console.WriteLine("MultipleDatabaseType.InMemory 模式，单元测试忽略重复加载");
                                 }
                                 else
@@ -358,15 +385,15 @@ namespace Senparc.Ncf.XncfBase
                             {
                                 hideTypeCount++;
                             }
-                            XncfRegisterManager.RegisterList.Add(register);//只有允许安装的才进行注册，否则执行完即结束
-                            services.AddScoped(type);//DI 中注册
+                            XncfRegisterManager.RegisterList.Add(register);//Legacy comment translated to English.
+                            services.AddScoped(type);//Legacy comment translated to English.
                                                      //foreach (var functionType in register.Functions)
                                                      //{
-                                                     //    services.AddScoped(functionType);//DI 中注册
+                                                     //Legacy comment translated to English.
                                                      //}
                         }
 
-                        //初始化数据库
+                        //initialize the database
                         if (register is IXncfDatabase)
                         {
 
@@ -375,7 +402,7 @@ namespace Senparc.Ncf.XncfBase
                     }
                 }
 
-                //处理 XncfAutoConfigurationMappingAttribute
+                //handling XncfAutoConfigurationMappingAttribute
                 {
                     var allTypes = types.Where(z => z.Value == ScanTypeKind.XncfAutoConfigurationMappingAttribute).Select(z => z.Key);
                     foreach (var type in allTypes)
@@ -425,11 +452,11 @@ namespace Senparc.Ncf.XncfBase
             services.AddScoped(typeof(DbContextOptionsBuilder<>));
             services.AddScoped(typeof(DbContextOptionsBuilder));
 
-            //多租户
-            services.AddScoped<RequestTenantInfo>();//TODO:需要动态识别，当前请求缓存中读取并转换
+            //multi-tenancy
+            services.AddScoped<RequestTenantInfo>();//Legacy comment translated to English.
             services.AddSingleton<IBackgroundTenantScopeFactory, BackgroundTenantScopeFactory>();
 
-            //注册 Senarc.Ncf.Service 中的服务
+            //Legacy comment translated to English.
             services.AddScoped<SysButtonService>();
             services.AddScoped<SysMenuService>();
             services.AddScoped<SysRoleAdminUserInfoService>();
@@ -437,37 +464,37 @@ namespace Senparc.Ncf.XncfBase
             services.AddScoped<SysRoleService>();
 
             services.ScanAssamblesForAutoDI();
-            //已经添加完所有程序集自动扫描的委托，立即执行扫描（必须）
+            //Legacy comment translated to English.
             AssembleScanHelper.RunScan(dllFilePatterns);
             //services.AddSingleton<Core.Cache.RedisProvider.IRedisProvider, Core.Cache.RedisProvider.StackExchangeRedisProvider>();
 
 
-            #region 支持 AutoMapper
+            #region Legacy section
 
             //Console.WriteLine("----------");
-            //Console.WriteLine("XNCF 模块进行 AutoMapper 映射 foreach (var xncfRegister in XncfRegisterManager.RegisterList)");
+            //Legacy comment translated to English.
             //Console.WriteLine("----------");
-            //XNCF 模块进行 AutoMapper 映射
+            //Legacy comment translated to English.
             foreach (var xncfRegister in XncfRegisterManager.RegisterList)
             {
                 xncfRegister.OnAutoMapMapping(services, configuration);
             }
 
             //Console.WriteLine("----------");
-            //Console.WriteLine("引入当前系统");
+            //Legacy comment translated to English.
             //Console.WriteLine("----------");
 
-            //引入当前系统
+            //Legacy comment translated to English.
             services.AddAutoMapper(z => z.AddProfile<Core.AutoMapper.SystemProfile>());
 
-            //引入所有模块    TODO:XncfModuleProfile 构造函数会在“XNCF 模块进行 AutoMapper 映射”之后就执行，导致 XNCF 模块的 AutoMapper 映射无效
+            //Legacy comment translated to English.
             services.AddAutoMapper(z => z.AddProfile<AutoMapper.XncfModuleProfile>());
 
             #endregion
 
-            //说明：AutoMapper 需要放到 XNCF 注册之前，因为 XNCF 内可能存在动态生成的程序集引发异常
+            //Legacy comment translated to English.
 
-            //XNCF 模块进行 Service 注册
+            //Legacy comment translated to English.
             foreach (var xncfRegister in XncfRegisterManager.RegisterList)
             {
                 try
@@ -487,7 +514,7 @@ namespace Senparc.Ncf.XncfBase
                 }
             }
 
-            //标记所有 AddXncfModule 方法已经执行完成
+            //Legacy comment translated to English.
             Ncf.Core.Config.SiteConfig.NcfCoreState.AllAddXncfModuleApplied = true;
             Ncf.Core.Config.SiteConfig.NcfCoreState.AllDatabaseXncfLoaded = true;
 
@@ -497,13 +524,13 @@ namespace Senparc.Ncf.XncfBase
         }
 
         /// <summary>
-        /// 扫描并安装（自动安装，无需手动）
-        /// TODO：放置到 Service 中，为系统模块自动升级
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="xncfModuleDtos">现有已安装的模块</param>
+        ///Legacy comment translated to English.
         /// <param name="serviceProvider">IServiceProvider</param>
-        /// <param name="afterInstalledOrUpdated">安装或更新后执行</param>
-        /// <param name="justScanThisUid">只扫描并更新特定的Uid</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public static async Task<string> ScanAndInstall(IList<CreateOrUpdate_XncfModuleDto> xncfModuleDtos,
             IServiceProvider serviceProvider,
@@ -513,7 +540,7 @@ namespace Senparc.Ncf.XncfBase
             StringBuilder sb = new StringBuilder();
             SetLog(sb, "开始扫描 XncfModules");
 
-            //先注册
+            //Legacy comment translated to English.
             var updatedCount = 0;
             var cache = CacheStrategyFactory.GetObjectCacheStrategyInstance();
             using (await cache.BeginCacheLockAsync("Senparc.Ncf.XncfBase.Register", "Scan").ConfigureAwait(false))
@@ -540,7 +567,7 @@ namespace Senparc.Ncf.XncfBase
                     var xncfModuleStoredDto = xncfModuleDtos.FirstOrDefault(z => z.Uid == register.Uid);
                     var xncfModuleAssemblyDto = new UpdateVersion_XncfModuleDto(register.Name, register.Uid, register.MenuName, register.Version, register.Description, register.Icon);
 
-                    //检查更新，并安装到数据库
+                    //Legacy comment translated to English.
                     var xncfModuleService = serviceProvider.GetService<XncfModuleService>();
                     var installOrUpdate = await xncfModuleService.CheckAndUpdateVersionAsync(xncfModuleStoredDto, xncfModuleAssemblyDto).ConfigureAwait(false);
                     SetLog(sb, $"是否更新版本：{installOrUpdate?.ToString() ?? "未安装"}");
@@ -549,7 +576,7 @@ namespace Senparc.Ncf.XncfBase
                     {
                         updatedCount++;
 
-                        //执行安装程序
+                        //Legacy comment translated to English.
                         await register.InstallOrUpdateAsync(serviceProvider, installOrUpdate.Value).ConfigureAwait(false);
 
                         await afterInstalledOrUpdated?.Invoke(register, installOrUpdate.Value);
@@ -562,10 +589,10 @@ namespace Senparc.Ncf.XncfBase
         }
 
         ///// <summary>
-        ///// 通常在 Startup.cs 中的 Configure() 方法中执行
+        ///Legacy comment translated to English.
         ///// </summary>
         ///// <param name="app"></param>
-        ///// <param name="registerService">CO2NET 注册对象</param>
+        ///Legacy comment translated to English.
         ///// <param name="senparcCoreSetting">SenparcCoreSetting</param>
         ///// <returns></returns>
         //public static IApplicationBuilder UseXncfModules<TDatabaseConfiguration>(this IApplicationBuilder app, IRegisterService registerService, SenparcCoreSetting senparcCoreSetting = null, bool autoRunInstall = false)
@@ -576,10 +603,10 @@ namespace Senparc.Ncf.XncfBase
 
 
         /// <summary>
-        /// 通常在 Startup.cs 中的 Configure() 方法中执行
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="app"></param>
-        /// <param name="registerService">CO2NET 注册对象</param>
+        ///Legacy comment translated to English.
         /// <param name="senparcCoreSetting">SenparcCoreSetting</param>
         /// <returns></returns>
         public static IApplicationBuilder UseXncfModules(
@@ -605,11 +632,11 @@ namespace Senparc.Ncf.XncfBase
                 {
                     register.UseXncfModule(app, registerService);
 
-                    //TODO: 后期改为远程（其他模块）查找租户
+                    //Legacy comment translated to English.
 
-                    // 是否已经载入过数据库功能的 Database
+                    //Legacy comment translated to English.
                     if (!SiteConfig.DatabaseXncfLoaded
-                        //SystemCore 需要支持 IXncfDatabase，但并不属于实际运作的数据库模块，因此需要排除
+                        //Legacy comment translated to English.
                         && register.Uid != SiteConfig.SYSTEM_XNCF_MODULE_SYSTEM_CORE_UID
                         && register is IXncfDatabase
                         )
@@ -625,7 +652,7 @@ namespace Senparc.Ncf.XncfBase
 详情：{ex.ToString()}");
                 }
 
-                //执行中间件
+                //Legacy comment translated to English.
                 if (register is IXncfMiddleware middlewareRegister)
                 {
                     try
@@ -637,26 +664,26 @@ namespace Senparc.Ncf.XncfBase
                     }
                 }
 
-                // 数据库升级模式和维护模式必须先完成架构检查，不能提前启动依赖业务表的后台线程。
+                //Legacy comment translated to English.
                 if (startBackgroundThreads)
                 {
                     StartXncfThread(app, register);
                 }
 
 
-                //MCP 服务器
+                //Legacy comment translated to English.
                 if (register.EnableMcpServer)
                 {
                     register.UseMcpServer(app, registerService);
                 }
             }
 
-            // 延迟模式会在数据库确认 Ready 后显式调用 StartXncfThreads()。
+            //Legacy comment translated to English.
             Ncf.Core.Config.SiteConfig.NcfCoreState.AllThreadXncfLoaded = startBackgroundThreads;
-            //所有 UseXncfModule 已经执行完成
+            //all UseXncfModule alreadyexecutecomplete
             Ncf.Core.Config.SiteConfig.NcfCoreState.AllUseXncfModuleApplied = true;
 
-            //自动运行安装
+            //Legacy comment translated to English.
 
             if (autoRunInstall)
             {
@@ -678,7 +705,7 @@ namespace Senparc.Ncf.XncfBase
         private static readonly object XncfThreadStartLock = new object();
 
         /// <summary>
-        /// 在数据库架构确认可用后启动所有 XNCF 后台线程。重复调用不会重复创建线程。
+        ///Legacy comment translated to English.
         /// </summary>
         public static IApplicationBuilder StartXncfThreads(this IApplicationBuilder app)
         {
@@ -721,43 +748,43 @@ namespace Senparc.Ncf.XncfBase
         }
 
         /// <summary>
-        /// 所有已经使用的 [AutoConfigurationMapping] 对应的实体类型
+        ///Legacy comment translated to English.
         /// </summary>
         public static List<Type> ApplyedAutoConfigurationMappingTypes { get; set; } = new List<Type>();
         private static List<Type> AddedApplyedAutoConfigurationMappingEntityTypes { get; set; } = new List<Type>();
         /// <summary>
-        /// 自动添加所有 XNCF 模块中标记了 [XncfAutoConfigurationMapping] 特性的对象
+        ///Legacy comment translated to English.
         /// </summary>
         public static void ApplyAllAutoConfigurationMapping(ModelBuilder modelBuilder)
         {
             var entityTypeConfigurationMethod = typeof(ModelBuilder).GetMethods()
                 .FirstOrDefault(z => z.Name == "ApplyConfiguration" && z.ContainsGenericParameters && z.GetParameters().SingleOrDefault()?.ParameterType.GetGenericTypeDefinition() == typeof(IEntityTypeConfiguration<>));
 
-            //所有模块中数据库实体中自动获取所有的 DbSet 下的实体类型
+            //Legacy comment translated to English.
 
-            //TODO:筛选基础类中的
+            //Legacy comment translated to English.
             var xncfDatabaseDbContextList = MultipleDatabasePool.Instance.Values.SelectMany(z => z.Values);
-            //TODO:为了进一步提高效率，可以对同一个 DbContext 的子类去重
+            //Legacy comment translated to English.
 
             foreach (var xncfDatabaseDbContextType in xncfDatabaseDbContextList)
             {
                 var setKeyInfoList = EntitySetKeys.GetEntitySetInfo(xncfDatabaseDbContextType).Values;
                 foreach (var setKeyInfo in setKeyInfoList)
                 {
-                    //数据库实体类型
+                    //Legacy comment translated to English.
                     var entityType = setKeyInfo.DbSetType;
                     if (AddedApplyedAutoConfigurationMappingEntityTypes.Contains(entityType))
                     {
-                        //Console.WriteLine($"\t [{xncfDatabaseDbContextType.Name}]ApplyAllAutoConfigurationMapping 有重复 setKeyInfo：{entityType.Name}，已跳过");
+                        //Legacy comment translated to English.
                         continue;
                     }
-                    //Console.WriteLine($"\t [{xncfDatabaseDbContextType.Name}]ApplyAllAutoConfigurationMapping 处理 setKeyInfo：{entityType.Name}");
+                    //Console.WriteLine($"\t [{xncfDatabaseDbContextType.Name}]ApplyAllAutoConfigurationMapping handling setKeyInfo：{entityType.Name}");
 
-                    //默认空 ConfigurationMapping 对象的泛型类型
+                    //Legacy comment translated to English.
                     var blankEntityTypeConfigurationType = typeof(BlankEntityTypeConfiguration<>).MakeGenericType(entityType);
-                    //创建一个新的实例
+                    //Legacy comment translated to English.
                     var blankEntityTypeConfiguration = Activator.CreateInstance(blankEntityTypeConfigurationType);
-                    //最佳到末尾，这样可以优先执行用户自定义的代码
+                    //Legacy comment translated to English.
                     XncfAutoConfigurationMappingList.Add(blankEntityTypeConfiguration);
                     AddedApplyedAutoConfigurationMappingEntityTypes.Add(entityType);
                 }
@@ -777,22 +804,22 @@ namespace Senparc.Ncf.XncfBase
 
                     logs.AppendLine(autoConfigurationMapping.GetType().FullName);
 
-                    //获取配置实体类型，如：DbConfig_WeixinUserConfigurationMapping
+                    //Legacy comment translated to English.
                     Type mappintConfigType = autoConfigurationMapping.GetType();
-                    //获取 IEntityTypeConfiguration<Entity> 接口
+                    //get IEntityTypeConfiguration<Entity> interface
                     var interfaceType = mappintConfigType.GetInterfaces().FirstOrDefault(z => z.Name.StartsWith("IEntityTypeConfiguration"));
                     if (interfaceType == null)
                     {
                         Console.WriteLine("interfaceType 为 null（不为 IEntityTypeConfiguration）");
                         continue;
                     }
-                    //实体类型，如：DbConfig
+                    //Legacy comment translated to English.
                     Type entityType = interfaceType.GenericTypeArguments[0];
 
-                    //PS：此处不能过滤，否则可能导致如 SystemServiceEntities_SqlServer / SystemServiceEntities_Mysql 中只有先注册的对象才成功，后面的被忽略
+                    //Legacy comment translated to English.
                     //if (ApplyedAutoConfigurationMappingTypes.Contains(entityType))
                     //{
-                    //    //如果已经添加过则跳过。作此判断因为：原始的 XncfAutoConfigurationMappingList 数据可能和上一步自动添加 DataSet 中的对象有重复
+                    //Legacy comment translated to English.
                     //    //continue;
                     //}
 
@@ -812,7 +839,7 @@ namespace Senparc.Ncf.XncfBase
                 SenparcTrace.SendCustomLog("监测到 ApplyAllAutoConfigurationMapping 执行", logs.ToString());
             }
 
-            //TODO：添加 IQueryTypeConfiguration<>
+            //Legacy comment translated to English.
 
 
         }

@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：Index.cshtml.cs
-    文件功能描述：Index.cshtml 相关实现
+
+    File name: Index.cshtml.cs
+
+    File description: Index.cshtml related implementation
+
     
+
     
-    创建标识：Senparc - 20260704
+
+    Created by: Senparc - 20260704
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -42,7 +54,7 @@ namespace Senparc.Web.DatabasePlant.Pages
                 var xncfName = proj.Split('.').Last();
                 var projectPath = Path.Combine(srcRootDir, proj);
                 var fullDatabaseName = $"{xncfName}SenparcEntities_{databaseName}";
-                //@"dotnet ef migrations add Init -c AdminSenparcEntities_Sqlite -s E:\Senparc项目\NeuCharFramework\NCF\src\back-end\Senparc.Web.DatabasePlant -o E:\Senparc项目\NeuCharFramework\NCF\src\back-end\Senparc.Areas.Admin\Domain\Migrations\Sqlite";
+                //Legacy comment translated to English.
 
                 var cmdStr = @$"cd {projectPath}
 dotnet ef migrations add {note} -c {fullDatabaseName} -s ""{startProject}"" -o ""{projectPath}\Domain\Migrations\{databaseName}""

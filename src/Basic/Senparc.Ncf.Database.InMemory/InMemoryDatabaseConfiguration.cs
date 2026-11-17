@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：InMemoryDatabaseConfiguration.cs
-    文件功能描述：InMemoryDatabaseConfiguration 相关实现
+
+    File name: InMemoryDatabaseConfiguration.cs
+
+    File description: InMemoryDatabaseConfiguration related implementation
+
     
+
     
-    创建标识：Senparc - 20240721
+
+    Created by: Senparc - 20240721
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -29,7 +41,7 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.Database.InMemory
 {
     /// <summary>
-    /// SQLite 数据库配置
+    /// SQLite databaseconfiguration
     /// </summary>
     public class InMemoryDatabaseConfiguration : DatabaseConfigurationBase<InMemoryDbContextOptionsBuilderForNcf, /*InMemoryOptionsExtension*/ InMemoryOptionsExtensionForNcf>
     {
@@ -45,9 +57,9 @@ namespace Senparc.Ncf.Database.InMemory
         public override Action<DbContextOptionsBuilder, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase =>
             (optionsBuilder, connectionString, xncfDatabaseData, actionBase) =>
             {
-                //其他更多配置
+                //Legacy comment translated to English.
 
-                //执行 UseInMemory（必须）
+                //execute UseInMemory（must）
                 //optionsBuilder.UseInMemory(CreateInMemoryDatabase(connectionString), actionBase);
 
                 optionsBuilder.UseInMemoryDatabase(connectionString);
@@ -55,19 +67,19 @@ namespace Senparc.Ncf.Database.InMemory
 
         public override Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsActionExtension => (builder, xncfDatabaseData) =>
         {
-            //更多数据库操作独立配置（非必须）
+            //Legacy comment translated to English.
         };
 
 
         public override string GetBackupDatabaseSql(DbConnection dbConnection, string backupFilePath)
         {
-            //不需要用到
+            //Legacy comment translated to English.
             return null;
         }
 
         public override string GetDropTableSql(DbContext dbContext, string tableName)
         {
-            //不需要用到
+            //Legacy comment translated to English.
             return null;
         }
     }

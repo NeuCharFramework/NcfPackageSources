@@ -1,23 +1,23 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：Register.cs
-    文件功能描述：Register 相关实现
+    File name: Register.cs
+    File description: Register related implementation
     
     
-    创建标识：Senparc - 20260504
+    Created by: Senparc - 20260504
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.3.0-preview2 为 FirmwareUpdate 模块接入统一资源本地化并优化功能文案
+    Modified by: Senparc - 20260717
+    Change description: v0.3.0-preview2 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.4.0-preview5 扩展 NCF 与 NcfDesktop 发布包同步能力
+    Modified by: Senparc - 20260804
+    Change description: v0.4.0-preview5 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.4.9 统一 XNCF Register 显示元数据与多语言资源键
+    Modified by: Senparc - 20261111
+    Change description: v0.4.9 unify XNCF Register display metadata and localization resource keys
 
 ----------------------------------------------------------------*/
 

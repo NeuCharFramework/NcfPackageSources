@@ -1,11 +1,11 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：FineTuningWorkerSupervisor.cs
-    文件功能描述：从 NCF 启动、停止并观察本机微调 Worker
+    File name: FineTuningWorkerSupervisor.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20261106
+    Created by: Senparc - 20261106
 
 ----------------------------------------------------------------*/
 

@@ -9,18 +9,29 @@
     'use strict';
     
     /**
+
      * Name lookup methods.
+
      * Uses an object-literal pattern and requires no instantiation.
+
      */
     var NameHelper = {
         /**
+
          * Find a name by ID.
+
          * @param {Array} options - Option list.
+
          * @param {string|number} id - ID to find.
+
          * @param {string} [defaultName='Unknown'] - Fallback name.
+
          * @param {string} [valueKey='value'] - ID field.
+
          * @param {string} [labelKey='label'] - Name field.
+
          * @returns {string} Matching or fallback name.
+
          */
         getName: function(options, id, defaultName, valueKey, labelKey) {
             // Apply defaults.
@@ -51,10 +62,15 @@
         },
 
         /**
+
          * Create a bound name lookup function.
+
          * @param {Array} options - Option list.
+
          * @param {string} [defaultName='Unknown'] - Fallback name.
+
          * @returns {Function} Lookup function accepting an ID.
+
          */
         createGetter: function(options, defaultName) {
             defaultName = defaultName || ncfST('未知');
@@ -65,13 +81,21 @@
         },
 
         /**
+
          * Get names for a list of IDs.
+
          * @param {Array} options - Option list.
+
          * @param {Array} ids - ID list.
+
          * @param {string} [defaultName='Unknown'] - Fallback name.
+
          * @param {string} [valueKey='value'] - ID field.
+
          * @param {string} [labelKey='label'] - Name field.
+
          * @returns {Array} Name array.
+
          */
         getNames: function(options, ids, defaultName, valueKey, labelKey) {
             if (!Array.isArray(ids)) {
@@ -87,13 +111,21 @@
         },
 
         /**
+
          * Find an ID by name.
+
          * @param {Array} options - Option list.
+
          * @param {string} name - Name to find.
+
          * @param {string|number} [defaultId=null] - Fallback ID.
+
          * @param {string} [valueKey='value'] - ID field.
+
          * @param {string} [labelKey='label'] - Name field.
+
          * @returns {string|number|null} Matching ID or fallback ID.
+
          */
         getId: function(options, name, defaultId, valueKey, labelKey) {
             defaultId = defaultId !== undefined ? defaultId : null;
@@ -120,11 +152,17 @@
         },
 
         /**
+
          * Check whether an ID exists.
+
          * @param {Array} options - Option list.
+
          * @param {string|number} id - ID to check.
+
          * @param {string} [valueKey='value'] - ID field.
+
          * @returns {boolean} Whether the ID exists.
+
          */
         hasId: function(options, id, valueKey) {
             valueKey = valueKey || 'value';
@@ -147,11 +185,17 @@
         },
 
         /**
+
          * Return the complete option for an ID.
+
          * @param {Array} options - Option list.
+
          * @param {string|number} id - ID to find.
+
          * @param {string} [valueKey='value'] - ID field.
+
          * @returns {Object|null} Matching option or null.
+
          */
         getOption: function(options, id, valueKey) {
             valueKey = valueKey || 'value';

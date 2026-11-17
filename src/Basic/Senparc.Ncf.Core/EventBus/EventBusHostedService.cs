@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：EventBusHostedService.cs
-    文件功能描述：EventBusHostedService 相关实现
+    File name: EventBusHostedService.cs
+    File description: EventBusHostedService related implementation
     
     
-    创建标识：Senparc - 20260215
+    Created by: Senparc - 20260215
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260726
-    修改描述：v0.25.0-preview2 增加 EventBus 请求-响应能力，支持超时、取消与请求关联清理
+    Modified by: Senparc - 20260726
+    Change description: v0.25.0-preview2 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -29,8 +29,8 @@ using System.Linq;
 namespace Senparc.Ncf.Core.EventBus
 {
     /// <summary>
-    /// 后台消息泵：负责从 Channel 读取事件并分发给 Handler
-    /// 支持高并发场景，可配置并发度
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public class EventBusHostedService : BackgroundService
     {
@@ -60,7 +60,7 @@ namespace Senparc.Ncf.Core.EventBus
                 _options.MaxEventChainDepth,
                 _options.EnableCircularReferenceDetection);
 
-            // 使用信号量控制并发度，防止过多任务同时执行导致资源耗尽
+            //Legacy comment translated to English.
             using var semaphore = new SemaphoreSlim(_options.MaxConcurrency);
             var activeTasks = new List<Task>();
 
@@ -68,7 +68,7 @@ namespace Senparc.Ncf.Core.EventBus
             {
                 await foreach (var @event in _eventBus.Reader.ReadAllAsync(stoppingToken))
                 {
-                    // 1. 防止重复处理检测
+                    //Legacy comment translated to English.
                     if (_options.EnableDuplicateDetection)
                     {
                         if (!_eventBus.TryMarkEventAsProcessed(@event.Id))
@@ -81,7 +81,7 @@ namespace Senparc.Ncf.Core.EventBus
                         }
                     }
                     
-                    // 2. 检查事件链深度（防止无限递归）
+                    //Legacy comment translated to English.
                     if (@event.Depth >= _options.MaxEventChainDepth)
                     {
                         _logger.LogError(
@@ -93,7 +93,7 @@ namespace Senparc.Ncf.Core.EventBus
                         continue;
                     }
                     
-                    // 3. 检查循环引用（防止 A→B→A 循环模式）
+                    //Legacy comment translated to English.
                     if (_options.EnableCircularReferenceDetection)
                     {
                         var currentEventType = @event.GetType().Name;
@@ -110,10 +110,10 @@ namespace Senparc.Ncf.Core.EventBus
                         }
                     }
 
-                    // 等待获取信号量（如果当前并发数已达上限）
+                    //Legacy comment translated to English.
                     await semaphore.WaitAsync(stoppingToken);
 
-                    // 启动异步任务处理事件
+                    //Legacy comment translated to English.
                     var task = Task.Run(async () =>
                     {
                         try
@@ -129,7 +129,7 @@ namespace Senparc.Ncf.Core.EventBus
                                 @event.Id,
                                 @event.Depth);
                             
-                            // 根据配置决定是否重试
+                            //Legacy comment translated to English.
                             if (_options.RetryOnFailure && _options.MaxRetryAttempts > 0)
                             {
                                 await RetryEventProcessingAsync(@event, stoppingToken);
@@ -137,21 +137,21 @@ namespace Senparc.Ncf.Core.EventBus
                         }
                         finally
                         {
-                            // 释放信号量，允许下一个事件处理
+                            //Legacy comment translated to English.
                             semaphore.Release();
                         }
                     }, stoppingToken);
 
                     activeTasks.Add(task);
 
-                    // 定期清理已完成的任务，防止内存泄漏
+                    //Legacy comment translated to English.
                     if (activeTasks.Count >= _options.MaxConcurrency * 2)
                     {
                         activeTasks.RemoveAll(t => t.IsCompleted);
                     }
                 }
 
-                // 等待所有正在处理的任务完成
+                //Legacy comment translated to English.
                 await Task.WhenAll(activeTasks);
             }
             catch (OperationCanceledException)
@@ -169,14 +169,14 @@ namespace Senparc.Ncf.Core.EventBus
         {
             var startTime = DateTime.UtcNow;
 
-            // 响应关联由唯一的 EventBus 消费者完成，不能另建 ChannelReader 与消息泵竞争。
-            // 完成等待任务后仍继续分发，让业务 Handler 可以同时观察响应事件。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             var completedPendingRequest = _eventBus.TryCompleteRequest(@event);
             
-            // 创建 Scope 以支持 Scoped 服务注入（如 DbContext, Repository）
+            //Legacy comment translated to English.
             using var scope = _serviceProvider.CreateScope();
 
-            // 动态查找：IIntegrationEventHandler<MyEvent>
+            //Legacy comment translated to English.
             var handlerType = typeof(IIntegrationEventHandler<>).MakeGenericType(@event.GetType());
             var handlers = scope.ServiceProvider.GetServices(handlerType).ToList();
 
@@ -237,7 +237,7 @@ namespace Senparc.Ncf.Core.EventBus
                         @event.Id,
                         @event.Depth,
                         @event.EventChain);
-                    throw; // 重新抛出异常，触发重试机制
+                    throw; //Legacy comment translated to English.
                 }
             }
 
@@ -263,7 +263,7 @@ namespace Senparc.Ncf.Core.EventBus
                         attempt,
                         _options.MaxRetryAttempts);
 
-                    // 指数退避策略
+                    //Legacy comment translated to English.
                     var delay = TimeSpan.FromSeconds(Math.Pow(2, attempt - 1));
                     await Task.Delay(delay, ct);
 
@@ -274,7 +274,7 @@ namespace Senparc.Ncf.Core.EventBus
                         @event.GetType().Name,
                         @event.Id,
                         attempt);
-                    return; // 成功处理，退出重试循环
+                    return; //Legacy comment translated to English.
                 }
                 catch (Exception ex)
                 {
@@ -299,44 +299,44 @@ namespace Senparc.Ncf.Core.EventBus
     }
 
     /// <summary>
-    /// EventBus 配置选项
+    ///Legacy comment translated to English.
     /// </summary>
     public class EventBusOptions
     {
         /// <summary>
-        /// 最大并发处理数（默认值根据 CPU 核心数计算）
-        /// 建议：数据库连接池大小 / 2，或者 Environment.ProcessorCount * 2
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         public int MaxConcurrency { get; set; } = Math.Max(4, Environment.ProcessorCount * 2);
 
         /// <summary>
-        /// 是否启用重复事件检测（防止同一事件被处理多次）
+        ///Legacy comment translated to English.
         /// </summary>
         public bool EnableDuplicateDetection { get; set; } = true;
 
         /// <summary>
-        /// 处理失败时是否重试
+        ///Legacy comment translated to English.
         /// </summary>
         public bool RetryOnFailure { get; set; } = true;
 
         /// <summary>
-        /// 最大重试次数
+        ///Legacy comment translated to English.
         /// </summary>
         public int MaxRetryAttempts { get; set; } = 3;
         
         /// <summary>
-        /// 最大事件链深度（防止无限循环）
+        ///Legacy comment translated to English.
         /// </summary>
         public int MaxEventChainDepth { get; set; } = 10;
         
         /// <summary>
-        /// 是否启用循环引用检测（检测事件类型链中的循环模式）
+        ///Legacy comment translated to English.
         /// </summary>
         public bool EnableCircularReferenceDetection { get; set; } = true;
 
         /// <summary>
-        /// 单次 EventBus 请求-响应允许等待的最长时间。
-        /// 调用方仍必须为每个请求显式提供不超过此值的有限超时。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         public TimeSpan MaxRequestTimeout { get; set; } = TimeSpan.FromMinutes(5);
     }

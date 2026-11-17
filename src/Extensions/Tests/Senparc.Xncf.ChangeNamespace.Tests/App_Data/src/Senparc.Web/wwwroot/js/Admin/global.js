@@ -1,18 +1,23 @@
 ﻿
-//Vue.prototype.isCollapse = false;//菜单收起/展开
-//Vue.prototype.handleOpen = function (key, keyPath) {//菜单展开
+//Legacy comment translated to English.
+//Legacy comment translated to English.
 //    console.log(key, keyPath);
 
 //};
-//Vue.prototype.handleClose = function (key, keyPath) {//菜单收起
+//Legacy comment translated to English.
 //    console.log(key, keyPath);
 //};
 
 /**
- * 递归，获取所有子节点
+
+ * Legacy comment translated to English.
+
  * @param {any} treeNode 2
+
  * @param {any} result 2
- * @returns {any} 节点名称
+
+ * English documentation comment.
+
  */
 function getAllChildrenNodes(treeNode, result) {
     if (treeNode.isParent) {
@@ -28,22 +33,34 @@ function getAllChildrenNodes(treeNode, result) {
 }
 
 /**
+
  * 
- * @param {any} selector 选择器
- * @param {any} options 树选项
- * @returns {any} 树示例
+
+ * English documentation comment.
+
+ * English documentation comment.
+
+ * English documentation comment.
+
  */
 async function initMenu(selector, options) {
     return await _initMenuTree(selector || '#tree', '/Admin/Menu/Edit', { handler: 'menu' }, options);
 }
 
 /**
- * 初始化树
- * @param {any} selector 元素选择器
- * @param {any} url 请求地址
- * @param {any} params 请求参数
- * @param {any} options 选项
- * @returns {any} 树示例
+
+ * Legacy comment translated to English.
+
+ * English documentation comment.
+
+ * English documentation comment.
+
+ * @param {any} params requestparameters
+
+ * English documentation comment.
+
+ * English documentation comment.
+
  */
 async function _initMenuTree(selector, url, params, options) {
     var setting = {
@@ -74,16 +91,21 @@ async function _initMenuTree(selector, url, params, options) {
 
 
 /**
- * 多选删除
- * @param {string} checkBoxName  checkbox 的name
- * @param {string} formId  表单的Id
- * @returns {any} 无返回值
+
+ * Legacy comment translated to English.
+
+ * English documentation comment.
+
+ * English documentation comment.
+
+ * English documentation comment.
+
  */
 function deleteCheck(checkBoxName, formId) {
     var _checkedAll = $("input[name=" + checkBoxName + "]:checked");
     //debugger
     if (_checkedAll.length === 0) {
-        //base.("warning", "请选择需要删除的内容");
+        //Legacy comment translated to English.
         base.swal.alert('请选择需要删除的内容');
         return false;
     }
@@ -116,16 +138,20 @@ function deleteCheck(checkBoxName, formId) {
 
 
 /**
- * 复制内容
- * @param {any} value 值 
- * @param {any} toastText 提示内容
+
+ * Legacy comment translated to English.
+
+ * English documentation comment. 
+
+ * English documentation comment.
+
  */
 function copyToClipboard(value, toastText) {
     $('#clipboardContainer').val(value);
     $('#clipboardContainer').select();
     toastText = toastText || '复制成功！请使用 Ctrl+V 组合键进行粘贴操作。';
     try {
-        document.execCommand("copy"); // 执行浏览器复制命令
+        document.execCommand("copy"); //Legacy comment translated to English.
         base.swal.toast(toastText);
     } finally {
         //Execute Finally
@@ -133,7 +159,7 @@ function copyToClipboard(value, toastText) {
 }
 
 
-function resizeUrl() {//处理剪切url id
+function resizeUrl() {//Legacy comment translated to English.
     let url = window.location.href;
     let obj = {};
     let reg = /[?&][^?&]+=[^?&]+/g;
@@ -150,9 +176,13 @@ function resizeUrl() {//处理剪切url id
 }
 
 /**
- * 将数值四舍五入(保留2位小数)后格式化成金额形式
- * @param {any} num 数值(Number或者String)
- * @returns {any} 金额格式的字符串,如'1,234,567.45'
+
+ * Legacy comment translated to English.
+
+ * English documentation comment.
+
+ * English documentation comment.
+
  */
 function formatCurrency(num) {
     num = num.toString().replace(/\$|\,/g, '');

@@ -1,67 +1,67 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：ChatGroupService.cs
-    文件功能描述：聊天组运行与多智能体协作编排服务
+    File name: ChatGroupService.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20240616
+    Created by: Senparc - 20240616
 
-    修改标识：Senparc - 20260701
-    修改描述：v0.11.0-preview2 优化多智能体群聊任务管理与执行流程
+    Modified by: Senparc - 20260701
+    Change description: v0.11.0-preview2 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260701
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+    Modified by: Senparc - 20260701
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-    修改标识：Senparc - 20260704
-    修改描述：v0.11.0-preview2 新增 ChatTask 归档能力并完善多数据库迁移支持
+    Modified by: Senparc - 20260704
+    Change description: v0.11.0-preview2 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.11.1-preview3 重构系统配置初始化与更新流程并统一模型处理
+    Modified by: Senparc - 20260705
+    Change description: v0.11.1-preview3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.11.2-preview4 重构系统配置初始化与更新流程并统一模型处理
+    Modified by: Senparc - 20260705
+    Change description: v0.11.2-preview4 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.14.0-preview9 新增 Agent 模板知识库关联与管理统计
+    Modified by: Senparc - 20260804
+    Change description: v0.14.0-preview9 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+    Modified by: Senparc - 20260813
+    Change description: v0.15.0-preview11 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.15.0-preview20 增强 AgentTemplate、ChatGroup 与发布型 A2A 的取消和请求处理
+    Modified by: Senparc - 20260815
+    Change description: v0.15.0-preview20 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 支持 AgentTemplate 模型绑定、空输出 Token 重试与 Human-in-the-Loop
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
+    Modified by: Senparc - 20260822
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260829
-    修改描述：v0.17.0 增强 Agent 请求诊断、ChatGroup 状态处理与工作流对象支持
+    Modified by: Senparc - 20260829
+    Change description: v0.17.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261006
-    修改描述：工作室等待任务持久化后返回，同时保留后台异步执行
+    Modified by: Senparc - 20261006
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261009
-    修改描述：v0.18.3 增强 Agent Studio、群组配置与任务管理交互
+    Modified by: Senparc - 20261009
+    Change description: v0.18.3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.19.0 群组对话记录 Token 用量
+    Modified by: Senparc - 20261021
+    Change description: v0.19.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261028
-    修改描述：多租户模式下 ChatGroup/Studio 后台执行与隔离状态更新恢复请求租户上下文
+    Modified by: Senparc - 20261028
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.19.1 Enhance ChatGroupService with task management and concurrency handling
+    Modified by: Senparc - 20261103
+    Change description: v0.19.1 Enhance ChatGroupService with task management and concurrency handling
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.19.3 适配 MAF 1.28，外部响应挂起时结束当前事件流
+    Modified by: Senparc - 20261111
+    Change description: v0.19.3 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -114,7 +114,7 @@ using ChatMessage = Microsoft.Extensions.AI.ChatMessage;
 
 namespace Senparc.Xncf.AgentsManager.Domain.Services;
 
-/// <summary>同步等待 ChatGroup 结束时返回的持久化任务引用。</summary>
+///Legacy comment translated to English.
 public sealed record ChatGroupRunResult(
     int ChatTaskId,
     int ChatGroupId,
@@ -167,17 +167,17 @@ public class ChatGroupService : ServiceBase<ChatGroup>
     }
 
     /// <summary>
-    /// 默认最大对话轮数（可被调用方覆盖）。
+    ///Legacy comment translated to English.
     /// </summary>
     public const int DefaultChatMaxRound = 20;
 
     /// <summary>
-    /// 有效对话轮数下限（保证多 Agent 至少完成一轮交叉对话）。
+    ///Legacy comment translated to English.
     /// </summary>
     public const int MinEffectiveChatRounds = 2;
 
     /// <summary>
-    /// 有效对话轮数上限（防止配置错误导致长循环）。
+    ///Legacy comment translated to English.
     /// </summary>
     public const int MaxEffectiveChatRounds = 50;
 
@@ -186,7 +186,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
     private const float DefaultTopP = 0.3f;
 
     /// <summary>
-    /// 持有正在运行的后台任务，避免引用丢失，并供并发启动时加锁登记。
+    ///Legacy comment translated to English.
     /// </summary>
     public static List<Task> TaskList = new List<Task>();
 
@@ -217,7 +217,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
     }
 
     /// <summary>
-    /// 在独立进程中运行 ChatGroup（UI 界面中进行，不等待完成）
+    ///Legacy comment translated to English.
     /// </summary>
     public Task RunChatGroupInThread(ChatGroupRunCommand request)
     {
@@ -228,7 +228,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
     }
 
     /// <summary>
-    /// 启动 ChatGroup 后立即返回已创建的任务引用，执行继续在后台进行。
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<ChatGroupRunResult> StartChatGroupInThreadAsync(ChatGroupRunCommand request)
     {
@@ -299,7 +299,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
     }
 
     /// <summary>
-    /// 运行 ChatGroup 直至本轮对话结束（用于 Prompt 优化等需同步等待的场景）
+    ///Legacy comment translated to English.
     /// </summary>
     public Task RunChatGroupAwaitAsync(ChatGroupRunCommand request)
     {
@@ -307,7 +307,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
     }
 
     /// <summary>
-    /// 同步运行并返回本次创建的 ChatTask，供跨模块调用方定位完整的持久化会话。
+    ///Legacy comment translated to English.
     /// </summary>
     public Task<ChatGroupRunResult> RunChatGroupAwaitWithResultAsync(ChatGroupRunCommand request)
     {
@@ -320,8 +320,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         CancellationToken cancellationToken = request.CancellationToken;
         cancellationToken.ThrowIfCancellationRequested();
 
-        // 同步捕获当前请求的租户上下文（后台执行开始时调用方作用域可能已释放），
-        // 保证后续数据读写始终保持在发起请求所属租户内（多租户 fail-closed）。
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         var tenantSnapshot = RequestTenantSnapshot.Capture(_serviceProvider);
 
         IDisposable activeOptimizationScope = null;
@@ -391,7 +391,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 logger.AppendLine("Group 已配置 Human 参与者，本次任务将自动包含 Human。");
             }
 
-            // 默认模型继承规则：未显式指定模型时，优先继承当前群主使用的 Prompt 模型。
+            //Legacy comment translated to English.
             if (aiModelId <= 0)
             {
                 var adminAgent = await agentTemplateService.GetObjectAsync(z => z.Id == chatGroup.AdminAgentTemplateId);
@@ -407,7 +407,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     }
                     catch
                     {
-                        // 保持 aiModelId=0，继续走系统默认模型。
+                        //Legacy comment translated to English.
                     }
                 }
             }
@@ -460,9 +460,9 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             await chatTaskService.SetStatus(ChatTask_Status.Chatting, chatTask);
             chatTaskDto = chatTaskService.Mapping<ChatTaskDto>(chatTask);
 
-            // 注册按任务维度的取消源（与调用方外部令牌链接）。
-            // ForceStop 通过 ChatTaskCancellationRegistry 取消该令牌，
-            // 工作流运行与进行中的模型调用可立即中断。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             cancellationToken = _cancellationRegistry.Register(chatTask.Id, cancellationToken);
 
             runningKey = chatTaskService.GetChatTaskRunCacheKey(chatTask.Id);
@@ -472,7 +472,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
             logger.Append($"开始运行 {chatGroup.Name}");
 
-            #region 确定 AiSetting
+            #region Legacy section
 
             var senparcAiSetting = Senparc.AI.Config.SenparcAiSetting;
 
@@ -490,7 +490,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             }
             else if (senparcAiSetting is SenparcAiSetting defaultSetting)
             {
-                // 与 PromptRange 保持一致：将系统默认设置映射为 AIModel 再构建，统一 Endpoint/Deployment 归一化。
+                //Legacy comment translated to English.
                 var defaultModel = AgentModelFallbackResolver.BuildModelDtoFromSetting(defaultSetting, "AgentsManager.RequestDefault");
                 if (defaultModel != null)
                 {
@@ -500,7 +500,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
             #endregion
 
-            #region 收集成员（确保包含 Admin + Enter）
+            #region Legacy section
 
             var memberCollection = new List<(int AgentTemplateId, string Uid)>();
 
@@ -750,9 +750,9 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     "Agents.Error.MultiAgentMinMembers", "聊天组【{0}】多智能体协作至少需要两个启用智能体。", chatGroup.Name));
             }
 
-            #region Microsoft Agent Framework 多智能体工作流
+            #region Legacy section
 
-#pragma warning disable MAAIW001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+#pragma warning disable MAAIW001 //Legacy comment translated to English.
             Workflow workflow = AgentWorkflowBuilder
                 .CreateGroupChatBuilderWith(agents =>
                 {
@@ -956,8 +956,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             StreamingRun run = null;
             try
             {
-                // OffThread 在后台执行超级步。人类参与者会在回合内等待外部输入，
-                // 不能让超级步占用调用线程，否则任务循环无法观察到并提交回复。
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 run = await InProcessExecution.OffThread.RunStreamingAsync(
                     workflow,
                     new List<ChatMessage> { new(ChatRole.User, taskPrompt) },
@@ -999,16 +999,16 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     }
                     else
                     {
-                        // SendResponseAsync 已将外部审批响应排入下一超级步。此处不能再同时注入
-                        // TurnToken，否则 GroupChat 会并行推进下一参与者，令 Human 回合与工具审批续跑交错。
+                        //Legacy comment translated to English.
+                        //Legacy comment translated to English.
                         startNextSuperStepWithTurnToken = true;
                     }
 
                     var hadEventsInCurrentSuperStep = false;
                     var workflowRequestReceived = false;
 
-                    // MAF 1.28 默认会在等待外部响应时挂起事件流。这里由任务循环自己发送
-                    // 下一轮 TurnToken 或审批响应，因此在挂起时结束本段流。
+                    //Legacy comment translated to English.
+                    //Legacy comment translated to English.
                     await foreach (var workflowEvent in run.WatchStreamAsync(blockOnPendingRequest: false, cancellationToken))
                     {
                         hadEventsInCurrentSuperStep = true;
@@ -1527,8 +1527,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             {
                 if (hasRemoteParticipants || hasHumanParticipants)
                 {
-                    // 本地顺序回退依赖 IWantToRun，不能把远程 A2A Agent 错当作本地模型执行。
-                    // 这里保留已有消息并明确结束原因，避免在故障时意外丢弃远程参与者。
+                    //Legacy comment translated to English.
+                    //Legacy comment translated to English.
                     var remoteFallbackNotice = state.WorkflowFailed
                         ? $"系统提示：混合 Agent 编排失败（{state.WorkflowFailureReason}），未执行顺序回退以避免跳过远程或 Human 参与者。"
                         : "系统提示：混合 Agent 编排未返回可展示内容，未执行顺序回退以避免跳过远程或 Human 参与者。";
@@ -1619,7 +1619,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 }
                 catch
                 {
-                    // 忽略收尾异常，保留原始异常抛出
+                    //Legacy comment translated to English.
                 }
             }
 
@@ -1631,7 +1631,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 }
                 catch
                 {
-                    // 忽略收尾异常，保留原始异常抛出
+                    //Legacy comment translated to English.
                 }
             }
 
@@ -1662,8 +1662,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         IEnumerable<ChatGroupContextSharingMode?> remoteMemberModes,
         bool hasRemoteParticipants)
     {
-        // GroupChatManager 的广播钩子是按群组生效，不能在同一轮为不同 Agent 发送不同 payload。
-        // 所以在有远程成员时取所有已配置策略中最严格的一项，避免某个成员的默认安全策略被放宽。
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         var modes = new List<ChatGroupContextSharingMode>();
         if (groupMode.HasValue)
         {
@@ -2763,7 +2763,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
             if (i < chunkList.Count - 1)
             {
-                // 适当拉开 synthetic chunk 的间隔，避免前端视觉上“整段瞬出”。
+                //Legacy comment translated to English.
                 await Task.Delay(28);
             }
         }

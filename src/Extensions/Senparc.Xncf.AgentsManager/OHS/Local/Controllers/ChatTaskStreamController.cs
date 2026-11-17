@@ -1,26 +1,26 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：ChatTaskStreamController.cs
-    文件功能描述：ChatTaskStreamController 控制器逻辑
+    File name: ChatTaskStreamController.cs
+    File description: Related implementation.
     
     
-    创建标识：Senparc - 20260626
+    Created by: Senparc - 20260626
     
-    修改标识：Senparc - 20260701
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+    Modified by: Senparc - 20260701
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-    修改标识：Senparc - 20260704
-    修改描述：v0.11.0-preview2 新增 ChatTask 归档能力并完善多数据库迁移支持
+    Modified by: Senparc - 20260704
+    Change description: v0.11.0-preview2 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.11.1-preview3 重构系统配置初始化与更新流程并统一模型处理
+    Modified by: Senparc - 20260705
+    Change description: v0.11.1-preview3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.11.2-preview4 重构系统配置初始化与更新流程并统一模型处理
+    Modified by: Senparc - 20260705
+    Change description: v0.11.2-preview4 Updated module behavior and related support.
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -55,7 +55,7 @@ public class ChatTaskStreamController : ControllerBase
         Response.Headers.ContentType = "text/event-stream";
         HttpContext.Features.Get<IHttpResponseBodyFeature>()?.DisableBuffering();
 
-        // 先发送连接确认，确保 EventSource 尽快进入已连接状态并减少代理缓冲影响。
+        // send the connection confirmation first so EventSource reaches the connected state quickly and proxy buffering is reduced.
         await Response.WriteAsync(": connected\n\n", cancellationToken);
         await Response.Body.FlushAsync(cancellationToken);
 

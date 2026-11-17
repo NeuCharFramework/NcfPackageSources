@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：XncfModulesInventoryEvents.cs
-    文件功能描述：XncfModulesInventoryEvents 相关实现
+    File name: XncfModulesInventoryEvents.cs
+    File description: XncfModulesInventoryEvents related implementation
     
     
-    创建标识：Senparc - 20260510
+    Created by: Senparc - 20260510
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
 ----------------------------------------------------------------*/
 
@@ -17,7 +17,7 @@ using Senparc.Ncf.Shared.Abstractions.Events;
 namespace Senparc.Xncf.XncfBuilder.Abstractions.Events
 {
     /// <summary>
-    /// 单条 XNCF 模块清单项（与数据库 / Register 展示字段对齐的纯数据）。
+    ///Legacy comment translated to English.
     /// </summary>
     public record XncfModuleInventoryItem(
         string MenuName,
@@ -28,12 +28,12 @@ namespace Senparc.Xncf.XncfBuilder.Abstractions.Events
         string StateDescription);
 
     /// <summary>
-    /// 请求通过 EventBus 获取当前已安装与未安装（或未对齐版本）的 XNCF 模块清单。
+    ///Legacy comment translated to English.
     /// </summary>
     public record XncfModulesInventoryRequestEvent(string RequestId) : IntegrationEvent;
 
     /// <summary>
-    /// <see cref="XncfModulesInventoryRequestEvent"/> 的响应。
+    ///Legacy comment translated to English.
     /// </summary>
     public record XncfModulesInventoryResponseEvent(
         string RequestId,

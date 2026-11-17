@@ -1,16 +1,16 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：WorkspaceAgentProtocol.cs
-    文件功能描述：Workspace Agent 跨进程协议
+    File name: WorkspaceAgentProtocol.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20261024
+    Created by: Senparc - 20261024
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.2.0 implement connection manager and workspace file system provider
+    Modified by: Senparc - 20261103
+    Change description: v0.2.0 implement connection manager and workspace file system provider
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.2.0 完善 Workspace Agent、文件存储与模块注册兼容
+    Modified by: Senparc - 20261111
+    Change description: v0.2.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

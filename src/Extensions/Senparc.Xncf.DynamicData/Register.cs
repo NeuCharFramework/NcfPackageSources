@@ -1,20 +1,38 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：Register.cs
-    文件功能描述：Register 相关实现
-    
-    
-    创建标识：Senparc - 20240718
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.6.0-preview2 为 DynamicData 模块接入统一资源本地化并优化功能文案
+    File name: Register.cs
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.7.10 统一 XNCF Register 显示元数据与多语言资源键
+    File description: Register related implementation
+
+    
+
+    
+
+    Created by: Senparc - 20240718
+
+    
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260717
+
+    Change description: v0.6.0-preview2 integrate shared resource localization and improve feature text for the DynamicData module
+
+
+
+    Modified by: Senparc - 20261111
+
+    Change description: v0.7.10 unify XNCF Register display metadata and localization resource keys
+
+
 
 ----------------------------------------------------------------*/
 
@@ -51,13 +69,13 @@ namespace Senparc.Xncf.DynamicData
             "动态数据基础模块",
             "用于创建和管理动态数据（早期迭代，尚未正式发布）");
 
-        #region IXncfRegister 接口
+        #region Legacy section
 
         public override string Name => "Senparc.Xncf.DynamicData";
 
-        public override string Uid => "9448D9BA-5DF5-4AF1-8419-1BAB85BE589E";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
+        public override string Uid => "9448D9BA-5DF5-4AF1-8419-1BAB85BE589E";//Legacy comment translated to English.
 
-        public override string Version => "0.1.0";//必须填写版本号
+        public override string Version => "0.1.0";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 
@@ -67,21 +85,21 @@ namespace Senparc.Xncf.DynamicData
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
-            //安装或升级版本时更新数据库
+            //update the database when installing or upgrading a version
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 
-            //根据安装或更新不同条件执行逻辑
+            //execute logic according to the installation or update condition
             switch (installOrUpdate)
             {
                 case InstallOrUpdate.Install:
-                    //新安装
-                    #region 初始化数据库数据
+                    //new installation
+                    #region Legacy section
                     var colorService = serviceProvider.GetService<ColorAppService>();
                     var colorResult = await colorService.GetOrInitColorAsync();
                     #endregion
                     break;
                 case InstallOrUpdate.Update:
-                    //更新
+                    //update
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -90,14 +108,14 @@ namespace Senparc.Xncf.DynamicData
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
-            #region 删除数据库（演示）
+            #region Legacy section
 
             var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
             DynamicDataSenparcEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as DynamicDataSenparcEntities;
 
-            //指定需要删除的数据实体
+            //specify the data entities to delete
 
-            //注意：这里作为演示，在卸载模块的时候删除了所有本模块创建的表，实际操作过程中，请谨慎操作，并且按照删除顺序对实体进行排序！
+            //Note: this is a demonstration that deletes all tables created by this module during uninstallation. In production, proceed carefully and order entities by their deletion dependencies.
             var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.TryGetXncfDatabaseDbContextType).Keys.ToArray();
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
 

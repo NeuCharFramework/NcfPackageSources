@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：PointsLogService.cs
-    文件功能描述：账户积分日志服务
+
+    File name: PointsLogService.cs
+
+    File description: Related implementation.
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260724
-    修改描述：v0.3.0 完善账户模块本地化资源与功能文案
+
+    Modified by: Senparc - 20260724
+
+    Change description: v0.3.0 Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 using Senparc.Service.ACL;
@@ -41,12 +53,12 @@ namespace Senparc.Service
         {
             if (notRecordIfPointIsZero && points == 0)
             {
-                return;//积分为0则不更改
+                return;//Legacy comment translated to English.
             }
 
             if (throwIfNotEnoughPoints && points < 0 && accountPoints + points < 0)
             {
-                //TODO 抛出异常待定
+                //Legacy comment translated to English.
                 throw new Exception($"积分不足,还需{Convert.ToInt32(accountPoints + points)}积分！");
             }
 
@@ -65,7 +77,7 @@ namespace Senparc.Service
             };
             this.SaveObject(pointsLog);
 
-            //删除Account缓存
+            //Legacy comment translated to English.
             var fullAccountCache = _serviceProvider.GetService<FullAccountCache>();
             fullAccountCache.RemoveObject(userName);
         }

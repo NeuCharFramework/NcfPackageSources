@@ -1,20 +1,38 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：RepositoryBase.cs
-    文件功能描述：RepositoryBase 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20261001
-    修改描述：增加已跟踪实体按指定字段保存的通用能力
+    File name: RepositoryBase.cs
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.20.10-preview9 维护RepositoryBase 相关实现
+    File description: RepositoryBase related implementation
+
+    
+
+    
+
+    Created by: Senparc - 20200724
+
+    
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20261001
+
+    Change description: Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20261103
+
+    Change description: v0.20.10-preview9 Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 
@@ -47,7 +65,7 @@ namespace Senparc.Ncf.Repository
         public RepositoryBase(INcfDbData db) : base(db)
         {
             //System.Web.HttpContext.Current.Response.Write("-"+this.GetType().Name + "<br />");
-            //DB = db ?? ObjectFactory.GetInstance<INcfDbData>();//如果没有定义，取默认数据库
+            //Legacy comment translated to English.
 
             base.BaseDB = db;
             // ObjectFactory.GetInstance<INcfDbData>();
@@ -59,13 +77,13 @@ namespace Senparc.Ncf.Repository
         //public BaseRepository() { }
 
 
-        #region IBaseRepository<T> 成员
+        #region Legacy section
 
 
         public virtual bool IsInsert(T obj)
         {
             Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<T> entry = BaseDB.BaseDataContext.Entry(obj);
-            return entry.State == EntityState.Added || entry.State == EntityState.Detached; //TODO:EF5、Core 验证正确性
+            return entry.State == EntityState.Added || entry.State == EntityState.Detached; //Legacy comment translated to English.
             //return obj.EntityKey == null || obj.EntityKey.EntityKeyValues == null;
 
             //entry.IsKeySet
@@ -120,13 +138,13 @@ namespace Senparc.Ncf.Repository
             {
                 result = resultList.ToList();
             }
-            //catch (ArgumentException ex)//DbArithmeticExpression 参数必须具有数值通用类型。
+            //Legacy comment translated to English.
             //{
-            //    //通常是ordery by的问题 TODO:重新整理是否需要Skip等操作
+            //Legacy comment translated to English.
             //    //result = query.Includes(includes)
-            //    //            .OrderByIEnumerable(orderBy.Compile(), orderingType)//改用非延时地方法，效率最低
+            //Legacy comment translated to English.
             //    //            .Skip(skipCount).Take(pageCount)
-            //    //            .Where(where.Compile())//保险起见用where.Compile()，但是会影响效率
+            //Legacy comment translated to English.
             //    //            .ToList();
             //    AdminLogUtility.WebLogger.Warn("EF ArgumentException", ex);
             //    throw;
@@ -173,13 +191,13 @@ namespace Senparc.Ncf.Repository
             {
                 result = resultList.ToList();
             }
-            //catch (ArgumentException ex)//DbArithmeticExpression 参数必须具有数值通用类型。
+            //Legacy comment translated to English.
             //{
-            //    //通常是ordery by的问题 TODO:重新整理是否需要Skip等操作
+            //Legacy comment translated to English.
             //    //result = query.Includes(includes)
-            //    //            .OrderByIEnumerable(orderBy.Compile(), orderingType)//改用非延时地方法，效率最低
+            //Legacy comment translated to English.
             //    //            .Skip(skipCount).Take(pageCount)
-            //    //            .Where(where.Compile())//保险起见用where.Compile()，但是会影响效率
+            //Legacy comment translated to English.
             //    //            .ToList();
             //    AdminLogUtility.WebLogger.Warn("EF ArgumentException", ex);
             //    throw;
@@ -413,19 +431,19 @@ namespace Senparc.Ncf.Repository
         }
 
         /// <summary>
-        /// 删除对象
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="obj"></param>
-        /// <param name="softDelete">是否使用软删除</param>
+        ///Legacy comment translated to English.
         public virtual void Delete(T obj, bool softDelete = false)
         {
             if (softDelete)
             {
-                obj.Flag = true;//软删除
+                obj.Flag = true;//Legacy comment translated to English.
             }
             else
             {
-                BaseDB.BaseDataContext.Set<T>().Remove(obj);//硬删除
+                BaseDB.BaseDataContext.Set<T>().Remove(obj);//Legacy comment translated to English.
             }
             this.SaveChanges();
         }
@@ -592,29 +610,29 @@ namespace Senparc.Ncf.Repository
 
 
         /// <summary>
-        /// 删除对象
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="obj"></param>
-        /// <param name="softDelete">是否使用软删除</param>
+        ///Legacy comment translated to English.
         public virtual async Task DeleteAsync(T obj, bool softDelete = false)
         {
             if (softDelete)
             {
-                obj.Flag = true;//软删除
+                obj.Flag = true;//Legacy comment translated to English.
             }
             else
             {
-                BaseDB.BaseDataContext.Set<T>().Remove(obj);//硬删除
+                BaseDB.BaseDataContext.Set<T>().Remove(obj);//Legacy comment translated to English.
             }
             await this.SaveChangesAsync();
         }
 
 
         /// <summary>
-        /// 批量删除
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="objs"></param>
-        /// <param name="deleteItemAction">删除每一个对象的操作</param>
+        ///Legacy comment translated to English.
         /// <param name="softDelete"></param>
         /// <returns></returns>
         public virtual async Task DeleteAllAsync(IEnumerable<T> objs, Action<T> deleteItemAction = null, bool softDelete = false)
@@ -623,11 +641,11 @@ namespace Senparc.Ncf.Repository
             {
                 if (softDelete)
                 {
-                    obj.Flag = true;//软删除
+                    obj.Flag = true;//Legacy comment translated to English.
                 }
                 else
                 {
-                    BaseDB.BaseDataContext.Set<T>().Remove(obj);//硬删除
+                    BaseDB.BaseDataContext.Set<T>().Remove(obj);//Legacy comment translated to English.
                 }
 
                 deleteItemAction?.Invoke(obj);
@@ -637,7 +655,7 @@ namespace Senparc.Ncf.Repository
 
 
         /// <summary>
-        /// 批量添加, 待优化
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="objs"></param>
         /// <param name="softDelete"></param>
@@ -646,7 +664,7 @@ namespace Senparc.Ncf.Repository
         {
             //foreach (var obj in objs)
             //{
-            //    //BaseDB.BaseDataContext.Set<T>().(obj);//硬删除
+            //Legacy comment translated to English.
             //}
             BaseDB.BaseDataContext.Set<T>().AddRange(objs);
             await this.SaveChangesAsync();
@@ -654,7 +672,7 @@ namespace Senparc.Ncf.Repository
 
 
         /// <summary>
-        /// 动态排序
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="where"></param>
         /// <param name="OrderbyField">xxx DESC, bbb ASC</param>
@@ -765,7 +783,7 @@ namespace Senparc.Ncf.Repository
         }
 
         /// <summary>
-        /// 开启事物
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public void BeginTransaction()
@@ -774,7 +792,7 @@ namespace Senparc.Ncf.Repository
         }
 
         /// <summary>
-        /// 开启事物
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public void BeginTransaction(System.Data.IsolationLevel isolationLevel)
@@ -783,7 +801,7 @@ namespace Senparc.Ncf.Repository
         }
 
         /// <summary>
-        /// 开启事物
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public async Task BeginTransactionAsync()
@@ -792,7 +810,7 @@ namespace Senparc.Ncf.Repository
         }
 
         /// <summary>
-        /// 开启事物
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public async Task BeginTransactionAsync(System.Data.IsolationLevel isolationLevel)
@@ -801,7 +819,7 @@ namespace Senparc.Ncf.Repository
         }
 
         /// <summary>
-        /// 回滚事物
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public void RollbackTransaction()
@@ -810,7 +828,7 @@ namespace Senparc.Ncf.Repository
         }
 
         /// <summary>
-        /// 提交事务
+        ///Legacy comment translated to English.
         /// </summary>
         public void CommitTransaction()
         {

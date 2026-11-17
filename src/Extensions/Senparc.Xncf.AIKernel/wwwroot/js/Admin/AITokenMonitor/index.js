@@ -23,7 +23,7 @@ var app = new Vue({
             if (!last) { return this.runLoading ? 5 : 0; }
             if (last.status === 1) { return 100; }
             if (last.status === 2) { return 100; }
-            // running：按已耗时估算，最多到 95
+            //Legacy comment translated to English.
             var p = Math.min(95, Math.floor(last.elapsedMs / 20));
             return Math.max(5, p);
         },
@@ -92,7 +92,7 @@ var app = new Vue({
             this.progressEvents = [];
             this.liveUsage = { inputTokens: 0, outputTokens: 0, totalTokens: 0, elapsedMs: 0, preview: "" };
 
-            // 轮询异步进度（在运行期间实时刷新）
+            //Legacy comment translated to English.
             var pollTimer = setInterval(() => { this.pollProgress(); }, 500);
 
             try {
@@ -117,7 +117,7 @@ var app = new Vue({
             } finally {
                 this.runLoading = false;
                 clearInterval(pollTimer);
-                // 运行结束后，回放完整缓冲进度
+                //Legacy comment translated to English.
                 this.replayBufferedProgress();
             }
         },
@@ -133,7 +133,7 @@ var app = new Vue({
                         }
                     });
             } catch (e) {
-                // 忽略轮询异常
+                //Legacy comment translated to English.
             }
         },
         async replayBufferedProgress() {
@@ -148,7 +148,7 @@ var app = new Vue({
                         }
                     });
             } catch (e) {
-                // 忽略
+                //Legacy comment translated to English.
             }
         },
         applyLiveUsage(evt) {

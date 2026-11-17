@@ -1,17 +1,32 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：AuthenticationAsyncPageFilterAttribute.cs
-    文件功能描述：AuthenticationAsyncPageFilterAttribute 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260731
-    修改描述：v0.23.0-preview4 将 Ajax 无权限提示接入核心多语言资源
+    Copyright (C) 2026 Senparc
+
+  
+
+    File name: AuthenticationAsyncPageFilterAttribute.cs
+
+    File description: AuthenticationAsyncPageFilterAttribute related implementation
+
+    
+
+    
+
+    Created by: Senparc - 20200724
+
+    
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260731
+
+    Change description: v0.23.0-preview4 will integrate Ajax none permission prompt with core multilingual resources
+
+
 
 ----------------------------------------------------------------*/
 
@@ -50,7 +65,7 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
 
         public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
         {
-            //在调用处理程序方法前，但在模型绑定结束后，进行异步调用。
+            //Perform asyncinvoke before ininvokehandlingprogrammethod, but after inmodel binding end.
 
             //context.ActionDescriptor.FilterDescriptors
             var authenticateResult = await context.HttpContext.AuthenticateAsync(AdminAuthorizeAttribute.AuthenticationScheme);
@@ -73,7 +88,7 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
                 if (!hasRight /*&& !(adminPageModel is Pages.IndexModel)*/)
                 {
                     IActionResult actionResult = new Microsoft.AspNetCore.Mvc.RedirectResult("/Admin/Forbidden");
-                    //跳出
+                    //bounced
                     if (context.HttpContext.Request.Headers.TryGetValue("x-requested-with", out Microsoft.Extensions.Primitives.StringValues strings))
                     {
                         if (strings.Contains("XMLHttpRequest"))
@@ -90,7 +105,7 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
 
         public Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context)
         {
-            //在选择处理程序方法后，但在模型绑定发生前，进行异步调用。
+            //After selecting the handling program method, but before the model binding occurs, perform an async invoke.
             return Task.CompletedTask;
         }
     }

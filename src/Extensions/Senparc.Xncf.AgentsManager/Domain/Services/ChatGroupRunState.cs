@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：ChatGroupRunState.cs
-    文件功能描述：ChatGroup 单次执行的运行时状态（从 ChatGroupService.RunChatGroupExecutionCoreAsync 抽取）
+    File name: ChatGroupRunState.cs
+    File description: Related implementation.
     
-    创建标识：Senparc - 20260927
-    创建描述：拆分 ChatGroupService，集中管理工作流事件循环中的可变状态
+    Created by: Senparc - 20260927
+    Creation description: Related implementation.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.19.1 update AgentsManager with new features and improvements
+    Modified by: Senparc - 20261103
+    Change description: v0.19.1 update AgentsManager with new features and improvements
 
 ----------------------------------------------------------------*/
 
@@ -20,7 +20,7 @@ using System.Text;
 namespace Senparc.Xncf.AgentsManager.Domain.Services;
 
 /// <summary>
-/// ChatGroup 单次执行（RunChatGroupExecutionCoreAsync）期间的工作流可变状态。
+///Legacy comment translated to English.
 /// </summary>
 internal sealed class ChatGroupRunState
 {

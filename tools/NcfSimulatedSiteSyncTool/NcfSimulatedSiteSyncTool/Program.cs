@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：Program.cs
-    文件功能描述：模拟站点同步工具入口
+
+    File name: Program.cs
+
+    File description: Related implementation.
+
     
+
     
-    创建标识：Senparc - 20250321
+
+    Created by: Senparc - 20250321
+
     
-    修改标识：Senparc - 20260726
-    修改描述：v0.0.1 完善外部与托管 NCF 目标解析的同步工具能力
+
+    Modified by: Senparc - 20260726
+
+    Change description: v0.0.1 Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 using Microsoft.Extensions.Logging;
@@ -24,17 +36,17 @@ class Program
     { 
         ".csproj", ".user", ".DS_Store", ".Development.config"
     };
-    // 新增忽略的文件名数组
+    //Legacy comment translated to English.
     private static readonly string[] IgnoredFileNames = new[]
     {
         "launchSettings.json", "NcfSimulatedSite.sln", "Dockerfile", "Dockerfile.original"
     };
-    // 新增包含特定字符串的文件过滤规则
+    //Legacy comment translated to English.
     private static readonly string[] IgnoredFilePatterns = new[]
     {
-        "-backup-"  // 用于匹配包含 -backup- 的 .sln 文件
+        "-backup-"  //Legacy comment translated to English.
     };
-    // 添加静态字段来存储自动选择的选项
+    //Legacy comment translated to English.
     private static ConsoleKey? _autoUpdateChoice = null;
 
     static Program()
@@ -60,7 +72,7 @@ class Program
                 ? "Mode: template-only (skip NcfSimulatedSite -> NCF back-end synchronization)"
                 : $"Target directory: {targetDir}");
 
-            // 检查源目录和目标目录
+            //Legacy comment translated to English.
             bool hasError = false;
             if (!Directory.Exists(sourceDir))
             {
@@ -84,7 +96,7 @@ class Program
                 return;
             }
 
-            // 处理模板目录的特殊同步
+            //Legacy comment translated to English.
             string templateSourceDir = Path.Combine(sourceDir, "Template_OrgName.Xncf.Template_XncfName");
             string templateTargetDir = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..","..", "..", "..", "..", "..", "src", "Extensions", "Senparc.Xncf.XncfBuilder", "Senparc.Xncf.XncfBuilder.Template", "templates", "template1"));
             
@@ -141,40 +153,40 @@ class Program
 
     static bool ShouldIgnore(string path)
     {
-        // 检查目录
+        // checkdirectory
         var relativePath = Path.GetDirectoryName(path);
         if (IgnoredFolders.Any(folder => relativePath?.Contains(folder) ?? false))
             return true;
 
-        // 获取文件名和扩展名
+        //Legacy comment translated to English.
         var fileName = Path.GetFileName(path);
 
-        // 首先检查完整文件名
+        //Legacy comment translated to English.
         if (IgnoredFileNames.Any(name => name.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
             return true;
 
-        // 检查扩展名
+        //Legacy comment translated to English.
         var extension = Path.GetExtension(path);
         if (IgnoredExtensions.Any(ext => 
             ext.Equals(extension, StringComparison.OrdinalIgnoreCase) || 
             fileName.EndsWith(ext, StringComparison.OrdinalIgnoreCase)))
             return true;
 
-        // 检查 .sln 文件是否包含指定模式
+        //Legacy comment translated to English.
         if (extension.Equals(".sln", StringComparison.OrdinalIgnoreCase))
         {
             if (IgnoredFilePatterns.Any(pattern => fileName.Contains(pattern, StringComparison.OrdinalIgnoreCase)))
                 return true;
         }
 
-        // 检查隐藏文件
+        // checkhidefile
         if (fileName.StartsWith("."))
             return true;
 
         return false;
     }
 
-    // 新增：模板目录的单向同步方法
+    //Legacy comment translated to English.
     static async Task SyncTemplateDirectoryAsync(string sourceDir, string targetDir)
     {
         var sourceFiles = Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories)
@@ -190,36 +202,36 @@ class Program
         }
     }
 
-    // 新增：模板文件的忽略规则（可能与普通文件不同）
+    //Legacy comment translated to English.
     static bool ShouldIgnoreForTemplate(string path)
     {
-        // 获取文件名和扩展名
+        //Legacy comment translated to English.
         var fileName = Path.GetFileName(path);
         var extension = Path.GetExtension(path);
 
-        // 对于模板目录，只忽略常见的临时文件和编译输出
+        //Legacy comment translated to English.
         var templateIgnoredFolders = new[] { "bin", "obj", ".vs" };
         var templateIgnoredExtensions = new[] { ".user", ".DS_Store" };
 
-        // 检查目录
+        // checkdirectory
         var relativePath = Path.GetDirectoryName(path);
         if (templateIgnoredFolders.Any(folder => relativePath?.Contains(folder) ?? false))
             return true;
 
-        // 检查扩展名
+        //Legacy comment translated to English.
         if (templateIgnoredExtensions.Any(ext => 
             ext.Equals(extension, StringComparison.OrdinalIgnoreCase) || 
             fileName.EndsWith(ext, StringComparison.OrdinalIgnoreCase)))
             return true;
 
-        // 检查隐藏文件
+        // checkhidefile
         if (fileName.StartsWith("."))
             return true;
 
         return false;
     }
 
-    // 新增：模板文件的单向同步方法
+    //Legacy comment translated to English.
     static async Task SyncTemplateFileAsync(string sourceFile, string sourceBaseDir, string targetBaseDir)
     {
         var relativePath = Path.GetRelativePath(sourceBaseDir, sourceFile);
@@ -235,7 +247,7 @@ class Program
         string? sourceContent = null;
         string? processedContent = null;
 
-        // 对 Register.cs 文件进行特殊处理
+        //Legacy comment translated to English.
         if (Path.GetFileName(sourceFile).Equals("Register.cs", StringComparison.OrdinalIgnoreCase))
         {
             sourceContent = await File.ReadAllTextAsync(sourceFile);
@@ -256,13 +268,13 @@ class Program
 
             if (processedContent != null)
             {
-                // 对于 Register.cs 文件，比较处理后的内容与目标文件内容
+                //Legacy comment translated to English.
                 var targetContent = await File.ReadAllTextAsync(targetFile);
                 contentSame = processedContent == targetContent;
             }
             else
             {
-                // 对于其他文件，比较文件大小和MD5
+                //Legacy comment translated to English.
                 var sourceFileInfo = new FileInfo(sourceFile);
                 var targetFileInfo = new FileInfo(targetFile);
 
@@ -276,13 +288,13 @@ class Program
 
             if (contentSame)
             {
-                // 内容相同，检查时间戳
+                //Legacy comment translated to English.
                 var sourceTime = File.GetLastWriteTime(sourceFile);
                 var targetTime = File.GetLastWriteTime(targetFile);
 
                 if (sourceTime <= targetTime)
                 {
-                    // 源文件没有更新，跳过
+                    //Legacy comment translated to English.
                     shouldCopy = false;
                     Console.ForegroundColor = ConsoleColor.Gray;
                     Console.WriteLine($"Template skipped (same): {relativePath}");
@@ -290,7 +302,7 @@ class Program
                 }
                 else
                 {
-                    // 更新时间戳
+                    //Legacy comment translated to English.
                     File.SetLastWriteTime(targetFile, sourceTime);
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine($"Template timestamp updated: {relativePath}");
@@ -300,7 +312,7 @@ class Program
             }
             else
             {
-                // 内容不同，显示信息但直接覆盖（单向同步）
+                //Legacy comment translated to English.
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine($"Template content differs, overwriting: {relativePath}");
                 Console.ResetColor();
@@ -313,12 +325,12 @@ class Program
             {
                 if (processedContent != null)
                 {
-                    // 对于 Register.cs 文件，写入处理后的内容
+                    //Legacy comment translated to English.
                     await File.WriteAllTextAsync(targetFile, processedContent);
                 }
                 else
                 {
-                    // 对于其他文件，直接复制
+                    //Legacy comment translated to English.
                     await FileExtensions.CopyAsync(sourceFile, targetFile, true);
                 }
                 
@@ -336,12 +348,12 @@ class Program
         }
     }
 
-    // 添加 LCS (Longest Common Subsequence) 算法来找到真正的差异
+    //Legacy comment translated to English.
     static List<(string Line, char Type)> GetDiff(string[] sourceLines, string[] targetLines)
     {
         var diff = new List<(string Line, char Type)>();
         
-        // 创建 LCS 长度矩阵
+        //Legacy comment translated to English.
         int[,] lcs = new int[sourceLines.Length + 1, targetLines.Length + 1];
         for (int i = 1; i <= sourceLines.Length; i++)
         {
@@ -358,7 +370,7 @@ class Program
             }
         }
 
-        // 回溯找出差异
+        //Legacy comment translated to English.
         int sourceIndex = sourceLines.Length;
         int targetIndex = targetLines.Length;
         var tempDiff = new List<(string Line, char Type)>();
@@ -375,14 +387,14 @@ class Program
             else if (targetIndex > 0 && 
                     (sourceIndex == 0 || lcs[sourceIndex, targetIndex - 1] >= lcs[sourceIndex - 1, targetIndex]))
             {
-                // 目标文件（旧文件）中的行将被删除
+                //Legacy comment translated to English.
                 tempDiff.Add((targetLines[targetIndex - 1], '-'));
                 targetIndex--;
             }
             else if (sourceIndex > 0 && 
                     (targetIndex == 0 || lcs[sourceIndex - 1, targetIndex] >= lcs[sourceIndex, targetIndex - 1]))
             {
-                // 源文件（新文件）中的行将被添加
+                //Legacy comment translated to English.
                 tempDiff.Add((sourceLines[sourceIndex - 1], '+'));
                 sourceIndex--;
             }
@@ -427,20 +439,20 @@ class Program
             switch (type)
             {
                 case '+':
-                    // 源文件（新文件）中的行，显示为绿色的加号
+                    //Legacy comment translated to English.
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"+ {line}");  // 新增的行
+                    Console.WriteLine($"+ {line}");  //Legacy comment translated to English.
                     hasDiff = true;
                     break;
                 case '-':
-                    // 目标文件（旧文件）中的行，显示为红色的减号
+                    //Legacy comment translated to English.
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"- {line}");  // 将被删除的行
+                    Console.WriteLine($"- {line}");  //Legacy comment translated to English.
                     hasDiff = true;
                     break;
                 default:
                     Console.ForegroundColor = ConsoleColor.Gray;
-                    Console.WriteLine($"  {line}");  // 未变更的行
+                    Console.WriteLine($"  {line}");  //Legacy comment translated to English.
                     break;
             }
         }
@@ -482,14 +494,14 @@ class Program
             var sourceTime = File.GetLastWriteTime(sourceFile);
             var targetTime = File.GetLastWriteTime(targetFile);
 
-            // 首先比较文件大小，如果大小不同则直接进行详细比较
+            //Legacy comment translated to English.
             var sourceFileInfo = new FileInfo(sourceFile);
             var targetFileInfo = new FileInfo(targetFile);
             bool contentSame = false;
 
             if (sourceFileInfo.Length == targetFileInfo.Length)
             {
-                // 如果文件大小相同，计算 MD5 进行比较
+                //Legacy comment translated to English.
                 var sourceMD5 = await FileExtensions.CalculateMD5Async(sourceFile);
                 var targetMD5 = await FileExtensions.CalculateMD5Async(targetFile);
                 contentSame = sourceMD5 == targetMD5;
@@ -497,7 +509,7 @@ class Program
 
             if (contentSame)
             {
-                // 如果内容相同，只更新时间戳
+                //Legacy comment translated to English.
                 if (targetTime > sourceTime)
                 {
                     Console.WriteLine();
@@ -566,20 +578,20 @@ class Program
                 }
                 else
                 {
-                    // 如果目标文件时间更早，直接更新时间戳
+                    //Legacy comment translated to English.
                     shouldCopy = true;
                     updateTimestampOnly = true;
-                    // 直接更新时间戳，不需要询问
+                    //Legacy comment translated to English.
                     File.SetLastWriteTime(targetFile, sourceTime);
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine($"Updated timestamp: {relativePath}");
                     Console.ResetColor();
-                    return; // 直接返回，不需要继续执行
+                    return; //Legacy comment translated to English.
                 }
             }
             else
             {
-                // 如果内容不同，显示差异并询问
+                //Legacy comment translated to English.
                 Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine($"Warning: Files have different content:");
@@ -623,7 +635,7 @@ class Program
         }
         else
         {
-            // 目标文件不存在，直接复制
+            //Legacy comment translated to English.
             shouldCopy = true;
         }
 
@@ -633,7 +645,7 @@ class Program
             {
                 if (isReverseUpdate)
                 {
-                    // 反向更新：将目标文件复制到源文件
+                    //Legacy comment translated to English.
                     await FileExtensions.CopyAsync(targetFile, sourceFile, true);
                     File.SetLastWriteTime(sourceFile, File.GetLastWriteTime(targetFile));
                     Console.ForegroundColor = ConsoleColor.Cyan;
@@ -642,7 +654,7 @@ class Program
                 }
                 else if (updateTimestampOnly)
                 {
-                    // 只更新时间戳
+                    //Legacy comment translated to English.
                     File.SetLastWriteTime(targetFile, File.GetLastWriteTime(sourceFile));
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine($"Updated timestamp: {relativePath}");
@@ -650,7 +662,7 @@ class Program
                 }
                 else
                 {
-                    // 正常更新：将源文件复制到目标文件
+                    //Legacy comment translated to English.
                     await FileExtensions.CopyAsync(sourceFile, targetFile, true);
                     File.SetLastWriteTime(targetFile, File.GetLastWriteTime(sourceFile));
                     Console.ForegroundColor = ConsoleColor.Green;

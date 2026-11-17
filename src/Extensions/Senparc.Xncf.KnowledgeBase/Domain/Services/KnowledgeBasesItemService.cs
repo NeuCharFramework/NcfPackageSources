@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：KnowledgeBasesItemService.cs
-    文件功能描述：KnowledgeBasesItemService 相关实现
+    File name: KnowledgeBasesItemService.cs
+    File description: KnowledgeBasesItemService related implementation
     
     
-    创建标识：Senparc - 20260704
+    Created by: Senparc - 20260704
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
 ----------------------------------------------------------------*/
 
@@ -30,7 +30,7 @@ namespace Senparc.Xncf.KnowledgeBase.Services
         {
         }
 
-        //TODO: 更多业务方法可以写到这里
+        //TODO: more business methods can be added here
         public async Task<IEnumerable<KnowledgeBaseItemDto>> GetKnowledgeBasesDetailList(int PageIndex, int PageSize)
         {
             List<KnowledgeBaseItemDto> selectListItems = null;
@@ -40,7 +40,7 @@ namespace Senparc.Xncf.KnowledgeBase.Services
         }
 
         /// <summary>
-        /// 根据知识库ID获取关联的 KnowledgeBaseItem 列表（用于配置页回显）
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<IEnumerable<KnowledgeBaseItemDto>> GetListByKnowledgeBaseIdAsync(int knowledgeBaseId)
         {

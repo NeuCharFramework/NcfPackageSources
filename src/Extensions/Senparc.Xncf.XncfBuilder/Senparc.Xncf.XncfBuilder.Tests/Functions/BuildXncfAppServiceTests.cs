@@ -1,12 +1,12 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：BuildXncfAppServiceTests.cs
-    文件功能描述：BuildXncfAppService 跨平台命令执行及失败响应测试
+    File name: BuildXncfAppServiceTests.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20260725
-    创建描述：验证 XNCF 生成命令无需 cmd.exe，并防止失败时返回成功信息
+    Created by: Senparc - 20260725
+    Creation description: Related implementation.
 
 ----------------------------------------------------------------*/
 

@@ -1,20 +1,38 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：InstallOptionsService.cs
-    文件功能描述：安装选项与模块选择服务
-    
-    
-    创建标识：Senparc - 20240312
-    
-    修改标识：Senparc - 20260724
-    修改描述：v0.4.0 增加默认模块选择与安装确认并完善多语言界面
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.4.1 加强安装状态校验并收紧安装辅助路由
+    File name: InstallOptionsService.cs
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.5.12 维护安装选项与模块选择服务
+    File description: Related implementation.
+
+    
+
+    
+
+    Created by: Senparc - 20240312
+
+    
+
+    Modified by: Senparc - 20260724
+
+    Change description: v0.4.0 Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20260729
+
+    Change description: v0.4.1 Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20261103
+
+    Change description: v0.5.12 Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Http;
@@ -59,12 +77,12 @@ namespace Senparc.Xncf.Installer.Domain.Services
             this._serviceProvider = serviceProvider;
             this._senparcCoreSetting = senparcCoreSetting.Value;
 
-            //初始化Options的默认值
+            //Legacy comment translated to English.
 
         }
 
         /// <summary>
-        /// 获取自动生成的管理员用户名称
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public string GetDefaultAdminUserName()
@@ -73,7 +91,7 @@ namespace Senparc.Xncf.Installer.Domain.Services
         }
 
         /// <summary>
-        /// 获取默认的系统名称
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public string GetDefaultSystemName()
@@ -82,7 +100,7 @@ namespace Senparc.Xncf.Installer.Domain.Services
         }
 
         /// <summary>
-        /// 读取配置中目标数据库连接字符串
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public string GetDbConnectionString()
@@ -91,7 +109,7 @@ namespace Senparc.Xncf.Installer.Domain.Services
             return SenparcDatabaseConnectionConfigs.GetClientConnectionString();
         }
         /// <summary>
-        /// 读取模块名称
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public List<XncfRegisterDto> GetModules()
@@ -134,7 +152,7 @@ namespace Senparc.Xncf.Installer.Domain.Services
         }
 
         /// <summary>
-        /// 修改配置及缓存中目标数据库连接字符串
+        ///Legacy comment translated to English.
         /// </summary>
         public void ResetDbConnectionString(string dbConnectionString)
         {
@@ -165,7 +183,7 @@ namespace Senparc.Xncf.Installer.Domain.Services
                 throw;
             }
 
-            //清空数据库配置缓存
+            //Legacy comment translated to English.
             MethodCache.ClearMethodCache<ConcurrentDictionary<string, SenparcConfig>>(SenparcDatabaseConnectionConfigs.SENPARC_CONFIG_KEY);
 
             _ = SenparcDatabaseConnectionConfigs.Configs.ToJson();

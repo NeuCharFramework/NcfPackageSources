@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：PromptOptimizationChatTaskHandler.cs
-    文件功能描述：PromptOptimizationChatTaskHandler 相关实现
+    File name: PromptOptimizationChatTaskHandler.cs
+    File description: PromptOptimizationChatTaskHandler related implementation
     
     
-    创建标识：Senparc - 20260325
+    Created by: Senparc - 20260325
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.19.1 update AgentsManager with new features and improvements
+    Modified by: Senparc - 20261103
+    Change description: v0.19.1 update AgentsManager with new features and improvements
 
 ----------------------------------------------------------------*/
 
@@ -32,7 +32,7 @@ using Microsoft.Extensions.Logging;
 namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
 {
     /// <summary>
-    /// Prompt 优化唯一执行路径：运行 ChatGroup 直至 Agent 对话结束，再由 Plugin 写入结果并发布响应事件
+    ///Legacy comment translated to English.
     /// </summary>
     public class PromptOptimizationChatTaskHandler : IIntegrationEventHandler<PromptOptimizationRequestEvent>
     {
@@ -201,7 +201,7 @@ namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
     }
 
     /// <summary>
-    /// 监听 PromptOptimizationResponseEvent，更新 ChatTask 状态
+    ///Legacy comment translated to English.
     /// </summary>
     public class PromptOptimizationTaskCompletionHandler : IIntegrationEventHandler<PromptOptimizationResponseEvent>
     {

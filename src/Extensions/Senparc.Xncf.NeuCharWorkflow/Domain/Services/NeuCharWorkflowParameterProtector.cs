@@ -2,13 +2,13 @@
     Copyright (C) 2026 Senparc
 
     File name: NeuCharWorkflowParameterProtector.cs
-    File description: NeuChar Loop Task 与 Workflow 敏感参数字段级保护
+    File description: Related implementation.
 
 
     Created by: Senparc - 20260809
 
     Modified by: Senparc - 20260813
-    Change description: v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Change description: v0.1.0-preview1 enhance workflow orchestration, replay, Webhook, and parallel execution
 
 ----------------------------------------------------------------*/
 
@@ -22,7 +22,7 @@ using System.Text.Json.Nodes;
 namespace Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 
 /// <summary>
-/// 只保护 Function 声明为 Password 的字段。普通参数保持可查询，密文绝不返回给浏览器。
+///Legacy comment translated to English.
 /// </summary>
 public sealed class NeuCharWorkflowParameterProtector
 {

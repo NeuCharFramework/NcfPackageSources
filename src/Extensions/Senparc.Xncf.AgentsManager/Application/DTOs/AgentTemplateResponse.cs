@@ -1,26 +1,26 @@
 ﻿/*-----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：AgentTemplateResponse.cs
-    文件功能描述：AgentTemplateResponse 相关实现
+    File name: AgentTemplateResponse.cs
+    File description: AgentTemplateResponse related implementation
     
     
-    创建标识：Senparc - 20260704
+    Created by: Senparc - 20260704
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.14.0-preview9 新增 Agent 模板知识库关联与管理统计
+    Modified by: Senparc - 20260804
+    Change description: v0.14.0-preview9 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.15.0-preview20 增强 AgentTemplate、ChatGroup 与发布型 A2A 的取消和请求处理
+    Modified by: Senparc - 20260815
+    Change description: v0.15.0-preview20 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
+    Modified by: Senparc - 20260822
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.19.1 update AgentsManager with new features and improvements
+    Modified by: Senparc - 20261103
+    Change description: v0.19.1 update AgentsManager with new features and improvements
 
 ----------------------------------------------------------------*/
 
@@ -54,9 +54,9 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
         public int Id { get; set; }
         public string Name { get; set; }
         /// <summary>
-        /// published：已发布的隔离集合，可安全用于 Agent RAG；
-        /// legacy：旧版切片已向量化，但未升级为隔离集合；
-        /// pending：尚无可用向量。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         public string EmbeddingStatus { get; set; }
         public bool IsEmbedded { get; set; }

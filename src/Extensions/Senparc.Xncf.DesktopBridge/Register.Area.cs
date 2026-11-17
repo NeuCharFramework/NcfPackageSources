@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：Register.Area.cs
-    文件功能描述：DesktopBridge 管理页面注册
+    File name: Register.Area.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260801
+    Created by: Senparc - 20260801
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;

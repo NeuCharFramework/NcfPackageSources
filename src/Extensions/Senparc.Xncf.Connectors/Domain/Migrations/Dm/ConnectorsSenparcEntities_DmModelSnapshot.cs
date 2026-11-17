@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：ConnectorsSenparcEntities_DmModelSnapshot.cs
-    文件功能描述：数据库模型快照
+    File name: ConnectorsSenparcEntities_DmModelSnapshot.cs
+    File description: database model snapshot
 
 
-    创建标识：Senparc - 20200724
+    Created by: Senparc - 20200724
 
-    修改标识：Senparc - 20261112
-    修改描述：v0.1.0 同步数据库模型快照
+    Modified by: Senparc - 20261112
+    Change description: v0.1.0 synchronize the database model snapshot
 
 ----------------------------------------------------------------*/
 

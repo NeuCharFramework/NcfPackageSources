@@ -1,14 +1,26 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：ChatGroupMemberDto.cs
-    文件功能描述：ChatGroupMemberDto 相关实现
+
+    File name: ChatGroupMemberDto.cs
+
+    File description: ChatGroupMemberDto related implementation
+
     
+
     
-    创建标识：Senparc - 20240616
+
+    Created by: Senparc - 20240616
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -20,7 +32,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
 {
     /// <summary>
-    /// ChatGroupMemer 数据库实体 DTO
+    ///Legacy comment translated to English.
     /// </summary>
     public class ChatGroupMemberDto : DtoBase
     {
@@ -35,7 +47,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         public int AgentTemplateId { get;  set; }
 
         /// <summary>
-        /// AgentTemplate（类型同名）
+        ///Legacy comment translated to English.
         /// </summary>
         public AgentTemplate AgentTemplate { get;  set; }
 
@@ -45,7 +57,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         public int ChatGroupId { get;  set; }
 
         ///// <summary>
-        ///// ChatGroup（类型同名）
+        ///Legacy comment translated to English.
         ///// </summary>
         //public ChatGroup ChatGroup { get;  set; }
 

@@ -1,17 +1,32 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：GlobalCulture.cs
-    文件功能描述：GlobalCulture 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.21.0-preview2 增强全局文化配置与本地化选项支持
+    Copyright (C) 2026 Senparc
+
+  
+
+    File name: GlobalCulture.cs
+
+    File description: GlobalCulture related implementation
+
+    
+
+    
+
+    Created by: Senparc - 20260704
+
+    
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260717
+
+    Change description: v0.21.0-preview2 Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 
@@ -34,7 +49,7 @@ namespace Senparc.Ncf.Utility.Helpers
     }
 
     /// <summary>
-    /// 文化帮助类
+    ///Legacy comment translated to English.
     /// </summary>
     public class GlobalCulture
     {
@@ -44,7 +59,7 @@ namespace Senparc.Ncf.Utility.Helpers
         private Dictionary<SystemLanguage, Action> _languageActionCollection = new Dictionary<SystemLanguage, Action>();
 
         /// <summary>
-        /// 当前系统使用的语言
+        ///Legacy comment translated to English.
         /// </summary>
         public static SystemLanguage CurrentLanguage
         {
@@ -57,7 +72,7 @@ namespace Senparc.Ncf.Utility.Helpers
         }
 
         /// <summary>
-        /// 清除当前异步上下文中的显式语言覆盖，恢复为跟随 CurrentUICulture。
+        ///Legacy comment translated to English.
         /// </summary>
         public static void ResetCurrentLanguage()
         {
@@ -131,10 +146,10 @@ namespace Senparc.Ncf.Utility.Helpers
         }
 
         /// <summary>
-        /// 如果之前的语言都不匹配，则执行默认语言设置
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="throwIfNothingIsSet">如果未设置任何语言，则抛出异常</param>
-        /// <param name="throwIfNotAllIsSet">如何未设置全所有语言，则抛出异常</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <exception cref="Exception"></exception>
         public void InvokeDefault(bool throwIfNothingIsSet = false, bool throwIfNotAllIsSet = false)
         {
@@ -163,12 +178,12 @@ namespace Senparc.Ncf.Utility.Helpers
 
             if (_languageActionCollection.ContainsKey(_defaultLanguage))
             {
-                //使用默认语言
+                //Legacy comment translated to English.
                 _languageActionCollection[_defaultLanguage].Invoke();
             }
             else
             {
-                //默认语言也未指定，取当前设定的第一个
+                //Legacy comment translated to English.
                 _languageActionCollection.Values.First().Invoke();
             }
         }

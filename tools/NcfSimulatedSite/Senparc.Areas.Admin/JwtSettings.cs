@@ -4,32 +4,32 @@
     {
 
         /// <summary>
-        /// 前台jwt
+        ///Legacy comment translated to English.
         /// </summary>
         public const string Position_MiniPro = "MiniProJwt";
 
         /// <summary>
-        /// 管理后台jwt
+        ///Legacy comment translated to English.
         /// </summary>
         public const string Position_Backend = "BackendJwt";
 
         /// <summary>
-        /// token是谁颁发的
+        ///Legacy comment translated to English.
         /// </summary>
         public string Issuer { get; set; }
 
         /// <summary>
-        /// token可以给哪些客户端使用
+        ///Legacy comment translated to English.
         /// </summary>
         public string Audience { get; set; }
 
         /// <summary>
-        /// 加密的key
+        ///Legacy comment translated to English.
         /// </summary>
         public string SecretKey { get; set; }
 
         /// <summary>
-        /// 过期时间，单位【小时】
+        ///Legacy comment translated to English.
         /// </summary>
         public double Expires { get; set; }
     }

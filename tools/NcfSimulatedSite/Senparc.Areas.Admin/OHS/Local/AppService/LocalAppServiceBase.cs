@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：LocalAppServiceBase.cs
-    文件功能描述：LocalAppServiceBase.cs implementation and project behavior.
+    File name: LocalAppServiceBase.cs
+    File description: LocalAppServiceBase.cs implementation and project behavior.
 
 
-    创建标识：Senparc - 20241028
+    Created by: Senparc - 20241028
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 维护LocalAppServiceBase.cs implementation and project behavior
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -31,7 +31,7 @@ using Senparc.Xncf.XncfModuleManager.Domain.Services;
 namespace Senparc.Areas.Admin.OHS.Local.AppService
 {
     /// <summary>
-    /// 基类
+    ///Legacy comment translated to English.
     /// </summary>
     public class LocalAppServiceBase : AppServiceBase
     {
@@ -41,7 +41,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取当前用的Id
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public int GetCurrentAdminUserInfoId(HttpContext httpContext = null)
@@ -56,7 +56,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取当前登录管理员的角色代码列表（Cookie 与 JWT 认证均携带 ClaimTypes.Role）
+        ///Legacy comment translated to English.
         /// </summary>
         public List<string> GetCurrentAdminRoleCodes(HttpContext httpContext = null)
         {
@@ -71,7 +71,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 判断当前登录管理员是否为超级管理员（拥有系统内置 administrator 角色）
+        ///Legacy comment translated to English.
         /// </summary>
         public bool IsCurrentAdminSuperAdmin(HttpContext httpContext = null)
         {

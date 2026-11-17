@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：WeixinCheckCodeCache.cs
-    文件功能描述：WeixinCheckCodeCache 相关实现
+
+    File name: WeixinCheckCodeCache.cs
+
+    File description: WeixinCheckCodeCache related implementation
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -36,7 +48,7 @@ namespace Senparc.Ncf.Core.Cache.QueueCache
             var value = base.Get(key, removeDataWhenExist);
             if (value != null)
             {
-                base.Remove(key);//一次性有效
+                base.Remove(key);//Legacy comment translated to English.
             }
             return value;
         }

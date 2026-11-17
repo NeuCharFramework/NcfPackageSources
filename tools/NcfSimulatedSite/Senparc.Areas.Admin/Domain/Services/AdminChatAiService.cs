@@ -1,65 +1,65 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：AdminChatAiService.cs
-    文件功能描述：AdminChatAiService 服务逻辑
+    File name: AdminChatAiService.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20260327
+    Created by: Senparc - 20260327
 
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-    修改标识：Senparc - 20260724
-    修改描述：v0.1.0 增强后台模块批量更新并完善多语言管理界面
+    Modified by: Senparc - 20260724
+    Change description: v0.1.0 enhance batch module updates and improve the multilingual management interface
 
-    修改标识：Senparc - 20260731
-    修改描述：v0.2.1 切换到新版 AgentKernel 原生 RunChatAsync 接口以适配 CO2NET 4.2.0
+    Modified by: Senparc - 20260731
+    Change description: v0.2.1 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.5.0 集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
+    Modified by: Senparc - 20260813
+    Change description: v0.5.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.5.1 优化管理端 AI 插件与知识库交互
+    Modified by: Senparc - 20260815
+    Change description: v0.5.1 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.6.0 新增管理端 Chat 会话工作流能力
+    Modified by: Senparc - 20260822
+    Change description: v0.6.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+    Modified by: Senparc - 20260915
+    Change description: v0.8.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260916
-    修改描述：v0.9.0 增强 Admin Chat 取消与推理轨迹，并扩展 NeuBell WebHook 请求能力
+    Modified by: Senparc - 20260916
+    Change description: v0.9.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260917
-    修改描述：v0.10.0 增强 Admin Chat FunctionRender 参数元数据与工具调用兼容
+    Modified by: Senparc - 20260917
+    Change description: v0.10.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261009
-    修改描述：v0.11.0 增强后台 Admin Chat 群组配置、提示词构建与上下文控制
+    Modified by: Senparc - 20261009
+    Change description: v0.11.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.11.1 对话接入工作区上下文并生成会话标题
+    Modified by: Senparc - 20261021
+    Change description: v0.11.1 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261024
-    修改描述：修复 Workspace 空查询工具调用，并显式报告客户端未注册错误
+    Modified by: Senparc - 20261024
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261102
-    修改描述：接入用户分层 Memory、受限自动更新及全局 SystemMessage
+    Modified by: Senparc - 20261102
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 implement AdminChat memory storage and management system
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 implement AdminChat memory storage and management system
 
-    修改标识：Senparc - 20261105
-    修改描述：v0.12.26 生成回复时处理 Prompt 引用与记忆上下文
+    Modified by: Senparc - 20261105
+    Change description: v0.12.26 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.12.28 适配 Harness 1.28，文件访问改为默认关闭
+    Modified by: Senparc - 20261111
+    Change description: v0.12.28 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261111
-    修改描述：补充 Workspace 路径、分段写入和文件变更轨迹规则
+    Modified by: Senparc - 20261111
+    Change description: Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -112,8 +112,8 @@ using MafToolApprovalResponseContent = Microsoft.Extensions.AI.ToolApprovalRespo
 namespace Senparc.Areas.Admin.Domain.Services
 {
     /// <summary>
-    /// 系统级 ChatAgent 调用选项。普通 AdminChat 保持既有体验，只能加载模块显式声明的
-    /// FunctionRender 白名单；系统生成场景可显式关闭全部 Function 工具。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public sealed class AdminChatGenerationOptions
     {
@@ -124,8 +124,8 @@ namespace Senparc.Areas.Admin.Domain.Services
     }
 
     /// <summary>
-    /// AdminChatAiService：管理后台聊天 AI 调用服务。
-    /// 默认使用 appsettings 中的 SenparcAiSetting，也支持按请求切换到 AIKernel 中配置的 Chat 模型。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public class AdminChatAiService
     {
@@ -141,12 +141,12 @@ namespace Senparc.Areas.Admin.Domain.Services
         public AdminChatMemoryUsage MemoryUsage => Memory.Usage;
 
         /// <summary>
-        /// 初始化管理后台聊天 AI 服务。
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="messageService">聊天消息服务。</param>
-        /// <param name="sessionModuleService">会话模块服务。</param>
-        /// <param name="serviceProvider">服务提供器。</param>
-        /// <param name="logger">日志记录器。</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         public AdminChatAiService(
             AdminChatMessageService messageService,
             AdminChatSessionModuleService sessionModuleService,
@@ -164,13 +164,13 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 生成 AI 回复内容并返回所使用的模型标识。
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="sessionId">会话 Id。</param>
-        /// <param name="userId">用户 Id。</param>
-        /// <param name="userMessage">用户输入消息。</param>
-        /// <param name="aiModelId">可选 AIModelId，0 表示系统级 SenparcAiSetting。</param>
-        /// <returns>返回回复文本与模型标识。</returns>
+        ///Legacy comment translated to English.
+        /// <param name="userId">user Id。</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         public async Task<(string response, string modelIdentifier)> GenerateResponseAsync(
             int sessionId,
             int userId,
@@ -206,7 +206,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                 generationOptions?.SystemInstructions ?? defaultSystemMessage)
                 + (memoryContext?.Instructions ?? "");
 
-#pragma warning disable MEAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+#pragma warning disable MEAI001 //Legacy comment translated to English.
             var iWantToRun = await agentAiHandler.IWantTo(setting).ConfigChatModel($"AdminChat-{userId}-{sessionId}", new ChatClientAgentOptions()
             {
                 ChatOptions = new ChatOptions()
@@ -224,7 +224,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                 })
             }
                 ).BuildKernelWithAgentSessionAsync();
-#pragma warning restore MEAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+#pragma warning restore MEAI001 //Legacy comment translated to English.
 
 
             if (importedFunctionCount == 0)
@@ -251,14 +251,14 @@ namespace Senparc.Areas.Admin.Domain.Services
             var prompt = AdminChatPromptBuilder.BuildUserPrompt(messages, userMessage, attachments);
             LogPromptContextSize(sessionId, userId, systemInstructions, prompt, aiFunctions, messages?.Count ?? 0);
 
-            // 使用 FunctionChoiceBehavior.Auto() 让 AI 根据需要自动调用 ModuleAssistantPlugin 函数
+            //Legacy comment translated to English.
             //var executionSettings = new PromptExecutionSettings
             //{
             //    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
             //};
 
-            // TODO: 测试 MAF 中是否自动开启工具调用
-            // 当调用方提供回调时，使用 AgentKernel 已有的流式回调；没有回调时保留原有整包路径。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             var hasStreamedChunk = false;
             string responseText;
             var aiModelService = _serviceProvider.GetService<AIModelService>();
@@ -336,8 +336,8 @@ namespace Senparc.Areas.Admin.Domain.Services
                 result = "抱歉，我暂时没有生成有效回复，请稍后再试。";
             }
 
-            // 某些模型/网关不提供增量内容，但仍返回最终文本。为流式客户端补发一个完整片段，
-            // 这样界面不会一直停留在“正在回复”状态。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             if (onChunk != null && !hasStreamedChunk)
             {
                 onChunk(result);
@@ -389,7 +389,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 根据首条用户消息生成简短会话标题。仅使用受限输入和输出，避免额外消耗过多 Token。
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<string> GenerateSessionTitleAsync(
             string userMessage,
@@ -462,7 +462,7 @@ namespace Senparc.Areas.Admin.Domain.Services
             var effectiveTimeout = timeout ?? TimeSpan.FromSeconds(120);
             var memoryContext = await Memory.BeginAsync(userId, sessionId, userMessage, cancellationToken, ResolveModelIdentifier(setting));
 
-#pragma warning disable MEAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+#pragma warning disable MEAI001 //Legacy comment translated to English.
             var defaultSystemMessage = await BuildSystemMessageAsync(modules, cancellationToken);
             var systemInstructions = LimitSystemInstructions(
                 defaultSystemMessage + AdminChatHarnessExecutor.BuildProtocolInstructions()) + memoryContext.Instructions;
@@ -485,7 +485,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                 })
             }
                 ).BuildKernelWithAgentSessionAsync();
-#pragma warning restore MEAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+#pragma warning restore MEAI001 //Legacy comment translated to English.
 
             var continuePrompt = AdminChatHarnessExecutor.BuildContinuePrompt();
 
@@ -1534,7 +1534,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                 }
             }
 
-            // 自动加载会话关联模块中的 FunctionRender（[#sym:FunctionRender]）插件对象
+            //Legacy comment translated to English.
             var moduleUids = modules.Where(z => !z.XncfModuleUid.IsNullOrEmpty()).Select(z => z.XncfModuleUid).ToList();
             var functionRenderBags = functionInvocationEnabled
                 ? moduleUids

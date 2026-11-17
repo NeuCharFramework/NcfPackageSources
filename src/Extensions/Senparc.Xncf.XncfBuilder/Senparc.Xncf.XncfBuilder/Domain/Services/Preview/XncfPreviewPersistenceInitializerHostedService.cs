@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：XncfPreviewPersistenceInitializerHostedService.cs
-    文件功能描述：在主站就绪后异步恢复 XNCF 预览持久化状态
+    File name: XncfPreviewPersistenceInitializerHostedService.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20260813
+    Created by: Senparc - 20260813
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.40.0-preview10 增强 XncfBuilder 预览状态持久化与后台初始化
+    Modified by: Senparc - 20260813
+    Change description: v0.40.0-preview10 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

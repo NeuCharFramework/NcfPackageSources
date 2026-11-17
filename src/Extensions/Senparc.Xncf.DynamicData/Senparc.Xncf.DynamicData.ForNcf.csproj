@@ -7,18 +7,18 @@
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <Description>动态数据基础模块，用于创建和管理动态数据</Description>
+    <Description>Dynamic data foundation module for creating and managing dynamic data</Description>
     <Copyright>Senparc</Copyright>
     <PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.DynamicData</PackageTags>
     <Authors>Senparc</Authors>
     <Owners>Senparc</Owners>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <Title>动态数据基础模块</Title>
+    <Title>Dynamic Data Foundation Module</Title>
     <!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <!--<PackageIcon>icon.jpg</PackageIcon>-->
     <PackageReleaseNotes>
-			v0.1.0 创世
+			v0.1.0 initial release
 
 				[2025-11-01] update basic libraries, including Senparc.AI
 </PackageReleaseNotes>

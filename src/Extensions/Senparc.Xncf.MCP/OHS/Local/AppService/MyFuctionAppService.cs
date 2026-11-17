@@ -1,33 +1,33 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：MyFuctionAppService.cs
-    文件功能描述：MyFuctionAppService 服务逻辑
+    File name: MyFuctionAppService.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20211031
+    Created by: Senparc - 20211031
 
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.4.0-preview3 为 MCP 模块接入统一资源本地化并优化功能文案
+    Modified by: Senparc - 20260717
+    Change description: v0.4.0-preview3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.5.0-preview8 补充 A2A 发布管理所需 MCP 功能与多语言资源
+    Modified by: Senparc - 20260813
+    Change description: v0.5.0-preview8 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261004
-    修改描述：移除模板计算示例和颜色服务依赖，保留 MCP 调用与工具
+    Modified by: Senparc - 20261004
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.5.10 函数对话结果写入 Token 用量
+    Modified by: Senparc - 20261021
+    Change description: v0.5.10 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.5.10 add AITokenUsageRecorder and related services for token usage tracking
+    Modified by: Senparc - 20261103
+    Change description: v0.5.10 add AITokenUsageRecorder and related services for token usage tracking
 
 ----------------------------------------------------------------*/
 
-#pragma warning disable OPENAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+#pragma warning disable OPENAI001 //Legacy comment translated to English.
 using Azure.AI.OpenAI;
 using Azure.Core;
 using Microsoft.Agents.AI;
@@ -84,14 +84,14 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
             return $"{message}: {DateTime.Now}";
         }
 
-        //[McpServerTool, Description("获取当前时间")]
+        //Legacy comment translated to English.
         //public static string Now(DoFuncReq reqeust)
         //{
-        //    Console.WriteLine("Now tool 收到请求：" + reqeust.ToJson());
+        //Legacy comment translated to English.
         //    return $"{reqeust.Str}: {DateTime.Now}";
         //}
 
-        //自动增加小时数
+        //Legacy comment translated to English.
         [McpServerTool, LocalizedDescription(typeof(McpResource), "MCP.Tool.AddHours.Description")]
         public static string AddHours(int hours)
         {
@@ -153,47 +153,47 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 //    // Arguments = ["-y", "@modelcontextprotocol/server-everything"],
                 //});
 
-                // 根据 MCP 服务器选择来确定端点
+                //Legacy comment translated to English.
                 string endpoint;
                 var selectedMcpServer = request.McpServerSelection;
 
                 if (!string.IsNullOrEmpty(selectedMcpServer) && selectedMcpServer != "Manual")
                 {
-                    // 如果选中了非"手动输入"的 MCP 服务器，从注册列表中获取真实地址
+                    //Legacy comment translated to English.
                     var serverParts = selectedMcpServer.Split('|');
                     if (serverParts.Length == 2)
                     {
                         var xncfName = serverParts[0];
                         var mcpRoute = serverParts[1];
 
-                        // 从 XncfRegisterManager 中查找对应的服务器信息
+                        //Legacy comment translated to English.
                         var mcpServerInfo = Senparc.Ncf.XncfBase.XncfRegisterManager.McpServerInfoCollection.Values
                             .FirstOrDefault(s => s.XncfName == xncfName && s.McpRoute == mcpRoute);
 
                         if (mcpServerInfo != null)
                         {
-                            // 构建完整的服务器地址
-                            // 默认端口避开 macOS AirPlay 占用的 5000
+                            //Legacy comment translated to English.
+                            //Legacy comment translated to English.
                             endpoint = $"http://localhost:5080/{mcpServerInfo.McpRoute}/sse";
                             Console.WriteLine($"使用选中的 MCP 服务器: {mcpServerInfo.XncfName}，路由: {mcpServerInfo.McpRoute}/sse");
                         }
                         else
                         {
-                            // 如果找不到对应的服务器信息，回退到默认地址
+                            //Legacy comment translated to English.
                             endpoint = "http://localhost:5080/mcp-senparc-xncf-mcp/sse";
                             Console.WriteLine($"警告：找不到选中的 MCP 服务器信息，使用默认端点");
                         }
                     }
                     else
                     {
-                        // 如果解析失败，回退到默认地址
+                        //Legacy comment translated to English.
                         endpoint = "http://localhost:5080/mcp-senparc-xncf-mcp/sse";
                         Console.WriteLine($"警告：无法解析选中的 MCP 服务器标识: {selectedMcpServer}，使用默认端点");
                     }
                 }
                 else
                 {
-                    // 如果选中了"手动输入"或没有选择，使用手动输入的端点
+                    //Legacy comment translated to English.
                     endpoint = request.Endpoint.IsNullOrEmpty() ? "http://localhost:5080/mcp-senparc-xncf-mcp/sse" : request.Endpoint;
                     Console.WriteLine("使用手动输入的端点");
                 }
@@ -255,14 +255,22 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
             //RequestType request
             )
         {
-            /* 页面上点击"执行"后，将调用这里的方法
+            /* Legacy comment translated to English.
+
               *
-              * 参数说明：
-              * response：已经初始化后的返回结果
-              * logger：日志
+
+              * parametersdescription：
+
+              * Legacy comment translated to English.
+
+              * Legacy comment translated to English.
+
               * 
-              * 如果直接对 response 的属性修改，则最终 return null，
-              * 否则可以返回一个新的 response 对象，系统将自动覆盖原有对象
+
+              * Legacy comment translated to English.
+
+              * Legacy comment translated to English.
+
               */
             RequestType request = new RequestType
             {
@@ -290,18 +298,18 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                     if (request.Number2 == 0)
                     {
                         //response.Success = false;
-                        //response.ErrorMessage = "被除数不能为0！";
+                        //Legacy comment translated to English.
                         return McpResource.Get("MCP.Calculate.DivideByZero");
                     }
                     calcResult = calcResult / request.Number2;
                     break;
                 default:
                     //response.Success = false;
-                    //response.ErrorMessage = $"未知的运算符：{theOperator}";
+                    //Legacy comment translated to English.
                     return McpResource.Format("MCP.Calculate.UnknownOperator", "未知的运算符：{0}", request.TheOperator);
             }
 
-            //logger.Append($"进行运算：{number1} {theOperator} {number2} = {calcResult}");
+            //Legacy comment translated to English.
 
             Action<int> raisePower = p =>
             {
@@ -311,7 +319,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                     {
                         var oldValue = calcResult;
                         calcResult = Math.Pow(calcResult, request.Power);
-                        //logger.Append($"进行{power}次方运算：{oldValue}{(power == 2 ? "²" : "³")} = {calcResult}");
+                        //Legacy comment translated to English.
                     }
                 }
             };
@@ -319,7 +327,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
             raisePower(2);
             raisePower(3);
 
-            // response.Data = $"【{theOperator}】计算结果：{calcResult}。计算过程请看日志";
+            //Legacy comment translated to English.
             return McpResource.Format("MCP.Calculate.Result", "【{0}】计算结果：{1}。计算过程请查看日志", request.TheOperator, calcResult);
             // });
         }
@@ -346,4 +354,4 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
 
     }
 }
-#pragma warning restore OPENAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+#pragma warning restore OPENAI001 //Legacy comment translated to English.

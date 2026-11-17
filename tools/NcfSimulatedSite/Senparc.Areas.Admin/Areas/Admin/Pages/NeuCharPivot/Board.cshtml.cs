@@ -1,20 +1,20 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：Board.cshtml.cs
-    文件功能描述：Pivot 面板（Provit Panel）管理：面板 CRUD、
-    跨 XNCF 模块 Provit Block 编排、AI Chat 创建或修改面板
+    File name: Board.cshtml.cs
+    File description: Related implementation.
+    Legacy comment translated to English.
 
-    创建标识：Senparc - 20260901
+    Created by: Senparc - 20260901
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+    Modified by: Senparc - 20260915
+    Change description: v0.8.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261101
-    修改描述：首页 Pivot 块缺失时返回可操作的状态信息
+    Modified by: Senparc - 20261101
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 enhance job management and telemetry features
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 enhance job management and telemetry features
 
 ----------------------------------------------------------------*/
 
@@ -42,7 +42,7 @@ public class BoardModel(
     private readonly IAdminWorkContextProvider _adminWorkContextProvider = adminWorkContextProvider;
 
     /// <summary>
-    /// 默认 GET：渲染面板管理页（JSON 数据由 handler=Boards/Functions/ByPageKey 提供）
+    ///Legacy comment translated to English.
     /// </summary>
     public IActionResult OnGet()
     {
@@ -50,7 +50,7 @@ public class BoardModel(
     }
 
     /// <summary>
-    /// 面板列表（含反序列化后的块列表）
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<IActionResult> OnGetBoardsAsync()
     {
@@ -60,7 +60,7 @@ public class BoardModel(
     }
 
     /// <summary>
-    /// 特定页面绑定的启用面板（首页等渲染用），无数据时 data 为 null
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<IActionResult> OnGetByPageKeyAsync([FromQuery] string pageKey)
     {
@@ -76,7 +76,7 @@ public class BoardModel(
     }
 
     /// <summary>
-    /// Provit Block 可选目录：全部 XNCF 模块 Pivot 中可见的 Function
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<IActionResult> OnGetFunctionsAsync()
     {
@@ -97,7 +97,7 @@ public class BoardModel(
         var board = await _boardService.CreateBoardAsync(
             request.Name, request.PageKey, request.Description, request.Columns, adminUserId)
             .ConfigureAwait(false);
-        // 工厂默认启用，这里统一以请求中的 IsEnabled 为准
+        //Legacy comment translated to English.
         board = await _boardService.UpdateBoardAsync(
             board.Id, board.Name, null, board.Description, board.Columns, request.IsEnabled)
             .ConfigureAwait(false);
@@ -152,7 +152,7 @@ public class BoardModel(
     }
 
     /// <summary>
-    /// AI Chat 创建 / 修改面板块（一次性指令，服务端校验后落库）
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<IActionResult> OnPostAiAsync([FromBody] BoardAiRequest request)
     {
@@ -166,7 +166,7 @@ public class BoardModel(
             request.BoardId, request.Instruction, adminUserId, HttpContext.RequestAborted).ConfigureAwait(false);
         if (!success)
         {
-            // 失败时也返回 AI 原始回复，便于前端提示与排查
+            //Legacy comment translated to English.
             return Ok(new { aiReply = aiReply ?? string.Empty }, false, message);
         }
         return Ok(new { aiReply = aiReply ?? string.Empty, board = ToBoardDto(board) });

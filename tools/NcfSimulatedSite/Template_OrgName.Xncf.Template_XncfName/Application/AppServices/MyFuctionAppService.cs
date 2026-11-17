@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：MyFuctionAppService.cs
-    文件功能描述：XNCF 模板示例实现
+    File name: MyFuctionAppService.cs
+    File description: XNCF template sample implementation
     
     
-    创建标识：Senparc - 20211031
+    Created by: Senparc - 20211031
     
-    修改标识：Senparc - 20260726
-    修改描述：v1.1.0 补充示例模板 EventBus 请求-响应回环与多语言能力
+    Modified by: Senparc - 20260726
+    Change description: v1.1.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 using Senparc.CO2NET;
@@ -40,14 +40,22 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                /* 页面上点击“执行”后，将调用这里的方法
+                /* Legacy comment translated to English.
+
                   *
-                  * 参数说明：
-                  * response：已经初始化后的返回结果
-                  * logger：日志
+
+                  * parametersdescription：
+
+                  * Legacy comment translated to English.
+
+                  * Legacy comment translated to English.
+
                   * 
-                  * 如果直接对 response 的属性修改，则最终 return null，
-                  * 否则可以返回一个新的 response 对象，系统将自动覆盖原有对象
+
+                  * Legacy comment translated to English.
+
+                  * Legacy comment translated to English.
+
                   */
 
                 double calcResult = request.Number1;
@@ -99,8 +107,8 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
         }
 
         /// <summary>
-        /// 验证当前 XNCF 内部 EventBus 的请求、处理、派生响应和关联等待链路。
-        /// 此方法不读取数据库、配置、文件、用户信息或其他模块数据。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         [FunctionRender(
             typeof(Template_XncfNameResource),

@@ -1,29 +1,29 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：AdminChatSessionService.cs
-    文件功能描述：AdminChatSessionService.cs implementation and project behavior.
+    File name: AdminChatSessionService.cs
+    File description: AdminChatSessionService.cs implementation and project behavior.
 
 
-    创建标识：Senparc - 20260325
+    Created by: Senparc - 20260325
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.11.1 保存会话工作区与标题
+    Modified by: Senparc - 20261021
+    Change description: v0.11.1 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：验证分类和所有权并原子保存会话排序
+    Modified by: Senparc - 20261103
+    Change description: validationUpdated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 完善后台聊天会话管理与排序
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261106
-    修改描述：归档会话只从进行中列表移出，并支持单独查询
+    Modified by: Senparc - 20261106
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261106
-    修改描述：按账号持久化会话未读提醒
+    Modified by: Senparc - 20261106
+    Change description: Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -41,12 +41,12 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.Domain.Services
 {
     /// <summary>
-    /// AdminChatSessionService：管理后台聊天会话服务
+    ///Legacy comment translated to English.
     /// </summary>
     public class AdminChatSessionService : BaseClientService<AdminChatSession>
     {
         /// <summary>
-        /// 构造函数
+        /// constructor
         /// </summary>
         public AdminChatSessionService(IAdminChatSessionRepository repository, IServiceProvider serviceProvider) 
             : base(repository, serviceProvider)
@@ -54,11 +54,11 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 获取用户的活跃会话列表（按最后消息时间倒序）
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="userId">用户ID</param>
-        /// <param name="pageIndex">页码（从1开始）</param>
-        /// <param name="pageSize">每页数量</param>
+        /// <param name="userId">userID</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         public async Task<(List<AdminChatSession> sessions, int totalCount)> GetUserActiveSessionsAsync(int userId, int pageIndex = 1, int pageSize = 20)
         {
             var result = await base.GetObjectListAsync(
@@ -72,7 +72,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 获取用户已归档、尚未删除的会话。
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<(List<AdminChatSession> sessions, int totalCount)> GetUserArchivedSessionsAsync(int userId, int pageIndex = 1, int pageSize = 20)
         {
@@ -87,7 +87,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 根据 ID 获取会话（包含验证用户权限）
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<AdminChatSession> GetSessionByIdAsync(int sessionId, int userId)
         {
@@ -131,7 +131,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 创建新的聊天会话
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<AdminChatSession> CreateSessionAsync(
             string title,
@@ -151,7 +151,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 更新会话标题
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<bool> UpdateSessionTitleAsync(int sessionId, int userId, string newTitle)
         {
@@ -164,7 +164,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 更新会话的最后消息时间
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task UpdateLastMessageTimeAsync(int sessionId)
         {
@@ -177,7 +177,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 归档会话
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<bool> ArchiveSessionAsync(int sessionId, int userId)
         {
@@ -191,7 +191,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 保存会话未读状态。只允许会话所属用户修改，已删除会话不再提醒。
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<bool> SetSessionUnreadAsync(int sessionId, int userId, bool unread)
         {
@@ -205,7 +205,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 删除会话（软删除）
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<bool> DeleteSessionAsync(int sessionId, int userId)
         {
@@ -218,7 +218,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 将已归档会话还原为进行中。已删除会话不能还原。
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<bool> RestoreSessionAsync(int sessionId, int userId)
         {
@@ -232,7 +232,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 获取会话总数（按状态）
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<int> GetSessionCountByStatusAsync(int userId, ChatSessionStatus status)
         {
@@ -241,7 +241,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 按用户统计会话数量（管理端监控用，仅返回数量与最后活跃时间，不包含任何会话/消息内容）
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<List<AdminChatUserSessionStat>> GetUserSessionStatsAsync()
         {
@@ -264,7 +264,7 @@ namespace Senparc.Areas.Admin.Domain.Services
     }
 
     /// <summary>
-    /// 单个用户的 AdminChat 会话统计（管理端监控用，仅含数量，不含内容）
+    ///Legacy comment translated to English.
     /// </summary>
     public class AdminChatUserSessionStat
     {

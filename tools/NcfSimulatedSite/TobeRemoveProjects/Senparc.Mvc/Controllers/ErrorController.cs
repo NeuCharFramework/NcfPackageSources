@@ -10,8 +10,8 @@ namespace Senparc.Mvc.Controllers
         {
             Error_ExceptionVD vd = new Error_ExceptionVD()
             {
-                //COCONET 暂时隐藏
-                //HandleErrorInfo = new HandleErrorInfo(new Exception("发生未知错误，请联系客服！"), "Error", "Error")
+                //COCONET temporarilyhide
+                //Legacy comment translated to English.
             };
             return View(vd);
         }

@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：FunctionRenderSchemaAIFunction.cs
-    文件功能描述：Agent FunctionRender schema 元数据包装
+    File name: FunctionRenderSchemaAIFunction.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20260918
+    Created by: Senparc - 20260918
 
-    修改标识：Senparc - 20260917
-    修改描述：v0.18.0 包装 FunctionRender AI 函数并扩展 schema 元数据
+    Modified by: Senparc - 20260917
+    Change description: v0.18.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

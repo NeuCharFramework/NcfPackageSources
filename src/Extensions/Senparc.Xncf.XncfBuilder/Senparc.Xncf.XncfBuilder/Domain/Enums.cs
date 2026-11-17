@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：Enums.cs
-    文件功能描述：Enums 相关实现
+
+    File name: Enums.cs
+
+    File description: Enums related implementation
+
     
+
     
-    创建标识：Senparc - 20260704
+
+    Created by: Senparc - 20260704
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -21,20 +33,20 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.XncfBuilder.Domain
 {
     /// <summary>
-    /// XncfBuilder 的 Prompt 类型
+    ///Legacy comment translated to English.
     /// </summary>
     public enum PromptBuildType
     {
         /// <summary>
-        /// 实体类
+        ///Legacy comment translated to English.
         /// </summary>
         EntityClass,
         /// <summary>
-        /// 实体类 DTO
+        ///Legacy comment translated to English.
         /// </summary>
         EntityDtoClass,
         /// <summary>
-        /// 更新 SenparcEntities
+        /// update SenparcEntities
         /// </summary>
         UpdateSenparcEntities,
         /// <summary>

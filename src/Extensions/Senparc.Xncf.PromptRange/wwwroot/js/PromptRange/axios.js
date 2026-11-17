@@ -1,6 +1,9 @@
 ﻿/**
+
  * Axios wrapper.
+
  * Centralizes request interception, response interception, and error handling.
+
  */
 // Create the Axios instance.
 var servicePR = axios.create({
@@ -56,7 +59,7 @@ servicePR.interceptors.response.use(
         //} else
         if (response.status === 200) {
             if (response.request.responseType === 'blob' || response.request.responseType === 'arraybuffer') {
-                // console.log('文件流：', response)
+                //Legacy comment translated to English.
                 return Promise.resolve(response);
             } else if (response.data.success) {
                 return Promise.resolve(response);

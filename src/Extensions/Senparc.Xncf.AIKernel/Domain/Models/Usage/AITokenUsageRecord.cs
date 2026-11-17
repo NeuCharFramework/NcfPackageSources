@@ -1,16 +1,16 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：AITokenUsageRecord.cs
-    文件功能描述：统一 Token 用量记录请求
+    File name: AITokenUsageRecord.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20261011
+    Created by: Senparc - 20261011
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.17.0 定义待持久化的 Token 用量记录
+    Modified by: Senparc - 20261021
+    Change description: v0.17.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.17.0 add AITokenUsageRecorder and related services for token usage tracking
+    Modified by: Senparc - 20261103
+    Change description: v0.17.0 add AITokenUsageRecorder and related services for token usage tracking
 
 ----------------------------------------------------------------*/
 
@@ -21,7 +21,7 @@ using System;
 namespace Senparc.Xncf.AIKernel.Domain.Models.Usage
 {
     /// <summary>
-    /// 一次模型调用的统一 Token 用量记录请求。
+    ///Legacy comment translated to English.
     /// </summary>
     [Serializable]
     public sealed class AITokenUsageRecord

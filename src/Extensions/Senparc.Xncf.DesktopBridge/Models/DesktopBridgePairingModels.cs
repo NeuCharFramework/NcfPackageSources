@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：DesktopBridgePairingModels.cs
-    文件功能描述：DesktopBridge 设备配对和会话管理协议
+    File name: DesktopBridgePairingModels.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260801
+    Created by: Senparc - 20260801
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.DesktopBridge.Models;

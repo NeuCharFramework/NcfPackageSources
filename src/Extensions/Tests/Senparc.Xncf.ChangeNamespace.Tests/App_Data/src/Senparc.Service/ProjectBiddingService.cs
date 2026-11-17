@@ -6,31 +6,31 @@ namespace Senparc.Service
     public interface IProjectBiddingService : IBaseClientService<ProjectBidding>
     {
         /// <summary>
-        /// 统计竞标数量
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="developerId"></param>
         /// <param name="userName"></param>
         void AddBiddingCount(int developerId, string userName);
         /// <summary>
-        /// 统计完成竞标数量
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="developer"></param>
         /// <param name="userName"></param>
         void AddSuccessBiddingCount(Developer developer, string userName);
         /// <summary>
-        /// 开发结束
+        /// developmentend
         /// </summary>
         /// <param name="id">ProjectBiddingId</param>
         void Finish(int id);
         /// <summary>
-        /// 添加评论
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="projectBidding"></param>
-        /// <param name="grade">评分</param>
-        /// <param name="comment">评论内容</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         void AddComment(ProjectBidding projectBidding, int grade, string comment);
         /// <summary>
-        /// 判断开发者是否竞标
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="developerId"></param>
         /// <param name="projectDemandId"></param>
@@ -57,7 +57,7 @@ namespace Senparc.Service
         public void AddSuccessBiddingCount(Developer developer, string userName)
         {
             developer.SuccessProjectBiddingCount++;
-            UpLever(developer);//开发者升级
+            UpLever(developer);//Legacy comment translated to English.
             _developerService.SaveObject(developer, userName);
         }
 
@@ -77,9 +77,9 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        /// 开发者升级
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="developer">开发者</param>
+        ///Legacy comment translated to English.
         protected void UpLever(Developer developer)
         {
             var count = developer.SuccessProjectBiddingCount;

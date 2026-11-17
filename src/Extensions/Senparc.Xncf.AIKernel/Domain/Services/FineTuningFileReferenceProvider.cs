@@ -1,13 +1,13 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：FineTuningFileReferenceProvider.cs
-    文件功能描述：向 FileManager 提供微调文件引用查询
+    File name: FineTuningFileReferenceProvider.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20261026
+    Created by: Senparc - 20261026
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.17.0 add FileId reference to AIFineTuningDataset and implement FineTuningFileReferenceProvider
+    Modified by: Senparc - 20261103
+    Change description: v0.17.0 add FileId reference to AIFineTuningDataset and implement FineTuningFileReferenceProvider
 
 ----------------------------------------------------------------*/
 

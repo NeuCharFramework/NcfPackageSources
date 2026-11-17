@@ -2,10 +2,10 @@
     Copyright (C) 2026 Senparc
 
     File name: NeuCharWorkflowAnalyticsService.cs
-    File description: Workflow 运行、资源和趋势统计
+    File description: Related implementation.
 
     Modified by: Senparc - 20260829
-    Change description: v0.3.0 新增工作流分析查询与管理端可视化
+    Change description: v0.3.0 add workflow analysis queries and admin-side visualization
 
 ----------------------------------------------------------------*/
 

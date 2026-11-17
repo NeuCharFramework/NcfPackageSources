@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：TenantSenparcEntities.cs
-    文件功能描述：TenantSenparcEntities 相关实现
+
+    File name: TenantSenparcEntities.cs
+
+    File description: TenantSenparcEntities related implementation
+
     
+
     
-    创建标识：Senparc - 20211211
+
+    Created by: Senparc - 20211211
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -22,7 +34,7 @@ using Senparc.Xncf.Tenant.Domain.DataBaseModel;
 namespace Senparc.Xncf.Tenant.Domain.DatabaseModel
 {
     /// <summary>
-    /// 当前上下文不应该和租户无关
+    ///Legacy comment translated to English.
     /// </summary>
     public class TenantSenparcEntities : XncfDatabaseDbContext
     {
@@ -30,7 +42,7 @@ namespace Senparc.Xncf.Tenant.Domain.DatabaseModel
         {
         }
 
-        #region 多租户
+        #region Legacy section
         public DbSet<TenantInfo> TenantInfos { get; set; }
 
         #endregion

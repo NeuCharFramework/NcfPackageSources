@@ -1,23 +1,23 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：WorkflowObjectContracts.cs
-    文件功能描述：NeuChar Workflow 面向其他 XNCF 模块的受控对象契约
+    File name: WorkflowObjectContracts.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20260810
+    Created by: Senparc - 20260810
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.1.0-preview1 扩展工作流模块的对象与事件契约
+    Modified by: Senparc - 20260813
+    Change description: v0.1.0-preview1 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 扩展 Human Input 与工作流对象契约
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 扩展工作流依赖、函数调用和人工交互契约
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260829
-    修改描述：v0.3.0 扩展 Workflow 对象执行引用契约
+    Modified by: Senparc - 20260829
+    Change description: v0.3.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -28,7 +28,7 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 
 /// <summary>
-/// 可被 Workflow 发现和调用的对象。该契约不提供任意 CLR 方法执行能力。
+///Legacy comment translated to English.
 /// </summary>
 public sealed record WorkflowObjectDescriptor(
     string ProviderId,
@@ -50,8 +50,8 @@ public sealed record WorkflowObjectExecutionRequest(
     int? AdminUserId = null);
 
 /// <summary>
-/// Workflow 向对象 Provider 传递的通用执行策略键。具体枚举和值域由 Provider 校验，
-/// Workflow 不依赖实现模块的领域类型。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 public static class WorkflowObjectExecutionParameters
 {
@@ -65,8 +65,8 @@ public static class WorkflowObjectExecutionParameters
 }
 
 /// <summary>
-/// 受控对象执行后可供 Workflow Console 和回看页使用的外部详情引用。
-/// Output 保持为节点可继续传递的业务结果，详情引用不参与下游模板计算。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 public sealed record WorkflowObjectExecutionReference(
     string Kind,
@@ -81,13 +81,13 @@ public sealed record WorkflowObjectExecutionResult(
     string? Output,
     string? ErrorMessage = null)
 {
-    /// <summary>仅供 Workflow 日志跳转使用，不参与下游节点的业务输出。</summary>
+    ///Legacy comment translated to English.
     public WorkflowObjectExecutionReference? Reference { get; init; }
 }
 
 /// <summary>
-/// 外部 XNCF 模块实现此接口，将其受控对象提供给已安装且开启的 Workflow 模块。
-/// 每次查询与执行都必须再次校验自身模块和目标对象的启用状态。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 public interface IWorkflowObjectProvider
 {

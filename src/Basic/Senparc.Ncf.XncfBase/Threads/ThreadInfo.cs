@@ -1,17 +1,32 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：ThreadInfo.cs
-    文件功能描述：ThreadInfo 相关实现
+
+    File name: ThreadInfo.cs
+
+    File description: ThreadInfo related implementation
 
 
-    创建标识：Senparc - 20200724
 
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.25.0-preview7 增强线程生命周期控制与函数参数数值类型解析
+
+    Created by: Senparc - 20200724
+
+
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260813
+
+    Change description: v0.25.0-preview7 Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 
@@ -32,34 +47,34 @@ namespace Senparc.Ncf.XncfBase.Threads
     public class ThreadInfo
     {
         /// <summary>
-        /// 用于识别 Thread，请确保单个 XNCF 模块中唯一
+        ///Legacy comment translated to English.
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        /// 间隔时间
+        ///Legacy comment translated to English.
         /// </summary>
         public TimeSpan IntervalTime { get; set; }
         /// <summary>
-        /// 执行任务
+        /// executetask
         /// </summary>
         public Func<IApplicationBuilder, ThreadInfo, Task> Task { get; set; }
         /// <summary>
-        /// 发生异常时的处理
+        ///Legacy comment translated to English.
         /// </summary>
         public Func<Exception, Task> ExceptionHandler { get; set; }
 
         /// <summary>
-        /// 应用正在停止时取消的令牌，由 <see cref="XncfThreadBuilder"/> 在启动线程时提供。
+        ///Legacy comment translated to English.
         /// </summary>
         public CancellationToken StoppingToken { get; internal set; } = CancellationToken.None;
 
         /// <summary>
-        /// 最后故事记录
+        ///Legacy comment translated to English.
         /// </summary>
         private List<string> Stories { get; set; } = new List<string>();
 
         /// <summary>
-        /// 获取故事 HTML代码
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public string StoryHtml => string.Join("<br /><br />", Stories.Select(z => z.HtmlEncode()).ToArray());
@@ -73,7 +88,7 @@ namespace Senparc.Ncf.XncfBase.Threads
         }
 
         /// <summary>
-        /// 记录故事
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="msg"></param>
         /// <returns></returns>

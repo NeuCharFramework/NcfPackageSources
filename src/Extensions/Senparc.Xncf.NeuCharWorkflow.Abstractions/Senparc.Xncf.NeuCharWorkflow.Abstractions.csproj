@@ -15,18 +15,18 @@
     <Authors>Senparc</Authors>
     <Owners>Senparc</Owners>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <Title>NeuChar 工作流 Abstractions</Title>
+    <Title>NeuChar workflow Abstractions</Title>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-      [2026-08-13] v0.1.0-preview1 扩展工作流模块的对象与事件契约
-      1、新增工作流对象编辑地址、元数据及模块事件契约，支持宿主集成
-      [2026-08-17] v0.2.0 扩展工作流人工交互契约
-      1、新增 Human Input 相关请求、恢复与外部键校验契约
-      2、完善工作流对象契约以支持人工节点配置与跨模块协作
-      3、新增工作流函数调用与依赖声明契约，支持 Agent 工作流引用和运行时扩展
-      [2026-08-29] v0.3.0 扩展 Workflow 对象执行引用契约
-      1、为 WorkflowObjectExecutionReference 增加 ObjectId，支持分析与回看页面定位执行对象
-      2、保持现有 Workflow 对象发现、执行和结果传递契约兼容
+      [2026-08-13] v0.1.0-preview1 Updated module behavior and related support.
+      1. Updated module behavior and related support.
+      [2026-08-17] v0.2.0 Updated module behavior and related support.
+      1. Updated module behavior and related support.
+      2. Updated module behavior and related support.
+      3. Updated module behavior and related support.
+      [2026-08-29] v0.3.0 Updated module behavior and related support.
+      1. Updated module behavior and related support.
+      2. Updated module behavior and related support.
       [2026-11-03] v0.3.1 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.7.0-preview1
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>

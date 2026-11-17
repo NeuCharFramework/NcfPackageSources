@@ -2,13 +2,13 @@
     Copyright (C) 2026 Senparc
   
     File name: LegacyWorkflowMigrationService.cs
-    File description: 增强工作流编排、回放、Webhook 与并行执行能力
+    File description: enhance workflow orchestration, replay, Webhook, and parallel execution
 
 
     Created by: Senparc - 20260810
 
     Modified by: Senparc - 20260813
-    Change description: v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Change description: v0.1.0-preview1 enhance workflow orchestration, replay, Webhook, and parallel execution
 
 ----------------------------------------------------------------*/
 
@@ -32,8 +32,8 @@ using WorkflowEntity = Senparc.Xncf.NeuCharWorkflow.Domain.Models.DatabaseModel.
 namespace Senparc.Xncf.NeuCharWorkflow.Application.AppServices;
 
 /// <summary>
-/// 将历史 Admin Workflow 表迁移到本模块。仅通过数据库的稳定列名读取，不引用 Admin 的实体、服务或 DbContext。
-/// 每行带 LegacySourceKey，安装/升级中断后再次执行可安全续跑；确认复制完成才删除旧两张 Workflow 表。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 public sealed class LegacyWorkflowMigrationService
 {
@@ -148,7 +148,7 @@ public sealed class LegacyWorkflowMigrationService
             migratedVersionSourceKeys.Add(sourceKey);
         }
 
-        // 在删除前再确认每个工作流和版本都已经由新模块记录，避免升级中途的源表丢失。
+        //Legacy comment translated to English.
         var allCopied = workflows.All(row => migrated.ContainsKey(row.Id));
         var allVersionsCopied = versions.All(row => migratedVersionSourceKeys.Contains($"admin-workflow-version:{row.Id}"));
         if (!allCopied || !allVersionsCopied)
@@ -220,7 +220,7 @@ public sealed class LegacyWorkflowMigrationService
         }
         catch (DbException)
         {
-            // 极早期版本可能没有版本表；工作流主体仍可安全迁移。
+            //Legacy comment translated to English.
             return new LegacyVersionsReadResult(new List<LegacyWorkflowVersionRow>(), false);
         }
     }

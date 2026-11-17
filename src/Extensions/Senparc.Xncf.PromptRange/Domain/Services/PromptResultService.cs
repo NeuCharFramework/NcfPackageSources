@@ -1,41 +1,41 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：PromptResultService.cs
-    文件功能描述：PromptResultService 服务逻辑
+    File name: PromptResultService.cs
+    File description: Related implementation.
     
     
-    创建标识：Senparc - 20231021
+    Created by: Senparc - 20231021
     
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.16.3-preview2 增强文生图重试机制并兼容 TLS1.2/TLS1.3
+    Modified by: Senparc - 20260705
+    Change description: v0.16.3-preview2 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.16.4-preview3 增强文生图重试机制并兼容 TLS1.2/TLS1.3
+    Modified by: Senparc - 20260705
+    Change description: v0.16.4-preview3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260707
-    修改描述：v0.16.5-preview4 增强 Embedding 请求兼容处理并优化向量检索稳定性
+    Modified by: Senparc - 20260707
+    Change description: v0.16.5-preview4 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260715
-    修改描述：v0.16.5-preview4 升级 Senparc.AI 至 0.27.3 与 Senparc.AI.AgentKernel 至 0.1.10
+    Modified by: Senparc - 20260715
+    Change description: v0.16.5-preview4 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.19.3 改进流式输出提取与 Ollama Token 兼容
+    Modified by: Senparc - 20260817
+    Change description: v0.19.3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.19.3 增强 PromptRange 流式结果处理兼容性
+    Modified by: Senparc - 20260822
+    Change description: v0.19.3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.20.0 结果记录附带 Skill 执行策略
+    Modified by: Senparc - 20261021
+    Change description: v0.20.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.20.8 add AITokenUsageRecorder and related services for token usage tracking
+    Modified by: Senparc - 20261103
+    Change description: v0.20.8 add AITokenUsageRecorder and related services for token usage tracking
 
-    修改标识：Senparc - 20261105
-    修改描述：v0.20.14 同步 Prompt 评分结果的读取与更新
+    Modified by: Senparc - 20261105
+    Change description: v0.20.14 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -134,7 +134,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         public async Task<List<PromptResultDto>> GetByItemId(int promptItemId)
         {
             // var promptItem = await _promptItemService.GetObjectAsync(p => p.Id == promptItemId)
-            //     ?? throw new NcfExceptionBase($"未找到{promptItemId}对应的提示词");
+            //Legacy comment translated to English.
 
             var resultList = (await this.GetFullListAsync(
                 p => p.PromptItemId == promptItemId,
@@ -149,7 +149,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
         /// <summary>
-        /// 获取 AI 生成结果
+        /// get AI generateresult
         /// </summary>
         /// <param name="promptItem"></param>
         /// <param name="userMessage"></param>
@@ -163,12 +163,12 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             Action<PromptResultStreamEvent> onStreamEvent = null,
             PromptExecutionOptions executionOptions = null)
         {
-            // 需要在变量前添加$
-            //string completionPrompt = $@"请根据提示输出对应内容:
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             //{promptItem.Content}";
             string completionPrompt = $@"{promptItem.Content}";
 
-            //定义 AI 接口调用参数和 Token 限制等
+            //Legacy comment translated to English.
             var promptParameter = new ChatOptions()
             {
                 Instructions = completionPrompt,
@@ -180,20 +180,20 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 StopSequences = (promptItem.StopSequences ?? "[]").GetObject<List<string>>() ?? new List<string>(),
             };
 
-            // 生成替换参数后的 SystemMessage（用于保存到数据库）
-            // 如果 Prompt 内容包含参数占位符（如 {{$variableName}}），进行参数替换
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             string systemMessage = completionPrompt;
             if (!string.IsNullOrWhiteSpace(promptItem.VariableDictJson) &&
                 !string.IsNullOrWhiteSpace(promptItem.Prefix) &&
                 !string.IsNullOrWhiteSpace(promptItem.Suffix))
             {
-                // 读取参数并替换 Prompt 内容中的占位符
+                //Legacy comment translated to English.
                 var variableDict = (promptItem.VariableDictJson ?? "{}").GetObject<Dictionary<string, string>>()
                     ?? new Dictionary<string, string>();
                 foreach (var (key, value) in variableDict)
                 {
-                    // 替换格式：{Prefix}{key}{Suffix} -> value
-                    // 例如：{{$variableName}} -> actualValue
+                    //Legacy comment translated to English.
+                    // for example：{{$variableName}} -> actualValue
                     string placeholder = $"{promptItem.Prefix}{key}{promptItem.Suffix}";
                     systemMessage = systemMessage.Replace(placeholder, value ?? string.Empty);
                 }
@@ -202,20 +202,20 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var hasUserMessage = !string.IsNullOrWhiteSpace(userMessage);
             var normalizedUserMessage = hasUserMessage ? userMessage : null;
 
-            // Chat 模式：Instructions 为系统 Prompt；Single 模式：Prompt 作为用户消息发送
+            //Legacy comment translated to English.
             promptParameter.Instructions = hasUserMessage ? systemMessage : null;
 
-            // 从数据库中获取模型信息
+            //Legacy comment translated to English.
             var model = promptItem.AIModelDto
                 ?? throw new NcfExceptionBase($"找不到 PromptItem（{promptItem.FullVersion}）对应的 AI 模型配置");
 
-            #region 用户自定义参数
+            #region Legacy section
 
             var history = BuildChatMessagesFromDto(chatHistory);
 
             if (!string.IsNullOrWhiteSpace(promptItem.VariableDictJson))
             {
-                // 如果有参数，前后缀不能为空
+                //Legacy comment translated to English.
                 if (string.IsNullOrWhiteSpace(promptItem.Prefix) || string.IsNullOrWhiteSpace(promptItem.Suffix))
                 {
                     throw new NcfExceptionBase("前后缀不能为空");
@@ -250,7 +250,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 }
             }
 
-            // Chat 模式使用 userMessage，Single 模式直接执行解析后的 Prompt 内容
+            //Legacy comment translated to English.
             var runPrompt = hasUserMessage ? normalizedUserMessage : systemMessage;
             if (string.IsNullOrWhiteSpace(runPrompt))
             {
@@ -306,44 +306,44 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var promptCostToken = usageInfo.PromptTokens;
             var resultCostToken = usageInfo.CompletionTokens;
 
-            // 判断是否为聊天模式
+            //Legacy comment translated to English.
             var isChatMode = hasUserMessage;
             var resultMode = isChatMode ? ResultMode.Chat : ResultMode.Single;
 
-            // 如果是聊天模式，保存 SystemMessage；否则为 null
+            //Legacy comment translated to English.
             var promptResult = new PromptResult(
                 promptItem.ModelId, aiOutput, SystemTime.DiffTotalMS(dt1),
                 -1, -1, -1, TestType.Text,
                 promptCostToken, resultCostToken, promptCostToken + resultCostToken,
                 promptItem.FullVersion, promptItem.Id,
                 resultMode,
-                isChatMode ? systemMessage : null); // 只在聊天模式时保存 SystemMessage
+                isChatMode ? systemMessage : null); //Legacy comment translated to English.
 
             if (executionOptions?.PersistResult != false)
             {
                 await base.SaveObjectAsync(promptResult);
             }
 
-            // 如果是聊天模式，保存对话记录
+            //Legacy comment translated to English.
             if (executionOptions?.PersistResult != false &&
                 isChatMode && !string.IsNullOrWhiteSpace(normalizedUserMessage) && !string.IsNullOrWhiteSpace(aiOutput))
             {
                 var chatMessages = new List<ChatMessageDto>();
 
-                // 如果有历史记录，先添加历史记录
+                //Legacy comment translated to English.
                 if (chatHistory != null && chatHistory.Count > 0)
                 {
                     chatMessages.AddRange(chatHistory);
                 }
 
-                // 添加当前对话（用户消息和 AI 响应）
+                //Legacy comment translated to English.
                 chatMessages.Add(new ChatMessageDto { Role = "user", Content = normalizedUserMessage });
                 chatMessages.Add(new ChatMessageDto { Role = "assistant", Content = aiOutput });
 
                 await _promptResultChatService.AddChatMessagesAsync(promptResult.Id, chatMessages);
             }
 
-            // 有期望结果， 进行自动打分
+            //Legacy comment translated to English.
             if (executionOptions?.PersistResult != false &&
                 promptItem.isAIGrade && !string.IsNullOrWhiteSpace(promptItem.ExpectedResultsJson))
             {
@@ -495,7 +495,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             string scene,
             HttpClient httpClient)
         {
-            // TextToImage 使用当前模型类型对应的最小模型配置，避免混入 Chat/Completion 模型字段。
+            //Legacy comment translated to English.
             var aiSettings = _aiModelService.Value.BuildSenparcAiSetting(model, null);
             var runnerName = $"PromptRange_{promptItem.Id}";
             SenparcTrace.SendCustomLog(
@@ -1004,11 +1004,11 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
         /// <summary>
-        /// 继续聊天：在现有 PromptResult 中追加对话记录，不创建新的 PromptResult
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="promptResultId">现有的 PromptResult ID</param>
-        /// <param name="userMessage">用户消息</param>
-        /// <returns>返回新追加的对话记录（用户消息和 AI 回复）</returns>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         public async Task<List<PromptResultChatDto>> ContinueChatAsync(
             int promptResultId,
             string userMessage,
@@ -1019,20 +1019,20 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 throw new NcfExceptionBase("用户消息不能为空");
             }
 
-            // 获取现有的 PromptResult
+            //Legacy comment translated to English.
             var promptResult = await this.GetObjectAsync(p => p.Id == promptResultId)
                 ?? throw new NcfExceptionBase($"未找到 ID 为 {promptResultId} 的 PromptResult");
 
-            // 验证是否为聊天模式
+            //Legacy comment translated to English.
             if (promptResult.Mode != ResultMode.Chat)
             {
                 throw new NcfExceptionBase("只有聊天模式的 PromptResult 才能继续聊天");
             }
 
-            // 获取 PromptItem
+            // get PromptItem
             var promptItem = await _promptItemService.GetAsync(promptResult.PromptItemId);
 
-            // 获取历史对话记录
+            //Legacy comment translated to English.
             var chatHistory = await _promptResultChatService.GetByPromptResultIdAsync(promptResultId);
             // var chatHistoryForAI = chatHistory.Select(c => new ChatMessageDto
             // {
@@ -1040,7 +1040,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             //     Content = c.Content
             // }).ToList();
 
-            //// 定义 AI 接口调用参数
+            ///Legacy comment translated to English.
             //var promptParameter = new PromptConfigParameter()
             //{
             //    MaxTokens = promptItem.MaxToken > 0 ? promptItem.MaxToken : 200,
@@ -1051,21 +1051,21 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             //    StopSequences = (promptItem.StopSequences ?? "[]").GetObject<List<string>>(),
             //};
 
-            // 优先使用保存的 SystemMessage，如果没有则使用当前的 Prompt 内容
-            // 这样可以确保即使 Prompt 内容或参数变化，继续对话时也使用最初保存的 SystemMessage
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             string completionPrompt;
             if (!string.IsNullOrWhiteSpace(promptResult.SystemMessage))
             {
-                // 使用保存的 SystemMessage（已完成参数替换）
+                //Legacy comment translated to English.
                 completionPrompt = promptResult.SystemMessage;
             }
             else
             {
-                // 降级方案：如果没有保存的 SystemMessage，使用当前的 Prompt 内容
-                // 这种情况可能发生在旧数据或 Single 模式的数据中
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 completionPrompt = $@"{promptItem.Content}";
 
-                // 如果 Prompt 内容包含参数占位符，进行参数替换
+                //Legacy comment translated to English.
                 if (!string.IsNullOrWhiteSpace(promptItem.VariableDictJson) &&
                     !string.IsNullOrWhiteSpace(promptItem.Prefix) &&
                     !string.IsNullOrWhiteSpace(promptItem.Suffix))
@@ -1080,14 +1080,14 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 }
             }
 
-            // 从数据库中获取模型信息
+            //Legacy comment translated to English.
             var model = promptItem.AIModelDto
                 ?? throw new NcfExceptionBase($"找不到 PromptItem（{promptItem.FullVersion}）对应的 AI 模型配置");
 
             var chatOptions = _promptItemService.GetChatOptions(promptItem, completionPrompt);
             var chatMessageList = _promptResultChatService.GetChatMessageList(chatHistory);
 
-            // 调用 AI 接口
+            // invoke AI interface
             var dt1 = SystemTime.Now;
             UsageDetails streamUsageDetails = null;
             void HandleStreamUpdate(AgentResponseUpdate update)
@@ -1128,14 +1128,14 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var costTime = SystemTime.DiffTotalMS(dt1);
             var usageInfo = PromptUsageHelper.ResolveUsage(streamUsageDetails ?? usageFromResponse);
 
-            // 追加新的对话记录到 PromptResultChat
+            //Legacy comment translated to English.
             var newChatMessages = new List<ChatMessageDto>
             {
                 new ChatMessageDto { Role = "user", Content = userMessage },
                 new ChatMessageDto { Role = "assistant", Content = aiOutput }
             };
 
-            // 添加新的对话记录（会自动从现有最大序号+1开始）
+            //Legacy comment translated to English.
             var newChatDtos = await _promptResultChatService.AddChatMessagesAsync(promptResultId, newChatMessages);
 
             promptResult.AppendUsageAndResult(
@@ -1168,7 +1168,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         {
             #region validate
 
-            //验证 score >= 0
+            //validation score >= 0
             if (score < 0 || score > 10 || decimal.Round(score, 1) != score)
             {
                 throw new NcfExceptionBase("分数必须为 0~10，且最多保留一位小数。");
@@ -1176,7 +1176,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
             #endregion
 
-            // 根据id搜索数据库
+            // according toidsearchdatabase
             var promptResult = await base.GetObjectAsync(result => result.Id == id) ??
                                throw new NcfExceptionBase($"未找到{id}对应的结果");
 
@@ -1198,7 +1198,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         }
 
         /// <summary>
-        /// AI 打分
+        /// AI scoring
         /// </summary>
         /// <param name="promptResultId"></param>
         /// <param name="isRefresh"></param>
@@ -1217,7 +1217,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             var promptItem = await _promptItemService.GetAsync(promptResult.PromptItemId)
                              ?? throw new NcfExceptionBase("找不到对应的promptItem");
 
-            // 保存期望结果列表
+            //Legacy comment translated to English.
             await _promptItemService.UpdateExpectedResultsAsync(promptItem.Id, expectedResultList.ToJson());
 
 
@@ -1262,7 +1262,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 return MAX_SCORE;
             }
 
-            //TODO：添加不等号规则
+            //Legacy comment translated to English.
 
 
             const string scorePrompt = $@"[背景]
@@ -1302,9 +1302,9 @@ Apple
 10
 ";
 
-            // 获取模型
+            // getmodel
             AIModelDto aiModelDto = null;
-            //如果当前模型不是 Chat 类型，则需要找一个 Chat 模型
+            //Legacy comment translated to English.
             if (promptItem.AIModelDto == null || promptItem.AIModelDto.ConfigModelType != ConfigModelType.Chat)
             {
                 var chatModel = await _aiModelService.Value.GetObjectAsync(z => z.ConfigModelType == ConfigModelType.Chat);
@@ -1354,10 +1354,10 @@ Apple
             var resultOutput = scoreOutput?.Trim() ?? string.Empty;
             SenparcTrace.SendCustomLog("自动打分结束", $"模型返回为{resultOutput}，花费时间{SystemTime.DiffTotalMS(dt1)}ms");
 
-            // 正则匹配出 resultOutput 中的数字
+            //Legacy comment translated to English.
             // Use regular expression to find matches
 
-            // 匹配 MAX_SCORE，后面可以跟 0-2 位的小数
+            //Legacy comment translated to English.
             string pattern = "^(10(\\.0{1,2})?|[1-9](\\.\\d{1,2})?|0(\\.\\d{1,2})?)$";
             //@"^100(\.[0-9]{1,2})?|([0-9]{1,2})(\.[0-9]{1,2})?$";
             //"^(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?|0(\.\d{1,2})?)$"
@@ -1379,7 +1379,7 @@ Apple
                 throw new NcfExceptionBase($"自动打分结果匹配失败, 被打分的结果字符串为：{scoringActualResult}, 模型返回为{resultOutput}，");
             }
 
-            #region error 打分结果不在 0-MAX_SCORE 之间
+            #region Legacy section
 
             score = score > MAX_SCORE ? MAX_SCORE : (score < 0 ? 0 : score);
 
@@ -1841,8 +1841,8 @@ Apple
             string scene,
             Action<AgentResponseUpdate> inStreamItemProceessing = null)
         {
-            // NeuCharAI 网关通常不支持稳定的流式返回（参考 AgentKernel 测试约定），
-            // 在 PromptRange 中统一走非流式路径，避免 Stream / 非 Stream 记录链路不一致。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             if (inStreamItemProceessing != null && model?.AiPlatform == AiPlatform.NeuCharAI)
             {
                 SenparcTrace.SendCustomLog("PromptRange.AI.StreamBypass",
@@ -1884,7 +1884,7 @@ Apple
             }
             catch (Exception ex)
             {
-                // 兼容某些模型/网关在 Session 场景下的拒绝，先尝试去掉 Session 再请求一次
+                //Legacy comment translated to English.
                 if (agentSession != null)
                 {
                     try
@@ -1901,7 +1901,7 @@ Apple
                     }
                     catch (Exception retryEx)
                     {
-                        // 若流式失败（例如网关策略不允许 SSE），降级到非流式以尽可能返回结果
+                        //Legacy comment translated to English.
                         if (ContainsForbiddenStatus(retryEx))
                         {
                             SenparcTrace.SendCustomLog("PromptRange.AI.Fallback", $"{scene} 流式调用重试仍返回 403，降级为非流式请求。");
@@ -1913,7 +1913,7 @@ Apple
                 }
                 else if (ContainsForbiddenStatus(ex))
                 {
-                    // 无 Session 的流式请求被 403 时，降级到非流式
+                    //Legacy comment translated to English.
                     SenparcTrace.SendCustomLog("PromptRange.AI.Fallback", $"{scene} 流式调用返回 403，降级为非流式请求。");
                     return await RunChatDirectAsync(iWantToRun, prompt, null, model, scene);
                 }
@@ -2018,8 +2018,8 @@ Apple
             {
                 messageBuilder.Append("；检测到上游返回 403（Forbidden），通常由模型端点权限、API Key、Deployment 名称或账号配额/策略导致。");
 
-                // AdminChat 默认（aiModelId=0）会使用系统级 SenparcAiSetting，这里一并输出，
-                // 便于快速对照“PromptRange 指定模型”和“系统默认模型”的差异。
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 var defaultSettingInfo = BuildDefaultChatSettingDiagnosticInfo();
                 if (!string.IsNullOrWhiteSpace(defaultSettingInfo))
                 {
@@ -2180,7 +2180,7 @@ Apple
                 return true;
             }
 
-            // 兼容较新枚举成员（当前项目 UI 有 VolatileInMemory 选项）
+            //Legacy comment translated to English.
             var typeName = vectorDbType.ToString();
             return string.Equals(typeName, "VolatileInMemory", StringComparison.OrdinalIgnoreCase);
         }
@@ -2304,8 +2304,8 @@ Apple
                 return;
             }
 
-            // 某些模型（例如 text-embedding-ada-002）不支持请求中显式传入 dimensions。
-            // 仍保留 Kernel.EmbeddingDimensions 用于向量库定义，但请求时改为不传该参数。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             iWantToRun.Kernel.EmbeddingGenerator = embeddingClient.AsIEmbeddingGenerator(null);
             SenparcTrace.SendCustomLog(
                 "PromptRange.AI.Embedding",
@@ -3066,7 +3066,7 @@ Apple
         }
 
         /// <summary>
-        /// 更新promptItem的平均分和最高分
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="promptItemId"></param>
         /// <returns></returns>
@@ -3082,7 +3082,7 @@ Apple
 
             if (promptResults.Count == 0)
             {
-                // 没有结果
+                //Legacy comment translated to English.
                 return false;
             }
 

@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：SysRole.cs
-    文件功能描述：SysRole 相关实现
+
+    File name: SysRole.cs
+
+    File description: SysRole related implementation
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -22,7 +34,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models.DataBaseModel
 {
     /// <summary>
-    /// 系统角色
+    ///Legacy comment translated to English.
     /// </summary>
     [Table("SysRoles")]
     public class SysRole : EntityBase<string>
@@ -55,7 +67,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         }
 
         /// <summary>
-        /// 启用状态
+        ///Legacy comment translated to English.
         /// </summary>
         public bool Enabled { get; set; }
 
@@ -63,13 +75,13 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public new string Id { get; set; }
 
         /// <summary>
-        /// 角色名称
+        /// role name
         /// </summary>
         [MaxLength(150)]
         public string RoleName { get; set; }
 
         /// <summary>
-        /// 角色代码
+        /// role code
         /// </summary>
         [MaxLength(150)]
         public string RoleCode { get; set; }

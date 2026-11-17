@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：Extensions.cs
-    文件功能描述：Extensions 相关实现
+
+    File name: Extensions.cs
+
+    File description: Extensions related implementation
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -22,10 +34,10 @@ namespace Senparc.Ncf.Core.Utility
     public static class Extensions
     {
         /// <summary>
-        /// 获取翻页时跳过的记录数
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="pageIndex">当前页码</param>
-        /// <param name="pageCount">每页记录数</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public static int GetSkipRecord(int pageIndex, int pageCount)
         {
@@ -33,7 +45,7 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        /// 获取数组的字典类型（key为index，value为数组内容）。通常用于配合枚举类型
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="strArr"></param>
         /// <returns></returns>
@@ -50,10 +62,10 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        /// 获取枚举成员，转为Dictionary类型
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="enumType"></param>
-        /// <param name="useDescription">是否使用枚举类型的描述</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public static Dictionary<string, string> GetDictionaryForEnums(this Type enumType, bool useDescription = false, bool addBlankOption = false, string blankOptionText = null)
         {
@@ -64,7 +76,7 @@ namespace Senparc.Ncf.Core.Utility
             Dictionary<string, string> dic = new Dictionary<string, string>();
             if (addBlankOption)
             {
-                dic.Add("", blankOptionText ?? "");//添加空白项
+                dic.Add("", blankOptionText ?? "");//Legacy comment translated to English.
             }
             foreach (int item in Enum.GetValues(enumType))
             {

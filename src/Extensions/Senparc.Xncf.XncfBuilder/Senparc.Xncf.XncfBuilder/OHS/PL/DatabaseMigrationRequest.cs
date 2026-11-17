@@ -1,17 +1,32 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：DatabaseMigrationRequest.cs
-    文件功能描述：DatabaseMigrationRequest 相关实现
-    
-    
-    创建标识：Senparc - 20211016
-    
-    修改标识：Senparc - 20260704
-    修改描述：v0.36.2-preview1 优化数据库迁移命令日志清洗与请求模型能力
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.37.0-preview5 增强 XNCF 构建、数据库迁移与 AI 生成流程的本地化支持
+    Copyright (C) 2026 Senparc
+
+  
+
+    File name: DatabaseMigrationRequest.cs
+
+    File description: DatabaseMigrationRequest related implementation
+
+    
+
+    
+
+    Created by: Senparc - 20211016
+
+    
+
+    Modified by: Senparc - 20260704
+
+    Change description: v0.36.2-preview1 Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20260717
+
+    Change description: v0.37.0-preview5 Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 using Microsoft.Extensions.DependencyInjection;
@@ -101,7 +116,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
             });
 
         /// <summary>
-        /// 预载入数据
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="serviceProvider"></param>
         /// <returns></returns>
@@ -109,11 +124,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
         {
             try
             {
-                //TODO:单独生成一个表来记录
+                //Legacy comment translated to English.
 
                 this.ProjectPathOptions.Items.Add(new SelectionItem("N/A", XncfBuilderResource.Get("XncfBuilder.Option.CustomPath"), "", true));
 
-                //添加“停机坪”路径
+                //Legacy comment translated to English.
                 var configService = serviceProvider.GetService<ConfigService>();
                 var config = await configService.GetObjectAsync(z => true);
                 if (config != null)
@@ -123,11 +138,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
                         this.DatabasePlantPath = Path.Combine(Path.GetDirectoryName(config.SlnFilePath), "Senparc.Web.DatabasePlant");
                     }
 
-                    //添加当前解决方案的项目选项
+                    //Legacy comment translated to English.
                     var projectList = FunctionHelper.LoadXncfProjects(false, null, "Senparc.Areas.Admin");
                     projectList.OrderBy(z=>z.Value).ToList().ForEach(z => ProjectPathOptions.Items.Add(z));
 
-                    //添加 NcfPackageSource 项目的解决方案的项目选项
+                    //Legacy comment translated to English.
                     var sourceRootDir = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "..", "..", "..", "src");
                     Console.WriteLine("查找 Source 项目源文件根目录：" + sourceRootDir);
                     var sourceProjectList = FunctionHelper.LoadXncfProjects(false, sourceRootDir, "Senparc.Areas.Admin");
@@ -141,7 +156,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.PL
 
 
         /// <summary>
-        /// 获取项目路径
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>

@@ -9,14 +9,21 @@
     'use strict';
     
     /**
+
      * HTML helper methods.
+
      * Uses an object-literal pattern and requires no instantiation.
+
      */
     var HtmlHelper = {
         /**
+
          * Escape HTML.
+
          * @param {string} text - Text to escape.
+
          * @returns {string} HTML-escaped text.
+
          */
         escape: function(text) {
             if (!text) return '';
@@ -26,17 +33,24 @@
         },
 
         /**
+
          * Escape regular-expression metacharacters.
+
          * @param {string} str - String to escape.
+
          * @returns {string} Escaped string.
+
          */
         escapeRegex: function(str) {
             return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         },
 
         /**
+
          * Generate an RFC 4122 UUID v4.
+
          * @returns {string} UUID string.
+
          */
         generateUUID: function() {
             return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -47,9 +61,13 @@
         },
 
         /**
+
          * Format a file size.
+
          * @param {number} bytes - Number of bytes.
+
          * @returns {string} Human-readable size such as "1.23 MB".
+
          */
         formatFileSize: function(bytes) {
             if (bytes === 0) return '0 B';
@@ -60,10 +78,15 @@
         },
 
         /**
+
          * Debounce a function.
+
          * @param {Function} func - Function to debounce.
+
          * @param {number} wait - Delay in milliseconds.
+
          * @returns {Function} Debounced function.
+
          */
         debounce: function(func, wait) {
             var timeout;
@@ -78,10 +101,15 @@
         },
 
         /**
+
          * Throttle a function.
+
          * @param {Function} func - Function to throttle.
+
          * @param {number} limit - Limit in milliseconds.
+
          * @returns {Function} Throttled function.
+
          */
         throttle: function(func, limit) {
             var inThrottle;
@@ -99,9 +127,13 @@
         },
 
         /**
+
          * Deep-clone an object.
+
          * @param {*} obj - Object to clone.
+
          * @returns {*} Cloned value.
+
          */
         deepClone: function(obj) {
             if (obj === null || typeof obj !== 'object') {
@@ -132,10 +164,15 @@
         },
 
         /**
+
          * Read a URL query parameter.
+
          * @param {string} name - Parameter name.
+
          * @param {string} [url] - URL; defaults to the current page URL.
+
          * @returns {string|null} Parameter value, or null when absent.
+
          */
         getQueryParam: function(name, url) {
             url = url || window.location.href;
@@ -148,9 +185,13 @@
         },
 
         /**
+
          * Check whether a value is empty.
+
          * @param {*} value - Value to check.
+
          * @returns {boolean} Whether the value is empty.
+
          */
         isEmpty: function(value) {
             if (value === null || value === undefined) return true;

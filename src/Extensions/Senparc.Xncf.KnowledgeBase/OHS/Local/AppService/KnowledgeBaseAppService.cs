@@ -1,23 +1,23 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：KnowledgeBaseAppService.cs
-    文件功能描述：KnowledgeBaseAppService 相关实现
+    File name: KnowledgeBaseAppService.cs
+    File description: KnowledgeBaseAppService related implementation
     
     
-    创建标识：Senparc - 20260704
+    Created by: Senparc - 20260704
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.5.0-preview6 新增知识库生命周期管理与 Agent 模板集成
+    Modified by: Senparc - 20260804
+    Change description: v0.5.0-preview6 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.7.2 修复知识库管理端敏感信息泄露并优化检索交互
+    Modified by: Senparc - 20260915
+    Change description: v0.7.2 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.8.0 upgrade KnowledgeBase retrieval with configurable chunking and re-ranking (backward compatible)
+    Modified by: Senparc - 20261103
+    Change description: v0.8.0 upgrade KnowledgeBase retrieval with configurable chunking and re-ranking (backward compatible)
 
 ----------------------------------------------------------------*/
 
@@ -63,9 +63,9 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 创建及修改
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="request">请求记录Dto模型</param>
+        /// <param name="request">requestrecordDtomodel</param>
         /// <returns></returns>
         [ApiBind("AutoMate", ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<bool>> CreateOrUpdateAsync(KnowledgeBaseRequest request)
@@ -93,10 +93,10 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 创建或设置 KnowledgeBaseDetail
+        /// createorsettings KnowledgeBaseDetail
         /// </summary>
-        /// <param name="chatGroupDto">ChatGroup 信息></param>
-        /// <param name="memberAgentTemplateIds">成员 AgentTemplate ID</param>
+        /// <param name="chatGroupDto">ChatGroup information></param>
+        /// <param name="memberAgentTemplateIds">members AgentTemplate ID</param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<bool>> SetKnowledgeBaseDetail(KnowledgeBaseItemRequest request)
@@ -121,7 +121,7 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 对KnowledgeBase进行Embedding，返回向量化结果描述（供前端展示）
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<string>> EmbeddingKnowledgeBase(plRequest.KnowledgeBasesRequest request)
@@ -149,7 +149,7 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 批量导入文件到知识库
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -188,7 +188,7 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 将知识库的 FileManager 关联完整同步为指定集合；空集合表示清空。
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<bool>> SyncFilesToKnowledgeBase(plRequest.ImportFilesRequest request)

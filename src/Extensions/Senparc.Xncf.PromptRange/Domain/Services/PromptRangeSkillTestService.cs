@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：PromptRangeSkillTestService.cs
-    文件功能描述：Skill 隔离测试运行器
+    File name: PromptRangeSkillTestService.cs
+    File description: Related implementation.
     
     
-    创建标识：Senparc - 20261021
+    Created by: Senparc - 20261021
     
-    修改标识：Senparc - 20261021
-    修改描述：v0.20.0 按隔离级别试运行 Skill
+    Modified by: Senparc - 20261021
+    Change description: v0.20.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.20.8 维护Skill 隔离测试运行器
+    Modified by: Senparc - 20261103
+    Change description: v0.20.8 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

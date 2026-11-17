@@ -1,20 +1,20 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：AdminChatMemoryService.cs
-    文件功能描述：AdminChatMemoryService 相关定义与实现
+    File name: AdminChatMemoryService.cs
+    File description: AdminChatMemoryService related definitions and implementation
 
 
-    创建标识：Senparc - 20261103
+    Created by: Senparc - 20261103
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 完善聊天记忆的存储、检索与上下文处理
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261104
-    修改描述：在自动落库和生成候选前校验保存意图，等待后续内容时不写入
+    Modified by: Senparc - 20261104
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261105
-    修改描述：v0.12.26 支持跨轮保存短指令，按真实证据来源决定自动保存或人工核对
+    Modified by: Senparc - 20261105
+    Change description: v0.12.26 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

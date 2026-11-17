@@ -1,23 +1,23 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：SystemConfigAppService.cs
-    文件功能描述：SystemConfigAppService 相关实现
+    File name: SystemConfigAppService.cs
+    File description: SystemConfigAppService related implementation
     
     
-    创建标识：Senparc - 20240827
+    Created by: Senparc - 20240827
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260707
-    修改描述：v0.14.2-preview2 新增 RequestTempId 暂存日志查询能力并补齐请求模型
+    Modified by: Senparc - 20260707
+    Change description: v0.14.2-preview2 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260715
-    修改描述：v0.14.2-preview2 升级 Senparc.AI 至 0.27.3 与 Senparc.AI.AgentKernel 至 0.1.10
+    Modified by: Senparc - 20260715
+    Change description: v0.14.2-preview2 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.15.0-preview3 为 SystemManager 模块接入统一资源本地化并优化功能文案
+    Modified by: Senparc - 20260717
+    Change description: v0.15.0-preview3 integrate shared resource localization and improve feature text for the SystemManager module
 
 ----------------------------------------------------------------*/
 

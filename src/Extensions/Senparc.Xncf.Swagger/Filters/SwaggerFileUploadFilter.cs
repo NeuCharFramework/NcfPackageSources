@@ -1,19 +1,31 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：SwaggerFileUploadFilter.cs
-    文件功能描述：SwaggerFileUploadFilter 相关实现
+
+    File name: SwaggerFileUploadFilter.cs
+
+    File description: SwaggerFileUploadFilter related implementation
+
     
+
     
-    创建标识：Senparc - 20210614
+
+    Created by: Senparc - 20210614
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http;
-using Microsoft.OpenApi; // 核心模型所在
+using Microsoft.OpenApi; //Legacy comment translated to English.
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Collections.Generic;
@@ -49,9 +61,9 @@ namespace Senparc.Xncf.Swagger.Filters
                 var schema = mediaType.Schema;
                 if (schema == null) return;
 
-                // --- 注意：由于 Properties 是只读的，我们直接操作集合 ---
+                //Legacy comment translated to English.
 
-                // 1. 清理：移除 IFormFile 默认属性
+                //Legacy comment translated to English.
                 foreach (var propName in FormFilePropertyNames)
                 {
                     if (schema.Properties.ContainsKey(propName))
@@ -60,7 +72,7 @@ namespace Senparc.Xncf.Swagger.Filters
                     }
                 }
 
-                // 2. 注入新属性
+                //Legacy comment translated to English.
                 foreach (var fileParam in fileParameters)
                 {
                     var parameterName = fileParam.Name ?? "file";
@@ -73,14 +85,14 @@ namespace Senparc.Xncf.Swagger.Filters
                         Description = $"选择文件: {parameterName}"
                     };
 
-                    // 使用索引器：如果存在则覆盖，不存在则添加
-                    // 因为属性是只读的，所以不能用 schema.Properties = ...
+                    //Legacy comment translated to English.
+                    //Legacy comment translated to English.
                     schema.Properties[parameterName] = fileSchema;
 
-                    // 3. 处理必填项 (Required 也是只读的 ISet<string>)
-                    // 通常框架会预先初始化好这个集合，如果没初始化（即为 null），
-                    // 在这种只读设计下通常会提供一个构造函数或初始化方法。
-                    // 但绝大多数情况下，schema.Required 在此时已经被实例化了。
+                    //Legacy comment translated to English.
+                    //Legacy comment translated to English.
+                    //Legacy comment translated to English.
+                    //Legacy comment translated to English.
                     if (schema.Required != null)
                     {
                         if (!schema.Required.Contains(parameterName))

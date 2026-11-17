@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：Index.cshtml.cs
-    文件功能描述：Index.cshtml 相关实现
+
+    File name: Index.cshtml.cs
+
+    File description: Index.cshtml related implementation
+
     
+
     
-    创建标识：Senparc - 20260704
+
+    Created by: Senparc - 20260704
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -59,7 +71,7 @@ namespace Senparc.IntegrationSample.Pages
         {
             XncfRegisterList = new List<XncfRegisterItem>();
 
-            //所有Register
+            //allRegister
             var xncfRegisterList = Senparc.Ncf.XncfBase.XncfRegisterManager.RegisterList
                                      .OrderByDescending(z => (z.GetType().GetCustomAttributes(typeof(XncfOrderAttribute), true).FirstOrDefault() as XncfOrderAttribute)?.Order)
                                      .ToList();
@@ -81,7 +93,7 @@ namespace Senparc.IntegrationSample.Pages
                     //var funClass = _serviceProvider.GetService(funtionBag.MethodInfo.DeclaringType) as IAppService;
                     //var funMethod = funClass.GetType().GetMethod()
 
-                    //遍历某个 Register 下所有的方法      TODO：未来可添加分组
+                    //Legacy comment translated to English.
                     foreach (var funtionBag in functionGroup.Values)
                     {
                         try

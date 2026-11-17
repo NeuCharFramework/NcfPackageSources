@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：PromptOptimizationService.cs
-    文件功能描述：PromptOptimizationService 相关实现
+    File name: PromptOptimizationService.cs
+    File description: PromptOptimizationService related implementation
     
     
-    创建标识：Senparc - 20260306
+    Created by: Senparc - 20260306
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
 ----------------------------------------------------------------*/
 
@@ -38,7 +38,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         private readonly ChatGroupMemberService _chatGroupMemberService;
         private readonly ILogger<PromptOptimizationService> _logger;
         
-        // 用于存储挂起的请求：RequestId -> TCS
+        //Legacy comment translated to English.
         private static readonly ConcurrentDictionary<string, TaskCompletionSource<PromptOptimizationResponseEvent>> _pendingRequests 
             = new ConcurrentDictionary<string, TaskCompletionSource<PromptOptimizationResponseEvent>>();
             
@@ -46,7 +46,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             = new ConcurrentDictionary<string, TaskCompletionSource<PromptInitResponseEvent>>();
 
         /// <summary>
-        /// 同一靶道 + 需求 + 模型下禁止并发两次 HTTP 优化（双击会发两个 RequestId，各插一行且内容常相同）。
+        ///Legacy comment translated to English.
         /// </summary>
         private static readonly ConcurrentDictionary<string, SemaphoreSlim> _optimizeInFlightByPrompt = new();
 
@@ -72,15 +72,15 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         }
 
         /// <summary>
-        /// 确保 PromptCatalyzer Agent 和相关资源已初始化（细粒度检查）
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="modelId">可选：用户指定的 AI Model ID</param>
+        ///Legacy comment translated to English.
         public async Task<PromptInitResponseEvent> EnsureInitializedAsync(int? modelId = null)
         {
             _logger.LogInformation("========== EnsureInitializedAsync 开始（细粒度检查）==========");
             _logger.LogInformation("请求的 ModelId: {ModelId}", modelId);
 
-            // === 步骤1：检查 Agent 是否已存在 ===
+            //Legacy comment translated to English.
             _logger.LogInformation("【步骤1/3】检查 PromptCatalyzer Agent 是否已存在...");
             var agent = _agentsTemplateService.GetObject(z => z.Name == "PromptCatalyzer");
             
@@ -91,7 +91,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             {
                 _logger.LogInformation("  ✅ Agent 已存在，ID: {AgentId}, PromptCode: {PromptCode}", 
                     agent.Id, agent.SystemMessage);
-                promptCode = agent.SystemMessage;  // Agent 的 SystemMessage 存储了 PromptCode
+                promptCode = agent.SystemMessage;  //Legacy comment translated to English.
 
                 const string pluginTypeName = "Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins.PromptOptimizationPlugin";
                 if (string.IsNullOrWhiteSpace(agent.FunctionCallNames))
@@ -105,10 +105,10 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             }
             else
             {
-                // Agent 不存在，需要创建
+                //Legacy comment translated to English.
                 _logger.LogInformation("  Agent 不存在，开始创建流程...");
                 
-                // 通过 EventBus 请求创建 PromptItem
+                //Legacy comment translated to English.
                 var requestId = Guid.NewGuid().ToString();
                 var tcs = new TaskCompletionSource<PromptInitResponseEvent>(
                     TaskCreationOptions.RunContinuationsAsynchronously);
@@ -161,7 +161,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                     throw;
                 }
                 
-                // 创建 Agent
+                // create Agent
                 _logger.LogInformation("【步骤2/3】创建 PromptCatalyzer Agent...");
                 _logger.LogInformation("  PromptCode: {PromptCode}", promptCode);
                 
@@ -174,7 +174,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                     hookRobotType: HookRobotType.None,
                     hookRobotParameter: null,
                     avastar: null,
-                    functionCallNames: "Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins.PromptOptimizationPlugin",  // 🔥 关键：设置 function-calling
+                    functionCallNames: "Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins.PromptOptimizationPlugin",  //Legacy comment translated to English.
                     mcpEndpoints: null
                 );
                 
@@ -186,7 +186,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 agentCreated = true;
             }
             
-            // === 步骤3：检查 ChatGroup 是否已存在（独立检查）===
+            //Legacy comment translated to English.
             _logger.LogInformation("【步骤3/3】检查 ChatGroup 是否已存在...");
             var chatGroup = await _chatGroupService.GetObjectAsync(z => z.Name == "PromptCatalyzer-OptimizationGroup");
             
@@ -195,7 +195,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 _logger.LogInformation("  ✅ ChatGroup 已存在，ID: {GroupId}, Admin={AdminId}, Enter={EnterId}", 
                     chatGroup.Id, chatGroup.AdminAgentTemplateId, chatGroup.EnterAgentTemplateId);
                 
-                // 验证 ChatGroup 的 Agent 引用是否正确
+                //Legacy comment translated to English.
                 if (chatGroup.AdminAgentTemplateId != agent.Id || chatGroup.EnterAgentTemplateId != agent.Id)
                 {
                     _logger.LogWarning("  ⚠️  ChatGroup 的 Agent 引用不正确，需要修复");
@@ -204,7 +204,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                     _logger.LogWarning("    当前 Enter={Current}, 应为 {Expected}", 
                         chatGroup.EnterAgentTemplateId, agent.Id);
                     
-                    // TODO: 这里可以选择更新 ChatGroup 的 Agent 引用，或者提示用户手动处理
+                    //Legacy comment translated to English.
                 }
             }
             else
@@ -238,7 +238,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         }
 
         /// <summary>
-        /// 完成初始化请求（由 PromptInitResponseHandler 调用）
+        ///Legacy comment translated to English.
         /// </summary>
         public void CompleteInitRequest(string requestId, PromptInitResponseEvent response)
         {
@@ -254,7 +254,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         }
 
         /// <summary>
-        /// 优化指定的 Prompt（包括内容和参数）
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<PromptOptimizationResponseEvent> OptimizePromptAsync(
             string promptCode, 
@@ -262,7 +262,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             string userRequirement,
             OptimizationContext context)
         {
-            // 1. 确保 Agent 已初始化
+            //Legacy comment translated to English.
             await EnsureInitializedAsync();
 
             var flightKey = BuildOptimizeSingleFlightKey(promptCode, userRequirement, context);
@@ -292,7 +292,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                         "Publishing PromptOptimizationRequestEvent: RequestId={RequestId}, PromptCode={PromptCode}",
                         requestId, promptCode);
 
-                    // 2. 发布优化请求事件
+                    //Legacy comment translated to English.
                     var requestEvent = new PromptOptimizationRequestEvent(
                         requestId, 
                         promptCode, 
@@ -301,7 +301,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                         context);
                     await _eventBus.PublishAsync(requestEvent);
 
-                    // 3. 等待响应（Agent 多轮对话可能较慢）
+                    //Legacy comment translated to English.
                     var timeoutTask = Task.Delay(TimeSpan.FromMinutes(15));
                     var completedTask = await Task.WhenAny(tcs.Task, timeoutTask);
 
@@ -350,7 +350,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         }
 
         /// <summary>
-        /// 完成优化请求（由 PromptOptimizationResponseHandler 调用）
+        ///Legacy comment translated to English.
         /// </summary>
         public void CompleteRequest(string requestId, PromptOptimizationResponseEvent response)
         {

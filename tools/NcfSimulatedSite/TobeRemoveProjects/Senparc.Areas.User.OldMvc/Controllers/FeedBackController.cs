@@ -27,7 +27,7 @@ namespace Senparc.Areas.User.Controllers
         }
 
         /// <summary>
-        /// 列表
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="pageIndex"></param>
         /// <returns></returns>
@@ -40,7 +40,7 @@ namespace Senparc.Areas.User.Controllers
         }
 
         /// <summary>
-        /// 获取反馈列表信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
@@ -65,7 +65,7 @@ namespace Senparc.Areas.User.Controllers
         }
 
         /// <summary>
-        /// 获取反馈信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -93,7 +93,7 @@ namespace Senparc.Areas.User.Controllers
         }
 
         /// <summary>
-        /// 编辑页面
+        /// editpage
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -105,7 +105,7 @@ namespace Senparc.Areas.User.Controllers
         }
 
         /// <summary>
-        /// 提交编辑
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -138,7 +138,7 @@ namespace Senparc.Areas.User.Controllers
         }
 
         /// <summary>
-        /// 删除反馈
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>

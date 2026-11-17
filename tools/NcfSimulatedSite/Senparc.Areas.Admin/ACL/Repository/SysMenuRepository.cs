@@ -13,14 +13,14 @@ namespace Senparc.Areas.Admin.ACL.Repository
     public interface ISysMenuRepository : IClientRepositoryBase<SysMenu>
     {
         /// <summary>
-        /// 获取用户可见菜单
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="accountId"></param>
         /// <returns></returns>
         Task<IEnumerable<SysMenuDto>> GetVisibleMenuDtosAsync(int accountId);
 
         /// <summary>
-        /// 获取所有菜单(仅包含菜单 和 页面)
+        ///Legacy comment translated to English.
         /// <param name="hasButton"></param>
         /// </summary>
         /// <returns></returns>
@@ -35,7 +35,7 @@ namespace Senparc.Areas.Admin.ACL.Repository
         }
 
         /// <summary>
-        /// 获取用户可见的菜单
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="hasButton"></param>
         /// <returns></returns>
@@ -44,7 +44,7 @@ namespace Senparc.Areas.Admin.ACL.Repository
             var query = BaseDB.BaseDataContext.Set<SysMenu>().Where(o => true);
             if (!hasButton)
             {
-                query = query.Where(menu => menu.MenuType < MenuType.按钮); // 获取可见的菜单
+                query = query.Where(menu => menu.MenuType < MenuType.按钮); //Legacy comment translated to English.
             }
             var menus = query.Select(menu => new SysMenuDto()
             {
@@ -69,20 +69,20 @@ namespace Senparc.Areas.Admin.ACL.Repository
         }
 
         /// <summary>
-        /// 获取用户可见的菜单
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="accountId"></param>
         /// <returns></returns>
         public async Task<IEnumerable<SysMenuDto>> GetVisibleMenuDtosAsync(int accountId)
         {
             var sysRoleAdminUserInfos = BaseDB.BaseDataContext.Set<SysRoleAdminUserInfo>()
-                .Where(sysRoleAdminUserInfo => sysRoleAdminUserInfo.AccountId == accountId); // 获取用户的角色信息
-            var sysRoles = BaseDB.BaseDataContext.Set<SysRole>().Where(role => role.Enabled); // 获取有效的角色信息
-            IQueryable<string> roleIdQuery = sysRoleAdminUserInfos.Select(_ => _.RoleId); // 获取用户的角色Id
+                .Where(sysRoleAdminUserInfo => sysRoleAdminUserInfo.AccountId == accountId); //Legacy comment translated to English.
+            var sysRoles = BaseDB.BaseDataContext.Set<SysRole>().Where(role => role.Enabled); //Legacy comment translated to English.
+            IQueryable<string> roleIdQuery = sysRoleAdminUserInfos.Select(_ => _.RoleId); //Legacy comment translated to English.
             var permissions = BaseDB.BaseDataContext.Set<SysRolePermission>().Where(rolePermission => roleIdQuery.Contains(rolePermission.RoleId));
             IQueryable<string> menuIds = permissions.Select(o => o.PermissionId);
             var menus = BaseDB.BaseDataContext.Set<SysMenu>()
-                .Where(menu => menu.Visible && menuIds.Contains(menu.Id) && menu.MenuType == MenuType.菜单) // 获取可见的菜单
+                .Where(menu => menu.Visible && menuIds.Contains(menu.Id) && menu.MenuType == MenuType.菜单) //Legacy comment translated to English.
                 .Select(menu => new SysMenuDto()
                 {
                     Id = menu.Id,

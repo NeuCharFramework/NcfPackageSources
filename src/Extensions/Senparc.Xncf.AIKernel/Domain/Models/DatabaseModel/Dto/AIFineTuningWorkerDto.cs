@@ -1,20 +1,20 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：AIFineTuningWorkerDto.cs
-    文件功能描述：微调 Worker 数据传输模型
+    File name: AIFineTuningWorkerDto.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20261009
+    Created by: Senparc - 20261009
 
-    修改标识：Senparc - 20261009
-    修改描述：v0.16.4 完善 AIKernel 本地微调 Worker、数据库配置与本地化管理能力
+    Modified by: Senparc - 20261009
+    Change description: v0.16.4 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.17.0 enhance Agent Studio, group configuration, and task management interactions
+    Modified by: Senparc - 20261103
+    Change description: v0.17.0 enhance Agent Studio, group configuration, and task management interactions
 
-    修改标识：Senparc - 20261106
-    修改描述：向管理界面返回本机启动配置和密钥文件路径，不返回密钥内容
+    Modified by: Senparc - 20261106
+    Change description: Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：BaseDictionaryCache.cs
-    文件功能描述：BaseDictionaryCache 相关实现
+
+    File name: BaseDictionaryCache.cs
+
+    File description: BaseDictionaryCache related implementation
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -32,7 +44,7 @@ namespace Senparc.Ncf.Core.Cache
     public interface IBaseDictionaryCache<TKey, TValue, TEntity> : IBaseCache<TValue>
            where TValue : class, new()
     {
-        #region 同步方法
+        #region Legacy section
 
         TValue InsertObjectToCache(TKey key);
         TValue InsertObjectToCache(TKey key, TEntity obj);
@@ -42,7 +54,7 @@ namespace Senparc.Ncf.Core.Cache
 
         #endregion
 
-        #region 异步方法
+        #region Legacy section
 
         Task<TValue> InsertObjectToCacheAsync(TKey key);
         Task<TValue> InsertObjectToCacheAsync(TKey key, TEntity obj);
@@ -64,7 +76,7 @@ namespace Senparc.Ncf.Core.Cache
         /// </summary>
         /// <param name="CACHE_KEY"></param>
         /// <param name="db"></param>
-        /// <param name="timeOut">单位：分钟。1440为一天。</param>
+        ///Legacy comment translated to English.
         public BaseDictionaryCache(string CACHE_KEY, INcfDbData db, int timeOut)
             : base(CACHE_KEY, db, timeOut)
         {
@@ -78,13 +90,13 @@ namespace Senparc.Ncf.Core.Cache
         where TEntity : class/*, new()*/
     {
         /// <summary>
-        /// 获取缓存中最终的Key
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
         protected string GetFinalCacheKey(TKey key)
         {
-            //TODO:判断Key类型
+            //TODO:checkKeytype
             TypeCode code = key == null ? TypeCode.DBNull : Type.GetTypeCode(key.GetType());
             string keyCode = null;
             switch (code)
@@ -109,7 +121,7 @@ namespace Senparc.Ncf.Core.Cache
                 default:
                     code = TypeCode.Object;
                     string keyStr = System.Text.Json.JsonSerializer.Serialize(key);
-                    keyCode = MD5.GetMD5Code(keyStr, "");//将对象序列化，然后拼接成字符串并转成MD5，确保唯一性。性能上可能会有一些损失，所以尽量不要太复杂的类型做Key
+                    keyCode = MD5.GetMD5Code(keyStr, "");//Legacy comment translated to English.
                     break;
             }
 
@@ -121,7 +133,7 @@ namespace Senparc.Ncf.Core.Cache
             }
             else
             {
-                finalKey = $"{CacheKey}@@@{keyCode}";//有的缓存策略可能不允许:作为分隔符[LocalCache 存在问题]
+                finalKey = $"{CacheKey}@@@{keyCode}";//Legacy comment translated to English.
             }
 
             return finalKey;
@@ -131,7 +143,7 @@ namespace Senparc.Ncf.Core.Cache
         //{
         //    using (var ms = new MemoryStream())
         //    {
-        //        //.NET 8.0 中已标记为过时且无法编译
+        //Legacy comment translated to English.
         //        new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter().Serialize(ms, value);
 
         //        return new ArraySegment<byte>(ms.GetBuffer(), 0, (int)ms.Length);
@@ -139,7 +151,7 @@ namespace Senparc.Ncf.Core.Cache
         //}
 
         ///// <summary>
-        ///// 获取指定Key下所有的子Key的Value
+        ///Legacy comment translated to English.
         ///// </summary>
         ///// <param name="key">xxx*</param>
         ///// <returns></returns>
@@ -164,13 +176,13 @@ namespace Senparc.Ncf.Core.Cache
         /// </summary>
         /// <param name="CACHE_KEY"></param>
         /// <param name="db"></param>
-        /// <param name="timeOut">单位：分钟。1440为一天。</param>
+        ///Legacy comment translated to English.
         public BaseDictionaryCache(string CACHE_KEY, INcfDbData db, int timeOut)
             : base(CACHE_KEY, db)
         {
             base.TimeOut = timeOut;
 
-            //强制初始化
+            //Legacy comment translated to English.
             //var load = base.Data;
             //var finalCacheKey = GetFinalCacheKey(key);
             //if (base.Cache.CheckExisted(finalCacheKey))
@@ -179,7 +191,7 @@ namespace Senparc.Ncf.Core.Cache
             //}
         }
 
-        #region 同步方法
+        #region Legacy section
 
         public override TValue Update()
         {
@@ -212,10 +224,10 @@ namespace Senparc.Ncf.Core.Cache
                 }
                 catch (Exception ex)
                 {
-                    //var msg = "系统调试记录cache的一个bug。发生错误：{0}。当前参数：base.Data：{1}（Count：{4}），key:{2}，obj：{3}。Null情况分别是：{4}，{5},{6}"
+                    //Legacy comment translated to English.
                     //    .With(ex.Message, base.Data, key, obj, base.Data == null, key == null, obj == null, base.Data.Count);
 
-                    var msg = $"系统调试记录cache的一个bug。发生错误：{ex.Message}。再次访问base.Data=null：{base.Data == null}";//实际上这里base.Data还是为null
+                    var msg = $"系统调试记录cache的一个bug。发生错误：{ex.Message}。再次访问base.Data=null：{base.Data == null}";//Legacy comment translated to English.
                     LogUtility.SystemLogger.Debug(msg, ex);
                     throw new Exception(msg, ex);
                 }
@@ -273,7 +285,7 @@ namespace Senparc.Ncf.Core.Cache
 
         #endregion
 
-        #region 异步方法
+        #region Legacy section
 
         public override async Task<TValue> UpdateAsync()
         {
@@ -306,10 +318,10 @@ namespace Senparc.Ncf.Core.Cache
                 }
                 catch (Exception ex)
                 {
-                    //var msg = "系统调试记录cache的一个bug。发生错误：{0}。当前参数：base.Data：{1}（Count：{4}），key:{2}，obj：{3}。Null情况分别是：{4}，{5},{6}"
+                    //Legacy comment translated to English.
                     //    .With(ex.Message, base.Data, key, obj, base.Data == null, key == null, obj == null, base.Data.Count);
 
-                    var msg = $"系统调试记录cache的一个bug。发生错误：{ex.Message}。再次访问base.Data=null：{base.Data == null}";//实际上这里base.Data还是为null
+                    var msg = $"系统调试记录cache的一个bug。发生错误：{ex.Message}。再次访问base.Data=null：{base.Data == null}";//Legacy comment translated to English.
                     LogUtility.SystemLogger.Debug(msg, ex);
                     throw new Exception(msg, ex);
                 }

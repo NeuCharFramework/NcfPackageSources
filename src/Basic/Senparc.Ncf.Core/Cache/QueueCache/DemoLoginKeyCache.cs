@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：DemoLoginKeyCache.cs
-    文件功能描述：DemoLoginKeyCache 相关实现
+
+    File name: DemoLoginKeyCache.cs
+
+    File description: DemoLoginKeyCache related implementation
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -32,7 +44,7 @@ namespace Senparc.Ncf.Core.Cache
     }
 
     /// <summary>
-    /// 登录许可缓存（缓存数据：UserId）
+    ///Legacy comment translated to English.
     /// </summary>
     public interface IDemoLoginKeyCache : IQueueCache<DemoLoginKeyCacheData>
     {
@@ -53,7 +65,7 @@ namespace Senparc.Ncf.Core.Cache
         {
             var instance = new DemoLoginKeyCache();
 
-            // 初始化父类中的异步初始化操作  
+            //Legacy comment translated to English.
             await instance.InitializeAsync();
 
             return instance;
@@ -61,10 +73,10 @@ namespace Senparc.Ncf.Core.Cache
 
         private async Task InitializeAsync()
         {
-            // 调用父类的静态工厂方法进行异步初始化  
+            //Legacy comment translated to English.
             var queueCache = await QueueCache<DemoLoginKeyCacheData>.CreateAsync(cacheKey, timeoutSeconds);
 
-            // 将初始化的结果赋值给当前实例  
+            //Legacy comment translated to English.
             this.MessageQueue = queueCache.MessageQueue;
             this.MessageCollection = queueCache.MessageCollection;
         }
@@ -74,7 +86,7 @@ namespace Senparc.Ncf.Core.Cache
             var value = base.Get(key,removeDataWhenExist);
             if (value != null)
             {
-                base.Remove(key);//一次性有效
+                base.Remove(key);//Legacy comment translated to English.
             }
             return value;
         }

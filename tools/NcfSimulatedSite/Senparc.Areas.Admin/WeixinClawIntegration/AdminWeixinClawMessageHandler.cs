@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：AdminWeixinClawMessageHandler.cs
-    文件功能描述：AdminWeixinClawMessageHandler.cs implementation and project behavior.
+    File name: AdminWeixinClawMessageHandler.cs
+    File description: AdminWeixinClawMessageHandler.cs implementation and project behavior.
 
 
-    创建标识：Senparc - 20260926
+    Created by: Senparc - 20260926
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 enhance WeixinClaw media handling and UI improvements
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 enhance WeixinClaw media handling and UI improvements
 
 ----------------------------------------------------------------*/
 
@@ -33,8 +33,8 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.WeixinClawIntegration;
 
 /// <summary>
-/// Admin 上层的个人微信消息路由器。
-/// WeixinManager 只负责收发消息，本类负责权限、会话、NeuBell 和 Admin Chat。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
 {

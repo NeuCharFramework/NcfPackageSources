@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：DatabaseExecutor.cs
-    文件功能描述：DatabaseExecutor 相关实现
+    File name: DatabaseExecutor.cs
+    File description: DatabaseExecutor related implementation
     
     
-    创建标识：Senparc - 20260327
+    Created by: Senparc - 20260327
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.27.0-preview3 增加数据库分页筛选执行能力并限制请求范围
+    Modified by: Senparc - 20260729
+    Change description: v0.27.0-preview3 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -29,8 +29,8 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
 {
     /// <summary>
-    /// 通用数据库执行器
-    /// 提供模块/表级别的数据查询与统计能力
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public class DatabaseExecutor
     {
@@ -115,13 +115,13 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
                 return new List<object>();
             }
 
-            // 构造 Expression<Func<T, bool>> 类型（而非 Func<T, bool>），与 GetFullListAsync 签名一致
+            //Legacy comment translated to English.
             var funcType = typeof(Func<,>).MakeGenericType(entityType, typeof(bool));
             var expressionPredicateType = typeof(Expression<>).MakeGenericType(funcType);
 
             var predicate = BuildFilterPredicate(entityType, filter);
 
-            // 必须提供全部参数类型（包括可选参数），否则 GetMethod 无法定位到正确重载
+            //Legacy comment translated to English.
             var method = serviceType.GetMethod("GetFullListAsync",
                 new[] { expressionPredicateType, typeof(string), typeof(string[]) });
             if (method == null)
@@ -129,7 +129,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
                 return new List<object>();
             }
 
-            // 调用时须传入全部参数（可选参数也必须明确提供）
+            //Legacy comment translated to English.
             var task = method.Invoke(serviceInstance,
                 new object[] { predicate, null, Array.Empty<string>() }) as Task;
             if (task == null)

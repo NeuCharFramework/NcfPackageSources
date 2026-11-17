@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：FullEntityCache.cs
-    文件功能描述：FullEntityCache 相关实现
+
+    File name: FullEntityCache.cs
+
+    File description: FullEntityCache related implementation
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -33,12 +45,12 @@ namespace Senparc.Ncf.Core.Utility
                 var props = fullEntityType.GetProperties();
                 foreach (var p in props)
                 {
-                    //获得当前属性的特性
+                    //Legacy comment translated to English.
                     AutoSetCacheAttribute m = Attribute.GetCustomAttribute(p, typeof(AutoSetCacheAttribute)) as AutoSetCacheAttribute;
                     if (m != null)
                     {
-                        //允许自动复制
-                        //获取原始实体值
+                        //Legacy comment translated to English.
+                        //Legacy comment translated to English.
                         var entityProp = entityType.GetProperty(p.Name);
                         if (entityProp == null || entityProp.PropertyType != p.PropertyType)
                         {

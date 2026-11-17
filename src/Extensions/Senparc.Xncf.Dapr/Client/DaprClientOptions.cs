@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：DaprClientOptions.cs
-    文件功能描述：DaprClientOptions 相关实现
+
+    File name: DaprClientOptions.cs
+
+    File description: DaprClientOptions related implementation
+
     
+
     
-    创建标识：Senparc - 20260704
+
+    Created by: Senparc - 20260704
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -22,7 +34,7 @@ namespace Senparc.Xncf.Dapr
 {
     public class DaprClientOptions
     {
-        //Dapr Api监听端口
+        //Legacy comment translated to English.
         private int apiport;
         public int ApiPort
         {
@@ -42,7 +54,7 @@ namespace Senparc.Xncf.Dapr
                 }
             }
         }
-        //状态存储组件名称
+        //Legacy comment translated to English.
         private string? stateStoreName;
         public string? StateStoreName 
         {
@@ -59,7 +71,7 @@ namespace Senparc.Xncf.Dapr
             }
         }
 
-        //发布订阅组件名称
+        //Legacy comment translated to English.
         private string? pubSubName;
         public string? PubSubName 
         {
@@ -76,7 +88,7 @@ namespace Senparc.Xncf.Dapr
             }
         }
 
-        //Dapr重连最大尝试次数
+        //Legacy comment translated to English.
         private int daprConnectionRetryCount;
         public int DaprConnectionRetryCount
         {

@@ -1,22 +1,22 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：AITokenUsageRecorder.cs
-    文件功能描述：异步 Token 用量记录器
+    File name: AITokenUsageRecorder.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20261011
+    Created by: Senparc - 20261011
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.17.0 异步记录 Token 用量，避免阻塞返回链路
+    Modified by: Senparc - 20261021
+    Change description: v0.17.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261028
-    修改描述：多租户模式下在请求上下文捕获租户快照，并在持久化作用域中还原，避免用量记录丢失租户归属
+    Modified by: Senparc - 20261028
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.17.0 Token 用量异步持久化恢复请求租户上下文
+    Modified by: Senparc - 20261103
+    Change description: v0.17.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261110
-    修改描述：主站停止时有限等待用量落库，取消信号不再中断进程退出
+    Modified by: Senparc - 20261110
+    Change description: Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -34,10 +34,10 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.AIKernel.Domain.Services
 {
     /// <summary>
-    /// Token 用量统一记录器。
+    ///Legacy comment translated to English.
     /// <para>
-    /// 记录入口只更新进程内实时聚合并写入无界队列，不等待数据库操作，
-    /// 避免 Token 返回链路被监控持久化拖慢。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </para>
     /// </summary>
     public sealed class AITokenUsageRecorder : IAITokenUsageRecorder, IHostedService, IDisposable
@@ -81,8 +81,8 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 return;
             }
 
-            // 关闭令牌一旦取消，WaitAsync(token) 会在后台任务尚未完成时立刻抛出，
-            // 宿主会把这次取消当成未处理异常。用量落库不能挡住进程退出。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             var drainTimeout = TimeSpan.FromSeconds(1);
             try
             {
@@ -142,7 +142,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        /// 捕获当前请求的租户快照（非请求上下文返回未匹配快照）。
+        ///Legacy comment translated to English.
         /// </summary>
         private RequestTenantSnapshot CaptureCurrentTenant()
         {

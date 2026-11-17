@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：PromptResultStreamHub.cs
-    文件功能描述：PromptResultStreamHub 服务逻辑
+    File name: PromptResultStreamHub.cs
+    File description: Related implementation.
     
     
-    创建标识：Senparc - 20260626
+    Created by: Senparc - 20260626
     
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
 ----------------------------------------------------------------*/
 

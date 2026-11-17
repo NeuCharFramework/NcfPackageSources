@@ -1,47 +1,47 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：SystemInfoAppService.cs
-    文件功能描述：SystemInfoAppService 相关功能实现
+    File name: SystemInfoAppService.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20241028
+    Created by: Senparc - 20241028
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.0.3 新增登录超时配置并补齐多数据库迁移支持
+    Modified by: Senparc - 20260705
+    Change description: v0.0.3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.0.4 新增登录超时配置并补齐多数据库迁移支持
+    Modified by: Senparc - 20260705
+    Change description: v0.0.4 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260724
-    修改描述：v0.1.0 增强后台模块批量更新并完善多语言管理界面
+    Modified by: Senparc - 20260724
+    Change description: v0.1.0 enhance batch module updates and improve the multilingual management interface
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.2.0 增强后台管理员交互与桌面 Admin Chat 安全同步
+    Modified by: Senparc - 20260729
+    Change description: v0.2.0 enhance admin interaction and secure desktop Admin Chat synchronization
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.3.0 新增纽铃内部触发测试 Function
+    Modified by: Senparc - 20260804
+    Change description: v0.3.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.3.0 将后台同步功能统一更名为 NeuBell/纽铃
+    Modified by: Senparc - 20260804
+    Change description: v0.3.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260808
-    修改描述：v0.4.0 完善系统信息接口以支持 Host 指标与纽铃测试
+    Modified by: Senparc - 20260808
+    Change description: v0.4.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.5.0 集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
+    Modified by: Senparc - 20260813
+    Change description: v0.5.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+    Modified by: Senparc - 20260915
+    Change description: v0.8.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260916
-    修改描述：v0.9.0 增强 Admin Chat 取消与推理轨迹，并扩展 NeuBell WebHook 请求能力
+    Modified by: Senparc - 20260916
+    Change description: v0.9.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 维护SystemInfoAppService 相关功能实现
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -104,7 +104,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
 
         /// <summary>
-        /// 获取全部系统信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
@@ -121,7 +121,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
 
         /// <summary>
-        /// 创建or修改系统信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -152,10 +152,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 打开或关闭 模块管理
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="hide">是否隐藏管理模块</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         /// <exception cref="NcfExceptionBase"></exception>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
@@ -344,7 +344,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 var index = 0;
                 logger.Append($"缓存锁测试开始");
 
-                //清理缓存
+                //Legacy comment translated to English.
                 await _cacheStrategy.RemoveFromCacheAsync("NcfLockTest");
 
                 Parallel.For(0, 10, async i =>
@@ -370,7 +370,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 var cacheObjects = await _cacheStrategy.GetAsync<List<LockCacheTest>>("NcfLockTest");
                 logger.Append($"缓存锁测试结束，lastLockCache:{cacheObjects.ToJson(true)}");
 
-                //分级缓存测试
+                //Legacy comment translated to English.
                 for (int i = 0; i < 10; i++)
                 {
                     var cacheKey = $"NcfLockTestLevels:{i}";

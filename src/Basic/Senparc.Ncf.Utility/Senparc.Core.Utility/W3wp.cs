@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：W3wp.cs
-    文件功能描述：W3wp 相关实现
+
+    File name: W3wp.cs
+
+    File description: W3wp related implementation
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -20,7 +32,7 @@ namespace Senparc.Ncf.Core.Utility
     {
         private W3wp() { }
 
-        //COCONET .net core不支持System.Management，需要继续改进
+        //Legacy comment translated to English.
 
         //public static string GetAllW3wp(string input)
         //{

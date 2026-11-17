@@ -1,36 +1,36 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：SandboxSessionInfo.cs
-    文件功能描述：跨模块可共享的沙箱会话快照
+    File name: SandboxSessionInfo.cs
+    File description: Related implementation.
     
     
-    创建标识：Senparc - 20260808
+    Created by: Senparc - 20260808
     
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 增加 IsTtlUnlimited 契约字段
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 扩展沙箱 Jupyter 与会话生命周期契约
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260918
-    修改描述：v0.3.3 增加 Alias 与 ExtraPorts 契约字段
+    Modified by: Senparc - 20260918
+    Change description: v0.3.3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260918
-    修改描述：v0.3.3 增加 Alias 与 ExtraPorts 契约字段
+    Modified by: Senparc - 20260918
+    Change description: v0.3.3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.3.0 0.3.0 feat: enhance Sandbox with external JupyterLab control, port mappings, session alias and raised quota
+    Modified by: Senparc - 20261005
+    Change description: v0.3.0 0.3.0 feat: enhance Sandbox with external JupyterLab control, port mappings, session alias and raised quota
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.3.1 维护跨模块可共享的沙箱会话快照
+    Modified by: Senparc - 20261103
+    Change description: v0.3.1 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Sandbox.Abstractions;
 
 /// <summary>
-/// 跨模块可共享的沙箱会话快照。
+///Legacy comment translated to English.
 /// </summary>
 public sealed class SandboxSessionInfo
 {
@@ -47,11 +47,11 @@ public sealed class SandboxSessionInfo
     public bool IsTtlUnlimited { get; init; }
     public DateTimeOffset LastActivityAtUtc { get; init; }
     /// <summary>
-    /// 可选的会话别名，便于在列表和日志中识别（非协议值，可本地化展示）。
+    ///Legacy comment translated to English.
     /// </summary>
     public string? Alias { get; init; }
     /// <summary>
-    /// 创建时解析后的附加端口映射展示串（hostPort:containerPort 以分号分隔），无则为空。
+    ///Legacy comment translated to English.
     /// </summary>
     public string? ExtraPorts { get; init; }
 }

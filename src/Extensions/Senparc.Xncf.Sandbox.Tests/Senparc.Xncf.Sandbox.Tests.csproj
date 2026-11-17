@@ -4,31 +4,31 @@
     <Version>0.0.10</Version>
     <PackageReleaseNotes>
       [2026-08-13] v0.0.1 Dependency update from Senparc.Xncf.Sandbox to 0.1.1-preview2
-      [2026-08-15] v0.0.2 增加 Sandbox 预览路径回归测试
-      1、覆盖隔离预览路径和基路径约束
-      2、补充镜像解析、Jupyter 路径、会话状态与模板目录回归测试
-      3、补充会话 TTL/永久保持策略与状态回归测试
-      4、Dependency update from Senparc.Xncf.Sandbox to 0.2.0
-      [2026-08-22] v0.0.3 补充沙箱运行时与 TTL 策略回归测试
-      1、覆盖模板目录、Jupyter 路径、工作区状态、运行时解析和永久保持会话策略
+      [2026-08-15] v0.0.2 Updated module behavior and related support.
+      1. Updated module behavior and related support.
+      2. Updated module behavior and related support.
+      3. Updated module behavior and related support.
+      4. Dependency update from Senparc.Xncf.Sandbox to 0.2.0
+      [2026-08-22] v0.0.3 Updated module behavior and related support.
+      1. Updated module behavior and related support.
       [2026-08-29] v0.0.4 Dependency updates from Senparc.Xncf.Sandbox to 0.3.0
-      1、Dependency update from Senparc.Xncf.Sandbox to 0.3.0
-      2、补充工作区根目录、子路径和相邻目录边界的回归测试
-      [2026-09-15] v0.0.5 同步上游模块版本并保持宿主兼容
-      1、更新项目依赖组合，兼容当前窗口内的 Senparc.Areas.Admin 及相关模块能力
+      1. Dependency update from Senparc.Xncf.Sandbox to 0.3.0
+      2. Updated module behavior and related support.
+      [2026-09-15] v0.0.5 synchronize upstream module versions and preserve host compatibility
+      1. Updated module behavior and related support.
       [2026-09-16] v0.0.6 Dependency updates from upstream modules
-      [2026-09-17] v0.0.7 补充 Sandbox FunctionRender 与协议参数测试
-      1、覆盖持久化实验室操作的 AI 可调用函数注册行为
-      2、验证请求模板选项能够暴露协议值
-      [2026-09-18] v0.0.7 同步上游模块 v0.3.3 能力
-      1、新增附加端口映射解析、Notebook 构建器与配额默认值回归测试
-      2、补充 LabCreateNotebook / UpdateAlias Function 注册与会话别名状态回归测试
-      [2026-09-18] v0.0.7 同步上游模块 v0.3.3 能力
-      1、新增附加端口映射解析、Notebook 构建器与配额默认值回归测试
-      2、补充 LabCreateNotebook / UpdateAlias Function 注册与会话别名状态回归测试
+      [2026-09-17] v0.0.7 Updated module behavior and related support.
+      1. Updated module behavior and related support.
+      2. Updated module behavior and related support.
+      [2026-09-18] v0.0.7 synchronizeupstreammodule v0.3.3 capabilities
+      1. Updated module behavior and related support.
+      2. Updated module behavior and related support.
+      [2026-09-18] v0.0.7 synchronizeupstreammodule v0.3.3 capabilities
+      1. Updated module behavior and related support.
+      2. Updated module behavior and related support.
       [2026-10-05] v0.0.8 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
-      1、Updated Senparc.Xncf.Sandbox.Tests project behavior and integration for the latest feature and reliability improvements.
-      2、feat: enhance Sandbox with external JupyterLab control, port mappings, session alias and raised quota
+      1. Updated Senparc.Xncf.Sandbox.Tests project behavior and integration for the latest feature and reliability improvements.
+      2. feat: enhance Sandbox with external JupyterLab control, port mappings, session alias and raised quota
       [2026-10-21] v0.0.9 Dependency update from Senparc.Xncf.Sandbox to 0.3.5
       [2026-11-12] v0.0.10 Dependency updates from Senparc.Xncf.Sandbox to 0.4.3
     </PackageReleaseNotes>

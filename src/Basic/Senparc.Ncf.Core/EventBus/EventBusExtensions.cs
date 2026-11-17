@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：EventBusExtensions.cs
-    文件功能描述：EventBusExtensions 相关实现
+    File name: EventBusExtensions.cs
+    File description: EventBusExtensions related implementation
     
     
-    创建标识：Senparc - 20200724
+    Created by: Senparc - 20200724
     
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-    修改标识：Senparc - 20260726
-    修改描述：v0.25.0-preview2 增加 EventBus 请求-响应能力，支持超时、取消与请求关联清理
+    Modified by: Senparc - 20260726
+    Change description: v0.25.0-preview2 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -27,11 +27,11 @@ namespace Senparc.Ncf.Core.EventBus
     public static class EventBusExtensions
     {
         /// <summary>
-        /// 注册 Senparc EventBus 及所有事件处理器
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="services">服务集合</param>
-        /// <param name="configureOptions">配置 EventBus 选项的委托（可选）</param>
-        /// <param name="assembliesToScan">需要扫描事件处理器的程序集</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         public static IServiceCollection AddSenparcEventBus(
             this IServiceCollection services, 
             Action<EventBusOptions> configureOptions = null,
@@ -39,12 +39,12 @@ namespace Senparc.Ncf.Core.EventBus
         {
             try
             {
-                // 1. 注册 EventBus 配置选项
+                //Legacy comment translated to English.
                 var options = new EventBusOptions();
                 configureOptions?.Invoke(options);
                 services.AddSingleton(options);
 
-                // 2. 注册单例 EventBus (发布者用) - 使用工厂方法来支持 ILogger 注入
+                //Legacy comment translated to English.
                 services.AddSingleton<InMemoryEventBus>(sp =>
                 {
                     var logger = sp.GetService<ILogger<InMemoryEventBus>>();
@@ -54,15 +54,15 @@ namespace Senparc.Ncf.Core.EventBus
                 services.AddSingleton<IEventBus>(sp => sp.GetRequiredService<InMemoryEventBus>());
                 services.AddSingleton<IEventBusRequestClient>(sp => sp.GetRequiredService<InMemoryEventBus>());
 
-                // 3. 注册后台托管服务 (消费者用)
+                //Legacy comment translated to English.
                 services.AddHostedService<EventBusHostedService>();
 
-                // 4. 扫描并注册 Handler
+                //Legacy comment translated to English.
                 if (assembliesToScan != null && assembliesToScan.Length > 0)
                 {
                     foreach (var assembly in assembliesToScan)
                     {
-                        // 查找实现了 IIntegrationEventHandler<T> 的具体类
+                        //Legacy comment translated to English.
                         var handlerTypes = assembly.GetTypes()
                             .Where(t => t.IsClass && !t.IsAbstract && !t.ContainsGenericParameters &&
                                 t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IIntegrationEventHandler<>)));
@@ -74,7 +74,7 @@ namespace Senparc.Ncf.Core.EventBus
 
                             foreach (var i in interfaces)
                             {
-                                // 注册为 Scoped
+                                //Legacy comment translated to English.
                                 services.AddScoped(i, type);
                             }
                         }

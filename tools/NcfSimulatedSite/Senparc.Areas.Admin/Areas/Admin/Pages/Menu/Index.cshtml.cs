@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：Index.cshtml.cs
-    文件功能描述：Index.cshtml 相关功能实现
+    File name: Index.cshtml.cs
+    File description: Index.cshtml related feature implementation
 
 
-    创建标识：Senparc - 20200724
+    Created by: Senparc - 20200724
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+    Modified by: Senparc - 20260915
+    Change description: v0.8.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 using System;
@@ -62,9 +62,9 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// 配置模式：保存整棵树“菜单/页面”的拖拽/数字排序结果，按父级分组真实更新 Sort 数值
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="request">按从上到下（深度优先）顺序排列的“菜单/页面”Id 列表</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public async Task<IActionResult> OnPostReorderAsync([FromBody] MenuReorderRequest request)
         {
@@ -89,12 +89,12 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                 return Ok(false, "未找到可排序的菜单");
             }
 
-            // 仅处理“菜单/页面”类型（前端只提交这两类，这里做兜底），按钮类型不参与排序
+            //Legacy comment translated to English.
             var sortableMenus = menus
                 .Where(_ => _.MenuType == MenuType.菜单 || _.MenuType == MenuType.页面)
                 .ToList();
 
-            // 按父级分组：同一父级下的子节点按提交顺序（从上到下）分配 Sort 数值
+            //Legacy comment translated to English.
             var parentGroups = new Dictionary<string, List<(int Index, SysMenu Menu)>>();
             foreach (var menu in sortableMenus)
             {
@@ -115,7 +115,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                 for (int i = 0; i < ordered.Count; i++)
                 {
                     var menu = ordered[i].Menu;
-                    // 左侧菜单按 Sort 降序渲染：位置越靠前（index 越小），Sort 数值越大
+                    //Legacy comment translated to English.
                     int newSort = (total - i) * 10;
                     if (menu.Sort != newSort)
                     {
@@ -131,7 +131,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                 await _sysMenuService.SaveObjectListAsync(toUpdate);
             }
 
-            // 刷新菜单缓存，使左侧菜单顺序立即生效
+            //Legacy comment translated to English.
             await _sysMenuService.GetMenuDtoByCacheAsync(true);
 
             return Ok(true);
@@ -139,7 +139,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
     }
 
     /// <summary>
-    /// 菜单排序请求（按深度优先顺序提交全部“菜单/页面”节点 Id）
+    ///Legacy comment translated to English.
     /// </summary>
     public class MenuReorderRequest
     {

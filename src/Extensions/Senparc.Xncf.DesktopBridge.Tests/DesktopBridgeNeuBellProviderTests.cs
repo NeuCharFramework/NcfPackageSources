@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：DesktopBridgeNeuBellProviderTests.cs
-    文件功能描述：DesktopBridge 纽铃 Provider 测试
+    File name: DesktopBridgeNeuBellProviderTests.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260802
+    Created by: Senparc - 20260802
 ----------------------------------------------------------------*/
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;

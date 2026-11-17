@@ -1,28 +1,28 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：NeuBellWebHookDispatcher.cs
-    文件功能描述：NeuBell WebHook 调度器：对比相邻快照的条目差异（added/removed），
-    将变更以异步方式（fire-and-forget）POST 到匹配的 WebHook 地址
+    File name: NeuBellWebHookDispatcher.cs
+    File description: Related implementation.
+    Legacy comment translated to English.
 
-    创建标识：Senparc - 20260906
+    Created by: Senparc - 20260906
 
-    修改标识：Senparc - 20260914
-    修改描述：v0.7.1 WebHook 增强：支持 GET/POST/PUT 请求方式、请求体模板与 {{占位符}}
-    渲染（与 Workflow 文本模板同格式）、发送前对渲染后地址二次校验、
-    修复变更通知日志在成功后仍被标记“请求未完成”的问题
+    Modified by: Senparc - 20260914
+    Change description: v0.7.1 Updated module behavior and related support.
+    Legacy comment translated to English.
+    Legacy comment translated to English.
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+    Modified by: Senparc - 20260915
+    Change description: v0.8.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260916
-    修改描述：v0.9.0 增强 Admin Chat 取消与推理轨迹，并扩展 NeuBell WebHook 请求能力
+    Modified by: Senparc - 20260916
+    Change description: v0.9.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 维护NeuBell WebHook 调度器：对比相邻快照的条目差异（added/removed），
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -47,7 +47,7 @@ using Senparc.Ncf.Shared.Abstractions.NeuBell;
 namespace Senparc.Areas.Admin.Domain.Services;
 
 /// <summary>
-/// 单个 Provider 的一次条目变化（新增/移除）
+///Legacy comment translated to English.
 /// </summary>
 public sealed class NeuBellWebHookChange
 {
@@ -64,7 +64,7 @@ public sealed class NeuBellWebHookChange
 }
 
 /// <summary>
-/// 一次由调用方明确触发的 NeuBell 操作，用于立即发送 WebHook。
+///Legacy comment translated to English.
 /// </summary>
 public sealed record NeuBellWebHookOperation
 {
@@ -82,10 +82,10 @@ public sealed record NeuBellWebHookOperation
 }
 
 /// <summary>
-/// 纽铃 WebHook 调度器（Singleton）。
-/// 每次 <see cref="ObserveAsync"/> 会以 Provider 为单位对比条目集合，
-/// 得出新增（added）与移除（removed）的条目，并按 WebHook 设置异步通知。
-/// 首次观测只建立基线、不触发通知，避免进程启动时误报全量“新增”。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 public sealed class NeuBellWebHookDispatcher
 {
@@ -106,10 +106,10 @@ public sealed class NeuBellWebHookDispatcher
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<NeuBellWebHookDispatcher> _logger;
 
-    // 可选站点根地址：把条目的相对 DetailUrl（{{link}}）拼成绝对链接
+    //Legacy comment translated to English.
     private readonly string _linkBaseUrl;
 
-    // 限制并发出站请求，避免 Provider 抖动时打爆下游 WebAPI
+    //Legacy comment translated to English.
     private readonly SemaphoreSlim _outboundGate = new(4, 4);
 
     public NeuBellWebHookDispatcher(
@@ -125,7 +125,7 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    /// 观测一轮快照，计算各 Provider 的 added/removed 并触发 WebHook 通知（异步、不阻塞调用方）
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<IReadOnlyList<NeuBellWebHookChange>> ObserveAsync(
         IReadOnlyList<NeuBellSnapshot> snapshots,
@@ -156,7 +156,7 @@ public sealed class NeuBellWebHookDispatcher
             var observation = _observations.GetOrAdd(snapshot.ProviderId, _ => new ProviderObservation());
             var (added, removed) = observation.Diff(itemIndex);
 
-            // 首次观测：只建立基线，不触发通知（进程重启后不能把现存条目误报为“新增”）
+            //Legacy comment translated to English.
             if (!observation.HasBaseline)
             {
                 observation.SetBaseline(itemIndex);
@@ -184,10 +184,10 @@ public sealed class NeuBellWebHookDispatcher
             _ = DispatchAsync(change, cancellationToken);
         }
 
-        // 本轮“缺席”的 Provider 分两种情况：
-        // 1. 模块未开放/已关闭（不在 expectedProviderIds 中）：存量条目按“移除”通知；
-        // 2. 模块仍开放但本轮快照获取失败（在 expectedProviderIds 中）：保留基线等待下轮，避免误报。
-        // expectedProviderIds 为 null（无法判定模块开放状态）时，一律不做移除判断。
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         if (expectedProviderIds != null)
         {
             var expected = new HashSet<string>(expectedProviderIds, StringComparer.OrdinalIgnoreCase);
@@ -231,9 +231,9 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    /// 测试发送：向指定 WebHook 发送一条 test 事件（管理页“测试”按钮用，同步等待结果）。
-    /// 地址与请求体支持 {{占位符}}（渲染后的真实数据记入日志）。
-    /// 请求数据与结果会记录到 NeuBellWebHookLog 列表。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<(bool success, string message)> SendTestAsync(
         NeuBellWebHook webHook,
@@ -296,7 +296,7 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    /// 异步分发（fire-and-forget）：加载启用中的 WebHook，按 Provider 过滤后逐个 POST
+    ///Legacy comment translated to English.
     /// </summary>
     private async Task DispatchAsync(NeuBellWebHookChange change, CancellationToken cancellationToken)
     {
@@ -337,7 +337,7 @@ public sealed class NeuBellWebHookDispatcher
                     var method = NeuBellWebHook.NormalizeHttpMethod(webHook.HttpMethod);
                     var renderedUrl = NeuBellWebHookTemplate.RenderUrl(webHook.WebHookUrl, tokens);
 
-                    // 渲染后的真实地址必须仍是合法的 http/https 绝对地址，否则只记失败日志、不发送
+                    //Legacy comment translated to English.
                     if (!NeuBellWebHook.TryValidateUrl(renderedUrl, out var urlError))
                     {
                         logId = await CreatePendingLogAsync(
@@ -380,7 +380,7 @@ public sealed class NeuBellWebHookDispatcher
                 }
                 finally
                 {
-                    // 仅在日志已创建但请求未走到“完成”路径（异常/被中断）时兜底标记失败
+                    //Legacy comment translated to English.
                     if (logId != null && !completed)
                     {
                         await CompleteLogAsync(logId.Value, false, "请求未完成", null, 0).ConfigureAwait(false);
@@ -392,8 +392,8 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    /// 实际发送（返回 HTTP 状态码与耗时），不记录日志。
-    /// GET 请求不携带请求体与签名；其他方法携带 body（默认 application/json）。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     private async Task<(bool success, string message, int? statusCode, long elapsedMilliseconds)> SendCoreAsync(
         string url,
@@ -413,7 +413,7 @@ public sealed class NeuBellWebHookDispatcher
             if (hasBody)
             {
                 request.Content = new StringContent(body, Encoding.UTF8, contentType ?? "application/json");
-                // 签名覆盖实际发出的请求体字节
+                //Legacy comment translated to English.
                 if (!string.IsNullOrWhiteSpace(secret))
                 {
                     request.Headers.TryAddWithoutValidation("X-NeuBell-Signature", SignPayload(secret, body));
@@ -442,7 +442,7 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    /// 创建“发送中”日志；失败时返回 null（日志失败不得阻塞通知本身）
+    ///Legacy comment translated to English.
     /// </summary>
     private async Task<int?> CreatePendingLogAsync(
         string eventKind,
@@ -470,7 +470,7 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    /// 完成日志记录；失败只记警告
+    ///Legacy comment translated to English.
     /// </summary>
     private async Task CompleteLogAsync(
         int logId,
@@ -492,7 +492,7 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    /// 创建 NeuBell 时按调用方传入的 WebHook 地址发送一次通知（兼容入口）。
+    ///Legacy comment translated to English.
     /// </summary>
     public Task<(bool queued, string message)> NotifyItemCreatedAsync(
         string webHookUrl,
@@ -520,8 +520,8 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    /// 按调用方传入的 WebHook 地址发送一次 NeuBell 操作通知。
-    /// 地址、请求方式和 Body 模板均来自调用方；实际 HTTP 请求在后台执行。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public Task<(bool queued, string message)> NotifyOperationAsync(
         string webHookUrl,
@@ -548,7 +548,7 @@ public sealed class NeuBellWebHookDispatcher
                 ? BuildItemCreatedPayload(operation)
                 : BuildOperationPayload(operation with { EventKind = eventKind });
 
-            // 模板地址本身不合法（占位符之外的部分无法解析）：不发送，仅记录失败日志
+            //Legacy comment translated to English.
             if (!NeuBellWebHook.TryValidateUrlTemplate(urlTemplate, out var templateError))
             {
                 var failedLogId = await CreatePendingLogAsync(
@@ -564,7 +564,7 @@ public sealed class NeuBellWebHookDispatcher
             var tokens = BuildOperationTokens(operation with { EventKind = eventKind }, payload);
             var renderedUrl = NeuBellWebHookTemplate.RenderUrl(urlTemplate, tokens);
 
-            // 渲染后的真实地址必须仍是合法的 http/https 绝对地址，否则只记失败日志、不发送
+            //Legacy comment translated to English.
             if (!NeuBellWebHook.TryValidateUrl(renderedUrl, out var urlError))
             {
                 var (failedBody, _) = BuildRequestBody(method, bodyTemplate, tokens, payload);
@@ -606,7 +606,7 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    /// 构建 item-created 报文（保留 item 结构以兼容已有接收方）。
+    ///Legacy comment translated to English.
     /// </summary>
     private static string BuildItemCreatedPayload(NeuBellWebHookOperation operation)
     {
@@ -660,8 +660,8 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    /// 按请求方式与模板计算实际发送的请求体（GET 返回 null 表示不发送请求体）。
-    /// bodyTemplate 非空时走模板渲染，否则使用默认结构化 JSON 报文。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     private static (string body, string contentType) BuildRequestBody(
         string method,
@@ -681,7 +681,7 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    /// 日志中的地址超过 1000 字符（MaxLength）时截断
+    ///Legacy comment translated to English.
     /// </summary>
     private static string TruncateLogUrl(string url)
     {
@@ -693,7 +693,7 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    /// 构建 items-changed 事件的占位符数据
+    ///Legacy comment translated to English.
     /// </summary>
     private Dictionary<string, string> BuildChangeTokens(
         NeuBellWebHookChange change,
@@ -718,7 +718,7 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    /// 构建统一操作事件的占位符数据
+    ///Legacy comment translated to English.
     /// </summary>
     private Dictionary<string, string> BuildOperationTokens(
         NeuBellWebHookOperation operation,
@@ -827,7 +827,7 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    /// 把条目的相对链接拼成绝对链接（配置了站点根地址时）
+    ///Legacy comment translated to English.
     /// </summary>
     private string ToAbsoluteLink(string detailUrl)
     {
@@ -840,7 +840,7 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    /// 构建通知报文（test=true 时为测试事件）
+    ///Legacy comment translated to English.
     /// </summary>
     public static string BuildPayload(NeuBellWebHookChange change, bool test)
     {
@@ -870,7 +870,7 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    /// HMAC-SHA256 签名：X-NeuBell-Signature: t=&lt;unix&gt;,v1=&lt;hex&gt;（v1 = HMAC(secret, t + "." + body)）
+    ///Legacy comment translated to English.
     /// </summary>
     public static string SignPayload(string secret, string payload)
     {

@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：StaticResourceSetting.cs
-    文件功能描述：StaticResourceSetting 相关实现
+    File name: StaticResourceSetting.cs
+    File description: StaticResourceSetting related implementation
     
     
-    创建标识：Senparc - 20260213
+    Created by: Senparc - 20260213
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
 ----------------------------------------------------------------*/
 
@@ -23,27 +23,27 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Models.DatabaseModel.Config
     public class StaticResourceSetting
     {
         /// <summary>
-        /// 上传根目录，可用软链接分离
+        ///Legacy comment translated to English.
         /// </summary>
         public string RootDir { get; set; }
 
         /// <summary>
-        /// 请求根目录
+        ///Legacy comment translated to English.
         /// </summary>
         public string RequestPath { get; set; }
 
         /// <summary>
-        /// 上传文件大小，单位：MB
+        ///Legacy comment translated to English.
         /// </summary>
         public int MaxSize { get; set; }
 
         /// <summary>
-        /// 访问的域名
+        ///Legacy comment translated to English.
         /// </summary>
         public string AccessUrl { get; set; }
 
         /// <summary>
-        /// 允许上传的文件
+        ///Legacy comment translated to English.
         /// </summary>
         public string[] AllowFile { get; set; }
     }

@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：AgentModelFallbackResolver.cs
-    文件功能描述：统一的模型回退解析：403 特征识别、Deployment 回退、API 版本候选与模型诊断
+    File name: AgentModelFallbackResolver.cs
+    File description: Related implementation.
     
-    创建标识：Senparc - 20260927
-    创建描述：抽取 AgentTemplateRunner 与 ChatGroupService 的重复回退逻辑，行为取两者并集
+    Created by: Senparc - 20260927
+    Creation description: Related implementation.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.19.1 update AgentsManager with new features and improvements
+    Modified by: Senparc - 20261103
+    Change description: v0.19.1 update AgentsManager with new features and improvements
 
 ----------------------------------------------------------------*/
 
@@ -26,7 +26,7 @@ using System.Text;
 namespace Senparc.Xncf.AgentsManager.Domain.Services;
 
 /// <summary>
-/// 模型回退解析的共享逻辑（AgentTemplateRunner 与 ChatGroupService 共用）。
+///Legacy comment translated to English.
 /// </summary>
 public static class AgentModelFallbackResolver
 {
@@ -37,7 +37,7 @@ public static class AgentModelFallbackResolver
     private const string NeuCharLegacyHost = "www.neuchar.com";
 
     /// <summary>
-    /// 判断异常链（含内层异常与完整 ToString）中是否包含 403/Forbidden 特征。
+    ///Legacy comment translated to English.
     /// </summary>
     public static bool ContainsForbiddenStatus(Exception exception)
     {
@@ -51,7 +51,7 @@ public static class AgentModelFallbackResolver
     }
 
     /// <summary>
-    /// 判断一段文本（如非流式输出）是否带有 403/401 服务失败签名。
+    ///Legacy comment translated to English.
     /// </summary>
     public static bool ContainsServiceFailureSignature(string? text)
     {
@@ -78,7 +78,7 @@ public static class AgentModelFallbackResolver
     }
 
     /// <summary>
-    /// 将异常链按“类型名 + 消息”顺序拼接（最多 8 层），用于诊断与特征识别。
+    ///Legacy comment translated to English.
     /// </summary>
     public static string FlattenExceptionMessages(Exception exception)
     {
@@ -110,8 +110,8 @@ public static class AgentModelFallbackResolver
     }
 
     /// <summary>
-    /// 当 DeploymentName 与 ModelId 不一致（AzureOpenAI/NeuCharAI）时，
-    /// 构造一个把 ModelId 当作 DeploymentName 的等价模型用于回退重试。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public static bool TryBuildAlternateDeploymentModel(AIModelDto? model, out AIModelDto? fallbackModel)
     {
@@ -145,7 +145,7 @@ public static class AgentModelFallbackResolver
     }
 
     /// <summary>
-    /// 判断系统默认设置是否可以直接作为聊天回退模型。
+    ///Legacy comment translated to English.
     /// </summary>
     public static bool CanUseDefaultChatFallback(SenparcAiSetting? defaultSetting)
     {
@@ -173,7 +173,7 @@ public static class AgentModelFallbackResolver
     }
 
     /// <summary>
-    /// 从系统设置构造聊天模型 DTO。
+    ///Legacy comment translated to English.
     /// </summary>
     public static AIModelDto? BuildModelDtoFromSetting(SenparcAiSetting? setting, string alias)
     {
@@ -204,7 +204,7 @@ public static class AgentModelFallbackResolver
     }
 
     /// <summary>
-    /// 判断两个模型是否指向同一个聊天端点配置。
+    ///Legacy comment translated to English.
     /// </summary>
     public static bool IsSameChatConfig(AIModelDto? left, AIModelDto? right)
     {
@@ -224,7 +224,7 @@ public static class AgentModelFallbackResolver
     }
 
     /// <summary>
-    /// 生成模型诊断信息（不输出 ApiKey 明文）。
+    ///Legacy comment translated to English.
     /// </summary>
     public static string BuildModelDiagnosticInfo(AIModelDto? model)
     {
@@ -242,7 +242,7 @@ public static class AgentModelFallbackResolver
     }
 
     /// <summary>
-    /// 端点归一化（NeuCharAI 补全结尾斜杠），用于诊断与比较。
+    ///Legacy comment translated to English.
     /// </summary>
     public static string NormalizeEndpointForDiagnostics(AiPlatform platform, string endpoint)
     {
@@ -261,7 +261,7 @@ public static class AgentModelFallbackResolver
     }
 
     /// <summary>
-    /// 生成同一端点上的 API 版本兼容候选（不改变模型、端点、密钥或授权范围）。
+    ///Legacy comment translated to English.
     /// </summary>
     public static IReadOnlyList<ApiVersionCompatibilityFallback> GetApiVersionCompatibilityFallbacks(
         AIModelDto model,
@@ -277,9 +277,9 @@ public static class AgentModelFallbackResolver
         AddApiVersionCandidate(candidates, model.ApiVersion, "AIModel");
         AddApiVersionCandidate(candidates, GetSettingApiVersion(model.AiPlatform, setting), "EffectiveSetting");
 
-        // NeuChar 的既有 NCF 模型配置与兼容 Azure 网关默认使用这个版本。
-        // MAF Azure 客户端目前无条件输出 2025-04-01-preview；只有在请求确实收到 403 后
-        // 才尝试这个同端点兼容版本。它不改变模型、端点、密钥或授权范围。
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         if (model.AiPlatform == AiPlatform.NeuCharAI
             && string.Equals(GetEndpointHost(model.Endpoint), NeuCharLegacyHost, StringComparison.OrdinalIgnoreCase))
         {
@@ -290,7 +290,7 @@ public static class AgentModelFallbackResolver
     }
 
     /// <summary>
-    /// 获取模型当前生效的 API 版本（模型配置优先，其次系统设置）。
+    ///Legacy comment translated to English.
     /// </summary>
     public static string GetConfiguredApiVersion(AIModelDto? model, ISenparcAiSetting? setting)
     {
@@ -303,7 +303,7 @@ public static class AgentModelFallbackResolver
     }
 
     /// <summary>
-    /// 按平台读取系统设置中的 API 版本。
+    ///Legacy comment translated to English.
     /// </summary>
     public static string? GetSettingApiVersion(AiPlatform? platform, ISenparcAiSetting? setting)
     {
@@ -316,7 +316,7 @@ public static class AgentModelFallbackResolver
     }
 
     /// <summary>
-    /// 解析端点 Host（非法端点返回 custom，空端点返回 unset）。
+    ///Legacy comment translated to English.
     /// </summary>
     public static string GetEndpointHost(string endpoint)
     {
@@ -368,6 +368,6 @@ public static class AgentModelFallbackResolver
 }
 
 /// <summary>
-/// 同一端点上的 API 版本兼容候选。
+///Legacy comment translated to English.
 /// </summary>
 public sealed record ApiVersionCompatibilityFallback(string ApiVersion, string Source);

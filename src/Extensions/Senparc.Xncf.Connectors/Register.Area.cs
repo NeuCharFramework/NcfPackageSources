@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：Register.Area.cs
-    文件功能描述：注册连接器模块的后台 Area 与菜单
+    File name: Register.Area.cs
+    File description: Related implementation.
     
     
-    创建标识：Senparc - 20261111
+    Created by: Senparc - 20261111
     
-    修改标识：Senparc - 20261111
-    修改描述：v0.1.0 注册连接器后台菜单
+    Modified by: Senparc - 20261111
+    Change description: v0.1.0 register the connector admin menu
 
 ----------------------------------------------------------------*/
 

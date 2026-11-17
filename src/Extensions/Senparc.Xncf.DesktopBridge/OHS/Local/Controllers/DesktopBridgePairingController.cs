@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：DesktopBridgePairingController.cs
-    文件功能描述：DesktopBridge 匿名设备配对申请和凭据领取接口
+    File name: DesktopBridgePairingController.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260801
+    Created by: Senparc - 20260801
 ----------------------------------------------------------------*/
 
 using System.Net;

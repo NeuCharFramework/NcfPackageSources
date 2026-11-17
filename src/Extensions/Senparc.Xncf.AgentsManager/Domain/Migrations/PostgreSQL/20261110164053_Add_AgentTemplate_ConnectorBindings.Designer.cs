@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：20261110164053_Add_AgentTemplate_ConnectorBindings.Designer.cs
-    文件功能描述：数据库迁移设计器模型
+    File name: 20261110164053_Add_AgentTemplate_ConnectorBindings.Designer.cs
+    File description: database migration designer model
 
 
-    创建标识：Senparc - 20231021
+    Created by: Senparc - 20231021
 
-    修改标识：Senparc - 20261112
-    修改描述：v0.19.3 同步数据库迁移设计器模型
+    Modified by: Senparc - 20261112
+    Change description: v0.19.3 synchronize the database migration designer model
 
 ----------------------------------------------------------------*/
 

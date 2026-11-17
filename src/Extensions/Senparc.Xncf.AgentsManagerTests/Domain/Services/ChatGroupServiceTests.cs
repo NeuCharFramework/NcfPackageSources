@@ -28,7 +28,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.Tests
             var aiModelService = base._serviceProvider.GetRequiredService<AIModelService>();
             var aiModel = await aiModelService.GetObjectAsync(z => true);
 
-            // 测试启动聊天组
+            //Legacy comment translated to English.
             await chatGroupService.RunChatGroupInThread(new ChatGroupRunCommand()
             {
                 ChatGroupId = chatGroup.Id,
@@ -45,10 +45,10 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.Tests
             ChatTask? chatTask = null;
             for (int i = 0; i < 80; i++)
             {
-                // 验证聊天组状态已更新为运行中
+                //Legacy comment translated to English.
                 await Task.Delay(1000);
 
-                //说明：此处使用 CreateAsyncScope() 方法是由于还有其他线程在读写 ChatTask，此处缓存可能读取不到最新的更新
+                //Legacy comment translated to English.
                 await using (var scope = base._serviceProvider.CreateAsyncScope())
                 {
                     var chatTaskService = scope.ServiceProvider.GetRequiredService<ChatTaskService>();

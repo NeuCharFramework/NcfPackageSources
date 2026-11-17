@@ -3,23 +3,23 @@
     <TargetFramework>net10.0</TargetFramework>
     <Version>0.0.10</Version>
     <PackageReleaseNotes>
-      [2026-08-04] v0.0.1 新增发布包镜像服务测试
-      1、覆盖 NCF 与 NcfDesktop 包元数据同步及镜像行为
+      [2026-08-04] v0.0.1 Updated module behavior and related support.
+      1. Updated module behavior and related support.
       [2026-08-08] v0.0.2 Dependency update from Senparc.Xncf.FirmwareUpdate to 0.4.1-preview6
-      [2026-08-13] v0.0.3 补充固件更新线程生命周期测试
-      1、覆盖线程取消与停止期间的异常处理行为
+      [2026-08-13] v0.0.3 Updated module behavior and related support.
+      1. Updated module behavior and related support.
       [2026-08-15] v0.0.4 Dependency update from Senparc.Xncf.FirmwareUpdate to 0.4.3-preview8
-      [2026-08-22] v0.0.5 同步 Senparc.Xncf.FirmwareUpdate.Tests 依赖版本
-      1、递归更新上游项目依赖，保持 Senparc.Xncf.FirmwareUpdate.Tests 与当前版本组合兼容
-      [2026-08-29] v0.0.6 补充固件包镜像服务回归测试
-      1、覆盖镜像包同步结果、日志摘要和异常处理路径
+      [2026-08-22] v0.0.5 synchronize Senparc.Xncf.FirmwareUpdate.Tests dependency version
+      1. Updated module behavior and related support.
+      [2026-08-29] v0.0.6 Updated module behavior and related support.
+      1. Updated module behavior and related support.
       [2026-09-16] v0.0.7 Dependency updates from upstream modules
       [2026-09-17] v0.0.8 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
-      1、同步受影响的基础库、AI 模块或宿主项目版本
-      2、保持项目引用链与当前功能兼容
+      1. Updated module behavior and related support.
+      2. Updated module behavior and related support.
       [2026-10-05] v0.0.9 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
-      1、Updated Senparc.Xncf.FirmwareUpdate.Tests project behavior and integration for the latest feature and reliability improvements.
-      2、chore: update package versions and dependencies across multiple projects
+      1. Updated Senparc.Xncf.FirmwareUpdate.Tests project behavior and integration for the latest feature and reliability improvements.
+      2. chore: update package versions and dependencies across multiple projects
       [2026-11-12] v0.0.10 Dependency updates from Senparc.Xncf.FirmwareUpdate to 0.4.10
     </PackageReleaseNotes>
     <IsPackable>false</IsPackable>

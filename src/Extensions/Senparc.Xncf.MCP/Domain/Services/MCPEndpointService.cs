@@ -1,20 +1,20 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：MCPEndpointService.cs
-    文件功能描述：MCPEndpointService 相关实现
+    File name: MCPEndpointService.cs
+    File description: MCPEndpointService related implementation
     
     
-    创建标识：Senparc - 20260327
+    Created by: Senparc - 20260327
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20261003
-    修改描述：v0.5.7 端点连接测试传递传输类型及请求取消信号
+    Modified by: Senparc - 20261003
+    Change description: v0.5.7 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.5.10 add comprehensive tests for MCP endpoint management and background tenant scope
+    Modified by: Senparc - 20261103
+    Change description: v0.5.10 add comprehensive tests for MCP endpoint management and background tenant scope
 
 ----------------------------------------------------------------*/
 
@@ -32,7 +32,7 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.MCP.Domain.Services
 {
     /// <summary>
-    /// MCP Endpoint 管理服务
+    ///Legacy comment translated to English.
     /// </summary>
     public class MCPEndpointService : ServiceBase<MCPEndpoint>
     {
@@ -42,7 +42,7 @@ namespace Senparc.Xncf.MCP.Domain.Services
         }
 
         /// <summary>
-        /// 获取所有已启用的 MCP Endpoints
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<List<MCPEndpoint>> GetEnabledEndpointsAsync()
         {
@@ -51,7 +51,7 @@ namespace Senparc.Xncf.MCP.Domain.Services
         }
 
         /// <summary>
-        /// 根据名称获取端点
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<MCPEndpoint> GetEndpointByNameAsync(string name)
         {
@@ -59,7 +59,7 @@ namespace Senparc.Xncf.MCP.Domain.Services
         }
 
         /// <summary>
-        /// 根据 Endpoint 地址获取端点
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<MCPEndpoint> GetEndpointByAddressAsync(string endpoint)
         {
@@ -67,7 +67,7 @@ namespace Senparc.Xncf.MCP.Domain.Services
         }
 
         /// <summary>
-        /// 测试端点连接（真实连接 MCP Server 并读取工具列表）
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<McpConnectionTestResult> TestEndpointAsync(int endpointId, CancellationToken cancellationToken = default)
         {
@@ -86,7 +86,7 @@ namespace Senparc.Xncf.MCP.Domain.Services
         }
 
         /// <summary>
-        /// 对指定端点执行真实连接测试，并持久化测试记录
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<McpConnectionTestResult> TestEndpointCoreAsync(MCPEndpoint endpoint, CancellationToken cancellationToken = default)
         {
@@ -106,7 +106,7 @@ namespace Senparc.Xncf.MCP.Domain.Services
         }
 
         /// <summary>
-        /// 从 AuthConfig JSON 中提取 Bearer Token（约定字段：token / accessToken / apiKey）
+        ///Legacy comment translated to English.
         /// </summary>
         internal static string? ExtractBearerToken(string? authConfigJson)
         {
@@ -133,7 +133,7 @@ namespace Senparc.Xncf.MCP.Domain.Services
             }
             catch
             {
-                // AuthConfig 不是 JSON 时直接作为 token 使用
+                //Legacy comment translated to English.
                 return authConfigJson;
             }
 

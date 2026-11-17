@@ -19,43 +19,43 @@ namespace Senparc.Areas.Admin.Models.VD
         /// </summary>		
         public int Id{get; set;}        
 		/// <summary>
-		/// 密码
+		///Legacy comment translated to English.
         /// </summary>		
         public string Password{get; set;}        
 		/// <summary>
-		/// 密码盐
+		///Legacy comment translated to English.
         /// </summary>		
         public string PasswordSalt{get; set;}        
 		/// <summary>
-		/// 真实姓名
+		///Legacy comment translated to English.
         /// </summary>		
         public string RealName{get; set;}        
 		/// <summary>
-		/// 手机号
+		///Legacy comment translated to English.
         /// </summary>		
         public string Phone{get; set;}        
 		/// <summary>
-		/// 备注
+		///Legacy comment translated to English.
         /// </summary>		
         public string Note{get; set;}        
 		/// <summary>
-		/// 当前登录时间
+		///Legacy comment translated to English.
         /// </summary>		
         public DateTime ThisLoginTime{get; set;}        
 		/// <summary>
-		/// 当前登录IP
+		///Legacy comment translated to English.
         /// </summary>		
         public string ThisLoginIP{get; set;}        
 		/// <summary>
-		/// 上次登录时间
+		///Legacy comment translated to English.
         /// </summary>		
         public DateTime LastLoginTime{get; set;}        
 		/// <summary>
-		/// 上次登录Ip
+		///Legacy comment translated to English.
         /// </summary>		
         public string LastLoginIP{get; set;}        
 		/// <summary>
-		/// 添加时间
+		/// creation time
         /// </summary>		
         public DateTime AddTime{get; set;}  
         public bool IsEdit { get; set; }

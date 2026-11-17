@@ -2,14 +2,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：20261025162715_AddFineTuningDatasetFileReference.Designer.cs
-    文件功能描述：20261025162715_AddFineTuningDatasetFileReference.Designer 相关定义与实现
+    File name: 20261025162715_AddFineTuningDatasetFileReference.Designer.cs
+    File description: 20261025162715_AddFineTuningDatasetFileReference.Designer related definitions and implementation
 
 
-    创建标识：Senparc - 20231021
+    Created by: Senparc - 20231021
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.17.0 支持 AddFineTuningDatasetFileReference 数据库迁移
+    Modified by: Senparc - 20261103
+    Change description: v0.17.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

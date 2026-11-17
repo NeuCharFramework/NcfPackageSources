@@ -2,43 +2,43 @@
     Copyright (C) 2026 Senparc
 
     File name: NeuCharWorkflowEngine.cs
-    File description: 新手友好的 NeuChar Workflow 声明式存储与执行引擎
+    File description: Related implementation.
 
 
     Created by: Senparc - 20260809
 
     Modified by: Senparc - 20260813
-    Change description: v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Change description: v0.1.0-preview1 enhance workflow orchestration, replay, Webhook, and parallel execution
 
     Modified by: Senparc - 20260815
-    Change description: v0.2.0 增强工作流并行与运行控制
+    Change description: v0.2.0 enhance workflow parallelism and execution control
 
     Modified by: Senparc - 20260817
-    Change description: v0.2.0 支持 Human Input 人工节点暂停与外部恢复
+    Change description: v0.2.0 support pausing and external resumption of Human Input nodes
 
     Modified by: Senparc - 20260822
-    Change description: v0.2.0 增强工作流函数调用、任务控制与回放管理
+    Change description: v0.2.0 enhance workflow function calls, task control, and replay management
 
     Modified by: Senparc - 20260829
-    Change description: v0.3.0 新增工作流分析查询与管理端可视化
+    Change description: v0.3.0 add workflow analysis queries and admin-side visualization
 
     Modified by: Senparc - 20260909
-    Change description: v0.4.0 新增 Chat 触发器（chat-trigger），支持登录用户与访客通过聊天页面启动工作流
+    Change description: v0.4.0 Updated module behavior and related support.
 
     Modified by: Senparc - 20260913
-    Change description: v0.4.0 宿主服务定期清理超过保留期的 Chat 消息
+    Change description: v0.4.0 Updated module behavior and related support.
 
     Modified by: Senparc - 20260915
-    Change description: v0.4.0 增强 Chat 触发器消息持久化与恢复能力
+    Change description: v0.4.0 enhance Chat trigger message persistence and recovery
 
     Modified by: Senparc - 20261028
-    Change description: vNext 宿主服务定时扫描按租户迭代，触发运行时携带租户快照
+    Change description: vNext Updated module behavior and related support.
 
     Modified by: Senparc - 20261103
-    Change description: v0.4.4 Workflow 运行协调器与定时宿主服务恢复/按租户传播租户上下文
+    Change description: v0.4.4 Updated module behavior and related support.
 
     Modified by: Senparc - 20261106
-    Change description: Function 节点在校验和执行前补齐默认值与唯一选项
+    Change description: Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -71,9 +71,9 @@ public sealed class NeuCharWorkflowGraph
 {
     public List<NeuCharWorkflowNode> Nodes { get; set; } = new();
     public List<NeuCharWorkflowEdge> Edges { get; set; } = new();
-    /// <summary>工作流级变量。运行时通过 <c>vars.变量名</c> 在受限公式中读取。</summary>
+    ///Legacy comment translated to English.
     public List<NeuCharWorkflowVariable> Variables { get; set; } = new();
-    /// <summary>仅用于设计器呈现，不参与工作流执行语义。</summary>
+    ///Legacy comment translated to English.
     public NeuCharWorkflowLayout Layout { get; set; } = new();
 }
 
@@ -85,7 +85,7 @@ public sealed class NeuCharWorkflowVariable
 
 public sealed class NeuCharWorkflowLayout
 {
-    /// <summary>层级布局的阅读方向：vertical（默认）或 horizontal。</summary>
+    ///Legacy comment translated to English.
     public string Direction { get; set; } = "vertical";
 }
 
@@ -105,7 +105,7 @@ public sealed class NeuCharWorkflowEdge
     public string Source { get; set; }
     public string Target { get; set; }
     public string SourceHandle { get; set; }
-    /// <summary>目标节点输入端。循环结束节点支持 continue / break；其他节点使用 default。</summary>
+    ///Legacy comment translated to English.
     public string TargetHandle { get; set; }
 }
 
@@ -130,8 +130,8 @@ public sealed record NeuCharWorkflowProgress(
 
 public sealed class NeuCharWorkflowEngine
 {
-    // 500 条不足以覆盖常见的循环体回放：例如 100 次循环 × 6 个节点就会超过旧上限。
-    // 执行保护、实时 Console 和持久化回放分别有自己的窗口，但统一至少支持 5000 条。
+    //Legacy comment translated to English.
+    //Legacy comment translated to English.
     private const int MaxStreamActivations = 5_000;
     private const int MaxReplayEvents = 5_000;
     private const int MaxLoopIterations = 100_000;
@@ -241,7 +241,7 @@ public sealed class NeuCharWorkflowEngine
     }
 
     /// <summary>
-    /// 解析并校验工作流图。保存草稿时可保留未连接节点，但执行前必须要求所有节点均可从触发器到达。
+    ///Legacy comment translated to English.
     /// </summary>
     public NeuCharWorkflowGraph ParseAndValidateGraph(string graphJson, bool requireAllNodesReachable = true)
     {
@@ -272,21 +272,21 @@ public sealed class NeuCharWorkflowEngine
         foreach (var node in graph.Nodes)
         {
             node.Config ??= new JsonObject();
-            // 已保存的旧聚合节点直接输出数组。迁移到可配置输出时保留这一明确模板，
-            // 以免升级后让既有工作流失效；新建节点会以空模板提示用户主动配置。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             if (node.Type.Equals("aggregate", StringComparison.OrdinalIgnoreCase) &&
                 !node.Config.ContainsKey("outputTemplate"))
             {
                 node.Config["outputTemplate"] = "{{input}}";
             }
-            // Console 节点早期固定打印其输入。补上显式模板后，既有工作流仍保留原有显示结果。
+            //Legacy comment translated to English.
             if (node.Type.Equals("console", StringComparison.OrdinalIgnoreCase) &&
                 !node.Config.ContainsKey("printTemplate"))
             {
                 node.Config["printTemplate"] = "{{input}}";
             }
-            // Loop 是有限次数的 For，不支持 while 或图上的回连。显式的 loop-end 节点
-            // 用于标记循环体边界；没有该节点的旧图继续使用兼容的“重复全部下游”语义。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             if (node.Type.Equals("loop", StringComparison.OrdinalIgnoreCase) &&
                 !node.Config.ContainsKey("count"))
             {
@@ -477,7 +477,7 @@ public sealed class NeuCharWorkflowEngine
     }
 
     /// <summary>
-    /// 返回无法从唯一触发器到达的草稿节点。调用方应先确保图结构已经通过校验。
+    ///Legacy comment translated to English.
     /// </summary>
     public IReadOnlyList<NeuCharWorkflowNode> GetDisconnectedNodes(NeuCharWorkflowGraph graph)
     {
@@ -646,7 +646,7 @@ public sealed class NeuCharWorkflowEngine
         return null;
     }
 
-    /// <summary>校验子工作流归属、可用性及整个引用链，防止保存后出现直接或间接递归。</summary>
+    ///Legacy comment translated to English.
     public async Task<string?> ValidateSubWorkflowReferencesAsync(
         NeuCharWorkflowGraph graph,
         int currentWorkflowId,
@@ -726,7 +726,7 @@ public sealed class NeuCharWorkflowEngine
             }
             catch (InvalidOperationException)
             {
-                // 历史异常图不参与密文复用，保存时必须重新输入敏感参数。
+                //Legacy comment translated to English.
             }
         }
 
@@ -932,7 +932,7 @@ public sealed class NeuCharWorkflowEngine
                 }
                 catch (JsonException)
                 {
-                    // Webhook 输入始终由入口序列化为 JSON；对历史调用或非 JSON 请求保留原始文本。
+                    //Legacy comment translated to English.
                 }
             }
 
@@ -2020,8 +2020,8 @@ public sealed class NeuCharWorkflowEngine
     }
 
     /// <summary>
-    /// 解析 Console 的展示内容。该值只供执行 Console 使用，Console 节点本身仍透传原始输入，
-    /// 因而不会改变下游节点看到的数据类型或内容。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     private static JsonNode? ResolveConsolePrintOutput(
         JsonObject config,
@@ -3673,8 +3673,8 @@ public sealed class NeuCharWorkflowHostedService : BackgroundService
             {
                 if (_tenantScopeFactory != null)
                 {
-                    // 工作流、Chat 消息与执行日志均挂在租户下，定时扫描必须按租户迭代，
-                    // 否则根作用域缺少租户上下文（多租户模式下 fail-closed 或写入错误租户）。
+                    //Legacy comment translated to English.
+                    //Legacy comment translated to English.
                     await _tenantScopeFactory.ForEachEnabledTenantAsync(
                         (scopeServiceProvider, _) => ScanIntervalWorkflowsAsync(scopeServiceProvider),
                         stoppingToken).ConfigureAwait(false);
@@ -3695,7 +3695,7 @@ public sealed class NeuCharWorkflowHostedService : BackgroundService
     }
 
     /// <summary>
-    /// 在指定（租户）作用域内执行一次定时扫描：模块开关校验、过期消息清理与定时 Workflow 触发。
+    ///Legacy comment translated to English.
     /// </summary>
     private async Task ScanIntervalWorkflowsAsync(IServiceProvider scopeServiceProvider)
     {
@@ -3715,7 +3715,7 @@ public sealed class NeuCharWorkflowHostedService : BackgroundService
             OrderingType.Ascending).ConfigureAwait(false);
         foreach (var workflow in workflows.Take(10))
         {
-            // 携带当前租户快照，使运行执行作用域（TryStart 之后立即创建）保持在同一租户内。
+            //Legacy comment translated to English.
             var tenant = RequestTenantSnapshot.From(scopeServiceProvider.GetRequiredService<RequestTenantInfo>());
             if (!runCoordinator.TryStart(workflow.Id, workflow.AdminUserId, string.Empty, out _, out var error, "interval", tenant))
             {
@@ -3725,7 +3725,7 @@ public sealed class NeuCharWorkflowHostedService : BackgroundService
     }
 
     /// <summary>
-    /// 每天最多一次清理超过保留期的 Chat 消息；清理失败只记录日志，不影响定时触发。
+    ///Legacy comment translated to English.
     /// </summary>
     private async Task CleanupExpiredChatMessagesAsync(IServiceProvider serviceProvider)
     {

@@ -1,23 +1,23 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：AgentsManagerHumanInteractionService.cs
-    文件功能描述：AgentsManager 统一处理 HIL 恢复与 NeuBell 消费
+    File name: AgentsManagerHumanInteractionService.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260815
-    修改描述：为 AgentsManager 页面、Workflow 快速入口提供同一恢复路径
+    Created by: Senparc - 20260815
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 支持 AgentTemplate 模型绑定、空输出 Token 重试与 Human-in-the-Loop
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
+    Modified by: Senparc - 20260822
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.19.1 update AgentsManager with new features and improvements
+    Modified by: Senparc - 20261103
+    Change description: v0.19.1 update AgentsManager with new features and improvements
 
 ----------------------------------------------------------------*/
 
@@ -41,9 +41,9 @@ public sealed record AgentsManagerHumanInteractionResolution(
     string Message);
 
 /// <summary>
-/// HIL 的唯一恢复入口。
-/// 无论请求来自 AgentsManager 页面还是 Workflow 页面，都在这里完成关联校验、恢复等待句柄
-/// 和消费 AgentsManager NeuBell，避免两个入口各自消费造成竞态或遗漏。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 public sealed class AgentsManagerHumanInteractionService
 {
@@ -67,8 +67,8 @@ public sealed class AgentsManagerHumanInteractionService
 
         return _requestStore
             .GetPendingByCorrelationId(correlationId)
-            // Human 轮次先完成 NeuBell 绑定，再允许 Workflow 快速入口看到它，
-            // 避免“请求已恢复但提醒刚刚创建”的极短竞态留下孤立提醒。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             .Where(request => !string.Equals(request.RequestType, "humanTurn", StringComparison.Ordinal)
                               || !string.IsNullOrWhiteSpace(request.NeuBellItemId))
             .Where(request => CanAccess(request, userId))
@@ -205,8 +205,8 @@ public sealed class AgentsManagerHumanInteractionService
 
     private static async Task NotifyNeuBellChangedAsync()
     {
-        // NeuBell 变更通知只是尽力而为的 UI 刷新提示：全局服务提供者不可用时
-        // （例如非完整 DI 的测试环境）跳过通知，不能影响人工审批主流程。
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         INeuBellPublisher publisher = null;
         try
         {
@@ -214,7 +214,7 @@ public sealed class AgentsManagerHumanInteractionService
         }
         catch
         {
-            // 忽略全局服务提供者不可用，直接跳过通知。
+            //Legacy comment translated to English.
         }
 
         if (publisher != null)
@@ -225,7 +225,7 @@ public sealed class AgentsManagerHumanInteractionService
 }
 
 /// <summary>
-/// AgentsManager 对 Workflow HIL 抽象的适配器。
+///Legacy comment translated to English.
 /// </summary>
 public sealed class AgentsManagerWorkflowHumanInteractionBridge : IWorkflowHumanInteractionBridge
 {

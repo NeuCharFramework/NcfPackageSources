@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：WeixinClawMediaFormat.cs
-    文件功能描述：WeixinClawMediaFormat 相关定义与实现
+    File name: WeixinClawMediaFormat.cs
+    File description: WeixinClawMediaFormat related definitions and implementation
 
 
-    创建标识：Senparc - 20261004
+    Created by: Senparc - 20261004
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.24.16 add comprehensive tests for MCP endpoint management and background tenant scope
+    Modified by: Senparc - 20261103
+    Change description: v0.24.16 add comprehensive tests for MCP endpoint management and background tenant scope
 
 ----------------------------------------------------------------*/
 

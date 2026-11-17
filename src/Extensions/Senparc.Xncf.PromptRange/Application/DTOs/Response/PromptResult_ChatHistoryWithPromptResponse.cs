@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：PromptResult_ChatHistoryWithPromptResponse.cs
-    文件功能描述：PromptResult_ChatHistoryWithPromptResponse 相关实现
+    File name: PromptResult_ChatHistoryWithPromptResponse.cs
+    File description: PromptResult_ChatHistoryWithPromptResponse related implementation
     
     
-    创建标识：Senparc - 20260704
+    Created by: Senparc - 20260704
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
 ----------------------------------------------------------------*/
 
@@ -18,17 +18,17 @@ using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Response
 {
     /// <summary>
-    /// 对话历史和 Prompt 内容响应
+    ///Legacy comment translated to English.
     /// </summary>
     public class PromptResult_ChatHistoryWithPromptResponse
     {
         /// <summary>
-        /// 对话历史记录
+        ///Legacy comment translated to English.
         /// </summary>
         public List<PromptResultChatDto> ChatHistory { get; set; }
         
         /// <summary>
-        /// Prompt 内容（SystemMessage）
+        /// Prompt content（SystemMessage）
         /// </summary>
         public string PromptContent { get; set; }
     }

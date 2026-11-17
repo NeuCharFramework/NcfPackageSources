@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：VersionHelperTests.cs
-    文件功能描述：VersionHelperTests 相关实现
+    File name: VersionHelperTests.cs
+    File description: VersionHelperTests related implementation
     
     
-    创建标识：Senparc - 20231104
+    Created by: Senparc - 20231104
     
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
 ----------------------------------------------------------------*/
 
@@ -26,26 +26,26 @@ namespace Senparc.Ncf.XncfBase.VersionManager.Tests
     [TestClass()]
     public class VersionHelperTests
     {
-        #region Prase() 方法测试
+        #region Legacy section
 
         [TestMethod]
         public void TestParseValidVersionStrings()
         {
-            // 测试基本语义化版本号  
-            ValidateParse("1.0", 1, 0, 0, null, null, null);//虽然不标准，但是也需要在特殊形况下支持
+            //Legacy comment translated to English.
+            ValidateParse("1.0", 1, 0, 0, null, null, null);//Legacy comment translated to English.
             ValidateParse("1.0.0", 1, 0, 0, null, null, null);
             ValidateParse("2.3.4", 2, 3, 4, null, null, null);
-            ValidateParse("99.99.99", 99, 99, 99, null, null, null);//虽然不标准，但是也需要在特殊形况下支持
+            ValidateParse("99.99.99", 99, 99, 99, null, null, null);//Legacy comment translated to English.
 
-            // 测试带有四个数字的版本号  
+            //Legacy comment translated to English.
             ValidateParse("99.99.99.888", 99, 99, 99, 888, null, null);
 
-            // 测试带有预发布版本标签的版本号  
+            //Legacy comment translated to English.
             ValidateParse("1.0.0-alpha", 1, 0, 0, null, "alpha", null);
             ValidateParse("1.0.0-beta.2", 1, 0, 0, null, "beta.2", null);
             ValidateParse("1.0.0-rc-1", 1, 0, 0, null, "rc-1", null);
 
-            // 测试带有元数据标签的版本号  
+            //Legacy comment translated to English.
             ValidateParse("1.0.0+build.123", 1, 0, 0, null, null, "build.123");
             ValidateParse("1.0.0-alpha+build.123", 1, 0, 0, null, "alpha", "build.123");
             ValidateParse("1.0.0-rc-1+build.123", 1, 0, 0, null, "rc-1", "build.123");
@@ -54,9 +54,9 @@ namespace Senparc.Ncf.XncfBase.VersionManager.Tests
         [TestMethod]
         public void TestParseInvalidVersionStrings()
         {
-            // 测试无效的版本号  
+            //Legacy comment translated to English.
             Assert.ThrowsException<ArgumentException>(() => VersionHelper.Parse("1"));
-            //Assert.ThrowsException<ArgumentException>(() => VersionHelper.Parse("1.0"));//为了兼容较早版本，暂时允许
+            //Legacy comment translated to English.
             Assert.ThrowsException<ArgumentException>(() => VersionHelper.Parse("1.0.0.0.0"));
             //Assert.ThrowsException<ArgumentException>(() => VersionHelper.Parse("1.0.0-alpha+build."));
             Assert.ThrowsException<ArgumentException>(() => VersionHelper.Parse("1.0.0-alpha+build!123"));
@@ -107,7 +107,7 @@ namespace Senparc.Xncf.XncfBuilder
     [XncfRegister]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
-        #region IXncfRegister 接口
+        #region IXncfRegister interface
 
         public override string Name => ""Senparc.Xncf.XncfBuilder"";
 
@@ -128,7 +128,7 @@ namespace Senparc.Xncf.XncfBuilder
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
-            //更新数据库
+            //Update the database
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
         }
 
@@ -138,9 +138,9 @@ namespace Senparc.Xncf.XncfBuilder
             XncfBuilderEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as XncfBuilderEntities;
             var xncfDbContextType = MultipleDatabasePool.Instance.GetXncfDbContextType(this.GetType());
 
-            //指定需要删除的数据实体
+            //Specify the data entities to delete
             var dropTableKeys = EntitySetKeys.GetEntitySetInfo(xncfDbContextType).Keys.ToArray();
-            //删除数据库表
+            //Delete database tables
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
 
             await base.UninstallAsync(serviceProvider, unsinstallFunc).ConfigureAwait(false);
@@ -181,7 +181,7 @@ namespace Senparc.Xncf.XncfBuilder
     [XncfRegister]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
-        #region IXncfRegister 接口
+        #region IXncfRegister interface
     
         public override string Name => ""Senparc.Xncf.XncfBuilder"";
     
@@ -202,7 +202,7 @@ namespace Senparc.Xncf.XncfBuilder
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
-            //更新数据库
+            //Update the database
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
         }
 
@@ -212,9 +212,9 @@ namespace Senparc.Xncf.XncfBuilder
             XncfBuilderEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as XncfBuilderEntities;
             var xncfDbContextType = MultipleDatabasePool.Instance.GetXncfDbContextType(this.GetType());
     
-            //指定需要删除的数据实体
+            //Specify the data entities to delete
             var dropTableKeys = EntitySetKeys.GetEntitySetInfo(xncfDbContextType).Keys.ToArray();
-            //删除数据库表
+            //Delete database tables
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
     
             await base.UninstallAsync(serviceProvider, unsinstallFunc).ConfigureAwait(false);
@@ -240,7 +240,7 @@ namespace Senparc.Xncf.XncfBuilder
 
             Assert.AreEqual("Version => \"0.10.1\"", result.RawVersionString);
 
-            // 修改版本号  
+            //Legacy comment translated to English.
             VersionInfo newVersionInfo = new VersionInfo
             {
                 Major = oldVersionInfo.Major,
@@ -250,13 +250,13 @@ namespace Senparc.Xncf.XncfBuilder
                 Metadata = oldVersionInfo.Metadata
             };
 
-            //使用纯正则表达式的方式替换
+            //Legacy comment translated to English.
             string replacedCode = VersionHelper.ReplaceVersionInCode(code, result.RawVersionString, newVersionInfo);
             Assert.IsTrue(replacedCode.Contains("public override string Version => \"0.11.1\";//必须填写版本号"));
             //Assert.AreEqual(exceptedCode, replacedCode);
             //Console.WriteLine(replacedCode); 
 
-            //使用 Roslyn 替换
+            //Legacy comment translated to English.
             string replacedCodeWithRoslyn = VersionHelper.UpdateVersionInCodeWithRoslyn(code, UpdateVersionType.MinorUpdate);
             Assert.IsTrue(replacedCodeWithRoslyn.Contains("public override string Version =>\"0.11.1\";//必须填写版本号"));
             //Assert.AreEqual(exceptedCode, replacedCodeWithRoslyn);

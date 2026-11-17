@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：XncfRegisterManager.cs
-    文件功能描述：XncfRegisterManager 相关实现
+
+    File name: XncfRegisterManager.cs
+
+    File description: XncfRegisterManager related implementation
+
     
+
     
-    创建标识：Senparc - 20200916
+
+    Created by: Senparc - 20200916
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -25,33 +37,33 @@ using Senparc.Ncf.XncfBase.MCP;
 namespace Senparc.Ncf.XncfBase
 {
     /// <summary>
-    /// XncfRegister 管理器
+    ///Legacy comment translated to English.
     /// </summary>
     public class XncfRegisterManager
     {
-        #region 静态方法
+        #region Legacy section
 
         /// <summary>
-        /// 模块和方法集合。模块已经按照 Order 倒叙排序（优先级从高到低）
+        ///Legacy comment translated to English.
         /// </summary>
         public static List<IXncfRegister> RegisterList { get; set; } = new List<IXncfRegister>();
 
         /// <summary>
-        /// 带有数据库的模块 TODO：可放置到缓存中 / TODO：可移除
+        ///Legacy comment translated to English.
         /// </summary>
         public static List<IXncfDatabase> XncfDatabaseList => RegisterList.Where(z => z is IXncfDatabase).Select(z => z as IXncfDatabase).ToList();
 
         public static McpServerInfoCollection McpServerInfoCollection =new McpServerInfoCollection();
 
         /// <summary>
-        /// 判断指定名称的模块是否已注册
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
         public static bool IsRegistered(string name) => RegisterList.Exists(z => z.Name == name);
 
         /// <summary>
-        /// 判断指定名称的模块是否已注册（推荐）
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="xncfRegister">XncfRegister</param>
         /// <returns></returns>
@@ -68,39 +80,39 @@ namespace Senparc.Ncf.XncfBase
         }
 
         /// <summary>
-        /// 检查数据库（缓存）中的模块信息，是否开放，并为开放状态
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="xncfName"></param>
         /// <returns></returns>
         private async Task<bool> CheckOpenStateAsync(string xncfName)
         {
-            //检查数据库中的安装状态
+            //Legacy comment translated to English.
             var fullXncfModuleCache = this._serviceProvider.GetService<FullXncfModuleCache>();
             var fullXncfModule = await fullXncfModuleCache.GetObjectAsync(xncfName);
             return fullXncfModule != null && fullXncfModule.State == Core.Enums.XncfModules_State.开放;
         }
 
         /// <summary>
-        /// 检查 XNCF 模块是否可用（推荐）
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="xncfRegister"></param>
         /// <returns></returns>
         public async Task<bool> CheckXncfAvailable(IXncfRegister xncfRegister)
         {
-            //检查内存中是否存在
+            //Legacy comment translated to English.
             return xncfRegister!=null && IsRegistered(xncfRegister)
                 ? await CheckOpenStateAsync(xncfRegister.Name).ConfigureAwait(false)
                 : false;
         }
 
         /// <summary>
-        /// 检查 XNCF 模块是否可用
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="xncfName"></param>
         /// <returns></returns>
         public async Task<bool> CheckXncfAvailable(string xncfName)
         {
-            //检查内存中是否存在
+            //Legacy comment translated to English.
             return IsRegistered(xncfName)
                 ? await CheckOpenStateAsync(xncfName).ConfigureAwait(false)
                 : false;

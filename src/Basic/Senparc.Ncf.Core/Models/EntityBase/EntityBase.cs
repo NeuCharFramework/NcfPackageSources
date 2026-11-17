@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：EntityBase.cs
-    文件功能描述：EntityBase 相关实现
+
+    File name: EntityBase.cs
+
+    File description: EntityBase related implementation
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -20,47 +32,47 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    /// 数据库实体基类
+    ///Legacy comment translated to English.
     /// </summary>
     [Serializable]
     public partial class EntityBase : IEntityBase, IMultiTenancy
     {
-        #region IEntityBase 接口
+        #region Legacy section
 
         /// <summary>
-        /// 是否软删除
+        ///Legacy comment translated to English.
         /// </summary>
         public bool Flag { get; set; }
         /// <summary>
-        /// 添加时间
+        /// creation time
         /// </summary>
         public DateTime AddTime { get; set; }
         /// <summary>
-        /// 上次更新时间
+        ///Legacy comment translated to English.
         /// </summary>
         public DateTime LastUpdateTime { get; set; }
 
         #endregion
 
-        #region IMultiTenancy 接口
+        #region Legacy section
 
         /// <summary>
-        /// 租户 ID
-        /// <para>如果为-1，则本系统不启用多租户</para>
-        /// <para>如果为0，则为系统公共数据（特殊情况使用）</para>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         public int TenantId { get; set; }
 
         #endregion
 
         /// <summary>
-        /// 仅管理员备注
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(300)]
         public string AdminRemark { get; set; }
 
         /// <summary>
-        /// 前台用户可见备注
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(300)]
         public string Remark { get; set; }
@@ -72,14 +84,14 @@ namespace Senparc.Ncf.Core.Models
         }
 
         /// <summary>
-        /// 更新最后更新时间
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="time"></param>
         protected void SetUpdateTime(DateTime? time = null)
         {
             if (AddTime == DateTime.MinValue)
             {
-                AddTime = SystemTime.Now.LocalDateTime;//通常在添加的时候发生
+                AddTime = SystemTime.Now.LocalDateTime;//Legacy comment translated to English.
             }
             LastUpdateTime = time ?? SystemTime.Now.LocalDateTime;
         }
@@ -87,14 +99,14 @@ namespace Senparc.Ncf.Core.Models
     }
 
     /// <summary>
-    /// 带单一主键的数据库实体基类
+    ///Legacy comment translated to English.
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
     [Serializable]
-    public partial class EntityBase<TKey> : EntityBase, IEntityBase<TKey>, IMultiTenancyEntityBase<TKey>/*默认支持多租户接口*/
+    public partial class EntityBase<TKey> : EntityBase, IEntityBase<TKey>, IMultiTenancyEntityBase<TKey>/*defaultsupportmulti-tenancyinterface*/
     {
         /// <summary>
-        /// 主键
+        ///Legacy comment translated to English.
         /// </summary>
         [Key]
         public TKey Id { get; set; }

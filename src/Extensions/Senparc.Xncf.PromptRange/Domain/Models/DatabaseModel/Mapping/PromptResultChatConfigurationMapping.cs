@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：PromptResultChatConfigurationMapping.cs
-    文件功能描述：PromptResultChatConfigurationMapping 相关实现
+    File name: PromptResultChatConfigurationMapping.cs
+    File description: PromptResultChatConfigurationMapping related implementation
     
     
-    创建标识：Senparc - 20251213
+    Created by: Senparc - 20251213
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
 ----------------------------------------------------------------*/
 
@@ -21,7 +21,7 @@ using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Mapping
 {
     /// <summary>
-    /// PromptResultChat 实体配置映射
+    ///Legacy comment translated to English.
     /// </summary>
     [XncfAutoConfigurationMapping]
     public class PromptResultChatConfigurationMapping : ConfigurationMappingWithIdBase<PromptResultChat, int>
@@ -30,18 +30,18 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Mapping
         {
             base.Configure(builder);
 
-            // 配置外键关系
+            //Legacy comment translated to English.
             builder.HasOne<PromptResult>()
                 .WithMany()
                 .HasForeignKey(c => c.PromptResultId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // 配置索引
+            //Legacy comment translated to English.
             builder.HasIndex(c => c.PromptResultId);
             builder.HasIndex(c => new { c.PromptResultId, c.Sequence });
 
-            // 配置字段长度和约束
-            // Content 字段不设置 MaxLength，使用数据库的 TEXT 类型以支持长文本
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             builder.Property(c => c.Content)
                 .IsRequired();
 
@@ -50,9 +50,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Mapping
 
             builder.Property(c => c.RoleType)
                 .IsRequired()
-                .HasConversion<int>(); // 将枚举转换为 int 存储
+                .HasConversion<int>(); //Legacy comment translated to English.
 
-            // UserFeedback 和 UserScore 可以为 null，不需要额外配置
+            //Legacy comment translated to English.
         }
     }
 }

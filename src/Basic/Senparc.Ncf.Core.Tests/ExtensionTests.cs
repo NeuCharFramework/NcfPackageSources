@@ -5,7 +5,7 @@ using Senparc.Ncf.Core.Models.DataBaseModel;
 namespace Senparc.Ncf.Core.Tests
 {
     /// <summary>
-    /// 一系列扩展方法的测试集合
+    /// A test collection of a series of extension methods
     /// </summary>
     [TestClass]
     public class ExtensionTests : TestBase

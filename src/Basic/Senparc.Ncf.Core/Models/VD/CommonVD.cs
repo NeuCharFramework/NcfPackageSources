@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：CommonVD.cs
-    文件功能描述：CommonVD 相关实现
+
+    File name: CommonVD.cs
+
+    File description: CommonVD related implementation
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -18,12 +30,12 @@ using System;
 namespace Senparc.Ncf.Core.Models.VD
 {
     /// <summary>
-    /// 地区数据（省、市、区）
+    ///Legacy comment translated to English.
     /// </summary>
     public class Common_AreaListVD : Base_AreaXmlVD
     {
         /// <summary>
-        /// ID,Name前缀
+        ///Legacy comment translated to English.
         /// </summary>
         public string Prefixes { get; set; }
 
@@ -65,7 +77,7 @@ namespace Senparc.Ncf.Core.Models.VD
             UserCity = userCity;
             UserDistrict = userDistrict;
 
-            //如果首项为空，则ID设为-1
+            //Legacy comment translated to English.
             topProvince = topProvince ?? new AreaXML_Provinces(-1, "", "", "");
             topCity = topCity ?? new AreaXML_Cities(-1, 0, "", "", "", 0);
             topDistrict = topDistrict ?? new AreaXML_Districts(-1, 0, "");

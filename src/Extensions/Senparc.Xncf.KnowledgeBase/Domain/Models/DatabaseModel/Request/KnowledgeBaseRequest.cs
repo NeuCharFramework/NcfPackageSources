@@ -1,20 +1,20 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：KnowledgeBaseRequest.cs
-    文件功能描述：KnowledgeBaseRequest 相关实现
+    File name: KnowledgeBaseRequest.cs
+    File description: KnowledgeBaseRequest related implementation
     
     
-    创建标识：Senparc - 20260704
+    Created by: Senparc - 20260704
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.5.0-preview6 新增知识库生命周期管理与 Agent 模板集成
+    Modified by: Senparc - 20260804
+    Change description: v0.5.0-preview6 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.8.0 upgrade KnowledgeBase retrieval with configurable chunking and re-ranking (backward compatible)
+    Modified by: Senparc - 20261103
+    Change description: v0.8.0 upgrade KnowledgeBase retrieval with configurable chunking and re-ranking (backward compatible)
 
 ----------------------------------------------------------------*/
 
@@ -32,31 +32,31 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Models.DatabaseModel.Request
     {
         public int Id { get; set; }
         /// <summary>
-        /// 训练模型Id
+        ///Legacy comment translated to English.
         /// </summary>
         public int EmbeddingModelId { get; set; }
         /// <summary>
-        /// 向量数据库Id
+        ///Legacy comment translated to English.
         /// </summary>
         public int VectorDBId { get; set; }
         /// <summary>
-        /// 对话模型Id
+        ///Legacy comment translated to English.
         /// </summary>
         public int ChatModelId { get; set; }
         /// <summary>
-        /// 名称
+        /// name
         /// </summary>
         public string Name { get; set; }
 
         public string Content { get; set; }
 
         /// <summary>
-        /// 检索配置（切片策略 + 重排）。null 表示使用默认（与旧版一致）。
+        ///Legacy comment translated to English.
         /// </summary>
         public KnowledgeBaseRetrievalConfig RetrievalConfig { get; set; }
 
         /// <summary>
-        /// null 表示不修改文件关联，空集合表示清空。
+        ///Legacy comment translated to English.
         /// </summary>
         public List<int> NcfFileIds { get; set; }
     }

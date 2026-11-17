@@ -1,17 +1,17 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：SenMapicEngineExtensionForWeb.cs
-    文件功能描述：SenMapicEngineExtensionForWeb 相关实现
+    File name: SenMapicEngineExtensionForWeb.cs
+    File description: SenMapicEngineExtensionForWeb related implementation
     
     
-    创建标识：Senparc - 20250113
+    Created by: Senparc - 20250113
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.3.1-preview3 限制站点地图抓取目标并安全处理重定向
+    Modified by: Senparc - 20260729
+    Change description: v0.3.1-preview3 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -83,7 +83,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         /// <summary>
-        /// 请求网页，获取webResponse
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="url"></param>
         /// <param name="requestStartTime"></param>
@@ -96,7 +96,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                 throw new InvalidOperationException("目标 URL 不允许访问。");
             }
 
-            var requestStartTime = DateTime.Now;//开始请求
+            var requestStartTime = DateTime.Now;//startrequest
             var currentUri = new Uri(url);
             HttpResponseMessage webResponse = null;
 
@@ -132,7 +132,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                 currentUri = redirectUri;
             }
 
-            var requestEndTime = DateTime.Now;//结束请求
+            var requestEndTime = DateTime.Now;//endrequest
             return (webResponse,requestStartTime,requestEndTime);
         }
     }

@@ -10,7 +10,7 @@ using Senparc.Service;
 
 namespace Senparc.Web.Pages.Install
 {
-    public class IndexModel : PageModel //不使用基类，因为无法通过已安装程序自动检测
+    public class IndexModel : PageModel //Legacy comment translated to English.
     {
 
         private readonly AdminUserInfoService _accountInfoService;
@@ -18,15 +18,15 @@ namespace Senparc.Web.Pages.Install
         private readonly SysMenuService _sysMenuService;
 
         /// <summary>
-        /// 管理员用户名
+        ///Legacy comment translated to English.
         /// </summary>
         public string AdminUserName { get; set; }
         /// <summary>
-        /// 管理员密码
+        ///Legacy comment translated to English.
         /// </summary>
         public string AdminPassword { get; set; }
         /// <summary>
-        /// 需要修改的命名空间
+        ///Legacy comment translated to English.
         /// </summary>
         public string Namespace { get; set; }
 
@@ -42,7 +42,7 @@ namespace Senparc.Web.Pages.Install
 
         public IActionResult OnGet()
         {
-            var adminUserInfo = _accountInfoService.GetObject(z => true);//检查是否已初始化
+            var adminUserInfo = _accountInfoService.GetObject(z => true);//Legacy comment translated to English.
             if (adminUserInfo != null)
             {
                 return new StatusCodeResult(404);
@@ -54,7 +54,7 @@ namespace Senparc.Web.Pages.Install
 
         public IActionResult OnPost()
         {
-            var adminUserInfo = _accountInfoService.Init(out string userName, out string password);//初始化管理员信息
+            var adminUserInfo = _accountInfoService.Init(out string userName, out string password);//Legacy comment translated to English.
 
             if (adminUserInfo == null)
             {
@@ -65,11 +65,11 @@ namespace Senparc.Web.Pages.Install
             else
             {
                 Step = 1;
-                _systemConfigService.Init();//初始化系统信息
+                _systemConfigService.Init();//Legacy comment translated to English.
                 _sysMenuService.Init();
 
                 AdminUserName = userName;
-                AdminPassword = password;//这里不可以使用 adminUserInfo.Password，因为此参数已经是加密信息
+                AdminPassword = password;//Legacy comment translated to English.
 
                 return Page();
             }

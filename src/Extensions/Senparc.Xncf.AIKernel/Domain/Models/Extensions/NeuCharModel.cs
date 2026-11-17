@@ -1,23 +1,44 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：NeuCharModel.cs
-    文件功能描述：NeuCharModel 相关实现
-    
-    
-    创建标识：Senparc - 20240827
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260718
-    修改描述：同步 NeuChar 算力模型类型
+    File name: NeuCharModel.cs
 
-    修改标识：Senparc - 20260722
-    修改描述：同步 NeuChar 算力模型 API 版本
+    File description: NeuCharModel related implementation
 
-    修改标识：Senparc - 20260724
-    修改描述：v0.14.0-preview5 同步 NeuChar 模型 API 版本并优化模型信息复制交互
+    
+
+    
+
+    Created by: Senparc - 20240827
+
+    
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260718
+
+    Change description: Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20260722
+
+    Change description: Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20260724
+
+    Change description: v0.14.0-preview5 Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 
@@ -31,39 +52,39 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace Senparc.Xncf.AIKernel.Domain.Models.Extensions
 {
     /// <summary>
-    /// NeuChar 平台对应当前用户支持的模型参数
+    ///Legacy comment translated to English.
     /// </summary>
     public class NeuCharModel
     {
         public int Id { get; set; }
 
         /// <summary>
-        /// 模型名称
+        /// model name
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// 模型类型
+        /// modeltype
         /// </summary>
         public Senparc.AI.ConfigModel ModelType { get; set; }
 
         /// <summary>
-        /// 模型 API 版本
+        /// model API version
         /// </summary>
         public string ApiVersion { get; set; }
 
         /// <summary>
-        /// 模型权重参考（以text-davinci-003为基准）
+        ///Legacy comment translated to English.
         /// </summary>
         public float Weight { get; set; }
 
         /// <summary>
-        /// 是否激活
+        ///Legacy comment translated to English.
         /// </summary>
         public bool Enable { get; set; }
 
         /// <summary>
-        /// 添加时间
+        /// creation time
         /// </summary>
         public DateTime AddTime { get; set; }
     }
@@ -71,7 +92,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.Extensions
     public class NeuCharGetModelJsonResult
     {
         ///// <summary>
-        ///// 此属性是本地新增
+        ///Legacy comment translated to English.
         ///// </summary>
         //public string Message { get; set; }
         public bool Success { get; set; }

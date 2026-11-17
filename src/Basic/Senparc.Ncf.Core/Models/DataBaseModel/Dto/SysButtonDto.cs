@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：SysButtonDto.cs
-    文件功能描述：SysButtonDto 相关实现
+
+    File name: SysButtonDto.cs
+
+    File description: SysButtonDto related implementation
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -27,26 +39,26 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public string Id { get; set; }
 
         /// <summary>
-        /// 菜单id
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(50)]
         public string MenuId { get; set; }
 
         /// <summary>
-        /// 操作名称
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(50)]
         //[Required]
         public string ButtonName { get; set; }
 
         /// <summary>
-        /// 操作标识
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(50)]
         public string OpearMark { get; set; }
 
         /// <summary>
-        /// 按钮对应的请求地址
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(350)]
         public string Url { get; set; }

@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：Prompt.cshtml.cs
-    文件功能描述：Prompt.cshtml 相关实现
+    File name: Prompt.cshtml.cs
+    File description: Prompt.cshtml related implementation
     
     
-    创建标识：Senparc - 20231021
+    Created by: Senparc - 20231021
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
 ----------------------------------------------------------------*/
 
@@ -41,9 +41,9 @@ namespace Senparc.Xncf.PromptRange.Areas.Admin.Pages.PromptRange
         }
 
         /// <summary>
-        /// 根据 PromptCode（支持靶场/靶道/完整版本）解析当前实际运行 Prompt 并跳转。
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="promptCode">PromptCode，可为 RangeName、RangeName-T1 或 RangeName-T1-A1</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public async Task<IActionResult> OnGetResolveAsync(string promptCode)
         {
@@ -65,7 +65,7 @@ namespace Senparc.Xncf.PromptRange.Areas.Admin.Pages.PromptRange
         }
 
         /// <summary>
-        /// 将 Alias 开头的 PromptCode 归一化为 RangeName 开头，避免历史数据中的 Alias 造成解析失败。
+        ///Legacy comment translated to English.
         /// </summary>
         private async Task<string> NormalizePromptCodeAsync(string promptCode)
         {

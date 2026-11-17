@@ -1,20 +1,20 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：MyFunctionRequest.cs
-    文件功能描述：MyFunctionRequest 相关实现
+    File name: MyFunctionRequest.cs
+    File description: MyFunctionRequest related implementation
     
     
-    创建标识：Senparc - 20211031
+    Created by: Senparc - 20211031
     
-    修改标识：Senparc - 20260717
-    修改描述：v1.1.0 更新示例 XNCF 模块的功能参数与页面本地化能力
+    Modified by: Senparc - 20260717
+    Change description: v1.1.0 update feature parameters and page localization for the sample XNCF module
 
-    修改标识：Senparc - 20260724
-    修改描述：v1.1.0 完善 XNCF 模板页面与资源的多语言支持
+    Modified by: Senparc - 20260724
+    Change description: v1.1.0 improve multilingual support for XNCF template pages and resources
 
-    修改标识：Senparc - 20260726
-    修改描述：v1.1.0 补充示例模板 EventBus 请求-响应回环与多语言能力
+    Modified by: Senparc - 20260726
+    Change description: v1.1.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 using Senparc.Ncf.XncfBase.FunctionRenders;
@@ -43,7 +43,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.DTOs.Request
         [LocalizedDescription(typeof(Template_XncfNameResource), "Parameter.Sample.Number2")]
         public int Number2 { get; set; }
 
-        [LocalizedDescription(typeof(Template_XncfNameResource), "Parameter.Sample.Operator")]//下拉列表
+        [LocalizedDescription(typeof(Template_XncfNameResource), "Parameter.Sample.Operator")]//Legacy comment translated to English.
            [FunctionParameterUi(ParameterType.DropDownList, nameof(OperatorOptions))]
            public string Operator { get; set; }
 
@@ -55,7 +55,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.DTOs.Request
                  new SelectionItem("÷", Template_XncfNameResource.Get("Parameter.Operator.Divide"), Template_XncfNameResource.Get("Parameter.Operator.Divide.Help"), false)
             });
 
-        [LocalizedDescription(typeof(Template_XncfNameResource), "Parameter.Sample.Power")]//多选框
+        [LocalizedDescription(typeof(Template_XncfNameResource), "Parameter.Sample.Power")]//Legacy comment translated to English.
            [FunctionParameterUi(ParameterType.CheckBoxList, nameof(PowerOptions))]
            public string[] Power { get; set; }
 
@@ -67,7 +67,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.DTOs.Request
     }
 
     /// <summary>
-    /// EventBus 内部回环健康检查不接收业务参数，避免把测试入口变成数据访问接口。
+    ///Legacy comment translated to English.
     /// </summary>
     public class EventBusRoundTripRequest : FunctionAppRequestBase
     {

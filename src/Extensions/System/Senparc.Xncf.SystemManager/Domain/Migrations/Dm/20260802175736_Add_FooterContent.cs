@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：20260802175736_Add_FooterContent.cs
-    文件功能描述：实现 Entity Framework 数据库迁移。
+    File name: 20260802175736_Add_FooterContent.cs
+    File description: Entity Framework database migration implementation.
 
 
-    创建标识：Senparc - 20250120
+    Created by: Senparc - 20250120
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.15.3-preview6 补齐 SystemConfig.FooterContent 数据库迁移
+    Modified by: Senparc - 20260804
+    Change description: v0.15.3-preview6 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

@@ -1,16 +1,16 @@
 /*
- * AgentsManager 前端：Vue 根实例 computed 计算属性。
- * 注意：本文件与 agents-app-*.js 系列按 three-loader.js 中的顺序加载，
- * 依赖全局 var（classic script 顶层 var 挂到 window），请勿单独引入。
+ * Legacy comment translated to English.
+ * Note: this file and the agents-app-*.js series are loaded in the order defined by three-loader.js,
+ * depends on global variables (top-level classic-script vars are attached to window); do not import separately.
  */
 
 var AgentsAppComputed = {
-    // 计算未被选择的插件类型
+    //Legacy comment translated to English.
     availablePluginTypes() {
       if (!this.agentForm.functionCallNames) {
         return this.pluginTypes;
       }
-      // 将逗号分隔的字符串转换为数组进行比较
+      //Legacy comment translated to English.
       const currentNames = this.agentForm.functionCallNames.split(',').filter(x => x);
       return this.pluginTypes.filter(type =>
         !currentNames.includes(type)
@@ -51,7 +51,7 @@ var AgentsAppComputed = {
         item.key
       ].some(value => String(value || '').toLowerCase().includes(keyword)))
     },
-    // 解析 McpEndpoints JSON 字符串
+    //Legacy comment translated to English.
     parsedMcpEndpoints() {
       try {
         if (!this.agentForm.mcpEndpoints) {
@@ -63,7 +63,7 @@ var AgentsAppComputed = {
         return {};
       }
     },
-    // 从 MCP 列表选择：按关键字过滤可选端点
+    //Legacy comment translated to English.
     filteredMcpEndpointOptions() {
       const options = Array.isArray(this.mcpEndpointOptions) ? this.mcpEndpointOptions : []
       const keyword = String(this.mcpSelectSearch || '').trim().toLowerCase()
@@ -95,7 +95,7 @@ var AgentsAppComputed = {
       return agents
         .map(agent => {
           const value = this.getAgentStatisticMetricValue(agent)
-          // 使用平方根缩放，保留大用量的面积差异，同时避免少数极大值吞没整个图面。
+          //Legacy comment translated to English.
           const ratio = maxValue > 0 ? Math.sqrt(value / maxValue) : 0
           const span = Math.max(2, Math.min(6, Math.round(2 + ratio * 4)))
           return {

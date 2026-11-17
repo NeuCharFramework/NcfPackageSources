@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：20260926101546_Add_KnowledgeBaseRetrievalConfig.cs
-    文件功能描述：实现 Entity Framework 数据库迁移。
+    File name: 20260926101546_Add_KnowledgeBaseRetrievalConfig.cs
+    File description: Entity Framework database migration implementation.
 
 
-    创建标识：Senparc - 20260926
+    Created by: Senparc - 20260926
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.8.0 支持 Add_KnowledgeBaseRetrievalConfig 数据库迁移
+    Modified by: Senparc - 20261103
+    Change description: v0.8.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

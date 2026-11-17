@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：AppResponseBase.cs
-    文件功能描述：AppResponseBase 相关实现
+
+    File name: AppResponseBase.cs
+
+    File description: AppResponseBase related implementation
+
     
+
     
-    创建标识：Senparc - 20260704
+
+    Created by: Senparc - 20260704
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -26,13 +38,13 @@ namespace Senparc.Ncf.Core.AppServices
         string ErrorMessage { get; set; }
         object Data { get; set; }
         /// <summary>
-        /// 请求临时ID（用于调取日志）
+        /// Request temporary ID (for retrieving logs)
         /// </summary>
         string RequestTempId { get; }
     }
 
     /// <summary>
-    /// AppService 响应详细基础模型（一般提供给序列化 JSON 使用）
+    /// AppService response detailed basemodel (generally provided for serialized JSON use)
     /// </summary>
     [Serializable]
     public class AppResponseBase : IAppResponse
@@ -42,7 +54,7 @@ namespace Senparc.Ncf.Core.AppServices
         public string ErrorMessage { get; set; }
         public object Data { get; set; }
         /// <summary>
-        /// 请求临时ID（用于调取日志）
+        /// Request temporary ID (for retrieving logs)
         /// </summary>
         public string RequestTempId { get; private set; }
 
@@ -73,7 +85,7 @@ namespace Senparc.Ncf.Core.AppServices
     }
 
     /// <summary>
-    /// AppService 响应详细基础模型（一般提供给序列化 JSON 使用）
+    /// AppService response detailed basemodel (generally provided for serialized JSON use)
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [Serializable]

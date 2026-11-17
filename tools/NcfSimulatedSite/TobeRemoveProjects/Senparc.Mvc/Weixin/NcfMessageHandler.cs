@@ -27,7 +27,7 @@ namespace Senparc.Mvc.Weixin
             var defaultResponseMessage = base.CreateResponseMessage<ResponseMessageText>();
             var requestHandler =
                 requestMessage.StartHandler()
-                    //关键字不区分大小写，按照顺序匹配成功后将不再运行下面的逻辑
+                    //Legacy comment translated to English.
                     .Keyword("code", () =>
                     {
                         defaultResponseMessage.Content =

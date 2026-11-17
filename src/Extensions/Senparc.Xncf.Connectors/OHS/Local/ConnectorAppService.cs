@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：ConnectorAppService.cs
-    文件功能描述：连接器配置与调用的应用服务
+    File name: ConnectorAppService.cs
+    File description: application service for connector configuration and invocation
     
     
-    创建标识：Senparc - 20261111
+    Created by: Senparc - 20261111
     
-    修改标识：Senparc - 20261111
-    修改描述：v0.1.0 提供连接器配置与调用的应用服务
+    Modified by: Senparc - 20261111
+    Change description: v0.1.0 provide application services for connector configuration and invocation
 
 ----------------------------------------------------------------*/
 

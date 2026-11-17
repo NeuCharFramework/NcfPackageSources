@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：ChatGroupMemberConfigurationMapping.cs
-    文件功能描述：ChatGroupMemberConfigurationMapping 相关实现
+
+    File name: ChatGroupMemberConfigurationMapping.cs
+
+    File description: ChatGroupMemberConfigurationMapping related implementation
+
     
+
     
-    创建标识：Senparc - 20240616
+
+    Created by: Senparc - 20240616
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -27,7 +39,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Mapping
         {
             base.Configure(builder);
 
-            //联合主键
+            //Legacy comment translated to English.
             //builder.HasKey(e => new { e.ChatGroupId, e.AgentTemplateId });
 
             //builder.HasOne(z => z.ChatGroup)

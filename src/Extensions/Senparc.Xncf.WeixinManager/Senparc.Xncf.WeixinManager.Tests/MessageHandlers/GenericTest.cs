@@ -23,10 +23,10 @@ namespace Senparc.Xncf.WeixinManager.Tests.MessageHandlers
         {
             List<MyType> s = new List<MyType> { new MyType() { { "MyKey", "MyValue" } } };
 
-            // 使用 OfType 和 ToList 方法将 List<MyType> 转换为 List<Dictionary<string, string>>  
+            //Legacy comment translated to English.
             List<Dictionary<string, string>> t = s.OfType<Dictionary<string, string>>().ToList();
 
-            // 测试输出  
+            // testoutput  
             Console.WriteLine($"t[0]: {t[0].ToJson(true)}");
         }
 

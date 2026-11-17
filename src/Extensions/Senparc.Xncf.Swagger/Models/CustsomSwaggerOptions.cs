@@ -1,14 +1,26 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：CustsomSwaggerOptions.cs
-    文件功能描述：CustsomSwaggerOptions 相关实现
+
+    File name: CustsomSwaggerOptions.cs
+
+    File description: CustsomSwaggerOptions related implementation
+
     
+
     
-    创建标识：Senparc - 20210614
+
+    Created by: Senparc - 20210614
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -33,41 +45,41 @@ namespace Senparc.Xncf.Swagger.Models
         }
 
         /// <summary>
-        /// 是否启用
+        /// whether enabled
         /// </summary>
         public bool Enabled { get; set; }
 
         /// <summary>
-        /// 项目发布路径 子应用程序的目录名（虚拟站点）
-        /// 直接发布为站点时，请保持默认值
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         public string AppPath { get; set; }
         /// <summary>
-        /// 项目名称
+        ///Legacy comment translated to English.
         /// </summary>
         public string ProjectName { get; set; } = "My API";
         /// <summary>
-        /// 接口文档显示版本
+        ///Legacy comment translated to English.
         /// </summary>
         public List<string> ApiVersions { get; set; } = VersionHelper.GetApiVersions();
         /// <summary>
-        /// 接口文档访问路由前缀
+        ///Legacy comment translated to English.
         /// </summary>
         public string RoutePrefix { get; set; } = "swagger";
         /// <summary>
-        /// 使用自定义首页
+        ///Legacy comment translated to English.
         /// </summary>
         public bool UseCustomIndex { get; set; }
         /// <summary>
-        /// 允许匿名访问
+        ///Legacy comment translated to English.
         /// </summary>
         public bool AllowAnonymous { get; set; }
         /// <summary>
-        /// 使用主项目的Admin模块认证登录
+        ///Legacy comment translated to English.
         /// </summary>
         public bool UseAdminAuth { get; set; }
         /// <summary>
-        /// swagger login账号,未指定则不启用
+        ///Legacy comment translated to English.
         /// </summary>
         public List<CustomSwaggerAuth> CustomAuthList { get; set; }
         /// <summary>

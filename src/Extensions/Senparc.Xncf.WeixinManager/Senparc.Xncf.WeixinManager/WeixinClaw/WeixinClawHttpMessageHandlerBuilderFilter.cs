@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：WeixinClawHttpMessageHandlerBuilderFilter.cs
-    文件功能描述：WeixinClawHttpMessageHandlerBuilderFilter.cs implementation and project behavior.
+    File name: WeixinClawHttpMessageHandlerBuilderFilter.cs
+    File description: WeixinClawHttpMessageHandlerBuilderFilter.cs implementation and project behavior.
 
 
-    创建标识：Senparc - 20260926
+    Created by: Senparc - 20260926
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.24.9 0.24.9 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
+    Modified by: Senparc - 20261005
+    Change description: v0.24.9 0.24.9 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.24.16 enhance WeixinClaw integration with new message handling and UI improvements
+    Modified by: Senparc - 20261103
+    Change description: v0.24.16 enhance WeixinClaw integration with new message handling and UI improvements
 
 ----------------------------------------------------------------*/
 

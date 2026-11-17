@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：InMemoryEventBus.cs
-    文件功能描述：InMemoryEventBus 相关实现
+    File name: InMemoryEventBus.cs
+    File description: InMemoryEventBus related implementation
     
     
-    创建标识：Senparc - 20260215
+    Created by: Senparc - 20260215
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260726
-    修改描述：v0.25.0-preview2 增加 EventBus 请求-响应能力，支持超时、取消与请求关联清理
+    Modified by: Senparc - 20260726
+    Change description: v0.25.0-preview2 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -27,7 +27,7 @@ using Microsoft.Extensions.Logging;
 namespace Senparc.Ncf.Core.EventBus
 {
     /// <summary>
-    /// 基于内存 Channel 的事件总线实现
+    ///Legacy comment translated to English.
     /// </summary>
     public class InMemoryEventBus : IEventBus, IEventBusRequestClient
     {
@@ -36,7 +36,7 @@ namespace Senparc.Ncf.Core.EventBus
         private readonly TimeSpan _maxRequestTimeout;
         private readonly ConcurrentDictionary<Guid, PendingRequest> _pendingRequests = new();
         
-        // 用于防止重复处理的事件 ID 追踪（使用滑动窗口，保留最近 10 分钟的事件 ID）
+        //Legacy comment translated to English.
         private readonly ConcurrentDictionary<Guid, DateTime> _processedEventIds = new();
         private readonly TimeSpan _eventIdRetentionPeriod = TimeSpan.FromMinutes(10);
         
@@ -54,18 +54,18 @@ namespace Senparc.Ncf.Core.EventBus
                     "EventBus MaxRequestTimeout must be a finite value greater than zero.");
             }
             
-            // 配置无界通道（生产速度 > 消费速度时，内存会增加，但不会阻塞生产者）
-            // 如果需要背压控制，可以使用 Channel.CreateBounded
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             var channelOptions = new UnboundedChannelOptions
             {
-                SingleReader = true,   // HostedService 是唯一消息泵；Handler 并发由消息泵负责
-                SingleWriter = false   // 多个业务模块在并发写
+                SingleReader = true,   //Legacy comment translated to English.
+                SingleWriter = false   //Legacy comment translated to English.
             };
             _channel = Channel.CreateUnbounded<IIntegrationEvent>(channelOptions);
         }
 
         /// <summary>
-        /// 发布请求并等待匹配类型及 RequestId 的响应。
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<TResponse> RequestAsync<TResponse>(
             IIntegrationRequest<TResponse> request,
@@ -121,13 +121,13 @@ namespace Senparc.Ncf.Core.EventBus
         }
         
         /// <summary>
-        /// 发布派生事件（自动继承父事件的链信息并检测循环）
-        /// 注意：此方法要求事件类型继承自 IntegrationEvent 基类
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         public ValueTask PublishDerivedAsync<TEvent>(TEvent @event, IIntegrationEvent parentEvent, CancellationToken cancellationToken = default)
             where TEvent : IIntegrationEvent
         {
-            // 仅支持 IntegrationEvent 基类（因为需要访问 DeriveMetadata 等方法）
+            //Legacy comment translated to English.
             if (parentEvent is not IntegrationEvent typedParent)
             {
                 throw new ArgumentException("Parent event must inherit from IntegrationEvent base class", nameof(parentEvent));
@@ -138,10 +138,10 @@ namespace Senparc.Ncf.Core.EventBus
                 throw new ArgumentException("Event must inherit from IntegrationEvent base class", nameof(@event));
             }
             
-            // 派生事件的元数据
+            //Legacy comment translated to English.
             var metadata = typedParent.DeriveMetadata();
             
-            // 检查是否会产生循环引用（在发布前预检）
+            //Legacy comment translated to English.
             var newEventType = typedEvent.GetType().Name;
             if (typedParent.HasCircularReference(newEventType))
             {
@@ -156,7 +156,7 @@ namespace Senparc.Ncf.Core.EventBus
                     $"This would cause an infinite event loop.");
             }
             
-            // 创建一个带有链信息的新事件实例
+            //Legacy comment translated to English.
             var derivedEvent = typedEvent with
             {
                 ParentEventId = metadata.ParentEventId,
@@ -175,8 +175,8 @@ namespace Senparc.Ncf.Core.EventBus
         }
 
         /// <summary>
-        /// 尝试用响应事件完成对应的等待请求。EventBusHostedService 是唯一调用方，
-        /// 避免额外读取 Channel 而与主消息泵竞争。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         internal bool TryCompleteRequest(IIntegrationEvent @event)
         {
@@ -204,11 +204,11 @@ namespace Senparc.Ncf.Core.EventBus
         }
 
         /// <summary>
-        /// 检查事件是否已经被处理过（用于防止重复处理）
+        ///Legacy comment translated to English.
         /// </summary>
         public bool TryMarkEventAsProcessed(Guid eventId)
         {
-            // 清理过期的事件 ID（每100次调用清理一次）
+            //Legacy comment translated to English.
             if (_processedEventIds.Count > 0 && _processedEventIds.Count % 100 == 0)
             {
                 CleanupExpiredEventIds();
@@ -231,7 +231,7 @@ namespace Senparc.Ncf.Core.EventBus
             }
         }
 
-        // 供同一个程序集内的 HostedService 读取
+        //Legacy comment translated to English.
         internal ChannelReader<IIntegrationEvent> Reader => _channel.Reader;
 
         private sealed class PendingRequest

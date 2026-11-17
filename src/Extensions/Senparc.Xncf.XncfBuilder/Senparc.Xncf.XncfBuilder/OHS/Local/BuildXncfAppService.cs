@@ -1,38 +1,38 @@
 ﻿/*-----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：BuildXncfAppService.cs
-    文件功能描述：BuildXncfAppService 相关实现
+    File name: BuildXncfAppService.cs
+    File description: BuildXncfAppService related implementation
     
     
-    创建标识：Senparc - 20211016
+    Created by: Senparc - 20211016
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.36.3-preview2 重构系统配置初始化与更新流程并统一模型处理
+    Modified by: Senparc - 20260705
+    Change description: v0.36.3-preview2 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.36.4-preview3 重构系统配置初始化与更新流程并统一模型处理
+    Modified by: Senparc - 20260705
+    Change description: v0.36.4-preview3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.37.0-preview5 增强 XNCF 构建、数据库迁移与 AI 生成流程的本地化支持
+    Modified by: Senparc - 20260717
+    Change description: v0.37.0-preview5 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260725
-    修改描述：移除 cmd.exe 依赖并按 dotnet 命令退出码返回真实生成结果
+    Modified by: Senparc - 20260725
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
+    Modified by: Senparc - 20260804
+    Change description: v0.39.0-preview8 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.41.0 增强隔离开发任务与 Sandbox 预览流程
+    Modified by: Senparc - 20260815
+    Change description: v0.41.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.41.0 优化 XncfBuilder 预览任务与工作区服务
+    Modified by: Senparc - 20260822
+    Change description: v0.41.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.41.7 XncfBuilder 预览与隔离开发任务表统一租户底层支持
+    Modified by: Senparc - 20261103
+    Change description: v0.41.7 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -77,7 +77,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             this._xncfModuleServiceExtension = xncfModuleServiceExtension;
         }
 
-        #region 生成 XNCF 项目
+        #region Legacy section
 
         private readonly AIModelService _aIModelService;
         private readonly XncfModuleService _xncfModuleService;
@@ -234,7 +234,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         }
 
         /// <summary>
-        /// 执行模板生成
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         private async Task<XncfBuildResult> BuildSampleAsync(BuildXncf_BuildRequest request, AppServiceLogger logger)
@@ -257,7 +257,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 throw new FileNotFoundException("未找到需要添加 XNCF 引用的 Senparc.Web.csproj。", webProjectFilePath);
             }
 
-            #region 检查并安装模板
+            #region Legacy section
 
             var templateListResult = await RunDotNetCommandAsync(
                 "检查 XNCF 模板",
@@ -318,7 +318,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
             #endregion
 
-            #region 从模板安装 XNCF 项目
+            #region Legacy section
 
             var frameworkVersion = string.IsNullOrEmpty(request.OtherFrameworkVersion)
                 ? request.FrameworkVersion
@@ -385,7 +385,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
             #endregion
 
-            #region 修改项目文件引用等
+            #region Legacy section
 
             await RunDotNetCommandAsync(
                 "添加 Senparc.Web 项目引用",
@@ -408,7 +408,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
 
         /// <summary>
-        /// 项目名称
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>

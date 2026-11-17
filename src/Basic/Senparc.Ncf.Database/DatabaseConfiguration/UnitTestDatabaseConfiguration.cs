@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：UnitTestDatabaseConfiguration.cs
-    文件功能描述：UnitTestDatabaseConfiguration 相关实现
+
+    File name: UnitTestDatabaseConfiguration.cs
+
+    File description: UnitTestDatabaseConfiguration related implementation
+
     
+
     
-    创建标识：Senparc - 20260704
+
+    Created by: Senparc - 20260704
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -23,12 +35,12 @@ using Senparc.Ncf.Core.Models;
 namespace Senparc.Ncf.Database
 {
     ///// <summary>
-    ///// 使用 appsettigs.json 中的配置进行获取，不作为任何实际使用的数据库配置
+    ///Legacy comment translated to English.
     ///// </summary>
     //public class UnitTestDatabaseConfiguration : IDatabaseConfiguration
     //{
     //    /// <summary>
-    //    /// 单元测试环境下的默认总数据库
+    //Legacy comment translated to English.
     //    /// </summary>
     //    public static Type? UnitTestPillarDbContext { get; set; } = null;
 

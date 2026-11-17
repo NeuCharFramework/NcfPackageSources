@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：DynamicDataResource.cs
-    文件功能描述：DynamicDataResource 相关实现
+    File name: DynamicDataResource.cs
+    File description: DynamicDataResource related implementation
     
     
-    创建标识：Senparc - 20260717
+    Created by: Senparc - 20260717
     
-    修改标识：Senparc - 20260717
-    修改描述：v0.6.0-preview2 为 DynamicData 模块接入统一资源本地化并优化功能文案
+    Modified by: Senparc - 20260717
+    Change description: v0.6.0-preview2 integrate shared resource localization and improve feature text for the DynamicData module
 
 ----------------------------------------------------------------*/
 #nullable enable

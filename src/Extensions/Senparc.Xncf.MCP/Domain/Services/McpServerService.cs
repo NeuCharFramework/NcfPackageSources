@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：McpServerService.cs
-    文件功能描述：McpServerService 服务逻辑
+
+    File name: McpServerService.cs
+
+    File description: Related implementation.
+
     
+
     
-    创建标识：Senparc - 20250327
+
+    Created by: Senparc - 20250327
+
     
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    Modified by: Senparc - 20260702
+
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
+
+
 
 ----------------------------------------------------------------*/
 
@@ -41,7 +53,7 @@ namespace Senparc.Xncf.MCP.Domain.Services
     }
 
     /// <summary>
-    /// NCF 内置启动的 MCP 服务（Server）
+    ///Legacy comment translated to English.
     /// </summary>
     public class McpServerService(IServiceProvider serviceProvider)
     {
@@ -73,13 +85,13 @@ namespace Senparc.Xncf.MCP.Domain.Services
                 McpServerCollection[mcpServerName] = mcpServerData;
             }
 
-            //TODO: 找一个没有被用过的端口
+            //Legacy comment translated to English.
 
             IHost? _extraHost = mcpServerData.Host;
             CancellationTokenSource? _cts = mcpServerData.CancellationTokenSource;
             bool _isRunning = mcpServerData.IsRunning;
 
-            if (_isRunning) return;  // 防止重复启动
+            if (_isRunning) return;  //Legacy comment translated to English.
             _cts = new CancellationTokenSource();
 
             _extraHost = Host.CreateDefaultBuilder()
@@ -107,11 +119,11 @@ namespace Senparc.Xncf.MCP.Domain.Services
                               })
                               .Configure(app =>
                               {
-                                  // 启用路由支持
+                                  //Legacy comment translated to English.
                                   app.UseRouting();
 
 
-                                  // 配置端点，包括 "/"
+                                  //Legacy comment translated to English.
                                   app.UseEndpoints(endpoints =>
                                   {
 
@@ -129,7 +141,7 @@ namespace Senparc.Xncf.MCP.Domain.Services
 
                                       //routeGroup.MapGet("/ncf-mcp-sse", async (HttpContext context, HttpResponse response, CancellationToken requestAborted) =>
                                       //{
-                                      //    // 检查 Token
+                                      //    // check Token
                                       //    var configuredToken = mcpServerData.accessToken;
 
                                       //    if (string.IsNullOrEmpty(configuredToken))

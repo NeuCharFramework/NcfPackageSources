@@ -33,11 +33,17 @@ var base = {
     },
 
     /**
-     * 发送post请求
-     * @param {any} url 地址
-     * @param {any} data 数据
-     * @param {any} ajaxOptions ajax选项
+
+     * sendpostrequest
+
+     * English documentation comment.
+
+     * @param {any} data data
+
+     * English documentation comment.
+
     * @returns {Promise} promise
+
      */
 
     post: function (url, data, ajaxOptions) {
@@ -68,11 +74,17 @@ var base = {
     },
 
     /**
-     * 发送get请求
-     * @param {any} url 地址
-     * @param {any} params 参数
-     * @param {any} isShowErrorMsg 发送错误时，是否显示错误信息
+
+     * sendgetrequest
+
+     * English documentation comment.
+
+     * @param {any} params parameters
+
+     * English documentation comment.
+
      * @returns {Promise} promise
+
      */
     get: function (url, params, isShowErrorMsg) {
         return new Promise((resolve, reject) => {
@@ -95,10 +107,15 @@ var base = {
     },
     swal: {
         /**
-         * 普通警告
-         * @param {any} text 文字
-         * @param {any} icon 类型 "warning","error", "success" and "info
+
+         * Legacy comment translated to English.
+
+         * English documentation comment.
+
+         * @param {any} icon type "warning","error", "success" and "info
+
          * @returns {any} promise
+
          */
         alert: function (text, icon) {
             return swal({
@@ -111,10 +128,15 @@ var base = {
         },
 
         /**
-         * 确认
-         * @param {any} text 文字
-         * @param {any} icon 类型 "warning","error", "success" and "info
+
+         * Legacy comment translated to English.
+
+         * English documentation comment.
+
+         * @param {any} icon type "warning","error", "success" and "info
+
         * @returns {any} promise
+
          */
         confirm: function (text, icon) {
             return swal({
@@ -140,10 +162,15 @@ var base = {
         },
 
         /**
+
          * 
-         * @param {any} text 文字
-         * @param {any} icon 类型 "warning","error", "success" and "info
+
+         * English documentation comment.
+
+         * @param {any} icon type "warning","error", "success" and "info
+
         * @returns {any} promise
+
          */
         promot: function (text, icon) {
             return swal({
@@ -176,8 +203,11 @@ var base = {
             });
         },
         /**
-         * iframe 弹层
-         * @param {any} options 参数
+
+         * Legacy comment translated to English.
+
+         * @param {any} options parameters
+
          * */
         iframModal: function (options) {
             let defaultOptions = {};

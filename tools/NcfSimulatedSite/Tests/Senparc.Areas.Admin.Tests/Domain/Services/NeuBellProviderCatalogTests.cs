@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：NeuBellProviderCatalogTests.cs
-    文件功能描述：Admin Footer 纽铃 Provider 启用状态筛选测试
+    File name: NeuBellProviderCatalogTests.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260802
+    Created by: Senparc - 20260802
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Logging.Abstractions;

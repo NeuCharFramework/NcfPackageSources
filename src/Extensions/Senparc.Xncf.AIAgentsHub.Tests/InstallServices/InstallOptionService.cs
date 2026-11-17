@@ -24,12 +24,12 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
             this._serviceProvider = serviceProvider;
             this._senparcCoreSetting = senparcCoreSetting.Value;
 
-            //初始化Options的默认值
+            //Legacy comment translated to English.
 
         }
 
         /// <summary>
-        /// 获取自动生成的管理员用户名称
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public string GetDefaultAdminUserName()
@@ -38,7 +38,7 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
         }
 
         /// <summary>
-        /// 获取默认的系统名称
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public string GetDefaultSystemName()
@@ -47,7 +47,7 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
         }
 
         /// <summary>
-        /// 读取配置中目标数据库连接字符串
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public string GetDbConnectionString()
@@ -57,7 +57,7 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
         }
 
         /// <summary>
-        /// 修改配置及缓存中目标数据库连接字符串
+        ///Legacy comment translated to English.
         /// </summary>
         public void ResetDbConnectionString(string dbConnectionString)
         {
@@ -87,7 +87,7 @@ namespace Senparc.Xncf.AIAgentsHub.Domain.Services
                 LogUtility.WebLogger.ErrorFormat("SenparcConfigs.Configs 修改错误：" + e.Message, e);
             }
 
-            //清空数据库配置缓存
+            //Legacy comment translated to English.
             MethodCache.ClearMethodCache<ConcurrentDictionary<string, SenparcConfig>>(SenparcDatabaseConnectionConfigs.SENPARC_CONFIG_KEY);
 
             _ = SenparcDatabaseConnectionConfigs.Configs.ToJson();

@@ -1,15 +1,15 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：20260831034100_Add_NeuCharPivotBoard.Designer.cs
-    文件功能描述：数据库迁移与模型快照
+    File name: 20260831034100_Add_NeuCharPivotBoard.Designer.cs
+    File description: database migration and model snapshot
 
 
-    创建标识：Senparc - 20260831
-    修改描述：v0.7.0 新增 NeuCharPivotBoard（Provit 面板）迁移
+    Created by: Senparc - 20260831
+    Change description: v0.7.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+    Modified by: Senparc - 20260915
+    Change description: v0.8.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

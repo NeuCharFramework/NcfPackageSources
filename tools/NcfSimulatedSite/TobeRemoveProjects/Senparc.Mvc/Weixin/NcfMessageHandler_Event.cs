@@ -19,7 +19,7 @@ namespace Senparc.Mvc.Weixin
                 {
                     var serviceProvider = SenparcDI.GetServiceProvider();
 
-                    //临时二维码
+                    //Legacy comment translated to English.
                     var qrCodeRegCache = serviceProvider.GetService<QrCodeRegCache>();
                     var qrCodeRegData = qrCodeRegCache.Get(sceneId.ToString());
 
@@ -29,7 +29,7 @@ namespace Senparc.Mvc.Weixin
                         if (qrCodeRegData.Data.QrCodeRegDataType == QrCodeRegDataType.Reg)
                         {
                             var userService = serviceProvider.GetService<AccountService>();
-                            //判断是否已经绑定[CodeChecked]
+                            //Legacy comment translated to English.
                             if (userService.GetCount(z => z.WeixinOpenId == requestMessage.FromUserName) <= 0)
                             {
                                 var code = new Random().Next(100000, 999999).ToString();

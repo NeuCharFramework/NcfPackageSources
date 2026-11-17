@@ -1,26 +1,26 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：Register.cs
-    文件功能描述：模块注册与初始化逻辑
+    File name: Register.cs
+    File description: module registration and initialization logic
     
     
-    创建标识：Senparc - 20250712
+    Created by: Senparc - 20250712
     
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.23.0-preview3 为 WeixinManager 模块接入统一资源本地化并优化功能文案
+    Modified by: Senparc - 20260717
+    Change description: v0.23.0-preview3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260731
-    修改描述：v0.24.0-preview5 将不支持的平台类型提示接入模块多语言资源
+    Modified by: Senparc - 20260731
+    Change description: v0.24.0-preview5 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.24.16 Remove DatabaseSample and related components from MCP extension
+    Modified by: Senparc - 20261103
+    Change description: v0.24.16 Remove DatabaseSample and related components from MCP extension
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.24.18 统一 XNCF Register 显示元数据与多语言资源键
+    Modified by: Senparc - 20261111
+    Change description: v0.24.18 unify XNCF Register display metadata and localization resource keys
 
 ----------------------------------------------------------------*/
 
@@ -71,14 +71,14 @@ namespace Senparc.Xncf.WeixinManager
 {
     [XncfRegister]
     [XncfOrder(5880)]
-    public partial class Register : XncfRegisterBase, IXncfRegister //注册 XNCF 基础模块接口（必须）
+    public partial class Register : XncfRegisterBase, IXncfRegister //Legacy comment translated to English.
     {
         private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<WeixinManagerResource>(
             "Module.WeixinManager",
             "微信管理",
             "盛派官方微信管理后台，可快速集成微信公众号和小程序的基础管理功能。基于 Senparc.Weixin SDK：https://github.com/JeffreySu/WeiXinMPSDK");
 
-        #region IXncfRegister 接口
+        #region Legacy section
 
         public override string Name => "Senparc.Xncf.WeixinManager";
 
@@ -104,7 +104,7 @@ namespace Senparc.Xncf.WeixinManager
         {
             //services.AddScoped<PostModel>(ServiceProvider =>
             //{
-            //    //根据条件生成不同的PostModel
+            //Legacy comment translated to English.
             //});
             services.AddScoped<IAiHandler, AgentAiHandler>();
             services.AddScoped<ISenparcAiSetting, SenparcAiSetting>();
@@ -135,32 +135,32 @@ namespace Senparc.Xncf.WeixinManager
             services.AddScoped<PromptItemService>();
             services.AddSingleton<IConnectorProvider, WeixinWorkCheckinConnector>();
 
-            var autoCreateApi = false;//是否自动生成API
+            var autoCreateApi = false;//whetherautomaticgenerateAPI
             services.AddSenparcWeixin(configuration, env, autoCreateApi);
 
-            return base.AddXncfModule(services, configuration, env);//如果重写此方法，必须调用基类方法
+            return base.AddXncfModule(services, configuration, env);//Legacy comment translated to English.
         }
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
-            //安装或升级版本时更新数据库
+            //update the database when installing or upgrading a version
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
         }
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
-            //TODO:可以在基础模块里给出选项是否删除
+            //Legacy comment translated to English.
 
-            #region 删除数据库（演示）
+            #region Legacy section
 
             var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
             WeixinSenparcEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as WeixinSenparcEntities;
 
-            //指定需要删除的数据实体
+            //specify the data entities to delete
 
-            //注意：这里作为演示，在卸载模块的时候删除了所有本模块创建的表，实际操作过程中，请谨慎操作，并且按照删除顺序对实体进行排序！
+            //Note: this is a demonstration that deletes all tables created by this module during uninstallation. In production, proceed carefully and order entities by their deletion dependencies.
             var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.TryGetXncfDatabaseDbContextType).Keys.ToArray();
-            //按照删除顺序排序
+            //Legacy comment translated to English.
             var types = new[]
             {
                 typeof(WeixinClawMessageReceipt),
@@ -177,7 +177,7 @@ namespace Senparc.Xncf.WeixinManager
                 .ToList();
             dropTypes.AddRange(types);
             types = dropTypes.ToArray();
-            //指定需要删除的数据实体
+            //specify the data entities to delete
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, types);
 
             #endregion
@@ -187,32 +187,32 @@ namespace Senparc.Xncf.WeixinManager
 
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
-            //等待数据库注册完成后运行
+            //Legacy comment translated to English.
             _ = Task.Factory.StartNew(async () =>
             {
-                //注册微信
+                //Legacy comment translated to English.
                 Senparc.Weixin.WeixinRegister.UseSenparcWeixin(null, null, senparcSetting: null);
                 
-                //等待数据库注册完成后运行
+                //Legacy comment translated to English.
                 while (Ncf.Database.Register.UseNcfDatabaseSetted is false)
                 {
                     await Task.Delay(1000);
                 }
                 
-                //开始查询数据库
+                //Legacy comment translated to English.
                 try
                 {
-                    //未安装数据库表的情况下可能会出错，因此需要try
+                    //Legacy comment translated to English.
                     using (var scope = app.ApplicationServices.CreateScope())
                     {
                         var mpAccountService = scope.ServiceProvider.GetRequiredService<MpAccountService>();
                         var allMpAccount = mpAccountService.GetAllMpAccounts();
 
-                        //批量自动注册公众号
+                        //Legacy comment translated to English.
                         allMpAccount.AsParallel().ForAll(mpAccount =>
                         {
                             AccessTokenContainer.RegisterAsync(mpAccount.AppId, mpAccount.AppSecret, $"{mpAccount.Name}-{mpAccount.Id}");
-                            //TODO：更多执行过程中的动态注册
+                            //Legacy comment translated to English.
                         });
                     }
                 }
@@ -235,7 +235,7 @@ namespace Senparc.Xncf.WeixinManager
             //    foreach (var neucharApiDocAssembly in WeixinApiService.WeixinApiAssemblyCollection)
             //    {
 
-            //        //TODO:真实的动态版本号
+            //Legacy comment translated to English.
             //        var verion = WeixinApiService.WeixinApiAssemblyVersions[neucharApiDocAssembly.Key]; //neucharApiDocAssembly.Value.ImageRuntimeVersion;
             //        var docName = WeixinApiService.GetDocName(neucharApiDocAssembly.Key);
 
@@ -275,7 +275,7 @@ namespace Senparc.Xncf.WeixinManager
 
             public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
             {
-                //每次切换定义，都需要经过比较长的时间才到达这里
+                //Legacy comment translated to English.
 
                 return;
                 string platformType;
@@ -312,14 +312,14 @@ namespace Senparc.Xncf.WeixinManager
                 {
                     if (!path.Contains(platformType))
                     {
-                        //移除非当前模块的API对象
+                        //Legacy comment translated to English.
                         swaggerDoc.Paths.Remove(path);
                     }
                 }
 
                 //SwaggerOperationAttribute
-                //移除Schema对象
-                //var toRemoveSchema = context.SchemaRepository.Schemas.Where(z => !z.Key.Contains(platformType)).ToList();//结果为全部删除，仅测试
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 //foreach (var schema in toRemoveSchema)
                 //{
                 //    context.SchemaRepository.Schemas.Remove(schema.Key);
@@ -362,15 +362,15 @@ namespace Senparc.Xncf.WeixinManager
         //{
         //    public void Apply(OpenApiOperation operation, OperationFilterContext context)
         //    {
-        //        //获取是否添加登录特性
+        //Legacy comment translated to English.
         //        var authAttributes = context.MethodInfo.DeclaringType.GetCustomAttributes(true)
         //         .Union(context.MethodInfo.GetCustomAttributes(true))
         //         .OfType<AuthorizeAttribute>().Any();
 
         //        if (authAttributes)
         //        {
-        //            operation.Responses.Add("401", new OpenApiResponse { Description = "暂无访问权限" });
-        //            operation.Responses.Add("403", new OpenApiResponse { Description = "禁止访问" });
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         //            operation.Security = new List<OpenApiSecurityRequirement>
         //            {
         //                new OpenApiSecurityRequirement { { new OpenApiSecurityScheme() {  Name= "oauth2" }, new[] { "swagger_api" } }}

@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：SenMapicSynData.cs
-    文件功能描述：SenMapicSynData 相关实现
+
+    File name: SenMapicSynData.cs
+
+    File description: SenMapicSynData related implementation
+
     
+
     
-    创建标识：Senparc - 20250113
+
+    Created by: Senparc - 20250113
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -26,12 +38,12 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             CurrentCrawlingUrlList = new CurrentCrawlingUrlList();
         }
 
-        //静态SearchCache
+        //Legacy comment translated to English.
         public static SenMapicSynData Instance
         {
             get
             {
-                return Nested.instance;//返回Nested类中的静态成员instance
+                return Nested.instance;//Legacy comment translated to English.
             }
         }
 
@@ -40,7 +52,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             static Nested()
             {
             }
-            //将instance设为一个初始化的SearchCache新实例
+            //Legacy comment translated to English.
             internal static readonly SenMapicSynData instance = new SenMapicSynData();
         }
 

@@ -59,8 +59,8 @@ namespace Senparc.Areas.Admin.Controllers
 
             List<string> filePathNames = Directory.GetFiles(logFileDir).OrderBy(z => z).ToList();
             List<WebLog> logList = new List<WebLog>();
-            int fileStartIndex = pageIndex > 0 ? pageIndex - 1 : 0;//开始查找日志文件，如果pageIndex为0，则查找全部
-            int fileEndIndex = pageIndex > 0 ? pageIndex : filePathNames.Count;//结束查找日志文件，如果pageIndex为0，则查找全部
+            int fileStartIndex = pageIndex > 0 ? pageIndex - 1 : 0;//Legacy comment translated to English.
+            int fileEndIndex = pageIndex > 0 ? pageIndex : filePathNames.Count;//Legacy comment translated to English.
 
             for (int i = fileStartIndex; i < fileEndIndex; i++)
             {
@@ -68,18 +68,18 @@ namespace Senparc.Areas.Admin.Controllers
                 var insertListIndex = logList.Count;
                 string newFilename = filePathName + ".bak";
                 System.IO.File.Delete(newFilename);
-                System.IO.File.Copy(filePathName, newFilename, true);//读取备份文件，以免资源占用
+                System.IO.File.Copy(filePathName, newFilename, true);//Legacy comment translated to English.
 
                 using (StreamReader sr = new StreamReader(newFilename, Encoding.Default))
                 {
                     string lineText = null;
                     int line = 0;
-                    //bool inOneLog = false;//属于同一条日志
+                    //Legacy comment translated to English.
                     WebLog log = new WebLog();
                     while ((lineText = sr.ReadLine()) != null)
                     {
                         line++;
-                        if (lineText.StartsWith("-------") /* || (!inOneLog && line.IsNullOrEmpty())*/)//日志之间的无效行
+                        if (lineText.StartsWith("-------") /* || (!inOneLog && line.IsNullOrEmpty())*/)//Legacy comment translated to English.
                         {
                             continue;
                         }
@@ -87,7 +87,7 @@ namespace Senparc.Areas.Admin.Controllers
                         if (lineText.StartsWith(logDate.ToString("yyyy-MM-dd")))
                         {
                             logList.Insert(insertListIndex, log);
-                            //日志格式：2010-02-25 14:19:04,541 [4] DEBUG WebLogger2 - AA调试，Home/Index被打开!
+                            //Legacy comment translated to English.
                             string[] data = lineText.Split(new[] { " ", "," }, StringSplitOptions.RemoveEmptyEntries);
                             log = new WebLog()
                             {
@@ -97,13 +97,13 @@ namespace Senparc.Areas.Admin.Controllers
                                 ThreadName = data[3],
                                 Level = data[4],
                                 LoggerName = data[5],
-                                Message = lineText.Substring(lineText.IndexOf(" - ") + 3, lineText.Length - lineText.IndexOf(" - ") - 3)//余下所有部分
+                                Message = lineText.Substring(lineText.IndexOf(" - ") + 3, lineText.Length - lineText.IndexOf(" - ") - 3)//Legacy comment translated to English.
                             };
-                            //inOneLog = true;//已经开始读数据
+                            //Legacy comment translated to English.
                         }
                         //else if (!log.Level.IsNullOrEmpty())
                         //{
-                        //    log.Details += line.Replace("  ", " &nbsp; &nbsp; ") + "<br />";//加入Details
+                        //Legacy comment translated to English.
                         //}
                     }
                     logList.Insert(insertListIndex, log);
@@ -145,7 +145,7 @@ namespace Senparc.Areas.Admin.Controllers
 
                 string newFilename = filePathName + ".bak";
                 System.IO.File.Delete(newFilename);
-                System.IO.File.Copy(filePathName, newFilename, true);//读取备份文件，以免资源占用
+                System.IO.File.Copy(filePathName, newFilename, true);//Legacy comment translated to English.
                 using (StreamReader sr = new StreamReader(newFilename, Encoding.Default))
                 {
                     string lineText = null;
@@ -172,13 +172,13 @@ namespace Senparc.Areas.Admin.Controllers
                                 ThreadName = data[3],
                                 Level = data[4],
                                 LoggerName = data[5],
-                                Message = lineText.Substring(lineText.IndexOf(" - ") + 3, lineText.Length - lineText.IndexOf(" - ") - 3)//余下所有部分
+                                Message = lineText.Substring(lineText.IndexOf(" - ") + 3, lineText.Length - lineText.IndexOf(" - ") - 3)//Legacy comment translated to English.
                             };
                             recordStarted = true;
                         }
                         else if (recordStarted)
                         {
-                            //开始记录内容
+                            //startrecordcontent
                             log.Details += lineText + "<br />";
                         }
                     }

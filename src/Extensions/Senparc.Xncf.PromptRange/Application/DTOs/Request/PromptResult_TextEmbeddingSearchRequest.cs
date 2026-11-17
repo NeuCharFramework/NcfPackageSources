@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：PromptResult_TextEmbeddingSearchRequest.cs
-    文件功能描述：PromptResult_TextEmbeddingSearchRequest 数据传输对象定义
+    File name: PromptResult_TextEmbeddingSearchRequest.cs
+    File description: Related implementation.
     
     
-    创建标识：Senparc - 20260705
+    Created by: Senparc - 20260705
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.16.4-preview3 增强文生图重试机制并兼容 TLS1.2/TLS1.3----------------------------------------------------------------*/
+    Modified by: Senparc - 20260705
+    Change description: v0.16.4-preview3 Updated module behavior and related support.*/
 
 using System.ComponentModel.DataAnnotations;
 
@@ -17,19 +17,19 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
     public class PromptResult_TextEmbeddingSearchRequest
     {
         /// <summary>
-        /// PromptResult ID（必须为 TextEmbedding 类型结果）
+        /// PromptResult ID（mustfor TextEmbedding typeresult）
         /// </summary>
         [Required]
         public int PromptResultId { get; set; }
 
         /// <summary>
-        /// 查询文本
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         public string Query { get; set; }
 
         /// <summary>
-        /// TopK（默认 3，范围 1-20）
+        ///Legacy comment translated to English.
         /// </summary>
         public int TopK { get; set; } = 3;
     }

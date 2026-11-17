@@ -1,20 +1,38 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：NcfFile.cs
-    文件功能描述：NcfFile 相关实现
+
+    File name: NcfFile.cs
+
+    File description: NcfFile related implementation
 
 
-    创建标识：Senparc - 20250112
 
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.6.0-preview1 完善文件资源边界、安全删除策略与静态资源管理
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.8.1 add SourceFileId, SourceType, and SourceUrl columns to PromptRange table for PostgreSQL, SQL Server, and SQLite
+    Created by: Senparc - 20250112
+
+
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260813
+
+    Change description: v0.6.0-preview1 Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20261103
+
+    Change description: v0.8.1 add SourceFileId, SourceType, and SourceUrl columns to PromptRange table for PostgreSQL, SQL Server, and SQLite
+
+
 
 ----------------------------------------------------------------*/
 
@@ -25,9 +43,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Senparc.Xncf.FileManager.Domain.Models.DatabaseModel
 {
-    //[Table(Register.DATABASE_PREFIX + nameof(NcfFile))]//必须添加前缀，防止全系统中发生冲突
+    //[Table(Register.DATABASE_PREFIX + nameof(NcfFile))]//a prefix is required to prevent system-wide conflicts
 
-    [Table(Register.DATABASE_PREFIX + nameof(NcfFile))]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(NcfFile))]//a prefix is required to prevent system-wide conflicts
     public class NcfFile : EntityBase<int>
     {
         [Required]
@@ -35,32 +53,32 @@ namespace Senparc.Xncf.FileManager.Domain.Models.DatabaseModel
         public string FileName { get; set; }
 
         [Required]
-        public string StorageFileName { get; set; } // Guid 格式的文件名
+        public string StorageFileName { get; set; } //Legacy comment translated to English.
 
         [Required]
-        public string FilePath { get; set; } // 相对路径，例如：App_Data/NcfFiles/yyyy/MM/
+        public string FilePath { get; set; } //Legacy comment translated to English.
 
-        public long FileSize { get; set; } // 文件大小（字节）
+        public long FileSize { get; set; } //Legacy comment translated to English.
 
         [MaxLength(100)]
-        public string FileExtension { get; set; } // 文件扩展名
+        public string FileExtension { get; set; } //Legacy comment translated to English.
 
-        public FileType FileType { get; set; } // 文件类型枚举
+        public FileType FileType { get; set; } //Legacy comment translated to English.
 
         [MaxLength(300)]
-        public string Description { get; set; } // 文件描述
+        public string Description { get; set; } // filedescription
 
-        public DateTime UploadTime { get; set; } // 上传时间
+        public DateTime UploadTime { get; set; } //Legacy comment translated to English.
 
-        public int? FolderId { get; set; } // 所属文件夹，可为空表示根目录
+        public int? FolderId { get; set; } //Legacy comment translated to English.
 
         /// <summary>
-        /// 文件的业务用途。用途一经确定不可在管理页面中直接转换，避免把知识库源文件误发布为站点资源。
+        ///Legacy comment translated to English.
         /// </summary>
         public NcfFileResourceScope ResourceScope { get; set; } = NcfFileResourceScope.KnowledgeBase;
 
         /// <summary>
-        /// 仅站点静态资源允许发布为公开访问；知识库源文件和外部私有附件始终保持私有。
+        ///Legacy comment translated to English.
         /// </summary>
         public NcfFileAccessLevel AccessLevel { get; set; } = NcfFileAccessLevel.Private;
 
@@ -68,7 +86,7 @@ namespace Senparc.Xncf.FileManager.Domain.Models.DatabaseModel
         public string ContentType { get; set; }
 
         /// <summary>
-        /// 文件写入完成后计算的 SHA-256，用于完整性标识及公开资源 URL 的缓存指纹。
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(64)]
         public string ContentHash { get; set; }
@@ -76,13 +94,13 @@ namespace Senparc.Xncf.FileManager.Domain.Models.DatabaseModel
 
     public enum NcfFileResourceScope
     {
-        /// <summary>可供 KnowledgeBase 提取和切片的资料文件。</summary>
+        ///Legacy comment translated to English.
         KnowledgeBase = 100,
 
-        /// <summary>站点可引用的图片、音视频和字体等静态资源。</summary>
+        ///Legacy comment translated to English.
         SiteAsset = 200,
 
-        /// <summary>由微信等外部模块导入且不可公开发布的私有附件。</summary>
+        ///Legacy comment translated to English.
         PrivateAttachment = 300,
 
         /// <summary>Skill package and resource files.</summary>

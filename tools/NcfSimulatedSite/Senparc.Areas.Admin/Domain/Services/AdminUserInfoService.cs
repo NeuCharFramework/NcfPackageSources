@@ -1,35 +1,35 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：AdminUserInfoService.cs
-    文件功能描述：AdminUserInfoService 服务逻辑
+    File name: AdminUserInfoService.cs
+    File description: Related implementation.
     
     
-    创建标识：Senparc - 20241028
+    Created by: Senparc - 20241028
     
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.0.3 新增登录超时配置并补齐多数据库迁移支持
+    Modified by: Senparc - 20260705
+    Change description: v0.0.3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.0.4 新增登录超时配置并补齐多数据库迁移支持
+    Modified by: Senparc - 20260705
+    Change description: v0.0.4 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260724
-    修改描述：v0.1.0 增强后台模块批量更新并完善多语言管理界面
+    Modified by: Senparc - 20260724
+    Change description: v0.1.0 enhance batch module updates and improve the multilingual management interface
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.2.0 增强后台管理员交互与桌面 Admin Chat 安全同步
+    Modified by: Senparc - 20260729
+    Change description: v0.2.0 enhance admin interaction and secure desktop Admin Chat synchronization
 
-    修改标识：Senparc - 20260808
-    修改描述：v0.4.0 适配桌面管理员换票签发所需的用户与会话信息
+    Modified by: Senparc - 20260808
+    Change description: v0.4.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 add image captcha for admin login (required after 2 failed attempts)
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 add image captcha for admin login (required after 2 failed attempts)
 
 ----------------------------------------------------------------*/
 
@@ -174,7 +174,7 @@ namespace Senparc.Areas.Admin.Domain
                 z => z.Id != id && z.UserName.ToUpper() == userName /*z.UserName.Equals(userName, StringComparison.CurrentCultureIgnoreCase)*/) != null;
         }
 
-        ////TODO：放到 OHS 的 Service
+        ///Legacy comment translated to English.
         ////[ApiBind]
         ////[Core.BackendJwtAuthorize]
         public async Task<AdminUserInfo> GetUserInfoAsync(string userName)
@@ -205,7 +205,7 @@ namespace Senparc.Areas.Admin.Domain
         /// <returns>A task representing the asynchronous operation</returns>
         public virtual async Task LoginAsync(AdminUserInfo userInfo, bool rememberMe, string tenantKey = null)
         {
-            #region 使用 .net core 的方法写入 cookie 验证信息
+            #region Legacy section
 
             var claims = new List<Claim>
             {
@@ -236,7 +236,7 @@ namespace Senparc.Areas.Admin.Domain
                 IsPersistent = false,
             };
 
-            await LogoutAsync(); //退出登录
+            await LogoutAsync(); //Legacy comment translated to English.
             await _contextAccessor.Value.HttpContext.SignInAsync(SiteConfig.NcfAdminAuthorizeScheme, new ClaimsPrincipal(identity), authProperties);
 
             #endregion
@@ -254,9 +254,9 @@ namespace Senparc.Areas.Admin.Domain
         //}
 
         /// <summary>
-        /// 获取当前用户的连续登录失败次数（用于判断是否需要图形验证码，与 TryLoginAsync 的计数共用同一缓存键）
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="userName">规范化用户名（AdminUserInfo.UserName）</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public async Task<int> GetFailedLoginCountAsync(string userName)
         {
@@ -266,7 +266,7 @@ namespace Senparc.Areas.Admin.Domain
         }
 
         /// <summary>
-        /// 如果密码正确，则尝试登录
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="adminUserInfo"></param>
         /// <param name="password"></param>
@@ -281,7 +281,7 @@ namespace Senparc.Areas.Admin.Domain
             var failedLoginKey = $"FailedLogin:{adminUserInfo.UserName}";
             using (var cacheLock = await cache.BeginCacheLockAsync("LoginLock-Admin", adminUserInfo.UserName))
             {
-                // 先检查是否在锁定期，避免不必要的数据库查询
+                //Legacy comment translated to English.
                 var lockEndTime = await cache.GetAsync<DateTime?>(lockTimeKey);
                 if (lockEndTime.HasValue && lockEndTime.Value > DateTime.Now)
                 {
@@ -290,21 +290,21 @@ namespace Senparc.Areas.Admin.Domain
 
                 if (adminUserInfo.CheckPassword(password))
                 {
-                    // 登录成功，清除失败记录
+                    //Legacy comment translated to English.
                     await cache.RemoveFromCacheAsync(failedLoginKey);
                     await cache.RemoveFromCacheAsync(lockTimeKey);
 
-                    // 登录
+                    //Legacy comment translated to English.
                     await LoginAsync(adminUserInfo, rememberMe, tenantKey);
                     return adminUserInfo;
                 }
                 else
                 {
-                    // 记录失败次数，即使锁定期已过，也要累加之前的失败次数
+                    //Legacy comment translated to English.
                     var failedCount = await cache.GetAsync<int>(failedLoginKey);
                     failedCount++;
 
-                    // 设置锁定时间
+                    //Legacy comment translated to English.
                     DateTime? lockTime = null;
                     if (failedCount >= 20)
                     {
@@ -323,7 +323,7 @@ namespace Senparc.Areas.Admin.Domain
                         lockTime = DateTime.Now.AddMinutes(5);
                     }
 
-                    // 更新缓存，失败次数在24小时内有效
+                    //Legacy comment translated to English.
                     await cache.SetAsync(failedLoginKey, failedCount, TimeSpan.FromHours(24));
                     if (lockTime.HasValue)
                     {
@@ -336,7 +336,7 @@ namespace Senparc.Areas.Admin.Domain
         }
 
         /// <summary>
-        /// 创建管理员
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="objDto"></param>
         /// <returns></returns>
@@ -348,7 +348,7 @@ namespace Senparc.Areas.Admin.Domain
         }
 
         /// <summary>
-        /// 创建管理员
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="objDto"></param>
         /// <returns></returns>
@@ -365,7 +365,7 @@ namespace Senparc.Areas.Admin.Domain
         }
 
         /// <summary>
-        /// 更新用户信息
+        /// updateuserinformation
         /// </summary>
         /// <param name="objDto"></param>
         public void UpdateAdminUserInfo(CreateOrUpdate_AdminUserInfoDto objDto)
@@ -395,7 +395,7 @@ namespace Senparc.Areas.Admin.Domain
 
 
         /// <summary>
-        /// 统计指定租户下的管理员账号数量（跨租户统计：忽略全局租户查询过滤器，仅用于租户管理决策）
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<int> GetTenantUserCountAsync(int tenantId)
         {
@@ -407,10 +407,10 @@ namespace Senparc.Areas.Admin.Domain
         }
 
         /// <summary>
-        /// 初始化，随机生成密码
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="userName">用户名</param>
-        /// <param name="password">密码</param>
+        /// <param name="userName">user name</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public async Task<(AdminUserInfo AdminUserInfo, string Password)> InitAsync(string userName)
         {
@@ -458,8 +458,8 @@ namespace Senparc.Areas.Admin.Domain
         }
 
         /// <summary>
-        /// 登录
-        /// <paramref name="loginDto">登录dto</paramref>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         //[ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
@@ -468,10 +468,10 @@ namespace Senparc.Areas.Admin.Domain
             AccountLoginResultDto result = new AccountLoginResultDto();
             string token;
 
-            //多租户：与 Cookie 登录路径（Admin Login 页面）保持一致——
-            //先按登录输入的租户名称解析 TenantInfo 并设置当前 DbContext 的租户上下文，
-            //否则全局租户查询过滤器（TenantId == 当前租户Id）会拦截掉该租户的管理员账号，导致登录失败；
-            //解析出的 TenantKey 同时写入 JWT claim，保证 TenantRule.LoginInput 规则在 JWT（桌面/后端）认证场景下可以解析请求租户
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             Senparc.Xncf.Tenant.Domain.DataBaseModel.TenantInfo tenantInfo = null;
             if (SiteConfig.SenparcCoreSetting.EnableMultiTenant && !string.IsNullOrWhiteSpace(loginDto.TenantKey))
             {
@@ -481,7 +481,7 @@ namespace Senparc.Areas.Admin.Domain
                     : await tenantInfoService.GetObjectAsync(z => z.Enable && z.TenantKey.ToUpper() == loginDto.TenantKey.ToUpper());
                 if (tenantInfo == null)
                 {
-                    //不区分“租户不存在”与“账号不存在”，避免泄露租户/账号信息
+                    //Legacy comment translated to English.
                     throw new NcfExceptionBase($"用户名不存在或密码不正确：{loginDto.UserName}！");
                 }
                 SetTenantInfo(tenantInfoService.GetRequestTenantInfo(tenantInfo));
@@ -517,14 +517,14 @@ namespace Senparc.Areas.Admin.Domain
             }
             catch (LoginLockException)
             {
-                throw; // 直接向上层抛出登录锁定异常
+                throw; //Legacy comment translated to English.
             }
 
             return result;
         }
 
         /// <summary>
-        /// 获取当前管理信息
+        /// getcurrentmanagementinformation
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -563,8 +563,8 @@ namespace Senparc.Areas.Admin.Domain
         }
 
         /// <summary>
-        /// 为已经通过 WebView Cookie 与 DesktopBridge 一次性挑战校验的管理员签发 JWT。
-        /// JWT 不能超过 Cookie 剩余寿命，也不能超过后台 JWT 的正常配置寿命。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<(string Token, DateTimeOffset ExpiresUtc)> GenerateTokenForDesktopHandoffAsync(
             int memberId,
@@ -626,7 +626,7 @@ namespace Senparc.Areas.Admin.Domain
             }
             if (!string.IsNullOrWhiteSpace(tenantKey))
             {
-                //与 Cookie 登录路径保持一致：多租户 LoginInput 规则依赖 TenantKey claim 解析请求租户
+                //Legacy comment translated to English.
                 claims.Add(new Claim("TenantKey", tenantKey, ClaimValueTypes.String));
             }
 

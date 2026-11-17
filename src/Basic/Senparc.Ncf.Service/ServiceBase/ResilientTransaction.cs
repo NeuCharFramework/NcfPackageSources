@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：ResilientTransaction.cs
-    文件功能描述：ResilientTransaction 相关实现
+
+    File name: ResilientTransaction.cs
+
+    File description: ResilientTransaction related implementation
+
     
+
     
-    创建标识：Senparc - 20201023
+
+    Created by: Senparc - 20201023
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -21,7 +33,7 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.Service.ServiceBase
 {
     /// <summary>
-    /// 默认事务策略,微软文档用法
+    ///Legacy comment translated to English.
     /// <seealso cref="https://docs.microsoft.com/ef/core/miscellaneous/connection-resiliency"/>
     /// </summary>
     public class ResilientTransaction

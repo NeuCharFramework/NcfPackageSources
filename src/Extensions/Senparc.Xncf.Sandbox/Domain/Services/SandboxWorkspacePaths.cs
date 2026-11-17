@@ -1,16 +1,16 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：SandboxWorkspacePaths.cs
-    文件功能描述：Sandbox 持久化工作区路径约束
+    File name: SandboxWorkspacePaths.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260822
+    Created by: Senparc - 20260822
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 enhance sandbox preview, Jupyter workspace, and session lifecycle management
 
-    修改标识：Senparc - 20260829
-    修改描述：v0.3.0 统一沙箱工作区路径边界校验
+    Modified by: Senparc - 20260829
+    Change description: v0.3.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

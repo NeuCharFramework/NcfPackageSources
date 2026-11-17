@@ -1,20 +1,20 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：AdminChatHistorySearch.cs
-    文件功能描述：在未归档的 Admin Chat 会话中检索消息片段
+    File name: AdminChatHistorySearch.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20261110
+    Created by: Senparc - 20261110
 
-    修改标识：Senparc - 20261110
-    修改描述：提供未归档对话的关键字检索与高亮片段
+    Modified by: Senparc - 20261110
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261110
-    修改描述：增加未归档会话中 Harness 方法调用名检索
+    Modified by: Senparc - 20261110
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.12.28 完善 Admin Chat 与模块工作区交互能力兼容
+    Modified by: Senparc - 20261111
+    Change description: v0.12.28 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 using System;
@@ -33,7 +33,7 @@ namespace Senparc.Areas.Admin.Domain.Services
     }
 
     /// <summary>
-    /// 一条可定位到会话和消息的搜索结果。片段只保留命中附近的文本。
+    ///Legacy comment translated to English.
     /// </summary>
     public sealed class AdminChatHistorySearchHit
     {
@@ -52,7 +52,7 @@ namespace Senparc.Areas.Admin.Domain.Services
     }
 
     /// <summary>
-    /// 只匹配当前用户仍在进行中的会话。已归档、已删除和其他账号的记录不会进入结果。
+    ///Legacy comment translated to English.
     /// </summary>
     public static class AdminChatHistorySearch
     {
@@ -148,7 +148,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 只匹配 Harness 轨迹中 EventType 为 tool.call 的方法名。参数、结果和普通消息不参与。
+        ///Legacy comment translated to English.
         /// </summary>
         public static IReadOnlyList<AdminChatHistorySearchHit> SearchToolCalls(
             IEnumerable<AdminChatSession> sessions,

@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：SkillAppService.cs
-    文件功能描述：Skill 查询、执行与测试应用服务
+    File name: SkillAppService.cs
+    File description: Related implementation.
     
     
-    创建标识：Senparc - 20261016
+    Created by: Senparc - 20261016
     
-    修改标识：Senparc - 20261021
-    修改描述：v0.20.0 开放 Skill 查询、执行与测试
+    Modified by: Senparc - 20261021
+    Change description: v0.20.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.20.8 add Skill management page and functionality
+    Modified by: Senparc - 20261103
+    Change description: v0.20.8 add Skill management page and functionality
 
 ----------------------------------------------------------------*/
 

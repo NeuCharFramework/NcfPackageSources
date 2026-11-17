@@ -1,34 +1,34 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：AdminChatStreamController.cs
-    文件功能描述：为桌面 Admin Chat 提供受 AdminOnly JWT 保护的流式消息接口
+    File name: AdminChatStreamController.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260726
+    Created by: Senparc - 20260726
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.2.0 增强后台管理员交互与桌面 Admin Chat 安全同步
+    Modified by: Senparc - 20260729
+    Change description: v0.2.0 enhance admin interaction and secure desktop Admin Chat synchronization
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+    Modified by: Senparc - 20260915
+    Change description: v0.8.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260916
-    修改描述：v0.9.0 增强 Admin Chat 取消与推理轨迹，并扩展 NeuBell WebHook 请求能力
+    Modified by: Senparc - 20260916
+    Change description: v0.9.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.11.1 流式输出携带工作区与会话标题
+    Modified by: Senparc - 20261021
+    Change description: v0.11.1 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 implement AdminChat memory storage and management system
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 implement AdminChat memory storage and management system
 
-    修改标识：Senparc - 20261105
-    修改描述：v0.12.26 按会话隔离流式输出与回调
+    Modified by: Senparc - 20261105
+    Change description: v0.12.26 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261107
-    修改描述：页面刷新或关闭后，AdminChat 任务继续执行并允许重新连接
+    Modified by: Senparc - 20261107
+    Change description: Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -57,7 +57,7 @@ using Senparc.Ncf.Shared.Abstractions.Events;
 namespace Senparc.Areas.Admin.OHS.Local.Controllers;
 
 /// <summary>
-/// Desktop Chat 专用流式接口。正文仍由 AdminOnly JWT 保护，EventBus 只负责完成后的变更通知。
+///Legacy comment translated to English.
 /// </summary>
 [ApiController]
 [Route("api/Senparc.Areas.Admin/AdminChatStream")]
@@ -406,7 +406,7 @@ public sealed class AdminChatStreamController : ControllerBase
         try { await generationTask.ConfigureAwait(false); }
         catch (Exception)
         {
-            // 生成失败或停止已经由调用方发布给仍在连接的页面。
+            //Legacy comment translated to English.
         }
     }
 

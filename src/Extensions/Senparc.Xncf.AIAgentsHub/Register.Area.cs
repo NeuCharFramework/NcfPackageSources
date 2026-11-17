@@ -1,17 +1,32 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：Register.Area.cs
-    文件功能描述：Register.Area 相关实现
-    
-    
-    创建标识：Senparc - 20240311
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.13.0-preview3 为 AIAgentsHub 模块接入统一资源本地化并优化功能文案
+    Copyright (C) 2026 Senparc
+
+  
+
+    File name: Register.Area.cs
+
+    File description: Register.Area related implementation
+
+    
+
+    
+
+    Created by: Senparc - 20240311
+
+    
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260717
+
+    Change description: v0.13.0-preview3 Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 
@@ -28,10 +43,10 @@ using Microsoft.Extensions.Hosting;
 
 namespace Senparc.Xncf.AIAgentsHub
 {
-    public partial class Register : IAreaRegister, //注册 XNCF 页面接口（按需选用）
-                                    IXncfRazorRuntimeCompilation  //赋能 RazorPage 运行时编译
+    public partial class Register : IAreaRegister, //register the XNCF page interface (optional)
+                                    IXncfRazorRuntimeCompilation  //enable RazorPage runtime compilation
     {
-        #region IAreaRegister 接口
+        #region Legacy section
 
         public string HomeUrl => "/Admin/AIAgentsHub/Index";
 
@@ -44,7 +59,7 @@ namespace Senparc.Xncf.AIAgentsHub
         {
             builder.AddRazorPagesOptions(options =>
             {
-                //此处可配置页面权限
+                //configure page permissions here
             });
 
             SenparcTrace.SendCustomLog("AIAgentsHub 启动", "完成 Area:Senparc.Xncf.AIAgentsHub 注册");
@@ -54,7 +69,7 @@ namespace Senparc.Xncf.AIAgentsHub
 
         #endregion
 
-        #region IXncfRazorRuntimeCompilation 接口
+        #region Legacy section
         public string LibraryPath => Path.GetFullPath(Path.Combine(SiteConfig.WebRootPath, "..", "..", "Senparc.Xncf.AIAgentsHub"));
         #endregion
     }

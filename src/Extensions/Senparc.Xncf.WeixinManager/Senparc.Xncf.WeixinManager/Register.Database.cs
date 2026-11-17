@@ -1,20 +1,20 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：Register.Database.cs
-    文件功能描述：Register.Database 相关实现
+    File name: Register.Database.cs
+    File description: Register.Database related implementation
     
     
-    创建标识：Senparc - 20250712
+    Created by: Senparc - 20250712
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.24.9 0.24.9 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
+    Modified by: Senparc - 20261005
+    Change description: v0.24.9 0.24.9 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.24.16 enhance WeixinClaw media handling and UI improvements
+    Modified by: Senparc - 20261103
+    Change description: v0.24.16 enhance WeixinClaw media handling and UI improvements
 
 ----------------------------------------------------------------*/
 
@@ -29,9 +29,9 @@ using Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel.Mapping;
 
 namespace Senparc.Xncf.WeixinManager
 {
-    public partial class Register : IXncfDatabase  //注册 XNCF 模块数据库（按需选用）
+    public partial class Register : IXncfDatabase  //register the XNCF module database (optional)
     {
-        #region IXncfDatabase 接口
+        #region Legacy section
 
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -60,7 +60,7 @@ namespace Senparc.Xncf.WeixinManager
             //services.AddScoped<UserTag>();
             //services.AddScoped<UserTag_WeixinUser>();
 
-            //AutoMap映射不能在这里做，因为执行到此处时，相关过程已经执行完毕
+            //Legacy comment translated to English.
             //base.AddAutoMapMapping(profile =>
             //{
             //});

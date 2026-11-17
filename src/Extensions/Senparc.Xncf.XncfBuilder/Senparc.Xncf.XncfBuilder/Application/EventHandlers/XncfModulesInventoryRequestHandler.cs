@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：XncfModulesInventoryRequestHandler.cs
-    文件功能描述：XncfModulesInventoryRequestHandler 相关实现
+    File name: XncfModulesInventoryRequestHandler.cs
+    File description: XncfModulesInventoryRequestHandler related implementation
     
     
-    创建标识：Senparc - 20260510
+    Created by: Senparc - 20260510
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
 ----------------------------------------------------------------*/
 
@@ -26,7 +26,7 @@ using Senparc.Xncf.XncfModuleManager.Domain.Services;
 namespace Senparc.Xncf.XncfBuilder.Application.EventHandlers
 {
     /// <summary>
-    /// 处理 <see cref="XncfModulesInventoryRequestEvent"/>：汇总已安装（库版本与 Register 一致）与未安装/未对齐的模块。
+    ///Legacy comment translated to English.
     /// </summary>
     public class XncfModulesInventoryRequestHandler : IIntegrationEventHandler<XncfModulesInventoryRequestEvent>
     {

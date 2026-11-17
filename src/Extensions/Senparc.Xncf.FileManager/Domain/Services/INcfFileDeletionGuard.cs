@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：INcfFileDeletionGuard.cs
-    文件功能描述：领域服务与业务流程实现
+    File name: INcfFileDeletionGuard.cs
+    File description: domain services and business-process implementation
 
 
-    创建标识：Senparc - 20260813
+    Created by: Senparc - 20260813
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.6.0-preview1 完善文件资源边界、安全删除策略与静态资源管理
+    Modified by: Senparc - 20260813
+    Change description: v0.6.0-preview1 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

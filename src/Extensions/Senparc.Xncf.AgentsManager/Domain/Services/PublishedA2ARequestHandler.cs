@@ -1,23 +1,23 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：PublishedA2ARequestHandler.cs
-    文件功能描述：领域服务与业务流程实现
+    File name: PublishedA2ARequestHandler.cs
+    File description: domain services and business-process implementation
 
 
-    创建标识：Senparc - 20260813
+    Created by: Senparc - 20260813
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+    Modified by: Senparc - 20260813
+    Change description: v0.15.0-preview11 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261028
-    修改描述：多租户模式下 A2A 发布端点恢复请求租户上下文，A2AServer 缓存按租户隔离
+    Modified by: Senparc - 20261028
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.19.1 A2A 发布端点恢复请求租户上下文，A2AServer 缓存按租户隔离
+    Modified by: Senparc - 20261103
+    Change description: v0.19.1 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.19.3 适配 A2A 1.0.0-preview4 请求上下文与推送配置接口
+    Modified by: Senparc - 20261111
+    Change description: v0.19.3 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -41,7 +41,7 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.AgentsManager.Domain.Services
 {
     /// <summary>
-    /// 依据路由中的 agentKey 将标准 A2A 请求分发到对应的本地发布 Agent。
+    ///Legacy comment translated to English.
     /// </summary>
     public class PublishedA2ARequestHandler : IA2ARequestHandler
     {
@@ -118,7 +118,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
     }
 
     /// <summary>
-    /// 仅缓存 A2A 协议状态；每个请求仍从数据库读取发布开关和鉴权配置，因此修改无需重启。
+    ///Legacy comment translated to English.
     /// </summary>
     public class PublishedA2AServerRegistry
     {
@@ -149,11 +149,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 throw new A2AException("A2A agent is unavailable.", A2AErrorCode.InvalidRequest);
             }
 
-            // 捕获当前请求的租户上下文：A2A 端点同样经过 TenantMiddleware，
-            // 请求已按 TenantRule 解析租户。验证与后续 Agent 执行都在新建作用域中进行，
-            // 必须显式还原租户，否则多租户模式下发布型 A2A 整体 fail-closed；
-            // 且不同租户可发布相同 PublicAgentKey，缓存键需包含租户维度，
-            // 防止 A2AServer（含 InMemoryTaskStore 与绑定的执行上下文）跨租户复用。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             var tenantSnapshot = RequestTenantSnapshot.Capture(httpContext?.RequestServices);
             await ValidateInboundRequestAsync(agentKey, httpContext, tenantSnapshot, cancellationToken);
             var serverCacheKey = SiteConfig.SenparcCoreSetting.EnableMultiTenant

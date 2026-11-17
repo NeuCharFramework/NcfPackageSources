@@ -1,11 +1,11 @@
 /*
- * AgentsManager 前端：智能体与 ChatGroup 列表/详情数据加载方法。
- * 注意：本文件与 agents-app-*.js 系列按 three-loader.js 中的顺序加载，
- * 依赖全局 var（classic script 顶层 var 挂到 window），请勿单独引入。
+ * Legacy comment translated to English.
+ * Note: this file and the agents-app-*.js series are loaded in the order defined by three-loader.js,
+ * depends on global variables (top-level classic-script vars are attached to window); do not import separately.
  */
 
 var AgentsAppMethodsAgentGroup = {
-    // 获取 智能体 数据
+    // get agent data
     async getAgentListData(listType, page = 0) {
       const queryList = {}
       if (listType === 'agent') {
@@ -16,7 +16,7 @@ var AgentsAppMethodsAgentGroup = {
         this.groupAgentQueryList.pageIndex = page ?? 1
         Object.assign(queryList, this.groupAgentQueryList)
       }
-      // 接口对接
+      //Legacy comment translated to English.
       await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetList?${getInterfaceQueryStr(queryList)}`)
         .then(res => {
           const data = res?.data ?? {}
@@ -25,11 +25,11 @@ var AgentsAppMethodsAgentGroup = {
             if (listType === 'agent') {
               this.$set(this, 'agentList', agentData)
               const agentDetail = this.agentDetails?.agentTemplateDto ?? {}
-              // 获取详情 
+              // get details 
               if (agentDetail.id) {
                 this.getAgentDetailData(agentDetail.id, agentDetail)
               }
-              // 计算 agent列表 需要填充的元素数量
+              //Legacy comment translated to English.
               this.calcAgentFillNum()
 
               if (this.tabsActiveName === 'first' && this.scrollbarAgentIndex === '') {
@@ -38,11 +38,11 @@ var AgentsAppMethodsAgentGroup = {
             }
             if (listType === 'groupAgent') {
               this.$set(this, 'groupAgentList', agentData)
-              // 确保更新数据时 不会清空选中
+              //Legacy comment translated to English.
               this.$nextTick(() => {
                 this.isGetGroupAgent = false
               })
-              // 组成员table 初始选中
+              //Legacy comment translated to English.
               if (this.visible.drawerGroup && this.groupForm.members.length > 0) {
                 // this.toggleSelection()
                 this.$nextTick(() => {
@@ -68,7 +68,7 @@ var AgentsAppMethodsAgentGroup = {
           this.isGetGroupAgent = false
         })
     },
-    // 获取 智能体详情 
+    //Legacy comment translated to English.
     async getAgentDetailData(id, detail = {}) {
       let taskList = []
       let groupList = []
@@ -78,7 +78,7 @@ var AgentsAppMethodsAgentGroup = {
           pageSize: 0,
           agentTemplateId: id
         }
-        // 获取组列表
+        //Legacy comment translated to English.
         await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupList?${getInterfaceQueryStr(groupQuery)}`, groupQuery)
           .then(res => {
             const data = res?.data ?? {}
@@ -91,7 +91,7 @@ var AgentsAppMethodsAgentGroup = {
           pageSize: 0,
           agentTemplateId: id
         }
-        //  获取任务列表
+        //  gettask list
         await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.GetList?${getInterfaceQueryStr(taskQuery)}`, taskQuery)
           .then(res => {
             const data = res?.data ?? {}
@@ -127,7 +127,7 @@ var AgentsAppMethodsAgentGroup = {
           }
         })
     },
-    // 获取 组 数据
+    // get group data
     async getGroupListData(listType, id, page = 0) {
       const queryList = {}
       if (listType === 'group') {
@@ -140,7 +140,7 @@ var AgentsAppMethodsAgentGroup = {
         Object.assign(queryList, this.agentDetailsGroupQueryList)
       }
       // debugger
-      // 获取agent列表
+      //Legacy comment translated to English.
       let agentAllList = []
       await serviceAM.get('/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetList')
         .then(res => {
@@ -150,18 +150,18 @@ var AgentsAppMethodsAgentGroup = {
             agentAllList = data?.data?.list ?? []
           }
         })
-      // 获取任务列表
+      // gettask list
       let taskAllList = []
       await serviceAM.get('/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.GetList')
         .then(res => {
           const data = res?.data ?? {}
           if (data.success) {
             taskAllList = data?.data?.chatTaskList ?? []
-            //设置最新的任务信息
+            //Legacy comment translated to English.
             this.groupTaskListLastNew = taskAllList[0]
           }
         })
-      // 获取组列表
+      //Legacy comment translated to English.
       await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupList?${getInterfaceQueryStr(queryList)}`, queryList)
         .then(res => {
           // debugger
@@ -182,13 +182,13 @@ var AgentsAppMethodsAgentGroup = {
             if (listType === 'group') {
               // this.groupTreeData = [{
               //     id: '0',
-              //     name: '全部组',
+              //Legacy comment translated to English.
               //     children: groupData
               // }]
-              this.groupSelection = [] // 清空选中
+              this.groupSelection = [] //Legacy comment translated to English.
               this.$set(this, 'groupList', handleGroupData)
               const groupDetail = this.groupDetails?.chatGroupDto ?? {}
-              // 获取详情 
+              // get details 
               if (this.groupShowType === '2' && groupDetail.id) {
                 this.getGroupDetailData(listType, groupDetail.id, groupDetail)
               }
@@ -196,7 +196,7 @@ var AgentsAppMethodsAgentGroup = {
             if (listType === 'agentGroup') {
               this.$set(this, 'agentDetailsGroupList', handleGroupData)
               const groupDetail = handleGroupData[this.agentDetailsGroupIndex]
-              // 获取详情
+              // get details
               if (groupDetail && groupDetail.id) {
                 this.getGroupDetailData(listType, groupDetail.id, groupDetail)
               }
@@ -210,7 +210,7 @@ var AgentsAppMethodsAgentGroup = {
           }
         })
     },
-    // 获取 组详情 
+    //Legacy comment translated to English.
     async getGroupDetailData(detailType, id, detail = {}) {
       await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${id}`)
         .then(res => {
@@ -223,12 +223,12 @@ var AgentsAppMethodsAgentGroup = {
             }
             if (detailType === 'agentGroup') {
               this.$set(this, 'agentDetailsGroupDetails', groupDetail)
-              // 获取任务列表
+              // gettask list
               this.gettaskListData('agentGroupTask', id)
             }
             if (['group', 'groupTable'].includes(detailType)) {
               this.$set(this, 'groupDetails', groupDetail)
-              // 获取任务列表
+              // gettask list
               this.gettaskListData('groupTask', id)
             }
           } else {

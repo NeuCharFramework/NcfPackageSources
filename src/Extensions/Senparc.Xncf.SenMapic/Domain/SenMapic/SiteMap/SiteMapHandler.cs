@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：SiteMapHandler.cs
-    文件功能描述：SiteMapHandler 相关实现
+
+    File name: SiteMapHandler.cs
+
+    File description: SiteMapHandler related implementation
+
     
+
     
-    创建标识：Senparc - 20260704
+
+    Created by: Senparc - 20260704
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -31,7 +43,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
     //     public void RemoveSiteMapCollectionFiles(SiteMapOrder order)
     //     {
-    //         //删除目录
+    //         //deletedirectory
     //         string dir = Server.HttpContext.Server.MapPath(GlobalConfigString.GetSitemapCollectionFileDirectory(order.Id));
     //         if (Directory.Exists(dir))
     //         {

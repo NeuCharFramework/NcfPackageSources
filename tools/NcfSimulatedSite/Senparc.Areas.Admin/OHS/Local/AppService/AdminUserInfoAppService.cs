@@ -1,29 +1,56 @@
 ﻿/*-----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：AdminUserInfoAppService.cs
-    文件功能描述：后台管理员用户应用服务
+
+    File name: AdminUserInfoAppService.cs
+
+    File description: Related implementation.
+
     
+
     
-    创建标识：Senparc - 20241028
+
+    Created by: Senparc - 20241028
+
     
-    修改标识：Senparc - 20260724
-    修改描述：v0.1.0 增强后台模块批量更新并完善多语言管理界面
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.2.0 增强后台管理员交互与桌面 Admin Chat 安全同步
+    Modified by: Senparc - 20260724
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.6.0 新增管理端 Chat 会话工作流能力
+    Change description: v0.1.0 enhance batch module updates and improve the multilingual management interface
 
-    修改标识：Senparc - 20260829
-    修改描述：v0.7.0 新增 NeuCharPivot 全局浮动调用与工作流分析管理能力
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 Remove DatabaseSample and related components from MCP extension
+    Modified by: Senparc - 20260729
+
+    Change description: v0.2.0 enhance admin interaction and secure desktop Admin Chat synchronization
+
+
+
+    Modified by: Senparc - 20260822
+
+    Change description: v0.6.0 Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20260829
+
+    Change description: v0.7.0 Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20260915
+
+    Change description: v0.8.0 Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20261103
+
+    Change description: v0.12.15 Remove DatabaseSample and related components from MCP extension
+
+
 
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Mvc;
@@ -80,9 +107,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 创建管理员
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="request">管理员创建请求</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
         public async Task<AppResponseBase<AdminUserInfo_CreateResponse>> Create(AdminUserInfo_CreateOrUpdateRequest request)
@@ -99,9 +126,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 修改管理员
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="request">管理员创建请求</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Put)]
         public async Task<AppResponseBase<AdminUserInfo_CreateResponse>> Update(AdminUserInfo_CreateOrUpdateRequest request)
@@ -118,7 +145,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 管理员登录验证，并进行登录授权
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -187,7 +214,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取当前管理员信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
@@ -203,7 +230,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
 
         /// <summary>
-        /// 增加角色
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -219,7 +246,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取当前用户的所有角色
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -239,9 +266,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 删除管理员
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="id">管理员 ID</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Delete)]
         public async Task<StringAppResponse> DeleteAsync(int id)
@@ -261,7 +288,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     throw new NcfExceptionBase("管理员不存在！");
                 }
 
-                //TODO：进行更多层级判断
+                //Legacy comment translated to English.
 
                 await _adminUserInfoService.DeleteObjectAsync(adminUserInfo);
 

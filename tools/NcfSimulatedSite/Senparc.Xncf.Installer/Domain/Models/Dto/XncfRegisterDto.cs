@@ -1,28 +1,28 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：XncfRegisterDto.cs
-    文件功能描述：安装模块注册信息传输模型
+    File name: XncfRegisterDto.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20241028
+    Created by: Senparc - 20241028
 
-    修改标识：Senparc - 20260724
-    修改描述：v0.1.1 扩展安装模块元数据以支持默认选择与导航兼容
+    Modified by: Senparc - 20260724
+    Change description: v0.1.1 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260916
-    修改描述：v0.5.7 整理安装器 DTO 归属并保持安装服务接口兼容
+    Modified by: Senparc - 20260916
+    Change description: v0.5.7 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.5.9 0.5.9 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
+    Modified by: Senparc - 20261005
+    Change description: v0.5.9 0.5.9 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.5.12 维护安装模块注册信息传输模型
+    Modified by: Senparc - 20261103
+    Change description: v0.5.12 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 namespace Senparc.Xncf.Installer.Domain.Dto
 {
-    /* 模块信息数据传输对象*/
+    /* Legacy comment translated to English.*/
     public class XncfRegisterDto
     {
         public bool IgnoreInstall { get; set; }

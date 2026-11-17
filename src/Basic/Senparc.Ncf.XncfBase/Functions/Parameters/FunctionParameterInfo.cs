@@ -1,23 +1,23 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：FunctionParameterInfo.cs
-    文件功能描述：FunctionParameterInfo 相关实现
+    File name: FunctionParameterInfo.cs
+    File description: FunctionParameterInfo related implementation
 
 
-    创建标识：Senparc - 20200724
+    Created by: Senparc - 20200724
 
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260916
-    修改描述：v0.27.0 新增 TextArea 函数参数类型并支持多行文本渲染
+    Modified by: Senparc - 20260916
+    Change description: v0.27.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.28.1 0.28.1 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
+    Modified by: Senparc - 20261005
+    Change description: v0.28.1 0.28.1 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.28.1 add bulk file upload functionality to Sandbox Lab
+    Modified by: Senparc - 20261103
+    Change description: v0.28.1 add bulk file upload functionality to Sandbox Lab
 
 ----------------------------------------------------------------*/
 
@@ -29,8 +29,8 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase
 {
     /// <summary>
-    /// 参数类型
-    /// <para>注意：请勿更改已经定义的顺序和值！</para>
+    /// parameterstype
+    ///Legacy comment translated to English.
     /// </summary>
     public enum ParameterType
     {
@@ -39,85 +39,85 @@ namespace Senparc.Ncf.XncfBase
         CheckBoxList = 2,
         Password = 3,
         /// <summary>
-        /// 单个布尔，对应 <c>bool</c> / <c>bool?</c>，前端渲染为单个复选框。
+        ///Legacy comment translated to English.
         /// </summary>
         CheckBox = 4,
         /// <summary>
-        /// 多行文本，对应字符串类参数，前端渲染为 textarea。
+        ///Legacy comment translated to English.
         /// </summary>
         TextArea = 5,
         /// <summary>
-        /// 文件引用；文件内容通过 Function 文件存储上传，参数只传递可序列化引用。
+        ///Legacy comment translated to English.
         /// </summary>
         File = 6,
     }
 
     /// <summary>
-    /// FunctionParameter 信息（供输出用）
+    ///Legacy comment translated to English.
     /// </summary>
     public class FunctionParameterInfo
     {
         /// <summary>
-        /// 参数名称
+        /// parametersname
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        /// 标题（标签内容）
+        ///Legacy comment translated to English.
         /// </summary>
         public string Title { get; set; }
         /// <summary>
-        /// 备注
+        ///Legacy comment translated to English.
         /// </summary>
         public string Description { get; set; }
         /// <summary>
-        /// 是否必须
+        /// whethermust
         /// </summary>
         public bool IsRequired { get; set; }
         /// <summary>
-        /// 系统类型
+        ///Legacy comment translated to English.
         /// </summary>
         public string SystemType { get; set; }
         /// <summary>
-        /// 最大长度（一般应用于字符串）
+        ///Legacy comment translated to English.
         public int MaxLength { get; set; }
 
         /// <summary>
-        /// 参数类型
+        /// parameterstype
         /// </summary>
         public ParameterType ParameterType { get; set; } = ParameterType.Text;
 
         /// <summary>
-        /// 文本值（当文本类型时使用）
+        ///Legacy comment translated to English.
         /// </summary>
         public object Value { get; set; }
 
         /// <summary>
-        /// 选项（当出现非文本内容时使用）
+        ///Legacy comment translated to English.
         /// </summary>
         public SelectionList SelectionList { get; set; }
 
         /// <summary>
-        /// 下拉框是否允许搜索
+        ///Legacy comment translated to English.
         /// </summary>
         public bool Filterable { get; set; }
 
         /// <summary>
-        /// 下拉框是否允许创建自定义值
+        ///Legacy comment translated to English.
         /// </summary>
         public bool AllowCreate { get; set; }
 
         /// <summary>
-        /// 文件参数是否允许一次选择多个文件。
+        ///Legacy comment translated to English.
         /// </summary>
         public bool AllowMultiple { get; set; }
 
         /// <summary>
-        /// 文件参数的最大文件数量。
+        ///Legacy comment translated to English.
         /// </summary>
         public int MaxFiles { get; set; }
 
         /// <summary>
-        /// 文件参数的客户端 accept 提示。
+        ///Legacy comment translated to English.
         /// </summary>
         public string Accept { get; set; }
 

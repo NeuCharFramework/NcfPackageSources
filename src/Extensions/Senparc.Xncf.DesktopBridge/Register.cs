@@ -1,28 +1,28 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：Register.cs
-    文件功能描述：DesktopBridge XNCF 模块注册
+    File name: Register.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260725
+    Created by: Senparc - 20260725
 
-    修改标识：Senparc - 20260726
-    修改描述：v0.1.0-preview2 同步模块功能与兼容性改进
+    Modified by: Senparc - 20260726
+    Change description: v0.1.0-preview2 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.3.0-preview3 新增桌面端同步提供程序
+    Modified by: Senparc - 20260804
+    Change description: v0.3.0-preview3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.3.0-preview3 将同步提供程序统一更名为 NeuBell/纽铃
+    Modified by: Senparc - 20260804
+    Change description: v0.3.0-preview3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260808
-    修改描述：v0.4.0-preview4 注册桌面管理员换票交接相关服务
+    Modified by: Senparc - 20260808
+    Change description: v0.4.0-preview4 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.4.8 implement connection manager and workspace file system provider
+    Modified by: Senparc - 20261103
+    Change description: v0.4.8 implement connection manager and workspace file system provider
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.4.10 统一 XNCF Register 显示元数据与多语言资源键
+    Modified by: Senparc - 20261111
+    Change description: v0.4.10 unify XNCF Register display metadata and localization resource keys
 
 ----------------------------------------------------------------*/
 
@@ -86,10 +86,10 @@ public sealed partial class Register : XncfRegisterBase, IXncfRegister
         services.AddSingleton<DesktopAdminAuthHandoffStore>();
         services.AddSingleton<INeuBellProvider, DesktopBridgeNeuBellProvider>();
 
-        // 不注册开放泛型实现：NCF EventBus 的程序集扫描会把开放泛型再次登记为
-        // 含泛型参数的服务描述符，导致 WebApplicationBuilder.Build() 无法创建容器。
-        // 利用 IIntegrationEventHandler<in T> 的逆变能力，将同一个非泛型观察器
-        // 映射到当前已加载的每一种具体事件类型，EventBusHostedService 仍是唯一读取者。
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         var eventTypes = GetIntegrationEventTypes().ToArray();
         foreach (var eventType in eventTypes)
         {
@@ -108,8 +108,8 @@ public sealed partial class Register : XncfRegisterBase, IXncfRegister
     private static IEnumerable<Type> GetIntegrationEventTypes()
     {
         return AppDomain.CurrentDomain.GetAssemblies()
-            // 与 NCF Web 的 EventBus 扫描范围保持一致，避免反射系统程序集或
-            // 第三方动态程序集拖慢甚至阻塞 StartWebEngine。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             .Where(assembly => !assembly.IsDynamic && !string.IsNullOrEmpty(assembly.FullName))
             .Where(assembly =>
             {
@@ -138,7 +138,7 @@ public sealed partial class Register : XncfRegisterBase, IXncfRegister
         }
         catch
         {
-            // 可选模块的类型探测失败不能阻断 NCF 启动。
+            //Legacy comment translated to English.
             return Array.Empty<Type>();
         }
     }

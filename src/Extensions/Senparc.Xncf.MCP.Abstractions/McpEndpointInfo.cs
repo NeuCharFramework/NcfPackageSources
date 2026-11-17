@@ -1,20 +1,20 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：McpEndpointInfo.cs
-    文件功能描述：跨模块共享的 MCP Endpoint 只读信息
+    File name: McpEndpointInfo.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20260924
+    Created by: Senparc - 20260924
 
-    修改标识：Senparc - 20260924
-    修改描述：v0.1.0 新增跨模块 MCP Endpoint 信息契约
+    Modified by: Senparc - 20260924
+    Change description: v0.1.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.1.0 0.1.0 feat: add MCP endpoint selection feature in AgentsManager
+    Modified by: Senparc - 20261005
+    Change description: v0.1.0 0.1.0 feat: add MCP endpoint selection feature in AgentsManager
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.1.1 维护跨模块共享的 MCP Endpoint 只读信息
+    Modified by: Senparc - 20261103
+    Change description: v0.1.1 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -23,18 +23,18 @@ using System;
 namespace Senparc.Xncf.MCP.Abstractions;
 
 /// <summary>
-/// 跨模块共享的 MCP Endpoint 只读信息（纯数据，与 MCP 模块数据库字段对齐）。
+///Legacy comment translated to English.
 /// </summary>
-/// <param name="Id">数据库主键。</param>
-/// <param name="Name">端点名称。</param>
-/// <param name="Endpoint">端点 URI/路径。</param>
-/// <param name="EndpointType">端点类型，例如 http、sse、stdio、websocket。</param>
-/// <param name="ProtocolVersion">协议版本。</param>
-/// <param name="Description">描述信息。</param>
-/// <param name="Enabled">是否启用。</param>
-/// <param name="LastTestedTime">最后测试时间。</param>
-/// <param name="LastTestResult">最后测试结果（成功/失败）。</param>
-/// <param name="LastToolCount">最近一次测试发现的工具数量。</param>
+///Legacy comment translated to English.
+///Legacy comment translated to English.
+///Legacy comment translated to English.
+///Legacy comment translated to English.
+///Legacy comment translated to English.
+/// <param name="Description">descriptioninformation。</param>
+/// <param name="Enabled">whether enabled。</param>
+///Legacy comment translated to English.
+/// <param name="LastTestResult">finallytestresult（success/failure）。</param>
+///Legacy comment translated to English.
 public sealed record McpEndpointInfo(
     int Id,
     string Name,

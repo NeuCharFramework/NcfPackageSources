@@ -1,20 +1,20 @@
 /*
- * AgentsManager 前端：核心工具、统计、Hash 路由、快捷跳转与 AgentGraph 3D 视图方法。
- * 注意：本文件与 agents-app-*.js 系列按 three-loader.js 中的顺序加载，
- * 依赖全局 var（classic script 顶层 var 挂到 window），请勿单独引入。
+ * Legacy comment translated to English.
+ * Note: this file and the agents-app-*.js series are loaded in the order defined by three-loader.js,
+ * depends on global variables (top-level classic-script vars are attached to window); do not import separately.
  */
 
 var AgentsAppMethodsCore = {
-    //寻找目标字符串
+    //Legacy comment translated to English.
     findDest(arg1) {
-      // 待判断的字符串
-      //const str = '2025.05.07.1-T1-A1-草稿';
+      //Legacy comment translated to English.
+      //Legacy comment translated to English.
       const str = arg1;
 
-      // 正则表达式：匹配 XXXX.XX.XX.X 的结构（X为数字）
+      //Legacy comment translated to English.
       const regex = /^\d{4}\.\d{2}\.\d{2}\.\d+/;
 
-      // 判断字符串是否符合规则
+      //Legacy comment translated to English.
       if (regex.test(str)) {
         console.log('目标字符串');
         return true;
@@ -576,18 +576,18 @@ var AgentsAppMethodsCore = {
         }
       }
     },
-    // 计算 agent列表 需要填充的元素数量
+    // calculate the number of elements needed to fill the agent list
     calcAgentFillNum() {
       // if (this.tabsActiveName === 'first' && this.scrollbarAgentIndex === '') {
       // }
       if (!this.agentListElResizeObserver) {
-        // 计算 agent列表 需要填充的元素数量
+        // calculate the number of elements needed to fill the agent list
         this.agentListElResizeObserver = new ResizeObserver(entries => {
           const elWidth = entries[0]?.contentRect?.width ?? 0
           const singleElWidth = 315
           const elSpac = 30
           const num = this.agentList.length
-          // 单个元素 最小宽 315
+          // minimum width of a single element 315
           let rowNum = Math.floor(elWidth / singleElWidth)
           if (rowNum > 1) {
             rowNum = Math.floor((elWidth - ((rowNum - 1) * elSpac)) / singleElWidth)
@@ -607,11 +607,11 @@ var AgentsAppMethodsCore = {
       }
 
     },
-    // 获取 状态文本
+    // get status text
     getStatusText(item, showType) {
       // this.taskStateText this.agentStateText
       let statusText = ''
-      // 智能体
+      // agent
       if (showType === '1') {
         let detailData = item.agentTemplateDto || item
         statusText = detailData.enable ? '待命' : '停用'
@@ -622,7 +622,7 @@ var AgentsAppMethodsCore = {
         }
         return resultText || statusText
       }
-      // 组
+      // group
       if (showType === '2') {
         let detailData = item.chatGroupDto || item
         statusText = detailData.enable ? '待命' : '停用'
@@ -632,18 +632,18 @@ var AgentsAppMethodsCore = {
         }
         return resultText || statusText
       }
-      // 任务
+      // task
       if (showType === '3') {
         statusText = this.taskStateText[item.status]
         return statusText
       }
       return ''
     },
-    // 获取 状态颜色
+    // 获取 status color
     getStatusColor(item, showType) {
       // this.taskStateColor this.agentStateColor
       let statusColor = ''
-      // 智能体列表
+      // agent list
       if (showType === '1') {
         let detailData = item.agentTemplateDto || item
         statusColor = detailData.enable ? 'standColor' : 'stopColor'
@@ -653,7 +653,7 @@ var AgentsAppMethodsCore = {
         }
         return resultColor || statusColor
       }
-      // 组
+      // group
       if (showType === '2') {
         let detailData = item.chatGroupDto || item
         statusColor = detailData.enable ? 'standColor' : 'stopColor'
@@ -663,7 +663,7 @@ var AgentsAppMethodsCore = {
         }
         return resultColor || statusColor
       }
-      // 任务 
+      // task 
       if (showType === '3') {
         statusColor = this.taskStateColor[item.status]
         return statusColor

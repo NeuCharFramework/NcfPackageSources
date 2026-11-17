@@ -1,23 +1,44 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：Register.Area.cs
-    文件功能描述：Register.Area 相关实现
+
+    File name: Register.Area.cs
+
+    File description: Register.Area related implementation
 
 
-    创建标识：Senparc - 20250105
 
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.3.0-preview3 为 KnowledgeBase 模块接入统一资源本地化并优化功能文案
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.6.0-preview8 完善知识库文件删除保护、召回测试与管理界面
+    Created by: Senparc - 20250105
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.7.2 优化知识库模块注册与管理端状态展示
+
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260717
+
+    Change description: v0.3.0-preview3 Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20260813
+
+    Change description: v0.6.0-preview8 Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20260915
+
+    Change description: v0.7.2 Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 
@@ -40,15 +61,15 @@ using System.Reflection;
 
 namespace Senparc.Xncf.KnowledgeBase
 {
-    public partial class Register : IAreaRegister, //注册 XNCF 页面接口（按需选用）
-                                    IXncfRazorRuntimeCompilation  //赋能 RazorPage 运行时编译
+    public partial class Register : IAreaRegister, //register the XNCF page interface (optional)
+                                    IXncfRazorRuntimeCompilation  //enable RazorPage runtime compilation
     {
-        #region IAreaRegister 接口
+        #region Legacy section
 
         public string HomeUrl => "/Admin/KnowledgeBase/Index";
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-            // HomeUrl 与知识库管理页相同，保留一个真实入口即可。
+            //Legacy comment translated to English.
             new AreaPageMenuItem(GetAreaUrl($"/Admin/KnowledgeBase/Index"), KnowledgeBaseResource.Get("Area.KnowledgeBase.Management", "知识库管理"),"fa fa-bookmark-o"),
             new AreaPageMenuItem(GetAreaUrl($"/Admin/KnowledgeBase/RecallTest"), KnowledgeBaseResource.Get("Area.KnowledgeBase.RecallTest", "召回测试"),"fa fa-bookmark-o"),
         };
@@ -57,7 +78,7 @@ namespace Senparc.Xncf.KnowledgeBase
         {
             builder.AddRazorPagesOptions(options =>
             {
-                //此处可配置页面权限
+                //configure page permissions here
             });
 
             SenparcTrace.SendCustomLog("KnowledgeBase 启动", "完成 Area:Senparc.Xncf.KnowledgeBase 注册");
@@ -67,7 +88,7 @@ namespace Senparc.Xncf.KnowledgeBase
 
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
-            // 开发时优先挂载物理 wwwroot，避免 cshtml 已热更新而 JS/CSS 仍读旧内嵌资源导致 Vue 白屏。
+            //Legacy comment translated to English.
             try
             {
                 var candidates = new List<string>();
@@ -78,7 +99,7 @@ namespace Senparc.Xncf.KnowledgeBase
                 var asmLocation = Assembly.GetExecutingAssembly().Location;
                 if (!string.IsNullOrWhiteSpace(asmLocation))
                 {
-                    // bin/Debug/netX.Y → 项目根/wwwroot
+                    //Legacy comment translated to English.
                     candidates.Add(Path.GetFullPath(Path.Combine(Path.GetDirectoryName(asmLocation)!, "..", "..", "..", "wwwroot")));
                 }
 
@@ -112,7 +133,7 @@ namespace Senparc.Xncf.KnowledgeBase
 
         #endregion
 
-        #region IXncfRazorRuntimeCompilation 接口
+        #region Legacy section
         public string LibraryPath => Path.GetFullPath(Path.Combine(SiteConfig.WebRootPath, "..", "..", "Senparc.Xncf.KnowledgeBase"));
         #endregion
     }

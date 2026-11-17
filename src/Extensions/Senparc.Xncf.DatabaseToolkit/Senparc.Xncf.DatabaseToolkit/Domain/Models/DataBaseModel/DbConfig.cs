@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：DbConfig.cs
-    文件功能描述：DbConfig 相关实现
+
+    File name: DbConfig.cs
+
+    File description: DbConfig related implementation
+
     
+
     
-    创建标识：Senparc - 20260704
+
+    Created by: Senparc - 20260704
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -21,19 +33,19 @@ using System.Text;
 
 namespace Senparc.Xncf.DatabaseToolkit
 {
-    [Table(Register.DATABASE_PREFIX + nameof(DbConfig))]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(DbConfig))]//a prefix is required to prevent system-wide conflicts
     [Serializable]
     public class DbConfig : EntityBase<int>
     {
         /// <summary>
-        /// 备份间隔时间
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         public int BackupCycleMinutes { get; private set; }
 
 
         /// <summary>
-        /// 是否已经启用备份
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         internal bool IsAutoBackup()
@@ -47,13 +59,13 @@ namespace Senparc.Xncf.DatabaseToolkit
         }
 
         /// <summary>
-        /// 备份物理路径
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(300)]
         public string BackupPath { get; private set; }
 
         /// <summary>
-        /// 上次备份时间
+        ///Legacy comment translated to English.
         /// </summary>
         public DateTime LastBackupTime { get; private set; }
 

@@ -18,7 +18,7 @@
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
 			v0.1
-			创世
+			initial release
 
 				[2025-11-01] update basic libraries, including Senparc.AI
 </PackageReleaseNotes>

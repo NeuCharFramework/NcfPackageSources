@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：XncfModulesInventoryResponseHandler.cs
-    文件功能描述：XncfModulesInventoryResponseHandler 相关实现
+    File name: XncfModulesInventoryResponseHandler.cs
+    File description: XncfModulesInventoryResponseHandler related implementation
     
     
-    创建标识：Senparc - 20260510
+    Created by: Senparc - 20260510
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
 ----------------------------------------------------------------*/
 
@@ -22,7 +22,7 @@ using Senparc.Xncf.XncfBuilder.Abstractions.Events;
 namespace Senparc.Xncf.XncfBuilder.Application.EventHandlers
 {
     /// <summary>
-    /// 完成 <see cref="XncfModulesInventoryResponseEvent"/> 与等待方的关联。
+    ///Legacy comment translated to English.
     /// </summary>
     public class XncfModulesInventoryResponseHandler : IIntegrationEventHandler<XncfModulesInventoryResponseEvent>
     {

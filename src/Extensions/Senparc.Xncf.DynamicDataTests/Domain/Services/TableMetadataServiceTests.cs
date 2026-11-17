@@ -29,7 +29,7 @@ namespace Senparc.Xncf.DynamicData.Domain.Services.Tests
 
                 Assert.IsNotNull(tableMetadataDto);
                 Assert.IsNotNull(tableMetadataDto.ColumnMetadatas);
-                Assert.IsTrue(tableMetadataDto.ColumnMetadatas.Count > 0);//注意：InMemory 数据库中，这里会自动进行关联，无论底层代码是否 Include
+                Assert.IsTrue(tableMetadataDto.ColumnMetadatas.Count > 0);//Legacy comment translated to English.
 
                 Console.WriteLine(tableMetadataDto.ToJson(true, new Newtonsoft.Json.JsonSerializerSettings()
                 {

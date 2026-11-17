@@ -2,13 +2,13 @@
     Copyright (C) 2026 Senparc
 
     File name: NeuCharWorkflowObservedOutputSchema.cs
-    File description: 已完成运行的输出结构观察（不记录原始值）
+    File description: Related implementation.
 
 
     Created by: Senparc - 20260811
 
     Modified by: Senparc - 20260813
-    Change description: v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Change description: v0.1.0-preview1 enhance workflow orchestration, replay, Webhook, and parallel execution
 
 ----------------------------------------------------------------*/
 

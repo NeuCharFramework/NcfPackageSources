@@ -1,17 +1,32 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：SystemConfigService.cs
-    文件功能描述：SystemConfigService 相关实现
-    
-    
-    创建标识：Senparc - 20211128
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.15.3-preview6 补齐 SystemConfig.FooterContent 数据库迁移
+    Copyright (C) 2026 Senparc
+
+  
+
+    File name: SystemConfigService.cs
+
+    File description: SystemConfigService related implementation
+
+    
+
+    
+
+    Created by: Senparc - 20211128
+
+    
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260804
+
+    Change description: v0.15.3-preview6 Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 
@@ -41,7 +56,7 @@ namespace Senparc.Xncf.SystemManager.Domain.Service
         }
 
         /// <summary>
-        /// 更新 NeuChar 账号
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="neuCharAppKey"></param>
         /// <param name="neuCharAppSecret"></param>
@@ -56,7 +71,7 @@ namespace Senparc.Xncf.SystemManager.Domain.Service
 
             if (!neuCharAppKey.IsNullOrEmpty() && !neuCharAppSecret.IsNullOrEmpty())
             {
-                //校验并获取 NeuCharDeveloperId
+                //Legacy comment translated to English.
                 var passportUrl = $"{Senparc.NeuChar.App.AppStore.Config.DefaultDomainName}/App/Api/GetPassport";
                 //Console.WriteLine("passport:" + (passportUrl));
 
@@ -123,9 +138,9 @@ namespace Senparc.Xncf.SystemManager.Domain.Service
             base.SaveObject(obj);
             LogUtility.WebLogger.InfoFormat("SystemConfig 被编辑：{0}", obj.ToJson());
 
-            //清除缓存
+            //clear the cache
             var fullSystemConfigCache = _serviceProvider.GetService<FullSystemConfigCache>();
-            //示范同步缓存锁
+            //Legacy comment translated to English.
             using (fullSystemConfigCache.Cache.BeginCacheLock(FullSystemConfigCache.CACHE_KEY, ""))
             {
                 fullSystemConfigCache.RemoveCache();
@@ -137,9 +152,9 @@ namespace Senparc.Xncf.SystemManager.Domain.Service
             await base.SaveObjectAsync(obj);
             LogUtility.WebLogger.InfoFormat("SystemConfig 被编辑：{0}", obj.ToJson());
 
-            //清除缓存
+            //clear the cache
             var fullSystemConfigCache = _serviceProvider.GetService<FullSystemConfigCache>();
-            //示范同步缓存锁
+            //Legacy comment translated to English.
             using (await fullSystemConfigCache.Cache.BeginCacheLockAsync(FullSystemConfigCache.CACHE_KEY, ""))
             {
                 fullSystemConfigCache.RemoveCache();

@@ -6,32 +6,32 @@
 
     Created by: Senparc - 20260808
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.2.0 add the NCF preview sandbox workload
+    Modified by: Senparc - 20260815
+    Change description: v0.2.0 add the NCF preview sandbox workload
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 enhance the jupyter-csharp template and sandbox session management
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 enhance the jupyter-csharp template and sandbox session management
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 support session TTL and keep-alive policies
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 support session TTL and keep-alive policies
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 enhance sandbox preview, Jupyter workspaces, and session lifecycle management
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 enhance sandbox preview, Jupyter workspaces, and session lifecycle management
 
-    修改标识：Senparc - 20260829
-    修改描述：v0.3.0 strengthen sandbox workspace boundary checks and session path isolation
+    Modified by: Senparc - 20260829
+    Change description: v0.3.0 strengthen sandbox workspace boundary checks and session path isolation
 
-    修改标识：Senparc - 20260918
-    修改描述：v0.3.3 support session aliases, additional port mappings, and interactive standard input
+    Modified by: Senparc - 20260918
+    Change description: v0.3.3 support session aliases, additional port mappings, and interactive standard input
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
+    Modified by: Senparc - 20261005
+    Change description: v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
-    修改标识：Senparc - 20261028
-    修改描述：In multi-tenant mode, restore request tenant context in the singleton orchestrator and iterate background TTL/orphan cleanup by tenant
+    Modified by: Senparc - 20261028
+    Change description: In multi-tenant mode, restore request tenant context in the singleton orchestrator and iterate background TTL/orphan cleanup by tenant
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.4.0 add bulk file upload functionality to Sandbox Lab
+    Modified by: Senparc - 20261103
+    Change description: v0.4.0 add bulk file upload functionality to Sandbox Lab
 
 ----------------------------------------------------------------*/
 

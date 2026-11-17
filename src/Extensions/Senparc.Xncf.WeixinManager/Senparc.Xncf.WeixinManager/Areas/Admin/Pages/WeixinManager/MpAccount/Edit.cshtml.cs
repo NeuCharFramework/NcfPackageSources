@@ -1,17 +1,32 @@
 /*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：Edit.cshtml.cs
-    文件功能描述：Edit.cshtml 相关实现
-    
-    
-    创建标识：Senparc - 20250712
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260731
-    修改描述：v0.24.0-preview5 修复公众号账户提示乱码并接入模块多语言资源
+    Copyright (C) 2026 Senparc
+
+  
+
+    File name: Edit.cshtml.cs
+
+    File description: Edit.cshtml related implementation
+
+    
+
+    
+
+    Created by: Senparc - 20250712
+
+    
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260731
+
+    Change description: v0.24.0-preview5 Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 

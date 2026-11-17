@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：20260803132752_Add_KnowledgeBaseLifecycle.Designer.cs
-    文件功能描述：定义 Entity Framework 数据库迁移元数据。
+    File name: 20260803132752_Add_KnowledgeBaseLifecycle.Designer.cs
+    File description: Entity Framework database migration metadata definition.
 
 
-    创建标识：Senparc - 20200724
+    Created by: Senparc - 20200724
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.5.0-preview6 新增知识库生命周期管理与 Agent 模板集成
+    Modified by: Senparc - 20260804
+    Change description: v0.5.0-preview6 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

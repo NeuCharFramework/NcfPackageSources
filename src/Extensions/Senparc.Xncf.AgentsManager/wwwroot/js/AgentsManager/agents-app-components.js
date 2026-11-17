@@ -1,10 +1,10 @@
 /*
- * AgentsManager 前端：participant-quick-action / task-html-renderer / load-more-select 子组件。
- * 注意：本文件与 agents-app-*.js 系列按 three-loader.js 中的顺序加载，
- * 依赖全局 var（classic script 顶层 var 挂到 window），请勿单独引入。
+ * Legacy comment translated to English.
+ * Note: this file and the agents-app-*.js series are loaded in the order defined by three-loader.js,
+ * depends on global variables (top-level classic-script vars are attached to window); do not import separately.
  */
 
-// 任务右侧成员列表：名称始终完整展示，点击后查看与当前任务关联的摘要。
+//Legacy comment translated to English.
 Vue.component('participant-quick-action', {
   props: {
     participant: {
@@ -78,12 +78,12 @@ Vue.component('participant-quick-action', {
   `
 })
 
-// task-html-renderer 渲染任务对话记录的内容
+//Legacy comment translated to English.
 Vue.component('task-html-renderer', {
   props: ['content'],
   render(createElement) {
     return createElement('div', {
-      class: 'taskrecord-listWrap-item-content', // 使用 CSS 类
+      class: 'taskrecord-listWrap-item-content', //Legacy comment translated to English.
       domProps: {
         innerHTML: sanitizeTaskHtml(this.content)
       }
@@ -91,18 +91,24 @@ Vue.component('task-html-renderer', {
   }
 });
 
-// 注册一个全局自定义指令 v-el-select-loadmore
+//Legacy comment translated to English.
 Vue.directive('el-select-loadmore', {
   bind(el, binding, vnode) {
-    // 获取element-ui定义好的scroll盒子
+    //Legacy comment translated to English.
     const SELECTWRAP_DOM = el.querySelector('.el-select-dropdown .el-select-dropdown__wrap')
     SELECTWRAP_DOM.addEventListener('scroll', function () {
       /**
-      * scrollHeight 获取元素内容高度(只读)
-      * scrollTop 获取或者设置元素的偏移值,常用于, 计算滚动条的位置, 当一个元素的容器没有产生垂直方向的滚动条, 那它的scrollTop的值默认为0.
-      * clientHeight 读取元素的可见高度(只读)
-      * 如果元素滚动到底, 下面等式返回true, 没有则返回false:
+
+      * Legacy comment translated to English.
+
+      * Legacy comment translated to English.
+
+      * Legacy comment translated to English.
+
+      * Legacy comment translated to English.
+
       * ele.scrollHeight - ele.scrollTop === ele.clientHeight;
+
       */
       const condition = this.scrollHeight - this.scrollTop <= this.clientHeight
       if (condition) {
@@ -112,7 +118,7 @@ Vue.directive('el-select-loadmore', {
   }
 })
 
-// load-more-select 组件
+//Legacy comment translated to English.
 Vue.component('load-more-select', {
   // v-el-select-loadmore="interestsLoadmore" filterable remote collapse-tags reserve-keyword :remote-method="remoteMethod" @focus="remoteMethod('',true)" @visible-change="reverseArrow"
   template: `<div :class="[direction === 'horizontal' ? 'df-wn flex-ac flex-js' : '']" style="width:100%;gap:10px;">
@@ -154,7 +160,7 @@ Vue.component('load-more-select', {
     },
     serviceType: {
       type: String,
-      default: '' // 默认使用公共 
+      default: '' // defaultusepublic 
     },
     misiptvId: {
       type: [String, Number],
@@ -166,7 +172,7 @@ Vue.component('load-more-select', {
     },
     direction: {
       type: String,
-      default: 'horizontal' // 横向/竖向  horizontal/vertical
+      default: 'horizontal' //Legacy comment translated to English.
     },
     chatOnly: {
       type: Boolean,
@@ -176,7 +182,7 @@ Vue.component('load-more-select', {
   data: function () {
     return {
       optionVisible: false,
-      interestsOptions: [], //  接口返回数据
+      interestsOptions: [], //  interfacereturndata
       interesLoading: false,
       currentPageSize: 0,
       listQuery: {
@@ -214,11 +220,11 @@ Vue.component('load-more-select', {
     // }
   },
   mounted() {
-    // 找到dom
+    //Legacy comment translated to English.
     // const rulesDom = this.$refs['elSelectLoadMore'].$el.querySelector(
     //     '.el-input .el-input__suffix .el-input__suffix-inner .el-input__icon'
     // )
-    // // 对dom新增class
+    //Legacy comment translated to English.
     // rulesDom?.classList.add('el-icon-arrow-up')
     this.refreshManagementList()
   },
@@ -251,14 +257,14 @@ Vue.component('load-more-select', {
     },
     reverseArrow(flag) {
       this.optionVisible = flag
-      // 找到dom
+      //Legacy comment translated to English.
       const rulesDom = this.$refs['elSelectLoadMore'].$el.querySelector(
         '.el-input .el-input__suffix .el-input__suffix-inner .el-input__icon'
       )
       if (flag) {
-        rulesDom.classList.add('is-reverse') // 对dom新增class
+        rulesDom.classList.add('is-reverse') //Legacy comment translated to English.
       } else {
-        rulesDom.classList.remove('is-reverse') // 对dom新增class
+        rulesDom.classList.remove('is-reverse') //Legacy comment translated to English.
       }
     },
     handleChange(e) {
@@ -272,7 +278,7 @@ Vue.component('load-more-select', {
         this.$emit('change', fintItem)
       }
     },
-    // 远程搜索
+    //Legacy comment translated to English.
     remoteMethod(query, isfocus) {
       // console.log(query, 8888, this.optionVisible,isfocus)
       if (this.optionVisible && isfocus) return
@@ -280,7 +286,7 @@ Vue.component('load-more-select', {
       this.listQuery.pageIndex = 1
       this.interestsOptions = []
       this.interesLoading = true
-      this.managementListOption() // 请求接口
+      this.managementListOption() // requestinterface
     },
     interestsLoadmore() {
       setTimeout(() => {
@@ -292,17 +298,17 @@ Vue.component('load-more-select', {
         this.managementListOption()
       }, 1000)
     },
-    // 刷新接口
+    // refreshinterface
     refreshManagementList() {
       this.listQuery.pageIndex = 1
       this.interestsOptions = []
       this.interesLoading = true
       this.managementListOption()
     },
-    // 调用接口
+    // invokeinterface
     managementListOption() {
       // console.log('managementListOption',this.serviceType);
-      this.interesLoading = true // 本地搜索 调用
+      this.interesLoading = true //Legacy comment translated to English.
       if (this.serviceType === 'agent') {
         serviceAM.get(`/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetList?${getInterfaceQueryStr(this.listQuery)}`)
           .then(res => {

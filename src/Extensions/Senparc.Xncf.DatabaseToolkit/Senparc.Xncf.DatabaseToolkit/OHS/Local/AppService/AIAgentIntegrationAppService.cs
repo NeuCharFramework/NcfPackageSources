@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：AIAgentIntegrationAppService.cs
-    文件功能描述：AIAgentIntegrationAppService 相关实现
+    File name: AIAgentIntegrationAppService.cs
+    File description: AIAgentIntegrationAppService related implementation
     
     
-    创建标识：Senparc - 20260327
+    Created by: Senparc - 20260327
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.26.0-preview2 为 DatabaseToolkit 模块接入统一资源本地化并优化功能文案
+    Modified by: Senparc - 20260717
+    Change description: v0.26.0-preview2 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -31,8 +31,8 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 {
     /// <summary>
-    /// AI Agent 集成 AppService
-    /// 定义用于 AI Agent 与 Database Toolkit 交互的 Prompt 和系统
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public class AIAgentIntegrationAppService : AppServiceBase
     {
@@ -42,8 +42,8 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取 AI Agent 系统 Prompt
-        /// 返回配置给 AI Agent 的系统提示，定义其在与数据库交互时的行为
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         [FunctionRender(typeof(DatabaseToolkitResource), "Function.Database.AgentPrompt.Name", "Function.Database.AgentPrompt.Description", typeof(Register))]
         public async Task<AppResponseBase<string>> GetSystemPrompt()
@@ -138,8 +138,8 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取常见查询模板
-        /// 返回预定义的常见查询模板，帮助 AI Agent 快速生成正确的查询
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         [FunctionRender(typeof(DatabaseToolkitResource), "Function.Database.QueryTemplates.Name", "Function.Database.QueryTemplates.Description", typeof(Register))]
         public async Task<AppResponseBase<string>> GetCommonQueryTemplates()

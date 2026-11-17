@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：WorkflowHumanInteractionContracts.cs
-    文件功能描述：Workflow 与外部人工交互模块之间的 HIL 桥接契约
+    File name: WorkflowHumanInteractionContracts.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260815
-    修改描述：Workflow 运行可读取并提交由 AgentsManager 托管的 Human 请求
+    Created by: Senparc - 20260815
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 扩展 Human Input 与工作流对象契约
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 扩展工作流依赖、函数调用和人工交互契约
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -23,8 +23,8 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 
 /// <summary>
-/// Workflow 运行中由外部 Agent 执行器托管的人工交互请求。
-/// Workflow 只消费契约，不依赖 AgentsManager 的实现与页面。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 public sealed record WorkflowHumanInteraction(
     string RequestId,
@@ -47,8 +47,8 @@ public sealed record WorkflowHumanInteractionResult(
     string Message);
 
 /// <summary>
-/// Workflow 与外部人工交互执行器的最小桥接。
-/// 实现方负责请求关联、权限校验、恢复执行以及提醒消费。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 public interface IWorkflowHumanInteractionBridge
 {
@@ -68,7 +68,7 @@ public interface IWorkflowHumanInteractionBridge
 }
 
 /// <summary>
-/// AgentsManager 未安装时的安全空实现。
+///Legacy comment translated to English.
 /// </summary>
 public sealed class NullWorkflowHumanInteractionBridge : IWorkflowHumanInteractionBridge
 {

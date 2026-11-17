@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：ColumnMetadataService.cs
-    文件功能描述：ColumnMetadataService 相关实现
+
+    File name: ColumnMetadataService.cs
+
+    File description: ColumnMetadataService related implementation
+
     
+
     
-    创建标识：Senparc - 20240719
+
+    Created by: Senparc - 20240719
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -42,18 +54,18 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
         }
 
         /// <summary>
-        /// 尝试根据实体创建表和列元数据
+        ///Legacy comment translated to English.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public async Task<ColumnTemplate> TryCreateTableAndColumnMetaFromEntityAsync<T>()
         {
-            //查看是否已经存在表
+            //Legacy comment translated to English.
             var tableName = typeof(T).FullName;
             var tableMetaDto = await _tableMetadataService.Value.GetTableMetadataDtoAsync(tableName);
             if (tableMetaDto == null)
             {
-                //创建对象
+                //Legacy comment translated to English.
                 //tableMetaDto = new TableMetadataDto()
                 //{
                 //    TableName = tableName,
@@ -66,12 +78,12 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
 
                 tableMetaDto = _tableMetadataService.Value.Mapping<TableMetadataDto>(tableMeta);
 
-                //创建列
+                //Legacy comment translated to English.
                 var props = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public);
                 List<ColumnMetadata> columns = new List<ColumnMetadata>();
                 foreach (var prop in props)
                 {
-                    //TODO:是否可为null，需要[Required]特性进行判断
+                    //Legacy comment translated to English.
                     var isRequired = prop.GetCustomAttribute<RequiredAttribute>() != null;
                     var defaultAttr = prop.GetCustomAttribute<DefaultValueAttribute>();
 
@@ -88,7 +100,7 @@ namespace Senparc.Xncf.DynamicData.Domain.Services
         public async Task<ColumnTemplate> GetColumnDtos(int tableId)
         {
             var columns = await base.GetFullListAsync(z => z.TableMetadataId == tableId);
-            //TODO: 添加 .ToDto<T>扩展方法
+            //Legacy comment translated to English.
             var columnDtos = columns.Select(z => base.Mapper.Map<ColumnMetadataDto>(z)).ToList();
             return new ColumnTemplate(tableId, columnDtos);
         }

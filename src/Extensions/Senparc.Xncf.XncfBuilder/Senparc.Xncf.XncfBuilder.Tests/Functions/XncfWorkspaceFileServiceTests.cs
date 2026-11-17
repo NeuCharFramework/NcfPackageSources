@@ -1,11 +1,11 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：XncfWorkspaceFileServiceTests.cs
-    文件功能描述：XNCF 工作区路径约束、原子写入和指纹并发测试
+    File name: XncfWorkspaceFileServiceTests.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20260802
+    Created by: Senparc - 20260802
 
 ----------------------------------------------------------------*/
 

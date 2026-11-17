@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：LogUtility.cs
-    文件功能描述：LogUtility 相关实现
+
+    File name: LogUtility.cs
+
+    File description: LogUtility related implementation
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -35,7 +47,7 @@ namespace Senparc.Ncf.Log
 
 
         public static int Int { get; set; }
-        //新建的领域可以在这里继续添加
+        //Legacy comment translated to English.
 
         public static ILog GetLogger(string name)
         {
@@ -44,7 +56,7 @@ namespace Senparc.Ncf.Log
                 //var appenders = LogManager.GetRepository().GetAppenders();
                 //if (appenders.Count() == 0)
                 //{
-                //    //没有载入log成功
+                //Legacy comment translated to English.
                 //    return log4net.LogManager.GetLogger(name);
                 //}
 

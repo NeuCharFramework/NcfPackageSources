@@ -1,17 +1,32 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：Register.cs
-    文件功能描述：Register 相关实现
-    
-    
-    创建标识：Senparc - 20211124
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.12.14 将 OfficeExtension Register 显示元数据接入统一资源本地化
+    Copyright (C) 2026 Senparc
+
+  
+
+    File name: Register.cs
+
+    File description: Register related implementation
+
+    
+
+    
+
+    Created by: Senparc - 20211124
+
+    
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20261111
+
+    Change description: v0.12.14 integrate OfficeExtension Register display metadata with shared resource localization
+
+
 
 ----------------------------------------------------------------*/
 
@@ -35,13 +50,13 @@ namespace Senparc.Xncf.OfficeExtension
             "Office 插件",
             "Office 插件");
 
-        #region IXncfRegister 接口
+        #region Legacy section
 
         public override string Name => "Senparc.Xncf.OfficeExtension";
 
-        public override string Uid => "60F17139-9074-411C-91D6-D4B239026434";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
+        public override string Uid => "60F17139-9074-411C-91D6-D4B239026434";//Legacy comment translated to English.
 
-        public override string Version => "0.1";//必须填写版本号
+        public override string Version => "0.1";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 

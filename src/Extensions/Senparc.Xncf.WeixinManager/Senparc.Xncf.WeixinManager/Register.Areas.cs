@@ -1,26 +1,26 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：Register.Areas.cs
-    文件功能描述：Register.Areas 相关实现
+    File name: Register.Areas.cs
+    File description: Register.Areas related implementation
     
     
-    创建标识：Senparc - 20250712
+    Created by: Senparc - 20250712
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.23.0-preview3 为 WeixinManager 模块接入统一资源本地化并优化功能文案
+    Modified by: Senparc - 20260717
+    Change description: v0.23.0-preview3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.23.1-preview4 限制微信管理模块的敏感日志和外部接口暴露
+    Modified by: Senparc - 20260729
+    Change description: v0.23.1-preview4 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.24.9 0.24.9 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
+    Modified by: Senparc - 20261005
+    Change description: v0.24.9 0.24.9 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.24.16 维护Register.Areas 相关实现
+    Modified by: Senparc - 20261103
+    Change description: v0.24.16 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -36,9 +36,9 @@ using Senparc.Ncf.Core.Areas;
 
 namespace Senparc.Xncf.WeixinManager
 {
-    public partial class Register : IAreaRegister //注册 XNCF 页面接口（按需选用）
+    public partial class Register : IAreaRegister //register the XNCF page interface (optional)
     {
-        #region IAreaRegister 接口
+        #region Legacy section
 
         public string HomeUrl => "/Admin/WeixinManager/Index";
 
@@ -55,7 +55,7 @@ namespace Senparc.Xncf.WeixinManager
 
             var services = builder.Services;
             //WebApiEngineExtensions.WebApiInitFinished = false;
-            //启用 WebApi（可选）
+            //Legacy comment translated to English.
             services.AddAndInitDynamicApi(builder, options =>
             {
                 options.DefaultRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get;

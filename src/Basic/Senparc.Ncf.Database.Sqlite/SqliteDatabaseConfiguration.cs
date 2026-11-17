@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：SqliteDatabaseConfiguration.cs
-    文件功能描述：SqliteDatabaseConfiguration 相关实现
+
+    File name: SqliteDatabaseConfiguration.cs
+
+    File description: SqliteDatabaseConfiguration related implementation
+
     
+
     
-    创建标识：Senparc - 20240316
+
+    Created by: Senparc - 20240316
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -28,7 +40,7 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.Database.Sqlite
 {
     /// <summary>
-    /// SQLite 数据库配置
+    /// SQLite databaseconfiguration
     /// </summary>
     public class SqliteDatabaseConfiguration : DatabaseConfigurationBase<SqliteDbContextOptionsBuilder, SqliteOptionsExtension>
     {
@@ -44,11 +56,11 @@ namespace Senparc.Ncf.Database.Sqlite
 
         internal static string GetLocalConnectionString(string connectionString)
         {
-            // 检查并调整路径  
+            //Legacy comment translated to English.
             const string PREFIX = "Filename=";
             if (connectionString.StartsWith($"{PREFIX}\\") || connectionString.StartsWith($"{PREFIX}./") || connectionString.StartsWith($"{PREFIX}.\\"))
             {
-                string relativePath = connectionString.Substring(PREFIX.Length); // 去掉 "Filename=" 前缀  
+                string relativePath = connectionString.Substring(PREFIX.Length); //Legacy comment translated to English.
                 string dbPath = Path.Combine(Senparc.CO2NET.Config.RootDirectoryPath, relativePath.Replace('\\', Path.DirectorySeparatorChar).Replace('/', Path.DirectorySeparatorChar));
                 connectionString = $"{PREFIX}{dbPath}";
             }
@@ -59,12 +71,12 @@ namespace Senparc.Ncf.Database.Sqlite
         public override Action<DbContextOptionsBuilder, string, XncfDatabaseData, Action<IRelationalDbContextOptionsBuilderInfrastructure>> SetUseDatabase =>
             (optionsBuilder, connectionString, xncfDatabaseData, actionBase) =>
             {
-                //其他更多配置
+                //Legacy comment translated to English.
 
-                // 检查并调整路径  
+                //Legacy comment translated to English.
                 connectionString = GetLocalConnectionString(connectionString);
 
-                //执行 UseSqlite（必须）
+                //execute UseSqlite（must）
                 //optionsBuilder.UseSqlite(CreateInMemoryDatabase(connectionString), actionBase);
 
                 optionsBuilder.UseSqlite(connectionString, actionBase);
@@ -72,7 +84,7 @@ namespace Senparc.Ncf.Database.Sqlite
 
         public override Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsActionExtension => (builder, xncfDatabaseData) =>
         {
-            //更多数据库操作独立配置（非必须）
+            //Legacy comment translated to English.
         };
 
 

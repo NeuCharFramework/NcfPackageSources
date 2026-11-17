@@ -1,17 +1,32 @@
 /*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：Register.Area.cs
-    文件功能描述：Register.Area 相关实现
-    
-    
-    创建标识：Senparc - 20210614
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.19.0-preview2 为 Swagger 模块接入统一资源本地化并优化功能文案
+    Copyright (C) 2026 Senparc
+
+  
+
+    File name: Register.Area.cs
+
+    File description: Register.Area related implementation
+
+    
+
+    
+
+    Created by: Senparc - 20210614
+
+    
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260717
+
+    Change description: v0.19.0-preview2 Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 
@@ -27,9 +42,9 @@ using System.IO;
 
 namespace Senparc.Xncf.Swagger
 {
-    public partial class Register : IAreaRegister //注册 XNCF 页面接口（按需选用）
+    public partial class Register : IAreaRegister //register the XNCF page interface (optional)
     {
-        #region IAreaRegister 接口
+        #region Legacy section
 
         public string HomeUrl => "/Admin/Swagger/Index";
 
@@ -57,7 +72,7 @@ namespace Senparc.Xncf.Swagger
 
             builder.AddRazorPagesOptions(options =>
             {
-                //此处可配置页面权限
+                //configure page permissions here
             });
 
             SenparcTrace.SendCustomLog("Swagger 启动", "完成 Area:Senparc.Xncf.Swagger 注册");
@@ -67,7 +82,7 @@ namespace Senparc.Xncf.Swagger
 
         #endregion
 
-        #region IXncfRazorRuntimeCompilation 接口
+        #region Legacy section
         public string LibraryPath => Path.GetFullPath(Path.Combine(SiteConfig.WebRootPath, "..", "..", "Senparc.Xncf.Swagger"));
 
         #endregion

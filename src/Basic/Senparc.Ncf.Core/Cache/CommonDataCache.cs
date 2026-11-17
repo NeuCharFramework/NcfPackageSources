@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：CommonDataCache.cs
-    文件功能描述：CommonDataCache 相关实现
+
+    File name: CommonDataCache.cs
+
+    File description: CommonDataCache related implementation
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -23,9 +35,9 @@ namespace Senparc.Ncf.Core.Cache
         Func<T> _fun;
 
         /// <summary>
-        /// 公用缓存模块，默认超时时间：1440分钟（1天）
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="key">全局唯一Key（只需要确保在CommonDataCache模块内唯一）</param>
+        ///Legacy comment translated to English.
         /// <param name="fun"></param>
         public CommonDataCache(string key, Func<T> fun)
             :this(key, 1440, fun)
@@ -33,10 +45,10 @@ namespace Senparc.Ncf.Core.Cache
         }
 
         /// <summary>
-        /// 公用缓存模块
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="key">全局唯一Key（只需要确保在CommonDataCache模块内唯一）</param>
-        /// <param name="timeout">缓存时间（分钟）</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <param name="fun"></param>
         public CommonDataCache(string key, int timeout, Func<T> fun)
             : base(CACHE_KEY + key)

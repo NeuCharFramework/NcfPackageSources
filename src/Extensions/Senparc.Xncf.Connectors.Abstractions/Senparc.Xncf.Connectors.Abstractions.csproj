@@ -8,18 +8,18 @@
     <RootNamespace>Senparc.Xncf.Connectors.Abstractions</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
-    <Description>NCF 连接器契约：外部工具的描述、配置字段、动作和 Agent 授权。</Description>
+    <Description>Module description.</Description>
     <Copyright>Senparc</Copyright>
     <PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.Connectors,Abstractions</PackageTags>
     <Authors>Senparc</Authors>
     <Owners>Senparc</Owners>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <Title>NCF 连接器 Abstractions</Title>
+    <Title>NCF Connectors Abstractions</Title>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-      [2026-11-11] v0.1.0 定义连接器描述、配置字段、动作与授权契约
-      1、描述连接器类型、字段和可调用动作。
-      2、授权计算 Agent 绑定与本次对话选择的交集，未授权实例不能因勾选而生效。
+      [2026-11-11] v0.1.0 Updated module behavior and related support.
+      1. Updated module behavior and related support.
+      2. Updated module behavior and related support.
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

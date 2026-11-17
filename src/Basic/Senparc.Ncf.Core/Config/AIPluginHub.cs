@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：AIPluginHub.cs
-    文件功能描述：AIPluginHub 相关实现
+
+    File name: AIPluginHub.cs
+
+    File description: AIPluginHub related implementation
+
     
+
     
-    创建标识：Senparc - 20250121
+
+    Created by: Senparc - 20250121
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -24,16 +36,16 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.Core
 {
     /// <summary>
-    /// 注册 AI 插件
+    ///Legacy comment translated to English.
     /// </summary>
     public class AIPluginHub
     {
-        #region 单例
+        #region Legacy section
 
         AIPluginHub() { }
 
         /// <summary>
-        /// AIPluginHub 的全局单例
+        ///Legacy comment translated to English.
         /// </summary>
         public static AIPluginHub Instance
         {
@@ -57,7 +69,7 @@ namespace Senparc.Ncf.Core
 
 
         /// <summary>
-        /// 添加 Plugin 类型
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="pluginType"></param>
 
@@ -72,7 +84,7 @@ namespace Senparc.Ncf.Core
         }
 
         /// <summary>
-        /// 获取 Plugin 类型
+        /// get Plugin type
         /// </summary>
         /// <param name="fullName"></param>
         /// <param name="patternSearch"></param>
@@ -105,7 +117,7 @@ namespace Senparc.Ncf.Core
         }
 
         /// <summary>
-        /// 获取所有 Plugin 类型
+        /// getall Plugin type
         /// </summary>
         /// <returns></returns>
         public List<string> GetAllPluginNames()

@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：Register.Thread.cs
-    文件功能描述：Register.Thread 相关实现
+    File name: Register.Thread.cs
+    File description: Register.Thread related implementation
 
 
-    创建标识：Senparc - 20260504
+    Created by: Senparc - 20260504
 
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.4.2-preview7 增强固件更新线程停止时的取消与异常处理
+    Modified by: Senparc - 20260813
+    Change description: v0.4.2-preview7 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

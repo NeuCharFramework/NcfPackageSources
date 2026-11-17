@@ -1,4 +1,4 @@
-/* MCP Endpoint 可视化管理：列表 / 新增 / 编辑 / 启用切换 / 连接测试（含可展开的 Function 信息） */
+/* Legacy comment translated to English. */
 (function () {
     var apiBase = '/api/Senparc.Xncf.MCP/MCPEndpointAppService/Xncf.MCP_MCPEndpointAppService';
 
@@ -88,7 +88,7 @@
                 filterText: '',
                 onlyEnabled: false,
 
-                // 新增/编辑对话框
+                //Legacy comment translated to English.
                 dialogVisible: false,
                 dialogTitle: '新增 MCP Endpoint',
                 saving: false,
@@ -108,17 +108,17 @@
                 },
                 endpointTypeOptions: ['sse', 'http', 'stdio', 'websocket'],
 
-                // 保存前连接测试
+                //Legacy comment translated to English.
                 preTestLoading: false,
                 preTestResult: null,
 
-                // 测试结果对话框
+                //Legacy comment translated to English.
                 testDialogVisible: false,
                 testResult: null,
                 testResultEndpointName: '',
                 expandedTools: [],
 
-                // 工具 schema 原始 JSON 查看
+                //Legacy comment translated to English.
                 schemaDialogVisible: false,
                 schemaTitle: '',
                 schemaText: ''

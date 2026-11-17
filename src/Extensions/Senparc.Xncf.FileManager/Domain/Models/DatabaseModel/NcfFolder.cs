@@ -1,17 +1,17 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：NcfFolder.cs
-    文件功能描述：NcfFolder 相关实现
+    File name: NcfFolder.cs
+    File description: NcfFolder related implementation
 
 
-    创建标识：Senparc - 20260104
+    Created by: Senparc - 20260104
 
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.6.0-preview1 完善文件资源边界、安全删除策略与静态资源管理
+    Modified by: Senparc - 20260813
+    Change description: v0.6.0-preview1 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -23,15 +23,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.FileManager.Domain.Models.DatabaseModel
 {
 
-    // 新增文件夹实体
-    [Table(Register.DATABASE_PREFIX + nameof(NcfFolder))]//必须添加前缀，防止全系统中发生冲突
+    //Legacy comment translated to English.
+    [Table(Register.DATABASE_PREFIX + nameof(NcfFolder))]//a prefix is required to prevent system-wide conflicts
     public class NcfFolder : EntityBase<int>
     {
         [Required]
         [MaxLength(200)]
         public string Name { get; set; }
 
-        public int? ParentId { get; set; } // 父级文件夹，null 为根
+        public int? ParentId { get; set; } //Legacy comment translated to English.
 
         [MaxLength(500)]
         public string Description { get; set; }
@@ -39,7 +39,7 @@ namespace Senparc.Xncf.FileManager.Domain.Models.DatabaseModel
         public DateTime CreateTime { get; set; } = DateTime.UtcNow;
 
         /// <summary>
-        /// 文件夹只承载一种用途，避免在一个目录中混放知识库资料和可公开访问的站点资源。
+        ///Legacy comment translated to English.
         /// </summary>
         public NcfFileResourceScope ResourceScope { get; set; } = NcfFileResourceScope.KnowledgeBase;
     }

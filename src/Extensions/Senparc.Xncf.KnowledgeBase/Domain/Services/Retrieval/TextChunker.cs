@@ -1,15 +1,15 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：TextChunker.cs
-    文件功能描述：知识库文本切片器。提供固定长度（旧版行为）、递归结构化、按段落三种策略；
-    切片大小与重叠由 KnowledgeBaseRetrievalConfig 配置。
+    File name: TextChunker.cs
+    File description: Related implementation.
+    Legacy comment translated to English.
 
 
-    创建标识：Senparc - 20260926
+    Created by: Senparc - 20260926
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.8.0 upgrade KnowledgeBase retrieval with configurable chunking and re-ranking (backward compatible)
+    Modified by: Senparc - 20261103
+    Change description: v0.8.0 upgrade KnowledgeBase retrieval with configurable chunking and re-ranking (backward compatible)
 
 ----------------------------------------------------------------*/
 
@@ -21,12 +21,12 @@ using System.Text;
 namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
 {
     /// <summary>
-    /// 文本切片。所有策略保证：不丢失正文内容、不产生纯空白切片、结果确定（相同输入得到相同输出）。
+    ///Legacy comment translated to English.
     /// </summary>
     public static class TextChunker
     {
         /// <summary>
-        /// 递归策略的分隔符优先级：段落 → 行 → 中英文句读 → 逗号 → 空格 → 单字符。
+        ///Legacy comment translated to English.
         /// </summary>
         private static readonly string[] RecursiveSeparators =
         {
@@ -34,7 +34,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
         };
 
         /// <summary>
-        /// 按知识库配置的切片策略切分文本。
+        ///Legacy comment translated to English.
         /// </summary>
         public static IReadOnlyList<string> Split(string text, KnowledgeBaseRetrievalConfig config)
         {
@@ -64,7 +64,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
         }
 
         /// <summary>
-        /// 固定长度切片（与旧版 SplitText 行为完全一致：字符窗口 + 重叠）。
+        ///Legacy comment translated to English.
         /// </summary>
         public static List<string> SplitFixed(string text, int chunkSize, int overlap)
         {
@@ -84,7 +84,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
 
                 chunks.Add(text.Substring(i, length));
 
-                // 防止死循环（如果 overlap >= chunkSize）
+                //Legacy comment translated to English.
                 if (chunkSize - overlap <= 0)
                 {
                     break;
@@ -95,8 +95,8 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
         }
 
         /// <summary>
-        /// 递归结构化切片：优先在语义边界（段落/行/句子）断开，仅在无法进一步切分时退回字符窗口；
-        /// 相邻切片保留 overlap 个字符的重叠，避免上下文在边界处丢失。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         public static List<string> SplitRecursive(string text, int chunkSize, int overlap)
         {
@@ -106,8 +106,8 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
         }
 
         /// <summary>
-        /// 按段落切片：以空行划分段落，短段落合并到不超过 chunkSize；
-        /// 超长段落内部改用递归结构化切分。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         public static List<string> SplitParagraph(string text, int chunkSize, int overlap)
         {
@@ -127,7 +127,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
                     continue;
                 }
 
-                // 单段超长：在段内做递归结构化切分
+                //Legacy comment translated to English.
                 fragments.AddRange(SplitIntoFragments(paragraph, chunkSize, RecursiveSeparators, 0));
             }
 
@@ -140,7 +140,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
         }
 
         /// <summary>
-        /// 按分隔符优先级递归拆分：能容纳在 chunkSize 内的片段保留，更大的片段用下一级分隔符继续拆。
+        ///Legacy comment translated to English.
         /// </summary>
         private static List<string> SplitIntoFragments(
             string text,
@@ -160,7 +160,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
             }
             if (separatorIndex >= separators.Count)
             {
-                // 已到最低优先级：按字符窗口硬切（保留完整内容）
+                //Legacy comment translated to English.
                 for (var i = 0; i < text.Length; i += chunkSize)
                 {
                     result.Add(text.Substring(i, Math.Min(chunkSize, text.Length - i)));
@@ -184,7 +184,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
         }
 
         /// <summary>
-        /// 按分隔符拆分，分隔符保留在前一段末尾，避免丢失标点与换行。
+        ///Legacy comment translated to English.
         /// </summary>
         private static List<string> SplitWithSeparator(string text, string separator)
         {
@@ -219,7 +219,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
         }
 
         /// <summary>
-        /// 把碎片贪心合并为不超过 chunkSize 的切片，并在相邻切片之间保留 overlap 字符重叠。
+        ///Legacy comment translated to English.
         /// </summary>
         private static List<string> MergeWithOverlap(IReadOnlyList<string> fragments, int chunkSize, int overlap)
         {

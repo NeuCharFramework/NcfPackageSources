@@ -29,7 +29,7 @@ namespace Senparc.Mvc.Controllers
             var vd = new Install_IndexVD()
             {
                 AdminUserName = userName,
-                AdminPassword = password//这里不可以使用 adminUserInfo.Password，因为此参数已经是加密信息
+                AdminPassword = password//Legacy comment translated to English.
             };
             return View(vd);
         }

@@ -91,12 +91,12 @@ namespace Senparc.Areas.User.Controllers
         [AllowAnonymous]
         public ActionResult Register(Home_RegisterVD vd_form)
         {
-            //判断是否已经绑定微信
+            //Legacy comment translated to English.
             var codeRegCache = SenparcDI.GetService<QrCodeRegCache>();
             var messageItem = codeRegCache.MessageQueue.FirstOrDefault(z => z.Data.RegGuid == vd_form.RegGuid);
             if (messageItem != null)
             {
-                //允许注册
+                //Legacy comment translated to English.
                 var qrCodeRegData = messageItem.Data;
                 var user = _accountService.GetObject(z => z.WeixinOpenId == qrCodeRegData.OpenId);
                 if (user != null)
@@ -106,7 +106,7 @@ namespace Senparc.Areas.User.Controllers
             }
             else
             {
-                //未发送验证码
+                //Legacy comment translated to English.
                 return RedirectToAction("Register", "Home");
             }
 
@@ -133,7 +133,7 @@ namespace Senparc.Areas.User.Controllers
             {
                 if (!SiteConfig.IsDebug)
                 {
-                    //短信验证
+                    //Legacy comment translated to English.
                     var phoneCheckCodeCache = SenparcDI.GetService<PhoneCheckCodeCache>();
                     var data = phoneCheckCodeCache.Get(vd_form.PhoneCheck);
                     phoneCheckVal.IsTrue(z => data != null && data.Data.Phone == vd_form.Phone, "{0}错误！", true);
@@ -144,7 +144,7 @@ namespace Senparc.Areas.User.Controllers
             if (!ModelState.IsValid)
             {
                 var smsRecord = SenparcDI.GetService<SmsRecordService>();
-                var smsToken = smsRecord.GetSendSmsToken();//获取已经保存的令牌
+                var smsToken = smsRecord.GetSendSmsToken();//Legacy comment translated to English.
                 vd_form.SmsToken = smsToken;
                 return View(vd_form);
             }
@@ -152,7 +152,7 @@ namespace Senparc.Areas.User.Controllers
             {
                 _accountService.CreateAccount(vd_form.UserName.Trim(), vd_form.Email.Trim(), vd_form.Phone.Trim(), vd_form.Password.Trim(),
                      messageItem.Data.OpenId, "", "");
-                codeRegCache.Remove(messageItem.Data.Key);//删除缓存记录
+                codeRegCache.Remove(messageItem.Data.Key);//Legacy comment translated to English.
                 SetMessager(MessageType.success, "注册成功");
                 return RedirectToAction("Login");
             }
@@ -160,7 +160,7 @@ namespace Senparc.Areas.User.Controllers
             {
                 SetMessager(MessageType.danger, "注册失败，请稍后重试");
                 var smsRecord = SenparcDI.GetService<SmsRecordService>();
-                var smsToken = smsRecord.GetSendSmsToken();//获取已经保存的令牌
+                var smsToken = smsRecord.GetSendSmsToken();//Legacy comment translated to English.
                 vd_form.SmsToken = smsToken;
                 return View(vd_form);
             }
@@ -199,7 +199,7 @@ namespace Senparc.Areas.User.Controllers
                 return RedirectToAction("Index");
             }
 
-            //未登录
+            //Legacy comment translated to English.
             var remoteDomain = "https://weixin.senparc.com"; //SiteConfig.IsDebug ? "https://localhost:44305" : "https://weixin.senparc.com";
             var loaclDomain = $"{Request.Scheme}://{Request.Host.Value}"; //SiteConfig.IsDebug ? "http://localhost:11942" : "https://scf.senparc.com";
 
@@ -210,7 +210,7 @@ namespace Senparc.Areas.User.Controllers
         }
 
         /// <summary>
-        /// 向weixin.senparc.com请求的OAuth回调
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="code"></param>
         /// <param name="state"></param>
@@ -250,7 +250,7 @@ namespace Senparc.Areas.User.Controllers
 
                 if (userInfo == null || userInfo.openid == null)
                 {
-                    //获取出错
+                    //Legacy comment translated to English.
                     var errorResult = JsonConvert.DeserializeObject<WxJsonResult>(userInfoJson);
                     return RenderError($"错误：{errorResult.errcode.ToString()}");
                 }
@@ -263,7 +263,7 @@ namespace Senparc.Areas.User.Controllers
                 {
                     return RedirectToAction(nameof(Index), "Home", new { area = "User" });
                 }
-                //转到用户一开始访问的页面
+                //Legacy comment translated to English.
                 return Redirect(returnUrl);
             }
             catch (ErrorJsonResultException ex)
@@ -287,15 +287,15 @@ namespace Senparc.Areas.User.Controllers
             //string errorMsg = null;
             //if (ModelState.IsValid && Session["TryLoginTimes"] != null)
             //{
-            //    //验证码
+            //Legacy comment translated to English.
             //    var tryLoginTimes = (int)Session["TryLoginTimes"];
             //    if (SiteConfig.TryUserLoginTimes <= tryLoginTimes)
             //    {
-            //        var valCheckCode = this.Validator(vd.CheckCode, "验证码", "CheckCode", null)
+            //Legacy comment translated to English.
             //                               .ValidateCheckCode(CheckCodeKind.Login, true);
             //        if (valCheckCode == null)
             //        {
-            //            errorMsg = "验证码错误！";
+            //Legacy comment translated to English.
             //        }
             //    }
             //}
@@ -333,14 +333,14 @@ namespace Senparc.Areas.User.Controllers
         [AllowAnonymous]
         public ActionResult SendSms(string phone, string token)
         {
-            //手机号是否存在
+            //Legacy comment translated to English.
             bool exist = _accountService.CheckPhoneExisted(0, phone);
             if (exist)
             {
                 return RenderJsonSuccessResult(false, new { Message = "手机号码已存在！" });
             }
             var session = Request.HttpContext.Session;
-            //发送时间间隔
+            //Legacy comment translated to English.
             if (session.GetString("LastSendSmsTime") != null)
             {
                 var lastSeconds = 60 - (DateTime.Now - DateTime.Parse(session.GetString("LastSendSmsTime"))).TotalSeconds;

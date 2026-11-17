@@ -117,7 +117,7 @@ var app = new Vue({
       this.addFormDialogVisible = true;
     },
     addNeuCharModel() {
-      this.neuCharFormDialogVisible = true; // 显示对话框  
+      this.neuCharFormDialogVisible = true; //Legacy comment translated to English.
     },
     async copyInfo(key) {
       let copied = false

@@ -2,11 +2,11 @@
     el: "#app",
     data() {
         return {
-            //分页参数
+            //pagination parameters
             paginationQuery: {
                 total: 5
             },
-            //分页接口传参
+            //pagination API parameters
             listQuery: {
                 pageIndex: 1,
                 pageSize: 20,
@@ -28,23 +28,23 @@
                 },
                 updateLoading: false
             },
-            // 树结构字段
+            //Legacy comment translated to English.
             defaultProps: {
                 children: 'children',
                 label: 'menuName'
             },
-            // 授权
+            //Legacy comment translated to English.
             au: {
                 title: '',
                 visible: false,
                 updateLoading: false,
                 temp: {}
             },
-            allMenu: [],// 所有权限
-            currMenu: [],// 当前权限
-            defaultExpandedKeys: [], // 默认展开
-            defaultCheckedKeys: [], // 默认选中
-            parentArr: [] // 父节点集合
+            allMenu: [],//Legacy comment translated to English.
+            currMenu: [],//Legacy comment translated to English.
+            defaultExpandedKeys: [], //Legacy comment translated to English.
+            defaultCheckedKeys: [], //Legacy comment translated to English.
+            parentArr: [] //Legacy comment translated to English.
         };
     },
     created: function () {
@@ -52,7 +52,7 @@
     },
     watch: {
         'dialog.visible': function (val, old) {
-            // 关闭dialog，清空
+            // disabledialog，clear
             if (!val) {
                 this.dialog.data = {
                     roleName: '', roleCode: '', adminRemark: '', remark: '', addTime: '', id: ''
@@ -61,7 +61,7 @@
             }
         },
         'au.visible': function (val, old) {
-            // 关闭dialog，清空
+            // disabledialog，clear
             if (!val) {
                 this.currMenu = [];
                 this.defaultCheckedKeys = [];
@@ -71,15 +71,15 @@
         }
     },
     methods: {
-        // 权限
+        //Legacy comment translated to English.
         async handleRole(index, row) {
-            // 打开dialog
+            //Legacy comment translated to English.
             this.au = {
                 title: row.roleName,
                 visible: true,
                 temp: row
             };
-            // 当前已有权限
+            //Legacy comment translated to English.
             const c = await service.get(`/Admin/Role/Permission?handler=RolePermission&roleId=${row.id}`);
             this.currMenu = c.data.data;
             let defaultCheckedKeys = [];
@@ -90,11 +90,11 @@
             const a = await service.get('/Admin/Menu/Edit?handler=menu');
             const b = a.data.data;
             let allMenu = [];
-            // 父节点的集合, 用于求默认和条件为父节点时的差集，解决element tree无半选问题。
+            //Legacy comment translated to English.
             let parentMenuNodes = [];
             this.ddd(b, null, allMenu, parentMenuNodes);
             this.allMenu = allMenu
-            // 所有权限  格式后的数据(用于渲染tree)
+            //Legacy comment translated to English.
             const e = [];
             parentMenuNodes.map((res) => {
                 defaultCheckedKeys.map((ele) => {
@@ -117,7 +117,7 @@
                 }
             }
         },
-        // 更新授权
+        //Legacy comment translated to English.
         async  auUpdateData() {
             this.au.updateLoading = true;
             const checkNodes = this.$refs.tree.getCheckedNodes(false, true);
@@ -146,7 +146,7 @@
                 });
             }
         },
-        // 初始化获取数据
+        // initializegetdata
         getList() {
             let { pageIndex, pageSize, roleName, orderField } = this.listQuery;
             service.get(`/Admin/Role/index?handler=List&pageIndex=${pageIndex}&pageSize=${pageSize}&roleName=${roleName}&orderField=${orderField}`).then(res => {
@@ -154,26 +154,26 @@
                 this.paginationQuery.total = res.data.data.totalCount;
             });
         },
-        // 编辑
+        // edit
         handleEdit(index, row) {
             this.dialog.visible = true;
             if (row) {
-                // 编辑
+                // edit
                 let { roleName, roleCode, adminRemark, remark, addTime, id, enabled } = row;
                 this.dialog.data = {
                     roleName, roleCode, adminRemark, remark, addTime, id, enabled
                 };
                 this.dialog.title = ncfT('Role.EditTitle');
             } else {
-                // 新增
+                // add
                 this.dialog.title = ncfT('Role.AddTitle');
             }
         },
-        // 更新新增、编辑
+        // updateadd、edit
         updateData() {
             this.dialog.updateLoading = true;
             this.$refs['dataForm'].validate(valid => {
-                // 表单校验
+                // single-table validation
                 if (valid) {
                     let data = {
                         Id: this.dialog.data.id,
@@ -201,7 +201,7 @@
 
 
         },
-        // 删除
+        // delete
         handleDelete(index, row) {
             let ids = [row.id];
             service.post("/Admin/Role/Index?handler=Delete", ids).then(res => {

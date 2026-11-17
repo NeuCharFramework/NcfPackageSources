@@ -1,17 +1,32 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：XncfStateAppService.cs
-    文件功能描述：XncfStateAppService 相关实现
-    
-    
-    创建标识：Senparc - 20240423
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.15.0-preview2 为 XncfModuleManager 模块接入统一资源本地化并优化功能文案
+    Copyright (C) 2026 Senparc
+
+  
+
+    File name: XncfStateAppService.cs
+
+    File description: XncfStateAppService related implementation
+
+    
+
+    
+
+    Created by: Senparc - 20240423
+
+    
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260717
+
+    Change description: v0.15.0-preview2 Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 
@@ -74,7 +89,7 @@ namespace Senparc.Xncf.XncfModuleManager.OHS.Local.AppService
                         response.Data += logger.Append($"[Function: {function.Value.Key}]\r\n");
                         response.Data += logger.Append($"[内部方法: {function.Key}]\r\n");
 
-                        //response.Data = logger.Append($"名称：{function.Value.FunctionRenderAttribute.Name}\r\n");
+                        //response.Data = logger.Append($"name：{function.Value.FunctionRenderAttribute.Name}\r\n");
 
                         try
                         {

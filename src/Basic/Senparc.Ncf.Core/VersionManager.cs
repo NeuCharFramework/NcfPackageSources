@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：VersionManager.cs
-    文件功能描述：VersionManager 相关实现
+
+    File name: VersionManager.cs
+
+    File description: VersionManager related implementation
+
     
+
     
-    创建标识：Senparc - 20200920
+
+    Created by: Senparc - 20200920
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -25,7 +37,7 @@ namespace Senparc.Ncf.Core
     public class VersionManager
     {
         /// <summary>
-        /// 返回版本信息
+        /// returnversioninformation
         /// </summary>
         /// <returns></returns>
         public static string GetVersionNote(string ncfVersion = null, string note = null, bool showOpenSourceInfo = true)
@@ -65,7 +77,7 @@ namespace Senparc.Ncf.Core
                     {
                         sb.AppendLine("    开源模板：https://github.com/NeuCharFramework/NCF");
                         sb.AppendLine("    开源模板：https://gitee.com/NeuCharFramework/NCF");
-                        //sb.AppendLine("    基础模块源码：https://github.com/NeuCharFramework/NcfPackageSources");
+                        //Legacy comment translated to English.
                         sb.AppendLine("    文档：https://doc.ncf.pub/");
                     }
                 })
@@ -82,7 +94,7 @@ namespace Senparc.Ncf.Core
 
         public static void ShowSuccessTip(string note, string systemVersion = null, bool showOpenSourceInfo = true)
         {
-            //输出启动成功标志
+            //output the startup success marker
             systemVersion ??= Assembly.GetExecutingAssembly().GetName().Version.ToString();
             var startupNote = Senparc.Ncf.Core.VersionManager.GetVersionNote(systemVersion, note, showOpenSourceInfo);
             Console.WriteLine("----------------------------------------------------------");

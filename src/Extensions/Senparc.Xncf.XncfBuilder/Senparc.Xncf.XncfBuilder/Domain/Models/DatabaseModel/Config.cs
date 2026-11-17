@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：Config.cs
-    文件功能描述：Config 相关实现
+
+    File name: Config.cs
+
+    File description: Config related implementation
+
     
+
     
-    创建标识：Senparc - 20260704
+
+    Created by: Senparc - 20260704
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -23,48 +35,48 @@ using System.Text;
 
 namespace Senparc.Xncf.XncfBuilder
 {
-    [Table(Register.DATABASE_PREFIX + nameof(Config))]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(Config))]//a prefix is required to prevent system-wide conflicts
     [Serializable]
     [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
     public class Config : EntityBase<int>
     {
         /// <summary>
-        /// Sln 文件路径
+        /// Sln filepath
         /// </summary>
         [MaxLength(300)]
         public string SlnFilePath { get; private set; }
         /// <summary>
-        /// 组织名称
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(300)]
         public string OrgName { get; private set; }
 
         /// <summary>
-        /// 模块名称
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(50)]
         public string XncfName { get; private set; }
 
         /// <summary>
-        /// 版本号
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(100)]
         public string Version { get; private set; }
 
         /// <summary>
-        /// 菜单名称
+        /// menu name
         /// </summary>
         [MaxLength(100)]
         public string MenuName { get; private set; }
 
         /// <summary>
-        /// 图标
+        /// icon
         /// </summary>
         [MaxLength(100)]
         public string Icon { get; private set; }
 
         /// <summary>
-        /// 说明
+        /// description
         /// </summary>
         [MaxLength(400)]
         public string Description { get; private set; }

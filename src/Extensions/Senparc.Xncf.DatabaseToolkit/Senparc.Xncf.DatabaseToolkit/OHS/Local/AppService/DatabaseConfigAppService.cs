@@ -1,20 +1,38 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：DatabaseConfigAppService.cs
-    文件功能描述：DatabaseConfigAppService 相关实现
-    
-    
-    创建标识：Senparc - 20211012
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.26.0-preview2 为 DatabaseToolkit 模块接入统一资源本地化并优化功能文案
+    File name: DatabaseConfigAppService.cs
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.27.0-preview3 增加数据库分页筛选执行能力并限制请求范围
+    File description: DatabaseConfigAppService related implementation
+
+    
+
+    
+
+    Created by: Senparc - 20211012
+
+    
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260717
+
+    Change description: v0.26.0-preview2 Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20260729
+
+    Change description: v0.27.0-preview3 Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 

@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：WeixinClawFileManagerBridge.cs
-    文件功能描述：WeixinClawFileManagerBridge 相关定义与实现
+    File name: WeixinClawFileManagerBridge.cs
+    File description: WeixinClawFileManagerBridge related definitions and implementation
 
 
-    创建标识：Senparc - 20261001
+    Created by: Senparc - 20261001
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.24.16 完善微信 Claw 消息收发、回执完整性与绑定配置交互
+    Modified by: Senparc - 20261103
+    Change description: v0.24.16 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

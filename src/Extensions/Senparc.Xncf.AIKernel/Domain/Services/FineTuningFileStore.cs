@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：FineTuningFileStore.cs
-    文件功能描述：保存微调数据集与产物文件
+    File name: FineTuningFileStore.cs
+    File description: Related implementation.
     
     
-    创建标识：Senparc - 20261014
+    Created by: Senparc - 20261014
     
-    修改标识：Senparc - 20261021
-    修改描述：v0.17.0 保存微调数据集与产物文件
+    Modified by: Senparc - 20261021
+    Change description: v0.17.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.17.0 add FileId reference to AIFineTuningDataset and implement FineTuningFileReferenceProvider
+    Modified by: Senparc - 20261103
+    Change description: v0.17.0 add FileId reference to AIFineTuningDataset and implement FineTuningFileReferenceProvider
 
 ----------------------------------------------------------------*/
 

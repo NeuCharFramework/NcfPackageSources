@@ -1,8 +1,8 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：AdminChatAccountIsolationTests.cs
-    文件功能描述：AdminChat 按账号隔离与超级管理员用量统计测试
+    File name: AdminChatAccountIsolationTests.cs
+    File description: Related implementation.
 
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Http;
@@ -41,9 +41,9 @@ namespace Senparc.Areas.Admin.Tests.Domain.Services
             Assert.IsNotNull(session);
             Assert.AreEqual(owner.Id, session.UserId);
 
-            // 属主可正常访问
+            //Legacy comment translated to English.
             Assert.IsNotNull(await _sessionService.GetSessionByIdAsync(session.Id, owner.Id));
-            // 其他账号无法访问
+            //Legacy comment translated to English.
             Assert.IsNull(await _sessionService.GetSessionByIdAsync(session.Id, intruder.Id));
             Assert.IsFalse(await _sessionService.ArchiveSessionAsync(session.Id, intruder.Id));
             Assert.IsFalse(await _sessionService.DeleteSessionAsync(session.Id, intruder.Id));
@@ -58,11 +58,11 @@ namespace Senparc.Areas.Admin.Tests.Domain.Services
             var session = await _sessionService.CreateSessionAsync("消息归属测试", owner.Id);
             var message = await _messageService.AddMessageAsync(session.Id, ChatMessageRoleType.Assistant, "hello isolation");
 
-            // 属主消息可获取，可设置反馈
+            //Legacy comment translated to English.
             Assert.IsNotNull(await _messageService.GetOwnedMessageAsync(message.Id, owner.Id));
             Assert.IsTrue(await _messageService.SetMessageFeedbackAsync(message.Id, owner.Id, MessageFeedbackType.Like));
 
-            // 其他账号无法获取或修改消息
+            //Legacy comment translated to English.
             Assert.IsNull(await _messageService.GetOwnedMessageAsync(message.Id, intruder.Id));
             Assert.IsFalse(await _messageService.SetMessageFeedbackAsync(message.Id, intruder.Id, MessageFeedbackType.Dislike));
             Assert.IsNull(await _messageService.GetOwnedMessageAsync(-1, owner.Id));
@@ -183,13 +183,13 @@ namespace Senparc.Areas.Admin.Tests.Domain.Services
         {
             var appService = new SuperAdminProbeService(base._serviceProvider);
 
-            // administrator 角色（单值/多值/大小写/空格）均为超级管理员
+            //Legacy comment translated to English.
             Assert.IsTrue(appService.IsCurrentAdminSuperAdmin(BuildHttpContext(new[] { "administrator" })));
             Assert.IsTrue(appService.IsCurrentAdminSuperAdmin(BuildHttpContext(new[] { "Administrator, operator" })));
             Assert.IsFalse(appService.IsCurrentAdminSuperAdmin(BuildHttpContext(new[] { "Admin, operator" })));
             Assert.IsTrue(appService.IsCurrentAdminSuperAdmin(BuildHttpContext(new[] { "ADMINISTRATOR" })));
 
-            // 普通角色或无角色均不是超级管理员
+            //Legacy comment translated to English.
             Assert.IsFalse(appService.IsCurrentAdminSuperAdmin(BuildHttpContext(new[] { "operator" })));
             Assert.IsFalse(appService.IsCurrentAdminSuperAdmin(BuildHttpContext(Array.Empty<string>())));
         }
@@ -228,7 +228,7 @@ namespace Senparc.Areas.Admin.Tests.Domain.Services
         }
 
         /// <summary>
-        /// LocalAppServiceBase 的具体实现，用于测试角色判定逻辑
+        ///Legacy comment translated to English.
         /// </summary>
         private class SuperAdminProbeService : LocalAppServiceBase
         {

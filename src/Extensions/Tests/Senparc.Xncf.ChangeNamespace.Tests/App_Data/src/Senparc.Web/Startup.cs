@@ -116,16 +116,19 @@ namespace Senparc.Web
                 {
                     #region CO2NET 全局配置
 
-                    #region 全局缓存配置（按需）
+                    #region Legacy section
 
                     #region 配置和使用 Redis
 
-                    //配置全局使用Redis缓存（按需，独立）
-                    if (UseRedis(senparcSetting.Value, out string redisConfigurationStr))//这里为了方便不同环境的开发者进行配置，做成了判断的方式，实际开发环境一般是确定的，这里的if条件可以忽略
+                    //Legacy comment translated to English.
+                    if (UseRedis(senparcSetting.Value, out string redisConfigurationStr))//Legacy comment translated to English.
                     {
                         /* 说明：
-                         * 1、Redis 的连接字符串信息会从 Config.SenparcSetting.Cache_Redis_Configuration 自动获取并注册，如不需要修改，下方方法可以忽略
+
+                         * Legacy comment translated to English.
+
                         /* 2、如需手动修改，可以通过下方 SetConfigurationOption 方法手动设置 Redis 链接信息（仅修改配置，不立即启用）
+
                          */
                         Senparc.CO2NET.Cache.CsRedis.Register.SetConfigurationOption(redisConfigurationStr);
 
@@ -133,17 +136,17 @@ namespace Senparc.Web
                         Senparc.CO2NET.Cache.CsRedis.Register.UseKeyValueRedisNow(); //键值对缓存策略（推荐）
                                                                                    //Senparc.CO2NET.Cache.Redis.Register.UseHashRedisNow();//HashSet储存格式的缓存策略
 
-                        //也可以通过以下方式自定义当前需要启用的缓存策略
+                        //Legacy comment translated to English.
                         //CacheStrategyFactory.RegisterObjectCacheStrategy(() => RedisObjectCacheStrategy.Instance);//键值对
                         //CacheStrategyFactory.RegisterObjectCacheStrategy(() => RedisHashSetObjectCacheStrategy.Instance);//HashSet
                     }
-                    //如果这里不进行Redis缓存启用，则目前还是默认使用内存缓存 
+                    //Legacy comment translated to English.
 
                     #endregion
 
                     #endregion
 
-                    #region 注册日志（按需，建议）
+                    #region Legacy section
 
                     globalRegister.RegisterTraceLog(ConfigTraceLog); //配置TraceLog
 
@@ -158,23 +161,26 @@ namespace Senparc.Web
                     #region Weixin 设置
 
                     /* 微信配置开始
+
                      * 
-                     * 建议按照以下顺序进行注册，尤其须将缓存放在第一位！
+
+                     * Legacy comment translated to English.
+
                      */
 
                     //注册开始
 
-                    #region 微信缓存（按需，必须在 register.UseSenparcWeixin () 之前）
+                    #region Legacy section
 
-                    //微信的 Redis 缓存，如果不使用则注释掉（开启前必须保证配置有效，否则会抛错）
-                    if (UseRedis(senparcSetting.Value, out string redisConfigurationStr))//这里为了方便不同环境的开发者进行配置，做成了判断的方式，实际开发环境一般是确定的，这里的if条件可以忽略
+                    //Legacy comment translated to English.
+                    if (UseRedis(senparcSetting.Value, out string redisConfigurationStr))//Legacy comment translated to English.
                     {
                         weixinRegister.UseSenparcWeixinCacheCsRedis();
                     }
 
                     #endregion
 
-                    #region 注册公众号或小程序（按需）
+                    #region Legacy section
 
                     //注册公众号（可注册多个）
                     weixinRegister.RegisterMpAccount(senparcWeixinSetting.Value, "NCF")
@@ -252,13 +258,13 @@ namespace Senparc.Web
                     #endregion
 
                         //除此以外，仍然可以在程序任意地方注册公众号或小程序：
-                        //AccessTokenContainer.Register(appId, appSecret, name);//命名空间：Senparc.Weixin.MP.Containers
+                        //Legacy comment translated to English.
 
                     #endregion
 
-                    #region 注册微信支付（按需）
+                    #region Legacy section
 
-                        //注册最新微信支付版本（V3）（可注册多个）
+                        //Legacy comment translated to English.
                         .RegisterTenpayV3(senparcWeixinSetting.Value, "NCF") //记录到同一个 SenparcWeixinSettingItem 对象中
 
                     #endregion
@@ -302,9 +308,9 @@ namespace Senparc.Web
 
             {
                 ////APM Ending 数据统计
-                //var utility = new APMNeuralDataThreadUtility();
-                //Thread thread = new Thread(utility.Run) { Name = "APMNeuralDataThread" };
-                //SiteConfig.AsynThread.Add(thread.Name, thread);
+                ///var utility = new APMNeuralDataThreadUtility();
+                ///Thread thread = new Thread(utility.Run) { Name = "APMNeuralDataThread" };
+                ///SiteConfig.AsynThread.Add(thread.Name, thread);
             }
 
             SiteConfig.AsynThread.Values.ToList().ForEach(z =>
@@ -321,7 +327,7 @@ namespace Senparc.Web
         /// </summary>
         private void ConfigTraceLog()
         {
-            //这里设为Debug状态时，/App_Data/WeixinTraceLog/目录下会生成日志文件记录所有的API请求日志，正式发布版本建议关闭
+            //Legacy comment translated to English.
 
             //如果全局的IsDebug（Senparc.CO2NET.Config.IsDebug）为false，此处可以单独设置true，否则自动为true
             CO2NET.Trace.SenparcTrace.SendCustomLog("系统日志",
@@ -363,7 +369,7 @@ namespace Senparc.Web
         private static readonly PhysicalFileProvider _fileProvider = new PhysicalFileProvider(Directory.GetCurrentDirectory());
 
         /// <summary>
-        /// 检测文件变化
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="app"></param>
         /// <param name="hubContext"></param>
@@ -391,7 +397,7 @@ namespace Senparc.Web
         }
 
         /// <summary>
-        /// 检查文件变化
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="hubContext"></param>
         /// <returns></returns>

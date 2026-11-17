@@ -7,103 +7,103 @@
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
 
 		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
-		<Description>NCF 初始化安装模块，安装完成后可卸载或移除</Description>
+		<Description>NCF initial installation module; it can be uninstalled or removed after installation</Description>
 		<Copyright>Senparc</Copyright>
 		<PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.Installer</PackageTags>
 		<Authors>Senparc</Authors>
 		<Owners>Senparc</Owners>
 		<!-- <PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPackageSources/blob/master/LICENSE</PackageLicenseUrl> -->
-		<Title>NCF 安装程序</Title>
+		<Title>NCF Installer</Title>
 		<!--<ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIconUrl>https://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>-->
-		<PackageReleaseNotes>			v0.3 创世
-			[2026-07-02] v0.3.1 增强多智能体群聊流程、容错与任务调度能力，优化 AgentsManager 前端界面与历史消息展示效果
-			1、增强多智能体群聊流程、容错与任务调度能力
-			2、优化 AgentsManager 前端界面与历史消息展示效果
-			3、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
+		<PackageReleaseNotes>			v0.3 initial release
+			[2026-07-02] v0.3.1 Updated module behavior and related support.
+			1. Updated module behavior and related support.
+			2. Updated module behavior and related support.
+			3. Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
 			[2026-07-07] v0.3.2 Dependency updates from upstream modules
-			1、Dependency update from Senparc.Xncf.SystemManager to 0.14.2-preview2
-			2、Dependency update from Senparc.Areas.Admin to 0.0.5
-			3、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
-			[2026-07-17] v0.4.0 为安装流程接入多语言资源与界面文案本地化
-			1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
-			2、统一模块注册信息、菜单名称与功能描述的本地化输出
-			3、同步管理页面与前端交互文案的多语言显示
-			4、补充并统一多语言资源键及资源文件
-			5、为核心模块提供默认勾选配置，简化首次安装选择
-			6、增加安装确认对话框并补齐多语言提示资源
-			[2026-07-29] v0.4.1 加强安装状态校验并收紧安装辅助路由
-			1、区分未初始化数据库与真实数据库故障，避免错误开放安装入口
-			2、安装请求增加防伪校验、重复安装保护，并仅在开发环境暴露测试路由
-			[2026-07-31] v0.4.2 升级安装模块的 Senparc.AI 兼容依赖
-			1、升级 Senparc.AI 组件版本以适配 CO2NET 4.2.0 二进制接口
-			[2026-08-04] v0.5.0 适配数据库升级维护流程
-			1、安装页面接入数据库升级状态判断并引导进入维护流程
+			1. Dependency update from Senparc.Xncf.SystemManager to 0.14.2-preview2
+			2. Dependency update from Senparc.Areas.Admin to 0.0.5
+			3. Updated module behavior and related support.
+			[2026-07-17] v0.4.0 Updated module behavior and related support.
+			1. integrateshared resource-localization mechanism, supportmodulefeature textdisplay dynamically according to the current culture
+			2. Updated module behavior and related support.
+			3. Updated module behavior and related support.
+			4. Updated module behavior and related support.
+			5. Updated module behavior and related support.
+			6. Updated module behavior and related support.
+			[2026-07-29] v0.4.1 Updated module behavior and related support.
+			1. Updated module behavior and related support.
+			2. Updated module behavior and related support.
+			[2026-07-31] v0.4.2 Updated module behavior and related support.
+			1. Updated module behavior and related support.
+			[2026-08-04] v0.5.0 Updated module behavior and related support.
+			1. Updated module behavior and related support.
 			[2026-08-08] v0.5.1 Dependency updates from upstream projects
-			1、Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
-			2、Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
-			3、Dependency update from Senparc.Xncf.Swagger to 0.20.2-preview6
-			4、Dependency update from Senparc.Xncf.Terminal to 0.22.4-preview6
-			5、Dependency update from Senparc.Xncf.XncfBuilder to 0.39.1-preview9
-			6、Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
-			7、Dependency update from Senparc.Xncf.Menu to 0.14.4-preview6
-			8、Dependency update from Senparc.Xncf.SystemCore to 0.14.4-preview6
-			9、Dependency update from Senparc.Xncf.SystemManager to 0.15.4-preview7
-			10、Dependency update from Senparc.Xncf.SystemPermission to 0.15.4-preview6
-			11、Dependency update from Senparc.Xncf.Tenant.Interface to 0.10.6-preview6
-			12、Dependency update from Senparc.Xncf.Tenant to 0.15.4-preview6
-			13、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.4-preview6
-			14、Dependency update from Senparc.Areas.Admin to 0.4.0
-			15、Dependency update from Senparc.Xncf.Installer.Interface to 0.1.5
+			1. Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
+			2. Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
+			3. Dependency update from Senparc.Xncf.Swagger to 0.20.2-preview6
+			4. Dependency update from Senparc.Xncf.Terminal to 0.22.4-preview6
+			5. Dependency update from Senparc.Xncf.XncfBuilder to 0.39.1-preview9
+			6. Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
+			7. Dependency update from Senparc.Xncf.Menu to 0.14.4-preview6
+			8. Dependency update from Senparc.Xncf.SystemCore to 0.14.4-preview6
+			9. Dependency update from Senparc.Xncf.SystemManager to 0.15.4-preview7
+			10. Dependency update from Senparc.Xncf.SystemPermission to 0.15.4-preview6
+			11. Dependency update from Senparc.Xncf.Tenant.Interface to 0.10.6-preview6
+			12. Dependency update from Senparc.Xncf.Tenant to 0.15.4-preview6
+			13. Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.4-preview6
+			14. Dependency update from Senparc.Areas.Admin to 0.4.0
+			15. Dependency update from Senparc.Xncf.Installer.Interface to 0.1.5
 			[2026-08-13] v0.5.2 Dependency update from Senparc.Ncf.AreaBase to 0.23.3-preview7; Senparc.Ncf.XncfBase to 0.25.0-preview7; Senparc.Xncf.Swagger to 0.20.3-preview7; Senparc.Xncf.Terminal to 0.22.5-preview7; Senparc.Xncf.XncfBuilder to 0.40.0-preview10; [5955]Senparc.Xncf.AreasBase to 0.13.5-preview7; [5940]Senparc.Xncf.Menu to 0.14.5-preview7; [5980]Senparc.Xncf.SystemCore to 0.14.5-preview7; [5970]Senparc.Xncf.SystemManager to 0.15.5-preview8; [5960]Senparc.Xncf.SystemPermission to 0.15.5-preview7; [5990]Senparc.Xncf.Tenant to 0.15.5-preview7; [5950]Senparc.Xncf.XncfModuleManager to 0.15.5-preview7; Senparc.Areas.Admin to 0.5.0
 			[2026-08-15] v0.5.3 Dependency update from Senparc.Xncf.XncfBuilder to 0.41.0; Senparc.Areas.Admin to 0.5.1
-			1、Dependency update from Senparc.Xncf.XncfBuilder to 0.41.0
-			[2026-08-22] v0.5.4 同步安装器模块依赖与本地配置
-			1、更新安装器项目依赖并补充当前模拟站点数据库配置文件
+			1. Dependency update from Senparc.Xncf.XncfBuilder to 0.41.0
+			[2026-08-22] v0.5.4 synchronize installer-module dependencies and local configuration
+			1. Updated module behavior and related support.
 			[2026-08-29] v0.5.5 Dependency updates from Senparc.Areas.Admin to 0.7.0
-			1、Dependency update from Senparc.Areas.Admin to 0.7.0
-			[2026-09-15] v0.5.6 适配共享 AI 依赖与 Harness 版本
-			1、同步 AgentKernel 及 Microsoft Agents AI Harness 依赖
-			2、保持安装器宿主模块加载兼容
-			[2026-09-16] v0.5.7 整理安装器 DTO 归属并保持安装服务接口兼容
-			1、将安装请求、响应及模块注册 DTO 收敛到安装器域模型目录
-			2、保持安装选项、安装服务与管理页面使用相同的 DTO 命名空间
-			[2026-09-17] v0.5.8 适配共享 AgentKernel 预览依赖版本
-			1、同步 Senparc.AI.AgentKernel 至 0.1.14-preview5
-			2、保持安装器宿主模块加载兼容
-			[2026-10-01] v0.5.10 等待安装初始化与完成标记持久化
-			1、菜单权限初始化及 install-finished 文件写入失败会显式终止安装流程
-			[2026-10-01] v0.5.9 修复数据库连接配置保存失败的错误处理
-			1、保存失败时记录并重新抛出异常，仅在持久化成功后清除数据库配置缓存
+			1. Dependency update from Senparc.Areas.Admin to 0.7.0
+			[2026-09-15] v0.5.6 Updated module behavior and related support.
+			1. Updated module behavior and related support.
+			2. Updated module behavior and related support.
+			[2026-09-16] v0.5.7 Updated module behavior and related support.
+			1. Updated module behavior and related support.
+			2. Updated module behavior and related support.
+			[2026-09-17] v0.5.8 Updated module behavior and related support.
+			1. Updated module behavior and related support.
+			2. Updated module behavior and related support.
+			[2026-10-01] v0.5.10 Updated module behavior and related support.
+			1. Updated module behavior and related support.
+			[2026-10-01] v0.5.9 Updated module behavior and related support.
+			1. Updated module behavior and related support.
 			[2026-10-09] v0.5.11 Dependency update from Senparc.Areas.Admin to 0.11.0
-			[2026-11-03] v0.5.12 适配 Senparc.AI.AgentKernel 0.1.15-preview2
-			1、升级共享 AgentKernel 依赖，保持安装器中的 Agent 初始化兼容
-			2、维护安装选项、模块选择和安装状态校验
-			3、Dependency update from [5990]Senparc.Xncf.Tenant.Interface to 0.10.10-preview10
-			[2026-11-03] v0.5.13 以中文资源为基准统一整理多语言文案
-			1、补齐并校正各语言资源条目，使模块界面文案与中文基准保持一致
-			2、Dependency update from Senparc.Ncf.AreaBase to 0.23.10
-			3、Dependency update from Senparc.Ncf.XncfBase to 0.28.2
-			4、Dependency update from Senparc.Xncf.Swagger to 0.20.10
-			5、Dependency update from Senparc.Xncf.Terminal to 0.22.12
-			6、Dependency update from Senparc.Xncf.XncfBuilder to 0.41.8
-			7、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
-			8、Dependency update from Senparc.Xncf.Menu to 0.14.12
-			9、Dependency update from Senparc.Xncf.SystemCore to 0.14.12
-			10、Dependency update from Senparc.Xncf.SystemManager to 0.15.12
-			11、Dependency update from Senparc.Xncf.SystemPermission to 0.15.12
-			12、Dependency update from Senparc.Xncf.Tenant.Interface to 0.10.11-preview11
-			13、Dependency update from Senparc.Xncf.Tenant to 0.15.15
-			14、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.12
-			15、Dependency update from Senparc.Areas.Admin to 0.12.26
-			16、Dependency update from Senparc.Xncf.Installer.Interface to 0.2.3
-			[2026-11-11] v0.5.14 独立安装器改用统一本地化注册
-			1、安装器宿主使用 AddNcfLocalization，并按统一文化列表启用请求本地化。
-			2、安装页切换语言时写入文化 Cookie 并刷新页面。
-			3、Register 通过 XncfRegisterText 用稳定资源键解析菜单名称与模块说明。
-			4、共享 AI 依赖升级到 Senparc.AI.AgentKernel 0.1.17 与 Microsoft Agent Framework 1.28.0。
-			5、Dependency update from Senparc.Areas.Admin to 0.12.28
+			[2026-11-03] v0.5.12 adapt Senparc.AI.AgentKernel 0.1.15-preview2
+			1. Updated module behavior and related support.
+			2. Updated module behavior and related support.
+			3. Dependency update from [5990]Senparc.Xncf.Tenant.Interface to 0.10.10-preview10
+			[2026-11-03] v0.5.13 Updated module behavior and related support.
+			1. Updated module behavior and related support.
+			2. Dependency update from Senparc.Ncf.AreaBase to 0.23.10
+			3. Dependency update from Senparc.Ncf.XncfBase to 0.28.2
+			4. Dependency update from Senparc.Xncf.Swagger to 0.20.10
+			5. Dependency update from Senparc.Xncf.Terminal to 0.22.12
+			6. Dependency update from Senparc.Xncf.XncfBuilder to 0.41.8
+			7. Dependency update from Senparc.Xncf.AreasBase to 0.13.12
+			8. Dependency update from Senparc.Xncf.Menu to 0.14.12
+			9. Dependency update from Senparc.Xncf.SystemCore to 0.14.12
+			10. Dependency update from Senparc.Xncf.SystemManager to 0.15.12
+			11. Dependency update from Senparc.Xncf.SystemPermission to 0.15.12
+			12. Dependency update from Senparc.Xncf.Tenant.Interface to 0.10.11-preview11
+			13. Dependency update from Senparc.Xncf.Tenant to 0.15.15
+			14. Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.12
+			15. Dependency update from Senparc.Areas.Admin to 0.12.26
+			16. Dependency update from Senparc.Xncf.Installer.Interface to 0.2.3
+			[2026-11-11] v0.5.14 Updated module behavior and related support.
+			1. Updated module behavior and related support.
+			2. Updated module behavior and related support.
+			3. Updated module behavior and related support.
+			4. Updated module behavior and related support.
+			5. Dependency update from Senparc.Areas.Admin to 0.12.28
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>
@@ -116,28 +116,31 @@
 		<OutputPath>..\..\..\BuildOutPut</OutputPath>
 	</PropertyGroup>
 	<ItemGroup>
+		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.Swagger\Senparc.Xncf.Swagger.csproj" />		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.Terminal\Senparc.Xncf.Terminal.csproj" />		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder.csproj" />		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.Menu\[5940]Senparc.Xncf.Menu.csproj" />		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.SystemCore\[5980]Senparc.Xncf.SystemCore.csproj" />		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.SystemManager\[5970]Senparc.Xncf.SystemManager.csproj" />		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.SystemPermission\[5960]Senparc.Xncf.SystemPermission.csproj" />		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.Tenant.Interface\[5990]Senparc.Xncf.Tenant.Interface.csproj" />		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.Tenant\[5990]Senparc.Xncf.Tenant.csproj" />		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.XncfModuleManager\[5950]Senparc.Xncf.XncfModuleManager.csproj" />		<ProjectReference Include="..\Senparc.Areas.Admin\Senparc.Areas.Admin.csproj" />		<ProjectReference Include="..\Senparc.Aspire.ServiceDefaults\Senparc.Aspire.ServiceDefaults.csproj" />		<ProjectReference Include="..\Senparc.Xncf.Installer.Interface\Senparc.Xncf.Installer.Interface.csproj" />
+	</ItemGroup>
+	<ItemGroup>
 		<!--<FrameworkReference Include="Microsoft.AspNetCore.App" />-->
 
 		<PackageReference Include="Dapr.AspNetCore" Version="1.17.0-rc01" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.10" />
-		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
-		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
-		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.Swagger\Senparc.Xncf.Swagger.csproj" />
-		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.Terminal\Senparc.Xncf.Terminal.csproj" />
-		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder.csproj" />
-		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
-		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.Menu\[5940]Senparc.Xncf.Menu.csproj" />
-		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.SystemCore\[5980]Senparc.Xncf.SystemCore.csproj" />
-		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.SystemManager\[5970]Senparc.Xncf.SystemManager.csproj" />
-		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.SystemPermission\[5960]Senparc.Xncf.SystemPermission.csproj" />
-		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.Tenant.Interface\[5990]Senparc.Xncf.Tenant.Interface.csproj" />
-		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.Tenant\[5990]Senparc.Xncf.Tenant.csproj" />
-		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.XncfModuleManager\[5950]Senparc.Xncf.XncfModuleManager.csproj" />
+
+
+
+
+
+
+
+
+
+
+
+
+
 		<!--<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />-->
 
-		<ProjectReference Include="..\Senparc.Areas.Admin\Senparc.Areas.Admin.csproj" />
-		<ProjectReference Include="..\Senparc.Aspire.ServiceDefaults\Senparc.Aspire.ServiceDefaults.csproj" />
-		<ProjectReference Include="..\Senparc.Xncf.Installer.Interface\Senparc.Xncf.Installer.Interface.csproj" />
+
+
+
 
 		<None Include="App_Data\SenparcTraceLog\*" />
 	</ItemGroup>
@@ -167,7 +170,7 @@
 		</PackageReference>
 	</ItemGroup>
 	<ItemGroup>
-	  <!-- 宿主 Senparc.Web 提供正式配置；此处仅保留本地开发副本，避免 publish 重复复制 -->
+	  <!-- host Senparc.Web provideconfiguration;,  publish  -->
 	  <Content Remove="App_Data\Database\SenparcConfig.config" />
 	  <None Include="App_Data\Database\SenparcConfig.config" />
 	</ItemGroup>

@@ -2,14 +2,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：WorkspaceSenparcEntities_DmModelSnapshot.cs
-    文件功能描述：WorkspaceSenparcEntities_DmModelSnapshot 相关定义与实现
+    File name: WorkspaceSenparcEntities_DmModelSnapshot.cs
+    File description: WorkspaceSenparcEntities_DmModelSnapshot related definitions and implementation
 
 
-    创建标识：Senparc - 20200724
+    Created by: Senparc - 20200724
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.2.2 更新数据库迁移模型快照
+    Modified by: Senparc - 20261103
+    Change description: v0.2.2 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

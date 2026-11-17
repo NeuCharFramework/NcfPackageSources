@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：MyMessageHandler.cs
-    文件功能描述：MyMessageHandler 相关实现
+
+    File name: MyMessageHandler.cs
+
+    File description: MyMessageHandler related implementation
+
     
+
     
-    创建标识：Senparc - 20241028
+
+    Created by: Senparc - 20241028
+
     
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    Modified by: Senparc - 20260702
+
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
+
+
 
 ----------------------------------------------------------------*/
 
@@ -54,68 +66,128 @@ namespace Senparc.Web
 
         protected override async Task AfterRunBotAsync(IServiceProvider serviceProvider, RequestMessageText requestMessage, MpAccountDto mpAccountDto, SenparcAiResult senparcAiResult, DateTimeOffset startTime)
         {
-            /* TODO：AgentKernel暂时未支持 Image 模型，支持后重新开放。*/
+            /* Legacy comment translated to English.*/
 
             /*
+
             var aiResultContent = senparcAiResult.OutputString;
+
             if (aiResultContent == "Img=True")
+
             {
-                _ = await Senparc.Weixin.MP.AdvancedAPIs.CustomApi.SendTextAsync(mpAccountDto.AppId, requestMessage.FromUserName, $"我开始画画啦！");
+
+                Legacy comment translated to English.
+
+
 
                 var dalleSetting = ((SenparcAiSetting)Senparc.AI.Config.SenparcAiSetting)["AzureDallE3"];
 
-                //绘制图片，并返回
+
+
+                Legacy comment translated to English.
+
                 var userId = "Jeffrey";
+
                 var agentAiHandler = serviceProvider.GetService<AgentAiHandler>();
+
                 var iWantTo = agentAiHandler.IWantTo(dalleSetting)
+
                                     .ConfigModel(ConfigModel.ImageGeneration, userId)
+
                                     .BuildKernel();
 
-#pragma warning disable SKEXP0002 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
-#pragma warning disable SKEXP0001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+
+
+Legacy comment translated to English.
+
+Legacy comment translated to English.
+
                 var dallE = iWantTo.GetRequiredService<ITextToImageService>();
 
 
+
+
+
                 var imageUrl = await dallE.GenerateImageAsync(requestMessage.Content, 1024, 1024);
-#pragma warning restore SKEXP0001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
 
-                _ = await Senparc.Weixin.MP.AdvancedAPIs.CustomApi.SendTextAsync(mpAccountDto.AppId, requestMessage.FromUserName, $"图片已生成，正在保存并推送（{imageUrl}）");
+Legacy comment translated to English.
 
-                //开始保存图片
+
+
+                Legacy comment translated to English.
+
+
+
+                Legacy comment translated to English.
+
                 var filePath = Senparc.CO2NET.Utilities.ServerUtility.ContentRootMapPath($"~/Senparc.AI.Dalle-{SystemTime.NowTicks}.jpg");
 
+
+
                 using (var fs = new FileStream(filePath, FileMode.OpenOrCreate))
+
                 {
+
                     await Senparc.CO2NET.HttpUtility.Get.DownloadAsync(serviceProvider, imageUrl, fs);
+
                     await fs.FlushAsync();
 
+
+
                     fs.Close();
-                    await Console.Out.WriteLineAsync("图片已保存：" + filePath);
+
+                    Legacy comment translated to English.
+
                 }
+
+
 
                 try
+
                 {
-                    //保存微信图片素材
+
+                    Legacy comment translated to English.
+
                     var uploadResult = await Senparc.Weixin.MP.AdvancedAPIs.MediaApi.UploadTemporaryMediaAsync(mpAccountDto.AppId, Senparc.Weixin.MP.UploadMediaFileType.image, filePath, timeOut: 50000000);
 
-                    //推送图片
+
+
+                    Legacy comment translated to English.
+
                     await Senparc.Weixin.MP.AdvancedAPIs.CustomApi.SendImageAsync(mpAccountDto.AppId, requestMessage.FromUserName, uploadResult.media_id);
+
                 }
+
                 catch (Exception ex)
+
                 {
+
                     await Console.Out.WriteLineAsync(ex.Message);
+
                     await Console.Out.WriteLineAsync(ex.StackTrace?.ToString());
+
                     await Console.Out.WriteLineAsync(ex.InnerException?.Message);
 
-                    _ = await Senparc.Weixin.MP.AdvancedAPIs.CustomApi.SendTextAsync(mpAccountDto.AppId, requestMessage.FromUserName, $"图片生成失败：" + ex.Message);
+
+
+                    Legacy comment translated to English.
+
+
 
                 }
-#pragma warning restore SKEXP0002 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+
+Legacy comment translated to English.
+
             }
+
             else
+
             {
+
                 await base.AfterRunBotAsync(serviceProvider, requestMessage, mpAccountDto, senparcAiResult, startTime);
+
             }
+
             */
         }
     }

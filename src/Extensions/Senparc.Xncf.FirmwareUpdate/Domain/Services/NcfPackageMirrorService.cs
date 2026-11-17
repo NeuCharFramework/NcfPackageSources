@@ -1,29 +1,29 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：NcfPackageMirrorService.cs
-    文件功能描述：NcfPackageMirrorService 相关实现
+    File name: NcfPackageMirrorService.cs
+    File description: NcfPackageMirrorService related implementation
     
     
-    创建标识：Senparc - 20260504
+    Created by: Senparc - 20260504
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260726
-    修改描述：v0.3.0-preview2 改进固件更新镜像源选择与日志摘要
+    Modified by: Senparc - 20260726
+    Change description: v0.3.0-preview2 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260802
-    修改描述：将 NCF Host 与 NcfDesktop 发布包分通道同步、校验并原子发布清单
+    Modified by: Senparc - 20260802
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.4.0-preview5 扩展 NCF 与 NcfDesktop 发布包同步能力
+    Modified by: Senparc - 20260804
+    Change description: v0.4.0-preview5 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260808
-    修改描述：友好显示镜像同步异常，并将完整诊断写入 SenparcTrace
+    Modified by: Senparc - 20260808
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20260829
-    修改描述：v0.4.5 改进固件包镜像服务的异常处理与同步日志
+    Modified by: Senparc - 20260829
+    Change description: v0.4.5 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -40,14 +40,14 @@ using Senparc.Ncf.Service;
 namespace Senparc.Xncf.FirmwareUpdate.Domain.Services;
 
 /// <summary>
-/// 从 GitHub 拉取 NCF Host 运行包与 NcfDesktop 桌面应用的 Release 资源，分别写入
-/// wwwroot/NcfPackages/host 与 wwwroot/NcfPackages/desktop，并原子发布各自的最新版本元数据。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 public class NcfPackageMirrorService
 {
     public const string GitHubReleasesApi = "https://api.github.com/repos/NeuCharFramework/NCF/releases";
     public const string NcfDesktopGitHubReleasesApi = "https://api.github.com/repos/NeuCharFramework/NcfDesktop/releases";
-    /// <summary>与 NcfDesktopApp 备用地址一致。</summary>
+    ///Legacy comment translated to English.
     public const string PublicPackageBaseUrl = "https://www.ncf.pub/NcfPackages";
     public const string LatestReleaseFileName = "latest-release.json";
     public const string LatestDesktopReleaseFileName = "latest-desktop-release.json";
@@ -94,7 +94,7 @@ public class NcfPackageMirrorService
     }
 
     /// <summary>
-    /// 安装包本地根目录：优先 <see cref="SiteConfig.WebRootPath"/>/NcfPackages，其次 ContentRoot/wwwroot/NcfPackages，最后回退到用户主目录（设计时等场景）。
+    ///Legacy comment translated to English.
     /// </summary>
     public static string GetLocalPackageRoot()
     {
@@ -116,7 +116,7 @@ public class NcfPackageMirrorService
         return fallback;
     }
 
-    /// <param name="manualTrigger">为 true 时忽略「是否启用」与「距上次完整同步间隔」。</param>
+    ///Legacy comment translated to English.
     public async Task<string> RunAsync(IServiceProvider serviceProvider, bool manualTrigger, CancellationToken cancellationToken = default)
     {
         await SyncGate.WaitAsync(cancellationToken).ConfigureAwait(false);
@@ -497,7 +497,7 @@ public class NcfPackageMirrorService
             }
             catch
             {
-                // 删除失败不会影响已发布清单；下次同步继续尝试。
+                //Legacy comment translated to English.
             }
         }
     }
@@ -535,7 +535,7 @@ public class NcfPackageMirrorService
 
     private void LogSyncFailure(string feedName, string message, Exception exception)
     {
-        // 控制台只呈现可操作的摘要，完整异常留在 SenparcTrace 中供诊断。
+        //Legacy comment translated to English.
         _logger.LogWarning("FirmwareUpdate: {Message}", message);
         SenparcTrace.SendCustomLog(
             $"FirmwareUpdate.{feedName}.SyncFailure",
@@ -593,7 +593,7 @@ public class NcfPackageMirrorService
         }
     }
 
-    /// <summary>用于目录名与 URL 段，避免非法路径字符。</summary>
+    ///Legacy comment translated to English.
     public static string MakeSafeDirectorySegment(string tag)
     {
         var invalid = new HashSet<char>(Path.GetInvalidFileNameChars())

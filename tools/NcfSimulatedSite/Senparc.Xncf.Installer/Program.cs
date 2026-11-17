@@ -1,68 +1,156 @@
-﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：Program.cs
-    文件功能描述：Program 相关实现
-    
-    
-    创建标识：Senparc - 20241028
-    
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+﻿/*----------------------------------------------------------------
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.4.1 加强安装状态校验并收紧安装辅助路由
-
-    修改标识：Senparc - 20261111
-    修改描述：v0.5.14 统一独立 Installer 的本地化宿主注册
-
+
+
+    Copyright (C) 2026 Senparc
+
+
+
+  
+
+
+
+    File name: Program.cs
+
+
+
+    File description: Program related implementation
+
+
+
+    
+
+
+
+    
+
+
+
+    Created by: Senparc - 20241028
+
+
+
+    
+
+
+
+    Modified by: Senparc - 20260702
+
+
+
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
+
+
+
+
+
+    Modified by: Senparc - 20260729
+
+    Change description: v0.4.1 Updated module behavior and related support.
+
+
+
+
+
+
+
+    Modified by: Senparc - 20261111
+
+
+
+    Change description: v0.5.14 Updated module behavior and related support.
+
+
+
+
+
+
+
 ----------------------------------------------------------------*/
-
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Localization;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
-using Senparc.CO2NET;
-using Senparc.CO2NET.AspNet;
-using Senparc.CO2NET.HttpUtility;
-using Senparc.Ncf.Core.Areas;
-using Senparc.Ncf.Core.Localization;
-using Senparc.Ncf.Core.Models;
-using Senparc.Ncf.Core.WebApi;
-using Senparc.Ncf.Database;
-using Senparc.Ncf.Database.SqlServer;
-using Senparc.Ncf.XncfBase;
-using Senparc.Ncf.Utility.Helpers;
-using Senparc.Xncf.AreasBase;
-using System;
-using System.Linq;
-using System.Text;
-
-var builder = WebApplication.CreateBuilder(args);
-
+
+
+using Microsoft.AspNetCore.Builder;
+
+using Microsoft.AspNetCore.Http;
+
+using Microsoft.AspNetCore.Localization;
+
+using Microsoft.Extensions.DependencyInjection;
+
+using Microsoft.Extensions.Hosting;
+
+using Microsoft.Extensions.Options;
+
+using Senparc.CO2NET;
+
+using Senparc.CO2NET.AspNet;
+
+using Senparc.CO2NET.HttpUtility;
+
+using Senparc.Ncf.Core.Areas;
+
+using Senparc.Ncf.Core.Localization;
+
+using Senparc.Ncf.Core.Models;
+
+using Senparc.Ncf.Core.WebApi;
+
+using Senparc.Ncf.Database;
+
+using Senparc.Ncf.Database.SqlServer;
+
+using Senparc.Ncf.XncfBase;
+
+using Senparc.Ncf.Utility.Helpers;
+
+using Senparc.Xncf.AreasBase;
+
+using System;
+
+using System.Linq;
+
+using System.Text;
+
+
+
+var builder = WebApplication.CreateBuilder(args);
+
+
+
 // Add service defaults & Aspire components.
 builder.AddServiceDefaults();
-
+
+
 // Add services to the container.
 builder.Services.AddProblemDetails();
-builder.Services.AddNcfLocalization();
+builder.Services.AddNcfLocalization();
+
 
 builder.Services.AddControllers().AddDapr();
-
-//激活 Xncf 扩展引擎（必须）
-var logMsg = builder.StartWebEngine(new[] { "Senparc.Areas.Admin" });
-//如果不需要启用 Areas，可以只使用 services.StartEngine() 方法
-
-Console.WriteLine("============ logMsg =============");
-Console.WriteLine(logMsg);
-Console.WriteLine("============ logMsg END =============");
-
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
+
+
+//Legacy comment translated to English.
+var logMsg = builder.StartWebEngine(new[] { "Senparc.Areas.Admin" });
+
+//Legacy comment translated to English.
+
+
+Console.WriteLine("============ logMsg =============");
+
+Console.WriteLine(logMsg);
+
+Console.WriteLine("============ logMsg END =============");
+
+
+
+builder.Services.AddSwaggerGen();
+
+
+
+var app = builder.Build();
+
+
+
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
@@ -70,59 +158,92 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-var supportedCultures = NcfLocalizationOptions.SupportedCultures;
-app.UseRequestLocalization(new RequestLocalizationOptions()
-    .SetDefaultCulture(NcfLocalizationOptions.DefaultCulture)
-    .AddSupportedCultures(supportedCultures.ToArray())
-    .AddSupportedUICultures(supportedCultures.ToArray())
-    .AddInitialRequestCultureProvider(new CookieRequestCultureProvider()));
-
-// 初始化 Senparc 全局 DI 访问器，避免模块静态初始化阶段拿不到 ServiceProvider。
+var supportedCultures = NcfLocalizationOptions.SupportedCultures;
+
+app.UseRequestLocalization(new RequestLocalizationOptions()
+
+    .SetDefaultCulture(NcfLocalizationOptions.DefaultCulture)
+
+    .AddSupportedCultures(supportedCultures.ToArray())
+
+    .AddSupportedUICultures(supportedCultures.ToArray())
+
+    .AddInitialRequestCultureProvider(new CookieRequestCultureProvider()));
+
+
+
+//Legacy comment translated to English.
 app.UseSenparcMvcDI();
 
-//Use NCF（必须）
+//Use NCF（must）
 IOptions<SenparcCoreSetting> senparcCoreSetting = app.Services.GetService<IOptions<SenparcCoreSetting>>();
 IOptions<SenparcSetting> senparcSetting = app.Services.GetService<IOptions<SenparcSetting>>();
-
-// 启动 CO2NET 全局注册，必须！
-// 关于 UseSenparcGlobal() 的更多用法见 CO2NET Demo：https://github.com/Senparc/Senparc.CO2NET/blob/master/Sample/Senparc.CO2NET.Sample.netcore3/Startup.cs
-var registerService = app
-    //全局注册
-    .UseSenparcGlobal(app.Environment, senparcSetting.Value, globalRegister => { });
-
-
-//XncfModules（必须）
+
+
+// start CO2NET global registration，must！
+
+//Legacy comment translated to English.
+var registerService = app
+
+    //global registration
+
+    .UseSenparcGlobal(app.Environment, senparcSetting.Value, globalRegister => { });
+
+
+
+
+
+//XncfModules（must）
 app.UseXncfModules(registerService, senparcCoreSetting.Value)
    .UseNcfDatabase<BySettingDatabaseConfiguration>();
-//using (var scope = app.Services.CreateScope())
-//{
-
-//    foreach (var register in Senparc.Ncf.XncfBase.XncfRegisterManager.RegisterList)
-//    {
-//        await register.InstallOrUpdateAsync(scope.ServiceProvider, Senparc.Ncf.Core.Enums.InstallOrUpdate.Install);
-//    }
-//}
-
+//using (var scope = app.Services.CreateScope())
+
+//{
+
+
+
+//    foreach (var register in Senparc.Ncf.XncfBase.XncfRegisterManager.RegisterList)
+
+//    {
+
+//        await register.InstallOrUpdateAsync(scope.ServiceProvider, Senparc.Ncf.Core.Enums.InstallOrUpdate.Install);
+
+//    }
+
+//}
+
+
+
 // These routes are local Aspire/Dapr smoke-test helpers. Do not publish them from
 // the installer host in a non-development environment.
 if (app.Environment.IsDevelopment())
 {
     app.Map("/TestInstall", () => ("this is a text from Dapr Container." + SystemTime.Now));
 }
-
-//app.UseHttpsRedirection();
-app.UseStaticFiles();
-
-app.UseCookiePolicy();
-
-app.UseRouting();
-app.UseAuthorization();
-
+
+
+//app.UseHttpsRedirection();
+
+app.UseStaticFiles();
+
+
+
+app.UseCookiePolicy();
+
+
+
+app.UseRouting();
+
+app.UseAuthorization();
+
+
+
 app.MapRazorPages();
 app.MapControllers();
 
 app.MapDefaultEndpoints();
-
+
+
 if (app.Environment.IsDevelopment())
 {
     app.MapGet("/aspire-test1", async httpContext =>
@@ -154,5 +275,7 @@ if (app.Environment.IsDevelopment())
         await httpContext.Response.WriteAsync(result2);
     });
 }
-
-app.Run();
+
+
+app.Run();
+

@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：SysButtonRespository.cs
-    文件功能描述：SysButtonRespository 相关实现
+
+    File name: SysButtonRespository.cs
+
+    File description: SysButtonRespository related implementation
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -28,7 +40,7 @@ namespace Senparc.Respository
     public interface ISysButtonRespository : IClientRepositoryBase<SysButton>
     {
         /// <summary>
-        /// 删除某个页面下的所有按钮
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="menuId"></param>
         /// <returns></returns>
@@ -45,13 +57,13 @@ namespace Senparc.Respository
         }
 
         /// <summary>
-        /// 删除某个页面下的所有按钮
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="menuId"></param>
         /// <returns></returns>
         public async Task<int> DeleteButtonsByMenuId(string menuId)
         {
-            //升级至 EF Core 5.0 后方法无效
+            //Legacy comment translated to English.
             //return await _senparcEntities.Database.ExecuteSqlCommandAsync($"DELETE {nameof(_senparcEntities.SysButtons)} WHERE {nameof(SysButton.MenuId)} = {{0}}", menuId);
 
             //return await _senparcEntities.Database.ExecuteSqlRawAsync($"DELETE {nameof(_senparcEntitie.SysButtons)} WHERE {nameof(SysButton.MenuId)} = {{0}}", menuId); 

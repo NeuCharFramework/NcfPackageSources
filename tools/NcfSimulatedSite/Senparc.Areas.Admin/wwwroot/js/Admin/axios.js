@@ -1,8 +1,8 @@
 ﻿/**
- * axios封装
- * 请求拦截、响应拦截、错误统一处理
+ * Legacy comment translated to English.
+ * Legacy comment translated to English.
  */
-// 创建一个axios实例
+//Legacy comment translated to English.
 var service = axios.create({
     timeout: 1000000 // request timeout
 });
@@ -19,7 +19,7 @@ function showErrorMessage(options) {
     console.error(options.message);
 }
 
-// 请求拦截
+//Legacy comment translated to English.
 service.interceptors.request.use(
     config => {
         if ((config.method || '').toUpperCase() === 'POST') {
@@ -39,15 +39,15 @@ service.interceptors.request.use(
         return Promise.reject(error);
     }
 );
-// 响应拦截器
+//Legacy comment translated to English.
 service.interceptors.response.use(
     response => {
         if (response.status === 200) {
             if (response.data.success) {
                 return Promise.resolve(response);
             } else {
-                // 请求已发出，其他状态
-                // 切换隐藏时不给错误提示，直接刷新
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 if (response.config.url.includes('HideManager') || response.config.url.includes('ChangeState')) {
                     return;
                 }

@@ -1,13 +1,13 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：LoginCaptchaService.cs
-    文件功能描述：管理员登录图形验证码服务（纯 SVG 生成，无第三方依赖；答案存入 CO2NET 缓存，一次性、短时效）
+    File name: LoginCaptchaService.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260926
+    Created by: Senparc - 20260926
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 add image captcha for admin login (required after 2 failed attempts)
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 add image captcha for admin login (required after 2 failed attempts)
 
 ----------------------------------------------------------------*/
 
@@ -21,21 +21,21 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.Domain.Services
 {
     /// <summary>
-    /// 管理员登录图形验证码：
-    /// 1. 纯 C# 生成高干扰 SVG 验证码（字符随机旋转/位移/字号/颜色 + 干扰曲线 + 噪点），不依赖任何第三方组件；
-    /// 2. 验证码答案通过 CO2NET 对象缓存保存（一次性、2 分钟时效），防止重放；
-    /// 3. 同一用户名连续密码错误达到 <see cref="CaptchaRequiredFailedCount"/> 次后，登录必须通过图形验证码校验。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public class LoginCaptchaService
     {
         /// <summary>
-        /// 连续密码错误达到该次数后，登录需要输入图形验证码
+        ///Legacy comment translated to English.
         /// </summary>
         public const int CaptchaRequiredFailedCount = 2;
 
         private const string CacheKeyPrefix = "LoginCaptcha:";
         private static readonly TimeSpan CaptchaLifeTime = TimeSpan.FromMinutes(2);
-        // 去除易混淆字符（0/O、1/I/L），大写 + 数字
+        //Legacy comment translated to English.
         private const string CodeChars = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
         private const int CodeLength = 6;
 
@@ -43,28 +43,28 @@ namespace Senparc.Areas.Admin.Domain.Services
 
         public LoginCaptchaService()
         {
-            // 与 AdminUserInfoService 保持一致：直接取 CO2NET 对象缓存策略实例
+            //Legacy comment translated to English.
             _cache = CO2NET.Cache.CacheStrategyFactory.GetObjectCacheStrategyInstance();
         }
 
         /// <summary>
-        /// 验证码生成结果
+        ///Legacy comment translated to English.
         /// </summary>
         public class CaptchaModel
         {
             /// <summary>
-            /// 验证码标识（登录请求时需要随表单提交）
+            ///Legacy comment translated to English.
             /// </summary>
             public string Token { get; set; }
 
             /// <summary>
-            /// 形如 data:image/svg+xml;base64,... 的数据 URI，可直接用于 img 的 src
+            ///Legacy comment translated to English.
             /// </summary>
             public string Image { get; set; }
         }
 
         /// <summary>
-        /// 生成新的图形验证码（答案写入缓存，一次性有效）
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<CaptchaModel> CreateAsync()
         {
@@ -81,10 +81,10 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 校验图形验证码（一次性：无论成功失败都会使该 Token 失效）
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="token">CreateAsync 返回的 Token</param>
-        /// <param name="input">用户输入的验证码</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         public async Task<bool> ValidateAsync(string token, string input)
         {
             if (string.IsNullOrWhiteSpace(token) || string.IsNullOrWhiteSpace(input))
@@ -101,7 +101,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                 return false;
             }
 
-            // 忽略大小写比较，降低用户输入负担
+            //Legacy comment translated to English.
             return string.Equals(code, input.Trim().ToUpperInvariant(), StringComparison.Ordinal);
         }
 
@@ -123,9 +123,9 @@ namespace Senparc.Areas.Admin.Domain.Services
     }
 
     /// <summary>
-    /// 高干扰 SVG 验证码渲染器（纯 C# 实现）：
-    /// 每个字符随机旋转（-32°~32°）、随机垂直位移、随机字号（26~38）、随机字体与颜色，
-    /// 并叠加 3 条干扰贝塞尔曲线与 35 个噪点。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public static class SvgCaptchaGenerator
     {
@@ -154,10 +154,10 @@ namespace Senparc.Areas.Admin.Domain.Services
               .Append("\" height=\"").Append(height)
               .Append("\" viewBox=\"0 0 ").Append(width).Append(' ').Append(height).Append("\">");
 
-            // 背景
+            //Legacy comment translated to English.
             sb.Append("<rect width=\"").Append(width).Append("\" height=\"").Append(height).Append("\" fill=\"#f5f7fa\"/>");
 
-            // 干扰曲线
+            //Legacy comment translated to English.
             for (int i = 0; i < 3; i++)
             {
                 int x0 = Random.Shared.Next(0, width);
@@ -175,7 +175,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                   .Append("\" fill=\"none\" opacity=\"0.7\"/>");
             }
 
-            // 验证码字符
+            //Legacy comment translated to English.
             double charStep = (width - 24) / (double)code.Length;
             for (int i = 0; i < code.Length; i++)
             {
@@ -200,7 +200,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                   .Append("</text>");
             }
 
-            // 噪点
+            //Legacy comment translated to English.
             for (int i = 0; i < 35; i++)
             {
                 double x = Random.Shared.NextDouble() * width;

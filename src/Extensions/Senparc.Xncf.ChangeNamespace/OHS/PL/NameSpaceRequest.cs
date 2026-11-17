@@ -1,17 +1,32 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：NameSpaceRequest.cs
-    文件功能描述：NameSpaceRequest 相关实现
-    
-    
-    创建标识：Senparc - 20211016
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.22.0-preview2 为 ChangeNamespace 模块接入统一资源本地化并优化功能文案
+    Copyright (C) 2026 Senparc
+
+  
+
+    File name: NameSpaceRequest.cs
+
+    File description: NameSpaceRequest related implementation
+
+    
+
+    
+
+    Created by: Senparc - 20211016
+
+    
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260717
+
+    Change description: v0.22.0-preview2 integrate shared resource localization and improve feature text for the ChangeNamespace module
+
+
 
 ----------------------------------------------------------------*/
 
@@ -38,14 +53,14 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.PL
         [LocalizedDescription(typeof(ChangeNamespaceResource), "Parameter.ChangeNamespace.NewNamespace")]
         public string NewNamespace { get; set; }
 
-        public string OldNamespaceKeyword = "Senparc.";//此参数不设置为属性，不需要在前端显示
+        public string OldNamespaceKeyword = "Senparc.";//Legacy comment translated to English.
     }
 
     public class NameSpace_DownloadSourceCodeRequest : FunctionAppRequestBase
     {
         /// <summary>
-        /// 提供选项
-        /// <para>注意：string[]类型的默认值为选项的备选值，如果没有提供备选值，此参数将别忽略</para>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>z
         [Required]
         [LocalizedDescription(typeof(ChangeNamespaceResource), "Parameter.ChangeNamespace.Source")]

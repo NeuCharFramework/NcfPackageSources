@@ -1,10 +1,17 @@
 /**
+
  * Resize function without multiple trigger
+
  * 
+
  * Usage:
+
  * $(window).smartresize(function(){  
+
  *     // code here
+
  * });
+
  */
 (function($,sr){
     // debouncing function from John Hann
@@ -34,9 +41,13 @@
 
 })(jQuery,'smartresize');
 /**
+
  * To change this license header, choose License Headers in Project Properties.
+
  * To change this template file, choose Tools | Templates
+
  * and open the template in the editor.
+
  */
 
 var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
@@ -1373,7 +1384,9 @@ if (typeof NProgress != 'undefined') {
 					console.log("cancel : ", this);
 				  },
 				  /*format : function (value) {
+
 				   return value + '%';
+
 				   },*/
 				  draw: function() {
 

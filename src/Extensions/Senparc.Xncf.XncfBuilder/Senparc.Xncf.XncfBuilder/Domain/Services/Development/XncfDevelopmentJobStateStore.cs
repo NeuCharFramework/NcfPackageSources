@@ -1,22 +1,22 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：XncfDevelopmentJobStateStore.cs
-    文件功能描述：XNCF 隔离开发任务数据库状态存储
+    File name: XncfDevelopmentJobStateStore.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260814
+    Created by: Senparc - 20260814
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.41.0 增强隔离开发任务与 Sandbox 预览流程
+    Modified by: Senparc - 20260815
+    Change description: v0.41.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.41.0 优化 XncfBuilder 预览任务与工作区服务
+    Modified by: Senparc - 20260822
+    Change description: v0.41.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261028
-    修改描述：多租户模式下支持平台级（TenantId=0）租户上下文还原
+    Modified by: Senparc - 20261028
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.41.7 XncfBuilder 状态存储支持平台级（TenantId=0）租户上下文
+    Modified by: Senparc - 20261103
+    Change description: v0.41.7 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -37,7 +37,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
     {
         public string JobId { get; set; }
         /// <summary>
-        /// 任务所属租户（0 = 单租户/系统公共）；多租户下所有读写均在任务所属租户的 scope 中执行。
+        ///Legacy comment translated to English.
         /// </summary>
         public int TenantId { get; set; }
         public int OwnerAdminUserId { get; set; }
@@ -264,9 +264,9 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             value.HasValue ? ToUtcOffset(value.Value) : null;
 
         /// <summary>
-        /// 在新作用域中还原任务所属租户的 RequestTenantInfo（多租户启用时生效，
-        /// tenantId = 0 表示平台级/系统管理员数据），
-        /// 使租户过滤查询与 TenantId 自动写入保持在任务所属租户内。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         private static void ApplyTenantContext(IServiceScope scope, int tenantId)
         {

@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：XncfDevelopmentWorkspaceServiceTests.cs
-    文件功能描述：隔离开发工作区快照与写入边界测试
+    File name: XncfDevelopmentWorkspaceServiceTests.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260814
+    Created by: Senparc - 20260814
 
 ----------------------------------------------------------------*/
 

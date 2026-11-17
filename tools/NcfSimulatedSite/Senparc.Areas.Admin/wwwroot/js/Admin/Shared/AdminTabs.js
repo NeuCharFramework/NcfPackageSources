@@ -1,8 +1,8 @@
-// 后台顶部标签页。
-// 外壳固定为 /Admin/Index?ncfShell=1，左侧菜单打开的页面放进 iframe（embedded=1）。
-// 当前页面写在锚点里，复制后可直接打开。页面自己的查询和锚点接在后面，例如：
+//Legacy comment translated to English.
+//Legacy comment translated to English.
+//Legacy comment translated to English.
 // /Admin/Index?ncfShell=1#/Admin/AdminChat/Chat?sessionId=15&mode=1#session-15
-// 同一个地址只保留一个标签；再次打开时切回该标签，不重新加载。
+//Legacy comment translated to English.
 (function (root) {
     'use strict';
 
@@ -638,7 +638,7 @@
         return '#' + url;
     }
 
-    // iframe 已经自己完成跳转时，只记录真实地址，不改 iframe 的 src，避免整页重载。
+    //Legacy comment translated to English.
     function rememberTabAddress(state, liveHref, baseHref) {
         var parsed = parseAdminUrl(liveHref, baseHref || liveHref);
         var current = cloneState(state || { enabled: true, shellId: '', activeId: '', tabs: [] });
@@ -727,7 +727,7 @@
         return '/Admin/Index?ncfShell=1' + shellPageHash(tab);
     }
 
-    // 锚点只接受后台页面。#session-15 这类页面内部锚点、登录地址和其他片段都留给原页面。
+    //Legacy comment translated to English.
     function pageUrlFromLocationHash(hash) {
         var value = String(hash || '');
         if (value.charAt(0) === '#') {

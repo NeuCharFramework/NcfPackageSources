@@ -1,20 +1,20 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：PromptRangeDto.cs
-    文件功能描述：PromptRangeDto 相关实现
+    File name: PromptRangeDto.cs
+    File description: PromptRangeDto related implementation
     
     
-    创建标识：Senparc - 20240105
+    Created by: Senparc - 20240105
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.20.0 输出 Prompt 或 Skill 类型
+    Modified by: Senparc - 20261021
+    Change description: v0.20.0 output Prompt or Skill type
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.20.8 add SourceFileId, SourceType, and SourceUrl columns to PromptRange table for PostgreSQL, SQL Server, and SQLite
+    Modified by: Senparc - 20261103
+    Change description: v0.20.8 add SourceFileId, SourceType, and SourceUrl columns to PromptRange table for PostgreSQL, SQL Server, and SQLite
 
 ----------------------------------------------------------------*/
 
@@ -26,17 +26,17 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 public class PromptRangeDto : DtoBase
 {
     /// <summary>
-    /// 主键 ID
+    /// primary key ID
     /// </summary>
     public int Id { get; set; }
 
     /// <summary>
-    /// 靶场代号（用户自定义）
+    /// rangecode（usercustom）
     /// </summary>
     public string Alias { get; set; }
 
     /// <summary>
-    /// 靶场名称（来自版号生成）
+    ///Legacy comment translated to English.
     /// </summary>
     public string RangeName { get; set; }
 
@@ -49,7 +49,7 @@ public class PromptRangeDto : DtoBase
     public string SourceUrl { get; set; }
 
     // /// <summary>
-    // /// 期望结果Json
+    //Legacy comment translated to English.
     // /// </summary>
     // public string ExpectedResultsJson { get;  set; }
 }

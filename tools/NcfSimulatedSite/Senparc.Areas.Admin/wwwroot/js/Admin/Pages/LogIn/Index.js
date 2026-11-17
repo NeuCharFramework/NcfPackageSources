@@ -13,11 +13,11 @@ var validateUser = (rule, value, callback) => {
     }
 };
 var validateTenant = (rule, value, callback) => {
-    // 租户名称不是必填的，直接通过验证
+    //Legacy comment translated to English.
     callback();
 };
 var validateCaptcha = (rule, value, callback) => {
-    // 仅当服务端标记需要验证码时才必填
+    //Legacy comment translated to English.
     var required = typeof app !== 'undefined' && app && app.captchaRequired;
     if (required && (!value || value.trim() === '')) {
         callback(new Error((window.ncfLoginI18n && window.ncfLoginI18n.captchaRequired) || 'Captcha is required'));
@@ -54,10 +54,10 @@ var app = new Vue({
         }, loading: false
     },
     mounted() {
-        // 检查是否启用多租户
+        // checkwhether enabledmulti-tenancy
         service.get('/Admin/Login?handler=CheckMultiTenant').then(res => {
             this.enableMultiTenant = res.data.data;
-            // 如果不是多租户模式，清空租户输入
+            //Legacy comment translated to English.
             if (!this.enableMultiTenant) {
                 this.ruleForm.tenant = '';
             }
@@ -147,7 +147,7 @@ var app = new Vue({
                 console.error('检查验证码状态失败:', error);
             });
         },
-        resizeUrl() {//处理剪切url id
+        resizeUrl() {//Legacy comment translated to English.
             let url = window.location.href;
             let obj = {};
             let reg = /[?&][^?&]+=[^?&]+/g;

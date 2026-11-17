@@ -1,7 +1,7 @@
 /*
- * AgentsManager 前端：ChatGroup 启动（参与者/提及）与各类编辑抽屉表单方法。
- * 注意：本文件与 agents-app-*.js 系列按 three-loader.js 中的顺序加载，
- * 依赖全局 var（classic script 顶层 var 挂到 window），请勿单独引入。
+ * Legacy comment translated to English.
+ * Note: this file and the agents-app-*.js series are loaded in the order defined by three-loader.js,
+ * depends on global variables (top-level classic-script vars are attached to window); do not import separately.
  */
 
 var AgentsAppMethodsGroupStartEditor = {
@@ -147,7 +147,7 @@ var AgentsAppMethodsGroupStartEditor = {
     normalizeEditorSnapshotValue(value, fieldName = '') {
       if (Array.isArray(value)) {
         const normalized = value.map(item => this.normalizeEditorSnapshotValue(item))
-        // Group 成员的选择顺序不影响实际保存结果，避免控件回填时造成伪变更。
+        //Legacy comment translated to English.
         if (['members', 'remoteMembers'].includes(fieldName)) {
           return normalized.sort((left, right) => {
             const leftKey = `${left?.id ?? ''}:${left?.name ?? ''}`
@@ -161,7 +161,7 @@ var AgentsAppMethodsGroupStartEditor = {
         return Object.keys(value)
           .sort()
           .reduce((result, key) => {
-            // 这两个字段在提交时由成员列表派生，不属于用户编辑内容。
+            //Legacy comment translated to English.
             if (['memberAgentTemplateIds', 'remoteAgentIds'].includes(key)) return result
             result[key] = this.normalizeEditorSnapshotValue(value[key], key)
             return result
@@ -186,7 +186,7 @@ var AgentsAppMethodsGroupStartEditor = {
     isEditorFormDirty(btnType) {
       const visibleKey = this.getEditorVisibleKey(btnType)
       const original = this.editorFormInitialSnapshots[visibleKey]
-      // 未取得初始快照时保守处理，避免误丢弃刚刚编辑的内容。
+      //Legacy comment translated to English.
       return !original || original !== this.buildEditorFormSnapshot(btnType)
     },
     closeEditorForm(btnType) {
@@ -233,14 +233,14 @@ var AgentsAppMethodsGroupStartEditor = {
         this.agentSystemMessageTypeDetectionPending = false
       }
     },
-    // Dailog|抽屉 打开 按钮
+    //Legacy comment translated to English.
     async handleElVisibleOpenBtn(btnType, formData) {
       // drawerAgent dialogGroupAgent drawerGroup drawerGroupStart
-      // console.log('通用新增按钮:', btnType);
+      //Legacy comment translated to English.
       let visibleKey = btnType
-      // 组 启动
+      // group start
       if (btnType === 'drawerGroupStart') {
-        // 详情: formData.chatGroupDto 列表: formData
+        //Legacy comment translated to English.
         const chatGroup = formData?.chatGroupDto || formData || {}
         const chatGroupId = chatGroup.id || chatGroup.chatGroupId || formData?.chatGroupId || ''
         this.groupStartForm.groupName = chatGroup.name || ''
@@ -271,7 +271,7 @@ var AgentsAppMethodsGroupStartEditor = {
       }
       let initialSnapshotLoader = null
       if (btnType === 'drawerGroup') {
-        // 成员选择控件会在列表到达后回填；待回填完成再建立快照，避免误判为用户修改。
+        //Legacy comment translated to English.
         initialSnapshotLoader = Promise.all([
           this.getAgentListData('groupAgent'),
           this.getRemoteAgentListData('groupRemoteAgent')
@@ -292,17 +292,17 @@ var AgentsAppMethodsGroupStartEditor = {
       }
       this.$nextTick(() => this.captureEditorFormSnapshot(visibleKey))
     },
-    // Dailog|抽屉 关闭 按钮
+    //Legacy comment translated to English.
     handleElVisibleClose(btnType) {
       if (btnType === 'dialogAgentParameter') {
-        // 清空数据
+        //Legacy comment translated to English.
         this.agentParameterList = []
         this.$nextTick(() => {
           this.visible[btnType] = false
         })
         return
       } else if (btnType === 'dialogTaskDescription') {
-        // 清空数据
+        //Legacy comment translated to English.
         this.describeContent = ''
         this.taskDescriptionDetails = null
         this.$nextTick(() => {
@@ -312,7 +312,7 @@ var AgentsAppMethodsGroupStartEditor = {
       }
       if (!this.getEditorFormName(btnType)) return
 
-      // 没有任何表单修改时直接关闭；仅在可能丢弃用户输入时询问。
+      //Legacy comment translated to English.
       if (!this.isEditorFormDirty(btnType)) {
         this.closeEditorForm(btnType)
         return
@@ -322,26 +322,26 @@ var AgentsAppMethodsGroupStartEditor = {
         .then(_ => this.closeEditorForm(btnType))
         .catch(_ => { });
     },
-    // Dailog|抽屉 提交 按钮
+    //Legacy comment translated to English.
     handleElVisibleSubmit(btnType) {
       // drawerAgent dialogGroupAgent drawerGroup drawerGroupStart
       let refName = '', formName = ''
-      // 智能体 
+      // agent 
       if (['drawerAgent', 'dialogGroupAgent'].includes(btnType)) {
         refName = 'agentELForm'
         formName = 'agentForm'
       }
-      // 组
+      // group
       if (btnType === 'drawerGroup') {
         refName = 'groupELForm'
         formName = 'groupForm'
       }
-      // 组 启动
+      // group start
       if (['drawerGroupStart', 'drawerTaskStart'].includes(btnType)) {
         refName = 'groupStartELForm'
         formName = 'groupStartForm'
       }
-      // 任务评价
+      // task evaluation
       if (btnType === 'dialogTaskEvaluation') {
         refName = 'evaluationELForm'
         formName = 'evaluationForm'
@@ -354,10 +354,10 @@ var AgentsAppMethodsGroupStartEditor = {
       this.$refs[refName].validate(async (valid) => {
         if (valid) {
           const submitForm = this[formName] ?? {}
-          //提交数据给后端
+          //Legacy comment translated to English.
           await this.saveSubmitFormData(btnType, submitForm)
-          // “再次执行/启动任务”的跳转交给 saveSubmitFormData 中刷新后的定位逻辑，
-          // 避免这里用旧缓存任务二次覆盖到历史任务。
+          //Legacy comment translated to English.
+          //Legacy comment translated to English.
           // this.visible[btnType] = false
         } else {
           console.log('error submit!!');
@@ -365,32 +365,32 @@ var AgentsAppMethodsGroupStartEditor = {
         }
       });
     },
-    // 表单 单条校验
+    //Legacy comment translated to English.
     handleFormValidateField(refFormEL, formName, propName, item) {
       // this[formName][propName] = item
       this.$set(this[formName], `${propName}`, item)
       this.$refs[refFormEL]?.validateField(propName, () => { })
     },
 
-    // 识别事件
+    //Legacy comment translated to English.
     handleIdentify(e) {
 
       //debugger
       let bRes = this.findDest(e)
       if (bRes) {
         console.log('命中')
-        //自动选出PromptRange（不做处理）
+        //Legacy comment translated to English.
 
       } else {
         console.log('未命中')
-        //TODO:默认成为新的提示词，zai
+        //Legacy comment translated to English.
 
       }
       console.log('识别事件', e);
     },
 
     handleSystemMessageTypeChange(type) {
-      // 用户显式切换时，应以用户的选择为准，不再让异步加载结果覆盖它。
+      //Legacy comment translated to English.
       this.agentSystemMessageTypeDetectionPending = false
       if (String(type) === '2') {
         this.$set(this.agentForm, 'modelBinding', 2)
@@ -510,7 +510,7 @@ var AgentsAppMethodsGroupStartEditor = {
       this.$set(this.agentForm, 'systemMessageType', selectedFromPromptRange ? '1' : '2')
     },
 
-    // 切换 tabs 页面
+    //Legacy comment translated to English.
     handleTabsClick(tab, event) {
       if (!this.isApplyingHashRoute) {
         this.navigateByHash(this.buildCurrentRoute({ tab: this.tabsActiveName }))
@@ -518,7 +518,7 @@ var AgentsAppMethodsGroupStartEditor = {
       }
       this.clearHistoryTimer()
       this.stopAgentGraphPolling()
-      // 智能体
+      // agent
       if (this.tabsActiveName === 'first') {
         this.getAgentListData('agent')
         if (this.agentListViewMode === 'three' && this.scrollbarAgentIndex === '') {
@@ -529,18 +529,18 @@ var AgentsAppMethodsGroupStartEditor = {
           })
         }
       }
-      // 组
+      // group
       if (this.tabsActiveName === 'second') {
         this.getGroupListData('group')
       }
-      // 任务
+      // task
       if (this.tabsActiveName === 'third') {
         this.gettaskListData('task')
       }
       this.syncHashRoute()
     },
 
-    // 筛选输入变化
+    //Legacy comment translated to English.
     handleFilterChange(value, filterType) {
       console.log('handleFilterChange', filterType, value)
       if (filterType === 'agent') {
@@ -572,9 +572,9 @@ var AgentsAppMethodsGroupStartEditor = {
         this.gettaskListData('task', 1)
       }
     },
-    // 筛选条件事件 agent  group task
+    //Legacy comment translated to English.
     handleFilterCriteria(filterType, fieldType) {
-      // 智能体
+      // agent
       if (filterType === 'agent') {
         if (fieldType === 'timeSort') {
           this.agentQueryList.timeSort = !this.agentQueryList.timeSort
@@ -593,9 +593,9 @@ var AgentsAppMethodsGroupStartEditor = {
           })
         }
         // this.agentFCPVisible = !this.agentFCPVisible
-        // to do 调用接口
+        // to do invokeinterface
       }
-      // 组
+      // group
       if (filterType === 'group') {
         if (fieldType === 'timeSort') {
           this.groupQueryList.timeSort = !this.groupQueryList.timeSort
@@ -614,9 +614,9 @@ var AgentsAppMethodsGroupStartEditor = {
           })
         }
         // this.groupFCPVisible = !this.groupFCPVisible
-        // to do 调用接口
+        // to do invokeinterface
       }
-      // 任务
+      // task
       if (filterType === 'task') {
         if (fieldType === 'timeSort') {
           this.taskQueryList.timeSort = !this.taskQueryList.timeSort
@@ -635,7 +635,7 @@ var AgentsAppMethodsGroupStartEditor = {
           })
         }
         // this.taskFCPVisible = !this.taskFCPVisible
-        // to do 调用接口
+        // to do invokeinterface
       }
     },
 

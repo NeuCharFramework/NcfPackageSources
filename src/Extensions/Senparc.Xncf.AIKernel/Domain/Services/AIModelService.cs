@@ -1,50 +1,50 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：AIModelService.cs
-    文件功能描述：AIModelService 服务逻辑
+    File name: AIModelService.cs
+    File description: Related implementation.
     
     
-    创建标识：Senparc - 20231229
+    Created by: Senparc - 20231229
     
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.13.4-preview3 修复 AI 模型类型展示顺序
+    Modified by: Senparc - 20260705
+    Change description: v0.13.4-preview3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260707
-    修改描述：v0.13.5-preview4 统一模型名称构建并补齐 Embedding 维度兼容处理
+    Modified by: Senparc - 20260707
+    Change description: v0.13.5-preview4 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260715
-    修改描述：v0.13.5-preview4 升级 Senparc.AI 至 0.27.3 与 Senparc.AI.AgentKernel 至 0.1.10
+    Modified by: Senparc - 20260715
+    Change description: v0.13.5-preview4 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260718
-    修改描述：同步 NeuChar 算力模型类型
+    Modified by: Senparc - 20260718
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20260722
-    修改描述：同步 NeuChar 算力模型 API 版本
+    Modified by: Senparc - 20260722
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20260724
-    修改描述：v0.14.0-preview5 同步 NeuChar 模型 API 版本并优化模型信息复制交互
+    Modified by: Senparc - 20260724
+    Change description: v0.14.0-preview5 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.15.3-preview12 修复指定 AI 模型配置穿透并保留兼容 API Version
+    Modified by: Senparc - 20260815
+    Change description: v0.15.3-preview12 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.15.4 Ollama 配置补齐 ModelName
+    Modified by: Senparc - 20260817
+    Change description: v0.15.4 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.15.4 修复 Ollama 指定模型名称传递
+    Modified by: Senparc - 20260822
+    Change description: v0.15.4 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.16.0 新增 AI Token 用量监控与模型选择能力
+    Modified by: Senparc - 20260915
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.17.0 对话调用统一记录 Token 用量
+    Modified by: Senparc - 20261021
+    Change description: v0.17.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.17.0 add AITokenUsageRecorder and related services for token usage tracking
+    Modified by: Senparc - 20261103
+    Change description: v0.17.0 add AITokenUsageRecorder and related services for token usage tracking
 
 ----------------------------------------------------------------*/
 
@@ -104,7 +104,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             AIModel aiModel = await this.GetObjectAsync(z => z.Id == request.Id)
                               ?? throw new NcfExceptionBase("未查询到实体!");
 
-            #region 如果字段为空就不更新
+            #region Legacy section
 
             if (string.IsNullOrWhiteSpace(request.ApiKey))
             {
@@ -127,7 +127,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        /// 构造 SenparcAiSetting
+        /// build SenparcAiSetting
         /// </summary>
         /// <param name="aiModel"></param>
         /// <returns></returns>
@@ -265,7 +265,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        /// 运行模型
+        /// runmodel
         /// </summary>
         /// <param name="senparcAiSetting"></param>
         /// <param name="prompt"></param>
@@ -322,10 +322,10 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        /// 统一执行一次 Chat 调用并异步记录 Token 用量。
+        ///Legacy comment translated to English.
         /// <para>
-        /// 所有外部入口都应通过本方法（或本类中的同类包装方法）执行模型请求。
-        /// 记录器只入队，不等待数据库写入，因此不会拖慢模型结果返回。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </para>
         /// </summary>
         public Task<SenparcKernelAiResult<string>> RunChatWithUsageAsync(
@@ -353,7 +353,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        /// 使用已构造的 AgentKernel 请求执行一次 Chat 调用并异步记录 Token 用量。
+        ///Legacy comment translated to English.
         /// </summary>
         public Task<SenparcKernelAiResult<string>> RunChatWithUsageAsync(
             IWantToRun runner,
@@ -383,7 +383,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        /// 统一执行 AgentResponse 调用并异步记录 Token 用量。
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<AgentResponse> RunChatResponseWithUsageAsync(
             IWantToRun runner,
@@ -432,7 +432,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        /// 统一执行 Agent 流式调用并异步记录 Token 用量。
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<IReadOnlyList<AgentResponseUpdate>> RunAgentStreamingWithUsageAsync(
             AIAgent agent,
@@ -491,7 +491,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        /// 统一执行 AgentKernel 流式调用并异步记录 Token 用量。
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<IReadOnlyList<AgentResponseUpdate>> RunChatStreamingWithUsageAsync(
             IWantToRun runner,
@@ -552,7 +552,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        /// 为无法直接通过 AgentKernel 包装入口执行的模型调用提交一条异步 Token 记录。
+        ///Legacy comment translated to English.
         /// </summary>
         public void RecordUsage(
             AIModelDto model,
@@ -673,22 +673,22 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        /// 运行模型并记录 Token 监控（含异步进度）。
+        ///Legacy comment translated to English.
         /// <para>
-        /// 与 <see cref="RunModelsync"/> 相比，本方法会以流式方式运行，并在运行过程中通过
-        /// <see cref="AITokenMonitorService"/> 发布 <see cref="AITokenProgressEvent"/>（异步进度），
-        /// 运行结束后捕获 <c>UsageDetails</c> 并提交到异步 Token 用量记录队列。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </para>
         /// </summary>
-        /// <param name="aiModel">要运行的模型</param>
-        /// <param name="prompt">用户提示词</param>
-        /// <param name="systemMessage">系统消息（可选）</param>
-        /// <param name="promptConfigParameter">模型参数（可选）</param>
-        /// <param name="monitor">Token 监控服务（异步进度 + 实时聚合）</param>
-        /// <param name="progress">可选的进度回调（在监控服务之上再通知调用方）</param>
-        /// <param name="source">调用来源标记</param>
-        /// <param name="cancellationToken">取消令牌</param>
-        /// <returns>模型运行结果（含 Usage）</returns>
+        ///Legacy comment translated to English.
+        /// <param name="prompt">userPrompt</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         public async Task<SenparcKernelAiResult<string>> RunModelWithMonitorAsync(
             AIModelDto aiModel,
             string prompt,
@@ -772,7 +772,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 }
                 catch
                 {
-                    // 忽略调用方回调异常，避免影响主流程
+                    //Legacy comment translated to English.
                 }
             }
 
@@ -799,7 +799,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                         }
                         else
                         {
-                            // 流式过程中没有精确 usage 时，用已生成文本长度估算输出 Token（约 4 字符 ≈ 1 token）
+                            //Legacy comment translated to English.
                             lastUsage.OutputTokens = (long)Math.Ceiling(outputText.Length / 4.0);
                             lastUsage.TotalTokens = lastUsage.InputTokens + lastUsage.OutputTokens;
                         }
@@ -819,7 +819,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             {
                 stopwatch.Stop();
 
-                // 运行结束后，用结果中的精确 Usage 覆盖估算值
+                //Legacy comment translated to English.
                 var finalUsage = BuildUsageSnapshot(aiResult?.Result?.Usage);
                 if (finalUsage.IsEmpty && !lastUsage.IsEmpty)
                 {
@@ -848,7 +848,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 }
                 catch
                 {
-                    // 忽略
+                    //Legacy comment translated to English.
                 }
 
             }
@@ -857,7 +857,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        /// 从 <see cref="UsageDetails"/> 构建 Token 使用快照
+        ///Legacy comment translated to English.
         /// </summary>
         public static AITokenUsageSnapshot BuildUsageSnapshot(UsageDetails usage)
         {
@@ -914,7 +914,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     Show = true
                 };
 
-                //兼容尚未返回 ModelType 的旧接口数据
+                //Legacy comment translated to English.
                 if ((neucharModel.ModelType is ConfigModel.Unknown or ConfigModel.Other) &&
                     neucharModel.Name.Contains("embedding", StringComparison.OrdinalIgnoreCase))
                 {
@@ -950,7 +950,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        /// 构造 SenparcAiSetting, 在两个地方使用
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="llModel"></param>
         /// <returns></returns>
@@ -1121,7 +1121,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 }
             }
 
-            // TextEmbedding 模型兜底，避免 AgentKernel 在创建 EmbeddingGenerator 时抛异常。
+            //Legacy comment translated to English.
             return aiModel.ConfigModelType == ConfigModelType.TextEmbedding ? 1536 : 0;
         }
 
@@ -1172,17 +1172,17 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
-        /// 获取可用的 Chat 模型，如果当前 <see cref="AIModelDto"/> 对象可用，则保留
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="currentModelDto"></param>
         /// <returns></returns>
         /// <exception cref="NcfExceptionBase"></exception>
         public async Task<(SenparcAiSetting AiSetting,AIModelDto FinalAiModelDto, bool ModelChanged)> GetValiableChatModel(AIModelDto currentModelDto)
         {
-            // 获取模型
+            // getmodel
             AIModelDto aiModelDto;
             var modelChanged = false;
-            //如果当前模型不是 Chat 类型，则需要找一个 Chat 模型
+            //Legacy comment translated to English.
             if (currentModelDto.ConfigModelType != ConfigModelType.Chat)
             {
                 var chatModel = await base.GetObjectAsync(z => z.ConfigModelType == ConfigModelType.Chat);

@@ -1,17 +1,32 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：Register.Middleware.cs
-    文件功能描述：Register.Middleware 相关实现
-    
-    
-    创建标识：Senparc - 20250712
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260731
-    修改描述：v0.24.0-preview5 将消息处理器构造与参数错误提示接入模块多语言资源
+    Copyright (C) 2026 Senparc
+
+  
+
+    File name: Register.Middleware.cs
+
+    File description: Register.Middleware related implementation
+
+    
+
+    
+
+    Created by: Senparc - 20250712
+
+    
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260731
+
+    Change description: v0.24.0-preview5 Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 
@@ -38,13 +53,13 @@ using Senparc.Xncf.WeixinManager.Domain.Services;
 
 namespace Senparc.Xncf.WeixinManager
 {
-    public partial class Register : IXncfMiddleware  //需要引入中间件的模块
+    public partial class Register : IXncfMiddleware  //Legacy comment translated to English.
     {
         public static ConcurrentDictionary<string, Type> MpMessageHandlerNames = new ConcurrentDictionary<string, Type>();
 
         /// <summary>
-        /// 创建 messageHandlerFunc 对象
-        /// <para>由于泛型 TMC 在编程时未知，因此创建此方法，提供给反射使用，用于构造最终的 messageHandlerFunc 对象</para>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         /// <typeparam name="TMC"></typeparam>
         /// <param name="mpAccountDtoFunc"></param>
@@ -70,10 +85,10 @@ namespace Senparc.Xncf.WeixinManager
                         senparcWeixinSetting.Token = mpAccountDto.Token;
                         senparcWeixinSetting.EncodingAESKey = mpAccountDto.EncodingAESKey;
 
-                        //注册全局缓存信息
+                        //Legacy comment translated to English.
                         Senparc.Weixin.Config.SenparcWeixinSetting[$"DynamicMP-{mpAccountDto.Id}"] = senparcWeixinSetting;
 
-                        //使用反射构造 MessageHandler 对象
+                        //Legacy comment translated to English.
                         var messageHandler = Activator.CreateInstance(mpMessageHandlerType, new object[] { mpAccountDto, stream, postModel, maxRecordCount, services });
 
                         return messageHandler as MessageHandler<TMC, IRequestMessageBase, IResponseMessageBase>;
@@ -90,7 +105,7 @@ namespace Senparc.Xncf.WeixinManager
             return messageHandlerFunc;
         }
 
-        #region IXncfMiddleware 接口
+        #region Legacy section
 
         public IApplicationBuilder UseMiddleware(IApplicationBuilder app)
         {
@@ -128,7 +143,7 @@ namespace Senparc.Xncf.WeixinManager
 
                 if (messageHandlerTypes == null || messageHandlerTypes.Count() == 0)
                 {
-                    return app;//未注册
+                    return app;//Legacy comment translated to English.
                 }
 
                 Func<IServiceProvider, MpAccountDto> mpAccountDtoFunc = serviceProvider =>
@@ -155,30 +170,30 @@ namespace Senparc.Xncf.WeixinManager
                         var mpMessageHandlerName = mpMessageHandlerNamePair.Key;
                         var mpMessageHandlerType = mpMessageHandlerNamePair.Value;
 
-                        // 消息上下文泛型
+                        //Legacy comment translated to English.
                         var messageContextGenericType = mpMessageHandlerType.BaseType.GetGenericArguments().First();
-                        //TODO：校验上下文类型正确性
+                        //Legacy comment translated to English.
 
 
-                        //注册中间件
+                        //Legacy comment translated to English.
 
-                        //获取 MessageHandlerFunc 方法（因为 TMC 类型未知，因此使用反射获取泛型方法后得到带泛型的 MessageHandler<TMC, IRequestMessageBase, IResponseMessageBase>>）
+                        //Legacy comment translated to English.
                         var messageHandlerFuncMethodInfo = this.GetType().GetMethod(nameof(BuildMessageHandlerFunc), System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
                         var messageHandlerFuncGenericMethodInfo = messageHandlerFuncMethodInfo.MakeGenericMethod(messageContextGenericType);
                         var messageHandlerFunc = messageHandlerFuncGenericMethodInfo.Invoke(null,
                                 new object[] { mpAccountDtoFunc, mpMessageHandlerType });
 
-                        //当前站点的微信 URL 接口地址
+                        //Legacy comment translated to English.
                         var mpUrl = new PathString($"/WeixinMp/{mpMessageHandlerName}");
 
-                        //微信配置
+                        //Legacy comment translated to English.
                         Action<MessageHandlerMiddlewareOptions<ISenparcWeixinSettingForMP>> optionsAction = options =>
                         {
-                            //说明：此代码块中演示了较为全面的功能点，简化的使用可以参考下面小程序和企业微信
+                            //Legacy comment translated to English.
 
-                            #region 配置 SenparcWeixinSetting 参数，以自动提供 Token、EncodingAESKey 等参数
+                            #region Legacy section
 
-                            //此处为委托，可以根据条件动态判断输入条件（必须）
+                            //Legacy comment translated to English.
                             options.AccountSettingFunc = context =>
                             {
                                 var mpAccountDto = mpAccountDtoFunc(context.RequestServices);
@@ -192,43 +207,43 @@ namespace Senparc.Xncf.WeixinManager
 
                             };
 
-                            //TODO：注册 Config.SenparcWeixinSetting
+                            //Legacy comment translated to English.
 
-                            //方法二：使用指定配置：
+                            //Legacy comment translated to English.
                             //Config.SenparcWeixinSetting["<Your SenparcWeixinSetting's name filled with Token, AppId and EncodingAESKey>"]; 
 
-                            //方法三：结合 context 参数动态判断返回Setting值
+                            //Legacy comment translated to English.
 
                             #endregion
 
-                            //对 MessageHandler 内异步方法未提供重写时，调用同步方法（按需）
+                            //Legacy comment translated to English.
                             options.DefaultMessageHandlerAsyncEvent = DefaultMessageHandlerAsyncEvent.SelfSynicMethod;
 
-                            //对发生异常进行处理（可选）
+                            //Legacy comment translated to English.
                             options.AggregateExceptionCatch = ex =>
                             {
-                                //逻辑处理...
-                                return false;//系统层面抛出异常
+                                //Legacy comment translated to English.
+                                return false;//Legacy comment translated to English.
                             };
                         };
 
-                        //获取微信中间件方法
+                        //Legacy comment translated to English.
                         var messageHandlerMiddlewareExType = typeof(Senparc.Weixin.MP.MessageHandlers.Middleware.MessageHandlerMiddlewareExtension);
                         var useMessageHandlerForMpMethodInfo = messageHandlerMiddlewareExType.GetMethod("UseMessageHandlerForMp", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
                         var useMessageHandlerForMpGenericMethodInfo = useMessageHandlerForMpMethodInfo.MakeGenericMethod(messageContextGenericType);
 
-                        //调用 app.UseMessageHandlerForMp() 扩展方法
+                        //invoke app.UseMessageHandlerForMp() extensionmethod
                         useMessageHandlerForMpGenericMethodInfo.Invoke(null, new object[] { app, mpUrl, messageHandlerFunc, optionsAction });
 
-                        #region 原始方法
+                        #region Legacy section
 
                         //app.UseMessageHandlerForMp($"/WeixinMp/{mpMessageHandlerName}", messageHandlerFunc, options =>
                         //{
-                        //    //说明：此代码块中演示了较为全面的功能点，简化的使用可以参考下面小程序和企业微信
+                        //Legacy comment translated to English.
 
-                        //    #region 配置 SenparcWeixinSetting 参数，以自动提供 Token、EncodingAESKey 等参数
+                        //    #region configure SenparcWeixinSetting parameters to provide Token, EncodingAESKey, and related values automatically
 
-                        //    //此处为委托，可以根据条件动态判断输入条件（必须）
+                        //Legacy comment translated to English.
                         //    options.AccountSettingFunc = context =>
                         //    {
                         //        var senparcWeixinSetting = new SenparcWeixinSetting();
@@ -243,23 +258,23 @@ namespace Senparc.Xncf.WeixinManager
 
                         //    };
 
-                        //    //TODO：注册 Config.SenparcWeixinSetting
+                        //Legacy comment translated to English.
 
-                        //    //方法二：使用指定配置：
+                        //Legacy comment translated to English.
                         //    //Config.SenparcWeixinSetting["<Your SenparcWeixinSetting's name filled with Token, AppId and EncodingAESKey>"]; 
 
-                        //    //方法三：结合 context 参数动态判断返回Setting值
+                        //Legacy comment translated to English.
 
                         //    #endregion
 
-                        //    //对 MessageHandler 内异步方法未提供重写时，调用同步方法（按需）
+                        //Legacy comment translated to English.
                         //    options.DefaultMessageHandlerAsyncEvent = DefaultMessageHandlerAsyncEvent.SelfSynicMethod;
 
-                        //    //对发生异常进行处理（可选）
+                        //Legacy comment translated to English.
                         //    options.AggregateExceptionCatch = ex =>
                         //    {
-                        //        //逻辑处理...
-                        //        return false;//系统层面抛出异常
+                        //Legacy comment translated to English.
+                        //Legacy comment translated to English.
                         //    };
                         //});
 

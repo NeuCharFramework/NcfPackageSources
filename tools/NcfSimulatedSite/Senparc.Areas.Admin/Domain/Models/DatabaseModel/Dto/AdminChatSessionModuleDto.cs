@@ -4,52 +4,52 @@ using System;
 namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
 {
     /// <summary>
-    /// AdminChatSessionModuleDto：管理后台聊天会话-模块关联数据传输对象
+    ///Legacy comment translated to English.
     /// </summary>
     public class AdminChatSessionModuleDto : DtoBase<int>
     {
         /// <summary>
-        /// 会话ID
+        ///Legacy comment translated to English.
         /// </summary>
         public int SessionId { get; set; }
 
         /// <summary>
-        /// XNCF 模块唯一标识符
+        ///Legacy comment translated to English.
         /// </summary>
         public string XncfModuleUid { get; set; }
 
         /// <summary>
-        /// 模块名称
+        ///Legacy comment translated to English.
         /// </summary>
         public string ModuleName { get; set; }
 
         /// <summary>
-        /// 模块版本
+        ///Legacy comment translated to English.
         /// </summary>
         public string ModuleVersion { get; set; }
 
         /// <summary>
-        /// 用于前端显示的模块名称（优先菜单名）
+        ///Legacy comment translated to English.
         /// </summary>
         public string DisplayName { get; set; }
 
         /// <summary>
-        /// 菜单名称
+        /// menu name
         /// </summary>
         public string MenuName { get; set; }
 
         /// <summary>
-        /// 模块简要说明
+        ///Legacy comment translated to English.
         /// </summary>
         public string ModuleDescription { get; set; }
 
         /// <summary>
-        /// 添加到会话的时间
+        ///Legacy comment translated to English.
         /// </summary>
         public DateTime AddedTime { get; set; }
 
         /// <summary>
-        /// 从实体映射到 DTO
+        ///Legacy comment translated to English.
         /// </summary>
         public static AdminChatSessionModuleDto CreateFromEntity(AdminChatSessionModule entity)
         {
@@ -57,14 +57,14 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
 
             return new AdminChatSessionModuleDto
             {
-                // 明确复制基类属性
+                //Legacy comment translated to English.
                 Id = entity.Id,
                 AddTime = entity.AddTime,
                 LastUpdateTime = entity.LastUpdateTime,
                 TenantId = entity.TenantId,
                 Flag = entity.Flag,
 
-                // 复制业务属性
+                //Legacy comment translated to English.
                 SessionId = entity.SessionId,
                 XncfModuleUid = entity.XncfModuleUid,
                 ModuleName = entity.ModuleName,

@@ -52,7 +52,7 @@ namespace Senparc.Areas.Admin.OHS.Local.PL
     }
 
     /// <summary>
-    /// 授权操作
+    ///Legacy comment translated to English.
     /// </summary>
     public class SysRole_AddPermissionRequest
     {

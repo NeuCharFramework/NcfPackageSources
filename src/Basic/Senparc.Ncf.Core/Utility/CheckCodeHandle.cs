@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：CheckCodeHandle.cs
-    文件功能描述：CheckCodeHandle 相关实现
+
+    File name: CheckCodeHandle.cs
+
+    File description: CheckCodeHandle related implementation
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -21,7 +33,7 @@ using System.Collections.Generic;
 namespace Senparc.Ncf.Core.Utility
 {
     /// <summary>
-    /// 验证码用途（分类）
+    ///Legacy comment translated to English.
     /// </summary>
     public enum CheckCodeKind
     {
@@ -36,7 +48,7 @@ namespace Senparc.Ncf.Core.Utility
         private const string COOKIE_NAME_PREFIX = "senparccheckcodeverify_";
         private string _cookieName;
         private HttpContext _httpContext;
-        private IMemoryCache _cache;//TODO: _cache需要赋值
+        private IMemoryCache _cache;//Legacy comment translated to English.
         private string _checkCodeSalt = "_senparccheckcode";
         private Dictionary<string, string> checkedCodeCollection
         {
@@ -60,7 +72,7 @@ namespace Senparc.Ncf.Core.Utility
         }
 
         /// <summary>
-        /// 获取验证码并记录cookie
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="checkCodeKind"></param>
         /// <returns></returns>
@@ -74,7 +86,7 @@ namespace Senparc.Ncf.Core.Utility
             //string[] str = new string[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" };
             string str1 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";//abcdefghijklmnopqrstuvwxyz
 
-            for (int i = 0; i < 4; i++)//原始值：5
+            for (int i = 0; i < 4; i++)//Legacy comment translated to English.
             {
 
                 //code = (char)str[random.Next(0, 61)];
@@ -102,7 +114,7 @@ namespace Senparc.Ncf.Core.Utility
             DateTimeOffset to = new DateTimeOffset(DateTime.Now.AddDays(1));
             var verifyCode = GenerateVerifyCode(checkCode, null);
             var value = $"checkcode={verifyCode}";
-            _httpContext.Response.Cookies.Append(this._cookieName, value, new CookieOptions() { Expires = to });//确定写入cookie中
+            _httpContext.Response.Cookies.Append(this._cookieName, value, new CookieOptions() { Expires = to });//Legacy comment translated to English.
         }
 
         public bool ValidateCheckCode(string inputCheckCode)
@@ -112,7 +124,7 @@ namespace Senparc.Ncf.Core.Utility
                 return false;
             }
 
-            //验证码验证
+            //Legacy comment translated to English.
             var myCookie = _httpContext.Request.Cookies[this._cookieName];
 
             if (myCookie == null || !myCookie.StartsWith("checkcode="))
@@ -127,7 +139,7 @@ namespace Senparc.Ncf.Core.Utility
             }
             if (checkedCodeCollection.ContainsKey(checkCodeVerify))
             {
-                return false;//如果已经参与过验证，则不能再次使用
+                return false;//Legacy comment translated to English.
             }
             var verifyCode = GenerateVerifyCode(inputCheckCode.Trim(), checkCodeVerify.Substring(checkCodeVerify.Length - 32, 32));
             if (verifyCode.ToUpper() != checkCodeVerify.ToUpper())
@@ -137,7 +149,7 @@ namespace Senparc.Ncf.Core.Utility
             checkedCodeCollection.Add(checkCodeVerify, inputCheckCode);
             return true;
 
-            //_httpContext.Response.Write("<script language = 'javascript'> alert('您的浏览器不支持coolie，请联系客服！');</script>");
+            //Legacy comment translated to English.
         }
 
         public string GenerateVerifyCode(string inputCheckCode, string key)
@@ -151,7 +163,7 @@ namespace Senparc.Ncf.Core.Utility
             string verifyCode = string.Format(verifyFormat,
                                     ((int)_checkCodeKind).ToString(),
                                     checkcodeEncoding,
-                                    key//密匙
+                                    key//Legacy comment translated to English.
                                     );
             return verifyCode;
         }

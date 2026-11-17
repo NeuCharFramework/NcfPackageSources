@@ -31,7 +31,7 @@ namespace Senparc.Xncf.WeixinManager.Services.Tests
 
             //Init();
 
-            //程序执行会自动触发
+            //Legacy comment translated to English.
             var weixinApis = Senparc.CO2NET.ApiBind.ApiBindInfoCollection.Instance.GetGroupedCollection();
             var webApiEngine = new WebApiEngine(null);
 

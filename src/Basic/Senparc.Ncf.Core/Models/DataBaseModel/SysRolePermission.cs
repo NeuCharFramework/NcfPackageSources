@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：SysRolePermission.cs
-    文件功能描述：SysRolePermission 相关实现
+
+    File name: SysRolePermission.cs
+
+    File description: SysRolePermission related implementation
+
     
+
     
-    创建标识：Senparc - 20260704
+
+    Created by: Senparc - 20260704
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -22,13 +34,15 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models.DataBaseModel
 {
     /// <summary>
-    /// 角色菜单表
+    ///Legacy comment translated to English.
     /// </summary>
     [Table("SysRolePermissions")]
     public class SysRolePermission : EntityBase<int>
     {
-        /* 注意：这里 Table 如果用 SysPermissions，将和 SQL Server 的系统表冲突
-         * 参考：https://docs.microsoft.com/zh-cn/sql/relational-databases/system-compatibility-views/sys-syspermissions-transact-sql?redirectedfrom=MSDN&view=sql-server-ver15
+        /* Legacy comment translated to English.
+
+         * Legacy comment translated to English.
+
          */
 
         public SysRolePermission()
@@ -47,30 +61,30 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         }
 
         /// <summary>
-        /// 角色代码
+        /// role code
         /// </summary>
         [MaxLength(150)]
         public string RoleCode { get; set; }
 
         /// <summary>
-        /// 资源（按钮）代码
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(150)]
         public string ResourceCode { get; set; }
 
         /// <summary>
-        /// 角色Id
+        /// roleId
         /// </summary>
         [MaxLength(150)]
         public string RoleId { get; set; }
 
         /// <summary>
-        /// 是否是菜单
+        ///Legacy comment translated to English.
         /// </summary>
         public bool IsMenu { get; set; }
 
         /// <summary>
-        /// 权限Id(菜单或者是按钮)
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(150)]
         public string PermissionId { get; set; }

@@ -1,23 +1,23 @@
 ﻿/*-----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：Register.Database.cs
-    文件功能描述：Register.Database 相关实现
+    File name: Register.Database.cs
+    File description: Register.Database related implementation
     
     
-    创建标识：Senparc - 20200921
+    Created by: Senparc - 20200921
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
+    Modified by: Senparc - 20260804
+    Change description: v0.39.0-preview8 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.41.0 增强隔离开发任务与 Sandbox 预览流程
+    Modified by: Senparc - 20260815
+    Change description: v0.41.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.41.0 优化 XncfBuilder 预览任务与工作区服务
+    Modified by: Senparc - 20260822
+    Change description: v0.41.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -47,9 +47,9 @@ namespace Senparc.Xncf.XncfBuilder
         {
             services.AddScoped<BuildXncf_BuildRequest>();
 
-            //services.AddScoped<XncfBuilderSenparcEntities_SqlServer>();//注意：此处不能直接这样自动配置数据库实体，基类中已经统一配置 implementationFactory
+            //Legacy comment translated to English.
 
-            //AutoMap映射
+            //AutoMap mapping
             base.AddAutoMapMapping(profile =>
             {
                 profile.CreateMap<Config, ConfigDto>();
@@ -83,7 +83,7 @@ namespace Senparc.Xncf.XncfBuilder
             modelBuilder.Entity<XncfDevelopmentJob>()
                 .HasIndex(job => new { job.OwnerAdminUserId, job.UpdatedAtUtc });
 
-            //实现 [XncfAutoConfigurationMapping] 特性之后，可以自动执行，无需手动添加
+            //after implementing the [XncfAutoConfigurationMapping] attribute, this runs automatically and no manual registration is needed
             //modelBuilder.ApplyConfiguration(new DbConfig_WeixinUserConfigurationMapping());
         }
     }

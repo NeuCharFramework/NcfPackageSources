@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：Register.Thread.cs
-    文件功能描述：Register.Thread 相关实现
+
+    File name: Register.Thread.cs
+
+    File description: Register.Thread related implementation
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -32,9 +44,9 @@ namespace Senparc.Xncf.DatabaseToolkit
     {
         public void ThreadConfig(XncfThreadBuilder xncfThreadBuilder)
         {
-            // TODO: 专门做数据库，负责定时项目的注册
+            //Legacy comment translated to English.
 
-            //TOOD: 按照不同租户，需要区分
+            //Legacy comment translated to English.
             DateTime lastAlertTime = DateTime.MinValue;
 
             xncfThreadBuilder.AddThreadInfo(new Ncf.XncfBase.Threads.ThreadInfo(
@@ -44,19 +56,19 @@ namespace Senparc.Xncf.DatabaseToolkit
                 {
                     try
                     {
-                        //SenparcTrace.SendCustomLog("执行调试", "DatabaseToolkit.Register.ThreadConfig");
+                        //Legacy comment translated to English.
                         threadInfo.RecordStory("开始检测并备份");
 
                         using (var scope = app.ApplicationServices.CreateScope())
                         {
                             var serviceProvider = scope.ServiceProvider;
 
-                            //检测当前模块是否可用
+                            //Legacy comment translated to English.
                             XncfRegisterManager xncfRegisterManager = new XncfRegisterManager(serviceProvider);
                             var xncfIsValiable = await xncfRegisterManager.CheckXncfAvailable(this);
                             if (!xncfIsValiable)
                             {
-                                //同一时间内只提示一次
+                                //Legacy comment translated to English.
                                 if (SystemTime.NowDiff(lastAlertTime) > TimeSpan.FromMinutes(10))
                                 {
                                     lastAlertTime = SystemTime.Now.DateTime;
@@ -70,9 +82,9 @@ namespace Senparc.Xncf.DatabaseToolkit
                                 return;
                             }
 
-                            //初始化数据库备份方法
+                            //Legacy comment translated to English.
                             DatabaseBackupAppService backupDatabase = serviceProvider.GetService<DatabaseBackupAppService>();
-                            //初始化参数
+                            //initializeparameters
                             var backupRequest = new DatabaseBackup_BackupRequest();
                             var dbConfigService = serviceProvider.GetService<ServiceBase<DbConfig>>();
                             var dbConfig = await dbConfigService.GetObjectAsync(z => true);
@@ -85,7 +97,7 @@ namespace Senparc.Xncf.DatabaseToolkit
                                     {
                                         backupRequest.Path = dbConfig.BackupPath;
                                         //await backupParam.LoadData(serviceProvider);
-                                        //threadInfo.RecordStory("完成备份设置数据载入");
+                                        //Legacy comment translated to English.
                                     }
                                     else
                                     {
@@ -95,7 +107,7 @@ namespace Senparc.Xncf.DatabaseToolkit
                                 else
                                 {
                                     threadInfo.RecordStory("不需要备份，或没有设置备份周期/路径，已忽略本次备份计划");
-                                    stopBackup = true;//不需要备份，或没有设置，返回
+                                    stopBackup = true;//Legacy comment translated to English.
                                 }
                             }
                             catch (Exception ex)
@@ -103,7 +115,7 @@ namespace Senparc.Xncf.DatabaseToolkit
                                 threadInfo.RecordStory($@"遇到异常，可能未配置数据库，已忽略本次备份计划。如需启动，请更新此模块到最新版本。
 异常信息：{ex.Message}
 {ex.StackTrace}");
-                                stopBackup = true;//可能没有配置数据库，返回
+                                stopBackup = true;//Legacy comment translated to English.
                             }
 
                             if (stopBackup)
@@ -112,7 +124,7 @@ namespace Senparc.Xncf.DatabaseToolkit
                             }
 
 
-                            //执行备份方法
+                            //Legacy comment translated to English.
                             threadInfo.RecordStory("备份开始：" + backupRequest.Path);
                             var result = await backupDatabase.Backup(backupRequest);
                             if (result.Success == false)

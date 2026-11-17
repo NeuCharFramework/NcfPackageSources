@@ -11,10 +11,10 @@ using Microsoft.Extensions.Hosting;
 
 namespace Template_OrgName.Xncf.Template_XncfName
 {
-    public partial class Register : IAreaRegister, //注册 XNCF 页面接口（按需选用）
-                                    IXncfRazorRuntimeCompilation  //赋能 RazorPage 运行时编译
+    public partial class Register : IAreaRegister, //register the XNCF page interface (optional)
+                                    IXncfRazorRuntimeCompilation  //enable RazorPage runtime compilation
     {
-        #region IAreaRegister 接口
+        #region Legacy section
 
         public string HomeUrl => "/Admin/Template_XncfName/Index";
 
@@ -30,7 +30,7 @@ namespace Template_OrgName.Xncf.Template_XncfName
         {
             builder.AddRazorPagesOptions(options =>
             {
-                //此处可配置页面权限
+                //configure page permissions here
             });
 
             SenparcTrace.SendCustomLog("Template_XncfName 启动", "完成 Area:Template_OrgName.Xncf.Template_XncfName 注册");
@@ -40,7 +40,7 @@ namespace Template_OrgName.Xncf.Template_XncfName
 
         #endregion
 
-        #region IXncfRazorRuntimeCompilation 接口
+        #region Legacy section
         public string LibraryPath => Path.GetFullPath(Path.Combine(SiteConfig.WebRootPath, "..", "..", "Template_OrgName.Xncf.Template_XncfName"));
         #endregion
     }

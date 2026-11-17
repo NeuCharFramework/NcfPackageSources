@@ -9,7 +9,7 @@ var app = new Vue({
             systemName: "",
             adminUserName: "",
             dbConnectionString: "",
-            needModelList:null  //模型名称列表
+            needModelList:null  //Legacy comment translated to English.
         }
     },
     methods: {

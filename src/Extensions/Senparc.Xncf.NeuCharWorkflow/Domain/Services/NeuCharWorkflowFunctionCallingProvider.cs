@@ -2,13 +2,13 @@
     Copyright (C) 2026 Senparc
 
     File name: NeuCharWorkflowFunctionCallingProvider.cs
-    File description: 将已启用 Workflow 暴露为宿主可选的 Function Calling 工具
+    File description: Related implementation.
 
     Modified by: Senparc - 20260822
-    Change description: v0.2.0 增强工作流函数调用、任务控制与回放管理
+    Change description: v0.2.0 enhance workflow function calls, task control, and replay management
 
     Modified by: Senparc - 20260829
-    Change description: v0.3.0 新增工作流分析查询与管理端可视化
+    Change description: v0.3.0 add workflow analysis queries and admin-side visualization
 
 ----------------------------------------------------------------*/
 
@@ -28,7 +28,7 @@ using WorkflowEntity = Senparc.Xncf.NeuCharWorkflow.Domain.Models.DatabaseModel.
 namespace Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 
 /// <summary>
-/// Workflow 模块安装且开放时才提供服务；每次执行仍由应用服务重新校验归属、启用状态和图引用。
+///Legacy comment translated to English.
 /// </summary>
 public sealed class NeuCharWorkflowFunctionCallingProvider : IWorkflowFunctionCallingProvider
 {

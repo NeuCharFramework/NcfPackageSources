@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：HostMetricsCollectorTests.cs
-    文件功能描述：Host 实时指标采集器测试
+    File name: HostMetricsCollectorTests.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260806
+    Created by: Senparc - 20260806
 
 ----------------------------------------------------------------*/
 

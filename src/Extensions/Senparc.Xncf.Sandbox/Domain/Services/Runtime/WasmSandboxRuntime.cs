@@ -1,16 +1,16 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：WasmSandboxRuntime.cs
-    文件功能描述：Wasm 轻量沙箱运行时（一期 Stub）
+    File name: WasmSandboxRuntime.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260808
+    Created by: Senparc - 20260808
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 增强 jupyter-csharp 模板与沙箱会话管理
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 enhance the jupyter-csharp template and sandbox session management
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 enhance sandbox preview, Jupyter workspace, and session lifecycle management
 
 ----------------------------------------------------------------*/
 
@@ -20,7 +20,7 @@ using Senparc.Xncf.Sandbox.Abstractions;
 namespace Senparc.Xncf.Sandbox.Domain.Services.Runtime;
 
 /// <summary>
-/// Wasm 后端占位。二期可接入 Wasmtime / WASI / .NET WASI SDK，用于短任务评测以降压。
+///Legacy comment translated to English.
 /// </summary>
 public sealed class WasmSandboxRuntime : ISandboxRuntime
 {

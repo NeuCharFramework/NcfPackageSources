@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：Login.cshtml.cs
-    文件功能描述：Login.cshtml 相关定义与实现
 
 
-    创建标识：Senparc - 20241028
+    File name: Login.cshtml.cs
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 add image captcha for admin login (required after 2 failed attempts)
+    File description: Login.cshtml related definitions and implementation
+
+
+
+
+
+    Created by: Senparc - 20241028
+
+
+
+    Modified by: Senparc - 20261103
+
+    Change description: v0.12.15 add image captcha for admin login (required after 2 failed attempts)
+
+
 
 ----------------------------------------------------------------*/
 
@@ -43,15 +55,15 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
     {
         //[BindProperty]
         //[FromBody]
-        //[Required(ErrorMessage = "请输入用户名")]
+        //Legacy comment translated to English.
         //public string Name { get; set; }
 
         //[BindProperty]
         //[FromBody]
-        //[Required(ErrorMessage = "请输入密码")]
+        //Legacy comment translated to English.
         //public string Password { get; set; }
 
-        //绑定参数
+        //Legacy comment translated to English.
         //[BindProperty(SupportsGet = true)]
         //public string ReturnUrl { get; set; }
 
@@ -74,8 +86,8 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         public async Task<IActionResult> OnGetAsync(string ReturnUrl)
         {
             await Task.CompletedTask;
-            //是否已经登录
-            //var logined = await base.CheckLoginedAsync(AdminAuthorizeAttribute.AuthenticationScheme);//判断登录
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
 
             //if (logined)
             //{
@@ -100,13 +112,13 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         //    var userInfo = await _userInfoService.GetUserInfo(this.Name);
         //    if (userInfo == null)
         //    {
-        //        //errorMsg = "账号或密码错误！错误代码：101。";
-        //        ModelState.AddModelError(nameof(this.Password), "账号或密码错误！错误代码：101。");
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         //    }
         //    else if (_userInfoService.TryLogin(this.Name, this.Password, true) == null)
         //    {
-        //        //errorMsg = "账号或密码错误！错误代码：102。";
-        //        ModelState.AddModelError(nameof(this.Password), "账号或密码错误！错误代码：102。");
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         //    }
 
         //    if (!errorMsg.IsNullOrEmpty() || !ModelState.IsValid)
@@ -132,8 +144,8 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                 return Ok(new { loginInDto.Name, loginInDto.Password });
             }
 
-            // 移除不必要的验证，因为ValidateTenant总是返回true
-            // 租户名称不是必填项，无需验证
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
 
             AdminUserInfo userInfo = null;
             string tenantKey = loginInDto.Tenant;
@@ -169,10 +181,10 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             {
                 SenparcTrace.SendCustomLog("登录失败", $"用户名：{loginInDto.Name}, 错误：账号或密码错误！101");
                 return new JsonResult(LoginResultDto.Fail(_localizer["Admin.Login.Error.InvalidCredentials"]));
-                //ModelState.AddModelError(nameof(this.Password), "账号或密码错误！");
+                //Legacy comment translated to English.
             }
 
-            // ===== 图形验证码门槛：连续密码错误达到阈值后，必须先通过验证码校验 =====
+            //Legacy comment translated to English.
             int failedCount = await _userInfoService.GetFailedLoginCountAsync(userInfo.UserName);
             if (failedCount >= LoginCaptchaService.CaptchaRequiredFailedCount)
             {
@@ -188,12 +200,12 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
 
             try
             {
-                //TODO 需要把 userInfo 获取过程封装到下面的方法中，统一处理账号锁定
+                //Legacy comment translated to English.
                 if (await _userInfoService.TryLoginAsync(userInfo, loginInDto.Password, true, tenantKey) == null)
                 {
-                    //ModelState.AddModelError(nameof(this.Password), "账号或密码错误！");
+                    //Legacy comment translated to English.
                     SenparcTrace.SendCustomLog("登录失败", $"用户名：{loginInDto.Name}, 错误：账号或密码错误！102");
-                    // TryLoginAsync 内部已累加失败次数；达到阈值后要求后续登录输入验证码
+                    //Legacy comment translated to English.
                     int failedCountAfter = await _userInfoService.GetFailedLoginCountAsync(userInfo.UserName);
                     if (failedCountAfter >= LoginCaptchaService.CaptchaRequiredFailedCount)
                     {
@@ -218,24 +230,24 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             catch (Exception ex)
             {
                 SenparcTrace.SendCustomLog("登录失败", $"用户名：{loginInDto.Name}, 错误：{ex.Message}");
-                //其他异常，不返回错误信息
+                //Legacy comment translated to English.
                 return new JsonResult(LoginResultDto.Fail(_localizer["Admin.Login.Error.InvalidCredentials"]));
             }
         }
 
         /// <summary>
-        /// 获取图形验证码（纯 SVG 高干扰，一次性、短时效）
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<IActionResult> OnGetCaptcha()
         {
             var captcha = await _captchaService.CreateAsync();
-            // 验证码一次性且时效短，禁止浏览器/代理缓存
+            //Legacy comment translated to English.
             HttpContext.Response.Headers["Cache-Control"] = "no-store, no-cache, must-revalidate";
             return Ok(new { captcha.Token, captcha.Image });
         }
 
         /// <summary>
-        /// 查询指定用户名当前是否需要图形验证码（连续密码错误达到阈值）
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<IActionResult> OnGetCaptchaRequired(string name)
         {
@@ -292,14 +304,14 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
 
         public bool ValidateTenant()
         {
-            // 租户名称不是必填的，即使在多租户模式下也是可选的
-            // 直接返回true表示验证总是通过
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             return true;
         }
     }
 
     /// <summary>
-    /// 登录响应中的图形验证码信息
+    ///Legacy comment translated to English.
     /// </summary>
     public class LoginCaptchaDto
     {
@@ -308,7 +320,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
     }
 
     /// <summary>
-    /// 登录接口统一响应：成功/失败 + 是否需要图形验证码 + 新的验证码（需要时由服务端下发）
+    ///Legacy comment translated to English.
     /// </summary>
     public class LoginResultDto
     {

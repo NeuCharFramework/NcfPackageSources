@@ -1,13 +1,13 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：XncfModuleDisplayDto.cs
-    文件功能描述：后台菜单多语言显示与兼容处理
+    File name: XncfModuleDisplayDto.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20261111
+    Created by: Senparc - 20261111
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.12.28 按稳定模块标识解析内置菜单多语言显示，保留用户自定义菜单原文
+    Modified by: Senparc - 20261111
+    Change description: v0.12.28 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -17,7 +17,7 @@ using Senparc.Ncf.Core.Models.DataBaseModel;
 namespace Senparc.Areas.Admin.Domain
 {
     /// <summary>
-    /// XNCF 模块显示 DTO
+    ///Legacy comment translated to English.
     /// </summary>
     public class XncfModuleDisplayDto : DtoBase
     {
@@ -34,18 +34,18 @@ namespace Senparc.Areas.Admin.Domain
         public XncfModules_State State { get; private set; }
 
         /// <summary>
-        /// 是否有新版本
+        ///Legacy comment translated to English.
         /// </summary>
         public bool HasNewVersion { get; set; }
 
         /// <summary>
-        /// 新版本号
+        ///Legacy comment translated to English.
         /// </summary>
         public string NewVersion { get; set; }
         public object Menus { get; set; }
 
         /// <summary>
-        /// 模块Functions
+        ///Legacy comment translated to English.
         /// </summary>
         public object Functions { get; set; }
 

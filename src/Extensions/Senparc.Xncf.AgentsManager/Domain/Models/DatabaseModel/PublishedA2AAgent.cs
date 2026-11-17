@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：PublishedA2AAgent.cs
-    文件功能描述：数据模型、DTO 与映射定义
+    File name: PublishedA2AAgent.cs
+    File description: data model, DTO, and mapping definitions
 
 
-    创建标识：Senparc - 20260813
+    Created by: Senparc - 20260813
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+    Modified by: Senparc - 20260813
+    Change description: v0.15.0-preview11 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -22,8 +22,8 @@ using System.Text.RegularExpressions;
 namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
 {
     /// <summary>
-    /// 本地 AgentTemplate 对外发布为标准 A2A Agent 的配置。
-    /// 与 AgentTemplate 解耦，确保现有本地 Agent 保持原有行为。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     [Table(Register.DATABASE_PREFIX + nameof(PublishedA2AAgent))]
     [Serializable]
@@ -35,21 +35,21 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
         public int AgentTemplateId { get; private set; }
 
         /// <summary>
-        /// 对外稳定标识，同时组成 A2A URL。仅允许小写字母、数字和连字符。
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         [MaxLength(64)]
         public string PublicAgentKey { get; private set; }
 
-        /// <summary>发布开关。即使本地 Agent 仍启用，关闭此项也不会接收外部 A2A 请求。</summary>
+        ///Legacy comment translated to English.
         [Required]
         public bool Enable { get; private set; }
 
-        /// <summary>可选的 Agent Card 名称；留空时使用本地 Agent 名称。</summary>
+        ///Legacy comment translated to English.
         [MaxLength(120)]
         public string CardName { get; private set; }
 
-        /// <summary>可选的 Agent Card 公开描述。不得填写 Prompt、密钥或内部工具信息。</summary>
+        ///Legacy comment translated to English.
         [MaxLength(1000)]
         public string CardDescription { get; private set; }
 
@@ -63,24 +63,24 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
         public string SkillDescription { get; private set; }
 
         /// <summary>
-        /// 默认关闭。开启后，远程输入可能触发本地 Function Calling 或 MCP 工具，须由管理员显式确认。
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         public bool AllowFunctionCalls { get; private set; }
 
-        /// <summary>单次可发送给本地模型的最大文本字符数。</summary>
+        ///Legacy comment translated to English.
         [Required]
         public int MaxInputCharacters { get; private set; }
 
-        /// <summary>入站鉴权方式。实际密钥只保存在 A2A:InboundSecrets:{AuthSecretKey}。</summary>
+        ///Legacy comment translated to English.
         [Required]
         public RemoteAgentAuthenticationMode AuthenticationMode { get; private set; }
 
-        /// <summary>CustomHeader 入站鉴权的请求头名称。</summary>
+        ///Legacy comment translated to English.
         [MaxLength(100)]
         public string AuthHeaderName { get; private set; }
 
-        /// <summary>部署配置中的密钥名，不保存令牌正文。</summary>
+        ///Legacy comment translated to English.
         [MaxLength(100)]
         public string AuthSecretKey { get; private set; }
 

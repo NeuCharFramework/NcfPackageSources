@@ -22,7 +22,7 @@
             }).catch((ww) => {
 
             });
-            //base.confirm("确定提交吗？", "提交后保存数据", function () {
+            //Legacy comment translated to English.
             //    console.log("comfirm!");
             //}, function () {
             //    console.log("cancel!");

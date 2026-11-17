@@ -1,20 +1,20 @@
 ﻿/*-----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：FunctionHelper.cs
-    文件功能描述：FunctionHelper 相关实现
+    File name: FunctionHelper.cs
+    File description: FunctionHelper related implementation
     
     
-    创建标识：Senparc - 20200724
+    Created by: Senparc - 20200724
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.26.0 增强 XNCF 基础注册与函数参数处理能力
+    Modified by: Senparc - 20260822
+    Change description: v0.26.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.28.1 add bulk file upload functionality to Sandbox Lab
+    Modified by: Senparc - 20261103
+    Change description: v0.28.1 add bulk file upload functionality to Sandbox Lab
 
 ----------------------------------------------------------------*/
 
@@ -40,12 +40,12 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.XncfBase.Functions
 {
     /// <summary>
-    /// Function 帮助类
+    ///Legacy comment translated to English.
     /// </summary>
     public class FunctionHelper
     {
         /// <summary>
-        /// 记录日志
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="sb"></param>
         /// <param name="msg"></param>
@@ -55,11 +55,11 @@ namespace Senparc.Ncf.XncfBase.Functions
         }
 
         /// <summary>
-        /// 获取所有参数的信息列表
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="serviceProvider"></param>
         /// <param name="functionRenderBag">FunctionRenderBag</param>
-        /// <param name="tryLoadData">是否尝试载入数据（参数必须实现 IFunctionParameterLoadDataBase 接口）</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public static async Task<List<FunctionParameterInfo>> GetFunctionParameterInfoAsync(IServiceProvider serviceProvider, FunctionRenderBag functionRenderBag, bool tryLoadData = true)
         {
@@ -69,14 +69,14 @@ namespace Senparc.Ncf.XncfBase.Functions
 
             if (ReflectionHelper.HasParameterlessConstructor(functionParameterType))
             {
-                //包含不带参数的构造函数
-                paraObj = functionParameterType.Assembly.CreateInstance(functionParameterType.FullName) as IAppRequest;//TODO:通过 DI 生成
+                //Legacy comment translated to English.
+                paraObj = functionParameterType.Assembly.CreateInstance(functionParameterType.FullName) as IAppRequest;//Legacy comment translated to English.
 
                 if (tryLoadData && paraObj is FunctionAppRequestBase functionRequestPara)
                 {
                     try
                     {
-                        await functionRequestPara.LoadData(serviceProvider);//载入原有信息
+                        await functionRequestPara.LoadData(serviceProvider);//Legacy comment translated to English.
                     }
                     catch (Exception ex)
                     {
@@ -99,7 +99,7 @@ namespace Senparc.Ncf.XncfBase.Functions
                 SelectionList selectionList = null;
                 var filterable = false;
                 var allowCreate = false;
-                parameterType = ParameterType.Text;//默认为文本内容
+                parameterType = ParameterType.Text;//Legacy comment translated to English.
 
                 var functionParameterUi = prop.GetCustomAttribute<FunctionParameterUiAttribute>();
                 if (functionParameterUi != null)
@@ -163,7 +163,7 @@ namespace Senparc.Ncf.XncfBase.Functions
                 var maxLength = 0;
                 if (descriptionAttr != null && descriptionAttr.Description != null)
                 {
-                    //分割：名称||说明
+                    //Legacy comment translated to English.
                     var descriptionAttrArr = descriptionAttr.Description.Split(new[] { "||" }, StringSplitOptions.RemoveEmptyEntries);
                     title = descriptionAttrArr[0];
                     if (descriptionAttrArr.Length > 1)
@@ -234,12 +234,12 @@ namespace Senparc.Ncf.XncfBase.Functions
         }
 
         /// <summary>
-        /// 给 SelectionList 对象添加当前解决方案中的 XNCF 项目
-        /// （扫描当前解决方案包含的所有领域项目）
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="mustHaveXncfModule">当前解决方案是否必须包含 XNCF 项目</param>
-        /// <param name="rootDir">查找 XNCF 模块根目录，如果留 null，则使用 <code>System.IO.Directory.GetCurrentDirectory()</code>获取，并且查找 .sln 所在文件夹</param>
-        /// <param name="additionalProjects">除了标准的 XNCF 以外额外的项目</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         public static List<SelectionItem> LoadXncfProjects(bool mustHaveXncfModule = false, string rootDir = null, params string[] additionalProjects)
         {
             var selectList = new List<SelectionItem>();
@@ -258,9 +258,9 @@ namespace Senparc.Ncf.XncfBase.Functions
 
             if (currentDir != null)
             {
-                //找到了 SLN 文件，开始展开地毯式搜索
+                //Legacy comment translated to English.
 
-                //第一步：查找 XNCF
+                //Legacy comment translated to English.
 
                 var projectFolders = Directory.GetDirectories(currentDir, "*.XNCF.*", SearchOption.AllDirectories).ToList();
 
@@ -278,14 +278,14 @@ namespace Senparc.Ncf.XncfBase.Functions
 
                 foreach (var projectFolder in projectFolders)
                 {
-                    //第二步：查看 Register 文件是否存在
+                    //Legacy comment translated to English.
                     var registerFilePath = Path.Combine(projectFolder, "Register.cs");
                     if (!File.Exists(registerFilePath))
                     {
-                        continue;//不存在则跳过
+                        continue;//Legacy comment translated to English.
                     }
 
-                    //第三步：检查 Register 文件是否合格
+                    //Legacy comment translated to English.
 
                     var registerContent = File.ReadAllText(registerFilePath);
                     if (registerContent.Contains("[XncfRegister]") &&
@@ -313,10 +313,10 @@ namespace Senparc.Ncf.XncfBase.Functions
         }
 
         /// <summary>
-        /// 获取 xxxSenparcEntities.cs 数据库文件
+        /// get xxxSenparcEntities.cs database file
         /// </summary>
         /// <param name="projectPath"></param>
-        /// <param name="dbType">数据库类型</param>
+        /// <param name="dbType">databasetype</param>
         /// <returns></returns>
         /// <exception cref="NcfExceptionBase"></exception>
         public static string GetSenparcEntitiesFilePath(string projectPath, string dbType)

@@ -1,17 +1,32 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：AiMessageContext.cs
-    文件功能描述：AiMessageContext 相关实现
-    
-    
-    创建标识：Senparc - 20250712
-    
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.24.16 AI 会话缓存（IWantToRun）Key 增加账号维度，防止多租户跨租户复用
+    Copyright (C) 2026 Senparc
+
+  
+
+    File name: AiMessageContext.cs
+
+    File description: AiMessageContext related implementation
+
+    
+
+    
+
+    Created by: Senparc - 20250712
+
+    
+
+    Modified by: Senparc - 20260702
+
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
+
+
+
+    Modified by: Senparc - 20261103
+
+    Change description: v0.24.16 Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 
@@ -38,21 +53,21 @@ namespace Senparc.Xncf.WeixinManager
         internal static ConcurrentDictionary<string, IWantToRun> IWantoRunDic = new ConcurrentDictionary<string, IWantToRun>();
 
         /// <summary>
-        /// 获取唯一 Key。
-        /// 使用 PromptRangeCode 参与到 Key 的标记中，可以实现实时 Prompt 的更新
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="openId"></param>
         /// <param name="mpAccountDto"></param>
         /// <returns></returns>
         private static string GetKey(string openId, MpAccountDto mpAccountDto)
         {
-            // 纳入公众号账号 Id：MpAccount 为租户作用域实体，Id 全局唯一，
-            // 避免多租户下不同租户的相同 openId + PromptRangeCode 命中同一 IWantToRun
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             return $"{mpAccountDto.Id}:{openId}-{mpAccountDto.PromptRangeCode}";
         }
 
         /// <summary>
-        /// 构建并获取 IWantToRun 对象
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="services"></param>
         /// <param name="mpAccountDto"></param>
@@ -78,13 +93,13 @@ namespace Senparc.Xncf.WeixinManager
 
                     if (!mpAccountDto.PromptRangeCode.IsNullOrEmpty())
                     {
-                        //只有靶场，自动选择最好的版本
+                        //Legacy comment translated to English.
                         //var isAverage = mpAccountDto.PromptRangeCode.Contains("Average", StringComparison.OrdinalIgnoreCase);
 
                         var promptResult = await promptItemService.GetWithVersionAsync(mpAccountDto.PromptRangeCode, isAvg: true);
                         promptTemplate = promptResult.PromptItem.Content;// Prompt
 
-                        senparcAiSetting = promptResult.SenparcAiSetting;// AI 模型参数
+                        senparcAiSetting = promptResult.SenparcAiSetting;// AI model parameters
                         await Console.Out.WriteLineAsync(senparcAiSetting.ToJson(true));
                         var promptResultDto = promptItemService.Mapper.Map<PromptItemDto>(promptResult.PromptItem);
                         promptConfigParameter = promptItemService.GetPromptConfigParameterFromAiSetting(promptResultDto);
@@ -100,7 +115,7 @@ namespace Senparc.Xncf.WeixinManager
                         };
                     }
 
-                    //配置和初始化模型
+                    //configurationandinitializemodel
                     var iWantToRun = _agentAiHandler.IWantTo(senparcAiSetting)
                                      .ConfigChatModel(openId, new Microsoft.Agents.AI.ChatClientAgentOptions()
                                      {

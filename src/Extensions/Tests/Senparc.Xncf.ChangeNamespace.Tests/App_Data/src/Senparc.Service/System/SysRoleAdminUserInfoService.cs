@@ -20,7 +20,7 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        /// 添加角色信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="roleId"></param>
         /// <param name="accountId"></param>

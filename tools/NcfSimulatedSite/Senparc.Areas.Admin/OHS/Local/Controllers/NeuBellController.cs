@@ -1,20 +1,20 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：NeuBellController.cs
-    文件功能描述：Admin Footer 服务器时间、纽铃快照与实时变更流
+    File name: NeuBellController.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20260803
+    Created by: Senparc - 20260803
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.3.0 新增后台同步管理与可配置多语言页脚
+    Modified by: Senparc - 20260804
+    Change description: v0.3.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.3.0 将后台同步功能统一更名为 NeuBell/纽铃
+    Modified by: Senparc - 20260804
+    Change description: v0.3.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.5.0 集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
+    Modified by: Senparc - 20260813
+    Change description: v0.5.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -80,8 +80,8 @@ public sealed class NeuBellController : ControllerBase
     }
 
     /// <summary>
-    /// 消费当前管理员可见的纽铃。Provider 未声明消费能力时返回冲突，调用方应仅导航到业务详情，
-    /// 不能把“查看”当成“已处理”。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     [HttpPost("consume")]
     public async Task<IActionResult> Consume(
@@ -119,7 +119,7 @@ public sealed class NeuBellController : ControllerBase
     [HttpGet("events")]
     public async Task GetEvents(CancellationToken cancellationToken)
     {
-        // EventSource 对 204 不会自动重连；无 Provider 时不保留长连接占用浏览器连接池。
+        //Legacy comment translated to English.
         if (!await _snapshotService.HasAvailableProvidersAsync(cancellationToken).ConfigureAwait(false))
         {
             Response.StatusCode = StatusCodes.Status204NoContent;
@@ -146,7 +146,7 @@ public sealed class NeuBellController : ControllerBase
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
-            // 浏览器关闭页面时正常结束流。
+            //Legacy comment translated to English.
         }
     }
 

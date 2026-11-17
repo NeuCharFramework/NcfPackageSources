@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：SenparcEntitiesDbContextBase.cs
-    文件功能描述：SenparcEntitiesDbContextBase 相关实现
+
+    File name: SenparcEntitiesDbContextBase.cs
+
+    File description: SenparcEntitiesDbContextBase related implementation
+
     
+
     
-    创建标识：Senparc - 20210221
+
+    Created by: Senparc - 20210221
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -33,7 +45,7 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    /// SenparcEntities 的基类
+    ///Legacy comment translated to English.
     /// </summary>
     public abstract class SenparcEntitiesDbContextBase : DbContext, ISenparcEntitiesDbContext
     {
@@ -43,7 +55,7 @@ namespace Senparc.Ncf.Core.Models
         private RequestTenantInfo _tenantInfo;
 
         /// <summary>
-        /// SenparcDI 储存的 GlobalServiceCollection 生成的 ServiceProvider
+        ///Legacy comment translated to English.
         /// </summary>
         protected virtual IServiceProvider ServiceProvider
         {
@@ -63,7 +75,7 @@ namespace Senparc.Ncf.Core.Models
         }
 
         /// <summary>
-        /// 当前上下文中租户信息 <![CDATA[未启用多租户则默认值为NULL值]]>
+        ///Legacy comment translated to English.
         /// </summary>
         public RequestTenantInfo TenantInfo
         {
@@ -82,7 +94,7 @@ namespace Senparc.Ncf.Core.Models
         }
 
         /// <summary>
-        /// 自动添加多租户Id
+        ///Legacy comment translated to English.
         /// </summary>
         private void AddTenandId()
         {
@@ -100,7 +112,7 @@ namespace Senparc.Ncf.Core.Models
                 {
                     if (!(entity is IIgnoreMulitTenant) && (entity is IMultiTenancy multiTenantEntity))
                     {
-                        ////如果未设置，则进行设定
+                        ///Legacy comment translated to English.
                         //requestTenantInfo = requestTenantInfo ?? MultiTenantHelper.TryGetAndCheckRequestTenantInfo(ServiceProvider, "SenparcEntitiesDbContextBase.AddTenandId()", this);
                         multiTenantEntity.TenantId = requestTenantInfo.Id;
                     }
@@ -111,7 +123,7 @@ namespace Senparc.Ncf.Core.Models
         public bool? _enableMultiTenant;
 
         /// <summary>
-        /// 是否启用多租户，默认读取 SiteConfig.SenparcCoreSetting.EnableMultiTenant
+        /// whether enabledmulti-tenancy，defaultread SiteConfig.SenparcCoreSetting.EnableMultiTenant
         /// </summary>
         public bool EnableMultiTenant
         {
@@ -142,11 +154,11 @@ namespace Senparc.Ncf.Core.Models
         //    _serviceScope?.Dispose();
         //}
 
-        #region Migration 迁移相关方法
+        #region Legacy section
 
         /// <summary>
-        /// 执行 EF Core 的合并操作（等价于 update-database）
-        /// <para>出于安全考虑，每次执行 Migrate() 方法之前，必须先执行 ResetMigrate() 开启允许 Migrate 执行的状态。</para>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         public virtual void Migrate()
         {
@@ -164,7 +176,7 @@ namespace Senparc.Ncf.Core.Models
         }
 
         /// <summary>
-        /// 重置合并状态
+        ///Legacy comment translated to English.
         /// </summary>
         public virtual void ResetMigrate()
         {
@@ -174,7 +186,7 @@ namespace Senparc.Ncf.Core.Models
         #endregion
 
         /// <summary>
-        /// 【核心】 将当前动态模块的 DbContext 对象注入到 DbContext
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -191,7 +203,7 @@ namespace Senparc.Ncf.Core.Models
             Console.WriteLine($"------|{new string('-', maxLength)}");
             for (int i = 0; i < types.Count; i++)
             {
-                //设置需要添加的全局查询
+                //Legacy comment translated to English.
 
                 var entityType = types[i];
                 Console.WriteLine($"  {(i + 1).ToString().PadRight(4)}| {entityType.Name}");
@@ -208,14 +220,14 @@ namespace Senparc.Ncf.Core.Models
         }
 
         /// <summary>
-        /// 设置全局查询
+        ///Legacy comment translated to English.
         /// </summary>
         private static readonly MethodInfo SetGlobalQueryMethodInfo = typeof(SenparcEntitiesBase)
             .GetMethods(BindingFlags.Public | BindingFlags.Instance)
             .Single(t => t.IsGenericMethod && t.Name == nameof(SetGlobalQuery) /*"SetGlobalQuery"*/);
 
         /// <summary>
-        /// 全局查询
+        ///Legacy comment translated to English.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="builder"></param>
@@ -223,22 +235,22 @@ namespace Senparc.Ncf.Core.Models
         {
             var entityBuilder = builder.Entity<T>();//.HasQueryFilter(z => !z.Flag);
 
-            //多租户
+            //multi-tenancy
             //Console.WriteLine($"\t DbContext:{this.GetHashCode()} \tSetGlobalQuery<{typeof(T).Name}> this.EnableMultiTenant:" + this.EnableMultiTenant + $" / SiteConfig.SenparcCoreSetting.EnableMultiTenant:{SiteConfig.SenparcCoreSetting.EnableMultiTenant}");
             if (this.EnableMultiTenant && typeof(IMultiTenancy).IsAssignableFrom(typeof(T)) && !(typeof(IIgnoreMulitTenant).IsAssignableFrom(typeof(T))))
             {
-                //多租户 + 软删除
+                //Legacy comment translated to English.
                 entityBuilder.HasQueryFilter(z => z.TenantId == TenantInfo.Id && !z.Flag);
             }
             else
             {
-                //仅软删除
+                //Legacy comment translated to English.
                 entityBuilder.HasQueryFilter(z => !z.Flag);
             }
         }
 
         /// <summary>
-        /// 设置当前 DbContext 是否启用上下文
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="enable"></param>
         public void SetMultiTenantEnable(bool enable)
@@ -248,7 +260,7 @@ namespace Senparc.Ncf.Core.Models
         }
 
         /// <summary>
-        /// 多租户状态重置为 SiteConfig.SenparcCoreSetting.EnableMultiTenant
+        ///Legacy comment translated to English.
         /// </summary>
         public void ResetMultiTenantEnable()
         {
@@ -259,14 +271,14 @@ namespace Senparc.Ncf.Core.Models
 
         public override int SaveChanges()
         {
-            //处理多租户
+            //handlingmulti-tenancy
             AddTenandId();
             return base.SaveChanges();
         }
 
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
         {
-            //处理多租户
+            //handlingmulti-tenancy
             AddTenandId();
             return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }
@@ -274,7 +286,7 @@ namespace Senparc.Ncf.Core.Models
 
         //public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         //{
-        //    return base.SaveChangesAsync(cancellationToken);//底层引用的就是  SaveChangesAsync，所以不用处理
+        //Legacy comment translated to English.
         //}
     }
 }

@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：SandboxJupyterProxyMiddleware.cs
-    文件功能描述：将已登录管理员的请求代理到本机 Jupyter（含 WebSocket）
+    File name: SandboxJupyterProxyMiddleware.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260808
+    Created by: Senparc - 20260808
 
 ----------------------------------------------------------------*/
 
@@ -20,7 +20,7 @@ namespace Senparc.Xncf.Sandbox.OHS.Local.Middleware;
 
 /// <summary>
 /// /sandbox-jupyter/{sessionId}/... → http://127.0.0.1:{port}/sandbox-jupyter/{sessionId}/...
-/// 要求 NCF Admin Cookie 已登录；Jupyter token 仅在服务端注入，不出现在对外 AccessUrl。
+///Legacy comment translated to English.
 /// </summary>
 public sealed class SandboxJupyterProxyMiddleware
 {
@@ -89,7 +89,7 @@ public sealed class SandboxJupyterProxyMiddleware
             return;
         }
 
-        // Jupyter 以 base_url=/sandbox-jupyter/{id}/ 启动，后端路径需保留前缀
+        // Jupyter starts with base_url=/sandbox-jupyter/{id}/; the backend path must retain the prefix
         var backendPath = SandboxJupyterPaths.GetBaseUrl(sessionId).TrimEnd('/') + remaining;
 
         _logger.LogDebug(

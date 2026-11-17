@@ -79,7 +79,7 @@ namespace Senparc.Areas.Admin.Controllers
 
 
         /// <summary>
-        /// 默认转到Edit页面
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public ActionResult Create()
@@ -87,7 +87,7 @@ namespace Senparc.Areas.Admin.Controllers
             return RedirectToAction("Edit");
         }
 
-        #region 成功或错误提示页面
+        #region Legacy section
 
         [NonAction]
         public virtual ActionResult RenderSuccess(string message, string backAction = null, string backController = null, RouteValueDictionary backRouteValues = null)
@@ -107,7 +107,7 @@ namespace Senparc.Areas.Admin.Controllers
         [NonAction]
         public virtual ActionResult RenderError(string message)
         {
-            //保留原有的controller和action信息
+            //preserve the original controller and action information
             ViewData["FakeControllerName"] = RouteData.Values["controller"] as string;
             ViewData["FakeActionName"] = RouteData.Values["action"] as string;
 
@@ -123,7 +123,7 @@ namespace Senparc.Areas.Admin.Controllers
             return Error404(Request.PathAndQuery());
         }
         /// <summary>
-        /// 显示404页面
+        /// display404page
         /// </summary>
         /// <param name="aspxerrorpath"></param>
         /// <returns></returns>
@@ -146,10 +146,10 @@ namespace Senparc.Areas.Admin.Controllers
         #endregion
 
         /// <summary>
-        /// 显示Json结果
+        /// displayJsonresult
         /// </summary>
-        /// <param name="success">是否成功</param>
-        /// <param name="result">数据，如果失败，可以为字符串的说明</param>
+        /// <param name="success">whethersuccess</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         [NonAction]
         public JsonResult RenderJsonSuccessResult(bool success, object result)

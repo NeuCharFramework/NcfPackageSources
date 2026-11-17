@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：NeuCharPivotBoardModels.cs
-    文件功能描述：NeuCharPivotBoard（Pivot 面板 / Provit Panel）实体：
-    为特定页面（如后台首页）聚合各 XNCF 模块 Pivot 的 Function 块
+    File name: NeuCharPivotBoardModels.cs
+    File description: Related implementation.
+    Legacy comment translated to English.
 
-    创建标识：Senparc - 20260901
+    Created by: Senparc - 20260901
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+    Modified by: Senparc - 20260915
+    Change description: v0.8.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -20,15 +20,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel;
 
 /// <summary>
-/// Pivot 面板（Provit Panel）：绑定到某个页面（PageKey），
-/// 内部由若干 Provit Block 组成，每个 Block 引用任意 XNCF 模块 Pivot 的 Function。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 [Table(Register.DATABASE_PREFIX + nameof(NeuCharPivotBoard))]
 [Serializable]
 public class NeuCharPivotBoard : EntityBase<int>
 {
     /// <summary>
-    /// 面板绑定的页面标识，例如 admin-home
+    ///Legacy comment translated to English.
     /// </summary>
     [Required, MaxLength(100)]
     public string PageKey { get; private set; }
@@ -39,17 +39,17 @@ public class NeuCharPivotBoard : EntityBase<int>
     public string Description { get; private set; }
 
     /// <summary>
-    /// 面板内块（Block）的列数
+    ///Legacy comment translated to English.
     /// </summary>
     public int Columns { get; private set; }
 
     /// <summary>
-    /// 块列表 JSON 数组：[{ key, moduleUid, functionKey, functionName, title, summary, accent, exposedParameters[] }]
+    ///Legacy comment translated to English.
     /// </summary>
     public string BlocksJson { get; private set; }
 
     /// <summary>
-    /// 是否启用（启用后才会渲染到对应页面）
+    ///Legacy comment translated to English.
     /// </summary>
     public bool IsEnabled { get; private set; }
 

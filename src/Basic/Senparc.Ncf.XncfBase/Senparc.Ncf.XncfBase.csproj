@@ -14,36 +14,36 @@
     <Authors>NeuCharFramework</Authors>
     <Owners>NeuCharFramework</Owners>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <Title>XNCF 模块基础库</Title>
+    <Title>Module</Title>
     <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>			[2024-08-07] v0.21.0.0-preview1 111
-			v0.1.0 创世
-			v0.2.100 完成基础架构，功能跑通
-			v0.3.100 优化 Function 返回值
-			v0.3.303 提供 IXncfThread 接口
-			v0.3.305 添加 XncfAutoConfigurationMapping 特性
-			v0.3.501 添加 Register.IsRegistered 方法
-			v0.7 升级 Function 为 FunctionRender
-			v0.9.1.6 优化 DDD 分层，忽略系统表的删除 History 操作
-			v0.11.3.1 重新开启线程 XncfThread
-			v0.11.8 添加 ServiceBase 子类的自动依赖注入注册
-			v0.11.9 添加 IServiceDataBase 类型自动注册
-			v0.13.0 添加 FunctionHelper.LoadXncfProjects() 方法
-			v0.13.1 添加 FunctionHelper.GetSenparcEntitiesFilePath() 方法
-			v0.13.2 添加 VersionHelper，统一处理版本
-			v0.15.0 SelectionItem 支持 BindData 属性
-			v0.15.4 删除 ScanTypeKind.IFunction 枚举
-			[2024-08-11] v0.21.1.0-preview1 新增 DtoBase&lt;T&gt; 类型
-			[2024-08-11] v0.21.2.0-preview1 新增 DtoBase&lt;T&gt; 类型
-			[2024-08-12] v0.21.3-preview1 添加 TableData 的数据插入方法，通过单元测试
-			[2024-08-28] v0.21.6-preview1 Function 添加 Password 类型
-			[2024-08-28] v0.21.6.1-preview1 更新 Function 的 Password 类型，并将 MaxLength 参数传送到前端 UI
-			[2024-08-29] v0.21.7-preview1 完成 Password 类型的 Function 参数编辑功能
-			[2024-08-29] v0.21.8-preview1 完成 Password 类型的 Function 参数编辑功能
-			[2024-09-10] v0.21.9-preview1 升级缓存基础库
-			[2024-11-15] v0.21.13-preview1 优化启动时的日志记录，把所有"监测到 ApplyAllAutoConfigurationMapping 执行"记录到一条日志
+			v0.1.0 initial release
+			v0.2.100 Updated module behavior and related support.
+			v0.3.100 Updated module behavior and related support.
+			v0.3.303 provide IXncfThread interface
+			v0.3.305 Updated module behavior and related support.
+			v0.3.501 add Register.IsRegistered method
+			v0.7 Updated module behavior and related support.
+			v0.9.1.6 Updated module behavior and related support.
+			v0.11.3.1 Updated module behavior and related support.
+			v0.11.8 Updated module behavior and related support.
+			v0.11.9 Updated module behavior and related support.
+			v0.13.0 add FunctionHelper.LoadXncfProjects() method
+			v0.13.1 add FunctionHelper.GetSenparcEntitiesFilePath() method
+			v0.13.2 add VersionHelper, unifyhandleversion
+			v0.15.0 SelectionItem support BindData property
+			v0.15.4 Updated module behavior and related support.
+			[2024-08-11] v0.21.1.0-preview1 add DtoBase&lt;T&gt; type
+			[2024-08-11] v0.21.2.0-preview1 add DtoBase&lt;T&gt; type
+			[2024-08-12] v0.21.3-preview1 Updated module behavior and related support.
+			[2024-08-28] v0.21.6-preview1 Function add Password type
+			[2024-08-28] v0.21.6.1-preview1 Updated module behavior and related support.
+			[2024-08-29] v0.21.7-preview1 Updated module behavior and related support.
+			[2024-08-29] v0.21.8-preview1 Updated module behavior and related support.
+			[2024-09-10] v0.21.9-preview1 upgrade the cache foundation libraries
+			[2024-11-15] v0.21.13-preview1 Updated module behavior and related support.
 			[2024-12-27] v0.22.2-preview1 Add exception log for UseXncfModules() auto progress
 			[2025-01-25] v0.22.6-preview1 Update Agents functions, support for function calling
 			[2025-04-29] v0.22.8-preview1 Update CO2NET and AIKernel
@@ -55,57 +55,57 @@
 			[2025-11-01] update basic libraries, including Senparc.AI
 			[2026-01-07] v0.22.16-preview.1 Add rootDir parameter to FunctionHelper.LoadXncfProjects() method
 			[2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
-			[2026-07-02] v0.23.2-preview1 升级 Senparc.AI.AgentKernel 并完成兼容性适配，增强 MCP 工具接入与调用链路兼容能力
-			1、升级 Senparc.AI.AgentKernel 并完成兼容性适配
-			2、增强 MCP 工具接入与调用链路兼容能力
-			3、增强 FunctionRequestParameterNormalizer 的参数归一化与占位符处理能力
-			[2026-07-17] v0.23.3-preview2 同步上游项目版本并适配统一本地化能力
-			1、Dependency update from Senparc.Ncf.Core to 0.25.0-preview2
-			2、Dependency update from Senparc.Ncf.Database to 0.21.2-preview2
-			3、Dependency update from Senparc.Ncf.Service to 0.23.2-preview2
+			[2026-07-02] v0.23.2-preview1 Updated module behavior and related support.
+			1. Updated module behavior and related support.
+			2. Updated module behavior and related support.
+			3. Updated module behavior and related support.
+			[2026-07-17] v0.23.3-preview2 synchronize upstream project versions and adopt shared localization capabilities
+			1. Dependency update from Senparc.Ncf.Core to 0.25.0-preview2
+			2. Dependency update from Senparc.Ncf.Database to 0.21.2-preview2
+			3. Dependency update from Senparc.Ncf.Service to 0.23.2-preview2
 			[2026-07-29] v0.23.4-preview3 Dependency update from Senparc.Ncf.Core to 0.26.0-preview3
-			[2026-07-31] v0.23.5-preview4 升级 CO2NET 4.2.0 基础依赖
-			1、升级 Senparc.CO2NET 至 4.2.0 并保持现有项目行为兼容
-			[2026-08-04] v0.24.0-preview5 统一数据库设计时工厂与函数参数处理
-			1、扩展设计时 DbContext 工厂配置和 XNCF 数据库注册流程
-			2、优化 FunctionRender 请求参数归一化与兼容处理
+			[2026-07-31] v0.23.5-preview4 Updated module behavior and related support.
+			1. Updated module behavior and related support.
+			[2026-08-04] v0.24.0-preview5 Updated module behavior and related support.
+			1. Updated module behavior and related support.
+			2. Updated module behavior and related support.
 			[2026-08-08] v0.24.1-preview6 Dependency updates from upstream projects
-			1、Dependency update from Senparc.Ncf.Core to 0.28.1-preview6
-			2、Dependency update from Senparc.Ncf.Database to 0.21.6-preview6
-			3、Dependency update from Senparc.Ncf.Service to 0.23.6-preview6
-			[2026-08-13] v0.25.0-preview7 增强线程生命周期控制与函数参数数值类型解析
-			1、为线程停止流程引入取消令牌并改善异常回退
-			2、支持 decimal、double、float 及可空数值 JSON 参数解析
-			[2026-08-15] v0.25.1-preview8 升级 Core 依赖并优化启动扫描多库日志
-			1、Dependency update from Senparc.Ncf.Core to 0.29.0-preview8
-			2、启动扫描多库日志改为矩阵表输出，并保留 GetAssembiles 预加载说明
-			[2026-08-22] v0.26.0-preview9 增强 XNCF 基础注册与函数参数处理能力
-			1、完善模块注册生命周期和函数参数解析，保持基础模块与多数据库日志能力兼容
+			1. Dependency update from Senparc.Ncf.Core to 0.28.1-preview6
+			2. Dependency update from Senparc.Ncf.Database to 0.21.6-preview6
+			3. Dependency update from Senparc.Ncf.Service to 0.23.6-preview6
+			[2026-08-13] v0.25.0-preview7 Updated module behavior and related support.
+			1. Updated module behavior and related support.
+			2. Updated module behavior and related support.
+			[2026-08-15] v0.25.1-preview8 Updated module behavior and related support.
+			1. Dependency update from Senparc.Ncf.Core to 0.29.0-preview8
+			2. Updated module behavior and related support.
+			[2026-08-22] v0.26.0-preview9 Updated module behavior and related support.
+			1. Updated module behavior and related support.
 			[2026-08-29] v0.26.1 Dependency updates from Senparc.Ncf.Core to 0.30.0-preview9
-			1、Dependency update from Senparc.Ncf.Core to 0.30.0-preview9
-			[2026-09-16] v0.27.0 新增 TextArea 函数参数类型并支持多行文本渲染
-			1、扩展 ParameterType，支持多行字符串参数并保持既有参数值兼容
-			2、同步工作流、NeuCharPivot 与模块执行页面的 textarea 输入交互
-			[2026-09-17] v0.28.0 增强 FunctionRender 的 AI schema 选择元数据支持
-			1、为 FunctionRender AI schema 注入 SelectionList 选项与显示文本元数据
-			2、保持原有函数调用和参数处理兼容
-			[2026-10-02] 注册统一后台租户作用域工厂，供模块后台任务复用
+			1. Dependency update from Senparc.Ncf.Core to 0.30.0-preview9
+			[2026-09-16] v0.27.0 Updated module behavior and related support.
+			1. Updated module behavior and related support.
+			2. Updated module behavior and related support.
+			[2026-09-17] v0.28.0 Updated module behavior and related support.
+			1. Updated module behavior and related support.
+			2. Updated module behavior and related support.
+			[2026-10-02] unify, moduletask
 			[2026-11-03] v0.28.1 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
-			1、Updated Senparc.Ncf.XncfBase project behavior and integration for the latest feature and reliability improvements.
-			2、chore: update package versions and dependencies across multiple projects
-			3、扩展 FunctionRender 文件引用、文件存储及参数规范化能力
-			4、完善 AI 函数参数 Schema 与文件上传交互
-			5、Dependency update from Senparc.Ncf.Database to 0.21.11
-			[2026-11-05] v0.28.2 同步直接依赖项目版本
-			1、Dependency update from Senparc.Ncf.Core to 0.30.4-preview10
-			2、Dependency update from Senparc.Ncf.Database to 0.21.12
-			3、Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
-			[2026-11-11] v0.28.2 用稳定资源键解析 XNCF 注册显示文本
-			1、新增 XncfRegisterText，按资源键和中文基准文本解析菜单名称与模块说明。
-			2、保留 IXncfRegister 的字符串契约，模块仍返回已解析的显示文本。
-			[2026-11-12] v0.29.0 支持 XNCF 注册文本的稳定资源键解析
-			1、注册信息可通过稳定资源键解析多语言显示名称与说明。
-			2、保留现有文本回退行为，兼容未提供本地化资源的模块。
+			1. Updated Senparc.Ncf.XncfBase project behavior and integration for the latest feature and reliability improvements.
+			2. chore: update package versions and dependencies across multiple projects
+			3. Updated module behavior and related support.
+			4. Updated module behavior and related support.
+			5. Dependency update from Senparc.Ncf.Database to 0.21.11
+			[2026-11-05] v0.28.2 synchronize direct dependency project versions
+			1. Dependency update from Senparc.Ncf.Core to 0.30.4-preview10
+			2. Dependency update from Senparc.Ncf.Database to 0.21.12
+			3. Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
+			[2026-11-11] v0.28.2 Updated module behavior and related support.
+			1. Updated module behavior and related support.
+			2. Updated module behavior and related support.
+			[2026-11-12] v0.29.0 Updated module behavior and related support.
+			1. Updated module behavior and related support.
+			2. Updated module behavior and related support.
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

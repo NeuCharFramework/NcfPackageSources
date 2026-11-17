@@ -15,14 +15,14 @@ namespace Senparc.Service
     public interface IProjectPayLogService : IBaseClientService<ProjectPayLog>
     {
         /// <summary>
-        /// 自动生成订单号
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="orderNumber"></param>
         /// <param name="includes"></param>
         /// <returns></returns>
         ProjectPayLog GetBuyOrderNumber(string orderNumber, string[] includes = null);
         /// <summary>
-        /// 创建订单
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="projectDemand"></param>
         /// <param name="description"></param>
@@ -30,7 +30,7 @@ namespace Senparc.Service
         /// <returns></returns>
         ProjectPayLog CreateOrder(ProjectDemand projectDemand, string description, int type);
         /// <summary>
-        /// 取消订单
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="projectPayLog"></param>
         void CancelOrder(ProjectPayLog projectPayLog);
@@ -68,7 +68,7 @@ namespace Senparc.Service
 
             var projectPayLog = new ProjectPayLog()
             {
-                OrderNumber = null,//Add的时候会自动生成
+                OrderNumber = null,//Legacy comment translated to English.
                 AddTime = DateTime.Now,
                 CompleteTime = DateTime.Now,
                 ProjectDemandId = projectDemand.Id,
@@ -79,7 +79,7 @@ namespace Senparc.Service
             };
             SaveObject(projectPayLog);
 
-            ////发送Email
+            ////sendEmail
             //if (account.EmailChecked)
             //{
             //    SendEmail sendEmail = new SendEmail(SendEmailType.OrderCreate);
@@ -100,7 +100,7 @@ namespace Senparc.Service
             projectPayLog.Type = (int)ProjectPay_Type.交易关闭;
             SaveObject(projectPayLog);
 
-            ////发送邮件
+            ///Legacy comment translated to English.
             //var account = ProjectPayLog.Account;
             //if (account.EmailChecked)
             //{

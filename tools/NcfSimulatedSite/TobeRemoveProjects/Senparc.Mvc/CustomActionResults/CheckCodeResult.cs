@@ -25,15 +25,15 @@ namespace Senparc.Mvc
         private void createcheckcodeimage(string checkcode, ActionContext context)
         {
             VerifyCode v = new VerifyCode();
-            v.CreateImageOnPage(checkcode, context);        // 输出图片
+            v.CreateImageOnPage(checkcode, context);        //Legacy comment translated to English.
         }
     }
     /// <summary>
-    /// 验证码
+    ///Legacy comment translated to English.
     /// </summary>
     public class VerifyCode
     {
-        #region 验证码字体大小(为了显示扭曲效果，默认40像素，可以自行修改)
+        #region Legacy section
         int fontSize = 40;
         public int FontSize
         {
@@ -42,7 +42,7 @@ namespace Senparc.Mvc
         }
         #endregion
 
-        #region 边框补(默认1像素)
+        #region Legacy section
         int padding = 2;
         public int Padding
         {
@@ -51,7 +51,7 @@ namespace Senparc.Mvc
         }
         #endregion
 
-        #region 是否输出燥点(默认不输出)
+        #region whether to output noise(disabled by default)
         bool chaos = true;
         public bool Chaos
         {
@@ -60,7 +60,7 @@ namespace Senparc.Mvc
         }
         #endregion
 
-        #region 输出燥点的颜色(默认灰色)
+        #region Legacy section
         System.Drawing.Color chaosColor = System.Drawing.Color.LightGray;
         public System.Drawing.Color ChaosColor
         {
@@ -69,7 +69,7 @@ namespace Senparc.Mvc
         }
         #endregion
 
-        #region 自定义背景色(默认白色)
+        #region Legacy section
         System.Drawing.Color backgroundColor = System.Drawing.Color.White;
         public System.Drawing.Color BackgroundColor
         {
@@ -78,7 +78,7 @@ namespace Senparc.Mvc
         }
         #endregion
 
-        #region 自定义随机颜色数组
+        #region Legacy section
         Color[] colors = { Color.Black, Color.Red, Color.DarkBlue, Color.Green, Color.Orange, Color.Brown, Color.DarkCyan, Color.Purple };
         public Color[] Colors
         {
@@ -87,7 +87,7 @@ namespace Senparc.Mvc
         }
         #endregion
 
-        #region 自定义字体数组
+        #region Legacy section
         string[] fonts = { "Arial", "Georgia" };
         public string[] Fonts
         {
@@ -96,24 +96,24 @@ namespace Senparc.Mvc
         }
         #endregion
 
-        #region 产生波形滤镜效果
+        #region Legacy section
 
         private const double PI = 3.1415926535897932384626433832795;
         private const double PI2 = 6.283185307179586476925286766559;
 
         /// <summary>
-        /// 正弦曲线Wave扭曲图片（Edit By 51aspx.com）
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="srcBmp">图片路径</param>
-        /// <param name="bXDir">如果扭曲则选择为True</param>
-        /// <param name="nMultValue">波形的幅度倍数，越大扭曲的程度越高，一般为3</param>
-        /// <param name="dPhase">波形的起始相位，取值区间[0-2*PI)</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public System.Drawing.Bitmap TwistImage(Bitmap srcBmp, bool bXDir, double dMultValue, double dPhase)
         {
             Bitmap destBmp = new Bitmap(srcBmp.Width, srcBmp.Height);
 
-            // 将位图背景填充为白色
+            //Legacy comment translated to English.
             Graphics graph = Graphics.FromImage(destBmp);
             graph.FillRectangle(new SolidBrush(System.Drawing.Color.White), 0, 0, destBmp.Width, destBmp.Height);
             graph.Dispose();
@@ -129,7 +129,7 @@ namespace Senparc.Mvc
                     dx += dPhase;
                     double dy = Math.Sin(dx);
 
-                    // 取得当前点的颜色
+                    //Legacy comment translated to English.
                     int nOldX = 0, nOldY = 0;
                     nOldX = bXDir ? i + (int)(dy * dMultValue) : i;
                     nOldY = bXDir ? j : j + (int)(dy * dMultValue);
@@ -150,7 +150,7 @@ namespace Senparc.Mvc
 
         #endregion
 
-        #region 生成校验码图片
+        #region Legacy section
         public Bitmap CreateImageCode(string code)
         {
             int fSize = FontSize;
@@ -167,7 +167,7 @@ namespace Senparc.Mvc
 
             Random rand = new Random();
 
-            //给背景添加随机生成的燥点
+            //Legacy comment translated to English.
             if (this.Chaos)
             {
 
@@ -195,7 +195,7 @@ namespace Senparc.Mvc
 
             int cindex, findex;
 
-            //随机字体和颜色的验证码字符
+            //Legacy comment translated to English.
             for (int i = 0; i < code.Length; i++)
             {
                 cindex = rand.Next(Colors.Length - 1);
@@ -218,18 +218,18 @@ namespace Senparc.Mvc
                 g.DrawString(code.Substring(i, 1), f, b, left, top);
             }
 
-            //画一个边框 边框颜色为Color.Gainsboro
+            //Legacy comment translated to English.
             g.DrawRectangle(new Pen(Color.Gainsboro, 0), 0, 0, image.Width - 1, image.Height - 1);
             g.Dispose();
 
-            //产生波形（Add By 51aspx.com）
+            //Legacy comment translated to English.
             image = TwistImage(image, true, 8, 4);
 
             return image;
         }
         #endregion
 
-        #region 将创建好的图片输出到页面
+        #region Legacy section
         public void CreateImageOnPage(string code, ActionContext context)
         {
             System.IO.MemoryStream ms = new System.IO.MemoryStream();

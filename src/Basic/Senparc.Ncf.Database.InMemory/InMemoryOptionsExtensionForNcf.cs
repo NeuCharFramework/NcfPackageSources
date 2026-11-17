@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：InMemoryOptionsExtensionForNcf.cs
-    文件功能描述：InMemoryOptionsExtensionForNcf 相关实现
+
+    File name: InMemoryOptionsExtensionForNcf.cs
+
+    File description: InMemoryOptionsExtensionForNcf related implementation
+
     
+
     
-    创建标识：Senparc - 20240721
+
+    Created by: Senparc - 20240721
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -93,7 +105,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         private DbContextOptionsExtensionInfo _info;
 
         //
-        // 摘要:
+        // Summary:
         //     This is an internal API that supports the Entity Framework Core infrastructure
         //     and not subject to the same compatibility standards as public APIs. It may be
         //     changed or removed without notice in any release. You should only use it directly
@@ -102,7 +114,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         public override DbContextOptionsExtensionInfo Info => _info ?? (_info = new ExtensionInfo(this));
 
         //
-        // 摘要:
+        // Summary:
         //     This is an internal API that supports the Entity Framework Core infrastructure
         //     and not subject to the same compatibility standards as public APIs. It may be
         //     changed or removed without notice in any release. You should only use it directly
@@ -111,7 +123,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         public virtual string StoreName => _storeName;
 
         //
-        // 摘要:
+        // Summary:
         //     This is an internal API that supports the Entity Framework Core infrastructure
         //     and not subject to the same compatibility standards as public APIs. It may be
         //     changed or removed without notice in any release. You should only use it directly
@@ -120,7 +132,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         public virtual bool IsNullabilityCheckEnabled => _nullabilityCheckEnabled;
 
         //
-        // 摘要:
+        // Summary:
         //     This is an internal API that supports the Entity Framework Core infrastructure
         //     and not subject to the same compatibility standards as public APIs. It may be
         //     changed or removed without notice in any release. You should only use it directly
@@ -129,7 +141,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         public virtual InMemoryDatabaseRoot? DatabaseRoot => _databaseRoot;
 
         //
-        // 摘要:
+        // Summary:
         //     This is an internal API that supports the Entity Framework Core infrastructure
         //     and not subject to the same compatibility standards as public APIs. It may be
         //     changed or removed without notice in any release. You should only use it directly
@@ -140,7 +152,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         }
 
         //
-        // 摘要:
+        // Summary:
         //     This is an internal API that supports the Entity Framework Core infrastructure
         //     and not subject to the same compatibility standards as public APIs. It may be
         //     changed or removed without notice in any release. You should only use it directly
@@ -153,7 +165,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         }
 
         //
-        // 摘要:
+        // Summary:
         //     This is an internal API that supports the Entity Framework Core infrastructure
         //     and not subject to the same compatibility standards as public APIs. It may be
         //     changed or removed without notice in any release. You should only use it directly
@@ -165,7 +177,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         //}
 
         //
-        // 摘要:
+        // Summary:
         //     This is an internal API that supports the Entity Framework Core infrastructure
         //     and not subject to the same compatibility standards as public APIs. It may be
         //     changed or removed without notice in any release. You should only use it directly
@@ -185,7 +197,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         }
 
         //
-        // 摘要:
+        // Summary:
         //     This is an internal API that supports the Entity Framework Core infrastructure
         //     and not subject to the same compatibility standards as public APIs. It may be
         //     changed or removed without notice in any release. You should only use it directly
@@ -205,7 +217,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         }
 
         //
-        // 摘要:
+        // Summary:
         //     This is an internal API that supports the Entity Framework Core infrastructure
         //     and not subject to the same compatibility standards as public APIs. It may be
         //     changed or removed without notice in any release. You should only use it directly
@@ -225,7 +237,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         }
 
         //
-        // 摘要:
+        // Summary:
         //     This is an internal API that supports the Entity Framework Core infrastructure
         //     and not subject to the same compatibility standards as public APIs. It may be
         //     changed or removed without notice in any release. You should only use it directly
@@ -237,7 +249,7 @@ namespace Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal
         }
 
         //
-        // 摘要:
+        // Summary:
         //     This is an internal API that supports the Entity Framework Core infrastructure
         //     and not subject to the same compatibility standards as public APIs. It may be
         //     changed or removed without notice in any release. You should only use it directly

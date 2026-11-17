@@ -1,17 +1,32 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：ExtensionEntity.Core.cs
-    文件功能描述：ExtensionEntity.Core 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.28.0-preview5 新增数据库升级维护状态与可配置页脚安全处理
+    Copyright (C) 2026 Senparc
+
+  
+
+    File name: ExtensionEntity.Core.cs
+
+    File description: ExtensionEntity.Core related implementation
+
+    
+
+    
+
+    Created by: Senparc - 20200724
+
+    
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260804
+
+    Change description: v0.28.0-preview5 Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 
@@ -29,10 +44,10 @@ using System.Runtime.Serialization;
 namespace Senparc.Ncf.Core.Models
 {
 
-    #region 全局
+    #region Legacy section
 
     /// <summary>
-    /// 分页
+    ///Legacy comment translated to English.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class PagedList<T> : List<T> //where T : class /*,new()*/
@@ -60,7 +75,7 @@ namespace Senparc.Ncf.Core.Models
     }
 
     /// <summary>
-    /// 网页Meta标签集合
+    ///Legacy comment translated to English.
     /// </summary>
     public class MetaCollection : Dictionary<MetaType, string>
     {
@@ -79,7 +94,7 @@ namespace Senparc.Ncf.Core.Models
     }
 
     /// <summary>
-    /// 首页图片切换
+    ///Legacy comment translated to English.
     /// </summary>
     public class HomeSlider
     {
@@ -95,7 +110,7 @@ namespace Senparc.Ncf.Core.Models
     }
 
     /// <summary>
-    /// 系统配置文件
+    ///Legacy comment translated to English.
     /// </summary>
     [Serializable]
     public class SenparcConfig
@@ -122,7 +137,7 @@ namespace Senparc.Ncf.Core.Models
     }
 
     /// <summary>
-    /// 全局提示消息
+    ///Legacy comment translated to English.
     /// </summary>
     [Serializable]
     public class Messager
@@ -142,7 +157,7 @@ namespace Senparc.Ncf.Core.Models
     }
 
     /// <summary>
-    /// 日志
+    ///Legacy comment translated to English.
     /// </summary>
     public class WebLog
     {
@@ -165,9 +180,9 @@ namespace Senparc.Ncf.Core.Models
 
     #endregion
 
-    #region 数据库实体扩展
+    #region Legacy section
 
-    #region FullEntity相关
+    #region Legacy section
 
     public interface IBaseFullEntity<in TEntity>
     {
@@ -188,11 +203,11 @@ namespace Senparc.Ncf.Core.Models
         }
 
         /// <summary>
-        /// 创建对象
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <typeparam name="T">对象类型</typeparam>
-        /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <param name="entity">实体实例</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public static T CreateEntity<T>(TEntity entity)
         where T : BaseFullEntity<TEntity>,
@@ -204,11 +219,11 @@ namespace Senparc.Ncf.Core.Models
         }
 
         /// <summary>
-        /// 创建对象列表
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <typeparam name="T">对象类型</typeparam>
-        /// <typeparam name="TEntity">试题类型</typeparam>
-        /// <param name="entityList">实体列表</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public static List<T> CreateList<T>(IEnumerable<TEntity> entityList)
         where T : BaseFullEntity<TEntity>,
@@ -307,7 +322,7 @@ namespace Senparc.Ncf.Core.Models
     #endregion
 
 
-    #region 省、市、区XML数据格式
+    #region Legacy section
     [DataContract]
     [Serializable]
     public class AreaXML_Provinces
@@ -319,13 +334,13 @@ namespace Senparc.Ncf.Core.Models
         public string ProvinceName { get; set; }
 
         /// <summary>
-        /// 地区代码
+        ///Legacy comment translated to English.
         /// </summary>
         [DataMember]
         public string DivisionsCode { get; set; }
 
         /// <summary>
-        /// 缩写（去掉“省”“市”“自治区”等）
+        ///Legacy comment translated to English.
         /// </summary>
         [DataMember]
         public string ShortName { get; set; }

@@ -51,7 +51,7 @@ namespace Senparc.Areas.WX.Controllers
                 return RenderError($"公众号OAuth授权异常，原因{ex.Message}");
             }
 
-            //处理Account
+            //handlingAccount
             var account =
                 _accountService.GetObject(z => z.WeixinOpenId == openId);
             if (account == null)
@@ -71,7 +71,7 @@ namespace Senparc.Areas.WX.Controllers
             }
 
             HttpContext.Session.SetString("OpenId", userInfo.openid);
-            //记录登录信息
+            //Legacy comment translated to English.
             account.ThisLoginTime = DateTime.Now;
             _accountService.SaveObject(account);
             return Redirect(callbackUrl);

@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：20260803133043_Add_AgentTemplate_KnowledgeBaseId.cs
-    文件功能描述：实现 Entity Framework 数据库迁移。
+    File name: 20260803133043_Add_AgentTemplate_KnowledgeBaseId.cs
+    File description: Entity Framework database migration implementation.
 
 
-    创建标识：Senparc - 20260803
+    Created by: Senparc - 20260803
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.14.0-preview9 新增 Agent 模板知识库关联与管理统计
+    Modified by: Senparc - 20260804
+    Change description: v0.14.0-preview9 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

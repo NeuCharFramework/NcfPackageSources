@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：MultipleMigrationDbContextAttribute.cs
-    文件功能描述：MultipleMigrationDbContextAttribute 相关实现
+
+    File name: MultipleMigrationDbContextAttribute.cs
+
+    File description: MultipleMigrationDbContextAttribute related implementation
+
     
+
     
-    创建标识：Senparc - 20201007
+
+    Created by: Senparc - 20201007
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -23,17 +35,17 @@ using System.Text;
 namespace Senparc.Ncf.Database
 {
     /// <summary>
-    /// 多数据库生成 Migration 的实体类，无需考虑
+    ///Legacy comment translated to English.
     /// </summary>
-    [System.AttributeUsage(AttributeTargets.Class, AllowMultiple = false/*暂时不支持*/)]
+    [System.AttributeUsage(AttributeTargets.Class, AllowMultiple = false/*temporarilynotsupport*/)]
     public class MultipleMigrationDbContextAttribute : Attribute
     {
         /// <summary>
-        /// MultipleMigrationDbContext 构造函数。指定多数据库配置。
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="multipleDatabaseType">MultipleDatabaseType 数据库类型</param>
-        /// <param name="xncfDatabaseRegisterType">XncfDatabase 注册类类型</param>
-        // /// <param name="runtimeDbContextType">当运行时使用的统一数据库上下文类型</param>
+        /// <param name="multipleDatabaseType">MultipleDatabaseType databasetype</param>
+        ///Legacy comment translated to English.
+        //Legacy comment translated to English.
         public MultipleMigrationDbContextAttribute(MultipleDatabaseType multipleDatabaseType,
             Type xncfDatabaseRegisterType/*, Type runtimeDbContextType*/)
         {

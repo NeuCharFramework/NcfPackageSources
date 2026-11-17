@@ -1,17 +1,32 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：CustomBindingHelperExtentions.cs
-    文件功能描述：CustomBindingHelperExtentions 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260731
-    修改描述：v0.22.0-preview4 将上下移动作提示接入核心多语言资源
+    Copyright (C) 2026 Senparc
+
+  
+
+    File name: CustomBindingHelperExtentions.cs
+
+    File description: CustomBindingHelperExtentions related implementation
+
+    
+
+    
+
+    Created by: Senparc - 20200724
+
+    
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260731
+
+    Change description: v0.22.0-preview4 Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 
@@ -52,7 +67,7 @@ namespace System.Web.Mvc
         }
 
         /// <summary>
-        /// “上移”“下移”箭头
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="helper"></param>
         /// <param name="listCount"></param>

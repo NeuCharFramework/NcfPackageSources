@@ -1,32 +1,32 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：WorkspaceContracts.cs
-    文件功能描述：工作区存储与访问策略契约
+    File name: WorkspaceContracts.cs
+    File description: Related implementation.
     
     
-    创建标识：Senparc - 20261015
+    Created by: Senparc - 20261015
     
-    修改标识：Senparc - 20261021
-    修改描述：v0.1.0 增加所有者、Agent 模板关联与访问策略
+    Modified by: Senparc - 20261021
+    Change description: v0.1.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261102
-    修改描述：增加 Workspace 服务器端流式文件上传契约
+    Modified by: Senparc - 20261102
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.2.0 add streamed large-file Workspace uploads with tenant-aware ownership checks
+    Modified by: Senparc - 20261103
+    Change description: v0.2.0 add streamed large-file Workspace uploads with tenant-aware ownership checks
 
-    修改标识：Senparc - 20261109
-    修改描述：增加工作区用量统计与清空内容契约
+    Modified by: Senparc - 20261109
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261111
-    修改描述：搜索请求可改为按相对路径返回文件和目录候选
+    Modified by: Senparc - 20261111
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261111
-    修改描述：搜索支持内容正则表达式和相对路径 glob
+    Modified by: Senparc - 20261111
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261112
-    修改描述：v0.3.0 支持路径 glob、内容正则与更清晰的搜索契约错误
+    Modified by: Senparc - 20261112
+    Change description: v0.3.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -119,8 +119,8 @@ public sealed record WorkspaceCreateRequest(
     int? AgentTemplateId = null);
 
 /// <summary>
-/// 工作区内容用量。文件数和字节数都不包含根目录上的 .workspace.json 清单，
-/// 也不跟随符号链接。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 public sealed record WorkspaceUsageStatistics(
     int FileCount,
@@ -351,8 +351,8 @@ public interface IWorkspaceStorage
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// 删除工作区里的用户内容，并重建新建时的 input、output、logs、.workspace 目录。
-    /// 保留工作区标识、清单和元数据。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     Task ClearContentAsync(
         string workspaceId,

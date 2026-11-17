@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：AdminAuthConfig_Request.cs
-    文件功能描述：AdminAuthConfig_Request 相关功能实现
+    File name: AdminAuthConfig_Request.cs
+    File description: Related implementation.
     
     
-    创建标识：Senparc - 20260705
+    Created by: Senparc - 20260705
     
-    修改标识：Senparc - 20260705
-    修改描述：v0.0.3 新增登录超时配置并补齐多数据库迁移支持
+    Modified by: Senparc - 20260705
+    Change description: v0.0.3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.0.4 新增登录超时配置并补齐多数据库迁移支持
+    Modified by: Senparc - 20260705
+    Change description: v0.0.4 Updated module behavior and related support.
 ----------------------------------------------------------------*/
 
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;

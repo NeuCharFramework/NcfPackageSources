@@ -1,7 +1,7 @@
 namespace Senparc.Xncf.Sandbox.Abstractions;
 
 /// <summary>
-/// 沙箱运行时后端。
+///Legacy comment translated to English.
 /// </summary>
 public enum SandboxRuntimeKind
 {

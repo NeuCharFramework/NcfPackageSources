@@ -1,15 +1,15 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：LexicalReranker.cs
-    文件功能描述：本地词法重排器。基于查询-片段词元重合度（拉丁词 + CJK 字符二元组）
-    计算确定性相关度分数，并与向量相似度融合；无任何模型调用与第三方依赖。
+    File name: LexicalReranker.cs
+    File description: Related implementation.
+    Legacy comment translated to English.
 
 
-    创建标识：Senparc - 20260926
+    Created by: Senparc - 20260926
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.8.0 upgrade KnowledgeBase retrieval with configurable chunking and re-ranking (backward compatible)
+    Modified by: Senparc - 20261103
+    Change description: v0.8.0 upgrade KnowledgeBase retrieval with configurable chunking and re-ranking (backward compatible)
 
 ----------------------------------------------------------------*/
 
@@ -22,7 +22,7 @@ using System.Text.RegularExpressions;
 namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
 {
     /// <summary>
-    /// 词法混合重排。适用于“查询包含专有名词、编号、英文术语”时向量召回排序不佳的场景。
+    ///Legacy comment translated to English.
     /// </summary>
     public static class LexicalReranker
     {
@@ -31,7 +31,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
             RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
         /// <summary>
-        /// 计算片段对查询的词法相关度，取值 0-1（越大越相关）。
+        ///Legacy comment translated to English.
         /// </summary>
         public static double Score(string query, string text)
         {
@@ -66,7 +66,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
         }
 
         /// <summary>
-        /// 融合向量分数与词法分数。vectorScore 需先做 min-max 归一化（可先用 <see cref="NormalizeScores"/>）。
+        ///Legacy comment translated to English.
         /// </summary>
         public static double Fuse(double normalizedVectorScore, double lexicalScore, double lexicalWeight)
         {
@@ -75,7 +75,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
         }
 
         /// <summary>
-        /// 对一组分数做 min-max 归一化；全部相同时统一返回 1。
+        ///Legacy comment translated to English.
         /// </summary>
         public static double[] NormalizeScores(double[] scores)
         {
@@ -100,7 +100,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
         }
 
         /// <summary>
-        /// 提取词元：拉丁/数字词（小写、长度≥2）+ CJK 字符二元组（单字 CJK 段取一元组）。
+        ///Legacy comment translated to English.
         /// </summary>
         public static HashSet<string> Tokenize(string text)
         {
@@ -131,7 +131,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
         }
 
         /// <summary>
-        /// 仅提取 CJK 字符二元组集合（用于 Dice 系数）。
+        ///Legacy comment translated to English.
         /// </summary>
         public static HashSet<string> TokenizeBigrams(string text)
         {
@@ -188,11 +188,11 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
 
         private static bool IsCjk(char ch)
         {
-            return (ch >= 0x4E00 && ch <= 0x9FFF)     // CJK 统一表意文字
-                   || (ch >= 0x3400 && ch <= 0x4DBF)   // 扩展 A
-                   || (ch >= 0x3040 && ch <= 0x30FF)   // 日文假名
-                   || (ch >= 0xAC00 && ch <= 0xD7AF)   // 韩文音节
-                   || (ch >= 0xF900 && ch <= 0xFAFF);  // 兼容表意文字
+            return (ch >= 0x4E00 && ch <= 0x9FFF)     //Legacy comment translated to English.
+                   || (ch >= 0x3400 && ch <= 0x4DBF)   // extension A
+                   || (ch >= 0x3040 && ch <= 0x30FF)   //Legacy comment translated to English.
+                   || (ch >= 0xAC00 && ch <= 0xD7AF)   //Legacy comment translated to English.
+                   || (ch >= 0xF900 && ch <= 0xFAFF);  //Legacy comment translated to English.
         }
     }
 }

@@ -1,17 +1,32 @@
 /*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：BuildXncfRequest.AI.MCP.cs
-    文件功能描述：BuildXncfRequest.AI.MCP 相关实现
-    
-    
-    创建标识：Senparc - 20250524
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
+    Copyright (C) 2026 Senparc
+
+  
+
+    File name: BuildXncfRequest.AI.MCP.cs
+
+    File description: BuildXncfRequest.AI.MCP related implementation
+
+    
+
+    
+
+    Created by: Senparc - 20250524
+
+    
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260804
+
+    Change description: v0.39.0-preview8 Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 

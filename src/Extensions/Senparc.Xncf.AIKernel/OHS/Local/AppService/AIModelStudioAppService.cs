@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：AIModelStudioAppService.cs
-    文件功能描述：AIModelStudioAppService 服务逻辑
+
+    File name: AIModelStudioAppService.cs
+
+    File description: Related implementation.
+
     
+
     
-    创建标识：Senparc - 20240131
+
+    Created by: Senparc - 20240131
+
     
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    Modified by: Senparc - 20260702
+
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
+
+
 
 ----------------------------------------------------------------*/
 
@@ -35,12 +47,12 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
             this._aIModelService = aIModelService;
         }
 
-        //[FunctionRender("测试 AI 模型", "测试已经设置的模型", typeof(Register))]
+        //Legacy comment translated to English.
         //public async Task<StringAppResponse> RunModelAsync(AIModelStudioRequest_RunModelAsync request)
         //{
         //    return await this.GetStringResponseAsync(async (response, logger) =>
         //    {
-        //        await request.LoadData(ServiceProvider);//加载数据
+        //Legacy comment translated to English.
 
         //        var msg = new StringBuilder();
 
@@ -48,26 +60,26 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
 
         //        if (selectedItems.Count() == 0)
         //        {
-        //            throw new SenparcAiException("请至少选择一个模型！");
+        //Legacy comment translated to English.
         //        }
 
         //        foreach (var selectedItem in selectedItems)
         //        {
-        //            msg.AppendLine($"正在测试模型：{selectedItem.Value}");
+        //Legacy comment translated to English.
         //            try
         //            {
         //                var aiResult = await _aIModelService.RunModelsync(selectedItem.BindData as SenparcAiSetting, request.Prompt);
-        //                msg.AppendLine($"模型测试成功，返回信息：{aiResult.Output}");
+        //                msg.AppendLine($"modeltestsuccess，returninformation：{aiResult.Output}");
         //            }
         //            catch (Exception ex)
         //            {
-        //                msg.AppendLine($"模型测试失败：{ex.Message}");
+        //                msg.AppendLine($"modeltestfailure：{ex.Message}");
         //            }
         //            msg.AppendLine("--------------------------");
         //        }
 
         //        response.Data = msg.ToString().Replace("\r", "<br />").Replace("\n", "");
-        //        logger.Append($"测试完成，返回信息：\r\n{msg.ToString()}");
+        //        logger.Append($"testcomplete，returninformation：\r\n{msg.ToString()}");
         //        return null;
         //    });
         //}

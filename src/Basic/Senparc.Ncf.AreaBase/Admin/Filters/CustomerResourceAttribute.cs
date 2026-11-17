@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：CustomerResourceAttribute.cs
-    文件功能描述：CustomerResourceAttribute 相关实现
+
+    File name: CustomerResourceAttribute.cs
+
+    File description: CustomerResourceAttribute related implementation
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -30,7 +42,7 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
     }
 
     /// <summary>
-    /// 不进行权限校验
+    /// Do not perform permission verification
     /// </summary>
     public class IgnoreAuthAttribute: Attribute, IFilterMetadata
     {

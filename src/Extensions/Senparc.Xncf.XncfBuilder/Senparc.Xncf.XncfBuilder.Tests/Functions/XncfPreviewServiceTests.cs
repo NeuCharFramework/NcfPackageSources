@@ -1,11 +1,11 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：XncfPreviewServiceTests.cs
-    文件功能描述：XNCF 独立预览路径、命令和隔离配置测试
+    File name: XncfPreviewServiceTests.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20260801
+    Created by: Senparc - 20260801
 
 ----------------------------------------------------------------*/
 

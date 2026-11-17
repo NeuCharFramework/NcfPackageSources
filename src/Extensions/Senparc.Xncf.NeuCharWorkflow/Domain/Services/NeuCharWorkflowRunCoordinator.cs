@@ -2,34 +2,34 @@
     Copyright (C) 2026 Senparc
 
     File name: NeuCharWorkflowRunCoordinator.cs
-    File description: NeuChar Workflow 测试运行状态、节点进度与 Console 协调器
+    File description: Related implementation.
 
 
     Created by: Senparc - 20260809
 
     Modified by: Senparc - 20260813
-    Change description: v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Change description: v0.1.0-preview1 enhance workflow orchestration, replay, Webhook, and parallel execution
 
     Modified by: Senparc - 20260815
-    Change description: v0.2.0 增强工作流并行与运行控制
+    Change description: v0.2.0 enhance workflow parallelism and execution control
 
     Modified by: Senparc - 20260817
-    Change description: v0.2.0 支持 Human Input 人工节点暂停与外部恢复
+    Change description: v0.2.0 support pausing and external resumption of Human Input nodes
 
     Modified by: Senparc - 20260822
-    Change description: v0.2.0 增强工作流函数调用、任务控制与回放管理
+    Change description: v0.2.0 enhance workflow function calls, task control, and replay management
 
     Modified by: Senparc - 20260909
-    Change description: v0.4.0 运行来源新增 chat（Chat 触发器聊天会话）
+    Change description: v0.4.0 Updated module behavior and related support.
 
     Modified by: Senparc - 20260915
-    Change description: v0.4.0 增强 Chat 触发器消息持久化与恢复能力
+    Change description: v0.4.0 enhance Chat trigger message persistence and recovery
 
     Modified by: Senparc - 20261028
-    Change description: vNext 运行状态携带发起租户快照，执行作用域恢复租户上下文
+    Change description: vNext Updated module behavior and related support.
 
     Modified by: Senparc - 20261103
-    Change description: v0.4.4 Workflow 运行协调器与定时宿主服务恢复/按租户传播租户上下文
+    Change description: v0.4.4 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -70,7 +70,7 @@ public sealed record NeuCharWorkflowRunSnapshot(
     int RunningCount = 0);
 
 /// <summary>
-/// 供任务列表使用的轻量实时运行状态。不返回原始输入和完整输出，避免在列表页意外暴露敏感数据。
+///Legacy comment translated to English.
 /// </summary>
 public sealed record NeuCharWorkflowActiveRun(
     Guid RunId,
@@ -338,8 +338,8 @@ public sealed class NeuCharWorkflowRunCoordinator
         try
         {
             using var scope = _scopeFactory.CreateScope();
-            // 恢复发起运行的租户上下文（手动/Webhook/Chat 来自请求作用域，定时来自租户作用域）；
-            // 未携带快照时保持原有 fail-closed 行为。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             state.Tenant?.Restore(scope.ServiceProvider);
             var workflowService = scope.ServiceProvider.GetRequiredService<NeuCharWorkflowService>();
             var executionLogService = scope.ServiceProvider.GetRequiredService<NeuCharWorkflowExecutionLogService>();

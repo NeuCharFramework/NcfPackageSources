@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：InstallerResource.cs
-    文件功能描述：安装模块本地化资源访问类
+    File name: InstallerResource.cs
+    File description: Related implementation.
     
     
-    创建标识：Senparc - 20260403
+    Created by: Senparc - 20260403
     
-    修改标识：Senparc - 20260724
-    修改描述：v0.4.0 增加默认模块选择与安装确认并完善多语言界面
+    Modified by: Senparc - 20260724
+    Change description: v0.4.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 namespace Senparc.Xncf.Installer

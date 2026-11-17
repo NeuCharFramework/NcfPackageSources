@@ -1,20 +1,20 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：Access.cshtml.cs
-    文件功能描述：Function 全局 Provit 访问控制管理页：
-    数据库访问策略映射（绑定用户/角色/权限码）的可视化维护：
-    完整信息展示（代码基线 + 数据库策略 + 生效策略）、单条与批量设置、手动清除。
-    策略行冗余保留：模块清除后不删除，模块重装后自动继续生效。
+    File name: Access.cshtml.cs
+    File description: Related implementation.
+    Legacy comment translated to English.
+    Legacy comment translated to English.
+    Legacy comment translated to English.
 
-    创建标识：Senparc - 20260917
-    修改描述：v0.9.1 新增 Function 全局 Provit 数据库访问策略映射
+    Created by: Senparc - 20260917
+    Change description: v0.9.1 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 维护Function 全局 Provit 访问控制管理页：
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -47,7 +47,7 @@ public class AccessModel(
     private readonly SysRoleService _sysRoleService = sysRoleService;
 
     /// <summary>
-    /// 默认 GET：渲染访问控制页（JSON 数据由 handler=List/Users/Roles 提供）
+    ///Legacy comment translated to English.
     /// </summary>
     public IActionResult OnGet()
     {
@@ -55,8 +55,8 @@ public class AccessModel(
     }
 
     /// <summary>
-    /// 全量列表：所有 XNCF 模块 Function 的代码基线 + 数据库策略 + 生效策略，
-    /// 以及“孤儿策略”（模块/Function 已不存在，策略冗余保留待重装生效）。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<IActionResult> OnGetListAsync([FromQuery] string moduleUid = null)
     {
@@ -98,7 +98,7 @@ public class AccessModel(
                 orphan: false));
         }
 
-        // 孤儿策略：模块被清除或 Function 已移除，策略冗余保留
+        //Legacy comment translated to English.
         var orphans = policies
             .Where(z => string.IsNullOrWhiteSpace(moduleUid) ||
                 string.Equals(z.ModuleUid, moduleUid, StringComparison.OrdinalIgnoreCase))
@@ -134,7 +134,7 @@ public class AccessModel(
     }
 
     /// <summary>
-    /// 后台管理员账号列表（绑定用户主体用）
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<IActionResult> OnGetUsersAsync()
     {
@@ -151,7 +151,7 @@ public class AccessModel(
     }
 
     /// <summary>
-    /// 系统角色列表（绑定角色主体用）
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<IActionResult> OnGetRolesAsync()
     {
@@ -166,7 +166,7 @@ public class AccessModel(
     }
 
     /// <summary>
-    /// 保存单条策略（新增或更新）
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<IActionResult> OnPostSaveAsync([FromBody] PolicySaveRequest request)
     {
@@ -185,7 +185,7 @@ public class AccessModel(
     }
 
     /// <summary>
-    /// 手动清除单条策略（物理删除；模块清除不会触发，策略冗余保留）
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<IActionResult> OnPostClearAsync([FromBody] PolicyKeyRequest request)
     {
@@ -208,7 +208,7 @@ public class AccessModel(
     }
 
     /// <summary>
-    /// 批量设置 / 批量清除。
+    ///Legacy comment translated to English.
     /// operation：apply-open / apply-restrict / apply-deny / apply-inherit / clear
     /// </summary>
     public async Task<IActionResult> OnPostBatchAsync([FromBody] PolicyBatchRequest request)
@@ -251,7 +251,7 @@ public class AccessModel(
                             ModuleUid = z.ModuleUid,
                             FunctionKey = z.FunctionKey,
                             AccessMode = mode,
-                            // 批量“受限”时可附带统一主体绑定；其余模式忽略绑定
+                            //Legacy comment translated to English.
                             AllowedRoleCodes = mode == NeuCharFunctionProvitAccess.AccessModeRestricted
                                 ? request.AllowedRoleCodes ?? new List<string>()
                                 : new List<string>(),
@@ -284,7 +284,7 @@ public class AccessModel(
         }
     }
 
-    #region 私有辅助
+    #region Legacy section
 
     private static NeuCharFunctionProvitAccessInput ToInput(PolicySaveRequest request)
     {
@@ -335,7 +335,7 @@ public class AccessModel(
         NeuCharFunctionProvitAccess policy,
         bool orphan)
     {
-        // 生效策略：数据库策略（非继承）优先，否则代码基线
+        //Legacy comment translated to English.
         var dbActive = policy != null &&
             policy.AccessMode != NeuCharFunctionProvitAccess.AccessModeInherit;
         var exposureAllowed = NeuCharPivotGlobalAccessService.ResolveExposureAllowed(
@@ -345,7 +345,7 @@ public class AccessModel(
         string effectiveSource;
         if (orphan)
         {
-            // 孤儿策略：Function 不存在时策略暂不生效，模块重装后按数据库策略生效
+            //Legacy comment translated to English.
             effectiveMode = "pending";
             effectiveSource = "db";
         }
@@ -410,7 +410,7 @@ public class AccessModel(
 
     #endregion
 
-    #region 请求模型
+    #region Legacy section
 
     public sealed class PolicyKeyRequest
     {

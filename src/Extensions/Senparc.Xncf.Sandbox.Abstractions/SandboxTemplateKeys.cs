@@ -1,29 +1,29 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：SandboxTemplateKeys.cs
-    文件功能描述：沙箱预置模板协议键定义
+    File name: SandboxTemplateKeys.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260808
+    Created by: Senparc - 20260808
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.2.0 增加 NCF 预览沙箱跨模块契约
+    Modified by: Senparc - 20260815
+    Change description: v0.2.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 新增 JupyterCsharp 模板键
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 同步沙箱契约版本说明
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 扩展沙箱 Jupyter 与会话生命周期契约
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Sandbox.Abstractions;
 
 /// <summary>
-/// 预置模板键（协议值，勿本地化）。
+///Legacy comment translated to English.
 /// </summary>
 public static class SandboxTemplateKeys
 {

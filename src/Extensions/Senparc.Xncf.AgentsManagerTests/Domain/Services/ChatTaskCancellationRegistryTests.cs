@@ -47,7 +47,7 @@ public class ChatTaskCancellationRegistryTests
         var first = registry.Register(104, CancellationToken.None);
         var second = registry.Register(104, CancellationToken.None);
 
-        // 同一任务重复注册时，旧的取消源应立即被取消，避免同一任务出现两个并发的运行上下文。
+        //Legacy comment translated to English.
         Assert.IsTrue(first.IsCancellationRequested);
         Assert.IsFalse(second.IsCancellationRequested);
 

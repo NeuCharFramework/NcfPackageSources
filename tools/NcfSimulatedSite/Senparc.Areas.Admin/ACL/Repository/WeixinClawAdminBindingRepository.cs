@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：WeixinClawAdminBindingRepository.cs
-    文件功能描述：WeixinClawAdminBindingRepository.cs implementation and project behavior.
+    File name: WeixinClawAdminBindingRepository.cs
+    File description: WeixinClawAdminBindingRepository.cs implementation and project behavior.
 
 
-    创建标识：Senparc - 20260926
+    Created by: Senparc - 20260926
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 enhance WeixinClaw integration with new message handling and UI improvements
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 enhance WeixinClaw integration with new message handling and UI improvements
 
 ----------------------------------------------------------------*/
 

@@ -12,7 +12,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Senparc.Areas.WX.Filter
 {
     /// <summary>
-    /// 服务号OAuth2.0的验证
+    ///Legacy comment translated to English.
     /// </summary>
     [SuppressMessage("Microsoft.Performance", "CA1813:AvoidUnsealedAttributes",
             Justification = "Unsealed so that subclassed types can set properties in the default constructor or override our behavior.")]

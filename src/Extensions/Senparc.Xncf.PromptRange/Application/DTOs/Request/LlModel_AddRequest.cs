@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：LlModel_AddRequest.cs
-    文件功能描述：LlModel_AddRequest 相关实现
+    File name: LlModel_AddRequest.cs
+    File description: LlModel_AddRequest related implementation
     
     
-    创建标识：Senparc - 20260704
+    Created by: Senparc - 20260704
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
 ----------------------------------------------------------------*/
 
@@ -19,22 +19,22 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
     public class LlModel_AddRequest
     {
         /// <summary>
-        /// 代号
+        /// code
         /// </summary>
         public string Alias { get; set; }
 
         /// <summary>
-        /// 名称
+        /// name
         /// </summary>
         public string DeploymentName { get; set; }
 
         /// <summary>
-        /// Endpoint（必须）
+        /// Endpoint（must）
         /// </summary>
         public string Endpoint { get; set; }
 
         /// <summary>
-        /// 模型的类型（必须）, 例如：OpenAI,Azure OpenAI,HuggingFace
+        ///Legacy comment translated to English.
         /// </summary>
         public AiPlatform ModelType { get; set; }
 

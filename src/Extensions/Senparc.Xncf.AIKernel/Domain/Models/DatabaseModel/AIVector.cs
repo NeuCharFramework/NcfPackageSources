@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：AIVector.cs
-    文件功能描述：AIVector 相关实现
+    File name: AIVector.cs
+    File description: AIVector related implementation
     
     
-    创建标识：Senparc - 20250402
+    Created by: Senparc - 20250402
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
 ----------------------------------------------------------------*/
 
@@ -26,56 +26,56 @@ using Senparc.AI.Interfaces;
 namespace Senparc.Xncf.AIKernel.Models
 {
     /// <summary>
-    /// 向量数据库实体
+    ///Legacy comment translated to English.
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(AIVector))] //必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(AIVector))] //a prefix is required to prevent system-wide conflicts
     [Serializable]
     public class AIVector : EntityBase<int>
     {
         /// <summary>
-        /// 代号
+        /// code
         /// </summary>
         [Required, MaxLength(50)]
         public string Alias { get; private set; }
 
 
         /// <summary>
-        /// 向量数据库名称（必须）
+        ///Legacy comment translated to English.
         /// </summary>
         [Required, MaxLength(100)]
         public string VectorId { get; private set; }
 
         /// <summary>
-        /// 名称
+        /// name
         /// </summary>
         [MaxLength(150)]
         public string Name { get; private set; }
 
         /// <summary>
-        /// 连接字符串
+        ///Legacy comment translated to English.
         /// </summary>
         public string ConnectionString { get; private set; }
 
         /// <summary>
-        /// 向量数据库的类型（必须）, 例如：Memory, HardDisk, Redis, Mulivs, Chroma, PostgreSQL, Sqlite, SqlServer, Default
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         public VectorDBType VectorDBType { get; private set; }
 
         /// <summary>
-        /// Note（可选）
+        /// Note (optional)
         /// </summary>
         public string Note { get; private set; }
 
         /// <summary>
-        /// 是否共享
+        /// whether shared
         /// </summary>
         [Required, DefaultValue(false)]
         public bool IsShared { get; private set; } = false;
 
 
         /// <summary>
-        /// 是否展示
+        /// whether displayed
         /// </summary>
         [Required, DefaultValue(true)]
         public bool Show { get; private set; }

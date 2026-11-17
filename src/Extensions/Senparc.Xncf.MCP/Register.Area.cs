@@ -1,23 +1,44 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：Register.Area.cs
-    文件功能描述：Register.Area 相关实现
-    
-    
-    创建标识：Senparc - 20250325
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.4.0-preview3 为 MCP 模块接入统一资源本地化并优化功能文案
+    File name: Register.Area.cs
 
-    修改标识：Senparc - 20261004
-    修改描述：移除数据库操作示例菜单
+    File description: Register.Area related implementation
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.5.10 use compatible icon for MCP module
+    
+
+    
+
+    Created by: Senparc - 20250325
+
+    
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260717
+
+    Change description: v0.4.0-preview3 Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20261004
+
+    Change description: Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20261103
+
+    Change description: v0.5.10 use compatible icon for MCP module
+
+
 
 ----------------------------------------------------------------*/
 
@@ -34,10 +55,10 @@ using System.IO;
 
 namespace Senparc.Xncf.MCP
 {
-    public partial class Register : IAreaRegister, //注册 XNCF 页面接口（按需选用）
-                                    IXncfRazorRuntimeCompilation  //赋能 RazorPage 运行时编译
+    public partial class Register : IAreaRegister, //register the XNCF page interface (optional)
+                                    IXncfRazorRuntimeCompilation  //enable RazorPage runtime compilation
     {
-        #region IAreaRegister 接口
+        #region Legacy section
 
         public string HomeUrl => "/Admin/MCP/Index";
 
@@ -49,7 +70,7 @@ namespace Senparc.Xncf.MCP
         {
             builder.AddRazorPagesOptions(options =>
             {
-                //此处可配置页面权限
+                //configure page permissions here
             });
 
             SenparcTrace.SendCustomLog("MCP 启动", "完成 Area:Senparc.Xncf.MCP 注册");
@@ -59,7 +80,7 @@ namespace Senparc.Xncf.MCP
 
         #endregion
 
-        #region IXncfRazorRuntimeCompilation 接口
+        #region Legacy section
         public string LibraryPath => Path.GetFullPath(Path.Combine(SiteConfig.WebRootPath, "..", "..", "Senparc.Xncf.MCP"));
         #endregion
     }

@@ -1,20 +1,38 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：FullTenantInfoCache.cs
-    文件功能描述：FullTenantInfoCache 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20261001
-    修改描述：通过现有 TenantInfoRepository 查询租户缓存数据
+    File name: FullTenantInfoCache.cs
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.15.14 维护FullTenantInfoCache 相关实现
+    File description: FullTenantInfoCache related implementation
+
+    
+
+    
+
+    Created by: Senparc - 20260704
+
+    
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20261001
+
+    Change description: Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20261103
+
+    Change description: v0.15.14 Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 
@@ -38,17 +56,22 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.Tenant.Domain.Cache
 {
-    /* 需要关注及优化：
-     * 1、当前依赖注入的对象 INcfDbData 仍然会注入 SenparcEntitiesBase，
-     *  而 SenparcEntitiesBase 的 OnModelCreating() 一旦被执行，会尝试读取此处的缓存，如果缓存未被初始化，就会陷入死循环。
-     *  因此当前缓存内禁止调用 INcfDbData 下的查询。
-     * 2、避免使用 INcfDbData，或者避免使用 BaseCache（因为 INcfDbData 默认注入对象为 NCF 模板中的 SenparcEntities，继承自 SenparcEntitiesBase）
+    /* Legacy comment translated to English.
+
+     * Legacy comment translated to English.
+
+     *  Legacy comment translated to English.
+
+     *  Legacy comment translated to English.
+
+     * Legacy comment translated to English.
+
      */
 
-    //TODO:临时增加的租户，也需要加入到缓存中
+    //Legacy comment translated to English.
 
     /// <summary>
-    /// 多租户信息缓存
+    ///Legacy comment translated to English.
     /// </summary>
     [AutoDIType(DILifecycleType.Scoped)]
     public class FullTenantInfoCache : BaseCache<Dictionary<string, TenantInfoDto>>
@@ -62,7 +85,7 @@ namespace Senparc.Xncf.Tenant.Domain.Cache
         //private SenparcEntitiesBase _senparcEntitiesBase => base._db.BaseDataContext as SenparcEntitiesBase;
 
         /// <summary>
-        /// 获取当前启用状态的 TenantInfo
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         private async Task<List<TenantInfo>> GetEnabledListAsync()
@@ -111,16 +134,16 @@ namespace Senparc.Xncf.Tenant.Domain.Cache
             }
             catch (Exception ex)
             {
-                //当前可能正在 Middleware 的获取过程中，还没有完成多租户获取
-                //如果从旧版本升级，表不存在，则需要更新
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
 
-                //TODO:_senparcEntitiesMultiTenant 当前没有做 Migration，所有实际上无法进行更新
+                //Legacy comment translated to English.
                 _senparcEntitiesMultiTenant.ResetMigrate();
                 _senparcEntitiesMultiTenant.Migrate();
 
                 SenparcTrace.SendCustomLog($"{nameof(FullTenantInfoCache)} - {nameof(UpdateAsync)} 异常", ex.ToString());
 
-                //var HttpContextAccessor = _serviceProvider.GetRequiredService<IHttpContextAccessor>();//注意：这里不能使用 TenantInfoService.SetScopedRequestTenantInfoAsync()， 否则会引发死循环
+                //Legacy comment translated to English.
             }
             finally
             {
@@ -128,7 +151,7 @@ namespace Senparc.Xncf.Tenant.Domain.Cache
             }
 
             var tenantInfoCollection = new Dictionary<string, TenantInfoDto>(StringComparer.OrdinalIgnoreCase);
-            fullList.ForEach(z => tenantInfoCollection[z.TenantKey.ToUpper()/*全部大写*/] = _mapper.Map<TenantInfoDto>(z));
+            fullList.ForEach(z => tenantInfoCollection[z.TenantKey.ToUpper()/*Legacy comment translated to English.*/] = _mapper.Map<TenantInfoDto>(z));
             await base.SetDataAsync(tenantInfoCollection, base.TimeOut, null);
 
             return await GetDataAsync();

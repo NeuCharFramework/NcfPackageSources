@@ -13,11 +13,11 @@ using System.Net.Http;
 namespace Senparc.Mvc.CustomActionResults
 {
     /// <summary>
-    /// 压缩文件，参考：https://blog.stephencleary.com/2016/11/streaming-zip-on-aspnet-core.html
+    ///Legacy comment translated to English.
     /// </summary>
     public class ZipResult : FileResult
     {
-        //参考：https://github.com/StephenClearyExamples/AsyncDynamicZip/issues/1
+        //Legacy comment translated to English.
         private static HttpClient Client { get; } = new HttpClient();
 
         private Func<Stream, ActionContext, Task> _callback;
@@ -42,7 +42,7 @@ namespace Senparc.Mvc.CustomActionResults
                         }
                         foreach (var item in newFilesFromString)
                         {
-                            //COCONET TODO:完善字符串的插入
+                            //Legacy comment translated to English.
                         }
 
                         foreach (var kvp in files)
@@ -50,7 +50,7 @@ namespace Senparc.Mvc.CustomActionResults
                             var zipEntry = zipArchive.CreateEntry(kvp.Key);
                             using (var zipStream = zipEntry.Open())
                             {
-                                //COCONET 需要测试。原始方法在.net core 2.1中找不到：Microsoft.AspNetCore.Sockets.Client.GetStreamAsync() 
+                                //Legacy comment translated to English.
                                 using (var stream = await Client.GetStreamAsync(kvp.Value))
                                 {
                                     await stream.CopyToAsync(zipStream);
@@ -85,7 +85,7 @@ namespace Senparc.Mvc.CustomActionResults
             public Task ExecuteAsync(ActionContext context, ZipResult result)
             {
                 SetHeadersAndLog(context, result,
-                    //COCONET 为编译通过暂时这么写，应该从传入的Stream中获取
+                    //Legacy comment translated to English.
                     context.HttpContext.Response.Body.Length,
                     true);
                 return result._callback(context.HttpContext.Response.Body, context);

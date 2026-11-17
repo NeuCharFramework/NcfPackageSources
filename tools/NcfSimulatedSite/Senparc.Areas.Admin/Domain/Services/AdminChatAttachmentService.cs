@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：AdminChatAttachmentService.cs
-    文件功能描述：AdminChatAttachmentService 相关定义与实现
+    File name: AdminChatAttachmentService.cs
+    File description: AdminChatAttachmentService related definitions and implementation
 
 
-    创建标识：Senparc - 20261026
+    Created by: Senparc - 20261026
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 add bilingual contextual documentation help with iframe dialog and new-window access
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 add bilingual contextual documentation help with iframe dialog and new-window access
 
 ----------------------------------------------------------------*/
 

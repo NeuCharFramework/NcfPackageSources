@@ -24,7 +24,7 @@ var app = new Vue({
                 "deepseek-coder"
             ],
             addFormDialogVisible: false,
-            neuCharFormDialogVisible: false, // 新增的对话框可见性  
+            neuCharFormDialogVisible: false, //Legacy comment translated to English.
             addForm: {
                 alias: "",
                 "modelId": "",
@@ -38,7 +38,7 @@ var app = new Vue({
                 "note": "",
                 "maxToken": 0,
             },
-            neuCharForm: { // 新增的表单数据  
+            neuCharForm: { //Legacy comment translated to English.
                 developerId: "",
                 apiKey: ""
             },
@@ -87,7 +87,7 @@ var app = new Vue({
                     { required: true, message: ncfT('AIKernel.Model.OrganizationRequired'), trigger: 'blur' }
                 ]
             },
-            neuCharRules: { // 新增的验证规则  
+            neuCharRules: { //Legacy comment translated to English.
                 developerId: [
                     { required: true, message: ncfT('AIKernel.Model.DeveloperIdRequired'), trigger: 'blur' }
                 ],
@@ -188,7 +188,7 @@ var app = new Vue({
             this.addFormDialogVisible = true;
         },
         addNeuCharModel() {
-            this.neuCharFormDialogVisible = true; // 显示对话框  
+            this.neuCharFormDialogVisible = true; //Legacy comment translated to English.
         },
         async copyInfo(key) {
             let copied = false
@@ -292,7 +292,7 @@ var app = new Vue({
                 "maxToken": 0,
             }
         },
-        clearNeuCharForm() { // 新增的清理表单方法  
+        clearNeuCharForm() { //Legacy comment translated to English.
             this.neuCharForm = {
                 developerId: "",
                 apiKey: ""

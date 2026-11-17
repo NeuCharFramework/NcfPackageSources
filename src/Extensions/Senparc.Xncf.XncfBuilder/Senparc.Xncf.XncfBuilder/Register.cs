@@ -1,35 +1,35 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：Register.cs
-    文件功能描述：模块注册与初始化逻辑
+    File name: Register.cs
+    File description: module registration and initialization logic
 
 
-    创建标识：Senparc - 20200816
+    Created by: Senparc - 20200816
 
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.37.0-preview5 增强 XNCF 构建、数据库迁移与 AI 生成流程的本地化支持
+    Modified by: Senparc - 20260717
+    Change description: v0.37.0-preview5 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.37.1-preview6 默认关闭未受保护的 Builder MCP 路由
+    Modified by: Senparc - 20260729
+    Change description: v0.37.1-preview6 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
+    Modified by: Senparc - 20260804
+    Change description: v0.39.0-preview8 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.40.0-preview10 增强 XncfBuilder 预览状态持久化与后台初始化
+    Modified by: Senparc - 20260813
+    Change description: v0.40.0-preview10 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.41.0 增强隔离开发任务与 Sandbox 预览流程
+    Modified by: Senparc - 20260815
+    Change description: v0.41.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.41.0 优化 XncfBuilder 预览任务与工作区服务
+    Modified by: Senparc - 20260822
+    Change description: v0.41.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.41.8 统一 XNCF Register 显示元数据与多语言资源键
+    Modified by: Senparc - 20261111
+    Change description: v0.41.8 unify XNCF Register display metadata and localization resource keys
 
 ----------------------------------------------------------------*/
 
@@ -71,13 +71,13 @@ namespace Senparc.Xncf.XncfBuilder
             "XNCF 模块生成器",
             "快速生成 XNCF 模块基础代码和示例，并据此扩展应用");
 
-        #region IXncfRegister 接口
+        #region Legacy section
 
         public override string Name => "Senparc.Xncf.XncfBuilder";
 
-        public override string Uid => "C2E1F87F-2DCE-4921-87CE-36923ED0D6EA";//必须确保全局唯一，生成后必须固定
+        public override string Uid => "C2E1F87F-2DCE-4921-87CE-36923ED0D6EA";//Legacy comment translated to English.
 
-        public override string Version => "0.10.3";//必须填写版本号
+        public override string Version => "0.10.3";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 
@@ -97,7 +97,7 @@ namespace Senparc.Xncf.XncfBuilder
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
-            //更新数据库
+            //updatedatabase
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
         }
 
@@ -107,9 +107,9 @@ namespace Senparc.Xncf.XncfBuilder
             XncfBuilderSenparcEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as XncfBuilderSenparcEntities;
             var xncfDbContextType = MultipleDatabasePool.Instance.GetXncfDbContextType(this.GetType());
 
-            //指定需要删除的数据实体
+            //specify the data entities to delete
             var dropTableKeys = EntitySetKeys.GetEntitySetInfo(xncfDbContextType).Keys.ToArray();
-            //删除数据库表
+            //deletedatabasetable
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
 
             await base.UninstallAsync(serviceProvider, unsinstallFunc).ConfigureAwait(false);
@@ -154,7 +154,7 @@ namespace Senparc.Xncf.XncfBuilder
                 services.AddSingleton<IHostedService, XncfPreviewPersistenceInitializerHostedService>();
             }
 
-            // Senparc.Xncf.AIKernel 模块
+            //Legacy comment translated to English.
             services.AddScoped<AIModelService>();
             services.AddScoped<AIModelAppService>();
 

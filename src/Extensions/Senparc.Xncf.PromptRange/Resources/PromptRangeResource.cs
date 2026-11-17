@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：PromptRangeResource.cs
-    文件功能描述：PromptRangeResource 相关实现
+    File name: PromptRangeResource.cs
+    File description: PromptRangeResource related implementation
     
     
-    创建标识：Senparc - 20260717
+    Created by: Senparc - 20260717
     
-    修改标识：Senparc - 20260717
-    修改描述：v0.17.0-preview5 为 PromptRange 模块接入统一资源本地化并优化功能文案
+    Modified by: Senparc - 20260717
+    Change description: v0.17.0-preview5 integrate shared resource localization and improve feature text for the PromptRange module
 
 ----------------------------------------------------------------*/
 #nullable enable

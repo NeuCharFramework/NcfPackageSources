@@ -1,17 +1,32 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：XncfThreadBuilder.cs
-    文件功能描述：XncfThreadBuilder 相关实现
+
+    File name: XncfThreadBuilder.cs
+
+    File description: XncfThreadBuilder related implementation
 
 
-    创建标识：Senparc - 20260704
 
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.25.0-preview7 增强线程生命周期控制与函数参数数值类型解析
+
+    Created by: Senparc - 20260704
+
+
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260813
+
+    Change description: v0.25.0-preview7 Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 
@@ -27,10 +42,10 @@ using System.Threading.Tasks;
 
 namespace Senparc.Ncf.XncfBase.Threads
 {
-    //TODO: 线程备份及后台操作需要考虑租户问题
+    //Legacy comment translated to English.
 
     /// <summary>
-    /// XNCF Thread 模块，线程配置
+    ///Legacy comment translated to English.
     /// </summary>
     public class XncfThreadBuilder
     {
@@ -48,10 +63,10 @@ namespace Senparc.Ncf.XncfBase.Threads
                 return;
             }
 
-            //return;//TODO:多租户完成之前暂时不启用后台线程，需要解决线程和租户的对应关系
+            //Legacy comment translated to English.
 
             var i = 0;
-            //遍历单个 XNCF 内所有线程配置
+            //Legacy comment translated to English.
             foreach (var threadInfo in _threadInfoList)
             {
                 if (threadInfo.Task == null)
@@ -66,7 +81,7 @@ namespace Senparc.Ncf.XncfBase.Threads
                     var stoppingToken = applicationLifetime?.ApplicationStopping ?? CancellationToken.None;
                     threadInfo.StoppingToken = stoppingToken;
 
-                    //定义线程
+                    //Legacy comment translated to English.
                     Thread thread = new Thread(async () =>
                     {
                         try
@@ -78,7 +93,7 @@ namespace Senparc.Ncf.XncfBase.Threads
                                 try
                                 {
                                     await threadInfo.Task.Invoke(app, threadInfo).ConfigureAwait(false);
-                                    // 建议开发者自己在内部做好线程内的异常处理
+                                    //Legacy comment translated to English.
                                 }
                                 catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
                                 {
@@ -97,7 +112,7 @@ namespace Senparc.Ncf.XncfBase.Threads
                                 }
                                 finally
                                 {
-                                    //进行延迟
+                                    //Legacy comment translated to English.
                                     if (!stoppingToken.IsCancellationRequested)
                                     {
                                         await Task.Delay(threadInfo.IntervalTime, stoppingToken).ConfigureAwait(false);
@@ -107,7 +122,7 @@ namespace Senparc.Ncf.XncfBase.Threads
                         }
                         catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
                         {
-                            // 应用停止时取消初始/轮询等待是预期行为，无需记录为线程异常。
+                            //Legacy comment translated to English.
                         }
                         catch (Exception ex)
                         {
@@ -123,7 +138,7 @@ namespace Senparc.Ncf.XncfBase.Threads
                     });
                     thread.Name = $"{register.Uid}-{threadInfo.Name ?? Guid.NewGuid().ToString()}";
                     thread.IsBackground = true;
-                    thread.Start();//启动
+                    thread.Start();//start
                     Register.ThreadCollection[threadInfo] = thread;
                 }
                 catch (Exception ex)

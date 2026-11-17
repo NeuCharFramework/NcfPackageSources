@@ -43,11 +43,11 @@ namespace Senparc.Areas.Admin.Models.VD
         public string Note { get; set; }
 
         /// <summary>
-        /// 岗位
+        ///Legacy comment translated to English.
         /// </summary>
         public string Post { get; set; }
         /// <summary>
-        /// 部门
+        ///Legacy comment translated to English.
         /// </summary>
         public string Branch { get; set; }
 

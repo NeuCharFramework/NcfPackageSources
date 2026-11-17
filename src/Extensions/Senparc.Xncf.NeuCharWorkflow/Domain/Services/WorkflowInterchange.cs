@@ -2,13 +2,13 @@
     Copyright (C) 2026 Senparc
   
     File name: WorkflowInterchange.cs
-    File description: 工作流 JSON/YAML 导入导出
+    File description: Related implementation.
     
     
     Created by: Senparc - 20261014
     
     Modified by: Senparc - 20261021
-    Change description: v0.4.4 实现工作流 JSON/YAML 导入导出与脱敏校验
+    Change description: v0.4.4 Updated module behavior and related support.
 
     Modified by: Senparc - 20261103
     Change description: v0.4.4 enhance fine-tuning functionality with artifact tracking and import/export capabilities

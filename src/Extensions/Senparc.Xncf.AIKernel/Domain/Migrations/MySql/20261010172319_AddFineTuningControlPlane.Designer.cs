@@ -1,17 +1,17 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：20261010172319_AddFineTuningControlPlane.Designer.cs
-    文件功能描述：EF Core 迁移设计器元数据
+    File name: 20261010172319_AddFineTuningControlPlane.Designer.cs
+    File description: EF Core migration designer metadata
     
     
-    创建标识：Senparc - 20250712
+    Created by: Senparc - 20250712
     
-    修改标识：Senparc - 20261021
-    修改描述：v0.17.0 同步微调控制面迁移设计器
+    Modified by: Senparc - 20261021
+    Change description: v0.17.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.17.0 支持 AddFineTuningControlPlane 数据库迁移
+    Modified by: Senparc - 20261103
+    Change description: v0.17.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

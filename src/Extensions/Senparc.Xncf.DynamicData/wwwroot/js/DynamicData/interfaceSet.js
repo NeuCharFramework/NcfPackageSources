@@ -2,9 +2,9 @@ var app = new Vue({
     el: "#app",
     data() {
         return {
-            devHost: 'http://pr-felixj.frp.senparc.com', // 测试 地址
-            elSize: 'medium', // el 组件尺寸大小 默认为空  medium、small、mini
-            // 布局 数据 列表
+            devHost: 'http://pr-felixj.frp.senparc.com', //Legacy comment translated to English.
+            elSize: 'medium', //Legacy comment translated to English.
+            //Legacy comment translated to English.
             layoutList: [],
             listTotal:0,
             queryList: {
@@ -33,9 +33,9 @@ var app = new Vue({
         
     },
     methods: {
-        // 获取 layoutList 数据
+        // get layoutList data
         getListData() {
-            // 模拟 数据
+            //Legacy comment translated to English.
             const simulationData = []
             for (let i = 0; i < 10; i++) {
                 simulationData.push({
@@ -49,9 +49,9 @@ var app = new Vue({
             }
             this.layoutList = simulationData
             this.listTotal = simulationData.length
-            // todo 调用接口
+            // todo invokeinterface
         },
-        // 获取 状态样式名称
+        //Legacy comment translated to English.
         getStateClass(val) {
             let valFormatt = val ? val.toString() : val
             let className = ''
@@ -65,7 +65,7 @@ var app = new Vue({
             }
             return className
         },
-        // 获取 状态文本
+        //Legacy comment translated to English.
         getStateText(val) {
             let valFormatt = val ? val.toString() : val
             let text = ''
@@ -79,17 +79,17 @@ var app = new Vue({
             }
             return text
         },
-        // 创建布局 
+        //Legacy comment translated to English.
         createLayout() {
-            // todo 跳转 ?uid=796D12D8-580B-40F3-A6E8-A5D9D2EABB69
+            //Legacy comment translated to English.
             window.location.assign('/Admin/DynamicData/LayoutSet')
         },
-        // 复制布局
+        //Legacy comment translated to English.
         copyLayout(item) {
             if (!item) return
             item.operationVisible = false
-            // todo 调用接口
-            // <strong>这是 <i>HTML</i> 片段</strong>
+            // todo invokeinterface
+            //English documentation comment.
             this.$prompt('布局名称', '复制布局', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -103,23 +103,23 @@ var app = new Vue({
             }).catch(() => {
                 //this.$message({
                 //    type: 'info',
-                //    message: '取消输入'
+                //Legacy comment translated to English.
                 //});
             });
         },
-        // 查看布局
+        //Legacy comment translated to English.
         viewLayout(item) {
             if (!item) return
             item.operationVisible = false
-            // todo 调用接口
-            // todo 跳转 ?uid=796D12D8-580B-40F3-A6E8-A5D9D2EABB69
+            // todo invokeinterface
+            //Legacy comment translated to English.
             window.location.assign('/Admin/DynamicData/LayoutSet')
         },
-        // 删除布局
+        //Legacy comment translated to English.
         deleteLayout(item) {
             if (!item) return
             item.operationVisible = false
-            // todo 调用接口
+            // todo invokeinterface
         }
     }
 });

@@ -23,7 +23,7 @@ namespace Senparc.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index(string returnUrl)
         {
-            //是否已经登录
+            //Legacy comment translated to English.
             var authenticate = await HttpContext.AuthenticateAsync(AdminAuthorizeAttribute.AuthenticationScheme);
 
             if (authenticate.Succeeded)

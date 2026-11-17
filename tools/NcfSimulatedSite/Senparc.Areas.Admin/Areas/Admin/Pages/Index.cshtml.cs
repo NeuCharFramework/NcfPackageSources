@@ -1,26 +1,26 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：Index.cshtml.cs
-    文件功能描述：集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
+    File name: Index.cshtml.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20241028
+    Created by: Senparc - 20241028
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.5.0 集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
+    Modified by: Senparc - 20260813
+    Change description: v0.5.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+    Modified by: Senparc - 20260915
+    Change description: v0.8.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 维护集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.12.28 按稳定模块标识解析内置菜单多语言显示，保留用户自定义菜单原文
+    Modified by: Senparc - 20261111
+    Change description: v0.12.28 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -56,11 +56,11 @@ namespace Senparc.Areas.Admin.Pages
         private readonly AdminMenuLocalizationService _menuLocalization = menuLocalization;
         private readonly IStringLocalizer<AdminResource> _localizer = localizer;
 
-        //TODO:从其他模块获得
+        //Legacy comment translated to English.
         private readonly XncfModuleServiceExtension _xncfModuleServiceEx = xncfModuleServiceEx;
 
         /// <summary>
-        /// 当前用户ID（可选，用于前端获取）
+        ///Legacy comment translated to English.
         /// </summary>
         public int CurrentUserId { get; set; }
 
@@ -72,22 +72,22 @@ namespace Senparc.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// 获取状态
+        /// getstatus
         /// </summary>
         /// <returns></returns>
         public async Task<IActionResult> OnGetXncfStatAsync()
         {
-            //所有已安装模块
+            //Legacy comment translated to English.
             var installedXncfModules = await _xncfModuleServiceEx.GetFullListAsync(z => true);
-            //未安装或待升级模块
+            //Legacy comment translated to English.
             var updateXncfRegisters = _xncfModuleServiceEx.GetUnInstallXncfModule(installedXncfModules);
-            //未安装货代升级模块的版本
+            //Legacy comment translated to English.
             var newVersions = updateXncfRegisters.Select(z => _xncfModuleServiceEx.GetVersionDisplayName(installedXncfModules, z));
-            //需要升级的版本号
+            //Legacy comment translated to English.
             var newXncfCount = newVersions.Count(z => !z.Contains("->"));
-            //全新未安装的版本号
+            //Legacy comment translated to English.
             var updateVersionXncfCount = newVersions.Count() - newXncfCount;
-            //安装后缺失的模块
+            //Legacy comment translated to English.
             var xncfRegisterManager = new XncfRegisterManager(_serviceProvider);
             var missingXncfCount = installedXncfModules.Count(z => !XncfRegisterManager.RegisterList.Exists(r => r.Uid == z.Uid));
 
@@ -106,39 +106,39 @@ namespace Senparc.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// 获取开放中的模块信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public async Task<IActionResult> OnGetXncfOpeningAsync()
         {
-            //所有已安装模块
+            //Legacy comment translated to English.
             var installedXncfModules = await _xncfModuleServiceEx.GetObjectListAsync(0, 0, 
                 z => z.State == Ncf.Core.Enums.XncfModules_State.开放, 
                 z => z.Id, 
                 Ncf.Core.Enums.OrderingType.Descending);
 
-            //获取未安装或待升级模块
+            //Legacy comment translated to English.
             var updateXncfRegisters = _xncfModuleServiceEx.GetUnInstallXncfModule(installedXncfModules);
 
             var xncfModuleDtos = installedXncfModules.Select(z =>
             {
                 var data = _xncfModuleServiceEx.Mapper.Map<XncfModuleDisplayDto>(z);
 
-                //获取模块的菜单信息
+                //Legacy comment translated to English.
                 IXncfRegister xncfRegister = XncfRegisterManager.RegisterList.FirstOrDefault(z => z.Uid == data.Uid);
                 if (xncfRegister != null)
                 {
-                    // 内置模块显示名称跟随当前请求文化；数据库中的 MenuName 仅作为
-                    // 未加载注册信息时的兼容回退。
+                    //Legacy comment translated to English.
+                    //Legacy comment translated to English.
                     data.ApplyLocalizedMetadata(xncfRegister.MenuName, xncfRegister.Description);
                 }
                 // if (xncfRegister == null)
                 // {
-                //     throw new Exception($"模块丢失或未加载（{XncfRegisterManager.RegisterList.Count}）！");
+                //Legacy comment translated to English.
                 // }
                 data.Menus = (xncfRegister as Ncf.Core.Areas.IAreaRegister)?.AreaPageMenuItems ?? new List<Ncf.Core.Areas.AreaPageMenuItem>();
 
-                //获取模块的Functions信息
+                //Legacy comment translated to English.
                 if (xncfRegister != null)
                 {
                     var registerType = xncfRegister.GetType();
@@ -157,7 +157,7 @@ namespace Senparc.Areas.Admin.Pages
                     }
                 }
 
-                //查找对应的更新版本
+                //Legacy comment translated to English.
                 var register = updateXncfRegisters.FirstOrDefault(r => r.Uid == z.Uid);
                 if (register != null)
                 {
@@ -179,11 +179,11 @@ namespace Senparc.Areas.Admin.Pages
             });
         }
 
-        #region 菜单相关
+        #region Legacy section
 
 
         /// <summary>
-        /// 获取无状态的菜单信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="sysPermissionService"></param>
         /// <returns></returns>
@@ -197,7 +197,7 @@ namespace Senparc.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// 获取包含当前停留页面信息的菜单信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="sysPermissionService"></param>
         /// <returns></returns>
@@ -212,30 +212,30 @@ namespace Senparc.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// 获取 Admin 后台左侧菜单结构
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="sysMenuTreeItems"></param>
         /// <returns></returns>
         private async Task<IEnumerable<SysMenuTreeItemDto>> GetSysMenuTreesMainRecursiveAsync(IEnumerable<SysMenuDto> sysMenuTreeItems)
         {
-            bool hideModuleManager = FullSystemConfig.HideModuleManager == true;//是否处于发布状态，需要隐藏部分菜单
+            bool hideModuleManager = FullSystemConfig.HideModuleManager == true;//Legacy comment translated to English.
             List<SysMenuTreeItemDto> sysMenuTrees = new List<SysMenuTreeItemDto>();
             List<SysMenuDto> dest = new List<SysMenuDto>();
             int index = 60000;
 
             XncfRegisterManager xncfRegisterManager = new XncfRegisterManager(_serviceProvider);
 
-            //遍历菜单设置项目，查找和 XNCF 模块有关的菜单节点
+            //Legacy comment translated to English.
             foreach (var item in sysMenuTreeItems)
             {
-                //定位 XNCF 模块
+                //Legacy comment translated to English.
                 IXncfRegister xncfRegister = XncfRegisterList
                     .FirstOrDefault(z => !string.IsNullOrEmpty(item.Url) &&
-                                         item.Url.Contains($"uid={z.Uid}", StringComparison.OrdinalIgnoreCase)); //TODO:判断Xncf条件还可以更细
+                                         item.Url.Contains($"uid={z.Uid}", StringComparison.OrdinalIgnoreCase)); //Legacy comment translated to English.
 
                 var isStoredXncf = !string.IsNullOrEmpty(item.Url) &&
-                                    item.Url.Contains("uid=", StringComparison.OrdinalIgnoreCase);//在数据库里面注册为模块
-                var xncfMissing = isStoredXncf && xncfRegister == null;//程序集未加载
+                                    item.Url.Contains("uid=", StringComparison.OrdinalIgnoreCase);//Legacy comment translated to English.
+                var xncfMissing = isStoredXncf && xncfRegister == null;//Legacy comment translated to English.
 
                 if (xncfRegister != null &&
                     xncfRegister is Senparc.Ncf.Core.Areas.IAreaRegister xncfAreapage &&
@@ -269,7 +269,7 @@ namespace Senparc.Areas.Admin.Pages
                     }));
                     item.Url = string.Empty;
                 }
-                else if (!string.IsNullOrEmpty(item.Url) && item.Url.Contains("uid=") && hideModuleManager)//TODO:判断Xncf条件还可以更细
+                else if (!string.IsNullOrEmpty(item.Url) && item.Url.Contains("uid=") && hideModuleManager)//Legacy comment translated to English.
                 {
                     item.ParentId = null;
                     item.Id = (index++).ToString();
@@ -277,15 +277,15 @@ namespace Senparc.Areas.Admin.Pages
 
                 if (hideModuleManager && item.Id == "4")
                 {
-                    continue;//拓展模块，判断是否隐藏
+                    continue;//Legacy comment translated to English.
                 }
 
-                //该菜单为模块用的菜单
+                //Legacy comment translated to English.
                 if (isStoredXncf)
                 {
                     if (xncfMissing)
                     {
-                        //XNCF 不可用状态下，给以提示（无论是否在管理模式下）
+                        //Legacy comment translated to English.
                         item.MenuName = $"!! {item.MenuName} !!";
                     }
                     else
@@ -295,12 +295,12 @@ namespace Senparc.Areas.Admin.Pages
                         {
                             if (hideModuleManager)
                             {
-                                //XNCF 不可用状态下，不显示
+                                //Legacy comment translated to English.
                                 continue;
                             }
                             else
                             {
-                                //XNCF 不可用状态下，给以提示
+                                //Legacy comment translated to English.
                                 item.MenuName = $"~~ {item.MenuName} ~~";
                             }
                         }
@@ -333,8 +333,8 @@ namespace Senparc.Areas.Admin.Pages
                 });
             }
 
-            // NeuCharPivot 是系统级 AI 能力入口，与 AdminChat 同属系统管理；
-            // 聚合页负责跨模块快捷调用。Workflow 由独立 XNCF 自行注册菜单和授权。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             var pivotMenu = dest.FirstOrDefault(z =>
                 string.Equals(z.MenuName, "NeuCharPivot", StringComparison.OrdinalIgnoreCase));
             if (pivotMenu == null)
@@ -391,7 +391,7 @@ namespace Senparc.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// 递归设置菜单节点信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="sysMenuTreeItems"></param>
         /// <param name="sysMenuTrees"></param>

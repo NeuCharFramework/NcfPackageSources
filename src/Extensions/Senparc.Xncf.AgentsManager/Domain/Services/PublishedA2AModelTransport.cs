@@ -1,13 +1,13 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：PublishedA2AModelTransport.cs
-    文件功能描述：发布型 A2A 模型请求的安全诊断与 API Version 兼容传输
+    File name: PublishedA2AModelTransport.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260813
+    Created by: Senparc - 20260813
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.15.0-preview20 增强 AgentTemplate、ChatGroup 与发布型 A2A 的取消和请求处理
+    Modified by: Senparc - 20260815
+    Change description: v0.15.0-preview20 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -27,7 +27,7 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.AgentsManager.Domain.Services;
 
 /// <summary>
-/// 发布型 A2A 的模型传输上下文。仅记录请求路由和鉴权形态，不记录 API Key、Prompt 或请求正文。
+///Legacy comment translated to English.
 /// </summary>
 internal static class PublishedA2AModelTransport
 {

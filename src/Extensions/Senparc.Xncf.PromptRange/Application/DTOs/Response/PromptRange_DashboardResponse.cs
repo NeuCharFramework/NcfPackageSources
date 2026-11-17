@@ -1,20 +1,20 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：PromptRange_DashboardResponse.cs
-    文件功能描述：PromptRange 首页看板聚合响应对象
+    File name: PromptRange_DashboardResponse.cs
+    File description: Related implementation.
     
     
-    创建标识：Senparc - 20260704
+    Created by: Senparc - 20260704
     
-    修改标识：Senparc - 20260704
-    修改描述：新增首页看板 DTO
+    Modified by: Senparc - 20260704
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.16.3-preview2 增强文生图重试机制并兼容 TLS1.2/TLS1.3
+    Modified by: Senparc - 20260705
+    Change description: v0.16.3-preview2 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.16.4-preview3 增强文生图重试机制并兼容 TLS1.2/TLS1.3
+    Modified by: Senparc - 20260705
+    Change description: v0.16.4-preview3 Updated module behavior and related support.
 ----------------------------------------------------------------*/
 
 using System;

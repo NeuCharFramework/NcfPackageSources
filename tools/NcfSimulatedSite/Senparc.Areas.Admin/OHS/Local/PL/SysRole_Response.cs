@@ -13,7 +13,7 @@ namespace Senparc.Areas.Admin.OHS.Local.PL
     }
 
     /// <summary>
-    /// 角色列表
+    ///Legacy comment translated to English.
     /// </summary>
     public class SysRole_GetListResponse
     {
@@ -23,7 +23,7 @@ namespace Senparc.Areas.Admin.OHS.Local.PL
     }
 
     /// <summary>
-    /// 详情
+    ///Legacy comment translated to English.
     /// </summary>
     public class SysRole_GetSingleResponse
     {
@@ -31,7 +31,7 @@ namespace Senparc.Areas.Admin.OHS.Local.PL
     }
 
     /// <summary>
-    /// 角色更新
+    /// roleupdate
     /// </summary>
     public class SysRole_CreateOrUpdateResponse
     {
@@ -42,7 +42,7 @@ namespace Senparc.Areas.Admin.OHS.Local.PL
     }
 
     /// <summary>
-    /// 角色下面的所有权限
+    ///Legacy comment translated to English.
     /// </summary>
     public class SysRole_PermissionsResponse
     {

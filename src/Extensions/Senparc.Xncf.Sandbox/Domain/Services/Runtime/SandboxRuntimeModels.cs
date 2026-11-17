@@ -1,26 +1,26 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：SandboxRuntimeModels.cs
-    文件功能描述：沙箱模板、运行时请求和配额模型
+    File name: SandboxRuntimeModels.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20260808
+    Created by: Senparc - 20260808
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.2.0 增加 NCF 预览沙箱工作负载
+    Modified by: Senparc - 20260815
+    Change description: v0.2.0 add the NCF preview sandbox workload
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 enhance sandbox preview, Jupyter workspace, and session lifecycle management
 
-    修改标识：Senparc - 20260918
-    修改描述：v0.3.3 提高会话配额并增加附加端口映射与交互式标准输入
+    Modified by: Senparc - 20260918
+    Change description: v0.3.3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
+    Modified by: Senparc - 20261005
+    Change description: v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.4.0 维护沙箱模板、运行时请求和配额模型
+    Modified by: Senparc - 20261103
+    Change description: v0.4.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -56,7 +56,7 @@ public sealed class SandboxCreateRuntimeRequest
     /// </summary>
     public SandboxNcfPreviewRuntimeOptions? NcfPreview { get; init; }
     /// <summary>
-    /// 可选的附加端口映射（仅 Jupyter 交互式模板）。HostPort 为 0 表示由运行时自动分配。
+    ///Legacy comment translated to English.
     /// </summary>
     public IReadOnlyList<SandboxPortMapping>? ExtraPortMappings { get; init; }
 }
@@ -79,7 +79,7 @@ public sealed class SandboxCreateRuntimeResult
     public string? AccessToken { get; init; }
     public string? Message { get; init; }
     /// <summary>
-    /// 解析完成后的附加端口映射（用于持久化展示）；无则为空。
+    ///Legacy comment translated to English.
     /// </summary>
     public string? ExtraPorts { get; init; }
 }
@@ -110,19 +110,19 @@ public sealed class SandboxInteractiveExecRequest
     public TimeSpan Timeout { get; init; } = TimeSpan.FromSeconds(30);
     public int MaxOutputCharacters { get; init; } = 32_000;
     /// <summary>
-    /// 可选的标准输入内容；提供时通过 docker exec -i 写入并关闭 stdin，
-    /// 用于向交互式程序（REPL/终端程序）批量提交指令。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public string? StdinContent { get; init; }
 }
 
 /// <summary>
-/// 单条附加端口映射。HostPort 为 0 表示运行时自动分配空闲端口。
+///Legacy comment translated to English.
 /// </summary>
 public sealed record SandboxPortMapping(int HostPort, int ContainerPort, bool ExposeExternally)
 {
     /// <summary>
-    /// 持久化/展示格式：loopback 为 127.0.0.1:host:container，外部为 0.0.0.0:host:container。
+    ///Legacy comment translated to English.
     /// </summary>
     public string ToDisplayString() =>
         $"{(ExposeExternally ? "0.0.0.0" : "127.0.0.1")}:{HostPort}:{ContainerPort}";

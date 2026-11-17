@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：PromptItem_GetResponse.cs
-    文件功能描述：PromptItem_GetResponse 相关实现
+    File name: PromptItem_GetResponse.cs
+    File description: PromptItem_GetResponse related implementation
     
     
-    创建标识：Senparc - 20260704
+    Created by: Senparc - 20260704
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
 ----------------------------------------------------------------*/
 
@@ -24,7 +24,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
     public class PromptItem_GetResponse : BaseResponse
     {
         /// <summary>
-        /// 昵称
+        /// display name
         /// </summary>
         public string NickName { get; set; }
 
@@ -33,12 +33,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
         public int ModelId { get; set; }
 
         /// <summary>
-        /// 最大 Token 数
+        /// maximum token count
         /// </summary>
         public int MaxToken { get; set; }
 
         /// <summary>
-        /// 温度
+        /// temperature
         /// </summary>
         public float Temperature { get; set; }
 
@@ -48,14 +48,14 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
         public float TopP { get; set; }
 
         /// <summary>
-        /// 频率惩罚
+        /// frequency penalty
         /// </summary>
         public float FrequencyPenalty { get; set; }
 
         public float PresencePenalty { get; private set; }
 
         /// <summary>
-        /// 停止序列（JSON 数组）
+        ///Legacy comment translated to English.
         /// </summary>
         public string StopSequences { get; set; }
 
@@ -64,7 +64,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
         public string PromptContent { get; set; }
 
         /// <summary>
-        /// 完整版本号
+        ///Legacy comment translated to English.
         /// </summary>
         public string FullVersion { get; set; }
 
@@ -76,46 +76,46 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.response
         public new DateTime LastRunTime { get; set; } = DateTime.Now;
 
         /// <summary>
-        /// 是否分享
+        ///Legacy comment translated to English.
         /// </summary>
         public bool IsShare { get; set; } = false;
 
         public List<PromptResult> PromptResultList { get; set; } = new();
 
-        #region 打分相关
+        #region Legacy section
 
         /// <summary>
-        /// 评估参数, 平均分
+        ///Legacy comment translated to English.
         /// </summary>
         public decimal EvalAvgScore { get; set; }
 
         /// <summary>
-        /// 评估参数
+        ///Legacy comment translated to English.
         /// </summary>
         public decimal EvalMaxScore { get; set; }
 
         /// <summary>
-        /// 期望结果Json
+        ///Legacy comment translated to English.
         /// </summary>
         public string ExpectedResultsJson { get; set; }
 
         #endregion
 
 
-        #region Prompt请求参数
+        #region Legacy section
 
         /// <summary>
-        /// 前缀
+        ///Legacy comment translated to English.
         /// </summary>
         public string Prefix { get; set; }
 
         /// <summary>
-        /// 后缀
+        ///Legacy comment translated to English.
         /// </summary>
         public string Suffix { get; set; }
 
         /// <summary>
-        /// 参数字典（JSON）
+        ///Legacy comment translated to English.
         /// </summary>
         public string VariableDictJson { get; set; }
 

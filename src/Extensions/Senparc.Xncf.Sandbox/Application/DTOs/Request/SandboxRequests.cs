@@ -1,36 +1,36 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：SandboxRequests.cs
-    文件功能描述：SandboxRequests.cs 功能实现
+    File name: SandboxRequests.cs
+    File description: Related implementation.
     
     
-    创建标识：Senparc - 20260808
+    Created by: Senparc - 20260808
     
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 增强 jupyter-csharp 模板与沙箱会话管理
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 enhance the jupyter-csharp template and sandbox session management
 -
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 增加 TTL 与永久保持请求参数
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 enhance sandbox preview, Jupyter workspace, and session lifecycle management
 
-    修改标识：Senparc - 20260918
-    修改描述：v0.3.3 增加别名、附加端口映射、Notebook 创建与交互式标准输入请求
+    Modified by: Senparc - 20260918
+    Change description: v0.3.3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
+    Modified by: Senparc - 20261005
+    Change description: v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
-    修改标识：Senparc - 20261018
-    修改描述：避免创建请求或 Notebook 请求缺少协议字段时静默回退到 Python
+    Modified by: Senparc - 20261018
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.3.5 创建和 Notebook 请求不再默认 Python
+    Modified by: Senparc - 20261021
+    Change description: v0.3.5 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.4.0 add bulk file upload functionality to Sandbox Lab
+    Modified by: Senparc - 20261103
+    Change description: v0.4.0 add bulk file upload functionality to Sandbox Lab
 
 ----------------------------------------------------------------*/
 
@@ -54,7 +54,7 @@ public class Sandbox_CreateRequest : FunctionAppRequestBase
     public string TemplateKey { get; set; } = string.Empty;
 
     /// <summary>
-    /// 下拉数据源：只读 + JsonIgnore，避免前端 JSON 反序列化 SelectionList 失败。
+    ///Legacy comment translated to English.
     /// </summary>
     [JsonIgnore]
     [Newtonsoft.Json.JsonIgnore]

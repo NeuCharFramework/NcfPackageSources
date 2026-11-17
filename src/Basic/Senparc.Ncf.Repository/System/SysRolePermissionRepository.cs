@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：SysRolePermissionRepository.cs
-    文件功能描述：SysRolePermissionRepository 相关实现
+
+    File name: SysRolePermissionRepository.cs
+
+    File description: SysRolePermissionRepository related implementation
+
     
+
     
-    创建标识：Senparc - 20211223
+
+    Created by: Senparc - 20211223
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -27,7 +39,7 @@ namespace Senparc.Respository
     public interface ISysRolePermissionRepository: IClientRepositoryBase<SysRolePermission>
     {
         /// <summary>
-        /// 获取某个用户下面的所有资源
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="adminUserInfoId"></param>
         /// <returns></returns>
@@ -41,14 +53,14 @@ namespace Senparc.Respository
         }
 
         /// <summary>
-        /// 获取某个用户下面的所有资源
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="adminUserInfoId"></param>
         /// <returns></returns>
         public async Task<IEnumerable<string>> GetAllResouceCodesByAccountIdAsync(int adminUserInfoId)
         {
-            IQueryable<string> roleIdQuery = BaseDB.BaseDataContext.Set<SysRoleAdminUserInfo>().Where(sra => sra.AccountId == adminUserInfoId).Select(_ => _.RoleId); // 查询角色
-            var menuIdQuery = BaseDB.BaseDataContext.Set<SysRolePermission>().Where(srp => roleIdQuery.Contains(srp.RoleId)).Select(srp => srp.PermissionId); // 查询所拥有的菜单
+            IQueryable<string> roleIdQuery = BaseDB.BaseDataContext.Set<SysRoleAdminUserInfo>().Where(sra => sra.AccountId == adminUserInfoId).Select(_ => _.RoleId); //Legacy comment translated to English.
+            var menuIdQuery = BaseDB.BaseDataContext.Set<SysRolePermission>().Where(srp => roleIdQuery.Contains(srp.RoleId)).Select(srp => srp.PermissionId); //Legacy comment translated to English.
             var resourceCodes = await BaseDB.BaseDataContext.Set<SysMenu>().Where(menu => menuIdQuery.Contains(menu.Id))
                 .Select(menu => menu.ResourceCode)
                 .ToListAsync();

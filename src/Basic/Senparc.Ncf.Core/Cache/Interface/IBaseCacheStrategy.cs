@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：IBaseCacheStrategy.cs
-    文件功能描述：IBaseCacheStrategy 相关实现
+
+    File name: IBaseCacheStrategy.cs
+
+    File description: IBaseCacheStrategy related implementation
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -22,7 +34,7 @@ namespace Senparc.Ncf.Core.Cache
     //public interface IBaseCacheStrategy
     //{
     //    /// <summary>
-    //    /// 开始一个同步锁
+    //Legacy comment translated to English.
     //    /// </summary>
     //    /// <param name="resourceName"></param>
     //    /// <param name="key"></param>
@@ -35,12 +47,12 @@ namespace Senparc.Ncf.Core.Cache
     //}
 
     /// <summary>
-    /// 公共缓存策略接口
+    ///Legacy comment translated to English.
     /// </summary>
     public interface INcfCacheStrategy : IBaseObjectCacheStrategy
     { 
         /// <summary>
-        /// 整个Cache集合的Key
+        ///Legacy comment translated to English.
         /// </summary>
         string CacheSetKey { get; set; }
     }

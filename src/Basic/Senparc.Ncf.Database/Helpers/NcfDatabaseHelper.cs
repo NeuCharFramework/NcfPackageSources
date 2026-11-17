@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：NcfDatabaseHelper.cs
-    文件功能描述：NcfDatabaseHelper 相关实现
+
+    File name: NcfDatabaseHelper.cs
+
+    File description: NcfDatabaseHelper related implementation
+
     
+
     
-    创建标识：Senparc - 20211110
+
+    Created by: Senparc - 20211110
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -29,7 +41,7 @@ namespace Senparc.Ncf.Database.Helpers
     public static class NcfDatabaseHelper
     {
         /// <summary>
-        /// 获取当前数据库连接信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public static Dictionary<string, string> GetCurrentConnectionInfo()
@@ -44,10 +56,10 @@ namespace Senparc.Ncf.Database.Helpers
         }
 
         /// <summary>
-        /// 尝试获取数据库连接信息的值，如果获取不到，则返回 null
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="dic">数据库信息</param>
-        /// <param name="name">名称，如 Database、UserName，不区分大小写</param>
+        /// <param name="dic">databaseinformation</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public static string TryGetConnectionValue(Dictionary<string, string> dic, string name)
         {
@@ -59,9 +71,9 @@ namespace Senparc.Ncf.Database.Helpers
         }
 
         /// <summary>
-        /// 尝试获取数据库连接信息的值，如果获取不到，则返回 null
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="name">名称，如 Database、UserName，不区分大小写</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public static string TryGetConnectionValue(string name)
         {

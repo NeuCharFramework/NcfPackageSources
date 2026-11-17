@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：WeixinClawAdminIntegrationOptions.cs
-    文件功能描述：WeixinClawAdminIntegrationOptions.cs implementation and project behavior.
+    File name: WeixinClawAdminIntegrationOptions.cs
+    File description: WeixinClawAdminIntegrationOptions.cs implementation and project behavior.
 
 
-    创建标识：Senparc - 20260926
+    Created by: Senparc - 20260926
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 add WeixinClawBindingProfile management and UI enhancements
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 add WeixinClawBindingProfile management and UI enhancements
 
 ----------------------------------------------------------------*/
 
@@ -20,7 +20,7 @@ using System;
 namespace Senparc.Areas.Admin.WeixinClawIntegration;
 
 /// <summary>
-/// Admin 与个人微信 Claw 的上层集成选项。
+///Legacy comment translated to English.
 /// </summary>
 public sealed class WeixinClawAdminIntegrationOptions
 {

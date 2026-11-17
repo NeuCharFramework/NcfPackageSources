@@ -14,7 +14,7 @@ namespace Senparc.Areas.Admin.Models.VD
         /// </summary>		
         public int Id { get; set; }
         /// <summary>
-        /// 系统名称
+        ///Legacy comment translated to English.
         /// </summary>		
         public string SystemName { get; set; }
 

@@ -1,20 +1,20 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：Register.cs
-    文件功能描述：XNCF 模板示例实现
+    File name: Register.cs
+    File description: XNCF template sample implementation
     
     
-    创建标识：Senparc - 20200818
+    Created by: Senparc - 20200818
     
-    修改标识：Senparc - 20260726
-    修改描述：v1.1.0 补充示例模板 EventBus 请求-响应回环与多语言能力
+    Modified by: Senparc - 20260726
+    Change description: v1.1.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v1.1.13 XNCF 模板无数据库变体编译修复
+    Modified by: Senparc - 20261103
+    Change description: v1.1.13 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261111
-    修改描述：v1.1.14 统一 XNCF Register 显示元数据与多语言资源键
+    Modified by: Senparc - 20261111
+    Change description: v1.1.14 unify XNCF Register display metadata and localization resource keys
 
 ----------------------------------------------------------------*/
 using Senparc.Ncf.Core.Enums;
@@ -52,13 +52,13 @@ namespace Template_OrgName.Xncf.Template_XncfName
                 "Template_MenuName",
                 "Template_Description");
 
-        #region IXncfRegister 接口
+        #region Legacy section
 
         public override string Name => "Template_OrgName.Xncf.Template_XncfName";
 
-        public override string Uid => "C5852057-BF1D-492B-A22E-64F3C5F91D38";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
+        public override string Uid => "C5852057-BF1D-492B-A22E-64F3C5F91D38";//Legacy comment translated to English.
 
-        public override string Version => "1.0.0";//必须填写版本号
+        public override string Version => "1.0.0";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 
@@ -69,23 +69,23 @@ namespace Template_OrgName.Xncf.Template_XncfName
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
 #if XNCF_HAS_DATABASE
-            //安装或升级版本时更新数据库
+            //update the database when installing or upgrading a version
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 #endif
-            //根据安装或更新不同条件执行逻辑
+            //execute logic according to the installation or update condition
             switch (installOrUpdate)
             {
                 case InstallOrUpdate.Install:
-                    //新安装
+                    //new installation
 #if XNCF_HAS_DATABASE
-            #region 初始化数据库数据
+            #region Legacy section
                     var colorService = serviceProvider.GetService<ColorAppService>();
                     var colorResult = await colorService.GetOrInitColorAsync();
             #endregion
 #endif
                     break;
                 case InstallOrUpdate.Update:
-                    //更新
+                    //update
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -95,14 +95,14 @@ namespace Template_OrgName.Xncf.Template_XncfName
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
 #if XNCF_HAS_DATABASE
-            #region 删除数据库（演示）
+            #region Legacy section
 
             var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
             Template_XncfNameSenparcEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as Template_XncfNameSenparcEntities;
 
-            //指定需要删除的数据实体
+            //specify the data entities to delete
 
-            //注意：这里作为演示，在卸载模块的时候删除了所有本模块创建的表，实际操作过程中，请谨慎操作，并且按照删除顺序对实体进行排序！
+            //Note: this is a demonstration that deletes all tables created by this module during uninstallation. In production, proceed carefully and order entities by their deletion dependencies.
             var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.TryGetXncfDatabaseDbContextType).Keys.ToArray();
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
 

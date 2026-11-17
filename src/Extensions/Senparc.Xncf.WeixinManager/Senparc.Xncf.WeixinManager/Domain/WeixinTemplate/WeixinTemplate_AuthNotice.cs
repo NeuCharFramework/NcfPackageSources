@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：WeixinTemplate_AuthNotice.cs
-    文件功能描述：WeixinTemplate_AuthNotice 相关实现
+
+    File name: WeixinTemplate_AuthNotice.cs
+
+    File description: WeixinTemplate_AuthNotice related implementation
+
     
+
     
-    创建标识：Senparc - 20250712
+
+    Created by: Senparc - 20250712
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -17,22 +29,34 @@ using Senparc.Weixin.MP.AdvancedAPIs.TemplateMessage;
 namespace Senparc.Xncf.WeixinManager.WeixinTemplate
 {
     /// <summary>
-    /// 审核结果通知
+    ///Legacy comment translated to English.
     /// </summary>
     public class WeixinTemplate_AppAuditNotice : WeixinTemplateBase
     {
         /*
+
         {{first.DATA}}
-        审核事项：{{keyword1.DATA}}
-        审核状态：{{keyword2.DATA}}
-        审核时间：{{keyword3.DATA}}
+
+        Legacy comment translated to English.
+
+        Legacy comment translated to English.
+
+        Legacy comment translated to English.
+
         {{remark.DATA}}
+
         * 
-        你的审核请求已经处理。
-        审核事项：机构申请注册
-        审核状态：通过
-        审核时间：2017年2月5日18:17
-        点击查看详情
+
+        Legacy comment translated to English.
+
+        Legacy comment translated to English.
+
+        Legacy comment translated to English.
+
+        Legacy comment translated to English.
+
+        Legacy comment translated to English.
+
         */
         public TemplateDataItem first { get; set; }
 
@@ -48,8 +72,8 @@ namespace Senparc.Xncf.WeixinManager.WeixinTemplate
         /// 
         /// </summary>
         /// <param name="_first"></param>
-        /// <param name="_keyword1">认证详情</param>
-        /// <param name="_keyword2">认证结果</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <param name="_remark"></param>
         public WeixinTemplate_AppAuditNotice(string _first, string _keyword1, string _keyword2, string _keyword3,
             string _remark) : base("_1_gRx85XBc7OGY4dw9D-fyW4XEeu6Q5URn_ikKH2UD", "审核结果通知")

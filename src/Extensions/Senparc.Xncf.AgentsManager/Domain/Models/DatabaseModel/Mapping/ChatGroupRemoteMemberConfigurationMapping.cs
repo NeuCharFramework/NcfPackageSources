@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：ChatGroupRemoteMemberConfigurationMapping.cs
-    文件功能描述：数据模型、DTO 与映射定义
+    File name: ChatGroupRemoteMemberConfigurationMapping.cs
+    File description: data model, DTO, and mapping definitions
 
 
-    创建标识：Senparc - 20260812
+    Created by: Senparc - 20260812
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+    Modified by: Senparc - 20260813
+    Change description: v0.15.0-preview11 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

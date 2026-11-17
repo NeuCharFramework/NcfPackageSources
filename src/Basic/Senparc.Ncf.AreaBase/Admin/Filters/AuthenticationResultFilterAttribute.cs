@@ -1,23 +1,44 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：AuthenticationResultFilterAttribute.cs
-    文件功能描述：AuthenticationResultFilterAttribute 相关实现
+
+    File name: AuthenticationResultFilterAttribute.cs
+
+    File description: AuthenticationResultFilterAttribute related implementation
 
 
-    创建标识：Senparc - 20200724
 
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260731
-    修改描述：v0.23.0-preview4 将 Handler 缺失与无权限提示接入核心多语言资源
 
-    修改标识：Senparc - 20260812
-    修改描述：未形成有效管理员会话时引导登录，避免误返回 403
+    Created by: Senparc - 20200724
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.23.3-preview7 修复后台会话失效时的登录跳转并持久化数据保护密钥
+
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260731
+
+    Change description: v0.23.0-preview4 will integrate core multilingual resources for the Handler missing and none permission prompts.
+
+
+
+    Modified by: Senparc - 20260812
+
+    Change description: Redirect to login when a valid management session has not been established to avoid incorrectly returning 403
+
+
+
+    Modified by: Senparc - 20260813
+
+    Change description: v0.23.3-preview7 Fixes the login redirection when the backend session expires and the persistence of data protection keys
+
+
 
 ----------------------------------------------------------------*/
 
@@ -43,7 +64,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 namespace Senparc.Ncf.AreaBase.Admin.Filters
 {
     /// <summary>
-    /// 校验权限的类
+    /// Class for validating permissions
     /// </summary>
     public class AuthenticationResultFilterAttribute : IAsyncPageFilter, IFilterMetadata
     {
@@ -64,7 +85,7 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
         }
 
         /// <summary>
-        /// 验证权限得方法
+        /// Validation permission for method
         /// </summary>
         /// <param name="serviceProvider"></param>
         /// <param name="context"></param>
@@ -80,7 +101,7 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
                 .OfType<CustomerResourceAttribute>()
                 .FirstOrDefault();
             bool isIgnore = context.Filters.OfType<IgnoreAuthAttribute>().Any();
-            IEnumerable<string> resourceCodes = attributeCodes?.ResourceCodes.ToList() ?? new List<string>() { "*" };//当前方法的资源Code
+            IEnumerable<string> resourceCodes = attributeCodes?.ResourceCodes.ToList() ?? new List<string>() { "*" };//Resource Code for currentmethod
             //Console.WriteLine("isAjax:{0}， isIgnore：{1}", isAjax, isIgnore);
             System.Diagnostics.Debug.WriteLine("isAjax:{0}, isIgnore: {1}", isAjax, isIgnore);
             if (isIgnore || (resourceCodes.Any(_ => "*".Equals(_)) && isAjax))
@@ -89,7 +110,7 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
                 return;
             }
 
-            // 无有效管理员会话时走登录，而不是菜单权限失败后的 403/Forbidden。
+            // When there is no effective management session, log in, and not 403/Forbidden after menu permission failure.
             var adminWorkContext = serviceProvider.GetService<IAdminWorkContextProvider>()?.GetAdminWorkContext();
             if (adminWorkContext == null || adminWorkContext.AdminUserId <= 0)
             {
@@ -137,7 +158,7 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
         }
 
         /// <summary>
-        /// 是否是Ajax请求
+        /// whether it is an Ajax request
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>

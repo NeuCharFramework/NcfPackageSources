@@ -1,19 +1,19 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：XncfDevelopmentJob.cs
-    文件功能描述：XNCF 隔离开发、验证及人工合入任务持久化记录
+    File name: XncfDevelopmentJob.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260814
+    Created by: Senparc - 20260814
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.41.0 增强隔离开发任务与 Sandbox 预览流程
+    Modified by: Senparc - 20260815
+    Change description: v0.41.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.41.0 优化 XncfBuilder 预览任务与工作区服务
+    Modified by: Senparc - 20260822
+    Change description: v0.41.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.41.7 XncfBuilder 预览与隔离开发任务表统一租户底层支持
+    Modified by: Senparc - 20261103
+    Change description: v0.41.7 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -27,7 +27,7 @@ namespace Senparc.Xncf.XncfBuilder
 {
     [Table(Register.DATABASE_PREFIX + nameof(XncfDevelopmentJob))]
     [Serializable]
-    // 统一使用租户底层支持：多租户启用时本表数据按 TenantId 隔离（与 PromptRange 等 XNCF 模块一致）
+    //Legacy comment translated to English.
     public class XncfDevelopmentJob : EntityBase<int>
     {
         [Required, MaxLength(64)]

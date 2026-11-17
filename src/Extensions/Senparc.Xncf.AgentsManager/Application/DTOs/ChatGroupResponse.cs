@@ -1,20 +1,20 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：ChatGroupResponse.cs
-    文件功能描述：ChatGroupResponse 相关实现
+    File name: ChatGroupResponse.cs
+    File description: ChatGroupResponse related implementation
 
 
-    创建标识：Senparc - 20260704
+    Created by: Senparc - 20260704
 
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+    Modified by: Senparc - 20260813
+    Change description: v0.15.0-preview11 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.19.1 update AgentsManager with new features and improvements
+    Modified by: Senparc - 20261103
+    Change description: v0.19.1 update AgentsManager with new features and improvements
 
 ----------------------------------------------------------------*/
 
@@ -39,19 +39,19 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
         public List<AgentTemplateDto> AgentTemplateDtoList { get; set; }
 
         /// <summary>
-        /// 群主、对接人等角色对应的本地智能体。角色不一定已经出现在普通成员列表中，
-        /// 因此单独返回，供调用方完整展示可参与群组任务的人员。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         public List<ChatGroupRoleAgentDto> RoleAgentTemplateDtoList { get; set; } = new List<ChatGroupRoleAgentDto>();
 
         /// <summary>
-        /// 远程成员与本地 AgentTemplateDtoList 并行返回，保证旧调用方仍可使用原字段。
+        ///Legacy comment translated to English.
         /// </summary>
         public List<ChatGroupRemoteMemberDto> RemoteMemberDtoList { get; set; } = new List<ChatGroupRemoteMemberDto>();
     }
 
     /// <summary>
-    /// ChatGroup 中承担特定角色的本地智能体。
+    ///Legacy comment translated to English.
     /// </summary>
     public class ChatGroupRoleAgentDto
     {

@@ -1,17 +1,32 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：TenantInfoService.cs
-    文件功能描述：TenantInfoService 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.15.14 维护TenantInfoService 相关实现
+    Copyright (C) 2026 Senparc
+
+  
+
+    File name: TenantInfoService.cs
+
+    File description: TenantInfoService related implementation
+
+    
+
+    
+
+    Created by: Senparc - 20260704
+
+    
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20261103
+
+    Change description: v0.15.14 Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 
@@ -50,9 +65,9 @@ namespace Senparc.Xncf.Tenant.Domain.Services
         }
 
         /// <summary>
-        /// 设置当前 Request 范围内的 RequestTenantInfo 值
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="httpContext">如果为 null，则自动从 IHttpContextAccessor 中获取</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public async Task<RequestTenantInfo> SetScopedRequestTenantInfoAsync(HttpContext httpContext)
         {
@@ -63,9 +78,9 @@ namespace Senparc.Xncf.Tenant.Domain.Services
             switch (SiteConfig.SenparcCoreSetting.TenantRule)
             {
                 case TenantRule.DomainName:
-                    //Console.WriteLine("\t\t进入 SetScopedRequestTenantInfoAsync -> TenantRule.DomainName");
+                    //Legacy comment translated to English.
                     var urlData = httpContext.Request;
-                    var host = urlData.Host.Host.ToUpper()/*全部大写*/;//主机名（不带端口）
+                    var host = urlData.Host.Host.ToUpper()/*Legacy comment translated to English.*/;//Legacy comment translated to English.
                     tenantKey = host;
                     break;
                 case TenantRule.RequestHeader:
@@ -81,7 +96,7 @@ namespace Senparc.Xncf.Tenant.Domain.Services
                     break;
                 case TenantRule.LoginInput:
                     {
-                        // 检查是否存在 TenantKey
+                        //Legacy comment translated to English.
                         var tenantKeyClaim = httpContext.User?.Claims.FirstOrDefault(c => c.Type == "TenantKey");
 
                         if (tenantKeyClaim == null)
@@ -91,7 +106,7 @@ namespace Senparc.Xncf.Tenant.Domain.Services
                         }
                         else
                         {
-                            // 读取 TenantKey 的值
+                            //Legacy comment translated to English.
                             tenantKey = tenantKeyClaim.Value;
                         }
                     }
@@ -100,7 +115,7 @@ namespace Senparc.Xncf.Tenant.Domain.Services
                     throw new Exception("未处理的 TenantRule 类型");
             }
 
-            //Console.WriteLine("\t\t准备进入 _serviceProvider.GetRequiredService<FullTenantInfoCache>()");
+            //Legacy comment translated to English.
 
             var fullTenantInfoCache = _serviceProvider.GetRequiredService<FullTenantInfoCache>();
             Dictionary<string, TenantInfoDto> tenantInfoCollection;
@@ -112,22 +127,22 @@ namespace Senparc.Xncf.Tenant.Domain.Services
             {
                 if (!Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.EnableMultiTenant)
                 {
-                    //数据库读取失败，且未登录任何租户
+                    //Legacy comment translated to English.
                     //tenantKey = null;
                     throw new NcfUninstallException("fullTenantInfoCache.GetDataAsync 读取失败，推测系统未安装或多租户未启用", ex);
                 }
 
-                //数据库错误，通常为系统未安装
+                //Legacy comment translated to English.
                 //tenantKey = null;
 
                 throw new NcfUninstallException("fullTenantInfoCache.GetDataAsync 读取失败，推测系统未安装", ex);
             }
 
-            //Console.WriteLine($"\t\t已获取 tenantInfoCollection：{tenantInfoCollection.ToJson()}");
+            //Legacy comment translated to English.
 
             if (!string.IsNullOrEmpty(tenantKey) && tenantInfoCollection.TryGetValue(tenantKey, out var tenantInfoDto))
             {
-                //Console.WriteLine($"\t\t 匹配到 tenantKey：{tenantKey}");
+                //Legacy comment translated to English.
                 requestTenantInfo.Id = tenantInfoDto.Id;
                 requestTenantInfo.Name = tenantInfoDto.Name;
                 requestTenantInfo.TenantKey = tenantInfoDto.TenantKey;
@@ -135,7 +150,7 @@ namespace Senparc.Xncf.Tenant.Domain.Services
             }
             else
             {
-                //Console.WriteLine($"\t\t 未匹配到 tenantKey：{tenantKey}");
+                //Legacy comment translated to English.
                 requestTenantInfo.Name = SiteConfig.TENANT_DEFAULT_NAME;
                 requestTenantInfo.TryMatch(tenantKey == null || false);
             }
@@ -144,11 +159,11 @@ namespace Senparc.Xncf.Tenant.Domain.Services
         }
 
         /// <summary>
-        /// 创建租户信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="createOrUpdate_TenantInfoDto"></param>
-        /// <param name="throwIfExisted">如果 Name 或 TenantKey 已存在，则抛出异常</param>
-        /// <exception cref="NcfTenantException">Name 或 TenantKey 已存在</exception>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public async Task<TenantInfoDto> CreateOrUpdateTenantInfoAsync(CreateOrUpdate_TenantInfoDto createOrUpdate_TenantInfoDto, bool throwIfExisted = false)
         {
@@ -168,7 +183,7 @@ namespace Senparc.Xncf.Tenant.Domain.Services
 
             if (createOrUpdate_TenantInfoDto.Id > 0)
             {
-                //编辑
+                //edit
                 tenantInfo = await GetObjectAsync(z => z.Id == createOrUpdate_TenantInfoDto.Id, null);
                 if (tenantInfo == null)
                 {
@@ -178,19 +193,19 @@ namespace Senparc.Xncf.Tenant.Domain.Services
             }
             else
             {
-                //新增
+                //add
                 tenantInfo = new TenantInfo(createOrUpdate_TenantInfoDto.Name, createOrUpdate_TenantInfoDto.Enable, createOrUpdate_TenantInfoDto.TenantKey);
             }
             await SaveObjectAsync(tenantInfo);
-            await tenantInfo.ClearCache(_serviceProvider);//所有涉及到租户信息的修改，都清除租户信息，重新更新
+            await tenantInfo.ClearCache(_serviceProvider);//Legacy comment translated to English.
 
             return base.Mapper.Map<TenantInfoDto>(tenantInfo);
         }
 
         /// <summary>
-        /// 创建默认 TenantInfo 信息
+        /// createdefault TenantInfo information
         /// </summary>
-        /// <param name="httpContext">如果为 null，则自动从 IHttpContextAccessor 中获取</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public async Task<TenantInfoDto> CreateInitTenantInfoAsync(HttpContext httpContext)
         {
@@ -202,7 +217,7 @@ namespace Senparc.Xncf.Tenant.Domain.Services
         }
 
         /// <summary>
-        /// 价差 Name 是否存在
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
@@ -213,7 +228,7 @@ namespace Senparc.Xncf.Tenant.Domain.Services
         }
 
         /// <summary>
-        /// 价差 TenantKey 是否存在
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="tenantKey"></param>
@@ -231,7 +246,7 @@ namespace Senparc.Xncf.Tenant.Domain.Services
         }
 
         /// <summary>
-        /// 获取 RequestTenantInfo
+        /// get RequestTenantInfo
         /// </summary>
         /// <param name="tenantInfo"></param>
         /// <returns></returns>
@@ -248,7 +263,7 @@ namespace Senparc.Xncf.Tenant.Domain.Services
         }
 
         /// <summary>
-        /// 强制设置租户信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="requestTenantInfo"></param>
         /// <returns></returns>

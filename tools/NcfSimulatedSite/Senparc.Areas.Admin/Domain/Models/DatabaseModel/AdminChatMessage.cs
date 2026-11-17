@@ -1,20 +1,20 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：AdminChatMessage.cs
-    文件功能描述：AdminChatMessage 相关功能实现
+    File name: AdminChatMessage.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20260325
+    Created by: Senparc - 20260325
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+    Modified by: Senparc - 20260915
+    Change description: v0.8.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 add comprehensive unit tests for AdminChatWorkspaceAssetService functionality
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 add comprehensive unit tests for AdminChatWorkspaceAssetService functionality
 
-    修改标识：Senparc - 20261105
-    修改描述：v0.12.26 消息实体保存 Prompt 引用
+    Modified by: Senparc - 20261105
+    Change description: v0.12.26 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 using Senparc.Ncf.Core.Models;
@@ -29,26 +29,26 @@ using Senparc.Xncf.PromptRange.Abstractions.References;
 namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
 {
     /// <summary>
-    /// AdminChatMessage：管理后台聊天消息
+    ///Legacy comment translated to English.
     /// </summary>
     [Table(Register.DATABASE_PREFIX + nameof(AdminChatMessage))]
     [Serializable]
     public class AdminChatMessage : EntityBase<int>
     {
         /// <summary>
-        /// 所属会话ID（外键到 AdminChatSession）
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         public int SessionId { get; private set; }
 
         /// <summary>
-        /// 消息角色类型（User/Assistant/System）
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         public ChatMessageRoleType RoleType { get; private set; }
 
         /// <summary>
-        /// 消息内容（支持 Markdown 格式）
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         public string Content { get; private set; }
@@ -79,18 +79,18 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 消息序号（用于保持对话顺序）
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         public int Sequence { get; private set; }
 
         /// <summary>
-        /// 用户反馈（Like/Dislike/None）
+        ///Legacy comment translated to English.
         /// </summary>
         public MessageFeedbackType UserFeedback { get; private set; }
 
         /// <summary>
-        /// 使用的模型标识符（例如："gpt-4", "claude-3"）
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(100)]
         public string ModelIdentifier { get; private set; }
@@ -106,24 +106,24 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
         public int? TrajectorySequence { get; private set; }
 
         /// <summary>
-        /// 导航属性：关联的会话
+        ///Legacy comment translated to English.
         /// </summary>
         [ForeignKey(nameof(SessionId))]
         public virtual AdminChatSession Session { get; private set; }
 
         /// <summary>
-        /// 私有构造函数（供 EF Core 使用）
+        ///Legacy comment translated to English.
         /// </summary>
         private AdminChatMessage() { }
 
         /// <summary>
-        /// 创建新的聊天消息
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="sessionId">会话ID</param>
-        /// <param name="roleType">角色类型</param>
-        /// <param name="content">消息内容</param>
-        /// <param name="sequence">消息序号</param>
-        /// <param name="modelIdentifier">模型标识符（可选）</param>
+        ///Legacy comment translated to English.
+        /// <param name="roleType">roletype</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         public AdminChatMessage(
             int sessionId,
             ChatMessageRoleType roleType,
@@ -144,7 +144,7 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 设置用户反馈
+        ///Legacy comment translated to English.
         /// </summary>
         public void SetFeedback(MessageFeedbackType feedback)
         {
@@ -153,7 +153,7 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 更新消息内容（通常用于流式输出场景的追加）
+        ///Legacy comment translated to English.
         /// </summary>
         public void UpdateContent(string newContent)
         {
@@ -174,39 +174,39 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
     }
 
     /// <summary>
-    /// 聊天消息角色类型
+    ///Legacy comment translated to English.
     /// </summary>
     public enum ChatMessageRoleType
     {
         /// <summary>
-        /// 用户消息
+        ///Legacy comment translated to English.
         /// </summary>
         User = 0,
         /// <summary>
-        /// AI 助手消息
+        ///Legacy comment translated to English.
         /// </summary>
         Assistant = 1,
         /// <summary>
-        /// 系统消息
+        ///Legacy comment translated to English.
         /// </summary>
         System = 2
     }
 
     /// <summary>
-    /// 消息反馈类型
+    ///Legacy comment translated to English.
     /// </summary>
     public enum MessageFeedbackType
     {
         /// <summary>
-        /// 无反馈
+        ///Legacy comment translated to English.
         /// </summary>
         None = 0,
         /// <summary>
-        /// 点赞
+        ///Legacy comment translated to English.
         /// </summary>
         Like = 1,
         /// <summary>
-        /// 点踩
+        ///Legacy comment translated to English.
         /// </summary>
         Dislike = 2
     }

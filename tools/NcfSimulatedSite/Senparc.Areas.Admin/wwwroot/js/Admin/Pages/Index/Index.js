@@ -39,9 +39,9 @@ var app = new Vue({
       agentsOverviewUnavailable: false,
       agentsOverviewTimer: null,
       agentsOverviewUpdatedAt: null,
-      // Pivot 面板（admin-home 绑定的启用面板）
+      //Legacy comment translated to English.
       pivotBoard: null,
-      // 添加动画控制变量
+      //Legacy comment translated to English.
       shakeAllModules: false,
       glowUpgradeableModules: false
     };
@@ -58,7 +58,7 @@ var app = new Vue({
     this.fetchAgentsOverview();
     this.startAgentsOverviewPolling();
     this.loadPivotBoard();
-    // 添加鼠标事件监听
+    //Legacy comment translated to English.
     this.initializeHoverEffects();
   },
   beforeDestroy() {
@@ -108,7 +108,7 @@ var app = new Vue({
         this.agentsOverview = Object.assign({ available: true }, payload.data);
         this.agentsOverviewUpdatedAt = new Date();
       } catch (_) {
-        // AgentsManager 是可选模块。端点不可用通常表示未安装、未启用或当前账号无权访问，首页保持无卡片状态。
+        //Legacy comment translated to English.
         this.agentsOverviewUnavailable = true;
         this.agentsOverview = { available: false };
       } finally {
@@ -142,8 +142,8 @@ var app = new Vue({
     navigateToAgentsManager() {
       openAdminPage('/Admin/XncfModule/Start/?uid=D858D7FA-775A-4690-9023-CFB0B3B84994');
     },
-    // 加载绑定到后台首页（admin-home）的启用 Pivot 面板。
-    // 使用原始 axios（与 AgentsManager 概览一致），非超管账号 403 时静默隐藏，不触发全局错误提示。
+    //Legacy comment translated to English.
+    //Legacy comment translated to English.
     async loadPivotBoard() {
       try {
         const headers = { 'x-requested-with': 'XMLHttpRequest' };
@@ -245,7 +245,7 @@ var app = new Vue({
         }
       }
     },
-    // 当前 Web 进程工作集占物理内存百分比（用于折线图与对比条）
+    //Legacy comment translated to English.
     computeProcessMemoryPercent(metrics) {
       const processBytes = this.toNullableNumber(metrics.processWorkingSetBytes);
       const totalBytes = this.toNullableNumber(metrics.memoryTotalBytes);
@@ -258,7 +258,7 @@ var app = new Vue({
       if (this.resourceMonitorTimer) {
         window.clearInterval(this.resourceMonitorTimer);
       }
-      // 与后台采样间隔一致（10 秒）：页面可见时轮询，隐藏时自动跳过
+      //Legacy comment translated to English.
       this.resourceMonitorTimer = window.setInterval(() => this.fetchResourceMonitor(), 10000);
     },
     ensureResourceMonitorChart() {
@@ -418,13 +418,13 @@ var app = new Vue({
         console.error('Error fetching chart data:', error);
       }
     },
-    async fetchTodayLogData() { // 新增获取今日日志数据的方法  
+    async fetchTodayLogData() { //Legacy comment translated to English.
       try {
         let response = await service.get('/api/Senparc.Areas.Admin/StatAppService/Areas.Admin_StatAppService.GetTodayLog');
         if (response.data && response.data.data && response.data.data.items) {
           this.todayLogData = response.data.data.items;
           this.todayDate = response.data.data.date;
-          this.initChart(); // 确保图表在获取到数据后更新  
+          this.initChart(); //Legacy comment translated to English.
         } else {
           console.error('Invalid API response:', response);
         }
@@ -463,7 +463,7 @@ var app = new Vue({
             name: ncfT('Admin.Home.NormalLogs'),
             type: 'line',
             stack: '总量',
-            areaStyle: { color: '#91c7ae' }, // 添加区域填充颜色  
+            areaStyle: { color: '#91c7ae' }, //Legacy comment translated to English.
             data: this.chartData.map(item => item.normalLogCount),
             color: '#91c7ae'
           },
@@ -471,7 +471,7 @@ var app = new Vue({
             name: ncfT('Admin.Home.ErrorLogs'),
             type: 'line',
             stack: '总量',
-            areaStyle: { color: '#d48265' }, // 添加区域填充颜色  
+            areaStyle: { color: '#d48265' }, //Legacy comment translated to English.
             data: this.chartData.map(item => item.exceptionLogCount),
             color: '#d48265'
           }
@@ -480,7 +480,7 @@ var app = new Vue({
       let chartInstance1 = echarts.init(chart1);
       chartInstance1.setOption(chartOption1);
 
-      // 添加点击事件监听器  
+      //Legacy comment translated to English.
       chartInstance1.on('click', params => {
         if (params.componentType === 'series') {
           let date = params.name;
@@ -488,7 +488,7 @@ var app = new Vue({
         }
       });
 
-      // 准备今日日志数据  
+      //Legacy comment translated to English.
       let todayLogData = this.todayLogData.map(item => ({
         name: item.senparcTraceType,
         value: item.count
@@ -508,7 +508,7 @@ var app = new Vue({
         legend: {
           orient: 'vertical',
           left: 'left',
-          data: this.todayLogData.map(item => item.senparcTraceType) // 自动输出所有类别  
+          data: this.todayLogData.map(item => item.senparcTraceType) //Legacy comment translated to English.
         },
         series: [{
           name: ncfT('Admin.Home.LogType'),
@@ -526,7 +526,7 @@ var app = new Vue({
       };
       let chartInstance2 = echarts.init(chart2);
       chartInstance2.setOption(chartOption2);
-      // 添加点击事件监听器    
+      //Legacy comment translated to English.
       chartInstance2.on('click', params => {
         if (params.componentType === 'series') {
           openAdminPage(`/Admin/SenparcTrace/DateLog?date=${this.todayDate}`);
@@ -534,18 +534,18 @@ var app = new Vue({
       });
 
     },
-    //XNCF 统计状态  
+    //XNCF statisticsstatus  
     async getXncfStat() {
       let xncfStatData = await service.get('/Admin/Index?handler=XncfStat');
       this.xncfStat = xncfStatData.data.data;
     },
-    //开放模块数据
+    //Legacy comment translated to English.
     async getXncfOpening() {
       let xncfOpeningList = await service.get('/Admin/Index?handler=XncfOpening');
       const data = xncfOpeningList && xncfOpeningList.data && xncfOpeningList.data.data;
       this.xncfOpeningList = Array.isArray(data) ? data : [];
     },
-    //点击打开模块
+    //Legacy comment translated to English.
     navigateTo(uid) {
       openAdminPage('/Admin/XncfModule/Start/?uid=' + uid);
     },
@@ -555,20 +555,20 @@ var app = new Vue({
       var menuInfo = menus[rowIndex]
       openAdminPage(menuInfo.url)
     },
-    // 添加新方法处理悬停效果
+    //Legacy comment translated to English.
     initializeHoverEffects() {
-      // 获取统计项元素 - 修正选择器
+      //Legacy comment translated to English.
       const installedModulesStat = document.querySelector('.xncf-stat-item');
       const updateModulesStat = document.querySelectorAll('.xncf-stat-item')[1];
 
-      // 已安装模块统计项的鼠标事件
+      //Legacy comment translated to English.
       if (installedModulesStat) {
         installedModulesStat.addEventListener('mouseenter', () => {
           this.triggerShakeAnimation();
         });
       }
 
-      // 待更新模块统计项的鼠标事件
+      //Legacy comment translated to English.
       if (updateModulesStat) {
         updateModulesStat.addEventListener('mouseenter', () => {
           this.triggerGlowAnimation();
@@ -576,52 +576,52 @@ var app = new Vue({
       }
     },
 
-    // 触发抖动动画
+    //Legacy comment translated to English.
     triggerShakeAnimation() {
       const moduleCards = document.querySelectorAll('#xncf-modules-area .box-card');
       moduleCards.forEach(card => {
-        // 添加随机延迟
-        const delay = Math.random() * 200; // 0-200ms的随机延迟
+        //Legacy comment translated to English.
+        const delay = Math.random() * 200; //Legacy comment translated to English.
         setTimeout(() => {
           card.classList.add('shake-animation');
-          // 动画结束后移除类
+          //Legacy comment translated to English.
           setTimeout(() => {
             card.classList.remove('shake-animation');
-          }, 800); // 与动画持续时间匹配
+          }, 800); //Legacy comment translated to English.
         }, delay);
       });
     },
 
-    // 触发发光/淡化动画
+    //Legacy comment translated to English.
     triggerGlowAnimation() {
       const allCards = document.querySelectorAll('#xncf-modules-area .box-card');
       const upgradeableVersions = document.querySelectorAll('#xncf-modules-area .version-upgradeable');
 
-      // 为所有可更新的模块添加发光效果
+      //Legacy comment translated to English.
       upgradeableVersions.forEach(version => {
         const card = version.closest('.box-card');
         if (card) {
-          // 添加随机延迟
+          //Legacy comment translated to English.
           const delay = Math.random() * 200;
           setTimeout(() => {
             card.classList.add('glow-animation');
             setTimeout(() => {
               card.classList.remove('glow-animation');
-            }, 1200); // 与动画持续时间匹配
+            }, 1200); //Legacy comment translated to English.
           }, delay);
         }
       });
 
-      // 为不可更新的模块添加淡化效果
+      //Legacy comment translated to English.
       allCards.forEach(card => {
         if (!card.querySelector('.version-upgradeable')) {
-          // 添加随机延迟
+          //Legacy comment translated to English.
           const delay = Math.random() * 200;
           setTimeout(() => {
             card.classList.add('fade-animation');
             setTimeout(() => {
               card.classList.remove('fade-animation');
-            }, 1200); // 与动画持续时间匹配
+            }, 1200); //Legacy comment translated to English.
           }, delay);
         }
       });

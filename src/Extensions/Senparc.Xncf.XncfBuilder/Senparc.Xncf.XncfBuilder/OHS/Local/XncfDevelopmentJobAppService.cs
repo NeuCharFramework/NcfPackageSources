@@ -1,19 +1,19 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：XncfDevelopmentJobAppService.cs
-    文件功能描述：供 Admin Chat 调用的受控 XNCF 开发工作流 Function
+    File name: XncfDevelopmentJobAppService.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260814
+    Created by: Senparc - 20260814
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.41.0 增强隔离开发任务与 Sandbox 预览流程
+    Modified by: Senparc - 20260815
+    Change description: v0.41.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.41.0 优化 XncfBuilder 预览任务与工作区服务
+    Modified by: Senparc - 20260822
+    Change description: v0.41.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.41.7 XncfBuilder 预览与隔离开发任务表统一租户底层支持
+    Modified by: Senparc - 20261103
+    Change description: v0.41.7 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -115,7 +115,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             {
                 try
                 {
-                    // 传递当前请求的租户上下文：开发任务的读写都在其所属租户的 scope 中执行
+                    //Legacy comment translated to English.
                     var ambientTenant = ServiceProvider.GetService<RequestTenantInfo>();
                     var service = ServiceProvider.GetRequiredService<IXncfDevelopmentJobService>();
                     var result = await operation(service, ambientTenant).ConfigureAwait(false);

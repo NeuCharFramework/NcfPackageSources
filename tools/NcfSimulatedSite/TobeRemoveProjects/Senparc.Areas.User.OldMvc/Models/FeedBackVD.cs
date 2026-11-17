@@ -25,7 +25,7 @@ namespace Senparc.Areas.User.Models.VD
         public DateTime AddTime { get; set; }
 
         /// <summary>
-        /// 用户
+        /// user
         /// </summary>
         /// <value></value>
         public Account Account { get; set; }

@@ -1,11 +1,11 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：FunctionRequestParameterNormalizerTests.cs
-    文件功能描述：函数请求参数归一化测试
+    File name: FunctionRequestParameterNormalizerTests.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20260802
+    Created by: Senparc - 20260802
 
 ----------------------------------------------------------------*/
 using Microsoft.VisualStudio.TestTools.UnitTesting;

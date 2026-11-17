@@ -1,13 +1,13 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：DatabaseMaintenanceMiddlewareExtensions.cs
-    文件功能描述：数据库未就绪时隔离业务请求
+    File name: DatabaseMaintenanceMiddlewareExtensions.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260803
+    Created by: Senparc - 20260803
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.35.0 新增数据库升级维护流程与多平台下载入口
+    Modified by: Senparc - 20260804
+    Change description: v0.35.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -24,7 +24,7 @@ public static class DatabaseMaintenanceMiddlewareExtensions
             var state = context.RequestServices.GetRequiredService<DatabaseRuntimeStateStore>().Current;
             if (state.Status is DatabaseRuntimeStatus.Ready or DatabaseRuntimeStatus.Uninitialized
                 || context.Request.Path.StartsWithSegments(MaintenancePath)
-                // 维护状态仍表示进程存活；/health 则继续返回 503，供编排系统停止业务流量。
+                //Legacy comment translated to English.
                 || context.Request.Path.StartsWithSegments("/alive"))
             {
                 await next().ConfigureAwait(false);

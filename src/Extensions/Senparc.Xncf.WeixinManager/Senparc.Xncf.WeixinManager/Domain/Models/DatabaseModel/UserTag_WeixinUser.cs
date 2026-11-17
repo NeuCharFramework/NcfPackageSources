@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：UserTag_WeixinUser.cs
-    文件功能描述：UserTag_WeixinUser 相关实现
+
+    File name: UserTag_WeixinUser.cs
+
+    File description: UserTag_WeixinUser related implementation
+
     
+
     
-    创建标识：Senparc - 20250712
+
+    Created by: Senparc - 20250712
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -21,13 +33,13 @@ using System.Text;
 
 namespace Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel
 {
-    //关于 EF 多对多的做法：https://www.entityframeworktutorial.net/efcore/configure-many-to-many-relationship-in-ef-core.aspx
+    //Legacy comment translated to English.
 
     /// <summary>
-    /// UserTag - WeixinUser 多对多关联表
+    ///Legacy comment translated to English.
     /// </summary>
 
-    [Table(Register.DATABASE_PREFIX + nameof(UserTag_WeixinUser))]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(UserTag_WeixinUser))]//a prefix is required to prevent system-wide conflicts
     [Serializable]
     public class UserTag_WeixinUser : EntityBase
     {

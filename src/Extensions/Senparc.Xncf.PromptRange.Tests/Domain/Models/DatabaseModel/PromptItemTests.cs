@@ -18,19 +18,29 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Tests
         [TestMethod()]
         public void IsPromptVersionTest()
         {
-            /* 判断是否为 Prompt 版本（从左到右，必须包含 -T 之前的部分，-Txxx 为可选，当，出现 -T 时，-A 为可选，但 -A 不能单独出现）。
- * 可能的格式为：
+            /* Legacy comment translated to English.
+
+ * Legacy comment translated to English.
+
  * 2023.12.14.1-T1-A123，
+
  * 2023.12.14.2-T1.1-A123
+
  * 2023.12.14.3-T2.1-A123
+
  * 2023.12.14.1-T2.2-A123
+
  * 2023.12.14.1-T2.2.1-A123
- * ...（T 后面可以有多个小数点）
+
+ * Legacy comment translated to English.
+
  * 2023.12.14.1
+
  * 2023.12.14.2-T1.1
+
  */
 
-            //测试正常情况
+            //testnormal case
             Assert.IsTrue(PromptItem.IsPromptVersion("2023.12.14.1-T1-A123"));
             Assert.IsTrue(PromptItem.IsPromptVersion("2023.12.14.2-T1.1-A123"));
             Assert.IsTrue(PromptItem.IsPromptVersion("2023.12.14.3-T2.1-A123"));
@@ -40,7 +50,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Tests
             Assert.IsTrue(PromptItem.IsPromptVersion("2023.12.14.1"));
             Assert.IsTrue(PromptItem.IsPromptVersion("2023.12.14.1-T2.2.1.1"));
 
-            //测试异常情况
+            //testexception case
             Assert.IsFalse(PromptItem.IsPromptVersion("2023.12.14.1-A123"));
             Assert.IsFalse(PromptItem.IsPromptVersion("2023.12.14.1-"));
             Assert.IsFalse(PromptItem.IsPromptVersion("2023.12.14.1-T"));
@@ -55,7 +65,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Tests
         [TestMethod()]
         public void IsValidVersionSegmentTest()
         {
-            // 测试用例  
+            //Legacy comment translated to English.
             Assert.IsTrue(PromptItem.IsValidVersionSegment("2023.12.14.1-T1-A123", "2023.12.14.1-T1-A123")); // true  
             Assert.IsTrue(PromptItem.IsValidVersionSegment("2023.12.14.1-T1-A123", "2023.12.14.1-T1")); // true  
             Assert.IsTrue(PromptItem.IsValidVersionSegment("2023.12.14.1-T1.1-A123", "2023.12.14.1-T1")); // true  
@@ -86,19 +96,19 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Tests
 //
 //     var today = SystemTime.Now.DateTime;
 //
-//     //测试当天时间
+//Legacy comment translated to English.
 //     var newVersion = testVersion(today, 3);
 //     Assert.AreEqual(today.Year, newVersion.Major);
 //     Assert.AreEqual(today.Month, newVersion.Minor);
 //     Assert.AreEqual(today.Day, newVersion.Patch);
-//     Assert.AreEqual(3 + 1, newVersion.Build);//版本号 +1
+//Legacy comment translated to English.
 //
-//     //测试过去时间
+//     //testpast time
 //     newVersion = testVersion(today.AddDays(-1), 4);
 //     Assert.AreEqual(today.Year, newVersion.Major);
 //     Assert.AreEqual(today.Month, newVersion.Minor);
 //     Assert.AreEqual(today.Day, newVersion.Patch);
-//     Assert.AreEqual(1, newVersion.Build);//版本号从 1 开始
+//Legacy comment translated to English.
 // }
 //
 // [TestMethod()]

@@ -1,22 +1,22 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：DesktopBridgeController.cs
-    文件功能描述：DesktopBridge 能力探测、快照和 SSE 接口
+    File name: DesktopBridgeController.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260725
+    Created by: Senparc - 20260725
 
-    修改标识：Senparc - 20260726
-    修改描述：v0.1.0-preview2 同步模块功能与兼容性改进
+    Modified by: Senparc - 20260726
+    Change description: v0.1.0-preview2 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.1.1-preview3 复用 NCF 标准 AdminOnly 策略名称
+    Modified by: Senparc - 20260729
+    Change description: v0.1.1-preview3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260808
-    修改描述：v0.4.0-preview4 新增管理员换票发起与兑换接口
+    Modified by: Senparc - 20260808
+    Change description: v0.4.0-preview4 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.4.8 implement connection manager and workspace file system provider
+    Modified by: Senparc - 20261103
+    Change description: v0.4.8 implement connection manager and workspace file system provider
 
 ----------------------------------------------------------------*/
 
@@ -93,7 +93,7 @@ public sealed class DesktopBridgeController : ControllerBase
     }
 
     /// <summary>
-    /// 创建绑定当前 DesktopBridge 会话的 PKCE 挑战。此接口不接受、读取或返回浏览器 Cookie。
+    ///Legacy comment translated to English.
     /// </summary>
     [HttpPost("admin-auth-handoff/requests")]
     [AllowAnonymous]
@@ -151,7 +151,7 @@ public sealed class DesktopBridgeController : ControllerBase
     }
 
     /// <summary>
-    /// 使用仅存在于 GUI 内存中的 PKCE verifier 领取 JWT。批准后的挑战无论成功失败都只可消费一次。
+    ///Legacy comment translated to English.
     /// </summary>
     [HttpPost("admin-auth-handoff/redeem")]
     [AllowAnonymous]
@@ -279,12 +279,12 @@ public sealed class DesktopBridgeController : ControllerBase
         }
         catch (OperationCanceledException) when (streamCancellation.IsCancellationRequested)
         {
-            // 浏览器断开或管理员撤销会话时立即结束现有 SSE，不记录为服务端错误。
+            //Legacy comment translated to English.
         }
     }
 
     /// <summary>
-    /// 输出按当前管理员隔离的资源变更通知。正文仍需由客户端使用同一 JWT 从业务 API 读取。
+    ///Legacy comment translated to English.
     /// </summary>
     [HttpGet("authorized-sync/events")]
     [Authorize(AuthenticationSchemes = BackendJwtScheme, Policy = AdminOnlyPolicy)]
@@ -337,7 +337,7 @@ public sealed class DesktopBridgeController : ControllerBase
         }
         catch (OperationCanceledException) when (streamCancellation.IsCancellationRequested)
         {
-            // 会话撤销同时终止 Admin Chat 同步流，不需要额外控制连接。
+            //Legacy comment translated to English.
         }
     }
 

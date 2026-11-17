@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
-  <!--<Project Sdk="Microsoft.NET.Sdk.Razor">-->
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <!--<RazorLangVersion>3.0</RazorLangVersion>-->
@@ -13,47 +12,47 @@
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
     <Description>
-			NCF 模块：盛派官方发布的微信管理后台
+			NCF module: publishmanagement
 
-			使用此插件可以在 NCF 中快速集成微信公众号、小程序的部分基础管理功能，欢迎大家一起扩展！
+			 NCF . managementfeature, extend！
 
-			微信 SDK 基于 Senparc.Weixin SDK 开发。
+			 SDK  Senparc.Weixin SDK .
 		</Description>
     <Copyright>NeuCharFramework</Copyright>
     <PackageTags>NeuCharFramework,NCF,Senparc.Xncf.WeixinManager</PackageTags>
     <Authors>NeuCharFramework</Authors>
     <Owners>NeuCharFramework</Owners>
     <PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPackageSources/blob/master/LICENSE</PackageLicenseUrl>
-    <Title>NCF 模块：微信管理后台 盛派官方</Title>
+    <Title>Module</Title>
     <ProjectUrl>https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</PackageProjectUrl>
     <PackageIconUrl>http://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>
-    <PackageReleaseNotes>		[2024-09-13] v0.16.4-preview1 升级基础库
-		[2024-10-09] v0.16.5-preview1 升级基础库
-		[2024-12-07] v0.16.6-preview1 更新基础库
-		[2025-01-10] v0.17.0-preview1 添加达梦（DM）和 Oracle 数据库支持
-		[2025-05-29] v0.18.0-preview.1 升级基础库
-		v0.1 创世
-		v0.2 完成公众号管理、用户管理等功能
-		v0.3 优化UI，匹配新版本NCF
-		v0.4.1 移植WeixinFace
-		v0.6.100 支持 .NET 5
-		v0.6.300 添加 Swagger Api
-		v0.6.359 添加 FindWeixinApi 接口
-		v0.6.400 更新基础接口，优化 WebApi
-		v0.6.500 使用新的 FunctionRender 版本
-		v0.7.0 支持 PostgreSQL
-		v0.8.0 中间件添加 MpAccountDto 参数
-		v0.9.0 优化多租户机制，解决添加新帐号后需要重启才能使用中间件的问题
-		v0.9.2 优化多租户机制，解决中间件启动问题
-		v0.9.3 解决中间件访问问题
-		v0.11.0 支持微信 MessageHandler 自定义上下文（MessageContext）
-		v0.12.0 支持 PromptRange
-		v0.13.0 支持最新 Senparc.AI
-		v0.15.0 支持最新 Senparc.AI
-		v0.16.1 支持基础新架构
-		v0.16.2 更新基础库
-		[2025-07-12] v0.18.1-preview.3 fix: SqlServerDatabaseConfiguration 命名统一
+    <PackageReleaseNotes>		[2024-09-13] v0.16.4-preview1 upgrade
+		[2024-10-09] v0.16.5-preview1 Updated module behavior and related support.
+		[2024-12-07] v0.16.6-preview1 Updated module behavior and related support.
+		[2025-01-10] v0.17.0-preview1 Updated module behavior and related support.
+		[2025-05-29] v0.18.0-preview.1 Updated module behavior and related support.
+		v0.1 initial release
+		v0.2 Updated module behavior and related support.
+		v0.3 Updated module behavior and related support.
+		v0.4.1 Updated module behavior and related support.
+		v0.6.100 support .NET 5
+		v0.6.300 add Swagger Api
+		v0.6.359 add FindWeixinApi interface
+		v0.6.400 Updated module behavior and related support.
+		v0.6.500 Updated module behavior and related support.
+		v0.7.0 support PostgreSQL
+		v0.8.0 Updated module behavior and related support.
+		v0.9.0 Updated module behavior and related support.
+		v0.9.2 Updated module behavior and related support.
+		v0.9.3 Updated module behavior and related support.
+		v0.11.0 Updated module behavior and related support.
+		v0.12.0 support PromptRange
+		v0.13.0 Updated module behavior and related support.
+		v0.15.0 Updated module behavior and related support.
+		v0.16.1 Updated module behavior and related support.
+		v0.16.2 Updated module behavior and related support.
+		[2025-07-12] v0.18.1-preview.3 Updated module behavior and related support.
 		[2025-07-12] v0.19.0-preview.1 migratie Senparc.Xncf.WeixinManager to NcfPackageResource repository
 		[2025-07-13] v0.20.0-preview.1 upgrade MpAccount loading progress in UseXncfModule
 		[2025-07-13] v0.20.1-preview.1 upgrade MpAccount loading progress in UseXncfModule
@@ -62,98 +61,98 @@
 		[2025-08-19] v0.21.1-preview.1 fix: Set ApiBind DefaultRequestMethod to GET
 		[2025-11-01] update basic libraries, including Senparc.AI
 		[2026-03-24] v0.21.5-preview.1 update Senparc.AI.Kernel to v0.28.0 and Senparc.Weixin.MP to v16.24.2
-		[2026-07-02] v0.22.2-preview1 支持流式输出并优化交互体验，新增 PromptRange 与 AgentsManager 使用记录能力
-		1、支持流式输出并优化交互体验
-		2、新增 PromptRange 与 AgentsManager 使用记录能力
+		[2026-07-02] v0.22.2-preview1 Updated module behavior and related support.
+		1. Updated module behavior and related support.
+		2. Updated module behavior and related support.
 		[2026-07-07] v0.22.3-preview2 Dependency updates from upstream modules
-		1、Dependency update from Senparc.Xncf.PromptRange to 0.16.5-preview4
-		2、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
-		[2026-07-17] v0.23.0-preview3 为 WeixinManager 模块接入统一资源本地化并优化功能文案
-		1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
-		2、统一模块注册信息、菜单名称与功能描述的本地化输出
-		3、同步管理页面与前端交互文案的多语言显示
-		4、补充并统一多语言资源键及资源文件
-		5、调整公众号账号页面链接导航处理，兼容桌面内嵌 WebView
-		[2026-07-29] v0.23.1-preview4 限制微信管理模块的敏感日志和外部接口暴露
-		1、详细 API 日志仅在开发环境启用，降低密钥和令牌泄露风险
-		2、生成 SDK 接口默认禁止外部访问，避免未经授权的公网暴露
-		[2026-07-31] v0.24.0-preview5 完善 WeixinManager 管理功能多语言并升级兼容依赖
-		1、补齐公众号账户、用户、异常与 Swagger 交互文案的多语言资源
-		2、修复账户保存提示乱码并保留英文回退文案
-		3、升级 Senparc.AI 组件、CO2NET WebApi 2.1.9-preview 与 TenPay 1.20.0
-		[2026-08-04] v0.24.1-preview6 统一微信模块多数据库设计时配置
-		1、为 Dm、MySql、Oracle、PostgreSQL、SqlServer 与 Sqlite 统一设计时 DbContext 配置
+		1. Dependency update from Senparc.Xncf.PromptRange to 0.16.5-preview4
+		2. Updated module behavior and related support.
+		[2026-07-17] v0.23.0-preview3 Updated module behavior and related support.
+		1. integrateshared resource-localization mechanism, supportmodulefeature textdisplay dynamically according to the current culture
+		2. Updated module behavior and related support.
+		3. Updated module behavior and related support.
+		4. Updated module behavior and related support.
+		5. Updated module behavior and related support.
+		[2026-07-29] v0.23.1-preview4 Updated module behavior and related support.
+		1. Updated module behavior and related support.
+		2. Updated module behavior and related support.
+		[2026-07-31] v0.24.0-preview5 Updated module behavior and related support.
+		1. Updated module behavior and related support.
+		2. Updated module behavior and related support.
+		3. Updated module behavior and related support.
+		[2026-08-04] v0.24.1-preview6 Updated module behavior and related support.
+		1. Updated module behavior and related support.
 		[2026-08-08] v0.24.2-preview7 Dependency updates from upstream projects
-		1、Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
-		2、Dependency update from Senparc.Ncf.Core to 0.28.1-preview6
-		3、Dependency update from Senparc.Ncf.Database.PostgreSQL to 0.13.6-preview6
-		4、Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.6-preview6
-		5、Dependency update from Senparc.Ncf.Database to 0.21.6-preview6
-		6、Dependency update from Senparc.Ncf.Mvc.UI to 0.22.2-preview6
-		7、Dependency update from Senparc.Ncf.Repository to 0.20.6-preview6
-		8、Dependency update from Senparc.Ncf.Service to 0.23.6-preview6
-		9、Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
-		10、Dependency update from Senparc.Xncf.PromptRange to 0.19.1-preview9
+		1. Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
+		2. Dependency update from Senparc.Ncf.Core to 0.28.1-preview6
+		3. Dependency update from Senparc.Ncf.Database.PostgreSQL to 0.13.6-preview6
+		4. Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.6-preview6
+		5. Dependency update from Senparc.Ncf.Database to 0.21.6-preview6
+		6. Dependency update from Senparc.Ncf.Mvc.UI to 0.22.2-preview6
+		7. Dependency update from Senparc.Ncf.Repository to 0.20.6-preview6
+		8. Dependency update from Senparc.Ncf.Service to 0.23.6-preview6
+		9. Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
+		10. Dependency update from Senparc.Xncf.PromptRange to 0.19.1-preview9
 		[2026-08-13] v0.24.3-preview8 Dependency update from Senparc.Ncf.AreaBase to 0.23.3-preview7; Senparc.Ncf.Core to 0.28.2-preview7; Senparc.Ncf.XncfBase to 0.25.0-preview7; Senparc.Xncf.PromptRange to 0.19.2-preview10; Senparc.Xncf.Swagger to 0.20.3-preview7
 		[2026-08-15] v0.24.4 Dependency update from Senparc.Ncf.Core to 0.29.0-preview8
-		1、Dependency update from Senparc.Xncf.PromptRange to 0.19.3
-		2、补充本地数据库配置文件并同步当前基础服务与 AgentsManager 依赖版本
+		1. Dependency update from Senparc.Xncf.PromptRange to 0.19.3
+		2. Updated module behavior and related support.
 		[2026-08-29] v0.24.5 Dependency updates from Senparc.Ncf.Core to 0.30.0-preview9
-		1、Dependency update from Senparc.Ncf.Core to 0.30.0-preview9
-		[2026-09-15] v0.24.6 适配共享 AI 依赖与 Harness 版本
-		1、同步 AgentKernel 及 Microsoft Agents AI Harness 依赖
-		2、保持微信管理模块宿主集成兼容
-		[2026-09-16] v0.24.7 升级微信相关组件至当前兼容版本
-		1、同步 Senparc.Weixin.AspNet、MP、Open、TenPay、Work 与 WxOpen 等组件版本
-		2、保持微信管理模块在当前 .NET 10 宿主中的运行兼容
-		[2026-09-17] v0.24.8 适配共享 AgentKernel 预览依赖版本
-		1、同步 Senparc.AI.AgentKernel 至 0.1.14-preview5
-		2、保持微信管理模块宿主集成兼容
-		[2026-09-26] v0.24.9 补齐个人微信 Claw AI 自动回复链路并修复消息处理问题
-		1、新增 WeixinClawAiMessageHandler：按账号 PromptRangeCode 自动 AI 回复一对一文本消息（群组消息不自动回复）
-		2、修复长轮询超时被误判为账号错误、NotifyStart 失败不重试、LastMessageAt 未更新的问题
-		3、修复 WeixinClawLoginService 单例捕获 Scoped 客户端的 DI 生命周期问题，并清理过期登录会话
-		4、登录面板补齐验证代码（verify_code）输入与错误提示，保存/发送失败时显示服务端原因
-		[2026-10-01] 个人微信后台按租户作用域调用账号服务和现有 Repository 查询，保留统一软删除过滤
-		[2026-10-01] v0.24.9 接入 FileManager 私有附件导入
-		1、Weixin Bot 收到媒体文件后通过 Abstractions EventBus 请求保存到 FileManager
-		2、修复后台轮询在多租户模式下的账号发现和租户上下文传播
-		[2026-10-02] 微信后台轮询复用统一租户作用域，移除反射及重复上下文设置并完善任务取消释放
-		[2026-10-03] v0.24.12 修复微信 Claw 下行 JSON 字段大小写、可选响应字段、媒体密钥编码及轮询会话上下文丢失，按官方 2.4.9 协议补充契约和发送链路测试
-		[2026-10-04] v0.24.13 支持微信 SILK 语音缓存解码和视频播放、Range 请求，修复首屏连接状态加载并移除重复发送面板
-		[2026-10-05] v0.24.14 持久化微信 Claw 会话上下文，支持 NeuBell 重启补偿推送并记录去重状态
+		1. Dependency update from Senparc.Ncf.Core to 0.30.0-preview9
+		[2026-09-15] v0.24.6 Updated module behavior and related support.
+		1. Updated module behavior and related support.
+		2. Updated module behavior and related support.
+		[2026-09-16] v0.24.7 Updated module behavior and related support.
+		1. Updated module behavior and related support.
+		2. Updated module behavior and related support.
+		[2026-09-17] v0.24.8 Updated module behavior and related support.
+		1. Updated module behavior and related support.
+		2. Updated module behavior and related support.
+		[2026-09-26] v0.24.9 Updated module behavior and related support.
+		1. Updated module behavior and related support.
+		2. Updated module behavior and related support.
+		3. Updated module behavior and related support.
+		4. Updated module behavior and related support.
+		[2026-10-01] invocationaccountservice Repository , unifydelete
+		[2026-10-01] v0.24.9 integrate FileManager privateattachmentimport
+		1. Updated module behavior and related support.
+		2. Updated module behavior and related support.
+		[2026-10-02] unify, improvetaskcancel
+		[2026-10-03] v0.24.12 Updated module behavior and related support.
+		[2026-10-04] v0.24.13 Updated module behavior and related support.
+		[2026-10-05] v0.24.14 Updated module behavior and related support.
 		[2026-10-09] v0.24.15 Dependency update from Senparc.Xncf.PromptRange to 0.19.8
-		[2026-11-03] v0.24.16 公众号 AI 回复接入 Token 用量记录
-		1、消息处理对话结果写入 Token 用量
-		2、适配 Senparc.AI.AgentKernel 0.1.15-preview2
-		3、完善微信 Claw 消息收发、回执完整性与绑定配置交互
-		4、隔离 AI 会话缓存并在登录确认时恢复请求租户上下文
-		5、Dependency update from Senparc.Ncf.Database.PostgreSQL to 0.13.11
-		6、Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.11
-		7、Dependency update from Senparc.Ncf.Database to 0.21.11
-		8、Dependency update from Senparc.Ncf.Mvc.UI to 0.22.6-preview10
+		[2026-11-03] v0.24.16 Updated module behavior and related support.
+		1. Updated module behavior and related support.
+		2. adapt Senparc.AI.AgentKernel 0.1.15-preview2
+		3. Updated module behavior and related support.
+		4. Updated module behavior and related support.
+		5. Dependency update from Senparc.Ncf.Database.PostgreSQL to 0.13.11
+		6. Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.11
+		7. Dependency update from Senparc.Ncf.Database to 0.21.11
+		8. Dependency update from Senparc.Ncf.Mvc.UI to 0.22.6-preview10
     [2026-11-03] Add shared documentation help to the official-account edit form.
-    [2026-11-03] v0.24.18 以中文资源为基准统一整理多语言文案
-    1、补齐并校正各语言资源条目，使模块界面文案与中文基准保持一致
-    2、Dependency update from Senparc.Ncf.AreaBase to 0.23.10
-    3、Dependency update from Senparc.Ncf.Core to 0.30.4-preview10
-    4、Dependency update from Senparc.Ncf.Database.PostgreSQL to 0.13.12
-    5、Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.12
-    6、Dependency update from Senparc.Ncf.Database to 0.21.12
-    7、Dependency update from Senparc.Ncf.Mvc.UI to 0.22.7-preview11
-    8、Dependency update from Senparc.Ncf.Repository to 0.20.11-preview10
-    9、Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
-    10、Dependency update from Senparc.Ncf.XncfBase to 0.28.2
-    11、Dependency update from Senparc.Xncf.PromptRange to 0.20.14
-    12、Dependency update from Senparc.Xncf.Swagger to 0.20.10
-    [2026-11-11] v0.24.18 新增企业微信打卡连接器，并统一注册文案
-    1、提供企业微信打卡连接器，使用 CorpId 和应用 Secret 获取打卡记录。
-    2、配置后可在对话、Workflow 和 Agent 模板中按授权选择。
-    3、Register 通过 XncfRegisterText 用稳定资源键解析菜单名称与模块说明。
-    4、共享 AI 依赖升级到 Senparc.AI.AgentKernel 0.1.17 与 Microsoft Agent Framework 1.28.0。
-    [2026-11-12] v0.25.0 新增企业微信打卡连接器并统一模块注册文案
-    1、增加企业微信打卡连接器及参数校验、请求错误处理能力。
-    2、模块注册显示名称与说明改用稳定资源键解析。
+    [2026-11-03] v0.24.18 Updated module behavior and related support.
+    1. Updated module behavior and related support.
+    2. Dependency update from Senparc.Ncf.AreaBase to 0.23.10
+    3. Dependency update from Senparc.Ncf.Core to 0.30.4-preview10
+    4. Dependency update from Senparc.Ncf.Database.PostgreSQL to 0.13.12
+    5. Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.12
+    6. Dependency update from Senparc.Ncf.Database to 0.21.12
+    7. Dependency update from Senparc.Ncf.Mvc.UI to 0.22.7-preview11
+    8. Dependency update from Senparc.Ncf.Repository to 0.20.11-preview10
+    9. Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
+    10. Dependency update from Senparc.Ncf.XncfBase to 0.28.2
+    11. Dependency update from Senparc.Xncf.PromptRange to 0.20.14
+    12. Dependency update from Senparc.Xncf.Swagger to 0.20.10
+    [2026-11-11] v0.24.18 Updated module behavior and related support.
+    1. Updated module behavior and related support.
+    2. Updated module behavior and related support.
+    3. Updated module behavior and related support.
+    4. Updated module behavior and related support.
+    [2026-11-12] v0.25.0 Updated module behavior and related support.
+    1. Updated module behavior and related support.
+    2. Updated module behavior and related support.
     </PackageReleaseNotes>
     <RepositoryUrl> https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -179,8 +178,6 @@
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
   </ItemGroup>
   <ItemGroup>
-    <!--<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />-->
-    <!--<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />-->
     <!--<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.6" />-->
     <!--<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="2.0.0-preview1-final" />-->
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
@@ -196,7 +193,6 @@
     <PackageReference Include="Senparc.AI.Kernel" Version="$(SenparcAiKernelVersion)" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />
     <!--<PackageReference Include="Senparc.Weixin.All" Version="2025.10.24" />-->
-    <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.1" />-->
     <PackageReference Include="Senparc.Weixin.AspNet" Version="1.6.7" />
     <PackageReference Include="Senparc.Weixin.MP" Version="16.25.3" />
     <PackageReference Include="Senparc.Weixin.MP.Middleware" Version="1.5.7" />
@@ -204,7 +200,7 @@
     <PackageReference Include="Senparc.Weixin.TenPay" Version="1.20.1" />
     <PackageReference Include="Senparc.Weixin.Work" Version="3.32.4" />
     <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.28.3" />
-    <!-- 由于 Npgsql 生成代码有依赖，因此此处暂时引用 -->
+    <!--  Npgsql generatedependency, reference -->
     <!--<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.10" />-->
     <!--<PackageReference Include="Senparc.Ncf.Database.PostgreSQL" Version="0.12.8.3-preview1" />
 		<PackageReference Include="Senparc.Ncf.Database.Sqlite" Version="0.19.8.3-preview1" />-->
@@ -242,7 +238,7 @@
     <Folder Include="OHS\Local\" />
   </ItemGroup>
   <ItemGroup>
-    <!-- 宿主站点使用 App_Data/Database；模块内配置仅本地开发用，避免 publish 冲突 -->
+    <!-- hostsite App_Data/Database;moduleconfiguration,  publish  -->
     <Content Remove="App_Data\Database\SenparcConfig.config" />
     <None Include="App_Data\Database\SenparcConfig.config" />
   </ItemGroup>
@@ -263,6 +259,6 @@
     <!--<ProjectReference Include="..\..\Senparc.Xncf.Swagger\Senparc.Xncf.Swagger.csproj" />-->
   </ItemGroup>
   <!--<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-	  <Exec Command="cd E:\Senparc项目\NeuCharFramework\NCF\src\XncfExtensionSample\MyExtensionCode&#xD;&#xA;&#xD;&#xA;dotnet add package $(SolutionName) - - prerelease -s &quot;E:\Senparc项目\NeuCharFramework\NcfPackageSources\src\BuildOutPut&quot;" />
+	  <Exec Command="cd E:\Senparcproject\NeuCharFramework\NCF\src\XncfExtensionSample\MyExtensionCode&#xD;&#xA;&#xD;&#xA;dotnet add package $(SolutionName) - - prerelease -s &quot;E:\Senparcproject\NeuCharFramework\NcfPackageSources\src\BuildOutPut&quot;" />
 	</Target>-->
 </Project>

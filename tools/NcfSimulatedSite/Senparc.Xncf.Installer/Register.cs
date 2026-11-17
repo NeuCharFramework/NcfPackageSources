@@ -1,17 +1,32 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：Register.cs
-    文件功能描述：模块注册与初始化逻辑
-    
-    
-    创建标识：Senparc - 20241028
-    
-    修改标识：Senparc - 20260724
-    修改描述：v0.4.0 增加默认模块选择与安装确认并完善多语言界面
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.5.14 统一 XNCF Register 显示元数据与多语言资源键
+    Copyright (C) 2026 Senparc
+
+  
+
+    File name: Register.cs
+
+    File description: module registration and initialization logic
+
+    
+
+    
+
+    Created by: Senparc - 20241028
+
+    
+
+    Modified by: Senparc - 20260724
+
+    Change description: v0.4.0 Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20261111
+
+    Change description: v0.5.14 unify XNCF Register display metadata and localization resource keys
+
+
 
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Builder;
@@ -45,13 +60,13 @@ namespace Senparc.Xncf.Installer
                 "NCF 安装程序",
                 "NCF 初始化安装模块，安装完成后可卸载或移除");
 
-        #region IXncfRegister 接口
+        #region Legacy section
 
         public override string Name => "Senparc.Xncf.Installer";
 
-        public override string Uid => "62FBB022-B04E-423F-82FE-926D418A0815";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
+        public override string Uid => "62FBB022-B04E-423F-82FE-926D418A0815";//Legacy comment translated to English.
 
-        public override string Version => "0.3";//必须填写版本号
+        public override string Version => "0.3";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 

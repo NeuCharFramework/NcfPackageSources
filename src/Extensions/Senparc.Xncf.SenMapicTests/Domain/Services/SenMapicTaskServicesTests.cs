@@ -85,12 +85,12 @@ namespace Senparc.Xncf.SenMapicTests.Domain.Services
 
             // Assert
             Assert.IsNotNull(task);
-            Assert.AreEqual(SenMapicTaskStatus.Running, task.Status);//正在进行中
+            Assert.AreEqual(SenMapicTaskStatus.Running, task.Status);//Legacy comment translated to English.
 
             Assert.AreEqual(name, task.Name);
             Assert.AreEqual(startUrl, task.StartUrl);
 
-            //TODO:可以等待完成
+            //TODO: may wait for completion
         }
 
         [TestMethod]
@@ -113,7 +113,7 @@ namespace Senparc.Xncf.SenMapicTests.Domain.Services
             Assert.IsNotNull(result);
             Assert.AreEqual(name, result.Name);
             Assert.AreEqual(startUrl, result.StartUrl);
-            Assert.AreEqual(SenMapicTaskStatus.Waiting, result.Status); // 验证初始状态
+            Assert.AreEqual(SenMapicTaskStatus.Waiting, result.Status); //Legacy comment translated to English.
         }
 
         [TestMethod]
@@ -152,7 +152,7 @@ namespace Senparc.Xncf.SenMapicTests.Domain.Services
             var result = _senMapicTaskService.CreateTaskAsync(name, invalidUrl, 5, 60, 3, 100,
                 startImmediately: true);
 
-            //TODO:验证存在错误信息的结果
+            //TODO: test a result containing an error message
         }
     }
 }

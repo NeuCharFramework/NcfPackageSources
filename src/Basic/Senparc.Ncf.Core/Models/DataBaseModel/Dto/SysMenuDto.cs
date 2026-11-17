@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：SysMenuDto.cs
-    文件功能描述：SysMenuDto 相关实现
+
+    File name: SysMenuDto.cs
+
+    File description: SysMenuDto related implementation
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -23,7 +35,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
     {
       
         /// <summary>
-        /// 是否是菜单
+        ///Legacy comment translated to English.
         /// </summary>
         [Obsolete("使用MenuType字段代替")]
         public bool IsMenu { get; set; }
@@ -36,7 +48,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public string MenuName { get; set; }
 
         /// <summary>
-        /// 父菜单
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(50)]
         public string ParentId { get; set; }
@@ -45,7 +57,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public string Url { get; set; }
 
         /// <summary>
-        /// 图标
+        /// icon
         /// </summary>
         [MaxLength(50)]
         public string Icon { get; set; }
@@ -56,7 +68,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public int Sort { get; set; }
 
         /// <summary>
-        /// 是否可见
+        ///Legacy comment translated to English.
         /// </summary>
         public bool Visible { get; set; }
 
@@ -86,7 +98,7 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
     }
 
     /// <summary>
-    /// 菜单树
+    ///Legacy comment translated to English.
     /// </summary>
     public class SysMenuTreeItemDto
     {

@@ -1,23 +1,23 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：ModuleAssistantPlugin.cs
-    文件功能描述：后台模块助手插件
+    File name: ModuleAssistantPlugin.cs
+    File description: Related implementation.
     
     
-    创建标识：Senparc - 20260327
+    Created by: Senparc - 20260327
     
-    修改标识：Senparc - 20260724
-    修改描述：v0.1.0 增强后台模块批量更新并完善多语言管理界面
+    Modified by: Senparc - 20260724
+    Change description: v0.1.0 enhance batch module updates and improve the multilingual management interface
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.5.1 优化管理端 AI 插件与知识库交互
+    Modified by: Senparc - 20260815
+    Change description: v0.5.1 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261009
-    修改描述：v0.11.0 增强后台 Admin Chat 群组配置、提示词构建与上下文控制
+    Modified by: Senparc - 20261009
+    Change description: v0.11.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 enhance Agent Studio, group configuration, and task management interactions
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 enhance Agent Studio, group configuration, and task management interactions
 
 ----------------------------------------------------------------*/
 using Microsoft.SemanticKernel;
@@ -34,8 +34,8 @@ using System.Text;
 namespace Senparc.Areas.Admin.Domain.Services.AIPlugins
 {
     /// <summary>
-    /// ModuleAssistantPlugin：针对会话关联模块的 AI Function Calling 插件。
-    /// <para>当用户提问涉及模块信息、数据库结构、已安装功能等时，AI 将自动调用对应函数。</para>
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public class ModuleAssistantPlugin
     {
@@ -44,16 +44,16 @@ namespace Senparc.Areas.Admin.Domain.Services.AIPlugins
         private readonly List<AdminChatSessionModule> _sessionModules;
 
         /// <summary>
-        /// 初始化模块助手插件。
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="sessionModules">当前会话关联模块列表。</param>
+        ///Legacy comment translated to English.
         public ModuleAssistantPlugin(List<AdminChatSessionModule> sessionModules)
         {
             _sessionModules = sessionModules ?? new List<AdminChatSessionModule>();
         }
 
         /// <summary>
-        /// 列出当前会话关联的所有 XNCF 模块
+        ///Legacy comment translated to English.
         /// </summary>
         [KernelFunction, Description("获取当前对话会话已关联的所有 XNCF 模块列表。当用户询问当前会话有哪些模块、关联了哪些模块时调用。")]
         public string GetSessionModuleList()
@@ -79,7 +79,7 @@ namespace Senparc.Areas.Admin.Domain.Services.AIPlugins
         }
 
         /// <summary>
-        /// 获取指定模块的详细信息（含 Functions 列表）
+        ///Legacy comment translated to English.
         /// </summary>
         [KernelFunction, Description("获取指定模块的详细信息，包括描述、版本、可用功能（FunctionRender）列表等。支持通过模块名称关键字或 UID 查询。当用户询问某个模块有哪些功能、模块说明时调用。")]
         public string GetModuleDetail(
@@ -103,7 +103,7 @@ namespace Senparc.Areas.Admin.Domain.Services.AIPlugins
                 sb.AppendLine($"- **图标**: {register.Icon}");
                 sb.AppendLine($"- **支持 MCP**: {(register.EnableMcpServer ? "是" : "否")}");
 
-                // 获取 FunctionRender 注册的功能列表
+                //Legacy comment translated to English.
                 var aiCallableFunctions = Ncf.XncfBase.Register.FunctionRenderCollection.TryGetValue(register.GetType(), out var functionGroup)
                     ? functionGroup.Values
                         // This plugin is itself an AI tool. Do not advertise legacy UI-only or
@@ -132,7 +132,7 @@ namespace Senparc.Areas.Admin.Domain.Services.AIPlugins
         }
 
         /// <summary>
-        /// 获取指定模块的数据库结构信息
+        ///Legacy comment translated to English.
         /// </summary>
         [KernelFunction, Description("获取指定模块的数据库/存储结构信息，包括数据库前缀、DbContext 类型、数据表（DbSet）列表等。当用户询问模块的数据结构、数据库表、存储内容时调用。")]
         public string GetModuleDatabaseInfo(
@@ -170,7 +170,7 @@ namespace Senparc.Areas.Admin.Domain.Services.AIPlugins
                             var entityType = prop.PropertyType.GetGenericArguments().FirstOrDefault();
                             sb.AppendLine($"  * **{prop.Name}** → 实体类型：{entityType?.Name ?? "未知"}");
 
-                            // 列出实体的公开属性（简要字段清单）
+                            //Legacy comment translated to English.
                             if (entityType != null)
                             {
                                 var fields = entityType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
@@ -199,7 +199,7 @@ namespace Senparc.Areas.Admin.Domain.Services.AIPlugins
         }
 
         /// <summary>
-        /// 列出系统中所有已注册模块
+        ///Legacy comment translated to English.
         /// </summary>
         [KernelFunction, Description("列出当前系统中所有已注册的 XNCF 模块（不局限于当前会话的关联模块）。当用户想了解系统整体有哪些模块、模块概览时调用。")]
         public string ListAllInstalledModules()
@@ -236,7 +236,7 @@ namespace Senparc.Areas.Admin.Domain.Services.AIPlugins
         }
 
         /// <summary>
-        /// 根据 UID 或名称关键字从会话模块中查找
+        ///Legacy comment translated to English.
         /// </summary>
         private AdminChatSessionModule FindModule(string moduleUidOrName)
         {

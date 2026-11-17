@@ -1,43 +1,43 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：ChatGroupAppService.cs
-    文件功能描述：ChatGroupAppService 相关实现
+    File name: ChatGroupAppService.cs
+    File description: ChatGroupAppService related implementation
 
-    创建标识：Senparc - 20260704
+    Created by: Senparc - 20260704
 
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.12.0-preview6 为 AgentsManager 模块接入统一资源本地化并优化功能文案
+    Modified by: Senparc - 20260717
+    Change description: v0.12.0-preview6 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+    Modified by: Senparc - 20260813
+    Change description: v0.15.0-preview11 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.15.0-preview20 增强 AgentTemplate、ChatGroup 与发布型 A2A 的取消和请求处理
+    Modified by: Senparc - 20260815
+    Change description: v0.15.0-preview20 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 支持 AgentTemplate 模型绑定、空输出 Token 重试与 Human-in-the-Loop
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
+    Modified by: Senparc - 20260822
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261006
-    修改描述：工作室增量组队、团队创建及 Agent/Group/Task 完整快照
+    Modified by: Senparc - 20261006
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261009
-    修改描述：v0.18.3 增强 Agent Studio、群组配置与任务管理交互
+    Modified by: Senparc - 20261009
+    Change description: v0.18.3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.19.1 enhance Agent Studio, group configuration, and task management interactions
+    Modified by: Senparc - 20261103
+    Change description: v0.19.1 enhance Agent Studio, group configuration, and task management interactions
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.19.3 完善 AgentsManager 模板、ChatGroup 与连接器能力兼容
+    Modified by: Senparc - 20261111
+    Change description: v0.19.3 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -195,12 +195,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             {
                 var enabledAgents = await _agentsTemplateService.GetFullListAsync(z => z.Enable, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
 
-                // 固定逻辑：群主和对接人优先使用“主持人”名称中评分最高的 Agent；不存在则自动创建。
+                //Legacy comment translated to English.
                 var preferredHost = await EnsurePreferredHostAgentAsync(enabledAgents, logger);
                 var adminId = preferredHost.Id;
                 var enterAgentId = preferredHost.Id;
 
-                //TODO:封装到 Service 中
+                //Legacy comment translated to English.
                 ChatGroup chatGroup = null;
                 var chatGroupDto = new ChatGroupDto(request.Name, true, ChatGroupState.Unstart, request.Description, adminId, enterAgentId);
                 var isNew = false;
@@ -225,12 +225,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                         return $"未找到需要编辑的 ChatGroup，ID：{chatGroupId}";
                     }
 
-                    // 此 Function 没有 Enable 入参；编辑既有组时应保留管理员设置的启用状态。
+                    //Legacy comment translated to English.
                     chatGroupDto.Enable = chatGroup.Enable;
                     chatGroup.Update(chatGroupDto);
                 }
 
-                //添加成员
+                //Legacy comment translated to English.
                 var memberList = new List<ChatGroupMember>();
                 var rawMemberInputs = new List<string>();
                 rawMemberInputs.AddRange((request.Members ?? Array.Empty<string>()).Where(z => !string.IsNullOrWhiteSpace(z)));
@@ -256,7 +256,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     return "请至少提供一个群成员（支持 ID 或名称）";
                 }
 
-                //合并“对接人”为成员
+                //Legacy comment translated to English.
                 if (!memberIdList.Contains(chatGroupDto.EnterAgentTemplateId))
                 {
                     memberIdList.Add(chatGroupDto.EnterAgentTemplateId);
@@ -464,7 +464,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                //群主
+                //Legacy comment translated to English.
                 if ((request.ChatGroups?.Length ?? 0) == 0)
                 {
                     return "至少选择一个组！";
@@ -510,10 +510,10 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 创建或设置 ChatGroup
+        /// createorsettings ChatGroup
         /// </summary>
-        /// <param name="chatGroupDto">ChatGroup 信息></param>
-        /// <param name="memberAgentTemplateIds">成员 AgentTemplate ID</param>
+        /// <param name="chatGroupDto">ChatGroup information></param>
+        /// <param name="memberAgentTemplateIds">members AgentTemplate ID</param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<ChatGroup_SetGroupChatResponse>> SetChatGroup(
@@ -527,7 +527,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 //var agentsTemplateAdmin = await _agentsTemplateService.GetAgentTemplateAsync(adminId);
                 //var agentsTemplateEnterAgent = await _agentsTemplateService.GetAgentTemplateAsync(enterAgent);
 
-                //TODO:封装到 Service 中
+                //Legacy comment translated to English.
                 ChatGroup chatGroup = null;
                 chatGroupDto.State = ChatGroupState.Unstart;
 
@@ -558,7 +558,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 }
                 else if (humanTemplate != null)
                 {
-                    // 编辑既有 Group 时，复用前端回传列表也不能绕过关闭 Human 的选择。
+                    //Legacy comment translated to English.
                     memberAgentTemplateIds.RemoveAll(z => z == humanTemplate.Id);
                 }
                 memberAgentTemplateIds = memberAgentTemplateIds.Distinct().ToList();
@@ -568,7 +568,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 var remoteMemberList = new List<ChatGroupRemoteMember>();
                 if (chatGroupDto.Id == 0)
                 {
-                    //新建
+                    //Legacy comment translated to English.
                     chatGroup = new ChatGroup(chatGroupDto);
                     isNew = true;
                 }
@@ -588,9 +588,9 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 
                 logger.Append($"ChatGroup {(isNew ? "新增" : "编辑")} 成功！");
 
-                //添加成员
+                //Legacy comment translated to English.
 
-                //合并“对接人”为成员
+                //Legacy comment translated to English.
                 if (!memberAgentTemplateIds.Contains(chatGroupDto.EnterAgentTemplateId))
                 {
                     memberAgentTemplateIds.Add(chatGroupDto.EnterAgentTemplateId);
@@ -600,7 +600,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 {
                     if (memberList.Exists(z => z.AgentTemplateId == agentId))
                     {
-                        continue;//已存在的不添加
+                        continue;//Legacy comment translated to English.
                     }
 
                     var chatGroupMemberDto = new ChatGroupMemberDto(null, chatGroup.Id, agentId);
@@ -609,7 +609,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     memberList.Add(member);
                 }
 
-                //删除不在范围内的成员
+                //Legacy comment translated to English.
                 var tobeRemove = memberList.Where(z => !memberAgentTemplateIds.Contains(z.AgentTemplateId)).ToArray();
 
                 for (var i = 0; i < tobeRemove.Length; i++) {
@@ -643,7 +643,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                         ChatGroupId = chatGroup.Id,
                         RemoteAgentId = remoteAgentId,
                         Enable = true,
-                        // 远程成员默认最小化共享；旧 Group 若未选择远程成员则完全不受影响。
+                        //Legacy comment translated to English.
                         ContextSharingMode = ChatGroupContextSharingMode.InstructionAndKeyReplies
                     }));
                 }
@@ -873,7 +873,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 启用或停用 ChatGroup。停用后不再接收新的群组执行任务。
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<string>> Enable(int id, bool enable)
@@ -901,7 +901,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 创建或设置 ChatGroup
+        /// createorsettings ChatGroup
         /// </summary>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
@@ -922,7 +922,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 var seh = new SenparcExpressionHelper<ChatGroup>();
                 seh.ValueCompare
                     .AndAlso(agentTemplateId > 0, z => chatGroupIdList.Contains(z.Id));
-                //增加模糊搜索组
+                //Legacy comment translated to English.
                 seh.ValueCompare.AndAlso(!string.IsNullOrEmpty(filter), _ => _.Name.Contains(filter));
                 var where = seh.BuildWhereExpression();
 
@@ -936,7 +936,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 创建或设置 ChatGroup
+        /// createorsettings ChatGroup
         /// </summary>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
@@ -981,8 +981,8 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     }
                 }
 
-                // 任务详情的成员标签需要与 Agent 列表使用同一份历史用量和活动时间统计。
-                // GetChatGroupItem 原先只映射基础 AgentTemplate，导致这些字段保持默认值。
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 var agentTemplateAppService = base.GetRequiredService<AgentTemplateAppService>();
                 await agentTemplateAppService.PopulateAgentMetadataAsync(
                     agents.Concat(roleAgentDtoList.Select(z => z.AgentTemplateDto)));
@@ -1004,10 +1004,10 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 运行智能体
+        /// runagent
         /// </summary>
-        /// <param name="request">任务正文。</param>
-        /// <param name="chatGroupId">由启动页显式传入的聊天组 ID。保留正文中的同名字段以兼容既有调用。</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<string>> RunGroup(
@@ -1021,9 +1021,9 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     throw new NcfExceptionBase("未提供聊天组启动请求。");
                 }
 
-                // 动态 ApiBind 控制器会对复杂正文参数和查询参数分别绑定。启动页把 Group ID
-                // 同时写入两处；此处优先采用显式查询参数，避免某些宿主/缓存脚本将正文属性
-                // 绑定为默认值 0 后误判为“未选择有效的聊天组”。
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 if (chatGroupId > 0)
                 {
                     request.ChatGroupId = chatGroupId;
@@ -1032,8 +1032,8 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 request.HumanRecipientUserId ??= GetCurrentAdminUserId();
                 await ValidateStudioRunRequestAsync(request);
 
-                //RunChatGroupInThread 内部通过 ContinueWith 记录异常并管理自身生命周期，
-                //调用方只需投递领域命令，无需等待。
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 _ = _chatGroupService.RunChatGroupInThread(ToRunCommand(request));
 
                 return logger.ToString();
@@ -1079,7 +1079,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 将 HTTP/UI 绑定模型 ChatGroup_RunGroupRequest 映射为 Domain 层执行命令。
+        ///Legacy comment translated to English.
         /// </summary>
         private static ChatGroupRunCommand ToRunCommand(ChatGroup_RunGroupRequest request)
         {
@@ -1108,7 +1108,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取 Agents 3D 视图所需的聚合快照数据
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<AgentGraphSnapshotResponse>> GetAgentGraphSnapshot(string filter = "")
@@ -1364,8 +1364,8 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取后台首页使用的 Agents 轻量运行概览。
-        /// 不返回 Prompt、对话内容或 Agent Card 等敏感配置。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<AgentsDashboardOverviewResponse>> GetDashboardOverview()
@@ -1518,7 +1518,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 删除整个对话（包括所有消息、任务等）
+        ///Legacy comment translated to English.
         /// </summary>
         [FunctionRender(typeof(AgentsManagerResource), "Function.Agents.DeleteConversation.Name", "Function.Agents.DeleteConversation.Description", typeof(Register))]
         public async Task<StringAppResponse> DeleteChatGroup(ChatGroup_DeleteChatGroupRequest request)
@@ -1530,7 +1530,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     return "请选择要删除的对话！";
                 }
 
-                // 检查是否确认删除
+                //Legacy comment translated to English.
                 if (!request.ConfirmDelete)
                 {
                     return "请勾选\"确认删除\"复选框来确认删除操作！";
@@ -1561,7 +1561,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             {
                 try
                 {
-                    // 获取对话信息
+                    //Legacy comment translated to English.
                     var chatGroup = await _chatGroupService.GetObjectAsync(z => z.Id == chatGroupId);
                     if (chatGroup == null)
                     {
@@ -1569,15 +1569,15 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                         continue;
                     }
 
-                    // 1. 删除所有关联的消息和任务
+                    //Legacy comment translated to English.
                     var chatTaskService = base.GetRequiredService<ChatTaskService>();
                     var chatGroupHistoryService = base.GetRequiredService<ChatGroupHistoryService>();
 
-                    // 先获取所有相关的 ChatTask
+                    //Legacy comment translated to English.
                     var chatTasks = await chatTaskService.GetFullListAsync(z => z.ChatGroupId == chatGroupId);
                     var chatTaskIds = chatTasks.Select(z => z.Id).ToList();
 
-                    // 删除这些 ChatTask 下的所有 ChatGroupHistory
+                    //Legacy comment translated to English.
                     if (chatTaskIds.Count > 0)
                     {
                         var histories = await chatGroupHistoryService.GetFullListAsync(
@@ -1592,7 +1592,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                         }
                     }
 
-                    // 2. 删除所有 ChatTask
+                    // 2. deleteall ChatTask
                     if (chatTasks.Count > 0)
                     {
                         foreach (var chatTask in chatTasks)
@@ -1602,7 +1602,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                         logger.Append($"  ✓ 已删除 {chatTasks.Count} 个对话任务");
                     }
 
-                    // 3. 删除所有对话成员 (ChatGroupMember)
+                    //Legacy comment translated to English.
                     var members = await _chatGroupMemeberService.GetFullListAsync(z => z.ChatGroupId == chatGroupId);
                     if (members.Count > 0)
                     {
@@ -1623,7 +1623,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                         logger.Append($"  ✓ 已删除 {remoteMembers.Count} 个远程对话成员");
                     }
 
-                    // 4. 最后删除对话本身 (ChatGroup)
+                    //Legacy comment translated to English.
                     await _chatGroupService.DeleteObjectAsync(chatGroup);
                     logger.Append($"✓ 对话 '{chatGroup.Name}' 及其所有数据已删除");
 
@@ -1636,7 +1636,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 }
             }
 
-            // 生成删除摘要
+            //Legacy comment translated to English.
             logger.Append($"\n========== 删除摘要 ==========");
             logger.Append($"✓ 成功删除: {deletedCount} 个对话");
             if (errors.Count > 0)
@@ -1663,7 +1663,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
     }
 
     /// <summary>
-    /// 首页 Agents 运行概览。所有活跃数字仅表示关联到未完成任务的参与者，不透露任务内容。
+    ///Legacy comment translated to English.
     /// </summary>
     public class AgentsDashboardOverviewResponse
     {

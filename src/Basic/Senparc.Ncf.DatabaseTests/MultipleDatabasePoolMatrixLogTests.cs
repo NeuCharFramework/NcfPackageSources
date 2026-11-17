@@ -24,7 +24,7 @@ namespace Senparc.Ncf.Database.Tests
                 },
                 [typeof(FakeRegisterB)] = new Dictionary<MultipleDatabaseType, Type>
                 {
-                    // 仅支持 Sqlite，用于验证当前 SqlServer 绑定表中出现 (not supported)
+                    //Legacy comment translated to English.
                     [MultipleDatabaseType.Sqlite] = typeof(FakeDbContext_Sqlite),
                 },
             };

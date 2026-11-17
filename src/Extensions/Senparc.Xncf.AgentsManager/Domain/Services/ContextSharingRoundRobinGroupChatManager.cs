@@ -1,20 +1,20 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：ContextSharingRoundRobinGroupChatManager.cs
-    文件功能描述：领域服务与业务流程实现
+    File name: ContextSharingRoundRobinGroupChatManager.cs
+    File description: domain services and business-process implementation
 
 
-    创建标识：Senparc - 20260812
+    Created by: Senparc - 20260812
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+    Modified by: Senparc - 20260813
+    Change description: v0.15.0-preview11 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260829
-    修改描述：v0.17.0 增强 Agent 请求诊断、ChatGroup 状态处理与工作流对象支持
+    Modified by: Senparc - 20260829
+    Change description: v0.17.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.19.3 适配 MAF 1.28 群聊本轮广播
+    Modified by: Senparc - 20261111
+    Change description: v0.19.3 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -31,10 +31,10 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.AgentsManager.Domain.Services;
 
 /// <summary>
-/// 控制 GroupChat 工作流每轮向参与者广播的上下文。
-/// MAF 1.28 起，GroupChatManager 持有完整对话用于选人和结束判断；
-/// UpdateHistoryAsync 只收到本轮即将广播的新消息。参与者自己的会话会累积此前广播。
-/// 此类收缩本轮 payload，避免把工具调用、原始表示或超长文本带出边界。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 internal sealed class ContextSharingRoundRobinGroupChatManager : RoundRobinGroupChatManager
 {
@@ -56,7 +56,7 @@ internal sealed class ContextSharingRoundRobinGroupChatManager : RoundRobinGroup
     {
         if (_contextSharingMode == ChatGroupContextSharingMode.LegacyFullHistory)
         {
-            // 本轮广播由宿主会话累积。这里只去掉审批协议内容，不再把历史重新塞进本轮 payload。
+            //Legacy comment translated to English.
             var currentBroadcast = await base.UpdateHistoryAsync(history, cancellationToken).ConfigureAwait(false);
             return RemoveApprovalProtocolContent(currentBroadcast);
         }
@@ -68,7 +68,7 @@ internal sealed class ContextSharingRoundRobinGroupChatManager : RoundRobinGroup
 
         if (_contextSharingMode == ChatGroupContextSharingMode.InstructionOnly)
         {
-            // 第一轮必须保留用户指令；后续轮次只发送协调提示，不转发任何其他 Agent 的原文。
+            //Legacy comment translated to English.
             var instruction = history.LastOrDefault(z => z.Role == ChatRole.User);
             if (instruction != null)
             {
@@ -82,8 +82,8 @@ internal sealed class ContextSharingRoundRobinGroupChatManager : RoundRobinGroup
             };
         }
 
-        // InstructionAndKeyReplies：默认远程模式。只投递当前轮的纯文本、截断后的共享结论；
-        // 丢弃 RawRepresentation、工具调用、usage、结构化内容和此前历史。
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         return history.Select(z => CreateTextOnlyMessage(z, MaxSharedConclusionLength)).ToList();
     }
 

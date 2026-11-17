@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：20261021123917_Add_PromptRange_SkillKind.cs
-    文件功能描述：20261021123917_Add_PromptRange_SkillKind 相关定义与实现
+    File name: 20261021123917_Add_PromptRange_SkillKind.cs
+    File description: 20261021123917_Add_PromptRange_SkillKind related definitions and implementation
 
 
-    创建标识：Senparc - 20250816
+    Created by: Senparc - 20250816
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.20.8 支持 Add_PromptRange_SkillKind 数据库迁移
+    Modified by: Senparc - 20261103
+    Change description: v0.20.8 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

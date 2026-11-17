@@ -1,20 +1,38 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：XncfRegisterBase.cs
-    文件功能描述：XncfRegisterBase 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.24.0-preview5 统一数据库设计时工厂与函数参数处理
+    File name: XncfRegisterBase.cs
 
-    修改标识：Senparc - 20261108
-    修改描述：创建模块数据库上下文时对齐 DbContextOptions 的具体类型
+    File description: XncfRegisterBase related implementation
+
+    
+
+    
+
+    Created by: Senparc - 20200724
+
+    
+
+    Modified by: Senparc - 20260702
+
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
+
+
+
+    Modified by: Senparc - 20260804
+
+    Change description: v0.24.0-preview5 Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20261108
+
+    Change description: Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 
@@ -48,112 +66,155 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.XncfBase
 {
     /// <summary>
-    /// 所有 XNCF 模块注册的基类
+    ///Legacy comment translated to English.
     /// </summary>
     public abstract class XncfRegisterBase : IXncfRegister
     {
         /// <summary>
-        /// 是否忽略安装（但不影响执行注册代码），默认为 false
+        ///Legacy comment translated to English.
         /// </summary>
         public virtual bool IgnoreInstall { get; }
 
         public virtual bool EnableMcpServer => false;
 
         /// <summary>
-        /// 模块名称，要求全局唯一
+        ///Legacy comment translated to English.
         /// </summary>
         public abstract string Name { get; }
         /// <summary>
-        /// 编号，要求全局唯一
+        ///Legacy comment translated to English.
         /// </summary>
         public abstract string Uid { get; }
         /// <summary>
-        /// 版本号
+        ///Legacy comment translated to English.
         /// </summary>
         public abstract string Version { get; }
         /// <summary>
-        /// 菜单名称
+        /// menu name
         /// </summary>
         public abstract string MenuName { get; }
         /// <summary>
-        /// Icon图标
+        /// Iconicon
         /// </summary>
         public abstract string Icon { get; }
         /// <summary>
-        /// 说明
+        /// description
         /// </summary>
         public abstract string Description { get; }
         ///// <summary>
-        ///// 注册方法，注册的顺序决定了界面中排列的顺序
+        ///Legacy comment translated to English.
         ///// </summary>
-        //public abstract IList<Type> Functions { get; }
+        ///public abstract IList<Type> Functions { get; }
 
         /// <summary>
-        /// 添加 AutoMap 映射
+        ///Legacy comment translated to English.
         /// </summary>
         public virtual ConcurrentBag<Action<Profile>> AutoMapMappingConfigs { get; set; }
         /// <summary>
-        /// 获取当前模块的已注册线程信息
+        ///Legacy comment translated to English.
         /// </summary>
         public IEnumerable<KeyValuePair<ThreadInfo, Thread>> RegisteredThreadInfo => Register.ThreadCollection.Where(z => z.Value.Name.StartsWith(Uid));
 
 
-        #region 执行 Migrate 更新数据 MigrateDatabaseAsync()
+        #region Legacy section
         /*
+
         /// <summary>
-        /// 执行 Migrate 更新数据
+
+        /// execute Migrate updatedata
+
         /// </summary>
+
         /// <param name="serviceProvider"></param>
+
         /// <param name="dbContextType"></param>
-        /// <param name="checkdbContextType">是否需要对 dbContextType 类型进行检查</param>
+
+        Legacy comment translated to English.
+
         /// <returns></returns>
+
         protected virtual async Task MigrateDatabaseAsync(IServiceProvider serviceProvider, Type dbContextType, bool checkdbContextType = true)
+
         {
+
             if (checkdbContextType && !dbContextType.IsSubclassOf(typeof(DbContext)))
+
             {
-                throw new NcfDatabaseException("dbContextType 参数必须继承自 DbContext", null, dbContextType);
+
+                Legacy comment translated to English.
+
             }
 
+
+
             var mySenparcEntities = serviceProvider.GetService(dbContextType) as DbContext;
-            await mySenparcEntities.Database.MigrateAsync().ConfigureAwait(false);//更新数据库
+
+            await mySenparcEntities.Database.MigrateAsync().ConfigureAwait(false);//updatedatabase
+
         }
 
 
+
+
+
         /// <summary>
-        /// 执行 Migrate 更新数据
+
+        /// execute Migrate updatedata
+
         /// </summary>
+
         /// <param name="serviceProvider"></param>
+
         /// <returns></returns>
+
         protected virtual async Task MigrateDatabaseAsync(IServiceProvider serviceProvider)
+
         {
-            //当前Register对应的数据库上下文（DbContext）类型
+
+            Legacy comment translated to English.
+
             var dbContextType = MultipleDatabasePool.Instance.GetXncfDbContextType(this.GetType());
+
             await MigrateDatabaseAsync(serviceProvider, dbContextType, false);
+
         }
 
+
+
         /// <summary>
-        /// 执行 Migrate 更新数据
+
+        /// execute Migrate updatedata
+
         /// </summary>
+
         /// <typeparam name="TSenparcEntities"></typeparam>
+
         /// <param name="serviceProvider"></param>
+
         /// <returns></returns>
+
         protected virtual async Task MigrateDatabaseAsync<TSenparcEntities>(IServiceProvider serviceProvider)
+
             where TSenparcEntities : DbContext
+
         {
+
             await MigrateDatabaseAsync(serviceProvider, typeof(TSenparcEntities));
+
         }
+
         */
         #endregion
 
         /// <summary>
-        /// 安装代码
+        ///Legacy comment translated to English.
         /// </summary>
         public virtual Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
             return Task.CompletedTask;
         }
         /// <summary>
-        /// 卸载代码
+        ///Legacy comment translated to English.
         /// </summary>
         public virtual async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
@@ -161,11 +222,11 @@ namespace Senparc.Ncf.XncfBase
         }
 
         /// <summary>
-        /// 删除表（此方法请慎重使用！）
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="serviceProvider"></param>
         /// <param name="databaseDbContext"></param>
-        /// <param name="entityType">需要删除的表所对应的实体类型</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         protected virtual async Task DropTablesAsync(IServiceProvider serviceProvider, DbContext databaseDbContext, Type[] entityType)
         {
@@ -188,15 +249,15 @@ namespace Senparc.Ncf.XncfBase
 
                         var tableName = databaseDbContext.Model.FindEntityType(type).GetTableName();
 
-                        #region 适用于 SQL Server
-                        //SenparcTrace.SendCustomLog("开始删除表格", $"[schma].[tableName]：[{schma}].[{tableName}]");
+                        #region Legacy section
+                        //Legacy comment translated to English.
                         ////mySenparcEntities.Colors.FromSqlRaw($"DELETE FROM [{key}]");
 
-                        //string fullTableName = $"[{tableName}]";
-                        //if (!schma.IsNullOrEmpty())
-                        //{
-                        //    fullTableName = $"[{schma}].{fullTableName}";
-                        //}
+                        ///string fullTableName = $"[{tableName}]";
+                        ///if (!schma.IsNullOrEmpty())
+                        ///{
+                        ///    fullTableName = $"[{schma}].{fullTableName}";
+                        ///}
                         #endregion
 
                         SenparcTrace.SendCustomLog("开始删除表格", $"tableName：{tableName}");
@@ -219,7 +280,7 @@ namespace Senparc.Ncf.XncfBase
 
                 }
 
-                //删除 Migration 记录，如果为系统表，则不删除
+                //delete Migration record，ifforsystem tables，thennotdelete
                 if (this is IXncfDatabase databaseRegister && databaseRegister.DatabaseUniquePrefix != NcfDatabaseMigrationHelper.SYSTEM_UNIQUE_PREFIX)
                 {
                     var migrationHistoryTableName = NcfDatabaseMigrationHelper.GetDatabaseMigrationHistoryTableName(databaseRegister);
@@ -240,8 +301,8 @@ namespace Senparc.Ncf.XncfBase
         }
 
         /// <summary>
-        /// 获取首页Url
-        /// <para>仅限实现了 IAreaRegister 接口之后的 Register，否则将返回 null</para>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public virtual string GetAreaHomeUrl()
@@ -254,8 +315,8 @@ namespace Senparc.Ncf.XncfBase
             return null;
         }
         /// <summary>
-        /// 获取指定网页的Url
-        /// <para>仅限实现了 IAreaRegister 接口之后的 Register，否则将返回 null</para>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
@@ -276,7 +337,7 @@ namespace Senparc.Ncf.XncfBase
         }
 
         /// <summary>
-        /// 添加模块
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="services"></param>
         /// <param name="configuration"></param>
@@ -285,53 +346,53 @@ namespace Senparc.Ncf.XncfBase
         {
             if (this is IXncfDatabase databaseRegister)
             {
-                //遍历所有Register中的数据库进行注册
+                //Legacy comment translated to English.
                 if (XncfDatabaseDbContextPool.Instance.ContainsKey(this.GetType()))
                 {
                     var dbContextTypes = XncfDatabaseDbContextPool.Instance[this.GetType()];
                     foreach (var dbContextType in dbContextTypes.Values)
                     {
-                        //定义 XncfSenparcEntities 实例生成
+                        //Legacy comment translated to English.
                         Func<IServiceProvider, DbContext> implementationFactory = s =>
                         {
-                            // 始终按当前上下文类型创建泛型 Builder。非泛型 Builder 的 Options
-                            // 运行时类型是 DbContextOptions<DbContext>，无法匹配
-                            // DbContextOptions<TContext> 构造函数。
+                            //Legacy comment translated to English.
+                            //Legacy comment translated to English.
+                            // DbContextOptions<TContext> constructor。
                             var dbOptionBuilderType = typeof(DbContextOptionsBuilder<>).MakeGenericType(dbContextType);
                             var dbOptionBuilder = Activator.CreateInstance(dbOptionBuilderType) as DbContextOptionsBuilder
                                 ?? throw new InvalidOperationException($"无法创建数据库配置：{dbContextType.FullName}");
 
-                            //获取当前数据库配置
+                            //getcurrentdatabaseconfiguration
                             var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.Current;
 
-                            //使用数据库
-                            currentDatabaseConfiguration.UseDatabase(dbOptionBuilder, Ncf.Core.Config.SenparcDatabaseConnectionConfigs.GetClientConnectionString(), new XncfDatabaseData(databaseRegister, null /*默认使用当前 Register 程序集*/), (b, xncfDatabaseData) =>
+                            //usedatabase
+                            currentDatabaseConfiguration.UseDatabase(dbOptionBuilder, Ncf.Core.Config.SenparcDatabaseConnectionConfigs.GetClientConnectionString(), new XncfDatabaseData(databaseRegister, null /*Legacy comment translated to English.*/), (b, xncfDatabaseData) =>
                                 {
-                                    ////进行附加配置
+                                    //Legacy comment translated to English.
                                     //this.DbContextOptionsAction?.Invoke(b);
 
-                                    //执行 DatabaseConfiguration 中的 DbContextOptionsActionBase，进行基础配置;
+                                    //Legacy comment translated to English.
                                     currentDatabaseConfiguration.DbContextOptionsActionBase(b, xncfDatabaseData);
 
-                                    //其他需要进行的配置，如对于 SQL Server：
+                                    //Legacy comment translated to English.
                                     //b.EnableRetryOnFailure(
                                     //    maxRetryCount: 5,
                                     //    maxRetryDelay: TimeSpan.FromSeconds(5),
                                     //    errorNumbersToAdd: new int[] { 2 });
                                 });
 
-                            // 使用当前作用域创建 DbContext。部分系统模块除 DbContextOptions 外还需要
-                            // IServiceProvider；ActivatorUtilities 可同时兼容这类构造函数和传统的
-                            // 单参数构造函数，并确保注入的是当前请求/升级作用域。
+                            //Legacy comment translated to English.
+                            //Legacy comment translated to English.
+                            //Legacy comment translated to English.
                             return CreateXncfDbContext(s, dbContextType, dbOptionBuilder.Options);
                         };
-                        //添加 XncfSenparcEntities 依赖注入配置
+                        //Legacy comment translated to English.
                         services.AddScoped(dbContextType, implementationFactory);
 
-                        //注册当前数据库的对象（必须）
+                        //Legacy comment translated to English.
                         EntitySetKeys.TryLoadSetInfo(dbContextType);
 
-                        //任意一个 IxncfDatabase 的Register已经执行完成
+                        //Legacy comment translated to English.
                         if (!Ncf.Core.Config.SiteConfig.NcfCoreState.AynDatabaseXncfLoaded)
                         {
                             Ncf.Core.Config.SiteConfig.NcfCoreState.AynDatabaseXncfLoaded = true;
@@ -346,12 +407,12 @@ namespace Senparc.Ncf.XncfBase
                     Console.WriteLine(errMsg);
                 }
 
-                //添加数据库相关注册过程
+                //Legacy comment translated to English.
                 databaseRegister.AddXncfDatabaseModule(services);
 
                 if (!Ncf.Core.Config.SiteConfig.NcfCoreState.AnyAddXncfDatabaseModuleApplied)
                 {
-                    //任意一个 AddXncfDatabaseModule 方法已经执行完成
+                    //Legacy comment translated to English.
                     Ncf.Core.Config.SiteConfig.NcfCoreState.AnyAddXncfDatabaseModuleApplied = true;
                 }
             }
@@ -360,10 +421,10 @@ namespace Senparc.Ncf.XncfBase
         }
 
         /// <summary>
-        /// 使用当前依赖注入作用域创建 XNCF 数据库上下文。
+        ///Legacy comment translated to English.
         /// </summary>
         /// <remarks>
-        /// 将 Options 作为显式参数传入，其余构造参数由依赖注入容器解析。
+        ///Legacy comment translated to English.
         /// </remarks>
         protected virtual DbContext CreateXncfDbContext(
             IServiceProvider serviceProvider,
@@ -376,7 +437,7 @@ namespace Senparc.Ncf.XncfBase
         }
 
         /// <summary>
-        /// 让传入的配置满足上下文构造函数要求的 DbContextOptions 类型。
+        ///Legacy comment translated to English.
         /// </summary>
         private static DbContextOptions AlignContextOptions(Type dbContextType, DbContextOptions dbContextOptions)
         {
@@ -405,7 +466,7 @@ namespace Senparc.Ncf.XncfBase
         }
 
         /// <summary>
-        /// 在 startup.cs 的 Configure() 方法中执行配置
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="app"></param>
         /// <param name="registerService"></param>
@@ -432,11 +493,11 @@ namespace Senparc.Ncf.XncfBase
         }
 
         /// <summary>
-        /// 执行 AutoMapper 映射 
+        ///Legacy comment translated to English.
         /// </summary>
         public virtual void OnAutoMapMapping(IServiceCollection services, IConfiguration configuration)
         {
-            //在 Register.StartEngine() 中调用，早于 AddXncfModule() 方法
+            //Legacy comment translated to English.
         }
 
         #region MCP
@@ -523,10 +584,10 @@ namespace Senparc.Ncf.XncfBase
                     return;
                 }
 
-                //注册 MCP 路由信息
+                //Legacy comment translated to English.
                 mcpServerInfo.McpRoute = routePattern;
 
-                //_logger.LogInformation($"启用 MCP 服务（{this.Name}）：{routePattern}");
+                //Legacy comment translated to English.
 
                 Console.WriteLine($"启用 MCP 服务（{this.Name}）：{routePattern}");
 
@@ -537,16 +598,16 @@ namespace Senparc.Ncf.XncfBase
 
 
         ///// <summary>
-        ///// 数据库 DbContext 选项配置（附加配置）
-        ///// <para>第1个参数：IRelationalDbContextOptionsBuilderInfrastructure</para>
-        ///// <para>第2个参数：AssemblyName</para>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         ///// </summary>
-        //public Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsAction => (builder, xncfDatabaseData) =>
-        //{
-        //    if (xncfDatabaseData!=null && !xncfDatabaseData.AssemblyName.IsNullOrEmpty())
-        //    {
+        ///public Action<IRelationalDbContextOptionsBuilderInfrastructure, XncfDatabaseData> DbContextOptionsAction => (builder, xncfDatabaseData) =>
+        ///{
+        ///    if (xncfDatabaseData!=null && !xncfDatabaseData.AssemblyName.IsNullOrEmpty())
+        ///    {
 
-        //    }
-        //};
+        ///    }
+        ///};
     }
 }

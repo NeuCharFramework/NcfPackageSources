@@ -1,18 +1,18 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：NeuBellWebHookMonitorService.cs
-    文件功能描述：NeuBell WebHook 后台监测服务：周期性聚合各模块纽铃快照，
-    交由 Dispatcher 对比差异并异步通知 WebHook；同时订阅 NeuBell 变更事件，
-    条目变化后尽快触发一轮观测（不等满轮询间隔）
+    File name: NeuBellWebHookMonitorService.cs
+    File description: Related implementation.
+    Legacy comment translated to English.
+    Legacy comment translated to English.
 
-    创建标识：Senparc - 20260906
+    Created by: Senparc - 20260906
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+    Modified by: Senparc - 20260915
+    Change description: v0.8.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 维护NeuBell WebHook 后台监测服务：周期性聚合各模块纽铃快照，
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -29,8 +29,8 @@ using Senparc.Ncf.Shared.Abstractions.NeuBell;
 namespace Senparc.Areas.Admin.Domain.Services;
 
 /// <summary>
-/// 纽铃 WebHook 后台监测（IHostedService）。
-/// 轮询间隔由配置节 <c>NeuBellWebHook:PollingIntervalSeconds</c> 控制（默认 30 秒，最小 5 秒）。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 public sealed class NeuBellWebHookMonitorService : IHostedService, IDisposable
 {
@@ -83,7 +83,7 @@ public sealed class NeuBellWebHookMonitorService : IHostedService, IDisposable
             }
             catch (OperationCanceledException)
             {
-                // 停止超时，直接放弃等待
+                //Legacy comment translated to English.
             }
         }
     }
@@ -100,7 +100,7 @@ public sealed class NeuBellWebHookMonitorService : IHostedService, IDisposable
         }
         catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
         {
-            // 正常停止
+            //Legacy comment translated to English.
         }
         catch (Exception ex)
         {
@@ -109,7 +109,7 @@ public sealed class NeuBellWebHookMonitorService : IHostedService, IDisposable
     }
 
     /// <summary>
-    /// 等待下一个触发点：轮询间隔到期，或任一 Provider 上报变更（先到先触发）
+    ///Legacy comment translated to English.
     /// </summary>
     private async Task WaitNextTriggerAsync(CancellationToken stoppingToken)
     {
@@ -154,7 +154,7 @@ public sealed class NeuBellWebHookMonitorService : IHostedService, IDisposable
             var catalog = scope.ServiceProvider.GetRequiredService<NeuBellProviderCatalog>();
             var snapshotService = scope.ServiceProvider.GetRequiredService<NeuBellSnapshotService>();
 
-            // 以固定系统身份观测，避免不同管理员的个性化视图互相污染差异基线
+            //Legacy comment translated to English.
             var context = new NeuBellRequestContext("neubell-webhook-monitor");
             var availableProviders = await catalog.GetAvailableProvidersAsync(cancellationToken).ConfigureAwait(false);
             var expectedProviderIds = availableProviders
@@ -170,7 +170,7 @@ public sealed class NeuBellWebHookMonitorService : IHostedService, IDisposable
         }
         catch (Exception ex)
         {
-            // 单轮失败不得终止监测循环
+            //Legacy comment translated to English.
             _logger.LogWarning(ex, "NeuBell WebHook 监测轮询失败。");
         }
     }

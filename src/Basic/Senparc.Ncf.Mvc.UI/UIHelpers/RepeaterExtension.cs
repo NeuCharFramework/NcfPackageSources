@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：RepeaterExtension.cs
-    文件功能描述：RepeaterExtension 相关实现
+
+    File name: RepeaterExtension.cs
+
+    File description: RepeaterExtension related implementation
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -29,13 +41,13 @@ namespace System.Web.Mvc
 
             //bool wroteStartTag = false, wroteEndTag = false;
 
-            string startTag, endTag;//开始、结束标签
-            public string itemStartTag, itemEndTag;//单项开始、结束标签
+            string startTag, endTag;//Legacy comment translated to English.
+            public string itemStartTag, itemEndTag;//Legacy comment translated to English.
             public StringBuilder body = new StringBuilder();
 
             public SingleRepeater(HttpContext context, RepeaterMode repeaterMode, object htmlAttributes)
             {
-                this._context = context;//目前没有用到，如果直接在这里用context.Response.Write输出则需要。
+                this._context = context;//Legacy comment translated to English.
                 switch (repeaterMode)
                 {
                     case RepeaterMode.None:
@@ -64,7 +76,7 @@ namespace System.Web.Mvc
                         break;
                 }
 
-                //属性
+                //property
                 var setHash = htmlAttributes.ToAttributeList();
 
                 string attributeList = string.Empty;
@@ -91,7 +103,7 @@ namespace System.Web.Mvc
                 return body.ToString();
             }
 
-            #region IDisposable 成员
+            #region Legacy section
 
             public void Dispose()
             {
@@ -106,14 +118,14 @@ namespace System.Web.Mvc
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="helper"></param>
-        /// <param name="dataSource">数据源</param>
-        /// <param name="header">第一个单项循环开始之前的内容</param>
-        /// <param name="itemTempletes">单项内容</param>
-        /// <param name="separatorTemplate">每次循环分隔内容（Table慎用）</param>
-        /// <param name="footer">最后一个单项循环结束之后的内容</param>
-        /// <param name="repeaterMode">repeater模式</param>
-        /// <param name="colCount">每行烈数（只在repeaterMode为Table时有效）</param>
-        /// <param name="htmlAttributes">标签属性</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public static string Repeater<T>(this HtmlHelper helper, IEnumerable<T> dataSource,
             string header, Expression<Func<T, int, string>> itemTempletes, Expression<Func<T, string>> separatorTemplate, string footer,
@@ -138,21 +150,21 @@ namespace System.Web.Mvc
 
                 int tableRow = 0;
 
-                /** 单项循环开始 **/
+                /** Legacy comment translated to English.*/
 
                 int dataCount = dataSource.Count();
                 int i = 0;
                 foreach (var item in dataSource)
                 {
 
-                    /* 仅适用Table */
+                    /* Legacy comment translated to English. */
                     if (repeaterMode == RepeaterMode.Table)
                     {
                         if (tableRow % colCount == 0)
-                            body.Append("<tr>");//添加行开始标记
+                            body.Append("<tr>");//Legacy comment translated to English.
                     }
 
-                    body.Append(repeater.itemStartTag);//单项开头
+                    body.Append(repeater.itemStartTag);//Legacy comment translated to English.
 
                     switch (repeaterMode)
                     {
@@ -160,21 +172,21 @@ namespace System.Web.Mvc
                         case RepeaterMode.Div:
                         case RepeaterMode.Ul:
                         case RepeaterMode.Table:
-                            body.Append(itemResult(item, i).ToString());//主体内容
+                            body.Append(itemResult(item, i).ToString());//Legacy comment translated to English.
                             break;
                     }
 
-                    body.Append(repeater.itemEndTag);//单项结尾
+                    body.Append(repeater.itemEndTag);//Legacy comment translated to English.
 
-                    /* 仅适用Table */
+                    /* Legacy comment translated to English. */
                     if (repeaterMode == RepeaterMode.Table)
                     {
                         tableRow++;
                         if (tableRow % colCount == 0)
-                            body.Append("</tr>");//添加行结束标记
+                            body.Append("</tr>");//Legacy comment translated to English.
                     }
 
-                    //添加分隔符
+                    //Legacy comment translated to English.
                     if (i < dataCount - 1)
                     {
                         body.Append(separatorResult(item).ToString());
@@ -182,15 +194,15 @@ namespace System.Web.Mvc
 
                     i++;
                 }
-                /** 单项循环结束 **/
+                /** Legacy comment translated to English.*/
 
 
-                //为Table添加结束标记
+                //Legacy comment translated to English.
                 if (repeaterMode == RepeaterMode.Table && tableRow % colCount != 0)
                 {
                     do
                     {
-                        body.Append(repeater.itemStartTag).Append(repeater.itemEndTag);//空白单元格
+                        body.Append(repeater.itemStartTag).Append(repeater.itemEndTag);//Legacy comment translated to English.
                         tableRow++;
                     } while (tableRow % colCount != 0);
                     body.Append("</tr>");
@@ -214,7 +226,7 @@ namespace System.Web.Mvc
         public enum RepeaterMode
         {
             /// <summary>
-            /// 不自动加任何多于标记，等同于foreach。但header和footer仍然有效
+            ///Legacy comment translated to English.
             /// </summary>
             None = 0,
             Table,

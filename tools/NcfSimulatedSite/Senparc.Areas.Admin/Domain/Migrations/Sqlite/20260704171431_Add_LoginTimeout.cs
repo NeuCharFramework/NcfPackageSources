@@ -1,17 +1,17 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：20260704171431_Add_LoginTimeout.cs
-    文件功能描述：20260704171431_Add_LoginTimeout 相关功能实现
+    File name: 20260704171431_Add_LoginTimeout.cs
+    File description: Related implementation.
     
     
-    创建标识：Senparc - 20210108
+    Created by: Senparc - 20210108
     
-    修改标识：Senparc - 20260705
-    修改描述：v0.0.3 新增登录超时配置并补齐多数据库迁移支持
+    Modified by: Senparc - 20260705
+    Change description: v0.0.3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.0.4 新增登录超时配置并补齐多数据库迁移支持
+    Modified by: Senparc - 20260705
+    Change description: v0.0.4 Updated module behavior and related support.
 ----------------------------------------------------------------*/
 
 using System;

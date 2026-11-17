@@ -17,32 +17,32 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-				v0.1.0 创世
-				[2024-09-10] v0.18.4-preview1 升级缓存基础库
+				v0.1.0 initial release
+				[2024-09-10] v0.18.4-preview1 upgrade the cache foundation libraries
 				[2025-01-25] v0.19.5-preview1 Update Agents functions, support for function calling
 				[2025-04-29] v0.19.7-preview1 Update CO2NET and AIKernel
 				[2025-04-29] v0.19.8-preview1 Update CO2NET and AIKernel
 				[2025-07-13] v0.20.0-preview1 feat: Add UseNcfDatabaseSetted field and update logic
 				[2025-11-01] update basic libraries, including Senparc.AI
-				[2026-07-17] v0.21.2-preview2 同步上游项目版本并适配统一本地化能力
-				1、Dependency update from Senparc.Ncf.Core to 0.25.0-preview2
-				2、Dependency update from Senparc.Ncf.Utility to 0.21.0-preview2
+				[2026-07-17] v0.21.2-preview2 synchronize upstream project versions and adopt shared localization capabilities
+				1. Dependency update from Senparc.Ncf.Core to 0.25.0-preview2
+				2. Dependency update from Senparc.Ncf.Utility to 0.21.0-preview2
 				[2026-07-29] v0.21.3-preview3 Dependency update from Senparc.Ncf.Core to 0.26.0-preview3
-				[2026-07-31] v0.21.4-preview4 升级 CO2NET 4.2.0 基础依赖
-				1、升级 Senparc.CO2NET 至 4.2.0 并保持现有项目行为兼容
+				[2026-07-31] v0.21.4-preview4 Updated module behavior and related support.
+				1. Updated module behavior and related support.
 				[2026-08-04] v0.21.5-preview5 Dependency update from Senparc.Ncf.Core to 0.28.0-preview5
 				[2026-08-08] v0.21.6-preview6 Dependency update from Senparc.Ncf.Core to 0.28.1-preview6
 				[2026-08-13] v0.21.7-preview7 Dependency update from Senparc.Ncf.Core to 0.28.2-preview7
-				[2026-08-15] v0.21.8-preview8 升级 Core 依赖并优化多库扫描日志矩阵输出
-				1、Dependency update from Senparc.Ncf.Core to 0.29.0-preview8
-				2、多库扫描日志改为 Register×Database 支持矩阵，并单独输出当前库 DbContext 绑定
-				[2026-08-22] v0.21.9-preview9 优化多数据库支持矩阵日志输出并补充当前 DbContext 绑定信息
-				1、多库扫描日志按 Register 与 Database 输出支持矩阵，便于诊断当前数据库绑定
+				[2026-08-15] v0.21.8-preview8 Updated module behavior and related support.
+				1. Dependency update from Senparc.Ncf.Core to 0.29.0-preview8
+				2. Updated module behavior and related support.
+				[2026-08-22] v0.21.9-preview9 Updated module behavior and related support.
+				1. Updated module behavior and related support.
 				[2026-08-29] v0.21.10 Dependency updates from Senparc.Ncf.Core to 0.30.0-preview9
-				1、Dependency update from Senparc.Ncf.Core to 0.30.0-preview9
+				1. Dependency update from Senparc.Ncf.Core to 0.30.0-preview9
 				[2026-11-03] v0.21.11 Dependency update from Senparc.Ncf.Core to 0.30.3-preview9
 				[2026-11-05] v0.21.12 Dependency update from Senparc.Ncf.Core to 0.30.4-preview10
-				[2026-11-12] v0.21.13 Dependency updates from Senparc.Ncf.Core to 0.31.0-preview11；Senparc.Ncf.Utility to 0.21.2-preview4
+				[2026-11-12] v0.21.13 Dependency updates from Senparc.Ncf.Core to 0.31.0-preview11;Senparc.Ncf.Utility to 0.21.2-preview4
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

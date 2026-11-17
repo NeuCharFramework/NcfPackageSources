@@ -1,8 +1,8 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：ChatAgentContractTests.cs
-    文件功能描述：ChatAgent EventBus 公共契约与能力边界测试
+    File name: ChatAgentContractTests.cs
+    File description: Related implementation.
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Shared.Abstractions.ChatAgent;

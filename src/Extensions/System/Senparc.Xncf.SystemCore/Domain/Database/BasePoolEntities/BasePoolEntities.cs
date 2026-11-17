@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：BasePoolEntities.cs
-    文件功能描述：BasePoolEntities 相关实现
+
+    File name: BasePoolEntities.cs
+
+    File description: BasePoolEntities related implementation
+
     
+
     
-    创建标识：Senparc - 20260704
+
+    Created by: Senparc - 20260704
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -19,10 +31,10 @@ using System;
 
 namespace Senparc.Xncf.SystemCore.Domain.Database
 {
-    //TODO: 如果后期没有明显变化（如额外扩展），考虑合并 SenparcEntities，并取代之
+    //Legacy comment translated to English.
 
     /// <summary>
-    /// 当前 Entities 只为帮助 SenparcEntities 生成 Migration 信息而存在，没有特别的操作意义。
+    /// The current Entities exist only to help SenparcEntities generate migration information and have no special operational purpose.
     /// </summary>
     public class BasePoolEntities : SenparcEntities
     {

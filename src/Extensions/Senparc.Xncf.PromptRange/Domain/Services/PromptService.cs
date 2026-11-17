@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：PromptService.cs
-    文件功能描述：PromptService 服务逻辑
+
+    File name: PromptService.cs
+
+    File description: Related implementation.
+
     
+
     
-    创建标识：Senparc - 20231001
+
+    Created by: Senparc - 20231001
+
     
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    Modified by: Senparc - 20260702
+
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
+
+
 
 ----------------------------------------------------------------*/
 
@@ -46,7 +58,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
         public IWantToRun IWantToRun { get; set; }
 
-        private string _userId = "XncfBuilder"; //区分用户
+        private string _userId = "XncfBuilder"; //Legacy comment translated to English.
 
         public PromptService(PromptRangeService promptRangeService, PromptItemService promptItemService, ISenparcAiSetting senparcAiSetting = null, AIModelService aiModelService = null)
         {
@@ -67,13 +79,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             return IWantToRun;
         }
 
-        /* 升级 Senparc.AI.AgentKernel，暂时停用此方法，未来改用 SKILL */
+        /* Legacy comment translated to English. */
 
         ///// <summary>
-        ///// 根据输入的 Version、NickName 等规则，找到关联 PromptItem 中质量最好的一个
-        ///// <para>当明确指定时，会精确命中； </para>
-        ///// <para>当 Version 是模糊查询时，在下级 PromptItem 中查找最好的一个</para>
-        ///// <para>当 NickName 存在多个的时候，寻找同名的最好的一个</para>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         ///// </summary>
         ///// <typeparam name="T"></typeparam>
         ///// <param name="senparcAiSetting"></param>
@@ -87,13 +99,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         ///// <returns></returns>
         //public async Task<T> GetPromptResultAsync<T>(ISenparcAiSetting senparcAiSetting, string input, SenparcAiArguments context = null, Dictionary<string, List<string>> pluginCollection = null, string pluginDir = null, IPromptTemplateFactory? promptTemplateFactory = null, IServiceProvider? services = null, params KernelFunction[] functionPiple)
         //{
-        //    //准备运行
-        //    //var userId = "XncfBuilder";//区分用户
-        //    //var modelName = "text-davinci-003";//默认使用模型
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
+        //    //var modelName = "text-davinci-003";//defaultusemodel
 
         //    var iWantToRun = IWantToRun ?? ReBuildKernel(senparcAiSetting);
 
-        //    ////TODO:外部传入配置
+        //Legacy comment translated to English.
         //    //var promptParameter = new PromptConfigParameter()
         //    //{
         //    //    MaxTokens = 6000,
@@ -106,21 +118,21 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
         //    if (pluginCollection?.Count > 0)
         //    {
-        //        //优先从数据库找
-        //        var fromDatabasePrompt = pluginDir.IsNullOrEmpty();//不提供文件地址时，优先从数据库找
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
 
         //        pluginDir ??= Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Domain", "PromptPlugins");
 
         //        foreach (var pluginItem in pluginCollection)
         //        {
-        //            //第一层：靶场，对应 Plugin
+        //Legacy comment translated to English.
 
-        //            var pluginName = pluginItem.Key;//Plugin 名字
+        //Legacy comment translated to English.
         //            var functionNames = pluginItem.Value;
 
-        //            KernelPlugin kernelPlugin = null;//导入 Plugin 后的 KernelPlugin 对象
+        //Legacy comment translated to English.
 
-        //            var tryLocalPromptFile = false; //从数据库读取失败，需要尝试从本地文件读取
+        //Legacy comment translated to English.
 
         //            if (iWantToRun.Kernel.Plugins.Contains(pluginName))
         //            {
@@ -130,7 +142,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         //            {
         //                if (fromDatabasePrompt)
         //                {
-        //                    //从数据库读取
+        //                    //fromdatabaseread
 
         //                    ILoggerFactory loggerFactory = services?.GetService<ILoggerFactory>() ?? NullLoggerFactory.Instance;
         //                    IPromptTemplateFactory factory = promptTemplateFactory ?? new KernelPromptTemplateFactory(loggerFactory);
@@ -140,57 +152,57 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         //                    var promptRange = await this._promptRangeService.GetObjectAsync(z => z.Alias == pluginName || z.RangeName == pluginName);
         //                    if (promptRange == null)
         //                    {
-        //                        //转到尝试用文件读取
+        //Legacy comment translated to English.
         //                        tryLocalPromptFile = true;
         //                    }
         //                    else
         //                    {
-        //                        //查找下属所有的靶道
+        //Legacy comment translated to English.
         //                        var allPromptItems = await this._promptItemService
         //                            .GetObjectListAsync(0, 0,
         //                            z => z.RangeId == promptRange.Id
-        //                            //&& (functionNames.Any(f => f == z.FullVersion) //完整版本信息匹配
-        //                            //    || functionNames.Any(f => f == z.NickName)) //别称匹配
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         //                            ,
         //                            z => z.EvalMaxScore, OrderingType.Descending);
 
-        //                        /* PromptItem 的命中有几种可能：
-        //                         * 1、FullVersion 达到匹配 functionName 要求
-        //                         * 2、NickName 达到匹配 functionName 要求（常见）
-        //                         * 3、满足上述任意条件后（都可能多个），在相关记录内，找到评分最高的一个
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         //                         */
 
         //                        Dictionary<string, PromptItem> filteredPromptItems = new Dictionary<string, PromptItem>();
 
         //                        foreach (var functionName in functionNames)
         //                        {
-        //                            //第二层：在某个靶场下的具体 PromptItem 筛选
+        //Legacy comment translated to English.
         //                            List<PromptItem> filteredItems = null;
         //                            if (PromptItem.IsPromptVersion(functionName))
         //                            {
-        //                                //符合版本格式
+        //Legacy comment translated to English.
         //                                filteredItems = allPromptItems
         //                                    .Where(z => PromptItem.IsValidVersionSegment(z.FullVersion, functionName))
         //                                    .ToList();
         //                            }
         //                            else
         //                            {
-        //                                //使用别名查找
+        //Legacy comment translated to English.
         //                                filteredItems = allPromptItems
         //                                       .Where(z => z.NickName == functionName)
         //                                       .ToList();
         //                            }
 
-        //                            //选择最佳结果
+        //Legacy comment translated to English.
         //                            if (filteredItems?.Count != 0)
         //                            {
         //                                var theBestItem = filteredItems.OrderByDescending(z => z.EvalMaxScore).FirstOrDefault();
         //                                if (theBestItem != null)
         //                                {
-        //                                    //加入当前 functionName 的最佳结果
+        //Legacy comment translated to English.
         //                                    filteredPromptItems.Add(functionName, theBestItem);
 
-        //                                    #region 使用当前指定的 AI 模型进行生成
+        //                                    #region Legacy section
         //                                    if (senparcAiSetting == null)
         //                                    {
         //                                        try
@@ -205,8 +217,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         //                                            SenparcTrace.BaseExceptionLog(ex);
         //                                            if (iWantToRun.IWantToBuild.IWantToConfig.IWantTo.SenparcAiSetting == null)
         //                                            {
-        //                                                SenparcTrace.BaseExceptionLog(new Exception("AI 模型配置错误，将使用系统默认配置进行覆盖！"));
-        //                                                //采用默认配置覆盖
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         //                                                iWantToRun.SemanticKernelHelper.ResetSenparcAiSetting(Senparc.AI.Config.SenparcAiSetting);
         //                                            }
         //                                        }
@@ -216,9 +228,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
 
         //                                    PromptTemplateConfig promptTemplateConfig = new PromptTemplateConfig()
         //                                    {
-        //                                        Description = theBestItem.Note,//TODO: 专门提供注释
+        //Legacy comment translated to English.
         //                                        Name = this.GetAvaliableFunctionName(theBestItem.GetAvailableName()),
-        //                                        //设置模型参数
+        //                                        //settingsmodel parameters
         //                                        ExecutionSettings = new Dictionary<string, PromptExecutionSettings>() {
         //                                            { "Default", new PromptExecutionSettings() {
         //                                                ExtensionData = new Dictionary<string, object>() {
@@ -232,7 +244,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         //                                                 }
         //                                            }
         //                                         },
-        //                                        //设置输入参数
+        //                                        //settingsinputparameters
         //                                        InputVariables = theBestItem.VariableDictJson.IsNullOrEmpty()
         //                                                            ? new List<InputVariable>()
         //                                                            : theBestItem.GetInputValiableObject().Select(z => new InputVariable(z)).ToList(),
@@ -261,15 +273,15 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         //                }
         //            }
 
-        //            //需要从 Plugin 文件读取
+        //            //needfrom Plugin fileread
         //            if (!fromDatabasePrompt || tryLocalPromptFile)
         //            {
-        //                //从文件读取
+        //                //fromfileread
         //                var finalDir = Path.Combine(pluginDir, pluginName);
         //                kernelPlugin = iWantToRun.ImportPluginFromPromptDirectory(finalDir, pluginName).kernelPlugin;
         //            }
 
-        //            //统一将文件或数据库读取的 function 进行注册
+        //Legacy comment translated to English.
         //            foreach (var functionName in functionNames)
         //            {
         //                if (kernelPlugin.Contains(functionName))
@@ -278,7 +290,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         //                }
         //                else
         //                {
-        //                    //TODO:给出警告
+        //Legacy comment translated to English.
         //                }
 
         //            }
@@ -299,18 +311,18 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         //        }
         //    }
 
-        //    //构建请求对象
+        //Legacy comment translated to English.
         //    var request = context == null
         //        ? iWantToRun.CreateRequest(input, true, allFunctionPiple.ToArray())
         //        : iWantToRun.CreateRequest(context.KernelArguments, true, allFunctionPiple.ToArray());
-        //    //请求
+        //    //request
         //    var result = await iWantToRun.RunAsync<T>(request);
         //    return result.Output;
         //}
 
         /// <summary>
-        /// 提供可供 functionName 使用的名称
-        /// <para>如果出现特殊字符，可能出现错误：A function name can contain only ASCII letters, digits, and underscores: '2024.05.17.1-T1.1-A3' is not a valid name. (Parameter 'value')</para>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>

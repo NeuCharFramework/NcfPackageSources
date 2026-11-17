@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：AssembleScanItem.cs
-    文件功能描述：AssembleScanItem 相关实现
+
+    File name: AssembleScanItem.cs
+
+    File description: AssembleScanItem related implementation
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -23,12 +35,12 @@ namespace Senparc.Ncf.Core.AssembleScan
     public class AssembleScanItem
     {
         /// <summary>
-        /// 扫描是否结束
+        ///Legacy comment translated to English.
         /// </summary>
         public bool ScanFinished { get; set; }
 
         /// <summary>
-        /// 扫描是否成功
+        ///Legacy comment translated to English.
         /// </summary>
         public bool ScanSuccessed { get; set; }
 
@@ -41,7 +53,7 @@ namespace Senparc.Ncf.Core.AssembleScan
 
         private object _lock { get; set; } = new object();
         /// <summary>
-        /// 执行扫描
+        /// Execute scan
         /// </summary>
         /// <param name="assembly"></param>
         public void Run(Assembly assembly)

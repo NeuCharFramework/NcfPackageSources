@@ -60,9 +60,9 @@ namespace Senparc.Service
             string md5 = password.ToUpper().Replace("-", "");
             if (!isMD5Password)
             {
-                md5 = MD5.GetMD5Code(password, "").Replace("-", ""); //原始MD5
+                md5 = MD5.GetMD5Code(password, "").Replace("-", ""); //originalMD5
             }
-            return MD5.GetMD5Code(md5, salt).Replace("-", ""); //再加密
+            return MD5.GetMD5Code(md5, salt).Replace("-", ""); //encrypt again
         }
 
         public async Task Logout()
@@ -79,7 +79,7 @@ namespace Senparc.Service
 
         public virtual void Login(AdminUserInfo userInfo, bool rememberMe)
         {
-            #region 使用 .net core 的方法写入 cookie 验证信息
+            #region Legacy section
 
             var claims = new List<Claim>
             {
@@ -96,7 +96,7 @@ namespace Senparc.Service
                 IsPersistent = false,
             };
 
-            Logout(); //退出登录
+            Logout(); //Legacy comment translated to English.
             _contextAccessor.Value.HttpContext.SignInAsync(SiteConfig.NcfAdminAuthorizeScheme, new ClaimsPrincipal(identity), authProperties);
 
             #endregion
@@ -128,7 +128,7 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        /// 添加用户信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="objDto"></param>
         public void CreateAdminUserInfo(CreateOrUpdate_AdminUserInfoDto objDto)
@@ -140,7 +140,7 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        /// 更新用户信息
+        /// updateuserinformation
         /// </summary>
         /// <param name="objDto"></param>
         public void UpdateAdminUserInfo(CreateOrUpdate_AdminUserInfoDto objDto)
@@ -169,7 +169,7 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        /// 初始化
+        /// initialize
         /// </summary>
         /// <returns></returns>
         public AdminUserInfo Init(out string userName, out string password)

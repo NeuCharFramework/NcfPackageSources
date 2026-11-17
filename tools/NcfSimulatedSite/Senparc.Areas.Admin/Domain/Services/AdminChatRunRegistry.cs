@@ -1,11 +1,11 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：AdminChatRunRegistry.cs
-    文件功能描述：让 AdminChat 生成在页面刷新或关闭后继续执行
+    File name: AdminChatRunRegistry.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20261107
+    Created by: Senparc - 20261107
 
 ----------------------------------------------------------------*/
 
@@ -20,8 +20,8 @@ using Microsoft.Extensions.Hosting;
 namespace Senparc.Areas.Admin.Domain.Services;
 
 /// <summary>
-/// 按会话保存正在执行的 AdminChat 任务。页面断开只取消观察者，不取消生成。
-/// 显式停止和进程退出才会取消。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 public sealed class AdminChatRunRegistry
 {

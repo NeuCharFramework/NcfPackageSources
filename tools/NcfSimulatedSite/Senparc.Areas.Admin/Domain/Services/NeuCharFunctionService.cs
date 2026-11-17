@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：NeuCharFunctionService.cs
-    文件功能描述：NeuCharPivot Function 目录、参数验证和统一安全执行入口
+    File name: NeuCharFunctionService.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20260809
+    Created by: Senparc - 20260809
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.5.0 集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
+    Modified by: Senparc - 20260813
+    Change description: v0.5.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260829
-    修改描述：v0.7.0 新增 NeuCharPivot 全局浮动调用与工作流分析管理能力
+    Modified by: Senparc - 20260829
+    Change description: v0.7.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -70,8 +70,8 @@ public sealed record NeuCharFunctionExecutionResult(
     string RequestTempId);
 
 /// <summary>
-/// 系统内所有 Function 调用的复用入口。只允许调用 FunctionRenderCollection 中已注册的方法，
-/// 并在每次执行前重新验证模块已安装且处于开放状态。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 public sealed class NeuCharFunctionService
 {

@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：AdminXscfModulePageModelBase.cs
-    文件功能描述：AdminXscfModulePageModelBase 相关实现
+
+    File name: AdminXscfModulePageModelBase.cs
+
+    File description: AdminXscfModulePageModelBase related implementation
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -25,7 +37,7 @@ using System.Text;
 namespace Senparc.Ncf.AreaBase.Admin
 {
     /// <summary>
-    /// XNCF 模块的页面模板
+    /// Page template for XNCF module
     /// </summary>
     public abstract class AdminXncfModulePageModelBase : AdminPageModelBase
     {
@@ -50,7 +62,7 @@ namespace Senparc.Ncf.AreaBase.Admin
         public string XncfModuleUid => XncfModuleDto?.Uid;
 
         /// <summary>
-        /// 当前正在操作的 XncfRegister
+        /// current XncfRegister in operation
         /// </summary>
         public virtual IXncfRegister XncfRegister => XncfModuleDto != null ? XncfRegisterList.FirstOrDefault(z => z.Uid == XncfModuleDto.Uid) : null;
 

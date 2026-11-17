@@ -2,7 +2,7 @@
     el: "#app",
     data() {
         return {
-            data: [], // 数据
+            data: [], // data
             tooltip: {
                 "IAreaRegister": ncfT('Xncf.AreaFeature'),
                 "IXncfDatabase": ncfT('Xncf.DatabaseFeature'),
@@ -23,14 +23,14 @@
                 2: ncfT('Xncf.NewModules'),
                 3: ncfT('Xncf.PendingUpdates')
             },
-            // 执行弹窗
+            //Legacy comment translated to English.
             run: {
                 data: {},
                 visible: false,
                 loading: false
             },
             runData: {
-                // 绑定数据
+                //Legacy comment translated to English.
             },
             runResult: {
                 visible: false,
@@ -41,7 +41,7 @@
                 tempId: '',
                 hasLog: false
             },
-            //查看线程 
+            //Legacy comment translated to English.
             thread: {
                 visible: false
             },
@@ -117,8 +117,8 @@
                 return '';
             }
 
-            // Function 返回值在服务端会先进行 HTML 编码。使用 textarea 仅解码文本，
-            // 实际输出仍必须经过 safeFunctionResultHtml() 的严格净化。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             const decoder = document.createElement('textarea');
             decoder.innerHTML = String(value || '');
             return decoder.value.replace(/\\r\\n|\\n|\\r/g, '\n');

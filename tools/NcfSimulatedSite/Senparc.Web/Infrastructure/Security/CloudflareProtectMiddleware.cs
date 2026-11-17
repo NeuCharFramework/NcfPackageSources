@@ -1,13 +1,13 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：CloudflareProtectMiddleware.cs
-    文件功能描述：Cloudflare 及类似站点防护中间件（限流 + 安全响应头）
+    File name: CloudflareProtectMiddleware.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260906
+    Created by: Senparc - 20260906
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.39.0 新增宿主安全防护与 MySQL 数据库集成
+    Modified by: Senparc - 20260915
+    Change description: v0.39.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -21,17 +21,17 @@ using Microsoft.Extensions.Options;
 namespace Senparc.Web.Infrastructure.Security
 {
     /// <summary>
-    /// Cloudflare 及类似站点防护中间件。
+    ///Legacy comment translated to English.
     /// <para>
-    /// 当 <see cref="CloudflareProtectOptions.Enabled"/> 为 true 时，自站点打开（首个请求）起立即生效：
-    /// 为受保护请求添加安全响应头，并按客户端（IP）进行固定窗口限流，超限返回 429。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </para>
     /// </summary>
     public sealed class CloudflareProtectMiddleware
     {
         private readonly RequestDelegate _next;
 
-        // 上次清理时间，避免每个请求都遍历字典。
+        //Legacy comment translated to English.
         private DateTime _lastPruneUtc = DateTime.MinValue;
 
         public CloudflareProtectMiddleware(RequestDelegate next)

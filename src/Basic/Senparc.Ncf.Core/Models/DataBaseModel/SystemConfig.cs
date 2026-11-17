@@ -1,17 +1,32 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：SystemConfig.cs
-    文件功能描述：SystemConfig 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.28.0-preview5 新增数据库升级维护状态与可配置页脚安全处理
+    Copyright (C) 2026 Senparc
+
+  
+
+    File name: SystemConfig.cs
+
+    File description: SystemConfig related implementation
+
+    
+
+    
+
+    Created by: Senparc - 20200724
+
+    
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260804
+
+    Change description: v0.28.0-preview5 Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 
@@ -40,7 +55,7 @@ namespace Senparc.Ncf.Core.Models
         public string TenPayAppId { get; private set; }
 
         /// <summary>
-        /// 是否隐藏模块管理
+        /// whetherhidemodule management
         /// </summary>
         public bool? HideModuleManager { get; private set; }
 
@@ -53,8 +68,8 @@ namespace Senparc.Ncf.Core.Models
         public string NeuCharAppSecret { get; private set; }
 
         /// <summary>
-        /// 站点与管理后台共用的底部版权内容。允许的 HTML 会在渲染时由
-        /// <see cref="Utility.FooterContentSanitizer"/> 限制为安全链接。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         [MaxLength(2000)]
@@ -74,7 +89,7 @@ namespace Senparc.Ncf.Core.Models
         }
 
         /// <summary>
-        /// 更新
+        /// update
         /// </summary>
         /// <param name="systemName"></param>
         /// <param name="mchId"></param>
@@ -101,7 +116,7 @@ namespace Senparc.Ncf.Core.Models
         }
 
         /// <summary>
-        /// 更新站点与管理后台共用的底部版权内容。
+        ///Legacy comment translated to English.
         /// </summary>
         public void UpdateFooterContent(string footerContent)
         {

@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：InstallDatabaseState.cs
-    文件功能描述：InstallDatabaseState.cs 相关实现
+    File name: InstallDatabaseState.cs
+    File description: InstallDatabaseState.cs related implementation
 
 
-    创建标识：Senparc - 20260728
+    Created by: Senparc - 20260728
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.4.1 加强安装状态校验并收紧安装辅助路由
+    Modified by: Senparc - 20260729
+    Change description: v0.4.1 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

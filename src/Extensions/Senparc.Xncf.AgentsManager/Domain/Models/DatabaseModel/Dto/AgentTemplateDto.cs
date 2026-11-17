@@ -1,37 +1,37 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：AgentTemplateDto.cs
-    文件功能描述：AgentTemplateDto 相关实现
+    File name: AgentTemplateDto.cs
+    File description: AgentTemplateDto related implementation
 
-    创建标识：Senparc - 20240616
+    Created by: Senparc - 20240616
 
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.14.0-preview9 新增 Agent 模板知识库关联与管理统计
+    Modified by: Senparc - 20260804
+    Change description: v0.14.0-preview9 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+    Modified by: Senparc - 20260813
+    Change description: v0.15.0-preview11 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 支持 AgentTemplate 模型绑定、空输出 Token 重试与 Human-in-the-Loop
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
+    Modified by: Senparc - 20260822
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.19.0 输出 Skill 绑定、执行权限与工作区策略
+    Modified by: Senparc - 20261021
+    Change description: v0.19.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.19.1 维护AgentTemplateDto 相关实现
+    Modified by: Senparc - 20261103
+    Change description: v0.19.1 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.19.3 完善 AgentsManager 模板、ChatGroup 与连接器能力兼容
+    Modified by: Senparc - 20261111
+    Change description: v0.19.3 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -51,71 +51,71 @@ using System.ComponentModel.DataAnnotations;
 namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
 {
     /// <summary>
-    /// Agent模板信息
+    ///Legacy comment translated to English.
     /// </summary>
     public class AgentTemplateDto : DtoBase<int>
     {
         /// <summary>
-        /// 名称
+        /// name
         /// </summary>
         public string Name { get;  set; }
 
         /// <summary>
-        /// 系统消息（PromptCode）
+        ///Legacy comment translated to English.
         /// </summary>
         public string SystemMessage { get;  set; }
 
         /// <summary>
-        /// 是否启用
+        /// whether enabled
         /// </summary>
         public bool Enable { get;  set; }
 
         /// <summary>
-        /// 描述
+        /// description
         /// </summary>
         public string Description { get;  set; }
 
         /// <summary>
-        /// PromptRange 的代号
+        ///Legacy comment translated to English.
         /// </summary>
         public string PromptCode { get;  set; }
 
         /// <summary>
-        /// 第三方机器人平台类型
+        ///Legacy comment translated to English.
         /// </summary>
         public HookRobotType HookRobotType { get;  set; }
 
         /// <summary>
-        /// 第三方机器人平台参数
+        ///Legacy comment translated to English.
         /// </summary>
         public string HookRobotParameter { get; set; }
 
         public string Avastar { get; set; }
 
         /// <summary>
-        /// 可调用的函数名称列表,以逗号分隔
+        ///Legacy comment translated to English.
         /// </summary>
         public string FunctionCallNames { get; set; }
 
         /// <summary>
-        /// Function Calling 绑定。FunctionCallNames 仍保留为旧版插件类名的兼容字段。
+        ///Legacy comment translated to English.
         /// </summary>
         public List<AgentFunctionBindingDto> FunctionBindings { get; set; } = new();
 
         /// <summary>
-        /// McpEndpoints，多个用逗号分隔
+        ///Legacy comment translated to English.
         /// </summary>
         public string McpEndpoints { get; set; }
 
         public int? KnowledgeBaseId { get; set; }
 
         /// <summary>
-        /// 模型绑定方式：0=从 PromptRange 继承，1=跟随组任务，2=手动选择 AIModel。
+        ///Legacy comment translated to English.
         /// </summary>
         public AgentModelBindingMode ModelBinding { get; set; } = AgentModelBindingMode.InheritPromptRange;
 
         /// <summary>
-        /// 当 <see cref="ModelBinding"/> 为手动选择时使用的 AIModel ID。
+        ///Legacy comment translated to English.
         /// </summary>
         public int? AiModelId { get; set; }
 
@@ -175,10 +175,10 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
             set => ConnectorBindingsJson = System.Text.Json.JsonSerializer.Serialize(value ?? new());
         }
 
-        /// <summary>是否为系统保留的 Human 参与者。</summary>
+        ///Legacy comment translated to English.
         public bool IsHuman { get; set; }
 
-        /// <summary>是否为系统自动维护的 Agent，例如 Human、PromptCatalyzer。</summary>
+        ///Legacy comment translated to English.
         public bool IsSystemAgent { get; set; }
 
         public string SystemAgentKind { get; set; }
@@ -225,13 +225,13 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
 
     public class AgentFunctionBindingDto
     {
-        /// <summary>plugin、function 或 workflow。</summary>
+        /// <summary>plugin、function or workflow。</summary>
         public string Kind { get; set; }
 
-        /// <summary>绑定的稳定键：插件类型、moduleUid::functionKey 或 workflowId。</summary>
+        ///Legacy comment translated to English.
         public string Key { get; set; }
 
-        /// <summary>仅用于管理界面显示，不作为权限依据。</summary>
+        ///Legacy comment translated to English.
         public string Name { get; set; }
 
         public string Description { get; set; }

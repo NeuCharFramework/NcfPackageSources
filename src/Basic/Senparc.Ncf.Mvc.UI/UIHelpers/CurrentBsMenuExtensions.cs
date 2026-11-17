@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：CurrentBsMenuExtensions.cs
-    文件功能描述：CurrentBsMenuExtensions 相关实现
+
+    File name: CurrentBsMenuExtensions.cs
+
+    File description: CurrentBsMenuExtensions related implementation
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -21,7 +33,7 @@ namespace System.Web.Mvc
     public static class CurrentBsMenuExtensions
     {
         /// <summary>
-        /// Bootstrap当前菜单
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="htmlHelper"></param>
         /// <param name="menuName"></param>

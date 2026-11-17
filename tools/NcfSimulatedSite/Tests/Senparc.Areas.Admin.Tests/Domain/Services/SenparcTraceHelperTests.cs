@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：SenparcTraceHelperTests.cs
-    文件功能描述：SenparcTrace 轻量日志扫描测试
+    File name: SenparcTraceHelperTests.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260809
+    Created by: Senparc - 20260809
 
 ----------------------------------------------------------------*/
 
@@ -61,7 +61,7 @@ Post Data：
 
 """);
 
-            // 一边追加写入，一边共享读（验证 FileShare.ReadWrite）
+            //Legacy comment translated to English.
             await using (var writer = new FileStream(logPath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
             await using (var sw = new StreamWriter(writer))
             {

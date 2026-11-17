@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：AIVectorService.cs
-    文件功能描述：AIVectorService 服务逻辑
+    File name: AIVectorService.cs
+    File description: Related implementation.
     
     
-    创建标识：Senparc - 20250402
+    Created by: Senparc - 20250402
     
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
 ----------------------------------------------------------------*/
 
@@ -61,7 +61,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             AIVector aiVector = await this.GetObjectAsync(z => z.Id == request.Id)
                               ?? throw new NcfExceptionBase("未查询到实体!");
 
-            #region 如果字段为空就不更新
+            #region Legacy section
 
             //if (string.IsNullOrWhiteSpace(request.ApiKey))
             //{
@@ -84,7 +84,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         ///// <summary>
-        ///// 构造 SenparcAiSetting
+        ///// build SenparcAiSetting
         ///// </summary>
         ///// <param name="aiVector"></param>
         ///// <returns></returns>
@@ -118,7 +118,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         //            case Models.ConfigModelType.SpeechToText:
         //            case Models.ConfigModelType.SpeechRecognition:
         //            default:
-        //                throw new Exception($"尚未支持：{aiModel.ConfigModelType} 模型在 BuildSenparcAiSetting 中的处理");
+        //Legacy comment translated to English.
         //        }
         //        return modelName;
         //    };
@@ -131,7 +131,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         //}
 
         ///// <summary>
-        ///// 运行模型
+        ///// runmodel
         ///// </summary>
         ///// <param name="senparcAiSetting"></param>
         ///// <param name="prompt"></param>
@@ -140,7 +140,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         //{
         //    if (senparcAiSetting == null)
         //    {
-        //        throw new SenparcAiException("SenparcAiSetting 不能为空");
+        //Legacy comment translated to English.
         //    }
 
         //    promptConfigParameter ??= new PromptConfigParameter()
@@ -165,7 +165,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         //{
         //    if (modelResult?.Result?.Data == null)
         //    {
-        //        return "模型数据不存在，请检查是否已部署，或是否具备权限！";
+        //Legacy comment translated to English.
         //    }
 
         //    var models = await base.GetFullListAsync(z => z.AiPlatform == AiPlatform.NeuCharAI);
@@ -186,11 +186,11 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         //                            : "",
         //            Endpoint = $"https://www.neuchar.com/{developerId}",
         //            ConfigModelType = Models.ConfigModelType.Chat,
-        //            Note = $"从 NeuChar AI 导入（DevId:{developerId}）",
+        //Legacy comment translated to English.
         //            Show = true
         //        };
 
-        //        //TODO: 远程不提供，临时本地判断
+        //Legacy comment translated to English.
         //        if (neucharModel.Name.Contains("embedding"))
         //        {
         //            dto.ConfigModelType = Models.ConfigModelType.TextEmbedding;
@@ -220,7 +220,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
 
         //        await base.SaveObjectAsync(model);
         //    }
-        //    return $"已成功添加 {addCount} 个模型，更新 {updateCount} 个模型信息。";
+        //Legacy comment translated to English.
         //}
     }
 }

@@ -1,20 +1,20 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：InstallRequestDto.cs
-    文件功能描述：安装器域模型数据传输对象
+    File name: InstallRequestDto.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20260916
+    Created by: Senparc - 20260916
 
-    修改标识：Senparc - 20260916
-    修改描述：v0.5.7 整理安装器 DTO 归属并保持安装服务接口兼容
+    Modified by: Senparc - 20260916
+    Change description: v0.5.7 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.5.9 0.5.9 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
+    Modified by: Senparc - 20261005
+    Change description: v0.5.9 0.5.9 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.5.12 维护安装器域模型数据传输对象
+    Modified by: Senparc - 20261103
+    Change description: v0.5.12 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -27,6 +27,6 @@ namespace Senparc.Xncf.Installer.Domain.Dto
         public string SystemName { get; set; }
         public string AdminUserName { get; set; }
         public string DbConnectionString { get; set; }
-        public List<string> NeedModelList { get; set; }//需要安装的模块列表
+        public List<string> NeedModelList { get; set; }//Legacy comment translated to English.
     }
 }

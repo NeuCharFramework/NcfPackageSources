@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：BaseAppServiceException.cs
-    文件功能描述：BaseAppServiceException 相关实现
+
+    File name: BaseAppServiceException.cs
+
+    File description: BaseAppServiceException related implementation
+
     
+
     
-    创建标识：Senparc - 20260704
+
+    Created by: Senparc - 20260704
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -22,7 +34,7 @@ namespace Senparc.Ncf.Core.AppServices.Exceptions
     public class BaseAppServiceException : BaseException
     {
         /// <summary>
-        /// 状态码
+        /// Status Code
         /// </summary>
         public int StateCode { get; set; }
         public BaseAppServiceException(int stateCode, string message, Exception inner, bool logged = false) : base(message, inner, logged)

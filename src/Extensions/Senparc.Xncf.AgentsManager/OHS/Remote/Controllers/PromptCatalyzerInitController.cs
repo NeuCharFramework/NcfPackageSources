@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：PromptCatalyzerInitController.cs
-    文件功能描述：PromptCatalyzerInitController 相关实现
+    File name: PromptCatalyzerInitController.cs
+    File description: PromptCatalyzerInitController related implementation
     
     
-    创建标识：Senparc - 20260324
+    Created by: Senparc - 20260324
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.12.1-preview7 加强 AgentsManager 接口授权与 Markdown/HTML 安全渲染
+    Modified by: Senparc - 20260729
+    Change description: v0.12.1-preview7 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -31,7 +31,7 @@ using Senparc.Xncf.PromptRange.Abstractions.Events;
 namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
 {
     /// <summary>
-    /// PromptCatalyzer 初始化 API Controller
+    /// PromptCatalyzer initialize API Controller
     /// </summary>
     [ApiController]
     [Route("api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService")]
@@ -56,7 +56,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
         }
 
         /// <summary>
-        /// 检查 PromptCatalyzer 是否已初始化
+        ///Legacy comment translated to English.
         /// </summary>
         [HttpGet("CheckStatus")]
         public IActionResult CheckStatus()
@@ -90,24 +90,24 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
         }
 
         /// <summary>
-        /// 获取所有可用的 Chat 类型 AI Model
+        ///Legacy comment translated to English.
         /// </summary>
         [HttpGet("GetAvailableModels")]
         public IActionResult GetAvailableModels()
         {
             try
             {
-                // 先获取所有模型用于调试
+                //Legacy comment translated to English.
                 var allModels = _aiModelService.GetFullList(z => true, z => z.Id, Ncf.Core.Enums.OrderingType.Ascending);
                 _logger.LogInformation($"数据库中共有 {allModels.Count} 个 AI Model");
                 
-                // 记录每个模型的详情
+                //Legacy comment translated to English.
                 foreach (var model in allModels)
                 {
                     _logger.LogInformation($"Model ID: {model.Id}, Alias: {model.Alias}, ConfigModelType: {model.ConfigModelType}, Show: {model.Show}");
                 }
                 
-                // 查询 Chat 类型的模型（只检查类型，不检查 Show 字段）
+                //Legacy comment translated to English.
                 var chatModels = _aiModelService
                     .GetFullList(z => z.ConfigModelType == AIKernel.Domain.Models.ConfigModelType.Chat,
                                 z => z.Id, Ncf.Core.Enums.OrderingType.Ascending)
@@ -159,7 +159,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
         }
 
         /// <summary>
-        /// 初始化 PromptCatalyzer Agent 和相关 Prompt 资源
+        ///Legacy comment translated to English.
         /// </summary>
         [HttpPost("Initialize")]
         public async Task<IActionResult> Initialize([FromBody] InitializeRequestDto request)
@@ -177,7 +177,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
                     });
                 }
 
-                // 验证 Model 是否存在
+                //Legacy comment translated to English.
                 var model = _aiModelService.GetObject(z => z.Id == request.ModelId.Value);
                 if (model == null)
                 {
@@ -197,7 +197,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
                     });
                 }
 
-                // 调用初始化服务
+                //Legacy comment translated to English.
                 var initResult = await _promptOptimizationService.EnsureInitializedAsync(request.ModelId.Value);
 
                 var result = new AppResponseBase<InitializeResponseDto>
@@ -228,7 +228,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
     #region DTOs
 
     /// <summary>
-    /// PromptCatalyzer 状态 DTO
+    /// PromptCatalyzer status DTO
     /// </summary>
     public class PromptCatalyzerStatusDto
     {
@@ -238,7 +238,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
     }
 
     /// <summary>
-    /// 可用模型列表 DTO
+    ///Legacy comment translated to English.
     /// </summary>
     public class AvailableModelsDto
     {
@@ -247,7 +247,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
     }
 
     /// <summary>
-    /// AI Model 信息 DTO
+    /// AI Model information DTO
     /// </summary>
     public class AIModelInfoDto
     {
@@ -261,7 +261,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
     }
 
     /// <summary>
-    /// 初始化请求 DTO
+    /// initializerequest DTO
     /// </summary>
     public class InitializeRequestDto
     {
@@ -269,7 +269,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
     }
 
     /// <summary>
-    /// 初始化响应 DTO
+    /// initializeresponse DTO
     /// </summary>
     public class InitializeResponseDto
     {

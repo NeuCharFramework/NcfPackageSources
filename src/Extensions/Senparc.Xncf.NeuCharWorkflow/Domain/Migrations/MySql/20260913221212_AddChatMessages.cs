@@ -1,17 +1,17 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：20260913221212_AddChatMessages.cs
-    文件功能描述：数据库迁移与模型快照
+    File name: 20260913221212_AddChatMessages.cs
+    File description: database migration and model snapshot
 
 
-    创建标识：Senparc - 20260913
+    Created by: Senparc - 20260913
 
-    修改标识：Senparc - 20260913
-    修改描述：v0.4.0 新增 Chat 消息持久化表
+    Modified by: Senparc - 20260913
+    Change description: v0.4.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.4.0 增强 Chat 触发器消息持久化与恢复能力
+    Modified by: Senparc - 20260915
+    Change description: v0.4.0 enhance Chat trigger message persistence and recovery
 
 ----------------------------------------------------------------*/
 

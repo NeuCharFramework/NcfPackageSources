@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：BaseCacheExtensions.cs
-    文件功能描述：BaseCacheExtensions 相关实现
+
+    File name: BaseCacheExtensions.cs
+
+    File description: BaseCacheExtensions related implementation
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -22,7 +34,7 @@ namespace Senparc.Ncf.Core.Cache.Extensions
     public static class BaseCacheExtensions
     {
         /// <summary>
-        /// 获取所有缓存集合
+        ///Legacy comment translated to English.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="baseCache"></param>
@@ -33,7 +45,7 @@ namespace Senparc.Ncf.Core.Cache.Extensions
         }
 
         /// <summary>
-        /// 【异步方法】获取所有缓存信息集合
+        ///Legacy comment translated to English.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="baseCache"></param>
@@ -44,7 +56,7 @@ namespace Senparc.Ncf.Core.Cache.Extensions
         }
 
         /// <summary>
-        /// 获取所有以key为前缀的缓存信息集合
+        ///Legacy comment translated to English.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="baseCache"></param>
@@ -56,7 +68,7 @@ namespace Senparc.Ncf.Core.Cache.Extensions
         }
 
         /// <summary>
-        /// 【异步方法】获取所有以key为前缀的缓存信息集合
+        ///Legacy comment translated to English.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="baseCache"></param>

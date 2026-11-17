@@ -1,16 +1,16 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：SandboxJupyterPaths.cs
-    文件功能描述：Jupyter 反向代理路径约定
+    File name: SandboxJupyterPaths.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260808
+    Created by: Senparc - 20260808
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 增强 jupyter-csharp 模板与沙箱会话管理
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 enhance the jupyter-csharp template and sandbox session management
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 enhance sandbox preview, Jupyter workspace, and session lifecycle management
 
 ----------------------------------------------------------------*/
 
@@ -19,7 +19,7 @@ namespace Senparc.Xncf.Sandbox.Domain.Services;
 public static class SandboxJupyterPaths
 {
     /// <summary>
-    /// Jupyter 的 base_url 前缀。完整形态：/sandbox-jupyter/{sessionId}/lab
+    ///Legacy comment translated to English.
     /// </summary>
     public const string ProxyPrefix = "/sandbox-jupyter";
 

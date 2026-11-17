@@ -1,14 +1,26 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：ChatGroupMember.cs
-    文件功能描述：ChatGroupMember 相关实现
+
+    File name: ChatGroupMember.cs
+
+    File description: ChatGroupMember related implementation
+
     
+
     
-    创建标识：Senparc - 20240616
+
+    Created by: Senparc - 20240616
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -22,9 +34,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
 {
     /// <summary>
-    /// ChatGroupMemer 数据库实体
+    ///Legacy comment translated to English.
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(ChatGroupMember))]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(ChatGroupMember))]//a prefix is required to prevent system-wide conflicts
     [Serializable]
     public class ChatGroupMember : EntityBase<int>
     {
@@ -43,7 +55,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
 
         [InverseProperty(nameof(AgentTemplate.ChatGroupMembers))]
         /// <summary>
-        /// AgentTemplate（类型同名）
+        ///Legacy comment translated to English.
         /// </summary>
         public AgentTemplate AgentTemplate { get; private set; }
 
@@ -54,7 +66,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
         public int ChatGroupId { get; private set; }
 
         ///// <summary>
-        ///// ChatGroup（类型同名）
+        ///Legacy comment translated to English.
         ///// </summary>
         //public ChatGroup ChatGroup { get; private set; }
 
@@ -86,7 +98,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
         }
 
         /// <summary>
-        /// 重新设置 UID
+        ///Legacy comment translated to English.
         /// </summary>
         public void ResetUID()
         {

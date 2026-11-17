@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：InMemoryDbContextOptionsBuilderForNcf.cs
-    文件功能描述：InMemoryDbContextOptionsBuilderForNcf 相关实现
+
+    File name: InMemoryDbContextOptionsBuilderForNcf.cs
+
+    File description: InMemoryDbContextOptionsBuilderForNcf related implementation
+
     
+
     
-    创建标识：Senparc - 20240721
+
+    Created by: Senparc - 20240721
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -27,21 +39,21 @@ namespace Microsoft.EntityFrameworkCore.Infrastructure
     public class InMemoryDbContextOptionsBuilderForNcf : RelationalDbContextOptionsBuilder<InMemoryDbContextOptionsBuilderForNcf, InMemoryOptionsExtensionForNcf>
     {
         //
-        // 摘要:
+        // Summary:
         //     Clones the configuration in this builder.
         //
-        // 返回结果:
+        // returnresult:
         //     The cloned configuration.
         protected virtual DbContextOptionsBuilder OptionsBuilder { get; }
 
         //DbContextOptionsBuilder IInMemoryDbContextOptionsBuilderInfrastructure.OptionsBuilder => OptionsBuilder;
 
         //
-        // 摘要:
+        // Summary:
         //     Initializes a new instance of the Microsoft.EntityFrameworkCore.Infrastructure.InMemoryDbContextOptionsBuilder
         //     class.
         //
-        // 参数:
+        // parameters:
         //   optionsBuilder:
         //     The options builder.
         public InMemoryDbContextOptionsBuilderForNcf(DbContextOptionsBuilder optionsBuilder)
@@ -51,18 +63,18 @@ namespace Microsoft.EntityFrameworkCore.Infrastructure
         }
 
         //
-        // 摘要:
+        // Summary:
         //     Enables nullability check for all properties across all entities within the in-memory
         //     database.
         //
-        // 参数:
+        // parameters:
         //   nullChecksEnabled:
         //     If true, then nullability check is enforced.
         //
-        // 返回结果:
+        // returnresult:
         //     The same builder instance so that multiple calls can be chained.
         //
-        // 言论：
+        //Legacy comment translated to English.
         //     See Using DbContextOptions, and The EF Core in-memory database provider for more
         //     information and examples.
         public virtual InMemoryDbContextOptionsBuilderForNcf EnableNullChecks(bool nullChecksEnabled = true)
@@ -74,10 +86,10 @@ namespace Microsoft.EntityFrameworkCore.Infrastructure
         }
 
         //
-        // 摘要:
+        // Summary:
         //     Returns a string that represents the current object.
         //
-        // 返回结果:
+        // returnresult:
         //     A string that represents the current object.
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override string? ToString()
@@ -86,14 +98,14 @@ namespace Microsoft.EntityFrameworkCore.Infrastructure
         }
 
         //
-        // 摘要:
+        // Summary:
         //     Determines whether the specified object is equal to the current object.
         //
-        // 参数:
+        // parameters:
         //   obj:
         //     The object to compare with the current object.
         //
-        // 返回结果:
+        // returnresult:
         //     true if the specified object is equal to the current object; otherwise, false.
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object? obj)
@@ -102,10 +114,10 @@ namespace Microsoft.EntityFrameworkCore.Infrastructure
         }
 
         //
-        // 摘要:
+        // Summary:
         //     Serves as the default hash function.
         //
-        // 返回结果:
+        // returnresult:
         //     A hash code for the current object.
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode()

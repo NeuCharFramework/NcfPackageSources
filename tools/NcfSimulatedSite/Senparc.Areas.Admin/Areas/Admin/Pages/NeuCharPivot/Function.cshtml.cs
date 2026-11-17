@@ -1,22 +1,22 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：Function.cshtml.cs
-    文件功能描述：全局 NeuCharPivot Function 浮动调用接口
+    File name: Function.cshtml.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260829
+    Created by: Senparc - 20260829
 
-    修改标识：Senparc - 20260829
-    修改描述：v0.7.0 新增 NeuCharPivot 全局浮动调用与工作流分析管理能力
+    Modified by: Senparc - 20260829
+    Change description: v0.7.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260917
-    修改描述：v0.9.1 Describe 响应补充数据库访问策略（access.policy），DB 策略覆盖代码属性
+    Modified by: Senparc - 20260917
+    Change description: v0.9.1 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 维护全局 NeuCharPivot Function 浮动调用接口
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -56,7 +56,7 @@ public class FunctionModel(
 
         var descriptor = resolution.Descriptor;
 
-        // 数据库访问策略（存在且非继承时覆盖代码属性）
+        //Legacy comment translated to English.
         object policyDto = null;
         var policy = _accessPolicyService.GetPolicy(
             descriptor.ModuleUid,

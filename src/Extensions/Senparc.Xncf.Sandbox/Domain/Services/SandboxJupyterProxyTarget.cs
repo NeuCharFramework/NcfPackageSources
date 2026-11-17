@@ -1,7 +1,7 @@
 namespace Senparc.Xncf.Sandbox.Domain.Services;
 
 /// <summary>
-/// 仅供服务端代理使用；勿下发给浏览器。
+///Legacy comment translated to English.
 /// </summary>
 public sealed class SandboxJupyterProxyTarget
 {

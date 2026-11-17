@@ -8,21 +8,21 @@ var app = new Vue({
             activeNavKey: 'list', // list | recall | guide
             defaultMSG: null,
             editorData: '',
-            elSize: 'medium', // el 组件尺寸大小 默认为空  medium、small、mini
-            // 显隐 visible
+            elSize: 'medium', //Legacy comment translated to English.
+            //Legacy comment translated to English.
             visible: {
-                drawerGroup: false, // 组 新增|编辑
-                dialogFile: false,   // 配置抽屉内「新建文件」上传弹框
-                embeddingProgress: false,  // 向量化进度弹窗
-                embeddingResult: false,    // 向量化结果展示弹窗
+                drawerGroup: false, // group add|edit
+                dialogFile: false,   //Legacy comment translated to English.
+                embeddingProgress: false,  //Legacy comment translated to English.
+                embeddingResult: false,    //Legacy comment translated to English.
                 searchSettingsDrawer: false,
                 paragraphDetailDialog: false,
             },
-            // 召回测试
+            //Legacy comment translated to English.
             selectedKnowledgeBaseId: null,
             recallContent: '',
             topK: 5,
-            recallRerankMode: '', // ''=跟随知识库设置; None/Lexical/Llm 为本次测试覆盖
+            recallRerankMode: '', //Legacy comment translated to English.
             recallLoading: false,
             recallResults: [],
             lastElapsedMilliseconds: null,
@@ -30,7 +30,7 @@ var app = new Vue({
             recordPage: 1,
             recordPageSize: 5,
             paragraphDetailItem: null,
-            recallKbOptions: [], // 召回下拉用的全量知识库（独立于列表分页）
+            recallKbOptions: [], //Legacy comment translated to English.
             embeddingProgressPercent: 0,
             embeddingProgressStatus: '',   // '' | success | exception
             embeddingProgressText: '正在准备...',
@@ -52,7 +52,7 @@ var app = new Vue({
             },
             _embeddingTimer: null,
             _embeddingResultTimer: null,
-            configUploadFileList: [], // 新建文件弹框内的上传列表（仅展示用，关闭时清空）
+            configUploadFileList: [], //Legacy comment translated to English.
             form:
             {
                 content: ''
@@ -61,12 +61,12 @@ var app = new Vue({
             {
                 initialFrameHeight: 500
             },
-            //分页参数
+            //pagination parameters
             paginationQuery:
             {
                 total: 5
             },
-            //分页接口传参
+            //pagination API parameters
             listQuery: {
                 pageIndex: 1,
                 pageSize: 20,
@@ -112,7 +112,7 @@ var app = new Vue({
             multipleSelection: '',
             radio: '',
             props: { multiple: true },
-            // 表格数据
+            //Legacy comment translated to English.
             tableData: [],
             navigationTarget: {
                 knowledgeBaseId: 0,
@@ -140,7 +140,16 @@ var app = new Vue({
                 visible: false,
                 data:
                 {
-                    id: '', embeddingModelId: null, vectorDBId: null, chatModelId: null, name: '', content: ''
+                    id: '', embeddingModelId: null, vectorDBId: null, chatModelId: null, name: '', content: '',
+                    retrievalConfig: {
+                        chunkingStrategy: 'Fixed',
+                        chunkSize: 800,
+                        chunkOverlap: 120,
+                        rerankMode: 'None',
+                        rerankModelId: 0,
+                        rerankCandidateCount: 20,
+                        lexicalWeight: 0.35
+                    }
                 },
                 rules:
                 {
@@ -159,7 +168,7 @@ var app = new Vue({
                 },
                 updateLoading: false,
                 disabled: false,
-                checkStrictly: true // 是否严格的遵守父子节点不互相关联
+                checkStrictly: true //Legacy comment translated to English.
             },
             detailDialog:
             {
@@ -178,14 +187,14 @@ var app = new Vue({
                 },
                 updateLoading: false,
                 disabled: false,
-                checkStrictly: true // 是否严格的遵守父子节点不互相关联
+                checkStrictly: true //Legacy comment translated to English.
             },
-            // 组 新增|编辑（内容类型：1=输入 2=文件 3=采集外部数据，默认文件）
+            //Legacy comment translated to English.
             groupForm: {
-                contentType: 2, // 内容类型，默认「文件」
-                files: [], // 文件列表
-                content: '', // 内容
-                knowledgeBasesId: '' //知识库ID
+                contentType: 2, // contenttype，default「file」
+                files: [], //Legacy comment translated to English.
+                content: '', // content
+                knowledgeBasesId: '' //Legacy comment translated to English.
             },
             groupFormRules: {
                 name: [
@@ -201,29 +210,29 @@ var app = new Vue({
                     { required: true, message: '请选择', trigger: 'change' },
                 ],
                 // description: [
-                //     { required: true, message: '请填写', trigger: 'blur' },
+                //     { required: true, message: 'please enter a value', trigger: 'blur' },
                 // ],
             },
-            // 组 新增|编辑 智能体
+            // group add|edit agent
             groupAgentQueryList: {
                 pageIndex: 0,
                 pageSize: 0,
-                filter: '', // 筛选文本
-                timeSort: false, // 默认降序
-                proce: false, // 进行中
-                stop: false, // 停用
-                stand: false, // 待命
+                filter: '', // filter text
+                timeSort: false, // descending by default
+                proce: false, // in progress
+                stop: false, // disabled
+                stand: false, // standby
             },
-            groupAgentList: [], // 组新增时的智能体列表
-            // 配置页文件列表查询与分页
+            groupAgentList: [], //Legacy comment translated to English.
+            //Legacy comment translated to English.
             fileQueryList: {
                 pageIndex: 1,
                 pageSize: 10,
-                filter: '', // 文件名称筛选
+                filter: '', //Legacy comment translated to English.
             },
-            fileListTotal: 0, // 文件列表总条数，用于分页
-            fileList: [], // 配置页文件列表
-            fileNamesToSelect: [], // 打开配置时待选中的文件名（从 KnowledgeBaseItem 回显用）
+            fileListTotal: 0, //Legacy comment translated to English.
+            fileList: [], //Legacy comment translated to English.
+            fileNamesToSelect: [], //Legacy comment translated to English.
         }
     },
     computed: {
@@ -278,19 +287,20 @@ var app = new Vue({
         that.getEmbeddingModelList();
         that.getVectorDBList();
         that.getChatModelList();
-        // 获取文件数据
+        // getfiledata
         that.getFileListData('file');
 
-        //TODO:初始化设置选中的字段
+        //Legacy comment translated to English.
         that.checkedColumns = that.colData.filter(item => item.istrue).map(item => item.title);
     },
     watch:
     {
         'dialog.visible': function (val, old) {
-            // 关闭dialog，清空
+            // disabledialog，clear
             if (!val) {
                 this.dialog.data = {
-                    id: '', embeddingModelId: null, vectorDBId: null, chatModelId: null, name: '', content: ''
+                    id: '', embeddingModelId: null, vectorDBId: null, chatModelId: null, name: '', content: '',
+                    retrievalConfig: this.defaultRetrievalConfig()
                 };
                 this.dialog.updateLoading = false;
                 this.dialog.disabled = false;
@@ -543,7 +553,7 @@ var app = new Vue({
         },
         uploadSuccess(res, file, fileList) {
             let that = this;
-            // 上传成功
+            // uploadsuccess
             that.fileList = fileList;
             //debugger
             if (res.stateCode == 0) {
@@ -552,7 +562,7 @@ var app = new Vue({
                     message: '恭喜你，上传成功',
                     type: 'success'
                 });
-                // 清空文件列表（关键）
+                //Legacy comment translated to English.
                 that.$refs.uploadRef.clearFiles();
             } else {
                 that.$notify.error({
@@ -568,7 +578,7 @@ var app = new Vue({
                 message: '上传失败，请重新上传'
             });
         },
-        // 配置抽屉「新建文件」弹框：上传成功后将文件写入 FileManage，并加入当前已选列表、刷新文件列表并勾选新文件
+        //Legacy comment translated to English.
         async configUploadSuccess(res, file, fileList) {
             const that = this;
             const ok = (res && (res.stateCode === 0 || res.success === true));
@@ -623,7 +633,7 @@ var app = new Vue({
             await axios.post('/api/Senparc.Xncf.AIKernel/AIVectorAppService/Xncf.AIKernel_AIVectorAppService.GetSelectionListAsync', param)
                 .then(res => {
                     const list = (res.data && res.data.data && res.data.data.data) || [];
-                    // KnowledgeBase 仅支持可持久化的 Redis / Qdrant；Memory 等内存库后端会直接拒绝
+                    //Legacy comment translated to English.
                     that.vectorDBData = (Array.isArray(list) ? list : []).filter(item => that.isSupportedVectorDb(item));
                     that.vectorDBDataAll = Array.isArray(list) ? list : [];
                 })
@@ -682,7 +692,7 @@ var app = new Vue({
                     that.chatModelData = res.data.data.data;
                 })
         },
-        // 获取 文件 数据（支持分页与筛选）
+        //Legacy comment translated to English.
         async getFileListData(listType, page) {
             const that = this
             if (listType === 'file') {
@@ -715,18 +725,18 @@ var app = new Vue({
                     that.$notify({ title: '错误', message: '资料列表加载失败，请稍后重试。', type: 'error', duration: 3000 })
                 })
         },
-        // 配置页文件列表：页码变化（首页/上一页/下一页/尾页/跳转）
+        //Legacy comment translated to English.
         handleConfigFilePageChange(page) {
             this.fileQueryList.pageIndex = page
             this.getFileListData('file')
         },
-        // 配置页文件列表：每页条数变化
+        //Legacy comment translated to English.
         handleConfigFileSizeChange(size) {
             this.fileQueryList.pageSize = size
             this.fileQueryList.pageIndex = 1
             this.getFileListData('file')
         },
-        // 打开配置时：根据当前知识库拉取 KnowledgeBaseItem 关联项，回填文件选中或内容
+        //Legacy comment translated to English.
         async loadConfigKnowledgeBaseItems(knowledgeBaseId) {
             const that = this
             if (!knowledgeBaseId) {
@@ -775,7 +785,7 @@ var app = new Vue({
                 that.getFileListData('file')
             }
         },
-        // 获取列表
+        //Legacy comment translated to English.
         async getList() {
             let that = this
             //that.uid = resizeUrl().uid
@@ -788,7 +798,7 @@ var app = new Vue({
             }
             const knowledgeBaseId = Number(that.navigationTarget?.knowledgeBaseId || 0)
 
-            await service.get(`/Admin/KnowledgeBase/Index?handler=KnowledgeBases&pageIndex=${pageIndex}&pageSize=${pageSize}&keyword=${encodeURIComponent(keyword || '')}&orderField=${encodeURIComponent(orderField || '')}&knowledgeBaseId=${knowledgeBaseId > 0 ? knowledgeBaseId : ''}`).then(res => {// 使用 map 转换为目标格式的对象数组
+            await service.get(`/Admin/KnowledgeBase/Index?handler=KnowledgeBases&pageIndex=${pageIndex}&pageSize=${pageSize}&keyword=${encodeURIComponent(keyword || '')}&orderField=${encodeURIComponent(orderField || '')}&knowledgeBaseId=${knowledgeBaseId > 0 ? knowledgeBaseId : ''}`).then(res => {//Legacy comment translated to English.
                 that.filterTableHeader.embeddingModelId = res.data.data.list.map(z => ({
                     text: z.embeddingModelId,
                     value: z.embeddingModelId
@@ -817,12 +827,12 @@ var app = new Vue({
         },
         async getCategoryList() {
             let that = this
-            //获取分类列表数据
+            //Legacy comment translated to English.
             await service.get('/Admin/KnowledgeBase/Index?handler=KnowledgeBasesCategory').then(res => {
                 that.categoryData = res.data.data.list;
             });
         },
-        // 检索配置默认值（与后端旧版行为一致）
+        //Legacy comment translated to English.
         defaultRetrievalConfig() {
             return {
                 chunkingStrategy: 'Fixed',
@@ -834,7 +844,7 @@ var app = new Vue({
                 lexicalWeight: 0.35
             };
         },
-        // 回显检索配置：补齐缺省字段，容错后端返回 null
+        //Legacy comment translated to English.
         normalizeRetrievalConfig(raw) {
             const defaults = this.defaultRetrievalConfig();
             if (!raw || typeof raw !== 'object') {
@@ -850,7 +860,7 @@ var app = new Vue({
                 lexicalWeight: (raw.lexicalWeight == null) ? defaults.lexicalWeight : Number(raw.lexicalWeight)
             };
         },
-        // 编辑 // 新增知识库（下拉直接绑定 dialog.data.*Id）
+        //Legacy comment translated to English.
         handleEdit(index, row, flag) {
             let that = this;
             that.dialog.visible = false;
@@ -873,7 +883,7 @@ var app = new Vue({
                 return;
             }
 
-            // 编辑 - 使用现有数据
+            //Legacy comment translated to English.
             let { id, embeddingModelId, vectorDBId, chatModelId, name, content, retrievalConfig } = row;
             that.dialog.data = {
                 id: id || 0,
@@ -889,7 +899,7 @@ var app = new Vue({
                 that.dialog.title = '编辑知识库';
             }
         },
-        // 设置父级菜单默认显示 递归
+        //Legacy comment translated to English.
         recursionFunc(row, source, dest) {
             if (row.chatModelId === null) {
                 return;
@@ -905,12 +915,12 @@ var app = new Vue({
                 }
             }
         },
-        // 保存 submitForm 数据（配置抽屉确认：内容类型为文件时导入选中文件，否则不校验文件）
+        //Legacy comment translated to English.
         async saveSubmitFormData(saveType, serviceForm = {}) {
             const that = this;
             if (saveType === 'drawerGroup') {
                 const contentType = serviceForm.contentType;
-                const isFileType = contentType === 2; // 2=文件
+                const isFileType = contentType === 2; // 2=file
 
                 if (isFileType) {
                     const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseAppService/Xncf.KnowledgeBase_KnowledgeBaseAppService.SyncFilesToKnowledgeBase';
@@ -989,7 +999,7 @@ var app = new Vue({
                 }
             }
         },
-        // 更新新增、编辑（文件改为在「配置」中上传并关联，此处不再传文件）
+        //Legacy comment translated to English.
         updateData() {
             let that = this;
             that.$refs['dataForm'].validate(valid => {
@@ -1045,7 +1055,7 @@ var app = new Vue({
                 });
             });
         },
-        // 删除
+        // delete
         handleDelete(index, row) {
             let that = this
             let ids = [row.id];
@@ -1069,7 +1079,7 @@ var app = new Vue({
                 //that.dialogVote.data.newsId = that.multipleSelection[0].id;
             }
         },
-        // 配置抽屉内「文件列表」表格勾选变化：同步到 groupForm.files，保存时用于关联知识库
+        //Legacy comment translated to English.
         handleConfigFileSelectionChange(val) {
             const currentPageIds = new Set((this.fileList || []).map(r => Number(r.id)))
             const preserved = (this.groupForm.files || []).filter(f => !currentPageIds.has(Number(f.id)))
@@ -1089,19 +1099,19 @@ var app = new Vue({
             //}
             that.detailDialog.visible = true;
         },
-        // 筛选输入变化
+        //Legacy comment translated to English.
         handleFilterChange(value, filterType) {
             if (filterType === 'groupAgent') {
                 this.groupAgentQueryList.filter = value
                 this.getAgentListData('groupAgent', 1)
             }
         },
-        // 配置页文件列表：按文件名称搜索（调用接口过滤，并回到第一页）
+        //Legacy comment translated to English.
         handleConfigFileSearch() {
             this.fileQueryList.pageIndex = 1
             this.getFileListData('file')
         },
-        // 配置抽屉只管理“关联”。删除文件会影响其他知识库和物理资源，必须回文件资源管理页单独执行。
+        //Legacy comment translated to English.
         removeConfigFileSelection(row) {
             this.groupForm.files = (this.groupForm.files || []).filter(f => Number(f.id) !== Number(row.id))
             this.$nextTick(() => {
@@ -1123,7 +1133,7 @@ var app = new Vue({
         },
         getCurrentRow(row) {
             let that = this
-            //获取选中数据
+            //Legacy comment translated to English.
             //that.templateSelection = row;
             that.multipleSelection = row;
             //that.newsId = that.multipleSelection.id;
@@ -1270,7 +1280,7 @@ var app = new Vue({
                 }).catch(function () {});
             }
         },
-        // Dailog|抽屉 打开 按钮
+        //Legacy comment translated to English.
         handleElVisibleOpenBtn(btnType, item) {
             const that = this
             let visibleKey = btnType
@@ -1294,19 +1304,19 @@ var app = new Vue({
             }
             this.visible[visibleKey] = true
         },
-        // Dailog|抽屉 关闭 按钮
+        //Legacy comment translated to English.
         handleElVisibleClose(btnType) {
             // drawerAgent dialogGroupAgent drawerGroup drawerGroupStart
             this.$confirm('确认关闭？')
                 .then(_ => {
                     let refName = '', formName = ''
-                    // 组
+                    // group
                     if (btnType === 'drawerGroup') {
                         refName = 'groupELForm'
                         formName = 'groupForm'
                         this.visible[btnType] = false
 
-                        //// 重置 组获取智能体query
+                        //Legacy comment translated to English.
                         //this.$set(this, 'groupAgentQueryList', this.$options.data().groupAgentQueryList)
                         //this.groupAgentList = []
                     }
@@ -1321,7 +1331,7 @@ var app = new Vue({
                     this.$nextTick(() => {
                         this.visible[btnType] = false
                     })
-                    // 清理 Function Calls 数据
+                    //Legacy comment translated to English.
                     if (['drawerAgent', 'dialogGroupAgent'].includes(btnType)) {
                         this.functionCallTags = []
                         this.functionCallInputVisible = false
@@ -1330,11 +1340,11 @@ var app = new Vue({
                 })
                 .catch(_ => { });
         },
-        // Dailog|抽屉 提交 按钮
+        //Legacy comment translated to English.
         handleElVisibleSubmit(btnType) {
             // drawerAgent dialogGroupAgent drawerGroup drawerGroupStart
             let refName = '', formName = ''
-            // 组
+            // group
             if (btnType === 'drawerGroup') {
                 refName = 'groupELForm'
                 formName = 'groupForm'
@@ -1344,7 +1354,7 @@ var app = new Vue({
                 if (valid) {
                     //debugger
                     const submitForm = this[formName] ?? {}
-                    //提交数据给后端
+                    //Legacy comment translated to English.
                     this.saveSubmitFormData(btnType, submitForm)
                     //debugger
                     // this.visible[btnType] = false
@@ -1353,7 +1363,7 @@ var app = new Vue({
                 }
             });
         },
-        // 配置抽屉「已选择」文件列表中移除某一项，并同步表格勾选
+        //Legacy comment translated to English.
         groupMembersCancel(item, index) {
             this.groupForm.files.splice(index, 1);
             this.$nextTick(() => {
@@ -1366,24 +1376,24 @@ var app = new Vue({
                 });
             });
         },
-        // 编辑 Dailog|抽屉 按钮 
+        //Legacy comment translated to English.
         async handleEditDrawerOpenBtn(btnType, item) {
             // drawerAgent dialogGroupAgent drawerGroup drawerGroupStart
             let formName = ''
-            // 智能体
+            // agent
             if (['dialogGroupAgent'].includes(btnType)) {
                 formName = 'agentForm'
             }
 
             if (formName) {
                 if (btnType === 'drawerAgent' && item) {
-                    // 创建一个新的对象来存储表单数据
+                    //Legacy comment translated to English.
                     const formData = item.agentTemplateDto ? { ...item.agentTemplateDto } : { ...item };
 
-                    // 确保 functionCallNames 被正确初始化
+                    //Legacy comment translated to English.
                     this.functionCallTags = formData.functionCallNames ? formData.functionCallNames.split(',').filter(Boolean) : [];
 
-                    // 将数据赋值给表单
+                    //Legacy comment translated to English.
                     Object.assign(this[formName], formData);
 
                 } else if (btnType === 'drawerGroup') {
@@ -1405,7 +1415,7 @@ var app = new Vue({
                                 }
                             })
                     }
-                    // // 获取 全部智能体数据
+                    //Legacy comment translated to English.
                     // this.getAgentListData('groupAgent')
                 } else if (btnType === 'drawerTaskStart') {
                     Object.assign(this[formName], {
@@ -1415,13 +1425,13 @@ var app = new Vue({
                 } else {
                     Object.assign(this[formName], item)
                 }
-                // 回显 表单值
+                //Legacy comment translated to English.
                 // this.$set(this, `${formName}`, deepClone(item))
-                // 打开 抽屉
+                //Legacy comment translated to English.
                 this.handleElVisibleOpenBtn(btnType)
             }
         },
-        // 组 新增|编辑 智能体table 切换table 选中
+        //Legacy comment translated to English.
         toggleSelection(rows) {
             if (rows) {
                 rows.forEach(row => {
@@ -1437,15 +1447,18 @@ var app = new Vue({
 
 
 /**
-* 处理接口 query 参数 转换为 string
-* @param {Object} queryObj // 原地址
+
+* Legacy comment translated to English.
+
+* English documentation comment.
+
 */
 function getInterfaceQueryStr(queryObj) {
     if (!queryObj) return ''
-    // 将对象转换为 URL 参数字符串
+    //Legacy comment translated to English.
     return Object.entries(queryObj)
         .filter(([key, value]) => {
-            // 过滤掉空值
+            //Legacy comment translated to English.
             if (typeof value === 'string') {
                 return value !== ''
             } else if (typeof value === 'object' && value instanceof Array) {

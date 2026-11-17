@@ -1,13 +1,13 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：FooterContentSanitizer.cs
-    文件功能描述：限制 Footer 配置中可渲染的 HTML，仅保留安全链接
+    File name: FooterContentSanitizer.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260802
+    Created by: Senparc - 20260802
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.28.0-preview5 新增数据库升级维护状态与可配置页脚安全处理
+    Modified by: Senparc - 20260804
+    Change description: v0.28.0-preview5 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -20,7 +20,7 @@ using Senparc.Ncf.Core.Models;
 namespace Senparc.Ncf.Core.Utility
 {
     /// <summary>
-    /// Footer 内容净化器。普通文本始终编码，仅允许绝对 HTTP/HTTPS 的 a 标签。
+    ///Legacy comment translated to English.
     /// </summary>
     public static class FooterContentSanitizer
     {

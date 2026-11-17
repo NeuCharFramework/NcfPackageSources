@@ -10,7 +10,7 @@ namespace Senparc.Web.Models.VD
     { }
 
     /// <summary>
-    /// 当前项目供前端（非Areas）使用的PageModel全局基类
+    ///Legacy comment translated to English.
     /// </summary>
     public class BasePageModel : PageModelBase, IBasePageModel
     {

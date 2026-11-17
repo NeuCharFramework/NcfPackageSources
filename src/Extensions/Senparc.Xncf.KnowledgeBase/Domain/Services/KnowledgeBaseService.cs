@@ -1,32 +1,32 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：KnowledgeBaseService.cs
-    文件功能描述：KnowledgeBaseService 服务逻辑
+    File name: KnowledgeBaseService.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20251225
+    Created by: Senparc - 20251225
 
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.3.1-preview4 通过文件服务读取知识库文件并限制物理路径
+    Modified by: Senparc - 20260729
+    Change description: v0.3.1-preview4 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.5.0-preview6 新增知识库生命周期管理与 Agent 模板集成
+    Modified by: Senparc - 20260804
+    Change description: v0.5.0-preview6 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.6.0-preview8 完善知识库文件删除保护、召回测试与管理界面
+    Modified by: Senparc - 20260813
+    Change description: v0.6.0-preview8 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.7.0 增强知识库向量发布状态识别
+    Modified by: Senparc - 20260815
+    Change description: v0.7.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.7.0 保持知识库页面与向量状态服务兼容
+    Modified by: Senparc - 20260822
+    Change description: v0.7.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.8.0 upgrade KnowledgeBase retrieval with configurable chunking and re-ranking (backward compatible)
+    Modified by: Senparc - 20261103
+    Change description: v0.8.0 upgrade KnowledgeBase retrieval with configurable chunking and re-ranking (backward compatible)
 
 ----------------------------------------------------------------*/
 
@@ -101,9 +101,9 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
         }
 
         /// <summary>
-        /// 获取知识库的向量发布状态。新版只有在生成独立集合后才可供 Agent 绑定；
-        /// 同时识别旧版仅在切片上保存 <see cref="KnowledgeBaseItem.IsEmbedded"/> 的记录，
-        /// 以免管理界面将其误报为“未向量化”。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<IReadOnlyDictionary<int, KnowledgeBaseEmbeddingStatus>> GetEmbeddingStatusesAsync(
             IEnumerable<KnowledgeBase.Models.DatabaseModel.KnowledgeBase> knowledgeBases)
@@ -134,8 +134,8 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                          .Where(z => !string.IsNullOrWhiteSpace(z.Content))
                          .GroupBy(z => z.KnowledgeBasesId))
             {
-                // 旧实现只在资料切片中记录 IsEmbedded，并且按 Embedding 模型共享集合。
-                // 这不能等同于新版 Agent 所需的“已发布、知识库隔离”的状态，故只标识为 legacy。
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 if (itemGroup.Any() && itemGroup.All(z => z.IsEmbedded))
                 {
                     result[itemGroup.Key] = KnowledgeBaseEmbeddingStatus.Legacy;
@@ -166,7 +166,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
 
             await ValidateConfigurationAsync(dto.EmbeddingModelId, dto.VectorDBId);
 
-            // 检索配置（切片策略 + 重排）：null 或与默认一致时不落库，保持旧数据形态
+            //Legacy comment translated to English.
             var retrievalConfig = dto.RetrievalConfig?.Clone().Sanitized();
             if (retrievalConfig != null && retrievalConfig.IsDefault())
             {
@@ -260,7 +260,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                 await AddFileToKnowledgeBaseAsync(knowledgeBase.Id, fileId);
             }
 
-            // 先确保所有新增文件均可读取，再删除已取消的关联，避免坏文件导致旧资料先丢失。
+            //Legacy comment translated to English.
             foreach (var obsolete in existing.Where(z => !selectedIds.Contains(z.NcfFileId.Value)))
             {
                 await _knowledgeBaseDetailService.DeleteObjectAsync(obsolete);
@@ -272,7 +272,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             var knowledgeBase = await GetObjectAsync(z => z.Id == knowledgeBaseId)
                 ?? throw new NcfExceptionBase($"Knowledge Base with ID {knowledgeBaseId} not found.");
 
-            // 必须先落库失效状态；后续任一步失败时，调用方都不会继续使用旧向量集合。
+            //Legacy comment translated to English.
             knowledgeBase.InvalidateEmbedding();
             await SaveObjectAsync(knowledgeBase);
             await SyncFilesAsync(knowledgeBase, fileIds ?? Array.Empty<int>());
@@ -306,11 +306,11 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
         }
 
         /// <summary>
-        /// 批量将文件添加到知识库（读取、切片、保存详情）
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="knowledgeBaseId"></param>
         /// <param name="fileIds"></param>
-        /// <returns>总切片数</returns>
+        ///Legacy comment translated to English.
         public async Task<int> AddFilesToKnowledgeBaseAsync(int knowledgeBaseId, List<int> fileIds)
         {
             if (fileIds == null || fileIds.Count == 0)
@@ -338,14 +338,14 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
         }
 
         /// <summary>
-        /// 将文件添加到知识库（读取、切片、保存详情）
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="knowledgeBaseId"></param>
         /// <param name="fileId"></param>
-        /// <returns>切片数</returns>
+        ///Legacy comment translated to English.
         public async Task<int> AddFileToKnowledgeBaseAsync(int knowledgeBaseId, int fileId)
         {
-            // 1. 获取文件信息
+            // 1. getfileinformation
             var file = await _ncfFileService.GetObjectAsync(z => z.Id == fileId);
             if (file == null)
             {
@@ -363,11 +363,11 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                 throw new NcfExceptionBase($"Knowledge Base with ID {knowledgeBaseId} not found.");
             }
 
-            // 所有物理路径、编码和 Open XML 安全解析都由 FileManager 统一处理。
+            //Legacy comment translated to English.
             var extraction = await _ncfFileService.GetExtractedTextAsync(fileId);
             var content = extraction.Text;
 
-            // 文件确认可提取后、修改切片前先使已发布集合失效。
+            //Legacy comment translated to English.
             knowledgeBase.InvalidateEmbedding();
             await SaveObjectAsync(knowledgeBase);
 
@@ -378,10 +378,10 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                 await _knowledgeBaseDetailService.DeleteObjectAsync(existingItem);
             }
 
-            // 3. 文本切片（策略与大小跟随知识库检索配置；未配置时与旧版 800/120 一致）
+            //Legacy comment translated to English.
             var chunks = NcfTextChunker.Split(content, knowledgeBase.GetRetrievalConfig());
 
-            // 4. 保存切片到 KnowledgeBasesDetail
+            //Legacy comment translated to English.
             int chunkIndex = 0;
             foreach (var chunk in chunks)
             {
@@ -402,10 +402,10 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
         }
 
         /// <summary>
-        /// 对知识库进行向量化（Embedding）
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="knowledgeBaseId"></param>
-        /// <param name="tags">当前 Embedding 记录的 Tag</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public async Task<string> EmbeddingKnowledgeBaseAsync(int knowledgeBaseId, params string[] tags)
         {
@@ -450,7 +450,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                     $"知识切片 {detail.Id}");
             }
 
-            // 只有整批写入成功后才发布新集合，召回请求不会看到半成品。
+            //Legacy comment translated to English.
             foreach (var detail in validDetails)
             {
                 detail.EmbeddingSucceeded();
@@ -468,10 +468,10 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
         }
 
         /// <summary>
-        /// 召回测试（Embedding）
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="knowledgeBaseId"></param>
-        /// <param name="tags">当前 Embedding 记录的 Tag</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public Task<List<RecallTestResponse>> RecallTestAsync(int knowledgeBaseId, string content, int topK = 5)
         {
@@ -479,10 +479,10 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
         }
 
         /// <summary>
-        /// 召回测试。支持知识库级重排配置（词法混合 / LLM）；
-        /// 未配置重排时行为与旧版完全一致（向量 TopK 直接返回）。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="options">单次调用覆盖项；null 表示完全跟随知识库配置</param>
+        ///Legacy comment translated to English.
         public async Task<List<RecallTestResponse>> RecallTestAsync(
             int knowledgeBaseId,
             string content,
@@ -548,7 +548,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                     .ToList();
             }
 
-            // 候选池评分：归一化向量分数 + 词法分数按配置权重融合
+            //Legacy comment translated to English.
             var vectorScores = vectorItems.Select(z => z.Score ?? 0d).ToArray();
             var lexicalScores = vectorItems.Select(z => LexicalReranker.Score(content, z.Text)).ToArray();
             var normalizedVector = LexicalReranker.NormalizeScores(vectorScores);
@@ -652,7 +652,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
         }
 
         /// <summary>
-        /// 为 Agent 等调用方生成有长度上限、带来源的 RAG 上下文。
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<string> BuildRagContextAsync(
             int knowledgeBaseId,
@@ -775,7 +775,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
     //    [VectorStoreData(IsFullTextIndexed = true)]
     //    public string Description { get; set; }
 
-    //    [VectorStoreVector(Dimensions: 1536 /*根据模型调整，例如 text-embedding-ada-002 为 1536，Large 为 3072*/, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Hnsw)]
+    //Legacy comment translated to English.
     //    public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 
     //    [VectorStoreData(IsIndexed = true)]

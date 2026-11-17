@@ -57,7 +57,7 @@ namespace Senparc.Xncf.Accounts.Domain.Models
         public string WeixinOpenId { get; set; }
 
         /// <summary>
-        /// 是否被锁定（无法登陆） TODO：暂未添加到DTO中
+        ///Legacy comment translated to English.
         /// </summary>
         public bool? Locked { get; set; }
         

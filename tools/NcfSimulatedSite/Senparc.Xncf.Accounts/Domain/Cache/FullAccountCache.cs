@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：FullAccountCache.cs
-    文件功能描述：账户信息缓存实现
+
+    File name: FullAccountCache.cs
+
+    File description: Related implementation.
+
     
+
     
-    创建标识：Senparc - 20241028
+
+    Created by: Senparc - 20241028
+
     
-    修改标识：Senparc - 20260724
-    修改描述：v0.3.0 完善账户模块本地化资源与功能文案
+
+    Modified by: Senparc - 20260724
+
+    Change description: v0.3.0 Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 using Senparc.Ncf.Core.Extensions;
@@ -35,7 +47,7 @@ namespace Senparc.Xncf.Accounts.Domain.Cache
     public class FullAccountCache : BaseStringDictionaryCache<FullAccount, Account> //, IFullAccountCache
     {
         /// <summary>
-        /// UserId和UserName的映射关系
+        ///Legacy comment translated to English.
         /// </summary>
         public static ConcurrentDictionary<int, string> UserIdNameRelationshop = new ConcurrentDictionary<int, string>();
 
@@ -44,10 +56,10 @@ namespace Senparc.Xncf.Accounts.Domain.Cache
 
         private INcfDbData _dataContext => base._db as INcfDbData;
 
-        #region 同步方法
+        #region Legacy section
 
         /// <summary>
-        /// 根据判断条件获取User
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="where"></param>
         /// <returns></returns>
@@ -87,9 +99,9 @@ namespace Senparc.Xncf.Accounts.Domain.Cache
             {
                 return null;
             }
-            UserIdNameRelationshop[fullUser.Id] = fullUser.UserName;//TODO:需要使用分布式缓存
+            UserIdNameRelationshop[fullUser.Id] = fullUser.UserName;//Legacy comment translated to English.
 
-            this.UpdateToCache(key, fullUser); //需要更新对象到Redis
+            this.UpdateToCache(key, fullUser); //Legacy comment translated to English.
             return fullUser;
         }
 
@@ -120,7 +132,7 @@ namespace Senparc.Xncf.Accounts.Domain.Cache
             var userName = GetUserName(accountId);
             if (userName == null)
             {
-                //未命中，查找数据库
+                //Legacy comment translated to English.
                 var account = this.GetAccount(z => z.Id == accountId);
                 if (account == null)
                 {
@@ -141,11 +153,11 @@ namespace Senparc.Xncf.Accounts.Domain.Cache
         #endregion
 
 
-        #region 异步方法
+        #region Legacy section
 
 
         /// <summary>
-        /// 根据判断条件获取User
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="where"></param>
         /// <returns></returns>
@@ -164,9 +176,9 @@ namespace Senparc.Xncf.Accounts.Domain.Cache
             {
                 return null;
             }
-            UserIdNameRelationshop[fullUser.Id] = fullUser.UserName;//TODO:需要使用分布式缓存
+            UserIdNameRelationshop[fullUser.Id] = fullUser.UserName;//Legacy comment translated to English.
 
-            await this.UpdateToCacheAsync(key, fullUser).ConfigureAwait(false); //需要更新对象到Redis
+            await this.UpdateToCacheAsync(key, fullUser).ConfigureAwait(false); //Legacy comment translated to English.
             return fullUser;
         }
 

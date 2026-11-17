@@ -1,22 +1,22 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：WorkspaceAgentHost.cs
-    文件功能描述：基于 NDJSON/stdin/stdout 的跨平台 Workspace Agent 宿主
+    File name: WorkspaceAgentHost.cs
+    File description: cross-platform Workspace Agent host based on NDJSON/stdin/stdout
 
-    创建标识：Senparc - 20261024
+    Created by: Senparc - 20261024
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.2.1 implement connection manager and workspace file system provider
+    Modified by: Senparc - 20261103
+    Change description: v0.2.1 implement connection manager and workspace file system provider
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.2.2 完善 Workspace Agent、文件存储与模块注册兼容
+    Modified by: Senparc - 20261111
+    Change description: v0.2.2 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261111
-    修改描述：保留 Workspace Agent 操作失败的诊断信息并输出到标准错误
+    Modified by: Senparc - 20261111
+    Change description: retain Workspace Agent operation failure diagnostics and write them to standard error
 
-    修改标识：Senparc - 20261112
-    修改描述：v0.2.3 支持路径 glob、内容正则搜索并改进错误诊断
+    Modified by: Senparc - 20261112
+    Change description: v0.2.3 support path globs and content regex search, and improve error diagnostics
 
 ----------------------------------------------------------------*/
 

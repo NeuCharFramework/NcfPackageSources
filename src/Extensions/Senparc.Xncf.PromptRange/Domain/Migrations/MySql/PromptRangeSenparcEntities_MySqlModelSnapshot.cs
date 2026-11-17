@@ -2,17 +2,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：PromptRangeSenparcEntities_MySqlModelSnapshot.cs
-    文件功能描述：PromptRangeSenparcEntities_MySqlModelSnapshot 相关定义与实现
+    File name: PromptRangeSenparcEntities_MySqlModelSnapshot.cs
+    File description: PromptRangeSenparcEntities_MySqlModelSnapshot related definitions and implementation
 
 
-    创建标识：Senparc - 20231021
+    Created by: Senparc - 20231021
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.20.8 更新数据库迁移模型快照
+    Modified by: Senparc - 20261103
+    Change description: v0.20.8 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261105
-    修改描述：v0.20.14 同步 PromptCode 评分字段的模型快照
+    Modified by: Senparc - 20261105
+    Change description: v0.20.14 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

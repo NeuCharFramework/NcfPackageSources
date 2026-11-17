@@ -20,15 +20,15 @@ namespace Senparc.Ncf.Core.Tests.EventBus
             // Arrange
             var services = new ServiceCollection();
 
-            // 注册 EventBus
+            // Register EventBus
             services.AddSingleton<InMemoryEventBus>();
             services.AddSingleton<IEventBus>(sp => sp.GetRequiredService<InMemoryEventBus>());
 
-            // 注册 HostedService (作为普通类测试，不一定要作为 HostedService 运行)
-            // 但为了触发 ExecuteAsync 需要手动调用 StartAsync 或类似
+            // Register HostedService (for general class test, not necessarily for HostedService run)
+            // But to trigger ExecuteAsync, you need to manually invoke StartAsync or a similar method.
             services.AddSingleton<EventBusHostedService>();
 
-            // 注册 Handler
+            // Register Handler
             var tcs = new TaskCompletionSource<(int, string)>(/*TaskCreationOptions.RunContinuationsAsynchronously*/);
             services.AddScoped<IIntegrationEventHandler<TestIntegrationEvent>>(sp => new TestIntegrationEventHandler(tcs));
 
@@ -46,14 +46,14 @@ namespace Senparc.Ncf.Core.Tests.EventBus
 
 
             // Act
-            // 启动 HostedService (后台循环开始监听)
+            // start HostedService (background loop start listening)
             var cts = new CancellationTokenSource();
             var hostedServiceTask = hostedService.StartAsync(cts.Token);
 
             var dt2 = SystemTime.Now;
             Console.WriteLine($"[{SystemTime.Now.ToString("mm:ss.ffffff")}] DT2");
 
-            // 发布消息
+            // Post Source
             //var testMessage = "Hello EventBus1";
             //var integrationEvent = new TestIntegrationEvent(1, testMessage, dt2);
             //await eventBus.PublishAsync(integrationEvent);
@@ -72,7 +72,7 @@ namespace Senparc.Ncf.Core.Tests.EventBus
             var dt3 = SystemTime.Now;
 
 
-            // 等待处理完成 (设置超时)
+            // waithandlingcomplete (settings timeout)
             var completedTask = await Task.WhenAny(tcs.Task, Task.Delay(10000));
 
             var dt4 = SystemTime.Now;
@@ -90,7 +90,7 @@ namespace Senparc.Ncf.Core.Tests.EventBus
 
             //completedTask = await Task.WhenAny(tcs.Task, Task.Delay(10000));
 
-            // 停止 HostedService
+            // Stop HostedService
             cts.Cancel();
             await hostedService.StopAsync(CancellationToken.None);
 
@@ -133,7 +133,7 @@ namespace Senparc.Ncf.Core.Tests.EventBus
                 //_tcs.TrySetResult(@event.Message + " Senparc");
                 _tcs.TrySetResult((89, @event.Message + " Senparc"));
                 //Console.WriteLine("Handle Time: " + SystemTime.DiffTotalMS(@event.DateTime));
-                Interlocked.Increment(ref Int); // 使用原子操作代替 lock
+                Interlocked.Increment(ref Int); // Use atomic operations instead of locks
 
                 return Task.CompletedTask;
             }
@@ -146,7 +146,7 @@ namespace Senparc.Ncf.Core.Tests.EventBus
             var services = new ServiceCollection();
             services.AddSingleton(typeof(ILogger<>), typeof(LoggerMock<>));
             
-            // 注册 EventBus with circular reference detection enabled
+            // Register EventBus with circular reference detection enabled
             var options = new EventBusOptions
             {
                 MaxEventChainDepth = 5,

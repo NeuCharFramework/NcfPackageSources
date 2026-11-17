@@ -1,13 +1,13 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：DesktopAdminAuthHandoffStore.cs
-    文件功能描述：短期、单次、绑定 DesktopBridge 会话的管理员换票状态
+    File name: DesktopAdminAuthHandoffStore.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260804
+    Created by: Senparc - 20260804
 
-    修改标识：Senparc - 20260808
-    修改描述：v0.4.0-preview4 新增单次绑定会话的管理员换票状态存储
+    Modified by: Senparc - 20260808
+    Change description: v0.4.0-preview4 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

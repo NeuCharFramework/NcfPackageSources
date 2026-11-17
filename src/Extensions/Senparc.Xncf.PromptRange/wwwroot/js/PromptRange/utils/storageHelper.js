@@ -9,15 +9,23 @@
     'use strict';
     
     /**
+
      * Storage helper methods.
+
      * Uses an object-literal pattern and requires no instantiation.
+
      */
     var StorageHelper = {
         /**
+
          * Save data to localStorage.
+
          * @param {string} key - Storage key.
+
          * @param {*} value - Value to serialize.
+
          * @returns {boolean} Whether saving succeeded.
+
          */
         set: function(key, value) {
             if (!key) {
@@ -36,10 +44,15 @@
         },
 
         /**
+
          * Read data from localStorage.
+
          * @param {string} key - Storage key.
+
          * @param {*} [defaultValue=null] - Value returned when missing or invalid.
+
          * @returns {*} Stored value or the default.
+
          */
         get: function(key, defaultValue) {
             if (!key) {
@@ -62,9 +75,13 @@
         },
 
         /**
+
          * Remove data from localStorage.
+
          * @param {string} key - Storage key.
+
          * @returns {boolean} Whether removal succeeded.
+
          */
         remove: function(key) {
             if (!key) {
@@ -82,8 +99,11 @@
         },
 
         /**
+
          * Clear all localStorage data.
+
          * @returns {boolean} Whether clearing succeeded.
+
          */
         clear: function() {
             try {
@@ -96,9 +116,13 @@
         },
 
         /**
+
          * Check whether a key exists.
+
          * @param {string} key - Storage key.
+
          * @returns {boolean} Whether the key exists.
+
          */
         has: function(key) {
             if (!key) {
@@ -108,8 +132,11 @@
         },
 
         /**
+
          * Return all storage keys.
+
          * @returns {Array<string>} Storage key list.
+
          */
         keys: function() {
             var keys = [];
@@ -124,8 +151,11 @@
         },
 
         /**
+
          * Return the number of stored entries.
+
          * @returns {number} Entry count.
+
          */
         length: function() {
             try {
@@ -137,8 +167,11 @@
         },
 
         /**
+
          * Return all stored data.
+
          * @returns {Object} Object containing all key-value pairs.
+
          */
         getAll: function() {
             var all = {};
@@ -154,9 +187,13 @@
         },
 
         /**
+
          * Set multiple values.
+
          * @param {Object} data - Key-value object.
+
          * @returns {boolean} Whether all values were stored.
+
          */
         setMultiple: function(data) {
             if (!data || typeof data !== 'object') {
@@ -176,9 +213,13 @@
         },
 
         /**
+
          * Get multiple values.
+
          * @param {Array<string>} keys - Key list.
+
          * @returns {Object} Object containing requested key-value pairs.
+
          */
         getMultiple: function(keys) {
             if (!Array.isArray(keys)) {
@@ -195,9 +236,13 @@
         },
 
         /**
+
          * Remove multiple values.
+
          * @param {Array<string>} keys - Key list.
+
          * @returns {boolean} Whether all values were removed.
+
          */
         removeMultiple: function(keys) {
             if (!Array.isArray(keys)) {
@@ -215,8 +260,11 @@
         },
 
         /**
+
          * Check whether localStorage is available.
+
          * @returns {boolean} Whether localStorage is available.
+
          */
         isAvailable: function() {
             try {
@@ -230,8 +278,11 @@
         },
 
         /**
+
          * Return storage usage information.
+
          * @returns {Object} {used: number, total: number, percentage: number}
+
          */
         getStorageInfo: function() {
             var used = 0;

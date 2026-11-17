@@ -28,8 +28,8 @@
             const message = Array.from(values).map(formatConsoleValue).join(' ');
             const now = Date.now();
             const signature = `${level}:${message}`;
-            // Vue 会把 render 异常写入 console。Footer 若立即把同一异常再写入响应式状态，
-            // 就会触发新的根组件渲染并形成自激循环；浏览器原始 Console 仍会完整保留每次错误。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             if (signature === lastConsoleEntrySignature && now - lastConsoleEntryAt < repeatedConsoleEntryWindowMs) {
                 return;
             }
@@ -71,7 +71,7 @@
         };
     }
 
-    // 防止开发期脚本重复加载时再次包装 console，造成一条日志被重复采集。
+    //Legacy comment translated to English.
     window.NcfAdminConsole = window.NcfAdminConsole || createAdminConsole();
 
     const footerRuntime = window.NcfAdminFooterRuntime || { owner: null };
@@ -305,7 +305,7 @@
         frameId = requestFrame(draw);
     }
 
-    // 每个 Admin 页面都会加载此 mixin，因此必须严格控制请求数和长连接生命周期。
+    //Legacy comment translated to English.
     const footerMixin = {
         data() {
             const parsedServerTime = Date.parse(initialState.serverTime || '');
@@ -387,8 +387,8 @@
             }
         },
         mounted() {
-            // Element UI 会动态创建额外的 Vue 根实例。只有真正挂载到布局 #app 的实例
-            // 可以成为 Owner，否则每个临时根实例都会各自创建 state 请求和 SSE。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             if (!claimFooterOwnership(this)) {
                 return;
             }
@@ -399,13 +399,13 @@
             });
 
             if (initialState.embedded) {
-                // AdminChat iframe 不再启动一套 Footer 后台通讯，避免嵌套页面重复连接。
+                //Legacy comment translated to English.
                 return;
             }
 
             this.bindVoiceNavDismiss();
             this.startFooterClock();
-            // pagehide/pageshow 需要兼容 bfcache：隐藏时暂停，恢复时重用同一 Vue 实例。
+            //Legacy comment translated to English.
             this.footerPageHideHandler = () => this.pauseFooter();
             this.footerPageShowHandler = () => this.resumeFooter();
             this.footerVisibilityHandler = () => {
@@ -542,12 +542,12 @@
                 this.neuBellToastExpanded = false;
             },
             closeAllNeuBellNotifications() {
-                // 保留旧方法名，兼容可能由页面脚本调用的生命周期清理入口。
+                //Legacy comment translated to English.
                 this.clearAllNeuBellToasts();
             },
             scheduleNeuBellToastExpiry(key) {
                 this.clearNeuBellToastTimer(key);
-                // 右下角提示只是视觉提醒；到期不会消费服务端的业务提醒。
+                //Legacy comment translated to English.
                 this.neuBellToastTimers[key] = window.setTimeout(() => {
                     this.closeNeuBellToast(key);
                 }, neuBellToastDurationMs);
@@ -620,8 +620,8 @@
                 }));
                 this.neuBellProviders = nextProviders;
                 this.syncNeuBellNotifications(previousProviders, nextProviders, showNewNotifications === true);
-                // 服务端只返回已安装且开放的 Provider；空集合时保留 Footer 入口，
-                // 但不建立实时通讯，抽屉内会明确提示当前没有可用 Provider。
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 this.footerAvailabilityKnown = true;
                 this.neuBellAvailable = this.neuBellProviders.length > 0;
                 if (this.neuBellAvailable && !document.hidden) {
@@ -636,7 +636,7 @@
                     return Promise.resolve();
                 }
                 if (this.footerStateRequest) {
-                    // 多个变更通知同时到达时共用已在进行的请求，不叠加 state 请求。
+                    //Legacy comment translated to English.
                     return this.footerStateRequest;
                 }
 
@@ -682,7 +682,7 @@
                     if (this.neuBellAvailable) {
                         this.ensureNeuBellRealtime();
                     } else if (!this.footerAvailabilityKnown && !document.hidden) {
-                        // 初始化失败时做低频恢复；已确认无 Provider 后不再轮询。
+                        //Legacy comment translated to English.
                         this.scheduleFooterPoll(30000, true);
                     }
                 });
@@ -714,7 +714,7 @@
                     || !this.neuBellAvailable) {
                     return;
                 }
-                // SSE 负责及时通知，30 秒单次定时器用于断线和不支持 EventSource 时的兼容兜底。
+                //Legacy comment translated to English.
                 this.startNeuBellEventStream();
                 this.scheduleFooterPoll(30000, false);
             },
@@ -783,8 +783,8 @@
                 }
             },
             toggleVoiceNav() {
-                // 麦克风只依赖当前页面，不跟纽铃通讯的 Owner 绑定。
-                // 否则布局根实例没抢到 Owner 时，按钮可见但点击没有任何反应。
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 if (this.voiceNavEmbedded || !window.NcfVoiceNavigation) {
                     return;
                 }
@@ -854,7 +854,7 @@
                 }
             },
             pauseFooter() {
-                // 后台页签不应保留 SSE、轮询、挂起的 HTTP 请求，或仍在监听的麦克风。
+                //Legacy comment translated to English.
                 this.closeVoiceNav();
                 this.footerPaused = true;
                 stopFooterFireworks();

@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：SkillExceptions.cs
-    文件功能描述：Skill 查询与执行异常
+    File name: SkillExceptions.cs
+    File description: Related implementation.
     
     
-    创建标识：Senparc - 20261016
+    Created by: Senparc - 20261016
     
-    修改标识：Senparc - 20261021
-    修改描述：v0.3.0-preview6 补充 Skill 不存在与访问拒绝异常
+    Modified by: Senparc - 20261021
+    Change description: v0.3.0-preview6 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.3.1-preview6 update AdminChat with PromptRange Skill integration
+    Modified by: Senparc - 20261103
+    Change description: v0.3.1-preview6 update AdminChat with PromptRange Skill integration
 
 ----------------------------------------------------------------*/
 

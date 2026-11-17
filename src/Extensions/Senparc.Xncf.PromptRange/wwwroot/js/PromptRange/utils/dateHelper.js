@@ -9,23 +9,39 @@
     'use strict';
     
     /**
+
      * Date helper methods.
+
      * Uses an object-literal pattern and requires no instantiation.
+
      */
     var DateHelper = {
         /**
+
          * Format a date.
+
          * @param {Date|string|number} date - Date object, string, or timestamp.
+
          * @param {string} [format='YYYY-MM-DD HH:mm:ss'] - Format string.
+
          * @returns {string} Formatted date.
+
          * 
+
          * Supported tokens:
+
          * - YYYY: four-digit year
+
          * - MM: two-digit month (01-12)
+
          * - DD: two-digit day (01-31)
+
          * - HH: two-digit hour (00-23)
+
          * - mm: two-digit minute (00-59)
+
          * - ss: two-digit second (00-59)
+
          */
         formatDate: function(date, format) {
             format = format || 'YYYY-MM-DD HH:mm:ss';
@@ -56,9 +72,13 @@
         },
 
         /**
+
          * Format a chat timestamp as relative time.
+
          * @param {Date|string|number} date - Date object, string, or timestamp.
+
          * @returns {string} Relative time description.
+
          */
         formatChatTime: function(date) {
             var now = new Date();
@@ -85,9 +105,13 @@
         },
 
         /**
+
          * Format an ISO 8601 time string.
+
          * @param {string} timeStr - Time string.
+
          * @returns {string} Formatted time string.
+
          */
         formatTime: function(timeStr) {
             if (!timeStr) return '';
@@ -96,18 +120,26 @@
         },
 
         /**
+
          * Return the current timestamp in milliseconds.
+
          * @returns {number} Timestamp in milliseconds.
+
          */
         getTimestamp: function() {
             return new Date().getTime();
         },
 
         /**
+
          * Calculate the difference between two dates.
+
          * @param {Date|string|number} startDate - Start date.
+
          * @param {Date|string|number} endDate - End date.
+
          * @returns {Object} Difference object: {days, hours, minutes, seconds, milliseconds}.
+
          */
         getTimeDiff: function(startDate, endDate) {
             var start = new Date(startDate);
@@ -124,9 +156,13 @@
         },
 
         /**
+
          * Check whether a date is today.
+
          * @param {Date|string|number} date - Date to check.
+
          * @returns {boolean} Whether the date is today.
+
          */
         isToday: function(date) {
             var d = new Date(date);
@@ -137,9 +173,13 @@
         },
 
         /**
+
          * Check whether a date is yesterday.
+
          * @param {Date|string|number} date - Date to check.
+
          * @returns {boolean} Whether the date is yesterday.
+
          */
         isYesterday: function(date) {
             var d = new Date(date);
@@ -151,19 +191,28 @@
         },
 
         /**
+
          * Return the number of days in a month.
+
          * @param {number} year - Year.
+
          * @param {number} month - Month (1-12).
+
          * @returns {number} Number of days.
+
          */
         getDaysInMonth: function(year, month) {
             return new Date(year, month, 0).getDate();
         },
 
         /**
+
          * Format a duration.
+
          * @param {number} milliseconds - Duration in milliseconds.
+
          * @returns {string} Readable duration such as "2 hours 30 minutes".
+
          */
         formatDuration: function(milliseconds) {
             var seconds = Math.floor(milliseconds / 1000);

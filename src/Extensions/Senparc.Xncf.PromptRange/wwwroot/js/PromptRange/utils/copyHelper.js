@@ -9,17 +9,27 @@
     'use strict';
     
     /**
+
      * Clipboard helper methods.
+
      * Uses an object-literal pattern and requires no instantiation.
+
      */
     var CopyHelper = {
         /**
+
          * Copy text to the clipboard.
+
          * @param {string} text - Text to copy.
-         * @param {string} [successMessage='复制成功'] - Success message.
-         * @param {string} [errorMessage='复制失败'] - Error message.
+
+         * English documentation comment.
+
+         * English documentation comment.
+
          * @param {boolean} [showMessage=true] - Whether to show a message.
+
          * @returns {boolean} Whether the copy request was accepted.
+
          */
         copyToClipboard: function(text, successMessage, errorMessage, showMessage) {
             if (!text) {
@@ -34,8 +44,11 @@
         },
 
         /**
+
          * Copy text asynchronously and return the final result.
+
          * @returns {Promise<boolean>} Whether copying succeeded.
+
          */
         copyToClipboardAsync: async function(text, successMessage, errorMessage, showMessage) {
             successMessage = successMessage || ncfST('复制成功');
@@ -72,10 +85,15 @@
         },
 
         /**
+
          * Compatibility fallback using document.execCommand.
+
          * @param {string} text - Text to copy.
+
          * @returns {boolean} Whether copying succeeded.
+
          * @private
+
          */
         _fallbackCopy: function(text) {
             var textarea = document.createElement('textarea');
@@ -109,10 +127,15 @@
         },
 
         /**
+
          * Copy a Prompt result.
+
          * @param {Object} item - Prompt result.
+
          * @param {boolean} [rawResult=false] - Whether to copy the raw result.
+
          * @returns {boolean} Whether copying succeeded.
+
          */
         copyPromptResult: function(item, rawResult) {
             if (!item) {
@@ -130,10 +153,15 @@
         },
 
         /**
+
          * Copy an object as formatted JSON.
+
          * @param {*} obj - Object to copy.
+
          * @param {number} [indent=2] - Indentation size.
+
          * @returns {boolean} Whether copying succeeded.
+
          */
         copyObject: function(obj, indent) {
             indent = indent !== undefined ? indent : 2;
@@ -154,10 +182,15 @@
         },
 
         /**
+
          * Copy array contents joined by a separator.
+
          * @param {Array} arr - Array to copy.
+
          * @param {string} [separator='\n'] - Separator.
+
          * @returns {boolean} Whether copying succeeded.
+
          */
         copyArray: function(arr, separator) {
             separator = separator || '\n';
@@ -177,9 +210,13 @@
         },
 
         /**
+
          * Copy HTML content while preserving formatting.
+
          * @param {string} html - HTML content.
+
          * @returns {boolean} Whether copying succeeded.
+
          */
         copyHtml: function(html) {
             if (!html) {
@@ -221,10 +258,15 @@
         },
 
         /**
+
          * Show a message through Element UI's Message component.
+
          * @param {string} message - Message content.
+
          * @param {string} type - Message type (success/error/warning/info).
+
          * @private
+
          */
         _showMessage: function(message, type) {
             if (window.app && window.app.$message) {
@@ -239,8 +281,11 @@
         },
 
         /**
+
          * Check whether the copy feature is available.
+
          * @returns {boolean} Whether copying is available.
+
          */
         isSupported: function() {
             return !!(navigator.clipboard || document.queryCommandSupported('copy'));

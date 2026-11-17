@@ -1,17 +1,32 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：Register.cs
-    文件功能描述：模块注册与初始化逻辑
-    
-    
-    创建标识：Senparc - 20200818
-    
-    修改标识：Senparc - 20260724
-    修改描述：v0.3.0 完善账户模块本地化资源与功能文案
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.3.12 统一 XNCF Register 显示元数据与多语言资源键
+    Copyright (C) 2026 Senparc
+
+  
+
+    File name: Register.cs
+
+    File description: module registration and initialization logic
+
+    
+
+    
+
+    Created by: Senparc - 20200818
+
+    
+
+    Modified by: Senparc - 20260724
+
+    Change description: v0.3.0 Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20261111
+
+    Change description: v0.3.12 unify XNCF Register display metadata and localization resource keys
+
+
 
 ----------------------------------------------------------------*/
 using Senparc.Ncf.Core.Enums;
@@ -43,13 +58,13 @@ namespace Senparc.Xncf.Accounts
                 "用户管理",
                 "注册用户管理");
 
-        #region IXncfRegister 接口
+        #region Legacy section
 
         public override string Name => "Senparc.Xncf.Accounts";
 
-        public override string Uid => Senparc.Ncf.Core.Config.SiteConfig.SYSTEM_XNCF_MODULE_ACCOUNTS_UID;//不可修改
+        public override string Uid => Senparc.Ncf.Core.Config.SiteConfig.SYSTEM_XNCF_MODULE_ACCOUNTS_UID;//Legacy comment translated to English.
 
-        public override string Version => "0.1";//必须填写版本号
+        public override string Version => "0.1";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 
@@ -59,20 +74,20 @@ namespace Senparc.Xncf.Accounts
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
-            //安装或升级版本时更新数据库
+            //update the database when installing or upgrading a version
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 
-            //根据安装或更新不同条件执行逻辑
+            //execute logic according to the installation or update condition
             switch (installOrUpdate)
             {
                 case InstallOrUpdate.Install:
-                    //新安装
-                    #region 初始化数据库数据
+                    //new installation
+                    #region Legacy section
 
                     #endregion
                     break;
                 case InstallOrUpdate.Update:
-                    //更新
+                    //update
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -81,14 +96,14 @@ namespace Senparc.Xncf.Accounts
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
-            #region 删除数据库（演示）
+            #region Legacy section
 
             var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
             AccountSenparcEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as AccountSenparcEntities;
 
-            //指定需要删除的数据实体
+            //specify the data entities to delete
 
-            //注意：这里作为演示，在卸载模块的时候删除了所有本模块创建的表，实际操作过程中，请谨慎操作，并且按照删除顺序对实体进行排序！
+            //Note: this is a demonstration that deletes all tables created by this module during uninstallation. In production, proceed carefully and order entities by their deletion dependencies.
             var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.TryGetXncfDatabaseDbContextType).Keys.ToArray();
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
 
@@ -99,7 +114,7 @@ namespace Senparc.Xncf.Accounts
 
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
-            //注册 User 登录策略
+            //Legacy comment translated to English.
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("UserAnonymous", policy =>

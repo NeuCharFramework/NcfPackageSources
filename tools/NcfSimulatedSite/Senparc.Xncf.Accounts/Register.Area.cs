@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：Register.Area.cs
-    文件功能描述：模块区域注册逻辑
+
+    File name: Register.Area.cs
+
+    File description: Related implementation.
+
     
+
     
-    创建标识：Senparc - 20241028
+
+    Created by: Senparc - 20241028
+
     
-    修改标识：Senparc - 20260724
-    修改描述：v0.3.0 完善账户模块本地化资源与功能文案
+
+    Modified by: Senparc - 20260724
+
+    Change description: v0.3.0 Updated module behavior and related support.
+
+
 
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Hosting;
@@ -26,8 +38,8 @@ using System.Resources;
 
 namespace Senparc.Xncf.Accounts
 {
-	public partial class Register : IAreaRegister, //注册 XNCF 页面接口（按需选用）
-									IXncfRazorRuntimeCompilation  //赋能 RazorPage 运行时编译
+	public partial class Register : IAreaRegister, //register the XNCF page interface (optional)
+									IXncfRazorRuntimeCompilation  //enable RazorPage runtime compilation
 	{
 		private static readonly ResourceManager AreaResourceManager = new("Senparc.Xncf.Accounts.AccountsResource", typeof(AccountsResource).Assembly);
 
@@ -36,7 +48,7 @@ namespace Senparc.Xncf.Accounts
 			return AreaResourceManager.GetString(key, CultureInfo.CurrentUICulture) ?? fallback;
 		}
 
-		#region IAreaRegister 接口
+		#region Legacy section
 
 		public string HomeUrl => "/Admin/Account/Index";
 
@@ -49,7 +61,7 @@ namespace Senparc.Xncf.Accounts
 		{
 			builder.AddRazorPagesOptions(options =>
 			{
-				//此处可配置页面权限
+				//configure page permissions here
 			});
 
 			SenparcTrace.SendCustomLog("Account 启动", "完成 Area:Senparc.Xncf.Accounts 注册");
@@ -59,7 +71,7 @@ namespace Senparc.Xncf.Accounts
 
 #endregion
 
-#region IXncfRazorRuntimeCompilation 接口
+#region IXncfRazorRuntimeCompilation interface
 		public string LibraryPath => Path.GetFullPath(Path.Combine(SiteConfig.WebRootPath, "..", "..", "Senparc.Xncf.Accounts"));
 #endregion
 	}

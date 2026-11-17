@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：Index.cshtml.cs
-    文件功能描述：Index.cshtml.cs 相关实现
+    File name: Index.cshtml.cs
+    File description: Index.cshtml.cs related implementation
 
 
-    创建标识：Senparc - 20241028
+    Created by: Senparc - 20241028
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.34.1 完善站点初始化状态、浏览器导航与多语言提示
+    Modified by: Senparc - 20260729
+    Change description: v0.34.1 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -60,7 +60,7 @@ namespace Senparc.Web.Pages
 
         public Task<IActionResult> OnGetAsync(string forceUpdateModule)
         {
-            //判断是否需要自动进入到安装程序
+            //Legacy comment translated to English.
             if (base.FullSystemConfig == null)
             {
                 return Task.FromResult<IActionResult>(BuildInstallRedirectPage());

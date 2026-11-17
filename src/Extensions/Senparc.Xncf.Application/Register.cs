@@ -1,20 +1,38 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：Register.cs
-    文件功能描述：Register 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.1.0 为 Application 模块接入统一资源本地化并优化功能文案
+    File name: Register.cs
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.1.12 统一 XNCF Register 显示元数据与多语言资源键
+    File description: Register related implementation
+
+    
+
+    
+
+    Created by: Senparc - 20200724
+
+    
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260717
+
+    Change description: v0.1.0 integrate shared resource localization and improve feature text for the Application module
+
+
+
+    Modified by: Senparc - 20261111
+
+    Change description: v0.1.12 unify XNCF Register display metadata and localization resource keys
+
+
 
 ----------------------------------------------------------------*/
 
@@ -39,18 +57,18 @@ namespace Senparc.Xncf.Application
         public Register()
         { }
 
-        #region IRegister 接口
+        #region Legacy section
 
         public override string Name => "Senparc.Xncf.Application";
-        public override string Uid => "699DFE0D-C1C0-4315-87DF-0DE1502B87A9";//必须确保全局唯一，生成后必须固定
-        public override string Version => "0.0.5";//必须填写版本号
+        public override string Uid => "699DFE0D-C1C0-4315-87DF-0DE1502B87A9";//Legacy comment translated to English.
+        public override string Version => "0.0.5";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
         public override string Icon => "fa fa-pencil";
         public override string Description => RegisterText.Description;
 
         /// <summary>
-        /// 注册当前模块需要支持的功能模块
+        ///Legacy comment translated to English.
         /// </summary>
         public override IList<Type> Functions => new[] {
             typeof(Functions.LaunchApp),

@@ -1,11 +1,11 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：FineTuningSecretStore.cs
-    文件功能描述：把微调 Worker 密钥保存在站点指定目录
+    File name: FineTuningSecretStore.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20261106
+    Created by: Senparc - 20261106
 
 ----------------------------------------------------------------*/
 

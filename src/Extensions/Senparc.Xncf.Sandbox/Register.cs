@@ -1,37 +1,37 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：Register.cs
-    文件功能描述：Senparc.Xncf.Sandbox 模块注册
+    File name: Register.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260808
+    Created by: Senparc - 20260808
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.2.0 增加 NCF 预览沙箱工作负载
+    Modified by: Senparc - 20260815
+    Change description: v0.2.0 add the NCF preview sandbox workload
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 增强 jupyter-csharp 模板与沙箱会话管理
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 enhance the jupyter-csharp template and sandbox session management
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 支持沙箱会话 TTL 与永久保持能力
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 support sandbox session TTL and persistent retention
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 enhance sandbox preview, Jupyter workspace, and session lifecycle management
 
-    修改标识：Senparc - 20260918
-    修改描述：v0.3.3 同步模块版本号（附加端口映射、Notebook 创建、别名与配额提升）
+    Modified by: Senparc - 20260918
+    Change description: v0.3.3 synchronize the module version (add port mappings, Notebook creation, aliases, and quota improvements)
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
+    Modified by: Senparc - 20261005
+    Change description: v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
-    修改标识：Senparc - 20261028
-    修改描述：注册 IHttpContextAccessor，供单例编排器捕获请求租户上下文
+    Modified by: Senparc - 20261028
+    Change description: register IHttpContextAccessor so the singleton orchestrator can capture request tenant context
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.4.0 沙箱单例编排器恢复请求租户上下文，后台回收按租户迭代
+    Modified by: Senparc - 20261103
+    Change description: v0.4.0 restore request tenant context in the sandbox singleton orchestrator and iterate background reclamation by tenant
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.4.2 统一 XNCF Register 显示元数据与多语言资源键
+    Modified by: Senparc - 20261111
+    Change description: v0.4.2 unify XNCF Register display metadata and localization resource keys
 
 ----------------------------------------------------------------*/
 
@@ -133,7 +133,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
             FileProvider = new ManifestEmbeddedFileProvider(Assembly.GetExecutingAssembly(), "wwwroot")
         });
 
-        // JupyterLab 交互需要 WebSocket；鉴权与 token 注入在中间件内完成。
+        //Legacy comment translated to English.
         app.UseWebSockets();
         app.UseMiddleware<SandboxJupyterProxyMiddleware>();
         app.UseMiddleware<SandboxNcfPreviewProxyMiddleware>();

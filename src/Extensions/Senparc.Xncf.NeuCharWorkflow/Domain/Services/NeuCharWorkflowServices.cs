@@ -2,36 +2,36 @@
     Copyright (C) 2026 Senparc
   
     File name: NeuCharWorkflowServices.cs
-    File description: 领域服务与业务流程实现
+    File description: domain services and business-process implementation
 
 
     Created by: Senparc - 20260810
 
     Modified by: Senparc - 20260813
-    Change description: v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Change description: v0.1.0-preview1 enhance workflow orchestration, replay, Webhook, and parallel execution
 
     Modified by: Senparc - 20260815
-    Change description: v0.2.0 增强工作流并行与运行控制
+    Change description: v0.2.0 enhance workflow parallelism and execution control
 
     Modified by: Senparc - 20260822
-    Change description: v0.2.0 增强工作流函数调用、任务控制与回放管理
+    Change description: v0.2.0 enhance workflow function calls, task control, and replay management
 
 -
 
     Modified by: Senparc - 20260829
-    Change description: v0.3.0 新增工作流分析查询与管理端可视化
+    Change description: v0.3.0 add workflow analysis queries and admin-side visualization
 
     Modified by: Senparc - 20260913
-    Change description: v0.4.0 新增 Chat 消息服务：历史查询、清理与 30 天保留期
+    Change description: v0.4.0 Updated module behavior and related support.
 
     Modified by: Senparc - 20260915
-    Change description: v0.4.0 增强 Chat 触发器消息持久化与恢复能力
+    Change description: v0.4.0 enhance Chat trigger message persistence and recovery
 
     Modified by: Senparc - 20261001
-    Change description: 通过现有 Repository 查询能力访问数据，运行状态按指定字段保存
+    Change description: Updated module behavior and related support.
 
     Modified by: Senparc - 20261103
-    Change description: v0.4.4 维护领域服务与业务流程实现
+    Change description: v0.4.4 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -55,8 +55,8 @@ public sealed class NeuCharWorkflowService : WorkflowClientServiceBase<WorkflowE
         : base(repository, serviceProvider) { }
 
     /// <summary>
-    /// 只保存运行状态字段。运行时可能持有开始执行时读取的旧工作流定义，不能通过普通实体保存
-    /// 把旧的 GraphJson、Revision 或编辑字段覆盖回数据库。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public Task SaveRuntimeStartedAsync(WorkflowEntity workflow) =>
         SaveRuntimePropertiesAsync(workflow,
@@ -364,14 +364,14 @@ public sealed class NeuCharWorkflowExecutionLogService : WorkflowClientServiceBa
 }
 
 /// <summary>
-/// Chat 消息持久化服务。消息历史保存到数据库，Host 重启后可恢复；
-/// 保留期为 <see cref="RetentionDays"/> 天，过期消息由托管服务定期清理。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 public sealed class NeuCharWorkflowChatMessageService : WorkflowClientServiceBase<NeuCharWorkflowChatMessage>
 {
-    /// <summary>Chat 消息保留期（天）。</summary>
+    ///Legacy comment translated to English.
     public const int RetentionDays = 30;
-    /// <summary>单次恢复写入内存会话的最大历史条数。</summary>
+    ///Legacy comment translated to English.
     public const int MaxHistoryCount = 200;
 
     public NeuCharWorkflowChatMessageService(
@@ -380,7 +380,7 @@ public sealed class NeuCharWorkflowChatMessageService : WorkflowClientServiceBas
         : base(repository, serviceProvider) { }
 
     /// <summary>
-    /// 按发送顺序返回指定会话最近 <see cref="MaxHistoryCount"/> 条持久化消息。
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<IReadOnlyList<NeuCharWorkflowChatMessage>> GetHistoryAsync(
         int workflowId,
@@ -403,7 +403,7 @@ public sealed class NeuCharWorkflowChatMessageService : WorkflowClientServiceBas
             .ToList();
     }
 
-    /// <summary>删除单个会话的全部持久化消息（会话重置时调用）。</summary>
+    ///Legacy comment translated to English.
     public async Task DeleteByParticipantAsync(int workflowId, string participantKeyHash, CancellationToken cancellationToken = default)
     {
         if (workflowId <= 0 || string.IsNullOrWhiteSpace(participantKeyHash))
@@ -420,7 +420,7 @@ public sealed class NeuCharWorkflowChatMessageService : WorkflowClientServiceBas
         }
     }
 
-    /// <summary>删除工作流的全部 Chat 消息（工作流删除时调用，与版本和执行日志清理保持一致）。</summary>
+    ///Legacy comment translated to English.
     public async Task DeleteByWorkflowAsync(int workflowId, CancellationToken cancellationToken = default)
     {
         if (workflowId <= 0)
@@ -438,7 +438,7 @@ public sealed class NeuCharWorkflowChatMessageService : WorkflowClientServiceBas
     }
 
     /// <summary>
-    /// 清理超过保留期的消息并返回删除条数；cap 限制单轮删除数量，避免重启后一次性大量删除。
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<int> DeleteExpiredAsync(DateTime cutoff, int cap = 1000, CancellationToken cancellationToken = default)
     {

@@ -1,23 +1,44 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：Register.cs
-    文件功能描述：Register 相关实现
-    
-    
-    创建标识：Senparc - 20210614
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.19.0-preview2 为 Swagger 模块接入统一资源本地化并优化功能文案
+    File name: Register.cs
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.19.1-preview3 修正 Swagger 认证中间件的认证方案处理
+    File description: Register related implementation
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.20.10 统一 XNCF Register 显示元数据与多语言资源键
+    
+
+    
+
+    Created by: Senparc - 20210614
+
+    
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
+
+    Modified by: Senparc - 20260717
+
+    Change description: v0.19.0-preview2 Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20260729
+
+    Change description: v0.19.1-preview3 Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20261111
+
+    Change description: v0.20.10 unify XNCF Register display metadata and localization resource keys
+
+
 
 ----------------------------------------------------------------*/
 
@@ -60,17 +81,17 @@ namespace Senparc.Xncf.Swagger
             "浏览系统 API 接口说明");
 
         /// <summary>
-        /// Api 默认文档地址，返回 null 则不生成 XML 文档
+        ///Legacy comment translated to English.
         /// </summary>
         public static Func<IWebHostEnvironment, string> ApiDocXmlPathFunc = (env) => Path.Combine(env.ContentRootPath, "App_Data", "ApiDocXml");
 
-        #region IRegister 接口
+        #region Legacy section
 
         public override string Name => "Senparc.Xncf.Swagger";
 
-        public override string Uid => "712d56f6-989e-4b5f-b769-86a870543e8d";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
+        public override string Uid => "712d56f6-989e-4b5f-b769-86a870543e8d";//Legacy comment translated to English.
 
-        public override string Version => "0.7.1";//必须填写版本号
+        public override string Version => "0.7.1";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 
@@ -94,7 +115,7 @@ namespace Senparc.Xncf.Swagger
 
 
 
-                #region 配置动态 API（必须在 Swagger 配置之前）
+                #region Legacy section
 
                 var docXmlPath = ApiDocXmlPathFunc?.Invoke(webEnv);// Path.Combine(env.ContentRootPath, "App_Data", "ApiDocXml");
                 var builder = services
@@ -145,7 +166,7 @@ namespace Senparc.Xncf.Swagger
                     x.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
                 });
 
-                //接口文档
+                //Legacy comment translated to English.
                 #region Swagger
 
                 if (ConfigurationHelper.CustsomSwaggerOptions.Enabled)

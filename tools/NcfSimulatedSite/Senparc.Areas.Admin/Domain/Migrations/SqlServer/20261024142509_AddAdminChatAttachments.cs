@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：20261024142509_AddAdminChatAttachments.cs
-    文件功能描述：20261024142509_AddAdminChatAttachments 相关定义与实现
+    File name: 20261024142509_AddAdminChatAttachments.cs
+    File description: 20261024142509_AddAdminChatAttachments related definitions and implementation
 
 
-    创建标识：Senparc - 20210105
+    Created by: Senparc - 20210105
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 支持 AddAdminChatAttachments 数据库迁移
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

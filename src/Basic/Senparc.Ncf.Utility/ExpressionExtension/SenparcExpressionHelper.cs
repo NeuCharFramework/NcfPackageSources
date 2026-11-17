@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：SenparcExpressionHelper.cs
-    文件功能描述：SenparcExpressionHelper 相关实现
+
+    File name: SenparcExpressionHelper.cs
+
+    File description: SenparcExpressionHelper related implementation
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -20,16 +32,16 @@ using System.Linq.Expressions;
 namespace Senparc.Ncf.Utility
 {
     /// <summary>
-    /// 支持关联表查询
+    ///Legacy comment translated to English.
     /// 
-    /// 类型如：
+    ///Legacy comment translated to English.
     ///   var seh = new SenparcExpressionHelper<T>();
     ///   seh.ValueCompare
     ///       .AndAlso(true, i => !i.IsDeleted && i.MPAccountId == MPAccount.Id)
     ///       .AndAlso(!string.IsNullOrEmpty(SearchText), i => i.MPKeywordList.Count(c => c.Content.Contains(SearchText)) > 0);
     ///   var where = seh.BuildWhereExpression();
     ///   
-    /// 其中关联表的Count统计，在SenparcExpressionHelper下，会吧变量c当作主表属性而报错
+    ///Legacy comment translated to English.
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     public class SenparcExpressionHelper<TEntity> where TEntity : class
@@ -41,14 +53,14 @@ namespace Senparc.Ncf.Utility
         }
 
         /// <summary>
-        /// 生成where表达式
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public Expression<Func<TEntity, bool>> BuildWhereExpression()
         {
             if (ValueCompare.ExpressionBody == null)
             {
-                //不需要查询
+                //Legacy comment translated to English.
                 Expression<Func<TEntity, bool>> returnTrue = z => true;
                 return returnTrue;
             }

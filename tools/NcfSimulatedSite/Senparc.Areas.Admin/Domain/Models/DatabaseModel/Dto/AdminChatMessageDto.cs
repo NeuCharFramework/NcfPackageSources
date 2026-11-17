@@ -1,20 +1,20 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：AdminChatMessageDto.cs
-    文件功能描述：AdminChatMessageDto 相关功能实现
+    File name: AdminChatMessageDto.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20260325
+    Created by: Senparc - 20260325
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+    Modified by: Senparc - 20260915
+    Change description: v0.8.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 add comprehensive unit tests for AdminChatWorkspaceAssetService functionality
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 add comprehensive unit tests for AdminChatWorkspaceAssetService functionality
 
-    修改标识：Senparc - 20261105
-    修改描述：v0.12.26 消息传输对象同步 Prompt 引用
+    Modified by: Senparc - 20261105
+    Change description: v0.12.26 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 using Senparc.Areas.Admin.Domain.Services;
@@ -27,39 +27,39 @@ using Senparc.Xncf.PromptRange.Abstractions.References;
 namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
 {
     /// <summary>
-    /// AdminChatMessageDto：管理后台聊天消息数据传输对象
+    ///Legacy comment translated to English.
     /// </summary>
     public class AdminChatMessageDto : DtoBase<int>
     {
         /// <summary>
-        /// 所属会话ID
+        ///Legacy comment translated to English.
         /// </summary>
         public int SessionId { get; set; }
 
         /// <summary>
-        /// 消息角色类型
+        ///Legacy comment translated to English.
         /// </summary>
         public ChatMessageRoleType RoleType { get; set; }
 
         /// <summary>
-        /// 消息内容
+        ///Legacy comment translated to English.
         /// </summary>
         public string Content { get; set; }
         public IReadOnlyList<AdminChatAttachment> Attachments { get; set; } = Array.Empty<AdminChatAttachment>();
         public IReadOnlyList<PromptReference> PromptReferences { get; set; } = Array.Empty<PromptReference>();
 
         /// <summary>
-        /// 消息序号
+        ///Legacy comment translated to English.
         /// </summary>
         public int Sequence { get; set; }
 
         /// <summary>
-        /// 用户反馈
+        ///Legacy comment translated to English.
         /// </summary>
         public MessageFeedbackType UserFeedback { get; set; }
 
         /// <summary>
-        /// 使用的模型标识符
+        ///Legacy comment translated to English.
         /// </summary>
         public string ModelIdentifier { get; set; }
 
@@ -68,7 +68,7 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
         public int? TrajectorySequence { get; set; }
 
         /// <summary>
-        /// 从实体映射到 DTO
+        ///Legacy comment translated to English.
         /// </summary>
         public static AdminChatMessageDto CreateFromEntity(AdminChatMessage entity)
         {
@@ -76,14 +76,14 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
 
             return new AdminChatMessageDto
             {
-                // 明确复制基类属性
+                //Legacy comment translated to English.
                 Id = entity.Id,
                 AddTime = entity.AddTime,
                 LastUpdateTime = entity.LastUpdateTime,
                 TenantId = entity.TenantId,
                 Flag = entity.Flag,
 
-                // 复制业务属性
+                //Legacy comment translated to English.
                 SessionId = entity.SessionId,
                 RoleType = entity.RoleType,
                 Content = entity.Content,
@@ -99,28 +99,28 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
     }
 
     /// <summary>
-    /// 发送聊天消息的请求 DTO
+    ///Legacy comment translated to English.
     /// </summary>
     public class ChatMessageInputDto
     {
         /// <summary>
-        /// 会话ID
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         public int SessionId { get; set; }
 
         /// <summary>
-        /// 选中的 AIModelId，0 表示系统级 SenparcAiSetting
+        ///Legacy comment translated to English.
         /// </summary>
         public int AiModelId { get; set; }
 
         /// <summary>
-        /// 消息内容
+        ///Legacy comment translated to English.
         /// </summary>
         public string Content { get; set; }
 
         /// <summary>
-        /// 运行模式：Simple、Plan 或 Execute；Plan/Execute 使用 MAF Harness。
+        ///Legacy comment translated to English.
         /// </summary>
         public AdminChatMode Mode { get; set; } = AdminChatMode.Simple;
         public int MaxOutputTokens { get; set; }

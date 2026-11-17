@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：DatabaseInstallStateTests.cs
-    文件功能描述：数据库首次安装与架构升级异常分类测试
+    File name: DatabaseInstallStateTests.cs
+    File description: Test for classification of exceptions in the initial installation of the database and schema upgrade
 
-    创建标识：Senparc - 20260803
+    Created by: Senparc - 20260803
 ----------------------------------------------------------------*/
 
 using System;

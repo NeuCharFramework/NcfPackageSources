@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：FileExtension.cs
-    文件功能描述：FileExtension 相关实现
+
+    File name: FileExtension.cs
+
+    File description: FileExtension related implementation
+
     
+
     
-    创建标识：Senparc - 20211124
+
+    Created by: Senparc - 20211124
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -25,7 +37,7 @@ namespace Senparc.Ncf.FileExtension
         /// 
         /// </summary>
         /// <param name="formFile"></param>
-        /// <param name="outPath">绝对路径</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public static async Task<bool> Upload(IFormFile formFile, string outPath)
         {

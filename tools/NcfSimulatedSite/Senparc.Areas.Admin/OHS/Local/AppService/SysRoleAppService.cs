@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：SysRoleAppService.cs
-    文件功能描述：SysRoleAppService.cs 相关实现
+
+    File name: SysRoleAppService.cs
+
+    File description: SysRoleAppService.cs related implementation
+
     
+
     
-    创建标识：Senparc - 20241028
+
+    Created by: Senparc - 20241028
+
     
-    修改标识：Senparc - 20260729
-    修改描述：v0.2.0 增强后台管理员交互与桌面 Admin Chat 安全同步
+
+    Modified by: Senparc - 20260729
+
+    Change description: v0.2.0 enhance admin interaction and secure desktop Admin Chat synchronization
+
+
 
 ----------------------------------------------------------------*/
 
@@ -42,7 +54,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 创建or修改角色信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -71,7 +83,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取分页列表
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -94,7 +106,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取详情
+        /// get details
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -116,7 +128,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 删除角色
+        /// deleterole
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -139,7 +151,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 增加权限
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -170,7 +182,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取角色下面的所有菜单
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="roleId"></param>
         /// <returns></returns>

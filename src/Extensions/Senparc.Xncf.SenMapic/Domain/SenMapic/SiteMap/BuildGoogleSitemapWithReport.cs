@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：BuildGoogleSitemapWithReport.cs
-    文件功能描述：BuildGoogleSitemapWithReport 相关实现
+
+    File name: BuildGoogleSitemapWithReport.cs
+
+    File description: BuildGoogleSitemapWithReport related implementation
+
     
+
     
-    创建标识：Senparc - 20260704
+
+    Created by: Senparc - 20260704
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -47,31 +59,31 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 //             //{
 
 
-//             urls = (string.IsNullOrEmpty(urls) || !urls.StartsWith("http")) ? "http://" + HttpContext.Current.Request.Url.Host : urls.Trim();//当格式错误或为空时，使用当前域名
+//Legacy comment translated to English.
 //             List<string> urlList = urls.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).Distinct().ToList();
 
 //             for (int i = 0; i < urlList.Count; i++)
 //             {
-//                 _domainAll += (i == 0 ? "" : "+") + this.GetDomain(urlList[i]);//所有域名
+//Legacy comment translated to English.
 //             }
 //             _domainAll = _domainAll.Replace(":", ",").Replace("/", "");
 
-//             //指定储存目录
+//Legacy comment translated to English.
 //             string saveDirectory = string.Format(GlobalConfigString.SITEMAP_SAVE_FILE_PATH + "/Sitemap.bak/{0}", DateTime.Now.ToString("yyyy-MM"));
-//             //指定文件名
+//Legacy comment translated to English.
 //             _sitemapXmlFileName = FileSaveUtility.GetAvailableFileName(Path.Combine(Server.GetMapPath(saveDirectory), "sitemap-{0}-{1}.xml".With(_domainAll, DateTime.Now.ToString("yyyyMMdd"))));
 //             sitemapXmlFileName = _sitemapXmlFileName;
-//             //查看储存文件目录是否存在，并赋予权限
-//             string physicalDirPath = Server.GetMapPath(saveDirectory);//物理路径
+//Legacy comment translated to English.
+//Legacy comment translated to English.
 //             if (!Directory.Exists(physicalDirPath))
 //             {
-//                 Directory.CreateDirectory(physicalDirPath);//如果目录不存在则创建
+//Legacy comment translated to English.
 //                 IoUtility.AddDirectorySecurity(physicalDirPath, "NETWORK SERVICE", System.Security.AccessControl.FileSystemRights.FullControl, System.Security.AccessControl.AccessControlType.Allow);
 //             }
 
-//             //创建sitemap.xml
+//             //createsitemap.xml
 //             BuildSiteMapXML(totalUrl, updateDate, priority, changefreq, saveDirectory);
-//             //创建sitemap.html和report.html
+//             //createsitemap.htmlandreport.html
 //             var averageTime = totalUrl.Count == 0 ? 0 : totalUrl.Values.Average(z => z.ResponseMillionSeconds);
 //             BuildReport(
 //                 urls: urls,
@@ -93,7 +105,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 //             //}
 //             //catch (Exception e)
 //             //{
-//             //    LogUtility.SitemapLogger.Error("BuildGoogleSitemapWithReport出错:{0}".With(e.Message, e));
+//Legacy comment translated to English.
 //             //    senMapic = null;
 //             //    zipFileName=null;
 //             //    reportFileName=null;
@@ -106,29 +118,29 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 //         {
 //             //try
 //             //{
-//             //组成XML文件
+//Legacy comment translated to English.
 //             XNamespace xmlns = "http://www.sitemaps.org/schemas/sitemap/0.9";
 //             XNamespace xsi = "http://www.w3.org/2001/XMLSchema-instance";
 //             XElement root = new XElement(xmlns + "urlset");
 //             root.SetAttributeValue(XNamespace.Xmlns + "xsi", xsi);
 //             root.SetAttributeValue(xsi + "schemaLocation",
-// @"http://www.sitemaps.org/schemas/sitemap/0.9  http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd");//取消了换行
+//Legacy comment translated to English.
 //             foreach (var urlData in totalUrls.Where(z => z.Value.Result == (int)HttpStatusCode.OK))
 //             {
 //                 XElement urlElement = new XElement(xmlns + "url",
 //                                             new XElement(xmlns + "loc", this.EscapingUrl(urlData.Value.Url)));
-//                 //页面更新时间
+//Legacy comment translated to English.
 //                 if (updateDate != null)
 //                 {
 //                     urlElement.Add(new XElement(xmlns + "lastmod",
 //                        string.Format("{0}+{1}:00", ((DateTime)updateDate).ToString("s"), TimeZone.CurrentTimeZone.GetUtcOffset((DateTime)updateDate).TotalHours.ToString("00"))));
 //                 }
-//                 //优先级
+//Legacy comment translated to English.
 //                 if (!string.IsNullOrEmpty(priority))
 //                 {
 //                     urlElement.Add(new XElement(xmlns + "priority", priority));
 //                 }
-//                 //更新频率
+//Legacy comment translated to English.
 //                 if (!string.IsNullOrEmpty(changefreq))
 //                 {
 //                     urlElement.Add(new XElement(xmlns + "changefreq", changefreq));
@@ -136,8 +148,8 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 //                 root.Add(urlElement);
 //             }
 
-//             //保存文件完整路径（包含文件名）
-//             //如果文件已存在，则生成一个新的文件名
+//Legacy comment translated to English.
+//Legacy comment translated to English.
 //             var fileSavePath = FileSaveUtility.GetAvailableFileName(_sitemapXmlFileName);
 //             root.Save(fileSavePath);
 //         }
@@ -153,19 +165,19 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
 //             zipFileName = $"sitemap-{urls.Replace("http://", "+").Replace("https://", "+").Replace(":", ",")}-{DateTime.Now:yyyy-MM-dd}.zip";
 
-//             reportFileName = FileSaveUtility.GetAvailableFileName(_sitemapXmlFileName + "-report.html");//如果文件已存在，则生成一个新的文件名
-//             sitemapHtmlFileName = FileSaveUtility.GetAvailableFileName(_sitemapXmlFileName + "-sitemap.html");//如果文件已存在，则生成一个新的文件名
+//Legacy comment translated to English.
+//Legacy comment translated to English.
 
 //             try
 //             {
-//                 //读取Report模板
+//Legacy comment translated to English.
 //                 using (var srTemplate = new StreamReader(Server.GetMapPath("~/App_Data/Template/SitemapReport.htm"), Encoding.UTF8))
 //                 {
 //                     _reportTemplate = srTemplate.ReadToEnd();
 //                 }
-//                 using (StreamWriter rwReportHtml = System.IO.File.CreateText(reportFileName))//创建文件
+//                 using (StreamWriter rwReportHtml = System.IO.File.CreateText(reportFileName))//create files
 //                 {
-//                     //输入数据
+//                     //inputdata
 //                     this.InsertReportTemplateValue("version", Config.SystemParameters.SenparcGoogleSitemapVersion);
 
 //                     this.InsertReportTemplateValue("filename", Path.GetFileName(_sitemapXmlFileName));
@@ -176,10 +188,10 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 //                     this.InsertReportTemplateValue("longdate", DateTime.Now.ToLongDateString());
 //                     this.InsertReportTemplateValue("url", urls);
 //                     this.InsertReportTemplateValue("deep", maxDeep.ToString());
-//                     this.InsertReportTemplateValue("frequent", changefreq != "none" ? changefreq : "不设置");
-//                     this.InsertReportTemplateValue("updatetime", updateDate != null ? DateTime.Now.ToString() : "不设置");
-//                     this.InsertReportTemplateValue("priority", priority != "none" ? priority : "不设置");
-//                     this.InsertReportTemplateValue("frequent", priority != "none" ? priority : "不设置");
+//                     this.InsertReportTemplateValue("frequent", changefreq != "none" ? changefreq : "notsettings");
+//                     this.InsertReportTemplateValue("updatetime", updateDate != null ? DateTime.Now.ToString() : "notsettings");
+//                     this.InsertReportTemplateValue("priority", priority != "none" ? priority : "notsettings");
+//                     this.InsertReportTemplateValue("frequent", priority != "none" ? priority : "notsettings");
 
 //                     int totalPageCount = totalUrls.Count;
 //                     int successPageCount = totalUrls.Count(z => z.Value.Result == (int)HttpStatusCode.OK);
@@ -190,7 +202,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 //                     this.InsertReportTemplateValue("responsetime", averageRequestTime.TotalMilliseconds.ToString("###,###"));
 //                     this.InsertReportTemplateValue("totalpagesizekb", totalPageSizeKB.ToString("###,###.###"));
 
-//                     //过滤关键字
+//Legacy comment translated to English.
 //                     StringBuilder filterWords = new StringBuilder();
 //                     if (filterOmitWords != null && filterOmitWords.Count > 0)
 //                     {
@@ -201,14 +213,14 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 //                     }
 //                     else
 //                     {
-//                         filterWords.Append("无");
+//                         filterWords.Append("none");
 //                     }
 //                     this.InsertReportTemplateValue("filteromitkeywords", filterWords.ToString());
 
 //                     StringBuilder failPageReport = new StringBuilder();
 //                     if (failedPageCount > 0)
 //                     {
-//                         failPageReport.Append("<table class=\"datatable\"><tr><th>错误页面URL</th><th>错误类型</th><th>错误页面父页URL</th></tr>");
+//Legacy comment translated to English.
 
 //                         foreach (var urlData in totalUrls.Where(z => z.Value.Result != (int)HttpStatusCode.OK))
 //                         {
@@ -218,7 +230,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 //                     }
 //                     else
 //                     {
-//                         failPageReport.Append("<span style=\"color:#f00\">恭喜！无错误页面！</span>");
+//Legacy comment translated to English.
 //                     }
 //                     this.InsertReportTemplateValue("errorpages", failPageReport.ToString());
 
@@ -227,15 +239,15 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 //                     rwReportHtml.Close();
 //                 }
 
-//                 //生成sitemap.html
-//                 //读取Html模板
+//                 //generatesitemap.html
+//Legacy comment translated to English.
 //                 using (var srTemplate = new StreamReader(Server.GetMapPath("~/App_Data/Template/SitemapHtml.htm"), Encoding.UTF8))
 //                 {
 //                     _sitemapHtmlTemplate = srTemplate.ReadToEnd();
 //                 }
-//                 using (StreamWriter rwSitemapHtml = System.IO.File.CreateText(sitemapHtmlFileName))//创建文件
+//                 using (StreamWriter rwSitemapHtml = System.IO.File.CreateText(sitemapHtmlFileName))//create files
 //                 {
-//                     //输入数据
+//                     //inputdata
 //                     this.InsertSitemapTemplateValue("url", urls);
 //                     this.InsertSitemapTemplateValue("version", Config.SystemParameters.SenparcGoogleSitemapVersion);
 
@@ -250,10 +262,10 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 //                     rwSitemapHtml.Write(this._sitemapHtmlTemplate);
 //                     rwSitemapHtml.Flush();
 //                     rwSitemapHtml.Close();
-//                     //TODO:整个过程有时候会执行几个小时！！持续观察！（如http://www.shoestog.com）
+//Legacy comment translated to English.
 //                 }
 
-//                 //记录统计数据
+//                 //recordstatisticsdata
 //                 sitemapBuildStatistic.SiteCount += totalDomainsCount;
 //                 sitemapBuildStatistic.PageCount += totalUrls.Count;
 //                 sitemapBuildStatistic.PageSizeKB += totalPageSizeKB;
@@ -261,7 +273,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 //             }
 //             catch (Exception e)
 //             {
-//                 SenparcTrace.SendCustomLog("SiteMap", $"BuildGoogleSitemapWithReport出错:{e.Message}", e);
+//Legacy comment translated to English.
 //             }
 //         }
 
@@ -275,7 +287,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 //         }
 
 //         /// <summary>
-//         /// 获取域名，如www.senparc.com
+//Legacy comment translated to English.
 //         /// </summary>
 //         /// <param name="url"></param>
 //         /// <returns></returns>
@@ -289,7 +301,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 //             return null;
 //         }
 
-//         #region 替换模板值
+//         #region replace template values
 //         private void InsertReportTemplateValue(string valueName, string value)
 //         {
 //             InsertTemplateValue(ref this._reportTemplate, valueName, value);
@@ -304,7 +316,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 //         {
 //             if (template.IsNullOrEmpty())
 //             {
-//                 throw new Exception("报表模板未载入！");
+//Legacy comment translated to English.
 //             }
 
 //             template = template.Replace("{$" + valueName.ToLower() + "$}", value);

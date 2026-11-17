@@ -1,20 +1,20 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：NcfFileManagerGateway.cs
-    文件功能描述：NcfFileManagerGateway.cs implementation and project behavior.
+    File name: NcfFileManagerGateway.cs
+    File description: NcfFileManagerGateway.cs implementation and project behavior.
 
 
-    创建标识：Senparc - 20260930
+    Created by: Senparc - 20260930
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.7.3 0.7.3 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
+    Modified by: Senparc - 20261005
+    Change description: v0.7.3 0.7.3 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.8.0 允许导入微调产物文件
+    Modified by: Senparc - 20261021
+    Change description: v0.8.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.8.1 add FileId reference to AIFineTuningDataset and implement FineTuningFileReferenceProvider
+    Modified by: Senparc - 20261103
+    Change description: v0.8.1 add FileId reference to AIFineTuningDataset and implement FineTuningFileReferenceProvider
 
 ----------------------------------------------------------------*/
 

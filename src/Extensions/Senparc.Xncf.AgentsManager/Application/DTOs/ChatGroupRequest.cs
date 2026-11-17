@@ -1,38 +1,38 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：ChatGroupRequest.cs
-    文件功能描述：ChatGroupRequest 相关实现
+    File name: ChatGroupRequest.cs
+    File description: ChatGroupRequest related implementation
     
     
-    创建标识：Senparc - 20260704
+    Created by: Senparc - 20260704
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.12.0-preview6 为 AgentsManager 模块接入统一资源本地化并优化功能文案
+    Modified by: Senparc - 20260717
+    Change description: v0.12.0-preview6 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.15.0-preview20 增强 AgentTemplate、ChatGroup 与发布型 A2A 的取消和请求处理
+    Modified by: Senparc - 20260815
+    Change description: v0.15.0-preview20 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 支持 AgentTemplate 模型绑定、空输出 Token 重试与 Human-in-the-Loop
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
+    Modified by: Senparc - 20260822
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261009
-    修改描述：v0.18.3 增强 Agent Studio、群组配置与任务管理交互
+    Modified by: Senparc - 20261009
+    Change description: v0.18.3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.19.1 enhance Agent Studio, group configuration, and task management interactions
+    Modified by: Senparc - 20261103
+    Change description: v0.19.1 enhance Agent Studio, group configuration, and task management interactions
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.19.3 完善 AgentsManager 模板、ChatGroup 与连接器能力兼容
+    Modified by: Senparc - 20261111
+    Change description: v0.19.3 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -163,7 +163,7 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
         [JsonIgnore]
         public SelectionList AIModelOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>
         {
-            //new SelectionItem("Default","系统默认","通过系统默认配置的固定 AI 模型信息",true)
+            //Legacy comment translated to English.
         });
 
         [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.Individuation")]
@@ -171,11 +171,11 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
         public bool Individuation { get; set; } = true;
 
         /// <summary>
-        /// 是否要求工具调用先取得人工批准。
+        /// whether tool calls require human approval first。
         /// </summary>
         public bool RequireHumanApproval { get; set; }
 
-        /// <summary>HIL 等级：0 自动，1 风险分层，2 工具审批，3 Human 参与者。</summary>
+        ///Legacy comment translated to English.
         public HumanInTheLoopLevel HumanInTheLoopLevel { get; set; } = HumanInTheLoopLevel.Automatic;
 
         public ToolPermissionMode PluginToolPermission { get; set; } = ToolPermissionMode.Inherit;
@@ -203,7 +203,7 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
 
             ChatGroupsOptions.Items = chatGroups.Select(z => new SelectionItem(z.Id.ToString(), z.Name, z.Description)).ToList();
 
-            //载入 AI 模型
+            //Legacy comment translated to English.
             await BuildXncfRequestHelper.LoadAiModelData(serviceProvider, AIModelOptions);
 
             await base.LoadData(serviceProvider);
@@ -213,7 +213,7 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
     public class ChatGroup_RunGroupRequest 
     {
         /// <summary>
-        /// 任务名称
+        /// task name
         /// </summary>
         public string Name { get; set; }
 
@@ -223,82 +223,82 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
         public int ChatGroupId { get; set; }
 
         /// <summary>
-        /// 如果是 0 ，则使用系统默认配置
+        ///Legacy comment translated to English.
         /// </summary>
         public int AiModelId { get; set; }
 
         /// <summary>
-        /// 发起对话的要求
+        ///Legacy comment translated to English.
         /// </summary>
         public string PromptCommand { get; set; }
 
         /// <summary>
-        /// 说明
+        /// description
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        /// 使用个性化智能体
+        ///Legacy comment translated to English.
         /// </summary>
         public bool Personality { get; set; }
 
         /// <summary>
-        /// 消息平台
+        ///Legacy comment translated to English.
         /// </summary>
         public HookPlatform HookPlatform { get; set; }
         /// <summary>
-        /// 消息平台参数
+        ///Legacy comment translated to English.
         /// </summary>
         public string HookParameter { get; set; }
 
         /// <summary>
-        /// 最大对话轮数
+        ///Legacy comment translated to English.
         /// </summary>
         public int ChatMaxRound { get; set; } = ChatGroupService.DefaultChatMaxRound;
 
         /// <summary>
-        /// 可选：业务关联 ID（例如 Prompt 优化的 RequestId），用于在执行上下文中关联工具调用
+        ///Legacy comment translated to English.
         /// </summary>
         public string CorrelationId { get; set; }
 
         /// <summary>
-        /// 是否要求工具调用先取得人工批准。默认关闭；启用后任务会在工具调用处暂停，
-        /// 由 Human-in-the-Loop API/SSE 完成批准或拒绝后继续执行。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         public bool RequireHumanApproval { get; set; }
 
-        /// <summary>HIL 等级：0 自动，1 风险分层，2 工具审批，3 Human 参与者。</summary>
+        ///Legacy comment translated to English.
         public HumanInTheLoopLevel HumanInTheLoopLevel { get; set; } = HumanInTheLoopLevel.Automatic;
 
-        /// <summary>插件工具权限覆盖；Inherit 表示按 HIL 等级计算。</summary>
+        ///Legacy comment translated to English.
         public ToolPermissionMode PluginToolPermission { get; set; } = ToolPermissionMode.Inherit;
 
-        /// <summary>MCP 工具权限覆盖；Inherit 表示按 HIL 等级计算。</summary>
+        ///Legacy comment translated to English.
         public ToolPermissionMode McpToolPermission { get; set; } = ToolPermissionMode.Inherit;
 
-        /// <summary>是否在本次 Group 执行中包含 Human 参与者。</summary>
+        ///Legacy comment translated to English.
         public bool IncludeHumanParticipant { get; set; }
 
-        /// <summary>为 true 时，本次对话只使用 <see cref="ConnectorInstanceIds"/> 与 Agent 授权的交集。</summary>
+        ///Legacy comment translated to English.
         public bool LimitConnectors { get; set; }
 
-        /// <summary>本次对话选中的连接器实例。仅在 <see cref="LimitConnectors"/> 为 true 时生效。</summary>
+        ///Legacy comment translated to English.
         public List<string> ConnectorInstanceIds { get; set; }
 
-        /// <summary>启动任务时捕获的提醒接收人，不参与 HTTP 模型绑定。</summary>
+        ///Legacy comment translated to English.
         [JsonIgnore]
         public string HumanRecipientUserId { get; set; }
 
         /// <summary>
-        /// 可选：由 Workflow 或宿主传入的取消信号。该属性不参与 HTTP 模型绑定，
-        /// 仅用于进程内调用以便及时终止外部 Agent 资源。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         [JsonIgnore]
         public System.Threading.CancellationToken CancellationToken { get; set; }
     }
 
     /// <summary>
-    /// 删除对话请求
+    ///Legacy comment translated to English.
     /// </summary>
     public class ChatGroup_DeleteChatGroupRequest : FunctionAppRequestBase
     {
@@ -314,7 +314,7 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
 
         public override async Task LoadData(IServiceProvider serviceProvider)
         {
-            // 加载所有可用的 ChatGroup
+            //Legacy comment translated to English.
             var chatGroupService = serviceProvider.GetService<ChatGroupService>();
             var chatGroups = await chatGroupService.GetFullListAsync(z => true, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
 

@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：PromptOptimizationAppService.cs
-    文件功能描述：PromptOptimizationAppService 相关实现
+    File name: PromptOptimizationAppService.cs
+    File description: PromptOptimizationAppService related implementation
     
     
-    创建标识：Senparc - 20260306
+    Created by: Senparc - 20260306
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
 ----------------------------------------------------------------*/
 
@@ -27,8 +27,8 @@ using Senparc.Xncf.AreaBase.Admin.Filters;
 namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 {
     /// <summary>
-    /// Prompt 优化 AppService
-    /// TODO: 需要权限验证
+    /// Prompt optimize AppService
+    /// TODO: permission validation is required
     /// </summary>
     [ApiAuthorize]
     public class PromptOptimizationAppService : AppServiceBase
@@ -47,7 +47,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 确保 PromptCatalyzer Agent 和相关资源已初始化
+        ///Legacy comment translated to English.
         /// </summary>
         [HttpPost]
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
@@ -62,7 +62,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 优化指定的 Prompt（包括内容和参数如 Temperature）
+        ///Legacy comment translated to English.
         /// </summary>
         [HttpPost]
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
@@ -73,7 +73,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 {
                     _logger.LogInformation("Received Prompt optimization request for PromptCode: {PromptCode}", request.PromptCode);
 
-                    // 验证请求参数
+                    // validationrequestparameters
                     if (string.IsNullOrWhiteSpace(request.PromptCode))
                     {
                         throw new NcfExceptionBase("PromptCode is required");
@@ -89,7 +89,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                         throw new NcfExceptionBase("Context is required");
                     }
 
-                    // 调用优化服务
+                    //Legacy comment translated to English.
                     var result = await _promptOptimizationService.OptimizePromptAsync(
                         request.PromptCode,
                         request.PromptContent,
@@ -103,27 +103,27 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
     }
 
     /// <summary>
-    /// Prompt 优化请求 DTO
+    /// Prompt optimizerequest DTO
     /// </summary>
     public class PromptOptimizationRequestDto
     {
         /// <summary>
-        /// Prompt 的版本号（如 "2024.1.1.1-T1-A1"）
+        ///Legacy comment translated to English.
         /// </summary>
         public string PromptCode { get; set; }
 
         /// <summary>
-        /// Prompt 的内容
+        ///Legacy comment translated to English.
         /// </summary>
         public string PromptContent { get; set; }
 
         /// <summary>
-        /// 用户的优化需求描述
+        ///Legacy comment translated to English.
         /// </summary>
         public string UserRequirement { get; set; }
 
         /// <summary>
-        /// 优化上下文（当前 Prompt 的参数）
+        ///Legacy comment translated to English.
         /// </summary>
         public OptimizationContext Context { get; set; }
     }

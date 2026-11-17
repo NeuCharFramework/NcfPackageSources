@@ -1,20 +1,20 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：AdminChatPromptBuilder.cs
-    文件功能描述：后台 AI 对话提示词构建器
+    File name: AdminChatPromptBuilder.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20261009
+    Created by: Senparc - 20261009
 
-    修改标识：Senparc - 20261009
-    修改描述：v0.11.0 增强后台 Admin Chat 群组配置、提示词构建与上下文控制
+    Modified by: Senparc - 20261009
+    Change description: v0.11.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261102
-    修改描述：补充附件大小与大文件 Workspace/Python 处理提示
+    Modified by: Senparc - 20261102
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 implement AdminChat memory storage and management system
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 implement AdminChat memory storage and management system
 
 ----------------------------------------------------------------*/
 

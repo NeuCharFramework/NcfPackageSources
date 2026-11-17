@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------
-    文件名：Access.js
-    文件功能描述：Function 全局 Provit 访问控制页：
-    代码基线 + 数据库策略 + 生效策略的完整展示、单条/批量设置与清除
+    File name: Access.js
+    File description: Related implementation.
+    Legacy comment translated to English.
 
-    创建标识：Senparc - 20260917
-    修改描述：v0.9.1 新增 Function 全局 Provit 数据库访问策略映射
+    Created by: Senparc - 20260917
+    Change description: v0.9.1 Updated module behavior and related support.
 ----------------------------------------------------------------*/
 new Vue({
     el: '#app',

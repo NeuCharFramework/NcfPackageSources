@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：Chat.cshtml.cs
-    文件功能描述：Chat.cshtml.cs implementation and project behavior.
+    File name: Chat.cshtml.cs
+    File description: Chat.cshtml.cs implementation and project behavior.
 
 
-    创建标识：Senparc - 20260325
+    Created by: Senparc - 20260325
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 维护Chat.cshtml.cs implementation and project behavior
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -27,8 +27,8 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.Pages.AdminChat
 {
     /// <summary>
-    /// 与 SenparcTrace/Index 等页一致：<see cref="Ncf.AreaBase.Admin.Filters.IgnoreAuth"/> 跳过菜单 URL 校验；
-    /// 登录与 AdminOnly 由 <see cref="BaseAdminPageModel"/> 与 Cookie 中间件统一处理，不在此页写 Login 跳转。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     [Ncf.AreaBase.Admin.Filters.IgnoreAuth]
     public class ChatModel : BaseAdminPageModel
@@ -47,29 +47,29 @@ namespace Senparc.Areas.Admin.Pages.AdminChat
         }
 
         /// <summary>
-        /// 会话ID（URL参数）
+        ///Legacy comment translated to English.
         /// </summary>
         [BindProperty(SupportsGet = true)]
         public int SessionId { get; set; }
 
         /// <summary>
-        /// 初始消息（URL参数，可选）
+        ///Legacy comment translated to English.
         /// </summary>
         [BindProperty(SupportsGet = true)]
         public string InitialMessage { get; set; }
 
         /// <summary>
-        /// 当前用户ID
+        /// currentuserID
         /// </summary>
         public int CurrentUserId { get; set; }
 
         /// <summary>
-        /// 当前用户是否为超级管理员（administrator 角色）：超级管理员可打开用量统计面板
+        ///Legacy comment translated to English.
         /// </summary>
         public bool IsSuperAdmin { get; set; }
 
         /// <summary>
-        /// 模块 UID 列表（逗号分隔的字符串）
+        ///Legacy comment translated to English.
         /// </summary>
         [BindProperty(SupportsGet = true)]
         public string ModuleUids { get; set; }

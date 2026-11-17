@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：SandboxExecCodeDefaults.cs
-    文件功能描述：Exec 示例代码与按模板归一化（避免 Python 默认值误用于 C#）
+    File name: SandboxExecCodeDefaults.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260808
+    Created by: Senparc - 20260808
 
 ----------------------------------------------------------------*/
 
@@ -18,7 +18,7 @@ public static class SandboxExecCodeDefaults
     public const string CsharpHello = "Console.WriteLine(\"hello from NCF Sandbox\");";
 
     /// <summary>
-    /// Function 表单共用一个 Code 字段；若用户未改 Python 默认值却在 csharp-exec 会话中执行，自动换成 C# 示例。
+    ///Legacy comment translated to English.
     /// </summary>
     public static string Normalize(string templateKey, string? code)
     {

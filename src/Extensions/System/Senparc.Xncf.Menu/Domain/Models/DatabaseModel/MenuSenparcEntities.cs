@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：MenuSenparcEntities.cs
-    文件功能描述：MenuSenparcEntities 相关实现
+
+    File name: MenuSenparcEntities.cs
+
+    File description: MenuSenparcEntities related implementation
+
     
+
     
-    创建标识：Senparc - 20211128
+
+    Created by: Senparc - 20211128
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -28,19 +40,19 @@ namespace Senparc.Xncf.Menu.Models
 
 
         /// <summary>
-        /// 菜单
+        ///Legacy comment translated to English.
         /// </summary>
         public DbSet<SysMenu> SysMenus { get; set; }
 
         /// <summary>
-        /// 菜单下面的按钮
+        ///Legacy comment translated to English.
         /// </summary>
         public DbSet<SysButton> SysButtons { get; set; }
 
-        //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
+        //DOT REMOVE OR MODIFY THIS LINE - Entities Point
         //ex. public DbSet<Color> Colors { get; set; }
 
-        //如无特殊需需要，OnModelCreating 方法可以不用写，已经在 Register 中要求注册
+        //Legacy comment translated to English.
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
         //}

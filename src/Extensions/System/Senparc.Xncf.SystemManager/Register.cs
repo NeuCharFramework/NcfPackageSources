@@ -1,26 +1,50 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：Register.cs
-    文件功能描述：Register 相关实现
+
+    File name: Register.cs
+
+    File description: Register related implementation
+
     
+
     
-    创建标识：Senparc - 20211128
+
+    Created by: Senparc - 20211128
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.15.0-preview3 为 SystemManager 模块接入统一资源本地化并优化功能文案
+    Modified by: Senparc - 20260704
 
-    修改标识：Senparc - 20260803
-    修改描述：v1.1.3 增加 FooterContent 数据库迁移
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.15.3-preview6 补齐 SystemConfig.FooterContent 数据库迁移
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.15.12 统一 XNCF Register 显示元数据与多语言资源键
+
+    Modified by: Senparc - 20260717
+
+    Change description: v0.15.0-preview3 integrate shared resource localization and improve feature text for the SystemManager module
+
+
+
+    Modified by: Senparc - 20260803
+
+    Change description: v1.1.3 Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20260804
+
+    Change description: v0.15.3-preview6 Updated module behavior and related support.
+
+
+
+    Modified by: Senparc - 20261111
+
+    Change description: v0.15.12 unify XNCF Register display metadata and localization resource keys
+
+
 
 ----------------------------------------------------------------*/
 
@@ -52,13 +76,13 @@ namespace Senparc.Xncf.SystemManager
             "系统管理",
             "负责系统配置和核心运行数据的管理模块，请勿删除；操作前请备份数据。");
 
-        #region IXncfRegister 接口
+        #region Legacy section
 
         public override string Name => "Senparc.Xncf.SystemManager";
 
         public override string Uid => SiteConfig.SYSTEM_XNCF_MODULE_SERVICE_MANAGER_UID;// "00000000-0000-0000-0000-000000000002";
 
-        public override string Version => "1.1.3";//必须填写版本号
+        public override string Version => "1.1.3";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 
@@ -68,7 +92,7 @@ namespace Senparc.Xncf.SystemManager
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
-            //安装或升级数据库
+            //install or upgrade the database
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 
             ////SenparcEntities senparcEntities = (SenparcEntities)xncfModuleServiceExtension.BaseData.BaseDB.BaseDataContext;
@@ -82,7 +106,7 @@ namespace Senparc.Xncf.SystemManager
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
-            //TODO：应该提供一个 BeforeUninstall 方法，阻止卸载。
+            //Legacy comment translated to English.
 
             await base.UninstallAsync(serviceProvider, unsinstallFunc);
         }

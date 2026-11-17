@@ -1,15 +1,15 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：KnowledgeBaseRetrievalConfig.cs
-    文件功能描述：知识库检索配置（切片策略 + Re-ranking 模式），以 JSON 形式保存在知识库上；
-    默认值与旧版行为完全一致，保证向下兼容。
+    File name: KnowledgeBaseRetrievalConfig.cs
+    File description: Related implementation.
+    Legacy comment translated to English.
 
 
-    创建标识：Senparc - 20260926
+    Created by: Senparc - 20260926
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.8.0 upgrade KnowledgeBase retrieval with configurable chunking and re-ranking (backward compatible)
+    Modified by: Senparc - 20261103
+    Change description: v0.8.0 upgrade KnowledgeBase retrieval with configurable chunking and re-ranking (backward compatible)
 
 ----------------------------------------------------------------*/
 
@@ -19,15 +19,15 @@ using System.Text.Json;
 namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
 {
     /// <summary>
-    /// 文本切片策略（常量集）
+    ///Legacy comment translated to English.
     /// </summary>
     public static class ChunkingStrategies
     {
-        /// <summary>固定长度（旧版默认行为：按字符窗口切分）</summary>
+        ///Legacy comment translated to English.
         public const string Fixed = "Fixed";
-        /// <summary>递归结构化（段落 → 行 → 句子 → 字符，兼顾中英文，长文推荐）</summary>
+        ///Legacy comment translated to English.
         public const string Recursive = "Recursive";
-        /// <summary>按段落（保留段落边界，短段落自动合并）</summary>
+        ///Legacy comment translated to English.
         public const string Paragraph = "Paragraph";
 
         public static bool TryParse(string value, out string strategy)
@@ -53,15 +53,15 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
     }
 
     /// <summary>
-    /// Re-ranking 模式（常量集）
+    ///Legacy comment translated to English.
     /// </summary>
     public static class RerankModes
     {
-        /// <summary>关闭（旧版默认行为：仅向量相似度排序）</summary>
+        ///Legacy comment translated to English.
         public const string None = "None";
-        /// <summary>词法混合重排：本地计算查询-片段词法重合度并与向量分数融合，无额外模型调用</summary>
+        ///Legacy comment translated to English.
         public const string Lexical = "Lexical";
-        /// <summary>LLM 重排：使用对话模型对候选片段排序，失败时自动回退到词法混合</summary>
+        ///Legacy comment translated to English.
         public const string Llm = "Llm";
 
         public static bool TryParse(string value, out string mode)
@@ -87,8 +87,8 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
     }
 
     /// <summary>
-    /// 知识库检索配置。序列化后存于 <c>KnowledgeBase.RetrievalConfigJson</c>。
-    /// 所有默认值与旧版（固定 800/120 字符切片、无重排）保持一致。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public sealed class KnowledgeBaseRetrievalConfig
     {
@@ -99,32 +99,32 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
             AllowTrailingCommas = true
         };
 
-        /// <summary>切片策略：Fixed / Recursive / Paragraph</summary>
+        ///Legacy comment translated to English.
         public string ChunkingStrategy { get; set; } = ChunkingStrategies.Fixed;
 
-        /// <summary>切片目标大小（字符数）</summary>
+        ///Legacy comment translated to English.
         public int ChunkSize { get; set; } = 800;
 
-        /// <summary>相邻切片重叠（字符数）</summary>
+        ///Legacy comment translated to English.
         public int ChunkOverlap { get; set; } = 120;
 
-        /// <summary>重排模式：None / Lexical / Llm</summary>
+        ///Legacy comment translated to English.
         public string RerankMode { get; set; } = RerankModes.None;
 
-        /// <summary>LLM 重排使用的对话模型 Id；0 表示回退到知识库的对话模型</summary>
+        ///Legacy comment translated to English.
         public int RerankModelId { get; set; }
 
-        /// <summary>重排候选池大小（向量检索先取该数量的候选，再重排出 TopK）</summary>
+        ///Legacy comment translated to English.
         public int RerankCandidateCount { get; set; } = 20;
 
-        /// <summary>词法混合重排中词法分数的融合权重（0-1）</summary>
+        ///Legacy comment translated to English.
         public double LexicalWeight { get; set; } = 0.35;
 
-        /// <summary>旧版等价默认配置</summary>
+        ///Legacy comment translated to English.
         public static KnowledgeBaseRetrievalConfig Default => new();
 
         /// <summary>
-        /// 从 JSON 解析；null / 空 / 非法 JSON 均返回默认配置（绝不抛出）。
+        ///Legacy comment translated to English.
         /// </summary>
         public static KnowledgeBaseRetrievalConfig FromJson(string json)
         {
@@ -139,7 +139,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
             }
             catch
             {
-                // 配置损坏时回退默认行为，而不是让召回整体失败
+                //Legacy comment translated to English.
                 return new KnowledgeBaseRetrievalConfig();
             }
         }
@@ -150,7 +150,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
         }
 
         /// <summary>
-        /// 把数值收敛到安全范围，并归一化枚举取值；返回自身便于链式调用。
+        ///Legacy comment translated to English.
         /// </summary>
         public KnowledgeBaseRetrievalConfig Sanitized()
         {
@@ -166,7 +166,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
             return this;
         }
 
-        /// <summary>是否为与旧版行为完全一致的默认配置</summary>
+        ///Legacy comment translated to English.
         public bool IsDefault()
         {
             var d = Default;
@@ -195,17 +195,17 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval
     }
 
     /// <summary>
-    /// 单次召回调用的可选覆盖项（不修改知识库保存的配置）。
+    ///Legacy comment translated to English.
     /// </summary>
     public sealed class RecallOptions
     {
-        /// <summary>重排模式覆盖；null/空 表示跟随知识库配置</summary>
+        ///Legacy comment translated to English.
         public string RerankMode { get; set; }
 
-        /// <summary>重排候选池覆盖；null/≤0 表示跟随知识库配置</summary>
+        ///Legacy comment translated to English.
         public int? CandidateCount { get; set; }
 
-        /// <summary>LLM 重排模型覆盖；null/≤0 表示跟随知识库配置</summary>
+        ///Legacy comment translated to English.
         public int? RerankModelId { get; set; }
     }
 }

@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：AgentWorkflowReferenceValidator.cs
-    文件功能描述：AgentWorkflowReferenceValidator.cs 相关实现
+    File name: AgentWorkflowReferenceValidator.cs
+    File description: AgentWorkflowReferenceValidator.cs related implementation
 
 
-    创建标识：Senparc - 20260822
+    Created by: Senparc - 20260822
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
+    Modified by: Senparc - 20260822
+    Change description: v0.16.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

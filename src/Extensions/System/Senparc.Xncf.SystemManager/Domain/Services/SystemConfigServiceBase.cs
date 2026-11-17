@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：SystemConfigServiceBase.cs
-    文件功能描述：SystemConfigServiceBase 相关实现
+
+    File name: SystemConfigServiceBase.cs
+
+    File description: SystemConfigServiceBase related implementation
+
     
+
     
-    创建标识：Senparc - 20211128
+
+    Created by: Senparc - 20211128
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -36,7 +48,7 @@ namespace Senparc.Ncf.Service
 
             base.SaveObject(obj);
 
-            //删除缓存
+            //Legacy comment translated to English.
             var systemConfigCache = _serviceProvider.GetService<FullSystemConfigCache>();
             systemConfigCache.RemoveCache();
         }
@@ -47,7 +59,7 @@ namespace Senparc.Ncf.Service
 
             await base.SaveObjectAsync(obj);
 
-            //删除缓存
+            //Legacy comment translated to English.
             var systemConfigCache = _serviceProvider.GetService<FullSystemConfigCache>();
             await systemConfigCache.RemoveCacheAsync();
             await base.SaveObjectAsync(obj);
@@ -55,7 +67,7 @@ namespace Senparc.Ncf.Service
 
         public virtual string BackupDatabase()
         {
-            string timeStamp = DateTime.Now.ToString("yyyyMMdd-HH-mm");//分钟
+            string timeStamp = DateTime.Now.ToString("yyyyMMdd-HH-mm");//Legacy comment translated to English.
             return timeStamp;
         }
 

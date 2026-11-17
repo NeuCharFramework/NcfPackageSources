@@ -1,44 +1,44 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：AdminSenparcEntities.cs
-    文件功能描述：AdminSenparcEntities 相关功能实现
+    File name: AdminSenparcEntities.cs
+    File description: Related implementation.
 
 
-    创建标识：Senparc - 20241028
+    Created by: Senparc - 20241028
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.0.3 新增登录超时配置并补齐多数据库迁移支持
+    Modified by: Senparc - 20260705
+    Change description: v0.0.3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.0.4 新增登录超时配置并补齐多数据库迁移支持
+    Modified by: Senparc - 20260705
+    Change description: v0.0.4 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260809
-    修改描述：Workflow 已迁出至 Senparc.Xncf.NeuCharWorkflow，本上下文仅保留 NeuCharPivot 与执行日志
+    Modified by: Senparc - 20260809
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.5.0 集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
+    Modified by: Senparc - 20260813
+    Change description: v0.5.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.6.0 新增管理端 Chat 会话工作流能力
+    Modified by: Senparc - 20260822
+    Change description: v0.6.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260829
-    修改描述：v0.7.0 新增 NeuCharPivot 全局浮动调用与工作流分析管理能力
+    Modified by: Senparc - 20260829
+    Change description: v0.7.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+    Modified by: Senparc - 20260915
+    Change description: v0.8.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260916
-    修改描述：v0.9.0 增强 Admin Chat 取消与推理轨迹，并扩展 NeuBell WebHook 请求能力
+    Modified by: Senparc - 20260916
+    Change description: v0.9.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261102
-    修改描述：移除合并遗留的微信 Claw 绑定重复声明和索引配置，保留原有映射
+    Modified by: Senparc - 20261102
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 implement AdminChat memory storage and management system
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 implement AdminChat memory storage and management system
 
 ----------------------------------------------------------------*/
 
@@ -52,7 +52,7 @@ using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
 namespace Senparc.Areas.Admin.Domain.Models
 {
     /// <summary>
-    /// 当前 Entities 只为帮助 SenparcEntities 生成 Migration 信息而存在，没有特别的操作意义。
+    /// The current Entities exist only to help SenparcEntities generate migration information and have no special operational purpose.
     /// </summary>
     public class AdminSenparcEntities : XncfDatabaseDbContext
     {
@@ -60,36 +60,36 @@ namespace Senparc.Areas.Admin.Domain.Models
         {
         }
 
-        #region 系统表（无特殊情况不要修改）
+        #region Legacy section
 
         /// <summary>
-        /// 系统设置
+        ///Legacy comment translated to English.
         /// </summary>
         public DbSet<AdminUserInfo> SystemConfigs { get; set; }
 
         /// <summary>
-        /// 管理后台认证配置
+        ///Legacy comment translated to English.
         /// </summary>
         public DbSet<AdminAuthConfig> AdminAuthConfigs { get; set; }
 
         /// <summary>
-        /// 管理后台聊天会话
+        ///Legacy comment translated to English.
         /// </summary>
         public DbSet<AdminChatSession> AdminChatSessions { get; set; }
         public DbSet<AdminChatMemoryState> AdminChatMemoryStates { get; set; }
 
         /// <summary>
-        /// 管理后台聊天消息
+        ///Legacy comment translated to English.
         /// </summary>
         public DbSet<AdminChatMessage> AdminChatMessages { get; set; }
 
         /// <summary>
-        /// 管理后台聊天会话-模块关联
+        ///Legacy comment translated to English.
         /// </summary>
         public DbSet<AdminChatSessionModule> AdminChatSessionModules { get; set; }
 
         /// <summary>
-        /// 管理后台聊天会话-Workflow 关联
+        ///Legacy comment translated to English.
         /// </summary>
         public DbSet<AdminChatSessionWorkflow> AdminChatSessionWorkflows { get; set; }
 
@@ -104,51 +104,51 @@ namespace Senparc.Areas.Admin.Domain.Models
         public DbSet<AdminChatTrajectoryEvent> AdminChatTrajectoryEvents { get; set; }
 
         /// <summary>
-        /// 系统级 NeuCharPivot 配置
+        ///Legacy comment translated to English.
         /// </summary>
         public DbSet<NeuCharPivotConfiguration> NeuCharPivotConfigurations { get; set; }
 
         /// <summary>
-        /// 可复用的单 Function UI 块
+        ///Legacy comment translated to English.
         /// </summary>
         public DbSet<NeuCharPivotFunction> NeuCharPivotFunctions { get; set; }
 
         /// <summary>
-        /// Function 定时任务
+        ///Legacy comment translated to English.
         /// </summary>
         public DbSet<NeuCharPivotLoopTask> NeuCharPivotLoopTasks { get; set; }
 
         /// <summary>
-        /// Pivot 与 Loop Task 的统一执行记录
+        ///Legacy comment translated to English.
         /// </summary>
         public DbSet<NeuCharExecutionLog> NeuCharExecutionLogs { get; set; }
 
         /// <summary>
-        /// Pivot 面板（Provit Panel）：为特定页面聚合各模块 Pivot 的 Function 块
+        ///Legacy comment translated to English.
         /// </summary>
         public DbSet<NeuCharPivotBoard> NeuCharPivotBoards { get; set; }
 
         /// <summary>
-        /// 纽铃 WebHook（WebAPI）通知设置
+        ///Legacy comment translated to English.
         /// </summary>
         public DbSet<NeuBellWebHook> NeuBellWebHooks { get; set; }
 
         /// <summary>
-        /// 纽铃 WebHook 请求日志（每次请求的数据与结果）
+        ///Legacy comment translated to English.
         /// </summary>
         public DbSet<NeuBellWebHookLog> NeuBellWebHookLogs { get; set; }
 
         /// <summary>
-        /// 个人微信 Claw 与 Admin Chat 的上层绑定。
+        ///Legacy comment translated to English.
         /// </summary>
         public DbSet<WeixinClawAdminBinding> WeixinClawAdminBindings { get; set; }
 
         /// <summary>
-        /// Function 全局 Provit（全局 Pivot 浮动调用）数据库访问策略映射
+        ///Legacy comment translated to English.
         /// </summary>
         public DbSet<NeuCharFunctionProvitAccess> NeuCharFunctionProvitAccesses { get; set; }
 
-        //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
+        //DOT REMOVE OR MODIFY THIS LINE - Entities Point
 
         #endregion
 

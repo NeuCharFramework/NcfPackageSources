@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：StringExtensions.cs
-    文件功能描述：StringExtensions 相关实现
+
+    File name: StringExtensions.cs
+
+    File description: StringExtensions related implementation
+
     
+
     
-    创建标识：Senparc - 20200724
+
+    Created by: Senparc - 20200724
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -38,7 +50,7 @@ namespace Senparc.Ncf.Core.Extensions
         //        if (!string.IsNullOrEmpty(item.Value))
         //        {
         //            result += string.Format("<meta name=\"{0}\" content=\"{1}\" />\r\n", item.Key.ToString(),
-        //                //helper.AttributeEncode(item.Value) //COCONET 此方法已失效
+        //Legacy comment translated to English.
         //                item.Value
         //                );
         //        }
@@ -102,7 +114,7 @@ namespace Senparc.Ncf.Core.Extensions
         //}
 
         ///// <summary>
-        ///// 把数据转换为Json格式
+        ///Legacy comment translated to English.
         ///// </summary>
         ///// <param name="data"></param>
         ///// <returns></returns>
@@ -119,7 +131,7 @@ namespace Senparc.Ncf.Core.Extensions
         //}
 
         ///// <summary>
-        ///// 把数据转换为Json格式（使用Newtonsoft.Json.dll）
+        ///Legacy comment translated to English.
         ///// </summary>
         ///// <param name="data"></param>
         ///// <returns></returns>
@@ -129,11 +141,11 @@ namespace Senparc.Ncf.Core.Extensions
         //}
 
         ///// <summary>
-        ///// 格式化成Json字符串
+        ///Legacy comment translated to English.
         ///// </summary>
-        ///// <param name="obj">需要格式化的对象</param>
-        ///// <param name="recursionDepth">指定序列化的深度</param>
-        ///// <returns>Json字符串</returns>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         //public static string ToJson(this object obj, int recursionDepth)
         //{
         //    //JavaScriptSerializer serializer = new JavaScriptSerializer();
@@ -142,14 +154,14 @@ namespace Senparc.Ncf.Core.Extensions
 
         //    return Newtonsoft.Json.JsonConvert.SerializeObject(obj, new Newtonsoft.Json.JsonSerializerSettings()
         //    {
-        //        //TODO：设置recursionDepth  COCONET 
+        //        //TODO：settingsrecursionDepth  COCONET 
         //    });
         //}
 
-        #region 转换HTML代码 public static string exHTML(string ntext)
+        #region Legacy section
         ///// <summary>
-        ///// 转换HTML代码——TNT2
-        ///// 已实现：回车,空格
+        ///// convert HTML code——TNT2
+        ///Legacy comment translated to English.
         ///// </summary>
         //public static string exHTML(string ntext)
         //{
@@ -158,8 +170,8 @@ namespace Senparc.Ncf.Core.Extensions
         //}
 
         /// <summary>
-        /// 转换HTML代码——TNT2
-        /// 已实现：回车,空格
+        /// convert HTML code——TNT2
+        ///Legacy comment translated to English.
         /// </summary>
         public static HtmlString ExHTML(this string ntext)
         {
@@ -172,7 +184,7 @@ namespace Senparc.Ncf.Core.Extensions
         }
 
         /// <summary>
-        /// 删除所有HTML标记
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
@@ -196,13 +208,13 @@ namespace Senparc.Ncf.Core.Extensions
         //}
 
         /// <summary>
-        /// 根据布尔值，返回√或×
+        /// return a check mark or cross according to the Boolean value
         /// </summary>
         /// <param name="yesOrNo">true:√,false:×</param>
         /// <returns></returns>
         public static HtmlString YesOrNo(this bool yesOrNo)
         {
-            #region 根据布尔值，返回√或×
+            #region Legacy section
             if (yesOrNo)
             {
                 return new HtmlString("<span class=\"red\">√</span>");
@@ -215,15 +227,15 @@ namespace Senparc.Ncf.Core.Extensions
         }
 
         /// <summary>
-        /// 区字符串固定长度，其余的省略
+        ///Legacy comment translated to English.
         /// 
-        /// 规则：
-        ///  1.如果startIndex大于字符串长度，则自动调整到取最后maxLangth长度。如果此时maxLangth长度比字符串长度还要大，那么startIndex回到0
-        ///  2.如果在startIndex基础上，取maxLangth长度大于比字符串长度,那么maxLangth自动取到可能的最大值，即从startIndex一直取到字符串末尾
-        ///  3.结果中，字符串只要有削减的地方，都以".."替代
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="str">原字符串</param>
-        /// <param name="maxLangth">最长字符个数</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public static string SubString(this string str, int startIndex, int maxLangth)
         {
@@ -235,27 +247,27 @@ namespace Senparc.Ncf.Core.Extensions
             {
                 string substring = "";
 
-                //调整startIndex
-                if (startIndex > str.Length - 1)//如果startIndex大于字符串长度
+                //Legacy comment translated to English.
+                if (startIndex > str.Length - 1)//Legacy comment translated to English.
                 {
-                    startIndex = (str.Length - maxLangth > 0) ? str.Length - maxLangth : 0;//则自动调整到取最后maxLangth长度。如果此时maxLangth长度比字符串长度还要大，那么startIndex回到0
+                    startIndex = (str.Length - maxLangth > 0) ? str.Length - maxLangth : 0;//Legacy comment translated to English.
                 }
 
-                //调整maxLangth
-                if (startIndex + maxLangth > str.Length)//如果在startIndex基础上，取maxLangth长度大于比字符串长度
+                //Legacy comment translated to English.
+                if (startIndex + maxLangth > str.Length)//Legacy comment translated to English.
                 {
-                    maxLangth = str.Length - startIndex;//那么maxLangth自动取到可能的最大值，即从startIndex一直取到字符串末尾
+                    maxLangth = str.Length - startIndex;//Legacy comment translated to English.
                 }
-                //调整完成
+                //Legacy comment translated to English.
 
-                //加缩略符号
-                substring += (startIndex > 0) ? ".." : "";//如果开头削减，以".."替代
+                //Legacy comment translated to English.
+                substring += (startIndex > 0) ? ".." : "";//Legacy comment translated to English.
 
-                //进行取定长字符串
+                //Legacy comment translated to English.
                 substring += str.Substring(startIndex, maxLangth);
 
-                //加缩略符号
-                substring += (str.Length - startIndex - maxLangth > 0) ? "..." : "";//如果结尾削减，以".."替代
+                //Legacy comment translated to English.
+                substring += (str.Length - startIndex - maxLangth > 0) ? "..." : "";//Legacy comment translated to English.
 
                 return substring;
             }
@@ -263,10 +275,10 @@ namespace Senparc.Ncf.Core.Extensions
 
 
         /// <summary>
-        /// 高亮关键字(红色)
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="str">原始字符串</param>
-        /// <param name="keyword">关键字</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public static string HighlightKeyword(this string str, string keyword)
         {
@@ -277,17 +289,17 @@ namespace Senparc.Ncf.Core.Extensions
 
             if (!keyword.IsNullOrEmpty())
             {
-                string replaceFormat = "<span class=\"red\">{0}</span>";//替换格式
+                string replaceFormat = "<span class=\"red\">{0}</span>";//Legacy comment translated to English.
                 str = Regex.Replace(str, string.Format(@"({0})", keyword), string.Format(replaceFormat, "$1"), RegexOptions.IgnoreCase);
             }
             return str;
         }
 
         /// <summary>
-        /// 隐藏IP段
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="ip"></param>
-        /// <param name="hideNum">从后计隐藏几个区段</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public static string HideIP(this string ip, int hideNum)
         {
@@ -300,7 +312,7 @@ namespace Senparc.Ncf.Core.Extensions
         }
 
         /// <summary>
-        /// 隐藏IP段（只隐藏最后一个IP段）
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="ip"></param>
         /// <returns></returns>

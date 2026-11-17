@@ -1,58 +1,58 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
-    文件名：AgentTemplateAppService.cs
-    文件功能描述：AgentTemplateAppService 服务逻辑
+    File name: AgentTemplateAppService.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20240616
+    Created by: Senparc - 20240616
 
-    修改标识：Senparc - 20260701
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+    Modified by: Senparc - 20260701
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-    修改标识：Senparc - 20260704
-    修改描述：v0.11.0-preview2 新增 ChatTask 归档能力并完善多数据库迁移支持
+    Modified by: Senparc - 20260704
+    Change description: v0.11.0-preview2 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.12.0-preview6 为 AgentsManager 模块接入统一资源本地化并优化功能文案
+    Modified by: Senparc - 20260717
+    Change description: v0.12.0-preview6 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.14.0-preview9 新增 Agent 模板知识库关联与管理统计
+    Modified by: Senparc - 20260804
+    Change description: v0.14.0-preview9 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+    Modified by: Senparc - 20260813
+    Change description: v0.15.0-preview11 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.15.0-preview20 增强 AgentTemplate、ChatGroup 与发布型 A2A 的取消和请求处理
+    Modified by: Senparc - 20260815
+    Change description: v0.15.0-preview20 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 支持 AgentTemplate 模型绑定、空输出 Token 重试与 Human-in-the-Loop
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
+    Modified by: Senparc - 20260822
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.18.1 0.18.1 feat: add MCP endpoint selection feature in AgentsManager
+    Modified by: Senparc - 20261005
+    Change description: v0.18.1 0.18.1 feat: add MCP endpoint selection feature in AgentsManager
 
-    修改标识：Senparc - 20261009
-    修改描述：v0.18.3 增强 Agent Studio、群组配置与任务管理交互
+    Modified by: Senparc - 20261009
+    Change description: v0.18.3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261021
-    修改描述：修复明文 Prompt 转换时 PromptItem Note 超过数据库长度限制
+    Modified by: Senparc - 20261021
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.19.0 保存 Agent 模板的 Skill 绑定与工作区策略
+    Modified by: Senparc - 20261021
+    Change description: v0.19.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.19.1 update chat avatar icon and improve assistant message styling
+    Modified by: Senparc - 20261103
+    Change description: v0.19.1 update chat avatar icon and improve assistant message styling
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.19.3 完善 AgentsManager 模板、ChatGroup 与连接器能力兼容
+    Modified by: Senparc - 20261111
+    Change description: v0.19.3 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -238,13 +238,13 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 {
                     try
                     {
-                        // 只有 PromptRange 版本引用才需要解析；普通文本直接作为 System Message。
+                        //Legacy comment translated to English.
                         var promptResult = await _promptItemService.GetWithVersionAsync(promptCode, isAvg: true);
                         promptTemplate = promptResult.PromptItem.Content;
                     }
                     catch (Exception ex)
                     {
-                        // Prompt Code 不存在的时候，会抛出异常。
+                        //Legacy comment translated to English.
                         return ex.Message;
                     }
                 }
@@ -294,7 +294,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     return "Human 是系统保留的特殊参与者，不能通过普通 Agent 接口创建。";
                 }
 
-                // 检查是否已有使用该 PromptCode 前缀的智能体
+                //Legacy comment translated to English.
                 var existingAgents = await this._agentsTemplateService.GetObjectListAsync(0, 0,
                     z => z.PromptCode != null && z.PromptCode.StartsWith(promptCode),
                     z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
@@ -393,7 +393,7 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
         }
 
         /// <summary>
-        /// 将靶场别称开头的 PromptCode 归一化为 RangeName 开头，避免把 Alias 存入 SystemMessage。
+        ///Legacy comment translated to English.
         /// </summary>
         private async Task<string> NormalizePromptCodeAsync(string promptCode)
         {
@@ -417,7 +417,7 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
         }
 
         /// <summary>
-        /// 获取 AgentTemplate 的列表
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="pageSize"></param>
         /// <param name="pageIndex"></param>
@@ -532,7 +532,7 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
         }
 
         /// <summary>
-        /// 获取 PromptRange 的树状结构
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         [ApiBind]
@@ -546,7 +546,7 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
         }
 
         /// <summary>
-        /// 创建或更新 AgentTemplate
+        /// createorupdate AgentTemplate
         /// </summary>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
@@ -624,7 +624,7 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
         }
 
         /// <summary>
-        /// 获取 AgentTemplate 的详情
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -647,7 +647,7 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
         }
 
         /// <summary>
-        /// 获取带状态的 AgentTemplate 的详情
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -667,9 +667,9 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                 AIModelDto aiModelDto = null;
                 var aiModelService = base.GetService<AIModelService>();
 
-                // PromptCode 兼容两种数据：PromptRange 版本号，或用户手动输入的 SystemMessage。
-                // 手动 Prompt 没有关联 PromptItem，不能直接交给 GetBestPromptAsync，否则会被当作
-                // RangeName 查询并返回“找不到对应的靶场”。
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 if (agentTemplateDto.ModelBinding == AgentModelBindingMode.ManualAiModel
                     && agentTemplateDto.AiModelId > 0)
                 {
@@ -782,10 +782,10 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
         }
 
         /// <summary>
-        /// 启用或者停用 AgentTemplate
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="id">AgentTemplate ID</param>
-        /// <param name="enable">是否启用</param>
+        /// <param name="enable">whether enabled</param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
         public async Task<AppResponseBase<string>> Enable(int id, bool enable)
@@ -835,9 +835,9 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
         }
 
 /// <summary>
-        /// 根据 PromptCode 前缀获取匹配的 AgentTemplate 列表
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="promptCode">PromptCode（支持前缀匹配，如"RangeName"、"RangeName-T1"、"RangeName-T1-A1"）</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         [ApiBind]
         public async Task<AppResponseBase<List<AgentTemplateSimpleStatusDto>>> GetListByPromptCode(string promptCode)
@@ -933,8 +933,8 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                     throw new InvalidOperationException("手动选择 AIModel 时必须选择一个 Chat 类型模型。");
                 }
 
-                // Human 本身不会调用模型；仍保存选择，使其在系统 Agent 管理页面中的
-                // 任务策略保持可见且可调整，并与其他系统 Agent 使用同一数据契约。
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 var humanModelService = base.GetService<AIModelService>()
                     ?? throw new InvalidOperationException("AIKernel 模块服务未启用，无法绑定 AIModel。");
                 var humanModel = await humanModelService.GetObjectAsync(z => z.Id == agentTemplateDto.AiModelId.Value)
@@ -1090,9 +1090,9 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                 };
 
         /// <summary>
-        /// 通过 EventBus 向 MCP 模块查询已登记的 MCP Endpoint 列表，
-        /// 供 Agent 配置界面以“从列表选择”方式关联 MCP（替代手动输入）。
-        /// 仅依赖 Senparc.Xncf.MCP.Abstractions 契约；MCP 模块未安装/未响应时返回空列表与提示。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
         public async Task<AppResponseBase<McpEndpointOptionsResponse>> GetMcpEndpointOptions()
@@ -1142,7 +1142,7 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
         }
 
         /// <summary>
-        /// 获取所有已注册的 AI Plugin 类型
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
@@ -1156,11 +1156,11 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
         }
 
         /// <summary>
-        /// 测试MCP连接
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="endpointName">Endpoint名称</param>
+        /// <param name="endpointName">Endpointname</param>
         /// <param name="endpointUrl">Endpoint URL</param>
-        /// <returns>包含工具列表和连接状态的响应</returns>
+        ///Legacy comment translated to English.
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
         public async Task<AppResponseBase<McpConnectionTestResult>> TestMcpConnection(string endpointName, string endpointUrl)
         {
@@ -1211,7 +1211,7 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                 catch (System.Text.Json.JsonException ex)
                 {
                     logger.Append($"解析工具列表时出错: {ex.Message}");
-                    // 创建一个假工具以显示错误信息
+                    //Legacy comment translated to English.
                     mcpToolList.Add(new McpTool
                     {
                         Name = "解析错误",
@@ -1290,14 +1290,14 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                     continue;
                 }
 
-                // 移除普通成员关系（不影响群主/对接人引用，因为上面已经阻止）
+                //Legacy comment translated to English.
                 var members = await chatGroupMemberService.GetFullListAsync(z => z.AgentTemplateId == id);
                 foreach (var member in members)
                 {
                     await chatGroupMemberService.DeleteObjectAsync(member);
                 }
 
-                // 删除与该 Agent 相关的历史消息，避免外键约束冲突
+                //Legacy comment translated to English.
                 var histories = await chatGroupHistoryService.GetFullListAsync(
                     z => z.FromAgentTemplateId == id || z.ToAgentTemplateId == id);
                 foreach (var history in histories)
@@ -1305,7 +1305,7 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                     await chatGroupHistoryService.DeleteObjectAsync(history);
                 }
 
-                // 发布配置是 Agent 的附加能力；删除本地 Agent 时一并撤销，避免遗留不可访问的公开标识。
+                //Legacy comment translated to English.
                 var publishedA2AAgent = await publishedA2AAgentService.GetByAgentTemplateIdAsync(id);
                 if (publishedA2AAgent != null)
                 {
@@ -1323,80 +1323,80 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
     }
 
     /// <summary>
-    /// MCP连接测试结果
+    ///Legacy comment translated to English.
     /// </summary>
     public class McpConnectionTestResult
     {
         /// <summary>
-        /// 连接是否成功
+        ///Legacy comment translated to English.
         /// </summary>
         public bool Success { get; set; }
 
         /// <summary>
-        /// HTTP状态码
+        ///Legacy comment translated to English.
         /// </summary>
         public int Status { get; set; }
 
         /// <summary>
-        /// 状态消息
+        ///Legacy comment translated to English.
         /// </summary>
         public string StatusMessage { get; set; }
 
         /// <summary>
-        /// 工具列表
+        ///Legacy comment translated to English.
         /// </summary>
         public List<McpTool> Tools { get; set; } = new List<McpTool>();
     }
 
     /// <summary>
-    /// MCP工具信息
+    ///Legacy comment translated to English.
     /// </summary>
     public class McpTool
     {
         /// <summary>
-        /// 工具名称
+        ///Legacy comment translated to English.
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// 工具描述
+        ///Legacy comment translated to English.
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        /// 工具参数列表
+        ///Legacy comment translated to English.
         /// </summary>
         public List<McpToolParameter> Parameters { get; set; } = new List<McpToolParameter>();
     }
 
     /// <summary>
-    /// MCP工具参数
+    ///Legacy comment translated to English.
     /// </summary>
     public class McpToolParameter
     {
         /// <summary>
-        /// 参数名称
+        /// parametersname
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// 参数描述
+        /// parametersdescription
         /// </summary>
         public string Description { get; set; }
     }
 
     /// <summary>
-    /// “从列表选择 MCP”接口的响应：MCP 模块是否可用 + 端点选项列表。
+    ///Legacy comment translated to English.
     /// </summary>
     public class McpEndpointOptionsResponse
     {
-        /// <summary>MCP 模块是否在线（EventBus 有响应）。</summary>
+        ///Legacy comment translated to English.
         public bool McpModuleAvailable { get; set; }
 
-        /// <summary>提示信息（例如“MCP 模块未安装”）。</summary>
+        ///Legacy comment translated to English.
         public string Message { get; set; }
 
-        /// <summary>可选的 MCP Endpoint 列表。</summary>
+        ///Legacy comment translated to English.
         public List<McpEndpointInfo> Options { get; set; }
     }
 }

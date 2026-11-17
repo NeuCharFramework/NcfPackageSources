@@ -1,14 +1,14 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：20260911075800_Add_NeuBellWebHookLog.cs
-    文件功能描述：数据库迁移与模型快照
+    File name: 20260911075800_Add_NeuBellWebHookLog.cs
+    File description: database migration and model snapshot
 
-    创建标识：Senparc - 20260911
-    修改描述：v0.7.1 新增 NeuBell WebHook 请求日志表迁移（MySql 手工编写，因无可用数据库实例）
+    Created by: Senparc - 20260911
+    Change description: v0.7.1 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+    Modified by: Senparc - 20260915
+    Change description: v0.8.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

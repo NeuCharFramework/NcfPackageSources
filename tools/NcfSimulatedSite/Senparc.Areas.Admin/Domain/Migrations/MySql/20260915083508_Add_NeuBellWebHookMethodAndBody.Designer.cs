@@ -1,20 +1,20 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：20260915083508_Add_NeuBellWebHookMethodAndBody.Designer.cs
-    文件功能描述：数据库迁移与模型快照
+    File name: 20260915083508_Add_NeuBellWebHookMethodAndBody.Designer.cs
+    File description: database migration and model snapshot
 
-    创建标识：Senparc - 20260915
-    修改描述：v0.7.1 WebHook 请求方式与请求体模板迁移（MySql 手工迁移，因无可用数据库实例）
+    Created by: Senparc - 20260915
+    Change description: v0.7.1 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260916
-    修改描述：v0.9.0 增强 Admin Chat 取消与推理轨迹，并扩展 NeuBell WebHook 请求能力
+    Modified by: Senparc - 20260916
+    Change description: v0.9.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 支持 Add_NeuBellWebHookMethodAndBody 数据库迁移
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

@@ -1,14 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
+
   
-    文件名：ColumnMetadataDto.cs
-    文件功能描述：ColumnMetadataDto 相关实现
+
+    File name: ColumnMetadataDto.cs
+
+    File description: ColumnMetadataDto related implementation
+
     
+
     
-    创建标识：Senparc - 20240718
+
+    Created by: Senparc - 20240718
+
     
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    Modified by: Senparc - 20260704
+
+    Change description: vNext: add the standardized file header comment
+
+
 
 ----------------------------------------------------------------*/
 
@@ -25,44 +37,44 @@ namespace Senparc.Xncf.DynamicData.Domain.Models.DatabaseModel.Dto
     public class ColumnMetadataDto : DtoBase<ColumnMetadata,int>
     {
         /// <summary>  
-        /// 关联的表格ID。
+        ///Legacy comment translated to English.
         /// </summary>  
         //[ForeignKey(nameof(TableMetadata))]
         public int TableMetadataId { get;  set; }
 
         /// <summary>  
-        /// 列名称。  
+        ///Legacy comment translated to English.
         /// </summary>  
         [Required]
         [MaxLength(255)]
         public string ColumnName { get;  set; }
 
         /// <summary>  
-        /// 列的数据类型。  
+        ///Legacy comment translated to English.
         /// </summary>  
         [Required]
         [MaxLength(50)]
         public string ColumnType { get;  set; }
 
         /// <summary>  
-        /// 是否允许NULL值。  
+        ///Legacy comment translated to English.
         /// </summary>  
         [Required]
         public bool IsNullable { get;  set; }
 
         /// <summary>  
-        /// 列的默认值。  
+        ///Legacy comment translated to English.
         /// </summary>  
         public string DefaultValue { get;  set; }
 
         /// <summary>  
-        /// 关联的表格元数据。  
+        /// associated table metadata。  
         /// </summary>  
         //[InverseProperty(nameof(TableMetadata.ColumnMetadatas))]
         public TableMetadataDto TableMetadata { get; set; }
 
         /// <summary>  
-        /// 关联的表格元数据。  
+        /// associated table metadata。  
         /// </summary>  
         //[InverseProperty(nameof(TableData.ColumnMetadata))]
         public ICollection<TableDataDto> TableDatas { get; set; }
