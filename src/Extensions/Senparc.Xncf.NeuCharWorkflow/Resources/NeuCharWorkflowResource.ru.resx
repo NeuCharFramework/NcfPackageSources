@@ -407,72 +407,72 @@
   <data name="Frontend.389" xml:space="preserve"><value>{0} pending requests</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.390" xml:space="preserve"><value>Show more steps ({0} / {1})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
 
-  <data name="Frontend.391" xml:space="preserve"><value>Test run ready</value></data>
-  <data name="Frontend.392" xml:space="preserve"><value>Validating parameters and node references</value></data>
-  <data name="Frontend.393" xml:space="preserve"><value>Aborting the workflow and waiting for the current node to acknowledge cancellation</value></data>
-  <data name="Frontend.394" xml:space="preserve"><value>Waiting for Human input or approval; the Workflow is paused</value></data>
-  <data name="Frontend.395" xml:space="preserve"><value>The Workflow is running; editing is locked</value></data>
-  <data name="Frontend.396" xml:space="preserve"><value>The latest test run succeeded</value></data>
-  <data name="Frontend.397" xml:space="preserve"><value>The latest test run failed</value></data>
-  <data name="Frontend.398" xml:space="preserve"><value>Starting node execution.</value></data>
-  <data name="Frontend.399" xml:space="preserve"><value>Node execution completed.</value></data>
-  <data name="Frontend.400" xml:space="preserve"><value>Running</value></data>
-  <data name="Frontend.401" xml:space="preserve"><value>Execution completed</value></data>
-  <data name="Frontend.402" xml:space="preserve"><value>Execution failed</value></data>
-  <data name="Frontend.403" xml:space="preserve"><value>Branch selected</value></data>
-  <data name="Frontend.404" xml:space="preserve"><value>Console output</value></data>
-  <data name="Frontend.405" xml:space="preserve"><value>Status updated</value></data>
-  <data name="Frontend.406" xml:space="preserve"><value>Run succeeded</value></data>
-  <data name="Frontend.407" xml:space="preserve"><value>Run failed</value></data>
-  <data name="Frontend.408" xml:space="preserve"><value>Run completed</value></data>
+  <data name="Frontend.391" xml:space="preserve"><value>Тестовый запуск готов</value></data>
+  <data name="Frontend.392" xml:space="preserve"><value>Проверка параметров и ссылок на узлы</value></data>
+  <data name="Frontend.393" xml:space="preserve"><value>Остановка Workflow; ожидание отмены текущего узла</value></data>
+  <data name="Frontend.394" xml:space="preserve"><value>Ожидание ввода или подтверждения человека; Workflow приостановлен</value></data>
+  <data name="Frontend.395" xml:space="preserve"><value>Workflow выполняется; редактирование заблокировано</value></data>
+  <data name="Frontend.396" xml:space="preserve"><value>Последний тестовый запуск выполнен успешно</value></data>
+  <data name="Frontend.397" xml:space="preserve"><value>Последний тестовый запуск завершился ошибкой</value></data>
+  <data name="Frontend.398" xml:space="preserve"><value>Начало выполнения узла.</value></data>
+  <data name="Frontend.399" xml:space="preserve"><value>Узел выполнен.</value></data>
+  <data name="Frontend.400" xml:space="preserve"><value>Выполняется</value></data>
+  <data name="Frontend.401" xml:space="preserve"><value>Выполнение завершено</value></data>
+  <data name="Frontend.402" xml:space="preserve"><value>Ошибка выполнения</value></data>
+  <data name="Frontend.403" xml:space="preserve"><value>Выбрать ветвь</value></data>
+  <data name="Frontend.404" xml:space="preserve"><value>Вывод Console</value></data>
+  <data name="Frontend.405" xml:space="preserve"><value>Обновление состояния</value></data>
+  <data name="Frontend.406" xml:space="preserve"><value>Выполнено успешно</value></data>
+  <data name="Frontend.407" xml:space="preserve"><value>Ошибка выполнения</value></data>
+  <data name="Frontend.408" xml:space="preserve"><value>Выполнение завершено</value></data>
 
-  <data name="Frontend.409" xml:space="preserve"><value>{0} (task copy)</value></data>
-  <data name="Frontend.410" xml:space="preserve"><value>Array</value></data>
-  <data name="Frontend.411" xml:space="preserve"><value>Object</value></data>
-  <data name="Frontend.412" xml:space="preserve"><value>Condition</value></data>
-  <data name="Frontend.413" xml:space="preserve"><value>Condition</value></data>
-  <data name="Frontend.414" xml:space="preserve"><value>Condition</value></data>
-  <data name="Frontend.415" xml:space="preserve"><value>Wait</value></data>
-  <data name="Frontend.416" xml:space="preserve"><value>Loop (For)</value></data>
-  <data name="Frontend.417" xml:space="preserve"><value>Loop</value></data>
-  <data name="Frontend.418" xml:space="preserve"><value>Loop end</value></data>
-  <data name="Frontend.419" xml:space="preserve"><value>Call workflow</value></data>
-  <data name="Frontend.420" xml:space="preserve"><value>Call workflow</value></data>
-  <data name="Frontend.421" xml:space="preserve"><value>Safe code</value></data>
-  <data name="Frontend.422" xml:space="preserve"><value>Aggregate</value></data>
-  <data name="Frontend.423" xml:space="preserve"><value>Item-by-item merge</value></data>
-  <data name="Frontend.424" xml:space="preserve"><value>Parallel</value></data>
-  <data name="Frontend.425" xml:space="preserve"><value>Console output</value></data>
-  <data name="Frontend.426" xml:space="preserve"><value>Console output content</value></data>
-  <data name="Frontend.427" xml:space="preserve"><value>Send NeuBell</value></data>
-  <data name="Frontend.428" xml:space="preserve"><value>Wait for Human input</value></data>
-  <data name="Frontend.429" xml:space="preserve"><value>Human input</value></data>
-  <data name="Frontend.430" xml:space="preserve"><value>End</value></data>
-  <data name="Frontend.431" xml:space="preserve"><value>System nodes</value></data>
-  <data name="Frontend.432" xml:space="preserve"><value>Workflow system nodes</value></data>
-  <data name="Frontend.433" xml:space="preserve"><value>Search nodes, Functions, modules, or objects</value></data>
-  <data name="Frontend.434" xml:space="preserve"><value>All modules</value></data>
-  <data name="Frontend.435" xml:space="preserve"><value>Available</value></data>
-  <data name="Frontend.436" xml:space="preserve"><value>Unavailable</value></data>
-  <data name="Frontend.437" xml:space="preserve"><value>Module not installed or enabled</value></data>
-  <data name="Frontend.438" xml:space="preserve"><value>Double-click or drag onto the canvas to add</value></data>
-  <data name="Frontend.439" xml:space="preserve"><value>The node catalog is temporarily unavailable</value></data>
-  <data name="Frontend.440" xml:space="preserve"><value>The model list is temporarily unavailable</value></data>
-  <data name="Frontend.441" xml:space="preserve"><value>Configurable items</value></data>
-  <data name="Frontend.442" xml:space="preserve"><value>Output branches</value></data>
-  <data name="Frontend.443" xml:space="preserve"><value>Repeat count</value></data>
-  <data name="Frontend.444" xml:space="preserve"><value>Execution mode</value></data>
-  <data name="Frontend.445" xml:space="preserve"><value>Limit</value></data>
-  <data name="Frontend.446" xml:space="preserve"><value>Required parameters</value></data>
-  <data name="Frontend.447" xml:space="preserve"><value>Node output</value></data>
-  <data name="Frontend.448" xml:space="preserve"><value>Remote A2A Agent</value></data>
-  <data name="Frontend.449" xml:space="preserve"><value>Standalone Agent</value></data>
-  <data name="Frontend.450" xml:space="preserve"><value>Object unavailable</value></data>
-  <data name="Frontend.451" xml:space="preserve"><value>The current object is unavailable and cannot be added</value></data>
-  <data name="Frontend.452" xml:space="preserve"><value>Output to the Console below using the template</value></data>
-  <data name="Frontend.453" xml:space="preserve"><value>Output to the Console below</value></data>
-  <data name="Frontend.454" xml:space="preserve"><value>The workflow ends here</value></data>
-  <data name="Frontend.455" xml:space="preserve"><value>Built-in Workflow node.</value></data>
+  <data name="Frontend.409" xml:space="preserve"><value>{0} (копия задачи)</value></data>
+  <data name="Frontend.410" xml:space="preserve"><value>Массив</value></data>
+  <data name="Frontend.411" xml:space="preserve"><value>Объект</value></data>
+  <data name="Frontend.412" xml:space="preserve"><value>Условие</value></data>
+  <data name="Frontend.413" xml:space="preserve"><value>Проверка условия</value></data>
+  <data name="Frontend.414" xml:space="preserve"><value>Решение</value></data>
+  <data name="Frontend.415" xml:space="preserve"><value>Ожидание</value></data>
+  <data name="Frontend.416" xml:space="preserve"><value>Цикл (For)</value></data>
+  <data name="Frontend.417" xml:space="preserve"><value>Цикл</value></data>
+  <data name="Frontend.418" xml:space="preserve"><value>Конец цикла</value></data>
+  <data name="Frontend.419" xml:space="preserve"><value>Вызвать Workflow</value></data>
+  <data name="Frontend.420" xml:space="preserve"><value>Вызвать поток</value></data>
+  <data name="Frontend.421" xml:space="preserve"><value>Безопасный код</value></data>
+  <data name="Frontend.422" xml:space="preserve"><value>Агрегация</value></data>
+  <data name="Frontend.423" xml:space="preserve"><value>Слияние по элементам</value></data>
+  <data name="Frontend.424" xml:space="preserve"><value>Параллельно</value></data>
+  <data name="Frontend.425" xml:space="preserve"><value>Вывести в Console</value></data>
+  <data name="Frontend.426" xml:space="preserve"><value>Вывод Console</value></data>
+  <data name="Frontend.427" xml:space="preserve"><value>Отправить NeuBell</value></data>
+  <data name="Frontend.428" xml:space="preserve"><value>Ожидание ввода человека</value></data>
+  <data name="Frontend.429" xml:space="preserve"><value>Ввод человека</value></data>
+  <data name="Frontend.430" xml:space="preserve"><value>Конец</value></data>
+  <data name="Frontend.431" xml:space="preserve"><value>Системные узлы</value></data>
+  <data name="Frontend.432" xml:space="preserve"><value>Системные узлы Workflow</value></data>
+  <data name="Frontend.433" xml:space="preserve"><value>Поиск узлов, Function, модулей или объектов</value></data>
+  <data name="Frontend.434" xml:space="preserve"><value>Все модули</value></data>
+  <data name="Frontend.435" xml:space="preserve"><value>Доступно</value></data>
+  <data name="Frontend.436" xml:space="preserve"><value>Недоступно</value></data>
+  <data name="Frontend.437" xml:space="preserve"><value>Модуль не установлен или отключён</value></data>
+  <data name="Frontend.438" xml:space="preserve"><value>Дважды щёлкните или перетащите на холст для добавления</value></data>
+  <data name="Frontend.439" xml:space="preserve"><value>Каталог узлов недоступен</value></data>
+  <data name="Frontend.440" xml:space="preserve"><value>Список моделей недоступен</value></data>
+  <data name="Frontend.441" xml:space="preserve"><value>Настраиваемые элементы</value></data>
+  <data name="Frontend.442" xml:space="preserve"><value>Выходные ветви</value></data>
+  <data name="Frontend.443" xml:space="preserve"><value>Количество повторений</value></data>
+  <data name="Frontend.444" xml:space="preserve"><value>Режим выполнения</value></data>
+  <data name="Frontend.445" xml:space="preserve"><value>Ограничения</value></data>
+  <data name="Frontend.446" xml:space="preserve"><value>Обязательные параметры</value></data>
+  <data name="Frontend.447" xml:space="preserve"><value>Вывод узла</value></data>
+  <data name="Frontend.448" xml:space="preserve"><value>Удалённый A2A Agent</value></data>
+  <data name="Frontend.449" xml:space="preserve"><value>Автономный Agent</value></data>
+  <data name="Frontend.450" xml:space="preserve"><value>Объект недоступен</value></data>
+  <data name="Frontend.451" xml:space="preserve"><value>Текущий объект недоступен и не может быть добавлен</value></data>
+  <data name="Frontend.452" xml:space="preserve"><value>Вывод по шаблону в нижнюю Console</value></data>
+  <data name="Frontend.453" xml:space="preserve"><value>Вывод в нижнюю Console</value></data>
+  <data name="Frontend.454" xml:space="preserve"><value>Поток завершается здесь</value></data>
+  <data name="Frontend.455" xml:space="preserve"><value>Встроенный узел Workflow.</value></data>
   <data name="Frontend.456" xml:space="preserve"><value>Unable to insert node</value></data>
   <data name="Frontend.457" xml:space="preserve"><value>End and trigger nodes cannot be inserted into an existing connection.</value></data>
   <data name="Frontend.458" xml:space="preserve"><value>Unable to connect</value></data>
