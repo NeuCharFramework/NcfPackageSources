@@ -627,4 +627,7 @@
   <data name="Frontend.601" xml:space="preserve"><value>値をDecimalに変換します。</value></data>
   <data name="Frontend.602" xml:space="preserve"><value>値をブール値に変換します。true/falseまたは1/0に対応します。</value></data>
   <data name="Frontend.603" xml:space="preserve"><value>値をテキストに変換します。</value></data>
+
+  <data name="Frontend.604" xml:space="preserve"><value>現在のUTC時刻をISOテキストで返します。</value></data>
+  <data name="Frontend.605" xml:space="preserve"><value>指定した形式で日付をフォーマットします。形式を空欄にすると既定の形式を使用します。</value></data>
 </root>

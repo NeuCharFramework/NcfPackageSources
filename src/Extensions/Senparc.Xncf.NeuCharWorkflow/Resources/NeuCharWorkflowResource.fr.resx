@@ -627,4 +627,7 @@
   <data name="Frontend.601" xml:space="preserve"><value>Convertit une valeur en Decimal.</value></data>
   <data name="Frontend.602" xml:space="preserve"><value>Convertit une valeur en booléen ; accepte true/false ou 1/0.</value></data>
   <data name="Frontend.603" xml:space="preserve"><value>Convertit une valeur en texte.</value></data>
+
+  <data name="Frontend.604" xml:space="preserve"><value>Renvoie l’heure UTC actuelle au format ISO.</value></data>
+  <data name="Frontend.605" xml:space="preserve"><value>Formate une date selon le format indiqué ; le format par défaut est utilisé si le paramètre est vide.</value></data>
 </root>

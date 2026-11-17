@@ -627,4 +627,7 @@
   <data name="Frontend.601" xml:space="preserve"><value>Преобразует значение в Decimal.</value></data>
   <data name="Frontend.602" xml:space="preserve"><value>Преобразует значение в логическое значение; поддерживаются true/false и 1/0.</value></data>
   <data name="Frontend.603" xml:space="preserve"><value>Преобразует значение в текст.</value></data>
+
+  <data name="Frontend.604" xml:space="preserve"><value>Возвращает текущее время UTC в виде текста ISO.</value></data>
+  <data name="Frontend.605" xml:space="preserve"><value>Форматирует дату по указанному формату; при пустом параметре используется формат по умолчанию.</value></data>
 </root>
