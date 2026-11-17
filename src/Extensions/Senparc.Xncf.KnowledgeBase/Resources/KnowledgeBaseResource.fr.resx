@@ -717,4 +717,12 @@
   <data name="Frontend.275" xml:space="preserve"><value>Configuration actuelle de la base de connaissances :</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.276" xml:space="preserve"><value>Élément {0} · Similarité</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.277" xml:space="preserve"><value>· Position de reranking d'origine {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.278" xml:space="preserve"><value>La requête n’est pas terminée. Vérifiez la base de connaissances et la configuration du modèle.</value></data>
+  <data name="Frontend.279" xml:space="preserve"><value>Impossible de charger la liste des bases de connaissances : {0}</value></data>
+  <data name="Frontend.280" xml:space="preserve"><value>Cette base de connaissances n’est pas vectorisée. Revenez à la page de gestion et lancez d’abord la vectorisation.</value></data>
+  <data name="Frontend.281" xml:space="preserve"><value>Saisissez la question à tester</value></data>
+  <data name="Frontend.282" xml:space="preserve"><value>Le service n’a pas renvoyé de résultats de récupération valides.</value></data>
+  <data name="Frontend.283" xml:space="preserve"><value>Test de récupération terminé. Vérifiez les sources et le contenu.</value></data>
+  <data name="Frontend.284" xml:space="preserve"><value>Test terminé, mais aucun passage correspondant n’a été renvoyé.</value></data>
+  <data name="Frontend.285" xml:space="preserve"><value>La récupération n’est pas terminée</value></data>
 </root>

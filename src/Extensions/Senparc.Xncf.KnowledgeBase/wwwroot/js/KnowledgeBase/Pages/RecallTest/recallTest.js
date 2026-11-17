@@ -8,7 +8,7 @@
   }
 
   function errorMessage(error) {
-    return '请求未完成，请检查知识库和模型配置。';
+    return ncfST('Frontend.278');
   }
 
   new Vue({
@@ -60,13 +60,13 @@
             const ready = !!(item.vectorCollectionName && item.embeddedTime);
             return {
               id: item.id,
-              name: item.name || ('知识库-' + item.id),
+              name: item.name || (ncfST('Frontend.234') + '-' + item.id),
               ready: ready,
-              label: (item.name || ('知识库-' + item.id)) + (ready ? '' : '（尚未向量化）')
+              label: (item.name || (ncfST('Frontend.234') + '-' + item.id)) + (ready ? '' : '（' + ncfST('Frontend.220') + '）')
             };
           });
         } catch (error) {
-          this.$message.error('无法获取知识库列表：' + errorMessage(error));
+          this.$message.error(ncfST('Frontend.279', errorMessage(error)));
         }
       },
       formatScore: function (score) {
@@ -88,15 +88,15 @@
         const knowledgeBase = this.selectedKnowledgeBase;
         const content = (this.recallContent || '').trim();
         if (!knowledgeBase) {
-          this.$message.warning('请先选择知识库');
+          this.$message.warning(ncfST('Frontend.103'));
           return;
         }
         if (!knowledgeBase.ready) {
-          this.$message.warning('该知识库尚未向量化，请先回到知识库管理页执行“向量化”');
+          this.$message.warning(ncfST('Frontend.280'));
           return;
         }
         if (!content) {
-          this.$message.warning('请输入要测试的问题');
+          this.$message.warning(ncfST('Frontend.281'));
           return;
         }
 
@@ -110,7 +110,7 @@
             topK: this.topK
           });
           const results = unwrap(response);
-          if (!Array.isArray(results)) throw new Error('服务未返回有效的召回结果');
+          if (!Array.isArray(results)) throw new Error(ncfST('Frontend.282'));
 
           this.recallResults = results.map(function (item, index) {
             return Object.assign({}, item, {
@@ -127,12 +127,12 @@
             knowledgeBaseName: knowledgeBase.name,
             resultCount: this.recallResults.length,
             highestScore: scores.length ? Math.max.apply(null, scores) : null,
-            time: new Date().toLocaleString('zh-CN', { hour12: false })
+            time: new Date().toLocaleString(document.documentElement.lang || undefined, { hour12: false })
           });
           this.recordPage = 1;
-          this.$message.success(this.recallResults.length ? '召回测试完成，请核对来源与内容。' : '测试完成，但没有返回匹配片段。');
+          this.$message.success(this.recallResults.length ? ncfST('Frontend.283') : ncfST('Frontend.284'));
         } catch (error) {
-          this.$notify({ title: '召回未完成', message: errorMessage(error), type: 'error', duration: 6000 });
+          this.$notify({ title: ncfST('Frontend.285'), message: errorMessage(error), type: 'error', duration: 6000 });
         } finally {
           this.recallLoading = false;
         }

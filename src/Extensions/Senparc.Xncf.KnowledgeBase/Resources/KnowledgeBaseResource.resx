@@ -716,4 +716,12 @@
   <data name="Frontend.275" xml:space="preserve"><value>当前知识库配置：</value></data>
   <data name="Frontend.276" xml:space="preserve"><value>第 {0} 条 · 相似度</value></data>
   <data name="Frontend.277" xml:space="preserve"><value>· 重排前第 {0} 条</value></data>
+  <data name="Frontend.278" xml:space="preserve"><value>请求未完成，请检查知识库和模型配置。</value></data>
+  <data name="Frontend.279" xml:space="preserve"><value>无法获取知识库列表：{0}</value></data>
+  <data name="Frontend.280" xml:space="preserve"><value>该知识库尚未向量化，请先回到知识库管理页执行“向量化”。</value></data>
+  <data name="Frontend.281" xml:space="preserve"><value>请输入要测试的问题</value></data>
+  <data name="Frontend.282" xml:space="preserve"><value>服务未返回有效的召回结果</value></data>
+  <data name="Frontend.283" xml:space="preserve"><value>召回测试完成，请核对来源与内容。</value></data>
+  <data name="Frontend.284" xml:space="preserve"><value>测试完成，但没有返回匹配片段。</value></data>
+  <data name="Frontend.285" xml:space="preserve"><value>召回未完成</value></data>
 </root>

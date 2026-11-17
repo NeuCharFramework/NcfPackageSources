@@ -717,4 +717,12 @@
   <data name="Frontend.275" xml:space="preserve"><value>Current knowledge-base configuration:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.276" xml:space="preserve"><value>Item {0} · Similarity</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.277" xml:space="preserve"><value>· Original rerank position {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.278" xml:space="preserve"><value>The request did not complete. Check the knowledge base and model configuration.</value></data>
+  <data name="Frontend.279" xml:space="preserve"><value>Failed to load the knowledge base list: {0}</value></data>
+  <data name="Frontend.280" xml:space="preserve"><value>This knowledge base has not been vectorized. Return to the knowledge base management page and run vectorization first.</value></data>
+  <data name="Frontend.281" xml:space="preserve"><value>Enter the question to test</value></data>
+  <data name="Frontend.282" xml:space="preserve"><value>The service did not return valid recall results.</value></data>
+  <data name="Frontend.283" xml:space="preserve"><value>Recall test completed. Check the sources and content.</value></data>
+  <data name="Frontend.284" xml:space="preserve"><value>Test completed, but no matching passages were returned.</value></data>
+  <data name="Frontend.285" xml:space="preserve"><value>Recall did not complete</value></data>
 </root>

@@ -717,4 +717,12 @@
   <data name="Frontend.275" xml:space="preserve"><value>Configuración actual de la base de conocimientos:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.276" xml:space="preserve"><value>Elemento {0} · Similitud</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.277" xml:space="preserve"><value>· Posición de reordenación original {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.278" xml:space="preserve"><value>La solicitud no se completó. Comprueba la base de conocimiento y la configuración del modelo.</value></data>
+  <data name="Frontend.279" xml:space="preserve"><value>No se pudo cargar la lista de bases de conocimiento: {0}</value></data>
+  <data name="Frontend.280" xml:space="preserve"><value>Esta base de conocimiento aún no está vectorizada. Vuelve a la página de gestión y ejecuta primero la vectorización.</value></data>
+  <data name="Frontend.281" xml:space="preserve"><value>Introduce la pregunta que quieres probar</value></data>
+  <data name="Frontend.282" xml:space="preserve"><value>El servicio no devolvió resultados de recuperación válidos.</value></data>
+  <data name="Frontend.283" xml:space="preserve"><value>Prueba de recuperación completada. Comprueba las fuentes y el contenido.</value></data>
+  <data name="Frontend.284" xml:space="preserve"><value>La prueba terminó, pero no devolvió fragmentos coincidentes.</value></data>
+  <data name="Frontend.285" xml:space="preserve"><value>La recuperación no se completó</value></data>
 </root>

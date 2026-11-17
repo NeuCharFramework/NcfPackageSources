@@ -717,4 +717,12 @@
   <data name="Frontend.275" xml:space="preserve"><value>現在のナレッジベース構成：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.276" xml:space="preserve"><value>項目 {0} · 類似度</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.277" xml:space="preserve"><value>· 元の再ランキング位置 {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.278" xml:space="preserve"><value>リクエストが完了しませんでした。ナレッジベースとモデルの設定を確認してください。</value></data>
+  <data name="Frontend.279" xml:space="preserve"><value>ナレッジベース一覧の取得に失敗しました：{0}</value></data>
+  <data name="Frontend.280" xml:space="preserve"><value>このナレッジベースはまだベクトル化されていません。管理ページに戻り、先にベクトル化を実行してください。</value></data>
+  <data name="Frontend.281" xml:space="preserve"><value>テストする質問を入力してください</value></data>
+  <data name="Frontend.282" xml:space="preserve"><value>サービスから有効な検索結果が返されませんでした。</value></data>
+  <data name="Frontend.283" xml:space="preserve"><value>検索テストが完了しました。ソースと内容を確認してください。</value></data>
+  <data name="Frontend.284" xml:space="preserve"><value>テストは完了しましたが、一致する文章が返されませんでした。</value></data>
+  <data name="Frontend.285" xml:space="preserve"><value>検索が完了しませんでした</value></data>
 </root>

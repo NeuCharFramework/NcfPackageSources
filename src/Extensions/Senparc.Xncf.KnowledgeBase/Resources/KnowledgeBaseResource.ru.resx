@@ -717,4 +717,12 @@
   <data name="Frontend.275" xml:space="preserve"><value>Текущая конфигурация базы знаний:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.276" xml:space="preserve"><value>Элемент {0} · Сходство</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.277" xml:space="preserve"><value>· Исходная позиция переранжирования {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.278" xml:space="preserve"><value>Запрос не выполнен. Проверьте базу знаний и настройки модели.</value></data>
+  <data name="Frontend.279" xml:space="preserve"><value>Не удалось загрузить список баз знаний: {0}</value></data>
+  <data name="Frontend.280" xml:space="preserve"><value>Эта база знаний ещё не векторизована. Вернитесь на страницу управления и сначала выполните векторизацию.</value></data>
+  <data name="Frontend.281" xml:space="preserve"><value>Введите вопрос для проверки</value></data>
+  <data name="Frontend.282" xml:space="preserve"><value>Сервис не вернул допустимые результаты поиска.</value></data>
+  <data name="Frontend.283" xml:space="preserve"><value>Тест поиска завершён. Проверьте источники и содержимое.</value></data>
+  <data name="Frontend.284" xml:space="preserve"><value>Тест завершён, но совпадающие фрагменты не возвращены.</value></data>
+  <data name="Frontend.285" xml:space="preserve"><value>Поиск не завершён</value></data>
 </root>
