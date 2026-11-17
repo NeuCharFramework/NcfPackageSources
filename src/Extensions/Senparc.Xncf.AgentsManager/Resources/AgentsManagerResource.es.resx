@@ -340,7 +340,7 @@
     <value>Acciones</value>
   </data>
   <data name="Frontend.062" xml:space="preserve">
-    <value>Parámetros del agente</value>
+    <value>Parámetros del Agent</value>
   </data>
   <data name="Frontend.063" xml:space="preserve">
     <value>Ejecutar de nuevo</value>
@@ -349,13 +349,13 @@
     <value>Forzar detención</value>
   </data>
   <data name="Frontend.065" xml:space="preserve">
-    <value>Analítica de uso</value>
+    <value>Análisis de uso</value>
   </data>
   <data name="Frontend.066" xml:space="preserve">
-    <value>Hora de inicio de la tarea:</value>
+    <value>Inicio de la tarea:</value>
   </data>
   <data name="Frontend.067" xml:space="preserve">
-    <value>Hora de fin de la tarea:</value>
+    <value>Fin de la tarea:</value>
   </data>
   <data name="Frontend.068" xml:space="preserve">
     <value>Puntuación:</value>
@@ -370,7 +370,7 @@
     <value>Total de mensajes</value>
   </data>
   <data name="Frontend.072" xml:space="preserve">
-    <value>Token total (entrada+salida)</value>
+    <value>Total de tokens (entrada+salida)</value>
   </data>
   <data name="Frontend.073" xml:space="preserve">
     <value>Tiempo medio de respuesta</value>
@@ -379,10 +379,10 @@
     <value>Duración máxima</value>
   </data>
   <data name="Frontend.075" xml:space="preserve">
-    <value>Agentes ·</value>
+    <value>Agents ·</value>
   </data>
   <data name="Frontend.076" xml:space="preserve">
-    <value>Analítica de uso de tareas</value>
+    <value>Análisis de uso de la tarea</value>
   </data>
   <data name="Frontend.077" xml:space="preserve">
     <value>Tarea:</value>
@@ -391,10 +391,10 @@
     <value>a</value>
   </data>
   <data name="Frontend.079" xml:space="preserve">
-    <value>Hora de inicio</value>
+    <value>Inicio</value>
   </data>
   <data name="Frontend.080" xml:space="preserve">
-    <value>Hora de finalización</value>
+    <value>Finalizado</value>
   </data>
   <data name="Frontend.081" xml:space="preserve">
     <value>Todos los Agents</value>
