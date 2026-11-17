@@ -114,7 +114,7 @@
                 {{ dateformatter(scope.row.addTime) }}
             </template>
         </el-table-column>
-        @* Token 使用 *@
+        @* Token usage *@
         <el-table-column prop="usage.calls" label="@XR["TokenMonitor.TotalCalls"]" width="auto" align="right">
             <template slot-scope="scope">
                 <span :class="{ 'usage-zero': !scope.row.usage || scope.row.usage.calls === 0 }">{{ formatNumber(scope.row.usage && scope.row.usage.calls) }}</span>
@@ -138,7 +138,7 @@
                 <span v-else class="usage-zero">—</span>
             </template>
         </el-table-column>
-        @* 操作 *@
+        @* Actions *@
         <el-table-column label="@XR["Vector.Actions"]" width="auto" class-name="ncf-table-actions-column">
             <template slot-scope="scope">
                 <el-button type="primary" icon="el-icon-edit" size="mini" @@click="editModel(scope.row)">@XR["Vector.Edit"]</el-button>
@@ -160,7 +160,7 @@
     </div>
 
 
-    @* dialog for 添加模型 *@
+    @* Dialog for adding a model *@
     <el-dialog title="@XR["Model.AddTitle"]" :visible.sync="addFormDialogVisible" width="50%" :close-on-click-modal="false">
         <el-form :model="addForm" label-width="120px" :rules="addRules" ref="addForm">
             <el-form-item label="@XR["Vector.Alias"]" prop="alias">
@@ -228,7 +228,7 @@
             <el-form-item label="@XR["Vector.Note"]" prop="note">
                 <el-input v-model="addForm.note"></el-input>
             </el-form-item>
-            @* <el-form-item label="显示"> *@
+    @* <el-form-item label="Display"> *@
             @*     $1$ use switch #1# *@
             @*     <el-switch v-model="addForm.show"></el-switch> *@
             @* </el-form-item> *@
@@ -241,7 +241,7 @@
             <el-button type="primary" @@click="addModelSubmit">@XR["Vector.Confirm"]</el-button>
         </span>
     </el-dialog>
-    @* dialog for 编辑模型 *@
+    @* Dialog for editing a model *@
     <el-dialog title="@XR["Model.EditTitle"]" :visible.sync="editFormDialogVisible" width="50%" :close-on-click-modal="false">
         <el-form :model="editForm" label-width="120px" :rules="editRules" ref="editForm">
             <el-form-item label="@XR["Vector.Alias"]" prop="alias">
