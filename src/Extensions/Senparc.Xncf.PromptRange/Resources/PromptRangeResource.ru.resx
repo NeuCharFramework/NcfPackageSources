@@ -878,4 +878,6 @@ Attachments provide an index only; they do not mean that you have read the conte
   <data name="Frontend.793" xml:space="preserve"><value>Верхние 20%</value></data>
   <data name="Frontend.794" xml:space="preserve"><value>Верхние 40%</value></data>
   <data name="Frontend.795" xml:space="preserve"><value>Нижние 20%</value></data>
+  <data name="Frontend.796" xml:space="preserve"><value>Выбрано: {0}</value></data>
+  <data name="Frontend.797" xml:space="preserve"><value>Файл пуст или превышает ограничение размера онлайн-просмотра.</value></data>
 </root>

@@ -878,4 +878,6 @@ Attachments provide an index only; they do not mean that you have read the conte
   <data name="Frontend.793" xml:space="preserve"><value>上位20%</value></data>
   <data name="Frontend.794" xml:space="preserve"><value>上位40%</value></data>
   <data name="Frontend.795" xml:space="preserve"><value>下位20%</value></data>
+  <data name="Frontend.796" xml:space="preserve"><value>選択済み：{0}</value></data>
+  <data name="Frontend.797" xml:space="preserve"><value>ファイルが空であるか、オンラインプレビューのサイズ制限を超えています。</value></data>
 </root>

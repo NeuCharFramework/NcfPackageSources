@@ -1388,4 +1388,6 @@ workspace_write 的 relativePath 必须是非空的 Workspace 相对文件路径
   <data name="Frontend.793" xml:space="preserve"><value>Top 20%</value></data>
   <data name="Frontend.794" xml:space="preserve"><value>Top 40%</value></data>
   <data name="Frontend.795" xml:space="preserve"><value>Bottom 20%</value></data>
+  <data name="Frontend.796" xml:space="preserve"><value>已选择：{0}</value></data>
+  <data name="Frontend.797" xml:space="preserve"><value>文件为空或超过在线预览大小限制。</value></data>
 </root>
