@@ -1348,10 +1348,10 @@
   <data name="Frontend.453" xml:space="preserve"><value>Lier le compte WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.454" xml:space="preserve"><value>Obtenir la liste des Workflows</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.455" xml:space="preserve"><value>Le préfixe de commande actuel est</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.456" xml:space="preserve"><value>{0} / {1} items</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.457" xml:space="preserve"><value>Input text</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.458" xml:space="preserve"><value>{0} new messages</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.459" xml:space="preserve"><value>Command prefix</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.456" xml:space="preserve"><value>{0} / {1} éléments</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.457" xml:space="preserve"><value>Entrée</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.458" xml:space="preserve"><value>{0} nouveaux messages</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.459" xml:space="preserve"><value>Préfixe de commande</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
 
   <data name="WeixinClaw.Workflow.IntegrationDisabled" xml:space="preserve"><value>Workflow integration is disabled or the host has not loaded the NeuCharWorkflow module.</value></data>
   <data name="WeixinClaw.Workflow.NoAvailable" xml:space="preserve"><value>No Workflows are currently available.</value></data>
@@ -1363,61 +1363,61 @@
   <data name="WeixinClaw.Workflow.HelpList" xml:space="preserve"><value>{0}workflow - List available Workflows and Workflow IDs</value></data>
   <data name="WeixinClaw.Workflow.HelpExecute" xml:space="preserve"><value>{0}workflow &lt;WorkflowId&gt; &lt;input&gt; - Execute the specified Workflow</value></data>
 
-  <data name="Frontend.500" xml:space="preserve"><value>NeuCharPivot · Access control</value></data>
+  <data name="Frontend.500" xml:space="preserve"><value>NeuCharPivot · Contrôle d’accès</value></data>
 
-  <data name="Frontend.501" xml:space="preserve"><value>Access control</value></data>
+  <data name="Frontend.501" xml:space="preserve"><value>Contrôle d’accès</value></data>
 
-  <data name="Frontend.502" xml:space="preserve"><value>Function global Provit access control</value></data>
+  <data name="Frontend.502" xml:space="preserve"><value>Contrôle d’accès global Provit des Functions</value></data>
 
-  <data name="Frontend.503" xml:space="preserve"><value>Configure database access policies for Functions in any XNCF module and bind users, roles, or permission codes. A database policy overrides code attributes (AllowGlobalPivot / GlobalPivotRoleCodes / GlobalPivotPermissionCodes). Policies remain as orphans after a module is removed and become effective again after reinstall; only manual clearing deletes them.</value></data>
+  <data name="Frontend.503" xml:space="preserve"><value>Configurez des stratégies d’accès pour les Functions de tout module XNCF en liant utilisateurs, rôles ou codes. Les stratégies de base de données remplacent les attributs du code ; après l’effacement d’un module, elles sont conservées et redeviennent actives après réinstallation jusqu’à suppression manuelle.</value></data>
 
-  <data name="Frontend.504" xml:space="preserve"><value>Search modules / Functions</value></data>
+  <data name="Frontend.504" xml:space="preserve"><value>Rechercher un module / une Function</value></data>
 
-  <data name="Frontend.505" xml:space="preserve"><value>Refresh</value></data>
+  <data name="Frontend.505" xml:space="preserve"><value>Actualiser</value></data>
 
   <data name="Frontend.506" xml:space="preserve"><value>{0} Functions</value></data>
 
-  <data name="Frontend.507" xml:space="preserve"><value>{0} database policies</value></data>
+  <data name="Frontend.507" xml:space="preserve"><value>Stratégies de base de données : {0}</value></data>
 
-  <data name="Frontend.508" xml:space="preserve"><value>{0} orphan policies</value></data>
+  <data name="Frontend.508" xml:space="preserve"><value>Stratégies orphelines : {0}</value></data>
 
-  <data name="Frontend.509" xml:space="preserve"><value>Bulk open</value></data>
+  <data name="Frontend.509" xml:space="preserve"><value>Ouverture groupée</value></data>
 
-  <data name="Frontend.510" xml:space="preserve"><value>Bulk restrict</value></data>
+  <data name="Frontend.510" xml:space="preserve"><value>Restriction groupée</value></data>
 
-  <data name="Frontend.511" xml:space="preserve"><value>Bulk deny</value></data>
+  <data name="Frontend.511" xml:space="preserve"><value>Désactiver en groupe</value></data>
 
-  <data name="Frontend.512" xml:space="preserve"><value>Bulk restore inheritance</value></data>
+  <data name="Frontend.512" xml:space="preserve"><value>Rétablir l’héritage en groupe</value></data>
 
-  <data name="Frontend.513" xml:space="preserve"><value>Bulk clear</value></data>
+  <data name="Frontend.513" xml:space="preserve"><value>Effacer en groupe</value></data>
 
   <data name="Frontend.514" xml:space="preserve"><value>Module</value></data>
 
-  <data name="Frontend.515" xml:space="preserve"><value>Module removed</value></data>
+  <data name="Frontend.515" xml:space="preserve"><value>Module effacé</value></data>
 
-  <data name="Frontend.516" xml:space="preserve"><value>Module unavailable</value></data>
+  <data name="Frontend.516" xml:space="preserve"><value>Module indisponible</value></data>
 
-  <data name="Frontend.517" xml:space="preserve"><value>Code baseline</value></data>
+  <data name="Frontend.517" xml:space="preserve"><value>Base du code</value></data>
 
-  <data name="Frontend.518" xml:space="preserve"><value>Global access allowed</value></data>
+  <data name="Frontend.518" xml:space="preserve"><value>Accès global autorisé</value></data>
 
-  <data name="Frontend.519" xml:space="preserve"><value>Global access not declared</value></data>
+  <data name="Frontend.519" xml:space="preserve"><value>Accès global non déclaré</value></data>
 
-  <data name="Frontend.520" xml:space="preserve"><value>Any signed-in administrator</value></data>
+  <data name="Frontend.520" xml:space="preserve"><value>Tout administrateur connecté</value></data>
 
-  <data name="Frontend.521" xml:space="preserve"><value>Database policy</value></data>
+  <data name="Frontend.521" xml:space="preserve"><value>Stratégie de base de données</value></data>
 
-  <data name="Frontend.522" xml:space="preserve"><value>Source: database policy</value></data>
+  <data name="Frontend.522" xml:space="preserve"><value>Source : stratégie de base de données</value></data>
 
-  <data name="Frontend.523" xml:space="preserve"><value>Effective after reinstall</value></data>
+  <data name="Frontend.523" xml:space="preserve"><value>Effectif après réinstallation</value></data>
 
-  <data name="Frontend.524" xml:space="preserve"><value>Source: code attribute</value></data>
+  <data name="Frontend.524" xml:space="preserve"><value>Source : attributs du code</value></data>
 
-  <data name="Frontend.525" xml:space="preserve"><value>Effective policy</value></data>
+  <data name="Frontend.525" xml:space="preserve"><value>Stratégie effective</value></data>
 
   <data name="Frontend.526" xml:space="preserve"><value>Actions</value></data>
 
-  <data name="Frontend.527" xml:space="preserve"><value>Settings</value></data>
+  <data name="Frontend.527" xml:space="preserve"><value>Paramètres</value></data>
 
   <data name="Frontend.528" xml:space="preserve"><value>Clear</value></data>
 

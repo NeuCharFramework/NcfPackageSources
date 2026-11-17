@@ -1351,7 +1351,7 @@
   <data name="Frontend.454" xml:space="preserve"><value>Get Workflow list</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.455" xml:space="preserve"><value>The current command prefix is</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.456" xml:space="preserve"><value>{0} / {1} items</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.457" xml:space="preserve"><value>Input text</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.457" xml:space="preserve"><value>Input</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.458" xml:space="preserve"><value>{0} new messages</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.459" xml:space="preserve"><value>Command prefix</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
 
@@ -1369,25 +1369,25 @@
 
   <data name="Frontend.501" xml:space="preserve"><value>Access control</value></data>
 
-  <data name="Frontend.502" xml:space="preserve"><value>Function global Provit access control</value></data>
+  <data name="Frontend.502" xml:space="preserve"><value>Global Function Provit access control</value></data>
 
-  <data name="Frontend.503" xml:space="preserve"><value>Configure database access policies for Functions in any XNCF module and bind users, roles, or permission codes. A database policy overrides code attributes (AllowGlobalPivot / GlobalPivotRoleCodes / GlobalPivotPermissionCodes). Policies remain as orphans after a module is removed and become effective again after reinstall; only manual clearing deletes them.</value></data>
+  <data name="Frontend.503" xml:space="preserve"><value>Configure database access policies for Functions in any XNCF module by binding users, roles, or permission codes. Database policies override code attributes; after a module is cleared, the policy is retained and becomes effective again after reinstall until manually cleared.</value></data>
 
-  <data name="Frontend.504" xml:space="preserve"><value>Search modules / Functions</value></data>
+  <data name="Frontend.504" xml:space="preserve"><value>Search module / Function</value></data>
 
   <data name="Frontend.505" xml:space="preserve"><value>Refresh</value></data>
 
   <data name="Frontend.506" xml:space="preserve"><value>{0} Functions</value></data>
 
-  <data name="Frontend.507" xml:space="preserve"><value>{0} database policies</value></data>
+  <data name="Frontend.507" xml:space="preserve"><value>Database policies: {0}</value></data>
 
-  <data name="Frontend.508" xml:space="preserve"><value>{0} orphan policies</value></data>
+  <data name="Frontend.508" xml:space="preserve"><value>Orphan policies: {0}</value></data>
 
   <data name="Frontend.509" xml:space="preserve"><value>Bulk open</value></data>
 
-  <data name="Frontend.510" xml:space="preserve"><value>Bulk restrict</value></data>
+  <data name="Frontend.510" xml:space="preserve"><value>Bulk restricted</value></data>
 
-  <data name="Frontend.511" xml:space="preserve"><value>Bulk deny</value></data>
+  <data name="Frontend.511" xml:space="preserve"><value>Bulk disable</value></data>
 
   <data name="Frontend.512" xml:space="preserve"><value>Bulk restore inheritance</value></data>
 
@@ -1395,7 +1395,7 @@
 
   <data name="Frontend.514" xml:space="preserve"><value>Module</value></data>
 
-  <data name="Frontend.515" xml:space="preserve"><value>Module removed</value></data>
+  <data name="Frontend.515" xml:space="preserve"><value>Module cleared</value></data>
 
   <data name="Frontend.516" xml:space="preserve"><value>Module unavailable</value></data>
 
@@ -1413,7 +1413,7 @@
 
   <data name="Frontend.523" xml:space="preserve"><value>Effective after reinstall</value></data>
 
-  <data name="Frontend.524" xml:space="preserve"><value>Source: code attribute</value></data>
+  <data name="Frontend.524" xml:space="preserve"><value>Source: code attributes</value></data>
 
   <data name="Frontend.525" xml:space="preserve"><value>Effective policy</value></data>
 

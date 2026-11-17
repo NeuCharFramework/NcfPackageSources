@@ -1348,10 +1348,10 @@
   <data name="Frontend.453" xml:space="preserve"><value>Привязать аккаунт WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.454" xml:space="preserve"><value>Получить список Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.455" xml:space="preserve"><value>Текущий префикс команды:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.456" xml:space="preserve"><value>{0} / {1} items</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.457" xml:space="preserve"><value>Input text</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.458" xml:space="preserve"><value>{0} new messages</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.459" xml:space="preserve"><value>Command prefix</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.456" xml:space="preserve"><value>{0} / {1} элементов</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.457" xml:space="preserve"><value>Ввод</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.458" xml:space="preserve"><value>Новых сообщений: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.459" xml:space="preserve"><value>Префикс команды</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
 
   <data name="WeixinClaw.Workflow.IntegrationDisabled" xml:space="preserve"><value>Workflow integration is disabled or the host has not loaded the NeuCharWorkflow module.</value></data>
   <data name="WeixinClaw.Workflow.NoAvailable" xml:space="preserve"><value>No Workflows are currently available.</value></data>
@@ -1363,61 +1363,61 @@
   <data name="WeixinClaw.Workflow.HelpList" xml:space="preserve"><value>{0}workflow - List available Workflows and Workflow IDs</value></data>
   <data name="WeixinClaw.Workflow.HelpExecute" xml:space="preserve"><value>{0}workflow &lt;WorkflowId&gt; &lt;input&gt; - Execute the specified Workflow</value></data>
 
-  <data name="Frontend.500" xml:space="preserve"><value>NeuCharPivot · Access control</value></data>
+  <data name="Frontend.500" xml:space="preserve"><value>NeuCharPivot · Контроль доступа</value></data>
 
-  <data name="Frontend.501" xml:space="preserve"><value>Access control</value></data>
+  <data name="Frontend.501" xml:space="preserve"><value>Контроль доступа</value></data>
 
-  <data name="Frontend.502" xml:space="preserve"><value>Function global Provit access control</value></data>
+  <data name="Frontend.502" xml:space="preserve"><value>Глобальный контроль доступа Provit для Function</value></data>
 
-  <data name="Frontend.503" xml:space="preserve"><value>Configure database access policies for Functions in any XNCF module and bind users, roles, or permission codes. A database policy overrides code attributes (AllowGlobalPivot / GlobalPivotRoleCodes / GlobalPivotPermissionCodes). Policies remain as orphans after a module is removed and become effective again after reinstall; only manual clearing deletes them.</value></data>
+  <data name="Frontend.503" xml:space="preserve"><value>Настраивает политики доступа для Function любого модуля XNCF с привязкой пользователей, ролей или кодов. Политики базы данных переопределяют атрибуты кода; после очистки модуля они сохраняются и снова действуют после переустановки, пока не будут очищены вручную.</value></data>
 
-  <data name="Frontend.504" xml:space="preserve"><value>Search modules / Functions</value></data>
+  <data name="Frontend.504" xml:space="preserve"><value>Поиск модуля / Function</value></data>
 
-  <data name="Frontend.505" xml:space="preserve"><value>Refresh</value></data>
+  <data name="Frontend.505" xml:space="preserve"><value>Обновить</value></data>
 
-  <data name="Frontend.506" xml:space="preserve"><value>{0} Functions</value></data>
+  <data name="Frontend.506" xml:space="preserve"><value>Function: {0}</value></data>
 
-  <data name="Frontend.507" xml:space="preserve"><value>{0} database policies</value></data>
+  <data name="Frontend.507" xml:space="preserve"><value>Политик базы данных: {0}</value></data>
 
-  <data name="Frontend.508" xml:space="preserve"><value>{0} orphan policies</value></data>
+  <data name="Frontend.508" xml:space="preserve"><value>Осиротевших политик: {0}</value></data>
 
-  <data name="Frontend.509" xml:space="preserve"><value>Bulk open</value></data>
+  <data name="Frontend.509" xml:space="preserve"><value>Пакетное открытие</value></data>
 
-  <data name="Frontend.510" xml:space="preserve"><value>Bulk restrict</value></data>
+  <data name="Frontend.510" xml:space="preserve"><value>Пакетное ограничение</value></data>
 
-  <data name="Frontend.511" xml:space="preserve"><value>Bulk deny</value></data>
+  <data name="Frontend.511" xml:space="preserve"><value>Пакетное отключение</value></data>
 
-  <data name="Frontend.512" xml:space="preserve"><value>Bulk restore inheritance</value></data>
+  <data name="Frontend.512" xml:space="preserve"><value>Пакетно восстановить наследование</value></data>
 
-  <data name="Frontend.513" xml:space="preserve"><value>Bulk clear</value></data>
+  <data name="Frontend.513" xml:space="preserve"><value>Пакетная очистка</value></data>
 
-  <data name="Frontend.514" xml:space="preserve"><value>Module</value></data>
+  <data name="Frontend.514" xml:space="preserve"><value>Модуль</value></data>
 
-  <data name="Frontend.515" xml:space="preserve"><value>Module removed</value></data>
+  <data name="Frontend.515" xml:space="preserve"><value>Модуль очищен</value></data>
 
-  <data name="Frontend.516" xml:space="preserve"><value>Module unavailable</value></data>
+  <data name="Frontend.516" xml:space="preserve"><value>Модуль недоступен</value></data>
 
-  <data name="Frontend.517" xml:space="preserve"><value>Code baseline</value></data>
+  <data name="Frontend.517" xml:space="preserve"><value>Базовая политика кода</value></data>
 
-  <data name="Frontend.518" xml:space="preserve"><value>Global access allowed</value></data>
+  <data name="Frontend.518" xml:space="preserve"><value>Глобальный доступ разрешён</value></data>
 
-  <data name="Frontend.519" xml:space="preserve"><value>Global access not declared</value></data>
+  <data name="Frontend.519" xml:space="preserve"><value>Глобальный доступ не объявлен</value></data>
 
-  <data name="Frontend.520" xml:space="preserve"><value>Any signed-in administrator</value></data>
+  <data name="Frontend.520" xml:space="preserve"><value>Любой вошедший администратор</value></data>
 
-  <data name="Frontend.521" xml:space="preserve"><value>Database policy</value></data>
+  <data name="Frontend.521" xml:space="preserve"><value>Политика базы данных</value></data>
 
-  <data name="Frontend.522" xml:space="preserve"><value>Source: database policy</value></data>
+  <data name="Frontend.522" xml:space="preserve"><value>Источник: политика базы данных</value></data>
 
-  <data name="Frontend.523" xml:space="preserve"><value>Effective after reinstall</value></data>
+  <data name="Frontend.523" xml:space="preserve"><value>Вступает в силу после переустановки</value></data>
 
-  <data name="Frontend.524" xml:space="preserve"><value>Source: code attribute</value></data>
+  <data name="Frontend.524" xml:space="preserve"><value>Источник: атрибуты кода</value></data>
 
-  <data name="Frontend.525" xml:space="preserve"><value>Effective policy</value></data>
+  <data name="Frontend.525" xml:space="preserve"><value>Действующая политика</value></data>
 
-  <data name="Frontend.526" xml:space="preserve"><value>Actions</value></data>
+  <data name="Frontend.526" xml:space="preserve"><value>Действия</value></data>
 
-  <data name="Frontend.527" xml:space="preserve"><value>Settings</value></data>
+  <data name="Frontend.527" xml:space="preserve"><value>Настройки</value></data>
 
   <data name="Frontend.528" xml:space="preserve"><value>Clear</value></data>
 

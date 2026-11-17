@@ -1348,10 +1348,10 @@
   <data name="Frontend.453" xml:space="preserve"><value>WeChatアカウントをバインド</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.454" xml:space="preserve"><value>Workflow一覧を取得</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.455" xml:space="preserve"><value>現在のコマンドプレフィックス：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.456" xml:space="preserve"><value>{0} / {1} items</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.457" xml:space="preserve"><value>Input text</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.458" xml:space="preserve"><value>{0} new messages</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.459" xml:space="preserve"><value>Command prefix</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.456" xml:space="preserve"><value>{0} / {1}件</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.457" xml:space="preserve"><value>入力内容</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.458" xml:space="preserve"><value>新着メッセージ{0}件</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.459" xml:space="preserve"><value>コマンドプレフィックス</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
 
   <data name="WeixinClaw.Workflow.IntegrationDisabled" xml:space="preserve"><value>Workflow integration is disabled or the host has not loaded the NeuCharWorkflow module.</value></data>
   <data name="WeixinClaw.Workflow.NoAvailable" xml:space="preserve"><value>No Workflows are currently available.</value></data>
@@ -1363,61 +1363,61 @@
   <data name="WeixinClaw.Workflow.HelpList" xml:space="preserve"><value>{0}workflow - List available Workflows and Workflow IDs</value></data>
   <data name="WeixinClaw.Workflow.HelpExecute" xml:space="preserve"><value>{0}workflow &lt;WorkflowId&gt; &lt;input&gt; - Execute the specified Workflow</value></data>
 
-  <data name="Frontend.500" xml:space="preserve"><value>NeuCharPivot · Access control</value></data>
+  <data name="Frontend.500" xml:space="preserve"><value>NeuCharPivot · アクセス制御</value></data>
 
-  <data name="Frontend.501" xml:space="preserve"><value>Access control</value></data>
+  <data name="Frontend.501" xml:space="preserve"><value>アクセス制御</value></data>
 
-  <data name="Frontend.502" xml:space="preserve"><value>Function global Provit access control</value></data>
+  <data name="Frontend.502" xml:space="preserve"><value>FunctionのグローバルProvitアクセス制御</value></data>
 
-  <data name="Frontend.503" xml:space="preserve"><value>Configure database access policies for Functions in any XNCF module and bind users, roles, or permission codes. A database policy overrides code attributes (AllowGlobalPivot / GlobalPivotRoleCodes / GlobalPivotPermissionCodes). Policies remain as orphans after a module is removed and become effective again after reinstall; only manual clearing deletes them.</value></data>
+  <data name="Frontend.503" xml:space="preserve"><value>任意のXNCFモジュールのFunctionに、ユーザー、ロール、権限コードを紐付けたデータベースアクセスポリシーを設定します。データベースポリシーはコード属性を上書きします。モジュールをクリアした後も保持され、再インストール後に再び有効になります。手動で削除した場合のみ消去されます。</value></data>
 
-  <data name="Frontend.504" xml:space="preserve"><value>Search modules / Functions</value></data>
+  <data name="Frontend.504" xml:space="preserve"><value>モジュール / Functionを検索</value></data>
 
-  <data name="Frontend.505" xml:space="preserve"><value>Refresh</value></data>
+  <data name="Frontend.505" xml:space="preserve"><value>更新</value></data>
 
-  <data name="Frontend.506" xml:space="preserve"><value>{0} Functions</value></data>
+  <data name="Frontend.506" xml:space="preserve"><value>Function {0}個</value></data>
 
-  <data name="Frontend.507" xml:space="preserve"><value>{0} database policies</value></data>
+  <data name="Frontend.507" xml:space="preserve"><value>データベースポリシー {0}件</value></data>
 
-  <data name="Frontend.508" xml:space="preserve"><value>{0} orphan policies</value></data>
+  <data name="Frontend.508" xml:space="preserve"><value>孤立ポリシー {0}件</value></data>
 
-  <data name="Frontend.509" xml:space="preserve"><value>Bulk open</value></data>
+  <data name="Frontend.509" xml:space="preserve"><value>一括公開</value></data>
 
-  <data name="Frontend.510" xml:space="preserve"><value>Bulk restrict</value></data>
+  <data name="Frontend.510" xml:space="preserve"><value>一括制限</value></data>
 
-  <data name="Frontend.511" xml:space="preserve"><value>Bulk deny</value></data>
+  <data name="Frontend.511" xml:space="preserve"><value>一括無効化</value></data>
 
-  <data name="Frontend.512" xml:space="preserve"><value>Bulk restore inheritance</value></data>
+  <data name="Frontend.512" xml:space="preserve"><value>継承を一括復元</value></data>
 
-  <data name="Frontend.513" xml:space="preserve"><value>Bulk clear</value></data>
+  <data name="Frontend.513" xml:space="preserve"><value>一括クリア</value></data>
 
-  <data name="Frontend.514" xml:space="preserve"><value>Module</value></data>
+  <data name="Frontend.514" xml:space="preserve"><value>モジュール</value></data>
 
-  <data name="Frontend.515" xml:space="preserve"><value>Module removed</value></data>
+  <data name="Frontend.515" xml:space="preserve"><value>モジュールをクリア済み</value></data>
 
-  <data name="Frontend.516" xml:space="preserve"><value>Module unavailable</value></data>
+  <data name="Frontend.516" xml:space="preserve"><value>モジュール利用不可</value></data>
 
-  <data name="Frontend.517" xml:space="preserve"><value>Code baseline</value></data>
+  <data name="Frontend.517" xml:space="preserve"><value>コードの基準</value></data>
 
-  <data name="Frontend.518" xml:space="preserve"><value>Global access allowed</value></data>
+  <data name="Frontend.518" xml:space="preserve"><value>グローバルアクセスを許可</value></data>
 
-  <data name="Frontend.519" xml:space="preserve"><value>Global access not declared</value></data>
+  <data name="Frontend.519" xml:space="preserve"><value>グローバルアクセス未宣言</value></data>
 
-  <data name="Frontend.520" xml:space="preserve"><value>Any signed-in administrator</value></data>
+  <data name="Frontend.520" xml:space="preserve"><value>ログイン済みの管理者</value></data>
 
-  <data name="Frontend.521" xml:space="preserve"><value>Database policy</value></data>
+  <data name="Frontend.521" xml:space="preserve"><value>データベースポリシー</value></data>
 
-  <data name="Frontend.522" xml:space="preserve"><value>Source: database policy</value></data>
+  <data name="Frontend.522" xml:space="preserve"><value>出典：データベースポリシー</value></data>
 
-  <data name="Frontend.523" xml:space="preserve"><value>Effective after reinstall</value></data>
+  <data name="Frontend.523" xml:space="preserve"><value>再インストール後に有効</value></data>
 
-  <data name="Frontend.524" xml:space="preserve"><value>Source: code attribute</value></data>
+  <data name="Frontend.524" xml:space="preserve"><value>出典：コード属性</value></data>
 
-  <data name="Frontend.525" xml:space="preserve"><value>Effective policy</value></data>
+  <data name="Frontend.525" xml:space="preserve"><value>有効なポリシー</value></data>
 
-  <data name="Frontend.526" xml:space="preserve"><value>Actions</value></data>
+  <data name="Frontend.526" xml:space="preserve"><value>操作</value></data>
 
-  <data name="Frontend.527" xml:space="preserve"><value>Settings</value></data>
+  <data name="Frontend.527" xml:space="preserve"><value>設定</value></data>
 
   <data name="Frontend.528" xml:space="preserve"><value>Clear</value></data>
 
