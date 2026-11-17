@@ -2,4 +2,33 @@
 <root><resheader name="resmimetype"><value>text/microsoft-resx</value></resheader><resheader name="version"><value>2.0</value></resheader><resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader><resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <data name="Module.Connectors.MenuName" xml:space="preserve"><value>Connectors</value></data>
   <data name="Module.Connectors.Description" xml:space="preserve"><value>Configure external tools as selectable connectors. After an account is configured, Chat, Workflow and Agent templates can use it according to permissions.</value></data>
+
+  <data name="Area.Connectors.Config" xml:space="preserve"><value>Connector setup</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Function.Connectors.Invoke.Name" xml:space="preserve"><value>Invoke connector</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Function.Connectors.Invoke.Description" xml:space="preserve"><value>Invoke an enabled connector action. Add a Function node in Workflow, then choose the connector and action.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.001" xml:space="preserve"><value>交给 AI 的动作||Actions available to AI</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.002" xml:space="preserve"><value>例如：总部企业微信||Example: corporate WeCom</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.003" xml:space="preserve"><value>保存||Save</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.004" xml:space="preserve"><value>先配置账号和密钥，再决定哪些动作可以交给 AI。Chat 里可以临时收窄，Workflow 的 Function 节点可以直接调用，Agent 模板则决定每个智能体能使用哪些连接器。||Configure the account and secret first, then choose which actions AI may use. Chat can narrow access temporarily, Workflow Function nodes can call connectors directly, and Agent templates control connector access per Agent.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.005" xml:space="preserve"><value>删除||Delete</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.006" xml:space="preserve"><value>取消||Cancel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.007" xml:space="preserve"><value>可用类型||Available types</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.008" xml:space="preserve"><value>名称||Name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.009" xml:space="preserve"><value>外部工具连接器||External tool connector</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.010" xml:space="preserve"><value>密钥只保存在服务端。编辑时留空表示继续使用已保存的密钥。||Secrets are stored only on the server. Leave the field empty while editing to keep the saved secret.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.011" xml:space="preserve"><value>已配置||Configured</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.012" xml:space="preserve"><value>扩展模块||Extension module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.013" xml:space="preserve"><value>测试||Test</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.014" xml:space="preserve"><value>类型由已安装模块提供。企业微信打卡来自微信管理模块。||Types are provided by installed modules. Corporate WeCom attendance is provided by Weixin Management.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.015" xml:space="preserve"><value>编辑||Edit</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.016" xml:space="preserve"><value>说明||Description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.017" xml:space="preserve"><value>还没有模块注册连接器。安装并启用微信管理后，这里会出现企业微信打卡。||No module has registered a connector yet. Install and enable Weixin Management to see corporate WeCom attendance here.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.018" xml:space="preserve"><value>还没有配置。选择上面的类型，填入企业微信 CorpId 和应用 Secret。||Nothing is configured. Select a type above and enter the corporate WeCom CorpId and application Secret.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.019" xml:space="preserve"><value>这个账号给哪个团队或场景使用||Which team or scenario uses this account?</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.020" xml:space="preserve"><value>连接器||Connector</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.021" xml:space="preserve"><value>配置||Configure</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.022" xml:space="preserve"><value>配置这个连接器||Configure this connector</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.023" xml:space="preserve"><value>{0} 个动作||{0} actions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.024" xml:space="preserve"><value>启用后可在 Chat、Workflow 和 Agent 中选择||Available for selection in Chat, Workflow, and Agent after enabling</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.025" xml:space="preserve"><value>请选择||Please select</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
 </root>

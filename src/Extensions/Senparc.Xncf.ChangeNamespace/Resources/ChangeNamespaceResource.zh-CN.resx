@@ -31,4 +31,11 @@
     <value>当前自定义命名空间||命名空间根通常以句点结尾，例如 [My.Namespace.]；最终将替换为 [Senparc.Ncf.] 或 [Senparc.]</value>
   </data>
 
+
+  <data name="Function.ChangeNamespace.Change.Name" xml:space="preserve"><value>修改命名空间</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Function.ChangeNamespace.Change.Description" xml:space="preserve"><value>修改所有 .cs 和 .cshtml 源码中的命名空间</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Function.ChangeNamespace.Restore.Name" xml:space="preserve"><value>还原命名空间</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Function.ChangeNamespace.Restore.Description" xml:space="preserve"><value>将所有 .cs 和 .cshtml 源码命名空间还原为 NCF 默认值</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Function.ChangeNamespace.Download.Name" xml:space="preserve"><value>下载官方 NCF 源码</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Function.ChangeNamespace.Download.Description" xml:space="preserve"><value>下载官方 NCF 源码以进行命名空间处理</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
 </root>

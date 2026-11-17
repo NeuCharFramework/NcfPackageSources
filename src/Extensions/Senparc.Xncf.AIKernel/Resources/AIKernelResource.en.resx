@@ -891,4 +891,6 @@
   <data name="FineTuning.SaveBeforeLaunch" xml:space="preserve"><value>Save first, then generate a key and start the worker.</value></data>
   <data name="FineTuning.Optional" xml:space="preserve"><value>Optional</value></data>
 
+
+  <data name="Frontend.400" xml:space="preserve"><value>从 NeuChar AI 导入（DevId:{0}）||Imported from NeuChar AI (DevId: {0})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
 </root>

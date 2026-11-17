@@ -73,4 +73,8 @@
   <data name="Server.SelectionRequired" xml:space="preserve"><value>请选择要清空的工作区。||请选择要清空的工作区。</value></data>
   <data name="Server.NotFound" xml:space="preserve"><value>工作区不存在，或不在当前账号的管理范围内。||工作区不存在，或不在当前账号的管理范围内。</value></data>
   <data name="Server.ClearFailed" xml:space="preserve"><value>清空工作区失败，请稍后重试。||清空工作区失败，请稍后重试。</value></data>
+
+  <data name="Frontend.058" xml:space="preserve"><value>{0} 个文件 ·||{0} 个文件 ·</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.059" xml:space="preserve"><value>当前账号 #{0} · 单个工作区配额 · 文件数和容量不含工作区清单。||当前账号 #{0} · 单个工作区配额 · 文件数和容量不含工作区清单。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.060" xml:space="preserve"><value>{0} 个文件 · {1}||{0} 个文件 · {1}</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
 </root>

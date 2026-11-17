@@ -6,4 +6,50 @@
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <data name="Module.DesktopBridge.MenuName" xml:space="preserve"><value>DesktopBridge</value></data>
   <data name="Module.DesktopBridge.Description" xml:space="preserve"><value>Provides protected local or remote status, device pairing and EventBus activity streams for NCF desktop applications.</value></data>
+
+  <data name="AuthHandoff.Title" xml:space="preserve"><value>Desktop AdminChat authorization</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AuthHandoff.ConfirmTitle" xml:space="preserve"><value>Authorize desktop AdminChat</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AuthHandoff.ConfirmDescription" xml:space="preserve"><value>After confirmation, the current GUI will use AdminChat as this administrator. Only a one-time authorization result is transmitted; browser cookies are not read or copied.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AuthHandoff.GuiOnly" xml:space="preserve"><value>Continue only when this page was opened automatically by the NCF GUI you are using.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AuthHandoff.Authorize" xml:space="preserve"><value>Authorize this GUI</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AuthHandoff.FailedTitle" xml:space="preserve"><value>Unable to authorize desktop AdminChat</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AuthHandoff.RequestMissing" xml:space="preserve"><value>The desktop authorization request does not exist or has expired. Return to the GUI and try again.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AuthHandoff.LoginExpired" xml:space="preserve"><value>The WebView administrator login has expired. Please sign in again.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AuthHandoff.TenantUnsupported" xml:space="preserve"><value>WebView automatic authorization is not supported for tenant administrators. Use explicit sign-in.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AuthHandoff.LoginExpiring" xml:space="preserve"><value>The WebView administrator login is about to expire. Please sign in again.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AuthHandoff.RequestInvalidated" xml:space="preserve"><value>The desktop authorization request is no longer valid. Return to the GUI and try again.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.001" xml:space="preserve"><value>待审批请求||Pending approval requests</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.002" xml:space="preserve"><value>活动会话||Active sessions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.003" xml:space="preserve"><value>仅当此页面由你正在使用的 NCF GUI 自动打开时继续。||Continue only when this page was opened automatically by the NCF GUI you are using.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.004" xml:space="preserve"><value>到期时间||Expires at</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.005" xml:space="preserve"><value>发起时间||Started at</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.006" xml:space="preserve"><value>安全配对说明||Secure pairing instructions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.007" xml:space="preserve"><value>已授权||Authorized</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.008" xml:space="preserve"><value>待审批 @Model.PendingPairings.Count||Pending approval @Model.PendingPairings.Count</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.009" xml:space="preserve"><value>扩展模块||Extension module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.010" xml:space="preserve"><value>批准||Approve</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.011" xml:space="preserve"><value>批准人||Approved by</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.012" xml:space="preserve"><value>批准时间||Approved at</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.013" xml:space="preserve"><value>拒绝||Reject</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.014" xml:space="preserve"><value>授权桌面 AdminChat||Authorize desktop AdminChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.015" xml:space="preserve"><value>授权此 GUI||Authorize this GUI</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.016" xml:space="preserve"><value>撤销||Revoke</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.017" xml:space="preserve"><value>操作||Actions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.018" xml:space="preserve"><value>最近使用||Last used</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.019" xml:space="preserve"><value>未能授权桌面 AdminChat||Unable to authorize desktop AdminChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.020" xml:space="preserve"><value>来源地址||Source address</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.021" xml:space="preserve"><value>桌面端||Desktop client</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.022" xml:space="preserve"><value>正在授权桌面 AdminChat||Authorizing desktop AdminChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.023" xml:space="preserve"><value>活动会话 @Model.Sessions.Count||Active sessions @Model.Sessions.Count</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.024" xml:space="preserve"><value>状态||Status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.025" xml:space="preserve"><value>环境变量令牌属于兼容通道，不会在活动会话列表中显示，也不能从此页面撤销。||Environment-variable tokens are compatibility channels; they do not appear in active sessions and cannot be revoked here.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.026" xml:space="preserve"><value>确认后，当前 GUI 将以此管理员身份使用 AdminChat。只传递一次性授权结果，不会读取或复制浏览器 Cookie。||After confirmation, this GUI will use AdminChat as this administrator. Only a one-time authorization result is transmitted; browser cookies are not read or copied.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.027" xml:space="preserve"><value>设备配对与会话||Device pairing and sessions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.028" xml:space="preserve"><value>过期时间||Expiration time</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.029" xml:space="preserve"><value>配对码||Pairing code</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.030" xml:space="preserve"><value>当前没有待审批的配对请求||There are no pending pairing requests</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.031" xml:space="preserve"><value>当前没有通过配对签发的活动会话||There are no active sessions issued through pairing</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.032" xml:space="preserve"><value>待审批 {0}||Pending approval {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.033" xml:space="preserve"><value>活动会话 {0}||Active sessions {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.034" xml:space="preserve"><value>桌面端留空令牌后会生成 5 分钟有效的配对码。请核对配对码和来源地址后批准；会话令牌有效 24 小时、不会在后台显示，并可随时撤销。||Leaving the token empty on the desktop generates a pairing code valid for 5 minutes. Verify the pairing code and source address before approving; session tokens are valid for 24 hours, are not shown in the background, and can be revoked at any time.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
 </root>

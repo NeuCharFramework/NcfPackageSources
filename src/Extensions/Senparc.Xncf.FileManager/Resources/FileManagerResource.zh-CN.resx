@@ -286,4 +286,142 @@
     <value>文件物理路径越界。||文件物理路径越界。</value>
   </data>
 
+
+  <data name="Function.Sample.Name" xml:space="preserve"><value>示例函数</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Function.Sample.Description" xml:space="preserve"><value>演示 FunctionRender 参数与返回值</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.064" xml:space="preserve"><value>一键清空||一键清空</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.065" xml:space="preserve"><value>上传后到“知识库管理 → 配置”关联资料，保存后点击“向量化”。||上传后到“知识库管理 → 配置”关联资料，保存后点击“向量化”。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.066" xml:space="preserve"><value>上传文件夹||上传文件夹</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.067" xml:space="preserve"><value>上传设置||上传设置</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.068" xml:space="preserve"><value>上传默认私有；确认无误后点“公开”，再复制生成的 URL 到站点内容中。||上传默认私有；确认无误后点“公开”，再复制生成的 URL 到站点内容中。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.069" xml:space="preserve"><value>为文件设置标签||为文件设置标签</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.070" xml:space="preserve"><value>仅统计企业文档：展示文件数量与总大小随时间变化||仅统计企业文档：展示文件数量与总大小随时间变化</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.071" xml:space="preserve"><value>从快速访问移除||从快速访问移除</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.072" xml:space="preserve"><value>企业文档||企业文档</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.073" xml:space="preserve"><value>企业文档容量统计||企业文档容量统计</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.074" xml:space="preserve"><value>保存||保存</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.075" xml:space="preserve"><value>保存设置||保存设置</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.076" xml:space="preserve"><value>停用||停用</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.077" xml:space="preserve"><value>允许上传的文件类型||允许上传的文件类型</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.078" xml:space="preserve"><value>先选用途：||先选用途：</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.079" xml:space="preserve"><value>全部||全部</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.080" xml:space="preserve"><value>再放位置：||再放位置：</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.081" xml:space="preserve"><value>分类||分类</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.082" xml:space="preserve"><value>分类名称||分类名称</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.083" xml:space="preserve"><value>分类描述||分类描述</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.084" xml:space="preserve"><value>分类管理员||分类管理员</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.085" xml:space="preserve"><value>列设置||列设置</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.086" xml:space="preserve"><value>删除时间||删除时间</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.087" xml:space="preserve"><value>刷新||刷新</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.088" xml:space="preserve"><value>单文件上传大小上限（MB）||单文件上传大小上限（MB）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.089" xml:space="preserve"><value>双击预览||双击预览</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.090" xml:space="preserve"><value>取消收藏||取消收藏</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.091" xml:space="preserve"><value>可将常用的文件和文件夹添加至「快速访问」，方便查找和使用。点击列表“更多”即可手动添加或移除快速访问||可将常用的文件和文件夹添加至「快速访问」，方便查找和使用。点击列表“更多”即可手动添加或移除快速访问</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.092" xml:space="preserve"><value>可选||可选</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.093" xml:space="preserve"><value>可选备注||可选备注</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.094" xml:space="preserve"><value>可选标签来自「标签管理」中已维护的数据；选择后将写入当前文件的标识字段。||可选标签来自「标签管理」中已维护的数据；选择后将写入当前文件的标识字段。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.095" xml:space="preserve"><value>启用||启用</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.096" xml:space="preserve"><value>回收站||回收站</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.097" xml:space="preserve"><value>在中间目录树选择或新建文件夹；刷新页面后，当前用途和文件夹会保留在地址栏中。||在中间目录树选择或新建文件夹；刷新页面后，当前用途和文件夹会保留在地址栏中。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.098" xml:space="preserve"><value>在线预览||在线预览</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.099" xml:space="preserve"><value>复制 URL||复制 URL</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.100" xml:space="preserve"><value>导入||导入</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.101" xml:space="preserve"><value>导出||导出</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.102" xml:space="preserve"><value>展示企业文档库当前已使用空间||展示企业文档库当前已使用空间</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.103" xml:space="preserve"><value>左侧「企业文档」用于管理知识库资料；站点静态资源可通过地址栏 scope 参数切换。||左侧「企业文档」用于管理知识库资料；站点静态资源可通过地址栏 scope 参数切换。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.104" xml:space="preserve"><value>已用空间||已用空间</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.105" xml:space="preserve"><value>开始日期||开始日期</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.106" xml:space="preserve"><value>微调产物||微调产物</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.107" xml:space="preserve"><value>快速访问||快速访问</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.108" xml:space="preserve"><value>恢复默认||恢复默认</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.109" xml:space="preserve"><value>我知道了||我知道了</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.110" xml:space="preserve"><value>所属分类||所属分类</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.111" xml:space="preserve"><value>按文件类型统计占用容量占比||按文件类型统计占用容量占比</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.112" xml:space="preserve"><value>按文件类型统计文件数量占比||按文件类型统计文件数量占比</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.113" xml:space="preserve"><value>排序||排序</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.114" xml:space="preserve"><value>搜索||搜索</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.115" xml:space="preserve"><value>搜索文件/文件夹||搜索文件/文件夹</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.116" xml:space="preserve"><value>搜索标签名称||搜索标签名称</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.117" xml:space="preserve"><value>搜索目录||搜索目录</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.118" xml:space="preserve"><value>支持每行一个扩展名，也可使用逗号分隔。建议带点号（如 .docx）。留空表示不限制允许列表（仍受下方过滤类型约束）。||支持每行一个扩展名，也可使用逗号分隔。建议带点号（如 .docx）。留空表示不限制允许列表（仍受下方过滤类型约束）。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.119" xml:space="preserve"><value>收藏||收藏</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.120" xml:space="preserve"><value>数据面板||数据面板</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.121" xml:space="preserve"><value>文件个数统计||文件个数统计</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.122" xml:space="preserve"><value>文件名称||文件名称</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.123" xml:space="preserve"><value>文件大小统计||文件大小统计</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.124" xml:space="preserve"><value>文件库容量统计||文件库容量统计</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.125" xml:space="preserve"><value>文件清空后将彻底删除，无法恢复？||文件清空后将彻底删除，无法恢复？</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.126" xml:space="preserve"><value>文件资源管理||文件资源管理</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.127" xml:space="preserve"><value>文件资源管理使用说明||文件资源管理使用说明</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.128" xml:space="preserve"><value>新增分类||新增分类</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.129" xml:space="preserve"><value>新增标签||新增标签</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.130" xml:space="preserve"><value>暂无可用标签，请先在左侧「标签管理」中新增标签||暂无可用标签，请先在左侧「标签管理」中新增标签</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.131" xml:space="preserve"><value>暂无可预览内容||暂无可预览内容</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.132" xml:space="preserve"><value>暂无数据||暂无数据</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.133" xml:space="preserve"><value>暂无文档||暂无文档</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.134" xml:space="preserve"><value>更多||更多</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.135" xml:space="preserve"><value>更新时间||更新时间</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.136" xml:space="preserve"><value>更新者||更新者</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.137" xml:space="preserve"><value>最后更新人||最后更新人</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.138" xml:space="preserve"><value>最后更新时间||最后更新时间</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.139" xml:space="preserve"><value>最近访问||最近访问</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.140" xml:space="preserve"><value>标签名称||标签名称</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.141" xml:space="preserve"><value>标签描述||标签描述</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.142" xml:space="preserve"><value>标签数量||标签数量</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.143" xml:space="preserve"><value>标签管理||标签管理</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.144" xml:space="preserve"><value>每行一个扩展名，例如：.docx
+.xlsx
+.pdf||每行一个扩展名，例如：.docx
+.xlsx
+.pdf</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.145" xml:space="preserve"><value>每行一个扩展名，例如：.exe
+.bat
+.js||每行一个扩展名，例如：.exe
+.bat
+.js</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.146" xml:space="preserve"><value>清空列表||清空列表</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.147" xml:space="preserve"><value>灵活使用快速访问，畅享高效工作!||灵活使用快速访问，畅享高效工作!</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.148" xml:space="preserve"><value>状态||状态</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.149" xml:space="preserve"><value>知识库资料：||知识库资料：</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.150" xml:space="preserve"><value>确定继续吗？||确定继续吗？</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.151" xml:space="preserve"><value>租户/组织名称||租户/组织名称</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.152" xml:space="preserve"><value>站点资源：||站点资源：</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.153" xml:space="preserve"><value>管理员||管理员</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.154" xml:space="preserve"><value>结束日期||结束日期</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.155" xml:space="preserve"><value>编辑||编辑</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.156" xml:space="preserve"><value>编辑备注||编辑备注</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.157" xml:space="preserve"><value>设置||设置</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.158" xml:space="preserve"><value>访问时间||访问时间</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.159" xml:space="preserve"><value>请从上方选择标签||请从上方选择标签</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.160" xml:space="preserve"><value>请将需要上传的文件/文件夹拖到此处||请将需要上传的文件/文件夹拖到此处</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.161" xml:space="preserve"><value>请输入分类名称，最多50个字符||请输入分类名称，最多50个字符</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.162" xml:space="preserve"><value>请输入文件备注||请输入文件备注</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.163" xml:space="preserve"><value>请输入标签名称，最多30个字符||请输入标签名称，最多30个字符</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.164" xml:space="preserve"><value>请输入标签描述||请输入标签描述</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.165" xml:space="preserve"><value>请选择标签（来自标签管理）||请选择标签（来自标签管理）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.166" xml:space="preserve"><value>请选择管理员||请选择管理员</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.167" xml:space="preserve"><value>过去7天||过去7天</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.168" xml:space="preserve"><value>过去一个月||过去一个月</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.169" xml:space="preserve"><value>过去一年||过去一年</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.170" xml:space="preserve"><value>返回上一级||返回上一级</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.171" xml:space="preserve"><value>选择分类||选择分类</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.172" xml:space="preserve"><value>配置文件上传的允许类型、大小上限以及需要拦截的扩展名。保存后立即对后续上传生效（本机浏览器记忆）。||配置文件上传的允许类型、大小上限以及需要拦截的扩展名。保存后立即对后续上传生效（本机浏览器记忆）。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.173" xml:space="preserve"><value>重置||重置</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.174" xml:space="preserve"><value>需要过滤的文件类型||需要过滤的文件类型</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.175" xml:space="preserve"><value>黑名单扩展名，命中后禁止上传（优先级高于允许列表）。||黑名单扩展名，命中后禁止上传（优先级高于允许列表）。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.176" xml:space="preserve"><value>默认 50 MB；超过此大小的文件将在上传前被拦截。||默认 50 MB；超过此大小的文件将在上传前被拦截。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.177" xml:space="preserve"><value>取消收藏||取消收藏</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.178" xml:space="preserve"><value>统计截止时间||统计截止时间</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.179" xml:space="preserve"><value>企业文档已使用：||企业文档已使用：</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.180" xml:space="preserve"><value>每行一个扩展名，例如：.docx .xlsx .pdf||每行一个扩展名，例如：.docx .xlsx .pdf</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.181" xml:space="preserve"><value>每行一个扩展名，例如：.exe .bat .js||每行一个扩展名，例如：.exe .bat .js</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.182" xml:space="preserve"><value>开始上传||开始上传</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.183" xml:space="preserve"><value>幻灯片||幻灯片</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.184" xml:space="preserve"><value>编辑文件夹||编辑文件夹</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.185" xml:space="preserve"><value>新建文件夹||新建文件夹</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.186" xml:space="preserve"><value>编辑分类||编辑分类</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.187" xml:space="preserve"><value>新增分类||新增分类</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.188" xml:space="preserve"><value>编辑标签||编辑标签</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.189" xml:space="preserve"><value>新增标签||新增标签</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.190" xml:space="preserve"><value>文件预览||文件预览</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
 </root>

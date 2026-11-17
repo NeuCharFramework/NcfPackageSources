@@ -908,4 +908,445 @@
   <data name="Admin.Pagination.PageSize" xml:space="preserve"><value>на странице</value></data>
   <data name="Admin.Pagination.Total" xml:space="preserve"><value>Всего {total}</value></data>
   <data name="Admin.Pagination.Page" xml:space="preserve"><value>Страница</value></data>
+
+  <data name="AdminChat.Settings.Title" xml:space="preserve"><value>Chat settings</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Settings.ModeLabel" xml:space="preserve"><value>Mode</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Settings.ModeTitle" xml:space="preserve"><value>Choose execution mode</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Settings.ModeCaption" xml:space="preserve"><value>Strategy used by the next request in this conversation.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Settings.LauncherModeCaption" xml:space="preserve"><value>This mode applies only to the next request; Plan and Execute use MAF Harness.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Settings.HarnessAdvanced" xml:space="preserve"><value>Harness advanced settings</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Settings.MaxIterations" xml:space="preserve"><value>Max iterations</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Settings.MaxOutputTokens" xml:space="preserve"><value>Max output tokens</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Settings.CapabilityNotice" xml:space="preserve"><value>FileMemory can only be changed with /harness file-memory on|off; Agent Skills and Hosted Web Search are off by default. Enabling them changes privacy, tool, and external-access boundaries.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Settings.Close" xml:space="preserve"><value>Close chat settings</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Settings.Stop" xml:space="preserve"><value>Stop</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Mode.Simple" xml:space="preserve"><value>Chat</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Mode.SimpleDescription" xml:space="preserve"><value>One response without the MAF long-running task loop.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Mode.Plan" xml:space="preserve"><value>Plan</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Mode.PlanDescription" xml:space="preserve"><value>Plan first, then call tools as needed and wait for approval.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Mode.Execute" xml:space="preserve"><value>Execute</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Mode.ExecuteDescription" xml:space="preserve"><value>Enter MAF execution mode directly for well-defined tasks.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Command.Mode" xml:space="preserve"><value>Switch execution mode</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Command.Help" xml:space="preserve"><value>Show available commands</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Command.MaxToken" xml:space="preserve"><value>Set output limit</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Command.MaxIterations" xml:space="preserve"><value>Set Harness max iterations</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.Command.Harness" xml:space="preserve"><value>Set Harness capabilities</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStats" xml:space="preserve"><value>Usage Stats</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStatsTitle" xml:space="preserve"><value>User Usage Statistics (AdminChat)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStatsTip" xml:space="preserve"><value>Only the per-account session/message counts are shown. No session or message content is exposed.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStatsCol.User" xml:space="preserve"><value>Account</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStatsCol.Total" xml:space="preserve"><value>Sessions</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStatsCol.Active" xml:space="preserve"><value>Active</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStatsCol.Archived" xml:space="preserve"><value>Archived</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStatsCol.Deleted" xml:space="preserve"><value>Deleted</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStatsCol.Messages" xml:space="preserve"><value>Messages</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStatsCol.LastActive" xml:space="preserve"><value>Last Active</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.UserStatsLoadFailed" xml:space="preserve"><value>Failed to load user usage statistics</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="AdminChat.SuperAdminOnly" xml:space="preserve"><value>Only super administrators can view per-account usage statistics</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Tenant.AdminUserCount" xml:space="preserve"><value>Admins</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Tenant.DeleteCurrentTenantNotAllowed" xml:space="preserve"><value>You cannot delete the tenant currently in use!</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Tenant.DeleteLastTenantNotAllowed" xml:space="preserve"><value>The system must keep at least one enabled tenant; the last tenant cannot be deleted!</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Tenant.DeleteHasAdminUsers" xml:space="preserve"><value>Tenant {0} still has {1} admin account(s). Reassign or delete them before deleting the tenant!</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Tenant.DeleteNotFound" xml:space="preserve"><value>Tenant not found!</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Title" xml:space="preserve"><value>PromptRange · Select a prompt</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Range" xml:space="preserve"><value>All ranges</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Tactic" xml:space="preserve"><value>All lanes</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Keyword" xml:space="preserve"><value>Search name, content, range or version</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Search" xml:space="preserve"><value>Search</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Retry" xml:space="preserve"><value>Reload</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Empty" xml:space="preserve"><value>No matching prompts. Try different filters.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Draft" xml:space="preserve"><value>Draft</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Preview" xml:space="preserve"><value>Prompt preview</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.SelectHint" xml:space="preserve"><value>Select a prompt on the left to preview its full content.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.InsertHint" xml:space="preserve"><value>Insert at the cursor (replace selected text), without sending or executing.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Cancel" xml:space="preserve"><value>Cancel</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Insert" xml:space="preserve"><value>Insert prompt</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.LoadFailed" xml:space="preserve"><value>Unable to load prompts. Please retry.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.AccessDenied" xml:space="preserve"><value>Your session expired or access was denied. Sign in again or contact an administrator.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Unavailable" xml:space="preserve"><value>PromptRange selector is unavailable. Check that the module is installed, enabled and updated.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.TargetChanged" xml:space="preserve"><value>The input changed or is no longer editable. Close the picker and select again.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.TooLong" xml:space="preserve"><value>The inserted content would exceed the input length limit. Shorten it first.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Sort" xml:space="preserve"><value>Sort by</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.SortScore" xml:space="preserve"><value>Score (current, high to low)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.SortPromptCode" xml:space="preserve"><value>PromptCode (ascending)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.AverageScore" xml:space="preserve"><value>Average score</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.MaxScore" xml:space="preserve"><value>Highest score</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.Unrated" xml:space="preserve"><value>Not rated</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptSelector.CurrentScore" xml:space="preserve"><value>Current score</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.Score" xml:space="preserve"><value>Rate (0–10)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.View" xml:space="preserve"><value>View prompt</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.Locate" xml:space="preserve"><value>Locate referenced text</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.Remove" xml:space="preserve"><value>Remove reference (keep text)</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.Unrated" xml:space="preserve"><value>Not rated</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.Unavailable" xml:space="preserve"><value>PromptRange is unavailable or the request failed. Please retry.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.InvalidReference" xml:space="preserve"><value>The prompt reference is invalid. Insert the prompt again.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.InvalidScore" xml:space="preserve"><value>Enter a score from 0 to 10 with at most one decimal place.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.LastScoreWins" xml:space="preserve"><value>The last successful rating wins, whether manual or AI. All references share the current score.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.AIConfirm" xml:space="preserve"><value>Evaluate this input and reply against the PromptCode benchmark using AI? Model charges may apply. A successful rating replaces the current score.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.AIScore" xml:space="preserve"><value>Rate with AI</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.AIUnavailable" xml:space="preserve"><value>AI rating requires a benchmark and a corresponding completed reply.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.Cancel" xml:space="preserve"><value>Cancel</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.Save" xml:space="preserve"><value>Save manual score</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.TooMany" xml:space="preserve"><value>At most 32 prompt references are allowed per message. Remove unused references first.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.RangeScores" xml:space="preserve"><value>Range score overview</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.ScoringTarget" xml:space="preserve"><value>Rating this PromptCode</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.LocateTarget" xml:space="preserve"><value>Locate rating target</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.DraftHint" xml:space="preserve"><value>Dragging only previews the score and green bar height. Changes take effect after saving the manual score.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.ChartHint" xml:space="preserve"><value>Green marks the rating target; a blue outline marks the preview. Clicking only previews a version and never changes the rating target. Scroll horizontally to browse all versions.</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.PreviewOnly" xml:space="preserve"><value>Read-only preview · does not affect your rating</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.CurrentScore" xml:space="preserve"><value>Current saved score</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.HumanScore" xml:space="preserve"><value>Manual score</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.RobotScore" xml:space="preserve"><value>AI score</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="PromptReference.Retry" xml:space="preserve"><value>Retry</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="Frontend.109" xml:space="preserve"><value>GET（不发送请求体，数据经地址占位符传递）||GET (no body; data is passed through URL placeholders)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.110" xml:space="preserve"><value>NeuBell WebHook 设置||NeuBell WebHook settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.111" xml:space="preserve"><value>POST（默认，携带 JSON 请求体）||POST (default, with a JSON body)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.112" xml:space="preserve"><value>PUT（携带请求体）||PUT (with a request body)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.113" xml:space="preserve"><value>Provider 过滤||Provider filter</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.114" xml:space="preserve"><value>WebHook 地址||WebHook URL</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.115" xml:space="preserve"><value>WebHook 设置||WebHook settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.116" xml:space="preserve"><value>WebHook 请求报文||WebHook request payload</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.117" xml:space="preserve"><value>例如：运维值班机器人||For example: operations duty bot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.118" xml:space="preserve"><value>创建 NeuBell 时按参数触发的通知、设置页“测试”与后台监测的变更通知，均在此记录请求数据与结果。||This records request data and results for parameter-triggered NeuBell notifications, settings-page tests, and monitored change notifications.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.119" xml:space="preserve"><value>动作值 ·||Action value ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.120" xml:space="preserve"><value>占位符||Placeholders</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.121" xml:space="preserve"><value>完整默认 JSON 报文||Complete default JSON payload</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.122" xml:space="preserve"><value>已配置||Configured</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.123" xml:space="preserve"><value>报文||Payload</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.124" xml:space="preserve"><value>搜索名称、地址或 Provider||Search name, URL, or Provider</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.125" xml:space="preserve"><value>数量 ·||Count ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.126" xml:space="preserve"><value>新增 WebHook||Add WebHook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.127" xml:space="preserve"><value>新增时通知||Notify on added</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.128" xml:space="preserve"><value>方式||Method</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.129" xml:space="preserve"><value>时间||Time</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.130" xml:space="preserve"><value>暂无请求日志。||No request logs yet.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.131" xml:space="preserve"><value>本次新增/移除标题（以“、”连接）||Titles added/removed in this event (joined with 、)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.132" xml:space="preserve"><value>条目 Id ·||Item ID ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.133" xml:space="preserve"><value>条目更新时间||Item updated at</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.134" xml:space="preserve"><value>条目标题 ·||Item title ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.135" xml:space="preserve"><value>条目链接（配置站点根地址时为绝对链接）·||Item link (absolute when a site root is configured) ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.136" xml:space="preserve"><value>模板||Template</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.137" xml:space="preserve"><value>清空（保留 50 条）||Clear (keep 50)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.138" xml:space="preserve"><value>点击右上角“新增 WebHook”，配置一个外部 WebAPI 通知端点。||Choose Add WebHook in the upper right to configure an external WebAPI notification endpoint.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.139" xml:space="preserve"><value>留空使用系统默认 JSON 报文；以 { 或 [ 开头按 JSON 处理。例如：{||Leave empty to use the default JSON payload; values starting with { or [ are treated as JSON. For example: {</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.140" xml:space="preserve"><value>留空表示全部 Provider||Leave empty for all Providers</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.141" xml:space="preserve"><value>租户标识（无租户时为空）||Tenant identifier (empty without a tenant)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.142" xml:space="preserve"><value>移除||Removed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.143" xml:space="preserve"><value>移除时通知||Notify on removed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.144" xml:space="preserve"><value>签名||Signature</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.145" xml:space="preserve"><value>签名密钥||Signing secret</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.146" xml:space="preserve"><value>结果||Result</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.147" xml:space="preserve"><value>耗时||Duration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.148" xml:space="preserve"><value>请求体模板||Request body template</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.149" xml:space="preserve"><value>请求方式||Request method</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.150" xml:space="preserve"><value>请求日志||Request logs</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.151" xml:space="preserve"><value>还没有 WebHook||No WebHooks yet</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.152" xml:space="preserve"><value>通知时间（ISO 8601）·||Notification time (ISO 8601) ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.153" xml:space="preserve"><value>配置后请求携带 X-NeuBell-Signature（HMAC-SHA256）||Configured requests include X-NeuBell-Signature (HMAC-SHA256)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.154" xml:space="preserve"><value>（与 Workflow 文本模板同格式，|| (same format as Workflow text templates,</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.155" xml:space="preserve"><value>NeuCharPivot 面板||NeuCharPivot panels</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.156" xml:space="preserve"><value>Provit Block 列表（可拖动排序）||Provit Block list (drag to reorder)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.157" xml:space="preserve"><value>admin-home（后台首页）||admin-home (Admin home)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.158" xml:space="preserve"><value>一句话说明||One-line description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.159" xml:space="preserve"><value>主题色||Theme color</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.160" xml:space="preserve"><value>例如：后台首页运维面板||For example: Admin home operations panel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.161" xml:space="preserve"><value>列数||Columns</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.162" xml:space="preserve"><value>创建面板||Create panel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.163" xml:space="preserve"><value>发送||Send</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.164" xml:space="preserve"><value>块标题||Block title</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.165" xml:space="preserve"><value>将面板（Provit Panel）绑定到特定页面（如后台首页 admin-home），组合来自任意 XNCF 模块的 Provit Block，并支持 AI Chat 创建或修改。||Bind a Provit Panel to a page such as admin-home, combine Provit Blocks from any XNCF module, and create or edit it with AI Chat.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.166" xml:space="preserve"><value>已停用||Disabled</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.167" xml:space="preserve"><value>已根据首页缺失块预填引用信息||References were prefilled from missing blocks on the home page</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.168" xml:space="preserve"><value>搜索面板名称、页面标识||Search panel name or page key</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.169" xml:space="preserve"><value>暂无块，点击“添加块”从任意 XNCF 模块的 Pivot Function 中选择。||No blocks yet. Choose Add block to select a Pivot Function from any XNCF module.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.170" xml:space="preserve"><value>模块 UID：||Module UID:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.171" xml:space="preserve"><value>橙||Orange</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.172" xml:space="preserve"><value>添加 Provit Block||Add Provit Block</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.173" xml:space="preserve"><value>添加块||Add block</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.174" xml:space="preserve"><value>灰||Gray</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.175" xml:space="preserve"><value>点击右上角“创建面板”，将面板绑定到页面（如 admin-home 绑定后台首页）。||Choose Create panel in the upper right to bind the panel to a page such as admin-home.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.176" xml:space="preserve"><value>用一句话告诉 AI 你的需求，例如：加入主机监控和待办任务两块，改成三列||Tell AI what you need in one sentence, for example: add host monitoring and a todo block, then use three columns</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.177" xml:space="preserve"><value>紫||Purple</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.178" xml:space="preserve"><value>绿||Green</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.179" xml:space="preserve"><value>蓝||Blue</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.180" xml:space="preserve"><value>还没有面板||No panels yet</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.181" xml:space="preserve"><value>选择 Function||Select Function</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.182" xml:space="preserve"><value>选择任意 XNCF 模块的 Pivot Function 作为本面板的块。||Select a Pivot Function from any XNCF module as a block for this panel.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.183" xml:space="preserve"><value>选择模块||Select module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.184" xml:space="preserve"><value>面板||Panel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.185" xml:space="preserve"><value>面板名称||Panel name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.186" xml:space="preserve"><value>页面标识||Page key</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.187" xml:space="preserve"><value>Function 状态||Function status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.188" xml:space="preserve"><value>Function：全部||Function: all</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.189" xml:space="preserve"><value>Function：可用||Function: available</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.190" xml:space="preserve"><value>Function：已移除||Function: removed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.191" xml:space="preserve"><value>LoopTask 状态||LoopTask status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.192" xml:space="preserve"><value>LoopTask：上次失败||LoopTask: last failed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.193" xml:space="preserve"><value>LoopTask：倒计时||LoopTask: countdown</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.194" xml:space="preserve"><value>LoopTask：全部||LoopTask: all</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.195" xml:space="preserve"><value>LoopTask：已停用||LoopTask: disabled</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.196" xml:space="preserve"><value>LoopTask：待执行||LoopTask: pending</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.197" xml:space="preserve"><value>LoopTask：执行中||LoopTask: running</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.198" xml:space="preserve"><value>LoopTask：未设置||LoopTask: not configured</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.199" xml:space="preserve"><value>NeuCharPivot 模块导航||NeuCharPivot module navigation</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.200" xml:space="preserve"><value>NeuCharPivot 聚合||NeuCharPivot aggregate</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.201" xml:space="preserve"><value>Pivot 执行||Pivot runs</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.202" xml:space="preserve"><value>Workflow 关联||Workflow links</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.203" xml:space="preserve"><value>Workflow 触发||Workflow triggers</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.204" xml:space="preserve"><value>Workflow：全部||Workflow: all</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.205" xml:space="preserve"><value>Workflow：已关联||Workflow: linked</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.206" xml:space="preserve"><value>Workflow：未关联||Workflow: unlinked</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.207" xml:space="preserve"><value>上次失败||Last failure</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.208" xml:space="preserve"><value>可用 / 总数||Available / total</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.209" xml:space="preserve"><value>启用 / 已配置||Enabled / configured</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.210" xml:space="preserve"><value>当前版本已移除||Removed in the current version</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.211" xml:space="preserve"><value>成功 / 失败||Succeeded / failed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.212" xml:space="preserve"><value>执行||Run</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.213" xml:space="preserve"><value>执行中 / 倒计时||Running / countdown</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.214" xml:space="preserve"><value>执行状态||Run status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.215" xml:space="preserve"><value>搜索模块、Function 或 Workflow||Search modules, Functions, or Workflows</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.216" xml:space="preserve"><value>模块||Module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.217" xml:space="preserve"><value>模块导航||Module navigation</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.218" xml:space="preserve"><value>模块已关闭||Module disabled</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.219" xml:space="preserve"><value>模块状态||Module status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.220" xml:space="preserve"><value>模块状态：不可用||Module status: unavailable</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.221" xml:space="preserve"><value>模块状态：全部||Module status: all</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.222" xml:space="preserve"><value>模块状态：可用||Module status: available</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.223" xml:space="preserve"><value>没有匹配的 NeuCharPivot||No matching NeuCharPivot entries</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.224" xml:space="preserve"><value>聚合||Aggregate</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.225" xml:space="preserve"><value>该模块当前未安装或未开启，Function 仅保留配置，不允许执行。||This module is not installed or enabled. Functions keep their configuration but cannot run.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.226" xml:space="preserve"><value>请调整筛选条件，或先进入任意模块的“设置/执行 → NeuCharPivot”生成操作面板。||Adjust the filters, or open Settings / Execute → NeuCharPivot in any module to generate an operation panel first.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.227" xml:space="preserve"><value>重置筛选||Reset filters</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.228" xml:space="preserve"><value>集中查看模块面板、参数化 Function、LoopTask 倒计时和完成后触发的 Workflow。||Review module panels, parameterized Functions, LoopTask countdowns, and post-completion Workflows in one place.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.229" xml:space="preserve"><value>Function 全局 Provit 访问控制||Function global Provit access control</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.230" xml:space="preserve"><value>Function 已不存在，策略冗余保留||The Function no longer exists; the policy is retained as an orphan</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.231" xml:space="preserve"><value>个 Function 应用“受限”策略。受限模式下，仅绑定的用户 / 角色 / 权限码（任一命中）可访问全局 Provit，请至少绑定一项。||Function(s) will receive the Restricted policy. In Restricted mode, only bound users, roles, or permission codes may access the global Provit; bind at least one.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.232" xml:space="preserve"><value>为任意 XNCF 模块的 Function 设置数据库访问策略，绑定用户 / 角色 / 权限码。数据库策略存在时覆盖代码属性（AllowGlobalPivot / GlobalPivotRoleCodes / GlobalPivotPermissionCodes）；模块被清除后策略冗余保留，模块重装后自动继续生效，仅手动清除才会删除。||Configure a database access policy for any XNCF Function and bind users, roles, or permission codes. A database policy overrides the code attributes; after a module is cleared, the policy remains orphaned and resumes when the module is reinstalled.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.233" xml:space="preserve"><value>代码基线||Code baseline</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.234" xml:space="preserve"><value>代码基线（FunctionRenderAttribute）||Code baseline (FunctionRenderAttribute)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.235" xml:space="preserve"><value>任意登录管理员||Any signed-in administrator</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.236" xml:space="preserve"><value>保存策略||Save policy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.237" xml:space="preserve"><value>允许权限码||Allowed permission codes</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.238" xml:space="preserve"><value>允许用户||Allowed users</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.239" xml:space="preserve"><value>允许角色||Allowed roles</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.240" xml:space="preserve"><value>受限||Restricted</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.241" xml:space="preserve"><value>将对选中的||The selected</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.242" xml:space="preserve"><value>尚未设置数据库策略，当前按代码基线执行。||No database policy is configured; the code baseline is currently used.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.243" xml:space="preserve"><value>已有绑定||Existing bindings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.244" xml:space="preserve"><value>应用||Apply</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.245" xml:space="preserve"><value>开放||Open</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.246" xml:space="preserve"><value>当前数据库策略||Current database policy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.247" xml:space="preserve"><value>批量受限||Batch Restricted</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.248" xml:space="preserve"><value>批量受限设置||Batch Restricted settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.249" xml:space="preserve"><value>批量开放||Batch Open</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.250" xml:space="preserve"><value>批量恢复继承||Batch restore Inherit</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.251" xml:space="preserve"><value>批量清除||Batch clear</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.252" xml:space="preserve"><value>批量禁用||Batch disable</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.253" xml:space="preserve"><value>搜索模块 / Function||Search module / Function</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.254" xml:space="preserve"><value>数据库策略||Database policy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.255" xml:space="preserve"><value>未设置（按代码基线）||Not set (using code baseline)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.256" xml:space="preserve"><value>模块不可用||Module unavailable</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.257" xml:space="preserve"><value>模块已清除||Module cleared</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.258" xml:space="preserve"><value>模块已清除，无法读取代码基线；策略以数据库记录为准。||The module is cleared, so its code baseline cannot be read; the database policy is authoritative.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.259" xml:space="preserve"><value>模式||Mode</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.260" xml:space="preserve"><value>清除||Clear</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.261" xml:space="preserve"><value>生效策略||Effective policy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.262" xml:space="preserve"><value>目标信息||Target information</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.263" xml:space="preserve"><value>禁用||Deny</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.264" xml:space="preserve"><value>策略保存后冗余保留，模块重装后自动生效||The policy remains as an orphan after saving and becomes effective automatically when the module is reinstalled.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.265" xml:space="preserve"><value>策略模式||Policy mode</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.266" xml:space="preserve"><value>继承代码||Inherit code</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.267" xml:space="preserve"><value>记录本次策略调整的原因，便于后续审计||Record why this policy changed for later auditing</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.268" xml:space="preserve"><value>设置||Settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.269" xml:space="preserve"><value>设置全局 Provit 访问策略||Configure global Provit access policy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.270" xml:space="preserve"><value>访问控制||Access control</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.271" xml:space="preserve"><value>输入权限资源码||Enter a permission resource code</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.272" xml:space="preserve"><value>输入权限资源码（如 sandbox.execute，任一命中即放行）||Enter a permission resource code, such as sandbox.execute; any match allows access.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.273" xml:space="preserve"><value>选择后台管理员用户||Select administrator users</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.274" xml:space="preserve"><value>选择后台管理员用户（任一命中即放行）||Select administrator users; any match allows access.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.275" xml:space="preserve"><value>选择或输入角色码||Select or enter role codes</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.276" xml:space="preserve"><value>选择或输入角色码（任一命中即放行）||Select or enter role codes; any match allows access.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.277" xml:space="preserve"><value>（无）||(none)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.278" xml:space="preserve"><value>Chat 修改||Edit with Chat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.279" xml:space="preserve"><value>ChatAgent · 当前 XNCF 模块||ChatAgent · Current XNCF module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.280" xml:space="preserve"><value>ChatAgent 会汇总全部 Function，生成一个声明式快捷操作面板。不会执行 AI 生成的脚本或任意内部方法。||ChatAgent summarizes all Functions into a declarative quick-action panel. It never executes AI-generated scripts or arbitrary internal methods.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.281" xml:space="preserve"><value>NeuBell 通知||NeuBell notification</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.282" xml:space="preserve"><value>NeuCharPivot 生成过程已关闭 Function Calling；完整 AdminChat 仍只加载会话显式关联模块公开注册的 FunctionRender。Pivot/Workflow 执行会再次进行服务端白名单和模块状态校验。||Function Calling is disabled during NeuCharPivot generation; full AdminChat still loads only publicly registered FunctionRender entries from explicitly linked modules. Pivot/Workflow execution performs server-side allowlist and module-state checks again.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.283" xml:space="preserve"><value>不关联||Do not link</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.284" xml:space="preserve"><value>例如：把高频操作放在第一组，并只暴露必要参数||For example: put frequent actions in the first group and expose only required parameters</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.285" xml:space="preserve"><value>发送并更新 Pivot||Send and update Pivot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.286" xml:space="preserve"><value>启用前会再次校验所有必填参数；模块关闭或 Function 被移除时不会执行。||All required parameters are checked again before enabling; execution is blocked when the module is disabled or the Function is removed.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.287" xml:space="preserve"><value>完成后触发 Workflow||Trigger Workflow after completion</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.288" xml:space="preserve"><value>当前引用：||Current reference:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.289" xml:space="preserve"><value>打开完整 AdminChat||Open full AdminChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.290" xml:space="preserve"><value>模块当前未安装或未开启，所有 Pivot Function 和定时任务均已在底层禁用。||This module is not installed or enabled; all Pivot Functions and scheduled tasks are disabled at the runtime layer.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.291" xml:space="preserve"><value>生成此模块的 NeuCharPivot||Generate NeuCharPivot for this module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.292" xml:space="preserve"><value>生成界面||Generate panel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.293" xml:space="preserve"><value>自动执行||Automatic execution</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.294" xml:space="preserve"><value>选择 AI 算力||Select AI capacity</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.295" xml:space="preserve"><value>间隔（秒）||Interval (seconds)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.296" xml:space="preserve"><value>Workflow 能力当前未开启。列表仍可查看，手机端执行命令不会生效。||Workflow capability is currently disabled. The list remains visible, but phone commands will not execute.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.297" xml:space="preserve"><value>个人微信 Bot||Personal WeChat Bot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.298" xml:space="preserve"><value>个人微信集成||Personal WeChat integration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.299" xml:space="preserve"><value>个人微信集成当前已停用，手机端命令不会进入 Admin。||Personal WeChat integration is disabled; phone commands will not enter Admin.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.300" xml:space="preserve"><value>创建绑定配置||Create binding configuration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.301" xml:space="preserve"><value>可用 Workflow||Available Workflows</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.302" xml:space="preserve"><value>命令前缀 @Model.PageData.CommandPrefix@(Model.PageData.RequireCommandPrefix ? " · 必填" : " · 可选")||Command prefix @Model.PageData.CommandPrefix@(Model.PageData.RequireCommandPrefix ? " · required" : " · optional")</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.303" xml:space="preserve"><value>在微信里完成绑定||Complete binding in WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.304" xml:space="preserve"><value>复制||Copy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.305" xml:space="preserve"><value>当前 Admin 用户 Id||Current Admin user ID</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.306" xml:space="preserve"><value>当前管理员没有可用 Workflow。||The current administrator has no available Workflows.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.307" xml:space="preserve"><value>当前能力||Current capability</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.308" xml:space="preserve"><value>手机命令||Phone commands</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.309" xml:space="preserve"><value>打开个人微信 Bot||Open Personal WeChat Bot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.310" xml:space="preserve"><value>把当前管理员和微信账号绑定后，可以在手机上查询并执行 Workflow。||After binding the current administrator to a WeChat account, Workflows can be queried and executed from the phone.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.311" xml:space="preserve"><value>把绑定码发给对方||Send the binding code to the user</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.312" xml:space="preserve"><value>按当前管理员 Id @Model.PageData.WorkflowUserId 查询。手机发送「获取 Workflow 列表」会得到同一份结果。||Query by current administrator ID @Model.PageData.WorkflowUserId. Sending “Get Workflow list” from the phone returns the same results.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.313" xml:space="preserve"><value>搜索编号或名称||Search ID or name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.314" xml:space="preserve"><value>数据库绑定配置||Database binding configuration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.315" xml:space="preserve"><value>条启用||enabled</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.316" xml:space="preserve"><value>系统只保留不可逆哈希。创建或修改成功后，立刻把本次明文绑定码发给对应的微信用户。||The system stores only an irreversible hash. Send the plaintext binding code to the WeChat user immediately after creating or updating it.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.317" xml:space="preserve"><value>让对方发送「绑定微信账号」命令。绑定完成后，发送「获取 Workflow 列表」，即可看到本页同一份列表。||Ask the user to send “Bind WeChat account”. After binding, “Get Workflow list” returns the same list shown here.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.318" xml:space="preserve"><value>还没有启用中的绑定配置。先到个人微信 Bot 为微信账号创建绑定，手机端才能识别管理员。||No enabled binding configuration exists. Create a binding for the WeChat account in Personal WeChat Bot first so the phone can identify the administrator.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.319" xml:space="preserve"><value>集成状态||Integration status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.320" xml:space="preserve"><value>首次绑定||First binding</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.321" xml:space="preserve"><value>Pivot Block 尚未初始化||Pivot Block has not been initialized</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.322" xml:space="preserve"><value>打开模块 NeuCharPivot 设置||Open module NeuCharPivot settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.323" xml:space="preserve"><value>打开面板设置并预填代码||Open panel settings and prefill the code</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.324" xml:space="preserve"><value>数据库中没有找到该块引用的 Function。先初始化或恢复 Function 后，再回到面板设置重新选择即可。||The Function referenced by this block was not found in the database. Initialize or restore it first, then return to panel settings and select it again.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.325" xml:space="preserve"><value>管理面板||Manage panels</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.326" xml:space="preserve"><value>日本語||日本語</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.327" xml:space="preserve"><value>简体中文||Simplified Chinese</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.328" xml:space="preserve"><value>苏州盛派网络科技有限公司||Suzhou Senparc Network Technology Co., Ltd.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.329" xml:space="preserve"><value>Function Calling 参数||Function Calling parameters</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.330" xml:space="preserve"><value>XNCF 模块||XNCF module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.331" xml:space="preserve"><value>仅接收常规 input 参数||Accept regular input parameters only</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.332" xml:space="preserve"><value>打开||Open</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.333" xml:space="preserve"><value>搜索 Workflow 名称 / 描述 / 参数||Search Workflow name / description / parameters</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.334" xml:space="preserve"><value>没有可用的已启用 Workflow||No enabled Workflows are available</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.335" xml:space="preserve"><value>清空选择||Clear selection</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.336" xml:space="preserve"><value>AI 快捷对话||AI quick chat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.337" xml:space="preserve"><value>Admin Chat 快捷对话||Admin Chat quick chat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.338" xml:space="preserve"><value>NeuBell 提醒||NeuBell reminders</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.339" xml:space="preserve"><value>仅显示当前页面加载后捕获的浏览器日志，不包含服务器 stdout。||Only browser logs captured after this page loaded are shown; server stdout is not included.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.340" xml:space="preserve"><value>关闭全部||Close all</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.341" xml:space="preserve"><value>切换到正式页面||Switch to the full page</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.342" xml:space="preserve"><value>当前没有模块提供纽铃信息。||No module currently provides NeuBell information.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.343" xml:space="preserve"><value>暂无日志||No logs yet</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.344" xml:space="preserve"><value>服务器时间||Server time</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.345" xml:space="preserve"><value>浏览器 Console||Browser Console</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.346" xml:space="preserve"><value>消费||Consume</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.347" xml:space="preserve"><value>消费全部||Consume all</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.348" xml:space="preserve"><value>清空||Clear</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.349" xml:space="preserve"><value>选择在 Footer 显示的模块提醒。设置保存在当前账号的浏览器中。||Choose which module reminders appear in the Footer. The setting is saved in this account's browser.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.350" xml:space="preserve"><value>支持普通文本和绝对 http/https 链接的 &lt;a&gt; 标签；其他 HTML 会被编码。||Supports plain text and absolute http/https links using &lt;a&gt; tags; other HTML is encoded.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.351" xml:space="preserve"><value>1 小时||1 hour</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.352" xml:space="preserve"><value>24 小时||24 hours</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.353" xml:space="preserve"><value>7 天||7 days</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.354" xml:space="preserve"><value>AdminChat 命令||AdminChat commands</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.355" xml:space="preserve"><value>HTML 匿名快照分享||Anonymous HTML snapshot sharing</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.356" xml:space="preserve"><value>Harness 任务轨迹||Harness task trajectory</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.357" xml:space="preserve"><value>Workspace PDF 预览||Workspace PDF preview</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.358" xml:space="preserve"><value>Workspace 名称||Workspace name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.359" xml:space="preserve"><value>Workspace 文件和路径||Workspace files and paths</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.360" xml:space="preserve"><value>Workspace 资产||Workspace assets</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.361" xml:space="preserve"><value>上一段||Previous chunk</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.362" xml:space="preserve"><value>上传资料||Upload material</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.363" xml:space="preserve"><value>下一段||Next chunk</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.364" xml:space="preserve"><value>下载 / 另存为||Download / Save as</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.365" xml:space="preserve"><value>下载当前目录 (.zip)||Download current directory (.zip)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.366" xml:space="preserve"><value>不使用 Workspace||Do not use Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.367" xml:space="preserve"><value>不引用模块也可以直接开始||Start directly without referencing a module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.368" xml:space="preserve"><value>为当前对话添加可调用模块或 Workflow||Add callable modules or Workflows to this conversation</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.369" xml:space="preserve"><value>为当前对话选择工作区||Choose a Workspace for this conversation</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.370" xml:space="preserve"><value>仅本轮授权发送压缩图片给视觉模型，可能产生额外 Token。||Authorize compressed images to be sent to the vision model for this turn only; this may use additional Tokens.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.371" xml:space="preserve"><value>从本轮移除并删除 Workspace 文件||Remove from this turn and delete the Workspace file</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.372" xml:space="preserve"><value>任何持有链接的人都能查看此快照。||Anyone with the link can view this snapshot.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.373" xml:space="preserve"><value>任务轨迹||Task trajectory</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.374" xml:space="preserve"><value>例如：Yield C# 示例项目||For example: a Yield C# sample project</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.375" xml:space="preserve"><value>保存文件||Save file</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.376" xml:space="preserve"><value>允许||Allow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.377" xml:space="preserve"><value>允许 AI 写入文件||Allow AI to write files</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.378" xml:space="preserve"><value>允许 AI 执行 Python||Allow AI to execute Python</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.379" xml:space="preserve"><value>关闭资产面板||Close asset panel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.380" xml:space="preserve"><value>分享有效期||Share expiration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.381" xml:space="preserve"><value>创建只读快照链接||Create read-only snapshot link</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.382" xml:space="preserve"><value>匿名快照链接||Anonymous snapshot link</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.383" xml:space="preserve"><value>取消编辑||Cancel editing</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.384" xml:space="preserve"><value>可写入||Writable</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.385" xml:space="preserve"><value>可执行 CLI||CLI execution allowed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.386" xml:space="preserve"><value>可选：补充说明或拒绝原因||Optional: add details or a rejection reason</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.387" xml:space="preserve"><value>在外部浏览器打开（只读）||Open in external browser (read-only)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.388" xml:space="preserve"><value>展开至最大可用宽度||Expand to the maximum available width</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.389" xml:space="preserve"><value>引用模块||Referenced module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.390" xml:space="preserve"><value>当前会话||Current session</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.391" xml:space="preserve"><value>当前目录为空||The current directory is empty</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.392" xml:space="preserve"><value>拒绝||Reject</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.393" xml:space="preserve"><value>搜索模型||Search models</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.394" xml:space="preserve"><value>撤销||Revoke</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.395" xml:space="preserve"><value>新建 Workspace||New Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.396" xml:space="preserve"><value>暂无 Harness 轨迹||No Harness trajectory yet</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.397" xml:space="preserve"><value>未保存||Unsaved</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.398" xml:space="preserve"><value>查看实时执行过程||View live execution</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.399" xml:space="preserve"><value>检索轨迹、工具或结果||Search trajectories, tools, or results</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.400" xml:space="preserve"><value>正在查找 Workspace…||Searching Workspace…</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.401" xml:space="preserve"><value>此文件类型暂不支持文本预览||Text preview is not supported for this file type</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.402" xml:space="preserve"><value>没有匹配的文件或路径||No matching files or paths</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.403" xml:space="preserve"><value>管理匿名分享||Manage anonymous sharing</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.404" xml:space="preserve"><value>编辑文件||Edit file</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.405" xml:space="preserve"><value>视觉||Vision</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.406" xml:space="preserve"><value>资产||Assets</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.407" xml:space="preserve"><value>跳转||Go to</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.408" xml:space="preserve"><value>跳转到行||Go to line</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.409" xml:space="preserve"><value>默认系统提示词由 PromptRange 管理；当前文本是个人或租户附加偏好。||The default system prompt is managed by PromptRange; the current text contains personal or tenant preferences.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.410" xml:space="preserve"><value>，@@ 引用文件或路径||, use @@ to reference a file or path</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.411" xml:space="preserve"><value>，输入 @@ 引用文件或路径||, enter @@ to reference a file or path</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.412" xml:space="preserve"><value>支持普通文本和绝对 http/https 链接的 &amp;lt;a&amp;gt; 标签；其他 HTML 会被编码。||Supports plain text and absolute http/https links using &amp;lt;a&amp;gt; tags; other HTML is encoded.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.413" xml:space="preserve"><value>分叉||Fork</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.414" xml:space="preserve"><value>正在思考||Thinking</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.415" xml:space="preserve"><value>等待工具确认||Waiting for tool approval</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.416" xml:space="preserve"><value>回放事件 #{0} ·||Replay event #{0} ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.417" xml:space="preserve"><value>按 Ctrl + Enter 或 Cmd + Enter 开始||Press Ctrl + Enter or Cmd + Enter to start</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.418" xml:space="preserve"><value>分叉||Fork</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.419" xml:space="preserve"><value>暂无有效分享||No active shares</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.420" xml:space="preserve"><value>还有 {0} 项||{0} more</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.421" xml:space="preserve"><value>查看预览||View preview</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.422" xml:space="preserve"><value>返回文本||Return to text</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.423" xml:space="preserve"><value>树状展开||Expand as tree</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.424" xml:space="preserve"><value>查看源码||View source</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.425" xml:space="preserve"><value>正在加载预览…||Loading preview…</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.426" xml:space="preserve"><value>缺少 Function：||Missing Function:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.427" xml:space="preserve"><value>当前筛选结果全选||Select all filtered results</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.428" xml:space="preserve"><value>已选 {0} / {1}||Selected {0} / {1}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.429" xml:space="preserve"><value>NeuBell · WebHook 设置||NeuBell · WebHook settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.430" xml:space="preserve"><value>编辑 WebHook||Edit WebHook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.431" xml:space="preserve"><value>新增 WebHook||Add WebHook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.432" xml:space="preserve"><value>个人微信集成||Personal Weixin integration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.433" xml:space="preserve"><value>当前没有匹配的 Workflow||No matching Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.434" xml:space="preserve"><value>数据库策略 {0} 条||{0} database policies</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.435" xml:space="preserve"><value>孤儿策略 {0} 条||{0} orphan policies</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.436" xml:space="preserve"><value>个可用 Workflow||available Workflows</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.437" xml:space="preserve"><value>个面板||panels</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.438" xml:space="preserve"><value>最多 {0} 个文件||Up to {0} files</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.439" xml:space="preserve"><value>显示不可用模块（{0}）||Show unavailable modules ({0})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.440" xml:space="preserve"><value>模块版本||Module version</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.441" xml:space="preserve"><value>最多 {0} 个文件||Up to {0} files</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.442" xml:space="preserve"><value>共 {0} 条||{0} total</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.443" xml:space="preserve"><value>{0}条/页||{0} per page</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.444" xml:space="preserve"><value>前往||Go to</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.445" xml:space="preserve"><value>页||Page</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.446" xml:space="preserve"><value>10条/页||10 per page</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.447" xml:space="preserve"><value>20条/页||20 per page</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.448" xml:space="preserve"><value>30条/页||30 per page</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.449" xml:space="preserve"><value>40条/页||40 per page</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.450" xml:space="preserve"><value>命令前缀 {0} · 必填||Command prefix {0} · required</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.451" xml:space="preserve"><value>命令前缀 {0} · 可选||Command prefix {0} · optional</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.452" xml:space="preserve"><value>Harness 未开启||Harness is disabled</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.453" xml:space="preserve"><value>绑定微信账号||Bind Weixin account</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.454" xml:space="preserve"><value>获取 Workflow 列表||Get Workflow list</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.455" xml:space="preserve"><value>当前命令前缀为||The current command prefix is</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.456" xml:space="preserve"><value>{0} / {1} 条||{0} / {1} items</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.457" xml:space="preserve"><value>输入内容||Input text</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.458" xml:space="preserve"><value>{0} 条新消息||{0} new messages</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.459" xml:space="preserve"><value>命令前缀||Command prefix</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
 </root>

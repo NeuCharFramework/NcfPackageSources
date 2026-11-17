@@ -1348,4 +1348,17 @@ workspace_write 的 relativePath 必须是非空的 Workspace 相对文件路径
   <data name="Frontend.759" xml:space="preserve"><value>手动评分: {0}||手动评分: {0}</value></data>
   <data name="Frontend.760" xml:space="preserve"><value>以版本树管理 Skill，以 Draft 作为 AI 生成和外部导入的安全边界||以版本树管理 Skill，以 Draft 作为 AI 生成和外部导入的安全边界</value></data>
   <data name="Frontend.761" xml:space="preserve"><value>可选，例如 excel.report||可选，例如 excel.report</value></data>
+
+  <data name="Function.PromptRange.ViewCodes.Name" xml:space="preserve"><value>查看 PromptCode 列表</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Function.PromptRange.ViewCodes.Description" xml:space="preserve"><value>查看所有靶场和靶道的 PromptCode，可用于在 AgentsManager 中快速创建智能体</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.762" xml:space="preserve"><value>备注:||备注:</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.763" xml:space="preserve"><value>检测到 {0} 个变量||检测到 {0} 个变量</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.764" xml:space="preserve"><value>共 {0} 个节点||共 {0} 个节点</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.765" xml:space="preserve"><value>已选择: {0} 个靶道||已选择: {0} 个靶道</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.766" xml:space="preserve"><value>请输入 Prompt 内容||请输入 Prompt 内容</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.767" xml:space="preserve"><value>请输入您的问题... (Ctrl+Enter / Cmd+Enter 发送)||请输入您的问题... (Ctrl+Enter / Cmd+Enter 发送)</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.768" xml:space="preserve"><value>请输入您的下一句话... (Ctrl+Enter / Cmd+Enter 发送)||请输入您的下一句话... (Ctrl+Enter / Cmd+Enter 发送)</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.769" xml:space="preserve"><value>当前 PromptCode 下已有 {0} 个智能体：{1}||当前 PromptCode 下已有 {0} 个智能体：{1}</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.770" xml:space="preserve"><value>备注:||备注:</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.771" xml:space="preserve"><value>已发布||已发布</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
 </root>

@@ -917,4 +917,6 @@
   <data name="FineTuning.SaveBeforeLaunch" xml:space="preserve"><value>请先保存，再生成密钥并启动。</value></data>
   <data name="FineTuning.Optional" xml:space="preserve"><value>可选</value></data>
 
+
+  <data name="Frontend.400" xml:space="preserve"><value>从 NeuChar AI 导入（DevId:{0}）||从 NeuChar AI 导入（DevId:{0}）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
 </root>

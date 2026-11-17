@@ -25,4 +25,13 @@
     <value>XNCF 模块||选择要安装并开放的模块</value>
   </data>
 
+
+  <data name="Function.XncfManager.GetAllModules.Name" xml:space="preserve"><value>获取全部 XNCF 模块信息</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Function.XncfManager.GetAllModules.Description" xml:space="preserve"><value>获取系统中全部 XNCF 模块的名称、说明和状态</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Function.XncfManager.InstallAndEnable.Name" xml:space="preserve"><value>安装并开放 XNCF 模块</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Function.XncfManager.InstallAndEnable.Description" xml:space="preserve"><value>安装指定 XNCF 模块，并将状态切换为开放</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Function.XncfManager.InstallAndEnableAi.Name" xml:space="preserve"><value>安装并开放 XNCF 模块（AI 兼容）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Function.XncfManager.InstallAndEnableAi.Description" xml:space="preserve"><value>通过模块 UID 或名称关键词直接安装并开放模块，无需 SelectionList</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Function.XncfManager.ViewFunctionStatus.Name" xml:space="preserve"><value>查看 XNCF 模块的 Function 状态</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Function.XncfManager.ViewFunctionStatus.Description" xml:space="preserve"><value>查看当前 XNCF 模块的 Function 加载情况</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
 </root>

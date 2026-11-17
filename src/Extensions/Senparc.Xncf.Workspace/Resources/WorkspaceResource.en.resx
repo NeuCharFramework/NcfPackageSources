@@ -50,4 +50,31 @@
   <data name="Server.SelectionRequired" xml:space="preserve"><value>Select a Workspace to clear.||Select a Workspace to clear.</value></data>
   <data name="Server.NotFound" xml:space="preserve"><value>The Workspace does not exist or is outside the current administrator's scope.||The Workspace does not exist or is outside the current administrator's scope.</value></data>
   <data name="Server.ClearFailed" xml:space="preserve"><value>Failed to clear the Workspace. Please retry later.||Failed to clear the Workspace. Please retry later.</value></data>
+
+  <data name="Frontend.035" xml:space="preserve"><value>工作区与远程编辑||Workspaces and remote editing</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.036" xml:space="preserve"><value>文件保存在隔离目录中，AdminChat、VS Code 与 Cursor 共用。这里查看每个工作区的文件数量和容量，也可以清空内容并恢复成新建时的空目录。||Files are stored in isolated directories shared by AdminChat, VS Code, and Cursor. Review file counts and usage here, or clear a Workspace back to its initial empty layout.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.037" xml:space="preserve"><value>当前账号 #{0} · 单个工作区配额 {1} · 文件数和容量不含工作区清单。||Current account #{0} · per-Workspace quota {1} · file counts and usage exclude the Workspace manifest.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.038" xml:space="preserve"><value>其他管理员只统计当前租户内不属于你的工作区。||Other administrators include only Workspaces in the current tenant that are not owned by you.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.039" xml:space="preserve"><value>{0} 个||{0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.040" xml:space="preserve"><value>给新任务起个名字，例如：订单系统重构||Name the new task, for example: order-system refactor</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.041" xml:space="preserve"><value>创建于 {0}||Created {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.042" xml:space="preserve"><value>访问于 {0}||Accessed {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.043" xml:space="preserve"><value>这些工作区不属于当前账号。超级管理员可以查看用量并清空内容，操作会记入日志。||These Workspaces are not owned by the current account. Super administrators can review usage and clear content; actions are logged.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.044" xml:space="preserve"><value>这里只显示同一个租户里、所有者不是你的工作区。||Only Workspaces in the same tenant with another owner are shown here.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.045" xml:space="preserve"><value>管理员 #{0}||Administrator #{0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.046" xml:space="preserve"><value>安装 “NCF Workspace” 扩展||Install the “NCF Workspace” extension</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.047" xml:space="preserve"><value>运行 “NCF: 连接工作区”||Run “NCF: Connect Workspace”</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.048" xml:space="preserve"><value>输入站点地址，在浏览器中确认配对||Enter the site address and confirm pairing in the browser</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.049" xml:space="preserve"><value>选择工作区，文件将作为远程文件夹打开||Choose a Workspace; its files open as a remote folder</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.050" xml:space="preserve"><value>工作区本身会保留。此操作不可撤销。||The Workspace itself remains. This action cannot be undone.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.051" xml:space="preserve"><value>当前租户没有其他管理员的工作区||No other administrator Workspaces exist in the current tenant</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.052" xml:space="preserve"><value>设备尚未配对？前往设备会话页面完成配对。||Device not paired? Open device sessions to complete pairing.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.053" xml:space="preserve"><value>工作区||Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.054" xml:space="preserve"><value>我的||Mine</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.055" xml:space="preserve"><value>其他管理员||Other administrator</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.056" xml:space="preserve"><value>创建工作区||Create Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.057" xml:space="preserve"><value>当前账号||Current account</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.058" xml:space="preserve"><value>{0} 个文件 ·||{0} files ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.059" xml:space="preserve"><value>当前账号 #{0} · 单个工作区配额 · 文件数和容量不含工作区清单。||Current account #{0} · per-Workspace quota · file count and capacity exclude the Workspace manifest.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.060" xml:space="preserve"><value>{0} 个文件 · {1}||{0} files · {1}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
 </root>

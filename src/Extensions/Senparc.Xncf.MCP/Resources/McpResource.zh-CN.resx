@@ -157,4 +157,60 @@
     <value>扩展模块</value>
   </data>
 
+
+  <data name="Function.MCP.Execute.Name" xml:space="preserve"><value>执行 MCP</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Function.MCP.Execute.Description" xml:space="preserve"><value>执行 MCP；选择模块时，默认地址为 http://localhost:5080/{Module Name}/sse</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.001" xml:space="preserve"><value>仅显示已启用||仅显示已启用</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.002" xml:space="preserve"><value>以下为本站运行时已映射的 MCP 服务，只读展示，不属于客户端连接配置。||以下为本站运行时已映射的 MCP 服务，只读展示，不属于客户端连接配置。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.003" xml:space="preserve"><value>例如 1.0（可选）||例如 1.0（可选）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.004" xml:space="preserve"><value>例如 http://localhost:3001/mcp/sse||例如 http://localhost:3001/mcp/sse</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.005" xml:space="preserve"><value>保存||保存</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.006" xml:space="preserve"><value>保存前测试||保存前测试</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.007" xml:space="preserve"><value>关闭||关闭</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.008" xml:space="preserve"><value>删除||删除</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.009" xml:space="preserve"><value>刷新||刷新</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.010" xml:space="preserve"><value>协议版本||协议版本</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.011" xml:space="preserve"><value>参数列表||参数列表</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.012" xml:space="preserve"><value>参数名||参数名</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.013" xml:space="preserve"><value>参数数||参数数</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.014" xml:space="preserve"><value>发布路由||发布路由</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.015" xml:space="preserve"><value>取消||取消</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.016" xml:space="preserve"><value>可选||可选</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.017" xml:space="preserve"><value>可选，保存为 AuthConfig JSON（字段 token）||可选，保存为 AuthConfig JSON（字段 token）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.018" xml:space="preserve"><value>名称||名称</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.019" xml:space="preserve"><value>否||否</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.020" xml:space="preserve"><value>启用||启用</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.021" xml:space="preserve"><value>复制||复制</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.022" xml:space="preserve"><value>客户端连接配置||客户端连接配置</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.023" xml:space="preserve"><value>工具名称||工具名称</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.024" xml:space="preserve"><value>必填||必填</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.025" xml:space="preserve"><value>所属模块||所属模块</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.026" xml:space="preserve"><value>描述||描述</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.027" xml:space="preserve"><value>搜索名称 / 地址 / 描述||搜索名称 / 地址 / 描述</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.028" xml:space="preserve"><value>搜索服务 / 模块 / 地址||搜索服务 / 模块 / 地址</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.029" xml:space="preserve"><value>操作||操作</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.030" xml:space="preserve"><value>放大查看||放大查看</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.031" xml:space="preserve"><value>新增 Endpoint||新增 Endpoint</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.032" xml:space="preserve"><value>是||是</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.033" xml:space="preserve"><value>最近测试||最近测试</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.034" xml:space="preserve"><value>服务名称||服务名称</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.035" xml:space="preserve"><value>未测试||未测试</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.036" xml:space="preserve"><value>未获取到工具列表。请检查端点地址、协议类型与鉴权信息后重试。||未获取到工具列表。请检查端点地址、协议类型与鉴权信息后重试。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.037" xml:space="preserve"><value>标题||标题</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.038" xml:space="preserve"><value>测试||测试</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.039" xml:space="preserve"><value>测试当前配置连接||测试当前配置连接</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.040" xml:space="preserve"><value>用于唯一标识该 MCP 端点||用于唯一标识该 MCP 端点</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.041" xml:space="preserve"><value>端点地址||端点地址</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.042" xml:space="preserve"><value>端点类型||端点类型</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.043" xml:space="preserve"><value>类型||类型</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.044" xml:space="preserve"><value>编辑||编辑</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.045" xml:space="preserve"><value>访问端点||访问端点</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.046" xml:space="preserve"><value>输入 Schema（JSON）||输入 Schema（JSON）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.047" xml:space="preserve"><value>本站发布的 MCP（{0}）||本站发布的 MCP（{0}）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.048" xml:space="preserve"><value>暂无匹配的本站 MCP 服务||暂无匹配的本站 MCP 服务</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.049" xml:space="preserve"><value>发现 {0} 个工具（Function）||发现 {0} 个工具（Function）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.050" xml:space="preserve"><value>连接测试 - {0}||连接测试 - {0}</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.051" xml:space="preserve"><value>共发现 {0} 个工具（Function）。点击左侧箭头展开查看参数与输入 Schema。||共发现 {0} 个工具（Function）。点击左侧箭头展开查看参数与输入 Schema。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.052" xml:space="preserve"><value>发布开关、工具和访问权限由所属模块管理。地址基于当前访问站点生成，不代表已允许匿名访问或公网可达。||发布开关、工具和访问权限由所属模块管理。地址基于当前访问站点生成，不代表已允许匿名访问或公网可达。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.053" xml:space="preserve"><value>工具 {0}||工具 {0}</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
 </root>
