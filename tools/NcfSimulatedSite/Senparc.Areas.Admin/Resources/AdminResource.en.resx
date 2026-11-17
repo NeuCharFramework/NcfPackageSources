@@ -1095,9 +1095,9 @@
   <data name="Frontend.198" xml:space="preserve"><value>LoopTask: not configured</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.199" xml:space="preserve"><value>NeuCharPivot module navigation</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.200" xml:space="preserve"><value>NeuCharPivot aggregate</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.201" xml:space="preserve"><value>Pivot runs</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.201" xml:space="preserve"><value>Pivot execution</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.202" xml:space="preserve"><value>Workflow links</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.203" xml:space="preserve"><value>Workflow triggers</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.203" xml:space="preserve"><value>Workflow trigger</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.204" xml:space="preserve"><value>Workflow: all</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.205" xml:space="preserve"><value>Workflow: linked</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.206" xml:space="preserve"><value>Workflow: unlinked</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
