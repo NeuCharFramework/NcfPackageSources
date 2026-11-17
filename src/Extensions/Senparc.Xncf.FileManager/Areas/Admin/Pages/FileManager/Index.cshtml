@@ -1,13 +1,13 @@
 @page
 @model Senparc.Xncf.FileManager.Areas.FileManager.Pages.Index
 @{
-    ViewData["Title"] = "文件资源管理";
+    ViewData["Title"] = FileManagerResource.Get("Area.FileManager.Files", "File resource management");
     Layout = "_Layout_Vue";
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
-    <el-breadcrumb-item>文件资源管理</el-breadcrumb-item>
+    <el-breadcrumb-item>@FileManagerResource.Get("Area.Extensions", "Extensions")</el-breadcrumb-item>
+    <el-breadcrumb-item>@FileManagerResource.Get("Area.FileManager.Files", "File resource management")</el-breadcrumb-item>
 }
 
 @section Style {
