@@ -429,6 +429,10 @@
   <data name="Script.CsrfMissing" xml:space="preserve"><value>ページの偽造防止トークンがありません。ページを再読み込みして再試行してください。</value></data>
   <data name="Frontend.191" xml:space="preserve"><value>折りたたむ</value></data>
   <data name="Frontend.192" xml:space="preserve"><value>展開</value></data>
+  <data name="Frontend.196" xml:space="preserve"><value>{0}をサポートします。</value></data>
+  <data name="Frontend.197" xml:space="preserve"><value>JSONL、JSON、ZIP、およびトレーニング実行時に生成されるその他の非公開成果物をサポートします。</value></data>
+  <data name="Frontend.198" xml:space="preserve"><value>JPG、PNG、GIF、WebP、AVIF、ICO、音声/動画、フォント形式をサポートします。</value></data>
+  <data name="Frontend.199" xml:space="preserve"><value>テキスト、JSON/XML/YAML、コード、DOCX、XLSX、PPTXをサポートします。</value></data>
   <data name="Frontend.193" xml:space="preserve"><value>ファインチューニング成果物は常に非公開です。トレーニングタスク、管理者、許可されたダウンロードエンドポイントのみが利用でき、公開URLは生成されません。</value></data>
   <data name="Frontend.194" xml:space="preserve"><value>サイトの静的リソースは既定で非公開です。公開するとSHA-256フィンガープリント付きの/assets/ URLが生成されます。同一オリジンのスクリプトインジェクションを防ぐため、HTML、SVG、JavaScript、圧縮ファイルは受け付けません。</value></data>
   <data name="Frontend.195" xml:space="preserve"><value>ナレッジベースのソースファイルは、安全に抽出できるテキストまたはOffice Open XMLファイルである必要があります。公開URLは生成されず、ここから公開することもできません。</value></data>

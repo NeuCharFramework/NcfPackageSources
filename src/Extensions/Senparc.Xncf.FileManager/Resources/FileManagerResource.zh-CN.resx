@@ -425,6 +425,10 @@
   <data name="Script.CsrfMissing" xml:space="preserve"><value>页面缺少防伪令牌，请刷新页面后重试。</value></data>
   <data name="Frontend.191" xml:space="preserve"><value>收起</value></data>
   <data name="Frontend.192" xml:space="preserve"><value>展开</value></data>
+  <data name="Frontend.196" xml:space="preserve"><value>支持 {0}。</value></data>
+  <data name="Frontend.197" xml:space="preserve"><value>支持 JSONL、JSON、ZIP 及训练运行时生成的其他私有产物格式。</value></data>
+  <data name="Frontend.198" xml:space="preserve"><value>支持 JPG、PNG、GIF、WebP、AVIF、ICO、音视频和字体格式。</value></data>
+  <data name="Frontend.199" xml:space="preserve"><value>支持文本、JSON/XML/YAML、代码、DOCX、XLSX、PPTX。</value></data>
   <data name="Frontend.193" xml:space="preserve"><value>微调产物始终保持私有，仅供训练任务、管理员和授权的下载接口使用，不会生成公开 URL。</value></data>
   <data name="Frontend.194" xml:space="preserve"><value>站点静态资源默认私有；公开后会生成带 SHA-256 指纹的 /assets/ URL。为防止同源脚本注入，不接受 HTML、SVG、JavaScript 或压缩包。</value></data>
   <data name="Frontend.195" xml:space="preserve"><value>知识库源文件只能是可安全提取的文本和 Office Open XML 文件。它们不会生成公开 URL，也不能在此处发布。</value></data>

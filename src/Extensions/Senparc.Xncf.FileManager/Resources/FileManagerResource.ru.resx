@@ -429,6 +429,10 @@
   <data name="Script.CsrfMissing" xml:space="preserve"><value>На странице отсутствует токен защиты от подделки запросов. Обновите страницу и повторите попытку.</value></data>
   <data name="Frontend.191" xml:space="preserve"><value>Свернуть</value></data>
   <data name="Frontend.192" xml:space="preserve"><value>Развернуть</value></data>
+  <data name="Frontend.196" xml:space="preserve"><value>Поддерживает: {0}.</value></data>
+  <data name="Frontend.197" xml:space="preserve"><value>Поддерживаются JSONL, JSON, ZIP и другие приватные артефакты, созданные во время обучения.</value></data>
+  <data name="Frontend.198" xml:space="preserve"><value>Поддерживаются JPG, PNG, GIF, WebP, AVIF, ICO, аудио/видео и шрифты.</value></data>
+  <data name="Frontend.199" xml:space="preserve"><value>Поддерживаются текст, JSON/XML/YAML, код, DOCX, XLSX и PPTX.</value></data>
   <data name="Frontend.193" xml:space="preserve"><value>Артефакты тонкой настройки всегда являются приватными. Они доступны только заданиям обучения, администраторам и разрешённым endpoint загрузки; публичный URL не создаётся.</value></data>
   <data name="Frontend.194" xml:space="preserve"><value>Статические ресурсы сайта по умолчанию приватны. После публикации создаётся URL /assets/ с отпечатком SHA-256. HTML, SVG, JavaScript и архивы не принимаются для предотвращения внедрения скриптов того же источника.</value></data>
   <data name="Frontend.195" xml:space="preserve"><value>Исходные файлы базы знаний должны быть безопасно извлекаемым текстом или файлами Office Open XML. Публичные URL не создаются, и публиковать их здесь нельзя.</value></data>
