@@ -1202,27 +1202,27 @@
   <data name="Frontend.307" xml:space="preserve"><value>現在の機能</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.308" xml:space="preserve"><value>モバイルコマンド</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.309" xml:space="preserve"><value>個人WeChat Botを開く</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.310" xml:space="preserve"><value>After binding the current administrator to a WeChat account, Workflows can be queried and executed from the phone.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.311" xml:space="preserve"><value>Send the binding code to the user</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.312" xml:space="preserve"><value>Query by current administrator ID @Model.PageData.WorkflowUserId. Sending “Get Workflow list” from the phone returns the same results.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.313" xml:space="preserve"><value>Search ID or name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.314" xml:space="preserve"><value>Database binding configuration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.315" xml:space="preserve"><value>enabled</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.316" xml:space="preserve"><value>The system stores only an irreversible hash. Send the plaintext binding code to the WeChat user immediately after creating or updating it.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.317" xml:space="preserve"><value>Ask the user to send “Bind WeChat account”. After binding, “Get Workflow list” returns the same list shown here.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.318" xml:space="preserve"><value>No enabled binding configuration exists. Create a binding for the WeChat account in Personal WeChat Bot first so the phone can identify the administrator.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.319" xml:space="preserve"><value>Integration status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.320" xml:space="preserve"><value>First binding</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.321" xml:space="preserve"><value>Pivot Block has not been initialized</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.322" xml:space="preserve"><value>Open module NeuCharPivot settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.323" xml:space="preserve"><value>Open panel settings and prefill the code</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.324" xml:space="preserve"><value>The Function referenced by this block was not found in the database. Initialize or restore it first, then return to panel settings and select it again.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.325" xml:space="preserve"><value>Manage panels</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.310" xml:space="preserve"><value>現在の管理者をWeChatアカウントにバインドすると、スマートフォンからWorkflowを確認・実行できます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.311" xml:space="preserve"><value>バインドコードを相手に送信</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.312" xml:space="preserve"><value>現在の管理者ID @Model.PageData.WorkflowUserId で検索します。スマートフォンで「Workflow一覧を取得」を送ると同じ結果が返ります。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.313" xml:space="preserve"><value>IDまたは名前を検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.314" xml:space="preserve"><value>データベースバインド設定</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.315" xml:space="preserve"><value>有効</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.316" xml:space="preserve"><value>システムには不可逆ハッシュのみ保存されます。作成または変更に成功したら、平文のバインドコードを対応するWeChatユーザーにすぐ送信してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.317" xml:space="preserve"><value>相手に「WeChatアカウントをバインド」を送ってもらいます。バインド後、「Workflow一覧を取得」を送ると、このページと同じ一覧を確認できます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.318" xml:space="preserve"><value>有効なバインド設定がありません。まず個人WeChat BotでWeChatアカウントのバインドを作成すると、スマートフォンが管理者を識別できます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.319" xml:space="preserve"><value>連携状態</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.320" xml:space="preserve"><value>初回バインド</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.321" xml:space="preserve"><value>Pivot Blockは未初期化です</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.322" xml:space="preserve"><value>モジュールのNeuCharPivot設定を開く</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.323" xml:space="preserve"><value>パネル設定を開き、コードを事前入力</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.324" xml:space="preserve"><value>このブロックが参照するFunctionがデータベースにありません。Functionを初期化または復元してから、パネル設定に戻って再選択してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.325" xml:space="preserve"><value>パネルを管理</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.326" xml:space="preserve"><value>日本語</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.327" xml:space="preserve"><value>Simplified Chinese</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.328" xml:space="preserve"><value>Suzhou Senparc Network Technology Co., Ltd.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.329" xml:space="preserve"><value>Function Calling parameters</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.330" xml:space="preserve"><value>XNCF module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.327" xml:space="preserve"><value>簡体字中国語</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.328" xml:space="preserve"><value>蘇州盛派ネットワークテクノロジー有限公司</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.329" xml:space="preserve"><value>Function Callingパラメーター</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.330" xml:space="preserve"><value>XNCFモジュール</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.331" xml:space="preserve"><value>Accept regular input parameters only</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.332" xml:space="preserve"><value>Open</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.333" xml:space="preserve"><value>Search Workflow name / description / parameters</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
