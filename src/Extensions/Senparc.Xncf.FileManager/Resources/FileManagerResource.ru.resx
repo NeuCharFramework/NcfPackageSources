@@ -452,4 +452,7 @@
   <data name="Frontend.213" xml:space="preserve"><value>Загрузка выполнена; статические ресурсы сайта всё ещё необходимо явно опубликовать, прежде чем сайт сможет их использовать.</value></data>
   <data name="Frontend.214" xml:space="preserve"><value>Ошибка загрузки: {0}</value></data>
   <data name="Frontend.215" xml:space="preserve"><value>Целевая папка недоступна. Выполнен возврат в корневую папку.</value></data>
+  <data name="Frontend.216" xml:space="preserve"><value>Файл «{0}» типа {1} отфильтрован и не может быть загружен.</value></data>
+  <data name="Frontend.217" xml:space="preserve"><value>Тип файла «{0}» отсутствует в списке разрешённых.</value></data>
+  <data name="Frontend.218" xml:space="preserve"><value>Файл «{0}» превышает {1} МБ и не может быть загружен.</value></data>
 </root>

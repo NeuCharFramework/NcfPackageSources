@@ -452,4 +452,7 @@
   <data name="Frontend.213" xml:space="preserve"><value>Upload succeeded; site static resources must still be explicitly published before the site can reference them.</value></data>
   <data name="Frontend.214" xml:space="preserve"><value>Upload failed: {0}</value></data>
   <data name="Frontend.215" xml:space="preserve"><value>The target folder is unavailable. Returned to the root folder.</value></data>
+  <data name="Frontend.216" xml:space="preserve"><value>File “{0}” with type {1} has been filtered and cannot be uploaded.</value></data>
+  <data name="Frontend.217" xml:space="preserve"><value>File “{0}” has a type that is not in the allowed upload list.</value></data>
+  <data name="Frontend.218" xml:space="preserve"><value>File “{0}” exceeds {1} MB and cannot be uploaded.</value></data>
 </root>

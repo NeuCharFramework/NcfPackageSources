@@ -452,4 +452,7 @@
   <data name="Frontend.213" xml:space="preserve"><value>アップロードに成功しました。サイトで参照するには、サイトの静的リソースを明示的に公開する必要があります。</value></data>
   <data name="Frontend.214" xml:space="preserve"><value>アップロードに失敗しました：{0}</value></data>
   <data name="Frontend.215" xml:space="preserve"><value>対象フォルダーを利用できません。ルートフォルダーに戻りました。</value></data>
+  <data name="Frontend.216" xml:space="preserve"><value>種類{1}のファイル「{0}」はフィルターされているため、アップロードできません。</value></data>
+  <data name="Frontend.217" xml:space="preserve"><value>ファイル「{0}」の種類は許可されたアップロード一覧にありません。</value></data>
+  <data name="Frontend.218" xml:space="preserve"><value>ファイル「{0}」は{1} MBを超えているため、アップロードできません。</value></data>
 </root>

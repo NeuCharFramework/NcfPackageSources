@@ -452,4 +452,7 @@
   <data name="Frontend.213" xml:space="preserve"><value>La carga se realizó correctamente; los recursos estáticos del sitio aún deben publicarse explícitamente antes de que el sitio pueda utilizarlos.</value></data>
   <data name="Frontend.214" xml:space="preserve"><value>Error de carga: {0}</value></data>
   <data name="Frontend.215" xml:space="preserve"><value>La carpeta de destino no está disponible. Se volvió a la carpeta raíz.</value></data>
+  <data name="Frontend.216" xml:space="preserve"><value>El archivo “{0}” de tipo {1} ha sido filtrado y no se puede subir.</value></data>
+  <data name="Frontend.217" xml:space="preserve"><value>El tipo del archivo “{0}” no está en la lista de tipos permitidos.</value></data>
+  <data name="Frontend.218" xml:space="preserve"><value>El archivo “{0}” supera {1} MB y no se puede subir.</value></data>
 </root>

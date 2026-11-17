@@ -746,7 +746,7 @@
             createTag: function (presetCategoryId) {
                 this.loadTagManagerFromStorage();
                 if (!(this.tagManager.list || []).length) {
-                    this.$message.warning('请先新增分类后再创建标签');
+                    this.$message.warning(fileManagerText('Frontend.128', 'Add a category first.'));
                     return;
                 }
                 this.tagCreateDialog = {
@@ -922,7 +922,7 @@
                     const editing = !!self.tagCategoryDialog.editing;
                     const currentId = form.id || '';
                     if (!name) {
-                        self.$message.warning('请输入分类名称');
+                        self.$message.warning(fileManagerText('Frontend.161', 'Enter a category name, up to 50 characters'));
                         return;
                     }
                     if (form.parentId && form.parentId === currentId) {
@@ -934,7 +934,7 @@
                         return String(row.name || '').toLowerCase() === name.toLowerCase();
                     });
                     if (exists) {
-                        self.$message.warning('分类名称已存在');
+                        self.$message.warning(fileManagerText('Frontend.082', 'The category name already exists'));
                         return;
                     }
                     self.tagCategoryDialog.loading = true;
@@ -989,11 +989,11 @@
                     const editing = !!self.tagCreateDialog.editing;
                     const currentId = form.id || '';
                     if (!name) {
-                        self.$message.warning('请输入标签名称');
+                        self.$message.warning(fileManagerText('Frontend.163', 'Enter a tag name, up to 30 characters'));
                         return;
                     }
                     if (!categoryId) {
-                        self.$message.warning('请选择所属分类');
+                        self.$message.warning(fileManagerText('Frontend.171', 'Select a category'));
                         return;
                     }
                     const category = (self.tagManager.list || []).find(function (row) { return row.id === categoryId; });
@@ -1007,7 +1007,7 @@
                             && String(tag.name || '').toLowerCase() === name.toLowerCase();
                     });
                     if (dup) {
-                        self.$message.warning('该分类下已存在同名标签');
+                        self.$message.warning(fileManagerText('Frontend.140', 'A tag with this name already exists in the category'));
                         return;
                     }
                     self.tagCreateDialog.loading = true;
@@ -1065,8 +1065,8 @@
             },
             enableSelectedTags: function () { this.setSelectedTagStatus(true); },
             disableSelectedTags: function () { this.setSelectedTagStatus(false); },
-            importTags: function () { this.$message.info('导入功能即将开放'); },
-            exportTags: function () { this.$message.info('导出功能即将开放'); },
+            importTags: function () { this.$message.info(fileManagerText('Frontend.100', 'Import')); },
+            exportTags: function () { this.$message.info(fileManagerText('Frontend.101', 'Export')); },
             openTagRowMenu: function (row) {
                 if (!row) return;
                 //Legacy comment translated to English.
@@ -1564,15 +1564,15 @@
                 const ext = extMatch ? extMatch[0].toLowerCase() : '';
                 const blocked = this.parseExtensionList((this.uploadSettings && this.uploadSettings.blockedTypesText) || '');
                 if (ext && blocked.indexOf(ext) !== -1) {
-                    return '文件“' + name + '”类型 ' + ext + ' 已被过滤，无法上传。';
+                    return fileManagerText('Frontend.216', 'File “{0}” with type {1} has been filtered and cannot be uploaded.', name, ext);
                 }
                 const allowed = this.parseExtensionList((this.uploadSettings && this.uploadSettings.allowedTypesText) || '');
                 if (allowed.length && (!ext || allowed.indexOf(ext) === -1)) {
-                    return '文件“' + name + '”类型不在允许上传列表中。';
+                    return fileManagerText('Frontend.217', 'File “{0}” has a type that is not in the allowed upload list.', name);
                 }
                 const maxBytes = this.getMaxUploadSizeBytes();
                 if (fileSize > maxBytes) {
-                    return '文件“' + name + '”超过 ' + Math.round(maxBytes / 1024 / 1024) + ' MB，无法上传。';
+                    return fileManagerText('Frontend.218', 'File “{0}” exceeds {1} MB and cannot be uploaded.', name, Math.round(maxBytes / 1024 / 1024));
                 }
                 return '';
             },
@@ -1581,7 +1581,7 @@
                 if (typeof this.loadFileTagMapFromStorage === 'function') this.loadFileTagMapFromStorage();
                 const catalog = (this.tagManager && this.tagManager.tags) || [];
                 if (!catalog.length) {
-                    this.$message.warning('请先在「标签管理」中维护标签后再设置');
+                    this.$message.warning(fileManagerText('Frontend.130', 'Create tags in Tag Management first.'));
                 }
                 const existingItems = this.getFileTagItems(row);
                 const selectedIds = existingItems.map(function (item) { return item.id; }).filter(Boolean);
@@ -2048,7 +2048,7 @@
                         const reason = self.validateUploadFile(file.name || rawFile.name, rawFile.size);
                         if (reason) throw new Error(reason);
                     } else if (rawFile.size > maxBytes) {
-                        throw new Error('文件“' + file.name + '”超过 ' + maxMb + ' MB，无法上传。');
+                        throw new Error(fileManagerText('Frontend.218', 'File “{0}” exceeds {1} MB and cannot be uploaded.', file.name, maxMb));
                     }
                     if (batch.length && (batch.length >= maxFilesPerUpload || batchBytes + rawFile.size > maxTotalUploadBytes)) {
                         batches.push(batch);

@@ -452,4 +452,7 @@
   <data name="Frontend.213" xml:space="preserve"><value>Téléversement réussi ; les ressources statiques du site doivent encore être publiées explicitement avant de pouvoir être utilisées par le site.</value></data>
   <data name="Frontend.214" xml:space="preserve"><value>Échec du téléversement : {0}</value></data>
   <data name="Frontend.215" xml:space="preserve"><value>Le dossier cible n'est pas disponible. Retour au dossier racine.</value></data>
+  <data name="Frontend.216" xml:space="preserve"><value>Le fichier « {0} » de type {1} a été filtré et ne peut pas être envoyé.</value></data>
+  <data name="Frontend.217" xml:space="preserve"><value>Le type du fichier « {0} » ne figure pas dans la liste autorisée.</value></data>
+  <data name="Frontend.218" xml:space="preserve"><value>Le fichier « {0} » dépasse {1} Mo et ne peut pas être envoyé.</value></data>
 </root>
