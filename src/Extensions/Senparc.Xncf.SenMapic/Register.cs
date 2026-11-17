@@ -49,7 +49,7 @@ namespace Senparc.Xncf.SenMapic
         private static readonly XncfRegisterText RegisterText = XncfRegisterText.Create<SenMapicResource>(
             "Module.SenMapic",
             "SenMapic",
-            "SenMapic 网页爬虫模块");
+            "SenMapic web crawler module");
 
         #region Legacy section
 

@@ -36,9 +36,9 @@ namespace Senparc.Xncf.SenMapic
         public string HomeUrl => "/Admin/SenMapic/Index";
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-                         new AreaPageMenuItem(GetAreaHomeUrl(), SenMapicResource.Get("Area.Home", "首页"),"fa fa-laptop"),
+                         new AreaPageMenuItem(GetAreaHomeUrl(), SenMapicResource.Get("Area.Home", "Home"),"fa fa-laptop"),
                          new AreaPageMenuItem(GetAreaUrl($"/Admin/SenMapic/Index"),"SenMapic","fa fa-file"),
-			 			 new AreaPageMenuItem(GetAreaUrl($"/Admin/SenMapic/DatabaseSample"), SenMapicResource.Get("Area.DatabaseSample", "数据库操作示例"),"fa fa-bookmark-o")
+			 			 new AreaPageMenuItem(GetAreaUrl($"/Admin/SenMapic/DatabaseSample"), SenMapicResource.Get("Area.DatabaseSample", "Database operations sample"),"fa fa-bookmark-o")
 			 		};
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
@@ -48,7 +48,7 @@ namespace Senparc.Xncf.SenMapic
                 //configure page permissions here
             });
 
-            SenparcTrace.SendCustomLog("SenMapic 启动", "完成 Area:Senparc.Xncf.SenMapic 注册");
+            SenparcTrace.SendCustomLog("SenMapic startup", "Completed Area:Senparc.Xncf.SenMapic registration");
 
             return builder;
         }
