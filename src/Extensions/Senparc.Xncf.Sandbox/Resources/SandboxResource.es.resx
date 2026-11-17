@@ -195,4 +195,8 @@
   <data name="Frontend.089" xml:space="preserve"><value>Fallido</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.090" xml:space="preserve"><value>Caducado</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.091" xml:space="preserve"><value>Desconocido ({0})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.092" xml:space="preserve"><value>Docker está listo; puedes continuar creando sandboxes.</value></data>
+  <data name="Frontend.093" xml:space="preserve"><value>Docker no está listo: completa la instalación manual y descarga previamente las imágenes según la documentación.</value></data>
+  <data name="Frontend.094" xml:space="preserve"><value>Instala y arranca Docker (o una CLI compatible) en la misma máquina que ejecuta NCF. El módulo no instala Docker automáticamente.</value></data>
+  <data name="Frontend.095" xml:space="preserve"><value>Para un registro interno, configura el prefijo o las sobrescrituras en SenparcXncfSandbox:Images dentro del appsettings.json del host; consulta la documentación.</value></data>
 </root>

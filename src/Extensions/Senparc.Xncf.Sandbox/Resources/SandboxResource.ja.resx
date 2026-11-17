@@ -195,4 +195,8 @@
   <data name="Frontend.089" xml:space="preserve"><value>失敗</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.090" xml:space="preserve"><value>期限切れ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.091" xml:space="preserve"><value>不明（{0}）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.092" xml:space="preserve"><value>Dockerの準備が完了しました。サンドボックスを作成できます。</value></data>
+  <data name="Frontend.093" xml:space="preserve"><value>Dockerの準備ができていません。ドキュメントに従って手動インストールとイメージの事前取得を完了してください。</value></data>
+  <data name="Frontend.094" xml:space="preserve"><value>NCFを実行している同じマシンにDocker（または互換CLI）をインストールして起動してください。モジュールはDockerを自動インストールしません。</value></data>
+  <data name="Frontend.095" xml:space="preserve"><value>内部レジストリを使用する場合は、ホストのappsettings.jsonにあるSenparcXncfSandbox:Imagesでプレフィックスまたは上書きを設定してください。詳細はドキュメントを参照してください。</value></data>
 </root>

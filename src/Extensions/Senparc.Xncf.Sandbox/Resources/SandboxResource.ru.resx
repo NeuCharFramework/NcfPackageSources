@@ -195,4 +195,8 @@
   <data name="Frontend.089" xml:space="preserve"><value>Ошибка</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.090" xml:space="preserve"><value>Истёк</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.091" xml:space="preserve"><value>Неизвестно ({0})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.092" xml:space="preserve"><value>Docker готов; можно продолжить создание песочниц.</value></data>
+  <data name="Frontend.093" xml:space="preserve"><value>Docker не готов: выполните ручную установку и предварительно загрузите образы согласно документации.</value></data>
+  <data name="Frontend.094" xml:space="preserve"><value>Установите и запустите Docker (или совместимый CLI) на той же машине, где работает NCF. Модуль не устанавливает Docker автоматически.</value></data>
+  <data name="Frontend.095" xml:space="preserve"><value>Для внутреннего реестра настройте префикс или переопределения в SenparcXncfSandbox:Images файла appsettings.json на хосте; см. документацию.</value></data>
 </root>

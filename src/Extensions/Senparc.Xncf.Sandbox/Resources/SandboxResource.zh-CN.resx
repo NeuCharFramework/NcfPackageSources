@@ -195,4 +195,8 @@
   <data name="Frontend.089" xml:space="preserve"><value>失败</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
   <data name="Frontend.090" xml:space="preserve"><value>已过期</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
   <data name="Frontend.091" xml:space="preserve"><value>未知({0})</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.092" xml:space="preserve"><value>Docker 检测通过，可以继续创建沙箱。</value></data>
+  <data name="Frontend.093" xml:space="preserve"><value>Docker 尚未就绪：请先按文档完成手动安装与镜像预拉。</value></data>
+  <data name="Frontend.094" xml:space="preserve"><value>请在运行 NCF 的同一台机器上安装并启动 Docker（或兼容 CLI）。模块不会自动安装 Docker。</value></data>
+  <data name="Frontend.095" xml:space="preserve"><value>如需内网仓库，请在宿主 appsettings.json 的 SenparcXncfSandbox:Images 中配置前缀或覆盖项（说明见文档）。</value></data>
 </root>
