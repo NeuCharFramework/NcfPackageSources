@@ -118,7 +118,7 @@
     <value>コードを表示</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>Position</value>
+    <value>位置</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
     <value>削除を許可</value>
@@ -148,10 +148,10 @@
     <value>ページ設定</value>
   </data>
   <data name="Frontend.017" xml:space="preserve">
-    <value>Column name</value>
+    <value>列名</value>
   </data>
   <data name="Frontend.018" xml:space="preserve">
-    <value>Column width</value>
+    <value>列幅</value>
   </data>
   <data name="Frontend.019" xml:space="preserve">
     <value>列プロパティ</value>
@@ -169,16 +169,16 @@
     <value>列の選択</value>
   </data>
   <data name="Frontend.024" xml:space="preserve">
-    <value>Create one</value>
+    <value>1件作成</value>
   </data>
   <data name="Frontend.025" xml:space="preserve">
     <value>レイアウトを作成</value>
   </data>
   <data name="Frontend.026" xml:space="preserve">
-    <value>Delete</value>
+    <value>削除</value>
   </data>
   <data name="Frontend.027" xml:space="preserve">
-    <value>Delete one</value>
+    <value>1件削除</value>
   </data>
   <data name="Frontend.028" xml:space="preserve">
     <value>1件のデータを削除</value>
@@ -190,13 +190,13 @@
     <value>動的データ基盤</value>
   </data>
   <data name="Frontend.031" xml:space="preserve">
-    <value>Ascending</value>
+    <value>昇順</value>
   </data>
   <data name="Frontend.032" xml:space="preserve">
     <value>ダブルクリック</value>
   </data>
   <data name="Frontend.033" xml:space="preserve">
-    <value>Publish</value>
+    <value>公開</value>
   </data>
   <data name="Frontend.034" xml:space="preserve">
     <value>キャンセル</value>
@@ -211,7 +211,7 @@
     <value>1ページだけのときは非表示</value>
   </data>
   <data name="Frontend.038" xml:space="preserve">
-    <value>Right</value>
+    <value>右</value>
   </data>
   <data name="Frontend.039" xml:space="preserve">
     <value>右揃え</value>
@@ -220,10 +220,10 @@
     <value>ページングを有効化</value>
   </data>
   <data name="Frontend.041" xml:space="preserve">
-    <value>Fixed column</value>
+    <value>固定列</value>
   </data>
   <data name="Frontend.042" xml:space="preserve">
-    <value>Fixed direction</value>
+    <value>固定方向</value>
   </data>
   <data name="Frontend.043" xml:space="preserve">
     <value>塗りつぶし</value>
@@ -235,7 +235,7 @@
     <value>より大きい</value>
   </data>
   <data name="Frontend.046" xml:space="preserve">
-    <value>Name</value>
+    <value>名前</value>
   </data>
   <data name="Frontend.047" xml:space="preserve">
     <value>子コンポーネント</value>
@@ -268,7 +268,7 @@
     <value>より小さい</value>
   </data>
   <data name="Frontend.057" xml:space="preserve">
-    <value>Display content</value>
+    <value>表示内容</value>
   </data>
   <data name="Frontend.058" xml:space="preserve">
     <value>表示内容テキスト</value>
@@ -283,7 +283,7 @@
     <value>プロパティ</value>
   </data>
   <data name="Frontend.062" xml:space="preserve">
-    <value>Left</value>
+    <value>左</value>
   </data>
   <data name="Frontend.063" xml:space="preserve">
     <value>左揃え</value>
@@ -292,7 +292,7 @@
     <value>idを引き継ぐ</value>
   </data>
   <data name="Frontend.065" xml:space="preserve">
-    <value>Age</value>
+    <value>年齢</value>
   </data>
   <data name="Frontend.066" xml:space="preserve">
     <value>ダイアログ設定</value>
@@ -355,10 +355,10 @@
     <value>アウトライン</value>
   </data>
   <data name="Frontend.086" xml:space="preserve">
-    <value>Description</value>
+    <value>説明</value>
   </data>
   <data name="Frontend.087" xml:space="preserve">
-    <value>Submit</value>
+    <value>送信</value>
   </data>
   <data name="Frontend.088" xml:space="preserve">
     <value>送信失敗状態の設定</value>
@@ -385,7 +385,7 @@
     <value>アクション</value>
   </data>
   <data name="Frontend.096" xml:space="preserve">
-    <value>Action column</value>
+    <value>操作列</value>
   </data>
   <data name="Frontend.097" xml:space="preserve">
     <value>データ形式</value>
@@ -436,7 +436,7 @@
     <value>テキスト</value>
   </data>
   <data name="Frontend.113" xml:space="preserve">
-    <value>Add</value>
+    <value>追加</value>
   </data>
   <data name="Frontend.114" xml:space="preserve">
     <value>フィールドを追加</value>
@@ -460,10 +460,10 @@
     <value>小型ページングを使う</value>
   </data>
   <data name="Frontend.121" xml:space="preserve">
-    <value>Unique</value>
+    <value>一意</value>
   </data>
   <data name="Frontend.122" xml:space="preserve">
-    <value>Required</value>
+    <value>必須</value>
   </data>
   <data name="Frontend.123" xml:space="preserve">
     <value>ゼブラ縞を表示</value>
@@ -478,22 +478,22 @@
     <value>枠線を表示</value>
   </data>
   <data name="Frontend.127" xml:space="preserve">
-    <value>Standard column</value>
+    <value>標準列</value>
   </data>
   <data name="Frontend.128" xml:space="preserve">
-    <value>Maximum length</value>
+    <value>最大長</value>
   </data>
   <data name="Frontend.129" xml:space="preserve">
     <value>最大ページボタン数</value>
   </data>
   <data name="Frontend.130" xml:space="preserve">
-    <value>Minimum length</value>
+    <value>最小長</value>
   </data>
   <data name="Frontend.131" xml:space="preserve">
     <value>レイアウトを表示</value>
   </data>
   <data name="Frontend.132" xml:space="preserve">
-    <value>Identifier id</value>
+    <value>識別子ID</value>
   </data>
   <data name="Frontend.133" xml:space="preserve">
     <value>タイトル内容</value>
@@ -508,7 +508,7 @@
     <value>スタイル設定</value>
   </data>
   <data name="Frontend.137" xml:space="preserve">
-    <value>Format</value>
+    <value>書式</value>
   </data>
   <data name="Frontend.138" xml:space="preserve">
     <value>書式テキスト</value>
@@ -553,10 +553,10 @@
     <value>ページ設定</value>
   </data>
   <data name="Frontend.152" xml:space="preserve">
-    <value>Confirm</value>
+    <value>確認</value>
   </data>
   <data name="Frontend.153" xml:space="preserve">
-    <value>Confirm</value>
+    <value>確認</value>
   </data>
   <data name="Frontend.154" xml:space="preserve">
     <value>確認ボタンの文字</value>
@@ -565,7 +565,7 @@
     <value>確認操作の設定</value>
   </data>
   <data name="Frontend.156" xml:space="preserve">
-    <value>Disabled</value>
+    <value>無効</value>
   </data>
   <data name="Frontend.157" xml:space="preserve">
     <value>等しい</value>
@@ -604,13 +604,13 @@
     <value>バインド項目テキスト1</value>
   </data>
   <data name="Frontend.169" xml:space="preserve">
-    <value>Edit</value>
+    <value>編集</value>
   </data>
   <data name="Frontend.170" xml:space="preserve">
     <value>ページを編集</value>
   </data>
   <data name="Frontend.171" xml:space="preserve">
-    <value>Generated automatically</value>
+    <value>自動生成</value>
   </data>
   <data name="Frontend.172" xml:space="preserve">
     <value>カスタム</value>
@@ -646,13 +646,13 @@
     <value>テーブルスタイル設定</value>
   </data>
   <data name="Frontend.183" xml:space="preserve">
-    <value>Settings</value>
+    <value>設定</value>
   </data>
   <data name="Frontend.184" xml:space="preserve">
     <value>ゲスト編集ページ</value>
   </data>
   <data name="Frontend.185" xml:space="preserve">
-    <value>Details</value>
+    <value>詳細</value>
   </data>
   <data name="Frontend.186" xml:space="preserve">
     <value>テーブルのフィールドを設定するには、先にデータテーブルを選択してください</value>
@@ -805,13 +805,13 @@
     <value>長さ</value>
   </data>
   <data name="Frontend.236" xml:space="preserve">
-    <value>Descending</value>
+    <value>降順</value>
   </data>
   <data name="Frontend.237" xml:space="preserve">
     <value>上揃え</value>
   </data>
   <data name="Frontend.238" xml:space="preserve">
-    <value>Color</value>
+    <value>色</value>
   </data>
   <data name="Frontend.239" xml:space="preserve">
     <value>ホーム</value>
@@ -829,7 +829,7 @@
     <value>DynamicData のデータテーブル設定</value>
   </data>
   <data name="Frontend.244" xml:space="preserve">
-    <value>Name</value>
+    <value>名前</value>
   </data>
   <data name="Frontend.245" xml:space="preserve">
     <value>はい</value>
@@ -916,7 +916,7 @@
     <value>このファイルを完全に削除します。続行しますか?</value>
   </data>
   <data name="Frontend.273" xml:space="preserve">
-    <value>Notice</value>
+    <value>お知らせ</value>
   </data>
   <data name="Frontend.274" xml:space="preserve">
     <value>削除しました！</value>
@@ -940,7 +940,7 @@
     <value>現在のページを閉じる</value>
   </data>
   <data name="Frontend.281" xml:space="preserve">
-    <value>Input</value>
+    <value>入力</value>
   </data>
   <data name="Frontend.282" xml:space="preserve">
     <value>テキスト入力</value>
@@ -949,7 +949,7 @@
     <value>テキストエリア</value>
   </data>
   <data name="Frontend.284" xml:space="preserve">
-    <value>Number input</value>
+    <value>数値入力</value>
   </data>
   <data name="Frontend.285" xml:space="preserve">
     <value>スイッチ</value>
@@ -982,7 +982,7 @@
     <value>週の選択</value>
   </data>
   <data name="Frontend.295" xml:space="preserve">
-    <value>yyyy Week WW</value>
+    <value>yyyy年 第WW週</value>
   </data>
   <data name="Frontend.296" xml:space="preserve">
     <value>日時ピッカー</value>
@@ -1000,10 +1000,10 @@
     <value>これはレイアウト名です</value>
   </data>
   <data name="Frontend.301" xml:space="preserve">
-    <value>Enabled</value>
+    <value>有効</value>
   </data>
   <data name="Frontend.302" xml:space="preserve">
-    <value>Disabled</value>
+    <value>無効</value>
   </data>
   <data name="Frontend.303" xml:space="preserve">
     <value>レイアウト名</value>
