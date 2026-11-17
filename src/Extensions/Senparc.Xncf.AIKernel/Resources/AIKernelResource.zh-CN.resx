@@ -919,4 +919,7 @@
 
 
   <data name="Frontend.400" xml:space="preserve"><value>从 NeuChar AI 导入（DevId:{0}）||从 NeuChar AI 导入（DevId:{0}）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+
+  <data name="Frontend.100" xml:space="preserve"><value>创建微调任务||创建微调任务</value></data>
+  <data name="Frontend.101" xml:space="preserve"><value>使用已批准的本地模型、数据集和训练参数创建微调任务。Worker、模型和数据集会自动载入，训练参数带有默认值，Workflow 可以按这些默认值直接运行。||使用已批准的本地模型、数据集和训练参数创建微调任务。Worker、模型和数据集会自动载入，训练参数带有默认值，Workflow 可以按这些默认值直接运行。</value></data>
 </root>

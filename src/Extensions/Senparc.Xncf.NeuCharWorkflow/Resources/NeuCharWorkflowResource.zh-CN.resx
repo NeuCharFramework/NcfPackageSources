@@ -507,4 +507,23 @@
 
   <data name="Frontend.487" xml:space="preserve"><value>{0} （任务副本）||{0} （任务副本）</value></data>
   <data name="Frontend.488" xml:space="preserve"><value>任务副本||任务副本</value></data>
+
+  <data name="Frontend.489" xml:space="preserve"><value>按顺序为预先声明的工作流变量赋值。只允许受限公式，不运行 JavaScript、网络、文件或循环。||按顺序为预先声明的工作流变量赋值。只允许受限公式，不运行 JavaScript、网络、文件或循环。</value></data>
+  <data name="Frontend.490" xml:space="preserve"><value>变量赋值、受限公式||变量赋值、受限公式</value></data>
+  <data name="Frontend.491" xml:space="preserve"><value>原始输入继续向下游传递||原始输入继续向下游传递</value></data>
+  <data name="Frontend.492" xml:space="preserve"><value>移开节点后关闭||移开节点后关闭</value></data>
+  <data name="Frontend.493" xml:space="preserve"><value>点击其它位置关闭，或 15 秒后自动关闭||点击其它位置关闭，或 15 秒后自动关闭</value></data>
+  <data name="Frontend.494" xml:space="preserve"><value>函数已失效||函数已失效</value></data>
+  <data name="Frontend.495" xml:space="preserve"><value>Function 已失效||Function 已失效</value></data>
+  <data name="Frontend.496" xml:space="preserve"><value>结束节点不能插入到连线中||结束节点不能插入到连线中</value></data>
+  <data name="Frontend.497" xml:space="preserve"><value>节点不可用||节点不可用</value></data>
+  <data name="Frontend.498" xml:space="preserve"><value>输出到下方 Console||输出到下方 Console</value></data>
+  <data name="Frontend.499" xml:space="preserve"><value>按模板输出到下方 Console||按模板输出到下方 Console</value></data>
+  <data name="Frontend.500" xml:space="preserve"><value>等待人工输入或外部 API 恢复||等待人工输入或外部 API 恢复</value></data>
+  <data name="Frontend.501" xml:space="preserve"><value>工作流节点||工作流节点</value></data>
+  <data name="Frontend.502" xml:space="preserve"><value>当前节点不可用||当前节点不可用</value></data>
+  <data name="Frontend.503" xml:space="preserve"><value>节点目录暂不可用||节点目录暂不可用</value></data>
+  <data name="Frontend.504" xml:space="preserve"><value>模型列表暂不可用||模型列表暂不可用</value></data>
+  <data name="Frontend.505" xml:space="preserve"><value>关联的 Function 选择参数已在模块更新后删除或不可用||关联的 Function 选择参数已在模块更新后删除或不可用</value></data>
+  <data name="Frontend.506" xml:space="preserve"><value>未选择时，AgentGroup 先继承群主的 PromptRange 模型；没有可用模型时才回退系统默认 Chat 模型。||未选择时，AgentGroup 先继承群主的 PromptRange 模型；没有可用模型时才回退系统默认 Chat 模型。</value></data>
 </root>

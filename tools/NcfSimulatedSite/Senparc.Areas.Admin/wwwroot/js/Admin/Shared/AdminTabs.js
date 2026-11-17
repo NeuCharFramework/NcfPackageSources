@@ -9,6 +9,8 @@
     var MAX_ADMIN_TABS = 16;
     var STORAGE_KEY = 'ncf.admin.pageTabs';
     var STRIPPED_PARAMS = { embedded: true, ncfShell: true, ncfOpen: true, ncfTab: true };
+    var moduleNameCache = Object.create(null);
+    var moduleNameRequests = Object.create(null);
 
     function textOf(name, fallback) {
         var bag = root.NCF_ADMIN_TABS_TEXT || {};
@@ -129,6 +131,105 @@
         } catch (error) {
             return '';
         }
+    }
+
+    function moduleUidForTab(tab, baseHref) {
+        return String(tab && tab.moduleUid || moduleUidFromUrl(
+            tab && (tab.address || tab.url),
+            baseHref)).trim();
+    }
+
+    function unwrapModuleDetail(response) {
+        var payload = response && response.data;
+        if (payload && Object.prototype.hasOwnProperty.call(payload, 'data')) {
+            payload = payload.data;
+        }
+        var module = payload && payload.xncfModule;
+        var register = payload && payload.xncfRegister;
+        return module && (module.menuName || module.name)
+            || register && (register.menuName || register.name)
+            || '';
+    }
+
+    function applyModuleName(state, moduleUid, moduleName, baseHref) {
+        var current = cloneState(state);
+        var changed = false;
+        current.tabs.forEach(function (tab) {
+            if (moduleUidForTab(tab, baseHref).toLowerCase() !== moduleUid.toLowerCase()) {
+                return;
+            }
+            if (tab.moduleUid !== moduleUid) {
+                tab.moduleUid = moduleUid;
+                changed = true;
+            }
+            if (tab.moduleName !== moduleName) {
+                tab.moduleName = moduleName;
+                changed = true;
+            }
+            var accentColor = accentColorFromUid(moduleUid);
+            if (tab.accentColor !== accentColor) {
+                tab.accentColor = accentColor;
+                changed = true;
+            }
+        });
+        return { state: current, changed: changed };
+    }
+
+    function requestModuleName(moduleUid, baseHref) {
+        var key = moduleUid.toLowerCase();
+        if (!moduleUid || moduleNameCache[key] || moduleNameRequests[key] ||
+            !root.service || typeof root.service.get !== 'function') {
+            return;
+        }
+        moduleNameRequests[key] = true;
+        root.service.get('/Admin/XncfModule/Start?handler=Detail&uid=' + encodeURIComponent(moduleUid))
+            .then(function (response) {
+                var moduleName = unwrapModuleDetail(response);
+                if (!moduleName) {
+                    return;
+                }
+                moduleNameCache[key] = moduleName;
+                var resolved = applyModuleName(snapshot(), moduleUid, moduleName, baseHref);
+                if (resolved.changed) {
+                    publish(resolved.state, 'module-name');
+                }
+            })
+            .catch(function (error) {
+                console.debug('[NCF][AdminTabs] Unable to load module name', error && error.message);
+            })
+            .finally(function () {
+                delete moduleNameRequests[key];
+            });
+    }
+
+    function resolveModuleNames(state, baseHref) {
+        var current = cloneState(state);
+        var changed = false;
+        var requested = Object.create(null);
+        current.tabs.forEach(function (tab) {
+            if (tab.isShell) {
+                return;
+            }
+            var moduleUid = moduleUidForTab(tab, baseHref);
+            if (!moduleUid) {
+                return;
+            }
+            var key = moduleUid.toLowerCase();
+            if (!tab.moduleUid) {
+                tab.moduleUid = moduleUid;
+                changed = true;
+            }
+            if (moduleNameCache[key] && tab.moduleName !== moduleNameCache[key]) {
+                tab.moduleName = moduleNameCache[key];
+                tab.accentColor = accentColorFromUid(moduleUid);
+                changed = true;
+            }
+            if (!requested[key]) {
+                requested[key] = true;
+                requestModuleName(moduleUid, baseHref);
+            }
+        });
+        return { state: current, changed: changed };
     }
 
     function hashSegment(value, seed) {
@@ -1011,6 +1112,8 @@
     }
 
     function publish(next, reason) {
+        var resolved = resolveModuleNames(next, root.location && root.location.href);
+        next = resolved.state;
         commitTabs(next);
         writeStorage(next);
         syncDocumentTitle(next);
@@ -1343,6 +1446,7 @@
         updateTabPageTitle: updateTabPageTitle,
         returnToSource: returnToSource,
         accentColorFromUid: accentColorFromUid,
+        moduleUidFromUrl: moduleUidFromUrl,
         tabScrollState: tabScrollState,
         shellPageHash: shellPageHash,
         shellAddress: shellAddress,

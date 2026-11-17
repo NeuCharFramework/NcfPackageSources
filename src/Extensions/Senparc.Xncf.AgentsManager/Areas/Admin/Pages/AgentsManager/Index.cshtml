@@ -436,18 +436,30 @@
                                                 {{ row.promptCommand }}
                                             </template>
                                         </el-table-column>
-                                        <el-table-column fixed="right" label="操作" width="350">
+                                        <el-table-column fixed="right" label="操作" width="210" class-name="table-actions-column">
                                             <template slot-scope="{ row }">
-                                                <el-button type="primary" size="mini"
-                                                    @@click="viewAgentParameters('agentGroupTask')">智能体参数</el-button>
                                                 <el-button type="primary" size="mini"
                                                     @@click="handleTaskView('agentGroupTask', row)">详情</el-button>
                                                 <el-button type="primary" size="mini"
                                                     @@click="handleTaskAgain('agentGroupTask', row)">再次执行</el-button>
-                                                <el-button type="warning" size="mini"
-                                                    @@click="handleTaskForceStop('agentGroupTask', row)">强制停止</el-button>
-                                                <el-button type="danger" size="mini"
-                                                    @@click="handleTaskDelet('agentGroupTask', row)">删除</el-button>
+                                                <el-tooltip content="更多操作" placement="top" :open-delay="180">
+                                                    <el-dropdown trigger="click" placement="bottom-end"
+                                                        @@command="handleTaskAction($event,'agentGroupTask',row)">
+                                                        <el-button type="text" size="mini" icon="el-icon-more"
+                                                            class="table-action-more" title="更多操作" aria-label="更多操作"></el-button>
+                                                        <el-dropdown-menu slot="dropdown">
+                                                            <el-dropdown-item command="parameters">
+                                                                <i class="el-icon-user"></i> 智能体参数
+                                                            </el-dropdown-item>
+                                                            <el-dropdown-item v-if="canForceStopTask(row)" command="force-stop">
+                                                                <i class="el-icon-video-pause"></i> 强制停止
+                                                            </el-dropdown-item>
+                                                            <el-dropdown-item command="delete" divided class="table-action-danger">
+                                                                <i class="el-icon-delete"></i> 删除
+                                                            </el-dropdown-item>
+                                                        </el-dropdown-menu>
+                                                    </el-dropdown>
+                                                </el-tooltip>
                                             </template>
                                         </el-table-column>
                                     </el-table>
@@ -861,18 +873,31 @@
                                 {{ row.enterAgentTemplateName }}
                             </template>
                         </el-table-column>
-                        <el-table-column fixed="right" label="操作" width="360">
+                        <el-table-column fixed="right" label="操作" width="190" class-name="table-actions-column">
                             <template slot-scope="{ row,$index }">
-                                <el-button type="primary" size="mini" :disabled="!row.enable"
-                                    @@click="handleElVisibleOpenBtn('drawerGroupStart',row)">启动</el-button>
-                                <el-button :type="row.enable ? 'warning' : 'success'" size="mini"
-                                    @@click="setGroupState(row)">{{ row.enable ? '停用' : '启用' }}</el-button>
                                 <el-button type="primary" size="mini"
                                     @@click="handleEditDrawerOpenBtn('drawerGroup',row)">编辑</el-button>
                                 <el-button type="primary" size="mini"
                                     @@click="handleGroupView('groupTable',row,$index)">详情</el-button>
-                                <el-button type="danger" size="mini"
-                                    @@click="handleGroupDelete('groupTable',row)">删除</el-button>
+                                <el-tooltip content="更多操作" placement="top" :open-delay="180">
+                                    <el-dropdown trigger="click" placement="bottom-end"
+                                        @@command="handleGroupAction($event,row,$index)">
+                                        <el-button type="text" size="mini" icon="el-icon-more"
+                                            class="table-action-more" title="更多操作" aria-label="更多操作"></el-button>
+                                        <el-dropdown-menu slot="dropdown">
+                                            <el-dropdown-item command="start" :disabled="!row.enable">
+                                                <i class="el-icon-video-play"></i> 启动
+                                            </el-dropdown-item>
+                                            <el-dropdown-item command="toggle">
+                                                <i :class="row.enable ? 'el-icon-video-pause' : 'el-icon-video-play'"></i>
+                                                {{ row.enable ? '停用' : '启用' }}
+                                            </el-dropdown-item>
+                                            <el-dropdown-item command="delete" divided class="table-action-danger">
+                                                <i class="el-icon-delete"></i> 删除
+                                            </el-dropdown-item>
+                                        </el-dropdown-menu>
+                                    </el-dropdown>
+                                </el-tooltip>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -948,18 +973,30 @@
                                 {{ row.promptCommand }}
                             </template>
                         </el-table-column>
-                        <el-table-column fixed="right" label="操作" width="350">
+                        <el-table-column fixed="right" label="操作" width="210" class-name="table-actions-column">
                             <template slot-scope="{ row }">
-                                <el-button type="primary" size="mini"
-                                    @@click="viewAgentParameters('groupTask')">智能体参数</el-button>
                                 <el-button type="primary" size="mini"
                                     @@click="handleTaskView('groupTask', row)">详情</el-button>
                                 <el-button type="primary" size="mini"
                                     @@click="handleTaskAgain('groupTask', row)">再次执行</el-button>
-                                <el-button type="warning" size="mini"
-                                    @@click="handleTaskForceStop('groupTask', row)">强制停止</el-button>
-                                <el-button type="danger" size="mini"
-                                    @@click="handleTaskDelet('groupTask', row)">删除</el-button>
+                                <el-tooltip content="更多操作" placement="top" :open-delay="180">
+                                    <el-dropdown trigger="click" placement="bottom-end"
+                                        @@command="handleTaskAction($event,'groupTask',row)">
+                                        <el-button type="text" size="mini" icon="el-icon-more"
+                                            class="table-action-more" title="更多操作" aria-label="更多操作"></el-button>
+                                        <el-dropdown-menu slot="dropdown">
+                                            <el-dropdown-item command="parameters">
+                                                <i class="el-icon-user"></i> 智能体参数
+                                            </el-dropdown-item>
+                                            <el-dropdown-item v-if="canForceStopTask(row)" command="force-stop">
+                                                <i class="el-icon-video-pause"></i> 强制停止
+                                            </el-dropdown-item>
+                                            <el-dropdown-item command="delete" divided class="table-action-danger">
+                                                <i class="el-icon-delete"></i> 删除
+                                            </el-dropdown-item>
+                                        </el-dropdown-menu>
+                                    </el-dropdown>
+                                </el-tooltip>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -1228,18 +1265,30 @@
                                 {{ row.promptCommand }}
                             </template>
                         </el-table-column>
-                        <el-table-column fixed="right" label="操作" width="350">
+                        <el-table-column fixed="right" label="操作" width="210" class-name="table-actions-column">
                             <template slot-scope="{ row,$index }">
-                                <el-button type="primary" size="mini"
-                                    @@click="viewAgentParameters('task', row)">智能体参数</el-button>
                                 <el-button type="primary" size="mini"
                                     @@click="handleTaskView('task', row, $index)">详情</el-button>
                                 <el-button type="primary" size="mini"
                                     @@click="handleTaskAgain('task', row)">再次执行</el-button>
-                                <el-button type="warning" size="mini"
-                                    @@click="handleTaskForceStop('task', row)">强制停止</el-button>
-                                <el-button type="danger" size="mini"
-                                    @@click="handleTaskDelet('task', row)">删除</el-button>
+                                <el-tooltip content="更多操作" placement="top" :open-delay="180">
+                                    <el-dropdown trigger="click" placement="bottom-end"
+                                        @@command="handleTaskAction($event,'task',row,$index)">
+                                        <el-button type="text" size="mini" icon="el-icon-more"
+                                            class="table-action-more" title="更多操作" aria-label="更多操作"></el-button>
+                                        <el-dropdown-menu slot="dropdown">
+                                            <el-dropdown-item command="parameters">
+                                                <i class="el-icon-user"></i> 智能体参数
+                                            </el-dropdown-item>
+                                            <el-dropdown-item v-if="canForceStopTask(row)" command="force-stop">
+                                                <i class="el-icon-video-pause"></i> 强制停止
+                                            </el-dropdown-item>
+                                            <el-dropdown-item command="delete" divided class="table-action-danger">
+                                                <i class="el-icon-delete"></i> 删除
+                                            </el-dropdown-item>
+                                        </el-dropdown-menu>
+                                    </el-dropdown>
+                                </el-tooltip>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -1839,13 +1888,30 @@
                 <el-table-column label="状态" width="75">
                     <template slot-scope="{ row }"><el-tag :type="row.enable ? 'success' : 'info'" size="mini">{{ row.enable ? '启用' : '停用' }}</el-tag></template>
                 </el-table-column>
-                <el-table-column label="操作" width="260" fixed="right">
+                <el-table-column label="操作" width="120" fixed="right" class-name="table-actions-column">
                     <template slot-scope="{ row }">
                         <el-button type="primary" size="mini" @@click="openRemoteAgentEditor(row)">编辑</el-button>
-                        <el-button size="mini" :loading="isRemoteAgentTesting(row.id)" :disabled="remoteAgentBatchTesting"
-                            @@click="testRemoteAgent(row)">测试</el-button>
-                        <el-button size="mini" @@click="setRemoteAgentEnable(row,!row.enable)">{{ row.enable ? '停用' : '启用' }}</el-button>
-                        <el-button type="danger" size="mini" @@click="deleteRemoteAgent(row)">删除</el-button>
+                        <el-tooltip content="更多操作" placement="top" :open-delay="180">
+                            <el-dropdown trigger="click" placement="bottom-end"
+                                @@command="handleRemoteAgentAction($event,row)">
+                                <el-button type="text" size="mini" icon="el-icon-more"
+                                    class="table-action-more" title="更多操作" aria-label="更多操作"></el-button>
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item command="test"
+                                        :disabled="remoteAgentBatchTesting || isRemoteAgentTesting(row.id)">
+                                        <i :class="isRemoteAgentTesting(row.id) ? 'el-icon-loading' : 'el-icon-connection'"></i>
+                                        测试连接
+                                    </el-dropdown-item>
+                                    <el-dropdown-item command="toggle">
+                                        <i :class="row.enable ? 'el-icon-video-pause' : 'el-icon-video-play'"></i>
+                                        {{ row.enable ? '停用' : '启用' }}
+                                    </el-dropdown-item>
+                                    <el-dropdown-item command="delete" divided class="table-action-danger">
+                                        <i class="el-icon-delete"></i> 删除
+                                    </el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                        </el-tooltip>
                     </template>
                 </el-table-column>
             </el-table>

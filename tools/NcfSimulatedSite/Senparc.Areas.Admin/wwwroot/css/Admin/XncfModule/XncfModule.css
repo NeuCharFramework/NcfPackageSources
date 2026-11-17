@@ -316,6 +316,14 @@
     gap: 8px;
 }
 
+.module-insight-summary .el-tag {
+    height: auto;
+    min-height: 28px;
+    line-height: 1.4;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
 .module-insight-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -324,6 +332,8 @@
 }
 
 .module-insight-grid > div {
+    min-width: 0;
+    overflow: hidden;
     padding: 12px;
     border: 1px solid #ebeef5;
     border-radius: 6px;
@@ -339,6 +349,12 @@
     font-size: 12px;
 }
 
+.module-insight-grid strong {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
 .module-re-auth {
     max-width: 520px;
     display: flex;
@@ -348,11 +364,15 @@
 
 .module-column-chip {
     display: inline-block;
+    max-width: 100%;
     margin: 2px 6px 2px 0;
     padding: 2px 6px;
     background: #f0f2f5;
     border-radius: 3px;
     font-size: 12px;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    vertical-align: top;
 }
 
 .pivot-empty {

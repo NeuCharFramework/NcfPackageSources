@@ -249,7 +249,22 @@
 .workflow-node-picker-filters > .el-input, .workflow-node-picker-filters > .el-select { width: 100%; }
 
 .palette-system-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 3px; }
-.palette-system-grid .el-button { width: 100%; margin: 0; padding-inline: 7px; }
+.palette-system-grid .el-button {
+    width: 100%;
+    min-width: 0;
+    min-height: 46px;
+    height: auto;
+    margin: 0;
+    padding: 8px 7px;
+    line-height: 1.2;
+    text-align: left;
+    white-space: normal;
+}
+.palette-system-grid .el-button > span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    white-space: normal;
+}
 .palette-system-grid .el-button:last-child:nth-child(odd) { grid-column: 1 / -1; }
 .workflow-node-picker .node-picker-system-button,
 .workflow-node-picker .palette-item { border-left-width: 3px; }

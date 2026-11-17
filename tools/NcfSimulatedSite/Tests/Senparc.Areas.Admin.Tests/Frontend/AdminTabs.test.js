@@ -30,6 +30,15 @@ test('/Admin 与首页是同一个标签', function () {
     assert.equal(home.id, index.id);
 });
 
+test('XNCF URLs resolve module UIDs from uid or moduleUid query parameters', function () {
+    assert.equal(
+        tabs.moduleUidFromUrl('/Admin/XncfModule/Start?uid=module-a', shellHref),
+        'module-a');
+    assert.equal(
+        tabs.moduleUidFromUrl('/Admin/NeuCharPivot/Access?moduleUid=module-b', shellHref),
+        'module-b');
+});
+
 test('登录、外链和 Razor handler 不进入标签', function () {
     assert.equal(tabs.parseAdminUrl('/Admin/Login?handler=Logout', shellHref), null);
     assert.equal(tabs.parseAdminUrl('https://example.com/Admin/Index', shellHref), null);

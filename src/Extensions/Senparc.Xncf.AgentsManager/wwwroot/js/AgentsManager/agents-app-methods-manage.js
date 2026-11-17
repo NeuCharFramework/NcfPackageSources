@@ -597,6 +597,46 @@ var AgentsAppMethodsManage = {
         this.syncHashRoute({ tab: 'third', taskId: item.id })
       }
     },
+    canForceStopTask(row = {}) {
+      const status = Number(row?.status)
+      return status === 0 || status === 1 || status === 2
+    },
+    handleTaskAction(action, optype, row = {}, index = 0) {
+      switch (action) {
+        case 'parameters':
+          return this.viewAgentParameters(optype, row)
+        case 'force-stop':
+          return this.handleTaskForceStop(optype, row)
+        case 'delete':
+          return this.handleTaskDelet(optype, row)
+        default:
+          return undefined
+      }
+    },
+    handleGroupAction(action, row = {}, index = 0) {
+      switch (action) {
+        case 'start':
+          return this.handleElVisibleOpenBtn('drawerGroupStart', row)
+        case 'toggle':
+          return this.setGroupState(row)
+        case 'delete':
+          return this.handleGroupDelete('groupTable', row)
+        default:
+          return undefined
+      }
+    },
+    handleRemoteAgentAction(action, row = {}) {
+      switch (action) {
+        case 'test':
+          return this.testRemoteAgent(row)
+        case 'toggle':
+          return this.setRemoteAgentEnable(row, !row.enable)
+        case 'delete':
+          return this.deleteRemoteAgent(row)
+        default:
+          return undefined
+      }
+    },
     //Legacy comment translated to English.
     returnGroup(clickType, fromHash = false) {
       if (!fromHash && !this.isApplyingHashRoute && clickType === 'groupTask') {

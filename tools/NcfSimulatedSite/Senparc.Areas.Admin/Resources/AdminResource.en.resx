@@ -995,6 +995,9 @@
   <data name="Xncf.NeuCharPivotAccessControl" xml:space="preserve"><value>NeuCharPivot - Access control</value></data>
   <data name="Xncf.ModuleNotLoaded" xml:space="preserve"><value>The module is not loaded.</value></data>
   <data name="Xncf.PasswordRequired" xml:space="preserve"><value>Enter the password.</value></data>
+  <data name="Xncf.Function" xml:space="preserve"><value>Function</value></data>
+  <data name="Xncf.Key" xml:space="preserve"><value>Key</value></data>
+  <data name="Xncf.NeuCharPivot" xml:space="preserve"><value>NeuCharPivot</value></data>
   <data name="Admin.Pagination.Goto" xml:space="preserve"><value>Go to</value></data>
   <data name="Admin.Pagination.PageSize" xml:space="preserve"><value>per page</value></data>
   <data name="Admin.Pagination.Total" xml:space="preserve"><value>{total} total</value></data>
@@ -1535,4 +1538,18 @@
   <data name="Frontend.585" xml:space="preserve"><value>批量操作完成，影响 {0} 条策略||Bulk operation completed; {0} policies affected</value></data>
 
   <data name="Frontend.586" xml:space="preserve"><value>批量操作失败||Bulk operation failed</value></data>
+
+  <data name="Frontend.600" xml:space="preserve"><value>选择在 Footer 显示的模块提醒。设置保存在当前账号的浏览器中。||Choose which module reminders appear in the Footer. The setting is saved in this account’s browser.</value></data>
+  <data name="Frontend.601" xml:space="preserve"><value>当前没有模块提供纽铃信息。||No modules are currently providing NeuBell information.</value></data>
+  <data name="Frontend.602" xml:space="preserve"><value>消费全部||Consume all</value></data>
+  <data name="Frontend.603" xml:space="preserve"><value>消费||Consume</value></data>
+  <data name="Frontend.604" xml:space="preserve"><value>NeuBell 提醒||NeuBell reminders</value></data>
+  <data name="Frontend.605" xml:space="preserve"><value>关闭全部||Close all</value></data>
+  <data name="Frontend.606" xml:space="preserve"><value>收起||Collapse</value></data>
+  <data name="Frontend.607" xml:space="preserve"><value>还有 {0} 条，点击展开||{0} more; click to expand</value></data>
+  <data name="Frontend.608" xml:space="preserve"><value>NeuBell 测试提醒||NeuBell test reminder</value></data>
+  <data name="Frontend.609" xml:space="preserve"><value>由 Function 发送；可在 Function 中消费本条，或清除当前订阅全部提醒。||Sent by a Function; consume this item from the Function or clear all reminders in the current subscription.</value></data>
+  <data name="Frontend.610" xml:space="preserve"><value>DesktopBridge 远程连接审核||DesktopBridge remote connection review</value></data>
+  <data name="Frontend.611" xml:space="preserve"><value>有 {0} 个设备配对请求等待处理。||{0} device pairing requests are awaiting review.</value></data>
+  <data name="Frontend.612" xml:space="preserve"><value>当前没有待处理的设备配对请求。||No device pairing requests are pending.</value></data>
 </root>

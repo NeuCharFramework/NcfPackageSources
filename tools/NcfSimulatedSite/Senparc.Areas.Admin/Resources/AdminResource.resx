@@ -1039,6 +1039,9 @@
   <data name="Xncf.NeuCharPivotAccessControl" xml:space="preserve"><value>NeuCharPivot - 访问控制</value></data>
   <data name="Xncf.ModuleNotLoaded" xml:space="preserve"><value>模块未加载。</value></data>
   <data name="Xncf.PasswordRequired" xml:space="preserve"><value>请输入密码。</value></data>
+  <data name="Xncf.Function" xml:space="preserve"><value>Function</value></data>
+  <data name="Xncf.Key" xml:space="preserve"><value>Key</value></data>
+  <data name="Xncf.NeuCharPivot" xml:space="preserve"><value>NeuCharPivot</value></data>
   <data name="Frontend.109" xml:space="preserve"><value>GET（不发送请求体，数据经地址占位符传递）||GET (no body; data is passed through URL placeholders)</value></data>
   <data name="Frontend.110" xml:space="preserve"><value>NeuBell WebHook 设置||NeuBell WebHook settings</value></data>
   <data name="Frontend.111" xml:space="preserve"><value>POST（默认，携带 JSON 请求体）||POST (default, with a JSON body)</value></data>
@@ -1578,4 +1581,18 @@
   <data name="Frontend.585" xml:space="preserve"><value>批量操作完成，影响 {0} 条策略||批量操作完成，影响 {0} 条策略</value></data>
 
   <data name="Frontend.586" xml:space="preserve"><value>批量操作失败||批量操作失败</value></data>
+
+  <data name="Frontend.600" xml:space="preserve"><value>选择在 Footer 显示的模块提醒。设置保存在当前账号的浏览器中。||选择在 Footer 显示的模块提醒。设置保存在当前账号的浏览器中。</value></data>
+  <data name="Frontend.601" xml:space="preserve"><value>当前没有模块提供纽铃信息。||当前没有模块提供纽铃信息。</value></data>
+  <data name="Frontend.602" xml:space="preserve"><value>消费全部||消费全部</value></data>
+  <data name="Frontend.603" xml:space="preserve"><value>消费||消费</value></data>
+  <data name="Frontend.604" xml:space="preserve"><value>NeuBell 提醒||NeuBell 提醒</value></data>
+  <data name="Frontend.605" xml:space="preserve"><value>关闭全部||关闭全部</value></data>
+  <data name="Frontend.606" xml:space="preserve"><value>收起||收起</value></data>
+  <data name="Frontend.607" xml:space="preserve"><value>还有 {0} 条，点击展开||还有 {0} 条，点击展开</value></data>
+  <data name="Frontend.608" xml:space="preserve"><value>NeuBell 测试提醒||NeuBell 测试提醒</value></data>
+  <data name="Frontend.609" xml:space="preserve"><value>由 Function 发送；可在 Function 中消费本条，或清除当前订阅全部提醒。||由 Function 发送；可在 Function 中消费本条，或清除当前订阅全部提醒。</value></data>
+  <data name="Frontend.610" xml:space="preserve"><value>DesktopBridge 远程连接审核||DesktopBridge 远程连接审核</value></data>
+  <data name="Frontend.611" xml:space="preserve"><value>有 {0} 个设备配对请求等待处理。||有 {0} 个设备配对请求等待处理。</value></data>
+  <data name="Frontend.612" xml:space="preserve"><value>当前没有待处理的设备配对请求。||当前没有待处理的设备配对请求。</value></data>
 </root>

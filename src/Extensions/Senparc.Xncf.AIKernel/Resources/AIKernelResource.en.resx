@@ -893,4 +893,7 @@
 
 
   <data name="Frontend.400" xml:space="preserve"><value>从 NeuChar AI 导入（DevId:{0}）||Imported from NeuChar AI (DevId: {0})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+
+  <data name="Frontend.100" xml:space="preserve"><value>创建微调任务||Create fine-tuning task</value></data>
+  <data name="Frontend.101" xml:space="preserve"><value>使用已批准的本地模型、数据集和训练参数创建微调任务。Worker、模型和数据集会自动载入，训练参数带有默认值，Workflow 可以按这些默认值直接运行。||Create a fine-tuning task with an approved local model, dataset, and training parameters. The Worker, model, and dataset load automatically, training parameters have defaults, and Workflow can run with those defaults.</value></data>
 </root>
