@@ -936,14 +936,14 @@ var app = new Vue({
                         const res = await service.post(serviceURL, requestData);
                         const success = res && (res.data === true || (res.data && (res.data.success === true || res.data.data === true)));
                         if (success) {
-                            that.$notify({ title: '成功', message: `已保存 ${fileIds.length} 份资料关联；请点击“向量化”使召回结果更新。`, type: 'success', duration: 3500 });
+                            that.$notify({ title: ncfST('Frontend.048'), message: ncfST('Frontend.186'), type: 'success', duration: 3500 });
                             that.visible.drawerGroup = false;
                             that.getList();
                         } else {
-                            that.$notify({ title: '失败', message: '文件导入失败，请稍后重试。', type: 'error', duration: 3000 });
+                            that.$notify({ title: ncfST('Frontend.049'), message: ncfST('Frontend.144'), type: 'error', duration: 3000 });
                         }
                     } catch (err) {
-                        that.$notify({ title: '错误', message: '文件导入失败，请稍后重试。', type: 'error', duration: 3000 });
+                        that.$notify({ title: ncfST('Frontend.049'), message: ncfST('Frontend.144'), type: 'error', duration: 3000 });
                     }
                 } else if (contentType === 1) {
                     const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseAppService/Xncf.KnowledgeBase_KnowledgeBaseAppService.SetKnowledgeBaseDetail';
@@ -955,16 +955,16 @@ var app = new Vue({
                     try {
                         const res = await service.post(serviceURL, requestData);
                         const success = res && (res.data === true || (res.data && (res.data.success === true || res.data.data === true)));
-                        if (!success) throw new Error('内容保存失败');
-                        that.$notify({ title: '成功', message: '知识库文本内容已同步', type: 'success', duration: 2000 });
+                        if (!success) throw new Error(ncfST('Frontend.148'));
+                        that.$notify({ title: ncfST('Frontend.048'), message: ncfST('Frontend.143'), type: 'success', duration: 2000 });
                         that.visible.drawerGroup = false;
                         that.getList();
                     } catch (err) {
-                        that.$notify({ title: '错误', message: '内容保存失败，请稍后重试。', type: 'error', duration: 3000 });
+                        that.$notify({ title: ncfST('Frontend.049'), message: ncfST('Frontend.148'), type: 'error', duration: 3000 });
                     }
                 } else {
                     that.$notify({
-                        title: '尚未支持',
+                        title: ncfST('Frontend.158'),
                         message: '外部数据采集需要单独配置抓取、权限与清洗策略，本版本不会伪造保存成功。',
                         type: 'warning',
                         duration: 4000
