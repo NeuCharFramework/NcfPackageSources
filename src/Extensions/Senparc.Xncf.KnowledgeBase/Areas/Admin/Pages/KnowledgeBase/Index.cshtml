@@ -1,7 +1,7 @@
 @page
 @model Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBase.IndexModel
 @{
-    ViewData["Title"] = "知识库管理";
+    ViewData["Title"] = XR["Area.KnowledgeBase.Management"];
     Layout = "_Layout_Vue";
 }
 
@@ -44,8 +44,8 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
-    <el-breadcrumb-item>知识库管理</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Module.KnowledgeBase.MenuName"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.KnowledgeBase.Management"]</el-breadcrumb-item>
 }
 
 <div class="knowledge-base-layout">
@@ -54,14 +54,14 @@
         <nav class="knowledge-base-nav-panel">
             <ul class="knowledge-base-nav-list">
                 <li class="knowledge-base-nav-item" :class="{ 'is-active': activeNavKey === 'list' }" @@click="onNavClick('list')">
-                    <i class="el-icon-notebook-2"></i><span>知识库列表</span>
+                    <i class="el-icon-notebook-2"></i><span>{{ ncfST('Frontend.234') }}</span>
                 </li>
                 <li class="knowledge-base-nav-item" :class="{ 'is-active': activeNavKey === 'recall' }" @@click="onNavClick('recall')">
-                    <i class="el-icon-search"></i><span>召回测试</span>
+                    <i class="el-icon-search"></i><span>@XR["Area.KnowledgeBase.RecallTest"]</span>
                 </li>
                 <li class="knowledge-base-nav-item is-divider"></li>
                 <li class="knowledge-base-nav-item" :class="{ 'is-active': activeNavKey === 'guide' }" @@click="onNavClick('guide')">
-                    <i class="el-icon-question"></i><span>使用指南</span>
+                    <i class="el-icon-question"></i><span>{{ ncfST('Frontend.233') }}</span>
                 </li>
             </ul>
         </nav>
@@ -75,27 +75,27 @@
                 <div class="kb-top-search">
                     <el-input v-model="keyword"
                               size="small"
-                              placeholder="搜索知识库名称"
+                              :placeholder="ncfST('Frontend.214')"
                               prefix-icon="el-icon-search"
                               clearable
                               @@keyup.enter.native="handleSearch()">
                     </el-input>
                 </div>
                 <div class="kb-top-actions">
-                    <el-button size="small" icon="el-icon-refresh" @@click="handleSearch()" title="刷新"></el-button>
-                    <el-popover placement="bottom" title="筛选列" trigger="click" width="140">
+                    <el-button size="small" icon="el-icon-refresh" @@click="handleSearch()" :title="ncfST('Frontend.192')"></el-button>
+                    <el-popover placement="bottom" :title="ncfST('Frontend.085')" trigger="click" width="140">
                         <el-checkbox-group v-model="checkedColumns" size="mini">
                             <el-checkbox v-for="item in checkBoxGroup" :key="item" :label="item" :value="item"></el-checkbox>
                         </el-checkbox-group>
-                        <el-button slot="reference" size="small" icon="el-icon-s-operation" title="筛选列"></el-button>
+                        <el-button slot="reference" size="small" icon="el-icon-s-operation" :title="ncfST('Frontend.085')"></el-button>
                     </el-popover>
-                    <el-button type="primary" size="small" icon="el-icon-plus" @@click="handleEdit('','','add')">新建知识库</el-button>
+                    <el-button type="primary" size="small" icon="el-icon-plus" @@click="handleEdit('','','add')">{{ ncfST('Frontend.215') }}</el-button>
                     <ncf-doc-help topic="knowledge.create"></ncf-doc-help>
                 </div>
             </div>
 
             <el-alert class="kb-guide-alert"
-                      title="新手操作顺序：新建知识库并配置 Embedding 与向量库 → 在“配置”中关联资料 → 点击“向量化” → 到“召回测试”核验结果。"
+                      :title="ncfST('Frontend.216')"
                       type="info" :closable="false" show-icon>
             </el-alert>
 
@@ -113,12 +113,12 @@
                     <template slot="empty">
                         <div class="kb-empty">
                             <i class="el-icon-notebook-2"></i>
-                            <strong>暂无知识库</strong>
-                            <el-button type="primary" size="mini" @@click="handleEdit('','','add')">新建知识库</el-button>
+                            <strong>{{ ncfST('Frontend.217') }}</strong>
+                            <el-button type="primary" size="mini" @@click="handleEdit('','','add')">{{ ncfST('Frontend.215') }}</el-button>
                         </div>
                     </template>
                     <el-table-column type="selection" width="48"></el-table-column>
-                    <el-table-column label="名称" min-width="200" sortable prop="name" :filters="filterTableHeader.name" :filter-method="filterHandler">
+                    <el-table-column :label="ncfST('Frontend.011')" min-width="200" sortable prop="name" :filters="filterTableHeader.name" :filter-method="filterHandler">
                         <template slot-scope="scope">
                             <div class="kb-name-cell">
                                 <span class="kb-name-main" :title="scope.row.name">{{ scope.row.name }}</span>
@@ -126,10 +126,10 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column label="向量化状态" width="120" align="center">
+                    <el-table-column :label="ncfST('Frontend.197')" width="120" align="center">
                         <template slot-scope="scope">
-                            <el-tag v-if="isKnowledgeBaseReady(scope.row)" size="mini" type="success" class="kb-status-tag">已向量化</el-tag>
-                            <el-tag v-else size="mini" type="info" class="kb-status-tag">未向量化</el-tag>
+                            <el-tag v-if="isKnowledgeBaseReady(scope.row)" size="mini" type="success" class="kb-status-tag">{{ ncfST('Frontend.205') }}</el-tag>
+                            <el-tag v-else size="mini" type="info" class="kb-status-tag">{{ ncfST('Frontend.220') }}</el-tag>
                         </template>
                     </el-table-column>
                     <el-table-column v-if="colData[0].istrue" prop="embeddingModelId" align="left" label="Embedding模型Id" width="140" sortable :filters="filterTableHeader.embeddingModelId" :filter-method="filterHandler"></el-table-column>
