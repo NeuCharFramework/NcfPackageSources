@@ -1117,10 +1117,10 @@
     <value>Usar conectores autorizados por cada Agent</value>
   </data>
   <data name="Frontend.321" xml:space="preserve">
-    <value>Seleccione las conversaciones a eliminar!</value>
+    <value>¡Selecciona primero las conversaciones que deseas eliminar!</value>
   </data>
   <data name="Frontend.322" xml:space="preserve">
-    <value>¡Marque la casilla "Confirmar eliminación" para confirmar la eliminación!</value>
+    <value>Marca la casilla «Confirmar eliminación» para confirmar.</value>
   </data>
   <data name="Frontend.323" xml:space="preserve">
     <value>No se proporcionó el ID del grupo</value>
@@ -1138,16 +1138,16 @@
     <value>No se proporcionó el ID de la tarea</value>
   </data>
   <data name="Frontend.328" xml:space="preserve">
-    <value>No se encontró ninguna tarea que se pueda iniciar</value>
+    <value>No se encontró ninguna tarea iniciable</value>
   </data>
   <data name="Frontend.329" xml:space="preserve">
-    <value>Inicio por lotes finalizado: {0} correctos, {1} omitidos</value>
+    <value>Inicio por lotes terminado: {0} correctas, {1} omitidas</value>
   </data>
   <data name="Frontend.330" xml:space="preserve">
-    <value>Detención forzada finalizada: {0} correctas, {1} omitidas</value>
+    <value>Detención forzada terminada: {0} correctas, {1} omitidas</value>
   </data>
   <data name="Frontend.331" xml:space="preserve">
-    <value>Eliminación de tareas finalizada: {0} correctas</value>
+    <value>Eliminación de tareas terminada: {0} correctas</value>
   </data>
   <data name="Agents.Error.MissingRunRequest" xml:space="preserve">
     <value>No se proporcionó ninguna solicitud de ejecución de grupo de chat.</value>
@@ -1502,15 +1502,15 @@
   </data>
 
 
-  <data name="Frontend.332" xml:space="preserve"><value>An A2A Agent Card exposes only the name, description, and skills; it does not expose Prompts, secrets, or internal tools.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.333" xml:space="preserve"><value>A2A public service</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.334" xml:space="preserve"><value>Remote A2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.335" xml:space="preserve"><value>Remote A2A Agent</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.336" xml:space="preserve"><value>A2A:Secrets:key-name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.337" xml:space="preserve"><value>Agent Card name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.338" xml:space="preserve"><value>Agent Card URL</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.339" xml:space="preserve"><value>The Agent template has no authorized connectors; selecting one here will not call it.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.340" xml:space="preserve"><value>When a Group has Human members, it pauses for a text reply when the Human turn is reached.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.332" xml:space="preserve"><value>Una A2A Agent Card solo expone el nombre, la descripción y las habilidades; no expone Prompts, secretos ni herramientas internas.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.333" xml:space="preserve"><value>Servicio público A2A</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.334" xml:space="preserve"><value>A2A remoto</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.335" xml:space="preserve"><value>Agent A2A remoto</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.336" xml:space="preserve"><value>A2A:Secrets:nombre-de-clave</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.337" xml:space="preserve"><value>Nombre de la Agent Card</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.338" xml:space="preserve"><value>URL de la Agent Card</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.339" xml:space="preserve"><value>La plantilla de Agent no tiene conectores autorizados; seleccionarlo aquí no lo invocará.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.340" xml:space="preserve"><value>Cuando un grupo tiene miembros Human, se pausa para una respuesta de texto al llegar al turno de Human.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.341" xml:space="preserve"><value>HIL level</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.342" xml:space="preserve"><value>Human does not call a model; this binding preserves the system Agent task policy and follows the group task by default.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.343" xml:space="preserve"><value>Human participant</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
