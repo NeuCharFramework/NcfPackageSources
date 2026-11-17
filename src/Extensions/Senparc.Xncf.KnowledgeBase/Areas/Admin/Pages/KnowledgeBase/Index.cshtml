@@ -299,127 +299,127 @@
                  size="small"
                  label-position="right"
                  label-width="120px">
-            <el-form-item label="名称" prop="name">
-                <el-input v-model="dialog.data.name" clearable placeholder="请输入知识库名称" />
+            <el-form-item :label="ncfST('Frontend.011')" prop="name">
+                <el-input v-model="dialog.data.name" clearable :placeholder="ncfST('Frontend.243')" />
             </el-form-item>
 
-            <el-form-item label="Embedding模型" prop="embeddingModelId">
+            <el-form-item :label="ncfST('Frontend.177')" prop="embeddingModelId">
                 <el-select v-model="dialog.data.embeddingModelId"
                            class="kb-edit-select"
                            popper-class="kb-edit-select-dropdown"
                            clearable
                            filterable
-                           placeholder="请选择 Embedding 模型"
+                           :placeholder="ncfST('Frontend.244')"
                            style="width: 100%;">
                     <el-option v-for="item in embeddingModelData"
                                :key="item.id"
-                               :label="formatSelectLabel(item, '模型')"
+                               :label="formatSelectLabel(item, ncfST('Frontend.203'))"
                                :value="item.id">
                     </el-option>
                 </el-select>
             </el-form-item>
 
-            <el-form-item label="向量数据库" prop="vectorDBId">
+            <el-form-item :label="ncfST('Frontend.198')" prop="vectorDBId">
                 <el-select v-model="dialog.data.vectorDBId"
                            class="kb-edit-select"
                            popper-class="kb-edit-select-dropdown"
                            clearable
                            filterable
-                           placeholder="请选择 Redis 或 Qdrant 向量库"
+                           :placeholder="ncfST('Frontend.245')"
                            style="width: 100%;">
                     <el-option v-for="item in vectorDBData"
                                :key="item.id"
-                               :label="formatSelectLabel(item, '向量库')"
+                               :label="formatSelectLabel(item, ncfST('Frontend.198'))"
                                :value="item.id">
                     </el-option>
                 </el-select>
-                <div v-if="!vectorDBData.length" class="kb-edit-form-inline-tip">当前没有可用的持久化向量库。请先在 AIKernel 中配置 Redis 或 Qdrant（Memory 内存库不可用于知识库）。</div>
+                <div v-if="!vectorDBData.length" class="kb-edit-form-inline-tip">{{ ncfST('Frontend.208') }}</div>
             </el-form-item>
 
-            <el-form-item label="对话模型" prop="chatModelId">
+            <el-form-item :label="ncfST('Frontend.203')" prop="chatModelId">
                 <el-select v-model="dialog.data.chatModelId"
                            class="kb-edit-select"
                            popper-class="kb-edit-select-dropdown"
                            clearable
                            filterable
-                           placeholder="请选择对话模型"
+                           :placeholder="ncfST('Frontend.247')"
                            style="width: 100%;">
                     <el-option v-for="item in chatModelData"
                                :key="item.id"
-                               :label="formatSelectLabel(item, '模型')"
+                               :label="formatSelectLabel(item, ncfST('Frontend.203'))"
                                :value="item.id">
                     </el-option>
                 </el-select>
             </el-form-item>
 
-            <el-divider content-position="left">检索与切片</el-divider>
+            <el-divider content-position="left">{{ ncfST('Frontend.223') }}</el-divider>
 
-            <el-form-item label="切片策略" prop="retrievalConfig.chunkingStrategy">
+            <el-form-item :label="ncfST('Frontend.191')" prop="retrievalConfig.chunkingStrategy">
                 <el-select v-model="dialog.data.retrievalConfig.chunkingStrategy"
                            class="kb-edit-select"
-                           placeholder="请选择切片策略"
+                           :placeholder="ncfST('Frontend.246')"
                            style="width: 100%;">
-                    <el-option label="固定长度（默认）" value="Fixed"></el-option>
-                    <el-option label="递归结构化（长文推荐）" value="Recursive"></el-option>
-                    <el-option label="按段落" value="Paragraph"></el-option>
+                    <el-option :label="ncfST('Frontend.199')" value="Fixed"></el-option>
+                    <el-option :label="ncfST('Frontend.256')" value="Recursive"></el-option>
+                    <el-option :label="ncfST('Frontend.211')" value="Paragraph"></el-option>
                 </el-select>
             </el-form-item>
 
-            <el-form-item label="切片大小 / 重叠" prop="retrievalConfig.chunkSize">
+            <el-form-item :label="ncfST('Frontend.190')" prop="retrievalConfig.chunkSize">
                 <div class="kb-chunk-size-row">
                     <el-input-number v-model="dialog.data.retrievalConfig.chunkSize"
                                      :min="100" :max="8000" :step="100" size="small" controls-position="right"></el-input-number>
-                    <span class="kb-chunk-size-unit">字符 · 重叠</span>
+                    <span class="kb-chunk-size-unit">{{ ncfST('Frontend.201') }}</span>
                     <el-input-number v-model="dialog.data.retrievalConfig.chunkOverlap"
                                      :min="0" :max="4000" :step="20" size="small" controls-position="right"></el-input-number>
-                    <span class="kb-chunk-size-unit">字符</span>
+                    <span class="kb-chunk-size-unit">{{ ncfST('Frontend.201') }}</span>
                 </div>
             </el-form-item>
 
-            <el-form-item label="重排（Re-ranking）" prop="retrievalConfig.rerankMode">
+            <el-form-item :label="ncfST('Frontend.259')" prop="retrievalConfig.rerankMode">
                 <el-select v-model="dialog.data.retrievalConfig.rerankMode"
                            class="kb-edit-select"
-                           placeholder="请选择重排模式"
+                           :placeholder="ncfST('Frontend.248')"
                            style="width: 100%;">
-                    <el-option label="关闭（默认）" value="None"></el-option>
-                    <el-option label="词法混合（无额外模型调用）" value="Lexical"></el-option>
-                    <el-option label="LLM 重排（使用对话模型）" value="Llm"></el-option>
+                    <el-option :label="ncfST('Frontend.188')" value="None"></el-option>
+                    <el-option :label="ncfST('Frontend.240')" value="Lexical"></el-option>
+                    <el-option :label="ncfST('Frontend.179')" value="Llm"></el-option>
                 </el-select>
             </el-form-item>
 
-            <el-form-item v-if="dialog.data.retrievalConfig.rerankMode === 'Llm'" label="重排模型">
+            <el-form-item v-if="dialog.data.retrievalConfig.rerankMode === 'Llm'" :label="ncfST('Frontend.258')">
                 <el-select v-model="dialog.data.retrievalConfig.rerankModelId"
                            class="kb-edit-select"
                            clearable
                            filterable
-                           placeholder="留空则使用本知识库的对话模型"
+                           :placeholder="ncfST('Frontend.232')"
                            style="width: 100%;">
                     <el-option v-for="item in chatModelData"
                                :key="item.id"
-                               :label="formatSelectLabel(item, '模型')"
+                               :label="formatSelectLabel(item, ncfST('Frontend.203'))"
                                :value="item.id">
                     </el-option>
                 </el-select>
             </el-form-item>
 
-            <el-form-item v-if="dialog.data.retrievalConfig.rerankMode !== 'None'" label="重排候选数">
+            <el-form-item v-if="dialog.data.retrievalConfig.rerankMode !== 'None'" :label="ncfST('Frontend.257')">
                 <div class="kb-chunk-size-row">
                     <el-input-number v-model="dialog.data.retrievalConfig.rerankCandidateCount"
                                      :min="5" :max="100" :step="5" size="small" controls-position="right"></el-input-number>
-                    <span class="kb-chunk-size-unit">个候选（先取候选再重排出 Top K）</span>
+                    <span class="kb-chunk-size-unit">{{ ncfST('Frontend.181') }}</span>
                 </div>
             </el-form-item>
 
-            <el-form-item v-if="dialog.data.retrievalConfig.rerankMode === 'Lexical'" label="词法权重">
+            <el-form-item v-if="dialog.data.retrievalConfig.rerankMode === 'Lexical'" :label="ncfST('Frontend.238')">
                 <div class="kb-chunk-size-row">
                     <el-slider v-model="dialog.data.retrievalConfig.lexicalWeight"
                                :min="0" :max="1" :step="0.05"
                                style="width: 180px;"></el-slider>
-                    <span class="kb-chunk-size-unit">{{ dialog.data.retrievalConfig.lexicalWeight }}（词法分数在融合得分中的占比）</span>
+                    <span class="kb-chunk-size-unit">{{ dialog.data.retrievalConfig.lexicalWeight }}{{ ncfST('Frontend.268') }}</span>
                 </div>
             </el-form-item>
 
-            <el-form-item label="内容" prop="content">
+            <el-form-item :label="ncfST('Frontend.090')" prop="content">
                 <el-input type="textarea"
                           v-model="dialog.data.content"
                           :rows="4"
@@ -427,11 +427,11 @@
                           :placeholder="ncfST('Frontend.242')" />
             </el-form-item>
 
-            <p class="kb-edit-form-tip">* 向量库仅支持 Redis / Qdrant；Memory 无法跨请求持久化。保存后可在「配置」中关联资料并执行向量化。<br />* 修改「切片策略 / 大小 / 重叠」需重新保存内容或资料并重新向量化后生效；「重排」配置保存后立即对召回生效，不影响已构建的向量。</p>
+            <p class="kb-edit-form-tip">{{ ncfST('Frontend.176') }}<br />{{ ncfST('Frontend.175') }}</p>
         </el-form>
         <div slot="footer" class="kb-edit-dialog-footer">
-            <el-button class="kb-btn-cancel" size="small" @@click="dialog.visible=false">取消</el-button>
-            <el-button class="kb-btn-confirm" size="small" :loading="dialog.updateLoading" :disabled="dialog.disabled" @@click="updateData">确定</el-button>
+            <el-button class="kb-btn-cancel" size="small" @@click="dialog.visible=false">{{ ncfST('Frontend.097') }}</el-button>
+            <el-button class="kb-btn-confirm" size="small" :loading="dialog.updateLoading" :disabled="dialog.disabled" @@click="updateData">{{ ncfST('Frontend.202') }}</el-button>
         </div>
     </el-dialog>
 
