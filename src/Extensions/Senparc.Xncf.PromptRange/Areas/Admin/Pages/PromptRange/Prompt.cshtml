@@ -1,7 +1,10 @@
 @page
 @model Senparc.Xncf.PromptRange.Areas.Admin.Pages.PromptRange.PromptModel
+@using Microsoft.Extensions.Localization
+@using Senparc.Xncf.PromptRange
+@inject IStringLocalizer<PromptRangeResource> XR
 @{
-    ViewData["Title"] = "PromptRange Prompt";
+    ViewData["Title"] = XR["Title.Prompt"];
     Layout = "_Layout_Vue";
 }
 
@@ -11,8 +14,8 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
-    <el-breadcrumb-item>提示词靶场</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.PromptRange"]</el-breadcrumb-item>
     <el-breadcrumb-item>Prompt</el-breadcrumb-item>
 }
 
@@ -31,17 +34,17 @@
                         <div class="d-flex align-center justify-content-between" style="gap: 5px;margin-bottom: 5px">
                             <div class="d-flex align-center">
                                 <img src="~/image/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon" />
-                                <div class="titleContent">选择靶场</div>
+                                <div class="titleContent">{{ ncfST('Frontend.001') }}</div>
                                 <ncf-doc-help topic="prompts.manage"></ncf-doc-help>
                             </div>
                             <div>
-                                <el-button type="primary" size="mini" @@click="expectedPluginOpen">导出 plugins</el-button>
-                                <el-button type="primary" size="mini" @@click="uploadPluginVisible = true">导入 plugins</el-button>
-                                <el-button type="primary" size="mini" icon="el-icon-plus" @@click="addPromptField">新增靶场</el-button>
+                                <el-button type="primary" size="mini" @@click="expectedPluginOpen">{{ ncfST('Frontend.002') }}</el-button>
+                                <el-button type="primary" size="mini" @@click="uploadPluginVisible = true">{{ ncfST('Frontend.003') }}</el-button>
+                                <el-button type="primary" size="mini" icon="el-icon-plus" @@click="addPromptField">{{ ncfST('Frontend.004') }}</el-button>
                             </div>
 
                         </div>
-                        <el-select v-model="promptField" filterable placeholder="请选择靶场" :popper-append-to-body="true" class="selectRow" @@change="promptChangeHandel($event,'promptField')">
+                        <el-select v-model="promptField" filterable :placeholder="ncfST('Frontend.005')" :popper-append-to-body="true" class="selectRow" @@change="promptChangeHandel($event,'promptField')">
                             <el-option v-for="item in promptFieldOpt"
                                        :key="item.id"
                                        :label="item.label"
@@ -51,8 +54,8 @@
                                     <span>{{ item.label }}</span>
                                     <div>
 
-                                        <el-button type="primary" size="mini" @@click="renameField($event,item)">重命名靶场</el-button>
-                                        <el-button type="danger" size="mini" @@click="fieldDeleteHandel($event,item.id)">删除</el-button>
+                                        <el-button type="primary" size="mini" @@click="renameField($event,item)">{{ ncfST('Frontend.006') }}</el-button>
+                                        <el-button type="danger" size="mini" @@click="fieldDeleteHandel($event,item.id)">{{ ncfST('Frontend.007') }}</el-button>
                                     </div>
                                 </div>
                             </el-option>
@@ -63,25 +66,25 @@
                         <div class="d-flex align-center justify-content-between" style="gap: 5px;margin-bottom: 5px">
                             <div class="d-flex align-center" style="gap: 5px;">
                                 <img src="~/image/PromptRange/prompt_selectPrompt.svg" alt="" class="imgIcon" />
-                                <div class="titleContent">选择靶道</div>
+                                <div class="titleContent">{{ ncfST('Frontend.008') }}</div>
                             </div>
                             <div class="d-flex align-center" style="gap: 5px;">
                                 <el-button type="primary" size="mini" icon="el-icon-magic-stick" @@click="openOptimizeDialog" 
                                     style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); border: none; font-weight: bold; color: #333;">
-                                    优化
+                                    {{ ncfST('Frontend.009') }}
                                 </el-button>
                                 <el-button type="primary" size="mini" icon="el-icon-s-data" @@click="openMapDialog" 
                                     style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; font-weight: bold;">
-                                    导图
+                                    {{ ncfST('Frontend.010') }}
                                 </el-button>
                                 <el-button type="success" size="mini" icon="el-icon-user" @@click="openCreateAgentDialog" :disabled="!promptid"
                                     style="font-weight: bold;">
-                                    创建智能体
+                                    {{ ncfST('Frontend.011') }}
                                 </el-button>
                                 <i class="el-icon-document-copy" style="font-size: 1.3rem;cursor: pointer" @@click="copyInfo"></i>
                             </div>
                         </div>
-                        <el-select v-model="promptid" :disabled="!promptField" :popper-append-to-body="true" :placeholder="promptField?'请选择靶道':'请先选择靶场'" class="selectRow" @@change="promptChangeHandel($event,'promptid')">
+                        <el-select v-model="promptid" :disabled="!promptField" :popper-append-to-body="true" :placeholder="promptField ? ncfST('Frontend.012') : ncfST('Frontend.013')" class="selectRow" @@change="promptChangeHandel($event,'promptid')">
                             <el-option v-for="item in promptOpt"
                                        :key="item.id"
                                        :label="item.label"
@@ -90,10 +93,10 @@
                                 <div class="d-flex justify-content-between align-center" style="gap:20px">
                                     <span>{{ item.label }}</span>
                                     <div style="display: flex; gap: 5px;">
-                                        <el-button type="success" size="mini" icon="el-icon-s-data" @@click="openCompareDialog($event, item)">对比</el-button>
-                                        <el-button type="primary" size="mini" @@click="promptNameField($event,item)">{{item.nickName ? '修改靶道名称' : '设置靶道名称'}}</el-button>
-                                        <el-button type="primary" size="mini" @@click="promptNameRest($event,item.id)">重置名称</el-button>
-                                        <el-button type="danger" size="mini" @@click="promptDeleteHandel($event,item.id)">删除</el-button>
+                                        <el-button type="success" size="mini" icon="el-icon-s-data" @@click="openCompareDialog($event, item)">{{ ncfST('Frontend.014') }}</el-button>
+                                        <el-button type="primary" size="mini" @@click="promptNameField($event,item)">{{ item.nickName ? ncfST('Frontend.015') : ncfST('Frontend.016') }}</el-button>
+                                        <el-button type="primary" size="mini" @@click="promptNameRest($event,item.id)">{{ ncfST('Frontend.017') }}</el-button>
+                                        <el-button type="danger" size="mini" @@click="promptDeleteHandel($event,item.id)">{{ ncfST('Frontend.007') }}</el-button>
                                     </div>
                                 </div>
                             </el-option>
@@ -106,15 +109,15 @@
                 <div class="titleRow" style="padding: 5px">
                     <div class="titleRow_leftBox">
                         <img src="~/image/PromptRange/prompt_selectModel.svg" alt="" class="imgIcon" />
-                        <div class="titleContent">选择模型</div>
+                        <div class="titleContent">{{ ncfST('Frontend.018') }}</div>
                     </div>
                     <div class="d-flex" style="gap:5px">
-                        <el-button size="mini" @@click="refreshModelOpt" :loading="waitRefreshModel">刷新</el-button>
-                        <el-button type="primary" size="mini" @@click="toAIKernel">管理模型</el-button>
+                        <el-button size="mini" @@click="refreshModelOpt" :loading="waitRefreshModel">{{ ncfST('Frontend.019') }}</el-button>
+                        <el-button type="primary" size="mini" @@click="toAIKernel">{{ ncfST('Frontend.020') }}</el-button>
                     </div>
                 </div>
                 <div>
-                    <el-select v-model="modelid" placeholder="请选择模型" :disabled="dodgersLoading" class="selectRow model-select" @@change="promptChangeHandel($event,'modelid',modelid)">
+                    <el-select v-model="modelid" :placeholder="ncfST('Frontend.021')" :disabled="dodgersLoading" class="selectRow model-select" @@change="promptChangeHandel($event,'modelid',modelid)">
                         <el-option v-for="item in modelOpt"
                                    :key="item.id"
                                    :label="item.selectLabel || item.displayName || item.alias"
@@ -122,7 +125,7 @@
                                    :disabled="item.disabled">
                             <div class="model-option-content">
                                 <div class="model-name-row">
-                                    <span class="model-name">{{ item.alias || '未命名模型' }}</span>
+                                    <span class="model-name">{{ item.alias || ncfST('Frontend.022') }}</span>
                                     <span class="model-type-badge" :class="'model-type-' + (item.configModelTypeName || 'unknown').toLowerCase()">{{ item.configModelTypeName || 'Unknown' }}</span>
                                     <span class="model-version" v-if="item.apiVersion">v{{ item.apiVersion }}</span>
                                 </div>
@@ -138,15 +141,15 @@
                 <div class="prompt-mask" v-if="promptFieldOpt.length===0||!promptField" style="z-index: 1350;">
                     <div class="text-center">
                         <i class="el-icon-lock" style="font-size:2.5rem"></i>
-                        <br>请新建或选择靶场后再进行操作
+                        <br>{{ ncfST('Frontend.023') }}
                     </div>
                 </div>
                 @* Batch-run mask. *@
                 <div class="prompt-mask" v-if="dodgersLoading">
                     <div class="text-center">
                         <i class="el-icon-lock" style="font-size:2.5rem"></i>
-                        <br>当前处于连发模式，内容已锁定
-                        <br>如需修改，请切换其他模式
+                        <br>{{ ncfST('Frontend.024') }}
+                        <br>{{ ncfST('Frontend.025') }}
                     </div>
                 </div>
                 @*Model parameter settings.*@
@@ -154,11 +157,11 @@
                     <div class="titleRow">
                         <div class="titleRow_leftBox">
                             <i class="requirIcon">*</i>
-                            <div class="titleContent">模型参数</div>
+                            <div class="titleContent">{{ ncfST('Frontend.026') }}</div>
                         </div>
                        <div class="titleRow_rightBox">
                             @* parameterViewShow=!parameterViewShow *@
-                            <el-button size="mini" @@click="resetConfigurineParam(true)">重置</el-button>
+                            <el-button size="mini" @@click="resetConfigurineParam(true)">{{ ncfST('Frontend.027') }}</el-button>
                             @* <i class="el-icon-caret-top icon" :class="{'rotate':parameterViewShow}" @@click="parameterViewToggle"></i>*@
                         </div>
                     </div>
@@ -184,8 +187,8 @@
                 </div>
                 @* Configure AI scoring criteria. *@
                 <div style="padding-left: 15px; margin-top:25px;">
-                    <el-button type="primary" :disabled=!isAIGrade size="mini" @@click="aiScoreFormOpenDialog">设置 AI 评分标准</el-button>
-                    <el-switch active-color="#13ce66" inactive-color="#ff4949" v-model="isAIGrade" active-text="开" inactive-text="关"></el-switch>
+                    <el-button type="primary" :disabled=!isAIGrade size="mini" @@click="aiScoreFormOpenDialog">{{ ncfST('Frontend.028') }}</el-button>
+                    <el-switch active-color="#13ce66" inactive-color="#ff4949" v-model="isAIGrade" :active-text="ncfST('Frontend.029')" :inactive-text="ncfST('Frontend.030')"></el-switch>
                 </div>
                 <div style="padding-left: 15px; margin-top: 12px; display: flex; align-items: center; gap: 8px;">
                     <span>{{ getPromptRangeText('streamOptionLabel') }}</span>
@@ -221,7 +224,7 @@
          v-if="!promptLeftShow && !centerAreaMaximized && !rightAreaMaximized"
          @@mousedown="startResizeLeft"
          @@dblclick="resetAreaWidths"
-         title="拖动调整宽度 | 双击还原默认"></div>
+         :title="ncfST('Frontend.031')"></div>
     
     @*Center: prompt input.*@
     <div class="promptPage_centerArea" 
@@ -233,15 +236,15 @@
                 <div class="prompt-mask" v-if="promptFieldOpt.length===0||!promptField" style="z-index: 1350;">
                     <div class="text-center">
                         <i class="el-icon-lock" style="font-size:2.5rem"></i>
-                        <br>请新建或选择靶场后再进行操作
+                        <br>{{ ncfST('Frontend.023') }}
                     </div>
                 </div>
                 @* Batch-run mask. *@
                 <div class="prompt-mask" v-if="dodgersLoading">
                     <div class="text-center">
                         <i class="el-icon-lock" style="font-size:2.5rem"></i>
-                        <br>当前处于连发模式，内容已锁定
-                        <br>如需修改，请切换其他模式
+                        <br>{{ ncfST('Frontend.024') }}
+                        <br>{{ ncfST('Frontend.025') }}
                     </div>
                 </div>
                 @*Prompt input.*@
@@ -494,7 +497,7 @@
          v-if="!box2Hidden && !centerAreaMaximized && !rightAreaMaximized"
          @@mousedown="startResizeRight"
          @@dblclick="resetAreaWidths"
-         title="拖动调整宽度 | 双击还原默认"></div>
+         :title="ncfST('Frontend.031')"></div>
     
     @*Right: scoring and analysis.*@
     <div class="promptPage_rightArea" 
