@@ -797,7 +797,7 @@
     </el-drawer>
     @*Tactic selection dialog.*@
     <el-dialog 
-        :title="continueChatMode ? '继续聊天' : (promptid ? '战术选择' : '打靶模式')" 
+        :title="continueChatMode ? ncfST('Frontend.085') : (promptid ? ncfST('Frontend.104') : ncfST('Frontend.105'))" 
         :visible.sync="tacticalFormVisible" 
         :width="continueChatMode ? '80%' : '65%'"
         :close-on-click-modal="false"
@@ -805,46 +805,46 @@
         @@close="tacticalFormCloseDialog">
         <el-form ref="tacticalForm" :model="tacticalForm" :rules="rules" :label-width="continueChatMode ? '120px' : '100px'" label-position="left" class="tacticalFormBox">
             @* Hide tactic selection during continued chat and on the first test when promptid is absent. *@
-            <el-form-item v-if="!continueChatMode && promptid" label="战术" prop="tactics">
+            <el-form-item v-if="!continueChatMode && promptid" :label="ncfST('Frontend.106')" prop="tactics">
                 <el-radio-group v-model="tacticalForm.tactics">
                     <el-radio label="创建顶级战术">
-                        <div class="d-f-startr-start-title">创建顶级战术</div>
+                        <div class="d-f-startr-start-title">{{ ncfST('Frontend.107') }}</div>
                         <div class="d-f-startr-start-nowrap">
-                            <span style="color: #606266;">将创建：</span>
+                            <span style="color: #606266;">{{ ncfST('Frontend.108') }}</span>
                             <div style="margin-left: 8px;">
-                                <div v-if="currentTacticalInfo.tactic !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">当前：{{ currentTacticalInfo.tactic }}</div>
-                                <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.topTactic }} <span style="color: #67C23A; font-size: 12px;">(新)</span></div>
+                                <div v-if="currentTacticalInfo.tactic !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">{{ ncfST('Frontend.109') }}{{ currentTacticalInfo.tactic }}</div>
+                                <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.topTactic }} <span style="color: #67C23A; font-size: 12px;">{{ ncfST('Frontend.110') }}</span></div>
                             </div>
                         </div>
                     </el-radio>
                     <el-radio label="创建平行战术">
-                        <div class="d-f-startr-start-title">创建平行战术</div>
+                        <div class="d-f-startr-start-title">{{ ncfST('Frontend.111') }}</div>
                         <div class="d-f-startr-start-nowrap">
-                            <span style="color: #606266;">将创建：</span>
+                            <span style="color: #606266;">{{ ncfST('Frontend.108') }}</span>
                             <div class="d-c-startr-start-nowrap" style="margin-left: 8px;">
-                                <div v-if="currentTacticalInfo.tactic !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">当前：{{ currentTacticalInfo.tactic }}</div>
-                                <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.parallelTactic }} <span style="color: #67C23A; font-size: 12px;">(新)</span></div>
+                                <div v-if="currentTacticalInfo.tactic !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">{{ ncfST('Frontend.109') }}{{ currentTacticalInfo.tactic }}</div>
+                                <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.parallelTactic }} <span style="color: #67C23A; font-size: 12px;">{{ ncfST('Frontend.110') }}</span></div>
                             </div>
                         </div>
                     </el-radio>
 
                     <el-radio label="创建子战术">
-                        <div class="d-f-startr-start-title">创建子战术</div>
+                        <div class="d-f-startr-start-title">{{ ncfST('Frontend.112') }}</div>
                         <div class="d-f-startr-start-nowrap">
-                            <span style="color: #606266;">将创建：</span>
+                            <span style="color: #606266;">{{ ncfST('Frontend.108') }}</span>
                             <div class="d-c-startr-start-nowrap" style="margin-left: 8px;">
-                                <div v-if="currentTacticalInfo.tactic !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">当前：{{ currentTacticalInfo.tactic }}</div>
-                                <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.subTactic }} <span style="color: #67C23A; font-size: 12px;">(新)</span></div>
+                                <div v-if="currentTacticalInfo.tactic !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">{{ ncfST('Frontend.109') }}{{ currentTacticalInfo.tactic }}</div>
+                                <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.subTactic }} <span style="color: #67C23A; font-size: 12px;">{{ ncfST('Frontend.110') }}</span></div>
                             </div>
                         </div>
                     </el-radio>
                     <el-radio label="重新瞄准">
-                        <div class="d-f-startr-start-title">重新瞄准</div>
+                        <div class="d-f-startr-start-title">{{ ncfST('Frontend.113') }}</div>
                         <div class="d-f-startr-start-nowrap">
-                            <span style="color: #606266;">将创建：</span>
+                            <span style="color: #606266;">{{ ncfST('Frontend.108') }}</span>
                             <div class="d-c-startr-start-nowrap" style="margin-left: 8px;">
-                                <div v-if="currentTacticalInfo.fullTactical !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">当前：{{ currentTacticalInfo.fullTactical }}</div>
-                                <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.newAiming }} <span style="color: #67C23A; font-size: 12px;">(新)</span></div>
+                                <div v-if="currentTacticalInfo.fullTactical !== '--'" style="color: #909399; font-size: 12px; margin-bottom: 4px;">{{ ncfST('Frontend.109') }}{{ currentTacticalInfo.fullTactical }}</div>
+                                <div style="color: #409EFF; font-weight: 600; font-size: 14px;">{{ nextTacticalNumbers.newAiming }} <span style="color: #67C23A; font-size: 12px;">{{ ncfST('Frontend.110') }}</span></div>
                             </div>
                         </div>
                     </el-radio>
