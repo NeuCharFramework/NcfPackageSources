@@ -864,4 +864,43 @@
   <data name="Frontend.817" xml:space="preserve"><value>¿Eliminar el Workflow «{0}»? Esta acción no se puede deshacer.</value></data>
   <data name="Frontend.818" xml:space="preserve"><value>Eliminar Workflow</value></data>
   <data name="Frontend.819" xml:space="preserve"><value>Eliminar</value></data>
+  <data name="Frontend.820" xml:space="preserve"><value>Introduce un nombre de Workflow.</value></data>
+  <data name="Frontend.821" xml:space="preserve"><value>Un Workflow admite como máximo 30 variables.</value></data>
+  <data name="Frontend.822" xml:space="preserve"><value>Los nombres de variables deben ser únicos, empezar por letra o guion bajo, contener solo letras, números y guiones bajos, y no pueden ser input ni vars.</value></data>
+  <data name="Frontend.823" xml:space="preserve"><value>La variable de Workflow «{0}» está duplicada.</value></data>
+  <data name="Frontend.824" xml:space="preserve"><value>El valor de la variable de Workflow «{0}» no puede superar 8000 caracteres.</value></data>
+  <data name="Frontend.825" xml:space="preserve"><value>El Workflow debe contener exactamente un activador.</value></data>
+  <data name="Frontend.826" xml:space="preserve"><value>El tipo de nodo activador no es válido.</value></data>
+  <data name="Frontend.827" xml:space="preserve"><value>El método de solicitud Webhook no es válido.</value></data>
+  <data name="Frontend.828" xml:space="preserve"><value>El formato del nombre del parámetro Webhook no es válido.</value></data>
+  <data name="Frontend.829" xml:space="preserve"><value>El parámetro Webhook «{0}» está duplicado.</value></data>
+  <data name="Frontend.830" xml:space="preserve"><value>La descripción del parámetro Webhook «{0}» no puede superar 500 caracteres.</value></data>
+  <data name="Frontend.831" xml:space="preserve"><value>El título de Chat no puede superar 100 caracteres.</value></data>
+  <data name="Frontend.832" xml:space="preserve"><value>El saludo de Chat no puede superar 500 caracteres.</value></data>
+  <data name="Frontend.833" xml:space="preserve"><value>El lienzo aún contiene nodos sin conectar al activador.</value></data>
+  <data name="Frontend.834" xml:space="preserve"><value>El nodo «{0}» solo admite una entrada anterior; usa Function, agregado o fusión para entradas múltiples.</value></data>
+  <data name="Frontend.835" xml:space="preserve"><value>El nodo agregado «{0}» debe definir el contenido de salida.</value></data>
+  <data name="Frontend.836" xml:space="preserve"><value>El contenido de salida del nodo agregado «{0}» no puede superar 8000 caracteres.</value></data>
+  <data name="Frontend.837" xml:space="preserve"><value>La cantidad del nodo de bucle «{0}» debe ser un entero de 1 a {1} o una referencia a un único valor anterior.</value></data>
+  <data name="Frontend.838" xml:space="preserve"><value>El nodo de código seguro «{0}» debe definir de 1 a 30 asignaciones.</value></data>
+  <data name="Frontend.839" xml:space="preserve"><value>El nodo de código seguro «{0}» solo puede asignar variables declaradas.</value></data>
+  <data name="Frontend.840" xml:space="preserve"><value>La asignación del nodo de código seguro «{0}» no puede superar 8000 caracteres.</value></data>
+  <data name="Frontend.841" xml:space="preserve"><value>El nodo de sub-Workflow «{0}» debe seleccionar un Workflow guardado.</value></data>
+  <data name="Frontend.842" xml:space="preserve"><value>El Workflow de destino del nodo de sub-Workflow «{0}» no está habilitado.</value></data>
+  <data name="Frontend.843" xml:space="preserve"><value>El nodo de sub-Workflow «{0}» no puede llamarse a sí mismo.</value></data>
+  <data name="Frontend.844" xml:space="preserve"><value>El nodo «{0}» referencia un módulo deshabilitado o una Function eliminada.</value></data>
+  <data name="Frontend.845" xml:space="preserve"><value>Al nodo «{0}» le falta el parámetro obligatorio «{1}».</value></data>
+  <data name="Frontend.846" xml:space="preserve"><value>El parámetro «{1}» del nodo «{0}» no tiene nombre de campo original. Solo se pueden guardar borradores; corrige o actualiza el módulo XNCF correspondiente.</value></data>
+  <data name="Frontend.847" xml:space="preserve"><value>Nodo «{0}», parámetro «{1}»: {2}</value></data>
+  <data name="Frontend.848" xml:space="preserve"><value>El nodo «{0}» referencia una conexión Agent o A2A no disponible.</value></data>
+  <data name="Frontend.849" xml:space="preserve"><value>Los metadatos de opciones no están disponibles</value></data>
+  <data name="Frontend.850" xml:space="preserve"><value>Selección de entrada precargada</value></data>
+  <data name="Frontend.851" xml:space="preserve"><value>Múltiple</value></data>
+  <data name="Frontend.852" xml:space="preserve"><value>Único</value></data>
+  <data name="Frontend.853" xml:space="preserve"><value>Observado en ejecución</value></data>
+  <data name="Frontend.854" xml:space="preserve"><value>Texto</value></data>
+  <data name="Frontend.855" xml:space="preserve"><value>Asignación de variable {0}</value></data>
+  <data name="Frontend.856" xml:space="preserve"><value>(texto vacío)</value></data>
+  <data name="Frontend.857" xml:space="preserve"><value>Copiado al portapapeles.</value></data>
+  <data name="Frontend.858" xml:space="preserve"><value>Error al copiar. Cópialo manualmente.</value></data>
 </root>

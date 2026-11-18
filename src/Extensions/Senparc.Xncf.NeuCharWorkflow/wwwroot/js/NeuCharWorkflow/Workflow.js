@@ -99,7 +99,7 @@ if (typeof Vue !== 'undefined' && typeof Vue.component === 'function') {
             },
             filteredSystemNodes() {
                 return this.systemNodes.filter(node => this.matchesKeyword([
-                    '系统节点',
+                    'system nodes',
                     node.type,
                     node.name,
                     node.label
@@ -1062,7 +1062,7 @@ new Vue({
             if (viewer) viewer.opener = null;
         },
         async createWorkflow() {
-            if (this.editingLocked || this.saveState.saving || !await this.confirmDiscardChanges('新建工作流')) return;
+            if (this.editingLocked || this.saveState.saving || !await this.confirmDiscardChanges(ncfWorkflowText('Frontend.280'))) return;
             this.form = this.emptyForm();
             this.observedOutputSchemas = [];
             this.editing = true;
@@ -1079,7 +1079,7 @@ new Vue({
         },
         async editWorkflow(id) {
             if (this.editingLocked || this.saveState.saving || Number(id) === Number(this.form.id)) return;
-            if (!await this.confirmDiscardChanges('切换工作流')) return;
+            if (!await this.confirmDiscardChanges(ncfWorkflowText('Frontend.011'))) return;
             this.workflowSettingsVisible = false;
             this.webhookHelpVisible = false;
             this.loading = true;
@@ -2603,7 +2603,7 @@ new Vue({
                 : [];
             if (!text || !nodes.length) return [];
             const labels = [];
-            const pattern = /节点[“"']([^”"']+)[”"']/g;
+            const pattern = /\u8282\u70b9[\u201c"']([^\u201d"']+)[\u201d"']/g;
             let match;
             while ((match = pattern.exec(text)) !== null) labels.push(match[1]);
             return [...new Set(labels
@@ -2616,13 +2616,13 @@ new Vue({
             const nodes = this.form && this.form.graph && Array.isArray(this.form.graph.nodes)
                 ? this.form.graph.nodes
                 : [];
-            if (/未连接到触发器/.test(String(message || '')) && typeof this.getDisconnectedNodes === 'function') {
+            if (/\u672a\u8fde\u63a5\u5230\u89e6\u53d1\u5668/.test(String(message || '')) && typeof this.getDisconnectedNodes === 'function') {
                 return this.getDisconnectedNodes().map(node => node.id);
             }
-            if (/触发器节点类型无效/.test(String(message || ''))) {
+            if (/\u89e6\u53d1\u5668\u8282\u70b9\u7c7b\u578b\u65e0\u6548/.test(String(message || ''))) {
                 return nodes.filter(node => String(node.type || '').endsWith('trigger')).map(node => node.id);
             }
-            if (/必须且只能包含一个触发器/.test(String(message || ''))) {
+            if (/\u5fc5\u987b\u4e14\u53ea\u80fd\u5305\u542b\u4e00\u4e2a\u89e6\u53d1\u5668/.test(String(message || ''))) {
                 return nodes.filter(node => String(node.type || '').endsWith('trigger')).map(node => node.id);
             }
             return [];
@@ -2866,11 +2866,11 @@ new Vue({
                         .slice(0, 3);
                     const optionSuffix = optionNames.length
                         ? `：${optionNames.join('、')}${options.length > optionNames.length ? '…' : ''}`
-                        : '；选项元数据暂不可用';
+                        : `; ${ncfWorkflowText('Frontend.849')}`;
                     const shape = this.expectedShape(parameter);
                     return {
                         path: `$.__functionInput.${parameter.name}`,
-                        label: `预载输入选择 · ${this.parameterDisplayName(parameter)}（${isMultiple ? '多选' : '单选'}${optionSuffix}）`,
+                        label: `${ncfWorkflowText('Frontend.850')} · ${this.parameterDisplayName(parameter)}（${isMultiple ? ncfWorkflowText('Frontend.851') : ncfWorkflowText('Frontend.852')}${optionSuffix}）`,
                         typeName: shape.typeName,
                         isArray: shape.isArray,
                         requiresIndex: false,
@@ -2885,7 +2885,7 @@ new Vue({
                 label: node.name,
                 children: this.nodeOutputFields(node).map(field => ({
                     value: field.path,
-                    label: `${field.label} · ${field.typeName}${field.isArray ? '[]' : ''}${field.observed ? ' · 运行观察' : ''}`
+                    label: `${field.label} · ${field.typeName}${field.isArray ? '[]' : ''}${field.observed ? ' · ' + ncfWorkflowText('Frontend.853') : ''}`
                 }))
             })).filter(option => option.children.length);
         },
@@ -2977,7 +2977,7 @@ new Vue({
         templateBindingLabel(binding) {
             const source = this.form.graph.nodes.find(node => node.id === binding?.nodeId);
             const field = source && this.nodeOutputFields(source).find(item => item.path === (binding.path || '$'));
-            return source && field ? `${source.name} · ${field.label}` : '已失效的上游来源';
+            return source && field ? `${source.name} · ${field.label}` : ncfWorkflowText('Frontend.780');
         },
         templatePlaceholder(token) { return `{{${String(token || '')}}}`; },
         templateUsesBindingToken(text, token) {
@@ -3036,7 +3036,7 @@ new Vue({
             this.openTemplateEditorForValue(node, currentValue, {
                 configKey: 'parameters',
                 parameterName: parameter.name,
-                fieldLabel: `${this.parameterDisplayName(parameter)}文本`,
+                fieldLabel: `${this.parameterDisplayName(parameter)}${ncfWorkflowText('Frontend.854')}`,
                 allowBindings: true,
                 targetType: 'parameter'
             });
@@ -3048,7 +3048,7 @@ new Vue({
             this.openTemplateEditorForValue(node, assignment.value, {
                 configKey: 'assignments',
                 assignmentIndex,
-                fieldLabel: `变量赋值 ${assignment.name || ''}`.trim(),
+                fieldLabel: ncfWorkflowText('Frontend.855').replace('{0}', assignment.name || '').trim(),
                 allowBindings: false,
                 targetType: 'code-assignment'
             });
@@ -3165,7 +3165,7 @@ new Vue({
         parameterTemplateSummary(value) {
             const template = this.templateFor(value);
             const text = String(template?.text || '');
-            return text.length > 96 ? `${text.substring(0, 96)}…` : (text || '（空文本）');
+            return text.length > 96 ? `${text.substring(0, 96)}…` : (text || ncfWorkflowText('Frontend.856'));
         },
         parameterTemplateBindings(value) {
             const template = this.templateFor(value);
@@ -3525,7 +3525,7 @@ new Vue({
                 }
             });
         },
-        configValueLabel(value) { return this.isBinding(value) ? `关联：${value.$source.nodeId}` : String(value || ''); },
+        configValueLabel(value) { return this.isBinding(value) ? `${ncfWorkflowText('Frontend.271')}: ${value.$source.nodeId}` : String(value || ''); },
         getDisconnectedNodes() {
             const nodes = this.form.graph.nodes || [];
             const nodeIds = new Set(nodes.map(node => node.id));
@@ -3544,50 +3544,50 @@ new Vue({
         },
         validate(options) {
             const requireRunnable = !options || options.requireRunnable !== false;
-            if (!this.form.name.trim()) return '请输入工作流名称。';
+            if (!this.form.name.trim()) return ncfWorkflowText('Frontend.820');
             const variables = this.form.graph?.variables || [];
-            if (variables.length > 30) return '单个工作流最多允许 30 个变量。';
+            if (variables.length > 30) return ncfWorkflowText('Frontend.821');
             const variableNames = new Set();
             for (const variable of variables) {
                 const name = String(variable?.name || '').trim();
                 if (!/^[A-Za-z_][A-Za-z0-9_]{0,63}$/.test(name) || /^(input|vars)$/i.test(name)) {
-                    return '工作流变量名必须唯一，以字母或下划线开头，仅包含字母、数字、下划线；不能使用 input 或 vars。';
+                    return ncfWorkflowText('Frontend.822');
                 }
                 const key = name.toLowerCase();
-                if (variableNames.has(key)) return `工作流变量“${name}”重复。`;
+                if (variableNames.has(key)) return ncfWorkflowText('Frontend.823').replace('{0}', name);
                 variableNames.add(key);
-                if (this.runtimeTextLength(variable?.value) > 8000) return `工作流变量“${name}”的值不能超过 8000 个字符。`;
+                if (this.runtimeTextLength(variable?.value) > 8000) return ncfWorkflowText('Frontend.824').replace('{0}', name);
             }
             const triggers = this.form.graph.nodes.filter(node => String(node.type).endsWith('trigger'));
-            if (triggers.length !== 1) return '工作流必须且只能包含一个触发器。';
+            if (triggers.length !== 1) return ncfWorkflowText('Frontend.825');
             const trigger = triggers[0];
-            if (!['manual-trigger', 'interval-trigger', 'webhook-trigger', 'chat-trigger'].includes(trigger.type)) return '触发器节点类型无效。';
+            if (!['manual-trigger', 'interval-trigger', 'webhook-trigger', 'chat-trigger'].includes(trigger.type)) return ncfWorkflowText('Frontend.826');
             if (this.form.triggerType === 'webhook') {
-                if (!['any', 'get', 'post'].includes(String(this.form.webhookMethod || '').toLowerCase())) return 'Webhook 请求方法无效。';
+                if (!['any', 'get', 'post'].includes(String(this.form.webhookMethod || '').toLowerCase())) return ncfWorkflowText('Frontend.827');
                 const names = new Set();
                 for (const parameter of this.form.webhookParameters || []) {
                     const name = String(parameter.name || '').trim();
-                    if (!/^[A-Za-z_][A-Za-z0-9_.-]{0,63}$/.test(name)) return 'Webhook 参数名格式无效。';
+                    if (!/^[A-Za-z_][A-Za-z0-9_.-]{0,63}$/.test(name)) return ncfWorkflowText('Frontend.828');
                     const key = name.toLowerCase();
-                    if (names.has(key)) return `Webhook 参数“${name}”重复。`;
+                    if (names.has(key)) return ncfWorkflowText('Frontend.829').replace('{0}', name);
                     names.add(key);
-                    if (String(parameter.description || '').length > 500) return `Webhook 参数“${name}”的说明不能超过 500 个字符。`;
+                    if (String(parameter.description || '').length > 500) return ncfWorkflowText('Frontend.830').replace('{0}', name);
                 }
             }
             if (this.form.triggerType === 'chat') {
-                if (String(this.form.chatTitle || '').length > 100) return 'Chat 标题不能超过 100 个字符。';
-                if (String(this.form.chatGreeting || '').length > 500) return 'Chat 欢迎语不能超过 500 个字符。';
+                if (String(this.form.chatTitle || '').length > 100) return ncfWorkflowText('Frontend.831');
+                if (String(this.form.chatGreeting || '').length > 500) return ncfWorkflowText('Frontend.832');
             }
             const disconnected = this.getDisconnectedNodes();
-            if (requireRunnable && disconnected.length) return '画布中仍有未连接到触发器的节点。';
+            if (requireRunnable && disconnected.length) return ncfWorkflowText('Frontend.833');
             for (const node of this.form.graph.nodes) {
                 const incoming = this.incomingEdges(node.id);
-                if (!this.supportsMultipleInputs(node) && incoming.length > 1) return `节点“${node.name}”只允许一个上游；多对一目标请使用 Function、聚合或逐项合流节点。`;
+                if (!this.supportsMultipleInputs(node) && incoming.length > 1) return ncfWorkflowText('Frontend.834').replace('{0}', node.name);
             }
             if (!requireRunnable) return '';
             for (const node of this.form.graph.nodes.filter(item => item.type === 'aggregate')) {
-                if (!this.formulaValueText(node.config?.outputTemplate).trim()) return `聚合节点“${node.name}”必须设置输出内容。`;
-                if (this.runtimeTextLength(node.config.outputTemplate) > 8000) return `聚合节点“${node.name}”的输出内容不能超过 8000 个字符。`;
+                if (!this.formulaValueText(node.config?.outputTemplate).trim()) return ncfWorkflowText('Frontend.835').replace('{0}', node.name);
+                if (this.runtimeTextLength(node.config.outputTemplate) > 8000) return ncfWorkflowText('Frontend.836').replace('{0}', node.name);
             }
             for (const node of this.form.graph.nodes.filter(item => item.type === 'loop')) {
                 const loopFormulaError = typeof this.loopCountFormulaValidationError === 'function'
@@ -3606,44 +3606,44 @@ new Vue({
                 }
                 const count = Number(node.config?.count);
                 if (!Number.isInteger(count) || count < 1 || count > MaxWorkflowLoopIterations) {
-                    return `循环节点“${node.name}”的次数必须为 1 到 ${MaxWorkflowLoopIterations} 的整数，或引用上游单值。`;
+                    return ncfWorkflowText('Frontend.837').replace('{0}', node.name).replace('{1}', MaxWorkflowLoopIterations);
                 }
                 const loopBoundaryError = this.loopBoundaryValidationError(node);
                 if (loopBoundaryError) return loopBoundaryError;
             }
             for (const node of this.form.graph.nodes.filter(item => item.type === 'code')) {
                 const assignments = Array.isArray(node.config?.assignments) ? node.config.assignments : [];
-                if (!assignments.length || assignments.length > 30) return `安全代码节点“${node.name}”必须设置 1 到 30 条变量赋值。`;
+                if (!assignments.length || assignments.length > 30) return ncfWorkflowText('Frontend.838').replace('{0}', node.name);
                 for (const assignment of assignments) {
                     if (!variableNames.has(String(assignment?.name || '').trim().toLowerCase())) {
-                        return `安全代码节点“${node.name}”只能给已定义的工作流变量赋值。`;
+                        return ncfWorkflowText('Frontend.839').replace('{0}', node.name);
                     }
-                    if (this.runtimeTextLength(assignment?.value) > 8000) return `安全代码节点“${node.name}”的赋值不能超过 8000 个字符。`;
+                    if (this.runtimeTextLength(assignment?.value) > 8000) return ncfWorkflowText('Frontend.840').replace('{0}', node.name);
                 }
             }
             for (const node of this.form.graph.nodes.filter(item => item.type === 'sub-workflow')) {
                 const targetId = Number(node.config?.workflowId || 0);
                 const target = (this.workflows || []).find(item => Number(item.id) === targetId);
-                if (!targetId || !target) return `调用工作流节点“${node.name}”必须选择一个已保存的目标工作流。`;
-                if (!target.enabled) return `调用工作流节点“${node.name}”的目标工作流尚未启用。`;
-                if (targetId === Number(this.form.id || 0)) return `调用工作流节点“${node.name}”不能调用当前工作流。`;
+                if (!targetId || !target) return ncfWorkflowText('Frontend.841').replace('{0}', node.name);
+                if (!target.enabled) return ncfWorkflowText('Frontend.842').replace('{0}', node.name);
+                if (targetId === Number(this.form.id || 0)) return ncfWorkflowText('Frontend.843').replace('{0}', node.name);
             }
             for (const node of this.form.graph.nodes.filter(item => item.type === 'function')) {
                 const fn = this.findFunction(node.config);
-                if (!fn || !fn.moduleAvailable) return `节点“${node.name}”引用的模块未开启或 Function 已移除。`;
+                if (!fn || !fn.moduleAvailable) return ncfWorkflowText('Frontend.844').replace('{0}', node.name);
                 const missing = NeuCharWorkflowUi.firstMissingRequired(fn, node.config.parameters || {});
-                if (missing) return `节点“${node.name}”缺少必填参数“${missing.title || missing.name}”。`;
+                if (missing) return ncfWorkflowText('Frontend.845').replace('{0}', node.name).replace('{1}', missing.title || missing.name);
                 for (const parameter of this.functionParameters(fn)) {
                     if (parameter.hasSyntheticName || parameter.metadataError) {
-                        return `节点“${node.name}”参数“${this.parameterDisplayName(parameter)}”缺少原始字段名，当前仅可保存草稿；请修复或更新对应 XNCF 模块。`;
+                        return ncfWorkflowText('Frontend.846').replace('{0}', node.name).replace('{1}', this.parameterDisplayName(parameter));
                     }
                     const compatibility = this.bindingCompatibility(node, parameter);
-                    if (compatibility.level === 'danger' || compatibility.level === 'warning') return `节点“${node.name}”参数“${parameter.title || parameter.name}”：${compatibility.text}`;
+                    if (compatibility.level === 'danger' || compatibility.level === 'warning') return ncfWorkflowText('Frontend.847').replace('{0}', node.name).replace('{1}', parameter.title || parameter.name).replace('{2}', compatibility.text);
                 }
             }
             for (const node of this.form.graph.nodes.filter(item => ['agent', 'agent-group', 'a2a'].includes(item.type))) {
                 const object = this.workflowObjects.find(item => item.providerId === node.config.providerId && item.objectId === node.config.objectId);
-                if (!object || !object.enabled) return `节点“${node.name}”引用的 Agent 或 A2A 连接不可用。`;
+                if (!object || !object.enabled) return ncfWorkflowText('Frontend.848').replace('{0}', node.name);
             }
             return '';
         },
@@ -3703,9 +3703,9 @@ new Vue({
             if (!value) return;
             try {
                 await navigator.clipboard.writeText(value);
-                this.$notify({ title, message: '已复制到剪贴板。', type: 'success' });
+                this.$notify({ title, message: ncfWorkflowText('Frontend.857'), type: 'success' });
             } catch {
-                this.$notify({ title, message: '复制失败，请手动复制。', type: 'warning' });
+                this.$notify({ title, message: ncfWorkflowText('Frontend.858'), type: 'warning' });
             }
         },
         openChatPage() {
@@ -3895,7 +3895,7 @@ new Vue({
             if (localError) {
                 const issue = this.showValidationIssue(localError, ncfWorkflowText('Frontend.795'), {
                     source: 'run',
-                    nodeIds: /未连接到触发器/.test(localError) ? this.getDisconnectedNodes().map(node => node.id) : undefined
+                    nodeIds: /\u672a\u8fde\u63a5\u5230\u89e6\u53d1\u5668/.test(localError) ? this.getDisconnectedNodes().map(node => node.id) : undefined
                 });
                 this.appendConsole('validation', issue.message, 'failed');
                 this.$notify({ title: ncfWorkflowText('Frontend.795'), message: issue.message, type: 'warning' });
@@ -4095,7 +4095,7 @@ new Vue({
                 return;
             }
             if (action === 'tasks') {
-                if (await this.confirmDiscardChanges('进入任务列表')) window.location.assign('/Admin/NeuCharWorkflow/Tasks');
+                if (await this.confirmDiscardChanges(ncfWorkflowText('Frontend.070'))) window.location.assign('/Admin/NeuCharWorkflow/Tasks');
                 return;
             }
             if (action !== 'delete' || !this.form.id || this.editingLocked || this.saveState.saving) return;

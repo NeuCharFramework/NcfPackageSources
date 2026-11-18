@@ -864,4 +864,43 @@
   <data name="Frontend.817" xml:space="preserve"><value>Delete Workflow "{0}"? This action cannot be undone.</value></data>
   <data name="Frontend.818" xml:space="preserve"><value>Delete Workflow</value></data>
   <data name="Frontend.819" xml:space="preserve"><value>Delete</value></data>
+  <data name="Frontend.820" xml:space="preserve"><value>Enter a Workflow name.</value></data>
+  <data name="Frontend.821" xml:space="preserve"><value>A Workflow can have at most 30 variables.</value></data>
+  <data name="Frontend.822" xml:space="preserve"><value>Workflow variable names must be unique, start with a letter or underscore, contain only letters, digits, and underscores, and cannot be input or vars.</value></data>
+  <data name="Frontend.823" xml:space="preserve"><value>Workflow variable "{0}" is duplicated.</value></data>
+  <data name="Frontend.824" xml:space="preserve"><value>The value of Workflow variable "{0}" cannot exceed 8000 characters.</value></data>
+  <data name="Frontend.825" xml:space="preserve"><value>The Workflow must contain exactly one trigger.</value></data>
+  <data name="Frontend.826" xml:space="preserve"><value>The trigger node type is invalid.</value></data>
+  <data name="Frontend.827" xml:space="preserve"><value>The Webhook request method is invalid.</value></data>
+  <data name="Frontend.828" xml:space="preserve"><value>The Webhook parameter name format is invalid.</value></data>
+  <data name="Frontend.829" xml:space="preserve"><value>Webhook parameter "{0}" is duplicated.</value></data>
+  <data name="Frontend.830" xml:space="preserve"><value>The description of Webhook parameter "{0}" cannot exceed 500 characters.</value></data>
+  <data name="Frontend.831" xml:space="preserve"><value>The Chat title cannot exceed 100 characters.</value></data>
+  <data name="Frontend.832" xml:space="preserve"><value>The Chat greeting cannot exceed 500 characters.</value></data>
+  <data name="Frontend.833" xml:space="preserve"><value>The canvas still contains nodes that are not connected to the trigger.</value></data>
+  <data name="Frontend.834" xml:space="preserve"><value>Node "{0}" accepts only one upstream input; use Function, aggregate, or merge for many-to-one input.</value></data>
+  <data name="Frontend.835" xml:space="preserve"><value>Aggregate node "{0}" must define output content.</value></data>
+  <data name="Frontend.836" xml:space="preserve"><value>The output content of aggregate node "{0}" cannot exceed 8000 characters.</value></data>
+  <data name="Frontend.837" xml:space="preserve"><value>The count of loop node "{0}" must be an integer from 1 to {1}, or an upstream single-value reference.</value></data>
+  <data name="Frontend.838" xml:space="preserve"><value>Safe-code node "{0}" must define 1 to 30 variable assignments.</value></data>
+  <data name="Frontend.839" xml:space="preserve"><value>Safe-code node "{0}" may assign only declared Workflow variables.</value></data>
+  <data name="Frontend.840" xml:space="preserve"><value>The assignment in safe-code node "{0}" cannot exceed 8000 characters.</value></data>
+  <data name="Frontend.841" xml:space="preserve"><value>Sub-Workflow node "{0}" must select a saved target Workflow.</value></data>
+  <data name="Frontend.842" xml:space="preserve"><value>The target Workflow of sub-Workflow node "{0}" is not enabled.</value></data>
+  <data name="Frontend.843" xml:space="preserve"><value>Sub-Workflow node "{0}" cannot call the current Workflow.</value></data>
+  <data name="Frontend.844" xml:space="preserve"><value>Node "{0}" references a disabled module or a removed Function.</value></data>
+  <data name="Frontend.845" xml:space="preserve"><value>Node "{0}" is missing required parameter "{1}".</value></data>
+  <data name="Frontend.846" xml:space="preserve"><value>Parameter "{1}" of node "{0}" is missing its original field name. Only drafts can be saved; fix or update the corresponding XNCF module.</value></data>
+  <data name="Frontend.847" xml:space="preserve"><value>Node "{0}", parameter "{1}": {2}</value></data>
+  <data name="Frontend.848" xml:space="preserve"><value>Node "{0}" references an unavailable Agent or A2A connection.</value></data>
+  <data name="Frontend.849" xml:space="preserve"><value>Option metadata is unavailable</value></data>
+  <data name="Frontend.850" xml:space="preserve"><value>Preloaded input selection</value></data>
+  <data name="Frontend.851" xml:space="preserve"><value>Multiple</value></data>
+  <data name="Frontend.852" xml:space="preserve"><value>Single</value></data>
+  <data name="Frontend.853" xml:space="preserve"><value>Observed at runtime</value></data>
+  <data name="Frontend.854" xml:space="preserve"><value>Text</value></data>
+  <data name="Frontend.855" xml:space="preserve"><value>Variable assignment {0}</value></data>
+  <data name="Frontend.856" xml:space="preserve"><value>(empty text)</value></data>
+  <data name="Frontend.857" xml:space="preserve"><value>Copied to the clipboard.</value></data>
+  <data name="Frontend.858" xml:space="preserve"><value>Copy failed. Copy it manually.</value></data>
 </root>

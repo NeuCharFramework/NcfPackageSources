@@ -863,4 +863,43 @@
   <data name="Frontend.817" xml:space="preserve"><value>确认删除工作流“{0}”？此操作无法恢复。</value></data>
   <data name="Frontend.818" xml:space="preserve"><value>删除工作流</value></data>
   <data name="Frontend.819" xml:space="preserve"><value>删除</value></data>
+  <data name="Frontend.820" xml:space="preserve"><value>请输入工作流名称。</value></data>
+  <data name="Frontend.821" xml:space="preserve"><value>单个工作流最多允许 30 个变量。</value></data>
+  <data name="Frontend.822" xml:space="preserve"><value>工作流变量名必须唯一，以字母或下划线开头，仅包含字母、数字、下划线；不能使用 input 或 vars。</value></data>
+  <data name="Frontend.823" xml:space="preserve"><value>工作流变量“{0}”重复。</value></data>
+  <data name="Frontend.824" xml:space="preserve"><value>工作流变量“{0}”的值不能超过 8000 个字符。</value></data>
+  <data name="Frontend.825" xml:space="preserve"><value>工作流必须且只能包含一个触发器。</value></data>
+  <data name="Frontend.826" xml:space="preserve"><value>触发器节点类型无效。</value></data>
+  <data name="Frontend.827" xml:space="preserve"><value>Webhook 请求方法无效。</value></data>
+  <data name="Frontend.828" xml:space="preserve"><value>Webhook 参数名格式无效。</value></data>
+  <data name="Frontend.829" xml:space="preserve"><value>Webhook 参数“{0}”重复。</value></data>
+  <data name="Frontend.830" xml:space="preserve"><value>Webhook 参数“{0}”的说明不能超过 500 个字符。</value></data>
+  <data name="Frontend.831" xml:space="preserve"><value>Chat 标题不能超过 100 个字符。</value></data>
+  <data name="Frontend.832" xml:space="preserve"><value>Chat 欢迎语不能超过 500 个字符。</value></data>
+  <data name="Frontend.833" xml:space="preserve"><value>画布中仍有未连接到触发器的节点。</value></data>
+  <data name="Frontend.834" xml:space="preserve"><value>节点“{0}”只允许一个上游；多对一目标请使用 Function、聚合或逐项合流节点。</value></data>
+  <data name="Frontend.835" xml:space="preserve"><value>聚合节点“{0}”必须设置输出内容。</value></data>
+  <data name="Frontend.836" xml:space="preserve"><value>聚合节点“{0}”的输出内容不能超过 8000 个字符。</value></data>
+  <data name="Frontend.837" xml:space="preserve"><value>循环节点“{0}”的次数必须为 1 到 {1} 的整数，或引用上游单值。</value></data>
+  <data name="Frontend.838" xml:space="preserve"><value>安全代码节点“{0}”必须设置 1 到 30 条变量赋值。</value></data>
+  <data name="Frontend.839" xml:space="preserve"><value>安全代码节点“{0}”只能给已定义的工作流变量赋值。</value></data>
+  <data name="Frontend.840" xml:space="preserve"><value>安全代码节点“{0}”的赋值不能超过 8000 个字符。</value></data>
+  <data name="Frontend.841" xml:space="preserve"><value>调用工作流节点“{0}”必须选择一个已保存的目标工作流。</value></data>
+  <data name="Frontend.842" xml:space="preserve"><value>调用工作流节点“{0}”的目标工作流尚未启用。</value></data>
+  <data name="Frontend.843" xml:space="preserve"><value>调用工作流节点“{0}”不能调用当前工作流。</value></data>
+  <data name="Frontend.844" xml:space="preserve"><value>节点“{0}”引用的模块未开启或 Function 已移除。</value></data>
+  <data name="Frontend.845" xml:space="preserve"><value>节点“{0}”缺少必填参数“{1}”。</value></data>
+  <data name="Frontend.846" xml:space="preserve"><value>节点“{0}”参数“{1}”缺少原始字段名，当前仅可保存草稿；请修复或更新对应 XNCF 模块。</value></data>
+  <data name="Frontend.847" xml:space="preserve"><value>节点“{0}”参数“{1}”：{2}</value></data>
+  <data name="Frontend.848" xml:space="preserve"><value>节点“{0}”引用的 Agent 或 A2A 连接不可用。</value></data>
+  <data name="Frontend.849" xml:space="preserve"><value>选项元数据暂不可用</value></data>
+  <data name="Frontend.850" xml:space="preserve"><value>预载输入选择</value></data>
+  <data name="Frontend.851" xml:space="preserve"><value>多选</value></data>
+  <data name="Frontend.852" xml:space="preserve"><value>单选</value></data>
+  <data name="Frontend.853" xml:space="preserve"><value>运行观察</value></data>
+  <data name="Frontend.854" xml:space="preserve"><value>文本</value></data>
+  <data name="Frontend.855" xml:space="preserve"><value>变量赋值 {0}</value></data>
+  <data name="Frontend.856" xml:space="preserve"><value>（空文本）</value></data>
+  <data name="Frontend.857" xml:space="preserve"><value>已复制到剪贴板。</value></data>
+  <data name="Frontend.858" xml:space="preserve"><value>复制失败，请手动复制。</value></data>
 </root>

@@ -880,4 +880,43 @@
   <data name="Frontend.817" xml:space="preserve"><value>Workflow「{0}」を削除しますか？この操作は元に戻せません。</value></data>
   <data name="Frontend.818" xml:space="preserve"><value>Workflow を削除</value></data>
   <data name="Frontend.819" xml:space="preserve"><value>削除</value></data>
+  <data name="Frontend.820" xml:space="preserve"><value>Workflow 名を入力してください。</value></data>
+  <data name="Frontend.821" xml:space="preserve"><value>Workflow には最大 30 個の変数を設定できます。</value></data>
+  <data name="Frontend.822" xml:space="preserve"><value>Workflow 変数名は一意で、英字またはアンダースコアで始まり、英字・数字・アンダースコアのみを使用し、input または vars は使用できません。</value></data>
+  <data name="Frontend.823" xml:space="preserve"><value>Workflow 変数「{0}」が重複しています。</value></data>
+  <data name="Frontend.824" xml:space="preserve"><value>Workflow 変数「{0}」の値は 8000 文字を超えられません。</value></data>
+  <data name="Frontend.825" xml:space="preserve"><value>Workflow にはトリガーを 1 つだけ含める必要があります。</value></data>
+  <data name="Frontend.826" xml:space="preserve"><value>トリガーノードの種類が無効です。</value></data>
+  <data name="Frontend.827" xml:space="preserve"><value>Webhook リクエストメソッドが無効です。</value></data>
+  <data name="Frontend.828" xml:space="preserve"><value>Webhook パラメーター名の形式が無効です。</value></data>
+  <data name="Frontend.829" xml:space="preserve"><value>Webhook パラメーター「{0}」が重複しています。</value></data>
+  <data name="Frontend.830" xml:space="preserve"><value>Webhook パラメーター「{0}」の説明は 500 文字を超えられません。</value></data>
+  <data name="Frontend.831" xml:space="preserve"><value>Chat タイトルは 100 文字を超えられません。</value></data>
+  <data name="Frontend.832" xml:space="preserve"><value>Chat の挨拶文は 500 文字を超えられません。</value></data>
+  <data name="Frontend.833" xml:space="preserve"><value>キャンバスにトリガーへ接続されていないノードがあります。</value></data>
+  <data name="Frontend.834" xml:space="preserve"><value>ノード「{0}」は上流入力を 1 つだけ受け付けます。複数入力には Function、集約、マージを使用してください。</value></data>
+  <data name="Frontend.835" xml:space="preserve"><value>集約ノード「{0}」には出力内容を設定してください。</value></data>
+  <data name="Frontend.836" xml:space="preserve"><value>集約ノード「{0}」の出力内容は 8000 文字を超えられません。</value></data>
+  <data name="Frontend.837" xml:space="preserve"><value>ループノード「{0}」の回数は 1～{1} の整数、または上流の単一値参照である必要があります。</value></data>
+  <data name="Frontend.838" xml:space="preserve"><value>セーフコードノード「{0}」には 1～30 個の変数代入が必要です。</value></data>
+  <data name="Frontend.839" xml:space="preserve"><value>セーフコードノード「{0}」は宣言済み Workflow 変数だけに代入できます。</value></data>
+  <data name="Frontend.840" xml:space="preserve"><value>セーフコードノード「{0}」の代入は 8000 文字を超えられません。</value></data>
+  <data name="Frontend.841" xml:space="preserve"><value>サブ Workflow ノード「{0}」で保存済み Workflow を選択してください。</value></data>
+  <data name="Frontend.842" xml:space="preserve"><value>サブ Workflow ノード「{0}」の対象 Workflow は有効化されていません。</value></data>
+  <data name="Frontend.843" xml:space="preserve"><value>サブ Workflow ノード「{0}」は現在の Workflow を呼び出せません。</value></data>
+  <data name="Frontend.844" xml:space="preserve"><value>ノード「{0}」が無効なモジュールまたは削除済み Function を参照しています。</value></data>
+  <data name="Frontend.845" xml:space="preserve"><value>ノード「{0}」に必須パラメーター「{1}」がありません。</value></data>
+  <data name="Frontend.846" xml:space="preserve"><value>ノード「{0}」のパラメーター「{1}」に元のフィールド名がありません。下書きのみ保存できます。対応する XNCF モジュールを修正または更新してください。</value></data>
+  <data name="Frontend.847" xml:space="preserve"><value>ノード「{0}」、パラメーター「{1}」：{2}</value></data>
+  <data name="Frontend.848" xml:space="preserve"><value>ノード「{0}」が利用できない Agent または A2A 接続を参照しています。</value></data>
+  <data name="Frontend.849" xml:space="preserve"><value>オプションメタデータを利用できません</value></data>
+  <data name="Frontend.850" xml:space="preserve"><value>プリロード入力の選択</value></data>
+  <data name="Frontend.851" xml:space="preserve"><value>複数</value></data>
+  <data name="Frontend.852" xml:space="preserve"><value>単一</value></data>
+  <data name="Frontend.853" xml:space="preserve"><value>実行時に確認</value></data>
+  <data name="Frontend.854" xml:space="preserve"><value>テキスト</value></data>
+  <data name="Frontend.855" xml:space="preserve"><value>変数代入 {0}</value></data>
+  <data name="Frontend.856" xml:space="preserve"><value>（空のテキスト）</value></data>
+  <data name="Frontend.857" xml:space="preserve"><value>クリップボードにコピーしました。</value></data>
+  <data name="Frontend.858" xml:space="preserve"><value>コピーに失敗しました。手動でコピーしてください。</value></data>
 </root>

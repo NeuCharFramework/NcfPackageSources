@@ -864,4 +864,43 @@
   <data name="Frontend.817" xml:space="preserve"><value>Supprimer le Workflow « {0} » ? Cette action est irréversible.</value></data>
   <data name="Frontend.818" xml:space="preserve"><value>Supprimer le Workflow</value></data>
   <data name="Frontend.819" xml:space="preserve"><value>Supprimer</value></data>
+  <data name="Frontend.820" xml:space="preserve"><value>Saisissez un nom de Workflow.</value></data>
+  <data name="Frontend.821" xml:space="preserve"><value>Un Workflow accepte au maximum 30 variables.</value></data>
+  <data name="Frontend.822" xml:space="preserve"><value>Les noms de variables doivent être uniques, commencer par une lettre ou un souligné, contenir uniquement lettres, chiffres et soulignés, et ne peuvent pas être input ou vars.</value></data>
+  <data name="Frontend.823" xml:space="preserve"><value>La variable Workflow « {0} » est dupliquée.</value></data>
+  <data name="Frontend.824" xml:space="preserve"><value>La valeur de la variable Workflow « {0} » ne peut pas dépasser 8 000 caractères.</value></data>
+  <data name="Frontend.825" xml:space="preserve"><value>Le Workflow doit contenir exactement un déclencheur.</value></data>
+  <data name="Frontend.826" xml:space="preserve"><value>Le type du nœud déclencheur est invalide.</value></data>
+  <data name="Frontend.827" xml:space="preserve"><value>La méthode de requête Webhook est invalide.</value></data>
+  <data name="Frontend.828" xml:space="preserve"><value>Le format du nom du paramètre Webhook est invalide.</value></data>
+  <data name="Frontend.829" xml:space="preserve"><value>Le paramètre Webhook « {0} » est dupliqué.</value></data>
+  <data name="Frontend.830" xml:space="preserve"><value>La description du paramètre Webhook « {0} » ne peut pas dépasser 500 caractères.</value></data>
+  <data name="Frontend.831" xml:space="preserve"><value>Le titre Chat ne peut pas dépasser 100 caractères.</value></data>
+  <data name="Frontend.832" xml:space="preserve"><value>Le message d’accueil Chat ne peut pas dépasser 500 caractères.</value></data>
+  <data name="Frontend.833" xml:space="preserve"><value>Le canevas contient encore des nœuds non reliés au déclencheur.</value></data>
+  <data name="Frontend.834" xml:space="preserve"><value>Le nœud « {0} » n’accepte qu’une entrée amont ; utilisez Function, agrégation ou fusion pour plusieurs entrées.</value></data>
+  <data name="Frontend.835" xml:space="preserve"><value>Le nœud d’agrégation « {0} » doit définir son contenu de sortie.</value></data>
+  <data name="Frontend.836" xml:space="preserve"><value>Le contenu de sortie du nœud d’agrégation « {0} » ne peut pas dépasser 8 000 caractères.</value></data>
+  <data name="Frontend.837" xml:space="preserve"><value>Le nombre du nœud de boucle « {0} » doit être un entier de 1 à {1} ou une référence à une valeur amont unique.</value></data>
+  <data name="Frontend.838" xml:space="preserve"><value>Le nœud de code sécurisé « {0} » doit définir de 1 à 30 affectations.</value></data>
+  <data name="Frontend.839" xml:space="preserve"><value>Le nœud de code sécurisé « {0} » ne peut affecter que des variables Workflow déclarées.</value></data>
+  <data name="Frontend.840" xml:space="preserve"><value>L’affectation du nœud de code sécurisé « {0} » ne peut pas dépasser 8 000 caractères.</value></data>
+  <data name="Frontend.841" xml:space="preserve"><value>Le nœud de sous-Workflow « {0} » doit sélectionner un Workflow enregistré.</value></data>
+  <data name="Frontend.842" xml:space="preserve"><value>Le Workflow cible du nœud de sous-Workflow « {0} » n’est pas activé.</value></data>
+  <data name="Frontend.843" xml:space="preserve"><value>Le nœud de sous-Workflow « {0} » ne peut pas appeler le Workflow actuel.</value></data>
+  <data name="Frontend.844" xml:space="preserve"><value>Le nœud « {0} » référence un module désactivé ou une Function supprimée.</value></data>
+  <data name="Frontend.845" xml:space="preserve"><value>Le nœud « {0} » n’a pas le paramètre obligatoire « {1} ».</value></data>
+  <data name="Frontend.846" xml:space="preserve"><value>Le paramètre « {1} » du nœud « {0} » n’a pas de nom de champ d’origine. Seuls les brouillons peuvent être enregistrés ; corrigez ou mettez à jour le module XNCF correspondant.</value></data>
+  <data name="Frontend.847" xml:space="preserve"><value>Nœud « {0} », paramètre « {1} » : {2}</value></data>
+  <data name="Frontend.848" xml:space="preserve"><value>Le nœud « {0} » référence une connexion Agent ou A2A indisponible.</value></data>
+  <data name="Frontend.849" xml:space="preserve"><value>Métadonnées des options indisponibles</value></data>
+  <data name="Frontend.850" xml:space="preserve"><value>Sélection d’entrée préchargée</value></data>
+  <data name="Frontend.851" xml:space="preserve"><value>Multiple</value></data>
+  <data name="Frontend.852" xml:space="preserve"><value>Unique</value></data>
+  <data name="Frontend.853" xml:space="preserve"><value>Observé à l’exécution</value></data>
+  <data name="Frontend.854" xml:space="preserve"><value>Texte</value></data>
+  <data name="Frontend.855" xml:space="preserve"><value>Affectation de variable {0}</value></data>
+  <data name="Frontend.856" xml:space="preserve"><value>(texte vide)</value></data>
+  <data name="Frontend.857" xml:space="preserve"><value>Copié dans le presse-papiers.</value></data>
+  <data name="Frontend.858" xml:space="preserve"><value>Échec de la copie. Copiez manuellement.</value></data>
 </root>

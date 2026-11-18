@@ -864,4 +864,43 @@
   <data name="Frontend.817" xml:space="preserve"><value>Удалить Workflow «{0}»? Это действие нельзя отменить.</value></data>
   <data name="Frontend.818" xml:space="preserve"><value>Удалить Workflow</value></data>
   <data name="Frontend.819" xml:space="preserve"><value>Удалить</value></data>
+  <data name="Frontend.820" xml:space="preserve"><value>Введите имя Workflow.</value></data>
+  <data name="Frontend.821" xml:space="preserve"><value>В Workflow может быть не более 30 переменных.</value></data>
+  <data name="Frontend.822" xml:space="preserve"><value>Имена переменных Workflow должны быть уникальными, начинаться с буквы или подчёркивания, содержать только буквы, цифры и подчёркивания и не быть input или vars.</value></data>
+  <data name="Frontend.823" xml:space="preserve"><value>Переменная Workflow «{0}» указана повторно.</value></data>
+  <data name="Frontend.824" xml:space="preserve"><value>Значение переменной Workflow «{0}» не может превышать 8000 символов.</value></data>
+  <data name="Frontend.825" xml:space="preserve"><value>Workflow должен содержать ровно один триггер.</value></data>
+  <data name="Frontend.826" xml:space="preserve"><value>Недопустимый тип узла-триггера.</value></data>
+  <data name="Frontend.827" xml:space="preserve"><value>Недопустимый метод запроса Webhook.</value></data>
+  <data name="Frontend.828" xml:space="preserve"><value>Недопустимый формат имени параметра Webhook.</value></data>
+  <data name="Frontend.829" xml:space="preserve"><value>Параметр Webhook «{0}» указан повторно.</value></data>
+  <data name="Frontend.830" xml:space="preserve"><value>Описание параметра Webhook «{0}» не может превышать 500 символов.</value></data>
+  <data name="Frontend.831" xml:space="preserve"><value>Заголовок Chat не может превышать 100 символов.</value></data>
+  <data name="Frontend.832" xml:space="preserve"><value>Приветствие Chat не может превышать 500 символов.</value></data>
+  <data name="Frontend.833" xml:space="preserve"><value>На холсте есть узлы, не соединённые с триггером.</value></data>
+  <data name="Frontend.834" xml:space="preserve"><value>Узел «{0}» принимает только один предыдущий ввод; для нескольких входов используйте Function, агрегирование или объединение.</value></data>
+  <data name="Frontend.835" xml:space="preserve"><value>Для агрегирующего узла «{0}» нужно задать содержимое вывода.</value></data>
+  <data name="Frontend.836" xml:space="preserve"><value>Вывод агрегирующего узла «{0}» не может превышать 8000 символов.</value></data>
+  <data name="Frontend.837" xml:space="preserve"><value>Количество повторов узла цикла «{0}» должно быть целым числом от 1 до {1} или ссылкой на одно предыдущее значение.</value></data>
+  <data name="Frontend.838" xml:space="preserve"><value>В узле безопасного кода «{0}» должно быть от 1 до 30 присваиваний переменных.</value></data>
+  <data name="Frontend.839" xml:space="preserve"><value>Узел безопасного кода «{0}» может присваивать только объявленные переменные Workflow.</value></data>
+  <data name="Frontend.840" xml:space="preserve"><value>Присваивание в узле безопасного кода «{0}» не может превышать 8000 символов.</value></data>
+  <data name="Frontend.841" xml:space="preserve"><value>Для узла дочернего Workflow «{0}» нужно выбрать сохранённый Workflow.</value></data>
+  <data name="Frontend.842" xml:space="preserve"><value>Целевой Workflow узла дочернего Workflow «{0}» не включён.</value></data>
+  <data name="Frontend.843" xml:space="preserve"><value>Узел дочернего Workflow «{0}» не может вызвать текущий Workflow.</value></data>
+  <data name="Frontend.844" xml:space="preserve"><value>Узел «{0}» ссылается на отключённый модуль или удалённую Function.</value></data>
+  <data name="Frontend.845" xml:space="preserve"><value>В узле «{0}» отсутствует обязательный параметр «{1}».</value></data>
+  <data name="Frontend.846" xml:space="preserve"><value>В параметре «{1}» узла «{0}» отсутствует исходное имя поля. Сохранять можно только черновики; исправьте или обновите соответствующий модуль XNCF.</value></data>
+  <data name="Frontend.847" xml:space="preserve"><value>Узел «{0}», параметр «{1}»: {2}</value></data>
+  <data name="Frontend.848" xml:space="preserve"><value>Узел «{0}» ссылается на недоступное соединение Agent или A2A.</value></data>
+  <data name="Frontend.849" xml:space="preserve"><value>Метаданные вариантов недоступны</value></data>
+  <data name="Frontend.850" xml:space="preserve"><value>Выбор предварительно загруженного ввода</value></data>
+  <data name="Frontend.851" xml:space="preserve"><value>Несколько</value></data>
+  <data name="Frontend.852" xml:space="preserve"><value>Одно</value></data>
+  <data name="Frontend.853" xml:space="preserve"><value>Наблюдалось при выполнении</value></data>
+  <data name="Frontend.854" xml:space="preserve"><value>Текст</value></data>
+  <data name="Frontend.855" xml:space="preserve"><value>Присваивание переменной {0}</value></data>
+  <data name="Frontend.856" xml:space="preserve"><value>(пустой текст)</value></data>
+  <data name="Frontend.857" xml:space="preserve"><value>Скопировано в буфер обмена.</value></data>
+  <data name="Frontend.858" xml:space="preserve"><value>Не удалось скопировать. Скопируйте вручную.</value></data>
 </root>
