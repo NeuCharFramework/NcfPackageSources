@@ -41,8 +41,8 @@ var app = new Vue({
                 simulationData.push({
                     id: i + 1,
                     thumbnail: '',
-                    name: '这是布局名称',
-                    description: '绑定数据表1，绑定数据表2，绑定数据表3绑定数据表1，绑定数据表2，绑定数据表3绑定数据表1，绑定数据表2，绑定数据表3',
+                    name: ncfST('Frontend.300'),
+                    description: ncfST('Frontend.267'),
                     state: i % 2 ? 1 : 2,
                     operationVisible: false
                 })
@@ -71,10 +71,10 @@ var app = new Vue({
             let text = ''
             switch (valFormatt) {
                 case '1':
-                    text = '已启用'
+                        text = ncfST('Frontend.301')
                     break
                 case '2':
-                    text = '未启用'
+                        text = ncfST('Frontend.302')
                     break
             }
             return text
@@ -90,15 +90,15 @@ var app = new Vue({
             item.operationVisible = false
             // todo invokeinterface
             //English documentation comment.
-            this.$prompt('布局名称', '复制布局', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
+            this.$prompt(ncfST('Frontend.303'), ncfST('Frontend.044'), {
+                confirmButtonText: ncfST('Frontend.152'),
+                cancelButtonText: ncfST('Frontend.034'),
                 inputPattern: /^(?!\s*$).+/,
-                inputErrorMessage: '布局名称不正确'
+                inputErrorMessage: ncfST('Frontend.304')
             }).then(({ value }) => {
                 this.$message({
                     type: 'success',
-                    message: '你的布局名称是: ' + value
+                    message: ncfST('Frontend.305') + ' ' + value
                 });
             }).catch(() => {
                 //this.$message({

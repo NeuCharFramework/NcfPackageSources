@@ -114,7 +114,7 @@ var app = new Vue({
 
             layoutMenuList: [
                 {
-                    name: '菜单1',
+                    name: ncfST('Frontend.276'),
                     isEditName: false,
                     layoutList: []
                 }
@@ -209,12 +209,12 @@ var app = new Vue({
                 interactive: '',
                 page: '',
                 popupForm: {
-                    popupTitleText: '是否确认删除此条数据',
-                    popupCancelText: '取消',
-                    popupConfirmText: '确认',
-                    popupPromptContent: '删除成功',
+                    popupTitleText: ncfST('Frontend.278'),
+                    popupCancelText: ncfST('Frontend.034'),
+                    popupConfirmText: ncfST('Frontend.152'),
+                    popupPromptContent: ncfST('Frontend.279'),
                     popupPromptOften: '1600', // ms
-                    popupClosePage: '关闭当前页面'
+                    popupClosePage: ncfST('Frontend.280')
                 }
             },
             //Legacy comment translated to English.
@@ -229,39 +229,39 @@ var app = new Vue({
             //Legacy comment translated to English.
             formItemOpt: [
                 {
-                    label: '输入框',
+                    label: ncfST('Frontend.281'),
                     value: 'input',
                     disabled: false,
                     children: [
                         {
-                            label: '文本输入框',
+                            label: ncfST('Frontend.282'),
                             value: 'text',
                             disabled: false,
                         },
                         {
-                            label: '文本域输入框',
+                            label: ncfST('Frontend.283'),
                             value: 'textarea',
                             disabled: false,
                         },
                         {
-                            label: '数字输入框',
+                            label: ncfST('Frontend.284'),
                             value: 'number',
                             disabled: false,
                         }
                     ]
                 },
                 {
-                    label: '开关',
+                    label: ncfST('Frontend.285'),
                     value: 'switch',
                     disabled: false,
                 },
                 {
-                    label: '选择器',
+                    label: ncfST('Frontend.286'),
                     value: 'select',
                     disabled: false,
                 },
                 {
-                    label: '任意时间点选择器',
+                    label: ncfST('Frontend.287'),
                     value: 'timePicker',
                     disabled: false,
                 },
@@ -271,55 +271,55 @@ var app = new Vue({
                 //     disabled: false,
                 // },
                 {
-                    label: '日期选择器',
+                    label: ncfST('Frontend.288'),
                     value: 'date',
                     disabled: false,
                     children: [
                         // datetimerange/daterange/monthrange
                         {
-                            label: '年份选择器',
+                            label: ncfST('Frontend.289'),
                             value: 'year',
                             format: '',
                             disabled: false,
                         },
                         {
-                            label: '年份选择器-多选',
+                            label: ncfST('Frontend.290'),
                             value: 'years',
                             format: '',
                             disabled: false,
                         },
                         {
-                            label: '月份选择器',
+                            label: ncfST('Frontend.291'),
                             value: 'month',
                             format: '',
                             disabled: false,
                         },
                         {
-                            label: '月份选择器-多选',
+                            label: ncfST('Frontend.292'),
                             value: 'months',
                             format: '',
                             disabled: false,
                         },
                         {
-                            label: '日期选择器',
+                            label: ncfST('Frontend.288'),
                             value: 'date',
                             format: '',
                             disabled: false,
                         },
                         {
-                            label: '日期选择器-多选',
+                            label: ncfST('Frontend.293'),
                             value: 'dates',
                             format: '',
                             disabled: false,
                         },
                         {
-                            label: '周选择器',
+                            label: ncfST('Frontend.294'),
                             value: 'week',
-                            format: 'yyyy 第 WW 周',
+                            format: ncfST('Frontend.295'),
                             disabled: false,
                         },
                         {
-                            label: '日期时间选择器',
+                            label: ncfST('Frontend.296'),
                             value: 'datetime',
                             format: '',
                             disabled: false,
@@ -328,12 +328,12 @@ var app = new Vue({
                     ]
                 },
                 {
-                    label: '复选框',
+                    label: ncfST('Frontend.297'),
                     value: 'checkbox',
                     disabled: false,
                 },
                 {
-                    label: '单选框',
+                    label: ncfST('Frontend.298'),
                     value: 'radio',
                     disabled: false,
                 }
@@ -426,7 +426,7 @@ var app = new Vue({
                                 columnkey: this.layoutComponentActive,
                                 ...item
                             })
-                            tableMockItem[item.field] = '模拟数据'
+                            tableMockItem[item.field] = ncfST('Frontend.299')
                         }
                     })
 
@@ -861,7 +861,7 @@ var app = new Vue({
             if (this.loadingAddMenu) return
             this.loadingAddMenu = true
             this.layoutMenuList.push({
-                name: `菜单${this.layoutMenuList.length + 1}`,
+                name: ncfST('Frontend.277', this.layoutMenuList.length + 1),
                 isEditName: false,
                 layoutList: []
             })
@@ -1079,7 +1079,7 @@ var app = new Vue({
         handleAddSortingRules() {
             this.dataSetForm.sortingRules.push({
                 field: '',
-                sort: '升序'
+                sort: ncfST('Frontend.031')
             })
         },
         //Legacy comment translated to English.
@@ -1135,12 +1135,12 @@ var app = new Vue({
                 interactive: '',
                 page: '',
                 popupForm: {
-                    popupTitleText: '是否确认删除此条数据',
-                    popupCancelText: '取消',
-                    popupConfirmText: '确认',
-                    popupPromptContent: '删除成功',
+                    popupTitleText: ncfST('Frontend.278'),
+                    popupCancelText: ncfST('Frontend.034'),
+                    popupConfirmText: ncfST('Frontend.152'),
+                    popupPromptContent: ncfST('Frontend.279'),
                     popupPromptOften: '1600', // ms
-                    popupClosePage: '关闭当前页面'
+                    popupClosePage: ncfST('Frontend.280')
                 }
             })
         },
