@@ -6,15 +6,15 @@
 
 var AgentsAppMethodsRemoteAgent = {
     remoteConnectionStatusText(status) {
-      const statusMap = { 0: ncfST('未检测'), 1: ncfST('可用'), 2: ncfST('不可用') }
-      return statusMap[Number(status)] || ncfST('未检测')
+      const statusMap = { 0: ncfST('Frontend.529'), 1: ncfST('Frontend.530'), 2: ncfST('Frontend.531') }
+      return statusMap[Number(status)] || ncfST('Frontend.529')
     },
     remoteConnectionStatusType(status) {
       const statusTypeMap = { 0: 'info', 1: 'success', 2: 'danger' }
       return statusTypeMap[Number(status)] || 'info'
     },
     remoteParticipantAvailabilityText(participant) {
-      if (!participant?.enable) return ncfST('已停用')
+      if (!participant?.enable) return ncfST('Frontend.532')
       return this.remoteConnectionStatusText(participant.connectionStatus)
     },
     remoteParticipantAvailabilityType(participant) {
@@ -78,7 +78,7 @@ var AgentsAppMethodsRemoteAgent = {
           '/api/Senparc.Xncf.AgentsManager/RemoteAgentAppService/Xncf.AgentsManager_RemoteAgentAppService.TestConnections',
           { remoteAgentIds: testAll ? [] : requestedIds })
         const data = response?.data ?? {}
-        if (!data.success) throw new Error(data.errorMessage || data.data || ncfST('连接测试失败'))
+        if (!data.success) throw new Error(data.errorMessage || data.data || ncfST('Frontend.533'))
 
         const results = data?.data?.results ?? []
         this.applyRemoteConnectionResults(results)
@@ -88,7 +88,7 @@ var AgentsAppMethodsRemoteAgent = {
         }
         return results
       } catch (err) {
-        if (!options.silent) this.$message.error(err?.message || ncfST('连接测试失败'))
+        if (!options.silent) this.$message.error(err?.message || ncfST('Frontend.533'))
         throw err
       } finally {
         this.setRemoteAgentTesting(loadingIds, false)
@@ -98,16 +98,16 @@ var AgentsAppMethodsRemoteAgent = {
     showRemoteAgentTestSummary(results) {
       const failedResults = (results || []).filter(result => !result.success)
       if (!results?.length) {
-        this.$message.warning(ncfST('没有可测试的远程 A2A 智能体'))
+        this.$message.warning(ncfST('Frontend.534'))
         return
       }
       if (!failedResults.length) {
-        this.$message.success(ncfST('全部通过：{0} 个远程 A2A 智能体均可用', results.length))
+        this.$message.success(ncfST('Frontend.535', results.length))
         return
       }
-      const failedLines = failedResults.map(result => `${result.name || `#${result.remoteAgentId}`}：${result.message || '不可用'}`)
+      const failedLines = failedResults.map(result => `${result.name || `#${result.remoteAgentId}`}: ${result.message || ncfST('Frontend.531')}`)
       this.$alert(ncfST('通过 {0} 个，未通过 {1} 个。\n\n{2}', results.length - failedResults.length, failedResults.length, failedLines.join('\n')),
-        ncfST('远程 A2A 批量测试结果'), { type: 'warning', confirmButtonText: ncfST('知道了') })
+        ncfST('Frontend.536'), { type: 'warning', confirmButtonText: ncfST('Frontend.537') })
     },
     async getRemoteAgentListData(listType = 'remoteAgent') {
       const query = listType === 'groupRemoteAgent'
@@ -117,7 +117,7 @@ var AgentsAppMethodsRemoteAgent = {
         const response = await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/RemoteAgentAppService/Xncf.AgentsManager_RemoteAgentAppService.GetList?${getInterfaceQueryStr(query)}`)
         const data = response?.data ?? {}
         if (!data.success) {
-          throw new Error(data.errorMessage || data.data || ncfST('加载远程 A2A 智能体失败'))
+          throw new Error(data.errorMessage || data.data || ncfST('Frontend.538'))
         }
 
         const list = data?.data?.list ?? []
@@ -134,7 +134,7 @@ var AgentsAppMethodsRemoteAgent = {
         }
       } catch (err) {
         console.log('getRemoteAgentListData', err)
-        this.$message.error(err?.message || ncfST('加载远程 A2A 智能体失败'))
+        this.$message.error(err?.message || ncfST('Frontend.538'))
       }
     },
     openRemoteAgentManager() {
@@ -145,7 +145,7 @@ var AgentsAppMethodsRemoteAgent = {
       const agent = item?.agentTemplateDto || item || this.agentForm
       const agentTemplateId = Number(agent?.id || agent?.agentTemplateId || 0)
       if (!agentTemplateId) {
-        this.$message.warning(ncfST('请先保存本地智能体，再配置 A2A 对外发布'))
+        this.$message.warning(ncfST('Frontend.539'))
         return
       }
 
@@ -154,7 +154,7 @@ var AgentsAppMethodsRemoteAgent = {
         const response = await serviceAM.get(
           `/api/Senparc.Xncf.AgentsManager/PublishedA2AAgentAppService/Xncf.AgentsManager_PublishedA2AAgentAppService.GetByAgentTemplateId?agentTemplateId=${agentTemplateId}`)
         const data = response?.data ?? {}
-        if (!data.success) throw new Error(data.errorMessage || data.data || ncfST('加载 A2A 发布配置失败'))
+        if (!data.success) throw new Error(data.errorMessage || data.data || ncfST('Frontend.540'))
         const existed = data.data || {}
         this.$set(this, 'publishedA2AForm', {
           ...defaults,
@@ -167,7 +167,7 @@ var AgentsAppMethodsRemoteAgent = {
         this.visible.dialogPublishedA2A = true
         this.$nextTick(() => this.$refs.publishedA2AELForm?.clearValidate())
       } catch (err) {
-        this.$message.error(err?.message || ncfST('加载 A2A 发布配置失败'))
+        this.$message.error(err?.message || ncfST('Frontend.540'))
       }
     },
     closePublishedA2AEditor() {
@@ -210,12 +210,12 @@ var AgentsAppMethodsRemoteAgent = {
             '/api/Senparc.Xncf.AgentsManager/PublishedA2AAgentAppService/Xncf.AgentsManager_PublishedA2AAgentAppService.SetPublishedAgent',
             this.publishedA2AForm)
           const data = response?.data ?? {}
-          if (!data.success) throw new Error(data.errorMessage || data.data || ncfST('保存失败'))
+          if (!data.success) throw new Error(data.errorMessage || data.data || ncfST('Frontend.541'))
           this.$set(this, 'publishedA2AForm', { ...this.publishedA2AForm, ...(data.data || {}) })
           await this.getAgentListData('agent')
-          this.$message.success(this.publishedA2AForm.enable ? ncfST('本地 Agent 已发布为 A2A 服务') : ncfST('A2A 发布配置已保存（当前未启用）'))
+          this.$message.success(this.publishedA2AForm.enable ? ncfST('Frontend.542') : ncfST('Frontend.575'))
         } catch (err) {
-          this.$message.error(err?.message || ncfST('保存 A2A 发布配置失败'))
+          this.$message.error(err?.message || ncfST('Frontend.543'))
         }
       })
     },
@@ -224,9 +224,9 @@ var AgentsAppMethodsRemoteAgent = {
       if (!url) return
       try {
         await navigator.clipboard.writeText(url)
-        this.$message.success(ncfST('A2A Agent Card 地址已复制'))
+        this.$message.success(ncfST('Frontend.544'))
       } catch (err) {
-        this.$message.warning(ncfST('复制失败，请手动复制地址'))
+        this.$message.warning(ncfST('Frontend.576'))
       }
     },
     openRemoteAgentEditor(item = null) {
@@ -247,13 +247,13 @@ var AgentsAppMethodsRemoteAgent = {
             '/api/Senparc.Xncf.AgentsManager/RemoteAgentAppService/Xncf.AgentsManager_RemoteAgentAppService.SetRemoteAgent',
             this.remoteAgentForm)
           const data = response?.data ?? {}
-          if (!data.success) throw new Error(data.errorMessage || data.data || '保存失败')
-          this.$message.success('远程 A2A 智能体已保存')
+          if (!data.success) throw new Error(data.errorMessage || data.data || ncfST('Frontend.541'))
+          this.$message.success(ncfST('Frontend.542'))
           this.closeRemoteAgentEditor()
           await this.getRemoteAgentListData()
           if (this.visible.drawerGroup) await this.getRemoteAgentListData('groupRemoteAgent')
         } catch (err) {
-          this.$message.error(err?.message || '保存远程 A2A 智能体失败')
+          this.$message.error(err?.message || ncfST('Frontend.543'))
         }
       })
     },
@@ -262,12 +262,12 @@ var AgentsAppMethodsRemoteAgent = {
         const results = await this.testRemoteAgentConnections([item?.id], { silent: true, refreshLists: true })
         const result = results[0]
         if (!result?.success) {
-          this.$message.error(result?.message || '连接测试失败')
+          this.$message.error(result?.message || ncfST('Frontend.533'))
           return
         }
-        this.$message.success(result.message || 'A2A Agent Card 连接成功')
+        this.$message.success(result.message || ncfST('Frontend.544'))
       } catch (err) {
-        this.$message.error(err?.message || '连接测试失败')
+        this.$message.error(err?.message || ncfST('Frontend.533'))
       }
     },
     async testAllRemoteAgents() {
@@ -275,7 +275,7 @@ var AgentsAppMethodsRemoteAgent = {
         const results = await this.testRemoteAgentConnections([], { testAll: true, silent: true, refreshLists: true })
         this.showRemoteAgentTestSummary(results)
       } catch (err) {
-        this.$message.error(err?.message || '批量连接测试失败')
+        this.$message.error(err?.message || ncfST('Frontend.545'))
       }
     },
     async autoTestRemoteParticipants(participants) {
@@ -288,7 +288,7 @@ var AgentsAppMethodsRemoteAgent = {
         const results = await this.testRemoteAgentConnections(remoteAgentIds, { silent: true })
         const failedCount = results.filter(result => !result.success).length
         if (failedCount) {
-          this.$message.warning(`${failedCount} 个远程 A2A 智能体当前不可用，可在成员列表中手动重测`)
+          this.$message.warning(ncfST('Frontend.577', failedCount))
         }
         return results
       } catch (err) {
@@ -301,12 +301,12 @@ var AgentsAppMethodsRemoteAgent = {
         const results = await this.testRemoteAgentConnections([participant?.id], { silent: true })
         const result = results[0]
         if (result?.success) {
-          this.$message.success(result.message || 'A2A Agent Card 连接成功')
+          this.$message.success(result.message || ncfST('Frontend.544'))
         } else {
-          this.$message.error(result?.message || '连接测试失败')
+          this.$message.error(result?.message || ncfST('Frontend.533'))
         }
       } catch (err) {
-        this.$message.error(err?.message || '连接测试失败')
+        this.$message.error(err?.message || ncfST('Frontend.533'))
       }
     },
     async testTaskRemoteAgent(participant) {
@@ -328,28 +328,28 @@ var AgentsAppMethodsRemoteAgent = {
           `/api/Senparc.Xncf.AgentsManager/RemoteAgentAppService/Xncf.AgentsManager_RemoteAgentAppService.Enable?id=${item.id}&enable=${enable}`,
           {})
         const data = response?.data ?? {}
-        if (!data.success) throw new Error(data.errorMessage || data.data || '状态更新失败')
-        this.$message.success(data.data || '状态已更新')
+        if (!data.success) throw new Error(data.errorMessage || data.data || ncfST('Frontend.546'))
+        this.$message.success(data.data || ncfST('Frontend.547'))
         await this.getRemoteAgentListData()
         if (this.visible.drawerGroup) await this.getRemoteAgentListData('groupRemoteAgent')
       } catch (err) {
-        this.$message.error(err?.message || '状态更新失败')
+        this.$message.error(err?.message || ncfST('Frontend.546'))
       }
     },
     deleteRemoteAgent(item) {
-      this.$confirm(`确认删除远程 A2A 智能体“${item.name}”？已加入群组的智能体不可删除。`, '删除确认', { type: 'warning' })
+      this.$confirm(ncfST('Frontend.549', item.name), ncfST('Frontend.548'), { type: 'warning' })
         .then(async () => {
           try {
             const response = await serviceAM.post(
               `/api/Senparc.Xncf.AgentsManager/RemoteAgentAppService/Xncf.AgentsManager_RemoteAgentAppService.Delete?id=${item.id}`,
               {})
             const data = response?.data ?? {}
-            if (!data.success) throw new Error(data.errorMessage || data.data || '删除失败')
-            this.$message.success(data.data || '已删除')
+            if (!data.success) throw new Error(data.errorMessage || data.data || ncfST('Frontend.550'))
+            this.$message.success(data.data || ncfST('Frontend.551'))
             await this.getRemoteAgentListData()
             if (this.visible.drawerGroup) await this.getRemoteAgentListData('groupRemoteAgent')
           } catch (err) {
-            this.$message.error(err?.message || '删除失败')
+            this.$message.error(err?.message || ncfST('Frontend.550'))
           }
         })
         .catch(() => { })

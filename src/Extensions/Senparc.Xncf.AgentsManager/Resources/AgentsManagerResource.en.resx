@@ -1724,4 +1724,7 @@
   <data name="Frontend.572" xml:space="preserve"><value>Edit Agent in a new window</value></data>
   <data name="Frontend.573" xml:space="preserve"><value>Type {0}</value></data>
   <data name="Frontend.574" xml:space="preserve"><value>Platform {0}</value></data>
+  <data name="Frontend.575" xml:space="preserve"><value>A2A publishing configuration saved (currently disabled)</value></data>
+  <data name="Frontend.576" xml:space="preserve"><value>Copy failed; copy the address manually</value></data>
+  <data name="Frontend.577" xml:space="preserve"><value>{0} remote A2A Agents are unavailable; retry them manually from the member list</value></data>
 </root>

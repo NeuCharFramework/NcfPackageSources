@@ -1724,4 +1724,7 @@
   <data name="Frontend.572" xml:space="preserve"><value>新しいウィンドウで Agent を編集</value></data>
   <data name="Frontend.573" xml:space="preserve"><value>種類 {0}</value></data>
   <data name="Frontend.574" xml:space="preserve"><value>プラットフォーム {0}</value></data>
+  <data name="Frontend.575" xml:space="preserve"><value>A2A 公開設定を保存しました（現在は無効）</value></data>
+  <data name="Frontend.576" xml:space="preserve"><value>コピーに失敗しました。アドレスを手動でコピーしてください</value></data>
+  <data name="Frontend.577" xml:space="preserve"><value>利用できないリモート A2A Agent が {0} 件あります。メンバー一覧から手動で再テストしてください</value></data>
 </root>

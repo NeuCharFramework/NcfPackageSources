@@ -1724,4 +1724,7 @@
   <data name="Frontend.572" xml:space="preserve"><value>Modifier l’Agent dans une nouvelle fenêtre</value></data>
   <data name="Frontend.573" xml:space="preserve"><value>Type {0}</value></data>
   <data name="Frontend.574" xml:space="preserve"><value>Plateforme {0}</value></data>
+  <data name="Frontend.575" xml:space="preserve"><value>Configuration de publication A2A enregistrée (actuellement désactivée)</value></data>
+  <data name="Frontend.576" xml:space="preserve"><value>Échec de la copie ; copiez l’adresse manuellement</value></data>
+  <data name="Frontend.577" xml:space="preserve"><value>{0} Agents A2A distants sont indisponibles ; retestez-les manuellement depuis la liste des membres</value></data>
 </root>

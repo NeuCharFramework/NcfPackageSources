@@ -1724,4 +1724,7 @@
   <data name="Frontend.572" xml:space="preserve"><value>Editar Agent en una ventana nueva</value></data>
   <data name="Frontend.573" xml:space="preserve"><value>Tipo {0}</value></data>
   <data name="Frontend.574" xml:space="preserve"><value>Plataforma {0}</value></data>
+  <data name="Frontend.575" xml:space="preserve"><value>Configuración de publicación A2A guardada (actualmente desactivada)</value></data>
+  <data name="Frontend.576" xml:space="preserve"><value>No se pudo copiar; copia la dirección manualmente</value></data>
+  <data name="Frontend.577" xml:space="preserve"><value>Hay {0} Agents A2A remotos no disponibles; vuelve a probarlos manualmente desde la lista de miembros</value></data>
 </root>

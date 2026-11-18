@@ -1199,4 +1199,7 @@
   <data name="Frontend.572" xml:space="preserve"><value>在新窗口中编辑 Agent</value></data>
   <data name="Frontend.573" xml:space="preserve"><value>类型 {0}</value></data>
   <data name="Frontend.574" xml:space="preserve"><value>平台 {0}</value></data>
+  <data name="Frontend.575" xml:space="preserve"><value>A2A 发布配置已保存（当前未启用）</value></data>
+  <data name="Frontend.576" xml:space="preserve"><value>复制失败，请手动复制地址</value></data>
+  <data name="Frontend.577" xml:space="preserve"><value>有 {0} 个远程 A2A 智能体当前不可用，可在成员列表中手动重测</value></data>
 </root>
