@@ -791,4 +791,25 @@
   <data name="Frontend.744" xml:space="preserve"><value>Le mode formule pure conserve le type d’exécution ; le paramètre cible attend {0}</value></data>
   <data name="Frontend.745" xml:space="preserve"><value>Résultat de formule pure : {0} → paramètre cible {1}</value></data>
   <data name="Frontend.746" xml:space="preserve"><value>Vous pouvez utiliser {{input}} pour référencer l’entrée actuelle ou ouvrir l’éditeur pour insérer une sortie amont.</value></data>
+  <data name="Frontend.747" xml:space="preserve"><value>Échec de l’actualisation de la liste des Workflows</value></data>
+  <data name="Frontend.748" xml:space="preserve"><value>Réessayez plus tard.</value></data>
+  <data name="Frontend.749" xml:space="preserve"><value>Impossible de charger le catalogue des nœuds Function, Agent ou A2A.</value></data>
+  <data name="Frontend.750" xml:space="preserve"><value>Vérifiez le module AIKernel et les autorisations du compte actuel.</value></data>
+  <data name="Frontend.751" xml:space="preserve"><value>Impossible d’ouvrir la tâche</value></data>
+  <data name="Frontend.752" xml:space="preserve"><value>La tâche ou le Workflow n’existe plus.</value></data>
+  <data name="Frontend.753" xml:space="preserve"><value>Échec de validation du fichier Workflow.</value></data>
+  <data name="Frontend.754" xml:space="preserve"><value>Impossible d’importer</value></data>
+  <data name="Frontend.755" xml:space="preserve"><value>{0} champs sensibles doivent être reconfigurés après l’importation.</value></data>
+  <data name="Frontend.756" xml:space="preserve"><value>Importer « {0} » comme brouillon désactivé.{1}</value></data>
+  <data name="Frontend.757" xml:space="preserve"><value>Confirmer l’importation du Workflow</value></data>
+  <data name="Frontend.758" xml:space="preserve"><value>Importer le brouillon</value></data>
+  <data name="Frontend.759" xml:space="preserve"><value>Importé comme brouillon désactivé. Vérifiez la configuration avant de l’activer.</value></data>
+  <data name="Frontend.760" xml:space="preserve"><value>Échec de l’importation</value></data>
+  <data name="Frontend.761" xml:space="preserve"><value>Échec de l’importation du fichier Workflow.</value></data>
+  <data name="Frontend.762" xml:space="preserve"><value>Ce navigateur ne peut pas générer une clé de récupération sécurisée. Saisissez manuellement une clé aléatoire forte.</value></data>
+  <data name="Frontend.763" xml:space="preserve"><value>Une nouvelle clé de récupération externe a été générée. Donnez-la à un appelant externe de confiance après l’enregistrement.</value></data>
+  <data name="Frontend.764" xml:space="preserve"><value>Déconnectez d’abord le nœud</value></data>
+  <data name="Frontend.765" xml:space="preserve"><value>Pour éviter de modifier silencieusement le flux existant, seuls les nœuds non connectés peuvent être glissés dans une connexion.</value></data>
+  <data name="Frontend.766" xml:space="preserve"><value>Copie de {0}</value></data>
+  <data name="Frontend.767" xml:space="preserve"><value>La connexion d’origine a changé ; rouvrez le menu d’insertion.</value></data>
 </root>

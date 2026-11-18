@@ -791,4 +791,25 @@
   <data name="Frontend.744" xml:space="preserve"><value>Pure formula mode preserves the runtime type; the target parameter requires {0}</value></data>
   <data name="Frontend.745" xml:space="preserve"><value>Pure formula result: {0} → target parameter {1}</value></data>
   <data name="Frontend.746" xml:space="preserve"><value>You can use {{input}} to reference the current input, or open the editor to insert upstream output.</value></data>
+  <data name="Frontend.747" xml:space="preserve"><value>Workflow list refresh failed</value></data>
+  <data name="Frontend.748" xml:space="preserve"><value>Please try again later.</value></data>
+  <data name="Frontend.749" xml:space="preserve"><value>Failed to load the Function, Agent, or A2A node catalog.</value></data>
+  <data name="Frontend.750" xml:space="preserve"><value>Check the AIKernel module and the current account's permissions.</value></data>
+  <data name="Frontend.751" xml:space="preserve"><value>Unable to open task</value></data>
+  <data name="Frontend.752" xml:space="preserve"><value>The task or Workflow no longer exists.</value></data>
+  <data name="Frontend.753" xml:space="preserve"><value>Workflow file validation failed.</value></data>
+  <data name="Frontend.754" xml:space="preserve"><value>Unable to import</value></data>
+  <data name="Frontend.755" xml:space="preserve"><value>{0} sensitive fields need to be reconfigured after import.</value></data>
+  <data name="Frontend.756" xml:space="preserve"><value>Import "{0}" as a disabled draft.{1}</value></data>
+  <data name="Frontend.757" xml:space="preserve"><value>Confirm Workflow import</value></data>
+  <data name="Frontend.758" xml:space="preserve"><value>Import draft</value></data>
+  <data name="Frontend.759" xml:space="preserve"><value>Imported as a disabled draft. Check the configuration before enabling it.</value></data>
+  <data name="Frontend.760" xml:space="preserve"><value>Import failed</value></data>
+  <data name="Frontend.761" xml:space="preserve"><value>Workflow file import failed.</value></data>
+  <data name="Frontend.762" xml:space="preserve"><value>This browser cannot securely generate a recovery key. Enter a strong random key manually.</value></data>
+  <data name="Frontend.763" xml:space="preserve"><value>A new external recovery key was generated. Give it to a trusted external caller after saving.</value></data>
+  <data name="Frontend.764" xml:space="preserve"><value>Disconnect the node first</value></data>
+  <data name="Frontend.765" xml:space="preserve"><value>To avoid silently changing the existing flow, only an unconnected node can be dragged into a connection.</value></data>
+  <data name="Frontend.766" xml:space="preserve"><value>Copy of {0}</value></data>
+  <data name="Frontend.767" xml:space="preserve"><value>The original connection changed; reopen the insert menu.</value></data>
 </root>

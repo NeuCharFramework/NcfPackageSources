@@ -904,7 +904,7 @@ new Vue({
                 const listResponse = await service.get('/Admin/NeuCharWorkflow/Index?handler=List');
                 this.workflows = NeuCharWorkflowUi.unwrap(listResponse) || [];
             } catch (error) {
-                this.$notify({ title: '工作流列表刷新失败', message: this.errorMessage(error, '请稍后重试。'), type: 'error' });
+                this.$notify({ title: ncfWorkflowText('Frontend.747'), message: this.errorMessage(error, ncfWorkflowText('Frontend.748')), type: 'error' });
             } finally { this.loading = false; }
         },
         async loadDesignerData() {
@@ -917,8 +917,8 @@ new Vue({
                 this.functions = [];
                 this.workflowObjects = [];
                 this.$notify({
-                    title: '节点目录暂不可用',
-                    message: this.errorMessage(error, 'Function、Agent 或 A2A 节点目录加载失败。'),
+                    title: ncfWorkflowText('Frontend.439'),
+                    message: this.errorMessage(error, ncfWorkflowText('Frontend.749')),
                     type: 'warning'
                 });
             }
@@ -950,8 +950,8 @@ new Vue({
             } catch (error) {
                 this.chatModels = [];
                 this.$notify({
-                    title: '模型列表暂不可用',
-                    message: this.errorMessage(error, '请确认 AIKernel 模块及当前账号的访问权限。'),
+                    title: ncfWorkflowText('Frontend.440'),
+                    message: this.errorMessage(error, ncfWorkflowText('Frontend.750')),
                     type: 'warning'
                 });
             }
@@ -974,7 +974,7 @@ new Vue({
                 this.run.lastSequence = 0;
                 this.pollRun();
             } catch (error) {
-                this.$notify({ title: '无法打开任务', message: this.errorMessage(error, '任务或工作流已不存在。'), type: 'warning' });
+                this.$notify({ title: ncfWorkflowText('Frontend.751'), message: this.errorMessage(error, ncfWorkflowText('Frontend.752')), type: 'warning' });
             }
         },
         openSubWorkflow(workflowId) {
@@ -1021,16 +1021,16 @@ new Vue({
                 const preview = NeuCharWorkflowUi.unwrap(previewResponse);
                 const errors = (preview && preview.errors) || [];
                 if (errors.length || !preview || preview.valid !== true) {
-                    const message = errors.map(error => error.message).join('；') || 'Workflow 文件校验失败。';
-                    this.$notify({ title: '无法导入', message, type: 'error', duration: 6000 });
+                    const message = errors.map(error => error.message).join('；') || ncfWorkflowText('Frontend.753');
+                    this.$notify({ title: ncfWorkflowText('Frontend.754'), message, type: 'error', duration: 6000 });
                     return;
                 }
                 const secrets = (preview.secrets || []).length;
-                const warning = secrets ? `其中 ${secrets} 个敏感字段需要导入后重新配置。` : '';
+                const warning = secrets ? ` ${ncfWorkflowText('Frontend.755').replace('{0}', secrets)}` : '';
                 await this.$confirm(
-                    `将以禁用草稿导入“${preview.name || 'Imported Workflow'}”。${warning}`,
-                    '确认导入 Workflow',
-                    { confirmButtonText: '导入草稿', cancelButtonText: '取消', type: 'warning' });
+                    ncfWorkflowText('Frontend.756').replace('{0}', preview.name || 'Imported Workflow').replace('{1}', warning),
+                    ncfWorkflowText('Frontend.757'),
+                    { confirmButtonText: ncfWorkflowText('Frontend.758'), cancelButtonText: ncfWorkflowText('Frontend.193'), type: 'warning' });
                 const response = await service.post('/Admin/NeuCharWorkflow/Index?handler=Import', {
                     content,
                     format: extension
@@ -1039,10 +1039,10 @@ new Vue({
                 this.applySavedWorkflow(saved);
                 this.editing = true;
                 await this.refreshWorkflowList();
-                this.$notify({ title: 'Workflow', message: '已导入为禁用草稿，请检查配置后再启用。', type: 'success' });
+                this.$notify({ title: 'Workflow', message: ncfWorkflowText('Frontend.759'), type: 'success' });
             } catch (error) {
                 if (!(error && error.message === 'cancel')) {
-                    this.$notify({ title: '导入失败', message: this.errorMessage(error, 'Workflow 文件导入失败。'), type: 'error' });
+                    this.$notify({ title: ncfWorkflowText('Frontend.760'), message: this.errorMessage(error, ncfWorkflowText('Frontend.761')), type: 'error' });
                 }
             } finally {
                 if (input) input.value = '';
@@ -1194,13 +1194,13 @@ new Vue({
             if (this.editingLocked || !node || node.type !== 'human-input') return;
             const cryptoApi = window.crypto;
             if (!cryptoApi || typeof cryptoApi.getRandomValues !== 'function') {
-                this.$message.error('当前浏览器无法安全生成恢复密钥，请手动填写高强度随机密钥。');
+                this.$message.error(ncfWorkflowText('Frontend.762'));
                 return;
             }
             const bytes = new Uint8Array(32);
             cryptoApi.getRandomValues(bytes);
             node.config.externalResumeKey = Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('');
-            this.$message.success('已生成新的外部恢复密钥；保存后请交给可信的外部调用方。');
+            this.$message.success(ncfWorkflowText('Frontend.763'));
         },
         createFunctionNode(fn) {
             return {
@@ -1352,7 +1352,7 @@ new Vue({
             const target = liveEdge && this.form.graph.nodes.find(item => item.id === liveEdge.target);
             if (!liveEdge || !source || !target) {
                 this.closeEdgeInsertMenu();
-                this.$notify({ title: ncfWorkflowText('Frontend.456'), message: ncfWorkflowText('Frontend.188'), type: 'warning' });
+                this.$notify({ title: ncfWorkflowText('Frontend.456'), message: ncfWorkflowText('Frontend.767'), type: 'warning' });
                 return null;
             }
 
@@ -1390,8 +1390,8 @@ new Vue({
             const relatedEdges = this.form.graph.edges.filter(item => item.source === node.id || item.target === node.id);
             if (relatedEdges.length) {
                 this.$notify({
-                    title: '请先断开节点',
-                    message: '为避免静默改变已有流程，只能将尚未连接的节点拖入连线。',
+                    title: ncfWorkflowText('Frontend.764'),
+                    message: ncfWorkflowText('Frontend.765'),
                     type: 'warning'
                 });
                 return null;
@@ -1474,7 +1474,7 @@ new Vue({
             const copies = sourceNodes.map(node => {
                 const copy = JSON.parse(JSON.stringify(node));
                 copy.id = this.makeId(node.type || 'node');
-                copy.name = `${node.name || ncfWorkflowText('Frontend.501')}（副本）`;
+                copy.name = ncfWorkflowText('Frontend.766').replace('{0}', node.name || ncfWorkflowText('Frontend.501'));
                 copy.x = Number(node.x || 0) + 40;
                 copy.y = Number(node.y || 0) + 40;
                 nodeIdMap.set(node.id, copy.id);

@@ -791,4 +791,25 @@
   <data name="Frontend.744" xml:space="preserve"><value>纯公式模式：运行时结果会保留类型；目标参数需要 {0}</value></data>
   <data name="Frontend.745" xml:space="preserve"><value>纯公式结果：{0} → 目标参数 {1}</value></data>
   <data name="Frontend.746" xml:space="preserve"><value>可使用 {{input}} 引用当前输入；也可以打开编辑器插入上游输出。</value></data>
+  <data name="Frontend.747" xml:space="preserve"><value>工作流列表刷新失败</value></data>
+  <data name="Frontend.748" xml:space="preserve"><value>请稍后重试。</value></data>
+  <data name="Frontend.749" xml:space="preserve"><value>Function、Agent 或 A2A 节点目录加载失败。</value></data>
+  <data name="Frontend.750" xml:space="preserve"><value>请确认 AIKernel 模块及当前账号的访问权限。</value></data>
+  <data name="Frontend.751" xml:space="preserve"><value>无法打开任务</value></data>
+  <data name="Frontend.752" xml:space="preserve"><value>任务或工作流已不存在。</value></data>
+  <data name="Frontend.753" xml:space="preserve"><value>Workflow 文件校验失败。</value></data>
+  <data name="Frontend.754" xml:space="preserve"><value>无法导入</value></data>
+  <data name="Frontend.755" xml:space="preserve"><value>其中 {0} 个敏感字段需要导入后重新配置。</value></data>
+  <data name="Frontend.756" xml:space="preserve"><value>将以禁用草稿导入“{0}”。{1}</value></data>
+  <data name="Frontend.757" xml:space="preserve"><value>确认导入 Workflow</value></data>
+  <data name="Frontend.758" xml:space="preserve"><value>导入草稿</value></data>
+  <data name="Frontend.759" xml:space="preserve"><value>已导入为禁用草稿，请检查配置后再启用。</value></data>
+  <data name="Frontend.760" xml:space="preserve"><value>导入失败</value></data>
+  <data name="Frontend.761" xml:space="preserve"><value>Workflow 文件导入失败。</value></data>
+  <data name="Frontend.762" xml:space="preserve"><value>当前浏览器无法安全生成恢复密钥，请手动填写高强度随机密钥。</value></data>
+  <data name="Frontend.763" xml:space="preserve"><value>已生成新的外部恢复密钥；保存后请交给可信的外部调用方。</value></data>
+  <data name="Frontend.764" xml:space="preserve"><value>请先断开节点</value></data>
+  <data name="Frontend.765" xml:space="preserve"><value>为避免静默改变已有流程，只能将尚未连接的节点拖入连线。</value></data>
+  <data name="Frontend.766" xml:space="preserve"><value>{0}（副本）</value></data>
+  <data name="Frontend.767" xml:space="preserve"><value>原连线已变化，请重新打开插入菜单。</value></data>
 </root>

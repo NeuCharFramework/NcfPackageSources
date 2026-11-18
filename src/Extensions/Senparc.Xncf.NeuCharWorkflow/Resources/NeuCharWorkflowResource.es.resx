@@ -791,4 +791,25 @@
   <data name="Frontend.744" xml:space="preserve"><value>El modo de fórmula pura conserva el tipo de ejecución; el parámetro requiere {0}</value></data>
   <data name="Frontend.745" xml:space="preserve"><value>Resultado de fórmula pura: {0} → parámetro de destino {1}</value></data>
   <data name="Frontend.746" xml:space="preserve"><value>Puedes usar {{input}} para referenciar la entrada actual o abrir el editor para insertar una salida anterior.</value></data>
+  <data name="Frontend.747" xml:space="preserve"><value>Error al actualizar la lista de Workflows</value></data>
+  <data name="Frontend.748" xml:space="preserve"><value>Inténtalo de nuevo más tarde.</value></data>
+  <data name="Frontend.749" xml:space="preserve"><value>No se pudo cargar el catálogo de nodos Function, Agent o A2A.</value></data>
+  <data name="Frontend.750" xml:space="preserve"><value>Comprueba el módulo AIKernel y los permisos de la cuenta actual.</value></data>
+  <data name="Frontend.751" xml:space="preserve"><value>No se pudo abrir la tarea</value></data>
+  <data name="Frontend.752" xml:space="preserve"><value>La tarea o el Workflow ya no existe.</value></data>
+  <data name="Frontend.753" xml:space="preserve"><value>La validación del archivo Workflow ha fallado.</value></data>
+  <data name="Frontend.754" xml:space="preserve"><value>No se pudo importar</value></data>
+  <data name="Frontend.755" xml:space="preserve"><value>{0} campos sensibles deben configurarse de nuevo después de importar.</value></data>
+  <data name="Frontend.756" xml:space="preserve"><value>Importar «{0}» como borrador deshabilitado.{1}</value></data>
+  <data name="Frontend.757" xml:space="preserve"><value>Confirmar importación de Workflow</value></data>
+  <data name="Frontend.758" xml:space="preserve"><value>Importar borrador</value></data>
+  <data name="Frontend.759" xml:space="preserve"><value>Importado como borrador deshabilitado. Comprueba la configuración antes de activarlo.</value></data>
+  <data name="Frontend.760" xml:space="preserve"><value>Error de importación</value></data>
+  <data name="Frontend.761" xml:space="preserve"><value>La importación del archivo Workflow ha fallado.</value></data>
+  <data name="Frontend.762" xml:space="preserve"><value>Este navegador no puede generar una clave de recuperación segura. Introduce manualmente una clave aleatoria fuerte.</value></data>
+  <data name="Frontend.763" xml:space="preserve"><value>Se generó una nueva clave de recuperación externa. Entrégala a un llamador externo de confianza después de guardar.</value></data>
+  <data name="Frontend.764" xml:space="preserve"><value>Desconecta primero el nodo</value></data>
+  <data name="Frontend.765" xml:space="preserve"><value>Para evitar cambiar silenciosamente el flujo existente, solo se pueden arrastrar nodos no conectados a una conexión.</value></data>
+  <data name="Frontend.766" xml:space="preserve"><value>Copia de {0}</value></data>
+  <data name="Frontend.767" xml:space="preserve"><value>La conexión original ha cambiado; vuelve a abrir el menú de inserción.</value></data>
 </root>

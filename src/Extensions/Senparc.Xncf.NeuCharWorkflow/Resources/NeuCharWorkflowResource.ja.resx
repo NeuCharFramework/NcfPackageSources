@@ -807,4 +807,25 @@
   <data name="Frontend.744" xml:space="preserve"><value>純粋な数式モードでは実行時の型を保持します。対象パラメーターには {0} が必要です</value></data>
   <data name="Frontend.745" xml:space="preserve"><value>純粋な数式の結果：{0} → 対象パラメーター {1}</value></data>
   <data name="Frontend.746" xml:space="preserve"><value>{{input}} で現在の入力を参照するか、エディターを開いて上流出力を挿入できます。</value></data>
+  <data name="Frontend.747" xml:space="preserve"><value>Workflow リストの更新に失敗しました</value></data>
+  <data name="Frontend.748" xml:space="preserve"><value>後でもう一度お試しください。</value></data>
+  <data name="Frontend.749" xml:space="preserve"><value>Function、Agent、A2A ノードカタログの読み込みに失敗しました。</value></data>
+  <data name="Frontend.750" xml:space="preserve"><value>AIKernel モジュールと現在のアカウント権限を確認してください。</value></data>
+  <data name="Frontend.751" xml:space="preserve"><value>タスクを開けません</value></data>
+  <data name="Frontend.752" xml:space="preserve"><value>タスクまたは Workflow は存在しません。</value></data>
+  <data name="Frontend.753" xml:space="preserve"><value>Workflow ファイルの検証に失敗しました。</value></data>
+  <data name="Frontend.754" xml:space="preserve"><value>インポートできません</value></data>
+  <data name="Frontend.755" xml:space="preserve"><value>インポート後に {0} 個の機密フィールドを再設定する必要があります。</value></data>
+  <data name="Frontend.756" xml:space="preserve"><value>「{0}」を無効な下書きとしてインポートします。{1}</value></data>
+  <data name="Frontend.757" xml:space="preserve"><value>Workflow のインポートを確認</value></data>
+  <data name="Frontend.758" xml:space="preserve"><value>下書きをインポート</value></data>
+  <data name="Frontend.759" xml:space="preserve"><value>無効な下書きとしてインポートしました。有効化する前に設定を確認してください。</value></data>
+  <data name="Frontend.760" xml:space="preserve"><value>インポートに失敗しました</value></data>
+  <data name="Frontend.761" xml:space="preserve"><value>Workflow ファイルのインポートに失敗しました。</value></data>
+  <data name="Frontend.762" xml:space="preserve"><value>このブラウザーでは復旧キーを安全に生成できません。強力なランダムキーを手動で入力してください。</value></data>
+  <data name="Frontend.763" xml:space="preserve"><value>新しい外部復旧キーを生成しました。保存後、信頼できる外部呼び出し元に渡してください。</value></data>
+  <data name="Frontend.764" xml:space="preserve"><value>先にノードの接続を解除してください</value></data>
+  <data name="Frontend.765" xml:space="preserve"><value>既存のフローを暗黙に変更しないため、未接続のノードだけを接続へドラッグできます。</value></data>
+  <data name="Frontend.766" xml:space="preserve"><value>{0}（コピー）</value></data>
+  <data name="Frontend.767" xml:space="preserve"><value>元の接続が変更されました。挿入メニューを再度開いてください。</value></data>
 </root>

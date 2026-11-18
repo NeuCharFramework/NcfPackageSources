@@ -791,4 +791,25 @@
   <data name="Frontend.744" xml:space="preserve"><value>Режим чистой формулы сохраняет тип во время выполнения; целевому параметру нужен {0}</value></data>
   <data name="Frontend.745" xml:space="preserve"><value>Результат чистой формулы: {0} → целевой параметр {1}</value></data>
   <data name="Frontend.746" xml:space="preserve"><value>Можно использовать {{input}} для ссылки на текущий ввод или открыть редактор и вставить вывод предыдущего узла.</value></data>
+  <data name="Frontend.747" xml:space="preserve"><value>Не удалось обновить список Workflow</value></data>
+  <data name="Frontend.748" xml:space="preserve"><value>Повторите попытку позже.</value></data>
+  <data name="Frontend.749" xml:space="preserve"><value>Не удалось загрузить каталог узлов Function, Agent или A2A.</value></data>
+  <data name="Frontend.750" xml:space="preserve"><value>Проверьте модуль AIKernel и права текущей учётной записи.</value></data>
+  <data name="Frontend.751" xml:space="preserve"><value>Не удалось открыть задачу</value></data>
+  <data name="Frontend.752" xml:space="preserve"><value>Задача или Workflow больше не существуют.</value></data>
+  <data name="Frontend.753" xml:space="preserve"><value>Не удалось проверить файл Workflow.</value></data>
+  <data name="Frontend.754" xml:space="preserve"><value>Не удалось импортировать</value></data>
+  <data name="Frontend.755" xml:space="preserve"><value>После импорта нужно заново настроить чувствительные поля: {0}.</value></data>
+  <data name="Frontend.756" xml:space="preserve"><value>Импортировать «{0}» как отключённый черновик.{1}</value></data>
+  <data name="Frontend.757" xml:space="preserve"><value>Подтвердить импорт Workflow</value></data>
+  <data name="Frontend.758" xml:space="preserve"><value>Импортировать черновик</value></data>
+  <data name="Frontend.759" xml:space="preserve"><value>Импортировано как отключённый черновик. Проверьте конфигурацию перед включением.</value></data>
+  <data name="Frontend.760" xml:space="preserve"><value>Ошибка импорта</value></data>
+  <data name="Frontend.761" xml:space="preserve"><value>Не удалось импортировать файл Workflow.</value></data>
+  <data name="Frontend.762" xml:space="preserve"><value>Этот браузер не может безопасно создать ключ восстановления. Введите надёжный случайный ключ вручную.</value></data>
+  <data name="Frontend.763" xml:space="preserve"><value>Создан новый внешний ключ восстановления. После сохранения передайте его доверенному внешнему вызывающему.</value></data>
+  <data name="Frontend.764" xml:space="preserve"><value>Сначала отключите узел</value></data>
+  <data name="Frontend.765" xml:space="preserve"><value>Чтобы не менять существующий поток незаметно, в соединение можно перетаскивать только неподключённые узлы.</value></data>
+  <data name="Frontend.766" xml:space="preserve"><value>Копия: {0}</value></data>
+  <data name="Frontend.767" xml:space="preserve"><value>Исходное соединение изменилось; снова откройте меню вставки.</value></data>
 </root>
