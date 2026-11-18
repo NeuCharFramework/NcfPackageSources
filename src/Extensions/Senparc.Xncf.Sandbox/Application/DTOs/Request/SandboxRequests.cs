@@ -202,13 +202,13 @@ public class Sandbox_LabListFilesRequest : FunctionAppRequestBase
     public string SessionId { get; set; } = string.Empty;
 
     [MaxLength(512)]
-    [Description("工作区目录||相对于 Lab 工作区的目录，留空表示根目录")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.ListDirectory", "Parameter.Sandbox.ListDirectory.Help")]
     public string RelativeDirectory { get; set; } = string.Empty;
 
-    [Description("递归列举||是否递归列举子目录")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.Recursive", "Parameter.Sandbox.Recursive.Help")]
     public bool Recursive { get; set; }
 
-    [Description("最多返回数量||留空或 0 使用系统默认上限")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.MaxItems", "Parameter.Sandbox.MaxItems.Help")]
     public int MaxItems { get; set; }
 }
 

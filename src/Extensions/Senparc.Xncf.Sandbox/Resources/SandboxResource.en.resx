@@ -287,4 +287,10 @@
   <data name="Parameter.Sandbox.Title.Help" xml:space="preserve"><value>Optional; when provided, it becomes the first Markdown cell as a level-one heading.</value></data>
   <data name="Parameter.Sandbox.Cells" xml:space="preserve"><value>Cell content</value></data>
   <data name="Parameter.Sandbox.Cells.Help" xml:space="preserve"><value>Percent format: put # %% on its own line to separate code cells; content after # %% [markdown] is a Markdown cell; content before the first marker is the first code cell.</value></data>
+  <data name="Parameter.Sandbox.ListDirectory" xml:space="preserve"><value>Workspace directory</value></data>
+  <data name="Parameter.Sandbox.ListDirectory.Help" xml:space="preserve"><value>Directory relative to the Lab workspace; leave empty for the root directory.</value></data>
+  <data name="Parameter.Sandbox.Recursive" xml:space="preserve"><value>Recursive listing</value></data>
+  <data name="Parameter.Sandbox.Recursive.Help" xml:space="preserve"><value>Whether to list child directories recursively.</value></data>
+  <data name="Parameter.Sandbox.MaxItems" xml:space="preserve"><value>Maximum items</value></data>
+  <data name="Parameter.Sandbox.MaxItems.Help" xml:space="preserve"><value>Leave empty or use 0 to apply the system default limit.</value></data>
 </root>
