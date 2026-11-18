@@ -261,4 +261,14 @@
   <data name="Frontend.117" xml:space="preserve"><value>初回リリース用のプレースホルダー（まだ利用できません）</value></data>
   <data name="Function.Sandbox.LabUploadFiles.Name" xml:space="preserve"><value>Lab ファイルを一括アップロード</value></data>
   <data name="Function.Sandbox.LabUploadFiles.Description" xml:space="preserve"><value>複数のアップロード済みファイルをストリームで実行中の永続 JupyterLab ワークスペースに書き込みます。</value></data>
+  <data name="Frontend.118" xml:space="preserve"><value>コード</value></data>
+  <data name="Frontend.119" xml:space="preserve"><value>短いタスクのソースコード。Python 例：print('hello from NCF Sandbox')。C# 例：Console.WriteLine("hello from NCF Sandbox")。（C# 文字列は二重引用符を使用）</value></data>
+  <data name="Frontend.120" xml:space="preserve"><value>コマンド</value></data>
+  <data name="Frontend.121" xml:space="preserve"><value>Lab コンテナー内で /bin/sh -lc により実行するコマンド。作業ディレクトリは Lab ワークスペース内に制限されます。</value></data>
+  <data name="Frontend.122" xml:space="preserve"><value>作業ディレクトリ</value></data>
+  <data name="Frontend.123" xml:space="preserve"><value>Lab ワークスペースからの相対ディレクトリ。空欄ならワークスペースのルートです。</value></data>
+  <data name="Frontend.124" xml:space="preserve"><value>タイムアウト（秒）</value></data>
+  <data name="Frontend.125" xml:space="preserve"><value>1 回のコマンドの最大実行時間。既定 30 秒、最大 120 秒です。</value></data>
+  <data name="Frontend.126" xml:space="preserve"><value>標準入力</value></data>
+  <data name="Frontend.127" xml:space="preserve"><value>任意。指定すると docker exec -i で実行し、内容を 1 行ずつ stdin に書き込みます。最大 32768 文字です。</value></data>
 </root>

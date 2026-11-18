@@ -261,4 +261,14 @@
   <data name="Frontend.117" xml:space="preserve"><value>Placeholder for the first release; not available yet</value></data>
   <data name="Function.Sandbox.LabUploadFiles.Name" xml:space="preserve"><value>Upload Lab files</value></data>
   <data name="Function.Sandbox.LabUploadFiles.Description" xml:space="preserve"><value>Write multiple uploaded files as streams into a running persistent JupyterLab workspace.</value></data>
+  <data name="Frontend.118" xml:space="preserve"><value>Code</value></data>
+  <data name="Frontend.119" xml:space="preserve"><value>Short task source code. Python example: print('hello from NCF Sandbox'); C# example: Console.WriteLine("hello from NCF Sandbox"); (C# strings must use double quotes)</value></data>
+  <data name="Frontend.120" xml:space="preserve"><value>Command</value></data>
+  <data name="Frontend.121" xml:space="preserve"><value>Command executed through /bin/sh -lc inside the Lab container; the working directory is restricted to the Lab workspace.</value></data>
+  <data name="Frontend.122" xml:space="preserve"><value>Working directory</value></data>
+  <data name="Frontend.123" xml:space="preserve"><value>Directory relative to the Lab workspace; leave empty for the workspace root.</value></data>
+  <data name="Frontend.124" xml:space="preserve"><value>Timeout (seconds)</value></data>
+  <data name="Frontend.125" xml:space="preserve"><value>Maximum duration of one command; 30 seconds by default and 120 seconds maximum.</value></data>
+  <data name="Frontend.126" xml:space="preserve"><value>Standard input</value></data>
+  <data name="Frontend.127" xml:space="preserve"><value>Optional; when provided, the command runs with docker exec -i and the content is written line by line to stdin, up to 32768 characters.</value></data>
 </root>

@@ -260,4 +260,14 @@
   <data name="Frontend.117" xml:space="preserve"><value>一期占位，尚未可用</value></data>
   <data name="Function.Sandbox.LabUploadFiles.Name" xml:space="preserve"><value>批量上传 Lab 文件</value></data>
   <data name="Function.Sandbox.LabUploadFiles.Description" xml:space="preserve"><value>把多个已上传文件以流方式写入运行中的持久化 JupyterLab 工作区。</value></data>
+  <data name="Frontend.118" xml:space="preserve"><value>代码</value></data>
+  <data name="Frontend.119" xml:space="preserve"><value>短任务源码。Python 示例：print('hello from NCF Sandbox')；C# 示例：Console.WriteLine("hello from NCF Sandbox");（C# 字符串须用双引号）</value></data>
+  <data name="Frontend.120" xml:space="preserve"><value>命令</value></data>
+  <data name="Frontend.121" xml:space="preserve"><value>在 Lab 容器内通过 /bin/sh -lc 执行的命令；工作目录限制在 Lab 工作区</value></data>
+  <data name="Frontend.122" xml:space="preserve"><value>工作目录</value></data>
+  <data name="Frontend.123" xml:space="preserve"><value>相对于 Lab 工作区的目录，留空表示工作区根目录</value></data>
+  <data name="Frontend.124" xml:space="preserve"><value>超时（秒）</value></data>
+  <data name="Frontend.125" xml:space="preserve"><value>单次命令最长执行时间，默认 30 秒，最多 120 秒</value></data>
+  <data name="Frontend.126" xml:space="preserve"><value>标准输入</value></data>
+  <data name="Frontend.127" xml:space="preserve"><value>可选；填写后命令以 docker exec -i 执行，该内容会逐行写入程序 stdin，最长 32768 个字符</value></data>
 </root>
