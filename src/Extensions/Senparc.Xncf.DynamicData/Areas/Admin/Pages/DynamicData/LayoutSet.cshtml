@@ -812,14 +812,14 @@
                                     </el-form-item>
                                 </el-form>
                                 @* Custom-column button events *@
-                                <div class="operation-title" style="margin-top:20px;">事件设置</div>
+                                <div class="operation-title" style="margin-top:20px;">{{ ncfST('Frontend.076') }}</div>
                                 <el-form :model="customColumnBtnForm" :size="elSize" label-position="top"
                                     label-width="80px" class="form-container">
-                                    <el-form-item label="按钮事件">
+                                    <el-form-item :label="ncfST('Frontend.076')">
                                         <el-select v-model="customColumnBtnForm.btnEvent" style="width:100%"
-                                            placeholder="请选择按钮事件">
-                                            <el-option label="点击" value="edit"></el-option>
-                                            <el-option label="双击" value="delete"></el-option>
+                                            :placeholder="ncfST('Frontend.212')">
+                                            <el-option :label="ncfST('Frontend.148')" value="edit"></el-option>
+                                            <el-option :label="ncfST('Frontend.032')" value="delete"></el-option>
                                         </el-select>
                                     </el-form-item>
                                     <el-form-item :label="ncfST('Frontend.227')">
