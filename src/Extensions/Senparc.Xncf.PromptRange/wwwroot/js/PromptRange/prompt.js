@@ -1196,15 +1196,15 @@ var app = new Vue({
                 scoreVal: 0,
                 alResultList: [{
                     id: 1,
-                    label: '预期结果1',
+                    label: ncfST('Frontend.416'),
                     value: ''
                 }, {
                     id: 2,
-                    label: '预期结果2',
+                    label: ncfST('Frontend.417'),
                     value: ''
                 }, {
                     id: 3,
-                    label: '预期结果3',
+                    label: ncfST('Frontend.418'),
                     value: ''
                 }]
             }
@@ -1223,7 +1223,7 @@ var app = new Vue({
                     const expectedList = JSON.parse(promptItem.expectedResultsJson)
                     normalized.alResultList = expectedList.map((value, index) => ({
                         id: index + 1,
-                        label: '预期结果',
+                        label: ncfST('Frontend.415'),
                         value
                     }))
                 } catch (e) {
@@ -2108,8 +2108,8 @@ var app = new Vue({
                 })
                 return
             }
-            const prefix = '名称：';
-            const suffix = ' | 版本号：';
+            const prefix = ncfST('Frontend.423');
+            const suffix = ncfST('Frontend.424');
 
             const startIndex = this.targetlaneName.indexOf(prefix);
             const endIndex = this.targetlaneName.indexOf(suffix, startIndex);
