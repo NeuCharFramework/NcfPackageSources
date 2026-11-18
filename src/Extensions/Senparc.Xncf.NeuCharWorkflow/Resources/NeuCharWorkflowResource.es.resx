@@ -645,4 +645,23 @@
   <data name="Frontend.618" xml:space="preserve"><value>Envía un recordatorio NeuBell a los suscriptores y permite configurar cómo se consume después de hacer clic.</value></data>
   <data name="Frontend.619" xml:space="preserve"><value>Crea un recordatorio NeuBell y pausa la rama actual hasta que un administrador o un llamador externo con la clave de recuperación envíe texto.</value></data>
   <data name="Frontend.620" xml:space="preserve"><value>Marca el final del Workflow; no se puede insertar en una conexión existente.</value></data>
+  <data name="Chat.Title" xml:space="preserve"><value>Chat de NeuChar Workflow</value></data>
+  <data name="Chat.Loading" xml:space="preserve"><value>Cargando…</value></data>
+  <data name="Chat.NewConversation" xml:space="preserve"><value>Conversación nueva</value></data>
+  <data name="Chat.InputPlaceholder" xml:space="preserve"><value>Escribe un mensaje y pulsa Enter para enviarlo</value></data>
+  <data name="Chat.Send" xml:space="preserve"><value>Enviar</value></data>
+  <data name="Chat.EnterHint" xml:space="preserve"><value>Enter para enviar · Shift + Enter para una nueva línea · Tu mensaje inicia una ejecución de Workflow</value></data>
+  <data name="Chat.Processing" xml:space="preserve"><value>Procesando…</value></data>
+  <data name="Chat.PreviousProcessing" xml:space="preserve"><value>El mensaje anterior todavía se está procesando…</value></data>
+  <data name="Chat.Starting" xml:space="preserve"><value>Iniciando Workflow…</value></data>
+  <data name="Chat.RunFailed" xml:space="preserve"><value>La ejecución del Workflow falló.</value></data>
+  <data name="Chat.RunCompleted" xml:space="preserve"><value>Workflow completado.</value></data>
+  <data name="Chat.ClearConfirm" xml:space="preserve"><value>¿Borrar la conversación actual? Los Workflows en ejecución no se verán afectados.</value></data>
+  <data name="Chat.ResetFailed" xml:space="preserve"><value>Error al restablecer.</value></data>
+  <data name="Chat.SessionLoadFailed" xml:space="preserve"><value>No se pudo cargar la sesión de chat.</value></data>
+  <data name="Chat.SessionUnavailable" xml:space="preserve"><value>No se pudo cargar la sesión</value></data>
+  <data name="Chat.GuestMode" xml:space="preserve"><value>Modo visitante</value></data>
+  <data name="Chat.SignedIn" xml:space="preserve"><value>Sesión iniciada</value></data>
+  <data name="Chat.Trigger" xml:space="preserve"><value>Activador de Chat</value></data>
+  <data name="Chat.User" xml:space="preserve"><value>Yo</value></data>
 </root>

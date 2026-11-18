@@ -644,4 +644,23 @@
   <data name="Frontend.618" xml:space="preserve"><value>向订阅者发送 NeuBell 提醒，并可设置点击后的消费方式。</value></data>
   <data name="Frontend.619" xml:space="preserve"><value>创建一条 NeuBell 提醒并暂停当前分支，直到后台用户或持有恢复密钥的外部调用方提交文本。</value></data>
   <data name="Frontend.620" xml:space="preserve"><value>标记工作流的结束位置；不能插入到已有连线中。</value></data>
+  <data name="Chat.Title" xml:space="preserve"><value>NeuChar Workflow 聊天</value></data>
+  <data name="Chat.Loading" xml:space="preserve"><value>加载中…</value></data>
+  <data name="Chat.NewConversation" xml:space="preserve"><value>新对话</value></data>
+  <data name="Chat.InputPlaceholder" xml:space="preserve"><value>输入消息，按 Enter 发送</value></data>
+  <data name="Chat.Send" xml:space="preserve"><value>发送</value></data>
+  <data name="Chat.EnterHint" xml:space="preserve"><value>Enter 发送 · Shift + Enter 换行 · 你的消息会作为输入启动工作流</value></data>
+  <data name="Chat.Processing" xml:space="preserve"><value>正在处理…</value></data>
+  <data name="Chat.PreviousProcessing" xml:space="preserve"><value>上一条消息还在处理中…</value></data>
+  <data name="Chat.Starting" xml:space="preserve"><value>正在启动工作流…</value></data>
+  <data name="Chat.RunFailed" xml:space="preserve"><value>工作流执行失败。</value></data>
+  <data name="Chat.RunCompleted" xml:space="preserve"><value>工作流已完成。</value></data>
+  <data name="Chat.ClearConfirm" xml:space="preserve"><value>确定要清空当前会话吗？正在进行的工作流运行不受影响。</value></data>
+  <data name="Chat.ResetFailed" xml:space="preserve"><value>重置失败。</value></data>
+  <data name="Chat.SessionLoadFailed" xml:space="preserve"><value>无法加载聊天会话。</value></data>
+  <data name="Chat.SessionUnavailable" xml:space="preserve"><value>无法加载会话</value></data>
+  <data name="Chat.GuestMode" xml:space="preserve"><value>访客模式</value></data>
+  <data name="Chat.SignedIn" xml:space="preserve"><value>已登录</value></data>
+  <data name="Chat.Trigger" xml:space="preserve"><value>Chat 触发</value></data>
+  <data name="Chat.User" xml:space="preserve"><value>我</value></data>
 </root>

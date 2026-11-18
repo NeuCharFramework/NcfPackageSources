@@ -645,4 +645,23 @@
   <data name="Frontend.618" xml:space="preserve"><value>購読者へ NeuBell 通知を送り、クリック後の消費方法を設定できます。</value></data>
   <data name="Frontend.619" xml:space="preserve"><value>NeuBell 通知を作成して現在の分岐を一時停止し、管理者または復元キーを持つ外部呼び出し元がテキストを送信するまで待ちます。</value></data>
   <data name="Frontend.620" xml:space="preserve"><value>Workflow の終了位置を示します。既存の接続には挿入できません。</value></data>
+  <data name="Chat.Title" xml:space="preserve"><value>NeuChar Workflow Chat</value></data>
+  <data name="Chat.Loading" xml:space="preserve"><value>読み込み中…</value></data>
+  <data name="Chat.NewConversation" xml:space="preserve"><value>新しい会話</value></data>
+  <data name="Chat.InputPlaceholder" xml:space="preserve"><value>メッセージを入力し、Enter で送信</value></data>
+  <data name="Chat.Send" xml:space="preserve"><value>送信</value></data>
+  <data name="Chat.EnterHint" xml:space="preserve"><value>Enter で送信 · Shift + Enter で改行 · メッセージを送ると Workflow が実行されます</value></data>
+  <data name="Chat.Processing" xml:space="preserve"><value>処理中…</value></data>
+  <data name="Chat.PreviousProcessing" xml:space="preserve"><value>前のメッセージをまだ処理しています…</value></data>
+  <data name="Chat.Starting" xml:space="preserve"><value>Workflow を開始しています…</value></data>
+  <data name="Chat.RunFailed" xml:space="preserve"><value>Workflow の実行に失敗しました。</value></data>
+  <data name="Chat.RunCompleted" xml:space="preserve"><value>Workflow が完了しました。</value></data>
+  <data name="Chat.ClearConfirm" xml:space="preserve"><value>現在の会話を消去しますか？実行中の Workflow には影響しません。</value></data>
+  <data name="Chat.ResetFailed" xml:space="preserve"><value>リセットに失敗しました。</value></data>
+  <data name="Chat.SessionLoadFailed" xml:space="preserve"><value>チャットセッションを読み込めません。</value></data>
+  <data name="Chat.SessionUnavailable" xml:space="preserve"><value>セッションを読み込めません</value></data>
+  <data name="Chat.GuestMode" xml:space="preserve"><value>ゲストモード</value></data>
+  <data name="Chat.SignedIn" xml:space="preserve"><value>ログイン済み</value></data>
+  <data name="Chat.Trigger" xml:space="preserve"><value>Chat トリガー</value></data>
+  <data name="Chat.User" xml:space="preserve"><value>自分</value></data>
 </root>

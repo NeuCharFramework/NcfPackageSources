@@ -26,6 +26,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Senparc.Xncf.NeuCharWorkflow.Application.AppServices;
+using Senparc.Xncf.NeuCharWorkflow;
 
 namespace Senparc.Xncf.NeuCharWorkflow.OHS.Local.Controllers;
 
@@ -61,8 +62,33 @@ public sealed class NeuCharWorkflowChatController : ControllerBase
     public IActionResult Page(int workflowId)
     {
         EnsureGuestCookie();
+        var culture = System.Globalization.CultureInfo.CurrentUICulture;
+        var translations = new
+        {
+            title = NeuCharWorkflowResource.Get("Chat.Title", "NeuChar Workflow Chat"),
+            loading = NeuCharWorkflowResource.Get("Chat.Loading", "Loading…"),
+            newConversation = NeuCharWorkflowResource.Get("Chat.NewConversation", "New conversation"),
+            inputPlaceholder = NeuCharWorkflowResource.Get("Chat.InputPlaceholder", "Type a message and press Enter to send"),
+            send = NeuCharWorkflowResource.Get("Chat.Send", "Send"),
+            enterHint = NeuCharWorkflowResource.Get("Chat.EnterHint", "Enter to send · Shift + Enter for a new line · Your message starts a Workflow run"),
+            processing = NeuCharWorkflowResource.Get("Chat.Processing", "Processing…"),
+            previousProcessing = NeuCharWorkflowResource.Get("Chat.PreviousProcessing", "The previous message is still processing…"),
+            starting = NeuCharWorkflowResource.Get("Chat.Starting", "Starting Workflow…"),
+            runFailed = NeuCharWorkflowResource.Get("Chat.RunFailed", "Workflow execution failed."),
+            runCompleted = NeuCharWorkflowResource.Get("Chat.RunCompleted", "Workflow completed."),
+            clearConfirm = NeuCharWorkflowResource.Get("Chat.ClearConfirm", "Clear the current conversation? Any running Workflow is not affected."),
+            resetFailed = NeuCharWorkflowResource.Get("Chat.ResetFailed", "Reset failed."),
+            sessionLoadFailed = NeuCharWorkflowResource.Get("Chat.SessionLoadFailed", "Unable to load the chat session."),
+            sessionUnavailable = NeuCharWorkflowResource.Get("Chat.SessionUnavailable", "Unable to load the session"),
+            guestMode = NeuCharWorkflowResource.Get("Chat.GuestMode", "Guest mode"),
+            signedIn = NeuCharWorkflowResource.Get("Chat.SignedIn", "Signed in"),
+            trigger = NeuCharWorkflowResource.Get("Chat.Trigger", "Chat trigger"),
+            user = NeuCharWorkflowResource.Get("Chat.User", "Me")
+        };
         var html = NeuCharWorkflowChatPage.Template
-            .Replace("__WORKFLOW_ID__", workflowId.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            .Replace("__WORKFLOW_ID__", workflowId.ToString(System.Globalization.CultureInfo.InvariantCulture))
+            .Replace("__CHAT_LANG__", culture.Name.StartsWith("zh", StringComparison.OrdinalIgnoreCase) ? "zh-CN" : culture.Name)
+            .Replace("__CHAT_I18N__", JsonSerializer.Serialize(translations, JsonOptions));
         return Content(html, "text/html; charset=utf-8");
     }
 

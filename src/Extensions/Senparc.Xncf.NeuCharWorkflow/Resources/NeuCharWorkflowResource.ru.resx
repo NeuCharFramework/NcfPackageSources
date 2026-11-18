@@ -645,4 +645,23 @@
   <data name="Frontend.618" xml:space="preserve"><value>Отправляет подписчикам уведомление NeuBell и позволяет настроить способ его обработки после нажатия.</value></data>
   <data name="Frontend.619" xml:space="preserve"><value>Создаёт уведомление NeuBell и приостанавливает текущую ветвь, пока администратор или внешний вызов с ключом восстановления не отправит текст.</value></data>
   <data name="Frontend.620" xml:space="preserve"><value>Обозначает конец Workflow; его нельзя вставить в существующее соединение.</value></data>
+  <data name="Chat.Title" xml:space="preserve"><value>Чат NeuChar Workflow</value></data>
+  <data name="Chat.Loading" xml:space="preserve"><value>Загрузка…</value></data>
+  <data name="Chat.NewConversation" xml:space="preserve"><value>Новый разговор</value></data>
+  <data name="Chat.InputPlaceholder" xml:space="preserve"><value>Введите сообщение и нажмите Enter для отправки</value></data>
+  <data name="Chat.Send" xml:space="preserve"><value>Отправить</value></data>
+  <data name="Chat.EnterHint" xml:space="preserve"><value>Enter — отправить · Shift + Enter — новая строка · Сообщение запускает выполнение Workflow</value></data>
+  <data name="Chat.Processing" xml:space="preserve"><value>Обработка…</value></data>
+  <data name="Chat.PreviousProcessing" xml:space="preserve"><value>Предыдущее сообщение ещё обрабатывается…</value></data>
+  <data name="Chat.Starting" xml:space="preserve"><value>Запуск Workflow…</value></data>
+  <data name="Chat.RunFailed" xml:space="preserve"><value>Выполнение Workflow завершилось ошибкой.</value></data>
+  <data name="Chat.RunCompleted" xml:space="preserve"><value>Workflow завершён.</value></data>
+  <data name="Chat.ClearConfirm" xml:space="preserve"><value>Очистить текущий разговор? Выполняющиеся Workflow не будут затронуты.</value></data>
+  <data name="Chat.ResetFailed" xml:space="preserve"><value>Не удалось сбросить состояние.</value></data>
+  <data name="Chat.SessionLoadFailed" xml:space="preserve"><value>Не удалось загрузить чат-сессию.</value></data>
+  <data name="Chat.SessionUnavailable" xml:space="preserve"><value>Не удалось загрузить сессию</value></data>
+  <data name="Chat.GuestMode" xml:space="preserve"><value>Гостевой режим</value></data>
+  <data name="Chat.SignedIn" xml:space="preserve"><value>Выполнен вход</value></data>
+  <data name="Chat.Trigger" xml:space="preserve"><value>Триггер Chat</value></data>
+  <data name="Chat.User" xml:space="preserve"><value>Я</value></data>
 </root>

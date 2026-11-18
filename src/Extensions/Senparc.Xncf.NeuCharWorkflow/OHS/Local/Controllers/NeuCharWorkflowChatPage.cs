@@ -24,12 +24,12 @@ public static class NeuCharWorkflowChatPage
 {
     public const string Template = """
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="__CHAT_LANG__">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex" />
-<title>NeuChar Workflow 聊天</title>
+<title id="page-title"></title>
 <style>
   :root {
     --brand: #4f46e5;
@@ -189,21 +189,21 @@ public static class NeuCharWorkflowChatPage
   <header class="chat-header">
     <div class="logo">&#129302;</div>
     <div class="titles">
-      <h1 id="chat-title">NeuChar Workflow 聊天</h1>
-      <p class="subtitle" id="chat-subtitle">加载中…</p>
+      <h1 id="chat-title"></h1>
+      <p class="subtitle" id="chat-subtitle"></p>
     </div>
     <span class="badge" id="chat-badge">…</span>
-    <button class="reset-btn" id="reset-btn" type="button" disabled>新对话</button>
+    <button class="reset-btn" id="reset-btn" type="button" disabled></button>
   </header>
   <main class="messages" id="messages">
-    <div class="system-line">正在加载会话…</div>
+    <div class="system-line" id="initial-status"></div>
   </main>
   <footer class="composer">
     <div class="composer-inner">
-      <textarea id="input" rows="1" placeholder="输入消息，按 Enter 发送" disabled></textarea>
-      <button class="send-btn" id="send-btn" type="button" disabled>发送</button>
+      <textarea id="input" rows="1" disabled></textarea>
+      <button class="send-btn" id="send-btn" type="button" disabled></button>
     </div>
-    <p class="hint">Enter 发送 · Shift + Enter 换行 · 你的消息会作为输入启动工作流</p>
+    <p class="hint" id="chat-hint"></p>
   </footer>
 </div>
 <script>
@@ -211,6 +211,7 @@ public static class NeuCharWorkflowChatPage
   'use strict';
   var apiBase = '/api/Senparc.Xncf.NeuCharWorkflow/neuchar-workflow/chat';
   var workflowId = __WORKFLOW_ID__;
+  var i18n = __CHAT_I18N__;
   var els = {
     title: document.getElementById('chat-title'),
     subtitle: document.getElementById('chat-subtitle'),
@@ -220,6 +221,14 @@ public static class NeuCharWorkflowChatPage
     input: document.getElementById('input'),
     send: document.getElementById('send-btn')
   };
+  document.getElementById('page-title').textContent = i18n.title;
+  els.title.textContent = i18n.title;
+  els.subtitle.textContent = i18n.loading;
+  els.reset.textContent = i18n.newConversation;
+  document.getElementById('initial-status').textContent = i18n.loading;
+  els.input.placeholder = i18n.inputPlaceholder;
+  els.send.textContent = i18n.send;
+  document.getElementById('chat-hint').textContent = i18n.enterHint;
   var state = {
     ready: false,
     sending: false,
@@ -262,7 +271,7 @@ public static class NeuCharWorkflowChatPage
         var data = null;
         try { data = body ? JSON.parse(body) : null; } catch (e) { data = null; }
         if (!response.ok) {
-          throw new Error((data && data.errorMessage) || ('请求失败（' + response.status + '）'));
+          throw new Error((data && data.errorMessage) || ('Request failed (' + response.status + ')'));
         }
         return data || {};
       });
@@ -298,7 +307,7 @@ public static class NeuCharWorkflowChatPage
     row.className = 'row ' + role;
     var avatar = document.createElement('div');
     avatar.className = 'avatar';
-    avatar.textContent = role === 'user' ? '我' : (role === 'error' ? '!' : '\u{1F916}');
+    avatar.textContent = role === 'user' ? i18n.user : (role === 'error' ? '!' : '\u{1F916}');
     var bubble = document.createElement('div');
     bubble.className = 'bubble';
     if (role === 'assistant') {
@@ -327,7 +336,7 @@ public static class NeuCharWorkflowChatPage
     dots.innerHTML = '<span></span><span></span><span></span>';
     var status = document.createElement('div');
     status.className = 'typing-status';
-    status.textContent = statusText || '正在处理…';
+    status.textContent = statusText || i18n.processing;
     bubble.appendChild(dots);
     bubble.appendChild(status);
     row.appendChild(avatar);
@@ -354,7 +363,7 @@ public static class NeuCharWorkflowChatPage
     els.send.disabled = value || !state.ready;
     els.reset.disabled = value || !state.ready;
     els.input.disabled = !state.ready;
-    els.input.placeholder = value ? '正在处理中，请稍候…' : '输入消息，按 Enter 发送';
+    els.input.placeholder = value ? i18n.processing : i18n.inputPlaceholder;
   }
 
   function stopPolling() {
@@ -370,7 +379,7 @@ public static class NeuCharWorkflowChatPage
       .then(function (data) {
         if (data.running) {
           if (data.lastSequence) state.afterSequence = data.lastSequence;
-          updateTyping(data.lastNodeMessage || '正在处理…');
+          updateTyping(data.lastNodeMessage || i18n.processing);
           state.timer = setTimeout(function () { pollRun(runId); }, 1200);
           return;
         }
@@ -379,9 +388,9 @@ public static class NeuCharWorkflowChatPage
         state.afterSequence = 0;
         setSending(false);
         if (data.runError) {
-          addBubble('error', data.runError || '工作流执行失败。');
+          addBubble('error', data.runError || i18n.runFailed);
         } else {
-          addBubble('assistant', data.finalOutput || '工作流已完成。');
+          addBubble('assistant', data.finalOutput || i18n.runCompleted);
         }
       })
       .catch(function () {
@@ -393,10 +402,10 @@ public static class NeuCharWorkflowChatPage
     state.ready = true;
     state.isGuest = !!data.isGuest;
     state.greeting = data.greeting || '';
-    document.title = data.title || 'NeuChar Workflow 聊天';
-    els.title.textContent = data.title || 'NeuChar Workflow 聊天';
-    els.subtitle.textContent = '工作流 #' + (data.workflowId || workflowId) + ' · Chat 触发';
-    els.badge.textContent = state.isGuest ? '访客模式' : '已登录';
+    document.title = data.title || i18n.title;
+    els.title.textContent = data.title || i18n.title;
+    els.subtitle.textContent = 'Workflow #' + (data.workflowId || workflowId) + ' · ' + i18n.trigger;
+    els.badge.textContent = state.isGuest ? i18n.guestMode : i18n.signedIn;
     setSending(false);
     clearMessages();
     if (data.messages && data.messages.length > 0) {
@@ -410,7 +419,7 @@ public static class NeuCharWorkflowChatPage
     if (data.hasPendingRun && data.pendingRunId) {
       setSending(true);
       state.afterSequence = 0;
-      setTyping('上一条消息还在处理中…');
+      setTyping(i18n.previousProcessing);
       pollRun(data.pendingRunId);
     }
   }
@@ -423,7 +432,7 @@ public static class NeuCharWorkflowChatPage
     els.input.value = '';
     autoresize();
     setSending(true);
-    setTyping('正在启动工作流…');
+    setTyping(i18n.starting);
     api('/' + workflowId + '/messages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -436,7 +445,7 @@ public static class NeuCharWorkflowChatPage
       .catch(function (error) {
         clearTyping();
         setSending(false);
-        addBubble('error', error.message || '发送失败。');
+        addBubble('error', error.message || i18n.runFailed);
       });
   }
 
@@ -455,14 +464,14 @@ public static class NeuCharWorkflowChatPage
   els.input.addEventListener('input', autoresize);
   els.reset.addEventListener('click', function () {
     if (!state.ready || state.sending) return;
-    if (!window.confirm('确定要清空当前会话吗？正在进行的工作流运行不受影响。')) return;
+    if (!window.confirm(i18n.clearConfirm)) return;
     api('/' + workflowId + '/reset', { method: 'POST' })
       .then(function () {
         clearMessages();
         if (state.greeting) addBubble('assistant', state.greeting);
       })
       .catch(function (error) {
-        addErrorBanner(error.message || '重置失败。');
+        addErrorBanner(error.message || i18n.resetFailed);
       });
   });
 
@@ -470,8 +479,8 @@ public static class NeuCharWorkflowChatPage
     .then(applyBootstrap)
     .catch(function (error) {
       clearMessages();
-      addErrorBanner(error.message || '无法加载聊天会话。');
-      els.subtitle.textContent = '无法加载会话';
+      addErrorBanner(error.message || i18n.sessionLoadFailed);
+      els.subtitle.textContent = i18n.sessionUnavailable;
       els.badge.textContent = '—';
       els.reset.disabled = true;
       els.send.disabled = true;

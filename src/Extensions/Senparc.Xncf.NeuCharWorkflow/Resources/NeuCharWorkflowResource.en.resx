@@ -645,4 +645,23 @@
   <data name="Frontend.618" xml:space="preserve"><value>Send a NeuBell reminder to subscribers and configure how it is consumed after being clicked.</value></data>
   <data name="Frontend.619" xml:space="preserve"><value>Create a NeuBell reminder and pause the current branch until an administrator or an external caller with the recovery key submits text.</value></data>
   <data name="Frontend.620" xml:space="preserve"><value>Marks the end of the Workflow; it cannot be inserted into an existing connection.</value></data>
+  <data name="Chat.Title" xml:space="preserve"><value>NeuChar Workflow Chat</value></data>
+  <data name="Chat.Loading" xml:space="preserve"><value>Loading…</value></data>
+  <data name="Chat.NewConversation" xml:space="preserve"><value>New conversation</value></data>
+  <data name="Chat.InputPlaceholder" xml:space="preserve"><value>Type a message and press Enter to send</value></data>
+  <data name="Chat.Send" xml:space="preserve"><value>Send</value></data>
+  <data name="Chat.EnterHint" xml:space="preserve"><value>Enter to send · Shift + Enter for a new line · Your message starts a Workflow run</value></data>
+  <data name="Chat.Processing" xml:space="preserve"><value>Processing…</value></data>
+  <data name="Chat.PreviousProcessing" xml:space="preserve"><value>The previous message is still processing…</value></data>
+  <data name="Chat.Starting" xml:space="preserve"><value>Starting Workflow…</value></data>
+  <data name="Chat.RunFailed" xml:space="preserve"><value>Workflow execution failed.</value></data>
+  <data name="Chat.RunCompleted" xml:space="preserve"><value>Workflow completed.</value></data>
+  <data name="Chat.ClearConfirm" xml:space="preserve"><value>Clear the current conversation? Any running Workflow is not affected.</value></data>
+  <data name="Chat.ResetFailed" xml:space="preserve"><value>Reset failed.</value></data>
+  <data name="Chat.SessionLoadFailed" xml:space="preserve"><value>Unable to load the chat session.</value></data>
+  <data name="Chat.SessionUnavailable" xml:space="preserve"><value>Unable to load the session</value></data>
+  <data name="Chat.GuestMode" xml:space="preserve"><value>Guest mode</value></data>
+  <data name="Chat.SignedIn" xml:space="preserve"><value>Signed in</value></data>
+  <data name="Chat.Trigger" xml:space="preserve"><value>Chat trigger</value></data>
+  <data name="Chat.User" xml:space="preserve"><value>Me</value></data>
 </root>
