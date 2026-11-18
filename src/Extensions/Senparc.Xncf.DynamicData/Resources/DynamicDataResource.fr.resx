@@ -1030,4 +1030,26 @@
     <value>Illustre les paramètres et retours FunctionRender</value>
   </data>
 
+  <data name="Frontend.309" xml:space="preserve"><value>Menu déroulant / mosaïque</value></data>
+  <data name="Frontend.310" xml:space="preserve"><value>Personnalisé / jeu de données</value></data>
+  <data name="Frontend.311" xml:space="preserve"><value>Valeur par défaut</value></data>
+  <data name="Frontend.312" xml:space="preserve"><value>Type</value></data>
+  <data name="Frontend.313" xml:space="preserve"><value>Une ligne</value></data>
+  <data name="Frontend.314" xml:space="preserve"><value>Multiligne</value></data>
+  <data name="Frontend.315" xml:space="preserve"><value>Validation</value></data>
+  <data name="Frontend.316" xml:space="preserve"><value>Obligatoire</value></data>
+  <data name="Frontend.317" xml:space="preserve"><value>Interdire les entrées en double</value></data>
+  <data name="Frontend.318" xml:space="preserve"><value>Limiter le nombre de caractères</value></data>
+  <data name="Frontend.319" xml:space="preserve"><value>Minimum</value></data>
+  <data name="Frontend.320" xml:space="preserve"><value>Maximum</value></data>
+  <data name="Frontend.321" xml:space="preserve"><value>Limiter le format de saisie</value></data>
+  <data name="Frontend.322" xml:space="preserve"><value>Proportion de largeur</value></data>
+  <data name="Frontend.323" xml:space="preserve"><value>Type de date</value></data>
+  <data name="Frontend.324" xml:space="preserve"><value>Date</value></data>
+  <data name="Frontend.325" xml:space="preserve"><value>Date et heure</value></data>
+  <data name="Frontend.326" xml:space="preserve"><value>Type d'heure</value></data>
+  <data name="Frontend.327" xml:space="preserve"><value>Format de date</value></data>
+  <data name="Frontend.328" xml:space="preserve"><value>Propriétés du champ</value></data>
+  <data name="Frontend.329" xml:space="preserve"><value>Lecture seule</value></data>
+  <data name="Frontend.330" xml:space="preserve"><value>Masqué</value></data>
 </root>

@@ -543,4 +543,26 @@
 
   <data name="Function.Sample.Name" xml:space="preserve"><value>示例函数</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
   <data name="Function.Sample.Description" xml:space="preserve"><value>演示 FunctionRender 参数与返回值</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.309" xml:space="preserve"><value>下拉菜单 / 平铺</value></data>
+  <data name="Frontend.310" xml:space="preserve"><value>自定义 / 数据集</value></data>
+  <data name="Frontend.311" xml:space="preserve"><value>默认值</value></data>
+  <data name="Frontend.312" xml:space="preserve"><value>类型</value></data>
+  <data name="Frontend.313" xml:space="preserve"><value>单行</value></data>
+  <data name="Frontend.314" xml:space="preserve"><value>多行</value></data>
+  <data name="Frontend.315" xml:space="preserve"><value>验证</value></data>
+  <data name="Frontend.316" xml:space="preserve"><value>必填</value></data>
+  <data name="Frontend.317" xml:space="preserve"><value>不允许重复输入</value></data>
+  <data name="Frontend.318" xml:space="preserve"><value>限定字数</value></data>
+  <data name="Frontend.319" xml:space="preserve"><value>最小</value></data>
+  <data name="Frontend.320" xml:space="preserve"><value>最大</value></data>
+  <data name="Frontend.321" xml:space="preserve"><value>限定输入格式</value></data>
+  <data name="Frontend.322" xml:space="preserve"><value>宽度占比</value></data>
+  <data name="Frontend.323" xml:space="preserve"><value>日期类型</value></data>
+  <data name="Frontend.324" xml:space="preserve"><value>日期</value></data>
+  <data name="Frontend.325" xml:space="preserve"><value>日期时间</value></data>
+  <data name="Frontend.326" xml:space="preserve"><value>时间类型</value></data>
+  <data name="Frontend.327" xml:space="preserve"><value>日期格式</value></data>
+  <data name="Frontend.328" xml:space="preserve"><value>字段属性</value></data>
+  <data name="Frontend.329" xml:space="preserve"><value>只读</value></data>
+  <data name="Frontend.330" xml:space="preserve"><value>隐藏</value></data>
 </root>

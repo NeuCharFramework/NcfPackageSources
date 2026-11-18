@@ -1030,4 +1030,26 @@
     <value>Demonstrates FunctionRender parameters and return values</value>
   </data>
 
+  <data name="Frontend.309" xml:space="preserve"><value>Dropdown / tiled</value></data>
+  <data name="Frontend.310" xml:space="preserve"><value>Custom / dataset</value></data>
+  <data name="Frontend.311" xml:space="preserve"><value>Default value</value></data>
+  <data name="Frontend.312" xml:space="preserve"><value>Type</value></data>
+  <data name="Frontend.313" xml:space="preserve"><value>Single-line</value></data>
+  <data name="Frontend.314" xml:space="preserve"><value>Multiline</value></data>
+  <data name="Frontend.315" xml:space="preserve"><value>Validation</value></data>
+  <data name="Frontend.316" xml:space="preserve"><value>Required</value></data>
+  <data name="Frontend.317" xml:space="preserve"><value>Do not allow duplicate input</value></data>
+  <data name="Frontend.318" xml:space="preserve"><value>Limit character count</value></data>
+  <data name="Frontend.319" xml:space="preserve"><value>Minimum</value></data>
+  <data name="Frontend.320" xml:space="preserve"><value>Maximum</value></data>
+  <data name="Frontend.321" xml:space="preserve"><value>Limit input format</value></data>
+  <data name="Frontend.322" xml:space="preserve"><value>Width ratio</value></data>
+  <data name="Frontend.323" xml:space="preserve"><value>Date type</value></data>
+  <data name="Frontend.324" xml:space="preserve"><value>Date</value></data>
+  <data name="Frontend.325" xml:space="preserve"><value>Date and time</value></data>
+  <data name="Frontend.326" xml:space="preserve"><value>Time type</value></data>
+  <data name="Frontend.327" xml:space="preserve"><value>Date format</value></data>
+  <data name="Frontend.328" xml:space="preserve"><value>Field properties</value></data>
+  <data name="Frontend.329" xml:space="preserve"><value>Read-only</value></data>
+  <data name="Frontend.330" xml:space="preserve"><value>Hidden</value></data>
 </root>

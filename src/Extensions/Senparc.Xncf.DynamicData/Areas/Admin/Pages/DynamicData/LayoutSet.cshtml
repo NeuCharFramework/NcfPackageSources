@@ -447,12 +447,12 @@
                                         </div>
                                         </template>
                                     </el-form-item>
-                                                                        <el-form-item label="提示文字">
+                                                                        <el-form-item :label="ncfST('Frontend.201')">
                                                                             <el-input v-model.trim="addColumnForm.displayContent"
                                                                                 :size="elSize"
                                                                                 :placeholder="ncfST('Frontend.201')"></el-input>
                                                                         </el-form-item>
-                                                                        <el-form-item label="列宽">
+                                                                        <el-form-item :label="ncfST('Frontend.018')">
                                                                             <el-slider :size="elSize" :min="20" v-model="addColumnForm.columnWidth" :step="10" show-stops></el-slider>
                                                                             @* <el-input
                                                                                 v-model.trim="addColumnForm.columnWidth"
@@ -1014,19 +1014,19 @@
                                     <el-form-item :label="ncfST('Frontend.057')">
                                         <el-select v-model="sheetSettingForm.displayUsage" style="width:100%"
                                             :placeholder="ncfST('Frontend.206')">
-                                            <el-option label="下拉菜单/平铺" value="shanghai"></el-option>
-                                            <el-option label="删除" value="beijing"></el-option>
-                                            <el-option label="详情" value="beijing"></el-option>
-                                            <el-option label="新增" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.309')" value="shanghai"></el-option>
+                                            <el-option :label="ncfST('Frontend.026')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.185')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.113')" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
                                     <el-form-item :label="ncfST('Frontend.230')">
                                         <el-select v-model="sheetSettingForm.customData"
                                             style="width:100%;margin-bottom:10px" :placeholder="ncfST('Frontend.206')">
-                                            <el-option label="自定义/数据集" value="shanghai"></el-option>
-                                            <el-option label="删除" value="beijing"></el-option>
-                                            <el-option label="详情" value="beijing"></el-option>
-                                            <el-option label="新增" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.310')" value="shanghai"></el-option>
+                                            <el-option :label="ncfST('Frontend.026')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.185')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.113')" value="beijing"></el-option>
                                         </el-select>
                                         <el-popover v-for="(item,index) in sheetSettingForm.optionData" :key="index"
                                             placement="left" width="400" trigger="click">
@@ -1060,35 +1060,35 @@
                                             </span>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item label="默认值">
+                                    <el-form-item :label="ncfST('Frontend.311')">
                                         <el-select v-model="sheetSettingForm.defaultValue" style="width:100%"
                                             :placeholder="ncfST('Frontend.206')">
-                                            <el-option label="默认值1" value="shanghai"></el-option>
-                                            <el-option label="删除" value="beijing"></el-option>
-                                            <el-option label="详情" value="beijing"></el-option>
-                                            <el-option label="新增" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.311') + ' 1'" value="shanghai"></el-option>
+                                            <el-option :label="ncfST('Frontend.026')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.185')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.113')" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="类型">
-                                        <el-radio v-model="sheetSettingForm.formType" label="1">单行</el-radio>
-                                        <el-radio v-model="sheetSettingForm.formType" label="2">多行</el-radio>
+                                    <el-form-item :label="ncfST('Frontend.312')">
+                                        <el-radio v-model="sheetSettingForm.formType" label="1">{{ ncfST('Frontend.313') }}</el-radio>
+                                        <el-radio v-model="sheetSettingForm.formType" label="2">{{ ncfST('Frontend.314') }}</el-radio>
                                     </el-form-item>
-                                    <el-form-item label="验证">
-                                        <el-checkbox v-model="sheetSettingForm.mustFillin">必填</el-checkbox>
-                                        <el-checkbox v-model="sheetSettingForm.notReuse">不允许重复输入</el-checkbox>
-                                        <el-checkbox v-model="sheetSettingForm.finiteWord">限定字数</el-checkbox>
+                                    <el-form-item :label="ncfST('Frontend.315')">
+                                        <el-checkbox v-model="sheetSettingForm.mustFillin">{{ ncfST('Frontend.316') }}</el-checkbox>
+                                        <el-checkbox v-model="sheetSettingForm.notReuse">{{ ncfST('Frontend.317') }}</el-checkbox>
+                                        <el-checkbox v-model="sheetSettingForm.finiteWord">{{ ncfST('Frontend.318') }}</el-checkbox>
                                         <div style="display:flex;flex-direction:row;">
                                             <div>
                                                 <el-input style="width:125px" v-model="sheetSettingForm.miniWord"
-                                                    type="number" placeholder="最小">
+                                                    type="number" :placeholder="ncfST('Frontend.319')">
                                             </div>-<div>
                                                 <el-input style="width:125px" v-model="sheetSettingForm.maxWord"
-                                                    placeholder="最大">
+                                                    :placeholder="ncfST('Frontend.320')">
                                             </div>
                                         </div>
-                                        <el-checkbox v-model="sheetSettingForm.finiteFormat">限定输入格式</el-checkbox>
+                                        <el-checkbox v-model="sheetSettingForm.finiteFormat">{{ ncfST('Frontend.321') }}</el-checkbox>
                                     </el-form-item>
-                                    <el-form-item label="宽度占比">
+                                    <el-form-item :label="ncfST('Frontend.322')">
                                         <div class="subsection-container df-wn flex-ac flex-jc">
                                             <div class="subsection-item"
                                                 :class="{'subsection-item_avtive':sheetSettingForm.size === '1/4'}"
@@ -1107,35 +1107,35 @@
                                                 @@click="handleSwitchSubformstyle('size','1')">1</div>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item label="日期类型">
-                                        <el-radio v-model="sheetSettingForm.dateType" label="1">日期</el-radio>
-                                        <el-radio v-model="sheetSettingForm.dateType" label="2">日期时间</el-radio>
+                                    <el-form-item :label="ncfST('Frontend.323')">
+                                        <el-radio v-model="sheetSettingForm.dateType" label="1">{{ ncfST('Frontend.324') }}</el-radio>
+                                        <el-radio v-model="sheetSettingForm.dateType" label="2">{{ ncfST('Frontend.325') }}</el-radio>
                                     </el-form-item>
-                                    <el-form-item label="时间类型">
+                                    <el-form-item :label="ncfST('Frontend.326')">
                                         <el-select v-model="sheetSettingForm.timeType" style="width:100%"
                                             :placeholder="ncfST('Frontend.206')">
-                                            <el-option label="年-月-日 时:分" value="shanghai"></el-option>
-                                            <el-option label="删除" value="beijing"></el-option>
-                                            <el-option label="详情" value="beijing"></el-option>
-                                            <el-option label="新增" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.327')" value="shanghai"></el-option>
+                                            <el-option :label="ncfST('Frontend.026')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.185')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.113')" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="日期格式">
+                                    <el-form-item :label="ncfST('Frontend.327')">
                                         <el-select v-model="sheetSettingForm.dateFormat" style="width:100%"
                                             :placeholder="ncfST('Frontend.206')">
                                             <el-option label="2024-9-20" value="shanghai"></el-option>
-                                            <el-option label="删除" value="beijing"></el-option>
-                                            <el-option label="详情" value="beijing"></el-option>
-                                            <el-option label="新增" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.026')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.185')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.113')" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="字段属性">
+                                    <el-form-item :label="ncfST('Frontend.328')">
                                         <div>
-                                            <el-checkbox v-model="sheetSettingForm.readOnly">只读</el-checkbox><i
+                                            <el-checkbox v-model="sheetSettingForm.readOnly">{{ ncfST('Frontend.329') }}</el-checkbox><i
                                                 class="el-icon-question"></i>
                                         </div>
                                         <div>
-                                            <el-checkbox v-model="sheetSettingForm.conCeal">隐藏</el-checkbox><i
+                                            <el-checkbox v-model="sheetSettingForm.conCeal">{{ ncfST('Frontend.330') }}</el-checkbox><i
                                                 class="el-icon-question"></i>
                                         </div>
                                     </el-form-item>
@@ -1143,7 +1143,7 @@
                             </template>
                             @* Form submit-button property settings *@
                             <template v-if="layoutComponentActiveType === 'formSubmitBtn'">
-                                <div class="operation-title" style="margin-top:20px;">按钮设置</div>
+                                <div class="operation-title" style="margin-top:20px;">{{ ncfST('Frontend.080') }}</div>
                                 <el-form v-model="formSubmitBtnForm" :size="elSize" label-position="top"
                                     label-width="80px" class="form-container">
                                     <el-form-item :label="ncfST('Frontend.077')">
@@ -1236,7 +1236,7 @@
                                                     :placeholder="ncfST('Frontend.189')"></div>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item label="确认操作设置">
+                                    <el-form-item :label="ncfST('Frontend.155')">
                                         <div class="Popupset">
 
                                             <div>{{ ncfST('Frontend.124') }}</div>

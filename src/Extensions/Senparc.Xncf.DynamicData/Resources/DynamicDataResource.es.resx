@@ -1030,4 +1030,26 @@
     <value>Demuestra parámetros y valores de retorno de FunctionRender</value>
   </data>
 
+  <data name="Frontend.309" xml:space="preserve"><value>Desplegable / mosaico</value></data>
+  <data name="Frontend.310" xml:space="preserve"><value>Personalizado / conjunto de datos</value></data>
+  <data name="Frontend.311" xml:space="preserve"><value>Valor predeterminado</value></data>
+  <data name="Frontend.312" xml:space="preserve"><value>Tipo</value></data>
+  <data name="Frontend.313" xml:space="preserve"><value>Una línea</value></data>
+  <data name="Frontend.314" xml:space="preserve"><value>Varias líneas</value></data>
+  <data name="Frontend.315" xml:space="preserve"><value>Validación</value></data>
+  <data name="Frontend.316" xml:space="preserve"><value>Obligatorio</value></data>
+  <data name="Frontend.317" xml:space="preserve"><value>No permitir entradas duplicadas</value></data>
+  <data name="Frontend.318" xml:space="preserve"><value>Limitar cantidad de caracteres</value></data>
+  <data name="Frontend.319" xml:space="preserve"><value>Mínimo</value></data>
+  <data name="Frontend.320" xml:space="preserve"><value>Máximo</value></data>
+  <data name="Frontend.321" xml:space="preserve"><value>Limitar formato de entrada</value></data>
+  <data name="Frontend.322" xml:space="preserve"><value>Proporción de ancho</value></data>
+  <data name="Frontend.323" xml:space="preserve"><value>Tipo de fecha</value></data>
+  <data name="Frontend.324" xml:space="preserve"><value>Fecha</value></data>
+  <data name="Frontend.325" xml:space="preserve"><value>Fecha y hora</value></data>
+  <data name="Frontend.326" xml:space="preserve"><value>Tipo de hora</value></data>
+  <data name="Frontend.327" xml:space="preserve"><value>Formato de fecha</value></data>
+  <data name="Frontend.328" xml:space="preserve"><value>Propiedades del campo</value></data>
+  <data name="Frontend.329" xml:space="preserve"><value>Solo lectura</value></data>
+  <data name="Frontend.330" xml:space="preserve"><value>Oculto</value></data>
 </root>

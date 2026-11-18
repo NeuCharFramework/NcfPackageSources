@@ -1030,4 +1030,26 @@
     <value>Демонстрирует параметры и возвращаемые значения FunctionRender</value>
   </data>
 
+  <data name="Frontend.309" xml:space="preserve"><value>Раскрывающийся список / плитка</value></data>
+  <data name="Frontend.310" xml:space="preserve"><value>Пользовательский / набор данных</value></data>
+  <data name="Frontend.311" xml:space="preserve"><value>Значение по умолчанию</value></data>
+  <data name="Frontend.312" xml:space="preserve"><value>Тип</value></data>
+  <data name="Frontend.313" xml:space="preserve"><value>Одна строка</value></data>
+  <data name="Frontend.314" xml:space="preserve"><value>Несколько строк</value></data>
+  <data name="Frontend.315" xml:space="preserve"><value>Проверка</value></data>
+  <data name="Frontend.316" xml:space="preserve"><value>Обязательно</value></data>
+  <data name="Frontend.317" xml:space="preserve"><value>Запретить повторный ввод</value></data>
+  <data name="Frontend.318" xml:space="preserve"><value>Ограничить число символов</value></data>
+  <data name="Frontend.319" xml:space="preserve"><value>Минимум</value></data>
+  <data name="Frontend.320" xml:space="preserve"><value>Максимум</value></data>
+  <data name="Frontend.321" xml:space="preserve"><value>Ограничить формат ввода</value></data>
+  <data name="Frontend.322" xml:space="preserve"><value>Доля ширины</value></data>
+  <data name="Frontend.323" xml:space="preserve"><value>Тип даты</value></data>
+  <data name="Frontend.324" xml:space="preserve"><value>Дата</value></data>
+  <data name="Frontend.325" xml:space="preserve"><value>Дата и время</value></data>
+  <data name="Frontend.326" xml:space="preserve"><value>Тип времени</value></data>
+  <data name="Frontend.327" xml:space="preserve"><value>Формат даты</value></data>
+  <data name="Frontend.328" xml:space="preserve"><value>Свойства поля</value></data>
+  <data name="Frontend.329" xml:space="preserve"><value>Только чтение</value></data>
+  <data name="Frontend.330" xml:space="preserve"><value>Скрыто</value></data>
 </root>

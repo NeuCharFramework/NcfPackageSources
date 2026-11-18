@@ -1030,4 +1030,26 @@
     <value>FunctionRender のパラメーターと戻り値を示します</value>
   </data>
 
+  <data name="Frontend.309" xml:space="preserve"><value>ドロップダウン / タイル</value></data>
+  <data name="Frontend.310" xml:space="preserve"><value>カスタム / データセット</value></data>
+  <data name="Frontend.311" xml:space="preserve"><value>既定値</value></data>
+  <data name="Frontend.312" xml:space="preserve"><value>タイプ</value></data>
+  <data name="Frontend.313" xml:space="preserve"><value>1行</value></data>
+  <data name="Frontend.314" xml:space="preserve"><value>複数行</value></data>
+  <data name="Frontend.315" xml:space="preserve"><value>検証</value></data>
+  <data name="Frontend.316" xml:space="preserve"><value>必須</value></data>
+  <data name="Frontend.317" xml:space="preserve"><value>重複入力を許可しない</value></data>
+  <data name="Frontend.318" xml:space="preserve"><value>文字数を制限</value></data>
+  <data name="Frontend.319" xml:space="preserve"><value>最小</value></data>
+  <data name="Frontend.320" xml:space="preserve"><value>最大</value></data>
+  <data name="Frontend.321" xml:space="preserve"><value>入力形式を制限</value></data>
+  <data name="Frontend.322" xml:space="preserve"><value>幅の比率</value></data>
+  <data name="Frontend.323" xml:space="preserve"><value>日付タイプ</value></data>
+  <data name="Frontend.324" xml:space="preserve"><value>日付</value></data>
+  <data name="Frontend.325" xml:space="preserve"><value>日時</value></data>
+  <data name="Frontend.326" xml:space="preserve"><value>時刻タイプ</value></data>
+  <data name="Frontend.327" xml:space="preserve"><value>日付形式</value></data>
+  <data name="Frontend.328" xml:space="preserve"><value>フィールド属性</value></data>
+  <data name="Frontend.329" xml:space="preserve"><value>読み取り専用</value></data>
+  <data name="Frontend.330" xml:space="preserve"><value>非表示</value></data>
 </root>
