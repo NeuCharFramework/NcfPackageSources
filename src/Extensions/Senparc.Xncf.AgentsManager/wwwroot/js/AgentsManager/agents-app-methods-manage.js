@@ -1249,7 +1249,7 @@ var AgentsAppMethodsManage = {
       const enabled = participant?.enable !== false
       const statusText = isRemote
         ? this.remoteParticipantAvailabilityText(participant)
-        : (enabled ? '已启用' : '已停用')
+        : (enabled ? ncfST('Frontend.044') : ncfST('Frontend.043'))
       const statusType = isRemote
         ? this.remoteParticipantAvailabilityType(participant)
         : (enabled ? 'success' : 'info')
