@@ -25,9 +25,9 @@ new Vue({
             return this.replay && this.stepIndex >= 0 ? this.replay.events[this.stepIndex] || null : null;
         },
         stepLabel() {
-            if (!this.replay) return '正在读取运行记录…';
-            if (this.stepIndex < 0) return '运行开始前';
-            return `步骤 ${this.stepIndex + 1} / ${this.replay.events.length}`;
+            if (!this.replay) return ncfWorkflowText('Frontend.107');
+            if (this.stepIndex < 0) return ncfWorkflowText('Frontend.108');
+            return ncfWorkflowText('Frontend.109').replace('{0}', this.stepIndex + 1).replace('{1}', this.replay.events.length);
         },
         canvasInset() { return 240; },
         canvasSize() {
@@ -72,14 +72,14 @@ new Vue({
         async loadReplay() {
             const executionLogId = this.routeExecutionLogId();
             if (!executionLogId) {
-                this.loadError = '缺少需要回看的任务标识。';
+                this.loadError = ncfWorkflowText('Frontend.110');
                 return;
             }
             this.loading = true;
             try {
                 const response = await service.get(`/Admin/NeuCharWorkflow/Replay?handler=Data&executionLogId=${executionLogId}`);
                 this.replay = NeuCharWorkflowUi.unwrap(response);
-                if (!this.replay) throw new Error('未找到任务回看数据。');
+                if (!this.replay) throw new Error(ncfWorkflowText('Frontend.111'));
                 this.replay.events = Array.isArray(this.replay.events) ? this.replay.events : [];
                 this.timelineRenderLimit = Math.min(this.timelineChunkSize, this.replay.events.length);
                 this.graph = NeuCharWorkflowUi.parseJson(this.replay.definition && this.replay.definition.graphJson, { nodes: [], edges: [] }) || { nodes: [], edges: [] };
@@ -87,7 +87,7 @@ new Vue({
                 this.graph.edges = Array.isArray(this.graph.edges) ? this.graph.edges : [];
                 this.scheduleInitialCenter();
             } catch (error) {
-                this.loadError = this.errorMessage(error, '无法读取任务回看。运行中的任务需要等待结束，旧任务可能尚未保存快照。');
+                this.loadError = this.errorMessage(error, ncfWorkflowText('Frontend.112'));
             } finally {
                 this.loading = false;
             }
@@ -253,24 +253,24 @@ new Vue({
         },
         eventStatusText(status) {
             const source = {
-                running: '执行中',
-                success: '执行完成',
-                failed: '执行失败',
-                branch: '选择分支',
-                console: 'Console 输出'
-            }[status] || '状态更新';
+                running: ncfWorkflowText('Frontend.400'),
+                success: ncfWorkflowText('Frontend.401'),
+                failed: ncfWorkflowText('Frontend.402'),
+                branch: ncfWorkflowText('Frontend.403'),
+                console: ncfWorkflowText('Frontend.404')
+            }[status] || ncfWorkflowText('Frontend.405');
             return window.ncfWorkflowText(source);
         },
         eventType(status) { return { success: 'success', failed: 'danger', running: 'warning', branch: 'primary' }[status] || 'info'; },
         statusText(status) {
-            const source = { success: '运行成功', failed: '运行失败' }[status] || '运行完成';
+            const source = { success: ncfWorkflowText('Frontend.406'), failed: ncfWorkflowText('Frontend.407') }[status] || ncfWorkflowText('Frontend.408');
             return window.ncfWorkflowText(source);
         },
         nodeTypeText(type) {
             return {
-                'manual-trigger': '手动触发', 'interval-trigger': '定时触发', 'webhook-trigger': 'Webhook 触发',
-                function: 'Function', delay: '等待', condition: '条件判断', agent: 'Agent', 'agent-group': 'Agent 组',
-                aggregate: '聚合', console: 'Console', neubell: '发送纽铃', end: '结束'
+                'manual-trigger': ncfWorkflowText('Frontend.248'), 'interval-trigger': ncfWorkflowText('Frontend.471'), 'webhook-trigger': ncfWorkflowText('Frontend.470'),
+                function: 'Function', delay: ncfWorkflowText('Frontend.115'), condition: ncfWorkflowText('Frontend.413'), agent: 'Agent', 'agent-group': ncfWorkflowText('Frontend.117'),
+                aggregate: ncfWorkflowText('Frontend.422'), console: 'Console', neubell: ncfWorkflowText('Frontend.427'), end: ncfWorkflowText('Frontend.430')
             }[type] || type;
         },
         formatDate(value) {
@@ -288,10 +288,10 @@ new Vue({
                     executionLogId: this.replay.executionLogId
                 }, { customAlert: true });
                 const workflow = NeuCharWorkflowUi.unwrap(response);
-                if (!workflow || !workflow.id) throw new Error('复制工作流失败。');
+                if (!workflow || !workflow.id) throw new Error(ncfWorkflowText('Frontend.114'));
                 window.location.assign(`/Admin/NeuCharWorkflow/Index?workflowId=${workflow.id}`);
             } catch (error) {
-                this.$message.error(this.errorMessage(error, '无法从当前回看创建工作流草稿。'));
+                this.$message.error(this.errorMessage(error, ncfWorkflowText('Frontend.113')));
             } finally {
                 this.copying = false;
             }
