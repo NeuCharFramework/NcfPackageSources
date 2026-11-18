@@ -253,6 +253,10 @@
   <data name="Parameter.Sandbox.Alias.Help" xml:space="preserve"><value>Необязательный идентификатор сеанса в списке; не более 128 символов.</value></data>
   <data name="Parameter.Sandbox.ExtraPortMappings" xml:space="preserve"><value>Дополнительные сопоставления портов</value></data>
   <data name="Parameter.Sandbox.ExtraPortMappings.Help" xml:space="preserve"><value>Необязательно и действует только для шаблонов JupyterLab; несколько значений разделяйте точкой с запятой. Максимум 8.</value></data>
+  <data name="Parameter.Sandbox.SessionId" xml:space="preserve"><value>Идентификатор сеанса</value></data>
+  <data name="Parameter.Sandbox.SessionId.Help" xml:space="preserve"><value>Должен указывать на работающий сеанс JupyterLab.</value></data>
+  <data name="Parameter.Sandbox.MaxBytes" xml:space="preserve"><value>Предел чтения (байты)</value></data>
+  <data name="Parameter.Sandbox.MaxBytes.Help" xml:space="preserve"><value>Оставьте пустым или укажите 0, чтобы использовать системный предел.</value></data>
   <data name="Frontend.112" xml:space="preserve"><value>Короткая задача Python (Docker)</value></data>
   <data name="Frontend.113" xml:space="preserve"><value>Короткая задача C# (образ Docker SDK)</value></data>
   <data name="Frontend.114" xml:space="preserve"><value>Интерактивный Python Notebook (требует много памяти)</value></data>

@@ -98,18 +98,18 @@ public class Sandbox_CreateRequest : FunctionAppRequestBase
 public class Sandbox_SessionIdRequest : FunctionAppRequestBase
 {
     [Required]
-    [Description("SessionId")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.SessionId", "Parameter.Sandbox.SessionId.Help")]
     public string SessionId { get; set; } = string.Empty;
 }
 
 public class Sandbox_ExecRequest : FunctionAppRequestBase
 {
     [Required]
-    [Description("SessionId")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.SessionId", "Parameter.Sandbox.SessionId.Help")]
     public string SessionId { get; set; } = string.Empty;
 
     [Required]
-    [Description("代码||短任务源码。Python 示例：print('hello from NCF Sandbox')；C# 示例：Console.WriteLine(\"hello from NCF Sandbox\");（C# 字符串须用双引号）")]
+    [LocalizedDescription(typeof(SandboxResource), "Frontend.118", "Frontend.119")]
     public string Code { get; set; } = SandboxExecCodeDefaults.PythonHello;
 }
 
@@ -117,23 +117,23 @@ public class Sandbox_LabCommandRequest : FunctionAppRequestBase
 {
     [Required]
     [MaxLength(64)]
-    [Description("SessionId||必须是运行中的 JupyterLab 会话")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.SessionId", "Parameter.Sandbox.SessionId.Help")]
     public string SessionId { get; set; } = string.Empty;
 
     [Required]
     [MaxLength(8000)]
-    [Description("命令||在 Lab 容器内通过 /bin/sh -lc 执行的命令；工作目录限制在 Lab 工作区")]
+    [LocalizedDescription(typeof(SandboxResource), "Frontend.120", "Frontend.121")]
     public string Command { get; set; } = string.Empty;
 
     [MaxLength(512)]
-    [Description("工作目录||相对于 Lab 工作区的目录，留空表示工作区根目录")]
+    [LocalizedDescription(typeof(SandboxResource), "Frontend.122", "Frontend.123")]
     public string WorkingDirectory { get; set; } = string.Empty;
 
-    [Description("超时（秒）||单次命令最长执行时间，默认 30 秒，最多 120 秒")]
+    [LocalizedDescription(typeof(SandboxResource), "Frontend.124", "Frontend.125")]
     public int TimeoutSeconds { get; set; } = 30;
 
     [MaxLength(32_768)]
-    [Description("标准输入||可选；填写后命令以 docker exec -i 执行，该内容会逐行写入程序 stdin（可向终端程序/REPL 批量提交指令），最长 32768 个字符")]
+    [LocalizedDescription(typeof(SandboxResource), "Frontend.126", "Frontend.127")]
     public string StdinContent { get; set; } = string.Empty;
 }
 
@@ -141,7 +141,7 @@ public class Sandbox_LabUploadFileRequest : FunctionAppRequestBase
 {
     [Required]
     [MaxLength(64)]
-    [Description("SessionId||必须是运行中的 JupyterLab 会话")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.SessionId", "Parameter.Sandbox.SessionId.Help")]
     public string SessionId { get; set; } = string.Empty;
 
     [Required]
@@ -162,7 +162,7 @@ public class Sandbox_LabUploadFilesRequest : FunctionAppRequestBase
 {
     [Required]
     [MaxLength(64)]
-    [Description("SessionId||必须是运行中的 JupyterLab 会话")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.SessionId", "Parameter.Sandbox.SessionId.Help")]
     public string SessionId { get; set; } = string.Empty;
 
     [MaxLength(512)]
@@ -174,7 +174,7 @@ public class Sandbox_LabUploadFilesRequest : FunctionAppRequestBase
     [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.Files", "Parameter.Sandbox.Files.Help")]
     public FunctionFileReference[] Files { get; set; } = Array.Empty<FunctionFileReference>();
 
-    [Description("覆盖已有文件||关闭后，目标文件存在时操作失败")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.Overwrite", "Parameter.Sandbox.Overwrite.Help")]
     public bool Overwrite { get; set; } = true;
 }
 
@@ -182,15 +182,15 @@ public class Sandbox_LabFileRequest : FunctionAppRequestBase
 {
     [Required]
     [MaxLength(64)]
-    [Description("SessionId||必须是运行中的 JupyterLab 会话")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.SessionId", "Parameter.Sandbox.SessionId.Help")]
     public string SessionId { get; set; } = string.Empty;
 
     [Required]
     [MaxLength(512)]
-    [Description("工作区文件路径||只能填写工作区内的相对路径")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.RelativePath", "Parameter.Sandbox.RelativePath.Help")]
     public string RelativePath { get; set; } = string.Empty;
 
-    [Description("读取上限（字节）||留空或 0 使用系统默认上限")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.MaxBytes", "Parameter.Sandbox.MaxBytes.Help")]
     public long MaxBytes { get; set; }
 }
 
@@ -198,7 +198,7 @@ public class Sandbox_LabListFilesRequest : FunctionAppRequestBase
 {
     [Required]
     [MaxLength(64)]
-    [Description("SessionId||必须是运行中的 JupyterLab 会话")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.SessionId", "Parameter.Sandbox.SessionId.Help")]
     public string SessionId { get; set; } = string.Empty;
 
     [MaxLength(512)]
@@ -216,7 +216,7 @@ public class Sandbox_LabCreateNotebookRequest : FunctionAppRequestBase
 {
     [Required]
     [MaxLength(64)]
-    [Description("SessionId||必须是运行中的 JupyterLab 会话")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.SessionId", "Parameter.Sandbox.SessionId.Help")]
     public string SessionId { get; set; } = string.Empty;
 
     [Required]
@@ -246,7 +246,7 @@ public class Sandbox_LabCreateNotebookRequest : FunctionAppRequestBase
     [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.Cells", "Parameter.Sandbox.Cells.Help")]
     public string Cells { get; set; } = string.Empty;
 
-    [Description("覆盖已有文件||关闭后，目标文件存在时操作失败")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.Overwrite", "Parameter.Sandbox.Overwrite.Help")]
     public bool Overwrite { get; set; } = true;
 }
 
@@ -254,11 +254,11 @@ public class Sandbox_UpdateAliasRequest : FunctionAppRequestBase
 {
     [Required]
     [MaxLength(64)]
-    [Description("SessionId")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.SessionId", "Parameter.Sandbox.SessionId.Help")]
     public string SessionId { get; set; } = string.Empty;
 
     [MaxLength(128)]
-    [Description("别名||留空表示清除别名；最长 128 个字符")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.Alias", "Parameter.Sandbox.Alias.Help")]
     public string Alias { get; set; } = string.Empty;
 }
 
@@ -269,12 +269,12 @@ public class Sandbox_ListRequest : FunctionAppRequestBase
 public class Sandbox_UpdateTtlRequest : FunctionAppRequestBase
 {
     [Required]
-    [Description("SessionId")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.SessionId", "Parameter.Sandbox.SessionId.Help")]
     public string SessionId { get; set; } = string.Empty;
 
-    [Description("TTL（分钟）||从当前时刻重新计算；正整数最多 240 分钟")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.TtlMinutes", "Parameter.Sandbox.TtlMinutes.Help")]
     public int? TtlMinutes { get; set; }
 
-    [Description("永久保持||勾选后不自动过期；须由管理员手动销毁")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.KeepAlive", "Parameter.Sandbox.KeepAlive.Help")]
     public bool KeepAlive { get; set; }
 }
