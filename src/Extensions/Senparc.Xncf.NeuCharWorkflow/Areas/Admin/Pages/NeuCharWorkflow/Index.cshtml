@@ -1096,7 +1096,7 @@
                                                            size="mini"
                                                            icon="el-icon-edit"
                                                            :disabled="editingLocked"
-                                                           @@click="openWorkflowObjectEditor(selectedWorkflowObject)">编辑</el-button>
+                                                           @@click="openWorkflowObjectEditor(selectedWorkflowObject)">{{ ncfST('Frontend.060') }}</el-button>
                                             </div>
                                             <el-alert v-if="!selectedWorkflowObject"
                                                       title="Agent 或 A2A 连接不存在、所属模块未开启或已被移除"
@@ -1118,8 +1118,8 @@
                                                     <el-tag v-for="item in parameterTemplateBindings(selectedNode.config.prompt)" :key="item.token" size="mini" :title="templateBindingLabel(item.source)">{{templatePlaceholder(item.token)}}</el-tag>
                                                 </div>
                                                 <div class="parameter-template-actions">
-                                                    <el-button type="text" size="mini" :disabled="editingLocked" @@click="openNodeTemplateEditor(selectedNode,'prompt',{fieldLabel:'Prompt'})">编辑公式文本</el-button>
-                                                    <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetNodeTemplateManual(selectedNode,'prompt')">改为手动输入</el-button>
+                                                    <el-button type="text" size="mini" :disabled="editingLocked" @@click="openNodeTemplateEditor(selectedNode,'prompt',{fieldLabel:'Prompt'})">{{ ncfST('Frontend.330') }}</el-button>
+                                                    <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetNodeTemplateManual(selectedNode,'prompt')">{{ ncfST('Frontend.275') }}</el-button>
                                                 </div>
                                             </div>
                                         </template>
@@ -1189,7 +1189,7 @@
                                                 <el-option label="禁止使用" :value="3"></el-option>
                                             </el-select>
                                         </el-form-item>
-                                        <el-form-item label="MCP 工具权限">
+                                        <el-form-item :label="ncfST('Frontend.349')">
                                             <el-select v-model="selectedNode.config.mcpToolPermission"
                                                        :disabled="editingLocked"
                                                        style="width:100%;">
