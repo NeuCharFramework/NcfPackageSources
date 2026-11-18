@@ -779,36 +779,36 @@
                                 <div class="operation-title" style="margin-top:20px;">按钮设置</div>
                                 <el-form :model="customColumnBtnForm" :size="elSize" label-position="top"
                                     label-width="80px" class="form-container">
-                                    <el-form-item label="按钮名称">
+                                    <el-form-item :label="ncfST('Frontend.077')">
                                         <el-input v-model.trim="customColumnBtnForm.name" :size="elSize"
-                                            placeholder="请输入按钮名称"></el-input>
+                                            :placeholder="ncfST('Frontend.198')"></el-input>
                                     </el-form-item>
-                                    <el-form-item label="按钮属性">
+                                    <el-form-item :label="ncfST('Frontend.078')">
                                         <el-select v-model="customColumnBtnForm.property" style="width:100%"
-                                            placeholder="请选择按钮属性">
-                                            <el-option label="编辑" value="edit"></el-option>
-                                            <el-option label="删除" value="delete"></el-option>
-                                            <el-option label="详情" value="details"></el-option>
-                                            <el-option label="新增" value="new"></el-option>
+                                            :placeholder="ncfST('Frontend.213')">
+                                            <el-option :label="ncfST('Frontend.169')" value="edit"></el-option>
+                                            <el-option :label="ncfST('Frontend.026')" value="delete"></el-option>
+                                            <el-option :label="ncfST('Frontend.185')" value="details"></el-option>
+                                            <el-option :label="ncfST('Frontend.113')" value="new"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="按钮类型">
+                                    <el-form-item :label="ncfST('Frontend.079')">
                                         <el-select v-model="customColumnBtnForm.type" style="width:100%"
-                                            placeholder="请选择按钮类型">
-                                            <el-option label="填充" value="fill"></el-option>
-                                            <el-option label="描边" value="stroke"></el-option>
-                                            <el-option label="文字" value="text"></el-option>
-                                            <el-option label="链接" value="link"></el-option>
+                                            :placeholder="ncfST('Frontend.214')">
+                                            <el-option :label="ncfST('Frontend.043')" value="fill"></el-option>
+                                            <el-option :label="ncfST('Frontend.085')" value="stroke"></el-option>
+                                            <el-option :label="ncfST('Frontend.112')" value="text"></el-option>
+                                            <el-option :label="ncfST('Frontend.234')" value="link"></el-option>
                                         </el-select>
                                     </el-form-item>
                                     <el-form-item>
-                                        <el-checkbox v-model="customColumnBtnForm.disable">禁用</el-checkbox>
+                                        <el-checkbox v-model="customColumnBtnForm.disable">{{ ncfST('Frontend.156') }}</el-checkbox>
                                     </el-form-item>
                                     <el-form-item>
-                                        <el-checkbox v-model="customColumnBtnForm.enterID">带入id</el-checkbox>
+                                        <el-checkbox v-model="customColumnBtnForm.enterID">{{ ncfST('Frontend.064') }}</el-checkbox>
                                     </el-form-item>
                                     <el-form-item>
-                                        <el-checkbox v-model="customColumnBtnForm.customIDName">自定义ID名称</el-checkbox>
+                                        <el-checkbox v-model="customColumnBtnForm.customIDName">{{ ncfST('Frontend.173') }}</el-checkbox>
                                     </el-form-item>
                                 </el-form>
                                 @* Custom-column button events *@
