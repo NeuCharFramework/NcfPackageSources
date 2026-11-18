@@ -767,4 +767,7 @@
   <data name="Frontend.720" xml:space="preserve"><value>Вычислять количество по формуле</value></data>
   <data name="Frontend.721" xml:space="preserve"><value>Читать количество из предыдущего узла (до 100000)</value></data>
   <data name="Frontend.722" xml:space="preserve"><value>Последовательно повторить {0} раз</value></data>
+  <data name="Frontend.723" xml:space="preserve"><value>Узел {0} обрабатывает вход предыдущего узла в Workflow.</value></data>
+  <data name="Frontend.724" xml:space="preserve"><value>Идентификатор базы знаний</value></data>
+  <data name="Frontend.725" xml:space="preserve"><value>Состояние группы</value></data>
 </root>

@@ -767,4 +767,7 @@
   <data name="Frontend.720" xml:space="preserve"><value>Compute the count dynamically with a formula</value></data>
   <data name="Frontend.721" xml:space="preserve"><value>Read the count from upstream (up to 100,000)</value></data>
   <data name="Frontend.722" xml:space="preserve"><value>Repeat sequentially {0} times</value></data>
+  <data name="Frontend.723" xml:space="preserve"><value>The {0} node processes upstream input in the Workflow.</value></data>
+  <data name="Frontend.724" xml:space="preserve"><value>Knowledge base ID</value></data>
+  <data name="Frontend.725" xml:space="preserve"><value>Group status</value></data>
 </root>

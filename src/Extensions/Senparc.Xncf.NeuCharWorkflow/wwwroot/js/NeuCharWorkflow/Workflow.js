@@ -840,7 +840,7 @@ new Vue({
             if (safePreview.kind === 'object') {
                 const metadata = payload.metadata || {};
                 const objectType = this.objectKindLabel(payload);
-                const description = String(metadata.description || payload.description || `${objectType} 节点会在工作流中处理上游输入。`);
+                const description = String(metadata.description || payload.description || ncfWorkflowText('Frontend.723').replace('{0}', objectType));
                 return {
                     kind: payload.kind === 'a2a' ? ncfWorkflowText('Frontend.706') : 'AgentsManager',
                     title: String(payload.name || objectType),
@@ -1155,11 +1155,11 @@ new Vue({
                 : this.form.triggerType === 'webhook'
                     ? 'webhook-trigger'
                     : this.form.triggerType === 'chat' ? 'chat-trigger' : 'manual-trigger';
-            const labels = { 'manual-trigger': '手动触发', 'interval-trigger': '间隔触发', 'webhook-trigger': 'Webhook 触发', 'chat-trigger': 'Chat 触发' };
+            const labels = { 'manual-trigger': ncfWorkflowText('Frontend.248'), 'interval-trigger': ncfWorkflowText('Frontend.471'), 'webhook-trigger': ncfWorkflowText('Frontend.470'), 'chat-trigger': ncfWorkflowText('Frontend.132') };
             const existing = this.form.graph.nodes.find(node => String(node.type).endsWith('trigger'));
             if (existing) {
                 existing.type = type;
-                existing.name = labels[type] || '手动触发';
+                existing.name = labels[type] || ncfWorkflowText('Frontend.248');
                 existing.config = existing.config || {};
                 if (type === 'webhook-trigger') {
                     existing.config.webhookParameters = (this.form.webhookParameters || []).map(parameter => ({ name: parameter.name, required: !!parameter.required, description: parameter.description || '' }));
@@ -1167,7 +1167,7 @@ new Vue({
                     delete existing.config.webhookParameters;
                 }
             } else {
-                const trigger = { id: this.makeId('trigger'), type, name: labels[type] || '手动触发', x: 430, y: 60, config: type === 'webhook-trigger' ? { webhookParameters: [] } : {} };
+                const trigger = { id: this.makeId('trigger'), type, name: labels[type] || ncfWorkflowText('Frontend.248'), x: 430, y: 60, config: type === 'webhook-trigger' ? { webhookParameters: [] } : {} };
                 this.form.graph.nodes.unshift(trigger);
                 this.setSelectedNodes([trigger]);
             }
@@ -1184,9 +1184,9 @@ new Vue({
                     : type === 'aggregate' ? { outputTemplate: '' }
                     : type === 'console' ? { printTemplate: '{{input}}' }
                     : type === 'neubell'
-                        ? { title: 'Workflow 提醒', summary: '{{input}}', consumeMode: 'item' }
+                        ? { title: ncfWorkflowText('Frontend.269'), summary: '{{input}}', consumeMode: 'item' }
                         : type === 'human-input'
-                            ? { title: 'Workflow 等待人工输入', prompt: '请补充必要信息：{{input}}', externalResumeEnabled: false, externalResumeKey: '' }
+                            ? { title: ncfWorkflowText('Frontend.269'), prompt: `${ncfWorkflowText('Frontend.164')}: {{input}}`, externalResumeEnabled: false, externalResumeKey: '' }
                         : {};
             return { id: this.makeId(type), type, name, x: 80, y: 80, config };
         },
@@ -1229,7 +1229,7 @@ new Vue({
                 config: {
                     providerId: object.providerId,
                     objectId: object.objectId,
-                    prompt: '处理以下输入：{{input}}',
+                    prompt: '{{input}}',
                     aiModelId: null,
                     personality: true,
                     allowFunctionCalls: object.kind === 'agent' ? false : supportsHumanInTheLoop,
@@ -1344,7 +1344,7 @@ new Vue({
         },
         insertNodeIntoEdge(node, edge, existingNode) {
             if (this.editingLocked || !node || node.type === 'end' || String(node.type || '').endsWith('trigger')) {
-                if (!this.editingLocked) this.$notify({ title: '无法插入节点', message: '结束或触发器节点不能插入到已有连线中。', type: 'warning' });
+                if (!this.editingLocked) this.$notify({ title: ncfWorkflowText('Frontend.456'), message: ncfWorkflowText('Frontend.457'), type: 'warning' });
                 return null;
             }
             const liveEdge = this.form.graph.edges.find(item => item.id === edge.id);
@@ -1352,7 +1352,7 @@ new Vue({
             const target = liveEdge && this.form.graph.nodes.find(item => item.id === liveEdge.target);
             if (!liveEdge || !source || !target) {
                 this.closeEdgeInsertMenu();
-                this.$notify({ title: '无法插入节点', message: '原连线已变化，请重新打开插入菜单。', type: 'warning' });
+                this.$notify({ title: ncfWorkflowText('Frontend.456'), message: ncfWorkflowText('Frontend.188'), type: 'warning' });
                 return null;
             }
 
@@ -1367,7 +1367,7 @@ new Vue({
                 this.canConnect(node, target, insertedHandle, originalTargetHandle);
             if (!valid) {
                 this.form.graph.edges = originalEdges;
-                this.$notify({ title: '无法插入节点', message: '该节点无法同时连接原连线的上下游，请选择其他节点。', type: 'warning' });
+                this.$notify({ title: ncfWorkflowText('Frontend.456'), message: ncfWorkflowText('Frontend.459'), type: 'warning' });
                 return null;
             }
 
@@ -1474,7 +1474,7 @@ new Vue({
             const copies = sourceNodes.map(node => {
                 const copy = JSON.parse(JSON.stringify(node));
                 copy.id = this.makeId(node.type || 'node');
-                copy.name = `${node.name || '节点'}（副本）`;
+                copy.name = `${node.name || ncfWorkflowText('Frontend.501')}（副本）`;
                 copy.x = Number(node.x || 0) + 40;
                 copy.y = Number(node.y || 0) + 40;
                 nodeIdMap.set(node.id, copy.id);
@@ -1701,7 +1701,7 @@ new Vue({
             if (targetId && this.form.graph.edges.some(edge =>
                 edge.source === node.id && edge.target === targetId && edge.sourceHandle === handle && edge.targetHandle === targetHandleValue)) return true;
             if (targetId && !this.canConnect(node, target, handle, targetHandleValue)) {
-                if (!silent) this.$notify({ title: '无法连接', message: '目标已有上游、连接会形成循环，或节点不支持该连接方式。多对一目标可使用 Function、聚合或逐项合流节点。', type: 'warning' });
+                if (!silent) this.$notify({ title: ncfWorkflowText('Frontend.458'), message: ncfWorkflowText('Frontend.459'), type: 'warning' });
                 return false;
             }
             if (node.type !== 'parallel') {
@@ -2644,7 +2644,7 @@ new Vue({
                 }
             }
             if (!message && typeof error === 'string') message = error;
-            message = String(message || fallback || '节点检查失败。');
+            message = String(message || fallback || ncfWorkflowText('Frontend.340'));
             nodeIds = [...new Set(nodeIds.map(nodeId => String(nodeId)).filter(Boolean))];
             return {
                 message,
@@ -2699,7 +2699,7 @@ new Vue({
         parameterDisplayName(parameter, index) {
             const title = String(parameter?.title || '').trim();
             const name = String(parameter?.name || '').trim();
-            return title || name || `参数 ${Number(index || 0) + 1}`;
+            return title || name || ncfWorkflowText('Frontend.099').replace('{0}', Number(index || 0) + 1);
         },
         hasParameterFieldName(parameter) {
             const title = String(parameter?.title || '').trim();
@@ -2728,14 +2728,14 @@ new Vue({
             if (!object) return [];
             const metadata = object.metadata || {};
             const rows = [
-                { label: '类型', value: metadata.type || (object.kind === 'a2a' ? '远程 A2A Agent' : object.kind === 'agent-group' ? 'Agent 组' : '独立 Agent') },
-                { label: '状态', value: object.enabled ? '可用 / 已启用' : '不可用 / 已停用' },
-                { label: '说明', value: object.description || '' }
+                { label: ncfWorkflowText('Frontend.707'), value: metadata.type || this.objectKindLabel(object) },
+                { label: ncfWorkflowText('Frontend.012'), value: object.enabled ? `${ncfWorkflowText('Frontend.435')} / ${ncfWorkflowText('Frontend.708')}` : `${ncfWorkflowText('Frontend.436')} / ${ncfWorkflowText('Frontend.709')}` },
+                { label: ncfWorkflowText('Frontend.346'), value: object.description || '' }
             ];
             if (metadata.promptCode) rows.push({ label: 'Prompt Code', value: metadata.promptCode });
             if (metadata.functionCallNames) rows.push({ label: 'Function Calls', value: metadata.functionCallNames });
-            if (metadata.knowledgeBaseId) rows.push({ label: '知识库 ID', value: metadata.knowledgeBaseId });
-            if (metadata.state) rows.push({ label: '组状态', value: metadata.state });
+            if (metadata.knowledgeBaseId) rows.push({ label: ncfWorkflowText('Frontend.724'), value: metadata.knowledgeBaseId });
+            if (metadata.state) rows.push({ label: ncfWorkflowText('Frontend.725'), value: metadata.state });
             return rows;
         },
         workflowModelLabel(model) {
@@ -2751,7 +2751,7 @@ new Vue({
                 3: 'Hugging Face',
                 4: 'NeuCharAI'
             };
-            return platforms[Number(model?.aiPlatform)] || `${ncfWorkflowText('平台')} ${model?.aiPlatform ?? ncfWorkflowText('未知')}`;
+            return platforms[Number(model?.aiPlatform)] || `${ncfWorkflowText('Frontend.658')} ${model?.aiPlatform ?? ncfWorkflowText('Frontend.652')}`;
         },
         openWorkflowObjectEditor(object) {
             const url = this.workflowObjectEditUrl(object);
@@ -2823,34 +2823,34 @@ new Vue({
         },
         nodeOutputFields(node, visited) {
             visited = visited || new Set();
-            if (!node || visited.has(node.id)) return [{ path: '$', label: '节点输出', typeName: 'any', isArray: false, requiresIndex: false }];
+            if (!node || visited.has(node.id)) return [{ path: '$', label: ncfWorkflowText('Frontend.447'), typeName: 'any', isArray: false, requiresIndex: false }];
             visited.add(node.id);
             if (node.type === 'function') {
                 const fn = this.findFunction(node.config);
                 const outputFields = (fn && fn.output && Array.isArray(fn.output.fields))
                     ? fn.output.fields
-                    : [{ path: '$', label: '完整输出', typeName: 'any', isArray: false, requiresIndex: false }];
+                    : [{ path: '$', label: ncfWorkflowText('Frontend.628'), typeName: 'any', isArray: false, requiresIndex: false }];
                 return this.withObservedOutputFields(node, [...outputFields, ...this.functionSelectionInputFields(fn)]);
             }
             if (node.type === 'aggregate') {
                 const rawArray = String(node.config?.outputTemplate || '').trim() === '{{input}}';
                 return this.withObservedOutputFields(node,
-                    [{ path: '$', label: rawArray ? '聚合数组' : '聚合输出', typeName: 'any', isArray: rawArray, requiresIndex: false }]);
+                    [{ path: '$', label: rawArray ? ncfWorkflowText('Frontend.634') : ncfWorkflowText('Frontend.635'), typeName: 'any', isArray: rawArray, requiresIndex: false }]);
             }
             if (node.type === 'merge') return this.withObservedOutputFields(node,
-                [{ path: '$', label: '当前输入项', typeName: 'any', isArray: false, requiresIndex: false }]);
+                [{ path: '$', label: ncfWorkflowText('Frontend.626'), typeName: 'any', isArray: false, requiresIndex: false }]);
             const observed = this.observedOutputFields(node);
             if (observed.length) return observed;
             if (node.type === 'webhook-trigger') {
                 const parameters = this.form.webhookParameters || [];
                 return parameters.length
                     ? parameters.filter(parameter => String(parameter.name || '').trim()).map(parameter => ({ path: `$.${String(parameter.name).trim()}`, label: parameter.name, typeName: 'any', isArray: false, requiresIndex: false }))
-                    : [{ path: '$', label: 'Webhook 输入', typeName: 'object', isArray: false, requiresIndex: false }];
+                    : [{ path: '$', label: ncfWorkflowText('Frontend.026'), typeName: 'object', isArray: false, requiresIndex: false }];
             }
-            if (['manual-trigger', 'interval-trigger', 'webhook-trigger', 'chat-trigger', 'agent', 'agent-group', 'a2a', 'sub-workflow', 'human-input'].includes(node.type)) return [{ path: '$', label: '文本输出', typeName: 'string', isArray: false, requiresIndex: false }];
+            if (['manual-trigger', 'interval-trigger', 'webhook-trigger', 'chat-trigger', 'agent', 'agent-group', 'a2a', 'sub-workflow', 'human-input'].includes(node.type)) return [{ path: '$', label: ncfWorkflowText('Frontend.560'), typeName: 'string', isArray: false, requiresIndex: false }];
             const incoming = this.form.graph.edges.find(edge => edge.target === node.id);
             const source = incoming && this.form.graph.nodes.find(item => item.id === incoming.source);
-            return source ? this.nodeOutputFields(source, visited) : [{ path: '$', label: '节点输出', typeName: 'any', isArray: false, requiresIndex: false }];
+            return source ? this.nodeOutputFields(source, visited) : [{ path: '$', label: ncfWorkflowText('Frontend.447'), typeName: 'any', isArray: false, requiresIndex: false }];
         },
         functionSelectionInputFields(fn) {
             if (!fn) return [];

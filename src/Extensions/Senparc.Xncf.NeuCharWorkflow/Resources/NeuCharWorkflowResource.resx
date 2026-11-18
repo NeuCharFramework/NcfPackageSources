@@ -766,4 +766,7 @@
   <data name="Frontend.720" xml:space="preserve"><value>按语法动态计算次数</value></data>
   <data name="Frontend.721" xml:space="preserve"><value>从上游读取次数（最多 100000 次）</value></data>
   <data name="Frontend.722" xml:space="preserve"><value>顺序重复 {0} 次</value></data>
+  <data name="Frontend.723" xml:space="preserve"><value>{0} 节点会在工作流中处理上游输入。</value></data>
+  <data name="Frontend.724" xml:space="preserve"><value>知识库 ID</value></data>
+  <data name="Frontend.725" xml:space="preserve"><value>组状态</value></data>
 </root>

@@ -783,4 +783,7 @@
   <data name="Frontend.720" xml:space="preserve"><value>数式で回数を動的に計算</value></data>
   <data name="Frontend.721" xml:space="preserve"><value>上流から回数を読み取る（最大 100000 回）</value></data>
   <data name="Frontend.722" xml:space="preserve"><value>{0} 回を順番に繰り返す</value></data>
+  <data name="Frontend.723" xml:space="preserve"><value>{0} ノードは Workflow で上流入力を処理します。</value></data>
+  <data name="Frontend.724" xml:space="preserve"><value>ナレッジベース ID</value></data>
+  <data name="Frontend.725" xml:space="preserve"><value>グループ状態</value></data>
 </root>

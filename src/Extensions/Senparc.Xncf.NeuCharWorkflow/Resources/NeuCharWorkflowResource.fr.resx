@@ -767,4 +767,7 @@
   <data name="Frontend.720" xml:space="preserve"><value>Calculer le nombre dynamiquement avec une formule</value></data>
   <data name="Frontend.721" xml:space="preserve"><value>Lire le nombre en amont (jusqu’à 100 000)</value></data>
   <data name="Frontend.722" xml:space="preserve"><value>Répéter séquentiellement {0} fois</value></data>
+  <data name="Frontend.723" xml:space="preserve"><value>Le nœud {0} traite l’entrée amont dans le Workflow.</value></data>
+  <data name="Frontend.724" xml:space="preserve"><value>ID de la base de connaissances</value></data>
+  <data name="Frontend.725" xml:space="preserve"><value>État du groupe</value></data>
 </root>

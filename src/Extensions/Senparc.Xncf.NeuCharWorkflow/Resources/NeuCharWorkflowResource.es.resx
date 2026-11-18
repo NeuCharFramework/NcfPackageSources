@@ -767,4 +767,7 @@
   <data name="Frontend.720" xml:space="preserve"><value>Calcular la cantidad dinámicamente con una fórmula</value></data>
   <data name="Frontend.721" xml:space="preserve"><value>Leer la cantidad desde una entrada anterior (hasta 100000)</value></data>
   <data name="Frontend.722" xml:space="preserve"><value>Repetir secuencialmente {0} veces</value></data>
+  <data name="Frontend.723" xml:space="preserve"><value>El nodo {0} procesa la entrada anterior en el Workflow.</value></data>
+  <data name="Frontend.724" xml:space="preserve"><value>ID de la base de conocimiento</value></data>
+  <data name="Frontend.725" xml:space="preserve"><value>Estado del grupo</value></data>
 </root>
