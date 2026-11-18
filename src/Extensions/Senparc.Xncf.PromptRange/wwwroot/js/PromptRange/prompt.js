@@ -1999,14 +1999,14 @@ var app = new Vue({
             // stop event propagation
             e.stopPropagation();
             //Legacy comment translated to English.
-            this.$confirm('此操作将永久删除该靶场下的所有内容', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
+            this.$confirm(ncfST('Frontend.363'), ncfST('Frontend.343'), {
+                confirmButtonText: ncfST('Frontend.421'),
+                cancelButtonText: ncfST('Frontend.091'),
                 type: 'warning'
             }).then(async () => {
                 let res = await servicePR.delete(`/api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.DeleteAsync?rangeId=${id}`)
                 if (res.data.success) {
-                    this.$message.success('删除成功')
+                    this.$message.success(ncfST('Frontend.269'))
                     let _isReset = id == this.promptField
                     //Legacy comment translated to English.
                     this.getFieldList().then(() => {
@@ -2032,9 +2032,9 @@ var app = new Vue({
             // stop event propagation
             e.stopPropagation();
             //Legacy comment translated to English.
-            this.$confirm('此操作将永久删除该靶道', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
+            this.$confirm(ncfST('Frontend.364'), ncfST('Frontend.343'), {
+                confirmButtonText: ncfST('Frontend.421'),
+                cancelButtonText: ncfST('Frontend.091'),
                 type: 'warning'
             }).then(async () => {
                 this.btnDeleteHandle(id)
@@ -2088,9 +2088,9 @@ var app = new Vue({
             // stop event propagation
             e.stopPropagation();
             //Legacy comment translated to English.
-            this.$confirm('此操作将重置该靶道名称', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
+            this.$confirm(ncfST('Frontend.366'), ncfST('Frontend.343'), {
+                confirmButtonText: ncfST('Frontend.421'),
+                cancelButtonText: ncfST('Frontend.091'),
                 type: 'warning'
             }).then(async () => {
                 this.btnEditHandle({ id: id, nickName: '' })
@@ -2713,7 +2713,7 @@ var app = new Vue({
         submitUploadPlugins() {
             let _fileData = JSON.parse(JSON.stringify(this.uploadPluginData))
             if (_fileData.length === 0) {
-                this.$message.warning('请选择文件夹')
+                this.$message.warning(ncfST('Frontend.288'))
                 return
             }
             if (this.isPageLoading) return
@@ -2765,7 +2765,7 @@ var app = new Vue({
                 //console.log(res)
                 if (res.data.success) {
                     this.uploadPluginVisible = false
-                    app.$message.success('上传成功')
+                    app.$message.success(ncfST('Frontend.276'))
                     // updaterangedata
                     this.getFieldList().then(() => {
                         if (this.promptFieldOpt && this.promptFieldOpt.length > 0) {
@@ -2917,7 +2917,7 @@ var app = new Vue({
                 this.updateExportPluginSelectedCount();
             });
             
-            this.$message.success('已全选所有靶道');
+            this.$message.success(ncfST('Frontend.325'));
         },
         
         //Legacy comment translated to English.
@@ -2954,7 +2954,7 @@ var app = new Vue({
                 this.updateExportPluginSelectedCount();
             });
             
-            this.$message.success('已反选');
+            this.$message.success(ncfST('Frontend.326'));
         },
         
         //Legacy comment translated to English.
@@ -2969,7 +2969,7 @@ var app = new Vue({
                 this.updateExportPluginSelectedCount();
             });
             
-            this.$message.info('已清空所有选择');
+            this.$message.info(ncfST('Frontend.327'));
         },
         
         //Legacy comment translated to English.
@@ -3038,7 +3038,7 @@ var app = new Vue({
                         URL.revokeObjectURL(url); //Legacy comment translated to English.
                         a.parentNode && a.parentNode.removeChild(a); //Legacy comment translated to English.
                         
-                        this.$message.success('导出成功！');
+                        this.$message.success(ncfST('Frontend.280'));
                     }).catch((error) => {
                         this.isPageLoading = false
                         console.error('导出失败:', error);
