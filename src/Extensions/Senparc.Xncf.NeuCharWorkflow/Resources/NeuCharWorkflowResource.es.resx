@@ -664,4 +664,5 @@
   <data name="Chat.SignedIn" xml:space="preserve"><value>Sesión iniciada</value></data>
   <data name="Chat.Trigger" xml:space="preserve"><value>Activador de Chat</value></data>
   <data name="Chat.User" xml:space="preserve"><value>Yo</value></data>
+  <data name="Chat.User" xml:space="preserve"><value>Yo</value></data>
 </root>
