@@ -13,14 +13,14 @@ var AgentsAppMethodsGroupStartEditor = {
       const chatGroupDto = groupDetail?.chatGroupDto || groupDetail || {}
       const fallbackRoleAgents = [
         {
-          roleName: '群主',
+          roleName: ncfST('Frontend.132'),
           agentTemplateDto: {
             id: chatGroupDto.adminAgentTemplateId,
             name: chatGroupDto.adminAgentTemplateName
           }
         },
         {
-          roleName: '对接人',
+          roleName: ncfST('Frontend.133'),
           agentTemplateDto: {
             id: chatGroupDto.enterAgentTemplateId,
             name: chatGroupDto.enterAgentTemplateName
@@ -408,7 +408,7 @@ var AgentsAppMethodsGroupStartEditor = {
       const binding = Number(this.agentForm?.modelBinding ?? 0)
       const aiModelId = Number(this.agentForm?.aiModelId || 0)
       if (isManualPrompt && binding !== 2) {
-        this.$message.error('手动 Prompt 没有 PromptRange 模型可继承，请选择“手动选择 AIModel”。')
+        this.$message.error(ncfST('Frontend.410'))
         return false
       }
       if (binding === 2 && !aiModelId) {
