@@ -90,7 +90,7 @@ new Vue({
                     if (selected) this.filters.resourceKey = this.resourceKey(selected);
                 }
             } catch (error) {
-                this.$message.error(this.errorMessage(error, ncfST('读取 Workflow 统计失败。')));
+                this.$message.error(this.errorMessage(error, ncfST('Frontend.103')));
             } finally {
                 this.loading = false;
             }
@@ -241,10 +241,10 @@ new Vue({
         formatDuration(value) {
             if (value === null || value === undefined || Number.isNaN(Number(value))) return '—';
             const seconds = Math.max(0, Number(value));
-            if (seconds < 60) return ncfST('{0} 秒', seconds.toFixed(1));
+            if (seconds < 60) return ncfST('Frontend.101', seconds.toFixed(1));
             const minutes = Math.floor(seconds / 60);
             const rest = Math.round(seconds % 60);
-            return ncfST('{0} 分 {1} 秒', minutes, rest);
+            return ncfST('Frontend.102', minutes, rest);
         },
         formatDate(value) {
             if (!value) return '—';
@@ -255,18 +255,18 @@ new Vue({
         },
         sourceText(source) {
             return {
-                manual: ncfST('手动运行'),
+                manual: ncfST('Frontend.467'),
                 webhook: 'Webhook',
-                interval: ncfST('定时触发'),
-                history: ncfST('历史记录')
-            }[source] || ncfST('运行记录');
+                interval: ncfST('Frontend.471'),
+                history: ncfST('Frontend.468')
+            }[source] || ncfST('Frontend.469');
         },
         statusText(status) {
             return {
-                running: ncfST('运行中'),
-                success: ncfST('成功'),
-                failed: ncfST('失败')
-            }[status] || ncfST('未知');
+                running: ncfST('Frontend.077'),
+                success: ncfST('Frontend.127'),
+                failed: ncfST('Frontend.128')
+            }[status] || ncfST('Frontend.652');
         },
         statusType(status) {
             return { running: 'warning', success: 'success', failed: 'danger' }[status] || 'info';
