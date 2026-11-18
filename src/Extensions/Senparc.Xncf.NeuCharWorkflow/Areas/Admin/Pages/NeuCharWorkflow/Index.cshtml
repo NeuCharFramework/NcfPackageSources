@@ -201,35 +201,35 @@
                     </button>
                 </section>
 
-                <el-dialog title="工作流设置"
+                <el-dialog :title="ncfST('Frontend.481')"
                            :visible.sync="workflowSettingsVisible"
                            :close-on-click-modal="false"
                            width="min(720px, calc(100vw - 32px))"
                            append-to-body>
                     <el-form label-position="top" size="small" :class="{'form-locked':editingLocked}">
-                        <el-form-item label="说明">
-                            <el-input v-model="form.description" :disabled="editingLocked" placeholder="用一句话说明这个工作流"></el-input>
+                        <el-form-item :label="ncfST('Frontend.346')">
+                            <el-input v-model="form.description" :disabled="editingLocked" :placeholder="ncfST('Frontend.312')"></el-input>
                         </el-form-item>
                         <div class="workflow-settings-grid">
-                            <el-form-item label="触发方式">
+                            <el-form-item :label="ncfST('Frontend.343')">
                                 <el-select v-model="form.triggerType" :disabled="editingLocked" @@change="syncTriggerNode">
-                                    <el-option label="手动触发" value="manual"></el-option>
-                                    <el-option label="间隔触发" value="interval"></el-option>
+                                    <el-option :label="ncfST('Frontend.248')" value="manual"></el-option>
+                                    <el-option :label="ncfST('Frontend.373')" value="interval"></el-option>
                                     <el-option label="Webhook" value="webhook"></el-option>
                                     <el-option label="Chat 触发" value="chat"></el-option>
                                 </el-select>
                             </el-form-item>
-                            <el-form-item v-if="form.triggerType==='interval'" label="间隔秒数">
+                            <el-form-item v-if="form.triggerType==='interval'" :label="ncfST('Frontend.372')">
                                 <el-input-number v-model="form.intervalSeconds" :disabled="editingLocked" :min="60" :max="31536000" :step="60"></el-input-number>
                             </el-form-item>
-                            <el-form-item label="运行状态">
-                                <el-switch v-model="form.enabled" :disabled="editingLocked" active-text="启用"></el-switch>
+                            <el-form-item :label="ncfST('Frontend.359')">
+                                <el-switch v-model="form.enabled" :disabled="editingLocked" :active-text="ncfST('Frontend.650')"></el-switch>
                             </el-form-item>
-                            <el-form-item label="自动保存" title="只在当前页面打开且内容有变化时执行">
+                            <el-form-item :label="ncfST('Frontend.336')" :title="ncfST('Frontend.196')">
                                 <div class="workflow-auto-save">
                                     <el-switch :value="form.autoSaveMinutes>0"
                                                :disabled="editingLocked || saveState.saving"
-                                               active-text="自动保存"
+                                               :active-text="ncfST('Frontend.336')"
                                                @@change="setAutoSaveEnabled"></el-switch>
                                     <el-input-number v-if="form.autoSaveMinutes>0"
                                                      v-model="form.autoSaveMinutes"
@@ -242,37 +242,37 @@
                                     <span v-if="form.autoSaveMinutes>0">分钟</span>
                                 </div>
                             </el-form-item>
-                            <el-form-item label="自动排列方向" title="影响“按设置自动排版”的层级阅读方向；默认纵向">
+                            <el-form-item :label="ncfST('Frontend.338')" :title="ncfST('Frontend.236')">
                                 <el-radio-group v-model="form.graph.layout.direction" :disabled="editingLocked">
-                                    <el-radio-button label="vertical">纵向</el-radio-button>
-                                    <el-radio-button label="horizontal">横向</el-radio-button>
+                                    <el-radio-button label="vertical">Vertical</el-radio-button>
+                                    <el-radio-button label="horizontal">Horizontal</el-radio-button>
                                 </el-radio-group>
                             </el-form-item>
-                            <el-form-item label="画布对齐">
+                            <el-form-item :label="ncfST('Frontend.315')">
                                 <div class="workflow-layout-actions">
                                     <el-button size="small"
                                                icon="el-icon-magic-stick"
                                                :disabled="editingLocked"
-                                               @@click="autoLayout()">按方向重新排列</el-button>
+                                               @@click="autoLayout()">{{ ncfST('Frontend.265') }}</el-button>
                                     <el-button size="small"
                                                icon="el-icon-s-grid"
                                                :disabled="editingLocked"
-                                               @@click="alignToNearbyGrid()">就近网格对齐</el-button>
+                                               @@click="alignToNearbyGrid()">{{ ncfST('Frontend.221') }}</el-button>
                                 </div>
-                                <p class="workflow-layout-help">就近网格对齐只做有限距离吸附和防重叠；会优先保留当前阅读顺序，并避免把连线拉得更长。</p>
+                                <p class="workflow-layout-help">{{ ncfST('Frontend.222') }}</p>
                             </el-form-item>
                         </div>
 
                         <section class="workflow-variable-settings">
                             <div class="workflow-variable-settings-heading">
                                 <div>
-                                    <strong>工作流变量</strong>
+                                    <strong>{{ ncfST('Frontend.224') }}</strong>
                                     <p>在这里声明默认值，后续受限公式用 <code v-pre>{{= vars.变量名 }}</code> 读取；安全代码节点可在本次运行中重新赋值。</p>
                                 </div>
                                 <el-button size="small"
                                            icon="el-icon-plus"
                                            :disabled="editingLocked || form.graph.variables.length>=30"
-                                           @@click="addWorkflowVariable">添加变量</el-button>
+                                           @@click="addWorkflowVariable">{{ ncfST('Frontend.304') }}</el-button>
                             </div>
                             <el-alert title="变量名只能使用字母、数字、下划线，且以字母或下划线开头。默认值可使用受限公式；不会执行 JavaScript。"
                                       type="info"
@@ -293,16 +293,16 @@
                                     <el-button type="text"
                                                class="workflow-variable-remove"
                                                :disabled="editingLocked"
-                                               @@click="removeWorkflowVariable(index)">删除</el-button>
+                                               @@click="removeWorkflowVariable(index)">{{ ncfST('Frontend.026') }}</el-button>
                                 </div>
                             </div>
-                            <p v-else class="workflow-variable-empty">尚未声明变量。先添加变量，才能在“安全代码”节点中对它赋值。</p>
+                            <p v-else class="workflow-variable-empty">{{ ncfST('Frontend.219') }}</p>
                         </section>
 
                         <div v-if="form.triggerType==='webhook'" class="workflow-webhook-config">
                             <div class="webhook-config-heading">
-                                <strong>Webhook 触发配置</strong>
-                                <el-button type="text" size="mini" icon="el-icon-question" @@click="webhookHelpVisible=true">使用说明</el-button>
+                                <strong>{{ ncfST('Frontend.146') }}</strong>
+                                <el-button type="text" size="mini" icon="el-icon-question" @@click="webhookHelpVisible=true">{{ ncfST('Frontend.162') }}</el-button>
                             </div>
                             <div class="webhook-config-row">
                                 <label>请求方法</label>
@@ -311,15 +311,15 @@
                                     <el-option label="GET" value="get"></el-option>
                                     <el-option label="POST" value="post"></el-option>
                                 </el-select>
-                                <label>访问密钥</label>
+                                <label>{{ ncfST('Frontend.345') }}</label>
                                 <el-input v-model="form.webhookToken" size="small" readonly placeholder="保存后自动生成">
                                     <el-button slot="append" icon="el-icon-document-copy" title="复制访问密钥" @@click="copyText(form.webhookToken)"></el-button>
                                 </el-input>
                                 <el-button size="small" icon="el-icon-document-copy" :disabled="!form.id" @@click="copyText(webhookUrl)">复制 URL</el-button>
                             </div>
                             <div class="webhook-parameters-heading">
-                                <span>参数（{{form.webhookParameters.length}}/50）</span>
-                                <el-button type="text" size="small" :disabled="editingLocked || form.webhookParameters.length>=50" @@click="addWebhookParameter">添加参数</el-button>
+                                <span>{{ ncfST('Frontend.381', form.webhookParameters.length) }}</span>
+                                <el-button type="text" size="small" :disabled="editingLocked || form.webhookParameters.length>=50" @@click="addWebhookParameter">{{ ncfST('Frontend.303') }}</el-button>
                             </div>
                             <div v-if="form.webhookParameters.length" class="webhook-parameters">
                                 <div v-for="(parameter,index) in form.webhookParameters" :key="parameter._id" class="webhook-parameter-row">
@@ -329,50 +329,50 @@
                                     <el-button type="text" class="webhook-parameter-remove" :disabled="editingLocked" @@click="removeWebhookParameter(index)">删除</el-button>
                                 </div>
                             </div>
-                            <div v-else class="webhook-parameters-empty">未配置参数：接收全部 Query、Form 与 JSON 字段。</div>
+                            <div v-else class="webhook-parameters-empty">{{ ncfST('Frontend.287') }}</div>
                         </div>
 
                         <div v-if="form.triggerType==='chat'" class="workflow-webhook-config workflow-chat-config">
                             <div class="webhook-config-heading">
-                                <strong>Chat 触发配置</strong>
+                                <strong>{{ ncfST('Frontend.133') }}</strong>
                             </div>
                             <div class="webhook-config-row">
-                                <label>页面标题</label>
-                                <el-input v-model="form.chatTitle" :disabled="editingLocked" size="small" maxlength="100" placeholder="留空时使用工作流名称"></el-input>
-                                <el-checkbox v-model="form.chatAllowGuest" :disabled="editingLocked">允许访客（未登录）</el-checkbox>
+                                <label>{{ ncfST('Frontend.373') }}</label>
+                                <el-input v-model="form.chatTitle" :disabled="editingLocked" size="small" maxlength="100" :placeholder="ncfST('Frontend.316')"></el-input>
+                                <el-checkbox v-model="form.chatAllowGuest" :disabled="editingLocked">{{ ncfST('Frontend.174') }}</el-checkbox>
                             </div>
                             <div class="webhook-config-row">
-                                <label>欢迎语</label>
-                                <el-input v-model="form.chatGreeting" :disabled="editingLocked" size="small" type="textarea" :rows="2" maxlength="500" placeholder="首次打开聊天页面时显示的问候语，留空时使用默认文案"></el-input>
+                                <label>{{ ncfST('Frontend.297') }}</label>
+                                <el-input v-model="form.chatGreeting" :disabled="editingLocked" size="small" type="textarea" :rows="2" maxlength="500" :placeholder="ncfST('Frontend.375')"></el-input>
                             </div>
                             <div class="webhook-config-row">
-                                <label>聊天页面</label>
-                                <el-input v-model="chatUrl" size="small" readonly placeholder="保存后可访问"></el-input>
-                                <el-button size="small" icon="el-icon-document-copy" :disabled="!form.id" @@click="copyText(chatUrl,'Chat')">复制 URL</el-button>
-                                <el-button size="small" type="primary" plain icon="el-icon-chat-dot-round" :disabled="!form.id" @@click="openChatPage">打开</el-button>
+                                <label>{{ ncfST('Frontend.334') }}</label>
+                                <el-input v-model="chatUrl" size="small" readonly :placeholder="ncfST('Frontend.168')"></el-input>
+                                <el-button size="small" icon="el-icon-document-copy" :disabled="!form.id" @@click="copyText(chatUrl,'Chat')">{{ ncfST('Frontend.210') }}</el-button>
+                                <el-button size="small" type="primary" plain icon="el-icon-chat-dot-round" :disabled="!form.id" @@click="openChatPage">{{ ncfST('Frontend.178') }}</el-button>
                             </div>
-                            <div class="webhook-parameters-empty">用户发送的每条消息都会作为输入启动一次工作流运行；关闭“允许访客”后仅登录用户可以聊天。</div>
+                            <div class="webhook-parameters-empty">{{ ncfST('Frontend.314') }}</div>
                         </div>
                     </el-form>
                     <span slot="footer" class="dialog-footer">
-                        <el-button @@click="workflowSettingsVisible=false">关闭</el-button>
+                        <el-button @@click="workflowSettingsVisible=false">{{ ncfST('Frontend.178') }}</el-button>
                     </span>
                 </el-dialog>
 
-                <el-dialog title="Webhook 使用说明"
+                <el-dialog :title="ncfST('Frontend.145')"
                            :visible.sync="webhookHelpVisible"
                            width="min(620px, calc(100vw - 32px))"
                            append-to-body>
                     <div class="workflow-webhook-help">
-                        <p>先保存工作流以生成调用地址和访问密钥。外部请求必须携带该密钥。</p>
+                        <p>{{ ncfST('Frontend.175') }}</p>
                         <template v-if="form.id">
                             <p>调用地址：<code>{{webhookUrl}}</code></p>
-                            <p>推荐使用请求头 <code>X-NeuChar-Webhook-Token</code> 传递访问密钥；也兼容 query 参数 <code>token</code>。</p>
+                            <p>{{ ncfST('Frontend.160') }} <code>X-NeuChar-Webhook-Token</code></p>
                         </template>
-                        <p>已定义的参数可从 Query、Form 或 JSON 请求体读取；未定义参数时，整个请求数据都会作为工作流输入。</p>
+                        <p>{{ ncfST('Frontend.229') }}</p>
                     </div>
                     <span slot="footer" class="dialog-footer">
-                        <el-button @@click="webhookHelpVisible=false">关闭</el-button>
+                        <el-button @@click="webhookHelpVisible=false">{{ ncfST('Frontend.178') }}</el-button>
                     </span>
                 </el-dialog>
 
