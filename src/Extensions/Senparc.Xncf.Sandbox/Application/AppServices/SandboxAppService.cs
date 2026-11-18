@@ -160,7 +160,8 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender("执行 Lab 命令", "在运行中的持久化 JupyterLab 容器工作区内执行受限时长的 Shell 命令", typeof(Register), AllowAiInvocation = true)]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.LabExec.Name", "Function.Sandbox.LabExec.Description",
+        typeof(Register), "Execute Lab command", "Run a limited-duration Shell command in a running persistent JupyterLab workspace.", AllowAiInvocation = true)]
     public async Task<StringAppResponse> LabExec(Sandbox_LabCommandRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>
@@ -184,7 +185,8 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender("上传 Lab 文件", "把 Base64 文件内容写入运行中的持久化 JupyterLab 工作区", typeof(Register), AllowAiInvocation = true)]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.LabUploadFile.Name", "Function.Sandbox.LabUploadFile.Description",
+        typeof(Register), "Upload Lab file", "Write Base64 file content into a running persistent JupyterLab workspace.", AllowAiInvocation = true)]
     public async Task<StringAppResponse> LabUploadFile(Sandbox_LabUploadFileRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>
@@ -298,7 +300,8 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender("下载 Lab 文件", "读取运行中的持久化 JupyterLab 工作区文件并返回 Base64 内容", typeof(Register), AllowAiInvocation = true)]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.LabDownloadFile.Name", "Function.Sandbox.LabDownloadFile.Description",
+        typeof(Register), "Download Lab file", "Read a file from a running persistent JupyterLab workspace and return Base64 content.", AllowAiInvocation = true)]
     public async Task<StringAppResponse> LabDownloadFile(Sandbox_LabFileRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>
@@ -324,7 +327,8 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender("列举 Lab 文件", "列举运行中的持久化 JupyterLab 工作区文件", typeof(Register), AllowAiInvocation = true)]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.LabListFiles.Name", "Function.Sandbox.LabListFiles.Description",
+        typeof(Register), "List Lab files", "List files in a running persistent JupyterLab workspace.", AllowAiInvocation = true)]
     public async Task<StringAppResponse> LabListFiles(Sandbox_LabListFilesRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>

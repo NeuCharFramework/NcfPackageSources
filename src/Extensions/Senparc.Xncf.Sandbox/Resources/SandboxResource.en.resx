@@ -223,4 +223,12 @@
   <data name="Function.Sandbox.Create.Description" xml:space="preserve"><value>Create an isolated sandbox session from a template (Docker or Wasm stub).</value></data>
   <data name="Function.Sandbox.Exec.Name" xml:space="preserve"><value>Execute code</value></data>
   <data name="Function.Sandbox.Exec.Description" xml:space="preserve"><value>Run a code snippet in an Exec template session.</value></data>
+  <data name="Function.Sandbox.LabExec.Name" xml:space="preserve"><value>Execute Lab command</value></data>
+  <data name="Function.Sandbox.LabExec.Description" xml:space="preserve"><value>Run a shell command for a limited duration inside a running persistent JupyterLab workspace.</value></data>
+  <data name="Function.Sandbox.LabUploadFile.Name" xml:space="preserve"><value>Upload Lab file</value></data>
+  <data name="Function.Sandbox.LabUploadFile.Description" xml:space="preserve"><value>Write Base64 file content into a running persistent JupyterLab workspace.</value></data>
+  <data name="Function.Sandbox.LabDownloadFile.Name" xml:space="preserve"><value>Download Lab file</value></data>
+  <data name="Function.Sandbox.LabDownloadFile.Description" xml:space="preserve"><value>Read a file from a running persistent JupyterLab workspace and return Base64 content.</value></data>
+  <data name="Function.Sandbox.LabListFiles.Name" xml:space="preserve"><value>List Lab files</value></data>
+  <data name="Function.Sandbox.LabListFiles.Description" xml:space="preserve"><value>List files in a running persistent JupyterLab workspace.</value></data>
 </root>

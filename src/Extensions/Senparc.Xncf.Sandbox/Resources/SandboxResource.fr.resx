@@ -223,4 +223,12 @@
   <data name="Function.Sandbox.Create.Description" xml:space="preserve"><value>Crée une session sandbox isolée à partir d’un modèle (Docker ou stub Wasm).</value></data>
   <data name="Function.Sandbox.Exec.Name" xml:space="preserve"><value>Exécuter du code</value></data>
   <data name="Function.Sandbox.Exec.Description" xml:space="preserve"><value>Exécute un fragment de code dans une session de modèle Exec.</value></data>
+  <data name="Function.Sandbox.LabExec.Name" xml:space="preserve"><value>Exécuter une commande Lab</value></data>
+  <data name="Function.Sandbox.LabExec.Description" xml:space="preserve"><value>Exécute une commande Shell pendant une durée limitée dans un espace JupyterLab persistant en cours d’exécution.</value></data>
+  <data name="Function.Sandbox.LabUploadFile.Name" xml:space="preserve"><value>Téléverser un fichier Lab</value></data>
+  <data name="Function.Sandbox.LabUploadFile.Description" xml:space="preserve"><value>Écrit le contenu Base64 d’un fichier dans un espace JupyterLab persistant en cours d’exécution.</value></data>
+  <data name="Function.Sandbox.LabDownloadFile.Name" xml:space="preserve"><value>Télécharger un fichier Lab</value></data>
+  <data name="Function.Sandbox.LabDownloadFile.Description" xml:space="preserve"><value>Lit un fichier d’un espace JupyterLab persistant en cours d’exécution et renvoie son contenu Base64.</value></data>
+  <data name="Function.Sandbox.LabListFiles.Name" xml:space="preserve"><value>Lister les fichiers Lab</value></data>
+  <data name="Function.Sandbox.LabListFiles.Description" xml:space="preserve"><value>Liste les fichiers d’un espace JupyterLab persistant en cours d’exécution.</value></data>
 </root>

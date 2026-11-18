@@ -223,4 +223,12 @@
   <data name="Function.Sandbox.Create.Description" xml:space="preserve"><value>Crea una sesión de sandbox aislada a partir de una plantilla (Docker o stub de Wasm).</value></data>
   <data name="Function.Sandbox.Exec.Name" xml:space="preserve"><value>Ejecutar código</value></data>
   <data name="Function.Sandbox.Exec.Description" xml:space="preserve"><value>Ejecuta un fragmento de código en una sesión de plantilla Exec.</value></data>
+  <data name="Function.Sandbox.LabExec.Name" xml:space="preserve"><value>Ejecutar comando de Lab</value></data>
+  <data name="Function.Sandbox.LabExec.Description" xml:space="preserve"><value>Ejecuta un comando Shell durante un tiempo limitado dentro de un espacio JupyterLab persistente en ejecución.</value></data>
+  <data name="Function.Sandbox.LabUploadFile.Name" xml:space="preserve"><value>Subir archivo de Lab</value></data>
+  <data name="Function.Sandbox.LabUploadFile.Description" xml:space="preserve"><value>Escribe el contenido Base64 de un archivo en un espacio JupyterLab persistente en ejecución.</value></data>
+  <data name="Function.Sandbox.LabDownloadFile.Name" xml:space="preserve"><value>Descargar archivo de Lab</value></data>
+  <data name="Function.Sandbox.LabDownloadFile.Description" xml:space="preserve"><value>Lee un archivo del espacio JupyterLab persistente en ejecución y devuelve su contenido Base64.</value></data>
+  <data name="Function.Sandbox.LabListFiles.Name" xml:space="preserve"><value>Listar archivos de Lab</value></data>
+  <data name="Function.Sandbox.LabListFiles.Description" xml:space="preserve"><value>Lista los archivos de un espacio JupyterLab persistente en ejecución.</value></data>
 </root>
