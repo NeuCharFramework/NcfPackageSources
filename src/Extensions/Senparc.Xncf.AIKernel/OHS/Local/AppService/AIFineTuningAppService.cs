@@ -47,6 +47,7 @@ using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Utility;
 using Senparc.Xncf.AIKernel.Domain.Models.FineTuning;
 using Senparc.Xncf.AIKernel.Domain.Services;
+using Senparc.Xncf.AIKernel;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Models;
 using Senparc.Xncf.AIKernel.OHS.Local.PL;
@@ -331,7 +332,14 @@ public class AIFineTuningAppService : AppServiceBase
             return job;
         });
 
-    [FunctionRender("创建微调任务", "使用已批准的本地模型、数据集和训练参数创建微调任务。Worker、模型和数据集会自动载入，训练参数带有默认值，Workflow 可以按这些默认值直接运行。", typeof(Register), AllowAiInvocation = true)]
+    [FunctionRender(
+        typeof(AIKernelResource),
+        "Frontend.100",
+        "Frontend.101",
+        typeof(Register),
+        "Create fine-tuning task",
+        "Create a fine-tuning task with an approved local model, dataset, and training parameters.",
+        AllowAiInvocation = true)]
     public Task<AppResponseBase<FineTuningJob>> StartFineTuningJobAsync(FineTuningStartJobFunctionRequest request) =>
         this.GetResponseAsync<FineTuningJob>(async (response, logger) =>
         {
