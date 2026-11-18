@@ -1601,20 +1601,20 @@
                     </div>
                     <div class="form-help-text">
                         {{ ncfST('Frontend.581') }}
-                        <template v-if="getKnowledgeBaseBindingInfo(agentForm.knowledgeBaseId).text === '旧版向量化，待发布'">旧版向量数据需要在知识库中重新向量化，才能升级为 Agent 可安全隔离检索的发布集合。</template>
+                        <template v-if="getKnowledgeBaseBindingInfo(agentForm.knowledgeBaseId).text === '旧版向量化，待发布'">{{ ncfST('Frontend.429') }}</template>
                     </div>
                 </el-form-item>
-                <el-form-item label="外接平台" prop="hookRobotType">
-                    <el-select v-model="agentForm.hookRobotType" style="width:100%" placeholder="请选择">
+                <el-form-item :label="ncfST('Frontend.106')" prop="hookRobotType">
+                    <el-select v-model="agentForm.hookRobotType" style="width:100%" :placeholder="ncfST('Frontend.102')">
                         <el-option label="None" :value="0"></el-option>
                         <el-option label="WeChatMp" :value="1"></el-option>
                         <el-option label="WeChatWorkRobot" :value="2"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="外接平台参数" prop="hookRobotParameter">
-                    <el-input v-model="agentForm.hookRobotParameter" placeholder="请填写" :disabled="agentForm.hookRobotType === 0"></el-input>
+                <el-form-item :label="ncfST('Frontend.107')" prop="hookRobotParameter">
+                    <el-input v-model="agentForm.hookRobotParameter" :placeholder="ncfST('Frontend.099')" :disabled="agentForm.hookRobotType === 0"></el-input>
                 </el-form-item>
-                <el-form-item label="Agent 头像" prop="avastar">
+                <el-form-item :label="ncfST('Frontend.189')" prop="avastar">
                     <div class="df-wn flex-ac flex-js agentForm-agentAvatarBox">
                         <div v-for="(aitem,aindex) in agentAvatarList" :key="aindex"
                             class="df-wn flex-ac flex-jc agentAvatarBoxItem"
@@ -1727,22 +1727,22 @@
                             </el-input>
                             
                             <div class="endpoint-input-actions">
-                                <el-button size="small" type="primary" @@click="handleMcpEndpointInputConfirm">确认</el-button>
-                                <el-button size="small" @@click="cancelMcpEndpointInput">取消</el-button>
+                                <el-button size="small" type="primary" @@click="handleMcpEndpointInputConfirm">{{ ncfST('Frontend.122') }}</el-button>
+                                <el-button size="small" @@click="cancelMcpEndpointInput">{{ ncfST('Frontend.191') }}</el-button>
                             </div>
                         </div>
                     </div>
                 </el-form-item>
                 
-                <el-form-item label="备注" prop="description">
-                    <el-input type="textarea" v-model="agentForm.description" :rows="4" placeholder="请填写(仅管理员可见)"></el-input>
+                <el-form-item :label="ncfST('Frontend.123')" prop="description">
+                    <el-input type="textarea" v-model="agentForm.description" :rows="4" :placeholder="ncfST('Frontend.390')"></el-input>
                 </el-form-item>
             </el-form>
         </div>
         @* Fixed content footer. *@
         <div class="drawerRtl__footer text-right">
-            <el-button :size="elSize" @@click="handleElVisibleClose('drawerAgent')">取消</el-button>
-            <el-button :size="elSize" type="primary" @@click="handleElVisibleSubmit('drawerAgent')">确认</el-button>
+            <el-button :size="elSize" @@click="handleElVisibleClose('drawerAgent')">{{ ncfST('Frontend.191') }}</el-button>
+            <el-button :size="elSize" type="primary" @@click="handleElVisibleSubmit('drawerAgent')">{{ ncfST('Frontend.192') }}</el-button>
         </div>
     </div>
 </el-drawer>
