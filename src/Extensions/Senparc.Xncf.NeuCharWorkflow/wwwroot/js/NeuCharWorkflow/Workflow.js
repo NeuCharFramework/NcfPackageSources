@@ -682,10 +682,10 @@ new Vue({
         },
         workflowTriggerLabel(item) {
             const triggerType = String(item && item.triggerType || '').toLowerCase();
-            if (triggerType === 'interval') return '定时';
+            if (triggerType === 'interval') return ncfWorkflowText('Frontend.471');
             if (triggerType === 'webhook') return 'Webhook';
             if (triggerType === 'chat') return 'Chat';
-            return '手动';
+            return ncfWorkflowText('Frontend.467');
         },
         workflowTriggerTagType(item) {
             const triggerType = String(item && item.triggerType || '').toLowerCase();
@@ -699,11 +699,11 @@ new Vue({
         workflowScheduleText(item) {
             // Reference the reactive clock so relative text updates even when the list is not reloaded.
             const now = Number(this.workflowClock || Date.now());
-            if (!item || !item.enabled) return '定时已暂停';
+            if (!item || !item.enabled) return ncfWorkflowText('Frontend.606');
             const nextRun = this.workflowNextRunDate(item);
-            if (!nextRun) return '等待下次排程';
+            if (!nextRun) return ncfWorkflowText('Frontend.115');
             const seconds = Math.ceil((nextRun.getTime() - now) / 1000);
-            if (seconds <= 0) return '即将运行';
+            if (seconds <= 0) return ncfWorkflowText('Frontend.391');
             if (seconds < 60) return '不足 1 分钟后运行';
             const minutes = Math.ceil(seconds / 60);
             if (minutes < 60) return `${minutes} 分钟后运行`;
@@ -714,9 +714,9 @@ new Vue({
         },
         workflowScheduleTitle(item) {
             if (!this.isIntervalWorkflow(item)) return '';
-            if (!item || !item.enabled) return '定时工作流当前未启用';
+            if (!item || !item.enabled) return ncfWorkflowText('Frontend.606');
             const nextRun = this.workflowNextRunDate(item);
-            if (!nextRun) return '已启用，正在等待调度器写入下次执行时间';
+            if (!nextRun) return ncfWorkflowText('Frontend.115');
             const pad = value => String(value).padStart(2, '0');
             return `下次执行：${nextRun.getFullYear()}-${pad(nextRun.getMonth() + 1)}-${pad(nextRun.getDate())} ${pad(nextRun.getHours())}:${pad(nextRun.getMinutes())}`;
         },
@@ -2572,7 +2572,7 @@ new Vue({
                 : this.isBinding(node.config?.count)
                 ? '从上游读取次数（最多 100000 次）'
                 : `顺序重复 ${node.config?.count || 3} 次`;
-            if (node.type === 'loop-end') return 'continue / break 后再继续向下执行';
+            if (node.type === 'loop-end') return ncfWorkflowText('Frontend.611');
             if (node.type === 'sub-workflow') {
                 const workflow = (this.workflows || []).find(item => Number(item.id) === Number(node.config?.workflowId || 0));
                 return workflow ? '调用：' + workflow.name : '请选择目标工作流';
@@ -2580,8 +2580,8 @@ new Vue({
             if (node.type === 'code') return '设置 ' + (Array.isArray(node.config?.assignments) ? node.config.assignments.length : 0) + ' 个工作流变量';
             if (node.type === 'condition') return `${node.config.operator || 'equals'} ${this.configValueLabel(node.config.right)}`;
             if (node.type === 'aggregate') return node.config.outputTemplate ? '汇总全部输入后只输出一次' : '请设置汇总输出内容';
-            if (node.type === 'merge') return '每个上游输入独立向下游发送一次';
-            if (node.type === 'parallel') return '同时分发到所有下游分支';
+            if (node.type === 'merge') return ncfWorkflowText('Frontend.615');
+            if (node.type === 'parallel') return ncfWorkflowText('Frontend.616');
             if (node.type === 'console') return node.config?.printTemplate ? '按模板输出到下方 Console' : '输出到下方 Console';
             if (node.type === 'neubell') {
                 const mode = String(node.config?.consumeMode || 'none');
@@ -2589,7 +2589,7 @@ new Vue({
                     : mode === 'item' ? '点击后消费当前提醒' : '点击后仅查看任务';
             }
             if (node.type === 'human-input') return node.config?.externalResumeEnabled ? '等待人工输入或外部 API 恢复' : '等待人工输入';
-            if (node.type === 'end') return '流程在此结束';
+            if (node.type === 'end') return ncfWorkflowText('Frontend.454');
             return node.type === 'agent-group' ? 'Agent 组' : node.type === 'agent' ? '独立 Agent' : node.type === 'a2a' ? '远程 A2A Agent' : node.type;
         },
         nodeValidationError(node) {
