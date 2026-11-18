@@ -30,6 +30,8 @@ namespace Senparc.Ncf.Core.AppServices
 
         public string ResourceKey { get; }
 
+        public string HelpResourceKey { get; }
+
         public LocalizedDescriptionAttribute(
             Type resourceType,
             string resourceKey,
@@ -42,7 +44,22 @@ namespace Senparc.Ncf.Core.AppServices
                 : resourceKey;
         }
 
+        public LocalizedDescriptionAttribute(
+            Type resourceType,
+            string resourceKey,
+            string helpResourceKey,
+            string fallback = null)
+            : this(resourceType, resourceKey, fallback)
+        {
+            HelpResourceKey = string.IsNullOrWhiteSpace(helpResourceKey)
+                ? throw new ArgumentException("A help resource key is required.", nameof(helpResourceKey))
+                : helpResourceKey;
+        }
+
         public override string Description =>
-            ResourceStringLocalizer.Get(ResourceType, ResourceKey, base.Description);
+            string.IsNullOrWhiteSpace(HelpResourceKey)
+                ? ResourceStringLocalizer.Get(ResourceType, ResourceKey, base.Description)
+                : $"{ResourceStringLocalizer.Get(ResourceType, ResourceKey, base.Description)}||" +
+                  ResourceStringLocalizer.Get(ResourceType, HelpResourceKey, string.Empty);
     }
 }
