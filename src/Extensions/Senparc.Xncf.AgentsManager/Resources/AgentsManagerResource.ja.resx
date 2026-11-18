@@ -1748,4 +1748,14 @@
   <data name="Frontend.588" xml:space="preserve"><value>現在のプレーンテキスト Prompt と選択した Chat モデルで Prompt Range を作成し、1 回採点した後、Range レベルの参照へ自動的に切り替えます。</value></data>
   <data name="Frontend.589" xml:space="preserve"><value>この手動 Prompt に継承可能な PromptRange モデルはありません。Chat AIModel を手動で選択してください。</value></data>
   <data name="Frontend.590" xml:space="preserve"><value>Human はモデルを呼び出しません。このバインドはシステム Agent のタスクポリシーを保持し、既定ではグループタスクに従います。</value></data>
+  <data name="Frontend.591" xml:space="preserve"><value>外部システムから呼び出されると、入力と Agent の通常の返信がシステム境界を越えます。Prompt、ナレッジベース、返信を外部共有できることを確認してください。</value></data>
+  <data name="Frontend.592" xml:space="preserve"><value>呼び出しごとにモデルとツールの費用が発生する可能性があります。HTTPS ゲートウェイでアクセス制御、レート制限、監視、アラートを設定してください。</value></data>
+  <data name="Frontend.593" xml:space="preserve"><value>受信認証が無効です。分離された管理ネットワークでのみ使用し、インターネットに直接公開しないでください。</value></data>
+  <data name="Frontend.594" xml:space="preserve"><value>ローカル Function / MCP ツールの呼び出しが許可されています。外部入力が間接的に書き込みや外部アクセスを引き起こす可能性があるため、権限を最小限にしてください。</value></data>
+  <data name="Frontend.595" xml:space="preserve"><value>有効にすると、このローカル Agent は標準 A2A サービスとして外部呼び出しを受け付けます。</value></data>
+  <data name="Frontend.596" xml:space="preserve"><value>A2A 公開サービスを有効にしますか</value></data>
+  <data name="Frontend.597" xml:space="preserve"><value>理解した上で保存</value></data>
+  <data name="Frontend.598" xml:space="preserve"><value>キャンセル</value></data>
+  <data name="Frontend.599" xml:space="preserve"><value>モジュールを利用できません</value></data>
+  <data name="Frontend.600" xml:space="preserve"><value>呼び出し可能</value></data>
 </root>

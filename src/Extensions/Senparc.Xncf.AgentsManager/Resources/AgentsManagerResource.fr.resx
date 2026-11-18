@@ -1748,4 +1748,14 @@
   <data name="Frontend.588" xml:space="preserve"><value>Créez un Prompt Range avec le Prompt texte et le modèle Chat sélectionnés, exécutez une notation, puis passez automatiquement à la référence au niveau du Range.</value></data>
   <data name="Frontend.589" xml:space="preserve"><value>Ce Prompt manuel ne possède aucun modèle PromptRange héritable ; sélectionnez manuellement un AIModel Chat.</value></data>
   <data name="Frontend.590" xml:space="preserve"><value>Human n'appelle aucun modèle ; cette liaison conserve la politique de tâches de l'Agent système et suit la tâche du groupe par défaut.</value></data>
+  <data name="Frontend.591" xml:space="preserve"><value>Après un appel externe, l'entrée et la réponse normale de l'Agent franchissent la limite du système ; confirmez que le Prompt, la base de connaissances et les réponses peuvent être partagés à l'extérieur.</value></data>
+  <data name="Frontend.592" xml:space="preserve"><value>Chaque appel peut générer des coûts de modèle et d'outils ; configurez le contrôle d'accès, la limitation, la surveillance et les alertes sur la passerelle HTTPS.</value></data>
+  <data name="Frontend.593" xml:space="preserve"><value>L'authentification entrante est désactivée ; utilisez ceci uniquement sur un réseau isolé et contrôlé, jamais directement sur Internet.</value></data>
+  <data name="Frontend.594" xml:space="preserve"><value>Les appels aux outils Function / MCP locaux sont autorisés ; une entrée externe peut déclencher indirectement des écritures ou des accès externes, limitez donc les permissions.</value></data>
+  <data name="Frontend.595" xml:space="preserve"><value>Une fois activé, cet Agent local accepte les appels externes comme service A2A standard.</value></data>
+  <data name="Frontend.596" xml:space="preserve"><value>Confirmer l'activation du service public A2A</value></data>
+  <data name="Frontend.597" xml:space="preserve"><value>J'ai compris et j'enregistre</value></data>
+  <data name="Frontend.598" xml:space="preserve"><value>Annuler</value></data>
+  <data name="Frontend.599" xml:space="preserve"><value>Module indisponible</value></data>
+  <data name="Frontend.600" xml:space="preserve"><value>Appelable</value></data>
 </root>

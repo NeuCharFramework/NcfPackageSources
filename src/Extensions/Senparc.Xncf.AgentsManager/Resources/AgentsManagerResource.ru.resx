@@ -1748,4 +1748,14 @@
   <data name="Frontend.588" xml:space="preserve"><value>Создаёт Prompt Range из текущего текстового Prompt и выбранной Chat-модели, выполняет оценку и автоматически переключается на ссылку уровня Range.</value></data>
   <data name="Frontend.589" xml:space="preserve"><value>Для этого ручного Prompt нет наследуемой модели PromptRange; выберите Chat AIModel вручную.</value></data>
   <data name="Frontend.590" xml:space="preserve"><value>Human не вызывает модель; эта связь сохраняет политику задач системного Agent и по умолчанию следует задаче группы.</value></data>
+  <data name="Frontend.591" xml:space="preserve"><value>После внешнего вызова ввод и обычный ответ Agent пересекают границу системы; подтвердите, что Prompt, база знаний и ответы можно передавать наружу.</value></data>
+  <data name="Frontend.592" xml:space="preserve"><value>Каждый вызов может повлечь расходы на модели и инструменты; настройте контроль доступа, лимиты, мониторинг и оповещения на HTTPS-шлюзе.</value></data>
+  <data name="Frontend.593" xml:space="preserve"><value>Входная аутентификация отключена; используйте это только в изолированной управляемой сети и не публикуйте напрямую в Интернете.</value></data>
+  <data name="Frontend.594" xml:space="preserve"><value>Разрешены вызовы локальных Function / MCP; внешний ввод может косвенно вызвать запись или внешний доступ, поэтому минимизируйте права.</value></data>
+  <data name="Frontend.595" xml:space="preserve"><value>После включения этот локальный Agent принимает внешние вызовы как стандартный сервис A2A.</value></data>
+  <data name="Frontend.596" xml:space="preserve"><value>Подтвердить включение публичного сервиса A2A</value></data>
+  <data name="Frontend.597" xml:space="preserve"><value>Я ознакомлен и сохраняю</value></data>
+  <data name="Frontend.598" xml:space="preserve"><value>Отмена</value></data>
+  <data name="Frontend.599" xml:space="preserve"><value>Модуль недоступен</value></data>
+  <data name="Frontend.600" xml:space="preserve"><value>Доступно для вызова</value></data>
 </root>

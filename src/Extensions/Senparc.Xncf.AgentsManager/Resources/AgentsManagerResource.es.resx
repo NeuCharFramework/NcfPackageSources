@@ -1748,4 +1748,14 @@
   <data name="Frontend.588" xml:space="preserve"><value>Crea un Prompt Range con el Prompt de texto y el modelo Chat seleccionados, ejecuta una puntuación y cambia automáticamente a la referencia de nivel de Range.</value></data>
   <data name="Frontend.589" xml:space="preserve"><value>Este Prompt manual no tiene un modelo PromptRange heredable; selecciona manualmente un AIModel de Chat.</value></data>
   <data name="Frontend.590" xml:space="preserve"><value>Human no llama a ningún modelo; esta vinculación conserva la política de tareas del Agent del sistema y sigue la tarea del grupo de forma predeterminada.</value></data>
+  <data name="Frontend.591" xml:space="preserve"><value>Cuando un sistema externo llama a este servicio, la entrada y la respuesta normal del Agent cruzan el límite del sistema; confirma que el Prompt, la base de conocimiento y las respuestas pueden compartirse externamente.</value></data>
+  <data name="Frontend.592" xml:space="preserve"><value>Cada llamada puede generar costes de modelo y herramientas; configura control de acceso, límites, supervisión y alertas en la pasarela HTTPS.</value></data>
+  <data name="Frontend.593" xml:space="preserve"><value>La autenticación entrante está desactivada; úsalo solo en una red aislada y controlada, nunca directamente en Internet.</value></data>
+  <data name="Frontend.594" xml:space="preserve"><value>Se permiten llamadas a Function / MCP locales; la entrada externa puede provocar escrituras o accesos externos indirectos, así que minimiza los permisos.</value></data>
+  <data name="Frontend.595" xml:space="preserve"><value>Al activarlo, este Agent local acepta llamadas externas como servicio A2A estándar.</value></data>
+  <data name="Frontend.596" xml:space="preserve"><value>Confirmar la activación del servicio A2A público</value></data>
+  <data name="Frontend.597" xml:space="preserve"><value>Entiendo y guardar</value></data>
+  <data name="Frontend.598" xml:space="preserve"><value>Cancelar</value></data>
+  <data name="Frontend.599" xml:space="preserve"><value>Módulo no disponible</value></data>
+  <data name="Frontend.600" xml:space="preserve"><value>Se puede llamar</value></data>
 </root>

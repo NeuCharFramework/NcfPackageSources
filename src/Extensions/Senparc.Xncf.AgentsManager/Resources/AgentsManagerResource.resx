@@ -1223,4 +1223,14 @@
   <data name="Frontend.588" xml:space="preserve"><value>使用当前明文 Prompt 和所选 Chat 模型创建靶场，完成一次打靶及 AI 评分后，自动切换为靶场级引用。</value></data>
   <data name="Frontend.589" xml:space="preserve"><value>手动 Prompt 没有 PromptRange 模型可继承，必须手动选择一个 Chat 类型 AIModel。</value></data>
   <data name="Frontend.590" xml:space="preserve"><value>Human 不调用模型；该绑定用于保留其系统 Agent 的任务策略配置，默认跟随组任务。</value></data>
+  <data name="Frontend.591" xml:space="preserve"><value>外部系统调用后，输入和 Agent 的正常回复都会跨越本系统边界；请确认 Prompt、知识库和回复内容允许对外共享。</value></data>
+  <data name="Frontend.592" xml:space="preserve"><value>每次调用可能产生模型和工具成本；请在 HTTPS 网关中配置访问控制、限流、监控和告警。</value></data>
+  <data name="Frontend.593" xml:space="preserve"><value>当前未启用入站鉴权，仅可用于隔离、受控网络；不可直接暴露到公网。</value></data>
+  <data name="Frontend.594" xml:space="preserve"><value>已允许本地 Function / MCP 工具调用；外部输入可能间接触发读写或外部访问，请确认权限最小化。</value></data>
+  <data name="Frontend.595" xml:space="preserve"><value>启用后，此本地 Agent 将作为标准 A2A 服务接受外部调用。</value></data>
+  <data name="Frontend.596" xml:space="preserve"><value>确认启用 A2A 对外服务</value></data>
+  <data name="Frontend.597" xml:space="preserve"><value>我已知悉并保存</value></data>
+  <data name="Frontend.598" xml:space="preserve"><value>取消</value></data>
+  <data name="Frontend.599" xml:space="preserve"><value>模块不可用</value></data>
+  <data name="Frontend.600" xml:space="preserve"><value>可调用</value></data>
 </root>

@@ -1748,4 +1748,14 @@
   <data name="Frontend.588" xml:space="preserve"><value>Create a Prompt Range with the current plain-text Prompt and selected Chat model, run scoring once, then switch automatically to the Range-level reference.</value></data>
   <data name="Frontend.589" xml:space="preserve"><value>This manual Prompt has no inheritable PromptRange model; select a Chat AIModel manually.</value></data>
   <data name="Frontend.590" xml:space="preserve"><value>Human does not call a model; this binding preserves the system Agent task policy and follows the group task by default.</value></data>
+  <data name="Frontend.591" xml:space="preserve"><value>After an external system calls this service, the input and the Agent's normal reply cross the system boundary; confirm that the Prompt, knowledge base, and replies may be shared externally.</value></data>
+  <data name="Frontend.592" xml:space="preserve"><value>Each call may incur model and tool costs; configure access control, rate limits, monitoring, and alerts at the HTTPS gateway.</value></data>
+  <data name="Frontend.593" xml:space="preserve"><value>Inbound authentication is disabled; use this only on an isolated, controlled network and never expose it directly to the public Internet.</value></data>
+  <data name="Frontend.594" xml:space="preserve"><value>Local Function / MCP tool calls are allowed; external input may indirectly trigger writes or external access, so keep permissions minimal.</value></data>
+  <data name="Frontend.595" xml:space="preserve"><value>When enabled, this local Agent accepts external calls as a standard A2A service.</value></data>
+  <data name="Frontend.596" xml:space="preserve"><value>Confirm enabling the A2A public service</value></data>
+  <data name="Frontend.597" xml:space="preserve"><value>I understand and save</value></data>
+  <data name="Frontend.598" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Frontend.599" xml:space="preserve"><value>Module unavailable</value></data>
+  <data name="Frontend.600" xml:space="preserve"><value>Callable</value></data>
 </root>
