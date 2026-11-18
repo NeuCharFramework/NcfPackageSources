@@ -501,4 +501,14 @@
   <data name="Frontend.262" xml:space="preserve"><value>選択したカテゴリーが存在しません。もう一度選択してください。</value></data>
   <data name="Frontend.263" xml:space="preserve"><value>タグが存在しません</value></data>
   <data name="Frontend.269" xml:space="preserve"><value>タグを作成する前にカテゴリを追加してください</value></data>
+  <data name="Frontend.270" xml:space="preserve"><value>アップロード設定を保存しました</value></data>
+  <data name="Frontend.271" xml:space="preserve"><value>保存に失敗しました。ブラウザーのローカルストレージを確認してください</value></data>
+  <data name="Frontend.272" xml:space="preserve"><value>アップロードの既定設定を復元しました</value></data>
+  <data name="Frontend.273" xml:space="preserve"><value>既定値の復元に失敗しました</value></data>
+  <data name="Frontend.274" xml:space="preserve"><value>カテゴリ名は既に存在します</value></data>
+  <data name="Frontend.275" xml:space="preserve"><value>カテゴリを更新しました</value></data>
+  <data name="Frontend.276" xml:space="preserve"><value>カテゴリを作成しました</value></data>
+  <data name="Frontend.277" xml:space="preserve"><value>このカテゴリには同名のタグが既にあります</value></data>
+  <data name="Frontend.278" xml:space="preserve"><value>タグを更新しました</value></data>
+  <data name="Frontend.279" xml:space="preserve"><value>タグを作成しました</value></data>
 </root>

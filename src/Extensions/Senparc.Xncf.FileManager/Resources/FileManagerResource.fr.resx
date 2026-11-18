@@ -501,4 +501,14 @@
   <data name="Frontend.262" xml:space="preserve"><value>La catégorie sélectionnée n’existe pas. Sélectionnez-en une autre.</value></data>
   <data name="Frontend.263" xml:space="preserve"><value>L’étiquette n’existe pas</value></data>
   <data name="Frontend.269" xml:space="preserve"><value>Créez une catégorie avant de créer une étiquette</value></data>
+  <data name="Frontend.270" xml:space="preserve"><value>Paramètres d’importation enregistrés</value></data>
+  <data name="Frontend.271" xml:space="preserve"><value>Échec de l’enregistrement. Vérifiez le stockage local du navigateur</value></data>
+  <data name="Frontend.272" xml:space="preserve"><value>Paramètres d’importation par défaut restaurés</value></data>
+  <data name="Frontend.273" xml:space="preserve"><value>Échec de la restauration des valeurs par défaut</value></data>
+  <data name="Frontend.274" xml:space="preserve"><value>Le nom de catégorie existe déjà</value></data>
+  <data name="Frontend.275" xml:space="preserve"><value>Catégorie mise à jour</value></data>
+  <data name="Frontend.276" xml:space="preserve"><value>Catégorie créée</value></data>
+  <data name="Frontend.277" xml:space="preserve"><value>Une étiquette portant le même nom existe déjà dans cette catégorie</value></data>
+  <data name="Frontend.278" xml:space="preserve"><value>Étiquette mise à jour</value></data>
+  <data name="Frontend.279" xml:space="preserve"><value>Étiquette créée</value></data>
 </root>

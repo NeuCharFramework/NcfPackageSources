@@ -2868,7 +2868,7 @@
                                 return String(row.name || '').toLowerCase() === name.toLowerCase();
                             });
                             if (exists) {
-                                self.$message.warning('分类名称已存在');
+                                self.$message.warning(ncfST('Frontend.274'));
                                 return;
                             }
                             self.tagCategoryDialog.loading = true;
@@ -2883,7 +2883,7 @@
                                     target.admin = form.admin || '-';
                                     target.updatedAt = now;
                             target.updatedBy = ncfST('Frontend.226');
-                                    self.$message.success('分类已更新');
+                                    self.$message.success(ncfST('Frontend.275'));
                                 } else {
                                     self.tagManager.list.unshift({
                                         id: 'cat-' + Date.now(),
@@ -2897,7 +2897,7 @@
                                         updatedBy: ncfST('Frontend.226'),
                                         admin: form.admin || '-'
                                     });
-                                    self.$message.success('分类已创建');
+                                    self.$message.success(ncfST('Frontend.276'));
                                 }
                                 self.syncTagCategoryOptions();
                                 self.saveTagManagerToStorage();
@@ -2939,7 +2939,7 @@
                                     && String(tag.name || '').toLowerCase() === name.toLowerCase();
                             });
                             if (dup) {
-                                self.$message.warning('该分类下已存在同名标签');
+                                self.$message.warning(ncfST('Frontend.277'));
                                 return;
                             }
                             self.tagCreateDialog.loading = true;
@@ -2960,7 +2960,7 @@
                                         if (oldCat) oldCat.tagCount = Math.max(0, (oldCat.tagCount || 0) - 1);
                                         category.tagCount = (category.tagCount || 0) + 1;
                                     }
-                                    self.$message.success('标签已更新');
+                                    self.$message.success(ncfST('Frontend.278'));
                                 } else {
                                     self.tagManager.tags.unshift({
                                         id: 'tag-' + Date.now(),
@@ -2975,7 +2975,7 @@
                                     category.tagCount = (category.tagCount || 0) + 1;
                                     category.updatedAt = now;
                                     category.updatedBy = ncfST('Frontend.226');
-                                    self.$message.success('标签已创建');
+                                    self.$message.success(ncfST('Frontend.279'));
                                 }
                                 self.saveTagManagerToStorage();
                                 if (typeof self.searchTags === 'function') self.searchTags();
@@ -4090,9 +4090,9 @@
                                 blockedTypesText: this.uploadSettings.blockedTypesText || ''
                             })
                         );
-                        this.$message.success('上传设置已保存');
+                            this.$message.success(ncfST('Frontend.270'));
                     } catch (e) {
-                        this.$message.error('保存失败，请检查浏览器本地存储是否可用');
+                            this.$message.error(ncfST('Frontend.271'));
                     }
                 }.bind(vm);
                 vm.resetUploadSettings = function () {
@@ -4106,9 +4106,9 @@
                                 blockedTypesText: this.uploadSettings.blockedTypesText || ''
                             })
                         );
-                        this.$message.success('已恢复默认上传设置');
+                            this.$message.success(ncfST('Frontend.272'));
                     } catch (e) {
-                        this.$message.error('恢复默认失败');
+                            this.$message.error(ncfST('Frontend.273'));
                     }
                 }.bind(vm);
                 vm.getMaxUploadSizeBytes = function () {

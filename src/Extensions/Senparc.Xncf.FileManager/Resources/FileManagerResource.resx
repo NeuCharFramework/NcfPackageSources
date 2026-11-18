@@ -496,4 +496,14 @@
   <data name="Frontend.262" xml:space="preserve"><value>所属分类不存在，请重新选择</value></data>
   <data name="Frontend.263" xml:space="preserve"><value>标签不存在</value></data>
   <data name="Frontend.269" xml:space="preserve"><value>请先新增分类后再创建标签</value></data>
+  <data name="Frontend.270" xml:space="preserve"><value>上传设置已保存</value></data>
+  <data name="Frontend.271" xml:space="preserve"><value>保存失败，请检查浏览器本地存储是否可用</value></data>
+  <data name="Frontend.272" xml:space="preserve"><value>已恢复默认上传设置</value></data>
+  <data name="Frontend.273" xml:space="preserve"><value>恢复默认失败</value></data>
+  <data name="Frontend.274" xml:space="preserve"><value>分类名称已存在</value></data>
+  <data name="Frontend.275" xml:space="preserve"><value>分类已更新</value></data>
+  <data name="Frontend.276" xml:space="preserve"><value>分类已创建</value></data>
+  <data name="Frontend.277" xml:space="preserve"><value>该分类下已存在同名标签</value></data>
+  <data name="Frontend.278" xml:space="preserve"><value>标签已更新</value></data>
+  <data name="Frontend.279" xml:space="preserve"><value>标签已创建</value></data>
 </root>

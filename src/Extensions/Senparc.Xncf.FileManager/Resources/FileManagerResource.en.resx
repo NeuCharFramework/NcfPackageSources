@@ -501,4 +501,14 @@
   <data name="Frontend.262" xml:space="preserve"><value>The selected category does not exist. Select another.</value></data>
   <data name="Frontend.263" xml:space="preserve"><value>Tag does not exist</value></data>
   <data name="Frontend.269" xml:space="preserve"><value>Create a category before creating a tag</value></data>
+  <data name="Frontend.270" xml:space="preserve"><value>Upload settings saved</value></data>
+  <data name="Frontend.271" xml:space="preserve"><value>Save failed. Check whether browser local storage is available</value></data>
+  <data name="Frontend.272" xml:space="preserve"><value>Default upload settings restored</value></data>
+  <data name="Frontend.273" xml:space="preserve"><value>Failed to restore defaults</value></data>
+  <data name="Frontend.274" xml:space="preserve"><value>Category name already exists</value></data>
+  <data name="Frontend.275" xml:space="preserve"><value>Category updated</value></data>
+  <data name="Frontend.276" xml:space="preserve"><value>Category created</value></data>
+  <data name="Frontend.277" xml:space="preserve"><value>A tag with the same name already exists in this category</value></data>
+  <data name="Frontend.278" xml:space="preserve"><value>Tag updated</value></data>
+  <data name="Frontend.279" xml:space="preserve"><value>Tag created</value></data>
 </root>

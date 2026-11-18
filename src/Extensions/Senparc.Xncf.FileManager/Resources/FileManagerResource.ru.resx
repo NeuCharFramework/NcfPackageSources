@@ -501,4 +501,14 @@
   <data name="Frontend.262" xml:space="preserve"><value>Выбранная категория не существует. Выберите другую.</value></data>
   <data name="Frontend.263" xml:space="preserve"><value>Метка не существует</value></data>
   <data name="Frontend.269" xml:space="preserve"><value>Сначала создайте категорию, затем создайте метку</value></data>
+  <data name="Frontend.270" xml:space="preserve"><value>Настройки загрузки сохранены</value></data>
+  <data name="Frontend.271" xml:space="preserve"><value>Не удалось сохранить. Проверьте локальное хранилище браузера</value></data>
+  <data name="Frontend.272" xml:space="preserve"><value>Настройки загрузки по умолчанию восстановлены</value></data>
+  <data name="Frontend.273" xml:space="preserve"><value>Не удалось восстановить значения по умолчанию</value></data>
+  <data name="Frontend.274" xml:space="preserve"><value>Имя категории уже существует</value></data>
+  <data name="Frontend.275" xml:space="preserve"><value>Категория обновлена</value></data>
+  <data name="Frontend.276" xml:space="preserve"><value>Категория создана</value></data>
+  <data name="Frontend.277" xml:space="preserve"><value>В этой категории уже есть метка с таким именем</value></data>
+  <data name="Frontend.278" xml:space="preserve"><value>Метка обновлена</value></data>
+  <data name="Frontend.279" xml:space="preserve"><value>Метка создана</value></data>
 </root>

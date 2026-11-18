@@ -501,4 +501,14 @@
   <data name="Frontend.262" xml:space="preserve"><value>La categoría seleccionada no existe. Selecciona otra.</value></data>
   <data name="Frontend.263" xml:space="preserve"><value>La etiqueta no existe</value></data>
   <data name="Frontend.269" xml:space="preserve"><value>Crea una categoría antes de crear una etiqueta</value></data>
+  <data name="Frontend.270" xml:space="preserve"><value>Configuración de carga guardada</value></data>
+  <data name="Frontend.271" xml:space="preserve"><value>Error al guardar. Comprueba el almacenamiento local del navegador</value></data>
+  <data name="Frontend.272" xml:space="preserve"><value>Configuración de carga predeterminada restaurada</value></data>
+  <data name="Frontend.273" xml:space="preserve"><value>No se pudieron restaurar los valores predeterminados</value></data>
+  <data name="Frontend.274" xml:space="preserve"><value>El nombre de categoría ya existe</value></data>
+  <data name="Frontend.275" xml:space="preserve"><value>Categoría actualizada</value></data>
+  <data name="Frontend.276" xml:space="preserve"><value>Categoría creada</value></data>
+  <data name="Frontend.277" xml:space="preserve"><value>Ya existe una etiqueta con el mismo nombre en esta categoría</value></data>
+  <data name="Frontend.278" xml:space="preserve"><value>Etiqueta actualizada</value></data>
+  <data name="Frontend.279" xml:space="preserve"><value>Etiqueta creada</value></data>
 </root>
