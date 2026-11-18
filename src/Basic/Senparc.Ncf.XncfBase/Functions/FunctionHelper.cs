@@ -23,6 +23,7 @@ using Senparc.CO2NET.Helpers;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.Core.Localization;
 using Senparc.Ncf.XncfBase.FunctionRenders;
 using Senparc.Ncf.XncfBase.Functions.Parameters;
 using Senparc.Ncf.XncfBase.Functions.Files;
@@ -64,6 +65,7 @@ namespace Senparc.Ncf.XncfBase.Functions
         public static async Task<List<FunctionParameterInfo>> GetFunctionParameterInfoAsync(IServiceProvider serviceProvider, FunctionRenderBag functionRenderBag, bool tryLoadData = true)
         {
             var functionParameterType = functionRenderBag.FunctionParameterType;
+            var registerType = functionRenderBag.FunctionRenderAttribute.RegisterType;
 
             IAppRequest paraObj = null;
 
@@ -170,6 +172,9 @@ namespace Senparc.Ncf.XncfBase.Functions
                     {
                         description = descriptionAttrArr[1];
                     }
+
+                    title = FunctionRenderTextResolver.Resolve(registerType, title);
+                    description = FunctionRenderTextResolver.Resolve(registerType, description);
                 }
 
                 if (maxLengthAttr != null)
@@ -190,6 +195,24 @@ namespace Senparc.Ncf.XncfBase.Functions
                     {
                         SenparcTrace.BaseExceptionLog(ex);
                     }
+                }
+
+                if (selectionList != null && registerType != null)
+                {
+                    var selectedValues = selectionList.SelectedValues;
+                    selectionList = new SelectionList(
+                        selectionList.SelectionType,
+                        selectionList.Items.Select(item => new SelectionItem(
+                            item.Value,
+                            FunctionRenderTextResolver.Resolve(registerType, item.Text),
+                            FunctionRenderTextResolver.Resolve(registerType, item.Note),
+                            item.DefaultSelected)
+                        {
+                            BindData = item.BindData
+                        }).ToList())
+                    {
+                        SelectedValues = selectedValues
+                    };
                 }
 
                 var functionParamInfo = new FunctionParameterInfo(name, title, description, isRequired, systemType, parameterType,

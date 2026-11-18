@@ -253,4 +253,10 @@
   <data name="Parameter.Sandbox.Alias.Help" xml:space="preserve"><value>Identificador opcional de la sesión mostrado en la lista; máximo 128 caracteres.</value></data>
   <data name="Parameter.Sandbox.ExtraPortMappings" xml:space="preserve"><value>Mapeos de puertos adicionales</value></data>
   <data name="Parameter.Sandbox.ExtraPortMappings.Help" xml:space="preserve"><value>Opcional y válido solo para plantillas JupyterLab; separa varios mapeos con punto y coma. Máximo 8 entradas.</value></data>
+  <data name="Frontend.112" xml:space="preserve"><value>Tarea Python corta (Docker)</value></data>
+  <data name="Frontend.113" xml:space="preserve"><value>Tarea C# corta (imagen SDK de Docker)</value></data>
+  <data name="Frontend.114" xml:space="preserve"><value>Notebook Python interactivo (consume memoria)</value></data>
+  <data name="Frontend.115" xml:space="preserve"><value>Notebook C# interactivo (primero hay que crear/configurar la imagen)</value></data>
+  <data name="Frontend.116" xml:space="preserve"><value>Requiere Docker local</value></data>
+  <data name="Frontend.117" xml:space="preserve"><value>Marcador de la primera versión; todavía no disponible</value></data>
 </root>
