@@ -922,32 +922,32 @@
                                                                                 :placeholder="ncfST('Frontend.196')"></el-input>
                                                                         </el-form-item>
                                                                         @* Selection options *@
-                                                                        <el-form-item v-if="['checkbox', 'radio', 'select'].includes(addColumnForm.formItemType)" label="选项">
+                                                                        <el-form-item v-if="['checkbox', 'radio', 'select'].includes(addColumnForm.formItemType)" :label="ncfST('Frontend.230')">
                                         <el-select v-model="addColumnForm.optionDataType"
-                                            style="width:100%;margin-bottom:10px" placeholder="请选择">
-                                            <el-option label="数据集" value="dataSheet"></el-option>
-                                            <el-option label="自定义" value="customData"></el-option>
+                                            style="width:100%;margin-bottom:10px" :placeholder="ncfST('Frontend.206')">
+                                            <el-option :label="ncfST('Frontend.111')" value="dataSheet"></el-option>
+                                            <el-option :label="ncfST('Frontend.172')" value="customData"></el-option>
                                         </el-select>
-                                        <el-form-item v-if="addColumnForm.optionDataType === 'dataSheet'" label="数据表选择">
+                                        <el-form-item v-if="addColumnForm.optionDataType === 'dataSheet'" :label="ncfST('Frontend.108')">
                                             <el-select v-model="addColumnForm.dataSheet" style="width:100%"
-                                                placeholder="请选择数据表">
-                                                <el-option label="数据表文本" value="shujubiao"></el-option>
-                                                <el-option label="数据表文本1" value="shujubiao1"></el-option>
+                                                :placeholder="ncfST('Frontend.217')">
+                                                <el-option :label="ncfST('Frontend.104')" value="shujubiao"></el-option>
+                                                <el-option :label="ncfST('Frontend.105')" value="shujubiao1"></el-option>
                                             </el-select>
                                         </el-form-item>
                                         <template v-if="addColumnForm.optionDataType === 'customData'">
                                             <el-popover v-for="(item,index) in addColumnForm.optionData" :key="index"
                                             placement="left" width="400" trigger="click">
                                             <div class="popover-bodyBox">
-                                                <div class="popover-title">选项设置</div>
+                                                <div class="popover-title">{{ ncfST('Frontend.233') }}</div>
                                                 <div class="popover-list df-wn flex-dc">
                                                     <div class="popover-list-item df-wn flex-ac">
-                                                        <div class="line-label">选项 label</div>
+                                                        <div class="line-label">{{ ncfST('Frontend.231') }}</div>
                                                         <el-input v-model="item.label"
                                                             :placeholder="ncfST('Frontend.191')"></el-input>
                                                     </div>
                                                     <div class="popover-list-item df-wn flex-ac">
-                                                        <div class="line-label">选项 value</div>
+                                                        <div class="line-label">{{ ncfST('Frontend.232') }}</div>
                                                         <el-input v-model="item.value"
                                                             :placeholder="ncfST('Frontend.191')"></el-input>
                                                     </div>
@@ -967,17 +967,17 @@
                                         <div class="addsort-box df-wn flex-ac" @@click="handleAddOptionData">
                                             <i class="el-icon-circle-plus-outline"></i>
                                             <span class="tipsText">
-                                                添加选项
+                                                {{ ncfST('Frontend.146') }}
                                             </span>
                                         </div>
                                         </template>
                                     </el-form-item>
-                                                                        <el-form-item label="提示文字">
+                                                                        <el-form-item :label="ncfST('Frontend.091')">
                                                                             <el-input v-model.trim="addColumnForm.displayContent"
                                                                                 :size="elSize"
-                                                                                placeholder="请输入提示文字"></el-input>
+                                                                                :placeholder="ncfST('Frontend.201')"></el-input>
                                                                         </el-form-item>
-                                                                        <el-form-item label="列宽">
+                                                                        <el-form-item :label="ncfST('Frontend.018')">
                                                                             <el-slider :size="elSize" :min="20" v-model="addColumnForm.columnWidth" :step="10" show-stops></el-slider>
                                                                             @* <el-input
                                                                                 v-model.trim="addColumnForm.columnWidth"
@@ -986,43 +986,43 @@
                                                                         </el-form-item>
                                         </el-form>
                                 @* <el-form v-model="sheetSettingForm" :size="elSize" label-position="top" label-width="80px" class="form-container">
-                                    <el-form-item label="绑定字段">
+                                    <el-form-item :label="ncfST('Frontend.166')">
                                         <el-select v-model="sheetSettingForm.boundField" style="width:100%"
-                                            placeholder="请选择">
-                                            <el-option label="输入框" value="shanghai"></el-option>
-                                            <el-option label="日期" value="beijing"></el-option>
-                                            <el-option label="性别" value="beijing"></el-option>
-                                            <el-option label="链接" value="beijing"></el-option>
+                                            :placeholder="ncfST('Frontend.206')">
+                                            <el-option :label="ncfST('Frontend.281')" value="shanghai"></el-option>
+                                            <el-option :label="ncfST('Frontend.288')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.298')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.234')" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="选择组件">
+                                    <el-form-item :label="ncfST('Frontend.228')">
                                         <el-select v-model="sheetSettingForm.selectComponent" style="width:100%"
-                                            placeholder="请选择">
-                                            <el-option label="输入框" value="shanghai"></el-option>
-                                            <el-option label="日期选择器" value="beijing"></el-option>
-                                            <el-option label="单选组件" value="beijing"></el-option>
-                                            <el-option label="多选组件" value="beijing"></el-option>
-                                            <el-option label="下拉选择" value="beijing"></el-option>
+                                            :placeholder="ncfST('Frontend.220')">
+                                            <el-option :label="ncfST('Frontend.281')" value="shanghai"></el-option>
+                                            <el-option :label="ncfST('Frontend.288')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.298')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.297')" value="beijing"></el-option>
+                                            <el-option :label="ncfST('Frontend.286')" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="字段名称">
+                                    <el-form-item :label="ncfST('Frontend.050')">
                                         <el-input v-model="sheetSettingForm.fieldName" :placeholder="ncfST('Frontend.191')"></el-input>
                                     </el-form-item>
-                                    <el-form-item label="提示文字">
+                                    <el-form-item :label="ncfST('Frontend.091')">
                                         <el-input v-model="sheetSettingForm.tipText" :placeholder="ncfST('Frontend.191')"></el-input>
                                     </el-form-item>
-                                    <el-form-item label="显示方式">
+                                    <el-form-item :label="ncfST('Frontend.057')">
                                         <el-select v-model="sheetSettingForm.displayUsage" style="width:100%"
-                                            placeholder="请选择">
+                                            :placeholder="ncfST('Frontend.206')">
                                             <el-option label="下拉菜单/平铺" value="shanghai"></el-option>
                                             <el-option label="删除" value="beijing"></el-option>
                                             <el-option label="详情" value="beijing"></el-option>
                                             <el-option label="新增" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="选项">
+                                    <el-form-item :label="ncfST('Frontend.230')">
                                         <el-select v-model="sheetSettingForm.customData"
-                                            style="width:100%;margin-bottom:10px" placeholder="请选择">
+                                            style="width:100%;margin-bottom:10px" :placeholder="ncfST('Frontend.206')">
                                             <el-option label="自定义/数据集" value="shanghai"></el-option>
                                             <el-option label="删除" value="beijing"></el-option>
                                             <el-option label="详情" value="beijing"></el-option>
@@ -1031,10 +1031,10 @@
                                         <el-popover v-for="(item,index) in sheetSettingForm.optionData" :key="index"
                                             placement="left" width="400" trigger="click">
                                             <div class="popover-bodyBox">
-                                                <div class="popover-title">选项设置</div>
+                                                <div class="popover-title">{{ ncfST('Frontend.233') }}</div>
                                                 <div class="popover-list df-wn flex-dc">
                                                     <div class="popover-list-item df-wn flex-ac">
-                                                        <div class="line-label">选项字段</div>
+                                                        <div class="line-label">{{ ncfST('Frontend.050') }}</div>
                                                         <el-input v-model="item.optionName"
                                                             :placeholder="ncfST('Frontend.191')"></el-input>
                                                     </div>
@@ -1056,7 +1056,7 @@
                                         <div class="addsort-box df-wn flex-ac" @@click="handleAddOptionData">
                                             <i class="el-icon-circle-plus-outline"></i>
                                             <span class="tipsText">
-                                                添加选项
+                                                {{ ncfST('Frontend.146') }}
                                             </span>
                                         </div>
                                     </el-form-item>
