@@ -281,4 +281,10 @@
   <data name="Parameter.Sandbox.RelativeDirectory.Help" xml:space="preserve"><value>Les fichiers sont écrits avec leur nom d’origine dans ce répertoire ; laissez vide pour la racine.</value></data>
   <data name="Parameter.Sandbox.Files" xml:space="preserve"><value>Fichiers</value></data>
   <data name="Parameter.Sandbox.Files.Help" xml:space="preserve"><value>Plusieurs fichiers peuvent être téléversés à la fois ; leur contenu est transmis par des références sécurisées.</value></data>
+  <data name="Parameter.Sandbox.Language" xml:space="preserve"><value>Langage du noyau</value></data>
+  <data name="Parameter.Sandbox.Language.Help" xml:space="preserve"><value>python utilise le noyau Python 3 ; csharp utilise le noyau C# .NET SDK de dotnet-interactive.</value></data>
+  <data name="Parameter.Sandbox.Title" xml:space="preserve"><value>Titre</value></data>
+  <data name="Parameter.Sandbox.Title.Help" xml:space="preserve"><value>Facultatif ; s’il est renseigné, il devient la première cellule Markdown avec un titre de niveau 1.</value></data>
+  <data name="Parameter.Sandbox.Cells" xml:space="preserve"><value>Contenu des cellules</value></data>
+  <data name="Parameter.Sandbox.Cells.Help" xml:space="preserve"><value>Format pourcentage : placez # %% sur une ligne seule pour séparer les cellules de code ; le contenu après # %% [markdown] est une cellule Markdown ; le contenu avant le premier marqueur est la première cellule de code.</value></data>
 </root>

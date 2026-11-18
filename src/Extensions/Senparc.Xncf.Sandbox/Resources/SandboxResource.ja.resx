@@ -281,4 +281,10 @@
   <data name="Parameter.Sandbox.RelativeDirectory.Help" xml:space="preserve"><value>元のファイル名でこのディレクトリに書き込みます。空欄ならワークスペースのルートです。</value></data>
   <data name="Parameter.Sandbox.Files" xml:space="preserve"><value>ファイル</value></data>
   <data name="Parameter.Sandbox.Files.Help" xml:space="preserve"><value>複数ファイルを一度にアップロードできます。内容は安全なファイル参照で渡されます。</value></data>
+  <data name="Parameter.Sandbox.Language" xml:space="preserve"><value>カーネル言語</value></data>
+  <data name="Parameter.Sandbox.Language.Help" xml:space="preserve"><value>python は Python 3 カーネル、csharp は dotnet-interactive C# .NET SDK カーネルを使用します。</value></data>
+  <data name="Parameter.Sandbox.Title" xml:space="preserve"><value>タイトル</value></data>
+  <data name="Parameter.Sandbox.Title.Help" xml:space="preserve"><value>任意。入力すると最初の Markdown セルのレベル 1 見出しになります。</value></data>
+  <data name="Parameter.Sandbox.Cells" xml:space="preserve"><value>セル内容</value></data>
+  <data name="Parameter.Sandbox.Cells.Help" xml:space="preserve"><value>パーセント形式：# %% を単独行に置いてコードセルを区切ります。# %% [markdown] の後は Markdown セルで、最初のマーカー前は最初のコードセルです。</value></data>
 </root>

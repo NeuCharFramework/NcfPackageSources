@@ -281,4 +281,10 @@
   <data name="Parameter.Sandbox.RelativeDirectory.Help" xml:space="preserve"><value>文件将以原始文件名写入该目录，留空表示工作区根目录。</value></data>
   <data name="Parameter.Sandbox.Files" xml:space="preserve"><value>文件</value></data>
   <data name="Parameter.Sandbox.Files.Help" xml:space="preserve"><value>可一次上传多个文件；文件内容通过安全文件引用传递。</value></data>
+  <data name="Parameter.Sandbox.Language" xml:space="preserve"><value>内核语言</value></data>
+  <data name="Parameter.Sandbox.Language.Help" xml:space="preserve"><value>python 使用 Python 3 内核；csharp 使用 dotnet-interactive C# .NET SDK 内核。</value></data>
+  <data name="Parameter.Sandbox.Title" xml:space="preserve"><value>标题</value></data>
+  <data name="Parameter.Sandbox.Title.Help" xml:space="preserve"><value>可选；填写后作为首个 Markdown 单元（一级标题）。</value></data>
+  <data name="Parameter.Sandbox.Cells" xml:space="preserve"><value>单元内容</value></data>
+  <data name="Parameter.Sandbox.Cells.Help" xml:space="preserve"><value>百分号格式：独立一行 # %% 分隔代码单元；# %% [markdown] 之后的内容为 Markdown 单元；首个标记之前默认是第一个代码单元。</value></data>
 </root>

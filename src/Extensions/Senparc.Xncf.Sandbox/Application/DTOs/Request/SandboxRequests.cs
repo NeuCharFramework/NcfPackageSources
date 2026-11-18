@@ -225,7 +225,7 @@ public class Sandbox_LabCreateNotebookRequest : FunctionAppRequestBase
     public string RelativePath { get; set; } = string.Empty;
 
     [Required]
-    [Description("内核语言||python 使用 Python 3 内核；csharp 使用 dotnet-interactive C# .NET SDK 内核")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.Language", "Parameter.Sandbox.Language.Help")]
     [FunctionParameterUi(ParameterType.DropDownList, nameof(LanguageOptions))]
     public string Language { get; set; } = string.Empty;
 
@@ -238,12 +238,12 @@ public class Sandbox_LabCreateNotebookRequest : FunctionAppRequestBase
     });
 
     [MaxLength(200)]
-    [Description("标题||可选；填写后作为首个 Markdown 单元（一级标题）")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.Title", "Parameter.Sandbox.Title.Help")]
     public string Title { get; set; } = string.Empty;
 
     [Required]
     [MaxLength(100_000)]
-    [Description("单元内容||百分号格式：独立一行 # %% 分隔代码单元；# %% [markdown] 之后的内容为 Markdown 单元；首个标记之前默认是第一个代码单元")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.Cells", "Parameter.Sandbox.Cells.Help")]
     public string Cells { get; set; } = string.Empty;
 
     [Description("覆盖已有文件||关闭后，目标文件存在时操作失败")]

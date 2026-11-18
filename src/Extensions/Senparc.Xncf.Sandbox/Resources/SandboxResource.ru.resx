@@ -281,4 +281,10 @@
   <data name="Parameter.Sandbox.RelativeDirectory.Help" xml:space="preserve"><value>Файлы записываются с исходными именами в этот каталог; оставьте пустым для корня.</value></data>
   <data name="Parameter.Sandbox.Files" xml:space="preserve"><value>Файлы</value></data>
   <data name="Parameter.Sandbox.Files.Help" xml:space="preserve"><value>Можно загрузить несколько файлов сразу; содержимое передаётся через безопасные ссылки на файлы.</value></data>
+  <data name="Parameter.Sandbox.Language" xml:space="preserve"><value>Язык ядра</value></data>
+  <data name="Parameter.Sandbox.Language.Help" xml:space="preserve"><value>python использует ядро Python 3, а csharp — ядро C# .NET SDK от dotnet-interactive.</value></data>
+  <data name="Parameter.Sandbox.Title" xml:space="preserve"><value>Заголовок</value></data>
+  <data name="Parameter.Sandbox.Title.Help" xml:space="preserve"><value>Необязательно; если задан, становится первым Markdown-блоком с заголовком первого уровня.</value></data>
+  <data name="Parameter.Sandbox.Cells" xml:space="preserve"><value>Содержимое ячеек</value></data>
+  <data name="Parameter.Sandbox.Cells.Help" xml:space="preserve"><value>Процентный формат: поместите # %% на отдельную строку для разделения ячеек кода; после # %% [markdown] идёт Markdown-ячейка, а текст до первого маркера — первая ячейка кода.</value></data>
 </root>
