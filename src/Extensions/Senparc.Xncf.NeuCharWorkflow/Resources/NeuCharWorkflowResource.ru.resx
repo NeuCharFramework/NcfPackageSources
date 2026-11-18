@@ -8,13 +8,13 @@
   <data name="Module.Description" xml:space="preserve"><value>Secure server-side workflows composed from Functions, system nodes, and controlled Agents.</value></data>
   <data name="Area.Workflow" xml:space="preserve"><value>Workflow</value></data>
   <data name="Area.Tasks" xml:space="preserve"><value>Tasks</value></data>
-  <data name="Area.Replay" xml:space="preserve"><value>Run replay</value></data>
+  <data name="Area.Replay" xml:space="preserve"><value>Повтор запуска</value></data>
   <data name="Title.Designer" xml:space="preserve"><value>NeuChar Workflow</value></data>
   <data name="Title.Tasks" xml:space="preserve"><value>Workflow tasks</value></data>
   <data name="Title.Replay" xml:space="preserve"><value>Workflow run replay</value></data>
   <data name="Designer.Introduction" xml:space="preserve"><value>Compose Functions, system nodes, and Agents. Parameters, types, connections, and module state are checked before save and run.</value></data>
   <data name="Action.Refresh" xml:space="preserve"><value>Refresh</value></data>
-  <data name="Action.NewWorkflow" xml:space="preserve"><value>New workflow</value></data>
+  <data name="Action.NewWorkflow" xml:space="preserve"><value>Новый Workflow</value></data>
 
   <data name="Frontend.001" xml:space="preserve"><value>Список задач</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.002" xml:space="preserve"><value>Просмотр запуска</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
@@ -671,7 +671,7 @@
   <data name="Frontend.624" xml:space="preserve"><value>От 1 до 100 000 фиксированных итераций или скалярное значение из предыдущего узла</value></data>
   <data name="Frontend.625" xml:space="preserve"><value>Цикл → тело цикла → конец цикла → следующий узел</value></data>
   <data name="Frontend.626" xml:space="preserve"><value>Входной порт</value></data>
-  <data name="Frontend.627" xml:space="preserve"><value>continue / break</value></data>
+  <data name="Frontend.627" xml:space="preserve"><value>продолжить / прервать</value></data>
   <data name="Frontend.628" xml:space="preserve"><value>Выход</value></data>
   <data name="Frontend.629" xml:space="preserve"><value>Продолжить ниже после завершения всех итераций или после break</value></data>
   <data name="Frontend.630" xml:space="preserve"><value>Целевой Workflow и входные данные</value></data>

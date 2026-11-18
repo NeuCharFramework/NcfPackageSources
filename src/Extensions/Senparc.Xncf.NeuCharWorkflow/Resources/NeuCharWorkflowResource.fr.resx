@@ -8,13 +8,13 @@
   <data name="Module.Description" xml:space="preserve"><value>Secure server-side workflows composed from Functions, system nodes, and controlled Agents.</value></data>
   <data name="Area.Workflow" xml:space="preserve"><value>Workflow</value></data>
   <data name="Area.Tasks" xml:space="preserve"><value>Tasks</value></data>
-  <data name="Area.Replay" xml:space="preserve"><value>Run replay</value></data>
+  <data name="Area.Replay" xml:space="preserve"><value>Rejouer l'exécution</value></data>
   <data name="Title.Designer" xml:space="preserve"><value>NeuChar Workflow</value></data>
   <data name="Title.Tasks" xml:space="preserve"><value>Workflow tasks</value></data>
   <data name="Title.Replay" xml:space="preserve"><value>Workflow run replay</value></data>
   <data name="Designer.Introduction" xml:space="preserve"><value>Compose Functions, system nodes, and Agents. Parameters, types, connections, and module state are checked before save and run.</value></data>
   <data name="Action.Refresh" xml:space="preserve"><value>Refresh</value></data>
-  <data name="Action.NewWorkflow" xml:space="preserve"><value>New workflow</value></data>
+  <data name="Action.NewWorkflow" xml:space="preserve"><value>Nouveau Workflow</value></data>
 
   <data name="Frontend.001" xml:space="preserve"><value>Liste des tâches</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.002" xml:space="preserve"><value>Relecture d’exécution</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
@@ -671,7 +671,7 @@
   <data name="Frontend.624" xml:space="preserve"><value>1 à 100 000 itérations fixes, ou une valeur scalaire en amont</value></data>
   <data name="Frontend.625" xml:space="preserve"><value>Boucle → corps de boucle → fin de boucle → nœud suivant</value></data>
   <data name="Frontend.626" xml:space="preserve"><value>Port d'entrée</value></data>
-  <data name="Frontend.627" xml:space="preserve"><value>continue / break</value></data>
+  <data name="Frontend.627" xml:space="preserve"><value>continuer / interrompre</value></data>
   <data name="Frontend.628" xml:space="preserve"><value>Sortie</value></data>
   <data name="Frontend.629" xml:space="preserve"><value>Continue vers l'aval après toutes les itérations ou après break</value></data>
   <data name="Frontend.630" xml:space="preserve"><value>Workflow cible et entrée</value></data>
@@ -895,7 +895,7 @@
   <data name="Frontend.848" xml:space="preserve"><value>Le nœud « {0} » référence une connexion Agent ou A2A indisponible.</value></data>
   <data name="Frontend.849" xml:space="preserve"><value>Métadonnées des options indisponibles</value></data>
   <data name="Frontend.850" xml:space="preserve"><value>Sélection d’entrée préchargée</value></data>
-  <data name="Frontend.851" xml:space="preserve"><value>Multiple</value></data>
+  <data name="Frontend.851" xml:space="preserve"><value>Multiples</value></data>
   <data name="Frontend.852" xml:space="preserve"><value>Unique</value></data>
   <data name="Frontend.853" xml:space="preserve"><value>Observé à l’exécution</value></data>
   <data name="Frontend.854" xml:space="preserve"><value>Texte</value></data>
