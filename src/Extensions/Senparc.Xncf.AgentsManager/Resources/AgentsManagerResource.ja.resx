@@ -1729,4 +1729,12 @@
   <data name="Frontend.577" xml:space="preserve"><value>利用できないリモート A2A Agent が {0} 件あります。メンバー一覧から手動で再テストしてください</value></data>
   <data name="Frontend.578" xml:space="preserve"><value>このタスクに参加</value></data>
   <data name="Frontend.579" xml:space="preserve"><value>このタスクでは無効</value></data>
+  <data name="Function.Workflow.Execute.Description" xml:space="preserve"><value>Workflow「{0}」を実行します。</value></data>
+  <data name="Function.Workflow.Execute.WithDescription" xml:space="preserve"><value>Workflow「{0}」を実行します：{1}</value></data>
+  <data name="Function.Workflow.Input.Description" xml:space="preserve"><value>Workflow に渡す通常の入力内容です。</value></data>
+  <data name="Function.Workflow.Parameter.Optional" xml:space="preserve"><value>Workflow パラメーター「{0}」（任意）。</value></data>
+  <data name="Function.Workflow.Parameter.OptionalSuffix" xml:space="preserve"><value>（任意）</value></data>
+  <data name="Error.Workflow.InputRequired" xml:space="preserve"><value>Workflow の呼び出しに失敗しました：input パラメーターは空にできません。</value></data>
+  <data name="Error.Workflow.InvocationFailed" xml:space="preserve"><value>Workflow の呼び出しに失敗しました：{0}</value></data>
+  <data name="Error.Workflow.Unknown" xml:space="preserve"><value>不明なエラー</value></data>
 </root>

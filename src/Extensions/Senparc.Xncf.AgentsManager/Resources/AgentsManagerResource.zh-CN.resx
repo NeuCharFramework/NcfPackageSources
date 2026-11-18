@@ -1155,4 +1155,12 @@
   <data name="Frontend.577" xml:space="preserve"><value>有 {0} 个远程 A2A 智能体当前不可用，可在成员列表中手动重测</value></data>
   <data name="Frontend.578" xml:space="preserve"><value>已加入本任务</value></data>
   <data name="Frontend.579" xml:space="preserve"><value>本任务未启用</value></data>
+  <data name="Function.Workflow.Execute.Description" xml:space="preserve"><value>执行工作流“{0}”。</value></data>
+  <data name="Function.Workflow.Execute.WithDescription" xml:space="preserve"><value>执行工作流“{0}”：{1}</value></data>
+  <data name="Function.Workflow.Input.Description" xml:space="preserve"><value>传给工作流的常规输入内容。</value></data>
+  <data name="Function.Workflow.Parameter.Optional" xml:space="preserve"><value>工作流参数“{0}”（可选）。</value></data>
+  <data name="Function.Workflow.Parameter.OptionalSuffix" xml:space="preserve"><value>（可选）</value></data>
+  <data name="Error.Workflow.InputRequired" xml:space="preserve"><value>Workflow 调用失败：input 参数不能为空。</value></data>
+  <data name="Error.Workflow.InvocationFailed" xml:space="preserve"><value>Workflow 调用失败：{0}</value></data>
+  <data name="Error.Workflow.Unknown" xml:space="preserve"><value>未知错误</value></data>
 </root>

@@ -1729,4 +1729,12 @@
   <data name="Frontend.577" xml:space="preserve"><value>Hay {0} Agents A2A remotos no disponibles; vuelve a probarlos manualmente desde la lista de miembros</value></data>
   <data name="Frontend.578" xml:space="preserve"><value>Incluido en esta tarea</value></data>
   <data name="Frontend.579" xml:space="preserve"><value>No habilitado para esta tarea</value></data>
+  <data name="Function.Workflow.Execute.Description" xml:space="preserve"><value>Ejecutar el Workflow «{0}».</value></data>
+  <data name="Function.Workflow.Execute.WithDescription" xml:space="preserve"><value>Ejecutar el Workflow «{0}»: {1}</value></data>
+  <data name="Function.Workflow.Input.Description" xml:space="preserve"><value>Entrada general que se pasa al Workflow.</value></data>
+  <data name="Function.Workflow.Parameter.Optional" xml:space="preserve"><value>Parámetro del Workflow «{0}» (opcional).</value></data>
+  <data name="Function.Workflow.Parameter.OptionalSuffix" xml:space="preserve"><value> (opcional)</value></data>
+  <data name="Error.Workflow.InputRequired" xml:space="preserve"><value>Falló la invocación del Workflow: el parámetro input no puede estar vacío.</value></data>
+  <data name="Error.Workflow.InvocationFailed" xml:space="preserve"><value>Falló la invocación del Workflow: {0}</value></data>
+  <data name="Error.Workflow.Unknown" xml:space="preserve"><value>Error desconocido</value></data>
 </root>

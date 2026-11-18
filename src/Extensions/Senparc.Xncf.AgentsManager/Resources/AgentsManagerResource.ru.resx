@@ -1729,4 +1729,12 @@
   <data name="Frontend.577" xml:space="preserve"><value>Недоступных удалённых Agents A2A: {0}; повторите проверку вручную в списке участников</value></data>
   <data name="Frontend.578" xml:space="preserve"><value>Участник этой задачи</value></data>
   <data name="Frontend.579" xml:space="preserve"><value>Не включено для этой задачи</value></data>
+  <data name="Function.Workflow.Execute.Description" xml:space="preserve"><value>Выполнить Workflow «{0}».</value></data>
+  <data name="Function.Workflow.Execute.WithDescription" xml:space="preserve"><value>Выполнить Workflow «{0}»: {1}</value></data>
+  <data name="Function.Workflow.Input.Description" xml:space="preserve"><value>Обычный ввод, передаваемый в Workflow.</value></data>
+  <data name="Function.Workflow.Parameter.Optional" xml:space="preserve"><value>Параметр Workflow «{0}» (необязательно).</value></data>
+  <data name="Function.Workflow.Parameter.OptionalSuffix" xml:space="preserve"><value> (необязательно)</value></data>
+  <data name="Error.Workflow.InputRequired" xml:space="preserve"><value>Не удалось вызвать Workflow: параметр input не может быть пустым.</value></data>
+  <data name="Error.Workflow.InvocationFailed" xml:space="preserve"><value>Не удалось вызвать Workflow: {0}</value></data>
+  <data name="Error.Workflow.Unknown" xml:space="preserve"><value>Неизвестная ошибка</value></data>
 </root>
