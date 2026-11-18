@@ -500,4 +500,5 @@
   <data name="Frontend.261" xml:space="preserve"><value>La categoría no existe</value></data>
   <data name="Frontend.262" xml:space="preserve"><value>La categoría seleccionada no existe. Selecciona otra.</value></data>
   <data name="Frontend.263" xml:space="preserve"><value>La etiqueta no existe</value></data>
+  <data name="Frontend.269" xml:space="preserve"><value>Crea una categoría antes de crear una etiqueta</value></data>
 </root>

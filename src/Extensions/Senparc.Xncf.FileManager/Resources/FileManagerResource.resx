@@ -495,4 +495,5 @@
   <data name="Frontend.261" xml:space="preserve"><value>分类不存在</value></data>
   <data name="Frontend.262" xml:space="preserve"><value>所属分类不存在，请重新选择</value></data>
   <data name="Frontend.263" xml:space="preserve"><value>标签不存在</value></data>
+  <data name="Frontend.269" xml:space="preserve"><value>请先新增分类后再创建标签</value></data>
 </root>

@@ -2655,7 +2655,7 @@
                                     blockedTypesText: this.uploadSettings.blockedTypesText || ''
                                 })
                             );
-                            this.$message.success('上传设置已保存');
+                            this.$message.success(ncfST('Frontend.075'));
                         } catch (e) {
                             this.$message.error('保存失败，请检查浏览器本地存储是否可用');
                         }
@@ -2671,7 +2671,7 @@
                                     blockedTypesText: this.uploadSettings.blockedTypesText || ''
                                 })
                             );
-                            this.$message.success('已恢复默认上传设置');
+                            this.$message.success(ncfST('Frontend.108'));
                         } catch (e) {
                             this.$message.error('恢复默认失败');
                         }
@@ -2799,7 +2799,7 @@
                     createTag: function () {
                         if (typeof this.loadTagManagerFromStorage === 'function') this.loadTagManagerFromStorage();
                         if (!(this.tagManager && this.tagManager.list && this.tagManager.list.length)) {
-                            this.$message.warning('请先新增分类后再创建标签');
+                            this.$message.warning(ncfST('Frontend.269'));
                             return;
                         }
                         this.tagCreateDialog = {
@@ -3585,7 +3585,7 @@
                 vm.createTag = function (presetCategoryId) {
                     if (typeof this.loadTagManagerFromStorage === 'function') this.loadTagManagerFromStorage();
                     if (!(this.tagManager && this.tagManager.list && this.tagManager.list.length)) {
-                        this.$message.warning('请先新增分类后再创建标签');
+                        this.$message.warning(ncfST('Frontend.269'));
                         return;
                     }
                     this.tagCreateDialog = {

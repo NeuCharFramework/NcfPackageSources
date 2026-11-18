@@ -500,4 +500,5 @@
   <data name="Frontend.261" xml:space="preserve"><value>カテゴリーが存在しません</value></data>
   <data name="Frontend.262" xml:space="preserve"><value>選択したカテゴリーが存在しません。もう一度選択してください。</value></data>
   <data name="Frontend.263" xml:space="preserve"><value>タグが存在しません</value></data>
+  <data name="Frontend.269" xml:space="preserve"><value>タグを作成する前にカテゴリを追加してください</value></data>
 </root>

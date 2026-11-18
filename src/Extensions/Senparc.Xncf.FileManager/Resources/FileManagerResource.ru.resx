@@ -500,4 +500,5 @@
   <data name="Frontend.261" xml:space="preserve"><value>Категория не существует</value></data>
   <data name="Frontend.262" xml:space="preserve"><value>Выбранная категория не существует. Выберите другую.</value></data>
   <data name="Frontend.263" xml:space="preserve"><value>Метка не существует</value></data>
+  <data name="Frontend.269" xml:space="preserve"><value>Сначала создайте категорию, затем создайте метку</value></data>
 </root>
