@@ -2751,7 +2751,7 @@ new Vue({
                 3: 'Hugging Face',
                 4: 'NeuCharAI'
             };
-            return platforms[Number(model?.aiPlatform)] || `平台 ${model?.aiPlatform ?? '未知'}`;
+            return platforms[Number(model?.aiPlatform)] || `${ncfWorkflowText('平台')} ${model?.aiPlatform ?? ncfWorkflowText('未知')}`;
         },
         openWorkflowObjectEditor(object) {
             const url = this.workflowObjectEditUrl(object);

@@ -696,4 +696,11 @@
   <data name="Frontend.649" xml:space="preserve"><value>Esperando una solicitud Webhook externa</value></data>
   <data name="Frontend.650" xml:space="preserve"><value>Ejecutado manualmente por el usuario</value></data>
   <data name="Frontend.651" xml:space="preserve"><value>Se inicia cuando un usuario envía un mensaje mediante la página de chat</value></data>
+  <data name="Frontend.652" xml:space="preserve"><value>Desconocido</value></data>
+  <data name="Frontend.653" xml:space="preserve"><value>Preparando la ejecución…</value></data>
+  <data name="Frontend.654" xml:space="preserve"><value>No hay ningún resumen de resultados disponible.</value></data>
+  <data name="Frontend.655" xml:space="preserve"><value>Esta ejecución no tiene identificador de cancelación. Actualiza la lista de tareas e inténtalo de nuevo.</value></data>
+  <data name="Frontend.656" xml:space="preserve"><value>Esta ejecución no tiene identificador activo; puede proceder de un proceso de servicio ya cerrado. Cancélala primero o espera a que se actualice su estado.</value></data>
+  <data name="Frontend.657" xml:space="preserve"><value>Error en la limpieza rápida de tareas de Workflow.</value></data>
+  <data name="Frontend.658" xml:space="preserve"><value>Plataforma</value></data>
 </root>

@@ -696,4 +696,11 @@
   <data name="Frontend.649" xml:space="preserve"><value>Waiting for an external Webhook request</value></data>
   <data name="Frontend.650" xml:space="preserve"><value>Run manually by the user</value></data>
   <data name="Frontend.651" xml:space="preserve"><value>Started when a user sends a message through the chat page</value></data>
+  <data name="Frontend.652" xml:space="preserve"><value>Unknown</value></data>
+  <data name="Frontend.653" xml:space="preserve"><value>Preparing execution…</value></data>
+  <data name="Frontend.654" xml:space="preserve"><value>No result summary is available.</value></data>
+  <data name="Frontend.655" xml:space="preserve"><value>This run has no abort identifier. Refresh the task list and try again.</value></data>
+  <data name="Frontend.656" xml:space="preserve"><value>This run has no live-run identifier, possibly left by an exited service process; abort it first or wait for the task status to update.</value></data>
+  <data name="Frontend.657" xml:space="preserve"><value>Quick cleanup of Workflow tasks failed.</value></data>
+  <data name="Frontend.658" xml:space="preserve"><value>Platform</value></data>
 </root>

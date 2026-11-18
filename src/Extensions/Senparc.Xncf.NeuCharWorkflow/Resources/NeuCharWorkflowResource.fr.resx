@@ -696,4 +696,11 @@
   <data name="Frontend.649" xml:space="preserve"><value>En attente d'une requête Webhook externe</value></data>
   <data name="Frontend.650" xml:space="preserve"><value>Exécuté manuellement par l'utilisateur</value></data>
   <data name="Frontend.651" xml:space="preserve"><value>Démarre lorsqu'un utilisateur envoie un message depuis la page de chat</value></data>
+  <data name="Frontend.652" xml:space="preserve"><value>Inconnu</value></data>
+  <data name="Frontend.653" xml:space="preserve"><value>Préparation de l’exécution…</value></data>
+  <data name="Frontend.654" xml:space="preserve"><value>Aucun résumé de résultat n’est disponible.</value></data>
+  <data name="Frontend.655" xml:space="preserve"><value>Cette exécution ne possède pas d’identifiant d’annulation. Actualisez la liste des tâches et réessayez.</value></data>
+  <data name="Frontend.656" xml:space="preserve"><value>Cette exécution ne possède pas d’identifiant actif ; elle peut provenir d’un processus de service arrêté. Annulez-la d’abord ou attendez la mise à jour de son état.</value></data>
+  <data name="Frontend.657" xml:space="preserve"><value>Échec du nettoyage rapide des tâches Workflow.</value></data>
+  <data name="Frontend.658" xml:space="preserve"><value>Plateforme</value></data>
 </root>

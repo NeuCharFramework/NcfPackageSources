@@ -696,4 +696,11 @@
   <data name="Frontend.649" xml:space="preserve"><value>等待外部 Webhook 请求</value></data>
   <data name="Frontend.650" xml:space="preserve"><value>由用户手动运行</value></data>
   <data name="Frontend.651" xml:space="preserve"><value>用户通过聊天页面发送消息启动</value></data>
+  <data name="Frontend.652" xml:space="preserve"><value>未知</value></data>
+  <data name="Frontend.653" xml:space="preserve"><value>正在准备执行…</value></data>
+  <data name="Frontend.654" xml:space="preserve"><value>没有可显示的结果摘要。</value></data>
+  <data name="Frontend.655" xml:space="preserve"><value>该运行缺少可中止标识，请刷新任务列表后重试。</value></data>
+  <data name="Frontend.656" xml:space="preserve"><value>该运行缺少实时运行标识，可能由已退出的服务进程遗留；请先中止或等待任务状态更新。</value></data>
+  <data name="Frontend.657" xml:space="preserve"><value>快速清理 Workflow 任务失败。</value></data>
+  <data name="Frontend.658" xml:space="preserve"><value>平台</value></data>
 </root>

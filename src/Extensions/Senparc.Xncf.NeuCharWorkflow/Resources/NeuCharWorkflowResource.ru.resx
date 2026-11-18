@@ -696,4 +696,11 @@
   <data name="Frontend.649" xml:space="preserve"><value>Ожидание внешнего запроса Webhook</value></data>
   <data name="Frontend.650" xml:space="preserve"><value>Запускается пользователем вручную</value></data>
   <data name="Frontend.651" xml:space="preserve"><value>Запускается, когда пользователь отправляет сообщение со страницы чата</value></data>
+  <data name="Frontend.652" xml:space="preserve"><value>Неизвестно</value></data>
+  <data name="Frontend.653" xml:space="preserve"><value>Подготовка выполнения…</value></data>
+  <data name="Frontend.654" xml:space="preserve"><value>Нет доступного сводного результата.</value></data>
+  <data name="Frontend.655" xml:space="preserve"><value>У этого запуска нет идентификатора отмены. Обновите список задач и повторите попытку.</value></data>
+  <data name="Frontend.656" xml:space="preserve"><value>У этого запуска нет активного идентификатора; возможно, он остался после завершения процесса службы. Сначала отмените его или дождитесь обновления состояния задачи.</value></data>
+  <data name="Frontend.657" xml:space="preserve"><value>Не удалось быстро очистить задачи Workflow.</value></data>
+  <data name="Frontend.658" xml:space="preserve"><value>Платформа</value></data>
 </root>
