@@ -703,4 +703,14 @@
   <data name="Frontend.656" xml:space="preserve"><value>This run has no live-run identifier, possibly left by an exited service process; abort it first or wait for the task status to update.</value></data>
   <data name="Frontend.657" xml:space="preserve"><value>Quick cleanup of Workflow tasks failed.</value></data>
   <data name="Frontend.658" xml:space="preserve"><value>Platform</value></data>
+  <data name="Frontend.659" xml:space="preserve"><value>Saving…</value></data>
+  <data name="Frontend.660" xml:space="preserve"><value>Save failed</value></data>
+  <data name="Frontend.661" xml:space="preserve"><value>Unsaved changes</value></data>
+  <data name="Frontend.662" xml:space="preserve"><value>Draft: {0} disconnected nodes</value></data>
+  <data name="Frontend.663" xml:space="preserve"><value>Saved {0}</value></data>
+  <data name="Frontend.664" xml:space="preserve"><value>Saved</value></data>
+  <data name="Frontend.665" xml:space="preserve"><value>Not saved</value></data>
+  <data name="Frontend.666" xml:space="preserve"><value>Edit</value></data>
+  <data name="Frontend.667" xml:space="preserve"><value>Edit text and insert variables</value></data>
+  <data name="Frontend.668" xml:space="preserve"><value>This field supports only the current input and restricted formulas; arbitrary JavaScript is not executed.</value></data>
 </root>

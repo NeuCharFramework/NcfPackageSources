@@ -719,4 +719,14 @@
   <data name="Frontend.656" xml:space="preserve"><value>この実行には有効な実行識別子がありません。終了したサービスプロセスの残骸の可能性があります。先に中止するか、タスク状態の更新を待ってください。</value></data>
   <data name="Frontend.657" xml:space="preserve"><value>Workflow タスクのクイッククリーンアップに失敗しました。</value></data>
   <data name="Frontend.658" xml:space="preserve"><value>プラットフォーム</value></data>
+  <data name="Frontend.659" xml:space="preserve"><value>保存中…</value></data>
+  <data name="Frontend.660" xml:space="preserve"><value>保存に失敗しました</value></data>
+  <data name="Frontend.661" xml:space="preserve"><value>未保存の変更があります</value></data>
+  <data name="Frontend.662" xml:space="preserve"><value>下書き：未接続ノード {0} 個</value></data>
+  <data name="Frontend.663" xml:space="preserve"><value>保存済み {0}</value></data>
+  <data name="Frontend.664" xml:space="preserve"><value>保存済み</value></data>
+  <data name="Frontend.665" xml:space="preserve"><value>未保存</value></data>
+  <data name="Frontend.666" xml:space="preserve"><value>編集</value></data>
+  <data name="Frontend.667" xml:space="preserve"><value>テキストを編集して変数を挿入</value></data>
+  <data name="Frontend.668" xml:space="preserve"><value>このフィールドは現在の入力と制限付き数式のみをサポートします。任意の JavaScript は実行されません。</value></data>
 </root>
