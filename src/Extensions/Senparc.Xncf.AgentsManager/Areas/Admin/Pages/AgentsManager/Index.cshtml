@@ -1752,14 +1752,14 @@
     <div class="drawerRtl function-binding-drawer">
         <div class="drawerRtl__header">
             <div class="drawerRtl__header__title">
-                工具与流程绑定
-                <span class="function-binding-drawer__agent">{{ agentForm.name || '新智能体' }}</span>
+                {{ ncfST('Frontend.517') }}
+                <span class="function-binding-drawer__agent">{{ agentForm.name || ncfST('Frontend.097') }}</span>
             </div>
             <div class="drawerRtl__header__close" @@click="visible.drawerFunctionBindings = false">&times;</div>
         </div>
         <div class="drawerRtl__body" v-loading="functionBindingLoading">
             <el-alert type="info" :closable="false" show-icon
-                title="只显示当前管理员可用的 Workflow；保存 Agent 或 Workflow 时会再次检查权限与循环引用。"
+                :title="ncfST('Frontend.387')"
                 style="margin-bottom:12px;"></el-alert>
             <el-tabs v-model="functionBindingTab" class="function-binding-tabs">
                 <el-tab-pane name="function">
@@ -1769,13 +1769,13 @@
                     <span slot="label"><i class="el-icon-s-operation"></i> Workflow</span>
                 </el-tab-pane>
                 <el-tab-pane name="plugin">
-                    <span slot="label"><i class="el-icon-s-tools"></i> 兼容 Plugin</span>
+                    <span slot="label"><i class="el-icon-s-tools"></i> {{ ncfST('Frontend.375') }}</span>
                 </el-tab-pane>
             </el-tabs>
             <el-input v-model="functionBindingSearch" clearable prefix-icon="el-icon-search"
-                placeholder="搜索名称、模块或说明" style="margin-bottom:12px;"></el-input>
+                :placeholder="ncfST('Frontend.421')" style="margin-bottom:12px;"></el-input>
             <div v-if="!filteredFunctionBindingOptions.length" class="function-binding-empty">
-                当前没有可选择的绑定。
+                {{ ncfST('Frontend.510') }}
             </div>
             <div v-else class="function-binding-option-list">
                 <div v-for="option in filteredFunctionBindingOptions"
@@ -1788,8 +1788,8 @@
                         <span class="function-binding-option__name">{{ option.name || option.key }}</span>
                         <span class="function-binding-option__meta">
                             <template v-if="option.moduleName">{{ option.moduleName }} · </template>
-                            <template v-if="option.parameterCount">参数 {{ option.parameterCount }} · </template>
-                            {{ option.available === false ? '模块不可用' : '可调用' }}
+                            <template v-if="option.parameterCount">Params {{ option.parameterCount }} · </template>
+                            {{ option.available === false ? ncfST('Frontend.599') : ncfST('Frontend.600') }}
                         </span>
                     </el-checkbox>
                     <div v-if="option.description" class="function-binding-option__description">
@@ -1800,7 +1800,7 @@
         </div>
         <div class="drawerRtl__footer text-right">
             <span class="function-binding-footer-summary">{{ functionBindingSummary }}</span>
-            <el-button :size="elSize" type="primary" @@click="visible.drawerFunctionBindings = false">完成</el-button>
+            <el-button :size="elSize" type="primary" @@click="visible.drawerFunctionBindings = false">{{ ncfST('Frontend.122') }}</el-button>
         </div>
     </div>
 </el-drawer>
@@ -1810,22 +1810,22 @@
     <div class="drawerRtl mcp-select-drawer">
         <div class="drawerRtl__header">
             <div class="drawerRtl__header__title">
-                从 MCP 列表选择
-                <span class="function-binding-drawer__agent">{{ agentForm.name || '新智能体' }}</span>
+                {{ ncfST('Frontend.357') }}
+                <span class="function-binding-drawer__agent">{{ agentForm.name || ncfST('Frontend.097') }}</span>
             </div>
             <div class="drawerRtl__header__close" @@click="visible.drawerMcpSelect = false">&times;</div>
         </div>
         <div class="drawerRtl__body" v-loading="mcpSelectLoading">
             <el-alert v-if="mcpModuleAvailable && mcpEndpointOptions.length" type="info" :closable="false" show-icon
-                title="以下端点来自 MCP 模块的登记列表，勾选后会以“名称 + URL”方式加入当前配置，可随时移除。"
+                :title="ncfST('Frontend.359')"
                 style="margin-bottom:12px;"></el-alert>
             <el-alert v-else-if="!mcpModuleAvailable && !mcpSelectLoading" type="warning" :closable="false" show-icon
-                :title="mcpSelectMessage || 'MCP 模块不可用，请使用手动输入方式添加 Endpoint。'"
+                :title="mcpSelectMessage || ncfST('Frontend.511')"
                 style="margin-bottom:12px;"></el-alert>
             <el-input v-model="mcpSelectSearch" clearable prefix-icon="el-icon-search"
-                placeholder="搜索名称、URL 或说明" style="margin-bottom:12px;"></el-input>
+                :placeholder="ncfST('Frontend.420')" style="margin-bottom:12px;"></el-input>
             <div v-if="!filteredMcpEndpointOptions.length && !mcpSelectLoading" class="function-binding-empty">
-                当前没有可选择的 MCP 端点。
+                {{ ncfST('Frontend.511') }}
             </div>
             <div v-else class="function-binding-option-list">
                 <div v-for="option in filteredMcpEndpointOptions"
@@ -1836,10 +1836,10 @@
                         <span class="function-binding-option__name">{{ option.name }}</span>
                         <span class="function-binding-option__meta">
                             <template v-if="option.endpointType">{{ option.endpointType }} · </template>
-                            <template v-if="option.lastTestResult === true">已连通</template>
-                            <template v-else-if="option.lastTestResult === false">测试失败</template>
-                            <template v-else>未测试</template>
-                            <template v-if="option.lastToolCount"> · 工具 {{ option.lastToolCount }}</template>
+                            <template v-if="option.lastTestResult === true">{{ ncfST('Frontend.402') }}</template>
+                            <template v-else-if="option.lastTestResult === false">{{ ncfST('Frontend.533') }}</template>
+                            <template v-else>{{ ncfST('Frontend.433') }}</template>
+                            <template v-if="option.lastToolCount"> · Tools {{ option.lastToolCount }}</template>
                         </span>
                     </el-checkbox>
                     <div class="mcp-select-option__endpoint">{{ option.endpoint }}</div>
@@ -1850,8 +1850,8 @@
             </div>
         </div>
         <div class="drawerRtl__footer text-right">
-            <span class="function-binding-footer-summary">当前已配置 {{ Object.keys(parsedMcpEndpoints).length }} 个 Endpoint</span>
-            <el-button :size="elSize" type="primary" @@click="visible.drawerMcpSelect = false">完成</el-button>
+            <span class="function-binding-footer-summary">{{ ncfST('Frontend.512', Object.keys(parsedMcpEndpoints).length) }}</span>
+            <el-button :size="elSize" type="primary" @@click="visible.drawerMcpSelect = false">{{ ncfST('Frontend.122') }}</el-button>
         </div>
     </div>
 </el-drawer>
