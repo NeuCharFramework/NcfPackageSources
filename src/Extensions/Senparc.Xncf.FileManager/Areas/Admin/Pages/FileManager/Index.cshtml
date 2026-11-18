@@ -2686,15 +2686,15 @@
                         var ext = extMatch ? extMatch[0].toLowerCase() : '';
                         var blocked = this.parseExtensionList((this.uploadSettings && this.uploadSettings.blockedTypesText) || '');
                         if (ext && blocked.indexOf(ext) !== -1) {
-                            return '文件“' + name + '”类型 ' + ext + ' 已被过滤，无法上传。';
+                            return ncfST('Frontend.216', name, ext);
                         }
                         var allowed = this.parseExtensionList((this.uploadSettings && this.uploadSettings.allowedTypesText) || '');
                         if (allowed.length && (!ext || allowed.indexOf(ext) === -1)) {
-                            return '文件“' + name + '”类型不在允许上传列表中。';
+                            return ncfST('Frontend.217', name);
                         }
                         var maxBytes = this.getMaxUploadSizeBytes();
                         if (fileSize > maxBytes) {
-                            return '文件“' + name + '”超过 ' + Math.round(maxBytes / 1024 / 1024) + ' MB，无法上传。';
+                            return ncfST('Frontend.218', name, Math.round(maxBytes / 1024 / 1024));
                         }
                         return '';
                     },
@@ -4155,12 +4155,12 @@
                         var batchBytes = 0;
                         (fileList || []).forEach(function (file) {
                             var rawFile = file.raw || file;
-                            if (!rawFile || !rawFile.size) throw new Error('存在无法读取的文件，请重新选择。');
+                            if (!rawFile || !rawFile.size) throw new Error(ncfST('Frontend.248'));
                             if (typeof self.validateUploadFile === 'function') {
                                 var reason = self.validateUploadFile(file.name || rawFile.name, rawFile.size);
                                 if (reason) throw new Error(reason);
                             } else if (rawFile.size > maxBytes) {
-                                throw new Error('文件“' + file.name + '”超过 ' + maxMb + ' MB，无法上传。');
+                                throw new Error(ncfST('Frontend.218', file.name, maxMb));
                             }
                             if (batch.length && (batch.length >= maxFilesPerUpload || batchBytes + rawFile.size > maxTotalUploadBytes)) {
                                 batches.push(batch);
