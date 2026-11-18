@@ -246,7 +246,7 @@ var AgentsAppMethodsManage = {
             if (res.data.success) {
               this.$message({
                 type: 'success',
-                message: '删除成功!'
+                message: ncfST('Frontend.229')
               })
               if (closeEditor) {
                 this.visible.drawerAgent = false
@@ -268,7 +268,7 @@ var AgentsAppMethodsManage = {
         })
       }).catch(() => {
         app.$message({
-          message: '删除预检查失败，请稍后重试',
+          message: ncfST('Frontend.230'),
           type: 'error',
           duration: 5 * 1000
         })
@@ -924,7 +924,7 @@ var AgentsAppMethodsManage = {
 
       const serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.StartBatch'
       // operation confirmation prompt
-      this.$confirm('确认批量启动数据吗？', ncfST('Frontend.528'), {
+      this.$confirm(ncfST('Frontend.235'), ncfST('Frontend.528'), {
         dangerouslyUseHTMLString: true, //Legacy comment translated to English.
         confirmButtonText: ncfST('Frontend.172'),
         cancelButtonText: ncfST('Studio.Cancel'),
@@ -1081,7 +1081,7 @@ var AgentsAppMethodsManage = {
       }
       const selectedIds = (selectedRows || []).map(task => task.id).filter(Boolean)
       if (!selectedIds.length) {
-        this.$message.warning('请先选择要停止的任务')
+        this.$message.warning(ncfST('Frontend.238'))
         return
       }
       const serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.ForceStopBatch'
@@ -1553,7 +1553,7 @@ var AgentsAppMethodsManage = {
       }
 
       const copied = await copyTextForEmbeddedBrowser(text)
-      this.$message[copied ? 'success' : 'error'](copied ? '复制成功' : '复制失败')
+      this.$message[copied ? 'success' : 'error'](copied ? ncfST('Frontend.179') : ncfST('Frontend.180'))
       return copied
     },
 };
