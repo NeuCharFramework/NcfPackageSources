@@ -1,20 +1,20 @@
 ﻿@page
 @model Senparc.Xncf.DynamicData.Areas.DynamicData.Pages.Index
 @{
-    ViewData["Title"] = "DynamicData 首页";
+    ViewData["Title"] = XR["Frontend.259"];
     Layout = "_Layout_Vue";
 }
 
 @section breadcrumbs{
-    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
-    <el-breadcrumb-item>动态数据基础模块</el-breadcrumb-item>
-    <el-breadcrumb-item>首页</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.Extensions"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Module.DynamicData.MenuName"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.Home"]</el-breadcrumb-item>
 }
 
 <div>
     <el-container>
         <el-header class="module-header">
-            <span class="start-title"> <i class="fa fa-dot-circle-o"></i>&nbsp;<span class="module-header-v">首页</span></span>
+            <span class="start-title"> <i class="fa fa-dot-circle-o"></i>&nbsp;<span class="module-header-v">{{ ncfST('Area.Home') }}</span></span>
         </el-header>
 
         <!-- A SideMenu can also be added here -->
@@ -28,7 +28,7 @@
             <h3>@Model.XncfRegister.MenuName / @Model.XncfRegister.Name</h3>
             <h4>@Model.XncfRegister.Description</h4>
             <br />
-            <i>当前模块为自动生成模块</i>
+            <i>{{ ncfST('Frontend.069') }}</i>
         </el-main>
     </el-container>
 </div>

@@ -107,8 +107,8 @@ var app = new Vue({
             for (let i = 0; i < 10; i++) {
                 simulationData.push({
                     id: i + 1,
-                    name: '设备管理证书（spot_checkasd）',
-                    description: '绑定数据表1，绑定数据表2，绑定数据表3绑定数据表1，绑定数据表2，绑定数据表3绑定数据表1，绑定数据表2，绑定数据表3',
+                    name: 'Device management certificate (spot_checkasd)',
+                    description: 'Bind data table 1, data table 2, and data table 3.',
                     operationVisible: false
                 })
             }
@@ -123,17 +123,17 @@ var app = new Vue({
             for (let i = 0; i < 5; i++) {
                 simulationData.push({
                     id: i + 1,
-                    name: '测试名称1',
+                    name: 'Test name 1',
                     identificationId: '4654645646',
-                    dataType: '类型文本',
-                    format: '格式文本',
+                    dataType: 'Text type',
+                    format: 'Text format',
                     minLen: '1',
                     maxLen: '30',
                     requir: false,
                     primaryKey: false,
-                    event: '事件文本',
+                    event: 'Event text',
                     color: '#000',
-                    description: '描述文本'
+                    description: 'Description text'
                 })
             }
             this.tableFieldList = simulationData
