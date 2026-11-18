@@ -94,13 +94,13 @@ var AgentsAppMethodsManage = {
         serviceURL = `/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.Enable?id=${itemData.id}&enable=${!itemData.enable}`
 
         if (itemData.enable) {
-          messageText = `<div>是否确认将${itemData.name}智能体停用？</div><div>此智能体将不会参与后续新任务</div>`
+          messageText = `<div>${ncfST('Frontend.212', itemData.name)}</div><div>${ncfST('Frontend.213')}</div>`
         } else {
-          messageText = `<div>是否确认将${itemData.name}智能体启用？</div>`
+          messageText = `<div>${ncfST('Frontend.214', itemData.name)}</div>`
         }
       }
       if (stateType === 'delete') {
-        messageText = `<div>是否确认从${item.name}组退出？</div><div>移除出后将无法看到之前参与的任务记录</div>`
+        messageText = `<div>${ncfST('Frontend.215', item.name)}</div><div>${ncfST('Frontend.216')}</div>`
       }
       if (!serviceURL) return
       this.$confirm(messageText, ncfST('Frontend.528'), {
