@@ -1132,25 +1132,25 @@ var AgentsAppMethodsManage = {
     },
     taskHumanInTheLoopLevelText(value) {
       return {
-        0: 'L0 全自动',
-        1: 'L1 风险分层',
-        2: 'L2 工具审批',
-        3: 'L3 Human 参与者 + 工具审批'
-      }[Number(value)] || `未知（${value}）`
+        0: ncfST('Frontend.345'),
+        1: ncfST('Frontend.346'),
+        2: ncfST('Frontend.347'),
+        3: ncfST('Frontend.348')
+      }[Number(value)] || ncfST('Frontend.555')
     },
     taskToolPermissionText(value) {
       return {
-        0: '继承 HIL 等级',
-        1: '自动执行',
-        2: '执行前审批',
-        3: '禁止使用'
-      }[Number(value)] || `未知（${value}）`
+        0: ncfST('Frontend.468'),
+        1: ncfST('Frontend.470'),
+        2: ncfST('Frontend.412'),
+        3: ncfST('Frontend.455')
+      }[Number(value)] || ncfST('Frontend.555')
     },
     taskHumanParticipantStatusText(task) {
       if (!task?.executionPolicyCaptured) {
-        return '历史任务未记录'
+        return ncfST('Frontend.444')
       }
-      return task.includeHumanParticipant ? '已加入本任务' : '本任务未启用'
+      return task.includeHumanParticipant ? ncfST('Frontend.140') : ncfST('Frontend.501')
     },
     taskDescriptionCopyText() {
       const detail = this.taskDescriptionDetails || {}
@@ -1161,14 +1161,14 @@ var AgentsAppMethodsManage = {
       return [
         this.describeContent,
         '',
-        '--- 执行策略 ---',
-        `HIL 等级：${this.taskHumanInTheLoopLevelText(detail.humanInTheLoopLevel)}`,
-        `插件工具权限：${this.taskToolPermissionText(detail.pluginToolPermission)}`,
-        `MCP 工具权限：${this.taskToolPermissionText(detail.mcpToolPermission)}`,
-        `Human 参与者：${detail.includeHumanParticipant ? '包含' : '跳过'}`,
-        `最大对话轮数：${Number(detail.chatMaxRound || 0)}`,
-        `个性化参数：${detail.isPersonality ? '启用' : '关闭'}`,
-        `兼容强制审批：${detail.requireHumanApproval ? '启用' : '关闭'}`
+        `--- ${ncfST('Frontend.440')} ---`,
+        `${ncfST('Frontend.341')}：${this.taskHumanInTheLoopLevelText(detail.humanInTheLoopLevel)}`,
+        `${ncfST('Frontend.419')}：${this.taskToolPermissionText(detail.pluginToolPermission)}`,
+        `${ncfST('Frontend.349')}：${this.taskToolPermissionText(detail.mcpToolPermission)}`,
+        `${ncfST('Frontend.343')}：${detail.includeHumanParticipant ? ncfST('Frontend.140') : ncfST('Frontend.501')}`,
+        `${ncfST('Frontend.432')}：${Number(detail.chatMaxRound || 0)}`,
+        `${ncfST('Frontend.354')}：${detail.isPersonality ? ncfST('Frontend.502') : ncfST('Frontend.501')}`,
+        `${ncfST('Frontend.376')}：${detail.requireHumanApproval ? ncfST('Frontend.502') : ncfST('Frontend.501')}`
       ].join('\n')
     },
     //Legacy comment translated to English.
