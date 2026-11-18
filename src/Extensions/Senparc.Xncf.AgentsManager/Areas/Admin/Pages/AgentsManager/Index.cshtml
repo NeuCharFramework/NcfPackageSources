@@ -2421,7 +2421,7 @@
     </div>
 </el-dialog>
 @* Agent parameter carousel dialog. *@
-<el-dialog title="智能体参数" :visible.sync="visible.dialogAgentParameter" :show-close="false" :close-on-click-modal="false"
+<el-dialog :title="ncfST('Frontend.062')" :visible.sync="visible.dialogAgentParameter" :show-close="false" :close-on-click-modal="false"
     :close-on-press-escape="false" width="80%">
     <div class="dialog-agentParameters">
         <el-tabs v-model="agentParameterTabsValue">
@@ -2440,26 +2440,26 @@
                                 </div>
                             </div>
                             <div class="agentParameters-head-actions">
-                                <el-tag v-if="item.agentKind === 'RemoteA2A'" type="warning" size="mini">远程 A2A</el-tag>
+                                <el-tag v-if="item.agentKind === 'RemoteA2A'" type="warning" size="mini">{{ ncfST('Frontend.482') }}</el-tag>
                                 <el-button v-else-if="item.id" type="primary" plain size="mini" icon="el-icon-edit"
-                                    @@click="openAgentParameterEditor(item)">快速编辑</el-button>
+                                    @@click="openAgentParameterEditor(item)">{{ ncfST('Frontend.408') }}</el-button>
                             </div>
                         </div>
                         <div class="df-wn flex-dc flex-jsb headitem">
                             <div class="df-wn flex-ac flex-js itemBox">
-                                <span class="label">靶场:</span>
+                                <span class="label">{{ ncfST('Frontend.035') }}</span>
                                 <span class="value">
                                     {{ handlePromptShowName('1',item) }}
                                 </span>
                             </div>
                             <div class="df-wn flex-ac flex-js itemBox">
-                                <span class="label">靶道:</span>
+                                <span class="label">{{ ncfST('Frontend.036') }}</span>
                                 <span class="value">
                                     {{ handlePromptShowName('2',item) }}
                                 </span>
                             </div>
                             <div class="df-wn flex-ac flex-js itemBox">
-                                <span class="label">模型:</span>
+                                <span class="label">{{ ncfST('Frontend.038') }}</span>
                                 <span class="value">{{ item.aiModelDto ? item.aiModelDto.deploymentName : '' }}</span>
                             </div>
                         </div>
@@ -2505,23 +2505,23 @@
                         <div class="prompt-title">
                             <div>
                                 <img src="~/images/AgentsManager/prompt_selectPrompt.svg" alt="" style="width: 15px;height:15px;" />
-                                <span class="label">靶场:</span>
+                                <span class="label">{{ ncfST('Frontend.035') }}</span>
                                 <span class="value">{{ item.promptRangeDto ? item.promptRangeDto.alias : '--' }}</span>
                             </div>
                             <div>
-                                <span class="label">靶道:</span>
+                                <span class="label">{{ ncfST('Frontend.036') }}</span>
                                 <span class="value">{{ item.promptItemDto ? item.promptItemDto.fullVersion : '--' }}</span>
                             </div>
                             <div>
-                                <span class="label">瞄准:</span>
+                                <span class="label">{{ ncfST('Frontend.193') }}</span>
                                 <span class="value">{{ item.promptItemDto ? (item.promptItemDto.nickName || '--') : '--' }}</span>
                             </div>
                             <div>
-                                <span class="label">平均分:</span>
+                                <span class="label">{{ ncfST('Frontend.194') }}</span>
                                 <span class="value">{{ item.promptItemDto ? scoreFormatter(item.promptItemDto.evalAvgScore) : '--' }}</span>
                             </div>
                             <div>
-                                <span class="label">最高分:</span>
+                                <span class="label">{{ ncfST('Frontend.195') }}</span>
                                 <span class="value">{{ item.promptItemDto ? scoreFormatter(item.promptItemDto.evalMaxScore) : '--' }}</span>
                             </div>
                         </div>
@@ -2530,11 +2530,11 @@
                             <div v-for="(oitem,oindex) in item.outputList" :key="oitem.id" class="contentBoxItem">
                     <div class="promptResult_Item_Title">
                         <div class="promptReultTimeArea">
-                            <span>{{oitem.addTime}} [耗时(毫秒):{{oitem.costTime}}]</span>
+                            <span>{{oitem.addTime}} [{{ ncfST('Frontend.196') }}{{oitem.costTime}}]</span>
                         </div>
                         <div class="copyButtonArea">
-                            <a href="javascript:void(0);" @@click="copyText('2',oitem)" title="复制带格式的 HTML 代码"><i class="fa fa-copy"></i> HTML</a>
-                            <a href="javascript:void(0);" @@click="copyText('1',oitem)" title="复制原始内容（例如将复制 markdown 标记）"><i class="fa fa-copy"></i> 原始</a>
+                            <a href="javascript:void(0);" @@click="copyText('2',oitem)" :title="ncfST('Frontend.197')"><i class="fa fa-copy"></i> HTML</a>
+                            <a href="javascript:void(0);" @@click="copyText('1',oitem)" :title="ncfST('Frontend.198')"><i class="fa fa-copy"></i> {{ ncfST('Frontend.199') }}</a>
                         </div>
                     </div>
                     <task-html-renderer class="contentRow" :content="oitem.resultStringHtml" />
@@ -2546,7 +2546,7 @@
         </el-tabs>
     </div>
     <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @@click="handleElVisibleClose('dialogAgentParameter')">关 闭</el-button>
+        <el-button type="primary" @@click="handleElVisibleClose('dialogAgentParameter')">{{ ncfST('Frontend.200') }}</el-button>
     </div>
 </el-dialog>
 @* Task description dialog. *@
