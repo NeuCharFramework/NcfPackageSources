@@ -271,4 +271,14 @@
   <data name="Frontend.125" xml:space="preserve"><value>Durée maximale d’une commande : 30 secondes par défaut, 120 secondes au maximum.</value></data>
   <data name="Frontend.126" xml:space="preserve"><value>Entrée standard</value></data>
   <data name="Frontend.127" xml:space="preserve"><value>Facultatif ; si elle est fournie, la commande utilise docker exec -i et le contenu est écrit ligne par ligne dans stdin, jusqu’à 32768 caractères.</value></data>
+  <data name="Parameter.Sandbox.RelativePath" xml:space="preserve"><value>Chemin du fichier de l’espace de travail</value></data>
+  <data name="Parameter.Sandbox.RelativePath.Help" xml:space="preserve"><value>Seul un chemin relatif dans l’espace est autorisé, par exemple data/input.json.</value></data>
+  <data name="Parameter.Sandbox.Base64" xml:space="preserve"><value>Contenu Base64</value></data>
+  <data name="Parameter.Sandbox.Base64.Help" xml:space="preserve"><value>Contenu du fichier encodé en Base64 ; chaque fichier peut atteindre environ 3 Mo au maximum.</value></data>
+  <data name="Parameter.Sandbox.Overwrite" xml:space="preserve"><value>Écraser le fichier existant</value></data>
+  <data name="Parameter.Sandbox.Overwrite.Help" xml:space="preserve"><value>Si cette option est désactivée, l’opération échoue lorsque la cible existe.</value></data>
+  <data name="Parameter.Sandbox.RelativeDirectory" xml:space="preserve"><value>Répertoire de l’espace de travail</value></data>
+  <data name="Parameter.Sandbox.RelativeDirectory.Help" xml:space="preserve"><value>Les fichiers sont écrits avec leur nom d’origine dans ce répertoire ; laissez vide pour la racine.</value></data>
+  <data name="Parameter.Sandbox.Files" xml:space="preserve"><value>Fichiers</value></data>
+  <data name="Parameter.Sandbox.Files.Help" xml:space="preserve"><value>Plusieurs fichiers peuvent être téléversés à la fois ; leur contenu est transmis par des références sécurisées.</value></data>
 </root>

@@ -271,4 +271,14 @@
   <data name="Frontend.125" xml:space="preserve"><value>单次命令最长执行时间，默认 30 秒，最多 120 秒</value></data>
   <data name="Frontend.126" xml:space="preserve"><value>标准输入</value></data>
   <data name="Frontend.127" xml:space="preserve"><value>可选；填写后命令以 docker exec -i 执行，该内容会逐行写入程序 stdin，最长 32768 个字符</value></data>
+  <data name="Parameter.Sandbox.RelativePath" xml:space="preserve"><value>工作区文件路径</value></data>
+  <data name="Parameter.Sandbox.RelativePath.Help" xml:space="preserve"><value>只能填写工作区内的相对路径，例如 data/input.json。</value></data>
+  <data name="Parameter.Sandbox.Base64" xml:space="preserve"><value>Base64 内容</value></data>
+  <data name="Parameter.Sandbox.Base64.Help" xml:space="preserve"><value>文件内容经过 Base64 编码，单个文件最多约 3 MB。</value></data>
+  <data name="Parameter.Sandbox.Overwrite" xml:space="preserve"><value>覆盖已有文件</value></data>
+  <data name="Parameter.Sandbox.Overwrite.Help" xml:space="preserve"><value>关闭后，目标文件存在时操作失败。</value></data>
+  <data name="Parameter.Sandbox.RelativeDirectory" xml:space="preserve"><value>工作区目录</value></data>
+  <data name="Parameter.Sandbox.RelativeDirectory.Help" xml:space="preserve"><value>文件将以原始文件名写入该目录，留空表示工作区根目录。</value></data>
+  <data name="Parameter.Sandbox.Files" xml:space="preserve"><value>文件</value></data>
+  <data name="Parameter.Sandbox.Files.Help" xml:space="preserve"><value>可一次上传多个文件；文件内容通过安全文件引用传递。</value></data>
 </root>

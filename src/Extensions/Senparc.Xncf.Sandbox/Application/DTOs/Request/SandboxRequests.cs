@@ -146,15 +146,15 @@ public class Sandbox_LabUploadFileRequest : FunctionAppRequestBase
 
     [Required]
     [MaxLength(512)]
-    [Description("工作区文件路径||只能填写工作区内的相对路径，例如 data/input.json")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.RelativePath", "Parameter.Sandbox.RelativePath.Help")]
     public string RelativePath { get; set; } = string.Empty;
 
     [Required]
     [MaxLength(4_194_304)]
-    [Description("Base64 内容||文件内容经过 Base64 编码，单个文件最多约 3 MB")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.Base64", "Parameter.Sandbox.Base64.Help")]
     public string ContentBase64 { get; set; } = string.Empty;
 
-    [Description("覆盖已有文件||关闭后，目标文件存在时操作失败")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.Overwrite", "Parameter.Sandbox.Overwrite.Help")]
     public bool Overwrite { get; set; } = true;
 }
 
@@ -166,12 +166,12 @@ public class Sandbox_LabUploadFilesRequest : FunctionAppRequestBase
     public string SessionId { get; set; } = string.Empty;
 
     [MaxLength(512)]
-    [Description("工作区目录||文件将以原始文件名写入该目录，留空表示工作区根目录")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.RelativeDirectory", "Parameter.Sandbox.RelativeDirectory.Help")]
     public string RelativeDirectory { get; set; } = string.Empty;
 
     [Required]
     [FunctionParameterUi(ParameterType.File, AllowMultiple = true, MaxFiles = 16)]
-    [Description("文件||可一次上传多个文件；文件内容通过安全文件引用传递")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.Files", "Parameter.Sandbox.Files.Help")]
     public FunctionFileReference[] Files { get; set; } = Array.Empty<FunctionFileReference>();
 
     [Description("覆盖已有文件||关闭后，目标文件存在时操作失败")]

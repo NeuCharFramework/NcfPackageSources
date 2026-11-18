@@ -271,4 +271,14 @@
   <data name="Frontend.125" xml:space="preserve"><value>Maximum duration of one command; 30 seconds by default and 120 seconds maximum.</value></data>
   <data name="Frontend.126" xml:space="preserve"><value>Standard input</value></data>
   <data name="Frontend.127" xml:space="preserve"><value>Optional; when provided, the command runs with docker exec -i and the content is written line by line to stdin, up to 32768 characters.</value></data>
+  <data name="Parameter.Sandbox.RelativePath" xml:space="preserve"><value>Workspace file path</value></data>
+  <data name="Parameter.Sandbox.RelativePath.Help" xml:space="preserve"><value>Only a relative path inside the workspace is allowed, for example data/input.json.</value></data>
+  <data name="Parameter.Sandbox.Base64" xml:space="preserve"><value>Base64 content</value></data>
+  <data name="Parameter.Sandbox.Base64.Help" xml:space="preserve"><value>File content encoded as Base64; one file may be approximately 3 MB at most.</value></data>
+  <data name="Parameter.Sandbox.Overwrite" xml:space="preserve"><value>Overwrite existing file</value></data>
+  <data name="Parameter.Sandbox.Overwrite.Help" xml:space="preserve"><value>When disabled, the operation fails if the target file exists.</value></data>
+  <data name="Parameter.Sandbox.RelativeDirectory" xml:space="preserve"><value>Workspace directory</value></data>
+  <data name="Parameter.Sandbox.RelativeDirectory.Help" xml:space="preserve"><value>Files are written using their original names in this directory; leave empty for the workspace root.</value></data>
+  <data name="Parameter.Sandbox.Files" xml:space="preserve"><value>Files</value></data>
+  <data name="Parameter.Sandbox.Files.Help" xml:space="preserve"><value>Multiple files can be uploaded at once; file content is passed through secure file references.</value></data>
 </root>

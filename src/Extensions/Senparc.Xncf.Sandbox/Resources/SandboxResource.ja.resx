@@ -271,4 +271,14 @@
   <data name="Frontend.125" xml:space="preserve"><value>1 回のコマンドの最大実行時間。既定 30 秒、最大 120 秒です。</value></data>
   <data name="Frontend.126" xml:space="preserve"><value>標準入力</value></data>
   <data name="Frontend.127" xml:space="preserve"><value>任意。指定すると docker exec -i で実行し、内容を 1 行ずつ stdin に書き込みます。最大 32768 文字です。</value></data>
+  <data name="Parameter.Sandbox.RelativePath" xml:space="preserve"><value>ワークスペースファイルパス</value></data>
+  <data name="Parameter.Sandbox.RelativePath.Help" xml:space="preserve"><value>ワークスペース内の相対パスだけを指定できます。例：data/input.json。</value></data>
+  <data name="Parameter.Sandbox.Base64" xml:space="preserve"><value>Base64 内容</value></data>
+  <data name="Parameter.Sandbox.Base64.Help" xml:space="preserve"><value>Base64 エンコードされたファイル内容です。1 ファイルは約 3 MB までです。</value></data>
+  <data name="Parameter.Sandbox.Overwrite" xml:space="preserve"><value>既存ファイルを上書き</value></data>
+  <data name="Parameter.Sandbox.Overwrite.Help" xml:space="preserve"><value>無効にすると、対象ファイルが存在する場合に失敗します。</value></data>
+  <data name="Parameter.Sandbox.RelativeDirectory" xml:space="preserve"><value>ワークスペースディレクトリ</value></data>
+  <data name="Parameter.Sandbox.RelativeDirectory.Help" xml:space="preserve"><value>元のファイル名でこのディレクトリに書き込みます。空欄ならワークスペースのルートです。</value></data>
+  <data name="Parameter.Sandbox.Files" xml:space="preserve"><value>ファイル</value></data>
+  <data name="Parameter.Sandbox.Files.Help" xml:space="preserve"><value>複数ファイルを一度にアップロードできます。内容は安全なファイル参照で渡されます。</value></data>
 </root>
