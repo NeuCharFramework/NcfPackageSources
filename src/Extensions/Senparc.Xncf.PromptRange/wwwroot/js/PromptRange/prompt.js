@@ -4779,7 +4779,7 @@ var app = new Vue({
             if (!isInitialized) {
                 //Legacy comment translated to English.
                 this.$message({
-                    message: '🚀 首次使用需要初始化 PromptCatalyzer，正在加载可用的 AI Model...',
+                    message: ncfST('Frontend.246'),
                     type: 'info',
                     duration: 3000
                 });
@@ -4835,7 +4835,7 @@ var app = new Vue({
                 return;
             }
             if (!this.promptid) {
-                this.$message.warning('请先选择一个Prompt！');
+                this.$message.warning(ncfST('Frontend.284'));
                 return;
             }
             
@@ -4897,9 +4897,9 @@ var app = new Vue({
                 );
 
                 if (response.data && response.data.success === false) {
-                    const topErr = response.data.errorMessage || response.data.message || '请求失败';
+                    const topErr = response.data.errorMessage || response.data.message || ncfST('Frontend.273');
                     this.optimizeErrorText = String(topErr);
-                    this.$message.error('优化失败：' + topErr);
+                    this.$message.error(ncfST('Frontend.237') + '：' + topErr);
                     return;
                 }
 
@@ -4908,7 +4908,7 @@ var app = new Vue({
                     if (!optimizeResult.success) {
                         const err = optimizeResult.errorMessage || optimizeResult.evaluationReason || '优化未成功';
                         this.optimizeErrorText = String(err);
-                        this.$message.error('优化失败：' + err);
+                        this.$message.error(ncfST('Frontend.237') + '：' + err);
                         return;
                     }
 
@@ -4923,7 +4923,7 @@ var app = new Vue({
                         p.label === code ||
                         (p.label && code && p.label.indexOf(code) >= 0));
                     if (!newPrompt) {
-                        const w = '已创建新版本，但未在列表中匹配到 Prompt Code：' + code;
+                        const w = ncfST('Frontend.357') + '：' + code;
                         this.optimizeErrorText = w;
                         this.$message.warning(w);
                         this.optimizeDialogVisible = false;
@@ -5011,7 +5011,7 @@ var app = new Vue({
                 } else {
                     const errorMsg = response.data?.errorMessage || ncfST('Frontend.357');
                     this.optimizeErrorText = String(errorMsg);
-                    this.$message.error('优化失败：' + errorMsg);
+                    this.$message.error(ncfST('Frontend.237') + '：' + errorMsg);
                 }
             } catch (error) {
                 console.error('优化失败:', error);
@@ -5024,7 +5024,7 @@ var app = new Vue({
                 }
                 this.optimizeErrorText = detail;
                 this.$message({
-                    message: '❌ 优化失败: ' + (resp?.errorMessage || resp?.message || error.message),
+                    message: '❌ ' + ncfST('Frontend.237') + ': ' + (resp?.errorMessage || resp?.message || error.message),
                     type: 'error',
                     duration: 8000,
                     showClose: true
