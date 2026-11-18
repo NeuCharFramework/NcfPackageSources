@@ -1739,4 +1739,6 @@
   <data name="Error.Workflow.Unknown" xml:space="preserve"><value>Erreur inconnue</value></data>
   <data name="Frontend.580" xml:space="preserve"><value>Plus d'actions</value></data>
   <data name="Frontend.581" xml:space="preserve"><value>Après liaison, la récupération RAG est exécutée avant les appels au modèle ; en cas d'échec, le recours au modèle reste disponible.</value></data>
+  <data name="Frontend.582" xml:space="preserve"><value>Enregistrer la configuration uniquement</value></data>
+  <data name="Frontend.583" xml:space="preserve"><value>Désactivé par défaut pour la sécurité</value></data>
 </root>

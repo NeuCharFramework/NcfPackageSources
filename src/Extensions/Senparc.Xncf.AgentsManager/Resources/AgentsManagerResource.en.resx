@@ -1739,4 +1739,6 @@
   <data name="Error.Workflow.Unknown" xml:space="preserve"><value>Unknown error</value></data>
   <data name="Frontend.580" xml:space="preserve"><value>More actions</value></data>
   <data name="Frontend.581" xml:space="preserve"><value>After binding, RAG retrieval runs before model calls; model fallback remains available if retrieval fails.</value></data>
+  <data name="Frontend.582" xml:space="preserve"><value>Save configuration only</value></data>
+  <data name="Frontend.583" xml:space="preserve"><value>Secure default: off</value></data>
 </root>

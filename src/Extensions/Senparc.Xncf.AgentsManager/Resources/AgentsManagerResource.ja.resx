@@ -1739,4 +1739,6 @@
   <data name="Error.Workflow.Unknown" xml:space="preserve"><value>不明なエラー</value></data>
   <data name="Frontend.580" xml:space="preserve"><value>その他の操作</value></data>
   <data name="Frontend.581" xml:space="preserve"><value>バインド後はモデル呼び出し前に RAG 検索を優先して実行し、検索に失敗した場合はモデルのフォールバックを維持します。</value></data>
+  <data name="Frontend.582" xml:space="preserve"><value>設定のみ保存</value></data>
+  <data name="Frontend.583" xml:space="preserve"><value>安全のため既定で無効</value></data>
 </root>

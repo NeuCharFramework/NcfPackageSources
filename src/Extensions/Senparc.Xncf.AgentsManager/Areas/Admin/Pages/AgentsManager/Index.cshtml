@@ -2671,69 +2671,69 @@
     </div>
 </el-dialog>
 @* Publish the local Agent as a standard A2A service dialog. *@
-<el-dialog title="发布本地 Agent 为 A2A 服务" :visible.sync="visible.dialogPublishedA2A" width="720px"
+<el-dialog :title="ncfST('Frontend.384')" :visible.sync="visible.dialogPublishedA2A" width="720px"
     :show-close="false" :close-on-click-modal="false" :close-on-press-escape="false">
-    <el-alert type="warning" :closable="false" title="A2A Agent Card 仅公开名称、描述和技能；不会公开 Prompt、密钥或内部工具信息。" show-icon></el-alert>
+    <el-alert type="warning" :closable="false" :title="ncfST('Frontend.332')" show-icon></el-alert>
     <el-alert v-if="publishedA2AForm.enable" type="warning" :closable="false" show-icon style="margin-top:12px;"
-        title="对外服务已启用：通过鉴权的外部系统可以调用此 Agent。请确认 Prompt、知识库和回复内容均允许对外共享，并通过 HTTPS、网关限流和监控控制调用范围与模型成本。"></el-alert>
+        :title="ncfST('Frontend.397')"></el-alert>
     <el-alert v-if="publishedA2AForm.enable && publishedA2AForm.authenticationMode === 0" type="error" :closable="false" show-icon style="margin-top:12px;"
-        title="当前未启用入站鉴权。请仅在隔离、受控网络中使用；公网或跨组织调用必须改用 Bearer Token 或自定义请求头。"></el-alert>
+        :title="ncfST('Frontend.406')"></el-alert>
     <el-alert v-if="publishedA2AForm.enable && publishedA2AForm.allowFunctionCalls" type="error" :closable="false" show-icon style="margin-top:12px;"
-        title="本地工具调用已开放。外部请求可能间接触发 Function / MCP 的读写或外部访问；请只开放最小权限工具并仅信任明确的调用方。"></el-alert>
+        :title="ncfST('Frontend.495')"></el-alert>
     <el-form v-if="visible.dialogPublishedA2A" ref="publishedA2AELForm" :model="publishedA2AForm" :rules="publishedA2AFormRules"
         :size="elSize" label-position="left" label-width="150px" style="margin-top:20px;">
-        <el-form-item label="启用对外服务">
-            <el-switch v-model="publishedA2AForm.enable" active-text="允许 A2A 调用" inactive-text="仅保存配置"></el-switch>
+        <el-form-item :label="ncfST('Frontend.392')">
+            <el-switch v-model="publishedA2AForm.enable" :active-text="ncfST('Frontend.515')" :inactive-text="ncfST('Frontend.582')"></el-switch>
         </el-form-item>
-        <el-form-item label="公开标识" prop="publicAgentKey">
+        <el-form-item :label="ncfST('Frontend.374')" prop="publicAgentKey">
             <el-input v-model="publishedA2AForm.publicAgentKey" placeholder="例如 research-agent"></el-input>
-            <div class="form-help-text">只允许小写字母、数字和连字符；地址在启用后保持稳定。</div>
+            <div class="form-help-text">{{ ncfST('Frontend.385') }}</div>
         </el-form-item>
-        <el-form-item label="Agent Card 名称">
-            <el-input v-model="publishedA2AForm.cardName" placeholder="留空则使用本地 Agent 名称"></el-input>
+        <el-form-item :label="ncfST('Frontend.337')">
+            <el-input v-model="publishedA2AForm.cardName" :placeholder="ncfST('Frontend.454')"></el-input>
         </el-form-item>
-        <el-form-item label="公开描述">
-            <el-input type="textarea" v-model="publishedA2AForm.cardDescription" :rows="3" placeholder="供远程系统选择 Agent 使用；不要填写 Prompt 或内部信息"></el-input>
+        <el-form-item :label="ncfST('Frontend.373')">
+            <el-input type="textarea" v-model="publishedA2AForm.cardDescription" :rows="3" :placeholder="ncfST('Frontend.368')"></el-input>
         </el-form-item>
-        <el-form-item label="技能标识 / 名称">
+        <el-form-item label="Skill ID / name">
             <div style="display:flex;gap:8px;">
                 <el-input v-model="publishedA2AForm.skillId" placeholder="chat" style="width:35%;"></el-input>
-                <el-input v-model="publishedA2AForm.skillName" placeholder="留空则使用 Card 名称"></el-input>
+                <el-input v-model="publishedA2AForm.skillName" :placeholder="ncfST('Frontend.452')"></el-input>
             </div>
         </el-form-item>
-        <el-form-item label="技能公开描述">
-            <el-input type="textarea" v-model="publishedA2AForm.skillDescription" :rows="2" placeholder="留空则使用公开描述"></el-input>
+        <el-form-item label="Skill description">
+            <el-input type="textarea" v-model="publishedA2AForm.skillDescription" :rows="2" :placeholder="ncfST('Frontend.453')"></el-input>
         </el-form-item>
-        <el-form-item label="入站鉴权">
+        <el-form-item :label="ncfST('Frontend.372')">
             <el-select v-model="publishedA2AForm.authenticationMode" style="width:100%;">
-                <el-option label="无（仅适合受控网络）" :value="0"></el-option>
+                <el-option label="None (controlled networks only)" :value="0"></el-option>
                 <el-option label="Bearer Token" :value="1"></el-option>
-                <el-option label="自定义请求头" :value="2"></el-option>
+                <el-option :label="ncfST('Frontend.471')" :value="2"></el-option>
             </el-select>
         </el-form-item>
-        <el-form-item v-if="publishedA2AForm.authenticationMode === 2" label="请求头名称">
+        <el-form-item v-if="publishedA2AForm.authenticationMode === 2" label="Request header name">
             <el-input v-model="publishedA2AForm.authHeaderName" placeholder="例如 X-A2A-Token"></el-input>
         </el-form-item>
-        <el-form-item v-if="publishedA2AForm.authenticationMode !== 0" label="部署密钥名">
+        <el-form-item v-if="publishedA2AForm.authenticationMode !== 0" :label="ncfST('Frontend.489')">
             <el-input v-model="publishedA2AForm.authSecretKey" placeholder="例如 partner-ncf"></el-input>
-            <div class="form-help-text">令牌正文请部署在 A2A:InboundSecrets:{{ publishedA2AForm.authSecretKey || '密钥名' }}，不会保存到数据库。</div>
+            <div class="form-help-text">{{ ncfST('Frontend.355') }} A2A:InboundSecrets:{{ publishedA2AForm.authSecretKey || 'secret-name' }}.</div>
         </el-form-item>
-        <el-form-item label="最大输入字符数">
+        <el-form-item :label="ncfST('Frontend.492')">
             <el-input-number v-model="publishedA2AForm.maxInputCharacters" :min="512" :max="100000" :step="1000"></el-input-number>
         </el-form-item>
-        <el-form-item label="允许本地工具调用">
-            <el-switch v-model="publishedA2AForm.allowFunctionCalls" active-text="显式允许" inactive-text="安全默认关闭"></el-switch>
-            <div class="form-help-text" style="color:#d97706;">开启后，外部请求可能间接触发该本地 Agent 已配置的 Function / MCP 工具，请只对受信任的调用方开放。</div>
+        <el-form-item :label="ncfST('Frontend.371')">
+            <el-switch v-model="publishedA2AForm.allowFunctionCalls" :active-text="ncfST('Frontend.516')" :inactive-text="ncfST('Frontend.583')"></el-switch>
+            <div class="form-help-text" style="color:#d97706;">{{ ncfST('Frontend.404') }}</div>
         </el-form-item>
-        <el-form-item v-if="publishedA2AForm.agentCardUrl" label="Agent Card 地址">
+        <el-form-item v-if="publishedA2AForm.agentCardUrl" :label="ncfST('Frontend.338')">
             <el-input :value="publishedA2AForm.agentCardUrl" readonly>
-                <el-button slot="append" icon="el-icon-document-copy" @@click="copyPublishedA2AUrl">复制</el-button>
+                <el-button slot="append" icon="el-icon-document-copy" @@click="copyPublishedA2AUrl">{{ ncfST('Frontend.394') }}</el-button>
             </el-input>
         </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-        <el-button @@click="closePublishedA2AEditor">关 闭</el-button>
-        <el-button type="primary" @@click="savePublishedA2A">保 存</el-button>
+        <el-button @@click="closePublishedA2AEditor">{{ ncfST('Frontend.091') }}</el-button>
+        <el-button type="primary" @@click="savePublishedA2A">{{ ncfST('Frontend.369') }}</el-button>
     </div>
 </el-dialog>
 @section scripts {

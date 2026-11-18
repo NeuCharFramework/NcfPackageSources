@@ -1165,4 +1165,6 @@
   <data name="Error.Workflow.Unknown" xml:space="preserve"><value>未知错误</value></data>
   <data name="Frontend.580" xml:space="preserve"><value>更多操作</value></data>
   <data name="Frontend.581" xml:space="preserve"><value>绑定后会在模型调用前优先执行 RAG 召回；召回失败时保留模型回退能力。</value></data>
+  <data name="Frontend.582" xml:space="preserve"><value>仅保存配置</value></data>
+  <data name="Frontend.583" xml:space="preserve"><value>安全默认关闭</value></data>
 </root>
