@@ -1758,4 +1758,5 @@
   <data name="Frontend.598" xml:space="preserve"><value>Cancelar</value></data>
   <data name="Frontend.599" xml:space="preserve"><value>Módulo no disponible</value></data>
   <data name="Frontend.600" xml:space="preserve"><value>Se puede llamar</value></data>
+  <data name="Frontend.601" xml:space="preserve"><value>Endpoint MCP añadido: {0}</value></data>
 </root>

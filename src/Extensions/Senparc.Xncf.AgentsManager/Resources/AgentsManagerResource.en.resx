@@ -1758,4 +1758,5 @@
   <data name="Frontend.598" xml:space="preserve"><value>Cancel</value></data>
   <data name="Frontend.599" xml:space="preserve"><value>Module unavailable</value></data>
   <data name="Frontend.600" xml:space="preserve"><value>Callable</value></data>
+  <data name="Frontend.601" xml:space="preserve"><value>MCP endpoint added: {0}</value></data>
 </root>

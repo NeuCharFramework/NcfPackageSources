@@ -236,7 +236,7 @@ var AgentsAppMethodsPluginMcp = {
           
           console.log('更新后的endpoint对象:', JSON.parse(JSON.stringify(endpoint)));
           
-          this.$message.success('连接测试成功');
+          this.$message.success(ncfST('Frontend.243'));
           
           //Legacy comment translated to English.
           if (tools && tools.length > 0) {
@@ -248,7 +248,7 @@ var AgentsAppMethodsPluginMcp = {
             message: response.data.errorMessage || '未知错误'
           };
           this.$set(endpoint, 'testResult', testResult);
-          this.$message.error('连接测试失败: ' + testResult.message);
+          this.$message.error(ncfST('Frontend.244') + ' ' + testResult.message);
         }
       } catch (error) {
         console.error('测试MCP连接出错:', error);
@@ -257,7 +257,7 @@ var AgentsAppMethodsPluginMcp = {
           message: error.message || '未知错误'
         };
         this.$set(endpoint, 'testResult', testResult);
-        this.$message.error('连接测试出错: ' + testResult.message);
+        this.$message.error(ncfST('Frontend.245') + ' ' + testResult.message);
       } finally {
         //Legacy comment translated to English.
         this.$set(endpoint, 'testing', false);
@@ -273,7 +273,7 @@ var AgentsAppMethodsPluginMcp = {
         }
       } catch (error) {
         console.error('获取插件类型失败:', error);
-        this.$message.error('获取插件类型失败');
+        this.$message.error(ncfST('Frontend.246'));
       }
     },
 
@@ -430,7 +430,7 @@ var AgentsAppMethodsPluginMcp = {
       const url = this.mcpEndpointUrlValue.trim();
       
       if (!name || !url) {
-        this.$message.warning('名称和URL不能为空');
+        this.$message.warning(ncfST('Frontend.247'));
         return;
       }
       
@@ -481,7 +481,7 @@ var AgentsAppMethodsPluginMcp = {
           '/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetMcpEndpointOptions');
         const data = response && response.data ? response.data : {};
         if (!data.success) {
-          this.mcpSelectMessage = data.errorMessage || '获取 MCP 列表失败';
+          this.mcpSelectMessage = data.errorMessage || ncfST('Frontend.246');
           return;
         }
         const result = data.data || {};
@@ -490,7 +490,7 @@ var AgentsAppMethodsPluginMcp = {
         this.mcpEndpointOptions = Array.isArray(result.options) ? result.options : [];
       } catch (error) {
         console.error('获取 MCP 列表失败:', error);
-        this.mcpSelectMessage = (error && error.message) || '获取 MCP 列表失败';
+        this.mcpSelectMessage = (error && error.message) || ncfST('Frontend.246');
       } finally {
         this.mcpSelectLoading = false;
       }
@@ -519,12 +519,12 @@ var AgentsAppMethodsPluginMcp = {
       
       if (selected) {
         if (!name || !url) {
-          this.$message.warning('该端点缺少名称或 URL，无法添加');
+        this.$message.warning(ncfST('Frontend.247'));
           return;
         }
         endpoints[name] = { url };
         this.agentForm.mcpEndpoints = JSON.stringify(endpoints);
-        this.$message.success('已添加 MCP 端点：' + name);
+        this.$message.success(ncfST('Frontend.601', name));
         return;
       }
       
@@ -571,7 +571,7 @@ var AgentsAppMethodsPluginMcp = {
       //Legacy comment translated to English.
       if (!endpoint) {
         console.error('endpoint参数为空');
-        this.$message.warning('endpoint参数为空');
+        this.$message.warning(ncfST('Frontend.248'));
         return;
       }
       
@@ -599,46 +599,46 @@ var AgentsAppMethodsPluginMcp = {
         }, 500);
       } else {
         console.warn('没有可用的工具信息', endpoint);
-        this.$message.warning('没有可用的工具信息');
+        this.$message.warning(ncfST('Frontend.249'));
       }
     },
 
     //Legacy comment translated to English.
     showMcpToolsAlert(tools) {
       if (!tools || !tools.length) {
-        this.$message.warning('没有可用的工具信息');
+        this.$message.warning(ncfST('Frontend.249'));
         return;
       }
       
       this.$alert(
         `<div>
-          <h3>工具列表 (${tools.length}个)</h3>
+          <h3>${ncfST('Frontend.250', tools.length)}</h3>
           <ul style="padding-left: 20px; text-align: left;">
             ${tools.map(tool => 
               `<li style="margin-bottom: 10px;">
                 <div style="font-weight: bold; color: #409EFF;">${tool.name}</div>
-                <div style="margin: 5px 0; color: #606266;">${tool.description || '无描述'}</div>
+                <div style="margin: 5px 0; color: #606266;">${tool.description || ncfST('Frontend.251')}</div>
                 ${tool.parameters && tool.parameters.length > 0 ? 
                   `<div style="margin-top: 5px;">
-                    <div style="font-weight: bold;">参数:</div>
+                    <div style="font-weight: bold;">${ncfST('Frontend.252')}</div>
                     <ul style="padding-left: 20px;">
                       ${tool.parameters.map(param => 
                         `<li><span style="color: #409EFF;">${param.name}</span>: ${param.description || ''}</li>`
                       ).join('')}
                     </ul>
                   </div>` : 
-                  '<div>无参数</div>'
+                  `<div>${ncfST('Frontend.253')}</div>`
                 }
               </li>`
             ).join('')}
           </ul>
         </div>`,
-        'MCP工具列表',
+        ncfST('Frontend.254'),
         {
           dangerouslyUseHTMLString: true,
           closeOnClickModal: true,
           closeOnPressEscape: true,
-          confirmButtonText: '关闭'
+          confirmButtonText: ncfST('Frontend.255')
         }
       );
     },

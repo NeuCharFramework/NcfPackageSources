@@ -1758,4 +1758,5 @@
   <data name="Frontend.598" xml:space="preserve"><value>キャンセル</value></data>
   <data name="Frontend.599" xml:space="preserve"><value>モジュールを利用できません</value></data>
   <data name="Frontend.600" xml:space="preserve"><value>呼び出し可能</value></data>
+  <data name="Frontend.601" xml:space="preserve"><value>MCP エンドポイントを追加しました：{0}</value></data>
 </root>

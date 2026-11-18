@@ -1758,4 +1758,5 @@
   <data name="Frontend.598" xml:space="preserve"><value>Отмена</value></data>
   <data name="Frontend.599" xml:space="preserve"><value>Модуль недоступен</value></data>
   <data name="Frontend.600" xml:space="preserve"><value>Доступно для вызова</value></data>
+  <data name="Frontend.601" xml:space="preserve"><value>Добавлена конечная точка MCP: {0}</value></data>
 </root>

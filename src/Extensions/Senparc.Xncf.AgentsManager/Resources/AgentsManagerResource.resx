@@ -1233,4 +1233,5 @@
   <data name="Frontend.598" xml:space="preserve"><value>取消</value></data>
   <data name="Frontend.599" xml:space="preserve"><value>模块不可用</value></data>
   <data name="Frontend.600" xml:space="preserve"><value>可调用</value></data>
+  <data name="Frontend.601" xml:space="preserve"><value>已添加 MCP 端点：{0}</value></data>
 </root>
