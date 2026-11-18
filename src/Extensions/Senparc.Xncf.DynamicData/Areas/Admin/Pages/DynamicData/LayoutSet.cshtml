@@ -822,68 +822,68 @@
                                             <el-option label="双击" value="delete"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="选择交互">
+                                    <el-form-item :label="ncfST('Frontend.227')">
                                         <el-select v-model="customColumnBtnForm.interactive" style="width:100%"
                                             placeholder="请选择交互">
-                                            <el-option label="打开页面" value="openPage"></el-option>
-                                            <el-option label="跳转链接" value="jumpLink"></el-option>
-                                            <el-option label="打开弹框" value="openPopUpBox"></el-option>
+                                            <el-option :label="ncfST('Frontend.072')" value="openPage"></el-option>
+                                            <el-option :label="ncfST('Frontend.226')" value="jumpLink"></el-option>
+                                            <el-option :label="ncfST('Frontend.070')" value="openPopUpBox"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="组件名称">
+                                    <el-form-item :label="ncfST('Frontend.164')">
                                         <el-select v-model="customColumnBtnForm.componentType" style="width:100%"
-                                            placeholder="请选择组件名称">
-                                            <el-option label="表格" value="table"></el-option>
-                                            <el-option label="表单" value="form"></el-option>
+                                            :placeholder="ncfST('Frontend.221')">
+                                            <el-option :label="ncfST('Frontend.179')" value="table"></el-option>
+                                            <el-option :label="ncfST('Frontend.176')" value="form"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="执行方法">
+                                    <el-form-item :label="ncfST('Frontend.073')">
                                         <el-select v-model="customColumnBtnForm.executionMethod" style="width:100%"
-                                            placeholder="请选择组件名称">
-                                            <el-option label="删除单条" value="deleteSingleBar"></el-option>
+                                            :placeholder="ncfST('Frontend.220')">
+                                            <el-option :label="ncfST('Frontend.027')" value="deleteSingleBar"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="选择页面">
+                                    <el-form-item :label="ncfST('Frontend.224')">
                                         <el-select v-model="customColumnBtnForm.page" style="width:100%"
-                                            placeholder="请选择页面">
-                                            <el-option label="编辑页面" value="visitorEditPage"></el-option>
-                                            <el-option label="新增页面" value="userEdit"></el-option>
+                                            :placeholder="ncfST('Frontend.224')">
+                                            <el-option :label="ncfST('Frontend.184')" value="visitorEditPage"></el-option>
+                                            <el-option :label="ncfST('Frontend.116')" value="userEdit"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="弹框设置">
+                                    <el-form-item :label="ncfST('Frontend.067')">
                                         <div :span="12" class="df-wn flex-ac flex-as">
-                                            <span class="formitem-labelText">标题文字</span>
+                                            <span class="formitem-labelText">{{ ncfST('Frontend.133') }}</span>
                                             <el-input v-model.trim="customColumnBtnForm.popupTitleText" :size="elSize"
-                                                placeholder="请输入标题文字"></el-input>
+                                                :placeholder="ncfST('Frontend.203')"></el-input>
                                         </div>
                                         <div :span="12" class="df-wn flex-ac flex-as">
-                                            <span class="formitem-labelText">取消按钮文字</span>
+                                            <span class="formitem-labelText">{{ ncfST('Frontend.255') }}</span>
                                             <el-input v-model.trim="customColumnBtnForm.popupCancelText" :size="elSize"
-                                                placeholder="请输入取消按钮文字"></el-input>
+                                                :placeholder="ncfST('Frontend.194')"></el-input>
                                         </div>
                                         <div :span="12" class="df-wn flex-ac flex-as">
-                                            <span class="formitem-labelText">确认按钮文字</span>
+                                            <span class="formitem-labelText">{{ ncfST('Frontend.256') }}</span>
                                             <el-input v-model.trim="customColumnBtnForm.popupConfirmText" :size="elSize"
-                                                placeholder="请输入确认按钮文字"></el-input>
+                                                :placeholder="ncfST('Frontend.204')"></el-input>
                                         </div>
                                     </el-form-item>
                                     <el-form-item :label="ncfST('Frontend.155')">
                                         <div :span="12" class="df-wn flex-ac flex-as">
-                                            <span class="formitem-labelText">提示内容</span>
+                                            <span class="formitem-labelText">{{ ncfST('Frontend.090') }}</span>
                                             <el-input v-model.trim="customColumnBtnForm.popupPromptContent"
-                                                :size="elSize" placeholder="请输入提示内容"></el-input>
+                                                :size="elSize" :placeholder="ncfST('Frontend.200')"></el-input>
                                         </div>
                                         <div :span="12" class="df-wn flex-ac flex-as">
-                                            <span class="formitem-labelText">提示时常</span>
+                                            <span class="formitem-labelText">{{ ncfST('Frontend.093') }}</span>
                                             <el-input v-model.trim="customColumnBtnForm.popupPromptOften" :size="elSize"
-                                                placeholder="请输入提示时常"></el-input>
+                                                :placeholder="ncfST('Frontend.202')"></el-input>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item label="取消操作设置">
+                                    <el-form-item :label="ncfST('Frontend.036')">
                                         <div :span="12" class="df-wn flex-ac flex-as">
-                                            <span class="formitem-labelText">关闭页面</span>
+                                            <span class="formitem-labelText">{{ ncfST('Frontend.014') }}</span>
                                             <el-input v-model.trim="customColumnBtnForm.popupClosePage" :size="elSize"
-                                                placeholder="请输入关闭页面"></el-input>
+                                                :placeholder="ncfST('Frontend.190')"></el-input>
                                         </div>
                                     </el-form-item>
                                 </el-form>
