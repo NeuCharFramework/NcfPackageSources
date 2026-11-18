@@ -7545,7 +7545,7 @@ var app = new Vue({
                     this.getScoringTrendData()
                     
                     //Legacy comment translated to English.
-                    await this.checkScoreAndSuggestOptimization(res.data.data || item, 'AI评分');
+                    await this.checkScoreAndSuggestOptimization(res.data.data || item, ncfST('Frontend.086'));
                 } else {
                     //Legacy comment translated to English.
                     this.$set(this.robotScoreLoadingMap, item.id, false)
@@ -7571,7 +7571,7 @@ var app = new Vue({
                     this.getScoringTrendData()
                     
                     //Legacy comment translated to English.
-                    await this.checkScoreAndSuggestOptimization(res.data.data || item, '手动评分');
+                    await this.checkScoreAndSuggestOptimization(res.data.data || item, ncfST('Frontend.087'));
                 } else {
                     app.$message({
                         message: res.data.errorMessage || res.data.data || 'Error',
@@ -7646,7 +7646,7 @@ var app = new Vue({
             let _len = this.outputList[index].alResultList.length
             this.outputList[index].alResultList.push({
                 id: _len + 1,
-                label: `预期结果`,
+                label: ncfST('Frontend.384'),
                 value: ''
             })
         },
@@ -8492,7 +8492,7 @@ var app = new Vue({
                         this.aiScoreForm.resultList = _expectedResultsJson.map((item, index) => {
                             return {
                                 id: index + 1,
-                                label: `预期结果`,
+                                label: ncfST('Frontend.384'),
                                 value: item
                             }
                         })
@@ -8561,7 +8561,7 @@ var app = new Vue({
                         this.aiScoreForm.resultList = expectedResultsJson.map((item, index) => {
                             return {
                                 id: index + 1,
-                                label: `预期结果`,
+                                        label: ncfST('Frontend.384'),
                                 value: item
                             }
                         })
@@ -8649,7 +8649,7 @@ var app = new Vue({
             let _len = this.aiScoreForm.resultList.length
             this.aiScoreForm.resultList.push({
                 id: _len + 1,
-                label: `预期结果`,
+                label: ncfST('Frontend.384'),
                 value: ''
             })
         },
@@ -8664,7 +8664,7 @@ var app = new Vue({
                     resultList: _expectedResultsJson.map((item, index) => {
                         return {
                             id: index + 1,
-                            label: `预期结果`,
+                            label: ncfST('Frontend.384'),
                             value: item
                         }
                     })
@@ -8810,7 +8810,7 @@ var app = new Vue({
                 const copyBtn = document.createElement('button');
                 copyBtn.className = 'code-copy-btn';
                 copyBtn.innerHTML = '<i class="el-icon-document-copy"></i> Copy';
-                copyBtn.title = '复制代码';
+                copyBtn.title = ncfST('Frontend.479');
                 
                 //Legacy comment translated to English.
                 copyBtn.addEventListener('click', async function(e) {
@@ -9400,7 +9400,7 @@ var app = new Vue({
                 
                 //Legacy comment translated to English.
                 this.$message({
-                    message: `已切换到 Prompt: ${promptData.fullVersion}`,
+                    message: ncfST('Frontend.491', promptData.fullVersion),
                     type: 'success',
                     duration: 2000
                 });
@@ -9408,7 +9408,7 @@ var app = new Vue({
             } catch (error) {
                 console.error('切换Prompt失败:', error);
                 this.$message({
-                    message: error.message || '切换Prompt失败，请重试',
+                    message: error.message || ncfST('Frontend.492'),
                     type: 'error',
                     duration: 3000
                 });
@@ -9431,10 +9431,10 @@ var app = new Vue({
         
         //Legacy comment translated to English.
         formatVariables(variablesJson) {
-            if (!variablesJson) return '无';
+            if (!variablesJson) return ncfST('Frontend.493');
             try {
                 const vars = JSON.parse(variablesJson);
-                if (Object.keys(vars).length === 0) return '无';
+                if (Object.keys(vars).length === 0) return ncfST('Frontend.493');
                 return Object.entries(vars).map(([key, value]) => `${key}: ${value}`).join('\n');
             } catch (e) {
                 return variablesJson;
@@ -9448,15 +9448,15 @@ var app = new Vue({
             
             //Legacy comment translated to English.
             if (!contentA && !contentB) {
-                return '<span class="diff-empty">暂无内容</span>';
+                return `<span class="diff-empty">${ncfST('Frontend.494')}</span>`;
             }
             
             //Legacy comment translated to English.
             if (!contentA && side === 'A') {
-                return '<span class="diff-empty">暂无内容</span>';
+                return `<span class="diff-empty">${ncfST('Frontend.494')}</span>`;
             }
             if (!contentB && side === 'B') {
-                return '<span class="diff-empty">暂无内容</span>';
+                return `<span class="diff-empty">${ncfST('Frontend.494')}</span>`;
             }
             
             //Legacy comment translated to English.
@@ -9566,7 +9566,7 @@ var app = new Vue({
                 }
             }
             
-            return html || '<span class="diff-empty">暂无内容</span>';
+            return html || `<span class="diff-empty">${ncfST('Frontend.494')}</span>`;
         },
         
         //Legacy comment translated to English.
