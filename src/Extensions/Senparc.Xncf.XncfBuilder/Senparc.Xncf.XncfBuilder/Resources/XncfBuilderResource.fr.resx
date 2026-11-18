@@ -511,4 +511,16 @@
   <data name="Function.XncfBuilder.Development.Create.Description" xml:space="preserve"><value>Crée un instantané du code dans un espace isolé. Les nouveaux modules utilisent le modèle local installé ; les modules existants sont copiés avant modification. Le code cible n’est jamais écrit.</value></data>
   <data name="Function.XncfBuilder.Development.Read.Name" xml:space="preserve"><value>Lire un fichier XNCF isolé</value></data>
   <data name="Function.XncfBuilder.Development.Read.Description" xml:space="preserve"><value>Lit un fichier texte et son SHA-256 depuis un module de l’espace isolé ; le code cible et les chemins externes sont inaccessibles.</value></data>
+  <data name="Function.XncfBuilder.Development.Write.Name" xml:space="preserve"><value>Écrire un fichier XNCF isolé</value></data>
+  <data name="Function.XncfBuilder.Development.Write.Description" xml:space="preserve"><value>Écrit atomiquement un fichier de code dans l’espace isolé. Les fichiers de projet, NuGet, MSBuild et de configuration ne peuvent pas être modifiés.</value></data>
+  <data name="Function.XncfBuilder.Development.Validate.Name" xml:space="preserve"><value>Valider la tâche de développement XNCF isolée</value></data>
+  <data name="Function.XncfBuilder.Development.Validate.Description" xml:space="preserve"><value>Valide le chemin du module isolé et la référence directe de Senparc.Web au projet source, puis génère un résumé contrôlé des différences.</value></data>
+  <data name="Function.XncfBuilder.Development.StartPreview.Name" xml:space="preserve"><value>Démarrer l’aperçu XNCF Sandbox</value></data>
+  <data name="Function.XncfBuilder.Development.StartPreview.Description" xml:space="preserve"><value>Transmet la copie nettoyée de l’espace isolé à Sandbox pour compilation et exécution ; échoue sans revenir au processus principal si Sandbox est indisponible.</value></data>
+  <data name="Function.XncfBuilder.Development.Status.Name" xml:space="preserve"><value>Obtenir la tâche de développement XNCF isolée</value></data>
+  <data name="Function.XncfBuilder.Development.Status.Description" xml:space="preserve"><value>Renvoie l’espace isolé, les différences, la validation, l’aperçu Sandbox et l’état d’approbation humaine.</value></data>
+  <data name="Function.XncfBuilder.Development.RequestMerge.Name" xml:space="preserve"><value>Demander l’approbation humaine de fusion</value></data>
+  <data name="Function.XncfBuilder.Development.RequestMerge.Description" xml:space="preserve"><value>Fige les différences de l’espace isolé et demande l’approbation de l’administrateur. Le code cible n’est pas écrit.</value></data>
+  <data name="Function.XncfBuilder.Development.Discard.Name" xml:space="preserve"><value>Abandonner la tâche de développement XNCF isolée</value></data>
+  <data name="Function.XncfBuilder.Development.Discard.Description" xml:space="preserve"><value>Arrête l’aperçu Sandbox associé et récupère l’espace isolé sans modifier le code cible.</value></data>
 </root>

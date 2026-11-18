@@ -83,7 +83,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         public Task<StringAppResponse> ReadIsolatedDevelopmentFile(XncfDevelopmentReadFileRequest request) =>
             ExecuteAsync((service, tenant) => service.ReadFileAsync(request.JobId, request.RelativeFilePath, CancellationToken, tenant));
 
-        [FunctionRender("写入隔离 XNCF 文件", "原子写入隔离工作区内的代码文件。项目、NuGet、MSBuild 和应用配置文件不可修改，建议传回读取时的 SHA-256。", typeof(Register))]
+        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Development.Write.Name", "Function.XncfBuilder.Development.Write.Description",
+            typeof(Register), "Write isolated XNCF file", "Atomically write a code file inside the isolated workspace.")]
         public Task<StringAppResponse> WriteIsolatedDevelopmentFile(XncfDevelopmentWriteFileRequest request) =>
             ExecuteAsync((service, tenant) => service.WriteFileAsync(
                 request.JobId,
@@ -93,23 +94,28 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 CancellationToken,
                 tenant));
 
-        [FunctionRender("校验隔离 XNCF 开发任务", "校验隔离工作区的模块路径和 Senparc.Web 对源码项目的直接引用，并生成受控差异摘要。", typeof(Register))]
+        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Development.Validate.Name", "Function.XncfBuilder.Development.Validate.Description",
+            typeof(Register), "Validate isolated XNCF development job", "Validate the isolated module path and direct source-project reference.")]
         public Task<StringAppResponse> ValidateIsolatedDevelopmentJob(XncfDevelopmentJobIdRequest request) =>
             ExecuteAsync((service, tenant) => service.ValidateAsync(request.JobId, CancellationToken, tenant));
 
-        [FunctionRender("启动 Sandbox XNCF 预览", "把已清洗的隔离工作区副本交给 Sandbox 构建和运行；Sandbox 不可用时会安全失败，绝不回退到主站进程。", typeof(Register))]
+        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Development.StartPreview.Name", "Function.XncfBuilder.Development.StartPreview.Description",
+            typeof(Register), "Start Sandbox XNCF preview", "Build and run the cleaned isolated workspace through Sandbox.")]
         public Task<StringAppResponse> StartSandboxDevelopmentPreview(XncfDevelopmentJobIdRequest request) =>
             ExecuteAsync((service, tenant) => service.StartSandboxPreviewAsync(request.JobId, CancellationToken, tenant));
 
-        [FunctionRender("获取隔离 XNCF 开发任务状态", "返回隔离工作区、差异、校验、Sandbox 预览和人工审批状态。", typeof(Register))]
+        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Development.Status.Name", "Function.XncfBuilder.Development.Status.Description",
+            typeof(Register), "Get isolated XNCF development job", "Return isolated workspace, diff, validation, preview, and approval status.")]
         public Task<StringAppResponse> GetIsolatedDevelopmentJob(XncfDevelopmentJobIdRequest request) =>
             ExecuteAsync((service, tenant) => service.GetAsync(request.JobId, CancellationToken, tenant));
 
-        [FunctionRender("请求人工合入 XNCF 任务", "冻结当前隔离工作区差异并请求管理员审批。此操作不会写入目标源码。", typeof(Register))]
+        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Development.RequestMerge.Name", "Function.XncfBuilder.Development.RequestMerge.Description",
+            typeof(Register), "Request human merge approval", "Freeze the isolated workspace diff and request administrator approval.")]
         public Task<StringAppResponse> RequestIsolatedDevelopmentMergeApproval(XncfDevelopmentJobIdRequest request) =>
             ExecuteAsync((service, tenant) => service.RequestMergeApprovalAsync(request.JobId, CancellationToken, tenant));
 
-        [FunctionRender("丢弃隔离 XNCF 开发任务", "停止对应 Sandbox 预览并回收隔离工作区；不会修改目标源码。", typeof(Register))]
+        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Development.Discard.Name", "Function.XncfBuilder.Development.Discard.Description",
+            typeof(Register), "Discard isolated XNCF development job", "Stop the related Sandbox preview and reclaim the isolated workspace.")]
         public Task<StringAppResponse> DiscardIsolatedDevelopmentJob(XncfDevelopmentJobIdRequest request) =>
             ExecuteAsync((service, tenant) => service.DiscardAsync(request.JobId, CancellationToken, tenant));
 

@@ -511,4 +511,16 @@
   <data name="Function.XncfBuilder.Development.Create.Description" xml:space="preserve"><value>分離ワークスペースにソーススナップショットを作成します。新規モジュールはローカルにインストールされたテンプレートから生成し、既存モジュールはコピーしてから変更します。対象ソースには書き込みません。</value></data>
   <data name="Function.XncfBuilder.Development.Read.Name" xml:space="preserve"><value>分離 XNCF ファイルを読み取る</value></data>
   <data name="Function.XncfBuilder.Development.Read.Description" xml:space="preserve"><value>分離ワークスペースのモジュールからテキストファイルと SHA-256 を読み取ります。対象ソースやワークスペース外のパスは読み取れません。</value></data>
+  <data name="Function.XncfBuilder.Development.Write.Name" xml:space="preserve"><value>分離 XNCF ファイルを書き込む</value></data>
+  <data name="Function.XncfBuilder.Development.Write.Description" xml:space="preserve"><value>分離ワークスペース内のコードファイルをアトミックに書き込みます。プロジェクト、NuGet、MSBuild、アプリ設定ファイルは変更できません。</value></data>
+  <data name="Function.XncfBuilder.Development.Validate.Name" xml:space="preserve"><value>分離 XNCF 開発タスクを検証</value></data>
+  <data name="Function.XncfBuilder.Development.Validate.Description" xml:space="preserve"><value>分離モジュールのパスと Senparc.Web のソースプロジェクトへの直接参照を検証し、制御された差分概要を生成します。</value></data>
+  <data name="Function.XncfBuilder.Development.StartPreview.Name" xml:space="preserve"><value>Sandbox XNCF プレビューを開始</value></data>
+  <data name="Function.XncfBuilder.Development.StartPreview.Description" xml:space="preserve"><value>クリーンな分離ワークスペースのコピーを Sandbox に渡してビルド・実行します。Sandbox が利用できない場合はメインプロセスへ戻らず安全に失敗します。</value></data>
+  <data name="Function.XncfBuilder.Development.Status.Name" xml:space="preserve"><value>分離 XNCF 開発タスクの状態を取得</value></data>
+  <data name="Function.XncfBuilder.Development.Status.Description" xml:space="preserve"><value>分離ワークスペース、差分、検証、Sandbox プレビュー、人的承認の状態を返します。</value></data>
+  <data name="Function.XncfBuilder.Development.RequestMerge.Name" xml:space="preserve"><value>XNCF タスクの人的マージ承認を要求</value></data>
+  <data name="Function.XncfBuilder.Development.RequestMerge.Description" xml:space="preserve"><value>現在の分離ワークスペースの差分を凍結し、管理者の承認を要求します。対象ソースには書き込みません。</value></data>
+  <data name="Function.XncfBuilder.Development.Discard.Name" xml:space="preserve"><value>分離 XNCF 開発タスクを破棄</value></data>
+  <data name="Function.XncfBuilder.Development.Discard.Description" xml:space="preserve"><value>関連する Sandbox プレビューを停止し、対象ソースを変更せずに分離ワークスペースを回収します。</value></data>
 </root>

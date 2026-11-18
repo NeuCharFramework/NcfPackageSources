@@ -511,4 +511,16 @@
   <data name="Function.XncfBuilder.Development.Create.Description" xml:space="preserve"><value>Создаёт снимок исходного кода в изолированном пространстве. Новые модули создаются из установленного локального шаблона, существующие копируются перед изменением. Целевой исходный код не изменяется.</value></data>
   <data name="Function.XncfBuilder.Development.Read.Name" xml:space="preserve"><value>Прочитать изолированный файл XNCF</value></data>
   <data name="Function.XncfBuilder.Development.Read.Description" xml:space="preserve"><value>Читает текстовый файл и SHA-256 из модуля изолированного пространства; целевой код и внешние пути недоступны.</value></data>
+  <data name="Function.XncfBuilder.Development.Write.Name" xml:space="preserve"><value>Записать изолированный файл XNCF</value></data>
+  <data name="Function.XncfBuilder.Development.Write.Description" xml:space="preserve"><value>Атомарно записывает файл кода в изолированное пространство. Файлы проекта, NuGet, MSBuild и конфигурации приложения изменять нельзя.</value></data>
+  <data name="Function.XncfBuilder.Development.Validate.Name" xml:space="preserve"><value>Проверить изолированную задачу разработки XNCF</value></data>
+  <data name="Function.XncfBuilder.Development.Validate.Description" xml:space="preserve"><value>Проверяет путь изолированного модуля и прямую ссылку Senparc.Web на исходный проект, затем формирует контролируемое резюме различий.</value></data>
+  <data name="Function.XncfBuilder.Development.StartPreview.Name" xml:space="preserve"><value>Запустить предпросмотр XNCF в Sandbox</value></data>
+  <data name="Function.XncfBuilder.Development.StartPreview.Description" xml:space="preserve"><value>Передаёт очищенную копию изолированного пространства в Sandbox для сборки и запуска; при недоступности Sandbox безопасно завершается без возврата к основному процессу.</value></data>
+  <data name="Function.XncfBuilder.Development.Status.Name" xml:space="preserve"><value>Получить изолированную задачу разработки XNCF</value></data>
+  <data name="Function.XncfBuilder.Development.Status.Description" xml:space="preserve"><value>Возвращает изолированное пространство, различия, проверку, предпросмотр Sandbox и состояние человеческого одобрения.</value></data>
+  <data name="Function.XncfBuilder.Development.RequestMerge.Name" xml:space="preserve"><value>Запросить человеческое одобрение слияния</value></data>
+  <data name="Function.XncfBuilder.Development.RequestMerge.Description" xml:space="preserve"><value>Замораживает текущие различия изолированного пространства и запрашивает одобрение администратора. Целевой код не изменяется.</value></data>
+  <data name="Function.XncfBuilder.Development.Discard.Name" xml:space="preserve"><value>Отбросить изолированную задачу разработки XNCF</value></data>
+  <data name="Function.XncfBuilder.Development.Discard.Description" xml:space="preserve"><value>Останавливает связанный предпросмотр Sandbox и освобождает изолированное пространство без изменения целевого кода.</value></data>
 </root>

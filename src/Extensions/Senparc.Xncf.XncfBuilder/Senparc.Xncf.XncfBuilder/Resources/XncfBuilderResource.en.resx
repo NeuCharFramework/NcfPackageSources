@@ -511,4 +511,16 @@
   <data name="Function.XncfBuilder.Development.Create.Description" xml:space="preserve"><value>Create a source snapshot in an isolated workspace. New modules are generated from the installed local template; existing modules are copied before editing. Target source is never written.</value></data>
   <data name="Function.XncfBuilder.Development.Read.Name" xml:space="preserve"><value>Read isolated XNCF file</value></data>
   <data name="Function.XncfBuilder.Development.Read.Description" xml:space="preserve"><value>Read a text file and SHA-256 from an isolated workspace module; target source and paths outside the workspace are inaccessible.</value></data>
+  <data name="Function.XncfBuilder.Development.Write.Name" xml:space="preserve"><value>Write isolated XNCF file</value></data>
+  <data name="Function.XncfBuilder.Development.Write.Description" xml:space="preserve"><value>Atomically write a code file inside the isolated workspace. Project, NuGet, MSBuild, and application configuration files cannot be modified.</value></data>
+  <data name="Function.XncfBuilder.Development.Validate.Name" xml:space="preserve"><value>Validate isolated XNCF development job</value></data>
+  <data name="Function.XncfBuilder.Development.Validate.Description" xml:space="preserve"><value>Validate the isolated module path and direct Senparc.Web reference to the source project, then generate a controlled diff summary.</value></data>
+  <data name="Function.XncfBuilder.Development.StartPreview.Name" xml:space="preserve"><value>Start Sandbox XNCF preview</value></data>
+  <data name="Function.XncfBuilder.Development.StartPreview.Description" xml:space="preserve"><value>Give the cleaned isolated workspace copy to Sandbox for build and execution; fail safely when Sandbox is unavailable without falling back to the main site process.</value></data>
+  <data name="Function.XncfBuilder.Development.Status.Name" xml:space="preserve"><value>Get isolated XNCF development job</value></data>
+  <data name="Function.XncfBuilder.Development.Status.Description" xml:space="preserve"><value>Return isolated workspace, diff, validation, Sandbox preview, and human approval status.</value></data>
+  <data name="Function.XncfBuilder.Development.RequestMerge.Name" xml:space="preserve"><value>Request human merge approval</value></data>
+  <data name="Function.XncfBuilder.Development.RequestMerge.Description" xml:space="preserve"><value>Freeze the current isolated workspace diff and request administrator approval. The target source is not written.</value></data>
+  <data name="Function.XncfBuilder.Development.Discard.Name" xml:space="preserve"><value>Discard isolated XNCF development job</value></data>
+  <data name="Function.XncfBuilder.Development.Discard.Description" xml:space="preserve"><value>Stop the related Sandbox preview and reclaim the isolated workspace without modifying target source.</value></data>
 </root>
