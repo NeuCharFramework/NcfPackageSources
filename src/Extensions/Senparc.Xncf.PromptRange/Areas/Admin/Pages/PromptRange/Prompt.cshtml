@@ -962,7 +962,7 @@
     </el-dialog>
     @*Diagram dialog.*@
     <el-dialog 
-        title="3D 结构导图" 
+        :title="ncfST('Frontend.141')" 
         :visible.sync="mapDialogVisible" 
         width="90%"
         :close-on-click-modal="false"
@@ -970,60 +970,60 @@
         @@close="mapDialogClose">
         @*Toolbar.*@
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
-            <el-button size="mini" icon="el-icon-refresh" @@click="resetMap3DView">重置视角</el-button>
-            <el-button size="mini" icon="el-icon-full-screen" @@click="toggleMap3DFullscreen">全屏</el-button>
-            <el-button size="mini" icon="el-icon-zoom-in" @@click="fitMap3DView">适应视图</el-button>
+            <el-button size="mini" icon="el-icon-refresh" @@click="resetMap3DView">{{ ncfST('Frontend.142') }}</el-button>
+            <el-button size="mini" icon="el-icon-full-screen" @@click="toggleMap3DFullscreen">{{ ncfST('Frontend.143') }}</el-button>
+            <el-button size="mini" icon="el-icon-zoom-in" @@click="fitMap3DView">{{ ncfST('Frontend.144') }}</el-button>
             <el-popover placement="bottom" width="260" trigger="hover" popper-class="map3d-shortcuts-popover">
                 <div slot="content" style="font-size:12px;line-height:1.8;">
-                    <div><strong>🖱️ 鼠标操作</strong></div>
-                    <div>左键拖拽：旋转视角</div>
-                    <div>右键拖拽：平移场景</div>
-                    <div>滚轮：缩放</div>
-                    <div>单击节点：高亮</div>
-                    <div>双击节点：跳转靶道</div>
-                    <div style="margin-top:6px;"><strong>⌨️ 键盘快捷键</strong></div>
-                    <div>W / A / S / D：前后左右平移</div>
-                    <div>Q / E：深度平移（前后）</div>
-                    <div>R：重置视角</div>
-                    <div>F：适应视图</div>
-                    <div>+/-：放大/缩小</div>
+                    <div><strong>{{ ncfST('Frontend.145') }}</strong></div>
+                    <div>{{ ncfST('Frontend.146') }}</div>
+                    <div>{{ ncfST('Frontend.147') }}</div>
+                    <div>{{ ncfST('Frontend.148') }}</div>
+                    <div>{{ ncfST('Frontend.149') }}</div>
+                    <div>{{ ncfST('Frontend.150') }}</div>
+                    <div style="margin-top:6px;"><strong>{{ ncfST('Frontend.151') }}</strong></div>
+                    <div>{{ ncfST('Frontend.152') }}</div>
+                    <div>{{ ncfST('Frontend.153') }}</div>
+                    <div>{{ ncfST('Frontend.154') }}</div>
+                    <div>{{ ncfST('Frontend.155') }}</div>
+                    <div>{{ ncfST('Frontend.156') }}</div>
                 </div>
-                <el-button slot="reference" size="mini" icon="el-icon-question">快捷键</el-button>
+                <el-button slot="reference" size="mini" icon="el-icon-question">{{ ncfST('Frontend.157') }}</el-button>
             </el-popover>
             <div style="margin-left:auto;font-size:12px;color:#909399;" v-if="map3dNodes && map3dNodes.length > 0">
-                共 {{ map3dNodes.length }} 个节点
+                {{ map3dNodes.length }} {{ ncfST('Frontend.158') }}
             </div>
         </div>
         <div id="map3dContainer" style="width: 100%; height: 580px; background: #1a1a1a;"></div>
     </el-dialog>
     @*Quick agent creation dialog.*@
     <el-dialog 
-        title="从 PromptCode 创建智能体" 
+        :title="ncfST('Frontend.159')" 
         :visible.sync="createAgentDialogVisible"
         width="560px"
         :close-on-click-modal="false"
         center>
         <el-form label-width="110px" size="small">
-            <el-form-item label="智能体名称">
-                <el-input v-model="createAgentForm.name" placeholder="请输入智能体名称" maxlength="50" show-word-limit></el-input>
+            <el-form-item :label="ncfST('Frontend.160')">
+                <el-input v-model="createAgentForm.name" :placeholder="ncfST('Frontend.161')" maxlength="50" show-word-limit></el-input>
             </el-form-item>
-            <el-form-item label="覆盖范围">
+            <el-form-item :label="ncfST('Frontend.162')">
                 <el-radio-group v-model="createAgentForm.scopeType" @@change="onCreateAgentScopeChange">
                     <el-radio label="range">
-                        靶场级别
-                        <el-tooltip content="PromptCode 只包含靶场名称，匹配该靶场下的所有靶道" placement="top">
+                        {{ ncfST('Frontend.163') }}
+                        <el-tooltip :content="ncfST('Frontend.164')" placement="top">
                             <i class="el-icon-question" style="color: #909399;"></i>
                         </el-tooltip>
                     </el-radio>
                     <el-radio label="tactic">
-                        靶道级别
-                        <el-tooltip content="PromptCode 包含靶场名称和战术编号，匹配当前战术下所有瞄准版本" placement="top">
+                        {{ ncfST('Frontend.165') }}
+                        <el-tooltip :content="ncfST('Frontend.166')" placement="top">
                             <i class="el-icon-question" style="color: #909399;"></i>
                         </el-tooltip>
                     </el-radio>
                     <el-radio label="full">
-                        完整定位
-                        <el-tooltip content="PromptCode 为完整版本号，精确匹配当前靶道" placement="top">
+                        {{ ncfST('Frontend.167') }}
+                        <el-tooltip :content="ncfST('Frontend.168')" placement="top">
                             <i class="el-icon-question" style="color: #909399;"></i>
                         </el-tooltip>
                     </el-radio>
@@ -1032,11 +1032,11 @@
             <el-form-item label="PromptCode">
                 <el-tag type="info" style="font-family: monospace;">{{ createAgentPromptCode }}</el-tag>
             </el-form-item>
-            <el-form-item label="说明">
-                <el-input v-model="createAgentForm.description" type="textarea" :rows="2" placeholder="对新智能体的说明（可选）"></el-input>
+            <el-form-item :label="ncfST('Frontend.169')">
+                <el-input v-model="createAgentForm.description" type="textarea" :rows="2" :placeholder="ncfST('Frontend.170')"></el-input>
             </el-form-item>
             <el-form-item label="Function Calls">
-                <el-input v-model="createAgentForm.functionCallNames" placeholder="Function Call 名称，多个用逗号分隔（可选）"></el-input>
+                <el-input v-model="createAgentForm.functionCallNames" :placeholder="ncfST('Frontend.171')"></el-input>
             </el-form-item>
         </el-form>
         @*Existing-agent notice.*@
@@ -1048,8 +1048,8 @@
                   style="margin-top: 10px;">
         </el-alert>
         <div slot="footer" class="dialog-footer">
-            <el-button size="small" @@click="createAgentDialogVisible = false">取 消</el-button>
-            <el-button type="primary" size="small" :loading="createAgentLoading" @@click="submitCreateAgent">创 建</el-button>
+            <el-button size="small" @@click="createAgentDialogVisible = false">{{ ncfST('Frontend.091') }}</el-button>
+            <el-button type="primary" size="small" :loading="createAgentLoading" @@click="submitCreateAgent">{{ ncfST('Frontend.172') }}</el-button>
         </div>
     </el-dialog>
     @*Add-model dialog.*@
