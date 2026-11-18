@@ -770,4 +770,25 @@
   <data name="Frontend.723" xml:space="preserve"><value>Узел {0} обрабатывает вход предыдущего узла в Workflow.</value></data>
   <data name="Frontend.724" xml:space="preserve"><value>Идентификатор базы знаний</value></data>
   <data name="Frontend.725" xml:space="preserve"><value>Состояние группы</value></data>
+  <data name="Frontend.726" xml:space="preserve"><value>Ответ загрузки файла недействителен.</value></data>
+  <data name="Frontend.727" xml:space="preserve"><value>Не удалось загрузить файл.</value></data>
+  <data name="Frontend.728" xml:space="preserve"><value>За один раз можно выбрать не более {0} файлов.</value></data>
+  <data name="Frontend.729" xml:space="preserve"><value>Этот параметр не поддерживает встраивание переменных в текст</value></data>
+  <data name="Frontend.730" xml:space="preserve"><value>Ручной ввод</value></data>
+  <data name="Frontend.731" xml:space="preserve"><value>Источник переменной в тексте недействителен или отсутствует индекс списка предыдущего узла</value></data>
+  <data name="Frontend.732" xml:space="preserve"><value>Указанный узел больше не является допустимым предыдущим узлом</value></data>
+  <data name="Frontend.733" xml:space="preserve"><value>Указанный параметр выбора Function удалён или недоступен после обновления модуля</value></data>
+  <data name="Frontend.734" xml:space="preserve"><value>Указанное поле вывода больше не существует</value></data>
+  <data name="Frontend.735" xml:space="preserve"><value>Тип указанного поля изменился после обновления модуля; выберите источник заново</value></data>
+  <data name="Frontend.736" xml:space="preserve"><value>Предыдущее значение является списком объектов; выберите индекс списка</value></data>
+  <data name="Frontend.737" xml:space="preserve"><value>Несовпадение типов: выберите индекс массива перед передачей одиночного значения</value></data>
+  <data name="Frontend.738" xml:space="preserve"><value>Несовпадение типов: целевому параметру нужен массив</value></data>
+  <data name="Frontend.739" xml:space="preserve"><value>Несовпадение типов: ожидалось {0}, получено {1}</value></data>
+  <data name="Frontend.740" xml:space="preserve"><value>Связано: {0}{1}</value></data>
+  <data name="Frontend.741" xml:space="preserve"><value>Недопустимый источник предыдущего узла</value></data>
+  <data name="Frontend.742" xml:space="preserve"><value>Целевому параметру нужен тип {0}; формула преобразования должна занимать весь ввод, например {{= {1}(value_1) }}</value></data>
+  <data name="Frontend.743" xml:space="preserve"><value>Результат чистой формулы — {0}, но целевому параметру нужен тип {1}</value></data>
+  <data name="Frontend.744" xml:space="preserve"><value>Режим чистой формулы сохраняет тип во время выполнения; целевому параметру нужен {0}</value></data>
+  <data name="Frontend.745" xml:space="preserve"><value>Результат чистой формулы: {0} → целевой параметр {1}</value></data>
+  <data name="Frontend.746" xml:space="preserve"><value>Можно использовать {{input}} для ссылки на текущий ввод или открыть редактор и вставить вывод предыдущего узла.</value></data>
 </root>

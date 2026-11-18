@@ -786,4 +786,25 @@
   <data name="Frontend.723" xml:space="preserve"><value>{0} ノードは Workflow で上流入力を処理します。</value></data>
   <data name="Frontend.724" xml:space="preserve"><value>ナレッジベース ID</value></data>
   <data name="Frontend.725" xml:space="preserve"><value>グループ状態</value></data>
+  <data name="Frontend.726" xml:space="preserve"><value>ファイルアップロードの応答が無効です。</value></data>
+  <data name="Frontend.727" xml:space="preserve"><value>ファイルのアップロードに失敗しました。</value></data>
+  <data name="Frontend.728" xml:space="preserve"><value>一度に選択できるファイルは {0} 個までです。</value></data>
+  <data name="Frontend.729" xml:space="preserve"><value>このパラメーターはテキストへの変数埋め込みに対応していません</value></data>
+  <data name="Frontend.730" xml:space="preserve"><value>手動入力</value></data>
+  <data name="Frontend.731" xml:space="preserve"><value>テキスト内の変数ソースが無効か、上流リストのインデックスがありません</value></data>
+  <data name="Frontend.732" xml:space="preserve"><value>参照されたノードは有効な上流ノードではありません</value></data>
+  <data name="Frontend.733" xml:space="preserve"><value>参照された Function 選択パラメーターはモジュール更新後に削除されたか、利用できません</value></data>
+  <data name="Frontend.734" xml:space="preserve"><value>参照された出力フィールドは存在しません</value></data>
+  <data name="Frontend.735" xml:space="preserve"><value>参照されたフィールドの型がモジュール更新後に変わりました。ソースを再選択してください</value></data>
+  <data name="Frontend.736" xml:space="preserve"><value>上流値はオブジェクトリストです。リストインデックスを選択してください</value></data>
+  <data name="Frontend.737" xml:space="preserve"><value>型が一致しません。単一値を渡す前に配列インデックスを選択してください</value></data>
+  <data name="Frontend.738" xml:space="preserve"><value>型が一致しません。対象パラメーターには配列が必要です</value></data>
+  <data name="Frontend.739" xml:space="preserve"><value>型が一致しません。{0} が必要ですが、{1} です</value></data>
+  <data name="Frontend.740" xml:space="preserve"><value>関連付け済み：{0}{1}</value></data>
+  <data name="Frontend.741" xml:space="preserve"><value>無効な上流ソース</value></data>
+  <data name="Frontend.742" xml:space="preserve"><value>対象パラメーターには {0} が必要です。変換式は入力全体を占める必要があります。例：{{= {1}(value_1) }}</value></data>
+  <data name="Frontend.743" xml:space="preserve"><value>純粋な数式の結果は {0} ですが、対象パラメーターには {1} が必要です</value></data>
+  <data name="Frontend.744" xml:space="preserve"><value>純粋な数式モードでは実行時の型を保持します。対象パラメーターには {0} が必要です</value></data>
+  <data name="Frontend.745" xml:space="preserve"><value>純粋な数式の結果：{0} → 対象パラメーター {1}</value></data>
+  <data name="Frontend.746" xml:space="preserve"><value>{{input}} で現在の入力を参照するか、エディターを開いて上流出力を挿入できます。</value></data>
 </root>

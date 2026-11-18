@@ -770,4 +770,25 @@
   <data name="Frontend.723" xml:space="preserve"><value>El nodo {0} procesa la entrada anterior en el Workflow.</value></data>
   <data name="Frontend.724" xml:space="preserve"><value>ID de la base de conocimiento</value></data>
   <data name="Frontend.725" xml:space="preserve"><value>Estado del grupo</value></data>
+  <data name="Frontend.726" xml:space="preserve"><value>La respuesta de carga de archivos no es válida.</value></data>
+  <data name="Frontend.727" xml:space="preserve"><value>Error al cargar el archivo.</value></data>
+  <data name="Frontend.728" xml:space="preserve"><value>Selecciona como máximo {0} archivos a la vez.</value></data>
+  <data name="Frontend.729" xml:space="preserve"><value>Este parámetro no admite variables incrustadas en el texto</value></data>
+  <data name="Frontend.730" xml:space="preserve"><value>Entrada manual</value></data>
+  <data name="Frontend.731" xml:space="preserve"><value>El origen de la variable en el texto no es válido o falta el índice de la lista anterior</value></data>
+  <data name="Frontend.732" xml:space="preserve"><value>El nodo referenciado ya no es un nodo anterior válido</value></data>
+  <data name="Frontend.733" xml:space="preserve"><value>El parámetro de selección de Function referenciado se eliminó o no está disponible tras actualizar el módulo</value></data>
+  <data name="Frontend.734" xml:space="preserve"><value>El campo de salida referenciado ya no existe</value></data>
+  <data name="Frontend.735" xml:space="preserve"><value>El tipo del campo referenciado cambió tras actualizar el módulo; vuelve a seleccionar el origen</value></data>
+  <data name="Frontend.736" xml:space="preserve"><value>El valor anterior es una lista de objetos; selecciona un índice de lista</value></data>
+  <data name="Frontend.737" xml:space="preserve"><value>Incompatibilidad de tipos: selecciona un índice de matriz antes de pasar un valor único</value></data>
+  <data name="Frontend.738" xml:space="preserve"><value>Incompatibilidad de tipos: el parámetro de destino requiere una matriz</value></data>
+  <data name="Frontend.739" xml:space="preserve"><value>Incompatibilidad de tipos: se esperaba {0}, se recibió {1}</value></data>
+  <data name="Frontend.740" xml:space="preserve"><value>Vinculado {0}{1}</value></data>
+  <data name="Frontend.741" xml:space="preserve"><value>Origen anterior no válido</value></data>
+  <data name="Frontend.742" xml:space="preserve"><value>El parámetro requiere {0}; la fórmula de conversión debe ocupar toda la entrada, por ejemplo {{= {1}(value_1) }}</value></data>
+  <data name="Frontend.743" xml:space="preserve"><value>El resultado de la fórmula pura es {0}, pero el parámetro requiere {1}</value></data>
+  <data name="Frontend.744" xml:space="preserve"><value>El modo de fórmula pura conserva el tipo de ejecución; el parámetro requiere {0}</value></data>
+  <data name="Frontend.745" xml:space="preserve"><value>Resultado de fórmula pura: {0} → parámetro de destino {1}</value></data>
+  <data name="Frontend.746" xml:space="preserve"><value>Puedes usar {{input}} para referenciar la entrada actual o abrir el editor para insertar una salida anterior.</value></data>
 </root>

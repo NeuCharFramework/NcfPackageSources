@@ -770,4 +770,25 @@
   <data name="Frontend.723" xml:space="preserve"><value>Le nœud {0} traite l’entrée amont dans le Workflow.</value></data>
   <data name="Frontend.724" xml:space="preserve"><value>ID de la base de connaissances</value></data>
   <data name="Frontend.725" xml:space="preserve"><value>État du groupe</value></data>
+  <data name="Frontend.726" xml:space="preserve"><value>La réponse du téléversement de fichier est invalide.</value></data>
+  <data name="Frontend.727" xml:space="preserve"><value>Échec du téléversement du fichier.</value></data>
+  <data name="Frontend.728" xml:space="preserve"><value>Sélectionnez au maximum {0} fichiers à la fois.</value></data>
+  <data name="Frontend.729" xml:space="preserve"><value>Ce paramètre n’accepte pas les variables intégrées au texte</value></data>
+  <data name="Frontend.730" xml:space="preserve"><value>Saisie manuelle</value></data>
+  <data name="Frontend.731" xml:space="preserve"><value>La source de variable dans le texte est invalide ou l’index de liste amont manque</value></data>
+  <data name="Frontend.732" xml:space="preserve"><value>Le nœud référencé n’est plus un nœud amont valide</value></data>
+  <data name="Frontend.733" xml:space="preserve"><value>Le paramètre de sélection Function référencé a été supprimé ou est indisponible après la mise à jour du module</value></data>
+  <data name="Frontend.734" xml:space="preserve"><value>Le champ de sortie référencé n’existe plus</value></data>
+  <data name="Frontend.735" xml:space="preserve"><value>Le type du champ référencé a changé après la mise à jour du module ; resélectionnez la source</value></data>
+  <data name="Frontend.736" xml:space="preserve"><value>La valeur amont est une liste d’objets ; sélectionnez un index de liste</value></data>
+  <data name="Frontend.737" xml:space="preserve"><value>Incompatibilité de types : sélectionnez un index de tableau avant de transmettre une valeur unique</value></data>
+  <data name="Frontend.738" xml:space="preserve"><value>Incompatibilité de types : le paramètre cible attend un tableau</value></data>
+  <data name="Frontend.739" xml:space="preserve"><value>Incompatibilité de types : {0} attendu, {1} reçu</value></data>
+  <data name="Frontend.740" xml:space="preserve"><value>Lié : {0}{1}</value></data>
+  <data name="Frontend.741" xml:space="preserve"><value>Source amont invalide</value></data>
+  <data name="Frontend.742" xml:space="preserve"><value>Le paramètre cible attend {0} ; la formule de conversion doit occuper toute l’entrée, par exemple {{= {1}(value_1) }}</value></data>
+  <data name="Frontend.743" xml:space="preserve"><value>Le résultat de la formule pure est {0}, mais le paramètre cible attend {1}</value></data>
+  <data name="Frontend.744" xml:space="preserve"><value>Le mode formule pure conserve le type d’exécution ; le paramètre cible attend {0}</value></data>
+  <data name="Frontend.745" xml:space="preserve"><value>Résultat de formule pure : {0} → paramètre cible {1}</value></data>
+  <data name="Frontend.746" xml:space="preserve"><value>Vous pouvez utiliser {{input}} pour référencer l’entrée actuelle ou ouvrir l’éditeur pour insérer une sortie amont.</value></data>
 </root>

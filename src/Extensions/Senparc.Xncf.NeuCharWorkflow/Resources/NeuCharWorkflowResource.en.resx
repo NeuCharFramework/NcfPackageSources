@@ -770,4 +770,25 @@
   <data name="Frontend.723" xml:space="preserve"><value>The {0} node processes upstream input in the Workflow.</value></data>
   <data name="Frontend.724" xml:space="preserve"><value>Knowledge base ID</value></data>
   <data name="Frontend.725" xml:space="preserve"><value>Group status</value></data>
+  <data name="Frontend.726" xml:space="preserve"><value>The file upload response is invalid.</value></data>
+  <data name="Frontend.727" xml:space="preserve"><value>File upload failed.</value></data>
+  <data name="Frontend.728" xml:space="preserve"><value>Select at most {0} files at a time.</value></data>
+  <data name="Frontend.729" xml:space="preserve"><value>This parameter does not support embedded variables in text</value></data>
+  <data name="Frontend.730" xml:space="preserve"><value>Manual input</value></data>
+  <data name="Frontend.731" xml:space="preserve"><value>The variable source in the text is invalid or an upstream list index is missing</value></data>
+  <data name="Frontend.732" xml:space="preserve"><value>The referenced node is no longer a valid upstream node</value></data>
+  <data name="Frontend.733" xml:space="preserve"><value>The referenced Function selection parameter was removed or is unavailable after a module update</value></data>
+  <data name="Frontend.734" xml:space="preserve"><value>The referenced output field no longer exists</value></data>
+  <data name="Frontend.735" xml:space="preserve"><value>The referenced field type changed after a module update; select the source again</value></data>
+  <data name="Frontend.736" xml:space="preserve"><value>The upstream value is an object list; select a list index</value></data>
+  <data name="Frontend.737" xml:space="preserve"><value>Type mismatch: select an array index before passing a single value</value></data>
+  <data name="Frontend.738" xml:space="preserve"><value>Type mismatch: the target parameter requires an array</value></data>
+  <data name="Frontend.739" xml:space="preserve"><value>Type mismatch: expected {0}, received {1}</value></data>
+  <data name="Frontend.740" xml:space="preserve"><value>Linked {0}{1}</value></data>
+  <data name="Frontend.741" xml:space="preserve"><value>Invalid upstream source</value></data>
+  <data name="Frontend.742" xml:space="preserve"><value>The target parameter requires {0}; the conversion formula must occupy the entire input, for example {{= {1}(value_1) }}</value></data>
+  <data name="Frontend.743" xml:space="preserve"><value>Pure formula result is {0}, but the target parameter requires {1}</value></data>
+  <data name="Frontend.744" xml:space="preserve"><value>Pure formula mode preserves the runtime type; the target parameter requires {0}</value></data>
+  <data name="Frontend.745" xml:space="preserve"><value>Pure formula result: {0} → target parameter {1}</value></data>
+  <data name="Frontend.746" xml:space="preserve"><value>You can use {{input}} to reference the current input, or open the editor to insert upstream output.</value></data>
 </root>

@@ -2934,26 +2934,28 @@ new Vue({
             if (!this.isPureFormulaExpression(text)) {
                 return {
                     level: 'danger',
-                    text: `目标参数需要 ${expected.typeName}；类型转换公式必须独占整个输入，例如 {{= ${expected.typeName === 'boolean' ? 'toBool' : 'toInt'}(value_1) }}`
+                    text: ncfWorkflowText('Frontend.742')
+                        .replace('{0}', expected.typeName)
+                        .replace('{1}', expected.typeName === 'boolean' ? 'toBool' : 'toInt')
                 };
             }
             const actual = this.inferredFormulaType(text);
             if (actual !== 'any' && actual !== expected.typeName) {
-                return { level: 'warning', text: `纯公式结果为 ${actual}，但目标参数需要 ${expected.typeName}` };
+                return { level: 'warning', text: ncfWorkflowText('Frontend.743').replace('{0}', actual).replace('{1}', expected.typeName) };
             }
             return {
                 level: 'success',
                 text: actual === 'any'
-                    ? `纯公式模式：运行时结果会保留类型；目标参数需要 ${expected.typeName}`
-                    : `纯公式结果：${actual} → 目标参数 ${expected.typeName}`
+                    ? ncfWorkflowText('Frontend.744').replace('{0}', expected.typeName)
+                    : ncfWorkflowText('Frontend.745').replace('{0}', actual).replace('{1}', expected.typeName)
             };
         },
         functionParameterFormulaHelp(parameter) {
             const expected = this.expectedShape(parameter);
-            const basic = '可使用 {{input}} 引用当前输入；也可以打开编辑器插入上游输出。';
-            if (expected.isArray || ['any', 'object', 'string'].includes(expected.typeName)) return `${basic} 组合前后文本时结果为字符串。`;
+            const basic = ncfWorkflowText('Frontend.746');
+            if (expected.isArray || ['any', 'object', 'string'].includes(expected.typeName)) return `${basic} ${ncfWorkflowText('Frontend.320')}`;
             const converter = expected.typeName === 'boolean' ? 'toBool' : 'toInt';
-            return `${basic} 目标参数需要 ${expected.typeName}：只填写完整公式（例如 {{= ${converter}(value_1) }}）会保留其类型；加入前后文本后结果会变成字符串。`;
+            return `${basic} ${ncfWorkflowText('Frontend.742').replace('{0}', expected.typeName).replace('{1}', converter)}`;
         },
         createSourceBinding(selection) {
             if (!selection || selection.length < 2) return null;
@@ -3214,7 +3216,7 @@ new Vue({
             const files = Array.from(fileList || []);
             if (!files.length) return [];
             if (maxFiles && files.length > Number(maxFiles)) {
-                throw new Error(`一次最多选择 ${maxFiles} 个文件。`);
+                throw new Error(ncfWorkflowText('Frontend.728').replace('{0}', maxFiles));
             }
             const form = new FormData();
             files.forEach(file => form.append('files', file, file.name));
@@ -3224,7 +3226,7 @@ new Vue({
                 { customAlert: true });
             const uploaded = response && response.data && response.data.files;
             if (!Array.isArray(uploaded) || uploaded.length !== files.length) {
-                throw new Error('文件上传响应无效。');
+                throw new Error(ncfWorkflowText('Frontend.726'));
             }
             return uploaded;
         },
@@ -3246,8 +3248,8 @@ new Vue({
                 this.scheduleAutoSave();
             } catch (error) {
                 this.$notify({
-                    title: '文件上传失败',
-                    message: error && error.message ? error.message : '文件上传失败。',
+                    title: ncfWorkflowText('Frontend.727'),
+                    message: error && error.message ? error.message : ncfWorkflowText('Frontend.727'),
                     type: 'error'
                 });
             } finally {
@@ -3269,9 +3271,9 @@ new Vue({
             const formulaCompatibility = this.formulaParameterCompatibility(parameter, value);
             if (formulaCompatibility && ['danger', 'warning'].includes(formulaCompatibility.level)) return formulaCompatibility;
             if (this.isTemplateValue(value)) {
-                if (!this.canUseTemplate(parameter)) return { level: 'danger', text: '此参数不支持在文本中嵌入变量' };
+                if (!this.canUseTemplate(parameter)) return { level: 'danger', text: ncfWorkflowText('Frontend.729') };
                 const bindings = this.parameterTemplateBindings(value);
-                if (!bindings.length) return formulaCompatibility || { level: 'manual', text: '手动输入' };
+                if (!bindings.length) return formulaCompatibility || { level: 'manual', text: ncfWorkflowText('Frontend.730') };
                 const invalid = bindings.find(item => {
                     const source = this.form.graph.nodes.find(node => node.id === item?.source?.nodeId);
                     const field = source && this.nodeOutputFields(source).find(candidate =>
@@ -3283,30 +3285,30 @@ new Vue({
                             typeof item?.source?.collectionIndex === 'undefined'));
                 });
                 return invalid
-                    ? { level: 'danger', text: '文本中的变量来源已失效，或缺少上游列表索引' }
-                    : formulaCompatibility || { level: 'success', text: `文本中嵌入 ${bindings.length} 个上游值` };
+                    ? { level: 'danger', text: ncfWorkflowText('Frontend.731') }
+                    : formulaCompatibility || { level: 'success', text: ncfWorkflowText('Frontend.740').replace('{0}', bindings.length).replace('{1}', ' upstream values') };
             }
             const rawBinding = this.bindingFor(node, parameter);
-            if (!rawBinding) return formulaCompatibility || { level: 'manual', text: '手动输入' };
+            if (!rawBinding) return formulaCompatibility || { level: 'manual', text: ncfWorkflowText('Frontend.730') };
             const source = this.form.graph.nodes.find(item => item.id === rawBinding.nodeId);
             const field = source && this.nodeOutputFields(source).find(item => item.path === (rawBinding.path || '$'));
-            if (!source || !this.upstreamNodes(node).some(item => item.id === source.id)) return { level: 'danger', text: '关联节点已不是有效上游节点' };
+            if (!source || !this.upstreamNodes(node).some(item => item.id === source.id)) return { level: 'danger', text: ncfWorkflowText('Frontend.732') };
             if (!field) return rawBinding.sourceKind === 'function-selection'
-                ? { level: 'danger', text: '关联的 Function 选择参数已在模块更新后删除或不可用' }
-                : { level: 'danger', text: '关联的输出字段已不存在' };
+                ? { level: 'danger', text: ncfWorkflowText('Frontend.733') }
+                : { level: 'danger', text: ncfWorkflowText('Frontend.734') };
             if (String(rawBinding.sourceKind || 'output') !== String(field.sourceKind || 'output')) {
-                return { level: 'danger', text: '关联字段类型已在模块更新后发生变化，请重新选择来源' };
+                return { level: 'danger', text: ncfWorkflowText('Frontend.735') };
             }
             const binding = this.resolvedBindingFor(node, parameter);
-            if (!binding) return { level: 'manual', text: '手动输入' };
+            if (!binding) return { level: 'manual', text: ncfWorkflowText('Frontend.730') };
             const expected = this.expectedShape(parameter);
-            if (binding.requiresIndex && (binding.collectionIndex === null || typeof binding.collectionIndex === 'undefined')) return { level: 'danger', text: '上游是对象列表，请选择列表索引' };
+            if (binding.requiresIndex && (binding.collectionIndex === null || typeof binding.collectionIndex === 'undefined')) return { level: 'danger', text: ncfWorkflowText('Frontend.736') };
             const actualArray = binding.isArray && (binding.itemIndex === null || typeof binding.itemIndex === 'undefined');
             if (expected.isArray !== actualArray) return actualArray
-                ? { level: 'danger', text: '类型不匹配：请选择数组索引后再传入单值' }
-                : { level: 'danger', text: '类型不匹配：目标参数要求数组' };
-            if (!['any', 'object'].includes(expected.typeName) && !['any', 'object'].includes(binding.sourceType) && expected.typeName !== binding.sourceType) return { level: 'warning', text: `类型不匹配：需要 ${expected.typeName}，当前为 ${binding.sourceType}` };
-            return { level: 'success', text: `已关联 ${binding.sourceType}${actualArray ? '[]' : ''}` };
+                ? { level: 'danger', text: ncfWorkflowText('Frontend.737') }
+                : { level: 'danger', text: ncfWorkflowText('Frontend.738') };
+            if (!['any', 'object'].includes(expected.typeName) && !['any', 'object'].includes(binding.sourceType) && expected.typeName !== binding.sourceType) return { level: 'warning', text: ncfWorkflowText('Frontend.739').replace('{0}', expected.typeName).replace('{1}', binding.sourceType) };
+            return { level: 'success', text: ncfWorkflowText('Frontend.740').replace('{0}', binding.sourceType).replace('{1}', actualArray ? '[]' : '') };
         },
         configBindingSelection(node, key) {
             const value = node && node.config[key];

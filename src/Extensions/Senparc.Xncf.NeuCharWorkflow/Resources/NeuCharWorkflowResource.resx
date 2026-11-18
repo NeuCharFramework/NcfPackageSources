@@ -769,4 +769,25 @@
   <data name="Frontend.723" xml:space="preserve"><value>{0} 节点会在工作流中处理上游输入。</value></data>
   <data name="Frontend.724" xml:space="preserve"><value>知识库 ID</value></data>
   <data name="Frontend.725" xml:space="preserve"><value>组状态</value></data>
+  <data name="Frontend.726" xml:space="preserve"><value>文件上传响应无效。</value></data>
+  <data name="Frontend.727" xml:space="preserve"><value>文件上传失败。</value></data>
+  <data name="Frontend.728" xml:space="preserve"><value>一次最多选择 {0} 个文件。</value></data>
+  <data name="Frontend.729" xml:space="preserve"><value>此参数不支持在文本中嵌入变量</value></data>
+  <data name="Frontend.730" xml:space="preserve"><value>手动输入</value></data>
+  <data name="Frontend.731" xml:space="preserve"><value>文本中的变量来源已失效，或缺少上游列表索引</value></data>
+  <data name="Frontend.732" xml:space="preserve"><value>关联节点已不是有效上游节点</value></data>
+  <data name="Frontend.733" xml:space="preserve"><value>关联的 Function 选择参数已在模块更新后删除或不可用</value></data>
+  <data name="Frontend.734" xml:space="preserve"><value>关联的输出字段已不存在</value></data>
+  <data name="Frontend.735" xml:space="preserve"><value>关联字段类型已在模块更新后发生变化，请重新选择来源</value></data>
+  <data name="Frontend.736" xml:space="preserve"><value>上游是对象列表，请选择列表索引</value></data>
+  <data name="Frontend.737" xml:space="preserve"><value>类型不匹配：请选择数组索引后再传入单值</value></data>
+  <data name="Frontend.738" xml:space="preserve"><value>类型不匹配：目标参数要求数组</value></data>
+  <data name="Frontend.739" xml:space="preserve"><value>类型不匹配：需要 {0}，当前为 {1}</value></data>
+  <data name="Frontend.740" xml:space="preserve"><value>已关联 {0}{1}</value></data>
+  <data name="Frontend.741" xml:space="preserve"><value>已失效的上游来源</value></data>
+  <data name="Frontend.742" xml:space="preserve"><value>目标参数需要 {0}；类型转换公式必须独占整个输入，例如 {{= {1}(value_1) }}</value></data>
+  <data name="Frontend.743" xml:space="preserve"><value>纯公式结果为 {0}，但目标参数需要 {1}</value></data>
+  <data name="Frontend.744" xml:space="preserve"><value>纯公式模式：运行时结果会保留类型；目标参数需要 {0}</value></data>
+  <data name="Frontend.745" xml:space="preserve"><value>纯公式结果：{0} → 目标参数 {1}</value></data>
+  <data name="Frontend.746" xml:space="preserve"><value>可使用 {{input}} 引用当前输入；也可以打开编辑器插入上游输出。</value></data>
 </root>
