@@ -512,4 +512,13 @@
   <data name="Frontend.278" xml:space="preserve"><value>Tag updated</value></data>
   <data name="Frontend.279" xml:space="preserve"><value>Tag created</value></data>
   <data name="Frontend.280" xml:space="preserve"><value>Request failed</value></data>
+  <data name="Frontend.281" xml:space="preserve"><value>Category name must be at most 50 characters</value></data>
+  <data name="Frontend.282" xml:space="preserve"><value>Tag name must be at most 30 characters</value></data>
+  <data name="Frontend.283" xml:space="preserve"><value>Select data first</value></data>
+  <data name="Frontend.284" xml:space="preserve"><value>File count</value></data>
+  <data name="Frontend.285" xml:space="preserve"><value>Total size</value></data>
+  <data name="Frontend.286" xml:space="preserve"><value>Count</value></data>
+  <data name="Frontend.287" xml:space="preserve"><value>Size</value></data>
+  <data name="Frontend.288" xml:space="preserve"><value>items</value></data>
+  <data name="Frontend.289" xml:space="preserve"><value>Enterprise documents</value></data>
 </root>

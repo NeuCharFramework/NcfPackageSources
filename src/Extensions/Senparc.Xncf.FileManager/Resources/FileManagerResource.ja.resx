@@ -512,4 +512,13 @@
   <data name="Frontend.278" xml:space="preserve"><value>タグを更新しました</value></data>
   <data name="Frontend.279" xml:space="preserve"><value>タグを作成しました</value></data>
   <data name="Frontend.280" xml:space="preserve"><value>リクエストに失敗しました</value></data>
+  <data name="Frontend.281" xml:space="preserve"><value>カテゴリ名は50文字以内で入力してください</value></data>
+  <data name="Frontend.282" xml:space="preserve"><value>タグ名は30文字以内で入力してください</value></data>
+  <data name="Frontend.283" xml:space="preserve"><value>先にデータを選択してください</value></data>
+  <data name="Frontend.284" xml:space="preserve"><value>ファイル数</value></data>
+  <data name="Frontend.285" xml:space="preserve"><value>合計サイズ</value></data>
+  <data name="Frontend.286" xml:space="preserve"><value>数量</value></data>
+  <data name="Frontend.287" xml:space="preserve"><value>サイズ</value></data>
+  <data name="Frontend.288" xml:space="preserve"><value>件</value></data>
+  <data name="Frontend.289" xml:space="preserve"><value>企業文書</value></data>
 </root>

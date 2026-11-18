@@ -2539,13 +2539,13 @@
                         tagCategoryRules: {
                             name: [
                                 { required: true, message: ncfST('Frontend.161'), trigger: 'blur' },
-                                { max: 50, message: '分类名称最多50个字符', trigger: 'blur' }
+                                { max: 50, message: ncfST('Frontend.281'), trigger: 'blur' }
                             ]
                         },
                         tagCreateRules: {
                             name: [
                                 { required: true, message: ncfST('Frontend.163'), trigger: 'blur' },
-                                { max: 30, message: '标签名称最多30个字符', trigger: 'blur' }
+                                { max: 30, message: ncfST('Frontend.282'), trigger: 'blur' }
                             ],
                             categoryId: [
                                 { required: true, message: ncfST('Frontend.171'), trigger: 'change' }
@@ -2577,7 +2577,7 @@
                         categories.forEach(function (cat) { known[cat.id] = true; });
                         var orphanTags = tags.filter(function (tag) { return !tag.categoryId || !known[tag.categoryId]; });
                         if (orphanTags.length) {
-                            groups.push({ id: '__other__', name: '未分类', tags: orphanTags });
+                            groups.push({ id: '__other__', name: ncfST('Frontend.220'), tags: orphanTags });
                         }
                         return groups;
                     },
@@ -2657,7 +2657,7 @@
                             );
                             this.$message.success(ncfST('Frontend.075'));
                         } catch (e) {
-                            this.$message.error('保存失败，请检查浏览器本地存储是否可用');
+                            this.$message.error(ncfST('Frontend.271'));
                         }
                     },
                     resetUploadSettings: function () {
@@ -2673,7 +2673,7 @@
                             );
                             this.$message.success(ncfST('Frontend.108'));
                         } catch (e) {
-                            this.$message.error('恢复默认失败');
+                            this.$message.error(ncfST('Frontend.273'));
                         }
                     },
                     getMaxUploadSizeBytes: function () {
@@ -2890,7 +2890,7 @@
                                         name: name,
                                         description: (form.description || '').trim(),
                                         parentId: form.parentId || '',
-                                        type: '分类',
+                                        type: ncfST('Frontend.081'),
                                         status: '启用',
                                         tagCount: 0,
                                         updatedAt: now,
@@ -2990,7 +2990,7 @@
                         if (typeof this.loadFileTagMapFromStorage === 'function') this.loadFileTagMapFromStorage();
                         var catalog = (this.tagManager && this.tagManager.tags) || [];
                         if (!catalog.length) {
-                            this.$message.warning('请先在「标签管理」中维护标签后再设置');
+                            this.$message.warning(ncfST('Frontend.130'));
                         }
                         var existingItems = this.getFileTagItems(row);
                         var selectedIds = existingItems.map(function (item) { return item.id; }).filter(Boolean);
@@ -3104,7 +3104,7 @@
                         return (this.favoriteList.list || []).some(function (item) { return item.id === row.id; });
                     },
                     buildFavoritePathText: function () {
-                        var segments = [this.rootFolderName || '企业文档', this.orgName || ''].concat(
+                        var segments = [this.rootFolderName || ncfST('Frontend.289'), this.orgName || ''].concat(
                             (this.folderPath || []).map(function (item) { return item.name; })
                         ).filter(function (name) { return !!name; });
                         return segments.join(' > ');
@@ -3226,7 +3226,7 @@
                             else this.$message.error((result && result.message) || ncfST('Frontend.232'));
                         } catch (error) {
                             var data = error && error.response && error.response.data;
-                            var message = typeof data === 'string' ? data : (data && (data.errorMessage || data.message || data.title || data.msg)) || (error && error.message) || '请求失败';
+                            var message = typeof data === 'string' ? data : (data && (data.errorMessage || data.message || data.title || data.msg)) || (error && error.message) || ncfST('Frontend.280');
                             this.$message.error(ncfST('Frontend.233', message));
                         } finally {
                             this.$set(this.recycleBin, 'emptying', false);
@@ -3275,18 +3275,18 @@
                         sizeTotalLabel: '0B',
                         countTotalLabel: '0',
                         sizeSlices: [
-                            { name: '文档', value: 0, color: '#95de64' },
-                            { name: '图片', value: 0, color: '#597ef7' },
-                            { name: '视频', value: 0, color: '#ffd666' },
-                            { name: '音频', value: 0, color: '#ff9c6e' },
-                            { name: '其他', value: 0, color: '#91d5ff' }
+                            { name: ncfST('Frontend.206'), value: 0, color: '#95de64' },
+                            { name: ncfST('Frontend.207'), value: 0, color: '#597ef7' },
+                            { name: ncfST('Frontend.208'), value: 0, color: '#ffd666' },
+                            { name: ncfST('Frontend.209'), value: 0, color: '#ff9c6e' },
+                            { name: ncfST('Frontend.210'), value: 0, color: '#91d5ff' }
                         ],
                         countSlices: [
-                            { name: '文档', value: 0, color: '#95de64' },
-                            { name: '图片', value: 0, color: '#597ef7' },
-                            { name: '视频', value: 0, color: '#ffd666' },
-                            { name: '音频', value: 0, color: '#ff9c6e' },
-                            { name: '其他', value: 0, color: '#91d5ff' }
+                            { name: ncfST('Frontend.206'), value: 0, color: '#95de64' },
+                            { name: ncfST('Frontend.207'), value: 0, color: '#597ef7' },
+                            { name: ncfST('Frontend.208'), value: 0, color: '#ffd666' },
+                            { name: ncfST('Frontend.209'), value: 0, color: '#ff9c6e' },
+                            { name: ncfST('Frontend.210'), value: 0, color: '#91d5ff' }
                         ]
                     });
                 } else if (!vm.dashboard.capacityTrend) {
@@ -3440,7 +3440,7 @@
                     });
                     categories.forEach(function (cat) {
                         var hasParent = !!(cat.parentId && categoryMap[cat.parentId]);
-                        cat.type = hasParent ? '二级分类' : '一级分类';
+                        cat.type = hasParent ? ncfST('Frontend.222') : ncfST('Frontend.223');
                         cat.level = hasParent ? 2 : 1;
                         if (hasParent) {
                             categoryMap[cat.parentId].children.push(cat);
@@ -3449,7 +3449,7 @@
                     });
                     (this.tagManager.tags || []).forEach(function (row) {
                         var tag = Object.assign({}, row, {
-                            nodeType: 'tag', type: '标签', tagCount: '-', admin: '-', children: []
+                            nodeType: 'tag', type: ncfST('Frontend.224'), tagCount: '-', admin: '-', children: []
                         });
                         if (tag.categoryId && categoryMap[tag.categoryId]) {
                             categoryMap[tag.categoryId].children.push(tag);
@@ -3520,9 +3520,9 @@
                     if (!row) return;
                     var self = this;
                     var tip = row.nodeType === 'tag'
-                        ? '确定删除标签「' + row.name + '」吗？'
-                        : '确定删除分类「' + row.name + '」及其下属标签吗？';
-                    this.$confirm(tip, '提示', { type: 'warning' }).then(function () {
+                        ? ncfST('Frontend.257', row.name)
+                        : ncfST('Frontend.258', row.name);
+                    this.$confirm(tip, ncfST('Frontend.259'), { type: 'warning' }).then(function () {
                         if (row.nodeType === 'tag') {
                             self.tagManager.tags = (self.tagManager.tags || []).filter(function (item) { return item.id !== row.id; });
                             var category = (self.tagManager.list || []).find(function (item) { return item.id === row.categoryId; });
@@ -3539,7 +3539,7 @@
                         if (typeof self.syncTagCategoryOptions === 'function') self.syncTagCategoryOptions();
                         if (typeof self.saveTagManagerToStorage === 'function') self.saveTagManagerToStorage();
                         self.searchTags();
-                        self.$message.success('已删除');
+                        self.$message.success(ncfST('Frontend.039'));
                     }).catch(function () { /* cancel */ });
                 };
                 vm.toggleTagRowStatus = function (row) {
@@ -3560,11 +3560,11 @@
                     }
                     if (typeof this.saveTagManagerToStorage === 'function') this.saveTagManagerToStorage();
                     this.searchTags();
-                    this.$message.success(enabled ? '已停用' : '已启用');
+                    this.$message.success(enabled ? ncfST('Frontend.225') : ncfST('Frontend.095'));
                 };
                 vm.setSelectedTagStatus = function (enabled) {
                     var ids = (this.tagManager && this.tagManager.selectedIds) || [];
-                    if (!ids.length) { this.$message.warning('请先选择数据'); return; }
+                    if (!ids.length) { this.$message.warning(ncfST('Frontend.283')); return; }
                     var idMap = {};
                     ids.forEach(function (id) { idMap[id] = true; });
                     var nextStatus = enabled ? '启用' : '已停用';
@@ -3577,7 +3577,7 @@
                     });
                     if (typeof this.saveTagManagerToStorage === 'function') this.saveTagManagerToStorage();
                     this.searchTags();
-                    this.$message.success(enabled ? '已启用所选项目' : '已停用所选项目');
+                    this.$message.success(enabled ? ncfST('Frontend.095') : ncfST('Frontend.225'));
                 };
                 vm.enableSelectedTags = function () { this.setSelectedTagStatus(true); };
                 vm.disableSelectedTags = function () { this.setSelectedTagStatus(false); };
@@ -3778,7 +3778,7 @@
                                 failedIds: remainingFallback.map(function (x) { return x.id; }),
                                 message: remainingFallback.length === 0
                                     ? ncfST('Frontend.229')
-                                    : ('已删除 ' + successFallback + ' 个，失败 ' + remainingFallback.length + ' 个' + (lastError ? '：' + lastError : ''))
+                                    : ncfST('Frontend.230', successFallback, remainingFallback.length, lastError || '-')
                             };
                         }
                         var failedIds = (result && result.failedIds) || [];
@@ -3795,13 +3795,13 @@
                         if (remaining.length === 0) {
                             this.$message.success((result && result.message) || ncfST('Frontend.229'));
                         } else if (remaining.length < items.length) {
-                            this.$message.warning((result && result.message) || ('部分文件删除失败，仍有 ' + remaining.length + ' 个留在回收站'));
+                            this.$message.warning((result && result.message) || ncfST('Frontend.231', remaining.length));
                         } else {
                             this.$message.error((result && result.message) || ncfST('Frontend.232'));
                         }
                     } catch (error) {
                         var errData = error && error.response && error.response.data;
-                        var message = typeof errData === 'string' ? errData : (errData && (errData.errorMessage || errData.message || errData.title || errData.msg)) || (error && error.message) || '请求失败';
+                        var message = typeof errData === 'string' ? errData : (errData && (errData.errorMessage || errData.message || errData.title || errData.msg)) || (error && error.message) || ncfST('Frontend.280');
                         this.$message.error(ncfST('Frontend.233', message));
                     } finally {
                         this.$set(this.recycleBin, 'emptying', false);
@@ -3811,17 +3811,17 @@
                     try {
                         var shortName = String(row.fileName || '').replace(/\.[^.]+$/, '') || row.fileName;
                         await this.$confirm(
-                            '此操作将文件放至回收站，是否继续？',
-                            '是否删除: ' + shortName,
-                            { type: 'warning', confirmButtonText: '确定', cancelButtonText: '取消' }
+                            ncfST('Frontend.236'),
+                            ncfST('Frontend.237', shortName),
+                            { type: 'warning', confirmButtonText: ncfST('Frontend.024'), cancelButtonText: ncfST('Frontend.038') }
                         );
                         this.moveFileToRecycleBin(row);
-                        this.$message.success('已移至回收站');
+                        this.$message.success(ncfST('Frontend.238'));
                     } catch (error) {
                         if (error !== 'cancel') {
                             var data = error && error.response && error.response.data;
                             var message = typeof data === 'string' ? data : (data && (data.errorMessage || data.message || data.title));
-                            this.$message.error('删除失败：' + (message || (error && error.message) || '请求失败'));
+                            this.$message.error(ncfST('Frontend.239', message || (error && error.message) || ncfST('Frontend.280')));
                         }
                     }
                 };
@@ -3868,7 +3868,7 @@
                     } catch (e) { /* ignore */ }
                 };
                 vm.buildFavoritePathText = function () {
-                    var segments = [this.rootFolderName || '企业文档', this.orgName || ''].concat(
+                    var segments = [this.rootFolderName || ncfST('Frontend.289'), this.orgName || ''].concat(
                         (this.folderPath || []).map(function (item) { return item.name; })
                     ).filter(function (name) { return !!name; });
                     return segments.join(' > ');
@@ -4121,15 +4121,15 @@
                     var ext = extMatch ? extMatch[0].toLowerCase() : '';
                     var blocked = this.parseExtensionList((this.uploadSettings && this.uploadSettings.blockedTypesText) || '');
                     if (ext && blocked.indexOf(ext) !== -1) {
-                        return '文件“' + name + '”类型 ' + ext + ' 已被过滤，无法上传。';
+                        return ncfST('Frontend.216', name, ext);
                     }
                     var allowed = this.parseExtensionList((this.uploadSettings && this.uploadSettings.allowedTypesText) || '');
                     if (allowed.length && (!ext || allowed.indexOf(ext) === -1)) {
-                        return '文件“' + name + '”类型不在允许上传列表中。';
+                        return ncfST('Frontend.217', name);
                     }
                     var maxBytes = this.getMaxUploadSizeBytes();
                     if (fileSize > maxBytes) {
-                        return '文件“' + name + '”超过 ' + Math.round(maxBytes / 1024 / 1024) + ' MB，无法上传。';
+                        return ncfST('Frontend.218', name, Math.round(maxBytes / 1024 / 1024));
                     }
                     return '';
                 };
@@ -4191,8 +4191,8 @@
                 if (!vm.$options.computed) vm.$options.computed = {};
                 if (typeof vm.getUploadDialogTitle !== 'function') {
                     vm.getUploadDialogTitle = function () {
-                        var segments = [this.rootFolderName || '根目录'].concat((this.folderPath || []).map(function (item) { return item.name; }));
-                        return '上传文件到 【/' + segments.join('/') + '】 --支持断点续传';
+                        var segments = [this.rootFolderName || ncfST('Frontend.023')].concat((this.folderPath || []).map(function (item) { return item.name; }));
+                        return ncfST('Frontend.234', segments.join('/'));
                     };
                 }
 
@@ -4328,22 +4328,22 @@
                                     if (!params || !params.length) return '';
                                     var lines = [params[0].axisValue];
                                     params.forEach(function (p) {
-                                        var unit = p.seriesName === '文件数量' ? ' 个' : ' MB';
+                                        var unit = p.seriesName === ncfST('Frontend.284') ? ' ' + ncfST('Frontend.288') : ' MB';
                                         lines.push(p.marker + p.seriesName + '：' + p.data + unit);
                                     });
                                     return lines.join('<br/>');
                                 }
                             },
-                            legend: { bottom: 0, data: ['文件数量', '总大小'] },
+                            legend: { bottom: 0, data: [ncfST('Frontend.284'), ncfST('Frontend.285')] },
                             grid: { left: 48, right: 56, top: 28, bottom: 48 },
                             xAxis: { type: 'category', boundaryGap: false, data: labels },
                             yAxis: [
-                                { type: 'value', name: '数量', minInterval: 1, axisLabel: { formatter: '{value}' }, splitLine: { lineStyle: { type: 'dashed' } } },
-                                { type: 'value', name: '大小', axisLabel: { formatter: '{value}MB' }, splitLine: { show: false } }
+                                { type: 'value', name: ncfST('Frontend.286'), minInterval: 1, axisLabel: { formatter: '{value}' }, splitLine: { lineStyle: { type: 'dashed' } } },
+                                { type: 'value', name: ncfST('Frontend.287'), axisLabel: { formatter: '{value}MB' }, splitLine: { show: false } }
                             ],
                             series: [
-                                { name: '文件数量', type: 'line', smooth: true, yAxisIndex: 0, data: fileCounts, areaStyle: { opacity: 0.08 } },
-                                { name: '总大小', type: 'line', smooth: true, yAxisIndex: 1, data: sizeMb }
+                                { name: ncfST('Frontend.284'), type: 'line', smooth: true, yAxisIndex: 0, data: fileCounts, areaStyle: { opacity: 0.08 } },
+                                { name: ncfST('Frontend.285'), type: 'line', smooth: true, yAxisIndex: 1, data: sizeMb }
                             ]
                         }, true);
                     }
@@ -4367,11 +4367,11 @@
                     var countChart = this.getOrCreateChart(this.$refs.countChart);
                     if (countChart) {
                         countChart.setOption({
-                            tooltip: { trigger: 'item', formatter: '{b}: {c} 个 ({d}%)' },
+                            tooltip: { trigger: 'item', formatter: '{b}: {c} ' + ncfST('Frontend.288') + ' ({d}%)' },
                             legend: { bottom: 0 },
                             series: [{
                                 type: 'pie', radius: ['48%', '68%'], center: ['50%', '46%'],
-                                label: { formatter: '{b}\n{c}个' },
+                                label: { formatter: '{b}\n{c}' + ncfST('Frontend.288') },
                                 data: (countSlices.length ? countSlices : this.dashboard.countSlices).map(function (x) {
                                     return { name: x.name, value: Number(x.value || 0), itemStyle: { color: x.color } };
                                 })
@@ -4404,7 +4404,7 @@
                     } catch (error) {
                         var data = error && error.response && error.response.data;
                         var message = typeof data === 'string' ? data : (data && (data.errorMessage || data.message || data.title));
-                        this.$message.error('获取文件列表失败：' + (message || (error && error.message) || '请求失败'));
+                        this.$message.error(ncfST('Frontend.030') + ': ' + (message || (error && error.message) || ncfST('Frontend.280')));
                     } finally {
                         this.tableLoading = false;
                     }
@@ -4491,7 +4491,7 @@
                     this.loadFileTagMapFromStorage();
                     var catalog = (this.tagManager && this.tagManager.tags) || [];
                     if (!catalog.length) {
-                        this.$message.warning('请先在「标签管理」中维护标签后再设置');
+                        this.$message.warning(ncfST('Frontend.130'));
                     }
                     var existingItems = this.getFileTagItems(row);
                     var selectedIds = existingItems.map(function (item) { return item.id; }).filter(Boolean);
@@ -4612,7 +4612,7 @@
                     };
                     vm.previewFile = async function (row) {
                         if (!row || row.id == null) {
-                            this.$message.warning('当前项无法预览');
+                            this.$message.warning(ncfST('Frontend.131'));
                             return;
                         }
                         var fileName = row.fileName || row.name || ncfST('Frontend.235');

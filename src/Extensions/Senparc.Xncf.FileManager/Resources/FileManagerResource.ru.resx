@@ -512,4 +512,13 @@
   <data name="Frontend.278" xml:space="preserve"><value>Метка обновлена</value></data>
   <data name="Frontend.279" xml:space="preserve"><value>Метка создана</value></data>
   <data name="Frontend.280" xml:space="preserve"><value>Ошибка запроса</value></data>
+  <data name="Frontend.281" xml:space="preserve"><value>Имя категории должно содержать не более 50 символов</value></data>
+  <data name="Frontend.282" xml:space="preserve"><value>Имя метки должно содержать не более 30 символов</value></data>
+  <data name="Frontend.283" xml:space="preserve"><value>Сначала выберите данные</value></data>
+  <data name="Frontend.284" xml:space="preserve"><value>Количество файлов</value></data>
+  <data name="Frontend.285" xml:space="preserve"><value>Общий размер</value></data>
+  <data name="Frontend.286" xml:space="preserve"><value>Количество</value></data>
+  <data name="Frontend.287" xml:space="preserve"><value>Размер</value></data>
+  <data name="Frontend.288" xml:space="preserve"><value>элементов</value></data>
+  <data name="Frontend.289" xml:space="preserve"><value>Корпоративные документы</value></data>
 </root>

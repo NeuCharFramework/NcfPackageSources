@@ -512,4 +512,13 @@
   <data name="Frontend.278" xml:space="preserve"><value>Étiquette mise à jour</value></data>
   <data name="Frontend.279" xml:space="preserve"><value>Étiquette créée</value></data>
   <data name="Frontend.280" xml:space="preserve"><value>Échec de la requête</value></data>
+  <data name="Frontend.281" xml:space="preserve"><value>Le nom de catégorie doit comporter au plus 50 caractères</value></data>
+  <data name="Frontend.282" xml:space="preserve"><value>Le nom d'étiquette doit comporter au plus 30 caractères</value></data>
+  <data name="Frontend.283" xml:space="preserve"><value>Sélectionnez d'abord des données</value></data>
+  <data name="Frontend.284" xml:space="preserve"><value>Nombre de fichiers</value></data>
+  <data name="Frontend.285" xml:space="preserve"><value>Taille totale</value></data>
+  <data name="Frontend.286" xml:space="preserve"><value>Quantité</value></data>
+  <data name="Frontend.287" xml:space="preserve"><value>Taille</value></data>
+  <data name="Frontend.288" xml:space="preserve"><value>éléments</value></data>
+  <data name="Frontend.289" xml:space="preserve"><value>Documents d'entreprise</value></data>
 </root>

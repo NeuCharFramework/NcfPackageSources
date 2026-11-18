@@ -508,4 +508,13 @@
   <data name="Frontend.278" xml:space="preserve"><value>标签已更新</value></data>
   <data name="Frontend.279" xml:space="preserve"><value>标签已创建</value></data>
   <data name="Frontend.280" xml:space="preserve"><value>请求失败</value></data>
+  <data name="Frontend.281" xml:space="preserve"><value>分类名称最多50个字符</value></data>
+  <data name="Frontend.282" xml:space="preserve"><value>标签名称最多30个字符</value></data>
+  <data name="Frontend.283" xml:space="preserve"><value>请先选择数据</value></data>
+  <data name="Frontend.284" xml:space="preserve"><value>文件数</value></data>
+  <data name="Frontend.285" xml:space="preserve"><value>总大小</value></data>
+  <data name="Frontend.286" xml:space="preserve"><value>数量</value></data>
+  <data name="Frontend.287" xml:space="preserve"><value>大小</value></data>
+  <data name="Frontend.288" xml:space="preserve"><value>个</value></data>
+  <data name="Frontend.289" xml:space="preserve"><value>企业文档</value></data>
 </root>
