@@ -132,30 +132,30 @@
                             <el-tag v-else size="mini" type="info" class="kb-status-tag">{{ ncfST('Frontend.220') }}</el-tag>
                         </template>
                     </el-table-column>
-                    <el-table-column v-if="colData[0].istrue" prop="embeddingModelId" align="left" label="Embedding模型Id" width="140" sortable :filters="filterTableHeader.embeddingModelId" :filter-method="filterHandler"></el-table-column>
-                    <el-table-column v-if="colData[1].istrue" prop="vectorDBId" align="left" label="向量数据库Id" width="130" sortable :filters="filterTableHeader.vectorDBId" :filter-method="filterHandler"></el-table-column>
-                    <el-table-column v-if="colData[2].istrue" prop="chatModelId" align="left" label="对话模型Id" width="120" sortable :filters="filterTableHeader.chatModelId" :filter-method="filterHandler"></el-table-column>
-                    <el-table-column v-if="colData[4].istrue" prop="content" align="left" label="内容" min-width="160" show-overflow-tooltip sortable :filters="filterTableHeader.content" :filter-method="filterHandler"></el-table-column>
-                    <el-table-column align="center" label="添加时间" width="170" sortable>
+                    <el-table-column v-if="colData[0].istrue" prop="embeddingModelId" align="left" :label="ncfST('Frontend.111')" width="140" sortable :filters="filterTableHeader.embeddingModelId" :filter-method="filterHandler"></el-table-column>
+                    <el-table-column v-if="colData[1].istrue" prop="vectorDBId" align="left" :label="ncfST('Frontend.112')" width="130" sortable :filters="filterTableHeader.vectorDBId" :filter-method="filterHandler"></el-table-column>
+                    <el-table-column v-if="colData[2].istrue" prop="chatModelId" align="left" :label="ncfST('Frontend.113')" width="120" sortable :filters="filterTableHeader.chatModelId" :filter-method="filterHandler"></el-table-column>
+                    <el-table-column v-if="colData[4].istrue" prop="content" align="left" :label="ncfST('Frontend.012')" min-width="160" show-overflow-tooltip sortable :filters="filterTableHeader.content" :filter-method="filterHandler"></el-table-column>
+                    <el-table-column align="center" :label="ncfST('Frontend.050')" width="170" sortable>
                         <template slot-scope="scope">
                             {{ formaTableTime(scope.row.addTime) }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="操作" align="center" fixed="right" width="300" class-name="ncf-table-actions-column">
+                    <el-table-column :label="ncfST('Frontend.031')" align="center" fixed="right" width="300" class-name="ncf-table-actions-column">
                         <template slot-scope="scope">
                             <el-button size="mini" type="primary" icon="el-icon-setting"
-                                @@click="handleElVisibleOpenBtn('drawerGroup', scope.row)">配置</el-button>
+                                @@click="handleElVisibleOpenBtn('drawerGroup', scope.row)">{{ ncfST('Frontend.074') }}</el-button>
                             <el-button size="mini" type="success" icon="el-icon-data-analysis"
-                                @@click="handleEmbeddingBtn('embedding', scope.row)">向量化</el-button>
-                            <el-tooltip content="更多操作" placement="top" :open-delay="180">
+                                @@click="handleEmbeddingBtn('embedding', scope.row)">{{ ncfST('Frontend.019') }}</el-button>
+                            <el-tooltip :content="ncfST('Frontend.218')" placement="top" :open-delay="180">
                             <el-dropdown trigger="click" @@command="handleRowCommand($event, scope.row)">
                                 <el-button size="mini" type="text" icon="el-icon-more"
-                                    class="ncf-table-action-more" title="更多操作" aria-label="更多操作"></el-button>
+                                    class="ncf-table-action-more" :title="ncfST('Frontend.218')" :aria-label="ncfST('Frontend.218')"></el-button>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="edit" icon="el-icon-edit">编辑</el-dropdown-item>
-                                    <el-dropdown-item command="recall" icon="el-icon-search">召回测试</el-dropdown-item>
+                                    <el-dropdown-item command="edit" icon="el-icon-edit">{{ ncfST('Frontend.060') }}</el-dropdown-item>
+                                    <el-dropdown-item command="recall" icon="el-icon-search">{{ ncfST('Frontend.016') }}</el-dropdown-item>
                                 <el-dropdown-item command="delete" divided icon="el-icon-delete"
-                                    class="ncf-table-action-danger">删除</el-dropdown-item>
+                                    class="ncf-table-action-danger">{{ ncfST('Frontend.014') }}</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                             </el-tooltip>
@@ -613,42 +613,42 @@
     </div>
 
     @* Recall: search settings. *@
-    <el-drawer title="检索设置" :visible.sync="visible.searchSettingsDrawer" direction="rtl" size="380px" append-to-body>
+    <el-drawer :title="ncfST('Frontend.047')" :visible.sync="visible.searchSettingsDrawer" direction="rtl" size="380px" append-to-body>
         <div class="search-settings-body">
             <div class="search-settings-item">
-                <div class="search-settings-label">检索方式</div>
-                <div class="search-method-display"><i class="el-icon-connection"></i> 语义向量检索</div>
-                <p class="search-method-tip">系统将问题和资料片段转换为向量后按语义相近程度排序。不同模型和向量库的分数范围可能不同，因此不要把它当作固定百分比或召回率。</p>
+                <div class="search-settings-label">{{ ncfST('Frontend.224') }}</div>
+                <div class="search-method-display"><i class="el-icon-connection"></i> {{ ncfST('Frontend.241') }}</div>
+                <p class="search-method-tip">{{ ncfST('Frontend.236') }}</p>
             </div>
             <div class="search-settings-item">
-                <div class="search-settings-label">返回片段数量（Top K）</div>
-                <p class="search-method-tip">先从 5 开始。结果太少可提高，结果太杂可降低；本设置只影响当前页面后续测试。</p>
+                <div class="search-settings-label">{{ ncfST('Frontend.251') }}</div>
+                <p class="search-method-tip">{{ ncfST('Frontend.187') }}</p>
                 <div class="topk-row">
                     <el-slider v-model="topK" :min="1" :max="20" :step="1" show-stops></el-slider>
                     <el-input-number v-model="topK" :min="1" :max="20" :step="1" size="small" controls-position="right"></el-input-number>
                 </div>
             </div>
             <div class="search-settings-item">
-                <div class="search-settings-label">重排（本次测试）</div>
+                <div class="search-settings-label">{{ ncfST('Frontend.260') }}</div>
                 <el-select v-model="recallRerankMode" size="small" style="width: 100%;">
-                    <el-option label="跟随知识库设置" value=""></el-option>
-                    <el-option label="关闭" value="None"></el-option>
-                    <el-option label="词法混合" value="Lexical"></el-option>
-                    <el-option label="LLM 重排" value="Llm"></el-option>
+                    <el-option :label="ncfST('Frontend.249')" value=""></el-option>
+                    <el-option :label="ncfST('Frontend.188')" value="None"></el-option>
+                    <el-option :label="ncfST('Frontend.239')" value="Lexical"></el-option>
+                    <el-option :label="ncfST('Frontend.178')" value="Llm"></el-option>
                 </el-select>
-                <p class="search-method-tip" v-if="selectedKnowledgeBase">当前知识库配置：{{ recallRerankSummary }}</p>
+                <p class="search-method-tip" v-if="selectedKnowledgeBase">{{ ncfST('Frontend.275') }}{{ recallRerankSummary }}</p>
             </div>
         </div>
-        <div class="search-settings-footer"><el-button type="primary" size="small" @@click="visible.searchSettingsDrawer = false">完成</el-button></div>
+        <div class="search-settings-footer"><el-button type="primary" size="small" @@click="visible.searchSettingsDrawer = false">{{ ncfST('Frontend.202') }}</el-button></div>
     </el-drawer>
 
     @* Recall: fragment details. *@
-    <el-dialog title="召回片段详情" :visible.sync="visible.paragraphDetailDialog" width="620px" append-to-body @@close="paragraphDetailItem = null">
+    <el-dialog :title="ncfST('Frontend.195')" :visible.sync="visible.paragraphDetailDialog" width="620px" append-to-body @@close="paragraphDetailItem = null">
         <template v-if="paragraphDetailItem">
             <div class="paragraph-detail-meta">第 {{ paragraphDetailItem.rank }} 条 · 相似度 {{ formatScore(paragraphDetailItem.score) }}
                 <template v-if="paragraphDetailItem.rerankMode && paragraphDetailItem.rerankMode !== 'None' && paragraphDetailItem.originalRank && paragraphDetailItem.originalRank !== paragraphDetailItem.rank"> · 重排前第 {{ paragraphDetailItem.originalRank }} 条</template>
             </div>
-            <div class="paragraph-detail-source">来源：{{ paragraphDetailItem.sourceName || '未提供来源名称' }}</div>
+            <div class="paragraph-detail-source">{{ ncfST('Frontend.267') }}{{ paragraphDetailItem.sourceName || ncfST('Frontend.090') }}</div>
             <div class="paragraph-detail-content">{{ paragraphDetailItem.content || '—' }}</div>
         </template>
     </el-dialog>
