@@ -4615,7 +4615,7 @@
                             this.$message.warning('当前项无法预览');
                             return;
                         }
-                        var fileName = row.fileName || row.name || '未命名文件';
+                        var fileName = row.fileName || row.name || ncfST('Frontend.235');
                         var kind = this.getPreviewKind(fileName);
                         var pageUrl = window.location.pathname || '/Admin/FileManager/Index';
                         var previewUrl = this.buildPreviewUrl(row.id);
@@ -4638,12 +4638,12 @@
                             }
                             if (kind === 'legacy-office') {
                                 this.filePreviewDialog.mode = 'error';
-                                this.filePreviewDialog.error = '旧版 Office 格式（.doc/.xls/.ppt）暂不支持在线预览，请下载后查看。';
+                                this.filePreviewDialog.error = ncfST('Frontend.200');
                                 return;
                             }
                             if (kind === 'unsupported') {
                                 this.filePreviewDialog.mode = 'error';
-                                this.filePreviewDialog.error = '该文件类型暂不支持在线预览，请尝试下载后查看。';
+                                this.filePreviewDialog.error = ncfST('Frontend.201');
                                 return;
                             }
                             var response = await axios.get(previewUrl, { responseType: 'arraybuffer' });
@@ -4651,7 +4651,7 @@
                             if (kind === 'docx' && typeof mammoth !== 'undefined') {
                                 var docResult = await mammoth.convertToHtml({ arrayBuffer: arrayBuffer });
                                 this.filePreviewDialog.mode = 'html';
-                                this.filePreviewDialog.html = docResult.value || '<p>文档为空</p>';
+                                this.filePreviewDialog.html = docResult.value || `<p>${ncfST('Frontend.202')}</p>`;
                                 return;
                             }
                             if (kind === 'xlsx' && typeof XLSX !== 'undefined') {
@@ -4659,7 +4659,7 @@
                                 var sheetName = workbook.SheetNames && workbook.SheetNames[0];
                                 if (!sheetName) {
                                     this.filePreviewDialog.mode = 'error';
-                                    this.filePreviewDialog.error = 'Excel 文件中没有可预览的工作表。';
+                            this.filePreviewDialog.error = ncfST('Frontend.203');
                                     return;
                                 }
                                 this.filePreviewDialog.mode = 'excel';
@@ -4688,12 +4688,12 @@
                                 return;
                             }
                             this.filePreviewDialog.mode = 'error';
-                            this.filePreviewDialog.error = '暂不支持该文件类型的在线预览。';
+                            this.filePreviewDialog.error = ncfST('Frontend.204');
                         } catch (error) {
                             this.filePreviewDialog.mode = 'error';
                             var data = error && error.response && error.response.data;
                             var message = typeof data === 'string' ? data : (data && (data.errorMessage || data.message || data.title));
-                            this.filePreviewDialog.error = '预览失败：' + (message || (error && error.message) || '请求失败');
+                            this.filePreviewDialog.error = ncfST('Frontend.205', message || (error && error.message) || ncfST('请求失败'));
                         } finally {
                             this.filePreviewDialog.loading = false;
                         }
