@@ -482,31 +482,31 @@
                             @* Table data settings *@
                             <template v-if="layoutComponentActiveType === 'table'">
                                 <div class="operation-title" style="margin-top:20px;">
-                                    数据设置
+                                    {{ ncfST('Frontend.109') }}
                                 </div>
                                 <el-form :model="dataSetForm" :size="elSize" label-position="top" label-width="80px" class="form-container">
-                                    <el-form-item label="数据筛选" prop="filterCriteriaLen">
+                                    <el-form-item :label="ncfST('Frontend.101')" prop="filterCriteriaLen">
                                         <el-popover placement="left" width="400" trigger="click">
                                             <div class="popover-bodyBox">
-                                                <div class="popover-title">筛选条件设置</div>
+                                                <div class="popover-title">{{ ncfST('Frontend.160') }}</div>
                                                 <div class="popover-list df-wn flex-dc">
                                                     <div v-for="(item,index) in dataSetForm.filterCriteria" :key="index"
                                                         class="popover-list-item df-wn flex-ac">
-                                                        <el-select v-model="item.field" placeholder="请选择">
+                                                        <el-select v-model="item.field" :placeholder="ncfST('Frontend.206')">
                                                             <el-option v-for="citem in columnForm.columnData"
                                                                 :key="citem.field" :label="citem.name"
                                                                 :value="citem.field">
                                                             </el-option>
                                                         </el-select>
-                                                        <el-select v-model="item.symbol" placeholder="请选择">
-                                                            <el-option label="等于" value="等于">
+                                                        <el-select v-model="item.symbol" :placeholder="ncfST('Frontend.206')">
+                                                            <el-option :label="ncfST('Frontend.157')" value="等于">
                                                             </el-option>
-                                                            <el-option label="大于" value="大于">
+                                                            <el-option :label="ncfST('Frontend.045')" value="大于">
                                                             </el-option>
-                                                            <el-option label="小于" value="小于">
+                                                            <el-option :label="ncfST('Frontend.056')" value="小于">
                                                             </el-option>
                                                         </el-select>
-                                                        <el-input v-model="item.condition" placeholder="请输入"></el-input>
+                                                        <el-input v-model="item.condition" :placeholder="ncfST('Frontend.189')"></el-input>
                                                         <i class="el-icon-close cursorPointer"
                                                             @@click="handleDeleteFilterCondition(index)"></i>
                                                     </div>
@@ -514,25 +514,25 @@
                                                 <div class="popover-addbox" @@click="handleAddFilterCondition">
                                                     <i class="el-icon-circle-plus-outline"></i>
                                                     <span class="tipsText">
-                                                        添加筛选条件
+                                                        {{ ncfST('Frontend.145') }}
                                                     </span>
                                                 </div>
                                             </div>
                                             <div slot="reference" class="filterCriteria-box df-wn flex-ac">
-                                                <div class="showText">{{ dataSetForm.filterCriteriaLen }}个条件</div>
+                                                <div class="showText">{{ dataSetForm.filterCriteriaLen }}{{ ncfST('Frontend.002') }}</div>
                                                 <i class="el-icon-more cursorPointer"></i>
                                             </div>
                                         </el-popover>
                                     </el-form-item>
-                                    <el-form-item label="排序" prop="columnData">
+                                    <el-form-item :label="ncfST('Frontend.081')" prop="columnData">
                                         <el-popover v-for="(item,index) in dataSetForm.sortingRules" :key="index"
                                             placement="left" width="400" trigger="click">
                                             <div class="popover-bodyBox">
-                                                <div class="popover-title">排序设置</div>
+                                                <div class="popover-title">{{ ncfST('Frontend.084') }}</div>
                                                 <div class="popover-list df-wn flex-dc">
                                                     <div class="popover-list-item df-wn flex-ac">
-                                                        <div class="line-label">排序字段</div>
-                                                        <el-select v-model="item.field" placeholder="请选择">
+                                                        <div class="line-label">{{ ncfST('Frontend.082') }}</div>
+                                                        <el-select v-model="item.field" :placeholder="ncfST('Frontend.206')">
                                                             <el-option v-for="citem in columnForm.columnData"
                                                                 :key="citem.field" :label="citem.name"
                                                                 :value="citem.field">
@@ -540,11 +540,11 @@
                                                         </el-select>
                                                     </div>
                                                     <div class="popover-list-item df-wn flex-ac">
-                                                        <div class="line-label">排序方式</div>
-                                                        <el-select v-model="item.sort" placeholder="请选择">
-                                                            <el-option label="升序" value="升序">
+                                                        <div class="line-label">{{ ncfST('Frontend.083') }}</div>
+                                                        <el-select v-model="item.sort" :placeholder="ncfST('Frontend.206')">
+                                                            <el-option :label="ncfST('Frontend.031')" value="升序">
                                                             </el-option>
-                                                            <el-option label="降序" value="降序">
+                                                            <el-option :label="ncfST('Frontend.236')" value="降序">
                                                             </el-option>
                                                         </el-select>
                                                     </div>
@@ -560,7 +560,7 @@
                                                         class="moveIcon" />
                                                     <div class="sortitemtext">{{ item.field ?
                                                         `${item.field}-${item.sort}` :
-                                                        '请选择排序字段' }}</div>
+                                                        ncfST('Frontend.251') }}</div>
                                                     <i class="el-icon-remove-outline"
                                                         style="cursor:pointer;color:#a6a6a6;"
                                                         @@click.stop="handleDeleteSortingRules(index)"></i>
@@ -570,24 +570,24 @@
                                         <div class="addsort-box df-wn flex-ac" @@click="handleAddSortingRules">
                                             <i class="el-icon-circle-plus-outline"></i>
                                             <span class="tipsText">
-                                                添加排序规则
+                                                {{ ncfST('Frontend.144') }}
                                             </span>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item label="筛选器" prop="columnData">
+                                    <el-form-item :label="ncfST('Frontend.158')" prop="columnData">
                                         <el-popover placement="left" width="400" trigger="click">
                                             <div class="popover-bodyBox">
-                                                <div class="popover-title">筛选器设置</div>
+                                                <div class="popover-title">{{ ncfST('Frontend.159') }}</div>
                                                 <table class="table-container" style="margin-top:20px;">
                                                     <thead class="table-head">
                                                         <tr>
                                                             <th style="width:150px">
                                                                 <el-checkbox v-model="columnForm.allChecked"
                                                                     :disabled="!dataSetForm.filterFieldList.length"
-                                                                    @@change="handleFilterAllCheckedChange">字段</el-checkbox>
+                                                                    @@change="handleFilterAllCheckedChange">{{ ncfST('Frontend.049') }}</el-checkbox>
                                                             </th>
                                                             <th>
-                                                                数据类型
+                                                                {{ ncfST('Frontend.102') }}
                                                             </th>
                                                             <th style="width:30px"></th>
                                                         </tr>
@@ -622,16 +622,16 @@
                                                 </table>
                                             </div>
                                             <div slot="reference" class="filterCriteria-box df-wn flex-ac">
-                                                <div class="showText">0个字段</div>
+                                                <div class="showText">0{{ ncfST('Frontend.001') }}</div>
                                                 <i class="el-icon-more cursorPointer"></i>
                                             </div>
                                         </el-popover>
                                     </el-form-item>
-                                    <el-form-item label="字段查询范围" prop="columnData">
+                                    <el-form-item :label="ncfST('Frontend.052')" prop="columnData">
                                         <el-select v-model="dataSetForm.queryScope" style="width:100%"
-                                            placeholder="请选择数据类型">
-                                            <el-option label="全部字段" value="shanghai"></el-option>
-                                            <el-option label="表格列字段" value="beijing"></el-option>
+                                            :placeholder="ncfST('Frontend.216')">
+                                            <el-option :label="ncfST('Frontend.013')" value="shanghai"></el-option>
+                                            <el-option :label="ncfST('Frontend.180')" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
                                 </el-form>
