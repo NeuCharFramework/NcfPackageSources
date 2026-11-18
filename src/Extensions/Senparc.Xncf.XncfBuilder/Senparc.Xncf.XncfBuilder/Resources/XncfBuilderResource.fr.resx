@@ -507,4 +507,8 @@
   <data name="Frontend.041" xml:space="preserve"><value>Aucune tâche de développement isolé</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.042" xml:space="preserve"><value>Dernière mise à jour : {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.043" xml:space="preserve"><value>Chaque tâche valide les références de l'hôte, effectue une compilation isolée, démarre une nouvelle prévisualisation, exécute un contrôle de santé et remplace la prévisualisation de manière atomique. La prévisualisation actuelle reste disponible jusqu'à ce que la nouvelle réussisse ses contrôles.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Function.XncfBuilder.Development.Create.Name" xml:space="preserve"><value>Créer une tâche de développement XNCF isolée</value></data>
+  <data name="Function.XncfBuilder.Development.Create.Description" xml:space="preserve"><value>Crée un instantané du code dans un espace isolé. Les nouveaux modules utilisent le modèle local installé ; les modules existants sont copiés avant modification. Le code cible n’est jamais écrit.</value></data>
+  <data name="Function.XncfBuilder.Development.Read.Name" xml:space="preserve"><value>Lire un fichier XNCF isolé</value></data>
+  <data name="Function.XncfBuilder.Development.Read.Description" xml:space="preserve"><value>Lit un fichier texte et son SHA-256 depuis un module de l’espace isolé ; le code cible et les chemins externes sont inaccessibles.</value></data>
 </root>

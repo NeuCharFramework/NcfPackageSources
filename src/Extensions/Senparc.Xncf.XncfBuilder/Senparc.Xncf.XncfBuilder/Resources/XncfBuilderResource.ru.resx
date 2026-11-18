@@ -507,4 +507,8 @@
   <data name="Frontend.041" xml:space="preserve"><value>Нет заданий изолированной разработки</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.042" xml:space="preserve"><value>Последнее обновление: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.043" xml:space="preserve"><value>Каждое задание проверяет ссылки на хост, выполняет изолированную сборку, запускает новый предварительный просмотр, проводит проверку работоспособности и атомарно заменяет предварительный просмотр. Текущий предварительный просмотр остаётся доступным, пока новый не пройдёт проверки.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Function.XncfBuilder.Development.Create.Name" xml:space="preserve"><value>Создать изолированную задачу разработки XNCF</value></data>
+  <data name="Function.XncfBuilder.Development.Create.Description" xml:space="preserve"><value>Создаёт снимок исходного кода в изолированном пространстве. Новые модули создаются из установленного локального шаблона, существующие копируются перед изменением. Целевой исходный код не изменяется.</value></data>
+  <data name="Function.XncfBuilder.Development.Read.Name" xml:space="preserve"><value>Прочитать изолированный файл XNCF</value></data>
+  <data name="Function.XncfBuilder.Development.Read.Description" xml:space="preserve"><value>Читает текстовый файл и SHA-256 из модуля изолированного пространства; целевой код и внешние пути недоступны.</value></data>
 </root>

@@ -506,4 +506,8 @@
   <data name="Frontend.041" xml:space="preserve"><value>当前没有隔离开发任务</value></data>
   <data name="Frontend.042" xml:space="preserve"><value>最近更新：{0}</value></data>
   <data name="Frontend.043" xml:space="preserve"><value>每个任务依次执行宿主引用校验、隔离构建、启动新预览、健康检查和原子替换。新预览通过检查前，当前可用的旧预览不会停止。</value></data>
+  <data name="Function.XncfBuilder.Development.Create.Name" xml:space="preserve"><value>创建隔离 XNCF 开发任务</value></data>
+  <data name="Function.XncfBuilder.Development.Create.Description" xml:space="preserve"><value>创建源码快照；新模块仅在隔离工作区由本机已安装模板生成，现有模块仅复制后修改。不会写入目标源码。</value></data>
+  <data name="Function.XncfBuilder.Development.Read.Name" xml:space="preserve"><value>读取隔离 XNCF 文件</value></data>
+  <data name="Function.XncfBuilder.Development.Read.Description" xml:space="preserve"><value>读取隔离工作区中指定模块的文本文件和 SHA-256；不能读取目标源码或工作区外的文件。</value></data>
 </root>

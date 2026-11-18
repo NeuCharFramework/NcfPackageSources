@@ -507,4 +507,8 @@
   <data name="Frontend.041" xml:space="preserve"><value>No hay tareas de desarrollo aislado</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.042" xml:space="preserve"><value>Última actualización: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.043" xml:space="preserve"><value>Cada tarea valida las referencias del host, realiza una compilación aislada, inicia una nueva vista previa, ejecuta una comprobación de salud y reemplaza la vista previa de forma atómica. La vista previa actual permanece disponible hasta que la nueva supere sus comprobaciones.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Function.XncfBuilder.Development.Create.Name" xml:space="preserve"><value>Crear tarea de desarrollo XNCF aislada</value></data>
+  <data name="Function.XncfBuilder.Development.Create.Description" xml:space="preserve"><value>Crea una instantánea del código en un espacio aislado. Los módulos nuevos usan la plantilla local instalada; los existentes se copian antes de modificarse. Nunca se escribe en el código objetivo.</value></data>
+  <data name="Function.XncfBuilder.Development.Read.Name" xml:space="preserve"><value>Leer archivo XNCF aislado</value></data>
+  <data name="Function.XncfBuilder.Development.Read.Description" xml:space="preserve"><value>Lee un archivo de texto y su SHA-256 desde un módulo del espacio aislado; no permite leer el código objetivo ni rutas externas.</value></data>
 </root>

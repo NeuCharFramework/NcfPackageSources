@@ -507,4 +507,8 @@
   <data name="Frontend.041" xml:space="preserve"><value>No isolated development tasks</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.042" xml:space="preserve"><value>Last updated: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.043" xml:space="preserve"><value>Each task validates host references, performs an isolated build, starts a new preview, runs a health check, and atomically replaces the preview. The current preview stays available until the new preview passes its checks.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Function.XncfBuilder.Development.Create.Name" xml:space="preserve"><value>Create isolated XNCF development job</value></data>
+  <data name="Function.XncfBuilder.Development.Create.Description" xml:space="preserve"><value>Create a source snapshot in an isolated workspace. New modules are generated from the installed local template; existing modules are copied before editing. Target source is never written.</value></data>
+  <data name="Function.XncfBuilder.Development.Read.Name" xml:space="preserve"><value>Read isolated XNCF file</value></data>
+  <data name="Function.XncfBuilder.Development.Read.Description" xml:space="preserve"><value>Read a text file and SHA-256 from an isolated workspace module; target source and paths outside the workspace are inaccessible.</value></data>
 </root>

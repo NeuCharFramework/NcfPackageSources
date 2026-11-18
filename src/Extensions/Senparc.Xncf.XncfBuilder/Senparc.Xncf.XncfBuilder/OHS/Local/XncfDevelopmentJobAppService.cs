@@ -25,6 +25,7 @@ using Senparc.Ncf.Core.WorkContext.Provider;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.XncfBase.FunctionRenders;
 using Senparc.Xncf.XncfBuilder.Domain.Services.Development;
+using Senparc.Xncf.XncfBuilder;
 using Senparc.Xncf.XncfBuilder.OHS.PL;
 using System;
 using System.Text.Json;
@@ -48,7 +49,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             _adminWorkContextProvider = adminWorkContextProvider;
         }
 
-        [FunctionRender("创建隔离 XNCF 开发任务", "创建源码快照；新模块仅在隔离工作区由本机已安装模板生成，现有模块仅复制后修改。不会写入目标源码。", typeof(Register))]
+        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Development.Create.Name", "Function.XncfBuilder.Development.Create.Description",
+            typeof(Register), "Create isolated XNCF development job", "Create a source snapshot in an isolated workspace. Target source is never written.")]
         public Task<StringAppResponse> CreateIsolatedDevelopmentJob(XncfDevelopmentStartRequest request) =>
             ExecuteAsync(async (service, tenant) =>
             {
@@ -76,7 +78,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 return result;
             });
 
-        [FunctionRender("读取隔离 XNCF 文件", "读取隔离工作区中指定模块的文本文件和 SHA-256；不能读取目标源码或工作区外的文件。", typeof(Register))]
+        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Development.Read.Name", "Function.XncfBuilder.Development.Read.Description",
+            typeof(Register), "Read isolated XNCF file", "Read a text file and SHA-256 from an isolated workspace module.")]
         public Task<StringAppResponse> ReadIsolatedDevelopmentFile(XncfDevelopmentReadFileRequest request) =>
             ExecuteAsync((service, tenant) => service.ReadFileAsync(request.JobId, request.RelativeFilePath, CancellationToken, tenant));
 

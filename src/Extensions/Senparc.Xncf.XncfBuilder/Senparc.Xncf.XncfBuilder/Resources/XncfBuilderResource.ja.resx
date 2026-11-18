@@ -507,4 +507,8 @@
   <data name="Frontend.041" xml:space="preserve"><value>分離開発タスクはありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.042" xml:space="preserve"><value>最終更新：{0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.043" xml:space="preserve"><value>各タスクはホスト参照を検証し、分離ビルドを実行し、新しいプレビューを開始し、ヘルスチェックを実行して、プレビューをアトミックに置き換えます。新しいプレビューがチェックに合格するまで、現在のプレビューは利用できます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Function.XncfBuilder.Development.Create.Name" xml:space="preserve"><value>分離 XNCF 開発タスクを作成</value></data>
+  <data name="Function.XncfBuilder.Development.Create.Description" xml:space="preserve"><value>分離ワークスペースにソーススナップショットを作成します。新規モジュールはローカルにインストールされたテンプレートから生成し、既存モジュールはコピーしてから変更します。対象ソースには書き込みません。</value></data>
+  <data name="Function.XncfBuilder.Development.Read.Name" xml:space="preserve"><value>分離 XNCF ファイルを読み取る</value></data>
+  <data name="Function.XncfBuilder.Development.Read.Description" xml:space="preserve"><value>分離ワークスペースのモジュールからテキストファイルと SHA-256 を読み取ります。対象ソースやワークスペース外のパスは読み取れません。</value></data>
 </root>
