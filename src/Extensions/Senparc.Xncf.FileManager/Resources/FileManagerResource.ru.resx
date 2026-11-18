@@ -521,4 +521,5 @@
   <data name="Frontend.287" xml:space="preserve"><value>Размер</value></data>
   <data name="Frontend.288" xml:space="preserve"><value>элементов</value></data>
   <data name="Frontend.289" xml:space="preserve"><value>Корпоративные документы</value></data>
+  <data name="Frontend.290" xml:space="preserve"><value>Завершено файлов: {0}</value></data>
 </root>

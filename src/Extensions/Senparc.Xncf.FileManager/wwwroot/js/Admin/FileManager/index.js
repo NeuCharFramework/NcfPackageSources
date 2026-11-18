@@ -1960,7 +1960,7 @@
                     await this.$confirm(
                         fileManagerText('Frontend.236', 'This will move the file to the recycle bin. Continue?'),
                         fileManagerText('Frontend.237', 'Delete: {0}', shortName),
-                        { type: 'warning', confirmButtonText: '确定', cancelButtonText: '取消' }
+                        { type: 'warning', confirmButtonText: fileManagerText('Frontend.024', 'OK'), cancelButtonText: fileManagerText('Frontend.038', 'Cancel') }
                     );
                     this.moveFileToRecycleBin(row);
                     this.$message.success(fileManagerText('Frontend.238', 'Moved to the recycle bin'));
@@ -2099,7 +2099,7 @@
                     this.reloadFolderTree();
                     await this.getList();
                 } catch (error) {
-                    const partialMessage = uploadedCount > 0 ? '，已完成 ' + uploadedCount + ' 个文件' : '';
+                    const partialMessage = uploadedCount > 0 ? fileManagerText('Frontend.290', '{0} files completed', uploadedCount) : '';
                     this.$message.error(fileManagerText('Frontend.214', 'Upload failed: {0}', partialMessage ? partialMessage + ': ' + errorMessage(error) : errorMessage(error)));
                 } finally {
                     this.uploadDialog.uploading = false;

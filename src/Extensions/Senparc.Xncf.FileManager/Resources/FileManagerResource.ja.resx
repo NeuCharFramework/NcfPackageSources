@@ -521,4 +521,5 @@
   <data name="Frontend.287" xml:space="preserve"><value>サイズ</value></data>
   <data name="Frontend.288" xml:space="preserve"><value>件</value></data>
   <data name="Frontend.289" xml:space="preserve"><value>企業文書</value></data>
+  <data name="Frontend.290" xml:space="preserve"><value>{0} 個のファイルが完了しました</value></data>
 </root>

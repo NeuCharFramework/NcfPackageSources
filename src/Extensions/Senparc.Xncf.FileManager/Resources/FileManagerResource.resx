@@ -516,4 +516,5 @@
   <data name="Frontend.287" xml:space="preserve"><value>大小</value></data>
   <data name="Frontend.288" xml:space="preserve"><value>个</value></data>
   <data name="Frontend.289" xml:space="preserve"><value>企业文档</value></data>
+  <data name="Frontend.290" xml:space="preserve"><value>已完成 {0} 个文件</value></data>
 </root>
