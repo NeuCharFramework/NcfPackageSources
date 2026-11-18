@@ -3139,7 +3139,7 @@ var app = new Vue({
                     return;
                 }
                 fullVersion = prompt.fullVersion;
-                label = `Prompt ${source} 版本号`;
+                label = ncfST('Frontend.427', source);
             } else {
                 //Legacy comment translated to English.
             if (!this.promptid) {
@@ -3155,7 +3155,9 @@ var app = new Vue({
                 label = '';
             }
             
-            const message = label ? `复制${label}【${fullVersion}】成功` : `复制【${fullVersion}】成功`;
+            const message = label
+                ? ncfST('Frontend.428', label, fullVersion)
+                : ncfST('Frontend.429', fullVersion);
             await window.PromptRangeUtils.CopyHelper.copyToClipboardAsync(fullVersion, message, ncfST('Frontend.304'), true)
         },
         //Legacy comment translated to English.
@@ -3186,10 +3188,10 @@ var app = new Vue({
             var hours = Math.floor(minutes / 60)
             var days = Math.floor(hours / 24)
             
-            if (minutes < 1) return '刚刚'
-            if (minutes < 60) return minutes + '分钟前'
-            if (hours < 24) return hours + '小时前'
-            if (days < 7) return days + '天前'
+            if (minutes < 1) return ncfST('Frontend.311')
+            if (minutes < 60) return minutes + ncfST('Frontend.312')
+            if (hours < 24) return hours + ncfST('Frontend.313')
+            if (days < 7) return days + ncfST('Frontend.314')
             
             //Legacy comment translated to English.
             var hh = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':'
@@ -3355,19 +3357,19 @@ var app = new Vue({
                         //console.log('params', params)
                         let _data = params?.data[3] || {}
                         //find alias name by rangeName
-                        let alias = '未设置'
+                        let alias = ncfST('Frontend.356')
                         that.promptFieldOpt.forEach(item => {
                             if (item.rangeName === _data?.rangeName) {
                                 alias = item.alias
                             }
                         })
                         let _html = `<div style="text-align: left;font-size:10px;">
-<p>自定义名称：${alias}</p>
-    <p>靶场：${_data?.rangeName || ''}</p>
-    <p>版本：${_data?.fullVersion || ''}</p>
-<p>平均分：${_data?.evalAvgScore.toFixed(1) || ''}</p>
-<p>最高分：${_data?.evalMaxScore.toFixed(1) || ''}</p>
-<p>时间：${this.formatDate(_data?.addTime) || ''}</p>
+<p>${ncfST('Frontend.431', alias)}</p>
+    <p>${ncfST('Frontend.432', _data?.rangeName || '')}</p>
+    <p>${ncfST('Frontend.433', _data?.fullVersion || '')}</p>
+<p>${ncfST('Frontend.434', _data?.evalAvgScore.toFixed(1) || '')}</p>
+<p>${ncfST('Frontend.435', _data?.evalMaxScore.toFixed(1) || '')}</p>
+<p>${ncfST('Frontend.436', this.formatDate(_data?.addTime) || '')}</p>
 </div>`
                         return _html
                     }
