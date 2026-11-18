@@ -3693,8 +3693,8 @@ var app = new Vue({
                 if (this.pageChange && this.modelid) {
                     //Legacy comment translated to English.
                     this.$confirm(ncfST('Frontend.333'), ncfST('Frontend.343'), {
-                        confirmButtonText: '保存',
-                        cancelButtonText: '不保存',
+                        confirmButtonText: ncfST('Frontend.090'),
+                        cancelButtonText: ncfST('Frontend.309'),
                         type: 'warning'
                     }).then(() => {
                         //Legacy comment translated to English.
@@ -3746,8 +3746,8 @@ var app = new Vue({
                 if (this.pageChange && this.modelid) {
                     //Legacy comment translated to English.
                     this.$confirm(ncfST('Frontend.333'), ncfST('Frontend.343'), {
-                        confirmButtonText: '保存',
-                        cancelButtonText: '不保存',
+                        confirmButtonText: ncfST('Frontend.090'),
+                        cancelButtonText: ncfST('Frontend.309'),
                         type: 'warning'
                     }).then(() => {
                         //Legacy comment translated to English.
@@ -4178,7 +4178,7 @@ var app = new Vue({
             //Legacy comment translated to English.
             if (!this.promptOpt || this.promptOpt.length === 0) {
                 this.$message({
-                    message: '当前靶场还没有进行过打靶，请打靶后再来看吧！',
+                    message: ncfST('Frontend.332'),
                     type: 'info',
                     duration: 3000
                 })
@@ -7409,7 +7409,7 @@ var app = new Vue({
             for (let i in data) {
                 newData = {
                     id: data[i].data.id,
-                    label: data[i].name ? data[i].name + (data[i].nickName ? " (" + data[i].nickName + ")" : "") : "未命名",
+                    label: data[i].name ? data[i].name + (data[i].nickName ? " (" + data[i].nickName + ")" : "") : ncfST('Frontend.351'),
                     isPublic: false,
                     data: data[i].data,
                     attributes: data[i].attributes,
@@ -7964,9 +7964,9 @@ var app = new Vue({
         },
         deleteModel(item) {
             //deletemodel confirm
-            this.$confirm(`此操作将永久删除模型【${item.alias}】, 是否继续?`, '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
+            this.$confirm(ncfST('Frontend.471', item.alias), ncfST('Frontend.343'), {
+                confirmButtonText: ncfST('Frontend.421'),
+                cancelButtonText: ncfST('Frontend.091'),
                 type: 'warning'
             }).then(async () => {
                 await servicePR.delete('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.BatchDelete', { data: [item.id] })
@@ -8060,7 +8060,7 @@ var app = new Vue({
                     const configModelTypeName = this.getConfigModelTypeLabel(configModelTypeCode)
 
                     //Legacy comment translated to English.
-                    let label = `${item.alias || '未命名模型'} [${configModelTypeName}]`
+                    let label = `${item.alias || ncfST('Frontend.351')} [${configModelTypeName}]`
                     if (item.apiVersion && item.apiVersion.trim()) {
                         label += ` v${item.apiVersion}`;
                     }
@@ -8119,7 +8119,7 @@ var app = new Vue({
                     value: item.id,
                     vectorDbTypeCode: this.parseVectorDbTypeValue(item.vectorDBType),
                     vectorDbTypeLabel: this.getVectorDbTypeLabel(item.vectorDBType),
-                    label: `${item.alias || item.name || '未命名向量库'} [${this.getVectorDbTypeLabel(item.vectorDBType)}]`
+                    label: `${item.alias || item.name || ncfST('Frontend.352')} [${this.getVectorDbTypeLabel(item.vectorDBType)}]`
                 }))
 
                 if (this.isTextEmbeddingModelSelected && !this.embeddingForm.vectorDbId && this.vectorOpt.length > 0) {
@@ -8287,7 +8287,7 @@ var app = new Vue({
                         })
                         //Legacy comment translated to English.
                         this.$message({
-                            message: '添加成功！',
+                            message: ncfST('Frontend.272'),
                             type: 'success'
                         })
                         // disabledialog
@@ -8331,7 +8331,7 @@ var app = new Vue({
                         })
                         //Legacy comment translated to English.
                         this.$message({
-                            message: '添加成功！',
+                            message: ncfST('Frontend.272'),
                             type: 'success'
                         })
                         // disabledialog
@@ -8374,10 +8374,10 @@ var app = new Vue({
         renameField(e, item) {
             e.stopPropagation()
             //Legacy comment translated to English.
-            this.$prompt('请输入新的靶场名称', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                inputErrorMessage: '靶场名称不能为空',
+            this.$prompt(ncfST('Frontend.473'), ncfST('Frontend.343'), {
+                confirmButtonText: ncfST('Frontend.421'),
+                cancelButtonText: ncfST('Frontend.091'),
+                inputErrorMessage: ncfST('Frontend.474'),
             }).then(async ({ value }) => {
                 const res = await servicePR.get('/api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.ChangeAliasAsync', {
                     params: {
@@ -8397,7 +8397,7 @@ var app = new Vue({
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: '已取消操作'
+                    message: ncfST('Frontend.329')
                 });
             });
 
@@ -8604,7 +8604,7 @@ var app = new Vue({
                 // deletesuccess
                 this.$message({
                     type: 'success',
-                    message: '删除成功!'
+                        message: ncfST('Frontend.476')
                 });
             } else {
                 app.$message({
@@ -8627,7 +8627,7 @@ var app = new Vue({
                 if (isSave) {
                     //Legacy comment translated to English.
                     this.$message({
-                        message: '保存成功！',
+                        message: ncfST('Frontend.268'),
                         type: 'success'
                     })
                 } else {
@@ -9237,7 +9237,7 @@ var app = new Vue({
                 //Legacy comment translated to English.
                 if (this.comparePromptBId && id === this.comparePromptBId) {
                     this.$message({
-                        message: '警告：您选择了同一个 Prompt 进行对比！',
+                        message: ncfST('Frontend.483'),
                         type: 'warning',
                         duration: 3000
                     });
@@ -9245,7 +9245,7 @@ var app = new Vue({
             } catch (error) {
                 console.error('加载Prompt A失败:', error);
                 this.$message({
-                    message: '加载Prompt A数据失败',
+                        message: ncfST('Frontend.484'),
                     type: 'error',
                     duration: 3000
                 });
@@ -9267,7 +9267,7 @@ var app = new Vue({
                 //Legacy comment translated to English.
                 if (this.comparePromptAId && id === this.comparePromptAId) {
                     this.$message({
-                        message: '警告：您选择了同一个 Prompt 进行对比！',
+                        message: ncfST('Frontend.483'),
                         type: 'warning',
                         duration: 3000
                     });
@@ -9275,7 +9275,7 @@ var app = new Vue({
             } catch (error) {
                 console.error('加载Prompt B失败:', error);
                 this.$message({
-                    message: '加载Prompt B数据失败',
+                        message: ncfST('Frontend.485'),
                     type: 'error',
                     duration: 3000
                 });
@@ -9290,7 +9290,7 @@ var app = new Vue({
             if (res.data.success) {
                 return res.data.data;
             } else {
-                throw new Error(res.data.errorMessage || '获取Prompt详情失败');
+                throw new Error(res.data.errorMessage || ncfST('Frontend.486'));
             }
         },
         
@@ -9330,7 +9330,7 @@ var app = new Vue({
         async switchToPrompt(promptId) {
             if (!promptId) {
                 this.$message({
-                    message: '无效的Prompt ID',
+                    message: ncfST('Frontend.487'),
                     type: 'warning',
                     duration: 2000
                 });
@@ -9342,7 +9342,7 @@ var app = new Vue({
                 const promptData = await this.getPromptDetail(promptId);
                 
                 if (!promptData) {
-                    throw new Error('无法获取Prompt详细信息');
+                    throw new Error(ncfST('Frontend.488'));
                 }
                 
                 //Legacy comment translated to English.
