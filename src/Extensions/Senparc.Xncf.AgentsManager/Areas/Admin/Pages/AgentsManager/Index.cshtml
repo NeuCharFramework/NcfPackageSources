@@ -2085,7 +2085,7 @@
     <div class="drawerRtl">
         @* Content header, including the title and close icon. *@
         <div class="drawerRtl__header">
-            <div class="drawerRtl__header__title">启动群组</div>
+            <div class="drawerRtl__header__title">{{ncfST('Frontend.135')}}</div>
             <div class="drawerRtl__header__close" @@click="handleElVisibleClose('drawerGroupStart')">&times;</div>
         </div>
         @* Main content area. *@
@@ -2093,19 +2093,19 @@
             <el-form v-if="visible.drawerGroupStart" ref="groupStartELForm" :model="groupStartForm"
                 :rules="groupStartFormRules" :size="elSize" label-position="left" label-width="130px"
                 class="drawerForm-container">
-                <el-form-item label="选择群组" prop="groupName">
+                <el-form-item :label="ncfST('Frontend.136')" prop="groupName">
                     <el-input v-model="groupStartForm.groupName" disabled placeholder="请填写"></el-input>
                 </el-form-item>
-                <el-form-item label="任务标题" prop="name">
+                <el-form-item :label="ncfST('Frontend.137')" prop="name">
                     <el-input v-model="groupStartForm.name" placeholder="请填写"></el-input>
                 </el-form-item>
-                <el-form-item label="选择模型" prop="aiModelId">
+                <el-form-item :label="ncfST('Frontend.138')" prop="aiModelId">
                     @* @change="handleChange($event,'')" *@
                     <load-more-select v-model="groupStartForm.aiModelId" service-type="model" :chat-only="true" direction="vertical"
                         placeholder="请选择" />
                 </el-form-item>
-                <el-form-item label="个性化智能体" prop="personality">
-                    <el-checkbox v-model="groupStartForm.personality">采用个性化参数运行智能体</el-checkbox>
+                <el-form-item :label="ncfST('Frontend.139')" prop="personality">
+                    <el-checkbox v-model="groupStartForm.personality">{{ncfST('Frontend.140')}}</el-checkbox>
                 </el-form-item>
                 <el-form-item label="工具调用审批" prop="requireHumanApproval">
                     <el-checkbox v-model="groupStartForm.requireHumanApproval">兼容总开关：强制所有工具调用前审批</el-checkbox>
@@ -2198,13 +2198,13 @@
                     </div>
                     <div class="form-help-text">{{ ncfST('Frontend.339') }}</div>
                 </el-form-item>
-                <el-form-item label="任务描述" prop="promptCommand">
+                <el-form-item :label="ncfST('Frontend.060')" prop="promptCommand">
                     <el-input ref="groupStartPromptCommand" type="textarea" v-model="groupStartForm.promptCommand" :rows="8"
-                        placeholder="我能帮你做什么" @@focus="rememberGroupStartPromptCaret"
+                        :placeholder="ncfST('Frontend.141')" @@focus="rememberGroupStartPromptCaret"
                         @@click.native="rememberGroupStartPromptCaret" @@keyup.native="rememberGroupStartPromptCaret"
                         @@select.native="rememberGroupStartPromptCaret"></el-input>
                 </el-form-item>
-                <el-form-item label="说明" prop="description">
+                <el-form-item :label="ncfST('Frontend.134')" prop="description">
                     <el-input type="textarea" v-model="groupStartForm.description" :rows="8"
                         placeholder="请填写"></el-input>
                 </el-form-item>
