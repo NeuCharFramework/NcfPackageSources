@@ -773,15 +773,15 @@
                                                             effect="dark"
                                                             placement="top-start"
                                                             :content="parameterDescription(parameter)">
-                                                    <i class="el-icon-info parameter-description-icon" aria-label="参数说明"></i>
+                                                    <i class="el-icon-info parameter-description-icon" :aria-label="ncfST('Frontend.026')"></i>
                                                 </el-tooltip>
                                                 <el-tooltip v-if="parameter.metadataError"
                                                             effect="dark"
                                                             placement="top-start"
                                                             :content="parameter.metadataError">
-                                                    <i class="el-icon-warning-outline parameter-metadata-warning" aria-label="参数元数据异常"></i>
+                                                    <i class="el-icon-warning-outline parameter-metadata-warning" :aria-label="ncfST('Frontend.189')"></i>
                                                 </el-tooltip>
-                                                <em v-if="parameter.required">必填</em>
+                                                <em v-if="parameter.required">{{ ncfST('Frontend.446') }}</em>
                                             </label>
 
                                             <template v-if="isTemplateValue(selectedNode.config.parameters[parameter.name])">
@@ -801,8 +801,8 @@
                                                         </el-tag>
                                                     </div>
                                                     <div class="parameter-template-actions">
-                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="openParameterTemplateEditor(selectedNode,parameter)">编辑文本与变量</el-button>
-                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetParameterManual(selectedNode,parameter)">改为手动输入</el-button>
+                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="openParameterTemplateEditor(selectedNode,parameter)">{{ ncfST('Frontend.330') }}</el-button>
+                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetParameterManual(selectedNode,parameter)">{{ ncfST('Frontend.275') }}</el-button>
                                                     </div>
                                                 </div>
                                             </template>
@@ -812,7 +812,7 @@
                                                                           :disabled="editingLocked"
                                                                           :editable="canUseTemplate(parameter)"
                                                                           :help-text="functionParameterFormulaHelp(parameter)"
-                                                                          placeholder="手动输入或使用公式"
+                                                                          :placeholder="ncfST('Frontend.250')"
                                                                           @@edit-template="openParameterTemplateEditor(selectedNode,parameter)"></workflow-rich-text-input>
                                                 <div v-if="formulaParameterCompatibility(parameter,selectedNode.config.parameters[parameter.name])"
                                                      :class="['parameter-formula-compatibility','binding-'+formulaParameterCompatibility(parameter,selectedNode.config.parameters[parameter.name]).level]">
@@ -822,13 +822,13 @@
                                                           type="password"
                                                           :disabled="editingLocked"
                                                           v-model="selectedNode.config.parameters[parameter.name]"
-                                                          placeholder="手动输入"></el-input>
+                                                          :placeholder="ncfST('Frontend.249')"></el-input>
                                                 <el-input v-else-if="parameter.parameterType===5"
                                                           type="textarea"
                                                           :rows="8"
                                                           :disabled="editingLocked"
                                                           v-model="selectedNode.config.parameters[parameter.name]"
-                                                          placeholder="手动输入"
+                                                          :placeholder="ncfST('Frontend.249')"
                                                           show-word-limit
                                                           :maxlength="parameter.maxLength || 20000"></el-input>
                                                 <el-select v-else-if="parameter.parameterType===1"
@@ -863,7 +863,7 @@
                                                     <i class="el-icon-connection"></i>
                                                     {{bindingCompatibility(selectedNode,parameter).text}}
                                                 </div>
-                                                <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetParameterManual(selectedNode,parameter)">改为手动输入</el-button>
+                                                <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetParameterManual(selectedNode,parameter)">{{ ncfST('Frontend.275') }}</el-button>
                                                 <el-input-number v-if="resolvedBindingFor(selectedNode,parameter).requiresIndex"
                                                                  v-model="selectedNode.config.parameters[parameter.name].$source.collectionIndex"
                                                                  :disabled="editingLocked"
@@ -871,7 +871,7 @@
                                                                  :step="1"
                                                                  size="mini"
                                                                  controls-position="right"
-                                                                 placeholder="列表索引"></el-input-number>
+                                                                 :placeholder="ncfST('Frontend.364')"></el-input-number>
                                                 <el-input-number v-if="resolvedBindingFor(selectedNode,parameter).isArray && !expectedShape(parameter).isArray"
                                                                  v-model="selectedNode.config.parameters[parameter.name].$source.itemIndex"
                                                                  :disabled="editingLocked"
@@ -879,53 +879,53 @@
                                                                  :step="1"
                                                                  size="mini"
                                                                  controls-position="right"
-                                                                 placeholder="数组索引"></el-input-number>
+                                                                 :placeholder="ncfST('Frontend.364')"></el-input-number>
                                             </div>
 
                                             <div class="upstream-picker">
-                                                <span>或完整关联上游输出 / Function 预载输入选择</span>
+                                                <span>{{ ncfST('Frontend.368') }}</span>
                                                 <el-cascader :value="bindingSelection(selectedNode,parameter)"
                                                              :options="upstreamOutputOptions(parameter)"
                                                              :disabled="editingLocked || !upstreamOutputOptions(parameter).length"
                                                              :props="{expandTrigger:'hover'}"
                                                              clearable
                                                              filterable
-                                                             placeholder="选择节点、输出或预载输入选择"
+                                                             :placeholder="ncfST('Frontend.368')"
                                                              @@change="setParameterBinding(selectedNode,parameter,$event)"></el-cascader>
                                             </div>
                                         </div>
                                     </template>
 
                                     <template v-if="selectedNode.type==='condition'">
-                                        <el-form-item label="左值">
+                                        <el-form-item :label="ncfST('Frontend.228')">
                                             <workflow-rich-text-input v-if="!isBinding(selectedNode.config.left)"
                                                                       v-model="selectedNode.config.left"
                                                                       :disabled="editingLocked"
                                                                       :help-text="'可使用 {{input}} 或受限公式，也可以插入上游输出作为文本片段。'"
-                                                                      placeholder="手动输入、公式或插入变量"
+                                                                      :placeholder="ncfST('Frontend.250')"
                                                                       @@edit-template="openNodeTemplateEditor(selectedNode,'left',{fieldLabel:'条件左值'})"></workflow-rich-text-input>
                                             <el-cascader :value="configBindingSelection(selectedNode,'left')" :options="upstreamOutputOptions(null)" :disabled="editingLocked || !upstreamOutputOptions(null).length" clearable filterable placeholder="关联上游 Output" @@change="setConfigBinding(selectedNode,'left',$event)"></el-cascader>
                                         </el-form-item>
-                                        <el-form-item label="判断">
+                                        <el-form-item :label="ncfST('Frontend.414')">
                                             <el-select v-model="selectedNode.config.operator" :disabled="editingLocked">
                                                 <el-option label="等于" value="equals"></el-option><el-option label="包含" value="contains"></el-option><el-option label="不等于" value="not-equals"></el-option><el-option label="开头是" value="starts-with"></el-option><el-option label="结尾是" value="ends-with"></el-option>
                                             </el-select>
                                         </el-form-item>
-                                        <el-form-item label="右值">
+                                        <el-form-item :label="ncfST('Frontend.200')">
                                             <workflow-rich-text-input v-if="!isBinding(selectedNode.config.right)"
                                                                       v-model="selectedNode.config.right"
                                                                       :disabled="editingLocked"
                                                                       :help-text="'可使用 {{input}} 或受限公式，也可以插入上游输出作为文本片段。'"
-                                                                      placeholder="手动输入、公式或插入变量"
+                                                                      :placeholder="ncfST('Frontend.250')"
                                                                       @@edit-template="openNodeTemplateEditor(selectedNode,'right',{fieldLabel:'条件右值'})"></workflow-rich-text-input>
                                             <el-cascader :value="configBindingSelection(selectedNode,'right')" :options="upstreamOutputOptions(null)" :disabled="editingLocked || !upstreamOutputOptions(null).length" clearable filterable placeholder="关联上游 Output" @@change="setConfigBinding(selectedNode,'right',$event)"></el-cascader>
                                         </el-form-item>
                                     </template>
-                                    <el-form-item v-if="selectedNode.type==='delay'" label="等待秒数（单节点最多 30 秒）">
+                                    <el-form-item v-if="selectedNode.type==='delay'" :label="ncfST('Frontend.322')">
                                         <el-input-number v-model="selectedNode.config.seconds" :disabled="editingLocked" :min="0" :max="30"></el-input-number>
                                     </el-form-item>
                                     <template v-if="selectedNode.type==='loop'">
-                                        <el-form-item label="重复次数（For）">
+                                        <el-form-item :label="ncfST('Frontend.371')">
                                             <div v-if="isTemplateValue(selectedNode.config.count)" class="workflow-loop-count-binding workflow-loop-count-formula">
                                                 <strong>使用语法计算次数：{{parameterTemplateSummary(selectedNode.config.count)}}</strong>
                                                 <span>运行时结果必须是 1–100000 的整数；可使用 <code v-pre>{{= toInt(input) }}</code> 或插入上游输出。</span>
