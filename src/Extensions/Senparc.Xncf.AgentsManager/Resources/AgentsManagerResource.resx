@@ -1212,4 +1212,5 @@
   <data name="Error.Workflow.InputRequired" xml:space="preserve"><value>Workflow 调用失败：input 参数不能为空。</value></data>
   <data name="Error.Workflow.InvocationFailed" xml:space="preserve"><value>Workflow 调用失败：{0}</value></data>
   <data name="Error.Workflow.Unknown" xml:space="preserve"><value>未知错误</value></data>
+  <data name="Frontend.580" xml:space="preserve"><value>更多操作</value></data>
 </root>

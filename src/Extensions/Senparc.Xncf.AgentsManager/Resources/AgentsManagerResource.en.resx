@@ -1737,4 +1737,5 @@
   <data name="Error.Workflow.InputRequired" xml:space="preserve"><value>Workflow invocation failed: the input parameter cannot be empty.</value></data>
   <data name="Error.Workflow.InvocationFailed" xml:space="preserve"><value>Workflow invocation failed: {0}</value></data>
   <data name="Error.Workflow.Unknown" xml:space="preserve"><value>Unknown error</value></data>
+  <data name="Frontend.580" xml:space="preserve"><value>More actions</value></data>
 </root>

@@ -301,10 +301,10 @@
                         <div class="agentDetails-main-left">
                             <el-tabs v-model="agentDetailsTabsActiveName" class="pageTabs"
                                 @@tab-click="handleAgentDetailsTabsClick">
-                                <el-tab-pane label="组" name="first">
+                                <el-tab-pane :label="ncfST('Frontend.045')" name="first">
                                     <div class="agentDetails-main-left-list">
                                         <div class="agentDetails-main-left-list-filter">
-                                            <el-input v-model="agentDetailsGroupQueryList.filter" placeholder="请输入名称搜索"
+                                            <el-input v-model="agentDetailsGroupQueryList.filter" :placeholder="ncfST('Frontend.007')"
                                                 suffix-icon="el-icon-search"
                                                 @@change="handleFilterChange($event,'agentGroup')"></el-input>
                                         </div>
@@ -321,14 +321,14 @@
                                             </template>
                                             <div v-else class="df-wn flex-ac flex-jc emptyData"
                                                 style="flex-grow: 1;font-size: 14px;color: #5e6d82;margin-top:150px;">
-                                                暂无数据</div>
+                                                {{ ncfST('Frontend.011') }}</div>
                                         </el-scrollbar>
                                     </div>
                                 </el-tab-pane>
-                                <el-tab-pane label="任务" name="second">
+                                <el-tab-pane :label="ncfST('Frontend.046')" name="second">
                                     <div class="agentDetails-main-left-list">
                                         <div class="agentDetails-main-left-list-filter">
-                                            <el-input v-model="agentDetailsTaskQueryList.filter" placeholder="请输入名称搜索"
+                                            <el-input v-model="agentDetailsTaskQueryList.filter" :placeholder="ncfST('Frontend.007')"
                                                 suffix-icon="el-icon-search"
                                                 @@change="handleFilterChange($event,'agentTask')"></el-input>
                                         </div>
@@ -344,7 +344,7 @@
                                             </template>
                                             <div v-else class="df-wn flex-ac flex-jc emptyData"
                                                 style="flex-grow: 1;font-size: 14px;color: #5e6d82;margin-top:150px;">
-                                                暂无数据</div>
+                                                {{ ncfST('Frontend.011') }}</div>
                                         </el-scrollbar>
                                     </div>
                                 </el-tab-pane>
@@ -363,35 +363,35 @@
                                             </div>
                                             <div class="df-wn groupInfoRow-operation">
                                                 <el-button type="danger" size="mini"
-                                                    @@click="setAgentState('delete',agentDetailsGroupDetails)">退出组</el-button>
+                                                    @@click="setAgentState('delete',agentDetailsGroupDetails)">{{ ncfST('Frontend.047') }}</el-button>
                                 <el-button type="primary" size="mini" :disabled="!agentDetailsGroupDetails.chatGroupDto.enable"
-                                    @@click="handleElVisibleOpenBtn('drawerGroupStart',agentDetailsGroupDetails)">启动</el-button>
+                                    @@click="handleElVisibleOpenBtn('drawerGroupStart',agentDetailsGroupDetails)">{{ ncfST('Frontend.048') }}</el-button>
                                 <el-button :type="agentDetailsGroupDetails.chatGroupDto.enable ? 'warning' : 'success'" size="mini"
-                                    @@click="setGroupState(agentDetailsGroupDetails)">{{ agentDetailsGroupDetails.chatGroupDto.enable ? '停用组' : '启用组' }}</el-button>
+                                    @@click="setGroupState(agentDetailsGroupDetails)">{{ agentDetailsGroupDetails.chatGroupDto.enable ? ncfST('Frontend.043') : ncfST('Frontend.044') }}</el-button>
                                 <el-button type="primary" size="mini"
-                                    @@click="handleEditDrawerOpenBtn('drawerGroup',agentDetailsGroupDetails)">编辑</el-button>
+                                    @@click="handleEditDrawerOpenBtn('drawerGroup',agentDetailsGroupDetails)">{{ ncfST('Frontend.016') }}</el-button>
                                                 <el-button type="primary" size="mini"
-                                                    @@click="handleTaskStartBatch('agentGroupTaskBatch',agentDetailsGroupDetails)">批量启动</el-button>
+                                                    @@click="handleTaskStartBatch('agentGroupTaskBatch',agentDetailsGroupDetails)">{{ ncfST('Frontend.049') }}</el-button>
                                                 <el-button type="warning" size="mini"
-                                                    @@click="handleTaskForceStopBatch('agentGroupTaskBatch',agentDetailsGroupDetails)">批量停止</el-button>
+                                                    @@click="handleTaskForceStopBatch('agentGroupTaskBatch',agentDetailsGroupDetails)">{{ ncfST('Frontend.050') }}</el-button>
                                                 <el-button type="danger" size="mini"
-                                                    @@click="handleTaskDeleteBatch('agentGroupTaskBatch',agentDetailsGroupDetails)">批量删除</el-button>
+                                                    @@click="handleTaskDeleteBatch('agentGroupTaskBatch',agentDetailsGroupDetails)">{{ ncfST('Frontend.051') }}</el-button>
                                             </div>
                                         </template>
                                     </div>
                                     <div class="df-wn flex-ac groupInfoRow-info">
                                         <template
                                             v-if="agentDetailsGroupDetails&&agentDetailsGroupDetails.chatGroupDto">
-                                            <div class="itembox">任务数: {{
+                                            <div class="itembox">{{ ncfST('Frontend.052') }}: {{
                                                 agentDetailsGroupDetails.chatGroupDto.numberTasks
                                                 }}
                                             </div>
-                                            <div class="itembox" @@click="viewAgentParameters('agentGroupTaskAdmin')">群主: {{
+                                            <div class="itembox" @@click="viewAgentParameters('agentGroupTaskAdmin')">{{ ncfST('Frontend.053') }} {{
                                                 agentDetailsGroupDetails.chatGroupDto.adminAgentTemplateName }}</div>
-                                            <div class="itembox" @@click="viewAgentParameters('agentGroupTaskEnter')">对接人: {{
+                                            <div class="itembox" @@click="viewAgentParameters('agentGroupTaskEnter')">{{ ncfST('Frontend.054') }} {{
                                                 agentDetailsGroupDetails.chatGroupDto.enterAgentTemplateName }}</div>
                                             <div class="itembox df-wn flex-ac">
-                                                <span style="margin-right: 10px;">组成员：</span>
+                                                <span style="margin-right: 10px;">{{ ncfST('Frontend.055') }}</span>
                                                 <div v-for="(v,i) in displayedAvatars(getGroupParticipantList(agentDetailsGroupDetails))"
                                                     :key="v.participantKey" class="df-wn flex-ac flex-jc avatarBox"
                                                     :style="{zIndex:100-i}" @@click="viewAgentParameters('agentGroupTask')">
@@ -408,54 +408,54 @@
                                         key="agentDetailsGroupTaskList" :height="`calc(100vh - 458px)`"
                                         style="width: 100%;" @@selection-change="handleAgentGroupTaskSelectionChange">
                                         <el-table-column type="selection" width="30"></el-table-column>
-                                        <el-table-column prop="name" label="运行任务" min-width="170" show-overflow-tooltip>
+                                        <el-table-column prop="name" :label="ncfST('Frontend.056')" min-width="170" show-overflow-tooltip>
                                             <template slot-scope="{ row }">
                                                 <i :class="[taskStateIcon[row.status],taskStateColor[row.status]]"></i>
                                                 <span>{{ row.name }}</span>
                                             </template>
                                         </el-table-column>
-                                        <el-table-column label="开始时间" min-width="100">
+                                        <el-table-column :label="ncfST('Frontend.057')" min-width="100">
                                             <template slot-scope="{ row }">
                                                 {{ row.startTime | showFormatDate }}
                                             </template>
                                         </el-table-column>
-                                        <el-table-column label="持续时长" width="100">
+                                        <el-table-column :label="ncfST('Frontend.058')" width="100">
                                             <template slot-scope="{ row }">
                                                 {{ calculateDuration(row.startTime,row.endTime) }}
                                             </template>
                                         </el-table-column>
-                                        <el-table-column prop="modelName" label="模型名称" min-width="100"
+                                        <el-table-column prop="modelName" :label="ncfST('Frontend.059')" min-width="100"
                                             show-overflow-tooltip>
                                             <template slot-scope="{ row }">
                                                 {{ row.modelName }}
                                             </template>
                                         </el-table-column>
-                                        <el-table-column prop="promptCommand" label="任务描述" min-width="130"
+                                        <el-table-column prop="promptCommand" :label="ncfST('Frontend.060')" min-width="130"
                                             show-overflow-tooltip>
                                             <template slot-scope="{ row }">
                                                 {{ row.promptCommand }}
                                             </template>
                                         </el-table-column>
-                                        <el-table-column fixed="right" label="操作" width="210" class-name="ncf-table-actions-column">
+                                        <el-table-column fixed="right" :label="ncfST('Frontend.061')" width="210" class-name="ncf-table-actions-column">
                                             <template slot-scope="{ row }">
                                                 <el-button type="primary" size="mini" icon="el-icon-view"
-                                                    @@click="handleTaskView('agentGroupTask', row)">详情</el-button>
+                                                    @@click="handleTaskView('agentGroupTask', row)">{{ ncfST('Frontend.017') }}</el-button>
                                                 <el-button type="primary" size="mini" icon="el-icon-refresh-right"
-                                                    @@click="handleTaskAgain('agentGroupTask', row)">再次执行</el-button>
-                                                <el-tooltip content="更多操作" placement="top" :open-delay="180">
+                                                    @@click="handleTaskAgain('agentGroupTask', row)">{{ ncfST('Frontend.063') }}</el-button>
+                                                <el-tooltip :content="ncfST('Frontend.580')" placement="top" :open-delay="180">
                                                     <el-dropdown trigger="click" placement="bottom-end"
                                                         @@command="handleTaskAction($event,'agentGroupTask',row)">
                                                         <el-button type="text" size="mini" icon="el-icon-more"
                                                             class="ncf-table-action-more" title="更多操作" aria-label="更多操作"></el-button>
                                                         <el-dropdown-menu slot="dropdown">
                                                             <el-dropdown-item command="parameters">
-                                                                <i class="el-icon-user"></i> 智能体参数
+                                                                <i class="el-icon-user"></i> {{ ncfST('Frontend.062') }}
                                                             </el-dropdown-item>
                                                             <el-dropdown-item v-if="canForceStopTask(row)" command="force-stop">
-                                                                <i class="el-icon-video-pause"></i> 强制停止
+                                                                <i class="el-icon-video-pause"></i> {{ ncfST('Frontend.064') }}
                                                             </el-dropdown-item>
                                                             <el-dropdown-item command="delete" divided class="ncf-table-action-danger">
-                                                                <i class="el-icon-delete"></i> 删除
+                                                                <i class="el-icon-delete"></i> {{ ncfST('Frontend.018') }}
                                                             </el-dropdown-item>
                                                         </el-dropdown-menu>
                                                     </el-dropdown>
