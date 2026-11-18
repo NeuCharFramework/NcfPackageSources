@@ -517,15 +517,15 @@
             <div class="promptVersion">
                 <div class="promptVersion-content">
                     <div class="promptVersion-row">
-                        <span>Prompt 版本: <strong>{{promptDetail.fullVersion}}</strong></span>
+                        <span>{{ ncfST('Frontend.064') }} <strong>{{promptDetail.fullVersion}}</strong></span>
                         <i class="el-icon-document-copy" style="font-size: 1.0rem;cursor: pointer;margin-left: 8px;" @@click="copyInfo"></i>
                     </div>
                     <div class="promptVersion-row promptVersion-info">
-                        <span style="margin-right:5px;">靶场:</span>
+                        <span style="margin-right:5px;">{{ ncfST('Frontend.065') }}</span>
                         <span style="margin-right:15px;">{{promptDetail.promptFieldStr||'--'}}</span>
-                        <span style="margin-right:5px;">靶道:</span>
+                        <span style="margin-right:5px;">{{ ncfST('Frontend.066') }}</span>
                         <span style="margin-right:15px;">{{promptDetail.promptStr||'--'}}</span>
-                        <span style="margin-right:5px;">瞄准:</span>
+                        <span style="margin-right:5px;">{{ ncfST('Frontend.067') }}</span>
                         <span>{{promptDetail.tacticsStr||'--'}}</span>
                     </div>
                 </div>
@@ -535,14 +535,14 @@
             <div class="titleRow">
                 <div class="titleRow_leftBox">
                     <img src="~/image/PromptRange/prompt_output.svg" alt="" class="imgIcon" />
-                    <div class="titleContent">输出</div>
+                    <div class="titleContent">{{ ncfST('Frontend.068') }}</div>
                 </div>
                 <div class="titleRow_scoreBox">
-                    <span>平均分:</span>
+                    <span>{{ ncfST('Frontend.069') }}</span>
                     <span>{{outputAverageDeci>-1?outputAverageDeci.toFixed(1):'--'}}</span>
                 </div>
                 <div class="titleRow_scoreBox">
-                    <span>最高分:</span>
+                    <span>{{ ncfST('Frontend.070') }}</span>
                     <span>{{outputMaxDeci>-1?outputMaxDeci.toFixed(1):'--'}}</span>
                 </div>
             </div>
@@ -556,11 +556,11 @@
                      :data-result-id="item.id">
                     <div class="promptResult_Item_Title">
                         <div class="promptReultTimeArea">
-                            <span>{{item.addTime}} [耗时(毫秒):{{item.costTime}}]</span>
+                            <span>{{item.addTime}} [{{ ncfST('Frontend.071') }}{{item.costTime}}]</span>
                         </div>
                         <div class="copyButtonArea">
-                            <a href="javascript:void(0);" @@click="copyPromptResult(item,false)" title="复制带格式的 HTML 代码"><i class="fa fa-copy"></i> HTML</a>
-                            <a href="javascript:void(0);" @@click="copyPromptResult(item,true)" title="复制原始内容（例如将复制 markdown 标记）"><i class="fa fa-copy"></i> 原始</a>
+                            <a href="javascript:void(0);" @@click="copyPromptResult(item,false)" :title="ncfST('Frontend.072')"><i class="fa fa-copy"></i> HTML</a>
+                            <a href="javascript:void(0);" @@click="copyPromptResult(item,true)" :title="ncfST('Frontend.073')"><i class="fa fa-copy"></i> {{ ncfST('Frontend.074') }}</a>
                         </div>
                     </div>
                     <div class="contentRow contentRow_tti" v-if="item.resultViewType === 'TextToImage'">
@@ -568,10 +568,10 @@
                             <div class="tti-image-wrapper" v-if="item.textToImage && item.textToImage.imageUrl">
                                 <img :src="item.textToImage.imageUrl" alt="Generated Image" class="tti-image" />
                             </div>
-                            <div class="tti-empty" v-else>图片已生成，但未获得可访问地址</div>
+                            <div class="tti-empty" v-else>{{ ncfST('Frontend.075') }}</div>
                             <div class="tti-meta">
-                                <div class="tti-meta-row"><span class="tti-meta-label">存储：</span><span>{{ item.textToImage && item.textToImage.storageType ? item.textToImage.storageType : '--' }}</span></div>
-                                <div class="tti-meta-row" v-if="item.textToImage && item.textToImage.imageUrl"><a :href="item.textToImage.imageUrl">查看原图</a></div>
+                                <div class="tti-meta-row"><span class="tti-meta-label">{{ ncfST('Frontend.076') }}</span><span>{{ item.textToImage && item.textToImage.storageType ? item.textToImage.storageType : '--' }}</span></div>
+                                <div class="tti-meta-row" v-if="item.textToImage && item.textToImage.imageUrl"><a :href="item.textToImage.imageUrl">{{ ncfST('Frontend.077') }}</a></div>
                                 <div class="tti-meta-row" v-if="item.textToImage && item.textToImage.revisedPrompt"><span class="tti-meta-label">Revised：</span><span>{{ item.textToImage.revisedPrompt }}</span></div>
                                 <div class="tti-meta-row" v-if="item.textToImage && item.textToImage.prompt"><span class="tti-meta-label">Prompt：</span><span>{{ item.textToImage.prompt }}</span></div>
                             </div>
@@ -580,7 +580,7 @@
                     <div class="contentRow contentRow_audio" v-else-if="item.resultViewType === 'TextToSpeech'">
                         <div class="audio-card">
                             <audio v-if="item.textToSpeech && item.textToSpeech.audioUrl" controls :src="item.textToSpeech.audioUrl" class="audio-player"></audio>
-                            <div class="audio-empty" v-else>音频已生成，但未获得可访问地址</div>
+                            <div class="audio-empty" v-else>{{ ncfST('Frontend.078') }}</div>
                             <div class="audio-meta">
                                 <div class="audio-meta-row"><span class="audio-meta-label">Voice：</span><span>{{ item.textToSpeech && item.textToSpeech.voice ? item.textToSpeech.voice : '--' }}</span></div>
                                 <div class="audio-meta-row"><span class="audio-meta-label">Format：</span><span>{{ item.textToSpeech && item.textToSpeech.format ? item.textToSpeech.format : '--' }}</span></div>
@@ -609,9 +609,9 @@
                             <div class="embedding-meta-row"><span class="embedding-meta-label">Source：</span><span>{{ item.textEmbedding && item.textEmbedding.sourceText ? item.textEmbedding.sourceText : '--' }}</span></div>
 
                             <div class="embedding-query-panel">
-                                <el-input v-model="item.embeddingQueryText" size="mini" placeholder="输入查询文本进行向量检索"></el-input>
+                                <el-input v-model="item.embeddingQueryText" size="mini" :placeholder="ncfST('Frontend.079')"></el-input>
                                 <el-input-number v-model="item.embeddingQueryTopK" size="mini" :min="1" :max="20" :step="1"></el-input-number>
-                                <el-button type="primary" size="mini" :loading="item.embeddingQueryLoading" @@click.stop="runTextEmbeddingQuery(item)">查询</el-button>
+                                <el-button type="primary" size="mini" :loading="item.embeddingQueryLoading" @@click.stop="runTextEmbeddingQuery(item)">{{ ncfST('Frontend.080') }}</el-button>
                             </div>
 
                             <div class="embedding-hit-list" v-if="item.embeddingQueryResults && item.embeddingQueryResults.length > 0">
@@ -625,15 +625,15 @@
                     <div class="contentRow" v-else v-html="item.resultStringHtml">
                     </div>
                     <div class="promptResultUsageRow" v-if="item.resultString.length>0">
-                        <span class="promptResultUsageToken">Token: {{item.totalCostToken || 0}}（输入 {{item.promptCostToken || 0}} / 输出 {{item.resultCostToken || 0}}）</span>
+                        <span class="promptResultUsageToken">Token: {{item.totalCostToken || 0}}（{{ ncfST('Frontend.081') }} {{item.promptCostToken || 0}} / {{ ncfST('Frontend.082') }} {{item.resultCostToken || 0}}）</span>
                     </div>
                     <div class="operateRow" v-if="item.resultString.length>0">
                         <div class="operateRow_item" @@click="app.showRatingView(index,'1')">
                             <img src="~/image/PromptRange/prompt_score.svg" class="imgIcon" />
                             <span :class="checkUseRed(index,item,'robotScore')">
-                                AI评分: 
+                                {{ ncfST('Frontend.086') }}:
                                 <template v-if="robotScoreLoadingMap[item.id]">
-                                    <i class="el-icon-loading"></i> AI 评分中...
+                                    <i class="el-icon-loading"></i> {{ ncfST('Frontend.083') }}
                                 </template>
                                 <template v-else>
                                     {{item.robotScore>-1 ? item.robotScore.toFixed(1) : '--'}}
@@ -642,26 +642,26 @@
                         </div>
                         <div class="operateRow_item" @@click="app.showRatingView(index,'2')">
                             <img src="~/image/PromptRange/prompt_score.svg" class="imgIcon" />
-                            <span :class="checkUseRed(index,item,'humanScore')">手动评分: {{item.humanScore>-1 ? item.humanScore.toFixed(1) : '--'}}</span>
+                            <span :class="checkUseRed(index,item,'humanScore')">{{ ncfST('Frontend.087') }}: {{item.humanScore>-1 ? item.humanScore.toFixed(1) : '--'}}</span>
                         </div>
                         <div class="operateRow_item" v-if="item.mode === 2 || item.mode === 'Chat'" @@click="app.continueChat(item.id, index)" style="cursor: pointer; color: #409EFF;">
                             <i class="el-icon-chat-line-round"></i>
-                            <span>继续聊天</span>
+                            <span>{{ ncfST('Frontend.085') }}</span>
                         </div>
                     </div>
                     <div v-if="item.isScoreView" class="scoreRow">
                         <div class="tabsArea">
                             @* @@click="app.alBtnScoring(index)" *@
-                            <div v-if="item.scoreType === '1'" class="tabsAreaItem" v-bind:class="{'activeTabsItem':item.scoreType === '1'}">AI评分</div>
-                            <div v-if="item.scoreType === '2'" class="tabsAreaItem" v-bind:class="{'activeTabsItem':item.scoreType === '2'}">手动评分</div>
+                            <div v-if="item.scoreType === '1'" class="tabsAreaItem" v-bind:class="{'activeTabsItem':item.scoreType === '1'}">{{ ncfST('Frontend.086') }}</div>
+                            <div v-if="item.scoreType === '2'" class="tabsAreaItem" v-bind:class="{'activeTabsItem':item.scoreType === '2'}">{{ ncfST('Frontend.087') }}</div>
                         </div>
                         <div v-if="item.scoreType === '1'" class="alScoreArea">
                             <div v-for="(elItem,elindex) in item.alResultList" :key="elindex" class="valFormItem">
                                 <span class="label">{{elItem.label}}</span>
-                                <el-input v-model="elItem.value" clearable placeholder="请输入" class="input" />
+                                <el-input v-model="elItem.value" clearable :placeholder="ncfST('Frontend.088')" class="input" />
                             </div>
                             <div class="aiOperation">
-                                <el-button type="primary" size="mini" @@click="saveManualScore(item)">开始打分</el-button>
+                                <el-button type="primary" size="mini" @@click="saveManualScore(item)">{{ ncfST('Frontend.089') }}</el-button>
                                 <el-button type="primary" size="mini" icon="el-icon-plus" circle @@click="app.addAlScoring(index)"></el-button>
                             </div>
                         </div>
@@ -685,14 +685,14 @@
                             </div>
                             @*<el-input v-model="manualScorVal" clearable placeholder="Enter a value" class="input"></el-input>*@
                             <div class="manualOperation">
-                                <el-button type="primary" size="mini" @@click="saveManualScore(item)">保存</el-button>
-                                <el-button type="primary" size="mini" @@click="cancelManualScore(index)">取消</el-button>
+                                <el-button type="primary" size="mini" @@click="saveManualScore(item)">{{ ncfST('Frontend.090') }}</el-button>
+                                <el-button type="primary" size="mini" @@click="cancelManualScore(index)">{{ ncfST('Frontend.091') }}</el-button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div v-if="outputList.length===0" class="emptyDataArea">
-                    暂无生成结果
+                    {{ ncfST('Frontend.092') }}
                 </div>
             </div>
             @*Custom scrollbar thumb.*@
@@ -717,7 +717,7 @@
                         <div class="thumbnail-content">
                             <span class="thumbnail-time">{{formatTime(item.addTime)}}</span>
                             <span v-if="getFinalScore(item) !== null" class="thumbnail-score">
-                                {{getFinalScore(item).toFixed(1)}}分
+                                {{getFinalScore(item).toFixed(1)}}{{ ncfST('Frontend.093') }}
                             </span>
                         </div>
                     </div>
@@ -732,19 +732,19 @@
                     <div class="titleRow_leftBox">
                         <img src="~/image/PromptRange/prompt_chart.svg" alt="" class="imgIcon" />
                         <div class="titleContent">
-                            分数趋势图 <el-tooltip class="item" content="只有一个有分数，图表无法渲染一个数构成的折线" effect="dark" placement="top">
+                            {{ ncfST('Frontend.094') }} <el-tooltip class="item" :content="ncfST('Frontend.095')" effect="dark" placement="top">
                                 <i class="el-icon-warning-outline" style="color:#f00"></i>
                             </el-tooltip>
                         </div>
-                        <el-radio v-model="isAvg" :label="true" @@input="getScoringTrendData">平均分</el-radio>
-                        <el-radio v-model="isAvg" :label="false" @@input="getScoringTrendData">最高分</el-radio>
+                        <el-radio v-model="isAvg" :label="true" @@input="getScoringTrendData">{{ ncfST('Frontend.096') }}</el-radio>
+                        <el-radio v-model="isAvg" :label="false" @@input="getScoringTrendData">{{ ncfST('Frontend.097') }}</el-radio>
                     </div>
                 </div>
                 <div id="promptPage_scoreChart" key="myCharts" v-if="promptid&&promptid!==''&&chartData.length!==0" class="echartsBox">
                 </div>
                 <div v-else class="echartsBox">
                     <div class="emptyDataArea">
-                        暂无数据
+                        {{ ncfST('Frontend.098') }}
                     </div>
                 </div>
 
@@ -753,15 +753,15 @@
         
     </div>
     @*Version history drawer.*@
-    <div v-if="promptField" class="versionBtn" @@click="seeVersionRecord">版本记录</div>
-    <el-drawer :visible.sync="versionDrawer" direction="rtl" title="版本记录" :with-header="false" @@close="versionDrawerClose">
+    <div v-if="promptField" class="versionBtn" @@click="seeVersionRecord">{{ ncfST('Frontend.099') }}</div>
+    <el-drawer :visible.sync="versionDrawer" direction="rtl" :title="ncfST('Frontend.099')" :with-header="false" @@close="versionDrawerClose">
         <div class="versionDrawerArea">
             <div class="versionDrawerArea_titleRow">
-                <span>版本记录</span>
+                <span>{{ ncfST('Frontend.099') }}</span>
                 <img src="~/image/PromptRange/prompt_back.svg" class="imgIcon" onclick="app.versionDrawer = false" />
             </div>
 
-            <el-input v-model="versionSearchVal" size="mini" placeholder="请输入名称" class="versionDrawerArea_inputRow">
+            <el-input v-model="versionSearchVal" size="mini" :placeholder="ncfST('Frontend.100')" class="versionDrawerArea_inputRow">
                 <el-button slot="append" icon="el-icon-search" size="mini"></el-button>
             </el-input>
 
