@@ -1768,4 +1768,31 @@
   <data name="Frontend.608" xml:space="preserve"><value>отключена</value></data>
   <data name="Frontend.609" xml:space="preserve"><value>При ручном выборе AIModel необходимо выбрать модель Chat.</value></data>
   <data name="Frontend.610" xml:space="preserve"><value>Сначала сохраните AgentTemplate, содержащий Prompt в виде обычного текста.</value></data>
+  <data name="Frontend.611" xml:space="preserve"><value>Не привязано</value></data>
+  <data name="Frontend.612" xml:space="preserve"><value>Чтение состояния</value></data>
+  <data name="Frontend.613" xml:space="preserve"><value>База знаний недоступна</value></data>
+  <data name="Frontend.614" xml:space="preserve"><value>Устаревшая векторизация; публикация ожидает</value></data>
+  <data name="Frontend.615" xml:space="preserve"><value>Доступно для поиска</value></data>
+  <data name="Frontend.616" xml:space="preserve"><value>Ожидается векторизация</value></data>
+  <data name="Frontend.617" xml:space="preserve"><value>Векторизовано; ожидается повторная публикация</value></data>
+  <data name="Frontend.618" xml:space="preserve"><value>Не векторизовано</value></data>
+  <data name="Frontend.620" xml:space="preserve"><value>Введите содержимое задачи для проверки этого Prompt.</value></data>
+  <data name="Frontend.621" xml:space="preserve"><value>Тестовый ввод Prompt</value></data>
+  <data name="Frontend.622" xml:space="preserve"><value>Тестовый ввод не может быть пустым.</value></data>
+  <data name="Frontend.623" xml:space="preserve"><value>Результат должен соответствовать обязанностям Agent «{0}» и давать точный, понятный и исполнимый ответ на тестовый ввод.</value></data>
+  <data name="Frontend.624" xml:space="preserve"><value>Используйте тестовую задачу как основу.</value></data>
+  <data name="Frontend.625" xml:space="preserve"><value>Опишите ожидаемый результат или критерии оценки; PromptRange использует их для оценки ИИ.</value></data>
+  <data name="Frontend.626" xml:space="preserve"><value>Критерии автоматической оценки Prompt</value></data>
+  <data name="Frontend.627" xml:space="preserve"><value>Критерии оценки не могут быть пустыми.</value></data>
+  <data name="Frontend.628" xml:space="preserve"><value>Не удалось преобразовать PromptRange.</value></data>
+  <data name="Frontend.629" xml:space="preserve"><value>Преобразование PromptRange завершено</value></data>
+  <data name="Frontend.630" xml:space="preserve"><value>Просмотреть сведения о {0}</value></data>
+  <data name="Frontend.631" xml:space="preserve"><value>Prompt создан и однократно оценён.\nСсылка на Range: {0}\nВерсия оценки: {1}\nОценка: {2}/10\n\nРезультат оценки:\n{3}</value></data>
+  <data name="Frontend.632" xml:space="preserve"><value>Успешно: {0}; неуспешно: {1}.\n\n{2}</value></data>
+  <data name="Frontend.634" xml:space="preserve"><value>Сначала выберите действительную базу знаний.</value></data>
+  <data name="Frontend.635" xml:space="preserve"><value>В этой среде нельзя открыть новое окно. Сначала сохраните Agent, чтобы сохранить несохранённые изменения; после подтверждения база знаний откроется на текущей странице.</value></data>
+  <data name="Frontend.636" xml:space="preserve"><value>Открыть базу знаний</value></data>
+  <data name="Frontend.637" xml:space="preserve"><value>Продолжить переход</value></data>
+  <data name="Frontend.638" xml:space="preserve"><value>Состояние базы знаний обновлено</value></data>
+  <data name="Frontend.639" xml:space="preserve"><value>Не удалось обновить состояние базы знаний</value></data>
 </root>

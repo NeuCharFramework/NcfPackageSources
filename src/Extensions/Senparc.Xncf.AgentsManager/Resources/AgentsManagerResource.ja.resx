@@ -1768,4 +1768,31 @@
   <data name="Frontend.608" xml:space="preserve"><value>無効</value></data>
   <data name="Frontend.609" xml:space="preserve"><value>AIModel を手動で選択する場合は、Chat モデルを選択してください。</value></data>
   <data name="Frontend.610" xml:space="preserve"><value>プレーンテキストの Prompt を含む AgentTemplate を先に保存してください。</value></data>
+  <data name="Frontend.611" xml:space="preserve"><value>未バインド</value></data>
+  <data name="Frontend.612" xml:space="preserve"><value>状態を読み込み中</value></data>
+  <data name="Frontend.613" xml:space="preserve"><value>ナレッジベースを利用できません</value></data>
+  <data name="Frontend.614" xml:space="preserve"><value>旧版のベクトル化済み。公開待ち</value></data>
+  <data name="Frontend.615" xml:space="preserve"><value>検索可能</value></data>
+  <data name="Frontend.616" xml:space="preserve"><value>ベクトル化待ち</value></data>
+  <data name="Frontend.617" xml:space="preserve"><value>ベクトル化済み。再公開待ち</value></data>
+  <data name="Frontend.618" xml:space="preserve"><value>未ベクトル化</value></data>
+  <data name="Frontend.620" xml:space="preserve"><value>この Prompt を検証するタスク内容を入力してください。</value></data>
+  <data name="Frontend.621" xml:space="preserve"><value>Prompt のテスト入力</value></data>
+  <data name="Frontend.622" xml:space="preserve"><value>テスト入力は空にできません。</value></data>
+  <data name="Frontend.623" xml:space="preserve"><value>結果は Agent「{0}」の役割に合い、テスト入力に対して正確で明確かつ実行可能な回答を提供する必要があります。</value></data>
+  <data name="Frontend.624" xml:space="preserve"><value>テストタスクを基準にします。</value></data>
+  <data name="Frontend.625" xml:space="preserve"><value>期待する結果または採点基準を説明してください。PromptRange はこれを AI 採点に使用します。</value></data>
+  <data name="Frontend.626" xml:space="preserve"><value>Prompt の自動採点基準</value></data>
+  <data name="Frontend.627" xml:space="preserve"><value>採点基準は空にできません。</value></data>
+  <data name="Frontend.628" xml:space="preserve"><value>PromptRange の変換に失敗しました。</value></data>
+  <data name="Frontend.629" xml:space="preserve"><value>PromptRange の変換が完了しました</value></data>
+  <data name="Frontend.630" xml:space="preserve"><value>{0} の情報を表示</value></data>
+  <data name="Frontend.631" xml:space="preserve"><value>Prompt を作成し、1 回採点しました。\nRange 参照：{0}\n採点バージョン：{1}\nスコア：{2}/10\n\n採点結果：\n{3}</value></data>
+  <data name="Frontend.632" xml:space="preserve"><value>成功：{0} 件、失敗：{1} 件。\n\n{2}</value></data>
+  <data name="Frontend.634" xml:space="preserve"><value>有効なナレッジベースを先に選択してください。</value></data>
+  <data name="Frontend.635" xml:space="preserve"><value>現在の環境では新しいウィンドウを開けません。未保存の Agent の変更を保持するため先に保存してください。確認後、現在のページでナレッジベースへ移動します。</value></data>
+  <data name="Frontend.636" xml:space="preserve"><value>ナレッジベースを開く</value></data>
+  <data name="Frontend.637" xml:space="preserve"><value>移動を続行</value></data>
+  <data name="Frontend.638" xml:space="preserve"><value>ナレッジベースの状態を更新しました</value></data>
+  <data name="Frontend.639" xml:space="preserve"><value>ナレッジベースの状態を更新できませんでした</value></data>
 </root>

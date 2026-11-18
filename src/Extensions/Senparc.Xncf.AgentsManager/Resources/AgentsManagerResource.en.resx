@@ -1768,4 +1768,31 @@
   <data name="Frontend.608" xml:space="preserve"><value>disabled</value></data>
   <data name="Frontend.609" xml:space="preserve"><value>When selecting an AIModel manually, you must select a Chat model.</value></data>
   <data name="Frontend.610" xml:space="preserve"><value>Save an AgentTemplate containing a plain-text Prompt first.</value></data>
+  <data name="Frontend.611" xml:space="preserve"><value>Not bound</value></data>
+  <data name="Frontend.612" xml:space="preserve"><value>Reading status</value></data>
+  <data name="Frontend.613" xml:space="preserve"><value>Knowledge base unavailable</value></data>
+  <data name="Frontend.614" xml:space="preserve"><value>Legacy vectorized; pending publication</value></data>
+  <data name="Frontend.615" xml:space="preserve"><value>Searchable</value></data>
+  <data name="Frontend.616" xml:space="preserve"><value>Pending vectorization</value></data>
+  <data name="Frontend.617" xml:space="preserve"><value>Vectorized; pending republishing</value></data>
+  <data name="Frontend.618" xml:space="preserve"><value>Not vectorized</value></data>
+  <data name="Frontend.620" xml:space="preserve"><value>Enter the task content used to validate this Prompt.</value></data>
+  <data name="Frontend.621" xml:space="preserve"><value>Prompt test input</value></data>
+  <data name="Frontend.622" xml:space="preserve"><value>Test input cannot be empty.</value></data>
+  <data name="Frontend.623" xml:space="preserve"><value>The result should match the responsibilities of Agent "{0}" and provide an accurate, clear, actionable answer for the test input.</value></data>
+  <data name="Frontend.624" xml:space="preserve"><value>Use the test task as the basis.</value></data>
+  <data name="Frontend.625" xml:space="preserve"><value>Describe the expected result or scoring criteria; PromptRange will use it for AI scoring.</value></data>
+  <data name="Frontend.626" xml:space="preserve"><value>Automatic Prompt scoring criteria</value></data>
+  <data name="Frontend.627" xml:space="preserve"><value>Scoring criteria cannot be empty.</value></data>
+  <data name="Frontend.628" xml:space="preserve"><value>PromptRange conversion failed.</value></data>
+  <data name="Frontend.629" xml:space="preserve"><value>PromptRange conversion completed</value></data>
+  <data name="Frontend.630" xml:space="preserve"><value>View information for {0}</value></data>
+  <data name="Frontend.631" xml:space="preserve"><value>Prompt created and scored once.\nRange reference: {0}\nScored version: {1}\nScore: {2}/10\n\nScoring result:\n{3}</value></data>
+  <data name="Frontend.632" xml:space="preserve"><value>Passed: {0}; failed: {1}.\n\n{2}</value></data>
+  <data name="Frontend.634" xml:space="preserve"><value>Select a valid knowledge base first.</value></data>
+  <data name="Frontend.635" xml:space="preserve"><value>This environment cannot open a new window. Save the Agent first to preserve unsaved changes; after confirmation, navigate to the knowledge base in the current page.</value></data>
+  <data name="Frontend.636" xml:space="preserve"><value>Open knowledge base</value></data>
+  <data name="Frontend.637" xml:space="preserve"><value>Continue navigation</value></data>
+  <data name="Frontend.638" xml:space="preserve"><value>Knowledge base status refreshed</value></data>
+  <data name="Frontend.639" xml:space="preserve"><value>Failed to refresh knowledge base status</value></data>
 </root>

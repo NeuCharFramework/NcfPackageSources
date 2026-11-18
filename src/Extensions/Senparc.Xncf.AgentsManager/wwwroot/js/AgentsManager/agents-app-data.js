@@ -25,12 +25,12 @@ var AgentsAppData = {
         drawerMcpSelect: false, //Legacy comment translated to English.
       },
       taskStateText: {
-        0: '等待',  // wait Waiting stand #3376cd
-        1: '聊天', //Legacy comment translated to English.
-        2: '停顿', //Legacy comment translated to English.
-        3: '完成', // complete Finished success #67C23A
-        4: '取消', //Legacy comment translated to English.
-        5: '失败', //Legacy comment translated to English.
+        0: ncfST('Frontend.021'),  // wait Waiting stand #3376cd
+        1: ncfST('Frontend.022'),
+        2: ncfST('Frontend.023'),
+        3: ncfST('Frontend.024'), // complete Finished success #67C23A
+        4: ncfST('Frontend.025'),
+        5: ncfST('Frontend.152'),
       },
       taskStateColor: {
         0: 'waitColor',
@@ -49,9 +49,9 @@ var AgentsAppData = {
         5: 'fas fa-times-circle',// el-icon-error
       },
       agentStateText: {
-        1: '待命',
-        2: '进行中',
-        3: '停用',
+        1: ncfST('Frontend.150'),
+        2: ncfST('Frontend.154'),
+        3: ncfST('Frontend.043'),
       },
       agentStateColor: {
         1: 'standColor',
@@ -78,22 +78,22 @@ var AgentsAppData = {
       agentFCPVisible: false, //Legacy comment translated to English.
       agentFilterCriteria: [
         {
-          label: '全部',
+          label: ncfST('Frontend.148'),
           value: 'all',
           checked: true
         },
         {
-          label: '进行中',
+          label: ncfST('Frontend.154'),
           value: 'proce',
           checked: false
         },
         {
-          label: '停用',
+          label: ncfST('Frontend.043'),
           value: 'stop',
           checked: false
         },
         {
-          label: '待命',
+          label: ncfST('Frontend.150'),
           value: 'stand',
           checked: false
         }
@@ -120,8 +120,8 @@ var AgentsAppData = {
         timeoutSeconds: 60,
       },
       remoteAgentFormRules: {
-        name: [{ required: true, message: '请填写远程智能体名称', trigger: 'blur' }],
-        agentCardUrl: [{ required: true, message: '请填写 A2A Agent Card 地址', trigger: 'blur' }]
+        name: [{ required: true, message: ncfST('Frontend.298'), trigger: 'blur' }],
+        agentCardUrl: [{ required: true, message: ncfST('Frontend.338'), trigger: 'blur' }]
       },
       publishedA2AForm: {
         id: 0,
@@ -141,7 +141,7 @@ var AgentsAppData = {
         agentCardUrl: ''
       },
       publishedA2AFormRules: {
-        publicAgentKey: [{ required: true, message: '请填写公开标识', trigger: 'blur' }]
+        publicAgentKey: [{ required: true, message: ncfST('Frontend.374'), trigger: 'blur' }]
       },
       knowledgeBaseOptions: [],
       knowledgeBaseOptionsLoaded: false,
@@ -214,22 +214,22 @@ var AgentsAppData = {
       groupFCPVisible: false, //Legacy comment translated to English.
       groupFilterCriteria: [
         {
-          label: '全部',
+          label: ncfST('Frontend.148'),
           value: 'all',
           checked: true
         },
         {
-          label: '进行中',
+          label: ncfST('Frontend.154'),
           value: 'proce',
           checked: false
         },
         {
-          label: '停用',
+          label: ncfST('Frontend.043'),
           value: 'stop',
           checked: false
         },
         {
-          label: '待命',
+          label: ncfST('Frontend.150'),
           value: 'stand',
           checked: false
         }
@@ -296,30 +296,30 @@ var AgentsAppData = {
       },
       taskArchiveScope: 'active', // active | archived | all
       taskArchiveScopeOptions: [
-        { label: '活动', value: 'active' },
-        { label: '归档', value: 'archived' },
-        { label: '全部', value: 'all' }
+        { label: ncfST('Frontend.148'), value: 'active' },
+        { label: ncfST('Frontend.153'), value: 'archived' },
+        { label: ncfST('Frontend.148'), value: 'all' }
       ],
       taskArchiveSavingId: 0,
       taskFCPVisible: false, //Legacy comment translated to English.
       taskFilterCriteria: [
         {
-          label: '全部',
+          label: ncfST('Frontend.148'),
           value: 'all',
           checked: true
         },
         {
-          label: '进行中',
+          label: ncfST('Frontend.154'),
           value: 'proce',
           checked: false
         },
         {
-          label: '停用',
+          label: ncfST('Frontend.043'),
           value: 'stop',
           checked: false
         },
         {
-          label: '待命',
+          label: ncfST('Frontend.150'),
           value: 'stand',
           checked: false
         }
@@ -357,25 +357,25 @@ var AgentsAppData = {
       agentPromptConversionLoading: false,
       agentFormRules: {
         name: [
-          { required: true, message: '请填写', trigger: 'blur' },
+          { required: true, message: ncfST('Frontend.099'), trigger: 'blur' },
         ],
         systemMessage: [
-          { required: true, message: '请选择', trigger: 'change' },
+          { required: true, message: ncfST('Frontend.102'), trigger: 'change' },
         ],
         // description: [
         //     { required: true, message: 'please enter a value', trigger: 'blur' },
         // ],
         hookRobotType: [
-          { required: true, message: '请选择', trigger: 'change' },
+          { required: true, message: ncfST('Frontend.102'), trigger: 'change' },
         ],
         // hookRobotParameter: [
         //     { required: true, message: 'please enter a value', trigger: 'blur' },
         // ],
         avastar: [
-          { required: true, message: '请选择', trigger: 'change' },
+          { required: true, message: ncfST('Frontend.102'), trigger: 'change' },
         ],
         functionCallNames: [
-          { required: false, message: '请输入Function Call名称', trigger: 'change' }
+          { required: false, message: ncfST('Frontend.156'), trigger: 'change' }
         ]
       },
       // group add|edit
@@ -392,16 +392,16 @@ var AgentsAppData = {
       },
       groupFormRules: {
         name: [
-          { required: true, message: '请填写', trigger: 'blur' },
+          { required: true, message: ncfST('Frontend.099'), trigger: 'blur' },
         ],
         members: [
-          { required: true, message: '请填写', trigger: 'change' },
+          { required: true, message: ncfST('Frontend.099'), trigger: 'change' },
         ],
         adminAgentTemplateId: [
-          { required: true, message: '请填写', trigger: 'change' },
+          { required: true, message: ncfST('Frontend.099'), trigger: 'change' },
         ],
         enterAgentTemplateId: [
-          { required: true, message: '请选择', trigger: 'change' },
+          { required: true, message: ncfST('Frontend.102'), trigger: 'change' },
         ],
         // description: [
         //     { required: true, message: 'please enter a value', trigger: 'blur' },
@@ -432,16 +432,16 @@ var AgentsAppData = {
       groupStartPromptCaretEnd: 0,
       groupStartFormRules: {
         chatGroupId: [
-          { required: true, message: '请填写', trigger: 'blur' },
+          { required: true, message: ncfST('Frontend.099'), trigger: 'blur' },
         ],
         name: [
-          { required: true, message: '请填写', trigger: 'blur' },
+          { required: true, message: ncfST('Frontend.099'), trigger: 'blur' },
         ],
         aiModelId: [
-          { required: true, message: '请选择', trigger: 'change' },
+          { required: true, message: ncfST('Frontend.102'), trigger: 'change' },
         ],
         promptCommand: [
-          { required: true, message: '请填写', trigger: 'blur' },
+          { required: true, message: ncfST('Frontend.099'), trigger: 'blur' },
         ],
       },
       // task evaluation
@@ -452,10 +452,10 @@ var AgentsAppData = {
       evaluationFormRules: {
         // change
         score: [
-          { required: true, message: '请填写', trigger: 'blur' },
+          { required: true, message: ncfST('Frontend.099'), trigger: 'blur' },
         ],
         evaluation: [
-          { required: true, message: '请填写', trigger: 'blur' },
+          { required: true, message: ncfST('Frontend.099'), trigger: 'blur' },
         ]
       },
       //Legacy comment translated to English.
@@ -537,10 +537,10 @@ var AgentsAppData = {
       agentListViewMode: 'panel',
       agentStatisticMetric: 'totalTokens',
       agentStatisticMetricOptions: [
-        { value: 'totalTokens', label: 'Token 消耗', unit: 'Token' },
-        { value: 'completedConversationRounds', label: '完成对话轮数', unit: '轮' },
-        { value: 'chattingCount', label: '进行中会话', unit: '个' },
-        { value: 'score', label: '评分', unit: '分' }
+        { value: 'totalTokens', label: ncfST('Frontend.084'), unit: 'Token' },
+        { value: 'completedConversationRounds', label: ncfST('Frontend.497'), unit: ncfST('Frontend.088') },
+        { value: 'chattingCount', label: ncfST('Frontend.155'), unit: ncfST('Frontend.075') },
+        { value: 'score', label: ncfST('Frontend.015'), unit: ncfST('Frontend.015') }
       ],
       agentGraphSnapshot: {
         agents: [],

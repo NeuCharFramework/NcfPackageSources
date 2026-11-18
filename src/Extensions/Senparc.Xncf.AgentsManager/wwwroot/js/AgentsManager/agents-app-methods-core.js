@@ -16,10 +16,10 @@ var AgentsAppMethodsCore = {
 
       //Legacy comment translated to English.
       if (regex.test(str)) {
-        console.log(ncfST('目标字符串'));
+        console.log(ncfST('Frontend.522'));
         return true;
       } else {
-        console.log(ncfST('非目标字符串'));
+        console.log(ncfST('Frontend.523'));
         return false;
       }
     },
@@ -101,7 +101,7 @@ var AgentsAppMethodsCore = {
     },
     async refreshAgentStatistics() {
       await this.getAgentListData('agent')
-      this.$message.success(ncfST('统计数据已刷新'))
+      this.$message.success(ncfST('Frontend.524'))
     },
     handleAgentStatisticTileClick(agent) {
       if (!agent) return
@@ -614,7 +614,7 @@ var AgentsAppMethodsCore = {
       // agent
       if (showType === '1') {
         let detailData = item.agentTemplateDto || item
-        statusText = detailData.enable ? '待命' : '停用'
+        statusText = detailData.enable ? ncfST('Frontend.150') : ncfST('Frontend.043')
         let resultText = ''
         if (detailData.enable) {
           // state status
@@ -625,7 +625,7 @@ var AgentsAppMethodsCore = {
       // group
       if (showType === '2') {
         let detailData = item.chatGroupDto || item
-        statusText = detailData.enable ? '待命' : '停用'
+        statusText = detailData.enable ? ncfST('Frontend.150') : ncfST('Frontend.043')
         let resultText = ''
         if (detailData.enable) {
           resultText = this.taskStateText[item.state]

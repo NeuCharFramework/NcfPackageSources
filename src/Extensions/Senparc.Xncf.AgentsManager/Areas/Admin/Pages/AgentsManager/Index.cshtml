@@ -123,7 +123,7 @@
                                     <span>{{ncfST('Frontend.497')}} {{ formatUsageCount(aitem.completedConversationRounds) }}</span>
                                     <span>Token {{ formatUsageCount(aitem.totalTokens) }}</span>
                                     <button v-if="aitem.knowledgeBaseId" type="button" class="agentCard-knowledgeBaseLink text-ellipsis"
-                                        :title="`${aitem.knowledgeBaseName || ncfST('Frontend.498')}（${getKnowledgeBaseBindingInfo(aitem.knowledgeBaseId).text}），点击管理资料`"
+                                        :title="`${aitem.knowledgeBaseName || ncfST('Frontend.498')} (${getKnowledgeBaseBindingInfo(aitem.knowledgeBaseId).text}) - ${ncfST('Frontend.459')}`"
                                         @@click.stop="openKnowledgeBase(aitem.knowledgeBaseId, 'materials')">
                                         {{ aitem.knowledgeBaseName || ncfST('Frontend.498') }} · {{ getKnowledgeBaseBindingInfo(aitem.knowledgeBaseId).text }}
                                     </button>
@@ -139,7 +139,7 @@
                                     <button type="button" class="lowerHalfbox_operation lowerHalfbox_operation--a2a"
                                         :title="aitem.hasPublishedA2A ? ncfST('Frontend.499') : ncfST('Frontend.500')"
                                         @@click="openPublishedA2AEditor(aitem)">{{ aitem.hasPublishedA2A ? ncfST('Frontend.499') : ncfST('Frontend.500') }}</button>
-                                    <button type="button" class="lowerHalfbox_operation" title="查看该智能体关联的任务"
+                                    <button type="button" class="lowerHalfbox_operation" :title="ncfST('Frontend.443')"
                                         @@click="handleAgentView(aitem,aindex)">{{ncfST('Frontend.442')}}</button>
                                 </div>
                             </div>
@@ -173,7 +173,7 @@
                                 <strong>{{ formatUsageCount(agentList.length) }}</strong>
                             </div>
                             <div class="agent-statistics-summary__item">
-                                <span>{{ agentStatisticMetricLabel }}合计</span>
+                                <span>{{ agentStatisticMetricLabel }}{{ ncfST('Frontend.496') }}</span>
                                 <strong>{{ formatAgentStatisticValue(agentStatisticMetricTotal) }} {{ agentStatisticMetricUnit }}</strong>
                             </div>
                             <div class="agent-statistics-summary__item agent-statistics-summary__note">
@@ -210,7 +210,7 @@
                                     {{ agentDetails.agentTemplateDto.name }}
                                 </div>
                                 <div class="btn" @@click="handleEditDrawerOpenBtn('drawerAgent',agentDetails)">
-                                    编辑
+                                    {{ ncfST('Frontend.016') }}
                                 </div>
                             </div>
                         </div>
@@ -232,7 +232,7 @@
                             <div class="df-wn flex-ac flex-js itemBox">
                                 <span class="label">{{ ncfST('Frontend.035') }}</span>
                                 <span class="value">
-                                    {{ agentDetails.promptRangeDto ? handlePromptShowName('1',agentDetails) : '手动 Prompt' }}
+                                    {{ agentDetails.promptRangeDto ? handlePromptShowName('1',agentDetails) : ncfST('Frontend.103') }}
                                 </span>
                             </div>
                             <div class="df-wn flex-ac flex-js itemBox">
@@ -446,7 +446,7 @@
                                                     <el-dropdown trigger="click" placement="bottom-end"
                                                         @@command="handleTaskAction($event,'agentGroupTask',row)">
                                                         <el-button type="text" size="mini" icon="el-icon-more"
-                                                            class="ncf-table-action-more" title="更多操作" aria-label="更多操作"></el-button>
+                                                            class="ncf-table-action-more" :title="ncfST('Frontend.580')" :aria-label="ncfST('Frontend.580')"></el-button>
                                                         <el-dropdown-menu slot="dropdown">
                                                             <el-dropdown-item command="parameters">
                                                                 <i class="el-icon-user"></i> {{ ncfST('Frontend.062') }}
@@ -729,7 +729,7 @@
                                         </div>
                                         <el-input v-model="agentTaskMemberfilter" :placeholder="ncfST('Frontend.007')" suffix-icon="el-icon-search" style="margin-bottom: 15px;" @@input="handleTaskFilterChange($event,'agentTask')"></el-input>
                                         <div class="taskmain-members-title">
-                                            机器人·{{ agentDetailsTaskMemberList ? agentDetailsTaskMemberList.length : 0 }}
+                                            {{ ncfST('Frontend.075') }}{{ agentDetailsTaskMemberList ? agentDetailsTaskMemberList.length : 0 }}
                                         </div>
                                         <el-scrollbar class="sidebar-taskmembers-container"
                                             wrap-class="scrollbar-wrapper">
@@ -753,7 +753,7 @@
                     </div>
                 </template>
                 <div v-else class="df-wn flex-ac flex-jc emptyData"
-                    style="flex-grow: 1;font-size: 14px;color: #5e6d82;margin-top:150px;">暂无数据</div>
+                    style="flex-grow: 1;font-size: 14px;color: #5e6d82;margin-top:150px;">{{ ncfST('Frontend.011') }}</div>
             </div>
         </div>
     </el-tab-pane>
@@ -883,7 +883,7 @@
                                     <el-dropdown trigger="click" placement="bottom-end"
                                         @@command="handleGroupAction($event,row,$index)">
                                         <el-button type="text" size="mini" icon="el-icon-more"
-                                            class="ncf-table-action-more" title="更多操作" aria-label="更多操作"></el-button>
+                                            class="ncf-table-action-more" :title="ncfST('Frontend.580')" :aria-label="ncfST('Frontend.580')"></el-button>
                                         <el-dropdown-menu slot="dropdown">
                                             <el-dropdown-item command="start" :disabled="!row.enable">
                                                 <i class="el-icon-video-play"></i> {{ ncfST('Frontend.048') }}
@@ -983,7 +983,7 @@
                                     <el-dropdown trigger="click" placement="bottom-end"
                                         @@command="handleTaskAction($event,'groupTask',row)">
                                         <el-button type="text" size="mini" icon="el-icon-more"
-                                            class="ncf-table-action-more" title="更多操作" aria-label="更多操作"></el-button>
+                                            class="ncf-table-action-more" :title="ncfST('Frontend.580')" :aria-label="ncfST('Frontend.580')"></el-button>
                                         <el-dropdown-menu slot="dropdown">
                                             <el-dropdown-item command="parameters">
                                                 <i class="el-icon-user"></i> {{ ncfST('Frontend.062') }}
@@ -1275,7 +1275,7 @@
                                     <el-dropdown trigger="click" placement="bottom-end"
                                         @@command="handleTaskAction($event,'task',row,$index)">
                                     <el-button type="text" size="mini" icon="el-icon-more"
-                                        class="ncf-table-action-more" title="更多操作" aria-label="更多操作"></el-button>
+                                        class="ncf-table-action-more" :title="ncfST('Frontend.580')" :aria-label="ncfST('Frontend.580')"></el-button>
                                         <el-dropdown-menu slot="dropdown">
                                             <el-dropdown-item command="parameters">
                                                 <i class="el-icon-user"></i> {{ ncfST('Frontend.062') }}
@@ -1422,7 +1422,7 @@
                     </div>
                 </template>
                 <div v-else class="df-wn flex-ac flex-jc emptyData"
-                    style="flex-grow: 1;font-size: 14px;color: #5e6d82;margin-top:150px;">暂无数据</div>
+                    style="flex-grow: 1;font-size: 14px;color: #5e6d82;margin-top:150px;">{{ ncfST('Frontend.011') }}</div>
             </div>
         </div>
     </el-tab-pane>
@@ -1601,7 +1601,7 @@
                     </div>
                     <div class="form-help-text">
                         {{ ncfST('Frontend.581') }}
-                        <template v-if="getKnowledgeBaseBindingInfo(agentForm.knowledgeBaseId).text === '旧版向量化，待发布'">{{ ncfST('Frontend.429') }}</template>
+                        <template v-if="getKnowledgeBaseBindingInfo(agentForm.knowledgeBaseId).status === 'legacy'">{{ ncfST('Frontend.429') }}</template>
                     </div>
                 </el-form-item>
                 <el-form-item :label="ncfST('Frontend.106')" prop="hookRobotType">
@@ -1895,7 +1895,7 @@
                             <el-dropdown trigger="click" placement="bottom-end"
                                 @@command="handleRemoteAgentAction($event,row)">
                                 <el-button type="text" size="mini" icon="el-icon-more"
-                                    class="ncf-table-action-more" title="更多操作" aria-label="更多操作"></el-button>
+                                    class="ncf-table-action-more" :title="ncfST('Frontend.580')" :aria-label="ncfST('Frontend.580')"></el-button>
                                 <el-dropdown-menu slot="dropdown">
                                     <el-dropdown-item command="test"
                                         :disabled="remoteAgentBatchTesting || isRemoteAgentTesting(row.id)">
@@ -2043,10 +2043,10 @@
                             style="width:100%;margin-bottom:8px;border:1px solid rgba(245,158,11,.35);"
                             @@selection-change="handleRemoteSelectionChange">
                             <el-table-column type="selection" width="36"></el-table-column>
-                            <el-table-column label="类型" width="78"><template slot-scope="{ row }"><el-tag type="warning" size="mini">A2A</el-tag></template></el-table-column>
-                            <el-table-column prop="name" label="智能体名称" width="150" show-overflow-tooltip></el-table-column>
-                            <el-table-column prop="agentCardUrl" label="Agent Card 地址" min-width="190" show-overflow-tooltip></el-table-column>
-                            <el-table-column label="连接" width="90"><template slot-scope="{ row }"><el-tag :type="row.connectionStatus === 1 ? 'success' : (row.connectionStatus === 2 ? 'danger' : 'info')" size="mini">{{ remoteConnectionStatusText(row.connectionStatus) }}</el-tag></template></el-table-column>
+                            <el-table-column :label="ncfST('Frontend.462')" width="78"><template slot-scope="{ row }"><el-tag type="warning" size="mini">A2A</el-tag></template></el-table-column>
+                            <el-table-column prop="name" :label="ncfST('Frontend.098')" width="150" show-overflow-tooltip></el-table-column>
+                            <el-table-column prop="agentCardUrl" :label="ncfST('Frontend.338')" min-width="190" show-overflow-tooltip></el-table-column>
+                            <el-table-column :label="ncfST('Frontend.486')" width="90"><template slot-scope="{ row }"><el-tag :type="row.connectionStatus === 1 ? 'success' : (row.connectionStatus === 2 ? 'danger' : 'info')" size="mini">{{ remoteConnectionStatusText(row.connectionStatus) }}</el-tag></template></el-table-column>
                         </el-table>
                         <div class="form-help-text">{{ ncfST('Frontend.483') }}</div>
                     </div>
@@ -2061,11 +2061,11 @@
                 </el-form-item>
                 <el-form-item :label="ncfST('Frontend.132')" prop="adminAgentTemplateId">
                     @* @change="handleChange($event,'')" *@
-                    <load-more-select v-model="groupForm.adminAgentTemplateId" service-type='agent' placeholder="请选择" />
+                    <load-more-select v-model="groupForm.adminAgentTemplateId" service-type='agent' :placeholder="ncfST('Frontend.102')" />
                 </el-form-item>
                 <el-form-item :label="ncfST('Frontend.133')" prop="enterAgentTemplateId">
                     @* @change="handleChange($event,'')" *@
-                    <load-more-select v-model="groupForm.enterAgentTemplateId" service-type='agent' placeholder="请选择" />
+                    <load-more-select v-model="groupForm.enterAgentTemplateId" service-type='agent' :placeholder="ncfST('Frontend.102')" />
                 </el-form-item>
                 <el-form-item :label="ncfST('Frontend.134')">
                     <el-input type="textarea" v-model="groupForm.description" :rows="4" :placeholder="ncfST('Frontend.099')"></el-input>
@@ -2094,15 +2094,15 @@
                 :rules="groupStartFormRules" :size="elSize" label-position="left" label-width="130px"
                 class="drawerForm-container">
                 <el-form-item :label="ncfST('Frontend.136')" prop="groupName">
-                    <el-input v-model="groupStartForm.groupName" disabled placeholder="请填写"></el-input>
+                    <el-input v-model="groupStartForm.groupName" disabled :placeholder="ncfST('Frontend.099')"></el-input>
                 </el-form-item>
                 <el-form-item :label="ncfST('Frontend.137')" prop="name">
-                    <el-input v-model="groupStartForm.name" placeholder="请填写"></el-input>
+                    <el-input v-model="groupStartForm.name" :placeholder="ncfST('Frontend.099')"></el-input>
                 </el-form-item>
                 <el-form-item :label="ncfST('Frontend.138')" prop="aiModelId">
                     @* @change="handleChange($event,'')" *@
                     <load-more-select v-model="groupStartForm.aiModelId" service-type="model" :chat-only="true" direction="vertical"
-                        placeholder="请选择" />
+                        :placeholder="ncfST('Frontend.102')" />
                 </el-form-item>
                 <el-form-item :label="ncfST('Frontend.139')" prop="personality">
                     <el-checkbox v-model="groupStartForm.personality">{{ncfST('Frontend.140')}}</el-checkbox>
@@ -2170,7 +2170,7 @@
                                         <el-tag :type="remoteParticipantAvailabilityType(participant)" size="mini"
                                             :title="participant.lastHealthCheckMessage || ''">{{ remoteParticipantAvailabilityText(participant) }}</el-tag>
                                         <span>{{ participant.timeoutSeconds || 60 }} {{ ncfST('Frontend.175') }}</span>
-                                        <span v-if="participant.lastHealthCheckAt">检测 {{ participant.lastHealthCheckAt | showFormatDate }}</span>
+                                        <span v-if="participant.lastHealthCheckAt">{{ ncfST('Frontend.570') }} {{ participant.lastHealthCheckAt | showFormatDate }}</span>
                                         <el-button type="text" size="mini" :loading="isRemoteAgentTesting(participant.id)"
                                             @@click.stop="testGroupStartRemoteAgent(participant)">{{ ncfST('Frontend.445') }}</el-button>
                                     </template>
@@ -2260,7 +2260,7 @@
                 <load-more-select v-model="agentForm.aiModelId" service-type="model" :chat-only="true"
                                   direction="vertical" :placeholder="ncfST('Frontend.476')" />
             </div>
-            <div class="form-help-text" v-if="agentForm.systemMessageType === '2' && !agentForm.isHuman">手动 Prompt 必须手动选择一个 Chat 类型 AIModel。</div>
+            <div class="form-help-text" v-if="agentForm.systemMessageType === '2' && !agentForm.isHuman">{{ ncfST('Frontend.409') }}</div>
         </el-form-item>
         <el-form-item v-if="!agentForm.isHuman" :label="ncfST('Frontend.104')" prop="enable">
             <el-checkbox v-model="agentForm.enable">{{ ncfST('Frontend.105') }}</el-checkbox>
@@ -2294,7 +2294,7 @@
         <el-form-item :label="ncfST('Frontend.107')" prop="hookRobotParameter">
             <el-input v-model="agentForm.hookRobotParameter" :placeholder="ncfST('Frontend.099')" :disabled="agentForm.hookRobotType === 0"></el-input>
         </el-form-item>
-        <el-form-item label="Agent 头像" prop="avastar">
+        <el-form-item :label="ncfST('Frontend.189')" prop="avastar">
             <div class="df-wn flex-ac flex-js agentForm-agentAvatarBox">
                 <div v-for="(aitem,aindex) in agentAvatarList" :key="aindex"
                     class="df-wn flex-ac flex-jc agentAvatarBoxItem"
@@ -2321,7 +2321,7 @@
                     {{ binding.name || binding.key }}
                 </el-tag>
                 <span v-if="agentForm.functionBindings.length > 6" class="form-help-text">
-                    还有 {{ agentForm.functionBindings.length - 6 }} 项
+                    {{ ncfST('Frontend.584', agentForm.functionBindings.length - 6) }}
                 </span>
             </div>
         </el-form-item>
@@ -2686,7 +2686,7 @@
             <el-switch v-model="publishedA2AForm.enable" :active-text="ncfST('Frontend.515')" :inactive-text="ncfST('Frontend.582')"></el-switch>
         </el-form-item>
         <el-form-item :label="ncfST('Frontend.374')" prop="publicAgentKey">
-            <el-input v-model="publishedA2AForm.publicAgentKey" placeholder="例如 research-agent"></el-input>
+            <el-input v-model="publishedA2AForm.publicAgentKey" :placeholder="ncfST('Frontend.366')"></el-input>
             <div class="form-help-text">{{ ncfST('Frontend.385') }}</div>
         </el-form-item>
         <el-form-item :label="ncfST('Frontend.337')">
@@ -2695,27 +2695,27 @@
         <el-form-item :label="ncfST('Frontend.373')">
             <el-input type="textarea" v-model="publishedA2AForm.cardDescription" :rows="3" :placeholder="ncfST('Frontend.368')"></el-input>
         </el-form-item>
-        <el-form-item label="Skill ID / name">
+        <el-form-item :label="ncfST('Frontend.415')">
             <div style="display:flex;gap:8px;">
                 <el-input v-model="publishedA2AForm.skillId" placeholder="chat" style="width:35%;"></el-input>
                 <el-input v-model="publishedA2AForm.skillName" :placeholder="ncfST('Frontend.452')"></el-input>
             </div>
         </el-form-item>
-        <el-form-item label="Skill description">
+        <el-form-item :label="ncfST('Frontend.414')">
             <el-input type="textarea" v-model="publishedA2AForm.skillDescription" :rows="2" :placeholder="ncfST('Frontend.453')"></el-input>
         </el-form-item>
         <el-form-item :label="ncfST('Frontend.372')">
             <el-select v-model="publishedA2AForm.authenticationMode" style="width:100%;">
-                <el-option label="None (controlled networks only)" :value="0"></el-option>
+                <el-option :label="ncfST('Frontend.428')" :value="0"></el-option>
                 <el-option label="Bearer Token" :value="1"></el-option>
                 <el-option :label="ncfST('Frontend.471')" :value="2"></el-option>
             </el-select>
         </el-form-item>
-        <el-form-item v-if="publishedA2AForm.authenticationMode === 2" label="Request header name">
-            <el-input v-model="publishedA2AForm.authHeaderName" placeholder="例如 X-A2A-Token"></el-input>
+        <el-form-item v-if="publishedA2AForm.authenticationMode === 2" :label="ncfST('Frontend.474')">
+            <el-input v-model="publishedA2AForm.authHeaderName" :placeholder="ncfST('Frontend.363')"></el-input>
         </el-form-item>
         <el-form-item v-if="publishedA2AForm.authenticationMode !== 0" :label="ncfST('Frontend.489')">
-            <el-input v-model="publishedA2AForm.authSecretKey" placeholder="例如 partner-ncf"></el-input>
+            <el-input v-model="publishedA2AForm.authSecretKey" :placeholder="ncfST('Frontend.365')"></el-input>
             <div class="form-help-text">{{ ncfST('Frontend.355') }} A2A:InboundSecrets:{{ publishedA2AForm.authSecretKey || 'secret-name' }}.</div>
         </el-form-item>
         <el-form-item :label="ncfST('Frontend.492')">

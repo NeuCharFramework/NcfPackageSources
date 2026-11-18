@@ -1768,4 +1768,31 @@
   <data name="Frontend.608" xml:space="preserve"><value>désactivé</value></data>
   <data name="Frontend.609" xml:space="preserve"><value>Lors de la sélection manuelle d'un AIModel, vous devez choisir un modèle Chat.</value></data>
   <data name="Frontend.610" xml:space="preserve"><value>Enregistrez d'abord un AgentTemplate contenant un Prompt en texte brut.</value></data>
+  <data name="Frontend.611" xml:space="preserve"><value>Non lié</value></data>
+  <data name="Frontend.612" xml:space="preserve"><value>Lecture de l’état</value></data>
+  <data name="Frontend.613" xml:space="preserve"><value>Base de connaissances indisponible</value></data>
+  <data name="Frontend.614" xml:space="preserve"><value>Vectorisation héritée ; publication en attente</value></data>
+  <data name="Frontend.615" xml:space="preserve"><value>Interrogeable</value></data>
+  <data name="Frontend.616" xml:space="preserve"><value>Vectorisation en attente</value></data>
+  <data name="Frontend.617" xml:space="preserve"><value>Vectorisée ; republication en attente</value></data>
+  <data name="Frontend.618" xml:space="preserve"><value>Non vectorisée</value></data>
+  <data name="Frontend.620" xml:space="preserve"><value>Saisissez le contenu de la tâche utilisé pour valider ce Prompt.</value></data>
+  <data name="Frontend.621" xml:space="preserve"><value>Entrée de test du Prompt</value></data>
+  <data name="Frontend.622" xml:space="preserve"><value>L’entrée de test ne peut pas être vide.</value></data>
+  <data name="Frontend.623" xml:space="preserve"><value>Le résultat doit correspondre aux responsabilités de l’Agent « {0} » et fournir une réponse précise, claire et exploitable pour l’entrée de test.</value></data>
+  <data name="Frontend.624" xml:space="preserve"><value>Utilisez la tâche de test comme référence.</value></data>
+  <data name="Frontend.625" xml:space="preserve"><value>Décrivez le résultat attendu ou les critères de notation ; PromptRange les utilisera pour l’évaluation par IA.</value></data>
+  <data name="Frontend.626" xml:space="preserve"><value>Critères de notation automatique du Prompt</value></data>
+  <data name="Frontend.627" xml:space="preserve"><value>Les critères de notation ne peuvent pas être vides.</value></data>
+  <data name="Frontend.628" xml:space="preserve"><value>Échec de la conversion PromptRange.</value></data>
+  <data name="Frontend.629" xml:space="preserve"><value>Conversion PromptRange terminée</value></data>
+  <data name="Frontend.630" xml:space="preserve"><value>Voir les informations de {0}</value></data>
+  <data name="Frontend.631" xml:space="preserve"><value>Prompt créé et noté une fois.\nRéférence du rang : {0}\nVersion notée : {1}\nScore : {2}/10\n\nRésultat de la notation :\n{3}</value></data>
+  <data name="Frontend.632" xml:space="preserve"><value>Réussis : {0} ; échoués : {1}.\n\n{2}</value></data>
+  <data name="Frontend.634" xml:space="preserve"><value>Sélectionnez d’abord une base de connaissances valide.</value></data>
+  <data name="Frontend.635" xml:space="preserve"><value>Cet environnement ne peut pas ouvrir de nouvelle fenêtre. Enregistrez d’abord l’Agent pour conserver les modifications non enregistrées ; après confirmation, ouvrez la base de connaissances dans la page actuelle.</value></data>
+  <data name="Frontend.636" xml:space="preserve"><value>Ouvrir la base de connaissances</value></data>
+  <data name="Frontend.637" xml:space="preserve"><value>Continuer la navigation</value></data>
+  <data name="Frontend.638" xml:space="preserve"><value>État de la base de connaissances actualisé</value></data>
+  <data name="Frontend.639" xml:space="preserve"><value>Échec de l’actualisation de l’état de la base de connaissances</value></data>
 </root>

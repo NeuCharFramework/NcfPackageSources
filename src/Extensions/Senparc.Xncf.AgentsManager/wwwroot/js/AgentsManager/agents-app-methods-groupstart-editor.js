@@ -318,7 +318,7 @@ var AgentsAppMethodsGroupStartEditor = {
         return
       }
 
-      this.$confirm(ncfST('当前修改尚未保存，确认关闭？'), ncfST('操作确认'))
+      this.$confirm(ncfST('Frontend.527'), ncfST('Frontend.528'))
         .then(_ => this.closeEditorForm(btnType))
         .catch(_ => { });
     },
@@ -378,15 +378,15 @@ var AgentsAppMethodsGroupStartEditor = {
       //debugger
       let bRes = this.findDest(e)
       if (bRes) {
-        console.log('命中')
+        console.log('Matched')
         //Legacy comment translated to English.
 
       } else {
-        console.log('未命中')
+        console.log('Not matched')
         //Legacy comment translated to English.
 
       }
-      console.log('识别事件', e);
+      console.log('Recognized event', e);
     },
 
     handleSystemMessageTypeChange(type) {
@@ -431,28 +431,28 @@ var AgentsAppMethodsGroupStartEditor = {
         return
       }
 
-      const defaultTestInput = `请根据“${agent.name || '当前 Agent'}”的职责完成一次简短示例任务。`
+      const defaultTestInput = `${ncfST('Frontend.361')} ${agent.name || ncfST('Frontend.005')}.`
       let testInput
       try {
-        const inputResult = await this.$prompt('输入用于验证该 Prompt 的任务内容。', 'Prompt 打靶输入', {
+        const inputResult = await this.$prompt(ncfST('Frontend.620'), ncfST('Frontend.621'), {
           inputType: 'textarea',
           inputValue: defaultTestInput,
           inputValidator: value => !!String(value || '').trim(),
-          inputErrorMessage: '测试输入不能为空'
+          inputErrorMessage: ncfST('Frontend.622')
         })
         testInput = String(inputResult.value || '').trim()
       } catch (_) {
         return
       }
 
-      const defaultExpectedResult = `结果应符合 Agent「${agent.name || ''}」的职责，并针对测试输入提供准确、清晰、可执行的回答。职责说明：${agent.description || '以测试任务为准'}`
+      const defaultExpectedResult = `${ncfST('Frontend.623', agent.name || ncfST('Frontend.005'))} ${agent.description || ncfST('Frontend.624')}`
       let expectedResult
       try {
-        const expectedResultInput = await this.$prompt('描述期望结果或评分标准，PromptRange 将据此进行 AI 评分。', 'Prompt 自动评分标准', {
+        const expectedResultInput = await this.$prompt(ncfST('Frontend.625'), ncfST('Frontend.626'), {
           inputType: 'textarea',
           inputValue: defaultExpectedResult,
           inputValidator: value => !!String(value || '').trim(),
-          inputErrorMessage: '评分标准不能为空'
+          inputErrorMessage: ncfST('Frontend.627')
         })
         expectedResult = String(expectedResultInput.value || '').trim()
       } catch (_) {
@@ -472,7 +472,7 @@ var AgentsAppMethodsGroupStartEditor = {
           })
         const apiResponse = response?.data || {}
         if (!apiResponse.success) {
-          throw new Error(apiResponse.message || apiResponse.errorMessage || apiResponse.error || 'PromptRange 转换失败。')
+          throw new Error(apiResponse.message || apiResponse.errorMessage || apiResponse.error || ncfST('Frontend.628'))
         }
 
         const result = apiResponse.data || {}
@@ -484,11 +484,11 @@ var AgentsAppMethodsGroupStartEditor = {
 
         const resultPreview = String(result.resultString || '').slice(0, 600)
         this.$alert(
-          `Prompt 已创建并完成一次打靶评分。\n靶场引用：${result.promptCode}\n打靶版本：${result.promptItemVersion}\n评分：${result.score}/10\n\n打靶结果：\n${resultPreview}`,
-          'PromptRange 转换完成',
-          { confirmButtonText: '确定', customClass: 'agent-prompt-conversion-result' })
+          ncfST('Frontend.631', result.promptCode, result.promptItemVersion, result.score, resultPreview),
+          ncfST('Frontend.629'),
+          { confirmButtonText: ncfST('Frontend.192'), customClass: 'agent-prompt-conversion-result' })
       } catch (error) {
-        const message = error?.response?.data?.message || error?.message || 'PromptRange 转换失败。'
+        const message = error?.response?.data?.message || error?.message || ncfST('Frontend.628')
         this.$message.error(message)
       } finally {
         this.agentPromptConversionLoading = false

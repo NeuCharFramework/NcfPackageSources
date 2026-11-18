@@ -1194,4 +1194,31 @@
   <data name="Frontend.608" xml:space="preserve"><value>停用</value></data>
   <data name="Frontend.609" xml:space="preserve"><value>手动选择 AIModel 时必须选择一个 Chat 类型模型。</value></data>
   <data name="Frontend.610" xml:space="preserve"><value>请先保存一个包含明文 Prompt 的 AgentTemplate。</value></data>
+  <data name="Frontend.611" xml:space="preserve"><value>未绑定</value></data>
+  <data name="Frontend.612" xml:space="preserve"><value>正在读取状态</value></data>
+  <data name="Frontend.613" xml:space="preserve"><value>知识库不可用</value></data>
+  <data name="Frontend.614" xml:space="preserve"><value>旧版向量化，待发布</value></data>
+  <data name="Frontend.615" xml:space="preserve"><value>可检索</value></data>
+  <data name="Frontend.616" xml:space="preserve"><value>待向量化</value></data>
+  <data name="Frontend.617" xml:space="preserve"><value>已向量化，待重新发布</value></data>
+  <data name="Frontend.618" xml:space="preserve"><value>未向量化</value></data>
+  <data name="Frontend.620" xml:space="preserve"><value>输入用于验证该 Prompt 的任务内容。</value></data>
+  <data name="Frontend.621" xml:space="preserve"><value>Prompt 打靶输入</value></data>
+  <data name="Frontend.622" xml:space="preserve"><value>测试输入不能为空</value></data>
+  <data name="Frontend.623" xml:space="preserve"><value>结果应符合 Agent“{0}”的职责，并针对测试输入提供准确、清晰、可执行的回答。</value></data>
+  <data name="Frontend.624" xml:space="preserve"><value>以测试任务为准</value></data>
+  <data name="Frontend.625" xml:space="preserve"><value>描述期望结果或评分标准，PromptRange 将据此进行 AI 评分。</value></data>
+  <data name="Frontend.626" xml:space="preserve"><value>Prompt 自动评分标准</value></data>
+  <data name="Frontend.627" xml:space="preserve"><value>评分标准不能为空</value></data>
+  <data name="Frontend.628" xml:space="preserve"><value>PromptRange 转换失败。</value></data>
+  <data name="Frontend.629" xml:space="preserve"><value>PromptRange 转换完成</value></data>
+  <data name="Frontend.630" xml:space="preserve"><value>查看 {0} 的信息</value></data>
+  <data name="Frontend.631" xml:space="preserve"><value>Prompt 已创建并完成一次打靶评分。\n靶场引用：{0}\n打靶版本：{1}\n评分：{2}/10\n\n打靶结果：\n{3}</value></data>
+  <data name="Frontend.632" xml:space="preserve"><value>通过 {0} 个，未通过 {1} 个。\n\n{2}</value></data>
+  <data name="Frontend.634" xml:space="preserve"><value>请先选择有效的知识库。</value></data>
+  <data name="Frontend.635" xml:space="preserve"><value>当前环境不能打开新窗口。为保留尚未保存的 Agent 修改，请先保存；确认后将在当前页面跳转到知识库。</value></data>
+  <data name="Frontend.636" xml:space="preserve"><value>打开知识库</value></data>
+  <data name="Frontend.637" xml:space="preserve"><value>仍要跳转</value></data>
+  <data name="Frontend.638" xml:space="preserve"><value>知识库状态已刷新</value></data>
+  <data name="Frontend.639" xml:space="preserve"><value>知识库状态刷新失败</value></data>
 </root>

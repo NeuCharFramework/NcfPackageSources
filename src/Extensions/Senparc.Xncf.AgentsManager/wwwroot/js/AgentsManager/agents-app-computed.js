@@ -34,7 +34,7 @@ var AgentsAppComputed = {
       if (counts.function) parts.push(`FunctionRender ${counts.function}`)
       if (counts.workflow) parts.push(`Workflow ${counts.workflow}`)
       if (counts.plugin) parts.push(`Plugin ${counts.plugin}`)
-      return parts.length ? parts.join(' · ') : '未绑定工具或流程'
+      return parts.length ? parts.join(' · ') : ncfST('Frontend.434')
     },
     filteredFunctionBindingOptions() {
       const catalog = this.functionBindingCatalog || {}
@@ -102,7 +102,7 @@ var AgentsAppComputed = {
             agent,
             value,
             span,
-            title: `${agent.name || '未命名智能体'}：${this.agentStatisticMetricLabel} ${this.formatAgentStatisticValue(value)} ${this.agentStatisticMetricUnit}。点击编辑。`
+            title: `${agent.name || ncfST('Frontend.005')}: ${this.agentStatisticMetricLabel} ${this.formatAgentStatisticValue(value)} ${this.agentStatisticMetricUnit} - ${ncfST('Frontend.016')}.`
           }
         })
         .sort((left, right) => right.value - left.value || String(left.agent.name || '').localeCompare(String(right.agent.name || '')))
@@ -186,7 +186,7 @@ var AgentsAppComputed = {
         a2a: 'A2A',
         human: 'Human'
       }
-      return skills.map(skill => labels[skill] || skill).join(' · ') || '无额外技能'
+      return skills.map(skill => labels[skill] || skill).join(' · ') || ncfST('Frontend.264')
     },
     quickJumpGroupOptions() {
       const map = new Map()

@@ -61,7 +61,7 @@ Vue.component('participant-quick-action', {
           <el-button v-if="quickInfo.isRemote" type="text" size="mini" :loading="testing" @click.stop="testRemote">{{ncfST('Frontend.117')}}</el-button>
         </div>
       </section>
-      <button slot="reference" type="button" class="taskmain-member-action" :title="'查看 ' + participant.name + ' 的信息'">
+      <button slot="reference" type="button" class="taskmain-member-action" :title="ncfST('Frontend.630', participant.name)">
         <span class="taskmain-member-action__avatar">
           <img :src="avatarUrl()" alt="">
         </span>

@@ -216,31 +216,31 @@ var AgentsAppMethodsManage = {
 
         if (adminGroups.length || enterGroups.length) {
           const blockedMessage = [
-            `<div>智能体「${itemData.name}」当前不可删除。</div>`,
-            adminGroups.length ? `<div style="margin-top:6px;">作为群主的组：${adminGroups.join('、')}</div>` : '',
-            enterGroups.length ? `<div style="margin-top:6px;">作为对接人的组：${enterGroups.join('、')}</div>` : '',
-            '<div style="margin-top:8px;color:#E6A23C;">请先在对应组中替换群主/对接人后再删除。</div>'
+            `<div>${ncfST('Frontend.220', itemData.name)}</div>`,
+            adminGroups.length ? `<div style="margin-top:6px;">${ncfST('Frontend.221', adminGroups.join(', '))}</div>` : '',
+            enterGroups.length ? `<div style="margin-top:6px;">${ncfST('Frontend.222', enterGroups.join(', '))}</div>` : '',
+            `<div style="margin-top:8px;color:#E6A23C;">${ncfST('Frontend.223')}</div>`
           ].join('')
 
-          this.$alert(blockedMessage, '删除受阻', {
+          this.$alert(blockedMessage, ncfST('Frontend.224'), {
             dangerouslyUseHTMLString: true,
-            confirmButtonText: '我知道了'
+            confirmButtonText: ncfST('Frontend.225')
           })
           return
         }
 
         const memberGroups = memberGroupList.map(group => group.name)
         const previewMessage = [
-          `<div>确认删除智能体「${itemData.name}」吗？</div>`,
+          `<div>${ncfST('Frontend.226', itemData.name)}</div>`,
           memberGroups.length
-            ? `<div style="margin-top:6px;">将移出成员组：${memberGroups.join('、')}</div>`
-            : '<div style="margin-top:6px;">该智能体当前不在任何组成员中。</div>',
-          '<div style="margin-top:8px;">同时会删除与该智能体相关的历史消息记录，且不可恢复。</div>'
+            ? `<div style="margin-top:6px;">${ncfST('Frontend.227', memberGroups.join(', '))}</div>`
+            : `<div style="margin-top:6px;">${ncfST('Frontend.161')}</div>`,
+          `<div style="margin-top:8px;">${ncfST('Frontend.228')}</div>`
         ].join('')
 
-        this.$confirm(previewMessage, '删除智能体确认', {
+        this.$confirm(previewMessage, ncfST('Frontend.217'), {
           dangerouslyUseHTMLString: true,
-          confirmButtonText: '删除智能体',
+          confirmButtonText: ncfST('Frontend.379'),
           cancelButtonText: ncfST('Studio.Cancel'),
           type: 'warning'
         }).then(() => {
@@ -1257,32 +1257,32 @@ var AgentsAppMethodsManage = {
         : (enabled ? 'success' : 'info')
       const currentUsageText = isHuman
         ? (usage.messageCount === 0
-          ? '尚无已提交输入'
-          : `已输入 ${this.formatUsageCount(usage.messageCount)} 条文本`)
+          ? ncfST('Frontend.174')
+          : `${ncfST('Frontend.071')}: ${this.formatUsageCount(usage.messageCount)}`)
         : (usage.messageCount === 0
-          ? '尚无已完成回复'
+          ? ncfST('Frontend.174')
           : (hasReportedTokenUsage
-            ? `${this.formatUsageCount(usage.messageCount)} 条回复 · ${this.formatUsageCount(usage.totalTokens)} Token`
-            : `${this.formatUsageCount(usage.messageCount)} 条回复 · Token 未由远端反馈`))
+            ? `${ncfST('Frontend.089')}: ${this.formatUsageCount(usage.messageCount)} · ${ncfST('Frontend.084')}: ${this.formatUsageCount(usage.totalTokens)}`
+            : `${ncfST('Frontend.089')}: ${this.formatUsageCount(usage.messageCount)} · ${ncfST('Frontend.084')}`))
       const totalTokens = Number(participant?.totalTokens || 0)
 
       return {
-        kindText: isHuman ? 'Human 参与者' : (isRemote ? '远程 A2A' : '本地 Agent'),
+        kindText: isHuman ? ncfST('Frontend.343') : (isRemote ? ncfST('Frontend.334') : ncfST('Frontend.436')),
         kindType: isHuman ? 'info' : (isRemote ? 'warning' : 'primary'),
         statusText,
         statusType,
-        description: participant?.description || '暂无简介',
+        description: participant?.description || ncfST('Frontend.159'),
         currentUsageText,
         responseTimeText: isHuman
-          ? '不适用'
-          : this.formatResponseMilliseconds(usage.averageResponseMilliseconds, '暂无响应时长'),
+          ? ncfST('Frontend.555')
+          : this.formatResponseMilliseconds(usage.averageResponseMilliseconds, ncfST('Frontend.174')),
         totalUsageText: isHuman
-          ? '不产生模型 Token'
+          ? ncfST('Frontend.590')
           : (totalTokens > 0
             ? `${this.formatUsageCount(totalTokens)} Token`
-            : '暂无累计数据'),
+            : ncfST('Frontend.174')),
         activityText: this.formatActivityTime(participant?.lastActiveTime || participant?.lastHealthCheckAt),
-        healthMessage: isRemote ? (participant?.lastHealthCheckMessage || '尚未执行连接检测') : '',
+        healthMessage: isRemote ? (participant?.lastHealthCheckMessage || ncfST('Frontend.570')) : '',
         isRemote,
         canOpenEditor: !isHuman && Number.isInteger(Number(participant?.id)) && Number(participant.id) > 0,
       }
@@ -1508,7 +1508,7 @@ var AgentsAppMethodsManage = {
                         <span>StopSequences:</span>
                         <span>${item.stopSequences}</span>
                     </div>
-    </div>`, '模型参数', {
+    </div>`, ncfST('Frontend.040'), {
             dangerouslyUseHTMLString: true, //Legacy comment translated to English.
             confirmButtonText: ncfST('Frontend.172'),
             cancelButtonText: ncfST('Studio.Cancel'),
@@ -1536,7 +1536,7 @@ var AgentsAppMethodsManage = {
         if (itemData) {
           const avg = scoreFormatter(itemData.evalAvgScore)
           const max = scoreFormatter(itemData.evalMaxScore)
-          resultText = `${itemData.nickName || '未设置'} | ${itemData.fullVersion} | 平均分：${avg} | 最高分：${max} ${itemData.isDraft ? '(草稿)' : ''}`
+          resultText = `${itemData.nickName || ncfST('Frontend.240')} | ${itemData.fullVersion} | ${ncfST('Frontend.194')} ${avg} | ${ncfST('Frontend.195')} ${max} ${itemData.isDraft ? ncfST('Frontend.241') : ''}`
         }
       }
       return resultText ?? ''

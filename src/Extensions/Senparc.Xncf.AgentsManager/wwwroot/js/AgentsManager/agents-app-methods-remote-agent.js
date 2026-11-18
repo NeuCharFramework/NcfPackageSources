@@ -106,7 +106,7 @@ var AgentsAppMethodsRemoteAgent = {
         return
       }
       const failedLines = failedResults.map(result => `${result.name || `#${result.remoteAgentId}`}: ${result.message || ncfST('Frontend.531')}`)
-      this.$alert(ncfST('通过 {0} 个，未通过 {1} 个。\n\n{2}', results.length - failedResults.length, failedResults.length, failedLines.join('\n')),
+      this.$alert(ncfST('Frontend.632', results.length - failedResults.length, failedResults.length, failedLines.join('\n')),
         ncfST('Frontend.536'), { type: 'warning', confirmButtonText: ncfST('Frontend.537') })
     },
     async getRemoteAgentListData(listType = 'remoteAgent') {
