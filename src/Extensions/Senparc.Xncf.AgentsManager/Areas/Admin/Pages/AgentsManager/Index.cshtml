@@ -3,7 +3,7 @@
 @using Senparc.Xncf.AgentsManager.Models.DatabaseModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
-    ViewData["Title"] = "AgentsManager 首页";
+    ViewData["Title"] = "AgentsManager";
     Layout = "_Layout_Vue";
 }
 @section Style {
@@ -14,39 +14,39 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
-    <el-breadcrumb-item>Agents 管理模块</el-breadcrumb-item>
-    <el-breadcrumb-item>首页</el-breadcrumb-item>
+    <el-breadcrumb-item>{{ncfST('Frontend.002')}}</el-breadcrumb-item>
+    <el-breadcrumb-item>{{ncfST('Frontend.003')}}</el-breadcrumb-item>
+    <el-breadcrumb-item>{{ncfST('Frontend.004')}}</el-breadcrumb-item>
 }
 
 <el-tabs v-model="tabsActiveName" class="pageTabs agentsManager-rootTabs" @@tab-click="handleTabsClick">
     <el-tab-pane name="first">
         <span slot="label" class="agentsManager-tabLabel">
             <i class="el-icon-s-custom" aria-hidden="true"></i>
-            <span>智能体</span>
+            <span>{{ncfST('Frontend.005')}}</span>
         </span>
         <div class="tabPane-container" :class="{'studio-layout':agentListViewMode === 'three' && scrollbarAgentIndex === ''}">
             @* Sidebar *@
             <div class="sidebar-container">
                 <div class="sidebar-head-container">
                     <div class="df-wn flex-ac flex-jsb sidebar-title-row">
-                        <div class="sidebar-titleRow-title text-ellipsis">智能体列表</div>
+                        <div class="sidebar-titleRow-title text-ellipsis">{{ncfST('Frontend.006')}}</div>
                         <div class="sidebar-titleRow-actions">
                             <el-button class="sidebar-titleRow-add" type="primary" size="mini" icon="el-icon-plus"
-                                title="新增智能体" @@click="handleElVisibleOpenBtn('drawerAgent')">新增</el-button>
+                                :title="ncfST('Frontend.423')" @@click="handleElVisibleOpenBtn('drawerAgent')">{{ncfST('Frontend.423')}}</el-button>
                             <div class="sidebar-titleRow-icon sidebar-titleRow-icon-remote df-wn flex-ac flex-jc"
-                                title="管理远程 A2A 智能体" @@click="openRemoteAgentManager">
+                                :title="ncfST('Frontend.461')" @@click="openRemoteAgentManager">
                                 <i class="el-icon-connection"></i>
                             </div>
                         </div>
                     </div>
                     <div class="df-wn flex-ac flex-jsb sidebar-search-row">
-                        <el-input v-model="agentQueryList.filter" placeholder="请输入名称搜索" suffix-icon="el-icon-search"
+                        <el-input v-model="agentQueryList.filter" :placeholder="ncfST('Frontend.007')" suffix-icon="el-icon-search"
                             class="sidebar-searchRow-input" @@change="handleFilterChange($event,'agent')"></el-input>
                         <el-popover placement="bottom" width="90" trigger="click" v-model="agentFCPVisible" popper-class="filter-popover">
                             <div class="popover-filterCriteria">
                                 <div class="sortRow" @@click="handleFilterCriteria('agent','timeSort')">
-                                    <span class="sortRowText">按时间排序</span>
+                                    <span class="sortRowText">{{ncfST('Frontend.008')}}</span>
                                     <div class="sortRowIconBox">
                                         <i class="el-icon-caret-top sortRowIconTriangle"
                                             :class="{'sortRowIconActive':agentQueryList.timeSort}"></i>
@@ -55,7 +55,7 @@
                                     </div>
                                 </div>
                                 <div class="sortRow sortRowDivision" style="margin-top: 5px; cursor: auto;">
-                                    <span class="sortRowText">选择状态</span>
+                                    <span class="sortRowText">{{ncfST('Frontend.009')}}</span>
                                 </div>
                                 <div v-for="(fitem,findex) in agentFilterCriteria" :key="findex" class="sortRow"
                                     @@click="handleFilterCriteria('agent',fitem.value)">
@@ -73,7 +73,7 @@
                             :class="{'sidebar-agentitem_active':scrollbarAgentIndex === ''}"
                             @@click="handleAgentViewAll">
                             <i class="el-icon-s-custom sidebar-all-item-icon" aria-hidden="true"></i>
-                            全部智能体
+                            {{ncfST('Frontend.010')}}
                         </div>
                         <div v-for="(item,index) in agentList" :key="item.id" class="sidebar-agentitem text-ellipsis"
                             :class="{'sidebar-agentitem_active':scrollbarAgentIndex === item.id}" :title="item.name"
@@ -82,7 +82,7 @@
                         </div>
                     </template>
                     <div v-else class="df-wn flex-ac flex-jc emptyData"
-                        style="flex-grow: 1;font-size: 14px;color: #5e6d82;margin-top:150px;">暂无数据</div>
+                        style="flex-grow: 1;font-size: 14px;color: #5e6d82;margin-top:150px;">{{ncfST('Frontend.011')}}</div>
                 </el-scrollbar>
             </div>
             @* Main content *@
@@ -92,12 +92,12 @@
                 <template v-if="scrollbarAgentIndex === ''">
                     <div class="agent-view-mode-row">
                         <el-radio-group v-model="agentListViewMode" size="mini" @@change="handleAgentListViewModeChange">
-                            <el-radio-button label="panel">面板视图</el-radio-button>
-                            <el-radio-button label="three">3D视图</el-radio-button>
-                            <el-radio-button label="stats">统计图</el-radio-button>
+                            <el-radio-button label="panel">{{ncfST('Frontend.012')}}</el-radio-button>
+                            <el-radio-button label="three">{{ncfST('Frontend.013')}}</el-radio-button>
+                            <el-radio-button label="stats">{{ncfST('Frontend.466')}}</el-radio-button>
                         </el-radio-group>
                         <el-button size="mini" type="warning" plain icon="el-icon-connection" style="margin-left:10px;"
-                            @@click="openRemoteAgentManager">远程 A2A 智能体</el-button>
+                            @@click="openRemoteAgentManager">{{ncfST('Frontend.461')}}</el-button>
                     </div>
                     <el-scrollbar v-if="agentListViewMode === 'panel'" class="sidebar-agent-container" wrap-class="scrollbar-wrapper">
                         <div ref="agentElListBox" class="agent-listWrap">
@@ -120,27 +120,27 @@
                                     aitem.description }}
                                 </div>
                                 <div class="agentCard-statistics">
-                                    <span>完成轮次 {{ formatUsageCount(aitem.completedConversationRounds) }}</span>
+                                    <span>{{ncfST('Frontend.497')}} {{ formatUsageCount(aitem.completedConversationRounds) }}</span>
                                     <span>Token {{ formatUsageCount(aitem.totalTokens) }}</span>
                                     <button v-if="aitem.knowledgeBaseId" type="button" class="agentCard-knowledgeBaseLink text-ellipsis"
-                                        :title="`${aitem.knowledgeBaseName || '知识库'}（${getKnowledgeBaseBindingInfo(aitem.knowledgeBaseId).text}），点击管理资料`"
+                                        :title="`${aitem.knowledgeBaseName || ncfST('Frontend.498')}（${getKnowledgeBaseBindingInfo(aitem.knowledgeBaseId).text}），点击管理资料`"
                                         @@click.stop="openKnowledgeBase(aitem.knowledgeBaseId, 'materials')">
-                                        {{ aitem.knowledgeBaseName || '知识库' }} · {{ getKnowledgeBaseBindingInfo(aitem.knowledgeBaseId).text }}
+                                        {{ aitem.knowledgeBaseName || ncfST('Frontend.498') }} · {{ getKnowledgeBaseBindingInfo(aitem.knowledgeBaseId).text }}
                                     </button>
-                                    <span v-else class="text-ellipsis" title="未绑定知识库">未绑定知识库</span>
+                                    <span v-else class="text-ellipsis" :title="ncfST('Frontend.435')">{{ncfST('Frontend.435')}}</span>
                                 </div>
                                 <div class="agentCard-lowerHalfbox">
-                                    <div class="lowerHalfbox_label">参加中</div>
+                                    <div class="lowerHalfbox_label">{{ncfST('Frontend.014')}}</div>
                                     <div class="lowerHalfbox_quantity">{{ aitem.chattingCount }}</div>
-                                    <div class="lowerHalfbox_label">评分</div>
+                                    <div class="lowerHalfbox_label">{{ncfST('Frontend.015')}}</div>
                                     <div class="lowerHalfbox_score">{{ aitem.score }}</div>
                                     <button type="button" class="lowerHalfbox_operation"
-                                        @@click="handleEditDrawerOpenBtn('drawerAgent',aitem)">编辑</button>
+                                        @@click="handleEditDrawerOpenBtn('drawerAgent',aitem)">{{ncfST('Studio.Edit')}}</button>
                                     <button type="button" class="lowerHalfbox_operation lowerHalfbox_operation--a2a"
                                         :title="aitem.hasPublishedA2A ? '管理 A2A 发布配置' : '发布为 A2A'"
                                         @@click="openPublishedA2AEditor(aitem)">{{ aitem.hasPublishedA2A ? '管理 A2A' : '发布 A2A' }}</button>
                                     <button type="button" class="lowerHalfbox_operation" title="查看该智能体关联的任务"
-                                        @@click="handleAgentView(aitem,aindex)">查看任务</button>
+                                        @@click="handleAgentView(aitem,aindex)">{{ncfST('Frontend.442')}}</button>
                                 </div>
                             </div>
                             <div v-for="fitem in fillCardNum" :key="fitem" style="flex-grow: 1;flex-basis: 315px;">
@@ -156,7 +156,7 @@
                     <div v-else class="agent-statistics-wrap">
                         <div class="agent-statistics-toolbar">
                             <div>
-                                <div class="agent-statistics-toolbar__title">智能体统计图</div>
+                                <div class="agent-statistics-toolbar__title">{{ncfST('Frontend.430')}}</div>
                                 <div class="agent-statistics-toolbar__hint">方块面积表示所选指标的相对大小；点击方块可直接编辑对应智能体。</div>
                             </div>
                             <div class="agent-statistics-toolbar__actions">
@@ -164,7 +164,7 @@
                                     <el-option v-for="option in agentStatisticMetricOptions" :key="option.value"
                                         :label="option.label" :value="option.value"></el-option>
                                 </el-select>
-                                <el-button size="mini" icon="el-icon-refresh" @@click="refreshAgentStatistics">刷新数据</el-button>
+                                <el-button size="mini" icon="el-icon-refresh" @@click="refreshAgentStatistics">{{ncfST('Frontend.380')}}</el-button>
                             </div>
                         </div>
                         <div class="agent-statistics-summary">
@@ -177,8 +177,8 @@
                                 <strong>{{ formatAgentStatisticValue(agentStatisticMetricTotal) }} {{ agentStatisticMetricUnit }}</strong>
                             </div>
                             <div class="agent-statistics-summary__item agent-statistics-summary__note">
-                                <span>统计范围</span>
-                                <strong>已记录的本地 Agent 累计/实时数据</strong>
+                                <span>{{ncfST('Frontend.467')}}</span>
+                                <strong>{{ncfST('Frontend.468')}}</strong>
                             </div>
                         </div>
                         <el-scrollbar class="agent-statistics-scrollbar" wrap-class="scrollbar-wrapper">
@@ -194,7 +194,7 @@
                                     <span class="agent-statistics-tile__action"><i class="el-icon-edit" aria-hidden="true"></i> 编辑</span>
                                 </button>
                             </div>
-                            <div v-else class="agent-statistics-empty">暂无可统计的智能体。</div>
+                            <div v-else class="agent-statistics-empty">{{ncfST('Frontend.011')}}</div>
                         </el-scrollbar>
                     </div>
                 </template>
