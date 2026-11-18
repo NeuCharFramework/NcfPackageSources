@@ -712,4 +712,11 @@
   <data name="Frontend.649" xml:space="preserve"><value>外部 Webhook リクエストを待機中</value></data>
   <data name="Frontend.650" xml:space="preserve"><value>ユーザーが手動で実行</value></data>
   <data name="Frontend.651" xml:space="preserve"><value>ユーザーがチャットページからメッセージを送信すると開始します</value></data>
+  <data name="Frontend.652" xml:space="preserve"><value>不明</value></data>
+  <data name="Frontend.653" xml:space="preserve"><value>実行を準備中…</value></data>
+  <data name="Frontend.654" xml:space="preserve"><value>表示できる結果概要はありません。</value></data>
+  <data name="Frontend.655" xml:space="preserve"><value>この実行には中止識別子がありません。タスク一覧を更新して再試行してください。</value></data>
+  <data name="Frontend.656" xml:space="preserve"><value>この実行には有効な実行識別子がありません。終了したサービスプロセスの残骸の可能性があります。先に中止するか、タスク状態の更新を待ってください。</value></data>
+  <data name="Frontend.657" xml:space="preserve"><value>Workflow タスクのクイッククリーンアップに失敗しました。</value></data>
+  <data name="Frontend.658" xml:space="preserve"><value>プラットフォーム</value></data>
 </root>
