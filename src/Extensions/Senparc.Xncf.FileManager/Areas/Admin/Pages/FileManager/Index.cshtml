@@ -2523,7 +2523,7 @@
                             blockedTypesText: ''
                         },
                         tagManagerStorageKey: 'ncf.fileManager.tagManager',
-                        tagAdminOptions: ['管理员', '当前用户'],
+                        tagAdminOptions: [ncfST('Frontend.153'), ncfST('Frontend.226')],
                         tagCategoryDialog: {
                             visible: false,
                             loading: false,
@@ -2538,17 +2538,17 @@
                         },
                         tagCategoryRules: {
                             name: [
-                                { required: true, message: '请输入分类名称', trigger: 'blur' },
+                                { required: true, message: ncfST('Frontend.161'), trigger: 'blur' },
                                 { max: 50, message: '分类名称最多50个字符', trigger: 'blur' }
                             ]
                         },
                         tagCreateRules: {
                             name: [
-                                { required: true, message: '请输入标签名称', trigger: 'blur' },
+                                { required: true, message: ncfST('Frontend.163'), trigger: 'blur' },
                                 { max: 30, message: '标签名称最多30个字符', trigger: 'blur' }
                             ],
                             categoryId: [
-                                { required: true, message: '请选择所属分类', trigger: 'change' }
+                                { required: true, message: ncfST('Frontend.171'), trigger: 'change' }
                             ]
                         }
                     };
@@ -2737,7 +2737,7 @@
                         }
                         if (index >= 0) {
                             list.splice(index, 1);
-                            this.$message.success('已从快速访问移除');
+                            this.$message.success(ncfST('Frontend.071'));
                         } else {
                             list.unshift({
                                 id: row.id,
@@ -2747,7 +2747,7 @@
                                 folderPathText: typeof this.buildFavoritePathText === 'function' ? this.buildFavoritePathText() : '',
                                 resourceScope: this.resourceScope
                             });
-                            this.$message.success('已添加至快速访问');
+                            this.$message.success(ncfST('Frontend.119'));
                         }
                         this.saveQuickAccessToStorage();
                     },
@@ -2876,13 +2876,13 @@
                                 var now = self.formatTagDateTime(new Date());
                                 if (editing) {
                                     var target = (self.tagManager.list || []).find(function (row) { return row.id === currentId; });
-                                    if (!target) { self.$message.error('分类不存在'); return; }
+                                    if (!target) { self.$message.error(ncfST('Frontend.261')); return; }
                                     target.name = name;
                                     target.description = (form.description || '').trim();
                                     target.parentId = form.parentId || '';
                                     target.admin = form.admin || '-';
                                     target.updatedAt = now;
-                                    target.updatedBy = '当前用户';
+                            target.updatedBy = ncfST('Frontend.226');
                                     self.$message.success('分类已更新');
                                 } else {
                                     self.tagManager.list.unshift({
@@ -2894,7 +2894,7 @@
                                         status: '启用',
                                         tagCount: 0,
                                         updatedAt: now,
-                                        updatedBy: '当前用户',
+                                        updatedBy: ncfST('Frontend.226'),
                                         admin: form.admin || '-'
                                     });
                                     self.$message.success('分类已创建');
@@ -2947,14 +2947,14 @@
                                 var now = self.formatTagDateTime(new Date());
                                 if (editing) {
                                     var target = self.tagManager.tags.find(function (tag) { return tag.id === currentId; });
-                                    if (!target) { self.$message.error('标签不存在'); return; }
+                                    if (!target) { self.$message.error(ncfST('Frontend.263')); return; }
                                     var oldCategoryId = target.categoryId;
                                     target.name = name;
                                     target.description = (form.description || '').trim();
                                     target.categoryId = categoryId;
                                     target.categoryName = category.name;
                                     target.updatedAt = now;
-                                    target.updatedBy = '当前用户';
+                                    target.updatedBy = ncfST('Frontend.226');
                                     if (oldCategoryId !== categoryId) {
                                         var oldCat = (self.tagManager.list || []).find(function (row) { return row.id === oldCategoryId; });
                                         if (oldCat) oldCat.tagCount = Math.max(0, (oldCat.tagCount || 0) - 1);
@@ -2970,11 +2970,11 @@
                                         categoryName: category.name,
                                         status: '启用',
                                         updatedAt: now,
-                                        updatedBy: '当前用户'
+                                        updatedBy: ncfST('Frontend.226')
                                     });
                                     category.tagCount = (category.tagCount || 0) + 1;
                                     category.updatedAt = now;
-                                    category.updatedBy = '当前用户';
+                                    category.updatedBy = ncfST('Frontend.226');
                                     self.$message.success('标签已创建');
                                 }
                                 self.saveTagManagerToStorage();
@@ -3094,7 +3094,7 @@
                             this.$set(row, 'tags', items.map(function (item) { return item.name; }));
                             this.$set(row, 'tagIds', items.map(function (item) { return item.id; }));
                             this.fileTagDialog.visible = false;
-                            this.$message.success(items.length ? '文件标签已更新' : '已清空文件标签');
+                            this.$message.success(items.length ? ncfST('Frontend.227') : ncfST('Frontend.228'));
                         } finally {
                             this.fileTagDialog.loading = false;
                         }
@@ -3415,7 +3415,7 @@
                 } else if (vm.tagCreateDialog.editing == null) {
                     Vue.set(vm.tagCreateDialog, 'editing', false);
                 }
-                if (!vm.tagAdminOptions) Vue.set(vm, 'tagAdminOptions', ['管理员', '当前用户']);
+                if (!vm.tagAdminOptions) Vue.set(vm, 'tagAdminOptions', [ncfST('Frontend.153'), ncfST('Frontend.226')]);
                 if (!vm.tagManagerStorageKey) Vue.set(vm, 'tagManagerStorageKey', 'ncf.fileManager.tagManager');
 
                 vm.isTagRowEnabled = function (row) { return !!(row && row.status === '启用'); };
@@ -3714,7 +3714,7 @@
                 vm.emptyRecycleBin = function () {
                     var list = (this.recycleBin && (this.recycleBin.list || this.recycleBin.displayList)) || [];
                     if (!list.length) {
-                        this.$message.info('回收站暂无文档');
+                        this.$message.info(ncfST('Frontend.133'));
                         return;
                     }
                     if (!this.recycleEmptyDialog) {
@@ -3735,7 +3735,7 @@
                         : (this.recycleBin.displayList || [])).slice();
                     if (!items.length) {
                         if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
-                        this.$message.info('回收站暂无文档');
+                        this.$message.info(ncfST('Frontend.133'));
                         return;
                     }
                     this.$set(this.recycleBin, 'emptying', true);
@@ -3777,7 +3777,7 @@
                                 deletedCount: successFallback,
                                 failedIds: remainingFallback.map(function (x) { return x.id; }),
                                 message: remainingFallback.length === 0
-                                    ? '一键清空成功'
+                                    ? ncfST('Frontend.229')
                                     : ('已删除 ' + successFallback + ' 个，失败 ' + remainingFallback.length + ' 个' + (lastError ? '：' + lastError : ''))
                             };
                         }
@@ -3793,16 +3793,16 @@
                         this.loadRecycleBin();
                         if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
                         if (remaining.length === 0) {
-                            this.$message.success((result && result.message) || '一键清空成功');
+                            this.$message.success((result && result.message) || ncfST('Frontend.229'));
                         } else if (remaining.length < items.length) {
                             this.$message.warning((result && result.message) || ('部分文件删除失败，仍有 ' + remaining.length + ' 个留在回收站'));
                         } else {
-                            this.$message.error((result && result.message) || '一键清空失败，文件未能彻底删除');
+                            this.$message.error((result && result.message) || ncfST('Frontend.232'));
                         }
                     } catch (error) {
                         var errData = error && error.response && error.response.data;
                         var message = typeof errData === 'string' ? errData : (errData && (errData.errorMessage || errData.message || errData.title || errData.msg)) || (error && error.message) || '请求失败';
-                        this.$message.error('一键清空失败：' + message);
+                        this.$message.error(ncfST('Frontend.233', message));
                     } finally {
                         this.$set(this.recycleBin, 'emptying', false);
                     }
@@ -4531,7 +4531,7 @@
                         this.$set(row, 'tags', items.map(function (item) { return item.name; }));
                         this.$set(row, 'tagIds', items.map(function (item) { return item.id; }));
                         this.fileTagDialog.visible = false;
-                        this.$message.success(items.length ? '文件标签已更新' : '已清空文件标签');
+                        this.$message.success(items.length ? ncfST('Frontend.227') : ncfST('Frontend.228'));
                     } finally {
                         this.fileTagDialog.loading = false;
                     }
