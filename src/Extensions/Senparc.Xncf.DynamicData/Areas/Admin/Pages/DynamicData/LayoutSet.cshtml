@@ -867,7 +867,7 @@
                                                 placeholder="请输入确认按钮文字"></el-input>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item label="确认操作设置">
+                                    <el-form-item :label="ncfST('Frontend.155')">
                                         <div :span="12" class="df-wn flex-ac flex-as">
                                             <span class="formitem-labelText">提示内容</span>
                                             <el-input v-model.trim="customColumnBtnForm.popupPromptContent"
@@ -1239,53 +1239,53 @@
                                     <el-form-item label="确认操作设置">
                                         <div class="Popupset">
 
-                                            <div>显示消息提示</div>
+                                            <div>{{ ncfST('Frontend.124') }}</div>
                                             <div class="popuptxet">
-                                                提示内容<el-input style="width: 160px;margin-left:53px"
-                                                    placeholder="请输入"></el-input>
+                                                {{ ncfST('Frontend.090') }}<el-input style="width: 160px;margin-left:53px"
+                                                    :placeholder="ncfST('Frontend.189')"></el-input>
                                             </div>
-                                            <div class="popuptxet">提示时长<el-input style="width:160px;margin-left:53px"
-                                                    placeholder="请输入"></div>
+                                            <div class="popuptxet">{{ ncfST('Frontend.093') }}<el-input style="width:160px;margin-left:53px"
+                                                    :placeholder="ncfST('Frontend.189')"></div>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item label="取消操作设置">
+                                    <el-form-item :label="ncfST('Frontend.036')">
                                         <div class="Popupset">
                                             <div class="popuptxet">
-                                                关闭页面<el-input style="width: 160px;margin-left:53px"
-                                                    placeholder="请输入"></el-input>
+                                                {{ ncfST('Frontend.014') }}<el-input style="width: 160px;margin-left:53px"
+                                                    :placeholder="ncfST('Frontend.189')"></el-input>
                                             </div>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item label="提交成功状态设置">
+                                    <el-form-item :label="ncfST('Frontend.089')">
                                         <div class="Popupset">
-                                            <div class="popuptxet">表单执行方法<el-input style="width:160px;margin-left:25px"
-                                                    placeholder="请输入"></div>
-                                            <div>显示消息提示</div>
+                                            <div class="popuptxet">{{ ncfST('Frontend.178') }}<el-input style="width:160px;margin-left:25px"
+                                                    :placeholder="ncfST('Frontend.189')"></div>
+                                            <div>{{ ncfST('Frontend.124') }}</div>
                                             <div class="popuptxet">
-                                                提示内容<el-input style="width: 160px;margin-left:53px"
-                                                    placeholder="请输入"></el-input>
+                                                {{ ncfST('Frontend.090') }}<el-input style="width: 160px;margin-left:53px"
+                                                    :placeholder="ncfST('Frontend.189')"></el-input>
                                             </div>
-                                            <div class="popuptxet">提示时长<el-input style="width:160px;margin-left:53px"
-                                                    placeholder="请输入"></div>
+                                            <div class="popuptxet">{{ ncfST('Frontend.093') }}<el-input style="width:160px;margin-left:53px"
+                                                    :placeholder="ncfST('Frontend.189')"></div>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item label="提交失败状态设置">
+                                    <el-form-item :label="ncfST('Frontend.088')">
                                         <div class="Popupset">
-                                            <div class="popuptxet">表单执行方法<el-input style="width:160px;margin-left:25px"
-                                                    placeholder="请输入"></div>
-                                            <div>打开弹窗</div>
+                                            <div class="popuptxet">{{ ncfST('Frontend.178') }}<el-input style="width:160px;margin-left:25px"
+                                                    :placeholder="ncfST('Frontend.189')"></div>
+                                            <div>{{ ncfST('Frontend.070') }}</div>
                                             <div class="popuptxet">
-                                                标题文字<el-input style="width: 160px;margin-left:53px"
-                                                    placeholder="请输入"></el-input>
+                                                {{ ncfST('Frontend.133') }}<el-input style="width: 160px;margin-left:53px"
+                                                    :placeholder="ncfST('Frontend.189')"></el-input>
                                             </div>
                                             <div class="popuptxet">
-                                                标题内容<el-input style="width: 160px;margin-left:53px"
-                                                    placeholder="请输入"></el-input>
+                                                {{ ncfST('Frontend.090') }}<el-input style="width: 160px;margin-left:53px"
+                                                    :placeholder="ncfST('Frontend.189')"></el-input>
                                             </div>
-                                            <div class="popuptxet">取消按钮文字<el-input style="width:160px;margin-left:25px"
-                                                    placeholder="请输入"></div>
-                                            <div class="popuptxet">确认按钮文字<el-input style="width:160px;margin-left:25px"
-                                                    placeholder="请输入"></div>
+                                            <div class="popuptxet">{{ ncfST('Frontend.255') }}<el-input style="width:160px;margin-left:25px"
+                                                    :placeholder="ncfST('Frontend.189')"></div>
+                                            <div class="popuptxet">{{ ncfST('Frontend.256') }}<el-input style="width:160px;margin-left:25px"
+                                                    :placeholder="ncfST('Frontend.189')"></div>
                                         </div>
                                     </el-form-item>
                                 </el-form>
