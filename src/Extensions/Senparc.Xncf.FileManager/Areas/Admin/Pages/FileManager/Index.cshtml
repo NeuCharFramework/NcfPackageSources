@@ -3147,7 +3147,7 @@
                         if (index >= 0) {
                             list.splice(index, 1);
                             this.$set(row, 'isFavorite', false);
-                            this.$message.success('已取消收藏');
+                            this.$message.success(ncfST('Frontend.177'));
                         } else {
                             list.unshift({
                                 id: row.id,
@@ -3161,7 +3161,7 @@
                                 isFavorite: true
                             });
                             this.$set(row, 'isFavorite', true);
-                            this.$message.success('已加入收藏');
+                            this.$message.success(ncfST('Frontend.119'));
                         }
                         this.favoriteList.list = list;
                         this.saveFavoritesToStorage();
@@ -3171,7 +3171,7 @@
                     emptyRecycleBin: function () {
                         var list = (this.recycleBin && (this.recycleBin.list || this.recycleBin.displayList)) || [];
                         if (!list.length) {
-                            this.$message.info('回收站暂无文档');
+                            this.$message.info(ncfST('Frontend.133'));
                             return;
                         }
                         if (!this.recycleEmptyDialog) {
@@ -3192,7 +3192,7 @@
                             : (this.recycleBin.displayList || [])).slice();
                         if (!items.length) {
                             if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
-                            this.$message.info('回收站暂无文档');
+                            this.$message.info(ncfST('Frontend.133'));
                             return;
                         }
                         this.$set(this.recycleBin, 'emptying', true);
@@ -3221,13 +3221,13 @@
                                 localStorage.setItem(this.recycleStorageKey || 'ncf.fileManager.recycleBin', JSON.stringify(remaining));
                             } catch (e) { /* ignore */ }
                             if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
-                            if (remaining.length === 0) this.$message.success((result && result.message) || '一键清空成功');
-                            else if (remaining.length < items.length) this.$message.warning((result && result.message) || ('部分删除失败，仍有 ' + remaining.length + ' 个'));
-                            else this.$message.error((result && result.message) || '一键清空失败');
+                            if (remaining.length === 0) this.$message.success((result && result.message) || ncfST('Frontend.229'));
+                            else if (remaining.length < items.length) this.$message.warning((result && result.message) || ncfST('Frontend.231', remaining.length));
+                            else this.$message.error((result && result.message) || ncfST('Frontend.232'));
                         } catch (error) {
                             var data = error && error.response && error.response.data;
                             var message = typeof data === 'string' ? data : (data && (data.errorMessage || data.message || data.title || data.msg)) || (error && error.message) || '请求失败';
-                            this.$message.error('一键清空失败：' + message);
+                            this.$message.error(ncfST('Frontend.233', message));
                         } finally {
                             this.$set(this.recycleBin, 'emptying', false);
                         }
@@ -3896,7 +3896,7 @@
                     if (index >= 0) {
                         list.splice(index, 1);
                         this.$set(row, 'isFavorite', false);
-                        this.$message.success('已取消收藏');
+                        this.$message.success(ncfST('Frontend.177'));
                     } else {
                         list.unshift({
                             id: row.id,
@@ -3910,7 +3910,7 @@
                             isFavorite: true
                         });
                         this.$set(row, 'isFavorite', true);
-                        this.$message.success('已加入收藏');
+                        this.$message.success(ncfST('Frontend.119'));
                     }
                     this.favoriteList.list = list;
                     this.saveFavoritesToStorage();
@@ -3996,7 +3996,7 @@
                     }
                     if (index >= 0) {
                         list.splice(index, 1);
-                        this.$message.success('已从快速访问移除');
+                        this.$message.success(ncfST('Frontend.071'));
                     } else {
                         list.unshift({
                             id: row.id,
@@ -4006,7 +4006,7 @@
                             folderPathText: typeof this.buildFavoritePathText === 'function' ? this.buildFavoritePathText() : '',
                             resourceScope: this.resourceScope
                         });
-                        this.$message.success('已添加至快速访问');
+                        this.$message.success(ncfST('Frontend.119'));
                     }
                     this.saveQuickAccessToStorage();
                 };
