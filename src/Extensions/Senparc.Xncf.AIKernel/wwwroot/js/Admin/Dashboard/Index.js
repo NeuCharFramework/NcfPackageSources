@@ -65,7 +65,7 @@
           {
                 name: ncfT('AIKernel.Dashboard.TotalSessions'),
             type: 'line',
-            stack: '总量',
+            stack: 'total',
             areaStyle: { color: '#91c7ae' }, //Legacy comment translated to English.
             data: this.chartData.map(item => item.normalLogCount),
             color: '#91c7ae'
@@ -106,7 +106,7 @@
                   {
                       name: ncfT('AIKernel.Dashboard.ActiveUsers'),
                       type: 'line',
-                      stack: '总量',
+                      stack: 'total',
                       areaStyle: { color: '#91c7ae' }, //Legacy comment translated to English.
                       data: this.chartData.map(item => item.normalLogCount),
                       color: '#91c7ae'
@@ -147,7 +147,7 @@
                 {
                     name: ncfT('AIKernel.Dashboard.AverageInteractions'),
                     type: 'line',
-                    stack: '总量',
+                    stack: 'total',
                     areaStyle: { color: '#91c7ae' }, //Legacy comment translated to English.
                     data: this.chartData.map(item => item.normalLogCount),
                     color: '#91c7ae'
@@ -187,7 +187,7 @@
                   {
                       name: ncfT('AIKernel.Dashboard.TokenSpeed'),
                       type: 'line',
-                      stack: '总量',
+                      stack: 'total',
                       areaStyle: { color: '#91c7ae' }, //Legacy comment translated to English.
                       data: this.chartData.map(item => item.normalLogCount),
                       color: '#91c7ae'
@@ -226,7 +226,7 @@
                   {
                       name: ncfT('AIKernel.Dashboard.UserSatisfaction'),
                       type: 'line',
-                      stack: '总量',
+                      stack: 'total',
                       areaStyle: { color: '#91c7ae' }, //Legacy comment translated to English.
                       data: this.chartData.map(item => item.normalLogCount),
                       color: '#91c7ae'
@@ -266,7 +266,7 @@
                   {
                       name: ncfT('AIKernel.Dashboard.TotalMessages'),
                       type: 'line',
-                      stack: '总量',
+                      stack: 'total',
                       areaStyle: { color: '#91c7ae' }, //Legacy comment translated to English.
                       data: this.chartData.map(item => item.normalLogCount),
                       color: '#91c7ae'
