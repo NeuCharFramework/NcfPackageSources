@@ -36,22 +36,22 @@ var app = new Vue({
             },
             newFieldFormRules: {
                 name: [
-                    { required: true, message: '请填写名称', trigger: 'blur' },
+                    { required: true, message: ncfST('Frontend.187'), trigger: 'blur' },
                 ],
                 identificationId: [
-                    { required: true, message: '请填写标识Id', trigger: 'blur' },
+                    { required: true, message: ncfST('Frontend.188'), trigger: 'blur' },
                 ],
                 dataType: [
-                    { required: true, message: '请选择数据类型', trigger: 'change' },
+                    { required: true, message: ncfST('Frontend.216'), trigger: 'change' },
                 ],
                 format: [
-                    { required: true, message: '请选择格式', trigger: 'change' },
+                    { required: true, message: ncfST('Frontend.218'), trigger: 'change' },
                 ],
                 requir: [
-                    { required: true, message: '请选择是否必填', trigger: 'change' },
+                    { required: true, message: ncfST('Frontend.264'), trigger: 'change' },
                 ],
                 primaryKey: [
-                    { required: true, message: '请选择是否唯一', trigger: 'change' },
+                    { required: true, message: ncfST('Frontend.265'), trigger: 'change' },
                 ],
                 //event: [
                 //Legacy comment translated to English.
@@ -194,11 +194,11 @@ var app = new Vue({
             const { name, description } = this.sheetForm
             let messageText = ''
             if (!name && !description) {
-                messageText = '请输入名称和描述'
+                messageText = ncfST('Frontend.270')
             } else if (!name) {
-                this.$message.error('请输入名称');
+                this.$message.error(ncfST('Frontend.195'));
             } else if (!description) {
-                messageText = '请输入描述'
+                messageText = ncfST('Frontend.199')
             }
             if (messageText) {
                 this.$message.error(messageText);
@@ -237,7 +237,7 @@ var app = new Vue({
         //}
         //Legacy comment translated to English.
         handleNewFieldDrawerClose(done) {
-            this.$confirm('确认关闭？')
+            this.$confirm(ncfST('Frontend.271'))
                 .then(_ => {
                     this.resetNewField(false)
                     this.$nextTick(() => {
@@ -260,14 +260,14 @@ var app = new Vue({
         },
         //Legacy comment translated to English.
         newFieldsDelete(row) {
-            this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
+            this.$confirm(ncfST('Frontend.272'), ncfST('Frontend.273'), {
+                confirmButtonText: ncfST('Frontend.152'),
+                cancelButtonText: ncfST('Frontend.034'),
                 type: 'warning'
             }).then(() => {
                 this.$message({
                     type: 'success',
-                    message: '删除成功!'
+                    message: ncfST('Frontend.274')
                 });
                 // todo invokedeleteinterface
                 //Legacy comment translated to English.
@@ -275,7 +275,7 @@ var app = new Vue({
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: '已取消删除'
+                    message: ncfST('Frontend.275')
                 });
             });
         },
