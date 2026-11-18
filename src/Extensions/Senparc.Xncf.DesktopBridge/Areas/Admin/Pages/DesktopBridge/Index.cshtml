@@ -1,8 +1,11 @@
 @page
 @using System.Text.Json
+@using Microsoft.Extensions.Localization
 @model Senparc.Xncf.DesktopBridge.Areas.DesktopBridge.Pages.Index
+@using Senparc.Xncf.DesktopBridge
+@inject IStringLocalizer<DesktopBridgeResource> XR
 @{
-    ViewData["Title"] = "DesktopBridge 设备配对与会话";
+    ViewData["Title"] = XR["Frontend.027"];
     Layout = "_Layout_Vue";
     var jsonOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
     var pendingPairingsJson = JsonSerializer.Serialize(Model.PendingPairings, jsonOptions);
@@ -10,9 +13,9 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.009"]</el-breadcrumb-item>
     <el-breadcrumb-item>DesktopBridge</el-breadcrumb-item>
-    <el-breadcrumb-item>设备配对与会话</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.027"]</el-breadcrumb-item>
 }
 
 <div>
@@ -20,17 +23,17 @@
         <el-header class="module-header">
             <span class="start-title">
                 <i class="fa fa-desktop"></i>&nbsp;
-                <span class="module-header-v">设备配对与会话</span>
+                <span class="module-header-v">@XR["Frontend.027"]</span>
             </span>
         </el-header>
 
         <el-main>
             <el-alert
-                title="安全配对说明"
+                :title="ncfST('Frontend.006')"
                 type="info"
                 show-icon
                 :closable="false"
-                description="桌面端留空令牌后会生成 5 分钟有效的配对码。请核对配对码和来源地址后批准；会话令牌有效 24 小时、不会在后台显示，并可随时撤销。">
+                :description="ncfST('Frontend.034')">
             </el-alert>
 
             @if (TempData["DesktopBridgeMessage"] is string message)
@@ -45,46 +48,46 @@
 
             <div class="filter-container">
                 <el-button type="primary" size="small" icon="el-icon-refresh" @@click="refreshPage">
-                    刷新状态
+                    {{ ncfST('Frontend.003') }}
                 </el-button>
-                <el-tag type="warning" size="small">待审批 @Model.PendingPairings.Count</el-tag>
-                <el-tag type="success" size="small">活动会话 @Model.Sessions.Count</el-tag>
+                <el-tag type="warning" size="small">{{ ncfST('Frontend.008', Model.PendingPairings.Count) }}</el-tag>
+                <el-tag type="success" size="small">{{ ncfST('Frontend.023', Model.Sessions.Count) }}</el-tag>
             </div>
 
             <el-card shadow="never">
                 <div slot="header" class="clearfix">
-                    <span><i class="fa fa-key"></i>&nbsp;待审批请求</span>
+                    <span><i class="fa fa-key"></i>&nbsp;{{ ncfST('Frontend.001') }}</span>
                     <ncf-doc-help topic="desktop.pairing"></ncf-doc-help>
                 </div>
 
-                <el-table :data="pendingPairings" border stripe empty-text="当前没有待审批的配对请求">
-                    <el-table-column label="配对码" min-width="170">
+                <el-table :data="pendingPairings" border stripe :empty-text="ncfST('Frontend.030')">
+                    <el-table-column :label="ncfST('Frontend.029')" min-width="170">
                         <template slot-scope="scope">
                             <el-tag type="warning" effect="plain">{{ scope.row.deviceCode }}</el-tag>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="clientName" label="桌面端" min-width="190"></el-table-column>
-                    <el-table-column prop="remoteAddress" label="来源地址" min-width="150"></el-table-column>
-                    <el-table-column label="发起时间" min-width="170">
+                    <el-table-column prop="clientName" :label="ncfST('Frontend.021')" min-width="190"></el-table-column>
+                    <el-table-column prop="remoteAddress" :label="ncfST('Frontend.020')" min-width="150"></el-table-column>
+                    <el-table-column :label="ncfST('Frontend.005')" min-width="170">
                         <template slot-scope="scope">{{ formatDate(scope.row.createdAt) }}</template>
                     </el-table-column>
-                    <el-table-column label="过期时间" min-width="170">
+                    <el-table-column :label="ncfST('Frontend.004')" min-width="170">
                         <template slot-scope="scope">{{ formatDate(scope.row.expiresAt) }}</template>
                     </el-table-column>
-                    <el-table-column label="操作" width="170" fixed="right" class-name="ncf-table-actions-column">
+                    <el-table-column :label="ncfST('Frontend.017')" width="170" fixed="right" class-name="ncf-table-actions-column">
                         <template slot-scope="scope">
                             <form class="d-inline-block" method="post" asp-page-handler="Approve">
                                 <input type="hidden" name="Uid" value="@Model.Uid" />
                                 <input type="hidden" name="requestId" :value="scope.row.requestId" />
                                 <button type="submit" class="el-button el-button--success el-button--mini">
-                                    <i class="el-icon-check"></i><span>批准</span>
+                                    <i class="el-icon-check"></i><span>{{ ncfST('Frontend.010') }}</span>
                                 </button>
                             </form>
                             <form class="d-inline-block" method="post" asp-page-handler="Deny">
                                 <input type="hidden" name="Uid" value="@Model.Uid" />
                                 <input type="hidden" name="requestId" :value="scope.row.requestId" />
                                 <button type="submit" class="el-button el-button--danger el-button--mini">
-                                    <i class="el-icon-close"></i><span>拒绝</span>
+                                    <i class="el-icon-close"></i><span>{{ ncfST('Frontend.013') }}</span>
                                 </button>
                             </form>
                         </template>
@@ -96,32 +99,32 @@
 
             <el-card shadow="never">
                 <div slot="header" class="clearfix">
-                    <span><i class="fa fa-link"></i>&nbsp;活动会话</span>
+                    <span><i class="fa fa-link"></i>&nbsp;{{ ncfST('Frontend.002') }}</span>
                 </div>
 
-                <el-table :data="sessions" border stripe empty-text="当前没有通过配对签发的活动会话">
-                    <el-table-column prop="clientName" label="桌面端" min-width="190"></el-table-column>
-                    <el-table-column prop="remoteAddress" label="来源地址" min-width="150"></el-table-column>
-                    <el-table-column prop="approvedBy" label="批准人" min-width="130"></el-table-column>
-                    <el-table-column label="批准时间" min-width="170">
+                <el-table :data="sessions" border stripe :empty-text="ncfST('Frontend.031')">
+                    <el-table-column prop="clientName" :label="ncfST('Frontend.021')" min-width="190"></el-table-column>
+                    <el-table-column prop="remoteAddress" :label="ncfST('Frontend.020')" min-width="150"></el-table-column>
+                    <el-table-column prop="approvedBy" :label="ncfST('Frontend.011')" min-width="130"></el-table-column>
+                    <el-table-column :label="ncfST('Frontend.012')" min-width="170">
                         <template slot-scope="scope">{{ formatDate(scope.row.approvedAt) }}</template>
                     </el-table-column>
-                    <el-table-column label="最近使用" min-width="170">
-                        <template slot-scope="scope">{{ scope.row.lastUsedAt ? formatDate(scope.row.lastUsedAt) : '尚未使用' }}</template>
+                    <el-table-column :label="ncfST('Frontend.018')" min-width="170">
+                        <template slot-scope="scope">{{ scope.row.lastUsedAt ? formatDate(scope.row.lastUsedAt) : ncfST('Frontend.018') }}</template>
                     </el-table-column>
-                    <el-table-column label="到期时间" min-width="170">
+                    <el-table-column :label="ncfST('Frontend.004')" min-width="170">
                         <template slot-scope="scope">{{ formatDate(scope.row.expiresAt) }}</template>
                     </el-table-column>
-                    <el-table-column label="状态" width="90">
-                        <template slot-scope="scope"><el-tag type="success" size="small">已授权</el-tag></template>
+                    <el-table-column :label="ncfST('Frontend.024')" width="90">
+                        <template slot-scope="scope"><el-tag type="success" size="small">{{ ncfST('Frontend.007') }}</el-tag></template>
                     </el-table-column>
-                    <el-table-column label="操作" width="100" fixed="right" class-name="ncf-table-actions-column">
+                    <el-table-column :label="ncfST('Frontend.017')" width="100" fixed="right" class-name="ncf-table-actions-column">
                         <template slot-scope="scope">
                             <form method="post" asp-page-handler="Revoke">
                                 <input type="hidden" name="Uid" value="@Model.Uid" />
                                 <input type="hidden" name="sessionId" :value="scope.row.sessionId" />
                                 <button type="submit" class="el-button el-button--danger el-button--mini">
-                                    <i class="el-icon-switch-button"></i><span>撤销</span>
+                                    <i class="el-icon-switch-button"></i><span>{{ ncfST('Frontend.016') }}</span>
                                 </button>
                             </form>
                         </template>
@@ -130,7 +133,7 @@
             </el-card>
 
             <el-alert
-                title="环境变量令牌属于兼容通道，不会在活动会话列表中显示，也不能从此页面撤销。"
+                :title="ncfST('Frontend.025')"
                 type="warning"
                 show-icon
                 :closable="false">
