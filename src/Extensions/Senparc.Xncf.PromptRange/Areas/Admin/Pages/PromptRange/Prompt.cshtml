@@ -366,7 +366,7 @@
                                 </div>
                             </div>
                             <div class="remarkRow">
-                                <span class="remarkLabel">{{ ncfST('备注:') }}</span>
+                                <span class="remarkLabel">{{ ncfST('Frontend.762') }}</span>
                                 <el-input v-model="remarks" type="textarea"
                                           :rows="4"
                                           resize="none"
@@ -779,14 +779,14 @@
                         <el-popover popper-class="versionTreeMorePopover" placement="left" width="118" trigger="hover">
                             <div class="operateArea">
                                 <div class="operateItem">
-                                    <span style="margin-right:5px;">是否公开</span>
+                                    <span style="margin-right:5px;">{{ ncfST('Frontend.101') }}</span>
                                     <el-switch v-model="data.isPublic" disabled="true" :width="34" @@change="versionRecordIsPublic(data)">
                                     </el-switch>
                                 </div>
-                                <div class="operateItem" @@click="versionRecordEdit(data)">编辑</div>
-                                <div class="operateItem" @@click="versionRecordGenerateCode(data)">生成代码</div>
+                                <div class="operateItem" @@click="versionRecordEdit(data)">{{ ncfST('Frontend.102') }}</div>
+                                <div class="operateItem" @@click="versionRecordGenerateCode(data)">{{ ncfST('Frontend.103') }}</div>
                                 @* <div class="operateItem" @@click="versionRecordViewNotes(data)">View notes</div> *@
-                                <div class="operateItem" @@click="versionRecordDelete(data)">删除</div>
+                                <div class="operateItem" @@click="versionRecordDelete(data)">{{ ncfST('Frontend.007') }}</div>
                             </div>
                             <img slot="reference" src="~/image/PromptRange/prompt_moreDot.svg" class="treeMoreIcon" />
                         </el-popover>
@@ -881,19 +881,19 @@
                             <el-collapse-item name="systemMessage">
                                 <template slot="title">
                                     <i :class="systemMessageCollapse.includes('systemMessage') ? 'el-icon-arrow-up' : 'el-icon-arrow-down'" style="margin-right: 8px;"></i>
-                                    <span style="font-weight: 600;">System Message (Prompt)</span>
-                                    <span style="margin-left: 8px; font-size: 12px; color: #909399;">(点击{{ systemMessageCollapse.includes('systemMessage') ? '收起' : '展开' }}查看当前对话使用的 Prompt)</span>
+                                    <span style="font-weight: 600;">{{ ncfST('Frontend.536') }}</span>
+                                    <span style="margin-left: 8px; font-size: 12px; color: #909399;">({{ ncfST(systemMessageCollapse.includes('systemMessage') ? 'Frontend.410' : 'Frontend.123') }})</span>
                                 </template>
-                                <div class="system-message-content">{{ continueChatSystemMessage || '加载中...' }}</div>
+                                <div class="system-message-content">{{ continueChatSystemMessage || ncfST('Frontend.124') }}</div>
                             </el-collapse-item>
                         </el-collapse>
                     </div>
                     <div v-if="continueChatMode" style="padding: 8px 12px; margin-bottom: 10px; background: #f5f7fa; border-radius: 6px; color: #606266;">
-                        Token 总量：{{ continueChatUsageSummary.totalCostToken || 0 }}（输入 {{ continueChatUsageSummary.promptCostToken || 0 }} / 输出 {{ continueChatUsageSummary.resultCostToken || 0 }}）
+                        {{ ncfST('Frontend.757', continueChatUsageSummary.totalCostToken || 0, continueChatUsageSummary.promptCostToken || 0, continueChatUsageSummary.resultCostToken || 0) }}
                     </div>
                     <div v-if="continueChatHistory.length === 0" class="chat-empty-tip">
                         <i class="el-icon-chat-line-round"></i>
-                        <span>暂无对话记录</span>
+                        <span>{{ ncfST('Frontend.126') }}</span>
                     </div>
                     <div v-for="(msg, idx) in continueChatHistory" :key="msg.id || `temp-${idx}`" class="chat-message-item" :class="{'chat-message-user': msg.roleType === 1, 'chat-message-assistant': msg.roleType === 2, 'chat-message-generating': msg._generating}">
                         <div class="chat-message-avatar">
@@ -901,7 +901,7 @@
                         </div>
                         <div class="chat-message-content-wrapper">
                             <div class="chat-message-header">
-                                <span class="chat-message-role">{{ msg.roleType === 1 ? '用户' : '助手' }}</span>
+                                <span class="chat-message-role">{{ msg.roleType === 1 ? ncfST('Frontend.127') : ncfST('Frontend.128') }}</span>
                                 <span class="chat-message-sequence">#{{ msg.sequence }}</span>
                                 <span class="chat-message-time">{{ formatChatTime(msg.addTime) }}</span>
                             </div>
@@ -914,23 +914,23 @@
                                     :icon="msg.userFeedback === true ? 'el-icon-check' : 'el-icon-thumb'" 
                                     size="mini"
                                     @@click="toggleChatFeedback(msg.id, true)"
-                                    title="点赞">
-                                    <span v-if="msg.userFeedback === true">已点赞</span>
-                                    <span v-else>点赞</span>
+                                    :title="ncfST('Frontend.129')">
+                                    <span v-if="msg.userFeedback === true">{{ ncfST('Frontend.130') }}</span>
+                                    <span v-else>{{ ncfST('Frontend.129') }}</span>
                                 </el-button>
                                 <el-button 
                                     :type="msg.userFeedback === false ? 'danger' : 'text'" 
                                     :icon="msg.userFeedback === false ? 'el-icon-close' : 'el-icon-remove-outline'" 
                                     size="mini"
                                     @@click="toggleChatFeedback(msg.id, false)"
-                                    title="点踩">
-                                    <span v-if="msg.userFeedback === false">已点踩</span>
-                                    <span v-else>点踩</span>
+                                    :title="ncfST('Frontend.131')">
+                                    <span v-if="msg.userFeedback === false">{{ ncfST('Frontend.132') }}</span>
+                                    <span v-else>{{ ncfST('Frontend.131') }}</span>
                                 </el-button>
                             </div>
                             @* Show a notice when no valid ID is available. *@
                             <div v-if="msg.roleType === 2 && (!msg.id || msg.id === 0)" class="chat-message-feedback" style="color: #909399; font-size: 12px;">
-                                <i class="el-icon-loading"></i> 正在保存...
+                                <i class="el-icon-loading"></i> {{ ncfST('Frontend.133') }}
                             </div>
                         </div>
                     </div>
@@ -939,7 +939,7 @@
             
             @* Conversation input area for chat mode. *@
             @* Do not use prop="chatInput"; this conditional field can make resetFields fail. *@
-            <el-form-item v-if="supportsChatMode && tacticalForm.chatMode === '对话模式'" label="对话输入">
+            <el-form-item v-if="supportsChatMode && tacticalForm.chatMode === '对话模式'" :label="ncfST('Frontend.134')">
                 <el-input 
                     v-model="tacticalChatInput" 
                     type="textarea" 
@@ -955,9 +955,9 @@
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button size="mini" @@click="tacticalFormVisible = false">取 消</el-button>
+            <el-button size="mini" @@click="tacticalFormVisible = false">{{ ncfST('Frontend.091') }}</el-button>
             @* v-loading="tacticalFormSubmitLoading" *@
-            <el-button type="primary" size="mini" @@click="tacticalFormSubmitBtn">发 射</el-button>
+            <el-button type="primary" size="mini" @@click="tacticalFormSubmitBtn">{{ ncfST('Frontend.140') }}</el-button>
         </div>
     </el-dialog>
     @*Diagram dialog.*@
@@ -1041,7 +1041,7 @@
         </el-form>
         @*Existing-agent notice.*@
         <el-alert v-if="createAgentExistingList.length > 0"
-                  :title="`当前 PromptCode 下已有 ${createAgentExistingList.length} 个智能体：${createAgentExistingList.map(a => a.name).join('、')}`"
+                  :title="ncfST('Frontend.769', createAgentExistingList.length, createAgentExistingList.map(a => a.name).join(', '))"
                   type="warning"
                   :closable="false"
                   show-icon
@@ -1158,7 +1158,7 @@
         <el-form ref="expectedPluginFoem" :model="expectedPluginFoem" :rules="rules" label-position="left">
             @*             <el-form-item label="Prompt range" prop="rangeId" label-width="130px">
             <el-select v-model="expectedPluginFoem.rangeId" multiple
-            collapse-tags placeholder="请选择靶场" class="selectRow" @@change="expectedPluginPromptFieldChange">
+            collapse-tags :placeholder="ncfST('Frontend.005')" class="selectRow" @@change="expectedPluginPromptFieldChange">
             <el-option v-for="item in promptFieldOpt"
             :key="item.id"
             :label="item.label"
@@ -1290,18 +1290,18 @@
                                size="mini" 
                                icon="el-icon-position" 
                                @@click="switchToPrompt(comparePromptAId)">
-                        跳转到此 Prompt
+                        {{ ncfST('Frontend.218') }}
                     </el-button>
                 </div>
                 <div class="score-card-body">
                     <div class="score-item">
-                        <span class="score-label">平均分:</span>
+                        <span class="score-label">{{ ncfST('Frontend.069') }}</span>
                         <span class="score-value" :class="{'score-empty': !hasScore(comparePromptA.evalAvgScore)}">
                             {{comparePromptA.evalAvgScore > -1 ? comparePromptA.evalAvgScore.toFixed(1) : '--'}}
                         </span>
                     </div>
                     <div class="score-item">
-                        <span class="score-label">最高分:</span>
+                        <span class="score-label">{{ ncfST('Frontend.070') }}</span>
                         <span class="score-value" :class="{'score-empty': !hasScore(comparePromptA.evalMaxScore)}">
                             {{comparePromptA.evalMaxScore > -1 ? comparePromptA.evalMaxScore.toFixed(1) : '--'}}
                         </span>
@@ -1316,18 +1316,18 @@
                                size="mini" 
                                icon="el-icon-position" 
                                @@click="switchToPrompt(comparePromptBId)">
-                        跳转到此 Prompt
+                        {{ ncfST('Frontend.218') }}
                     </el-button>
                 </div>
                 <div class="score-card-body">
                     <div class="score-item">
-                        <span class="score-label">平均分:</span>
+                        <span class="score-label">{{ ncfST('Frontend.069') }}</span>
                         <span class="score-value" :class="{'score-empty': !hasScore(comparePromptB.evalAvgScore)}">
                             {{comparePromptB.evalAvgScore > -1 ? comparePromptB.evalAvgScore.toFixed(1) : '--'}}
                         </span>
                     </div>
                     <div class="score-item">
-                        <span class="score-label">最高分:</span>
+                        <span class="score-label">{{ ncfST('Frontend.070') }}</span>
                         <span class="score-value" :class="{'score-empty': !hasScore(comparePromptB.evalMaxScore)}">
                             {{comparePromptB.evalMaxScore > -1 ? comparePromptB.evalMaxScore.toFixed(1) : '--'}}
                         </span>
@@ -1343,26 +1343,26 @@
                 <table>
                     <thead>
                         <tr>
-                            <th style="width: 120px;">字段</th>
+                            <th style="width: 120px;">{{ ncfST('Frontend.219') }}</th>
                             <th>
                                 📝 Prompt A 
                                 <span class="version-tag">{{comparePromptA.fullVersion}}</span>
                                 <i class="el-icon-document-copy copy-version-icon" 
                                    @@click="copyInfo('A')"
-                                   title="复制版本号"></i>
+                                   :title="ncfST('Frontend.220')"></i>
                             </th>
                             <th>
                                 📝 Prompt B 
                                 <span class="version-tag">{{comparePromptB.fullVersion}}</span>
                                 <i class="el-icon-document-copy copy-version-icon" 
                                    @@click="copyInfo('B')"
-                                   title="复制版本号"></i>
+                                   :title="ncfST('Frontend.220')"></i>
                             </th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr :class="{'has-diff': comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.targetRangeName !== comparePromptBInfo.targetRangeName}">
-                            <td class="field-name">靶场</td>
+                            <td class="field-name">{{ ncfST('Frontend.221') }}</td>
                             <td>{{comparePromptAInfo ? comparePromptAInfo.targetRangeName : '--'}}</td>
                             <td>
                                 {{comparePromptBInfo ? comparePromptBInfo.targetRangeName : '--'}}
@@ -1370,7 +1370,7 @@
                             </td>
                         </tr>
                         <tr :class="{'has-diff': comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.targetLaneName !== comparePromptBInfo.targetLaneName}">
-                            <td class="field-name">靶道</td>
+                            <td class="field-name">{{ ncfST('Frontend.222') }}</td>
                             <td>{{comparePromptAInfo ? comparePromptAInfo.targetLaneName : '--'}}</td>
                             <td>
                                 {{comparePromptBInfo ? comparePromptBInfo.targetLaneName : '--'}}
@@ -1378,7 +1378,7 @@
                             </td>
                         </tr>
                         <tr :class="{'has-diff': comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.tacticalName !== comparePromptBInfo.tacticalName}">
-                            <td class="field-name">战术</td>
+                            <td class="field-name">{{ ncfST('Frontend.106') }}</td>
                             <td>{{comparePromptAInfo ? comparePromptAInfo.tacticalName : '--'}}</td>
                             <td>
                                 {{comparePromptBInfo ? comparePromptBInfo.tacticalName : '--'}}
@@ -1386,7 +1386,7 @@
                             </td>
                         </tr>
                         <tr :class="{'has-diff': hasFieldDiff(comparePromptA.nickName, comparePromptB.nickName)}">
-                            <td class="field-name">别名</td>
+                            <td class="field-name">{{ ncfST('Frontend.223') }}</td>
                             <td>{{comparePromptA.nickName || '--'}}</td>
                             <td>
                                 {{comparePromptB.nickName || '--'}}
@@ -1394,7 +1394,7 @@
                             </td>
                         </tr>
                         <tr :class="{'has-diff': comparePromptAInfo && comparePromptBInfo && comparePromptAInfo.modelName !== comparePromptBInfo.modelName}">
-                            <td class="field-name">模型</td>
+                            <td class="field-name">{{ ncfST('Frontend.224') }}</td>
                             <td>{{comparePromptAInfo ? comparePromptAInfo.modelName : '--'}}</td>
                             <td>
                                 {{comparePromptBInfo ? comparePromptBInfo.modelName : '--'}}
@@ -1447,7 +1447,7 @@
             
             @*Prompt content comparison with synchronized scrolling and Git-style differences.*@
             <div class="compare-diff-section">
-                <h4 class="diff-title">📄 Prompt 内容对比</h4>
+                <h4 class="diff-title">{{ ncfST('Frontend.225') }}</h4>
                 <div class="compare-diff-container" ref="compareScrollContainer">
                     <div class="compare-columns">
                         <div class="compare-diff-column">
@@ -1458,7 +1458,7 @@
                         </div>
                         <div class="compare-diff-column">
                             <div class="diff-column-header">Prompt B  
-                                <span class="diff-badge" v-if="hasFieldDiff(comparePromptA.promptContent, comparePromptB.promptContent)">有差异</span>
+                                <span class="diff-badge" v-if="hasFieldDiff(comparePromptA.promptContent, comparePromptB.promptContent)">{{ ncfST('Frontend.226') }}</span>
                             </div>
                             <div class="diff-code-block" :class="{'has-content-diff': hasFieldDiff(comparePromptA.promptContent, comparePromptB.promptContent)}">
                                 <pre v-html="getContentDiffHtml('B')"></pre>
@@ -1470,36 +1470,36 @@
             
             @*Request parameter comparison (prefix, suffix, and variable configuration).*@
             <div class="compare-diff-section">
-                <h4 class="diff-title">🎯 请求参数对比</h4>
+                <h4 class="diff-title">{{ ncfST('Frontend.227') }}</h4>
                 
                 @*Prefix and suffix comparison (table format).*@
                 <div class="compare-params-table">
                     <table>
                         <thead>
                             <tr>
-                                <th style="width: 100px;">参数</th>
+                                <th style="width: 100px;">{{ ncfST('Frontend.228') }}</th>
                                 <th>Prompt A</th>
                                 <th>Prompt B</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr :class="{'has-diff': hasFieldDiff(getPromptPrefix('A'), getPromptPrefix('B'))}">
-                                <td class="field-name">前缀</td>
+                                <td class="field-name">{{ ncfST('Frontend.056') }}</td>
                                 <td>
-                                    <code>{{getPromptPrefix('A') || '(未设置)'}}</code>
+                                    <code>{{getPromptPrefix('A') || ncfST('Frontend.229')}}</code>
                                 </td>
                                 <td>
-                                    <code>{{getPromptPrefix('B') || '(未设置)'}}</code>
+                                    <code>{{getPromptPrefix('B') || ncfST('Frontend.229')}}</code>
                                     <span class="diff-mark" v-if="hasFieldDiff(getPromptPrefix('A'), getPromptPrefix('B'))">●</span>
                                 </td>
                             </tr>
                             <tr :class="{'has-diff': hasFieldDiff(getPromptSuffix('A'), getPromptSuffix('B'))}">
-                                <td class="field-name">后缀</td>
+                                <td class="field-name">{{ ncfST('Frontend.057') }}</td>
                                 <td>
-                                    <code>{{getPromptSuffix('A') || '(未设置)'}}</code>
+                                    <code>{{getPromptSuffix('A') || ncfST('Frontend.229')}}</code>
                                 </td>
                                 <td>
-                                    <code>{{getPromptSuffix('B') || '(未设置)'}}</code>
+                                    <code>{{getPromptSuffix('B') || ncfST('Frontend.229')}}</code>
                                     <span class="diff-mark" v-if="hasFieldDiff(getPromptSuffix('A'), getPromptSuffix('B'))">●</span>
                                 </td>
                             </tr>
@@ -1511,14 +1511,14 @@
                 <div class="compare-diff-container" v-if="comparePromptA.variableDictJson || comparePromptB.variableDictJson">
                     <div class="compare-columns">
                         <div class="compare-diff-column">
-                            <div class="diff-column-header">Prompt A - 变量配置</div>
+                            <div class="diff-column-header">Prompt A - {{ ncfST('Frontend.230') }}</div>
                             <div class="diff-code-block">
                                 <pre v-html="getVariablesDiffHtml('A')"></pre>
                             </div>
                         </div>
                         <div class="compare-diff-column">
-                            <div class="diff-column-header">Prompt B - 变量配置
-                                <span class="diff-badge" v-if="hasFieldDiff(comparePromptA.variableDictJson, comparePromptB.variableDictJson)">有差异</span>
+                            <div class="diff-column-header">Prompt B - {{ ncfST('Frontend.231') }}
+                                <span class="diff-badge" v-if="hasFieldDiff(comparePromptA.variableDictJson, comparePromptB.variableDictJson)">{{ ncfST('Frontend.226') }}</span>
                             </div>
                             <div class="diff-code-block" :class="{'has-content-diff': hasFieldDiff(comparePromptA.variableDictJson, comparePromptB.variableDictJson)}">
                                 <pre v-html="getVariablesDiffHtml('B')"></pre>
@@ -1528,7 +1528,7 @@
                 </div>
                 <div v-else class="compare-empty-params">
                     <i class="el-icon-info"></i>
-                    <span>两个Prompt都未配置变量</span>
+                    <span>{{ ncfST('Frontend.232') }}</span>
                 </div>
             </div>
         </div>
@@ -1686,7 +1686,7 @@
                        :loading="initializing"
                        :disabled="!selectedModelIdForInit">
                 <i class="el-icon-magic-stick" v-if="!initializing"></i>
-                {{ initializing ? '初始化中...' : '开始初始化' }}
+                {{ initializing ? ncfST('Frontend.263') : ncfST('Frontend.264') }}
             </el-button>
         </span>
     </el-dialog>
