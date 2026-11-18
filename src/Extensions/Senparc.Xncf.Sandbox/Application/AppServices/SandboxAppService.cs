@@ -46,6 +46,7 @@ using Senparc.Xncf.Sandbox.Abstractions;
 using Senparc.Xncf.Sandbox.Application.DTOs.Request;
 using Senparc.Xncf.Sandbox.Domain.Services;
 using Senparc.Xncf.Sandbox.Domain.Services.Runtime;
+using Senparc.Xncf.Sandbox;
 
 namespace Senparc.Xncf.Sandbox.Application.AppServices;
 
@@ -110,7 +111,8 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender("沙箱列表", "查看最近沙箱会话", typeof(Register))]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.List.Name", "Function.Sandbox.List.Description",
+        typeof(Register), "List sandboxes", "View recent sandbox sessions.")]
     public async Task<StringAppResponse> List(Sandbox_ListRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>
@@ -128,7 +130,8 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender("沙箱状态", "按 SessionId 查询", typeof(Register))]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.Status.Name", "Function.Sandbox.Status.Description",
+        typeof(Register), "Sandbox status", "Query a sandbox session by SessionId.")]
     public async Task<StringAppResponse> Status(Sandbox_SessionIdRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>

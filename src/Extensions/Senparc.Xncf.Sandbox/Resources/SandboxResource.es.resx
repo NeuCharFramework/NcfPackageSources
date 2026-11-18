@@ -215,4 +215,8 @@
   <data name="Frontend.109" xml:space="preserve"><value>Eliminar registro de sesión</value></data>
   <data name="Frontend.110" xml:space="preserve"><value>Registro de sesión Sandbox eliminado.</value></data>
   <data name="Frontend.111" xml:space="preserve"><value>No se pudo eliminar el registro de la sesión. Destruye primero el entorno de ejecución o comprueba los registros del servicio.</value></data>
+  <data name="Function.Sandbox.List.Name" xml:space="preserve"><value>Listar sandboxes</value></data>
+  <data name="Function.Sandbox.List.Description" xml:space="preserve"><value>Ver las sesiones de sandbox recientes.</value></data>
+  <data name="Function.Sandbox.Status.Name" xml:space="preserve"><value>Estado del sandbox</value></data>
+  <data name="Function.Sandbox.Status.Description" xml:space="preserve"><value>Consultar una sesión de sandbox mediante SessionId.</value></data>
 </root>

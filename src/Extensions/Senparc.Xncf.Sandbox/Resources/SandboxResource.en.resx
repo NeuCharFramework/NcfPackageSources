@@ -215,4 +215,8 @@
   <data name="Frontend.109" xml:space="preserve"><value>Delete session record</value></data>
   <data name="Frontend.110" xml:space="preserve"><value>Sandbox session record deleted.</value></data>
   <data name="Frontend.111" xml:space="preserve"><value>Failed to delete the session record. Destroy the runtime environment first or check the service logs.</value></data>
+  <data name="Function.Sandbox.List.Name" xml:space="preserve"><value>List sandboxes</value></data>
+  <data name="Function.Sandbox.List.Description" xml:space="preserve"><value>View recent sandbox sessions.</value></data>
+  <data name="Function.Sandbox.Status.Name" xml:space="preserve"><value>Sandbox status</value></data>
+  <data name="Function.Sandbox.Status.Description" xml:space="preserve"><value>Query a sandbox session by SessionId.</value></data>
 </root>

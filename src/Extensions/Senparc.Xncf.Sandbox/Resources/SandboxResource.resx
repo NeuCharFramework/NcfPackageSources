@@ -214,4 +214,8 @@
   <data name="Frontend.110" xml:space="preserve"><value>沙箱会话记录已删除。</value></data>
   <data name="Frontend.111" xml:space="preserve"><value>删除会话记录失败，请先销毁运行环境或检查服务日志。</value></data>
 
+  <data name="Function.Sandbox.List.Name" xml:space="preserve"><value>沙箱列表</value></data>
+  <data name="Function.Sandbox.List.Description" xml:space="preserve"><value>查看最近沙箱会话。</value></data>
+  <data name="Function.Sandbox.Status.Name" xml:space="preserve"><value>沙箱状态</value></data>
+  <data name="Function.Sandbox.Status.Description" xml:space="preserve"><value>按 SessionId 查询沙箱会话。</value></data>
 </root>

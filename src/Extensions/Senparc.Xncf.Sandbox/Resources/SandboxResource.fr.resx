@@ -215,4 +215,8 @@
   <data name="Frontend.109" xml:space="preserve"><value>Supprimer l’enregistrement de session</value></data>
   <data name="Frontend.110" xml:space="preserve"><value>Enregistrement de session Sandbox supprimé.</value></data>
   <data name="Frontend.111" xml:space="preserve"><value>Impossible de supprimer l’enregistrement de session. Détruisez d’abord l’environnement d’exécution ou vérifiez les journaux du service.</value></data>
+  <data name="Function.Sandbox.List.Name" xml:space="preserve"><value>Lister les sandboxes</value></data>
+  <data name="Function.Sandbox.List.Description" xml:space="preserve"><value>Afficher les sessions de sandbox récentes.</value></data>
+  <data name="Function.Sandbox.Status.Name" xml:space="preserve"><value>État du sandbox</value></data>
+  <data name="Function.Sandbox.Status.Description" xml:space="preserve"><value>Interroger une session de sandbox avec son SessionId.</value></data>
 </root>

@@ -215,4 +215,8 @@
   <data name="Frontend.109" xml:space="preserve"><value>セッション記録を削除</value></data>
   <data name="Frontend.110" xml:space="preserve"><value>サンドボックスセッション記録を削除しました。</value></data>
   <data name="Frontend.111" xml:space="preserve"><value>セッション記録の削除に失敗しました。先に実行環境を破棄するか、サービスログを確認してください。</value></data>
+  <data name="Function.Sandbox.List.Name" xml:space="preserve"><value>サンドボックスを一覧表示</value></data>
+  <data name="Function.Sandbox.List.Description" xml:space="preserve"><value>最近のサンドボックスセッションを表示します。</value></data>
+  <data name="Function.Sandbox.Status.Name" xml:space="preserve"><value>サンドボックスの状態</value></data>
+  <data name="Function.Sandbox.Status.Description" xml:space="preserve"><value>SessionId でサンドボックスセッションを照会します。</value></data>
 </root>

@@ -215,4 +215,8 @@
   <data name="Frontend.109" xml:space="preserve"><value>Удалить запись сессии</value></data>
   <data name="Frontend.110" xml:space="preserve"><value>Запись сессии Sandbox удалена.</value></data>
   <data name="Frontend.111" xml:space="preserve"><value>Не удалось удалить запись сессии. Сначала уничтожьте среду выполнения или проверьте журналы службы.</value></data>
+  <data name="Function.Sandbox.List.Name" xml:space="preserve"><value>Список песочниц</value></data>
+  <data name="Function.Sandbox.List.Description" xml:space="preserve"><value>Показывает последние сеансы песочницы.</value></data>
+  <data name="Function.Sandbox.Status.Name" xml:space="preserve"><value>Состояние песочницы</value></data>
+  <data name="Function.Sandbox.Status.Description" xml:space="preserve"><value>Запрашивает сеанс песочницы по SessionId.</value></data>
 </root>
