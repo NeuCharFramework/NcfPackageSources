@@ -471,12 +471,12 @@ new Vue({
             return this.editing && this.currentSaveSignature !== this.saveState.lastSavedSignature;
         },
         saveStatusText() {
-            if (this.saveState.saving) return '正在保存…';
-            if (this.saveState.status === 'error') return this.saveState.error || '保存失败';
-            if (this.saveDirty) return '有尚未保存的更改';
-            if (this.disconnectedNodes.length) return `草稿：${this.disconnectedNodes.length} 个未连接节点`;
-            if (this.saveState.lastSavedLabel) return `已保存 ${this.saveState.lastSavedLabel}`;
-            return this.form.id ? '已保存' : '尚未保存';
+            if (this.saveState.saving) return ncfWorkflowText('Frontend.659');
+            if (this.saveState.status === 'error') return this.saveState.error || ncfWorkflowText('Frontend.660');
+            if (this.saveDirty) return ncfWorkflowText('Frontend.661');
+            if (this.disconnectedNodes.length) return ncfWorkflowText('Frontend.662').replace('{0}', this.disconnectedNodes.length);
+            if (this.saveState.lastSavedLabel) return ncfWorkflowText('Frontend.663').replace('{0}', this.saveState.lastSavedLabel);
+            return this.form.id ? ncfWorkflowText('Frontend.664') : ncfWorkflowText('Frontend.665');
         },
         validationIssues() {
             const message = String(this.validation?.message || '').trim();
@@ -517,13 +517,13 @@ new Vue({
         },
         templateEditorTitle() {
             return this.templateEditor.fieldLabel
-                ? `编辑${this.templateEditor.fieldLabel}`
-                : '编辑文本与插入变量';
+                ? `${ncfWorkflowText('Frontend.666')}${this.templateEditor.fieldLabel}`
+                : ncfWorkflowText('Frontend.667');
         },
         templateEditorBindingHelpText() {
             return this.templateEditor.allowBindings
                 ? this.templateEditorBindingHelp
-                : '此字段只支持当前输入和受限公式；表达式不会执行任意 JavaScript。';
+                : ncfWorkflowText('Frontend.668');
         },
         templateExpressionHelp() {
             const names = WorkflowFormulaDefinitions.map(item => item.name).join('、');
