@@ -665,4 +665,32 @@
   <data name="Chat.Trigger" xml:space="preserve"><value>Chat trigger</value></data>
   <data name="Chat.User" xml:space="preserve"><value>Me</value></data>
   <data name="Chat.User" xml:space="preserve"><value>Me</value></data>
+  <data name="Frontend.621" xml:space="preserve"><value>Left value, comparison operator, right value, and loop control</value></data>
+  <data name="Frontend.622" xml:space="preserve"><value>True / False / break</value></data>
+  <data name="Frontend.623" xml:space="preserve"><value>Wait duration in seconds</value></data>
+  <data name="Frontend.624" xml:space="preserve"><value>Fixed 1–100,000 iterations, or an upstream scalar value</value></data>
+  <data name="Frontend.625" xml:space="preserve"><value>Loop → loop body → loop end → following node</value></data>
+  <data name="Frontend.626" xml:space="preserve"><value>Input port</value></data>
+  <data name="Frontend.627" xml:space="preserve"><value>continue / break</value></data>
+  <data name="Frontend.628" xml:space="preserve"><value>Output</value></data>
+  <data name="Frontend.629" xml:space="preserve"><value>Continue downstream after all iterations finish or after break</value></data>
+  <data name="Frontend.630" xml:space="preserve"><value>Target workflow and input</value></data>
+  <data name="Frontend.631" xml:space="preserve"><value>Only your own enabled workflows can be called; nesting is limited to 8 levels</value></data>
+  <data name="Frontend.632" xml:space="preserve"><value>Variable assignments and restricted formulas</value></data>
+  <data name="Frontend.633" xml:space="preserve"><value>Pass the original input to downstream nodes</value></data>
+  <data name="Frontend.634" xml:space="preserve"><value>Multiple upstream inputs and output content</value></data>
+  <data name="Frontend.635" xml:space="preserve"><value>One aggregated result</value></data>
+  <data name="Frontend.636" xml:space="preserve"><value>Bindings for multiple upstream inputs</value></data>
+  <data name="Frontend.637" xml:space="preserve"><value>Emit one output for each input</value></data>
+  <data name="Frontend.638" xml:space="preserve"><value>Connect any number of branches from the output</value></data>
+  <data name="Frontend.639" xml:space="preserve"><value>Distribute the original input to every branch</value></data>
+  <data name="Frontend.640" xml:space="preserve"><value>Printed content (default {{input}})</value></data>
+  <data name="Frontend.641" xml:space="preserve"><value>Subscription, title, content, and consumption mode</value></data>
+  <data name="Frontend.642" xml:space="preserve"><value>Optional consumption</value></data>
+  <data name="Frontend.643" xml:space="preserve"><value>Current reminder / all reminders in the subscription / view only</value></data>
+  <data name="Frontend.644" xml:space="preserve"><value>Text submitted by a person</value></data>
+  <data name="Frontend.645" xml:space="preserve"><value>External recovery</value></data>
+  <data name="Frontend.646" xml:space="preserve"><value>When enabled, a one-time request ID and node recovery key can call the internal WebAPI</value></data>
+  <data name="Frontend.647" xml:space="preserve"><value>No following node; cannot be inserted into an existing edge</value></data>
+  <data name="Frontend.648" xml:space="preserve"><value>Drag onto the canvas to add; cannot be inserted into an edge</value></data>
 </root>

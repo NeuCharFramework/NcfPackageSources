@@ -664,4 +664,32 @@
   <data name="Chat.Trigger" xml:space="preserve"><value>Chat 触发</value></data>
   <data name="Chat.User" xml:space="preserve"><value>我</value></data>
   <data name="Chat.User" xml:space="preserve"><value>我</value></data>
+  <data name="Frontend.621" xml:space="preserve"><value>左值、比较符、右值、循环控制</value></data>
+  <data name="Frontend.622" xml:space="preserve"><value>真 / 假 / break</value></data>
+  <data name="Frontend.623" xml:space="preserve"><value>等待秒数</value></data>
+  <data name="Frontend.624" xml:space="preserve"><value>固定 1–100000 次，或引用上游单值</value></data>
+  <data name="Frontend.625" xml:space="preserve"><value>循环 → 循环体 → 循环结束 → 后续节点</value></data>
+  <data name="Frontend.626" xml:space="preserve"><value>输入端</value></data>
+  <data name="Frontend.627" xml:space="preserve"><value>continue / break</value></data>
+  <data name="Frontend.628" xml:space="preserve"><value>输出</value></data>
+  <data name="Frontend.629" xml:space="preserve"><value>全部轮次完成或 break 后继续向下</value></data>
+  <data name="Frontend.630" xml:space="preserve"><value>目标工作流、传入输入</value></data>
+  <data name="Frontend.631" xml:space="preserve"><value>仅可调用自己的已启用工作流，最多嵌套 8 层</value></data>
+  <data name="Frontend.632" xml:space="preserve"><value>变量赋值、受限公式</value></data>
+  <data name="Frontend.633" xml:space="preserve"><value>原始输入继续向下游传递</value></data>
+  <data name="Frontend.634" xml:space="preserve"><value>多个上游输入、输出内容</value></data>
+  <data name="Frontend.635" xml:space="preserve"><value>一次汇总结果</value></data>
+  <data name="Frontend.636" xml:space="preserve"><value>多个上游输入绑定</value></data>
+  <data name="Frontend.637" xml:space="preserve"><value>每个输入各输出一次</value></data>
+  <data name="Frontend.638" xml:space="preserve"><value>从输出端连接任意多个分支</value></data>
+  <data name="Frontend.639" xml:space="preserve"><value>原始输入分发至每个分支</value></data>
+  <data name="Frontend.640" xml:space="preserve"><value>打印内容（默认 {{input}}）</value></data>
+  <data name="Frontend.641" xml:space="preserve"><value>订阅、标题、内容、消费方式</value></data>
+  <data name="Frontend.642" xml:space="preserve"><value>可选消费</value></data>
+  <data name="Frontend.643" xml:space="preserve"><value>当前提醒 / 当前订阅全部 / 仅查看</value></data>
+  <data name="Frontend.644" xml:space="preserve"><value>人工提交的文本</value></data>
+  <data name="Frontend.645" xml:space="preserve"><value>外部恢复</value></data>
+  <data name="Frontend.646" xml:space="preserve"><value>启用后可使用一次请求 ID 与节点恢复密钥调用内部 WebAPI</value></data>
+  <data name="Frontend.647" xml:space="preserve"><value>无后续节点，不能在线中插入</value></data>
+  <data name="Frontend.648" xml:space="preserve"><value>可拖到画布添加；不能插入连线</value></data>
 </root>

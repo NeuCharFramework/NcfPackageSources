@@ -665,4 +665,32 @@
   <data name="Chat.Trigger" xml:space="preserve"><value>Activador de Chat</value></data>
   <data name="Chat.User" xml:space="preserve"><value>Yo</value></data>
   <data name="Chat.User" xml:space="preserve"><value>Yo</value></data>
+  <data name="Frontend.621" xml:space="preserve"><value>Valor izquierdo, operador de comparación, valor derecho y control del bucle</value></data>
+  <data name="Frontend.622" xml:space="preserve"><value>Verdadero / Falso / break</value></data>
+  <data name="Frontend.623" xml:space="preserve"><value>Segundos de espera</value></data>
+  <data name="Frontend.624" xml:space="preserve"><value>Entre 1 y 100 000 iteraciones fijas, o un valor escalar ascendente</value></data>
+  <data name="Frontend.625" xml:space="preserve"><value>Bucle → cuerpo del bucle → fin del bucle → nodo siguiente</value></data>
+  <data name="Frontend.626" xml:space="preserve"><value>Puerto de entrada</value></data>
+  <data name="Frontend.627" xml:space="preserve"><value>continue / break</value></data>
+  <data name="Frontend.628" xml:space="preserve"><value>Salida</value></data>
+  <data name="Frontend.629" xml:space="preserve"><value>Continúa hacia abajo cuando terminan todas las iteraciones o después de break</value></data>
+  <data name="Frontend.630" xml:space="preserve"><value>Workflow de destino y entrada</value></data>
+  <data name="Frontend.631" xml:space="preserve"><value>Solo se pueden llamar Workflows propios activados; máximo 8 niveles de anidamiento</value></data>
+  <data name="Frontend.632" xml:space="preserve"><value>Asignaciones de variables y fórmulas restringidas</value></data>
+  <data name="Frontend.633" xml:space="preserve"><value>Pasa la entrada original a los nodos siguientes</value></data>
+  <data name="Frontend.634" xml:space="preserve"><value>Varias entradas ascendentes y contenido de salida</value></data>
+  <data name="Frontend.635" xml:space="preserve"><value>Un único resultado agregado</value></data>
+  <data name="Frontend.636" xml:space="preserve"><value>Vinculaciones de varias entradas ascendentes</value></data>
+  <data name="Frontend.637" xml:space="preserve"><value>Emite una salida por cada entrada</value></data>
+  <data name="Frontend.638" xml:space="preserve"><value>Conecta cualquier número de ramas desde la salida</value></data>
+  <data name="Frontend.639" xml:space="preserve"><value>Distribuye la entrada original a cada rama</value></data>
+  <data name="Frontend.640" xml:space="preserve"><value>Contenido impreso (predeterminado {{input}})</value></data>
+  <data name="Frontend.641" xml:space="preserve"><value>Suscripción, título, contenido y modo de consumo</value></data>
+  <data name="Frontend.642" xml:space="preserve"><value>Consumo opcional</value></data>
+  <data name="Frontend.643" xml:space="preserve"><value>Aviso actual / todos los avisos de la suscripción / solo consultar</value></data>
+  <data name="Frontend.644" xml:space="preserve"><value>Texto enviado por una persona</value></data>
+  <data name="Frontend.645" xml:space="preserve"><value>Recuperación externa</value></data>
+  <data name="Frontend.646" xml:space="preserve"><value>Al activarlo, un ID de solicitud de un solo uso y una clave de recuperación del nodo pueden llamar a la WebAPI interna</value></data>
+  <data name="Frontend.647" xml:space="preserve"><value>No hay nodo siguiente; no se puede insertar en una conexión existente</value></data>
+  <data name="Frontend.648" xml:space="preserve"><value>Arrástralo al lienzo para añadirlo; no se puede insertar en una conexión</value></data>
 </root>

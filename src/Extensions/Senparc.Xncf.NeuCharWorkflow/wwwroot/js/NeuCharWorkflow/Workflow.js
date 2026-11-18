@@ -736,72 +736,72 @@ new Vue({
         systemNodePreview(type, fallbackName) {
             const definitions = {
                 condition: {
-                    title: '条件判断',
+                    title: ncfST('Frontend.413'),
                     description: ncfST('Frontend.608'),
-                    rows: [{ label: '可配置项', value: '左值、比较符、右值、循环控制' }, { label: '输出分支', value: '真 / 假 / break' }]
+                    rows: [{ label: ncfST('Frontend.441'), value: ncfST('Frontend.621') }, { label: ncfST('Frontend.442'), value: ncfST('Frontend.622') }]
                 },
                 delay: {
-                    title: '等待',
+                    title: ncfST('Frontend.415'),
                     description: ncfST('Frontend.609'),
-                    rows: [{ label: '可配置项', value: '等待秒数' }]
+                    rows: [{ label: ncfST('Frontend.441'), value: ncfST('Frontend.623') }]
                 },
                 loop: {
-                    title: '循环（For）',
+                    title: ncfST('Frontend.416'),
                     description: ncfST('Frontend.610'),
-                    rows: [{ label: '重复次数', value: '固定 1–100000 次，或引用上游单值' }, { label: '执行方式', value: '循环 → 循环体 → 循环结束 → 后续节点' }]
+                    rows: [{ label: ncfST('Frontend.443'), value: ncfST('Frontend.624') }, { label: ncfST('Frontend.444'), value: ncfST('Frontend.625') }]
                 },
                 'loop-end': {
-                    title: '循环结束',
+                    title: ncfST('Frontend.418'),
                     description: ncfST('Frontend.611'),
-                    rows: [{ label: '输入端', value: 'continue / break' }, { label: '输出', value: '全部轮次完成或 break 后继续向下' }]
+                    rows: [{ label: ncfST('Frontend.626'), value: ncfST('Frontend.627') }, { label: ncfST('Frontend.628'), value: ncfST('Frontend.629') }]
                 },
                 'sub-workflow': {
-                    title: '调用工作流',
+                    title: ncfST('Frontend.419'),
                     description: ncfST('Frontend.612'),
-                    rows: [{ label: '可配置项', value: '目标工作流、传入输入' }, { label: '限制', value: '仅可调用自己的已启用工作流，最多嵌套 8 层' }]
+                    rows: [{ label: ncfST('Frontend.441'), value: ncfST('Frontend.630') }, { label: ncfST('Frontend.445'), value: ncfST('Frontend.631') }]
                 },
                 code: {
-                    title: '安全代码',
+                    title: ncfST('Frontend.421'),
                     description: ncfST('Frontend.613'),
-                    rows: [{ label: '可配置项', value: '变量赋值、受限公式' }, { label: '输出', value: '原始输入继续向下游传递' }]
+                    rows: [{ label: ncfST('Frontend.441'), value: ncfST('Frontend.632') }, { label: ncfST('Frontend.628'), value: ncfST('Frontend.633') }]
                 },
                 aggregate: {
-                    title: '聚合',
+                    title: ncfST('Frontend.422'),
                     description: ncfST('Frontend.614'),
-                    rows: [{ label: '可配置项', value: '多个上游输入、输出内容' }, { label: '输出', value: '一次汇总结果' }]
+                    rows: [{ label: ncfST('Frontend.441'), value: ncfST('Frontend.634') }, { label: ncfST('Frontend.628'), value: ncfST('Frontend.635') }]
                 },
                 merge: {
-                    title: '逐项合流',
+                    title: ncfST('Frontend.423'),
                     description: ncfST('Frontend.615'),
-                    rows: [{ label: '可配置项', value: '多个上游输入绑定' }, { label: '输出', value: '每个输入各输出一次' }]
+                    rows: [{ label: ncfST('Frontend.441'), value: ncfST('Frontend.636') }, { label: ncfST('Frontend.628'), value: ncfST('Frontend.637') }]
                 },
                 parallel: {
-                    title: '并行',
+                    title: ncfST('Frontend.424'),
                     description: ncfST('Frontend.616'),
-                    rows: [{ label: '可配置项', value: '从输出端连接任意多个分支' }, { label: '输出', value: '原始输入分发至每个分支' }]
+                    rows: [{ label: ncfST('Frontend.441'), value: ncfST('Frontend.638') }, { label: ncfST('Frontend.628'), value: ncfST('Frontend.639') }]
                 },
                 console: {
-                    title: 'Console 打印',
+                    title: ncfST('Frontend.425'),
                     description: ncfST('Frontend.617'),
-                    rows: [{ label: '可配置项', value: '打印内容（默认 {{input}}）' }]
+                    rows: [{ label: ncfST('Frontend.441'), value: ncfST('Frontend.640') }]
                 },
                 neubell: {
-                    title: '发送纽铃',
+                    title: ncfST('Frontend.427'),
                     description: ncfST('Frontend.618'),
-                    rows: [{ label: '可配置项', value: '订阅、标题、内容、消费方式' }, { label: '可选消费', value: '当前提醒 / 当前订阅全部 / 仅查看' }]
+                    rows: [{ label: ncfST('Frontend.441'), value: ncfST('Frontend.641') }, { label: ncfST('Frontend.642'), value: ncfST('Frontend.643') }]
                 },
                 'human-input': {
-                    title: '等待人工输入',
+                    title: ncfST('Frontend.428'),
                     description: ncfST('Frontend.619'),
-                    rows: [{ label: '输出', value: '人工提交的文本' }, { label: '外部恢复', value: '启用后可使用一次请求 ID 与节点恢复密钥调用内部 WebAPI' }]
+                    rows: [{ label: ncfST('Frontend.628'), value: ncfST('Frontend.644') }, { label: ncfST('Frontend.645'), value: ncfST('Frontend.646') }]
                 },
                 end: {
-                    title: '结束',
+                    title: ncfST('Frontend.430'),
                     description: ncfST('Frontend.620'),
-                    rows: [{ label: '限制', value: '无后续节点，不能在线中插入' }]
+                    rows: [{ label: ncfST('Frontend.445'), value: ncfST('Frontend.647') }]
                 }
             };
-            return definitions[type] || { title: fallbackName || '系统节点', description: '工作流内置节点。', rows: [] };
+            return definitions[type] || { title: fallbackName || ncfST('Frontend.431'), description: ncfST('Frontend.455'), rows: [] };
         },
         describeNodePreview(preview) {
             const safePreview = preview || {};
@@ -809,11 +809,11 @@ new Vue({
             if (safePreview.kind === 'system') {
                 const definition = this.systemNodePreview(payload.type, payload.name);
                 return {
-                    kind: '工作流系统节点',
+                    kind: ncfST('Frontend.432'),
                     title: definition.title,
                     description: definition.description,
                     rows: definition.rows,
-                    actionText: payload.type === 'end' ? '可拖到画布添加；不能插入连线' : '双击或拖到画布以添加'
+                    actionText: payload.type === 'end' ? ncfST('Frontend.648') : ncfST('Frontend.438')
                 };
             }
             if (safePreview.kind === 'function') {
