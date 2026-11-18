@@ -1738,4 +1738,5 @@
   <data name="Error.Workflow.InvocationFailed" xml:space="preserve"><value>Falló la invocación del Workflow: {0}</value></data>
   <data name="Error.Workflow.Unknown" xml:space="preserve"><value>Error desconocido</value></data>
   <data name="Frontend.580" xml:space="preserve"><value>Más acciones</value></data>
+  <data name="Frontend.581" xml:space="preserve"><value>Tras vincularlo, la recuperación RAG se ejecuta antes de las llamadas al modelo; si falla, se conserva el respaldo del modelo.</value></data>
 </root>

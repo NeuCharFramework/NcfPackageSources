@@ -1213,4 +1213,5 @@
   <data name="Error.Workflow.InvocationFailed" xml:space="preserve"><value>Workflow 调用失败：{0}</value></data>
   <data name="Error.Workflow.Unknown" xml:space="preserve"><value>未知错误</value></data>
   <data name="Frontend.580" xml:space="preserve"><value>更多操作</value></data>
+  <data name="Frontend.581" xml:space="preserve"><value>绑定后会在模型调用前优先执行 RAG 召回；召回失败时保留模型回退能力。</value></data>
 </root>
