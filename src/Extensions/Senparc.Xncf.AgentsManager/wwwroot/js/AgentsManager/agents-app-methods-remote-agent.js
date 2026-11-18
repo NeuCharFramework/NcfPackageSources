@@ -179,26 +179,23 @@ var AgentsAppMethodsRemoteAgent = {
         if (!valid) return
 
         if (this.publishedA2AForm.enable) {
-          const riskItems = [
-            '外部系统调用后，输入及 Agent 的正常回复都会跨越本系统边界；请确认 Prompt、知识库和回复内容可对外共享。',
-            '每次调用可能产生模型与工具成本；请在 HTTPS 网关配置访问控制、限流、监控和告警。'
-          ]
+          const riskItems = [ncfST('Frontend.591'), ncfST('Frontend.592')]
           if (this.publishedA2AForm.authenticationMode === 0) {
-            riskItems.push('当前未启用入站鉴权。仅可用于隔离、受控网络；不可直接暴露到公网。')
+            riskItems.push(ncfST('Frontend.593'))
           }
           if (this.publishedA2AForm.allowFunctionCalls) {
-            riskItems.push('已允许本地 Function / MCP 工具调用。外部输入可能间接触发读写或外部访问，请确认工具权限最小化。')
+            riskItems.push(ncfST('Frontend.594'))
           }
 
           try {
             await this.$confirm(
-              `<div>启用后，此本地 Agent 将作为标准 A2A 服务接受外部调用。</div><ul style="padding-left:20px;margin:10px 0 0;"><li>${riskItems.join('</li><li>')}</li></ul>`,
-              '确认启用 A2A 对外服务',
+              `<div>${ncfST('Frontend.595')}</div><ul style="padding-left:20px;margin:10px 0 0;"><li>${riskItems.join('</li><li>')}</li></ul>`,
+              ncfST('Frontend.596'),
               {
                 type: 'warning',
                 dangerouslyUseHTMLString: true,
-                confirmButtonText: '我已知悉并保存',
-                cancelButtonText: '取消'
+                confirmButtonText: ncfST('Frontend.597'),
+                cancelButtonText: ncfST('Frontend.598')
               })
           } catch (_) {
             return
