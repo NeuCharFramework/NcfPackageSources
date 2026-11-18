@@ -702,4 +702,14 @@
   <data name="Frontend.656" xml:space="preserve"><value>该运行缺少实时运行标识，可能由已退出的服务进程遗留；请先中止或等待任务状态更新。</value></data>
   <data name="Frontend.657" xml:space="preserve"><value>快速清理 Workflow 任务失败。</value></data>
   <data name="Frontend.658" xml:space="preserve"><value>平台</value></data>
+  <data name="Frontend.659" xml:space="preserve"><value>正在保存…</value></data>
+  <data name="Frontend.660" xml:space="preserve"><value>保存失败</value></data>
+  <data name="Frontend.661" xml:space="preserve"><value>有尚未保存的更改</value></data>
+  <data name="Frontend.662" xml:space="preserve"><value>草稿：{0} 个未连接节点</value></data>
+  <data name="Frontend.663" xml:space="preserve"><value>已保存 {0}</value></data>
+  <data name="Frontend.664" xml:space="preserve"><value>已保存</value></data>
+  <data name="Frontend.665" xml:space="preserve"><value>尚未保存</value></data>
+  <data name="Frontend.666" xml:space="preserve"><value>编辑</value></data>
+  <data name="Frontend.667" xml:space="preserve"><value>编辑文本与插入变量</value></data>
+  <data name="Frontend.668" xml:space="preserve"><value>此字段只支持当前输入和受限公式；表达式不会执行任意 JavaScript。</value></data>
 </root>

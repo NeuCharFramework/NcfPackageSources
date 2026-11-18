@@ -703,4 +703,14 @@
   <data name="Frontend.656" xml:space="preserve"><value>Esta ejecución no tiene identificador activo; puede proceder de un proceso de servicio ya cerrado. Cancélala primero o espera a que se actualice su estado.</value></data>
   <data name="Frontend.657" xml:space="preserve"><value>Error en la limpieza rápida de tareas de Workflow.</value></data>
   <data name="Frontend.658" xml:space="preserve"><value>Plataforma</value></data>
+  <data name="Frontend.659" xml:space="preserve"><value>Guardando…</value></data>
+  <data name="Frontend.660" xml:space="preserve"><value>Error al guardar</value></data>
+  <data name="Frontend.661" xml:space="preserve"><value>Hay cambios sin guardar</value></data>
+  <data name="Frontend.662" xml:space="preserve"><value>Borrador: {0} nodos desconectados</value></data>
+  <data name="Frontend.663" xml:space="preserve"><value>Guardado {0}</value></data>
+  <data name="Frontend.664" xml:space="preserve"><value>Guardado</value></data>
+  <data name="Frontend.665" xml:space="preserve"><value>No guardado</value></data>
+  <data name="Frontend.666" xml:space="preserve"><value>Editar</value></data>
+  <data name="Frontend.667" xml:space="preserve"><value>Editar texto e insertar variables</value></data>
+  <data name="Frontend.668" xml:space="preserve"><value>Este campo solo admite la entrada actual y fórmulas restringidas; no se ejecuta JavaScript arbitrario.</value></data>
 </root>

@@ -703,4 +703,14 @@
   <data name="Frontend.656" xml:space="preserve"><value>Cette exécution ne possède pas d’identifiant actif ; elle peut provenir d’un processus de service arrêté. Annulez-la d’abord ou attendez la mise à jour de son état.</value></data>
   <data name="Frontend.657" xml:space="preserve"><value>Échec du nettoyage rapide des tâches Workflow.</value></data>
   <data name="Frontend.658" xml:space="preserve"><value>Plateforme</value></data>
+  <data name="Frontend.659" xml:space="preserve"><value>Enregistrement…</value></data>
+  <data name="Frontend.660" xml:space="preserve"><value>Échec de l’enregistrement</value></data>
+  <data name="Frontend.661" xml:space="preserve"><value>Modifications non enregistrées</value></data>
+  <data name="Frontend.662" xml:space="preserve"><value>Brouillon : {0} nœuds déconnectés</value></data>
+  <data name="Frontend.663" xml:space="preserve"><value>Enregistré {0}</value></data>
+  <data name="Frontend.664" xml:space="preserve"><value>Enregistré</value></data>
+  <data name="Frontend.665" xml:space="preserve"><value>Non enregistré</value></data>
+  <data name="Frontend.666" xml:space="preserve"><value>Modifier</value></data>
+  <data name="Frontend.667" xml:space="preserve"><value>Modifier le texte et insérer des variables</value></data>
+  <data name="Frontend.668" xml:space="preserve"><value>Ce champ accepte uniquement l’entrée actuelle et les formules limitées ; aucun JavaScript arbitraire n’est exécuté.</value></data>
 </root>

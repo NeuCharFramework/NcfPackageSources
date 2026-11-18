@@ -703,4 +703,14 @@
   <data name="Frontend.656" xml:space="preserve"><value>У этого запуска нет активного идентификатора; возможно, он остался после завершения процесса службы. Сначала отмените его или дождитесь обновления состояния задачи.</value></data>
   <data name="Frontend.657" xml:space="preserve"><value>Не удалось быстро очистить задачи Workflow.</value></data>
   <data name="Frontend.658" xml:space="preserve"><value>Платформа</value></data>
+  <data name="Frontend.659" xml:space="preserve"><value>Сохранение…</value></data>
+  <data name="Frontend.660" xml:space="preserve"><value>Не удалось сохранить</value></data>
+  <data name="Frontend.661" xml:space="preserve"><value>Есть несохранённые изменения</value></data>
+  <data name="Frontend.662" xml:space="preserve"><value>Черновик: отключённых узлов — {0}</value></data>
+  <data name="Frontend.663" xml:space="preserve"><value>Сохранено {0}</value></data>
+  <data name="Frontend.664" xml:space="preserve"><value>Сохранено</value></data>
+  <data name="Frontend.665" xml:space="preserve"><value>Не сохранено</value></data>
+  <data name="Frontend.666" xml:space="preserve"><value>Изменить</value></data>
+  <data name="Frontend.667" xml:space="preserve"><value>Изменить текст и вставить переменные</value></data>
+  <data name="Frontend.668" xml:space="preserve"><value>Это поле поддерживает только текущий ввод и ограниченные формулы; произвольный JavaScript не выполняется.</value></data>
 </root>
