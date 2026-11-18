@@ -3116,7 +3116,7 @@ var app = new Vue({
             //Legacy comment translated to English.
             if (this.pageChange) {
                 //Legacy comment translated to English.
-                let confirmationMessage = '您的数据已经修改，是否保存为草稿？';
+                let confirmationMessage = ncfST('Frontend.333');
                 //Legacy comment translated to English.
                 e.preventDefault();
                 //Legacy comment translated to English.
@@ -3702,7 +3702,7 @@ var app = new Vue({
                 //Legacy comment translated to English.
                 if (this.pageChange && this.modelid) {
                     //Legacy comment translated to English.
-                    this.$confirm('您的数据已经修改，是否保存为草稿？', '提示', {
+                    this.$confirm(ncfST('Frontend.333'), ncfST('Frontend.343'), {
                         confirmButtonText: '保存',
                         cancelButtonText: '不保存',
                         type: 'warning'
@@ -3755,7 +3755,7 @@ var app = new Vue({
 
                 if (this.pageChange && this.modelid) {
                     //Legacy comment translated to English.
-                    this.$confirm('您的数据已经修改，是否保存为草稿？', '提示', {
+                    this.$confirm(ncfST('Frontend.333'), ncfST('Frontend.343'), {
                         confirmButtonText: '保存',
                         cancelButtonText: '不保存',
                         type: 'warning'
@@ -4800,7 +4800,7 @@ var app = new Vue({
                 await this.loadAvailableModels();
                 
                 if (this.availableModelsForInit.length === 0) {
-                    this.$message.error('没有找到可用的 AI Model，请先在 AIKernel 模块中配置 Chat 类型的 Model');
+                    this.$message.error(ncfST('Frontend.367'));
                     return;
                 }
                 
@@ -4843,7 +4843,7 @@ var app = new Vue({
         },
         async executeOptimize() {
             if (this.optimizing) {
-                this.$message.warning('优化正在进行中，请勿重复点击');
+                this.$message.warning(ncfST('Frontend.308'));
                 return;
             }
             if (!this.promptid) {
@@ -4868,14 +4868,14 @@ var app = new Vue({
             }
 
             if (!promptCode) {
-                this.$message.error('无法获取当前Prompt的版本号(Prompt Code)');
+                this.$message.error(ncfST('Frontend.348'));
                 return;
             }
 
             //Legacy comment translated to English.
             const promptDetail = this.promptDetail;
             if (!promptDetail) {
-                this.$message.error('无法获取当前 Prompt 的详细信息');
+                this.$message.error(ncfST('Frontend.347'));
                 return;
             }
 
@@ -5004,10 +5004,10 @@ var app = new Vue({
                             this.$set(this.robotScoreLoadingMap, item.id, true);
                             await this.saveManualScore(item, latestIndex);
                         } else {
-                            this.$message.warning('未配置预期结果，已跳过 AI 评分');
+                            this.$message.warning(ncfST('Frontend.358'));
                         }
                     } else if (this.autoShootAfterOptimize && this.autoAIGradeAfterShoot && (!this.outputList || this.outputList.length === 0)) {
-                        this.$message.warning('自动打靶未返回输出记录，已跳过 AI 评分；可在主界面手动打靶后再评分');
+                        this.$message.warning(ncfST('Frontend.368'));
                     }
 
                     let message = `✅ 优化完成\n\n新 Prompt：${code}`;
@@ -7453,7 +7453,7 @@ var app = new Vue({
             //Legacy comment translated to English.
             //Legacy comment translated to English.
             //Legacy comment translated to English.
-            this.$message.warning('敬请期待')
+            this.$message.warning(ncfST('Frontend.345'))
         },
         // versionrecord edit
         versionRecordEdit(itemData) {
@@ -7474,13 +7474,13 @@ var app = new Vue({
         versionRecordGenerateCode(itemData) {
             //console.log('versionrecord generatecode:', itemData)
             //Legacy comment translated to English.
-            this.$message.warning('敬请期待')
+            this.$message.warning(ncfST('Frontend.345'))
             //Legacy comment translated to English.
         },
         // versionrecord delete
         versionRecordDelete(itemData) {
             //console.log('versionrecord delete:', itemData)
-            this.$message.warning('敬请期待')
+            this.$message.warning(ncfST('Frontend.345'))
             //Legacy comment translated to English.
             //Legacy comment translated to English.
             //Legacy comment translated to English.
@@ -8835,8 +8835,8 @@ var app = new Vue({
                     if (window.PromptRangeUtils && window.PromptRangeUtils.CopyHelper) {
                         const success = await window.PromptRangeUtils.CopyHelper.copyToClipboardAsync(
                             code, 
-                            '代码复制成功', 
-                            '代码复制失败',
+                            ncfST('Frontend.303'), 
+                            ncfST('Frontend.304'),
                             true
                         );
                         
@@ -8888,7 +8888,7 @@ var app = new Vue({
                 document.body.removeChild(textarea);
                 
                 if (success) {
-                    this.$message.success('代码复制成功');
+                    this.$message.success(ncfST('Frontend.303'));
                     button.classList.add('copied');
                     button.innerHTML = '<i class="el-icon-check"></i> Copied!';
                     
@@ -8897,11 +8897,11 @@ var app = new Vue({
                         button.innerHTML = '<i class="el-icon-document-copy"></i> Copy';
                     }, 2000);
                 } else {
-                    this.$message.error('代码复制失败');
+                    this.$message.error(ncfST('Frontend.304'));
                 }
             } catch (err) {
                 console.error('Copy failed:', err);
-                this.$message.error('代码复制失败');
+                this.$message.error(ncfST('Frontend.304'));
             }
         },
         //Legacy comment translated to English.
