@@ -1,7 +1,7 @@
 ﻿@page
 @model Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager.IndexModel
 @{
-    ViewData["Title"] = "公众号控制中心";
+    ViewData["Title"] = XR["Frontend.004"];
     Layout = "_Layout_Vue";
 }
 @section HeaderContent{
@@ -62,14 +62,14 @@
 
 }
 @section breadcrumbs {
-    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
-    <el-breadcrumb-item>微信管理</el-breadcrumb-item>
-    <el-breadcrumb-item>公众号控制中心</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.001"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.003"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.004"]</el-breadcrumb-item>
 }
 <div>
     <el-container>
         <el-header class="module-header">
-            <span class="start-title"> <i class="fa fa-weixin"></i>&nbsp;<span class="module-header-v">公众号控制中心</span></span>
+            <span class="start-title"> <i class="fa fa-weixin"></i>&nbsp;<span class="module-header-v">{{ ncfST('Frontend.004') }}</span></span>
         </el-header>
         <el-main>
             <el-row :gutter="20">
@@ -79,8 +79,8 @@
                         <div class="icon">
                             <i class="fa fa-comments"></i>
                         </div>
-                        <p class="tit">公众号数量</p>
-                        <p class="des">已经录入系统的公众号</p>
+                        <p class="tit">{{ ncfST('Frontend.005') }}</p>
+                        <p class="des">{{ ncfST('Frontend.006') }}</p>
                     </div>
                 </el-col>
                 <el-col :span="6">
@@ -89,8 +89,8 @@
                         <div class="icon">
                             <i class="fa fa-tachometer"></i>
                         </div>
-                        <p class="tit">运行账号数量</p>
-                        <p class="des">已经生效并连接微信服务器的账号数量</p>
+                        <p class="tit">{{ ncfST('Frontend.007') }}</p>
+                        <p class="des">{{ ncfST('Frontend.008') }}</p>
                     </div>
                 </el-col>
                 <el-col :span="6">
@@ -99,8 +99,8 @@
                         <div class="icon">
                             <i class="fa fa-users"></i>
                         </div>
-                        <p class="tit">总微信用户数</p>
-                        <p class="des">在当前平台交互过或自动拉取关注的用户数</p>
+                        <p class="tit">{{ ncfST('Frontend.009') }}</p>
+                        <p class="des">{{ ncfST('Frontend.010') }}</p>
                     </div>
                 </el-col>
                 <el-col :span="6">
@@ -109,8 +109,8 @@
                         <div class="icon">
                             <i class="fa fa-users"></i>
                         </div>
-                        <p class="tit">今日新增用户数</p>
-                        <p class="des">当天已经同步或添加到平台的用户数量</p>
+                        <p class="tit">{{ ncfST('Frontend.011') }}</p>
+                        <p class="des">{{ ncfST('Frontend.012') }}</p>
                     </div>
                 </el-col>
             </el-row>
@@ -128,17 +128,17 @@
                                 <el-col :span="8" :offset="1">
                                     <div class="chart-li">
                                         <ul class="quick-list">
-                                            <li><i class="fa fa-line-chart"></i><a :href="`/Admin/WeixinManager/WeixinUser?uid=${uid}&mpid=${item.id}`">查看用户</a></li>
-                                            <li><i class="fa fa-thumbs-up"></i><a href="#">查看分组</a></li>
-                                            <li><i class="fa fa-calendar-o"></i><a href="#">查看标签</a></li>
-                                            <li><i class="fa fa-area-chart"></i><a href="#">对话</a></li>
-                                            <li><i class="fa fa-cog"></i><a :href="`/Admin/WeixinManager/MpAccount?uid=${uid}`">编辑</a></li>
+                                            <li><i class="fa fa-line-chart"></i><a :href="`/Admin/WeixinManager/WeixinUser?uid=${uid}&mpid=${item.id}`">{{ ncfST('Frontend.013') }}</a></li>
+                                            <li><i class="fa fa-thumbs-up"></i><a href="#">{{ ncfST('Frontend.014') }}</a></li>
+                                            <li><i class="fa fa-calendar-o"></i><a href="#">{{ ncfST('Frontend.015') }}</a></li>
+                                            <li><i class="fa fa-area-chart"></i><a href="#">{{ ncfST('Frontend.016') }}</a></li>
+                                            <li><i class="fa fa-cog"></i><a :href="`/Admin/WeixinManager/MpAccount?uid=${uid}`">{{ ncfST('Frontend.017') }}</a></li>
                                         </ul>
                                     </div>
                                 </el-col>
                                 <el-col :span="10">
                                     <div class="chart-li">
-                                        <h4>AccessToken 凭证有效期</h4>
+                                        <h4>{{ ncfST('Frontend.018') }}</h4>
                                         <div :id="'chart_mpaccount_'+item.id" style="width: 400px;height:300px;"></div>
                                     </div>
                                 </el-col>
@@ -231,7 +231,7 @@
                                     },
                                     series: [
                                         {
-                                            name: 'AccessToken 凭证状态',
+                                            name: ncfST('Frontend.019'),
                                             type: 'gauge',
                                             detail: { formatter: '{value}%' },
                                             data: [{ value: leftTimePercent, name: status }]
