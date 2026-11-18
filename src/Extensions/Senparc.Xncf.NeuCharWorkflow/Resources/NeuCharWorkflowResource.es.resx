@@ -664,7 +664,6 @@
   <data name="Chat.SignedIn" xml:space="preserve"><value>Sesión iniciada</value></data>
   <data name="Chat.Trigger" xml:space="preserve"><value>Activador de Chat</value></data>
   <data name="Chat.User" xml:space="preserve"><value>Yo</value></data>
-  <data name="Chat.User" xml:space="preserve"><value>Yo</value></data>
   <data name="Frontend.621" xml:space="preserve"><value>Valor izquierdo, operador de comparación, valor derecho y control del bucle</value></data>
   <data name="Frontend.622" xml:space="preserve"><value>Verdadero / Falso / break</value></data>
   <data name="Frontend.623" xml:space="preserve"><value>Segundos de espera</value></data>

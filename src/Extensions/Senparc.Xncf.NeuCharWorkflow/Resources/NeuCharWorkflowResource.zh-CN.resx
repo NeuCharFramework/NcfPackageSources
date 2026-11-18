@@ -664,7 +664,6 @@
   <data name="Chat.SignedIn" xml:space="preserve"><value>已登录</value></data>
   <data name="Chat.Trigger" xml:space="preserve"><value>Chat 触发</value></data>
   <data name="Chat.User" xml:space="preserve"><value>我</value></data>
-  <data name="Chat.User" xml:space="preserve"><value>我</value></data>
   <data name="Frontend.621" xml:space="preserve"><value>左值、比较符、右值、循环控制</value></data>
   <data name="Frontend.622" xml:space="preserve"><value>真 / 假 / break</value></data>
   <data name="Frontend.623" xml:space="preserve"><value>等待秒数</value></data>

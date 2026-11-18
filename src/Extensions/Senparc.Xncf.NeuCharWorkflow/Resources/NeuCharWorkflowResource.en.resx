@@ -664,7 +664,6 @@
   <data name="Chat.SignedIn" xml:space="preserve"><value>Signed in</value></data>
   <data name="Chat.Trigger" xml:space="preserve"><value>Chat trigger</value></data>
   <data name="Chat.User" xml:space="preserve"><value>Me</value></data>
-  <data name="Chat.User" xml:space="preserve"><value>Me</value></data>
   <data name="Frontend.621" xml:space="preserve"><value>Left value, comparison operator, right value, and loop control</value></data>
   <data name="Frontend.622" xml:space="preserve"><value>True / False / break</value></data>
   <data name="Frontend.623" xml:space="preserve"><value>Wait duration in seconds</value></data>

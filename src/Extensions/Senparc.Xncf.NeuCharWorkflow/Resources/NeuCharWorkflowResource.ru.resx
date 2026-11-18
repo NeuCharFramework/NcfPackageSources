@@ -664,7 +664,6 @@
   <data name="Chat.SignedIn" xml:space="preserve"><value>Выполнен вход</value></data>
   <data name="Chat.Trigger" xml:space="preserve"><value>Триггер Chat</value></data>
   <data name="Chat.User" xml:space="preserve"><value>Я</value></data>
-  <data name="Chat.User" xml:space="preserve"><value>Я</value></data>
   <data name="Frontend.621" xml:space="preserve"><value>Левое значение, оператор сравнения, правое значение и управление циклом</value></data>
   <data name="Frontend.622" xml:space="preserve"><value>Истина / Ложь / break</value></data>
   <data name="Frontend.623" xml:space="preserve"><value>Секунды ожидания</value></data>

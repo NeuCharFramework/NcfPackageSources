@@ -664,7 +664,6 @@
   <data name="Chat.SignedIn" xml:space="preserve"><value>Connecté</value></data>
   <data name="Chat.Trigger" xml:space="preserve"><value>Déclencheur Chat</value></data>
   <data name="Chat.User" xml:space="preserve"><value>Moi</value></data>
-  <data name="Chat.User" xml:space="preserve"><value>Moi</value></data>
   <data name="Frontend.621" xml:space="preserve"><value>Valeur gauche, opérateur de comparaison, valeur droite et contrôle de boucle</value></data>
   <data name="Frontend.622" xml:space="preserve"><value>Vrai / Faux / break</value></data>
   <data name="Frontend.623" xml:space="preserve"><value>Durée d'attente en secondes</value></data>

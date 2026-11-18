@@ -680,7 +680,6 @@
   <data name="Chat.SignedIn" xml:space="preserve"><value>ログイン済み</value></data>
   <data name="Chat.Trigger" xml:space="preserve"><value>Chat トリガー</value></data>
   <data name="Chat.User" xml:space="preserve"><value>自分</value></data>
-  <data name="Chat.User" xml:space="preserve"><value>自分</value></data>
   <data name="Frontend.621" xml:space="preserve"><value>左辺値、比較演算子、右辺値、ループ制御</value></data>
   <data name="Frontend.622" xml:space="preserve"><value>真 / 偽 / break</value></data>
   <data name="Frontend.623" xml:space="preserve"><value>待機秒数</value></data>
