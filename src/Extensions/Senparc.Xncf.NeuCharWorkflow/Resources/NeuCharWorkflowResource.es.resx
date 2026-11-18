@@ -827,4 +827,41 @@
   <data name="Frontend.780" xml:space="preserve"><value>Origen anterior no válido</value></data>
   <data name="Frontend.781" xml:space="preserve"><value>La fórmula de cantidad del nodo de bucle «{0}» no puede estar vacía.</value></data>
   <data name="Frontend.782" xml:space="preserve"><value>La fórmula de cantidad del nodo de bucle «{0}» debe ser numérica o una referencia numérica anterior.</value></data>
+  <data name="Frontend.783" xml:space="preserve"><value>Este Workflow tiene cambios sin guardar. Si sales, se perderán.</value></data>
+  <data name="Frontend.784" xml:space="preserve"><value>¿Salir del Workflow actual?</value></data>
+  <data name="Frontend.785" xml:space="preserve"><value>Descartar cambios</value></data>
+  <data name="Frontend.786" xml:space="preserve"><value>Seguir editando</value></data>
+  <data name="Frontend.787" xml:space="preserve"><value>No hay cambios que guardar.</value></data>
+  <data name="Frontend.788" xml:space="preserve"><value>Comprueba la configuración del nodo.</value></data>
+  <data name="Frontend.789" xml:space="preserve"><value>No se pudo guardar</value></data>
+  <data name="Frontend.790" xml:space="preserve"><value>Borrador guardado. Los nodos desconectados ({0}) impedirán la ejecución; el Workflow se desactivó automáticamente. Conéctalos antes de volver a activarlo.</value></data>
+  <data name="Frontend.791" xml:space="preserve"><value>Guardado con el atajo de teclado.</value></data>
+  <data name="Frontend.792" xml:space="preserve"><value>Workflow guardado.</value></data>
+  <data name="Frontend.793" xml:space="preserve"><value>Guardado automático pausado</value></data>
+  <data name="Frontend.794" xml:space="preserve"><value>Error al guardar</value></data>
+  <data name="Frontend.795" xml:space="preserve"><value>La validación previa a la ejecución ha fallado.</value></data>
+  <data name="Frontend.796" xml:space="preserve"><value>Guardando y validando el Workflow actual…</value></data>
+  <data name="Frontend.797" xml:space="preserve"><value>La validación de parámetros, referencias y tipos se completó.</value></data>
+  <data name="Frontend.798" xml:space="preserve"><value>No se pudo ejecutar</value></data>
+  <data name="Frontend.799" xml:space="preserve"><value>La ejecución del Workflow terminó.</value></data>
+  <data name="Frontend.800" xml:space="preserve"><value>La ejecución del Workflow falló.</value></data>
+  <data name="Frontend.801" xml:space="preserve"><value>No se pudo leer el estado de ejecución.</value></data>
+  <data name="Frontend.802" xml:space="preserve"><value>Se necesita entrada Human</value></data>
+  <data name="Frontend.803" xml:space="preserve"><value>Introduce texto antes de continuar el Workflow.</value></data>
+  <data name="Frontend.804" xml:space="preserve"><value>Entrada rápida de Workflow</value></data>
+  <data name="Frontend.805" xml:space="preserve"><value>Aprobación rápida de Workflow</value></data>
+  <data name="Frontend.806" xml:space="preserve"><value>Respuesta Human enviada; el flujo seguirá esperando o ejecutándose.</value></data>
+  <data name="Frontend.807" xml:space="preserve"><value>Se rechazó esta llamada de herramienta; el flujo seguirá procesándose.</value></data>
+  <data name="Frontend.808" xml:space="preserve"><value>Error al gestionar Human</value></data>
+  <data name="Frontend.809" xml:space="preserve"><value>Es posible que la solicitud ya se haya gestionado desde otra entrada.</value></data>
+  <data name="Frontend.810" xml:space="preserve"><value>Se detendrá el Workflow actual. Las llamadas externas iniciadas pueden esperar su propia respuesta de cancelación.</value></data>
+  <data name="Frontend.811" xml:space="preserve"><value>Confirmar cancelación</value></data>
+  <data name="Frontend.812" xml:space="preserve"><value>Cancelar</value></data>
+  <data name="Frontend.813" xml:space="preserve"><value>Continuar</value></data>
+  <data name="Frontend.814" xml:space="preserve"><value>Cancelación manual solicitada; esperando la respuesta de cancelación del nodo actual.</value></data>
+  <data name="Frontend.815" xml:space="preserve"><value>Error al cancelar el Workflow.</value></data>
+  <data name="Frontend.816" xml:space="preserve"><value>No se pudo cancelar</value></data>
+  <data name="Frontend.817" xml:space="preserve"><value>¿Eliminar el Workflow «{0}»? Esta acción no se puede deshacer.</value></data>
+  <data name="Frontend.818" xml:space="preserve"><value>Eliminar Workflow</value></data>
+  <data name="Frontend.819" xml:space="preserve"><value>Eliminar</value></data>
 </root>

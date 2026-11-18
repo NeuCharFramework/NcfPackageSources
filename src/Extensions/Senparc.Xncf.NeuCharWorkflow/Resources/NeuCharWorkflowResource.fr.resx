@@ -827,4 +827,41 @@
   <data name="Frontend.780" xml:space="preserve"><value>Source amont invalide</value></data>
   <data name="Frontend.781" xml:space="preserve"><value>La formule de comptage du nœud de boucle « {0} » ne peut pas être vide.</value></data>
   <data name="Frontend.782" xml:space="preserve"><value>La formule de comptage du nœud de boucle « {0} » doit être numérique ou référencer une valeur numérique amont.</value></data>
+  <data name="Frontend.783" xml:space="preserve"><value>Ce Workflow contient des modifications non enregistrées. Elles seront perdues si vous quittez.</value></data>
+  <data name="Frontend.784" xml:space="preserve"><value>Quitter le Workflow actuel ?</value></data>
+  <data name="Frontend.785" xml:space="preserve"><value>Abandonner les modifications</value></data>
+  <data name="Frontend.786" xml:space="preserve"><value>Continuer l’édition</value></data>
+  <data name="Frontend.787" xml:space="preserve"><value>Aucune modification à enregistrer.</value></data>
+  <data name="Frontend.788" xml:space="preserve"><value>Vérifiez la configuration du nœud.</value></data>
+  <data name="Frontend.789" xml:space="preserve"><value>Impossible d’enregistrer</value></data>
+  <data name="Frontend.790" xml:space="preserve"><value>Brouillon enregistré. Les nœuds déconnectés ({0}) empêcheront l’exécution ; le Workflow a été désactivé automatiquement. Reconnectez-les avant de le réactiver.</value></data>
+  <data name="Frontend.791" xml:space="preserve"><value>Enregistré avec le raccourci clavier.</value></data>
+  <data name="Frontend.792" xml:space="preserve"><value>Workflow enregistré.</value></data>
+  <data name="Frontend.793" xml:space="preserve"><value>Enregistrement automatique suspendu</value></data>
+  <data name="Frontend.794" xml:space="preserve"><value>Échec de l’enregistrement</value></data>
+  <data name="Frontend.795" xml:space="preserve"><value>Échec de la validation avant exécution.</value></data>
+  <data name="Frontend.796" xml:space="preserve"><value>Enregistrement et validation du Workflow actuel…</value></data>
+  <data name="Frontend.797" xml:space="preserve"><value>Validation des paramètres, références et types réussie.</value></data>
+  <data name="Frontend.798" xml:space="preserve"><value>Impossible d’exécuter</value></data>
+  <data name="Frontend.799" xml:space="preserve"><value>L’exécution du Workflow est terminée.</value></data>
+  <data name="Frontend.800" xml:space="preserve"><value>Échec de l’exécution du Workflow.</value></data>
+  <data name="Frontend.801" xml:space="preserve"><value>Impossible de lire l’état d’exécution.</value></data>
+  <data name="Frontend.802" xml:space="preserve"><value>Saisie Human requise</value></data>
+  <data name="Frontend.803" xml:space="preserve"><value>Saisissez du texte avant de continuer le Workflow.</value></data>
+  <data name="Frontend.804" xml:space="preserve"><value>Saisie rapide du Workflow</value></data>
+  <data name="Frontend.805" xml:space="preserve"><value>Approbation rapide du Workflow</value></data>
+  <data name="Frontend.806" xml:space="preserve"><value>Réponse Human envoyée ; le flux poursuivra son attente ou son exécution.</value></data>
+  <data name="Frontend.807" xml:space="preserve"><value>Cet appel d’outil a été refusé ; le flux poursuivra son traitement.</value></data>
+  <data name="Frontend.808" xml:space="preserve"><value>Échec du traitement Human</value></data>
+  <data name="Frontend.809" xml:space="preserve"><value>La demande a peut-être été traitée par une autre entrée.</value></data>
+  <data name="Frontend.810" xml:space="preserve"><value>Le Workflow actuel va s’arrêter. Les appels externes démarrés peuvent attendre leur propre réponse d’annulation.</value></data>
+  <data name="Frontend.811" xml:space="preserve"><value>Confirmer l’annulation</value></data>
+  <data name="Frontend.812" xml:space="preserve"><value>Annuler</value></data>
+  <data name="Frontend.813" xml:space="preserve"><value>Continuer</value></data>
+  <data name="Frontend.814" xml:space="preserve"><value>Annulation manuelle demandée ; attente de la réponse d’annulation du nœud actuel.</value></data>
+  <data name="Frontend.815" xml:space="preserve"><value>Échec de l’annulation du Workflow.</value></data>
+  <data name="Frontend.816" xml:space="preserve"><value>Impossible d’annuler</value></data>
+  <data name="Frontend.817" xml:space="preserve"><value>Supprimer le Workflow « {0} » ? Cette action est irréversible.</value></data>
+  <data name="Frontend.818" xml:space="preserve"><value>Supprimer le Workflow</value></data>
+  <data name="Frontend.819" xml:space="preserve"><value>Supprimer</value></data>
 </root>

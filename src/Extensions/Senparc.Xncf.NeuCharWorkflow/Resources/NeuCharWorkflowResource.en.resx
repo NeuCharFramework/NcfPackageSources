@@ -827,4 +827,41 @@
   <data name="Frontend.780" xml:space="preserve"><value>Invalid upstream source</value></data>
   <data name="Frontend.781" xml:space="preserve"><value>The count formula for loop node "{0}" cannot be empty.</value></data>
   <data name="Frontend.782" xml:space="preserve"><value>The count formula for loop node "{0}" must be a numeric formula or an upstream numeric reference.</value></data>
+  <data name="Frontend.783" xml:space="preserve"><value>This Workflow has unsaved changes. Leaving will discard them.</value></data>
+  <data name="Frontend.784" xml:space="preserve"><value>Leave the current Workflow?</value></data>
+  <data name="Frontend.785" xml:space="preserve"><value>Discard changes</value></data>
+  <data name="Frontend.786" xml:space="preserve"><value>Continue editing</value></data>
+  <data name="Frontend.787" xml:space="preserve"><value>There are no changes to save.</value></data>
+  <data name="Frontend.788" xml:space="preserve"><value>Check the node configuration.</value></data>
+  <data name="Frontend.789" xml:space="preserve"><value>Unable to save</value></data>
+  <data name="Frontend.790" xml:space="preserve"><value>Draft saved. {0} disconnected nodes will block execution; the Workflow was disabled automatically. Connect them before enabling it again.</value></data>
+  <data name="Frontend.791" xml:space="preserve"><value>Saved with the keyboard shortcut.</value></data>
+  <data name="Frontend.792" xml:space="preserve"><value>Workflow saved.</value></data>
+  <data name="Frontend.793" xml:space="preserve"><value>Auto-save paused</value></data>
+  <data name="Frontend.794" xml:space="preserve"><value>Save failed</value></data>
+  <data name="Frontend.795" xml:space="preserve"><value>Pre-run validation failed.</value></data>
+  <data name="Frontend.796" xml:space="preserve"><value>Saving and validating the current Workflow…</value></data>
+  <data name="Frontend.797" xml:space="preserve"><value>Parameter, reference, and type validation passed.</value></data>
+  <data name="Frontend.798" xml:space="preserve"><value>Unable to run</value></data>
+  <data name="Frontend.799" xml:space="preserve"><value>Workflow run completed.</value></data>
+  <data name="Frontend.800" xml:space="preserve"><value>Workflow run failed.</value></data>
+  <data name="Frontend.801" xml:space="preserve"><value>Failed to read run status.</value></data>
+  <data name="Frontend.802" xml:space="preserve"><value>Human input required</value></data>
+  <data name="Frontend.803" xml:space="preserve"><value>Enter text before continuing the Workflow.</value></data>
+  <data name="Frontend.804" xml:space="preserve"><value>Workflow quick input</value></data>
+  <data name="Frontend.805" xml:space="preserve"><value>Workflow quick approval</value></data>
+  <data name="Frontend.806" xml:space="preserve"><value>Human response submitted; the flow will continue waiting or executing.</value></data>
+  <data name="Frontend.807" xml:space="preserve"><value>This tool call was rejected; the flow will continue processing.</value></data>
+  <data name="Frontend.808" xml:space="preserve"><value>Human handling failed</value></data>
+  <data name="Frontend.809" xml:space="preserve"><value>The request may have been handled through another entry point.</value></data>
+  <data name="Frontend.810" xml:space="preserve"><value>The current Workflow will stop. Started external calls may need to wait for their own cancellation response.</value></data>
+  <data name="Frontend.811" xml:space="preserve"><value>Confirm abort</value></data>
+  <data name="Frontend.812" xml:space="preserve"><value>Abort</value></data>
+  <data name="Frontend.813" xml:space="preserve"><value>Continue</value></data>
+  <data name="Frontend.814" xml:space="preserve"><value>Manual abort requested; waiting for the current node to respond to cancellation.</value></data>
+  <data name="Frontend.815" xml:space="preserve"><value>Workflow abort failed.</value></data>
+  <data name="Frontend.816" xml:space="preserve"><value>Unable to abort</value></data>
+  <data name="Frontend.817" xml:space="preserve"><value>Delete Workflow "{0}"? This action cannot be undone.</value></data>
+  <data name="Frontend.818" xml:space="preserve"><value>Delete Workflow</value></data>
+  <data name="Frontend.819" xml:space="preserve"><value>Delete</value></data>
 </root>

@@ -3772,11 +3772,11 @@ new Vue({
             this.discardConfirming = true;
             try {
                 await this.$confirm(
-                    '当前工作流有未保存的更改。离开后这些更改将丢失。',
-                    action || '确认离开当前工作流？',
+                    ncfWorkflowText('Frontend.783'),
+                    action || ncfWorkflowText('Frontend.784'),
                     {
-                        confirmButtonText: '放弃更改',
-                        cancelButtonText: '继续编辑',
+                        confirmButtonText: ncfWorkflowText('Frontend.785'),
+                        cancelButtonText: ncfWorkflowText('Frontend.786'),
                         type: 'warning',
                         distinguishCancelAndClose: true
                     });
@@ -3829,19 +3829,19 @@ new Vue({
             if (this.editingLocked || this.saveState.saving) return null;
             const saveSignature = this.currentSaveSignature;
             if (this.form.id && !this.saveDirty) {
-                if (!options.silent) this.$notify({ title: 'Workflow', message: '当前没有需要保存的更改。', type: 'info' });
+                if (!options.silent) this.$notify({ title: 'Workflow', message: ncfWorkflowText('Frontend.787'), type: 'info' });
                 this.scheduleAutoSave();
                 return { id: this.form.id, revision: this.form.revision, unchanged: true };
             }
             const error = this.validate({ requireRunnable: false });
             if (error) {
-                const issue = this.showValidationIssue(error, '请检查节点配置。', {
+                const issue = this.showValidationIssue(error, ncfWorkflowText('Frontend.788'), {
                     source: 'save',
                     focus: !options.automatic
                 });
                 this.saveState.status = 'error';
                 this.saveState.error = issue.message;
-                if (!options.automatic) this.$notify({ title: '无法保存', message: issue.message, type: 'warning' });
+                if (!options.automatic) this.$notify({ title: ncfWorkflowText('Frontend.789'), message: issue.message, type: 'warning' });
                 return null;
             }
             this.saveState.saving = true;
@@ -3867,14 +3867,14 @@ new Vue({
                 if (!options.silent) {
                     const draftCount = this.disconnectedNodes.length;
                     const message = draftCount
-                        ? `草稿已保存。${draftCount} 个未连接节点会阻止运行；已自动停用工作流，请连接完成后重新启用。`
-                        : (options.source === 'shortcut' ? '已使用快捷键保存。' : '工作流已保存。');
+                        ? ncfWorkflowText('Frontend.790').replace('{0}', draftCount)
+                        : (options.source === 'shortcut' ? ncfWorkflowText('Frontend.791') : ncfWorkflowText('Frontend.792'));
                     this.$notify({ title: 'Workflow', message, type: draftCount ? 'warning' : 'success' });
                 }
                 await this.refreshWorkflowList();
                 return saved;
             } catch (error) {
-                const issue = this.showValidationIssue(error, '请检查节点配置。', {
+                const issue = this.showValidationIssue(error, ncfWorkflowText('Frontend.788'), {
                     source: 'save',
                     focus: !options.automatic
                 });
@@ -3883,9 +3883,9 @@ new Vue({
                 this.saveState.error = message;
                 if (options.automatic && this.currentSaveSignature === saveSignature) {
                     this.saveState.autoSaveBlockedSignature = saveSignature;
-                    this.$notify({ title: '自动保存已暂停', message: `${message}。请修正后手动保存。`, type: 'warning' });
+                    this.$notify({ title: ncfWorkflowText('Frontend.793'), message: `${message}。${ncfWorkflowText('Frontend.788')}`, type: 'warning' });
                 }
-                if (!options.automatic) this.$notify({ title: '保存失败', message, type: 'error' });
+                if (!options.automatic) this.$notify({ title: ncfWorkflowText('Frontend.794'), message, type: 'error' });
                 return null;
             } finally { this.saveState.saving = false; }
         },
@@ -3893,12 +3893,12 @@ new Vue({
             if (this.run.running || this.run.validating) return;
             const localError = this.validate({ requireRunnable: true });
             if (localError) {
-                const issue = this.showValidationIssue(localError, '运行前校验失败。', {
+                const issue = this.showValidationIssue(localError, ncfWorkflowText('Frontend.795'), {
                     source: 'run',
                     nodeIds: /未连接到触发器/.test(localError) ? this.getDisconnectedNodes().map(node => node.id) : undefined
                 });
                 this.appendConsole('validation', issue.message, 'failed');
-                this.$notify({ title: '运行前校验失败', message: issue.message, type: 'warning' });
+                this.$notify({ title: ncfWorkflowText('Frontend.795'), message: issue.message, type: 'warning' });
                 return;
             }
             this.clearValidationIssue();
@@ -3911,12 +3911,12 @@ new Vue({
             this.run.humanReplyVisible = false;
             this.run.humanReplyRequest = null;
             this.run.humanReplyInput = '';
-            this.appendConsole('validation', '正在保存并校验当前工作流……', 'running');
+            this.appendConsole('validation', ncfWorkflowText('Frontend.796'), 'running');
             try {
                 const saved = await this.saveWorkflow({ silent: true });
                 if (!saved) return;
                 await service.post('/Admin/NeuCharWorkflow/Index?handler=ValidateRun', { id: this.form.id, input: this.run.input }, { customAlert: true });
-                this.appendConsole('validation', '参数、引用和类型校验通过。', 'success');
+                this.appendConsole('validation', ncfWorkflowText('Frontend.797'), 'success');
                 const response = await service.post('/Admin/NeuCharWorkflow/Index?handler=StartRun', { id: this.form.id, input: this.run.input }, { customAlert: true });
                 const data = NeuCharWorkflowUi.unwrap(response) || {};
                 this.run.runId = data.runId;
@@ -3925,11 +3925,11 @@ new Vue({
                 this.run.lastSequence = 0;
                 this.pollRun();
             } catch (error) {
-                const issue = this.showValidationIssue(error, '运行前校验失败。', { source: 'run' });
+                const issue = this.showValidationIssue(error, ncfWorkflowText('Frontend.795'), { source: 'run' });
                 const message = issue.message;
                 this.run.status = 'failed'; this.run.error = message;
                 this.appendConsole('validation', message, 'failed');
-                this.$notify({ title: '无法运行', message, type: 'error' });
+                this.$notify({ title: ncfWorkflowText('Frontend.798'), message, type: 'error' });
             } finally { this.run.validating = false; }
         },
         async pollRun() {
@@ -3957,10 +3957,10 @@ new Vue({
                 this.run.status = snapshot.succeeded ? 'success' : 'failed';
                 this.run.finalOutput = snapshot.finalOutput || '';
                 this.run.error = snapshot.errorMessage || '';
-                this.appendConsole('workflow', snapshot.succeeded ? '工作流运行完成。' : (snapshot.errorMessage || '工作流运行失败。'), snapshot.succeeded ? 'success' : 'failed', snapshot.finalOutput);
+                this.appendConsole('workflow', snapshot.succeeded ? ncfWorkflowText('Frontend.799') : (snapshot.errorMessage || ncfWorkflowText('Frontend.800')), snapshot.succeeded ? 'success' : 'failed', snapshot.finalOutput);
             } catch (error) {
                 this.run.running = false; this.run.aborting = false; this.run.status = 'failed';
-                this.run.error = this.errorMessage(error, '读取运行状态失败。');
+                this.run.error = this.errorMessage(error, ncfWorkflowText('Frontend.801'));
                 this.appendConsole('workflow', this.run.error, 'failed');
             }
         },
@@ -3990,7 +3990,7 @@ new Vue({
             if (!request || this.run.humanReplySubmitting || !this.run.runId) return;
             const requiresTextInput = this.requiresHumanTextInput(request);
             if (requiresTextInput && !String(this.run.humanReplyInput || '').trim()) {
-                this.$notify({ title: '需要 Human 输入', message: '请输入文本后再继续 Workflow。', type: 'warning' });
+                this.$notify({ title: ncfWorkflowText('Frontend.802'), message: ncfWorkflowText('Frontend.803'), type: 'warning' });
                 return;
             }
             this.run.humanReplySubmitting = true;
@@ -4000,15 +4000,15 @@ new Vue({
                     requestId: request.requestId,
                     approved: !!approved,
                     input: requiresTextInput ? String(this.run.humanReplyInput || '').trim() : '',
-                    reason: requiresTextInput ? 'Workflow 快速输入' : 'Workflow 快速审批'
+                    reason: requiresTextInput ? ncfWorkflowText('Frontend.804') : ncfWorkflowText('Frontend.805')
                 }, { customAlert: true });
                 this.run.humanInteractions = this.run.humanInteractions.filter(item => item.requestId !== request.requestId);
                 this.run.humanReplyVisible = false;
                 this.run.humanReplyRequest = null;
                 this.run.humanReplyInput = '';
-                this.$notify({ title: 'Workflow', message: approved ? 'Human 处理已提交，流程继续等待/执行。' : '已拒绝本次工具调用，流程继续处理。', type: approved ? 'success' : 'warning' });
+                this.$notify({ title: 'Workflow', message: approved ? ncfWorkflowText('Frontend.806') : ncfWorkflowText('Frontend.807'), type: approved ? 'success' : 'warning' });
             } catch (error) {
-                this.$notify({ title: 'Human 处理失败', message: this.errorMessage(error, '请求可能已由另一入口处理。'), type: 'error' });
+                this.$notify({ title: ncfWorkflowText('Frontend.808'), message: this.errorMessage(error, ncfWorkflowText('Frontend.809')), type: 'error' });
             } finally {
                 this.run.humanReplySubmitting = false;
             }
@@ -4020,9 +4020,9 @@ new Vue({
             if (!this.run.running || this.run.aborting || !this.run.runId) return;
             try {
                 if (this.$confirm) {
-                    await this.$confirm('将停止当前工作流。已启动的外部调用可能需要等待其自身响应取消。', '确认中止运行', {
-                        confirmButtonText: '中止',
-                        cancelButtonText: '继续运行',
+                    await this.$confirm(ncfWorkflowText('Frontend.810'), ncfWorkflowText('Frontend.811'), {
+                        confirmButtonText: ncfWorkflowText('Frontend.812'),
+                        cancelButtonText: ncfWorkflowText('Frontend.813'),
                         type: 'warning'
                     });
                 }
@@ -4033,13 +4033,13 @@ new Vue({
             this.run.aborting = true;
             try {
                 await service.post('/Admin/NeuCharWorkflow/Index?handler=AbortRun', { runId: this.run.runId }, { customAlert: true });
-                this.appendConsole('workflow', '已请求手动中止，正在等待当前节点响应取消。', 'running');
+                this.appendConsole('workflow', ncfWorkflowText('Frontend.814'), 'running');
                 this.clearRunPoll();
                 this.pollRun();
             } catch (error) {
-                const message = this.errorMessage(error, '中止工作流失败。');
+                const message = this.errorMessage(error, ncfWorkflowText('Frontend.815'));
                 this.run.aborting = false;
-                this.$notify({ title: '无法中止', message, type: 'error' });
+                this.$notify({ title: ncfWorkflowText('Frontend.816'), message, type: 'error' });
             }
         },
         applyRunEvent(event) {
@@ -4101,11 +4101,11 @@ new Vue({
             if (action !== 'delete' || !this.form.id || this.editingLocked || this.saveState.saving) return;
             try {
                 await this.$confirm(
-                    `确认删除工作流“${this.form.name || this.form.id}”？此操作无法恢复。`,
-                    '删除工作流',
+                    ncfWorkflowText('Frontend.817').replace('{0}', this.form.name || this.form.id),
+                    ncfWorkflowText('Frontend.818'),
                     {
-                        confirmButtonText: '删除',
-                        cancelButtonText: '取消',
+                        confirmButtonText: ncfWorkflowText('Frontend.819'),
+                        cancelButtonText: ncfWorkflowText('Frontend.193'),
                         type: 'warning'
                     });
             } catch {

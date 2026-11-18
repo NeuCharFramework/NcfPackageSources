@@ -843,4 +843,41 @@
   <data name="Frontend.780" xml:space="preserve"><value>無効な上流ソース</value></data>
   <data name="Frontend.781" xml:space="preserve"><value>ループノード「{0}」の回数式を空にすることはできません。</value></data>
   <data name="Frontend.782" xml:space="preserve"><value>ループノード「{0}」の回数式は数式または上流の数値参照である必要があります。</value></data>
+  <data name="Frontend.783" xml:space="preserve"><value>現在の Workflow に未保存の変更があります。離れると変更は失われます。</value></data>
+  <data name="Frontend.784" xml:space="preserve"><value>現在の Workflow を離れますか？</value></data>
+  <data name="Frontend.785" xml:space="preserve"><value>変更を破棄</value></data>
+  <data name="Frontend.786" xml:space="preserve"><value>編集を続ける</value></data>
+  <data name="Frontend.787" xml:space="preserve"><value>保存する変更はありません。</value></data>
+  <data name="Frontend.788" xml:space="preserve"><value>ノードの設定を確認してください。</value></data>
+  <data name="Frontend.789" xml:space="preserve"><value>保存できません</value></data>
+  <data name="Frontend.790" xml:space="preserve"><value>下書きを保存しました。未接続ノード {0} 個が実行を妨げるため、Workflow を自動的に無効化しました。再度有効にする前に接続してください。</value></data>
+  <data name="Frontend.791" xml:space="preserve"><value>キーボードショートカットで保存しました。</value></data>
+  <data name="Frontend.792" xml:space="preserve"><value>Workflow を保存しました。</value></data>
+  <data name="Frontend.793" xml:space="preserve"><value>自動保存を一時停止しました</value></data>
+  <data name="Frontend.794" xml:space="preserve"><value>保存に失敗しました</value></data>
+  <data name="Frontend.795" xml:space="preserve"><value>実行前の検証に失敗しました。</value></data>
+  <data name="Frontend.796" xml:space="preserve"><value>現在の Workflow を保存して検証中…</value></data>
+  <data name="Frontend.797" xml:space="preserve"><value>パラメーター、参照、型の検証に成功しました。</value></data>
+  <data name="Frontend.798" xml:space="preserve"><value>実行できません</value></data>
+  <data name="Frontend.799" xml:space="preserve"><value>Workflow の実行が完了しました。</value></data>
+  <data name="Frontend.800" xml:space="preserve"><value>Workflow の実行に失敗しました。</value></data>
+  <data name="Frontend.801" xml:space="preserve"><value>実行状態を読み込めませんでした。</value></data>
+  <data name="Frontend.802" xml:space="preserve"><value>Human 入力が必要です</value></data>
+  <data name="Frontend.803" xml:space="preserve"><value>Workflow を続行する前にテキストを入力してください。</value></data>
+  <data name="Frontend.804" xml:space="preserve"><value>Workflow クイック入力</value></data>
+  <data name="Frontend.805" xml:space="preserve"><value>Workflow クイック承認</value></data>
+  <data name="Frontend.806" xml:space="preserve"><value>Human の応答を送信しました。フローは待機または実行を続けます。</value></data>
+  <data name="Frontend.807" xml:space="preserve"><value>このツール呼び出しは拒否されました。フローは処理を続けます。</value></data>
+  <data name="Frontend.808" xml:space="preserve"><value>Human の処理に失敗しました</value></data>
+  <data name="Frontend.809" xml:space="preserve"><value>別の入口ですでに処理された可能性があります。</value></data>
+  <data name="Frontend.810" xml:space="preserve"><value>現在の Workflow を停止します。開始済みの外部呼び出しは、独自のキャンセル応答を待つ場合があります。</value></data>
+  <data name="Frontend.811" xml:space="preserve"><value>中止を確認</value></data>
+  <data name="Frontend.812" xml:space="preserve"><value>中止</value></data>
+  <data name="Frontend.813" xml:space="preserve"><value>続行</value></data>
+  <data name="Frontend.814" xml:space="preserve"><value>手動中止を要求しました。現在のノードのキャンセル応答を待機中です。</value></data>
+  <data name="Frontend.815" xml:space="preserve"><value>Workflow の中止に失敗しました。</value></data>
+  <data name="Frontend.816" xml:space="preserve"><value>中止できません</value></data>
+  <data name="Frontend.817" xml:space="preserve"><value>Workflow「{0}」を削除しますか？この操作は元に戻せません。</value></data>
+  <data name="Frontend.818" xml:space="preserve"><value>Workflow を削除</value></data>
+  <data name="Frontend.819" xml:space="preserve"><value>削除</value></data>
 </root>

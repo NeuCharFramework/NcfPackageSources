@@ -826,4 +826,41 @@
   <data name="Frontend.780" xml:space="preserve"><value>已失效的上游来源</value></data>
   <data name="Frontend.781" xml:space="preserve"><value>循环节点“{0}”的次数语法不能为空。</value></data>
   <data name="Frontend.782" xml:space="preserve"><value>循环节点“{0}”的次数语法必须是数值公式或上游数值引用。</value></data>
+  <data name="Frontend.783" xml:space="preserve"><value>当前工作流有未保存的更改。离开后这些更改将丢失。</value></data>
+  <data name="Frontend.784" xml:space="preserve"><value>确认离开当前工作流？</value></data>
+  <data name="Frontend.785" xml:space="preserve"><value>放弃更改</value></data>
+  <data name="Frontend.786" xml:space="preserve"><value>继续编辑</value></data>
+  <data name="Frontend.787" xml:space="preserve"><value>当前没有需要保存的更改。</value></data>
+  <data name="Frontend.788" xml:space="preserve"><value>请检查节点配置。</value></data>
+  <data name="Frontend.789" xml:space="preserve"><value>无法保存</value></data>
+  <data name="Frontend.790" xml:space="preserve"><value>草稿已保存。{0} 个未连接节点会阻止运行；已自动停用工作流，请连接完成后重新启用。</value></data>
+  <data name="Frontend.791" xml:space="preserve"><value>已使用快捷键保存。</value></data>
+  <data name="Frontend.792" xml:space="preserve"><value>工作流已保存。</value></data>
+  <data name="Frontend.793" xml:space="preserve"><value>自动保存已暂停</value></data>
+  <data name="Frontend.794" xml:space="preserve"><value>保存失败</value></data>
+  <data name="Frontend.795" xml:space="preserve"><value>运行前校验失败。</value></data>
+  <data name="Frontend.796" xml:space="preserve"><value>正在保存并校验当前工作流……</value></data>
+  <data name="Frontend.797" xml:space="preserve"><value>参数、引用和类型校验通过。</value></data>
+  <data name="Frontend.798" xml:space="preserve"><value>无法运行</value></data>
+  <data name="Frontend.799" xml:space="preserve"><value>工作流运行完成。</value></data>
+  <data name="Frontend.800" xml:space="preserve"><value>工作流运行失败。</value></data>
+  <data name="Frontend.801" xml:space="preserve"><value>读取运行状态失败。</value></data>
+  <data name="Frontend.802" xml:space="preserve"><value>需要 Human 输入</value></data>
+  <data name="Frontend.803" xml:space="preserve"><value>请输入文本后再继续 Workflow。</value></data>
+  <data name="Frontend.804" xml:space="preserve"><value>Workflow 快速输入</value></data>
+  <data name="Frontend.805" xml:space="preserve"><value>Workflow 快速审批</value></data>
+  <data name="Frontend.806" xml:space="preserve"><value>Human 处理已提交，流程继续等待/执行。</value></data>
+  <data name="Frontend.807" xml:space="preserve"><value>已拒绝本次工具调用，流程继续处理。</value></data>
+  <data name="Frontend.808" xml:space="preserve"><value>Human 处理失败</value></data>
+  <data name="Frontend.809" xml:space="preserve"><value>请求可能已由另一入口处理。</value></data>
+  <data name="Frontend.810" xml:space="preserve"><value>将停止当前工作流。已启动的外部调用可能需要等待其自身响应取消。</value></data>
+  <data name="Frontend.811" xml:space="preserve"><value>确认中止运行</value></data>
+  <data name="Frontend.812" xml:space="preserve"><value>中止</value></data>
+  <data name="Frontend.813" xml:space="preserve"><value>继续运行</value></data>
+  <data name="Frontend.814" xml:space="preserve"><value>已请求手动中止，正在等待当前节点响应取消。</value></data>
+  <data name="Frontend.815" xml:space="preserve"><value>中止工作流失败。</value></data>
+  <data name="Frontend.816" xml:space="preserve"><value>无法中止</value></data>
+  <data name="Frontend.817" xml:space="preserve"><value>确认删除工作流“{0}”？此操作无法恢复。</value></data>
+  <data name="Frontend.818" xml:space="preserve"><value>删除工作流</value></data>
+  <data name="Frontend.819" xml:space="preserve"><value>删除</value></data>
 </root>

@@ -827,4 +827,41 @@
   <data name="Frontend.780" xml:space="preserve"><value>Недопустимый источник предыдущего узла</value></data>
   <data name="Frontend.781" xml:space="preserve"><value>Формула количества узла цикла «{0}» не может быть пустой.</value></data>
   <data name="Frontend.782" xml:space="preserve"><value>Формула количества узла цикла «{0}» должна быть числовой формулой или ссылкой на число предыдущего узла.</value></data>
+  <data name="Frontend.783" xml:space="preserve"><value>В текущем Workflow есть несохранённые изменения. При выходе они будут потеряны.</value></data>
+  <data name="Frontend.784" xml:space="preserve"><value>Выйти из текущего Workflow?</value></data>
+  <data name="Frontend.785" xml:space="preserve"><value>Отменить изменения</value></data>
+  <data name="Frontend.786" xml:space="preserve"><value>Продолжить редактирование</value></data>
+  <data name="Frontend.787" xml:space="preserve"><value>Нет изменений для сохранения.</value></data>
+  <data name="Frontend.788" xml:space="preserve"><value>Проверьте конфигурацию узла.</value></data>
+  <data name="Frontend.789" xml:space="preserve"><value>Не удалось сохранить</value></data>
+  <data name="Frontend.790" xml:space="preserve"><value>Черновик сохранён. Несоединённые узлы ({0}) будут препятствовать запуску; Workflow автоматически отключён. Соедините их перед повторным включением.</value></data>
+  <data name="Frontend.791" xml:space="preserve"><value>Сохранено с помощью сочетания клавиш.</value></data>
+  <data name="Frontend.792" xml:space="preserve"><value>Workflow сохранён.</value></data>
+  <data name="Frontend.793" xml:space="preserve"><value>Автосохранение приостановлено</value></data>
+  <data name="Frontend.794" xml:space="preserve"><value>Не удалось сохранить</value></data>
+  <data name="Frontend.795" xml:space="preserve"><value>Проверка перед запуском не пройдена.</value></data>
+  <data name="Frontend.796" xml:space="preserve"><value>Сохранение и проверка текущего Workflow…</value></data>
+  <data name="Frontend.797" xml:space="preserve"><value>Проверка параметров, ссылок и типов пройдена.</value></data>
+  <data name="Frontend.798" xml:space="preserve"><value>Не удалось запустить</value></data>
+  <data name="Frontend.799" xml:space="preserve"><value>Запуск Workflow завершён.</value></data>
+  <data name="Frontend.800" xml:space="preserve"><value>Запуск Workflow завершился ошибкой.</value></data>
+  <data name="Frontend.801" xml:space="preserve"><value>Не удалось прочитать состояние запуска.</value></data>
+  <data name="Frontend.802" xml:space="preserve"><value>Требуется ввод Human</value></data>
+  <data name="Frontend.803" xml:space="preserve"><value>Введите текст, прежде чем продолжить Workflow.</value></data>
+  <data name="Frontend.804" xml:space="preserve"><value>Быстрый ввод Workflow</value></data>
+  <data name="Frontend.805" xml:space="preserve"><value>Быстрое утверждение Workflow</value></data>
+  <data name="Frontend.806" xml:space="preserve"><value>Ответ Human отправлен; поток продолжит ожидание или выполнение.</value></data>
+  <data name="Frontend.807" xml:space="preserve"><value>Вызов инструмента отклонён; поток продолжит обработку.</value></data>
+  <data name="Frontend.808" xml:space="preserve"><value>Не удалось обработать Human</value></data>
+  <data name="Frontend.809" xml:space="preserve"><value>Запрос мог быть обработан через другой вход.</value></data>
+  <data name="Frontend.810" xml:space="preserve"><value>Текущий Workflow будет остановлен. Запущенные внешние вызовы могут ждать собственного ответа отмены.</value></data>
+  <data name="Frontend.811" xml:space="preserve"><value>Подтвердить отмену</value></data>
+  <data name="Frontend.812" xml:space="preserve"><value>Отменить</value></data>
+  <data name="Frontend.813" xml:space="preserve"><value>Продолжить</value></data>
+  <data name="Frontend.814" xml:space="preserve"><value>Запрошена ручная отмена; ожидание ответа текущего узла на отмену.</value></data>
+  <data name="Frontend.815" xml:space="preserve"><value>Не удалось отменить Workflow.</value></data>
+  <data name="Frontend.816" xml:space="preserve"><value>Не удалось отменить</value></data>
+  <data name="Frontend.817" xml:space="preserve"><value>Удалить Workflow «{0}»? Это действие нельзя отменить.</value></data>
+  <data name="Frontend.818" xml:space="preserve"><value>Удалить Workflow</value></data>
+  <data name="Frontend.819" xml:space="preserve"><value>Удалить</value></data>
 </root>
