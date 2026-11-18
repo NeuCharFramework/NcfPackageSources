@@ -231,4 +231,14 @@
   <data name="Function.Sandbox.LabDownloadFile.Description" xml:space="preserve"><value>Lee un archivo del espacio JupyterLab persistente en ejecución y devuelve su contenido Base64.</value></data>
   <data name="Function.Sandbox.LabListFiles.Name" xml:space="preserve"><value>Listar archivos de Lab</value></data>
   <data name="Function.Sandbox.LabListFiles.Description" xml:space="preserve"><value>Lista los archivos de un espacio JupyterLab persistente en ejecución.</value></data>
+  <data name="Function.Sandbox.CreateNotebook.Name" xml:space="preserve"><value>Crear Notebook</value></data>
+  <data name="Function.Sandbox.CreateNotebook.Description" xml:space="preserve"><value>Crea un archivo .ipynb de Python o C# en un espacio JupyterLab en ejecución.</value></data>
+  <data name="Function.Sandbox.UpdateAlias.Name" xml:space="preserve"><value>Actualizar alias</value></data>
+  <data name="Function.Sandbox.UpdateAlias.Description" xml:space="preserve"><value>Establece o elimina el alias de una sesión de sandbox.</value></data>
+  <data name="Function.Sandbox.Destroy.Name" xml:space="preserve"><value>Destruir sandbox</value></data>
+  <data name="Function.Sandbox.Destroy.Description" xml:space="preserve"><value>Detiene y limpia la sesión especificada.</value></data>
+  <data name="Function.Sandbox.DeleteRecord.Name" xml:space="preserve"><value>Eliminar registro del sandbox</value></data>
+  <data name="Function.Sandbox.DeleteRecord.Description" xml:space="preserve"><value>Elimina permanentemente el registro de una sesión detenida, caducada o completamente limpiada.</value></data>
+  <data name="Function.Sandbox.UpdateTtl.Name" xml:space="preserve"><value>Actualizar TTL</value></data>
+  <data name="Function.Sandbox.UpdateTtl.Description" xml:space="preserve"><value>Amplía, reduce o hace permanente la retención del sandbox.</value></data>
 </root>

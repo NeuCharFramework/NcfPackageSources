@@ -230,4 +230,14 @@
   <data name="Function.Sandbox.LabDownloadFile.Description" xml:space="preserve"><value>读取运行中的持久化 JupyterLab 工作区文件并返回 Base64 内容。</value></data>
   <data name="Function.Sandbox.LabListFiles.Name" xml:space="preserve"><value>列举 Lab 文件</value></data>
   <data name="Function.Sandbox.LabListFiles.Description" xml:space="preserve"><value>列举运行中的持久化 JupyterLab 工作区文件。</value></data>
+  <data name="Function.Sandbox.CreateNotebook.Name" xml:space="preserve"><value>创建 Notebook</value></data>
+  <data name="Function.Sandbox.CreateNotebook.Description" xml:space="preserve"><value>在运行中的 JupyterLab 工作区创建 Python 或 C# .ipynb 文件。</value></data>
+  <data name="Function.Sandbox.UpdateAlias.Name" xml:space="preserve"><value>修改别名</value></data>
+  <data name="Function.Sandbox.UpdateAlias.Description" xml:space="preserve"><value>为沙箱会话设置或清除别名。</value></data>
+  <data name="Function.Sandbox.Destroy.Name" xml:space="preserve"><value>销毁沙箱</value></data>
+  <data name="Function.Sandbox.Destroy.Description" xml:space="preserve"><value>停止并清理指定会话。</value></data>
+  <data name="Function.Sandbox.DeleteRecord.Name" xml:space="preserve"><value>删除沙箱记录</value></data>
+  <data name="Function.Sandbox.DeleteRecord.Description" xml:space="preserve"><value>永久删除已停止、已过期或已清理完成的会话记录。</value></data>
+  <data name="Function.Sandbox.UpdateTtl.Name" xml:space="preserve"><value>修改 TTL</value></data>
+  <data name="Function.Sandbox.UpdateTtl.Description" xml:space="preserve"><value>延长、缩短或设为永久保持。</value></data>
 </root>

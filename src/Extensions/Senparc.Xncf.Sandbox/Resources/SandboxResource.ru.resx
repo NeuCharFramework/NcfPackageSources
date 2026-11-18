@@ -231,4 +231,14 @@
   <data name="Function.Sandbox.LabDownloadFile.Description" xml:space="preserve"><value>Читает файл из работающего постоянного пространства JupyterLab и возвращает содержимое Base64.</value></data>
   <data name="Function.Sandbox.LabListFiles.Name" xml:space="preserve"><value>Список файлов Lab</value></data>
   <data name="Function.Sandbox.LabListFiles.Description" xml:space="preserve"><value>Перечисляет файлы в работающем постоянном пространстве JupyterLab.</value></data>
+  <data name="Function.Sandbox.CreateNotebook.Name" xml:space="preserve"><value>Создать Notebook</value></data>
+  <data name="Function.Sandbox.CreateNotebook.Description" xml:space="preserve"><value>Создаёт файл .ipynb Python или C# в работающем пространстве JupyterLab.</value></data>
+  <data name="Function.Sandbox.UpdateAlias.Name" xml:space="preserve"><value>Обновить псевдоним</value></data>
+  <data name="Function.Sandbox.UpdateAlias.Description" xml:space="preserve"><value>Устанавливает или очищает псевдоним сеанса песочницы.</value></data>
+  <data name="Function.Sandbox.Destroy.Name" xml:space="preserve"><value>Уничтожить песочницу</value></data>
+  <data name="Function.Sandbox.Destroy.Description" xml:space="preserve"><value>Останавливает и очищает указанный сеанс.</value></data>
+  <data name="Function.Sandbox.DeleteRecord.Name" xml:space="preserve"><value>Удалить запись песочницы</value></data>
+  <data name="Function.Sandbox.DeleteRecord.Description" xml:space="preserve"><value>Окончательно удаляет запись остановленного, просроченного или полностью очищенного сеанса.</value></data>
+  <data name="Function.Sandbox.UpdateTtl.Name" xml:space="preserve"><value>Обновить TTL</value></data>
+  <data name="Function.Sandbox.UpdateTtl.Description" xml:space="preserve"><value>Продлевает, сокращает или делает хранение песочницы постоянным.</value></data>
 </root>

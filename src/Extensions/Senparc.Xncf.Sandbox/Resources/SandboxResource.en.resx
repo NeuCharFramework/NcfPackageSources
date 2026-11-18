@@ -231,4 +231,14 @@
   <data name="Function.Sandbox.LabDownloadFile.Description" xml:space="preserve"><value>Read a file from a running persistent JupyterLab workspace and return Base64 content.</value></data>
   <data name="Function.Sandbox.LabListFiles.Name" xml:space="preserve"><value>List Lab files</value></data>
   <data name="Function.Sandbox.LabListFiles.Description" xml:space="preserve"><value>List files in a running persistent JupyterLab workspace.</value></data>
+  <data name="Function.Sandbox.CreateNotebook.Name" xml:space="preserve"><value>Create Notebook</value></data>
+  <data name="Function.Sandbox.CreateNotebook.Description" xml:space="preserve"><value>Create a Python or C# .ipynb file in a running JupyterLab workspace.</value></data>
+  <data name="Function.Sandbox.UpdateAlias.Name" xml:space="preserve"><value>Update alias</value></data>
+  <data name="Function.Sandbox.UpdateAlias.Description" xml:space="preserve"><value>Set or clear the alias for a sandbox session.</value></data>
+  <data name="Function.Sandbox.Destroy.Name" xml:space="preserve"><value>Destroy sandbox</value></data>
+  <data name="Function.Sandbox.Destroy.Description" xml:space="preserve"><value>Stop and clean up the specified session.</value></data>
+  <data name="Function.Sandbox.DeleteRecord.Name" xml:space="preserve"><value>Delete sandbox record</value></data>
+  <data name="Function.Sandbox.DeleteRecord.Description" xml:space="preserve"><value>Permanently delete a stopped, expired, or fully cleaned session record.</value></data>
+  <data name="Function.Sandbox.UpdateTtl.Name" xml:space="preserve"><value>Update TTL</value></data>
+  <data name="Function.Sandbox.UpdateTtl.Description" xml:space="preserve"><value>Extend, shorten, or make the sandbox retention permanent.</value></data>
 </root>

@@ -361,11 +361,8 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender(
-        "创建 Notebook",
-        "在运行中的 JupyterLab 工作区创建 Python 或 C# .ipynb 文件",
-        typeof(Register),
-        AllowAiInvocation = true)]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.CreateNotebook.Name", "Function.Sandbox.CreateNotebook.Description",
+        typeof(Register), "Create Notebook", "Create a Python or C# .ipynb file in a running JupyterLab workspace.", AllowAiInvocation = true)]
     public async Task<StringAppResponse> LabCreateNotebook(Sandbox_LabCreateNotebookRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>
@@ -428,7 +425,8 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender("修改别名", "为沙箱会话设置或清除别名（留空清除）", typeof(Register))]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.UpdateAlias.Name", "Function.Sandbox.UpdateAlias.Description",
+        typeof(Register), "Update alias", "Set or clear the alias for a sandbox session.")]
     public async Task<StringAppResponse> UpdateAlias(Sandbox_UpdateAliasRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>
@@ -443,11 +441,8 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender(
-        "销毁沙箱",
-        "停止并清理指定会话",
-        typeof(Register),
-        AllowGlobalPivot = true)]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.Destroy.Name", "Function.Sandbox.Destroy.Description",
+        typeof(Register), "Destroy sandbox", "Stop and clean up the specified session.", AllowGlobalPivot = true)]
     public async Task<StringAppResponse> Destroy(Sandbox_SessionIdRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>
@@ -459,7 +454,8 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender("删除沙箱记录", "永久删除已停止、已过期或已清理完成的会话记录", typeof(Register))]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.DeleteRecord.Name", "Function.Sandbox.DeleteRecord.Description",
+        typeof(Register), "Delete sandbox record", "Permanently delete a stopped, expired, or fully cleaned session record.")]
     public async Task<StringAppResponse> DeleteRecord(Sandbox_SessionIdRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>
@@ -471,7 +467,8 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender("修改 TTL", "延长、缩短或设为永久保持", typeof(Register))]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.UpdateTtl.Name", "Function.Sandbox.UpdateTtl.Description",
+        typeof(Register), "Update TTL", "Extend, shorten, or make the sandbox retention permanent.")]
     public async Task<StringAppResponse> UpdateTtl(Sandbox_UpdateTtlRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>

@@ -231,4 +231,14 @@
   <data name="Function.Sandbox.LabDownloadFile.Description" xml:space="preserve"><value>実行中の永続 JupyterLab ワークスペースからファイルを読み取り、Base64 内容を返します。</value></data>
   <data name="Function.Sandbox.LabListFiles.Name" xml:space="preserve"><value>Lab ファイルを一覧表示</value></data>
   <data name="Function.Sandbox.LabListFiles.Description" xml:space="preserve"><value>実行中の永続 JupyterLab ワークスペースのファイルを一覧表示します。</value></data>
+  <data name="Function.Sandbox.CreateNotebook.Name" xml:space="preserve"><value>Notebook を作成</value></data>
+  <data name="Function.Sandbox.CreateNotebook.Description" xml:space="preserve"><value>実行中の JupyterLab ワークスペースに Python または C# の .ipynb ファイルを作成します。</value></data>
+  <data name="Function.Sandbox.UpdateAlias.Name" xml:space="preserve"><value>エイリアスを更新</value></data>
+  <data name="Function.Sandbox.UpdateAlias.Description" xml:space="preserve"><value>サンドボックスセッションのエイリアスを設定または削除します。</value></data>
+  <data name="Function.Sandbox.Destroy.Name" xml:space="preserve"><value>サンドボックスを破棄</value></data>
+  <data name="Function.Sandbox.Destroy.Description" xml:space="preserve"><value>指定したセッションを停止してクリーンアップします。</value></data>
+  <data name="Function.Sandbox.DeleteRecord.Name" xml:space="preserve"><value>サンドボックス記録を削除</value></data>
+  <data name="Function.Sandbox.DeleteRecord.Description" xml:space="preserve"><value>停止済み、期限切れ、または完全にクリーンアップ済みのセッション記録を完全に削除します。</value></data>
+  <data name="Function.Sandbox.UpdateTtl.Name" xml:space="preserve"><value>TTL を更新</value></data>
+  <data name="Function.Sandbox.UpdateTtl.Description" xml:space="preserve"><value>サンドボックスの保持期間を延長、短縮、または永久保持に変更します。</value></data>
 </root>
