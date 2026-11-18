@@ -880,4 +880,5 @@ Los archivos adjuntos solo proporcionan un índice; no significan que hayas leí
   <data name="Frontend.795" xml:space="preserve"><value>20% inferior</value></data>
   <data name="Frontend.796" xml:space="preserve"><value>Seleccionado: {0}</value></data>
   <data name="Frontend.797" xml:space="preserve"><value>El archivo está vacío o supera el límite de tamaño de la vista previa en línea.</value></data>
+  <data name="Frontend.663" xml:space="preserve"><value>El modelo seleccionado crea el prompt predeterminado de "PromptCatalyzer"; durante la optimización se puede elegir otro modelo.</value></data>
 </root>

@@ -1536,23 +1536,23 @@
         @*Empty-state notice.*@
         <div v-else class="compare-empty-state">
             <i class="el-icon-document-copy" style="font-size: 60px; color: #dcdfe6;"></i>
-            <p>请选择两个 Prompt 进行对比</p>
+            <p>{{ ncfST('Frontend.233') }}</p>
         </div>
         
         <div slot="footer" class="dialog-footer">
-            <el-button @@click="compareDialogVisible = false">关闭</el-button>
+            <el-button @@click="compareDialogVisible = false">{{ ncfST('Frontend.190') }}</el-button>
         </div>
     </el-dialog>
 
     @*Prompt optimization dialog.*@
-    <el-dialog title="AI 自动优化 Prompt（Agent）" :visible.sync="optimizeDialogVisible" width="50%" :append-to-body="true" :close-on-click-modal="!optimizing">
+    <el-dialog :title="ncfST('Frontend.234')" :visible.sync="optimizeDialogVisible" width="50%" :append-to-body="true" :close-on-click-modal="!optimizing">
         <div class="optimize-dialog-content">
-            <el-alert title="说明" type="info" description="优化由 Agents 模块中的 PromptCatalyzer 智能体通过多轮对话与工具调用完成；点击开始后请等待对话结束（可能需要数分钟），随后本页将自动选中新版本并可按需打靶、评分。" show-icon :closable="false" style="margin-bottom: 20px;">
+            <el-alert :title="ncfST('Frontend.235')" type="info" :description="ncfST('Frontend.236')" show-icon :closable="false" style="margin-bottom: 20px;">
             </el-alert>
             <el-alert v-if="optimizing && optimizeProgressText" :title="optimizeProgressText" type="warning" show-icon :closable="false" style="margin-bottom: 16px;">
             </el-alert>
             <el-alert v-if="optimizeErrorText"
-                      title="优化失败"
+                      :title="ncfST('Frontend.237')"
                       type="error"
                       :description="optimizeErrorText"
                       show-icon
@@ -1561,22 +1561,22 @@
                       style="margin-bottom: 16px; white-space: pre-wrap;">
             </el-alert>
             <el-form label-position="top">
-                <el-form-item label="优化需求描述">
-                    <el-input type="textarea" :rows="4" placeholder="例如：让回答更具创造性，或者是减少幻觉..." v-model="optimizeRequirement">
+                <el-form-item :label="ncfST('Frontend.238')">
+                    <el-input type="textarea" :rows="4" :placeholder="ncfST('Frontend.239')" v-model="optimizeRequirement">
                     </el-input>
                 </el-form-item>
                 
                 @* New options: automatic testing and AI scoring. *@
-                <el-form-item label="优化后处理">
+                <el-form-item :label="ncfST('Frontend.240')">
                     <el-checkbox v-model="autoShootAfterOptimize" style="display: block; margin-bottom: 10px;">
-                        <span style="font-weight: 500;">创建后立即打靶</span>
-                        <el-tooltip content="优化完成后自动执行一次打靶测试，验证新 Prompt 的效果" placement="top">
+                        <span style="font-weight: 500;">{{ ncfST('Frontend.241') }}</span>
+                        <el-tooltip :content="ncfST('Frontend.242')" placement="top">
                             <i class="el-icon-question" style="color: #909399; margin-left: 5px;"></i>
                         </el-tooltip>
                     </el-checkbox>
                     <el-checkbox v-model="autoAIGradeAfterShoot" :disabled="!autoShootAfterOptimize" style="margin-left: 20px;">
-                        <span style="font-weight: 500;">打靶后使用 AI 评分</span>
-                        <el-tooltip content="打靶完成后自动调用 AI 评分功能，快速获得质量反馈" placement="top">
+                        <span style="font-weight: 500;">{{ ncfST('Frontend.243') }}</span>
+                        <el-tooltip :content="ncfST('Frontend.244')" placement="top">
                             <i class="el-icon-question" style="color: #909399; margin-left: 5px;"></i>
                         </el-tooltip>
                     </el-checkbox>
@@ -1584,33 +1584,33 @@
             </el-form>
         </div>
         <span slot="footer" class="dialog-footer">
-            <el-button @@click="optimizeDialogVisible = false">取消</el-button>
-            <el-button type="primary" @@click="executeOptimize" :loading="optimizing" :disabled="optimizing">开始优化</el-button>
+            <el-button @@click="optimizeDialogVisible = false">{{ ncfST('Frontend.091') }}</el-button>
+            <el-button type="primary" @@click="executeOptimize" :loading="optimizing" :disabled="optimizing">{{ ncfST('Frontend.245') }}</el-button>
         </span>
     </el-dialog>
 
     @*PromptCatalyzer initialization dialog.*@
-    <el-dialog title="🚀 首次使用：初始化 Prompt 优化功能" 
+    <el-dialog :title="ncfST('Frontend.246')" 
                :visible.sync="promptCatalyzerInitVisible" 
                width="55%" 
                :close-on-click-modal="false"
                center>
         <div class="init-dialog-content">
-            <el-alert title="欢迎使用 AI 自动优化功能！" 
+            <el-alert :title="ncfST('Frontend.247')" 
                       type="info" 
                       show-icon 
                       :closable="false" 
                       style="margin-bottom: 20px;">
                 <template slot>
-                    <p style="margin: 5px 0;">首次使用需要初始化 <strong>PromptCatalyzer Agent</strong>。</p>
-                    <p style="margin: 5px 0;">请选择一个 AI Model 来驱动优化功能，系统将自动创建相关资源。</p>
+                    <p style="margin: 5px 0;">{{ ncfST('Frontend.248') }}</p>
+                    <p style="margin: 5px 0;">{{ ncfST('Frontend.249') }}</p>
                 </template>
             </el-alert>
             
             <el-form label-position="top">
-                <el-form-item label="选择 AI Model" required>
+                <el-form-item :label="ncfST('Frontend.250')" required>
                     <el-select v-model="selectedModelIdForInit" 
-                               placeholder="请选择 AI Model" 
+                               :placeholder="ncfST('Frontend.251')" 
                                style="width: 100%;"
                                :loading="loadingModels"
                                filterable>
@@ -1630,57 +1630,57 @@
                     </el-select>
                     <div style="margin-top: 10px; padding: 8px 12px; background-color: #f4f4f5; border-radius: 4px; font-size: 12px; color: #606266;">
                         <i class="el-icon-info" style="color: #409EFF; margin-right: 4px;"></i>
-                        <strong>提示：</strong>选择的 Model 将用于创建 "PromptCatalyzer" 默认 Prompt，之后可以在优化时选择其他 Model。
+                        <strong>{{ ncfST('Frontend.252') }}</strong>{{ ncfST('Frontend.663') }}
                     </div>
                 </el-form-item>
                 
-                <el-form-item label="默认参数预览" v-if="selectedModelIdForInit">
+                <el-form-item :label="ncfST('Frontend.253')" v-if="selectedModelIdForInit">
                     <el-descriptions :column="2" border size="small">
                         <el-descriptions-item label-class-name="desc-label">
                             <template slot="label">
-                                <el-tooltip content="控制输出的随机性：0.0-1.0，越低越精确，越高越创意" placement="top">
+                                <el-tooltip :content="ncfST('Frontend.254')" placement="top">
                                     <span>Temperature <i class="el-icon-question"></i></span>
                                 </el-tooltip>
                             </template>
                             <el-tag size="mini" type="success">0.7</el-tag>
-                            <span style="margin-left: 8px; color: #909399; font-size: 12px;">(平衡模式)</span>
+                            <span style="margin-left: 8px; color: #909399; font-size: 12px;">{{ ncfST('Frontend.255') }}</span>
                         </el-descriptions-item>
                         <el-descriptions-item label-class-name="desc-label">
                             <template slot="label">
-                                <el-tooltip content="核采样参数：0.0-1.0，控制词汇选择范围" placement="top">
+                                <el-tooltip :content="ncfST('Frontend.256')" placement="top">
                                     <span>TopP <i class="el-icon-question"></i></span>
                                 </el-tooltip>
                             </template>
                             <el-tag size="mini" type="success">0.9</el-tag>
-                            <span style="margin-left: 8px; color: #909399; font-size: 12px;">(高质量)</span>
+                            <span style="margin-left: 8px; color: #909399; font-size: 12px;">{{ ncfST('Frontend.257') }}</span>
                         </el-descriptions-item>
                         <el-descriptions-item label-class-name="desc-label">
                             <template slot="label">
-                                <el-tooltip content="生成的最大 token 数量，影响输出长度" placement="top">
+                                <el-tooltip :content="ncfST('Frontend.258')" placement="top">
                                     <span>MaxTokens <i class="el-icon-question"></i></span>
                                 </el-tooltip>
                             </template>
                             <el-tag size="mini" type="success">4000</el-tag>
-                            <span style="margin-left: 8px; color: #909399; font-size: 12px;">(标准长度)</span>
+                            <span style="margin-left: 8px; color: #909399; font-size: 12px;">{{ ncfST('Frontend.259') }}</span>
                         </el-descriptions-item>
                         <el-descriptions-item label-class-name="desc-label">
                             <template slot="label">
-                                <el-tooltip content="频率惩罚：-2.0 到 2.0，减少重复词汇" placement="top">
+                                <el-tooltip :content="ncfST('Frontend.260')" placement="top">
                                     <span>FrequencyPenalty <i class="el-icon-question"></i></span>
                                 </el-tooltip>
                             </template>
                             <el-tag size="mini" type="success">0</el-tag>
-                            <span style="margin-left: 8px; color: #909399; font-size: 12px;">(不惩罚)</span>
+                            <span style="margin-left: 8px; color: #909399; font-size: 12px;">{{ ncfST('Frontend.261') }}</span>
                         </el-descriptions-item>
                     </el-descriptions>
                     <div style="margin-top: 8px; font-size: 12px; color: #909399; text-align: center;">
-                        ℹ️ 这些是初始参数，创建后可以在 PromptRange 中调整
+                        {{ ncfST('Frontend.262') }}
                     </div>
                 </el-form-item>
             </el-form>
         </div>
         <span slot="footer" class="dialog-footer">
-            <el-button @@click="promptCatalyzerInitVisible = false" :disabled="initializing">取消</el-button>
+            <el-button @@click="promptCatalyzerInitVisible = false" :disabled="initializing">{{ ncfST('Frontend.091') }}</el-button>
             <el-button type="primary" 
                        @@click="executeInitialization" 
                        :loading="initializing"

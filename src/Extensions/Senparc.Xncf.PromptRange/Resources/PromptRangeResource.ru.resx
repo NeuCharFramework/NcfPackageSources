@@ -880,4 +880,5 @@
   <data name="Frontend.795" xml:space="preserve"><value>Нижние 20%</value></data>
   <data name="Frontend.796" xml:space="preserve"><value>Выбрано: {0}</value></data>
   <data name="Frontend.797" xml:space="preserve"><value>Файл пуст или превышает ограничение размера онлайн-просмотра.</value></data>
+  <data name="Frontend.663" xml:space="preserve"><value>Выбранная модель создаёт стандартный промпт «PromptCatalyzer»; во время оптимизации можно выбрать другую модель.</value></data>
 </root>

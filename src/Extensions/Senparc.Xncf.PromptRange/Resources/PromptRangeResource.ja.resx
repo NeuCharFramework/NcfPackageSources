@@ -880,4 +880,5 @@ workspace_write の Workspace 相対パスは空であってはなりません�
   <data name="Frontend.795" xml:space="preserve"><value>下位20%</value></data>
   <data name="Frontend.796" xml:space="preserve"><value>選択済み：{0}</value></data>
   <data name="Frontend.797" xml:space="preserve"><value>ファイルが空であるか、オンラインプレビューのサイズ制限を超えています。</value></data>
+  <data name="Frontend.663" xml:space="preserve"><value>選択したモデルで既定の「PromptCatalyzer」プロンプトを作成します。最適化中に別のモデルを選択できます。</value></data>
 </root>

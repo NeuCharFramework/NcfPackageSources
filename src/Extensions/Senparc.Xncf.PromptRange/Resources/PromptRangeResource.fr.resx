@@ -880,4 +880,5 @@ Les pièces jointes fournissent uniquement un index ; elles ne signifient pas qu
   <data name="Frontend.795" xml:space="preserve"><value>Derniers 20 %</value></data>
   <data name="Frontend.796" xml:space="preserve"><value>Sélectionné : {0}</value></data>
   <data name="Frontend.797" xml:space="preserve"><value>Le fichier est vide ou dépasse la limite de taille de l’aperçu en ligne.</value></data>
+  <data name="Frontend.663" xml:space="preserve"><value>Le modèle sélectionné crée le prompt "PromptCatalyzer" par défaut ; un autre modèle peut être choisi pendant l’optimisation.</value></data>
 </root>

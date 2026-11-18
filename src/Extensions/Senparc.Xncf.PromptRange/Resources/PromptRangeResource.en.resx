@@ -880,4 +880,5 @@ Attachments provide an index only; they do not mean that you have read the conte
   <data name="Frontend.795" xml:space="preserve"><value>Bottom 20%</value></data>
   <data name="Frontend.796" xml:space="preserve"><value>Selected: {0}</value></data>
   <data name="Frontend.797" xml:space="preserve"><value>The file is empty or exceeds the online preview size limit.</value></data>
+  <data name="Frontend.663" xml:space="preserve"><value>The selected model creates the default "PromptCatalyzer" prompt; another model can be selected during optimization.</value></data>
 </root>
