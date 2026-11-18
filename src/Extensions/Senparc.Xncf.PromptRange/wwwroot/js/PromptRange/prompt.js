@@ -6402,7 +6402,7 @@ var app = new Vue({
                                 }
                                 
                                 //Legacy comment translated to English.
-                                tooltipContent += `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 11px; color: #999;">💡 双击可快速选中此靶道</div>`
+                                tooltipContent += `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 11px; color: #999;">${ncfST('Frontend.470')}</div>`
                             }
                             
                             tooltip.innerHTML = tooltipContent
