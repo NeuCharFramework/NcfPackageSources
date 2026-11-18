@@ -137,8 +137,8 @@
                                     <button type="button" class="lowerHalfbox_operation"
                                         @@click="handleEditDrawerOpenBtn('drawerAgent',aitem)">{{ncfST('Studio.Edit')}}</button>
                                     <button type="button" class="lowerHalfbox_operation lowerHalfbox_operation--a2a"
-                                        :title="aitem.hasPublishedA2A ? '管理 A2A 发布配置' : '发布为 A2A'"
-                                        @@click="openPublishedA2AEditor(aitem)">{{ aitem.hasPublishedA2A ? '管理 A2A' : '发布 A2A' }}</button>
+                                        :title="aitem.hasPublishedA2A ? ncfST('Frontend.499') : ncfST('Frontend.500')"
+                                        @@click="openPublishedA2AEditor(aitem)">{{ aitem.hasPublishedA2A ? ncfST('Frontend.499') : ncfST('Frontend.500') }}</button>
                                     <button type="button" class="lowerHalfbox_operation" title="查看该智能体关联的任务"
                                         @@click="handleAgentView(aitem,aindex)">{{ncfST('Frontend.442')}}</button>
                                 </div>
@@ -146,7 +146,7 @@
                             <div v-for="fitem in fillCardNum" :key="fitem" style="flex-grow: 1;flex-basis: 315px;">
                             </div>
                             <div v-if="agentList.length === 0" class="df-wn flex-ac flex-jc emptyData"
-                                style="flex-grow: 1;font-size: 14px;color: #5e6d82;margin-top:150px;">暂无数据</div>
+                                style="flex-grow: 1;font-size: 14px;color: #5e6d82;margin-top:150px;">{{ ncfST('Frontend.011') }}</div>
                         </div>
 
                     </el-scrollbar>
@@ -157,7 +157,7 @@
                         <div class="agent-statistics-toolbar">
                             <div>
                                 <div class="agent-statistics-toolbar__title">{{ncfST('Frontend.430')}}</div>
-                                <div class="agent-statistics-toolbar__hint">方块面积表示所选指标的相对大小；点击方块可直接编辑对应智能体。</div>
+                                <div class="agent-statistics-toolbar__hint">{{ ncfST('Frontend.426') }}</div>
                             </div>
                             <div class="agent-statistics-toolbar__actions">
                                 <el-select v-model="agentStatisticMetric" size="mini" style="width:150px;">
@@ -169,7 +169,7 @@
                         </div>
                         <div class="agent-statistics-summary">
                             <div class="agent-statistics-summary__item">
-                                <span>本地 Agents</span>
+                                <span>{{ ncfST('Frontend.437') }}</span>
                                 <strong>{{ formatUsageCount(agentList.length) }}</strong>
                             </div>
                             <div class="agent-statistics-summary__item">
@@ -191,7 +191,7 @@
                                     <span v-if="tile.agent.hasPublishedA2A" class="agent-statistics-tile__a2a">A2A</span>
                                     <span class="agent-statistics-tile__name">{{ tile.agent.name }}</span>
                                     <span class="agent-statistics-tile__value">{{ formatAgentStatisticValue(tile.value) }} {{ agentStatisticMetricUnit }}</span>
-                                    <span class="agent-statistics-tile__action"><i class="el-icon-edit" aria-hidden="true"></i> 编辑</span>
+                                    <span class="agent-statistics-tile__action"><i class="el-icon-edit" aria-hidden="true"></i> {{ ncfST('Frontend.016') }}</span>
                                 </button>
                             </div>
                             <div v-else class="agent-statistics-empty">{{ncfST('Frontend.011')}}</div>
@@ -216,86 +216,86 @@
                         </div>
                         <div class="df-wn flex-dc flex-jsb agentDetails-head-item2">
                             <div class="df-wn flex-ac flex-js itemBox">
-                                <span class="label" style="width: 80px;">参与组</span>
+                                <span class="label" style="width: 80px;">{{ ncfST('Frontend.032') }}</span>
                                 <span class="numerical">{{ agentDetails.participationGroup || 0 }}</span>
                             </div>
                             <div class="df-wn flex-ac flex-js itemBox">
-                                <span class="label" style="width: 80px;">参与任务</span>
+                                <span class="label" style="width: 80px;">{{ ncfST('Frontend.033') }}</span>
                                 <span class="numerical">{{ agentDetails.participationInTasks || 0 }}</span>
                             </div>
                             <div class="df-wn flex-ac flex-js itemBox">
-                                <span class="label" style="width: 80px;">运行中任务</span>
+                                <span class="label" style="width: 80px;">{{ ncfST('Frontend.034') }}</span>
                                 <span class="numerical">{{ agentDetails.agentTemplateDto.chattingCount || 0 }}</span>
                             </div>
                         </div>
                         <div class="df-wn flex-dc flex-jsb agentDetails-head-item3">
                             <div class="df-wn flex-ac flex-js itemBox">
-                                <span class="label">靶场:</span>
+                                <span class="label">{{ ncfST('Frontend.035') }}</span>
                                 <span class="value">
                                     {{ agentDetails.promptRangeDto ? handlePromptShowName('1',agentDetails) : '手动 Prompt' }}
                                 </span>
                             </div>
                             <div class="df-wn flex-ac flex-js itemBox">
-                                <span class="label">靶道:</span>
+                                <span class="label">{{ ncfST('Frontend.036') }}</span>
                                 <span class="value">
                                     {{ agentDetails.promptItemDto ? handlePromptShowName('2',agentDetails) : '--' }}
                                 </span>
                                 <span v-if="agentDetails.promptItemDto" class="btnText"
-                                    @@click="jumpPromptRange('promptRange',agentDetails.promptItemDto)">打靶</span>
+                                    @@click="jumpPromptRange('promptRange',agentDetails.promptItemDto)">{{ ncfST('Frontend.037') }}</span>
                             </div>
                             <div class="df-wn flex-ac flex-js itemBox">
-                                <span class="label">模型:</span>
+                                <span class="label">{{ ncfST('Frontend.038') }}</span>
                                 <span class="value">{{ agentDetails.aiModelDto ? agentDetails.aiModelDto.deploymentName
                                     : '' }}</span>
                                 <span class="btnText"
-                                    @@click="jumpPromptRange('model',agentDetails.aiModelDto)">管理AI模型</span>
+                                    @@click="jumpPromptRange('model',agentDetails.aiModelDto)">{{ ncfST('Frontend.039') }}</span>
                             </div>
                         </div>
                         <div class="df-wn flex-dc flex-jsb agentDetails-head-item4">
                             <div class="df-wn flex-ac flex-js itemBox">
-                                <span class="label">模型参数</span>
+                                <span class="label">{{ ncfST('Frontend.040') }}</span>
                                 <span class="btnText"
-                                    @@click="jumpPromptRange('modelParameter',agentDetails.promptItemDto)">详情</span>
+                                    @@click="jumpPromptRange('modelParameter',agentDetails.promptItemDto)">{{ ncfST('Frontend.017') }}</span>
                             </div>
                             <div class="df-wn flex-ac flex-js itemBox">
-                                <span class="label">模型评分:</span>
+                                <span class="label">{{ ncfST('Frontend.041') }}</span>
                                 <span class="value">{{ agentDetails.promptItemDto ?
                                     agentDetails.promptItemDto.evalAvgScore : '' }}</span>
                             </div>
                             <div class="df-wn flex-ac flex-js itemBox">
-                                <span class="label">状态:</span>
+                                <span class="label">{{ ncfST('Frontend.042') }}</span>
                                 <span class="value">{{ getStatusText(agentDetails,'1') }}</span>
                                 <span class="btnText"
                                     :style="{'color': agentDetails.agentTemplateDto.enable ? '#F56C6C' : '#2a82e4' }"
                                     @@click="setAgentState('stop', agentDetails)">{{
-                                    agentDetails.agentTemplateDto.enable ? '停用' : '启用' }}</span>
+                                    agentDetails.agentTemplateDto.enable ? ncfST('Frontend.043') : ncfST('Frontend.044') }}</span>
                             </div>
                         </div>
                     </div>
                     <div class="agentDetails-statistics">
                         <span class="agentDetails-knowledgeBase">
-                            <span>绑定知识库：</span>
+                            <span>{{ ncfST('Frontend.465') }}</span>
                             <el-button v-if="agentDetails.agentTemplateDto.knowledgeBaseId" type="text" size="mini"
                                 @@click="openKnowledgeBase(agentDetails.agentTemplateDto.knowledgeBaseId, 'materials')">
-                                {{ agentDetails.agentTemplateDto.knowledgeBaseName || '知识库' }}
+                                {{ agentDetails.agentTemplateDto.knowledgeBaseName || ncfST('Frontend.498') }}
                             </el-button>
-                            <span v-else>未绑定</span>
+                            <span v-else>{{ ncfST('Frontend.434') }}</span>
                             <el-tag v-if="agentDetails.agentTemplateDto.knowledgeBaseId" size="mini"
                                 :type="getKnowledgeBaseBindingInfo(agentDetails.agentTemplateDto.knowledgeBaseId).type">
                                 {{ getKnowledgeBaseBindingInfo(agentDetails.agentTemplateDto.knowledgeBaseId).text }}
                             </el-tag>
                             <el-button v-if="agentDetails.agentTemplateDto.knowledgeBaseId" type="text" size="mini"
-                                @@click="openKnowledgeBase(agentDetails.agentTemplateDto.knowledgeBaseId, 'materials')">资料</el-button>
+                                @@click="openKnowledgeBase(agentDetails.agentTemplateDto.knowledgeBaseId, 'materials')">{{ ncfST('Frontend.477') }}</el-button>
                             <el-button v-if="agentDetails.agentTemplateDto.knowledgeBaseId" type="text" size="mini"
-                                @@click="openKnowledgeBase(agentDetails.agentTemplateDto.knowledgeBaseId, 'edit')">设置</el-button>
+                                @@click="openKnowledgeBase(agentDetails.agentTemplateDto.knowledgeBaseId, 'edit')">{{ ncfST('Frontend.473') }}</el-button>
                         </span>
-                        <span>完成对话轮数：{{ formatUsageCount(agentDetails.agentTemplateDto.completedConversationRounds) }}</span>
-                        <span>完成任务：{{ formatUsageCount(agentDetails.agentTemplateDto.completedTaskCount) }}</span>
-                        <span>输入 Token：{{ formatUsageCount(agentDetails.agentTemplateDto.promptTokens) }}</span>
-                        <span>输出 Token：{{ formatUsageCount(agentDetails.agentTemplateDto.completionTokens) }}</span>
-                        <span>总 Token：{{ formatUsageCount(agentDetails.agentTemplateDto.totalTokens) }}</span>
-                        <span>平均响应：{{ formatResponseMilliseconds(agentDetails.agentTemplateDto.averageResponseMilliseconds) }}</span>
-                        <span>最后活动：{{ formatActivityTime(agentDetails.agentTemplateDto.lastActiveTime) }}</span>
+                        <span>{{ ncfST('Frontend.503') }}{{ formatUsageCount(agentDetails.agentTemplateDto.completedConversationRounds) }}</span>
+                        <span>{{ ncfST('Frontend.504') }}{{ formatUsageCount(agentDetails.agentTemplateDto.completedTaskCount) }}</span>
+                        <span>{{ ncfST('Frontend.505') }}{{ formatUsageCount(agentDetails.agentTemplateDto.promptTokens) }}</span>
+                        <span>{{ ncfST('Frontend.506') }}{{ formatUsageCount(agentDetails.agentTemplateDto.completionTokens) }}</span>
+                        <span>{{ ncfST('Frontend.507') }}{{ formatUsageCount(agentDetails.agentTemplateDto.totalTokens) }}</span>
+                        <span>{{ ncfST('Frontend.508') }}{{ formatResponseMilliseconds(agentDetails.agentTemplateDto.averageResponseMilliseconds) }}</span>
+                        <span>{{ ncfST('Frontend.509') }}{{ formatActivityTime(agentDetails.agentTemplateDto.lastActiveTime) }}</span>
                     </div>
                     <div class="df-wn agentDetails-main">
                         <div class="agentDetails-main-left">
