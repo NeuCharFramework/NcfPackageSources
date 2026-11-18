@@ -2849,7 +2849,7 @@
                             var editing = !!self.tagCategoryDialog.editing;
                             var currentId = form.id || '';
                             if (!name) {
-                                self.$message.warning('请输入分类名称');
+                                self.$message.warning(ncfST('Frontend.161'));
                                 return;
                             }
                             if (!self.tagManager) {
@@ -2860,7 +2860,7 @@
                                 });
                             }
                             if (form.parentId && form.parentId === currentId) {
-                                self.$message.warning('所属分类不能选择自己');
+                                self.$message.warning(ncfST('Frontend.260'));
                                 return;
                             }
                             var exists = (self.tagManager.list || []).some(function (row) {
@@ -2920,16 +2920,16 @@
                             var editing = !!self.tagCreateDialog.editing;
                             var currentId = form.id || '';
                             if (!name) {
-                                self.$message.warning('请输入标签名称');
+                                self.$message.warning(ncfST('Frontend.163'));
                                 return;
                             }
                             if (!categoryId) {
-                                self.$message.warning('请选择所属分类');
+                                self.$message.warning(ncfST('Frontend.171'));
                                 return;
                             }
                             var category = (self.tagManager.list || []).find(function (row) { return row.id === categoryId; });
                             if (!category) {
-                                self.$message.warning('所属分类不存在，请重新选择');
+                                self.$message.warning(ncfST('Frontend.262'));
                                 return;
                             }
                             if (!Array.isArray(self.tagManager.tags)) self.tagManager.tags = [];
