@@ -241,4 +241,16 @@
   <data name="Function.Sandbox.DeleteRecord.Description" xml:space="preserve"><value>Permanently delete a stopped, expired, or fully cleaned session record.</value></data>
   <data name="Function.Sandbox.UpdateTtl.Name" xml:space="preserve"><value>Update TTL</value></data>
   <data name="Function.Sandbox.UpdateTtl.Description" xml:space="preserve"><value>Extend, shorten, or make the sandbox retention permanent.</value></data>
+  <data name="Parameter.Sandbox.Template" xml:space="preserve"><value>Template</value></data>
+  <data name="Parameter.Sandbox.Template.Help" xml:space="preserve"><value>Select a sandbox template (one dropdown item is enough).</value></data>
+  <data name="Parameter.Sandbox.Runtime" xml:space="preserve"><value>Runtime</value></data>
+  <data name="Parameter.Sandbox.Runtime.Help" xml:space="preserve"><value>Use Docker for the first release; Wasm is not available yet.</value></data>
+  <data name="Parameter.Sandbox.TtlMinutes" xml:space="preserve"><value>TTL (minutes)</value></data>
+  <data name="Parameter.Sandbox.TtlMinutes.Help" xml:space="preserve"><value>Leave empty to use the template default; positive integers are limited to 240 minutes.</value></data>
+  <data name="Parameter.Sandbox.KeepAlive" xml:space="preserve"><value>Keep alive</value></data>
+  <data name="Parameter.Sandbox.KeepAlive.Help" xml:space="preserve"><value>When checked, the session does not expire automatically and must be destroyed by an administrator.</value></data>
+  <data name="Parameter.Sandbox.Alias" xml:space="preserve"><value>Alias</value></data>
+  <data name="Parameter.Sandbox.Alias.Help" xml:space="preserve"><value>Optional session identifier shown in the list; maximum 128 characters.</value></data>
+  <data name="Parameter.Sandbox.ExtraPortMappings" xml:space="preserve"><value>Additional port mappings</value></data>
+  <data name="Parameter.Sandbox.ExtraPortMappings.Help" xml:space="preserve"><value>Optional and valid only for JupyterLab templates; separate multiple mappings with semicolons. Maximum 8 entries.</value></data>
 </root>

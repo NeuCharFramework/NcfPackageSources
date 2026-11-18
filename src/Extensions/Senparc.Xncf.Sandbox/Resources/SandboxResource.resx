@@ -240,4 +240,16 @@
   <data name="Function.Sandbox.DeleteRecord.Description" xml:space="preserve"><value>永久删除已停止、已过期或已清理完成的会话记录。</value></data>
   <data name="Function.Sandbox.UpdateTtl.Name" xml:space="preserve"><value>修改 TTL</value></data>
   <data name="Function.Sandbox.UpdateTtl.Description" xml:space="preserve"><value>延长、缩短或设为永久保持。</value></data>
+  <data name="Parameter.Sandbox.Template" xml:space="preserve"><value>模板</value></data>
+  <data name="Parameter.Sandbox.Template.Help" xml:space="preserve"><value>选择沙箱模板（下拉一项即可）。</value></data>
+  <data name="Parameter.Sandbox.Runtime" xml:space="preserve"><value>运行时</value></data>
+  <data name="Parameter.Sandbox.Runtime.Help" xml:space="preserve"><value>一期请选 Docker；Wasm 尚未可用。</value></data>
+  <data name="Parameter.Sandbox.TtlMinutes" xml:space="preserve"><value>TTL（分钟）</value></data>
+  <data name="Parameter.Sandbox.TtlMinutes.Help" xml:space="preserve"><value>留空时保持模板当前默认值；正整数最多 240 分钟。</value></data>
+  <data name="Parameter.Sandbox.KeepAlive" xml:space="preserve"><value>永久保持</value></data>
+  <data name="Parameter.Sandbox.KeepAlive.Help" xml:space="preserve"><value>勾选后不自动过期；须由管理员手动销毁。</value></data>
+  <data name="Parameter.Sandbox.Alias" xml:space="preserve"><value>别名</value></data>
+  <data name="Parameter.Sandbox.Alias.Help" xml:space="preserve"><value>可选，用于在列表中识别会话，最长 128 个字符。</value></data>
+  <data name="Parameter.Sandbox.ExtraPortMappings" xml:space="preserve"><value>附加端口映射</value></data>
+  <data name="Parameter.Sandbox.ExtraPortMappings.Help" xml:space="preserve"><value>可选，仅 JupyterLab 模板有效；多条以分号分隔，最多 8 条。</value></data>
 </root>

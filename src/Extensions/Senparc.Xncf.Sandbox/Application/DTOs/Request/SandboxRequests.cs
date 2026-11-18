@@ -37,11 +37,13 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.FunctionRenders;
 using Senparc.Ncf.XncfBase.Functions;
 using Senparc.Xncf.Sandbox.Abstractions;
 using Senparc.Xncf.Sandbox.Domain.Services;
+using Senparc.Xncf.Sandbox;
 using Senparc.Ncf.XncfBase.Functions.Files;
 
 namespace Senparc.Xncf.Sandbox.Application.DTOs.Request;
@@ -49,7 +51,7 @@ namespace Senparc.Xncf.Sandbox.Application.DTOs.Request;
 public class Sandbox_CreateRequest : FunctionAppRequestBase
 {
     [Required]
-    [Description("模板||选择沙箱模板（下拉一项即可）")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.Template", "Parameter.Sandbox.Template.Help")]
     [FunctionParameterUi(ParameterType.DropDownList, nameof(TemplateOptions))]
     public string TemplateKey { get; set; } = string.Empty;
 
@@ -66,7 +68,7 @@ public class Sandbox_CreateRequest : FunctionAppRequestBase
         new SelectionItem(SandboxTemplateKeys.JupyterCsharp, "JupyterLab C#", "交互式 C# Notebook（需先构建/配置镜像）")
     });
 
-    [Description("运行时||一期请选 Docker；Wasm 尚未可用")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.Runtime", "Parameter.Sandbox.Runtime.Help")]
     [FunctionParameterUi(ParameterType.DropDownList, nameof(RuntimeOptions))]
     public string RuntimeKind { get; set; } = nameof(SandboxRuntimeKind.Docker);
 
@@ -78,18 +80,18 @@ public class Sandbox_CreateRequest : FunctionAppRequestBase
         new SelectionItem(nameof(SandboxRuntimeKind.Wasm), "Wasm (Stub)", "一期占位，尚未可用")
     });
 
-    [Description("TTL（分钟）||留空时保持模板当前默认值；正整数最多 240 分钟")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.TtlMinutes", "Parameter.Sandbox.TtlMinutes.Help")]
     public int? TtlMinutes { get; set; }
 
-    [Description("永久保持||勾选后不自动过期；须由管理员手动销毁")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.KeepAlive", "Parameter.Sandbox.KeepAlive.Help")]
     public bool KeepAlive { get; set; }
 
     [MaxLength(128)]
-    [Description("别名||可选，用于在列表中识别会话，最长 128 个字符")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.Alias", "Parameter.Sandbox.Alias.Help")]
     public string Alias { get; set; } = string.Empty;
 
     [MaxLength(512)]
-    [Description("附加端口映射||可选，仅 JupyterLab 模板有效；多条以分号分隔：3000（自动 loopback 宿主端口）/ 9000:3000（指定 loopback）/ *:3000（自动外部端口）/ *:9000:3000（指定外部端口），最多 8 条")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.ExtraPortMappings", "Parameter.Sandbox.ExtraPortMappings.Help")]
     public string ExtraPortMappings { get; set; } = string.Empty;
 }
 
