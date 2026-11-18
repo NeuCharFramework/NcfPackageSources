@@ -62,7 +62,7 @@ var AgentsAppMethodsGroupStartEditor = {
           `/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${requestedGroupId}`)
         const data = response?.data ?? {}
         if (!data.success) {
-          throw new Error(data.errorMessage || data.data || ncfST('加载群组成员失败'))
+          throw new Error(data.errorMessage || data.data || ncfST('Frontend.525'))
         }
         if (Number(this.groupStartForm.chatGroupId) === requestedGroupId) {
           this.groupStartParticipants = this.buildGroupStartParticipants(data.data || {})
@@ -75,7 +75,7 @@ var AgentsAppMethodsGroupStartEditor = {
       } catch (error) {
         console.warn('loadGroupStartParticipants failed', error)
         if (Number(this.groupStartForm.chatGroupId) === requestedGroupId) {
-          this.$message.warning(ncfST('无法刷新完整组员列表，当前仅显示已加载的组员'))
+          this.$message.warning(ncfST('Frontend.526'))
         }
       } finally {
         if (Number(this.groupStartForm.chatGroupId) === requestedGroupId) {

@@ -314,12 +314,12 @@ var AgentsAppMethodsRemoteAgent = {
         const results = await this.testRemoteAgentConnections([participant?.id], { silent: true })
         const result = results[0]
         if (result?.success) {
-          this.$message.success(result.message || 'A2A Agent Card 连接成功')
+          this.$message.success(result.message || ncfST('Frontend.544'))
         } else {
-          this.$message.error(result?.message || '连接测试失败')
+          this.$message.error(result?.message || ncfST('Frontend.533'))
         }
       } catch (err) {
-        this.$message.error(err?.message || '连接测试失败')
+        this.$message.error(err?.message || ncfST('Frontend.533'))
       }
     },
     async setRemoteAgentEnable(item, enable) {
