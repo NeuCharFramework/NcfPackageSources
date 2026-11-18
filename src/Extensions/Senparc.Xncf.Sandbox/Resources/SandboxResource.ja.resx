@@ -259,4 +259,6 @@
   <data name="Frontend.115" xml:space="preserve"><value>インタラクティブ C# Notebook（先にイメージの構築・設定が必要）</value></data>
   <data name="Frontend.116" xml:space="preserve"><value>ローカル Docker が必要</value></data>
   <data name="Frontend.117" xml:space="preserve"><value>初回リリース用のプレースホルダー（まだ利用できません）</value></data>
+  <data name="Function.Sandbox.LabUploadFiles.Name" xml:space="preserve"><value>Lab ファイルを一括アップロード</value></data>
+  <data name="Function.Sandbox.LabUploadFiles.Description" xml:space="preserve"><value>複数のアップロード済みファイルをストリームで実行中の永続 JupyterLab ワークスペースに書き込みます。</value></data>
 </root>

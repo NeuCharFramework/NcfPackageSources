@@ -259,4 +259,6 @@
   <data name="Frontend.115" xml:space="preserve"><value>Interactive C# Notebook (image must be built/configured first)</value></data>
   <data name="Frontend.116" xml:space="preserve"><value>Requires local Docker</value></data>
   <data name="Frontend.117" xml:space="preserve"><value>Placeholder for the first release; not available yet</value></data>
+  <data name="Function.Sandbox.LabUploadFiles.Name" xml:space="preserve"><value>Upload Lab files</value></data>
+  <data name="Function.Sandbox.LabUploadFiles.Description" xml:space="preserve"><value>Write multiple uploaded files as streams into a running persistent JupyterLab workspace.</value></data>
 </root>

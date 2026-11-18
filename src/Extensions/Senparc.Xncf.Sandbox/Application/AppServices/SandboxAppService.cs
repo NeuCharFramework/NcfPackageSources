@@ -221,7 +221,8 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender("批量上传 Lab 文件", "把多个已上传文件以流方式写入运行中的持久化 JupyterLab 工作区", typeof(Register), AllowAiInvocation = true)]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.LabUploadFiles.Name", "Function.Sandbox.LabUploadFiles.Description",
+        typeof(Register), "Upload Lab files", "Write multiple uploaded files into a running persistent JupyterLab workspace.", AllowAiInvocation = true)]
     public async Task<StringAppResponse> LabUploadFiles(Sandbox_LabUploadFilesRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>

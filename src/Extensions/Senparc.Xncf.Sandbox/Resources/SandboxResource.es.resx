@@ -259,4 +259,6 @@
   <data name="Frontend.115" xml:space="preserve"><value>Notebook C# interactivo (primero hay que crear/configurar la imagen)</value></data>
   <data name="Frontend.116" xml:space="preserve"><value>Requiere Docker local</value></data>
   <data name="Frontend.117" xml:space="preserve"><value>Marcador de la primera versión; todavía no disponible</value></data>
+  <data name="Function.Sandbox.LabUploadFiles.Name" xml:space="preserve"><value>Subir archivos de Lab</value></data>
+  <data name="Function.Sandbox.LabUploadFiles.Description" xml:space="preserve"><value>Escribe varios archivos subidos como flujos en un espacio JupyterLab persistente en ejecución.</value></data>
 </root>

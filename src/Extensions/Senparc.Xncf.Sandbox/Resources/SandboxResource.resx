@@ -258,4 +258,6 @@
   <data name="Frontend.115" xml:space="preserve"><value>交互式 C# Notebook（需先构建/配置镜像）</value></data>
   <data name="Frontend.116" xml:space="preserve"><value>需要本机 Docker</value></data>
   <data name="Frontend.117" xml:space="preserve"><value>一期占位，尚未可用</value></data>
+  <data name="Function.Sandbox.LabUploadFiles.Name" xml:space="preserve"><value>批量上传 Lab 文件</value></data>
+  <data name="Function.Sandbox.LabUploadFiles.Description" xml:space="preserve"><value>把多个已上传文件以流方式写入运行中的持久化 JupyterLab 工作区。</value></data>
 </root>

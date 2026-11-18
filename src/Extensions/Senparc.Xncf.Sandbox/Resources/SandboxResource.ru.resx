@@ -259,4 +259,6 @@
   <data name="Frontend.115" xml:space="preserve"><value>Интерактивный C# Notebook (сначала нужно собрать/настроить образ)</value></data>
   <data name="Frontend.116" xml:space="preserve"><value>Требуется локальный Docker</value></data>
   <data name="Frontend.117" xml:space="preserve"><value>Заполнитель первой версии; пока недоступно</value></data>
+  <data name="Function.Sandbox.LabUploadFiles.Name" xml:space="preserve"><value>Загрузить файлы Lab</value></data>
+  <data name="Function.Sandbox.LabUploadFiles.Description" xml:space="preserve"><value>Записывает несколько загруженных файлов потоково в работающее постоянное пространство JupyterLab.</value></data>
 </root>
