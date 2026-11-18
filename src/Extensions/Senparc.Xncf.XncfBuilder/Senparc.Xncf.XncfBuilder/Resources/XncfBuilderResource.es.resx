@@ -507,6 +507,54 @@
   <data name="Frontend.041" xml:space="preserve"><value>No hay tareas de desarrollo aislado</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.042" xml:space="preserve"><value>Última actualización: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.043" xml:space="preserve"><value>Cada tarea valida las referencias del host, realiza una compilación aislada, inicia una nueva vista previa, ejecuta una comprobación de salud y reemplaza la vista previa de forma atómica. La vista previa actual permanece disponible hasta que la nueva supere sus comprobaciones.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.044" xml:space="preserve"><value>Abrir</value></data>
+  <data name="Frontend.045" xml:space="preserve"><value>Detener</value></data>
+  <data name="Frontend.046" xml:space="preserve"><value>Tareas de desarrollo aislado / vista previa de Sandbox</value></data>
+  <data name="Frontend.047" xml:space="preserve"><value>La IA solo puede escribir en el espacio aislado; aplicar cambios requiere una frase de confirmación del administrador.</value></data>
+  <data name="Frontend.048" xml:space="preserve"><value>No hay tareas de desarrollo aislado</value></data>
+  <data name="Frontend.049" xml:space="preserve"><value>Módulo</value></data>
+  <data name="Frontend.050" xml:space="preserve"><value>Modo / etapa</value></data>
+  <data name="Frontend.051" xml:space="preserve"><value>Estado y diferencias</value></data>
+  <data name="Frontend.052" xml:space="preserve"><value>Aún no se ha generado el resumen de diferencias</value></data>
+  <data name="Frontend.053" xml:space="preserve"><value>Ruta / Sandbox</value></data>
+  <data name="Frontend.054" xml:space="preserve"><value>Objetivo:</value></data>
+  <data name="Frontend.055" xml:space="preserve"><value>Aislado:</value></data>
+  <data name="Frontend.056" xml:space="preserve"><value>Sandbox:</value></data>
+  <data name="Frontend.057" xml:space="preserve"><value>Abrir vista previa de Sandbox</value></data>
+  <data name="Frontend.058" xml:space="preserve"><value>Acciones</value></data>
+  <data name="Frontend.059" xml:space="preserve"><value>Integrar manualmente</value></data>
+  <data name="Frontend.060" xml:space="preserve"><value>Descartar</value></data>
+  <data name="Frontend.061" xml:space="preserve"><value>Después de generar o modificar el código fuente, usa «Iniciar vista previa XNCF aislada» para entrar en esta cola; la huella del código demuestra la instantánea exacta usada por la compilación.</value></data>
+  <data name="Frontend.062" xml:space="preserve"><value>No se pudo leer el estado.</value></data>
+  <data name="Frontend.063" xml:space="preserve"><value>Sin salida.</value></data>
+  <data name="Frontend.064" xml:space="preserve"><value>No se pudieron leer los registros.</value></data>
+  <data name="Frontend.065" xml:space="preserve"><value>Detener vista previa</value></data>
+  <data name="Frontend.066" xml:space="preserve"><value>Cancelar</value></data>
+  <data name="Frontend.067" xml:space="preserve"><value>No se pudo detener la vista previa.</value></data>
+  <data name="Frontend.068" xml:space="preserve"><value>Integrar manualmente el módulo XNCF</value></data>
+  <data name="Frontend.069" xml:space="preserve"><value>Integrar</value></data>
+  <data name="Frontend.070" xml:space="preserve"><value>La frase de confirmación debe coincidir exactamente: {0}</value></data>
+  <data name="Frontend.071" xml:space="preserve"><value>Error de integración.</value></data>
+  <data name="Frontend.072" xml:space="preserve"><value>Descartar tarea de desarrollo aislado</value></data>
+  <data name="Frontend.073" xml:space="preserve"><value>No se pudo descartar.</value></data>
+  <data name="Frontend.074" xml:space="preserve"><value>Módulo nuevo</value></data>
+  <data name="Frontend.075" xml:space="preserve"><value>Modificar módulo existente</value></data>
+  <data name="Frontend.076" xml:space="preserve"><value>Tomando instantánea</value></data>
+  <data name="Frontend.077" xml:space="preserve"><value>Editable</value></data>
+  <data name="Frontend.078" xml:space="preserve"><value>Validando</value></data>
+  <data name="Frontend.079" xml:space="preserve"><value>Vista previa de Sandbox</value></data>
+  <data name="Frontend.080" xml:space="preserve"><value>Pendiente de revisión</value></data>
+  <data name="Frontend.081" xml:space="preserve"><value>Pendiente de integración manual</value></data>
+  <data name="Frontend.082" xml:space="preserve"><value>Integrado</value></data>
+  <data name="Frontend.083" xml:space="preserve"><value>Descartado</value></data>
+  <data name="Frontend.084" xml:space="preserve"><value>Fallido</value></data>
+  <data name="Frontend.085" xml:space="preserve"><value>Desconocido</value></data>
+  <data name="Frontend.086" xml:space="preserve"><value>No creado</value></data>
+  <data name="Frontend.087" xml:space="preserve"><value> leyendo la salida reciente…</value></data>
+  <data name="Frontend.088" xml:space="preserve"><value>¿Detener la tarea de vista previa de {0}?</value></data>
+  <data name="Frontend.089" xml:space="preserve"><value>Revisa primero el espacio aislado, las diferencias y la vista previa de Sandbox. Introduce {0} para escribir las diferencias controladas en el código objetivo.</value></data>
+  <data name="Frontend.090" xml:space="preserve"><value>Esto detendrá la vista previa de Sandbox relacionada y eliminará el espacio aislado sin cambiar el código objetivo. ¿Descartar {0}?</value></data>
+  <data name="Frontend.091" xml:space="preserve"><value> Motivo: </value></data>
   <data name="Function.XncfBuilder.Development.Create.Name" xml:space="preserve"><value>Crear tarea de desarrollo XNCF aislada</value></data>
   <data name="Function.XncfBuilder.Development.Create.Description" xml:space="preserve"><value>Crea una instantánea del código en un espacio aislado. Los módulos nuevos usan la plantilla local instalada; los existentes se copian antes de modificarse. Nunca se escribe en el código objetivo.</value></data>
   <data name="Function.XncfBuilder.Development.Read.Name" xml:space="preserve"><value>Leer archivo XNCF aislado</value></data>

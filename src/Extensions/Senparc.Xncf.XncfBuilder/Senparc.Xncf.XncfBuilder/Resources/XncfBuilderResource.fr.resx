@@ -507,6 +507,54 @@
   <data name="Frontend.041" xml:space="preserve"><value>Aucune tâche de développement isolé</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.042" xml:space="preserve"><value>Dernière mise à jour : {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.043" xml:space="preserve"><value>Chaque tâche valide les références de l'hôte, effectue une compilation isolée, démarre une nouvelle prévisualisation, exécute un contrôle de santé et remplace la prévisualisation de manière atomique. La prévisualisation actuelle reste disponible jusqu'à ce que la nouvelle réussisse ses contrôles.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.044" xml:space="preserve"><value>Ouvrir</value></data>
+  <data name="Frontend.045" xml:space="preserve"><value>Arrêter</value></data>
+  <data name="Frontend.046" xml:space="preserve"><value>Tâches de développement isolé / prévisualisation Sandbox</value></data>
+  <data name="Frontend.047" xml:space="preserve"><value>L'IA ne peut écrire que dans l'espace isolé ; l'application des modifications nécessite une phrase de confirmation de l'administrateur.</value></data>
+  <data name="Frontend.048" xml:space="preserve"><value>Aucune tâche de développement isolé</value></data>
+  <data name="Frontend.049" xml:space="preserve"><value>Module</value></data>
+  <data name="Frontend.050" xml:space="preserve"><value>Mode / étape</value></data>
+  <data name="Frontend.051" xml:space="preserve"><value>État et différences</value></data>
+  <data name="Frontend.052" xml:space="preserve"><value>Le résumé des différences n'est pas encore généré</value></data>
+  <data name="Frontend.053" xml:space="preserve"><value>Chemin / Sandbox</value></data>
+  <data name="Frontend.054" xml:space="preserve"><value>Cible :</value></data>
+  <data name="Frontend.055" xml:space="preserve"><value>Isolé :</value></data>
+  <data name="Frontend.056" xml:space="preserve"><value>Sandbox :</value></data>
+  <data name="Frontend.057" xml:space="preserve"><value>Ouvrir la prévisualisation Sandbox</value></data>
+  <data name="Frontend.058" xml:space="preserve"><value>Actions</value></data>
+  <data name="Frontend.059" xml:space="preserve"><value>Appliquer manuellement</value></data>
+  <data name="Frontend.060" xml:space="preserve"><value>Abandonner</value></data>
+  <data name="Frontend.061" xml:space="preserve"><value>Après la génération ou la modification de la source, utilisez « Démarrer la prévisualisation XNCF isolée » pour rejoindre cette file ; l'empreinte de la source prouve l'instantané exact utilisé par la compilation.</value></data>
+  <data name="Frontend.062" xml:space="preserve"><value>Échec de la lecture de l'état.</value></data>
+  <data name="Frontend.063" xml:space="preserve"><value>Aucune sortie.</value></data>
+  <data name="Frontend.064" xml:space="preserve"><value>Échec de la lecture des journaux.</value></data>
+  <data name="Frontend.065" xml:space="preserve"><value>Arrêter la prévisualisation</value></data>
+  <data name="Frontend.066" xml:space="preserve"><value>Annuler</value></data>
+  <data name="Frontend.067" xml:space="preserve"><value>Échec de l'arrêt de la prévisualisation.</value></data>
+  <data name="Frontend.068" xml:space="preserve"><value>Appliquer manuellement le module XNCF</value></data>
+  <data name="Frontend.069" xml:space="preserve"><value>Appliquer</value></data>
+  <data name="Frontend.070" xml:space="preserve"><value>La phrase de confirmation doit correspondre exactement : {0}</value></data>
+  <data name="Frontend.071" xml:space="preserve"><value>Échec de l'application.</value></data>
+  <data name="Frontend.072" xml:space="preserve"><value>Abandonner la tâche de développement isolé</value></data>
+  <data name="Frontend.073" xml:space="preserve"><value>Échec de l'abandon.</value></data>
+  <data name="Frontend.074" xml:space="preserve"><value>Nouveau module</value></data>
+  <data name="Frontend.075" xml:space="preserve"><value>Modifier le module existant</value></data>
+  <data name="Frontend.076" xml:space="preserve"><value>Instantané en cours</value></data>
+  <data name="Frontend.077" xml:space="preserve"><value>Modifiable</value></data>
+  <data name="Frontend.078" xml:space="preserve"><value>Validation en cours</value></data>
+  <data name="Frontend.079" xml:space="preserve"><value>Prévisualisation Sandbox</value></data>
+  <data name="Frontend.080" xml:space="preserve"><value>En attente de révision</value></data>
+  <data name="Frontend.081" xml:space="preserve"><value>En attente d'une application manuelle</value></data>
+  <data name="Frontend.082" xml:space="preserve"><value>Appliqué</value></data>
+  <data name="Frontend.083" xml:space="preserve"><value>Abandonné</value></data>
+  <data name="Frontend.084" xml:space="preserve"><value>Échec</value></data>
+  <data name="Frontend.085" xml:space="preserve"><value>Inconnu</value></data>
+  <data name="Frontend.086" xml:space="preserve"><value>Non créé</value></data>
+  <data name="Frontend.087" xml:space="preserve"><value>Lecture de la sortie récente…</value></data>
+  <data name="Frontend.088" xml:space="preserve"><value>Arrêter la tâche de prévisualisation de {0} ?</value></data>
+  <data name="Frontend.089" xml:space="preserve"><value>Vérifiez d'abord l'espace isolé, les différences et la prévisualisation Sandbox. Saisissez {0} pour écrire les différences contrôlées dans la source cible.</value></data>
+  <data name="Frontend.090" xml:space="preserve"><value>La prévisualisation Sandbox associée sera arrêtée et l'espace isolé supprimé, sans modifier la source cible. Abandonner {0} ?</value></data>
+  <data name="Frontend.091" xml:space="preserve"><value> Motif : </value></data>
   <data name="Function.XncfBuilder.Development.Create.Name" xml:space="preserve"><value>Créer une tâche de développement XNCF isolée</value></data>
   <data name="Function.XncfBuilder.Development.Create.Description" xml:space="preserve"><value>Crée un instantané du code dans un espace isolé. Les nouveaux modules utilisent le modèle local installé ; les modules existants sont copiés avant modification. Le code cible n’est jamais écrit.</value></data>
   <data name="Function.XncfBuilder.Development.Read.Name" xml:space="preserve"><value>Lire un fichier XNCF isolé</value></data>

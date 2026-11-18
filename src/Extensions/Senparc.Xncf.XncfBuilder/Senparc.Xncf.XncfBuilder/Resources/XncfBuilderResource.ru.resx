@@ -507,6 +507,54 @@
   <data name="Frontend.041" xml:space="preserve"><value>Нет заданий изолированной разработки</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.042" xml:space="preserve"><value>Последнее обновление: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.043" xml:space="preserve"><value>Каждое задание проверяет ссылки на хост, выполняет изолированную сборку, запускает новый предварительный просмотр, проводит проверку работоспособности и атомарно заменяет предварительный просмотр. Текущий предварительный просмотр остаётся доступным, пока новый не пройдёт проверки.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.044" xml:space="preserve"><value>Открыть</value></data>
+  <data name="Frontend.045" xml:space="preserve"><value>Остановить</value></data>
+  <data name="Frontend.046" xml:space="preserve"><value>Задания изолированной разработки / предварительного просмотра Sandbox</value></data>
+  <data name="Frontend.047" xml:space="preserve"><value>ИИ может записывать только в изолированное пространство; для применения изменений требуется фраза подтверждения администратора.</value></data>
+  <data name="Frontend.048" xml:space="preserve"><value>Нет заданий изолированной разработки</value></data>
+  <data name="Frontend.049" xml:space="preserve"><value>Модуль</value></data>
+  <data name="Frontend.050" xml:space="preserve"><value>Режим / этап</value></data>
+  <data name="Frontend.051" xml:space="preserve"><value>Состояние и различия</value></data>
+  <data name="Frontend.052" xml:space="preserve"><value>Сводка различий ещё не создана</value></data>
+  <data name="Frontend.053" xml:space="preserve"><value>Путь / Sandbox</value></data>
+  <data name="Frontend.054" xml:space="preserve"><value>Цель:</value></data>
+  <data name="Frontend.055" xml:space="preserve"><value>Изолированное:</value></data>
+  <data name="Frontend.056" xml:space="preserve"><value>Sandbox:</value></data>
+  <data name="Frontend.057" xml:space="preserve"><value>Открыть предварительный просмотр Sandbox</value></data>
+  <data name="Frontend.058" xml:space="preserve"><value>Действия</value></data>
+  <data name="Frontend.059" xml:space="preserve"><value>Применить вручную</value></data>
+  <data name="Frontend.060" xml:space="preserve"><value>Отбросить</value></data>
+  <data name="Frontend.061" xml:space="preserve"><value>После создания или изменения исходного кода выберите «Запустить изолированный предварительный просмотр XNCF», чтобы попасть в эту очередь; отпечаток источника подтверждает точный снимок, использованный сборкой.</value></data>
+  <data name="Frontend.062" xml:space="preserve"><value>Не удалось прочитать состояние.</value></data>
+  <data name="Frontend.063" xml:space="preserve"><value>Нет вывода.</value></data>
+  <data name="Frontend.064" xml:space="preserve"><value>Не удалось прочитать журналы.</value></data>
+  <data name="Frontend.065" xml:space="preserve"><value>Остановить предварительный просмотр</value></data>
+  <data name="Frontend.066" xml:space="preserve"><value>Отмена</value></data>
+  <data name="Frontend.067" xml:space="preserve"><value>Не удалось остановить предварительный просмотр.</value></data>
+  <data name="Frontend.068" xml:space="preserve"><value>Применить модуль XNCF вручную</value></data>
+  <data name="Frontend.069" xml:space="preserve"><value>Применить</value></data>
+  <data name="Frontend.070" xml:space="preserve"><value>Фраза подтверждения должна полностью совпадать: {0}</value></data>
+  <data name="Frontend.071" xml:space="preserve"><value>Не удалось применить.</value></data>
+  <data name="Frontend.072" xml:space="preserve"><value>Отбросить задание изолированной разработки</value></data>
+  <data name="Frontend.073" xml:space="preserve"><value>Не удалось отбросить.</value></data>
+  <data name="Frontend.074" xml:space="preserve"><value>Новый модуль</value></data>
+  <data name="Frontend.075" xml:space="preserve"><value>Изменить существующий модуль</value></data>
+  <data name="Frontend.076" xml:space="preserve"><value>Создание снимка</value></data>
+  <data name="Frontend.077" xml:space="preserve"><value>Доступно для записи</value></data>
+  <data name="Frontend.078" xml:space="preserve"><value>Проверка</value></data>
+  <data name="Frontend.079" xml:space="preserve"><value>Предварительный просмотр Sandbox</value></data>
+  <data name="Frontend.080" xml:space="preserve"><value>Ожидает проверки</value></data>
+  <data name="Frontend.081" xml:space="preserve"><value>Ожидает ручного применения</value></data>
+  <data name="Frontend.082" xml:space="preserve"><value>Применено</value></data>
+  <data name="Frontend.083" xml:space="preserve"><value>Отброшено</value></data>
+  <data name="Frontend.084" xml:space="preserve"><value>Ошибка</value></data>
+  <data name="Frontend.085" xml:space="preserve"><value>Неизвестно</value></data>
+  <data name="Frontend.086" xml:space="preserve"><value>Не создано</value></data>
+  <data name="Frontend.087" xml:space="preserve"><value>Чтение последнего вывода…</value></data>
+  <data name="Frontend.088" xml:space="preserve"><value>Остановить задачу предварительного просмотра {0}?</value></data>
+  <data name="Frontend.089" xml:space="preserve"><value>Сначала проверьте изолированное пространство, различия и предварительный просмотр Sandbox. Введите {0}, чтобы записать контролируемые различия в целевой исходный код.</value></data>
+  <data name="Frontend.090" xml:space="preserve"><value>Связанный предварительный просмотр Sandbox будет остановлен, а изолированное пространство удалено без изменения целевого исходного кода. Отбросить {0}?</value></data>
+  <data name="Frontend.091" xml:space="preserve"><value> Причина: </value></data>
   <data name="Function.XncfBuilder.Development.Create.Name" xml:space="preserve"><value>Создать изолированную задачу разработки XNCF</value></data>
   <data name="Function.XncfBuilder.Development.Create.Description" xml:space="preserve"><value>Создаёт снимок исходного кода в изолированном пространстве. Новые модули создаются из установленного локального шаблона, существующие копируются перед изменением. Целевой исходный код не изменяется.</value></data>
   <data name="Function.XncfBuilder.Development.Read.Name" xml:space="preserve"><value>Прочитать изолированный файл XNCF</value></data>

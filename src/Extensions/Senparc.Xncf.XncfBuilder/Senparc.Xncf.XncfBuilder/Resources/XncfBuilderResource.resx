@@ -506,6 +506,54 @@
   <data name="Frontend.041" xml:space="preserve"><value>当前没有隔离开发任务</value></data>
   <data name="Frontend.042" xml:space="preserve"><value>最近更新：{0}</value></data>
   <data name="Frontend.043" xml:space="preserve"><value>每个任务依次执行宿主引用校验、隔离构建、启动新预览、健康检查和原子替换。新预览通过检查前，当前可用的旧预览不会停止。</value></data>
+  <data name="Frontend.044" xml:space="preserve"><value>打开</value></data>
+  <data name="Frontend.045" xml:space="preserve"><value>停止</value></data>
+  <data name="Frontend.046" xml:space="preserve"><value>隔离开发 / Sandbox 预览任务</value></data>
+  <data name="Frontend.047" xml:space="preserve"><value>AI 只能写入隔离工作区；应用修改需要管理员确认短语。</value></data>
+  <data name="Frontend.048" xml:space="preserve"><value>当前没有隔离开发任务</value></data>
+  <data name="Frontend.049" xml:space="preserve"><value>模块</value></data>
+  <data name="Frontend.050" xml:space="preserve"><value>模式 / 阶段</value></data>
+  <data name="Frontend.051" xml:space="preserve"><value>状态与差异</value></data>
+  <data name="Frontend.052" xml:space="preserve"><value>尚未生成差异摘要</value></data>
+  <data name="Frontend.053" xml:space="preserve"><value>路径 / Sandbox</value></data>
+  <data name="Frontend.054" xml:space="preserve"><value>目标：</value></data>
+  <data name="Frontend.055" xml:space="preserve"><value>隔离：</value></data>
+  <data name="Frontend.056" xml:space="preserve"><value>Sandbox：</value></data>
+  <data name="Frontend.057" xml:space="preserve"><value>打开 Sandbox 预览</value></data>
+  <data name="Frontend.058" xml:space="preserve"><value>操作</value></data>
+  <data name="Frontend.059" xml:space="preserve"><value>人工合入</value></data>
+  <data name="Frontend.060" xml:space="preserve"><value>丢弃</value></data>
+  <data name="Frontend.061" xml:space="preserve"><value>源码生成或修改完成后，调用“启动 XNCF 隔离预览”才会进入此监控队列；源码指纹用于证明本次构建对应的确切源码快照。</value></data>
+  <data name="Frontend.062" xml:space="preserve"><value>状态读取失败。</value></data>
+  <data name="Frontend.063" xml:space="preserve"><value>暂无输出。</value></data>
+  <data name="Frontend.064" xml:space="preserve"><value>日志读取失败。</value></data>
+  <data name="Frontend.065" xml:space="preserve"><value>停止预览</value></data>
+  <data name="Frontend.066" xml:space="preserve"><value>取消</value></data>
+  <data name="Frontend.067" xml:space="preserve"><value>停止预览失败。</value></data>
+  <data name="Frontend.068" xml:space="preserve"><value>人工合入 XNCF 模块</value></data>
+  <data name="Frontend.069" xml:space="preserve"><value>合入</value></data>
+  <data name="Frontend.070" xml:space="preserve"><value>确认短语必须完全匹配：{0}</value></data>
+  <data name="Frontend.071" xml:space="preserve"><value>合入失败。</value></data>
+  <data name="Frontend.072" xml:space="preserve"><value>丢弃隔离开发任务</value></data>
+  <data name="Frontend.073" xml:space="preserve"><value>丢弃失败。</value></data>
+  <data name="Frontend.074" xml:space="preserve"><value>新建模块</value></data>
+  <data name="Frontend.075" xml:space="preserve"><value>修改现有模块</value></data>
+  <data name="Frontend.076" xml:space="preserve"><value>快照中</value></data>
+  <data name="Frontend.077" xml:space="preserve"><value>可编写</value></data>
+  <data name="Frontend.078" xml:space="preserve"><value>校验中</value></data>
+  <data name="Frontend.079" xml:space="preserve"><value>Sandbox 预览中</value></data>
+  <data name="Frontend.080" xml:space="preserve"><value>待审阅</value></data>
+  <data name="Frontend.081" xml:space="preserve"><value>等待人工合入</value></data>
+  <data name="Frontend.082" xml:space="preserve"><value>已合入</value></data>
+  <data name="Frontend.083" xml:space="preserve"><value>已丢弃</value></data>
+  <data name="Frontend.084" xml:space="preserve"><value>失败</value></data>
+  <data name="Frontend.085" xml:space="preserve"><value>未知</value></data>
+  <data name="Frontend.086" xml:space="preserve"><value>未创建</value></data>
+  <data name="Frontend.087" xml:space="preserve"><value>正在读取最近输出…</value></data>
+  <data name="Frontend.088" xml:space="preserve"><value>确定停止 {0} 的此预览任务吗？</value></data>
+  <data name="Frontend.089" xml:space="preserve"><value>请先确认隔离工作区、差异和 Sandbox 预览。输入 {0} 才会将受控差异写入目标源码。</value></data>
+  <data name="Frontend.090" xml:space="preserve"><value>将停止对应 Sandbox 预览并删除隔离工作区，目标源码不会改变。确定丢弃 {0} 吗？</value></data>
+  <data name="Frontend.091" xml:space="preserve"><value> 原因：</value></data>
   <data name="Function.XncfBuilder.Development.Create.Name" xml:space="preserve"><value>创建隔离 XNCF 开发任务</value></data>
   <data name="Function.XncfBuilder.Development.Create.Description" xml:space="preserve"><value>创建源码快照；新模块仅在隔离工作区由本机已安装模板生成，现有模块仅复制后修改。不会写入目标源码。</value></data>
   <data name="Function.XncfBuilder.Development.Read.Name" xml:space="preserve"><value>读取隔离 XNCF 文件</value></data>

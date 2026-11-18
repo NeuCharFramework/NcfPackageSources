@@ -507,6 +507,54 @@
   <data name="Frontend.041" xml:space="preserve"><value>No isolated development tasks</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.042" xml:space="preserve"><value>Last updated: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.043" xml:space="preserve"><value>Each task validates host references, performs an isolated build, starts a new preview, runs a health check, and atomically replaces the preview. The current preview stays available until the new preview passes its checks.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.044" xml:space="preserve"><value>Open</value></data>
+  <data name="Frontend.045" xml:space="preserve"><value>Stop</value></data>
+  <data name="Frontend.046" xml:space="preserve"><value>Isolated development / Sandbox preview jobs</value></data>
+  <data name="Frontend.047" xml:space="preserve"><value>AI can write only to the isolated workspace; applying changes requires an administrator confirmation phrase.</value></data>
+  <data name="Frontend.048" xml:space="preserve"><value>No isolated development jobs</value></data>
+  <data name="Frontend.049" xml:space="preserve"><value>Module</value></data>
+  <data name="Frontend.050" xml:space="preserve"><value>Mode / stage</value></data>
+  <data name="Frontend.051" xml:space="preserve"><value>Status and diff</value></data>
+  <data name="Frontend.052" xml:space="preserve"><value>Diff summary not generated yet</value></data>
+  <data name="Frontend.053" xml:space="preserve"><value>Path / Sandbox</value></data>
+  <data name="Frontend.054" xml:space="preserve"><value>Target:</value></data>
+  <data name="Frontend.055" xml:space="preserve"><value>Isolated:</value></data>
+  <data name="Frontend.056" xml:space="preserve"><value>Sandbox:</value></data>
+  <data name="Frontend.057" xml:space="preserve"><value>Open Sandbox preview</value></data>
+  <data name="Frontend.058" xml:space="preserve"><value>Actions</value></data>
+  <data name="Frontend.059" xml:space="preserve"><value>Merge manually</value></data>
+  <data name="Frontend.060" xml:space="preserve"><value>Discard</value></data>
+  <data name="Frontend.061" xml:space="preserve"><value>After source generation or modification, use “Start isolated XNCF preview” to enter this monitor queue; the source fingerprint proves the exact source snapshot used by the build.</value></data>
+  <data name="Frontend.062" xml:space="preserve"><value>Failed to read status.</value></data>
+  <data name="Frontend.063" xml:space="preserve"><value>No output.</value></data>
+  <data name="Frontend.064" xml:space="preserve"><value>Failed to read logs.</value></data>
+  <data name="Frontend.065" xml:space="preserve"><value>Stop preview</value></data>
+  <data name="Frontend.066" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Frontend.067" xml:space="preserve"><value>Failed to stop preview.</value></data>
+  <data name="Frontend.068" xml:space="preserve"><value>Merge XNCF module manually</value></data>
+  <data name="Frontend.069" xml:space="preserve"><value>Merge</value></data>
+  <data name="Frontend.070" xml:space="preserve"><value>Confirmation phrase must exactly match: {0}</value></data>
+  <data name="Frontend.071" xml:space="preserve"><value>Merge failed.</value></data>
+  <data name="Frontend.072" xml:space="preserve"><value>Discard isolated development job</value></data>
+  <data name="Frontend.073" xml:space="preserve"><value>Failed to discard.</value></data>
+  <data name="Frontend.074" xml:space="preserve"><value>New module</value></data>
+  <data name="Frontend.075" xml:space="preserve"><value>Modify existing module</value></data>
+  <data name="Frontend.076" xml:space="preserve"><value>Snapshotting</value></data>
+  <data name="Frontend.077" xml:space="preserve"><value>Writable</value></data>
+  <data name="Frontend.078" xml:space="preserve"><value>Validating</value></data>
+  <data name="Frontend.079" xml:space="preserve"><value>Sandbox preview</value></data>
+  <data name="Frontend.080" xml:space="preserve"><value>Awaiting review</value></data>
+  <data name="Frontend.081" xml:space="preserve"><value>Awaiting manual merge</value></data>
+  <data name="Frontend.082" xml:space="preserve"><value>Merged</value></data>
+  <data name="Frontend.083" xml:space="preserve"><value>Discarded</value></data>
+  <data name="Frontend.084" xml:space="preserve"><value>Failed</value></data>
+  <data name="Frontend.085" xml:space="preserve"><value>Unknown</value></data>
+  <data name="Frontend.086" xml:space="preserve"><value>Not created</value></data>
+  <data name="Frontend.087" xml:space="preserve"><value>Reading recent output…</value></data>
+  <data name="Frontend.088" xml:space="preserve"><value>Stop the preview job for {0}?</value></data>
+  <data name="Frontend.089" xml:space="preserve"><value>Review the isolated workspace, diff, and Sandbox preview first. Enter {0} to write the controlled diff to target source.</value></data>
+  <data name="Frontend.090" xml:space="preserve"><value>This stops the related Sandbox preview and deletes the isolated workspace without changing target source. Discard {0}?</value></data>
+  <data name="Frontend.091" xml:space="preserve"><value> Reason: </value></data>
   <data name="Function.XncfBuilder.Development.Create.Name" xml:space="preserve"><value>Create isolated XNCF development job</value></data>
   <data name="Function.XncfBuilder.Development.Create.Description" xml:space="preserve"><value>Create a source snapshot in an isolated workspace. New modules are generated from the installed local template; existing modules are copied before editing. Target source is never written.</value></data>
   <data name="Function.XncfBuilder.Development.Read.Name" xml:space="preserve"><value>Read isolated XNCF file</value></data>

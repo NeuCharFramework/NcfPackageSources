@@ -507,6 +507,54 @@
   <data name="Frontend.041" xml:space="preserve"><value>分離開発タスクはありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.042" xml:space="preserve"><value>最終更新：{0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.043" xml:space="preserve"><value>各タスクはホスト参照を検証し、分離ビルドを実行し、新しいプレビューを開始し、ヘルスチェックを実行して、プレビューをアトミックに置き換えます。新しいプレビューがチェックに合格するまで、現在のプレビューは利用できます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.044" xml:space="preserve"><value>開く</value></data>
+  <data name="Frontend.045" xml:space="preserve"><value>停止</value></data>
+  <data name="Frontend.046" xml:space="preserve"><value>分離開発 / Sandbox プレビュータスク</value></data>
+  <data name="Frontend.047" xml:space="preserve"><value>AI は分離ワークスペースにのみ書き込めます。変更を適用するには管理者の確認フレーズが必要です。</value></data>
+  <data name="Frontend.048" xml:space="preserve"><value>分離開発タスクはありません</value></data>
+  <data name="Frontend.049" xml:space="preserve"><value>モジュール</value></data>
+  <data name="Frontend.050" xml:space="preserve"><value>モード / ステージ</value></data>
+  <data name="Frontend.051" xml:space="preserve"><value>状態と差分</value></data>
+  <data name="Frontend.052" xml:space="preserve"><value>差分概要はまだ生成されていません</value></data>
+  <data name="Frontend.053" xml:space="preserve"><value>パス / Sandbox</value></data>
+  <data name="Frontend.054" xml:space="preserve"><value>対象：</value></data>
+  <data name="Frontend.055" xml:space="preserve"><value>分離：</value></data>
+  <data name="Frontend.056" xml:space="preserve"><value>Sandbox：</value></data>
+  <data name="Frontend.057" xml:space="preserve"><value>Sandbox プレビューを開く</value></data>
+  <data name="Frontend.058" xml:space="preserve"><value>操作</value></data>
+  <data name="Frontend.059" xml:space="preserve"><value>手動で適用</value></data>
+  <data name="Frontend.060" xml:space="preserve"><value>破棄</value></data>
+  <data name="Frontend.061" xml:space="preserve"><value>ソースの生成または変更後、「分離 XNCF プレビューを開始」を実行するとこの監視キューに入ります。ソースフィンガープリントはビルドに使用された正確なソーススナップショットを証明します。</value></data>
+  <data name="Frontend.062" xml:space="preserve"><value>状態の読み取りに失敗しました。</value></data>
+  <data name="Frontend.063" xml:space="preserve"><value>出力はありません。</value></data>
+  <data name="Frontend.064" xml:space="preserve"><value>ログの読み取りに失敗しました。</value></data>
+  <data name="Frontend.065" xml:space="preserve"><value>プレビューを停止</value></data>
+  <data name="Frontend.066" xml:space="preserve"><value>キャンセル</value></data>
+  <data name="Frontend.067" xml:space="preserve"><value>プレビューの停止に失敗しました。</value></data>
+  <data name="Frontend.068" xml:space="preserve"><value>XNCF モジュールを手動で適用</value></data>
+  <data name="Frontend.069" xml:space="preserve"><value>適用</value></data>
+  <data name="Frontend.070" xml:space="preserve"><value>確認フレーズは完全一致する必要があります：{0}</value></data>
+  <data name="Frontend.071" xml:space="preserve"><value>適用に失敗しました。</value></data>
+  <data name="Frontend.072" xml:space="preserve"><value>分離開発タスクを破棄</value></data>
+  <data name="Frontend.073" xml:space="preserve"><value>破棄に失敗しました。</value></data>
+  <data name="Frontend.074" xml:space="preserve"><value>新規モジュール</value></data>
+  <data name="Frontend.075" xml:space="preserve"><value>既存モジュールを変更</value></data>
+  <data name="Frontend.076" xml:space="preserve"><value>スナップショット中</value></data>
+  <data name="Frontend.077" xml:space="preserve"><value>書き込み可能</value></data>
+  <data name="Frontend.078" xml:space="preserve"><value>検証中</value></data>
+  <data name="Frontend.079" xml:space="preserve"><value>Sandbox プレビュー中</value></data>
+  <data name="Frontend.080" xml:space="preserve"><value>レビュー待ち</value></data>
+  <data name="Frontend.081" xml:space="preserve"><value>手動適用待ち</value></data>
+  <data name="Frontend.082" xml:space="preserve"><value>適用済み</value></data>
+  <data name="Frontend.083" xml:space="preserve"><value>破棄済み</value></data>
+  <data name="Frontend.084" xml:space="preserve"><value>失敗</value></data>
+  <data name="Frontend.085" xml:space="preserve"><value>不明</value></data>
+  <data name="Frontend.086" xml:space="preserve"><value>未作成</value></data>
+  <data name="Frontend.087" xml:space="preserve"><value>最近の出力を読み込んでいます…</value></data>
+  <data name="Frontend.088" xml:space="preserve"><value>{0} のプレビュータスクを停止しますか？</value></data>
+  <data name="Frontend.089" xml:space="preserve"><value>まず分離ワークスペース、差分、Sandbox プレビューを確認してください。対象ソースに制御された差分を書き込むには {0} を入力します。</value></data>
+  <data name="Frontend.090" xml:space="preserve"><value>関連する Sandbox プレビューを停止し、対象ソースを変更せずに分離ワークスペースを削除します。{0} を破棄しますか？</value></data>
+  <data name="Frontend.091" xml:space="preserve"><value> 原因：</value></data>
   <data name="Function.XncfBuilder.Development.Create.Name" xml:space="preserve"><value>分離 XNCF 開発タスクを作成</value></data>
   <data name="Function.XncfBuilder.Development.Create.Description" xml:space="preserve"><value>分離ワークスペースにソーススナップショットを作成します。新規モジュールはローカルにインストールされたテンプレートから生成し、既存モジュールはコピーしてから変更します。対象ソースには書き込みません。</value></data>
   <data name="Function.XncfBuilder.Development.Read.Name" xml:space="preserve"><value>分離 XNCF ファイルを読み取る</value></data>
