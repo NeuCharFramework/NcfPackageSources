@@ -10,8 +10,8 @@
   <data name="Area.Tasks" xml:space="preserve"><value>Tasks</value></data>
   <data name="Area.Replay" xml:space="preserve"><value>Rejouer l'exécution</value></data>
   <data name="Title.Designer" xml:space="preserve"><value>NeuChar Workflow</value></data>
-  <data name="Title.Tasks" xml:space="preserve"><value>Workflow tasks</value></data>
-  <data name="Title.Replay" xml:space="preserve"><value>Workflow run replay</value></data>
+  <data name="Title.Tasks" xml:space="preserve"><value>Tâches Workflow</value></data>
+  <data name="Title.Replay" xml:space="preserve"><value>Relecture d'une exécution Workflow</value></data>
   <data name="Designer.Introduction" xml:space="preserve"><value>Compose Functions, system nodes, and Agents. Parameters, types, connections, and module state are checked before save and run.</value></data>
   <data name="Action.Refresh" xml:space="preserve"><value>Refresh</value></data>
   <data name="Action.NewWorkflow" xml:space="preserve"><value>Nouveau Workflow</value></data>
