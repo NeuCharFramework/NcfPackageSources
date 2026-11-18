@@ -389,10 +389,10 @@
                                     @* Test button. *@
                                     <div class="targetShootBtnRow">
                                         <el-dropdown trigger="click" @@command="changeBtn" split-button type="primary" @@click="clickSendBtn" size="small">
-                                            {{ ncfST(sendBtnText === '打靶' ? 'Frontend.265' : (sendBtnText === '连发' ? 'Frontend.266' : 'Frontend.310')) }}
+                                            {{ ncfST(sendBtnText === PromptRangeSendCommand.shoot ? 'Frontend.265' : (sendBtnText === PromptRangeSendCommand.rapid ? 'Frontend.266' : 'Frontend.310')) }}
                                             <el-dropdown-menu slot="dropdown">
-                                            <el-dropdown-item v-for="btn of sendBtns" :key="btn.text" :disabled="btn.text==='连发'&&(!promptid||outputList.length===0||pageChange)" :command="btn.text">
-                                                {{ ncfST(btn.text === '打靶' ? 'Frontend.265' : (btn.text === '连发' ? 'Frontend.266' : 'Frontend.310')) }}
+                                            <el-dropdown-item v-for="btn of sendBtns" :key="btn.text" :disabled="btn.text===PromptRangeSendCommand.rapid&&(!promptid||outputList.length===0||pageChange)" :command="btn.text">
+                                                {{ ncfST(btn.text === PromptRangeSendCommand.shoot ? 'Frontend.265' : (btn.text === PromptRangeSendCommand.rapid ? 'Frontend.266' : 'Frontend.310')) }}
                                             </el-dropdown-item>
                                             </el-dropdown-menu>
                                         </el-dropdown>
@@ -402,7 +402,7 @@
                                                 {{ ncfST('Frontend.404') }}<br />
                                                 {{ ncfST('Frontend.405') }}
                                             </div>
-                                            <i class="el-icon-warning-outline" :style="sendBtnText==='连发'?'filter:invert(1)':''"></i>
+                                            <i class="el-icon-warning-outline" :style="sendBtnText===PromptRangeSendCommand.rapid?'filter:invert(1)':''"></i>
                                         </el-tooltip>
                                     </div>
                                 </div>

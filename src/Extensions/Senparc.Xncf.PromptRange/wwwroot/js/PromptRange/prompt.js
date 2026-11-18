@@ -1,3 +1,9 @@
+var PromptRangeSendCommand = window.PromptRangeSendCommand = Object.freeze({
+    shoot: 'shoot',
+    rapid: 'rapid',
+    draft: 'draft'
+});
+
 var app = new Vue({
     el: "#app",
     data() {
@@ -162,16 +168,16 @@ var app = new Vue({
             //Legacy comment translated to English.
             sendBtns: [
                 {
-                    text: '打靶'
+                    text: PromptRangeSendCommand.shoot
                 },
                 {
-                    text: '连发'
+                    text: PromptRangeSendCommand.rapid
                 },
                 {
-                    text: '保存草稿'
+                    text: PromptRangeSendCommand.draft
                 }
             ],
-            sendBtnText: '打靶',
+            sendBtnText: PromptRangeSendCommand.shoot,
             // output ---start
             outputAverageDeci: -1,//Legacy comment translated to English.
             outputMaxDeci: -1, //Legacy comment translated to English.
@@ -1874,23 +1880,23 @@ var app = new Vue({
                             if (_el.isDraft) {
                                 this.sendBtns = [
                                     {
-                                        text: '打靶'
+                                        text: PromptRangeSendCommand.shoot
                                     },
                                     {
-                                        text: '保存草稿'
+                                        text: PromptRangeSendCommand.draft
                                     }
                                 ]
-                                this.sendBtnText = '打靶'
+                                this.sendBtnText = PromptRangeSendCommand.shoot
                             } else {
                                 this.sendBtns = [
                                     {
-                                        text: '连发'
+                                        text: PromptRangeSendCommand.rapid
                                     },
                                     {
-                                        text: '保存草稿'
+                                        text: PromptRangeSendCommand.draft
                                     }
                                 ]
-                                this.sendBtnText = '连发'
+                                this.sendBtnText = PromptRangeSendCommand.rapid
                             }
 
                             // get details
@@ -1898,13 +1904,13 @@ var app = new Vue({
                         } else {
                             this.sendBtns = [
                                 {
-                                    text: '打靶'
+                                    text: PromptRangeSendCommand.shoot
                                 },
                                 {
-                                    text: '保存草稿'
+                                    text: PromptRangeSendCommand.draft
                                 }
                             ]
-                            this.sendBtnText = '打靶'
+                            this.sendBtnText = PromptRangeSendCommand.shoot
                         }
 
                     })
@@ -2475,23 +2481,23 @@ var app = new Vue({
                             })
                             this.sendBtns = [
                                 {
-                                    text: '打靶'
+                                    text: PromptRangeSendCommand.shoot
                                 },
                                 {
-                                    text: '保存草稿'
+                                    text: PromptRangeSendCommand.draft
                                 }
                             ]
-                            this.sendBtnText = '打靶'
+                            this.sendBtnText = PromptRangeSendCommand.shoot
                         } else {
                             this.sendBtns = [
                                 {
-                                    text: '连发'
+                                    text: PromptRangeSendCommand.rapid
                                 },
                                 {
-                                    text: '保存草稿'
+                                    text: PromptRangeSendCommand.draft
                                 }
                             ]
-                            this.sendBtnText = '连发'
+                            this.sendBtnText = PromptRangeSendCommand.rapid
                         }
                         let {
                             promptResultList = [],
@@ -2529,7 +2535,7 @@ var app = new Vue({
                             this.getScoringTrendData()
                         })
 
-                        if (this.sendBtnText !== '保存草稿' && this.numsOfResults > 1) {
+                        if (this.sendBtnText !== PromptRangeSendCommand.draft && this.numsOfResults > 1) {
                             //Legacy comment translated to English.
                             this.dealRapicFireHandel(this.numsOfResults - 1, id)
                         }
@@ -3096,11 +3102,11 @@ var app = new Vue({
         clickSendBtn() {
             const command = this.sendBtnText
             //Legacy comment translated to English.
-            if (command === '打靶') {
+            if (command === PromptRangeSendCommand.shoot) {
                 this.targetShootHandel()
-            } else if (command === '保存草稿') {
+            } else if (command === PromptRangeSendCommand.draft) {
                 this.targetShootHandel(true)
-            } else if (command === '连发') {
+            } else if (command === PromptRangeSendCommand.rapid) {
                 this.dealRapicFireHandel(this.numsOfResults)
             }
         },
@@ -3731,23 +3737,23 @@ var app = new Vue({
                     if (_fitem && _fitem.isDraft) {
                         this.sendBtns = [
                             {
-                                text: '打靶'
+                                text: PromptRangeSendCommand.shoot
                             },
                             {
-                                text: '保存草稿'
+                                text: PromptRangeSendCommand.draft
                             }
                         ]
-                        this.sendBtnText = '打靶'
+                        this.sendBtnText = PromptRangeSendCommand.shoot
                     } else {
                         this.sendBtns = [
                             {
-                                text: '连发'
+                                text: PromptRangeSendCommand.rapid
                             },
                             {
-                                text: '保存草稿'
+                                text: PromptRangeSendCommand.draft
                             }
                         ]
-                        this.sendBtnText = '连发'
+                        this.sendBtnText = PromptRangeSendCommand.rapid
                     }
                     this.getPromptetail(val, true, true)
                     return
@@ -3777,23 +3783,23 @@ var app = new Vue({
                         if (_fitem.isDraft) {
                             this.sendBtns = [
                                 {
-                                    text: '打靶'
+                                    text: PromptRangeSendCommand.shoot
                                 },
                                 {
-                                    text: '保存草稿'
+                                    text: PromptRangeSendCommand.draft
                                 }
                             ]
-                            this.sendBtnText = '打靶'
+                            this.sendBtnText = PromptRangeSendCommand.shoot
                         } else {
                             this.sendBtns = [
                                 {
-                                    text: '连发'
+                                    text: PromptRangeSendCommand.rapid
                                 },
                                 {
-                                    text: '保存草稿'
+                                    text: PromptRangeSendCommand.draft
                                 }
                             ]
-                            this.sendBtnText = '连发'
+                            this.sendBtnText = PromptRangeSendCommand.rapid
                         }
 
                         //Legacy comment translated to English.
@@ -3816,23 +3822,23 @@ var app = new Vue({
                     if (_fitem.isDraft) {
                         this.sendBtns = [
                             {
-                                text: '打靶'
+                                text: PromptRangeSendCommand.shoot
                             },
                             {
-                                text: '保存草稿'
+                                text: PromptRangeSendCommand.draft
                             }
                         ]
-                        this.sendBtnText = '打靶'
+                        this.sendBtnText = PromptRangeSendCommand.shoot
                     } else {
                         this.sendBtns = [
                             {
-                                text: '连发'
+                                text: PromptRangeSendCommand.rapid
                             },
                             {
-                                text: '保存草稿'
+                                text: PromptRangeSendCommand.draft
                             }
                         ]
-                        this.sendBtnText = '连发'
+                        this.sendBtnText = PromptRangeSendCommand.rapid
                     }
                     //Legacy comment translated to English.
                     this.getPromptetail(val, true, true)
@@ -3848,13 +3854,13 @@ var app = new Vue({
                 this.pageChange = true
                 this.sendBtns = [
                     {
-                        text: '打靶'
+                        text: PromptRangeSendCommand.shoot
                     },
                     {
-                        text: '保存草稿'
+                        text: PromptRangeSendCommand.draft
                     }
                 ]
-                this.sendBtnText = '打靶'
+                this.sendBtnText = PromptRangeSendCommand.shoot
             }
 
         },
@@ -3912,23 +3918,23 @@ var app = new Vue({
                         if (_el.isDraft) {
                             this.sendBtns = [
                                 {
-                                    text: '打靶'
+                                    text: PromptRangeSendCommand.shoot
                                 },
                                 {
-                                    text: '保存草稿'
+                                    text: PromptRangeSendCommand.draft
                                 }
                             ]
-                            this.sendBtnText = '打靶'
+                            this.sendBtnText = PromptRangeSendCommand.shoot
                         } else {
                             this.sendBtns = [
                                 {
-                                    text: '连发'
+                                    text: PromptRangeSendCommand.rapid
                                 },
                                 {
-                                    text: '保存草稿'
+                                    text: PromptRangeSendCommand.draft
                                 }
                             ]
-                            this.sendBtnText = '连发'
+                            this.sendBtnText = PromptRangeSendCommand.rapid
                         }
 
                         // get details
@@ -3936,13 +3942,13 @@ var app = new Vue({
                     } else {
                         this.sendBtns = [
                             {
-                                text: '打靶'
+                                text: PromptRangeSendCommand.shoot
                             },
                             {
-                                text: '保存草稿'
+                                text: PromptRangeSendCommand.draft
                             }
                         ]
-                        this.sendBtnText = '打靶'
+                        this.sendBtnText = PromptRangeSendCommand.shoot
                     }
 
                 })
@@ -4949,11 +4955,11 @@ var app = new Vue({
                     const _fitem = this.promptOpt.find(item => item.value === this.promptid);
                     if (_fitem) {
                         if (_fitem.isDraft) {
-                            this.sendBtns = [{ text: '打靶' }, { text: '保存草稿' }];
-                            this.sendBtnText = '打靶';
+                            this.sendBtns = [{ text: PromptRangeSendCommand.shoot }, { text: PromptRangeSendCommand.draft }];
+                            this.sendBtnText = PromptRangeSendCommand.shoot;
                         } else {
-                            this.sendBtns = [{ text: '连发' }, { text: '保存草稿' }];
-                            this.sendBtnText = '连发';
+                            this.sendBtns = [{ text: PromptRangeSendCommand.rapid }, { text: PromptRangeSendCommand.draft }];
+                            this.sendBtnText = PromptRangeSendCommand.rapid;
                         }
                     }
 
@@ -7313,13 +7319,13 @@ var app = new Vue({
                     this.promptDetail = copyResultData
                     this.sendBtns = [
                         {
-                            text: '连发'
+                            text: PromptRangeSendCommand.rapid
                         },
                         {
-                            text: '保存草稿'
+                            text: PromptRangeSendCommand.draft
                         }
                     ]
-                    this.sendBtnText = '连发'
+                    this.sendBtnText = PromptRangeSendCommand.rapid
                     this.outputAverageDeci = evalAvgScore > -1 ? evalAvgScore : -1
                     this.outputMaxDeci = evalMaxScore > -1 ? evalMaxScore : -1
                     this.outputList = promptResultList.map(item => this.normalizeOutputResultItem(item, id, fullVersion, promptItem))
@@ -7355,7 +7361,7 @@ var app = new Vue({
                         this.getScoringTrendData()
                     })
 
-                    if (this.sendBtnText !== '保存草稿' && this.numsOfResults > 1) {
+                    if (this.sendBtnText !== PromptRangeSendCommand.draft && this.numsOfResults > 1) {
                         await this.dealRapicFireHandel(this.numsOfResults - 1, id)
                     }
                 } else {
@@ -7844,13 +7850,13 @@ var app = new Vue({
                 this.pageChange = true
                 this.sendBtns = [
                     {
-                        text: '打靶'
+                        text: PromptRangeSendCommand.shoot
                     },
                     {
-                        text: '保存草稿'
+                        text: PromptRangeSendCommand.draft
                     }
                 ]
-                this.sendBtnText = '打靶'
+                this.sendBtnText = PromptRangeSendCommand.shoot
             }
             //Legacy comment translated to English.
             //Legacy comment translated to English.
@@ -7929,13 +7935,13 @@ var app = new Vue({
             this.pageChange = true
             this.sendBtns = [
                 {
-                    text: '打靶'
+                    text: PromptRangeSendCommand.shoot
                 },
                 {
-                    text: '保存草稿'
+                    text: PromptRangeSendCommand.draft
                 }
             ]
-            this.sendBtnText = '打靶'
+            this.sendBtnText = PromptRangeSendCommand.shoot
             let { sliderMax, sliderMin, sliderStep, isStr, isSlider, formField } = item
             //console.log('parameterInputHandle:', val)
             let _findIdnex = this.parameterViewList.findIndex(item => item.formField === formField)
@@ -8710,13 +8716,13 @@ var app = new Vue({
                     this.numsOfResults = 1
                     this.sendBtns = [
                         {
-                            text: '打靶'
+                            text: PromptRangeSendCommand.shoot
                         },
                         {
-                            text: '保存草稿'
+                            text: PromptRangeSendCommand.draft
                         }
                     ]
-                    this.sendBtnText = '打靶'
+                    this.sendBtnText = PromptRangeSendCommand.shoot
                 }
             }
         },
