@@ -225,24 +225,6 @@ var app = new Vue({
             promptStreamAvailable: true,
             useStreamOutput: true,
             promptStreamPreferenceStorageKey: 'PromptRange.UseStreamOutput',
-            promptRangeTexts: {
-                zh: {
-                    streamOptionLabel: '流式输出',
-                    streamOptionTooltip: '开启后，打靶/连发/继续对话会实时输出；关闭后使用整块输出。',
-                    switchOn: '开',
-                    switchOff: '关',
-                    streamFallbackWarning: '实时流连接失败，已自动切换为普通模式（刷新页面可重试）',
-                    streamUnsupportedWarning: '当前浏览器不支持流式输出，已切换为普通模式'
-                },
-                en: {
-                    streamOptionLabel: 'Streaming Output',
-                    streamOptionTooltip: 'When enabled, shooting/rapid fire/continue chat uses streaming output. When disabled, it uses full-response output.',
-                    switchOn: 'On',
-                    switchOff: 'Off',
-                    streamFallbackWarning: 'Streaming connection failed. Switched to normal mode automatically (refresh to retry).',
-                    streamUnsupportedWarning: 'Streaming is not supported by this browser. Switched to normal mode.'
-                }
-            },
             //Legacy comment translated to English.
             mapDialogVisible: false, //Legacy comment translated to English.
             map3dScene: null, //Legacy comment translated to English.
@@ -850,17 +832,17 @@ var app = new Vue({
         }
     },
     methods: {
-        getPromptRangeLocale() {
-            const raw = (document.documentElement.lang || navigator.language || 'en').toLowerCase();
-            if (raw.startsWith('zh')) {
-                return 'zh';
-            }
-            return 'en';
-        },
         getPromptRangeText(key) {
-            const locale = this.getPromptRangeLocale();
-            const localeTexts = this.promptRangeTexts[locale] || this.promptRangeTexts.en || {};
-            return localeTexts[key] || (this.promptRangeTexts.en && this.promptRangeTexts.en[key]) || key;
+            const resourceKeys = {
+                streamOptionLabel: 'Frontend.300',
+                streamOptionTooltip: 'Frontend.330',
+                switchOn: 'Frontend.029',
+                switchOff: 'Frontend.030',
+                streamFallbackWarning: 'Frontend.299',
+                streamUnsupportedWarning: 'Frontend.298'
+            };
+            const resourceKey = resourceKeys[key];
+            return resourceKey ? ncfST(resourceKey) : key;
         },
         loadPromptStreamPreference() {
             if (typeof EventSource === 'undefined') {
