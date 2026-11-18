@@ -645,8 +645,8 @@
     @* Recall: fragment details. *@
     <el-dialog :title="ncfST('Frontend.195')" :visible.sync="visible.paragraphDetailDialog" width="620px" append-to-body @@close="paragraphDetailItem = null">
         <template v-if="paragraphDetailItem">
-            <div class="paragraph-detail-meta">第 {{ paragraphDetailItem.rank }} 条 · 相似度 {{ formatScore(paragraphDetailItem.score) }}
-                <template v-if="paragraphDetailItem.rerankMode && paragraphDetailItem.rerankMode !== 'None' && paragraphDetailItem.originalRank && paragraphDetailItem.originalRank !== paragraphDetailItem.rank"> · 重排前第 {{ paragraphDetailItem.originalRank }} 条</template>
+            <div class="paragraph-detail-meta">{{ ncfST('Frontend.276', paragraphDetailItem.rank) }} {{ formatScore(paragraphDetailItem.score) }}
+                <template v-if="paragraphDetailItem.rerankMode && paragraphDetailItem.rerankMode !== 'None' && paragraphDetailItem.originalRank && paragraphDetailItem.originalRank !== paragraphDetailItem.rank"> {{ ncfST('Frontend.277', paragraphDetailItem.originalRank) }}</template>
             </div>
             <div class="paragraph-detail-source">{{ ncfST('Frontend.267') }}{{ paragraphDetailItem.sourceName || ncfST('Frontend.090') }}</div>
             <div class="paragraph-detail-content">{{ paragraphDetailItem.content || '—' }}</div>

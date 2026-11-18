@@ -35,18 +35,18 @@ var app = new Vue({
                 content: []
             },
             colData: [
-                { title: "知识库Id", istrue: false },
-                { title: "内容类型", istrue: true },
-                { title: "内容", istrue: true }
+                { title: ncfST('知识库Id'), istrue: false },
+                { title: ncfST('内容类型'), istrue: true },
+                { title: ncfST('内容'), istrue: true }
             ],
             checkBoxGroup: [
-                "知识库Id","内容类型","内容"
+                ncfST('知识库Id'), ncfST('内容类型'), ncfST('内容')
             ],
             checkedColumns: [],
             contentTypeData: [
-                { value: 1, label: '输入' },
-                { value: 2, label: '文件' },
-                { value: 3, label: '采集外部数据' }
+                { value: 1, label: ncfST('输入') },
+                { value: 2, label: ncfST('文件') },
+                { value: 3, label: ncfST('采集外部数据') }
             ],
 
             keyword:'',
@@ -72,7 +72,7 @@ var app = new Vue({
             dialogVisible: false,
             dialog:
             {
-                title: '新增知识库管理详情',
+                title: ncfST('新增知识库管理详情'),
                 visible: false,
                 data:
                 {
@@ -82,7 +82,7 @@ var app = new Vue({
                 {
                     name:
                     [
-                        { required: true, message: "知识库管理详情名称为必填项", trigger: "blur" }
+                        { required: true, message: ncfST('知识库管理详情名称为必填项'), trigger: "blur" }
                     ]
                 },
                 updateLoading: false,
@@ -91,7 +91,7 @@ var app = new Vue({
             },
             detailDialog:
             {
-                title: '知识库管理详情详情',
+                title: ncfST('知识库管理详情详情'),
                 visible: false,
                 data:
                 {
@@ -101,7 +101,7 @@ var app = new Vue({
                 {
                     name:
                     [
-                        { required: true, message: "知识库管理详情名称为必填项", trigger: "blur" }
+                        { required: true, message: ncfST('知识库管理详情名称为必填项'), trigger: "blur" }
                     ]
                 },
                 updateLoading: false,
@@ -162,8 +162,8 @@ var app = new Vue({
             if (res.code == 200)
             {
                 that.$notify({
-                    title: '成功',
-                    message: '恭喜你，上传成功',
+                    title: ncfST('成功'),
+                    message: ncfST('恭喜你，上传成功'),
                     type: 'success'
                 });
                 that.dialog.data.cover = res.data;
@@ -171,8 +171,8 @@ var app = new Vue({
             else
             {
                 that.$notify.error({
-                    title: '失败',
-                    message: '上传失败，请重新上传'
+                    title: ncfST('失败'),
+                    message: ncfST('上传失败，请重新上传')
                 });
             }
         },
@@ -180,8 +180,8 @@ var app = new Vue({
             let that = this
             //that.refs.upload.clearFiles();
             that.$notify.error({
-                title: '失败',
-                message: '上传失败，请重新上传'
+                title: ncfST('失败'),
+                message: ncfST('上传失败，请重新上传')
             });
         },
         //Legacy comment translated to English.
@@ -234,7 +234,7 @@ var app = new Vue({
             if (flag === 'add')
             {
                 // add
-                that.dialog.title = '新增知识库管理详情';
+                that.dialog.title = ncfST('新增知识库管理详情');
                 that.dialogImageUrl = '';
                 //that.$refs['bodyEditor'].editor.setData('');
                 return;
@@ -263,7 +263,7 @@ var app = new Vue({
 
             if (flag === 'edit')
             {
-                that.dialog.title = '编辑知识库管理详情';
+                that.dialog.title = ncfST('编辑知识库管理详情');
             }
         },
         //Legacy comment translated to English.
@@ -311,7 +311,7 @@ var app = new Vue({
                             that.getList();
                             that.$notify({
                                 title: "Success",
-                                message: "成功",
+                                message: ncfST('成功'),
                                 type: "success",
                                 duration: 2000
                             });
@@ -331,7 +331,7 @@ var app = new Vue({
                         that.getList();
                         that.$notify({
                         title: "Success",
-                        message: "删除成功",
+                        message: ncfST('删除成功'),
                         type: "success",
                         duration: 2000
                     });
@@ -398,13 +398,13 @@ var app = new Vue({
         setContentTypeFormat(row, column, cellValue, index) {
             switch(cellValue) {
                 case 1:{
-                    return "输入"
+                    return ncfST('输入')
                 }
                 case 2:{
-                    return "文件"
+                    return ncfST('文件')
                 }
                 case 3:{
-                    return "采集外部数据"
+                    return ncfST('采集外部数据')
                 }
             }
         },
