@@ -807,7 +807,7 @@
             @* Hide tactic selection during continued chat and on the first test when promptid is absent. *@
             <el-form-item v-if="!continueChatMode && promptid" :label="ncfST('Frontend.106')" prop="tactics">
                 <el-radio-group v-model="tacticalForm.tactics">
-                    <el-radio label="创建顶级战术">
+                    <el-radio label="create-top">
                         <div class="d-f-startr-start-title">{{ ncfST('Frontend.107') }}</div>
                         <div class="d-f-startr-start-nowrap">
                             <span style="color: #606266;">{{ ncfST('Frontend.108') }}</span>
@@ -817,7 +817,7 @@
                             </div>
                         </div>
                     </el-radio>
-                    <el-radio label="创建平行战术">
+                    <el-radio label="create-parallel">
                         <div class="d-f-startr-start-title">{{ ncfST('Frontend.111') }}</div>
                         <div class="d-f-startr-start-nowrap">
                             <span style="color: #606266;">{{ ncfST('Frontend.108') }}</span>
@@ -828,7 +828,7 @@
                         </div>
                     </el-radio>
 
-                    <el-radio label="创建子战术">
+                    <el-radio label="create-sub">
                         <div class="d-f-startr-start-title">{{ ncfST('Frontend.112') }}</div>
                         <div class="d-f-startr-start-nowrap">
                             <span style="color: #606266;">{{ ncfST('Frontend.108') }}</span>
@@ -838,7 +838,7 @@
                             </div>
                         </div>
                     </el-radio>
-                    <el-radio label="重新瞄准">
+                    <el-radio label="retarget">
                         <div class="d-f-startr-start-title">{{ ncfST('Frontend.113') }}</div>
                         <div class="d-f-startr-start-nowrap">
                             <span style="color: #606266;">{{ ncfST('Frontend.108') }}</span>
@@ -852,11 +852,11 @@
             </el-form-item>
             <el-form-item v-if="!continueChatMode && supportsChatMode" :label="ncfST('Frontend.105')" prop="chatMode">
                 <el-radio-group v-model="tacticalForm.chatMode" :disabled="continueChatMode">
-                    <el-radio label="对话模式">
+                    <el-radio label="chat">
                         <div>{{ ncfST('Frontend.114') }}</div>
                         <div style="margin-top:5px; font-size:12px; color:#909399;">{{ ncfST('Frontend.116') }}</div>
                     </el-radio>
-                    <el-radio label="直接测试">
+                    <el-radio label="direct">
                         <div>{{ ncfST('Frontend.115') }}</div>
                         <div style="margin-top:5px; font-size:12px; color:#909399;">{{ ncfST('Frontend.117') }}</div>
                     </el-radio>
@@ -939,7 +939,7 @@
             
             @* Conversation input area for chat mode. *@
             @* Do not use prop="chatInput"; this conditional field can make resetFields fail. *@
-            <el-form-item v-if="supportsChatMode && tacticalForm.chatMode === '对话模式'" :label="ncfST('Frontend.134')">
+            <el-form-item v-if="supportsChatMode && tacticalForm.chatMode === 'chat'" :label="ncfST('Frontend.134')">
                 <el-input 
                     v-model="tacticalChatInput" 
                     type="textarea" 

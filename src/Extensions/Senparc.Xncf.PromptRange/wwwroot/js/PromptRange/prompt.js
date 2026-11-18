@@ -194,8 +194,8 @@ var app = new Vue({
             tacticalFormVisible: false,
             tacticalFormSubmitLoading: false,
             tacticalForm: {
-                tactics: '重新瞄准',
-                chatMode: '对话模式' //Legacy comment translated to English.
+                tactics: 'retarget',
+                chatMode: 'chat' //Legacy comment translated to English.
             },
             //Legacy comment translated to English.
             tacticalChatInput: '', //Legacy comment translated to English.
@@ -2187,7 +2187,7 @@ var app = new Vue({
             }
 
             if (!this.supportsChatMode) {
-                this.tacticalForm.chatMode = '直接测试'
+                this.tacticalForm.chatMode = 'direct'
             }
             
             //Legacy comment translated to English.
@@ -2213,7 +2213,7 @@ var app = new Vue({
             }
             
             //Legacy comment translated to English.
-            if (this.supportsChatMode && this.tacticalForm.chatMode === '对话模式') {
+            if (this.supportsChatMode && this.tacticalForm.chatMode === 'chat') {
                 // checkwhetherhasinputcontent
                 if (!this.tacticalChatInput || !this.tacticalChatInput.trim()) {
                     this.$message({
@@ -3965,7 +3965,7 @@ var app = new Vue({
                     this.syncContinueChatUsageFromResult(promptResultId)
                     
                     //Legacy comment translated to English.
-                    this.tacticalForm.chatMode = '对话模式'
+                    this.tacticalForm.chatMode = 'chat'
                     this.tacticalFormVisible = true
                     
                     //Legacy comment translated to English.
@@ -3993,7 +3993,7 @@ var app = new Vue({
                             this.continueChatSystemMessage = this.content || ''
                         }
                         
-                        this.tacticalForm.chatMode = '对话模式'
+                        this.tacticalForm.chatMode = 'chat'
                         this.tacticalFormVisible = true
                         
                         this.$nextTick(() => {
@@ -4034,8 +4034,8 @@ var app = new Vue({
         tacticalFormCloseDialog() {
             const wasContinueChatMode = this.continueChatMode
             this.tacticalForm = {
-                tactics: '重新瞄准',
-                chatMode: '对话模式' //Legacy comment translated to English.
+                tactics: 'retarget',
+                chatMode: 'chat' //Legacy comment translated to English.
             }
             //Legacy comment translated to English.
             this.tacticalChatInput = ''
@@ -4962,7 +4962,7 @@ var app = new Vue({
                         this.optimizeProgressText = '正在打靶（与手动打靶相同，可在主界面查看输出）…';
                         //Legacy comment translated to English.
                         const savedTactics = this.tacticalForm.tactics;
-                        this.tacticalForm.tactics = '连发';
+                        this.tacticalForm.tactics = 'rapid';
                         try {
                             await this.executeTargetShootWithChatMessage(null);
                         } finally {
@@ -7261,16 +7261,16 @@ var app = new Vue({
             if (this.promptid) {
                 _postData.id = this.promptid
                 //Legacy comment translated to English.
-                if (selectedTactics === '创建顶级战术') {
+                if (selectedTactics === 'create-top') {
                     _postData.isTopTactic = true
                 }
-                if (selectedTactics === '创建平行战术') {
+                if (selectedTactics === 'create-parallel') {
                     _postData.isNewTactic = true
                 }
-                if (selectedTactics === '创建子战术') {
+                if (selectedTactics === 'create-sub') {
                     _postData.isNewSubTactic = true
                 }
-                if (selectedTactics === '重新瞄准') {
+                if (selectedTactics === 'retarget') {
                     _postData.isNewAiming = true
                 }
             }
@@ -8148,11 +8148,11 @@ var app = new Vue({
         },
         onModelSelectionChanged() {
             if (this.isSpeechToTextModelSelected) {
-                this.tacticalForm.chatMode = '直接测试'
+                this.tacticalForm.chatMode = 'direct'
             } else if (this.supportsChatMode && !this.tacticalForm.chatMode) {
-                this.tacticalForm.chatMode = '对话模式'
-            } else if (!this.supportsChatMode && this.tacticalForm.chatMode === '对话模式') {
-                this.tacticalForm.chatMode = '直接测试'
+                this.tacticalForm.chatMode = 'chat'
+            } else if (!this.supportsChatMode && this.tacticalForm.chatMode === 'chat') {
+                this.tacticalForm.chatMode = 'direct'
             }
 
             if (this.isTextEmbeddingModelSelected) {
