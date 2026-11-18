@@ -7,48 +7,48 @@ window.ncfWorkflowText = window.ncfWorkflowText || function (source) {
 const MaxWorkflowConsoleEvents = 5000;
 const MaxWorkflowLoopIterations = 100000;
 const WorkflowFormulaDefinitions = [
-    { name: 'if', label: '条件', category: '判断', arity: 3, description: '根据条件返回两个值之一。第一个参数为条件，后两个参数分别是真值和假值。' },
-    { name: 'coalesce', label: '取首个非空值', category: '判断', arity: 2, description: '从多个参数中返回第一个非空值；可以继续手动添加更多参数。' },
-    { name: 'contains', label: '包含', category: '判断', arity: 2, description: '判断文本是否包含子文本，或数组是否包含指定项。' },
-    { name: 'startsWith', label: '前缀匹配', category: '判断', arity: 2, description: '判断文本是否以指定内容开头。' },
-    { name: 'endsWith', label: '后缀匹配', category: '判断', arity: 2, description: '判断文本是否以指定内容结尾。' },
-    { name: 'isEmpty', label: '是否为空', category: '判断', arity: 1, description: '判断值是否为 null、空文本或空数组。' },
-    { name: 'isNull', label: '是否为 null', category: '判断', arity: 1, description: '判断值是否为 null；空文本和空数组不视为 null。' },
-    { name: 'substring', label: '截取文本', category: '文本', arity: 3, description: '按起始位置和长度截取文本；长度参数可以留空以截取到末尾。' },
-    { name: 'trim', label: '去首尾空白', category: '文本', arity: 1, description: '删除文本首尾的空格、换行等空白字符。' },
-    { name: 'lower', label: '转小写', category: '文本', arity: 1, description: '将文本转换为小写。' },
-    { name: 'upper', label: '转大写', category: '文本', arity: 1, description: '将文本转换为大写。' },
-    { name: 'replace', label: '替换文本', category: '文本', arity: 3, description: '将文本中的指定内容替换为新内容。' },
-    { name: 'split', label: '分割文本', category: '文本', arity: 2, description: '按分隔符拆分文本并返回数组。' },
-    { name: 'concat', label: '连接值', category: '文本/数组', arity: 2, description: '连接文本；当参数中包含数组时，按数组项连接为一个新数组。' },
-    { name: 'length', label: '长度', category: '数组', arity: 1, description: '返回文本长度或数组项数。' },
-    { name: 'count', label: '计数', category: '数组', arity: 1, description: 'length 的别名，返回文本长度或数组项数。' },
-    { name: 'toArray', label: '转数组', category: '数组', arity: 1, description: '将单值包装为数组；已经是数组时返回数组副本。' },
-    { name: 'first', label: '首项', category: '数组', arity: 1, description: '返回数组或文本的第一项。' },
-    { name: 'last', label: '末项', category: '数组', arity: 1, description: '返回数组或文本的最后一项。' },
-    { name: 'at', label: '按索引取值', category: '数组', arity: 2, description: '按从 0 开始的索引读取数组或文本项。' },
-    { name: 'join', label: '连接数组', category: '数组', arity: 2, description: '使用指定分隔符把数组项连接成文本。' },
-    { name: 'sort', label: '排序', category: '数组', arity: 3, description: '对数组排序；可选字段路径和 asc/desc 排序方向。' },
-    { name: 'orderBy', label: '按字段排序', category: '数组', arity: 3, description: 'sort 的语义别名，按对象字段路径稳定排序。' },
-    { name: 'reverse', label: '反转', category: '数组', arity: 1, description: '返回数组项的反向副本。' },
-    { name: 'take', label: '取前几项', category: '数组', arity: 2, description: '返回数组开头指定数量的项。' },
-    { name: 'skip', label: '跳过前几项', category: '数组', arity: 2, description: '跳过数组开头指定数量的项。' },
-    { name: 'flatten', label: '展开一层', category: '数组', arity: 1, description: '将嵌套数组展开一层，不递归处理更深层级。' },
-    { name: 'sum', label: '求和', category: '数组', arity: 1, description: '将数组项转换为数字并求和。' },
-    { name: 'min', label: '最小值', category: '数组', arity: 1, description: '返回数组项转换后的最小数字。' },
-    { name: 'max', label: '最大值', category: '数组', arity: 1, description: '返回数组项转换后的最大数字。' },
-    { name: 'unique', label: '去重', category: '数组', arity: 1, description: '按文本表现去重并保留首次出现的项。' },
-    { name: 'keys', label: '对象键名', category: '对象', arity: 1, description: '返回对象的属性名数组。' },
-    { name: 'values', label: '对象值', category: '对象', arity: 1, description: '返回对象的属性值数组。' },
-    { name: 'has', label: '包含属性', category: '对象', arity: 2, description: '判断对象是否包含指定属性名。' },
-    { name: 'toNumber', label: '转数字', category: '类型', arity: 1, description: '将值转换为数字。' },
-    { name: 'toInt', label: '转 Int32', category: '类型', arity: 1, description: '将值转换为 Int32。' },
-    { name: 'toLong', label: '转 Int64', category: '类型', arity: 1, description: '将值转换为 Int64。' },
-    { name: 'toDecimal', label: '转 Decimal', category: '类型', arity: 1, description: '将值转换为 Decimal。' },
-    { name: 'toBool', label: '转布尔', category: '类型', arity: 1, description: '将值转换为布尔值，支持 true/false 或 1/0。' },
-    { name: 'toString', label: '转文本', category: '类型', arity: 1, description: '将值转换为文本。' },
-    { name: 'now', label: '当前时间', category: '时间', arity: 0, description: '返回当前 UTC 时间的 ISO 文本。' },
-    { name: 'formatDate', label: '格式化日期', category: '时间', arity: 2, description: '按指定格式格式化日期；格式参数留空时使用默认格式。' }
+    { name: 'if', label: 'Frontend.412', category: 'Frontend.414', arity: 3, description: 'Frontend.564' },
+    { name: 'coalesce', label: 'Frontend.520', category: 'Frontend.414', arity: 2, description: 'Frontend.565' },
+    { name: 'contains', label: 'Frontend.187', category: 'Frontend.414', arity: 2, description: 'Frontend.566' },
+    { name: 'startsWith', label: 'Frontend.521', category: 'Frontend.414', arity: 2, description: 'Frontend.567' },
+    { name: 'endsWith', label: 'Frontend.522', category: 'Frontend.414', arity: 2, description: 'Frontend.568' },
+    { name: 'isEmpty', label: 'Frontend.523', category: 'Frontend.414', arity: 1, description: 'Frontend.569' },
+    { name: 'isNull', label: 'Frontend.524', category: 'Frontend.414', arity: 1, description: 'Frontend.570' },
+    { name: 'substring', label: 'Frontend.525', category: 'Frontend.560', arity: 3, description: 'Frontend.571' },
+    { name: 'trim', label: 'Frontend.526', category: 'Frontend.560', arity: 1, description: 'Frontend.572' },
+    { name: 'lower', label: 'Frontend.527', category: 'Frontend.560', arity: 1, description: 'Frontend.573' },
+    { name: 'upper', label: 'Frontend.528', category: 'Frontend.560', arity: 1, description: 'Frontend.574' },
+    { name: 'replace', label: 'Frontend.529', category: 'Frontend.560', arity: 3, description: 'Frontend.575' },
+    { name: 'split', label: 'Frontend.530', category: 'Frontend.560', arity: 2, description: 'Frontend.576' },
+    { name: 'concat', label: 'Frontend.531', category: 'Frontend.561', arity: 2, description: 'Frontend.577' },
+    { name: 'length', label: 'Frontend.532', category: 'Frontend.410', arity: 1, description: 'Frontend.578' },
+    { name: 'count', label: 'Frontend.533', category: 'Frontend.410', arity: 1, description: 'Frontend.579' },
+    { name: 'toArray', label: 'Frontend.534', category: 'Frontend.410', arity: 1, description: 'Frontend.580' },
+    { name: 'first', label: 'Frontend.535', category: 'Frontend.410', arity: 1, description: 'Frontend.581' },
+    { name: 'last', label: 'Frontend.536', category: 'Frontend.410', arity: 1, description: 'Frontend.582' },
+    { name: 'at', label: 'Frontend.537', category: 'Frontend.410', arity: 2, description: 'Frontend.583' },
+    { name: 'join', label: 'Frontend.538', category: 'Frontend.410', arity: 2, description: 'Frontend.584' },
+    { name: 'sort', label: 'Frontend.539', category: 'Frontend.410', arity: 3, description: 'Frontend.585' },
+    { name: 'orderBy', label: 'Frontend.540', category: 'Frontend.410', arity: 3, description: 'Frontend.586' },
+    { name: 'reverse', label: 'Frontend.541', category: 'Frontend.410', arity: 1, description: 'Frontend.587' },
+    { name: 'take', label: 'Frontend.542', category: 'Frontend.410', arity: 2, description: 'Frontend.588' },
+    { name: 'skip', label: 'Frontend.543', category: 'Frontend.410', arity: 2, description: 'Frontend.589' },
+    { name: 'flatten', label: 'Frontend.544', category: 'Frontend.410', arity: 1, description: 'Frontend.590' },
+    { name: 'sum', label: 'Frontend.545', category: 'Frontend.410', arity: 1, description: 'Frontend.591' },
+    { name: 'min', label: 'Frontend.546', category: 'Frontend.410', arity: 1, description: 'Frontend.592' },
+    { name: 'max', label: 'Frontend.547', category: 'Frontend.410', arity: 1, description: 'Frontend.593' },
+    { name: 'unique', label: 'Frontend.548', category: 'Frontend.410', arity: 1, description: 'Frontend.594' },
+    { name: 'keys', label: 'Frontend.549', category: 'Frontend.411', arity: 1, description: 'Frontend.595' },
+    { name: 'values', label: 'Frontend.550', category: 'Frontend.411', arity: 1, description: 'Frontend.596' },
+    { name: 'has', label: 'Frontend.551', category: 'Frontend.411', arity: 2, description: 'Frontend.597' },
+    { name: 'toNumber', label: 'Frontend.552', category: 'Frontend.562', arity: 1, description: 'Frontend.598' },
+    { name: 'toInt', label: 'Frontend.553', category: 'Frontend.562', arity: 1, description: 'Frontend.599' },
+    { name: 'toLong', label: 'Frontend.554', category: 'Frontend.562', arity: 1, description: 'Frontend.600' },
+    { name: 'toDecimal', label: 'Frontend.555', category: 'Frontend.562', arity: 1, description: 'Frontend.601' },
+    { name: 'toBool', label: 'Frontend.556', category: 'Frontend.562', arity: 1, description: 'Frontend.602' },
+    { name: 'toString', label: 'Frontend.557', category: 'Frontend.562', arity: 1, description: 'Frontend.603' },
+    { name: 'now', label: 'Frontend.558', category: 'Frontend.563', arity: 0, description: 'Frontend.604' },
+    { name: 'formatDate', label: 'Frontend.559', category: 'Frontend.563', arity: 2, description: 'Frontend.605' }
 ];
 WorkflowFormulaDefinitions.forEach(definition => {
     definition.label = ncfWorkflowText(definition.label);
@@ -139,7 +139,7 @@ if (typeof Vue !== 'undefined' && typeof Vue.component === 'function') {
                 return !keyword || values.some(value => String(value || '').toLowerCase().includes(keyword));
             },
             objectKindLabel(object) {
-                return object?.kind === 'a2a' ? '远程 A2A Agent' : object?.kind === 'agent-group' ? 'Agent 组' : '独立 Agent';
+                return object?.kind === 'a2a' ? ncfWorkflowText('Frontend.448') : object?.kind === 'agent-group' ? ncfWorkflowText('Frontend.117') : ncfWorkflowText('Frontend.449');
             },
             functionIdentity(fn) { return `${String(fn.moduleUid).toLowerCase()}|${String(fn.functionKey).toLowerCase()}`; },
             isPinned(fn) { return this.pinnedFunctionKeys.includes(this.functionIdentity(fn)); },
@@ -219,14 +219,14 @@ if (typeof Vue !== 'undefined' && typeof Vue.component === 'function') {
             placeholder: { type: String, default: '' },
             helpText: { type: String, default: '' },
             editable: { type: Boolean, default: true },
-            editLabel: { type: String, default: '变量/公式' }
+            editLabel: { type: String, default: ncfWorkflowText('Frontend.688') }
         },
         template: `
             <div :class="['workflow-rich-text-input', {'is-disabled': disabled, 'is-multiline': multiline}]">
                 <div class="workflow-rich-text-input-header">
-                    <span class="workflow-rich-text-badge"><i class="el-icon-magic-stick"></i>支持公式文本</span>
+                    <span class="workflow-rich-text-badge"><i class="el-icon-magic-stick"></i>${ncfWorkflowText('Frontend.686')}</span>
                     <el-tooltip v-if="helpText" effect="dark" placement="top-start" :content="helpText">
-                        <i class="el-icon-info workflow-rich-text-info" tabindex="0" aria-label="公式文本说明"></i>
+                        <i class="el-icon-info workflow-rich-text-info" tabindex="0" :aria-label="${ncfWorkflowText('Frontend.687')}"></i>
                     </el-tooltip>
                 </div>
                 <div class="workflow-rich-text-input-control">
@@ -274,8 +274,8 @@ new Vue({
             discardConfirming: false,
             webhookHelpVisible: false,
             workflowSettingsVisible: false,
-            templateEditorPlaceholder: '例如：请根据 {{value_1}} 生成一段摘要',
-            templateEditorBindingHelp: '删除一个变量标签时，它在文本中的对应占位符也会一并删除。所有公式文本都可以使用 {{input}} 引用当前输入；带“支持公式文本”标记的字段还可以插入上游输出。',
+            templateEditorPlaceholder: ncfWorkflowText('Frontend.689'),
+            templateEditorBindingHelp: ncfWorkflowText('Frontend.690'),
             templateEditor: {
                 visible: false,
                 nodeId: '',
@@ -482,7 +482,7 @@ new Vue({
             const message = String(this.validation?.message || '').trim();
             if (!message) return [];
             const nodeIds = Array.isArray(this.validation?.nodeIds) ? this.validation.nodeIds : [];
-            if (!nodeIds.length) return [{ nodeId: '', label: '工作流', message }];
+            if (!nodeIds.length) return [{ nodeId: '', label: ncfWorkflowText('Frontend.011'), message }];
             return nodeIds.map(nodeId => {
                 const node = this.form.graph.nodes.find(item => item.id === nodeId);
                 return { nodeId, label: node ? (node.name || node.id) : nodeId, message };
@@ -527,7 +527,7 @@ new Vue({
         },
         templateExpressionHelp() {
             const names = WorkflowFormulaDefinitions.map(item => item.name).join('、');
-            return `表达式写法：{{= if(contains(value_1, "VIP"), upper(value_1), "普通") }}。支持 ${names}、比较和判断。非字符串参数请只填写完整公式，例如 {{= toInt(value_1) }}；加入前后文本后结果始终是字符串。工作流变量须写为 {{= vars.变量名 }}；不执行 JavaScript。右侧公式按钮可以快速插入。`;
+            return ncfWorkflowText('Frontend.691').replace('{0}', names);
         },
         templateEditorFormulaGroups() {
             const groups = [];
@@ -683,8 +683,8 @@ new Vue({
         workflowTriggerLabel(item) {
             const triggerType = String(item && item.triggerType || '').toLowerCase();
             if (triggerType === 'interval') return ncfWorkflowText('Frontend.471');
-            if (triggerType === 'webhook') return 'Webhook';
-            if (triggerType === 'chat') return 'Chat';
+            if (triggerType === 'webhook') return ncfWorkflowText('Frontend.470');
+            if (triggerType === 'chat') return ncfWorkflowText('Frontend.132');
             return ncfWorkflowText('Frontend.467');
         },
         workflowTriggerTagType(item) {
@@ -704,13 +704,13 @@ new Vue({
             if (!nextRun) return ncfWorkflowText('Frontend.115');
             const seconds = Math.ceil((nextRun.getTime() - now) / 1000);
             if (seconds <= 0) return ncfWorkflowText('Frontend.391');
-            if (seconds < 60) return '不足 1 分钟后运行';
+            if (seconds < 60) return ncfWorkflowText('Frontend.692');
             const minutes = Math.ceil(seconds / 60);
-            if (minutes < 60) return `${minutes} 分钟后运行`;
+            if (minutes < 60) return ncfWorkflowText('Frontend.693').replace('{0}', minutes);
             const hours = Math.ceil(minutes / 60);
-            if (hours < 24) return `${hours} 小时后运行`;
+            if (hours < 24) return ncfWorkflowText('Frontend.694').replace('{0}', hours);
             const days = Math.ceil(hours / 24);
-            return `${days} 天后运行`;
+            return ncfWorkflowText('Frontend.695').replace('{0}', days);
         },
         workflowScheduleTitle(item) {
             if (!this.isIntervalWorkflow(item)) return '';
@@ -718,7 +718,7 @@ new Vue({
             const nextRun = this.workflowNextRunDate(item);
             if (!nextRun) return ncfWorkflowText('Frontend.115');
             const pad = value => String(value).padStart(2, '0');
-            return `下次执行：${nextRun.getFullYear()}-${pad(nextRun.getMonth() + 1)}-${pad(nextRun.getDate())} ${pad(nextRun.getHours())}:${pad(nextRun.getMinutes())}`;
+            return ncfWorkflowText('Frontend.696').replace('{0}', `${nextRun.getFullYear()}-${pad(nextRun.getMonth() + 1)}-${pad(nextRun.getDate())} ${pad(nextRun.getHours())}:${pad(nextRun.getMinutes())}`);
         },
         emptyForm() {
             return { id: 0, name: '', description: '', enabled: false, triggerType: 'manual', intervalSeconds: 300, webhookMethod: 'any', webhookToken: '', webhookParameters: [], chatTitle: '', chatGreeting: '', chatAllowGuest: true, autoSaveMinutes: 3, revision: 0, runningCount: 0, graph: { nodes: [], edges: [], variables: [], layout: { direction: 'vertical' } } };
@@ -819,41 +819,41 @@ new Vue({
             if (safePreview.kind === 'function') {
                 const parameters = this.functionParameters(payload) || [];
                 const rows = [
-                    { label: '所属模块', value: String(payload.moduleName || '未标注模块') },
-                    { label: 'Function 标识', value: String(payload.functionKey || '未标注') },
-                    { label: '状态', value: payload.moduleAvailable ? '可用' : '模块未安装或未开启' }
+                    { label: ncfWorkflowText('Frontend.697'), value: String(payload.moduleName || ncfWorkflowText('Frontend.699')) },
+                    { label: ncfWorkflowText('Frontend.698'), value: String(payload.functionKey || ncfWorkflowText('Frontend.700')) },
+                    { label: ncfWorkflowText('Frontend.012'), value: payload.moduleAvailable ? ncfWorkflowText('Frontend.435') : ncfWorkflowText('Frontend.437') }
                 ];
                 parameters.slice(0, 4).forEach((parameter, index) => {
                     const name = this.parameterDisplayName(parameter, index);
                     const description = this.parameterDescription(parameter);
-                    rows.push({ label: `参数 · ${name}`, value: description || (parameter.required ? '必填参数' : '可选参数') });
+                    rows.push({ label: `${ncfWorkflowText('Frontend.701')} · ${name}`, value: description || (parameter.required ? ncfWorkflowText('Frontend.446') : ncfWorkflowText('Frontend.460')) });
                 });
-                if (parameters.length > 4) rows.push({ label: '更多参数', value: `另有 ${parameters.length - 4} 个参数可在节点设置中配置` });
+                if (parameters.length > 4) rows.push({ label: ncfWorkflowText('Frontend.702'), value: `${parameters.length - 4} ${ncfWorkflowText('Frontend.702')}` });
                 return {
                     kind: 'NeuCharPivot Function',
-                    title: String(payload.functionName || '未命名 Function'),
-                    description: String(payload.description || '暂无 Function 说明。'),
+                    title: String(payload.functionName || ncfWorkflowText('Frontend.703')),
+                    description: String(payload.description || ncfWorkflowText('Frontend.704')),
                     rows,
-                    actionText: payload.moduleAvailable ? '双击或拖到画布以添加' : '模块未开启，暂不能添加'
+                    actionText: payload.moduleAvailable ? ncfWorkflowText('Frontend.438') : ncfWorkflowText('Frontend.705')
                 };
             }
             if (safePreview.kind === 'object') {
                 const metadata = payload.metadata || {};
-                const objectType = payload.kind === 'a2a' ? '远程 A2A Agent' : payload.kind === 'agent-group' ? 'Agent 组' : '独立 Agent';
+                const objectType = this.objectKindLabel(payload);
                 const description = String(metadata.description || payload.description || `${objectType} 节点会在工作流中处理上游输入。`);
                 return {
-                    kind: payload.kind === 'a2a' ? 'A2A 远程连接' : 'AgentsManager',
+                    kind: payload.kind === 'a2a' ? ncfWorkflowText('Frontend.706') : 'AgentsManager',
                     title: String(payload.name || objectType),
                     description,
                     rows: [
-                        { label: '节点类型', value: objectType },
-                        { label: '所属模块', value: String(payload.moduleName || 'AgentsManager') },
-                        { label: '状态', value: payload.enabled ? '可用' : '不可用' }
+                        { label: ncfWorkflowText('Frontend.707'), value: objectType },
+                        { label: ncfWorkflowText('Frontend.697'), value: String(payload.moduleName || 'AgentsManager') },
+                        { label: ncfWorkflowText('Frontend.012'), value: payload.enabled ? ncfWorkflowText('Frontend.435') : ncfWorkflowText('Frontend.436') }
                     ],
-                    actionText: payload.enabled ? '双击或拖到画布以添加' : '当前对象不可用，暂不能添加'
+                    actionText: payload.enabled ? ncfWorkflowText('Frontend.438') : ncfWorkflowText('Frontend.451')
                 };
             }
-            return { kind: '节点详情', title: '添加节点', description: '', rows: [], actionText: '双击或拖到画布以添加' };
+            return { kind: ncfWorkflowText('Frontend.719'), title: ncfWorkflowText('Frontend.305'), description: '', rows: [], actionText: ncfWorkflowText('Frontend.438') };
         },
         clearNodePreviewTimer() {
             if (this.nodePreviewTimer !== null && this.nodePreviewTimer !== undefined) window.clearTimeout(this.nodePreviewTimer);
@@ -2561,36 +2561,36 @@ new Vue({
             this.updateCanvasViewport();
         },
         nodeSummary(node) {
-            if (node.type === 'function') { const fn = this.findFunction(node.config); return fn ? fn.moduleName : 'Function 已失效'; }
-            if (node.type === 'interval-trigger') return `每 ${this.form.intervalSeconds} 秒`;
+            if (node.type === 'function') { const fn = this.findFunction(node.config); return fn ? fn.moduleName : ncfWorkflowText('Frontend.495'); }
+            if (node.type === 'interval-trigger') return `${ncfWorkflowText('Frontend.101').replace('{0}', this.form.intervalSeconds)}`;
             if (node.type === 'webhook-trigger') return ncfST('Frontend.649');
             if (node.type === 'manual-trigger') return ncfST('Frontend.650');
             if (node.type === 'chat-trigger') return ncfST('Frontend.651');
-            if (node.type === 'delay') return `${node.config.seconds || 0} 秒`;
+            if (node.type === 'delay') return ncfWorkflowText('Frontend.101').replace('{0}', node.config.seconds || 0);
             if (node.type === 'loop') return this.isTemplateValue(node.config?.count)
-                ? `按语法动态计算次数`
+                ? ncfWorkflowText('Frontend.720')
                 : this.isBinding(node.config?.count)
-                ? '从上游读取次数（最多 100000 次）'
-                : `顺序重复 ${node.config?.count || 3} 次`;
+                ? ncfWorkflowText('Frontend.721')
+                : ncfWorkflowText('Frontend.722').replace('{0}', node.config?.count || 3);
             if (node.type === 'loop-end') return ncfWorkflowText('Frontend.611');
             if (node.type === 'sub-workflow') {
                 const workflow = (this.workflows || []).find(item => Number(item.id) === Number(node.config?.workflowId || 0));
-                return workflow ? '调用：' + workflow.name : '请选择目标工作流';
+                return workflow ? ncfWorkflowText('Frontend.710').replace('{0}', workflow.name) : ncfWorkflowText('Frontend.711');
             }
-            if (node.type === 'code') return '设置 ' + (Array.isArray(node.config?.assignments) ? node.config.assignments.length : 0) + ' 个工作流变量';
+            if (node.type === 'code') return ncfWorkflowText('Frontend.712').replace('{0}', Array.isArray(node.config?.assignments) ? node.config.assignments.length : 0);
             if (node.type === 'condition') return `${node.config.operator || 'equals'} ${this.configValueLabel(node.config.right)}`;
-            if (node.type === 'aggregate') return node.config.outputTemplate ? '汇总全部输入后只输出一次' : '请设置汇总输出内容';
+            if (node.type === 'aggregate') return node.config.outputTemplate ? ncfWorkflowText('Frontend.713') : ncfWorkflowText('Frontend.714');
             if (node.type === 'merge') return ncfWorkflowText('Frontend.615');
             if (node.type === 'parallel') return ncfWorkflowText('Frontend.616');
-            if (node.type === 'console') return node.config?.printTemplate ? '按模板输出到下方 Console' : '输出到下方 Console';
+            if (node.type === 'console') return node.config?.printTemplate ? ncfWorkflowText('Frontend.452') : ncfWorkflowText('Frontend.453');
             if (node.type === 'neubell') {
                 const mode = String(node.config?.consumeMode || 'none');
-                return mode === 'provider' ? '点击后消费本订阅全部提醒'
-                    : mode === 'item' ? '点击后消费当前提醒' : '点击后仅查看任务';
+                return mode === 'provider' ? ncfWorkflowText('Frontend.715')
+                    : mode === 'item' ? ncfWorkflowText('Frontend.716') : ncfWorkflowText('Frontend.717');
             }
-            if (node.type === 'human-input') return node.config?.externalResumeEnabled ? '等待人工输入或外部 API 恢复' : '等待人工输入';
+            if (node.type === 'human-input') return node.config?.externalResumeEnabled ? ncfWorkflowText('Frontend.718') : ncfWorkflowText('Frontend.428');
             if (node.type === 'end') return ncfWorkflowText('Frontend.454');
-            return node.type === 'agent-group' ? 'Agent 组' : node.type === 'agent' ? '独立 Agent' : node.type === 'a2a' ? '远程 A2A Agent' : node.type;
+            return node.type === 'agent-group' ? ncfWorkflowText('Frontend.117') : node.type === 'agent' ? ncfWorkflowText('Frontend.449') : node.type === 'a2a' ? ncfWorkflowText('Frontend.448') : node.type;
         },
         nodeValidationError(node) {
             if (!node || !this.validation || !Array.isArray(this.validation.nodeIds)) return '';

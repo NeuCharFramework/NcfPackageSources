@@ -712,4 +712,58 @@
   <data name="Frontend.666" xml:space="preserve"><value>编辑</value></data>
   <data name="Frontend.667" xml:space="preserve"><value>编辑文本与插入变量</value></data>
   <data name="Frontend.668" xml:space="preserve"><value>此字段只支持当前输入和受限公式；表达式不会执行任意 JavaScript。</value></data>
+  <data name="Frontend.669" xml:space="preserve"><value>使用每个 Agent 模型绑定</value></data>
+  <data name="Frontend.670" xml:space="preserve"><value>对所有 Agent 使用此任务模型</value></data>
+  <data name="Frontend.671" xml:space="preserve"><value>不向模型暴露工具</value></data>
+  <data name="Frontend.672" xml:space="preserve"><value>允许此组中已配置的 Human 参与者</value></data>
+  <data name="Frontend.673" xml:space="preserve"><value>本次运行跳过 Human 成员</value></data>
+  <data name="Frontend.674" xml:space="preserve"><value>未命名变量</value></data>
+  <data name="Frontend.675" xml:space="preserve"><value>例如：{{= upper(input) }}；使用 vars.variableName 读取当前变量值。点击编辑公式可打开统一公式编辑器。</value></data>
+  <data name="Frontend.676" xml:space="preserve"><value>Workflow 人在回路</value></data>
+  <data name="Frontend.677" xml:space="preserve"><value>提交并继续</value></data>
+  <data name="Frontend.678" xml:space="preserve"><value>同意并继续</value></data>
+  <data name="Frontend.679" xml:space="preserve"><value>取消置顶</value></data>
+  <data name="Frontend.680" xml:space="preserve"><value>置顶</value></data>
+  <data name="Frontend.681" xml:space="preserve"><value>从“{0}”拖到目标节点{1}端口；松开到空白处可取消。</value></data>
+  <data name="Frontend.682" xml:space="preserve"><value>左侧</value></data>
+  <data name="Frontend.683" xml:space="preserve"><value>顶部</value></data>
+  <data name="Frontend.684" xml:space="preserve"><value>已保存文件引用：</value></data>
+  <data name="Frontend.685" xml:space="preserve"><value>可使用 {{input}} 或受限公式，也可以插入上游输出作为文本片段。</value></data>
+  <data name="Frontend.686" xml:space="preserve"><value>支持公式文本</value></data>
+  <data name="Frontend.687" xml:space="preserve"><value>公式文本说明</value></data>
+  <data name="Frontend.688" xml:space="preserve"><value>变量 / 公式</value></data>
+  <data name="Frontend.689" xml:space="preserve"><value>例如：请根据 {{value_1}} 生成一段摘要</value></data>
+  <data name="Frontend.690" xml:space="preserve"><value>删除一个变量标签时，文本中的对应占位符也会一并删除。所有公式文本都可以使用 {{input}} 引用当前输入；带“支持公式文本”标记的字段还可以插入上游输出。</value></data>
+  <data name="Frontend.691" xml:space="preserve"><value>表达式写法：{{= if(contains(value_1, "VIP"), upper(value_1), "普通") }}。支持 {0}、比较和判断。非字符串参数请只填写完整公式，例如 {{= toInt(value_1) }}；加入前后文本后结果始终是字符串。工作流变量须写为 {{= vars.variableName }}；不执行 JavaScript。右侧公式按钮可以快速插入。</value></data>
+  <data name="Frontend.692" xml:space="preserve"><value>不到 1 分钟后运行</value></data>
+  <data name="Frontend.693" xml:space="preserve"><value>{0} 分钟后运行</value></data>
+  <data name="Frontend.694" xml:space="preserve"><value>{0} 小时后运行</value></data>
+  <data name="Frontend.695" xml:space="preserve"><value>{0} 天后运行</value></data>
+  <data name="Frontend.696" xml:space="preserve"><value>下次执行：{0}</value></data>
+  <data name="Frontend.697" xml:space="preserve"><value>所属模块</value></data>
+  <data name="Frontend.698" xml:space="preserve"><value>Function 标识</value></data>
+  <data name="Frontend.699" xml:space="preserve"><value>未标注模块</value></data>
+  <data name="Frontend.700" xml:space="preserve"><value>未标注</value></data>
+  <data name="Frontend.701" xml:space="preserve"><value>参数</value></data>
+  <data name="Frontend.702" xml:space="preserve"><value>更多参数</value></data>
+  <data name="Frontend.703" xml:space="preserve"><value>未命名 Function</value></data>
+  <data name="Frontend.704" xml:space="preserve"><value>暂无 Function 说明。</value></data>
+  <data name="Frontend.705" xml:space="preserve"><value>模块未开启，暂不能添加</value></data>
+  <data name="Frontend.706" xml:space="preserve"><value>A2A 远程连接</value></data>
+  <data name="Frontend.707" xml:space="preserve"><value>节点类型</value></data>
+  <data name="Frontend.708" xml:space="preserve"><value>已启用</value></data>
+  <data name="Frontend.709" xml:space="preserve"><value>已停用</value></data>
+  <data name="Frontend.710" xml:space="preserve"><value>调用：{0}</value></data>
+  <data name="Frontend.711" xml:space="preserve"><value>请选择目标工作流</value></data>
+  <data name="Frontend.712" xml:space="preserve"><value>设置 {0} 个工作流变量</value></data>
+  <data name="Frontend.713" xml:space="preserve"><value>汇总全部输入后只输出一次</value></data>
+  <data name="Frontend.714" xml:space="preserve"><value>请设置汇总输出内容</value></data>
+  <data name="Frontend.715" xml:space="preserve"><value>点击后消费本订阅全部提醒</value></data>
+  <data name="Frontend.716" xml:space="preserve"><value>点击后消费当前提醒</value></data>
+  <data name="Frontend.717" xml:space="preserve"><value>点击后仅查看任务</value></data>
+  <data name="Frontend.718" xml:space="preserve"><value>等待人工输入或外部 API 恢复</value></data>
+  <data name="Frontend.719" xml:space="preserve"><value>节点详情</value></data>
+  <data name="Frontend.720" xml:space="preserve"><value>按语法动态计算次数</value></data>
+  <data name="Frontend.721" xml:space="preserve"><value>从上游读取次数（最多 100000 次）</value></data>
+  <data name="Frontend.722" xml:space="preserve"><value>顺序重复 {0} 次</value></data>
 </root>

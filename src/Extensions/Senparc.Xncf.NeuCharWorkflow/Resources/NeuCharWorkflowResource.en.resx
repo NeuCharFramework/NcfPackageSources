@@ -713,4 +713,58 @@
   <data name="Frontend.666" xml:space="preserve"><value>Edit</value></data>
   <data name="Frontend.667" xml:space="preserve"><value>Edit text and insert variables</value></data>
   <data name="Frontend.668" xml:space="preserve"><value>This field supports only the current input and restricted formulas; arbitrary JavaScript is not executed.</value></data>
+  <data name="Frontend.669" xml:space="preserve"><value>Use each Agent's model binding</value></data>
+  <data name="Frontend.670" xml:space="preserve"><value>Use this task model for all Agents</value></data>
+  <data name="Frontend.671" xml:space="preserve"><value>Do not expose tools to the model</value></data>
+  <data name="Frontend.672" xml:space="preserve"><value>Allow configured Human participants in this group</value></data>
+  <data name="Frontend.673" xml:space="preserve"><value>Skip Human members for this run</value></data>
+  <data name="Frontend.674" xml:space="preserve"><value>Unnamed variable</value></data>
+  <data name="Frontend.675" xml:space="preserve"><value>For example: {{= upper(input) }}; use vars.variableName to read the current variable value. Click Edit formula to open the shared formula editor.</value></data>
+  <data name="Frontend.676" xml:space="preserve"><value>Workflow Human-in-the-Loop</value></data>
+  <data name="Frontend.677" xml:space="preserve"><value>Submit and continue</value></data>
+  <data name="Frontend.678" xml:space="preserve"><value>Approve and continue</value></data>
+  <data name="Frontend.679" xml:space="preserve"><value>Unpin</value></data>
+  <data name="Frontend.680" xml:space="preserve"><value>Pin</value></data>
+  <data name="Frontend.681" xml:space="preserve"><value>Drag from "{0}" to the {1} port of the target node; release over empty space to cancel.</value></data>
+  <data name="Frontend.682" xml:space="preserve"><value>left</value></data>
+  <data name="Frontend.683" xml:space="preserve"><value>top</value></data>
+  <data name="Frontend.684" xml:space="preserve"><value>Saved file reference: </value></data>
+  <data name="Frontend.685" xml:space="preserve"><value>You can use {{input}} or restricted formulas, and insert upstream output as a text fragment.</value></data>
+  <data name="Frontend.686" xml:space="preserve"><value>Supports formula text</value></data>
+  <data name="Frontend.687" xml:space="preserve"><value>Formula text description</value></data>
+  <data name="Frontend.688" xml:space="preserve"><value>Variable / formula</value></data>
+  <data name="Frontend.689" xml:space="preserve"><value>For example: generate a summary based on {{value_1}}</value></data>
+  <data name="Frontend.690" xml:space="preserve"><value>Removing a variable tag also removes its corresponding placeholder from the text. All formula text can use {{input}} to reference the current input; fields marked as supporting formula text can also insert upstream output.</value></data>
+  <data name="Frontend.691" xml:space="preserve"><value>Expression syntax: {{= if(contains(value_1, "VIP"), upper(value_1), "normal") }}. Supports {0}, comparisons, and predicates. For non-string parameters, enter a complete formula such as {{= toInt(value_1) }}; adding surrounding text always produces a string. Workflow variables must use {{= vars.variableName }}; JavaScript is not executed. Use the formula buttons on the right to insert expressions.</value></data>
+  <data name="Frontend.692" xml:space="preserve"><value>Runs in less than 1 minute</value></data>
+  <data name="Frontend.693" xml:space="preserve"><value>Runs in {0} minutes</value></data>
+  <data name="Frontend.694" xml:space="preserve"><value>Runs in {0} hours</value></data>
+  <data name="Frontend.695" xml:space="preserve"><value>Runs in {0} days</value></data>
+  <data name="Frontend.696" xml:space="preserve"><value>Next run: {0}</value></data>
+  <data name="Frontend.697" xml:space="preserve"><value>Module</value></data>
+  <data name="Frontend.698" xml:space="preserve"><value>Function identifier</value></data>
+  <data name="Frontend.699" xml:space="preserve"><value>Unlabeled module</value></data>
+  <data name="Frontend.700" xml:space="preserve"><value>Unlabeled</value></data>
+  <data name="Frontend.701" xml:space="preserve"><value>Parameter</value></data>
+  <data name="Frontend.702" xml:space="preserve"><value>More parameters</value></data>
+  <data name="Frontend.703" xml:space="preserve"><value>Untitled Function</value></data>
+  <data name="Frontend.704" xml:space="preserve"><value>No Function description is available.</value></data>
+  <data name="Frontend.705" xml:space="preserve"><value>The module is not enabled; this item cannot be added.</value></data>
+  <data name="Frontend.706" xml:space="preserve"><value>A2A remote connection</value></data>
+  <data name="Frontend.707" xml:space="preserve"><value>Node type</value></data>
+  <data name="Frontend.708" xml:space="preserve"><value>Enabled</value></data>
+  <data name="Frontend.709" xml:space="preserve"><value>Disabled</value></data>
+  <data name="Frontend.710" xml:space="preserve"><value>Call: {0}</value></data>
+  <data name="Frontend.711" xml:space="preserve"><value>Select a target Workflow</value></data>
+  <data name="Frontend.712" xml:space="preserve"><value>Set {0} Workflow variables</value></data>
+  <data name="Frontend.713" xml:space="preserve"><value>Summarize all inputs and output once</value></data>
+  <data name="Frontend.714" xml:space="preserve"><value>Set aggregate output content</value></data>
+  <data name="Frontend.715" xml:space="preserve"><value>Consume all reminders in this subscription after clicking</value></data>
+  <data name="Frontend.716" xml:space="preserve"><value>Consume the current reminder after clicking</value></data>
+  <data name="Frontend.717" xml:space="preserve"><value>View the task only after clicking</value></data>
+  <data name="Frontend.718" xml:space="preserve"><value>Waiting for human input or external API resumption</value></data>
+  <data name="Frontend.719" xml:space="preserve"><value>Node details</value></data>
+  <data name="Frontend.720" xml:space="preserve"><value>Compute the count dynamically with a formula</value></data>
+  <data name="Frontend.721" xml:space="preserve"><value>Read the count from upstream (up to 100,000)</value></data>
+  <data name="Frontend.722" xml:space="preserve"><value>Repeat sequentially {0} times</value></data>
 </root>

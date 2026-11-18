@@ -729,4 +729,58 @@
   <data name="Frontend.666" xml:space="preserve"><value>編集</value></data>
   <data name="Frontend.667" xml:space="preserve"><value>テキストを編集して変数を挿入</value></data>
   <data name="Frontend.668" xml:space="preserve"><value>このフィールドは現在の入力と制限付き数式のみをサポートします。任意の JavaScript は実行されません。</value></data>
+  <data name="Frontend.669" xml:space="preserve"><value>各 Agent のモデルバインディングを使用</value></data>
+  <data name="Frontend.670" xml:space="preserve"><value>すべての Agent にこのタスクモデルを使用</value></data>
+  <data name="Frontend.671" xml:space="preserve"><value>モデルにツールを公開しない</value></data>
+  <data name="Frontend.672" xml:space="preserve"><value>このグループで設定された Human 参加者を許可</value></data>
+  <data name="Frontend.673" xml:space="preserve"><value>この実行では Human メンバーを除外</value></data>
+  <data name="Frontend.674" xml:space="preserve"><value>名前のない変数</value></data>
+  <data name="Frontend.675" xml:space="preserve"><value>例：{{= upper(input) }}。現在の変数値を読むには vars.variableName を使用します。「数式を編集」をクリックすると共通の数式エディターを開けます。</value></data>
+  <data name="Frontend.676" xml:space="preserve"><value>Workflow Human-in-the-Loop</value></data>
+  <data name="Frontend.677" xml:space="preserve"><value>送信して続行</value></data>
+  <data name="Frontend.678" xml:space="preserve"><value>承認して続行</value></data>
+  <data name="Frontend.679" xml:space="preserve"><value>ピン留めを解除</value></data>
+  <data name="Frontend.680" xml:space="preserve"><value>ピン留め</value></data>
+  <data name="Frontend.681" xml:space="preserve"><value>「{0}」から対象ノードの{1}ポートへドラッグし、空白部分で離してキャンセルします。</value></data>
+  <data name="Frontend.682" xml:space="preserve"><value>左</value></data>
+  <data name="Frontend.683" xml:space="preserve"><value>上</value></data>
+  <data name="Frontend.684" xml:space="preserve"><value>保存済みファイル参照：</value></data>
+  <data name="Frontend.685" xml:space="preserve"><value>{{input}}、制限付き数式、上流出力のテキストフラグメントを使用できます。</value></data>
+  <data name="Frontend.686" xml:space="preserve"><value>数式テキストに対応</value></data>
+  <data name="Frontend.687" xml:space="preserve"><value>数式テキストの説明</value></data>
+  <data name="Frontend.688" xml:space="preserve"><value>変数 / 数式</value></data>
+  <data name="Frontend.689" xml:space="preserve"><value>例：{{value_1}} に基づいて要約を生成</value></data>
+  <data name="Frontend.690" xml:space="preserve"><value>変数タグを削除すると、テキスト内の対応するプレースホルダーも削除されます。すべての数式テキストで {{input}} を使用して現在の入力を参照できます。数式テキスト対応の項目では上流出力も挿入できます。</value></data>
+  <data name="Frontend.691" xml:space="preserve"><value>式の構文：{{= if(contains(value_1, "VIP"), upper(value_1), "normal") }}。{0}、比較、判定に対応しています。文字列以外のパラメーターでは {{= toInt(value_1) }} のような完全な式を入力してください。前後にテキストを追加すると常に文字列になります。Workflow 変数は {{= vars.variableName }} と記述し、JavaScript は実行されません。右側の数式ボタンから式を挿入できます。</value></data>
+  <data name="Frontend.692" xml:space="preserve"><value>1 分未満で実行</value></data>
+  <data name="Frontend.693" xml:space="preserve"><value>{0} 分後に実行</value></data>
+  <data name="Frontend.694" xml:space="preserve"><value>{0} 時間後に実行</value></data>
+  <data name="Frontend.695" xml:space="preserve"><value>{0} 日後に実行</value></data>
+  <data name="Frontend.696" xml:space="preserve"><value>次回実行：{0}</value></data>
+  <data name="Frontend.697" xml:space="preserve"><value>所属モジュール</value></data>
+  <data name="Frontend.698" xml:space="preserve"><value>Function 識別子</value></data>
+  <data name="Frontend.699" xml:space="preserve"><value>未分類モジュール</value></data>
+  <data name="Frontend.700" xml:space="preserve"><value>未分類</value></data>
+  <data name="Frontend.701" xml:space="preserve"><value>パラメーター</value></data>
+  <data name="Frontend.702" xml:space="preserve"><value>その他のパラメーター</value></data>
+  <data name="Frontend.703" xml:space="preserve"><value>名前のない Function</value></data>
+  <data name="Frontend.704" xml:space="preserve"><value>Function の説明はありません。</value></data>
+  <data name="Frontend.705" xml:space="preserve"><value>モジュールが有効でないため追加できません。</value></data>
+  <data name="Frontend.706" xml:space="preserve"><value>A2A リモート接続</value></data>
+  <data name="Frontend.707" xml:space="preserve"><value>ノード種別</value></data>
+  <data name="Frontend.708" xml:space="preserve"><value>有効</value></data>
+  <data name="Frontend.709" xml:space="preserve"><value>無効</value></data>
+  <data name="Frontend.710" xml:space="preserve"><value>呼び出し：{0}</value></data>
+  <data name="Frontend.711" xml:space="preserve"><value>対象 Workflow を選択</value></data>
+  <data name="Frontend.712" xml:space="preserve"><value>Workflow 変数 {0} 個を設定</value></data>
+  <data name="Frontend.713" xml:space="preserve"><value>すべての入力を集約して 1 回だけ出力</value></data>
+  <data name="Frontend.714" xml:space="preserve"><value>集約出力の内容を設定</value></data>
+  <data name="Frontend.715" xml:space="preserve"><value>クリック後にこの購読の通知をすべて消費</value></data>
+  <data name="Frontend.716" xml:space="preserve"><value>クリック後に現在の通知を消費</value></data>
+  <data name="Frontend.717" xml:space="preserve"><value>クリック後にタスクのみ表示</value></data>
+  <data name="Frontend.718" xml:space="preserve"><value>Human 入力または外部 API による再開を待機中</value></data>
+  <data name="Frontend.719" xml:space="preserve"><value>ノードの詳細</value></data>
+  <data name="Frontend.720" xml:space="preserve"><value>数式で回数を動的に計算</value></data>
+  <data name="Frontend.721" xml:space="preserve"><value>上流から回数を読み取る（最大 100000 回）</value></data>
+  <data name="Frontend.722" xml:space="preserve"><value>{0} 回を順番に繰り返す</value></data>
 </root>

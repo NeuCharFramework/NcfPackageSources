@@ -713,4 +713,58 @@
   <data name="Frontend.666" xml:space="preserve"><value>Modifier</value></data>
   <data name="Frontend.667" xml:space="preserve"><value>Modifier le texte et insérer des variables</value></data>
   <data name="Frontend.668" xml:space="preserve"><value>Ce champ accepte uniquement l’entrée actuelle et les formules limitées ; aucun JavaScript arbitraire n’est exécuté.</value></data>
+  <data name="Frontend.669" xml:space="preserve"><value>Utiliser la liaison de modèle de chaque Agent</value></data>
+  <data name="Frontend.670" xml:space="preserve"><value>Utiliser le modèle de cette tâche pour tous les Agents</value></data>
+  <data name="Frontend.671" xml:space="preserve"><value>Ne pas exposer les outils au modèle</value></data>
+  <data name="Frontend.672" xml:space="preserve"><value>Autoriser les participants Human configurés dans ce groupe</value></data>
+  <data name="Frontend.673" xml:space="preserve"><value>Ignorer les membres Human pour cette exécution</value></data>
+  <data name="Frontend.674" xml:space="preserve"><value>Variable sans nom</value></data>
+  <data name="Frontend.675" xml:space="preserve"><value>Par exemple : {{= upper(input) }} ; utilisez vars.variableName pour lire la valeur actuelle de la variable. Cliquez sur Modifier la formule pour ouvrir l’éditeur partagé.</value></data>
+  <data name="Frontend.676" xml:space="preserve"><value>Workflow avec intervention humaine</value></data>
+  <data name="Frontend.677" xml:space="preserve"><value>Envoyer et continuer</value></data>
+  <data name="Frontend.678" xml:space="preserve"><value>Approuver et continuer</value></data>
+  <data name="Frontend.679" xml:space="preserve"><value>Retirer des favoris</value></data>
+  <data name="Frontend.680" xml:space="preserve"><value>Ajouter aux favoris</value></data>
+  <data name="Frontend.681" xml:space="preserve"><value>Faites glisser depuis « {0} » vers le port {1} du nœud cible ; relâchez dans un espace vide pour annuler.</value></data>
+  <data name="Frontend.682" xml:space="preserve"><value>gauche</value></data>
+  <data name="Frontend.683" xml:space="preserve"><value>supérieur</value></data>
+  <data name="Frontend.684" xml:space="preserve"><value>Référence de fichier enregistrée : </value></data>
+  <data name="Frontend.685" xml:space="preserve"><value>Vous pouvez utiliser {{input}} ou des formules limitées, et insérer une sortie amont comme fragment de texte.</value></data>
+  <data name="Frontend.686" xml:space="preserve"><value>Prend en charge le texte de formule</value></data>
+  <data name="Frontend.687" xml:space="preserve"><value>Description du texte de formule</value></data>
+  <data name="Frontend.688" xml:space="preserve"><value>Variable / formule</value></data>
+  <data name="Frontend.689" xml:space="preserve"><value>Par exemple : générer un résumé à partir de {{value_1}}</value></data>
+  <data name="Frontend.690" xml:space="preserve"><value>La suppression d’une étiquette de variable supprime aussi son espace réservé correspondant. Tout texte de formule peut utiliser {{input}} pour référencer l’entrée actuelle ; les champs marqués comme compatibles peuvent aussi insérer une sortie amont.</value></data>
+  <data name="Frontend.691" xml:space="preserve"><value>Syntaxe d’expression : {{= if(contains(value_1, "VIP"), upper(value_1), "normal") }}. Prend en charge {0}, les comparaisons et les prédicats. Pour les paramètres non textuels, saisissez une formule complète comme {{= toInt(value_1) }} ; ajouter du texte produit toujours une chaîne. Les variables Workflow doivent utiliser {{= vars.variableName }} ; JavaScript n’est pas exécuté. Utilisez les boutons de formule à droite pour insérer des expressions.</value></data>
+  <data name="Frontend.692" xml:space="preserve"><value>Exécution dans moins d’une minute</value></data>
+  <data name="Frontend.693" xml:space="preserve"><value>Exécution dans {0} minutes</value></data>
+  <data name="Frontend.694" xml:space="preserve"><value>Exécution dans {0} heures</value></data>
+  <data name="Frontend.695" xml:space="preserve"><value>Exécution dans {0} jours</value></data>
+  <data name="Frontend.696" xml:space="preserve"><value>Prochaine exécution : {0}</value></data>
+  <data name="Frontend.697" xml:space="preserve"><value>Module</value></data>
+  <data name="Frontend.698" xml:space="preserve"><value>Identifiant de Function</value></data>
+  <data name="Frontend.699" xml:space="preserve"><value>Module non étiqueté</value></data>
+  <data name="Frontend.700" xml:space="preserve"><value>Non étiqueté</value></data>
+  <data name="Frontend.701" xml:space="preserve"><value>Paramètre</value></data>
+  <data name="Frontend.702" xml:space="preserve"><value>Paramètres supplémentaires</value></data>
+  <data name="Frontend.703" xml:space="preserve"><value>Function sans nom</value></data>
+  <data name="Frontend.704" xml:space="preserve"><value>Aucune description de Function.</value></data>
+  <data name="Frontend.705" xml:space="preserve"><value>Le module n’est pas activé ; cet élément ne peut pas être ajouté.</value></data>
+  <data name="Frontend.706" xml:space="preserve"><value>Connexion A2A distante</value></data>
+  <data name="Frontend.707" xml:space="preserve"><value>Type de nœud</value></data>
+  <data name="Frontend.708" xml:space="preserve"><value>Activé</value></data>
+  <data name="Frontend.709" xml:space="preserve"><value>Désactivé</value></data>
+  <data name="Frontend.710" xml:space="preserve"><value>Appeler : {0}</value></data>
+  <data name="Frontend.711" xml:space="preserve"><value>Sélectionnez un Workflow cible</value></data>
+  <data name="Frontend.712" xml:space="preserve"><value>Définir {0} variables Workflow</value></data>
+  <data name="Frontend.713" xml:space="preserve"><value>Rassembler toutes les entrées et produire une seule sortie</value></data>
+  <data name="Frontend.714" xml:space="preserve"><value>Configurez le contenu de sortie agrégé</value></data>
+  <data name="Frontend.715" xml:space="preserve"><value>Consommer toutes les notifications de cet abonnement après clic</value></data>
+  <data name="Frontend.716" xml:space="preserve"><value>Consommer la notification actuelle après clic</value></data>
+  <data name="Frontend.717" xml:space="preserve"><value>Afficher uniquement la tâche après clic</value></data>
+  <data name="Frontend.718" xml:space="preserve"><value>En attente d’une saisie humaine ou d’une reprise par API externe</value></data>
+  <data name="Frontend.719" xml:space="preserve"><value>Détails du nœud</value></data>
+  <data name="Frontend.720" xml:space="preserve"><value>Calculer le nombre dynamiquement avec une formule</value></data>
+  <data name="Frontend.721" xml:space="preserve"><value>Lire le nombre en amont (jusqu’à 100 000)</value></data>
+  <data name="Frontend.722" xml:space="preserve"><value>Répéter séquentiellement {0} fois</value></data>
 </root>

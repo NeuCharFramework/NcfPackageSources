@@ -713,4 +713,58 @@
   <data name="Frontend.666" xml:space="preserve"><value>Изменить</value></data>
   <data name="Frontend.667" xml:space="preserve"><value>Изменить текст и вставить переменные</value></data>
   <data name="Frontend.668" xml:space="preserve"><value>Это поле поддерживает только текущий ввод и ограниченные формулы; произвольный JavaScript не выполняется.</value></data>
+  <data name="Frontend.669" xml:space="preserve"><value>Использовать привязку модели каждого Agent</value></data>
+  <data name="Frontend.670" xml:space="preserve"><value>Использовать модель этой задачи для всех Agent</value></data>
+  <data name="Frontend.671" xml:space="preserve"><value>Не предоставлять инструменты модели</value></data>
+  <data name="Frontend.672" xml:space="preserve"><value>Разрешить настроенных участников Human в этой группе</value></data>
+  <data name="Frontend.673" xml:space="preserve"><value>Пропустить участников Human для этого запуска</value></data>
+  <data name="Frontend.674" xml:space="preserve"><value>Безымянная переменная</value></data>
+  <data name="Frontend.675" xml:space="preserve"><value>Например: {{= upper(input) }}; используйте vars.variableName для чтения текущего значения переменной. Нажмите «Изменить формулу», чтобы открыть общий редактор формул.</value></data>
+  <data name="Frontend.676" xml:space="preserve"><value>Workflow с участием человека</value></data>
+  <data name="Frontend.677" xml:space="preserve"><value>Отправить и продолжить</value></data>
+  <data name="Frontend.678" xml:space="preserve"><value>Одобрить и продолжить</value></data>
+  <data name="Frontend.679" xml:space="preserve"><value>Убрать закрепление</value></data>
+  <data name="Frontend.680" xml:space="preserve"><value>Закрепить</value></data>
+  <data name="Frontend.681" xml:space="preserve"><value>Перетащите от «{0}» к порту {1} целевого узла; отпустите в пустом месте, чтобы отменить.</value></data>
+  <data name="Frontend.682" xml:space="preserve"><value>слева</value></data>
+  <data name="Frontend.683" xml:space="preserve"><value>сверху</value></data>
+  <data name="Frontend.684" xml:space="preserve"><value>Сохранённая ссылка на файл: </value></data>
+  <data name="Frontend.685" xml:space="preserve"><value>Можно использовать {{input}} или ограниченные формулы и вставлять вывод предыдущего узла как фрагмент текста.</value></data>
+  <data name="Frontend.686" xml:space="preserve"><value>Поддерживает текст формул</value></data>
+  <data name="Frontend.687" xml:space="preserve"><value>Описание текста формулы</value></data>
+  <data name="Frontend.688" xml:space="preserve"><value>Переменная / формула</value></data>
+  <data name="Frontend.689" xml:space="preserve"><value>Например: создайте сводку на основе {{value_1}}</value></data>
+  <data name="Frontend.690" xml:space="preserve"><value>При удалении тега переменной соответствующий заполнитель также удаляется из текста. В тексте формулы можно использовать {{input}} для ссылки на текущий ввод; поля с поддержкой формул также могут вставлять вывод предыдущего узла.</value></data>
+  <data name="Frontend.691" xml:space="preserve"><value>Синтаксис выражения: {{= if(contains(value_1, "VIP"), upper(value_1), "обычный") }}. Поддерживаются {0}, сравнения и условия. Для параметров нестрокового типа вводите полную формулу, например {{= toInt(value_1) }}; добавление текста превращает результат в строку. Переменные Workflow записываются как {{= vars.variableName }}; JavaScript не выполняется. Используйте кнопки формул справа для вставки выражений.</value></data>
+  <data name="Frontend.692" xml:space="preserve"><value>Запуск менее чем через 1 минуту</value></data>
+  <data name="Frontend.693" xml:space="preserve"><value>Запуск через {0} мин.</value></data>
+  <data name="Frontend.694" xml:space="preserve"><value>Запуск через {0} ч.</value></data>
+  <data name="Frontend.695" xml:space="preserve"><value>Запуск через {0} дн.</value></data>
+  <data name="Frontend.696" xml:space="preserve"><value>Следующий запуск: {0}</value></data>
+  <data name="Frontend.697" xml:space="preserve"><value>Модуль</value></data>
+  <data name="Frontend.698" xml:space="preserve"><value>Идентификатор Function</value></data>
+  <data name="Frontend.699" xml:space="preserve"><value>Модуль без метки</value></data>
+  <data name="Frontend.700" xml:space="preserve"><value>Без метки</value></data>
+  <data name="Frontend.701" xml:space="preserve"><value>Параметр</value></data>
+  <data name="Frontend.702" xml:space="preserve"><value>Другие параметры</value></data>
+  <data name="Frontend.703" xml:space="preserve"><value>Function без имени</value></data>
+  <data name="Frontend.704" xml:space="preserve"><value>Описание Function отсутствует.</value></data>
+  <data name="Frontend.705" xml:space="preserve"><value>Модуль не включён; добавить этот элемент нельзя.</value></data>
+  <data name="Frontend.706" xml:space="preserve"><value>Удалённое соединение A2A</value></data>
+  <data name="Frontend.707" xml:space="preserve"><value>Тип узла</value></data>
+  <data name="Frontend.708" xml:space="preserve"><value>Включено</value></data>
+  <data name="Frontend.709" xml:space="preserve"><value>Отключено</value></data>
+  <data name="Frontend.710" xml:space="preserve"><value>Вызов: {0}</value></data>
+  <data name="Frontend.711" xml:space="preserve"><value>Выберите целевой Workflow</value></data>
+  <data name="Frontend.712" xml:space="preserve"><value>Задать переменные Workflow: {0}</value></data>
+  <data name="Frontend.713" xml:space="preserve"><value>Объединить все входы и вывести один результат</value></data>
+  <data name="Frontend.714" xml:space="preserve"><value>Задайте содержимое агрегированного вывода</value></data>
+  <data name="Frontend.715" xml:space="preserve"><value>После нажатия обработать все уведомления этой подписки</value></data>
+  <data name="Frontend.716" xml:space="preserve"><value>После нажатия обработать текущее уведомление</value></data>
+  <data name="Frontend.717" xml:space="preserve"><value>После нажатия только просмотреть задачу</value></data>
+  <data name="Frontend.718" xml:space="preserve"><value>Ожидание ввода человека или возобновления через внешний API</value></data>
+  <data name="Frontend.719" xml:space="preserve"><value>Сведения об узле</value></data>
+  <data name="Frontend.720" xml:space="preserve"><value>Вычислять количество по формуле</value></data>
+  <data name="Frontend.721" xml:space="preserve"><value>Читать количество из предыдущего узла (до 100000)</value></data>
+  <data name="Frontend.722" xml:space="preserve"><value>Последовательно повторить {0} раз</value></data>
 </root>
