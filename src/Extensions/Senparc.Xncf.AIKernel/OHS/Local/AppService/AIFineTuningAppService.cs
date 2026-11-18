@@ -100,7 +100,8 @@ public class AIFineTuningAppService : AppServiceBase
     public Task<AppResponseBase<FineTuningHealth>> HealthAsync(string workerAlias) =>
         this.GetResponseAsync<FineTuningHealth>((response, logger) => _worker.HealthAsync(workerAlias, CancellationToken));
 
-    [FunctionRender("检查微调 Worker", "检查指定微调 Worker 的健康状态、能力和队列情况。只配置了一个可用 Worker 时会自动选中。", typeof(Register), AllowAiInvocation = true)]
+    [FunctionRender(typeof(AIKernelResource), "Function.FineTuning.CheckWorker.Name", "Function.FineTuning.CheckWorker.Description",
+        typeof(Register), "Check fine-tuning Worker", "Check the selected fine-tuning Worker health, capabilities, and queue.", AllowAiInvocation = true)]
     public Task<AppResponseBase<FineTuningHealth>> CheckFineTuningWorkerAsync(FineTuningWorkerFunctionRequest request)
     {
         if (request == null)
@@ -149,7 +150,8 @@ public class AIFineTuningAppService : AppServiceBase
             return diagnostics;
         });
 
-    [FunctionRender("检查微调环境", "检查微调开关、密钥、Worker、模型目录和 FileManager 状态，不执行安装或命令。只配置了一个可用 Worker 时会自动选中。", typeof(Register), AllowAiInvocation = true)]
+    [FunctionRender(typeof(AIKernelResource), "Function.FineTuning.CheckEnvironment.Name", "Function.FineTuning.CheckEnvironment.Description",
+        typeof(Register), "Check fine-tuning environment", "Check the fine-tuning switch, secret, Worker, model directory, and FileManager state.", AllowAiInvocation = true)]
     public Task<AppResponseBase<FineTuningDiagnostics>> CheckFineTuningEnvironmentAsync(FineTuningWorkerFunctionRequest request)
     {
         if (request == null)
@@ -199,7 +201,8 @@ public class AIFineTuningAppService : AppServiceBase
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     [RequestSizeLimit(FineTuningWorkerClient.MaxDatasetBytes + 64 * 1024)]
     [RequestFormLimits(MultipartBodyLengthLimit = FineTuningWorkerClient.MaxDatasetBytes + 64 * 1024)]
-    [FunctionRender("上传微调数据集文件", "以流方式保存并上传 JSONL 微调数据集，适合大文件。", typeof(Register), AllowAiInvocation = true)]
+    [FunctionRender(typeof(AIKernelResource), "Function.FineTuning.UploadDatasetFile.Name", "Function.FineTuning.UploadDatasetFile.Description",
+        typeof(Register), "Upload fine-tuning dataset file", "Save and upload a JSONL fine-tuning dataset as a stream for large files.", AllowAiInvocation = true)]
     public Task<AppResponseBase<FineTuningDataset>> UploadDatasetFileAsync(
         [FromForm] IFormFile file, [FromForm] string name, string workerAlias) =>
         this.GetResponseAsync<FineTuningDataset>(async (response, logger) =>
@@ -289,7 +292,8 @@ public class AIFineTuningAppService : AppServiceBase
         }
     }
 
-    [FunctionRender("创建微调数据集", "保存经过 Worker 校验的 JSONL 微调数据集。Worker 会自动载入；适合在 Workflow 中提交小规模 JSONL 文本。", typeof(Register), AllowAiInvocation = true)]
+    [FunctionRender(typeof(AIKernelResource), "Function.FineTuning.CreateDataset.Name", "Function.FineTuning.CreateDataset.Description",
+        typeof(Register), "Create fine-tuning dataset", "Save a Worker-validated JSONL fine-tuning dataset.", AllowAiInvocation = true)]
     public Task<AppResponseBase<FineTuningDataset>> CreateDatasetFromTextAsync(FineTuningDatasetFunctionRequest request) =>
         this.GetResponseAsync<FineTuningDataset>(async (response, logger) =>
         {
@@ -399,7 +403,8 @@ public class AIFineTuningAppService : AppServiceBase
         this.GetResponseAsync<FineTuningValidation>((response, logger) => _worker.GetValidationAsync(workerAlias, id, CancellationToken));
 
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-    [FunctionRender("验证微调 Adapter", "对已成功的微调任务按选择的 CPU、CUDA 或 MLX 后端运行受限的离线测试提示；与任务记录不一致时必须明确确认。", typeof(Register), AllowAiInvocation = true)]
+    [FunctionRender(typeof(AIKernelResource), "Function.FineTuning.ValidateAdapter.Name", "Function.FineTuning.ValidateAdapter.Description",
+        typeof(Register), "Validate fine-tuning adapter", "Run a bounded offline test prompt for a successful fine-tuning job on the selected backend.", AllowAiInvocation = true)]
     public Task<AppResponseBase<FineTuningValidation>> StartValidationAsync(
         [FromBody] FineTuningValidationRequest request, string workerAlias, string id) =>
         this.GetResponseAsync<FineTuningValidation>(async (response, logger) =>

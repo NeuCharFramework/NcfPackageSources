@@ -896,4 +896,16 @@
 
   <data name="Frontend.100" xml:space="preserve"><value>Create fine-tuning task</value></data>
   <data name="Frontend.101" xml:space="preserve"><value>Create a fine-tuning task with an approved local model, dataset, and training parameters. The Worker, model, and dataset load automatically, training parameters have defaults, and Workflow can run with those defaults.</value></data>
+  <data name="Function.FineTuning.CheckWorker.Name" xml:space="preserve"><value>Check fine-tuning Worker</value></data>
+  <data name="Function.FineTuning.CheckWorker.Description" xml:space="preserve"><value>Check the selected fine-tuning Worker health, capabilities, and queue. A single available Worker is selected automatically.</value></data>
+  <data name="Function.FineTuning.CheckEnvironment.Name" xml:space="preserve"><value>Check fine-tuning environment</value></data>
+  <data name="Function.FineTuning.CheckEnvironment.Description" xml:space="preserve"><value>Check the fine-tuning switch, secret, Worker, model directory, and FileManager state without installing or running commands. A single available Worker is selected automatically.</value></data>
+  <data name="Function.FineTuning.UploadDatasetFile.Name" xml:space="preserve"><value>Upload fine-tuning dataset file</value></data>
+  <data name="Function.FineTuning.UploadDatasetFile.Description" xml:space="preserve"><value>Save and upload a JSONL fine-tuning dataset as a stream for large files.</value></data>
+  <data name="Function.FineTuning.CreateDataset.Name" xml:space="preserve"><value>Create fine-tuning dataset</value></data>
+  <data name="Function.FineTuning.CreateDataset.Description" xml:space="preserve"><value>Save a Worker-validated JSONL fine-tuning dataset. The Worker loads it automatically; suitable for small JSONL submissions from Workflow.</value></data>
+  <data name="Function.FineTuning.StartJob.Name" xml:space="preserve"><value>Create fine-tuning job</value></data>
+  <data name="Function.FineTuning.StartJob.Description" xml:space="preserve"><value>Create a fine-tuning job with an approved local model, dataset, and training parameters. Worker, model, and dataset load automatically, and Workflow can run with the defaults.</value></data>
+  <data name="Function.FineTuning.ValidateAdapter.Name" xml:space="preserve"><value>Validate fine-tuning adapter</value></data>
+  <data name="Function.FineTuning.ValidateAdapter.Description" xml:space="preserve"><value>Run a bounded offline test prompt for a successful fine-tuning job on the selected CPU, CUDA, or MLX backend; explicitly confirm when it differs from the job record.</value></data>
 </root>

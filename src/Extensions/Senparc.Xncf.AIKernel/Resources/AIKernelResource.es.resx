@@ -536,4 +536,16 @@
 
   <data name="Frontend.100" xml:space="preserve"><value>Crear tarea de ajuste fino</value></data>
   <data name="Frontend.101" xml:space="preserve"><value>Crea una tarea de ajuste fino con un modelo local aprobado, un conjunto de datos y parámetros de entrenamiento. El worker, el modelo y el conjunto de datos se cargan automáticamente; los parámetros tienen valores predeterminados y Workflow puede ejecutarse con ellos.</value></data>
+  <data name="Function.FineTuning.CheckWorker.Name" xml:space="preserve"><value>Comprobar Worker de fine-tuning</value></data>
+  <data name="Function.FineTuning.CheckWorker.Description" xml:space="preserve"><value>Comprueba la salud, las capacidades y la cola del Worker de fine-tuning seleccionado. Si solo hay uno disponible, se selecciona automáticamente.</value></data>
+  <data name="Function.FineTuning.CheckEnvironment.Name" xml:space="preserve"><value>Comprobar el entorno de fine-tuning</value></data>
+  <data name="Function.FineTuning.CheckEnvironment.Description" xml:space="preserve"><value>Comprueba el interruptor de fine-tuning, el secreto, el Worker, el directorio del modelo y el estado de FileManager sin instalar ni ejecutar comandos. Si solo hay un Worker disponible, se selecciona automáticamente.</value></data>
+  <data name="Function.FineTuning.UploadDatasetFile.Name" xml:space="preserve"><value>Subir archivo de conjunto de datos de fine-tuning</value></data>
+  <data name="Function.FineTuning.UploadDatasetFile.Description" xml:space="preserve"><value>Guarda y sube como flujo un conjunto de datos JSONL de fine-tuning para archivos grandes.</value></data>
+  <data name="Function.FineTuning.CreateDataset.Name" xml:space="preserve"><value>Crear conjunto de datos de fine-tuning</value></data>
+  <data name="Function.FineTuning.CreateDataset.Description" xml:space="preserve"><value>Guarda un conjunto de datos JSONL validado por el Worker. El Worker lo carga automáticamente; es adecuado para envíos JSONL pequeños desde Workflow.</value></data>
+  <data name="Function.FineTuning.StartJob.Name" xml:space="preserve"><value>Crear tarea de fine-tuning</value></data>
+  <data name="Function.FineTuning.StartJob.Description" xml:space="preserve"><value>Crea una tarea de fine-tuning con un modelo local aprobado, un conjunto de datos y parámetros de entrenamiento. El Worker, el modelo y los datos se cargan automáticamente.</value></data>
+  <data name="Function.FineTuning.ValidateAdapter.Name" xml:space="preserve"><value>Validar adaptador de fine-tuning</value></data>
+  <data name="Function.FineTuning.ValidateAdapter.Description" xml:space="preserve"><value>Ejecuta una prueba offline limitada para una tarea de fine-tuning completada en el backend CPU, CUDA o MLX seleccionado; confirma explícitamente cuando difiera del registro.</value></data>
 </root>

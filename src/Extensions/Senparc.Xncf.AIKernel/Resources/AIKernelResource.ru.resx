@@ -536,4 +536,16 @@
 
   <data name="Frontend.100" xml:space="preserve"><value>Создать задачу тонкой настройки</value></data>
   <data name="Frontend.101" xml:space="preserve"><value>Создайте задачу тонкой настройки с утверждённой локальной моделью, набором данных и параметрами обучения. Worker, модель и набор данных загружаются автоматически; параметры обучения имеют значения по умолчанию, а Workflow может выполняться с ними.</value></data>
+  <data name="Function.FineTuning.CheckWorker.Name" xml:space="preserve"><value>Проверить Worker тонкой настройки</value></data>
+  <data name="Function.FineTuning.CheckWorker.Description" xml:space="preserve"><value>Проверяет состояние, возможности и очередь выбранного Worker тонкой настройки. Если доступен только один Worker, он выбирается автоматически.</value></data>
+  <data name="Function.FineTuning.CheckEnvironment.Name" xml:space="preserve"><value>Проверить среду тонкой настройки</value></data>
+  <data name="Function.FineTuning.CheckEnvironment.Description" xml:space="preserve"><value>Проверяет переключатель тонкой настройки, секрет, Worker, каталог модели и состояние FileManager без установки и выполнения команд.</value></data>
+  <data name="Function.FineTuning.UploadDatasetFile.Name" xml:space="preserve"><value>Загрузить файл набора данных тонкой настройки</value></data>
+  <data name="Function.FineTuning.UploadDatasetFile.Description" xml:space="preserve"><value>Сохраняет и загружает потоковый JSONL-набор данных тонкой настройки для больших файлов.</value></data>
+  <data name="Function.FineTuning.CreateDataset.Name" xml:space="preserve"><value>Создать набор данных тонкой настройки</value></data>
+  <data name="Function.FineTuning.CreateDataset.Description" xml:space="preserve"><value>Сохраняет проверенный Worker набор данных JSONL. Worker загрузит его автоматически; подходит для небольших отправок JSONL из Workflow.</value></data>
+  <data name="Function.FineTuning.StartJob.Name" xml:space="preserve"><value>Создать задачу тонкой настройки</value></data>
+  <data name="Function.FineTuning.StartJob.Description" xml:space="preserve"><value>Создаёт задачу тонкой настройки с утверждённой локальной моделью, набором данных и параметрами обучения. Worker, модель и данные загружаются автоматически.</value></data>
+  <data name="Function.FineTuning.ValidateAdapter.Name" xml:space="preserve"><value>Проверить адаптер тонкой настройки</value></data>
+  <data name="Function.FineTuning.ValidateAdapter.Description" xml:space="preserve"><value>Запускает ограниченный офлайн-тест для успешной задачи тонкой настройки на выбранном CPU, CUDA или MLX; при расхождении с записью задачи требуется явное подтверждение.</value></data>
 </root>

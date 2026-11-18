@@ -922,4 +922,16 @@
 
   <data name="Frontend.100" xml:space="preserve"><value>创建微调任务</value></data>
   <data name="Frontend.101" xml:space="preserve"><value>使用已批准的本地模型、数据集和训练参数创建微调任务。Worker、模型和数据集会自动载入，训练参数带有默认值，Workflow 可以按这些默认值直接运行。</value></data>
+  <data name="Function.FineTuning.CheckWorker.Name" xml:space="preserve"><value>检查微调 Worker</value></data>
+  <data name="Function.FineTuning.CheckWorker.Description" xml:space="preserve"><value>检查指定微调 Worker 的健康状态、能力和队列情况。只配置了一个可用 Worker 时会自动选中。</value></data>
+  <data name="Function.FineTuning.CheckEnvironment.Name" xml:space="preserve"><value>检查微调环境</value></data>
+  <data name="Function.FineTuning.CheckEnvironment.Description" xml:space="preserve"><value>检查微调开关、密钥、Worker、模型目录和 FileManager 状态，不执行安装或命令。只配置了一个可用 Worker 时会自动选中。</value></data>
+  <data name="Function.FineTuning.UploadDatasetFile.Name" xml:space="preserve"><value>上传微调数据集文件</value></data>
+  <data name="Function.FineTuning.UploadDatasetFile.Description" xml:space="preserve"><value>以流方式保存并上传 JSONL 微调数据集，适合大文件。</value></data>
+  <data name="Function.FineTuning.CreateDataset.Name" xml:space="preserve"><value>创建微调数据集</value></data>
+  <data name="Function.FineTuning.CreateDataset.Description" xml:space="preserve"><value>保存经过 Worker 校验的 JSONL 微调数据集。Worker 会自动载入；适合在 Workflow 中提交小规模 JSONL 文本。</value></data>
+  <data name="Function.FineTuning.StartJob.Name" xml:space="preserve"><value>创建微调任务</value></data>
+  <data name="Function.FineTuning.StartJob.Description" xml:space="preserve"><value>使用已批准的本地模型、数据集和训练参数创建微调任务。Worker、模型和数据集会自动载入，训练参数带有默认值，Workflow 可以按这些默认值直接运行。</value></data>
+  <data name="Function.FineTuning.ValidateAdapter.Name" xml:space="preserve"><value>验证微调 Adapter</value></data>
+  <data name="Function.FineTuning.ValidateAdapter.Description" xml:space="preserve"><value>对已成功的微调任务按选择的 CPU、CUDA 或 MLX 后端运行受限的离线测试提示；与任务记录不一致时必须明确确认。</value></data>
 </root>

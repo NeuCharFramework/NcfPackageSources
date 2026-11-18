@@ -536,4 +536,16 @@
 
   <data name="Frontend.100" xml:space="preserve"><value>ファインチューニングタスクを作成</value></data>
   <data name="Frontend.101" xml:space="preserve"><value>承認済みのローカルモデル、データセット、学習パラメーターを使用してファインチューニングタスクを作成します。Worker、モデル、データセットは自動的に読み込まれ、学習パラメーターには既定値が設定されます。Workflowはその値で実行できます。</value></data>
+  <data name="Function.FineTuning.CheckWorker.Name" xml:space="preserve"><value>ファインチューニング Worker を確認</value></data>
+  <data name="Function.FineTuning.CheckWorker.Description" xml:space="preserve"><value>指定したファインチューニング Worker の状態、能力、キューを確認します。利用可能な Worker が 1 つだけの場合は自動選択します。</value></data>
+  <data name="Function.FineTuning.CheckEnvironment.Name" xml:space="preserve"><value>ファインチューニング環境を確認</value></data>
+  <data name="Function.FineTuning.CheckEnvironment.Description" xml:space="preserve"><value>インストールやコマンド実行を行わず、ファインチューニングの有効化、シークレット、Worker、モデルディレクトリ、FileManager の状態を確認します。</value></data>
+  <data name="Function.FineTuning.UploadDatasetFile.Name" xml:space="preserve"><value>ファインチューニングデータセットファイルをアップロード</value></data>
+  <data name="Function.FineTuning.UploadDatasetFile.Description" xml:space="preserve"><value>大きな JSONL ファイルに対応するため、ファインチューニングデータセットをストリームで保存してアップロードします。</value></data>
+  <data name="Function.FineTuning.CreateDataset.Name" xml:space="preserve"><value>ファインチューニングデータセットを作成</value></data>
+  <data name="Function.FineTuning.CreateDataset.Description" xml:space="preserve"><value>Worker の検証済み JSONL データセットを保存します。Worker が自動で読み込み、Workflow からの小規模 JSONL 送信に適しています。</value></data>
+  <data name="Function.FineTuning.StartJob.Name" xml:space="preserve"><value>ファインチューニングタスクを作成</value></data>
+  <data name="Function.FineTuning.StartJob.Description" xml:space="preserve"><value>承認済みのローカルモデル、データセット、学習パラメーターでファインチューニングタスクを作成します。Worker、モデル、データセットは自動で読み込まれます。</value></data>
+  <data name="Function.FineTuning.ValidateAdapter.Name" xml:space="preserve"><value>ファインチューニングアダプターを検証</value></data>
+  <data name="Function.FineTuning.ValidateAdapter.Description" xml:space="preserve"><value>成功したファインチューニングタスクに対し、選択した CPU、CUDA、MLX バックエンドで制限付きオフラインテストを実行します。タスク記録と異なる場合は明示的に確認します。</value></data>
 </root>
