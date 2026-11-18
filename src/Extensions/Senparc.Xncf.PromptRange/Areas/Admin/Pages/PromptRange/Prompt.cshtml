@@ -257,18 +257,18 @@
                                 <div class="titleContent">{{ promptInputTitle }}</div>
                             </div>
                             <div class="titleRow_rightBox">
-                                <el-button size="mini" @@click="resetInputPrompt">重置</el-button>
-                                <el-button v-if="shouldShowPromptEditor" type="primary" size="mini" :icon="promptParamVisible?'el-icon-s-fold':'el-icon-s-unfold'" @@click="promptParamVisible = !promptParamVisible">请求参数</el-button>
+                                <el-button size="mini" @@click="resetInputPrompt">{{ ncfST('Frontend.027') }}</el-button>
+                                <el-button v-if="shouldShowPromptEditor" type="primary" size="mini" :icon="promptParamVisible?'el-icon-s-fold':'el-icon-s-unfold'" @@click="promptParamVisible = !promptParamVisible">{{ ncfST('Frontend.032') }}</el-button>
                                 <i class="el-icon-full-screen" style="font-size: 1.3rem;cursor: pointer;" @@mousedown.prevent="preservePromptContentBeforeAmplification" @@click="Amplification('box2')"></i>
                             </div>
                         </div>
                         <div class="promptContentBox">
                         <div class="modelSpecialPanel stt-upload-panel" v-show="isSpeechToTextModelSelected">
                             <div class="special-row">
-                                <span class="special-label">音频文件</span>
+                                <span class="special-label">{{ ncfST('Frontend.033') }}</span>
                                 <div class="special-actions">
-                                    <el-button type="primary" size="mini" @@click="openSpeechFilePicker">上传音频</el-button>
-                                    <el-button size="mini" @@click="clearSpeechInput" :disabled="!sttForm.audioFileName">清空</el-button>
+                                    <el-button type="primary" size="mini" @@click="openSpeechFilePicker">{{ ncfST('Frontend.034') }}</el-button>
+                                    <el-button size="mini" @@click="clearSpeechInput" :disabled="!sttForm.audioFileName">{{ ncfST('Frontend.035') }}</el-button>
                                 </div>
                             </div>
                             <input ref="sttFileInput"
@@ -280,22 +280,22 @@
                                 {{ sttForm.audioFileName }}（{{ (sttForm.fileSize / 1024).toFixed(1) }} KB）
                             </div>
                             <div class="special-text" v-else>
-                                支持格式：flac / m4a / mp3 / mp4 / mpeg / mpga / oga / ogg / wav / webm
+                                {{ ncfST('Frontend.036') }}
                             </div>
                             <div class="special-row compact">
-                                <span class="special-label">识别语言</span>
-                                <el-input v-model="sttForm.language" size="mini" placeholder="可空，例如 zh / en"></el-input>
+                                <span class="special-label">{{ ncfST('Frontend.037') }}</span>
+                                <el-input v-model="sttForm.language" size="mini" :placeholder="ncfST('Frontend.038')"></el-input>
                             </div>
                         </div>
 
                         <div class="modelSpecialPanel tts-option-panel" v-show="isTextToSpeechModelSelected">
                             <div class="special-row compact">
-                                <span class="special-label">音色</span>
+                                <span class="special-label">{{ ncfST('Frontend.039') }}</span>
                                 <el-input v-model="ttsForm.voice" size="mini" placeholder="alloy / ash / onyx ..."></el-input>
                             </div>
                             <div class="special-row compact">
-                                <span class="special-label">格式</span>
-                                <el-select v-model="ttsForm.format" size="mini" placeholder="选择输出格式">
+                                <span class="special-label">{{ ncfST('Frontend.040') }}</span>
+                                <el-select v-model="ttsForm.format" size="mini" :placeholder="ncfST('Frontend.041')">
                                     <el-option label="mp3" value="mp3"></el-option>
                                     <el-option label="opus" value="opus"></el-option>
                                     <el-option label="aac" value="aac"></el-option>
@@ -305,7 +305,7 @@
                                 </el-select>
                             </div>
                             <div class="special-row compact">
-                                <span class="special-label">语速</span>
+                                <span class="special-label">{{ ncfST('Frontend.042') }}</span>
                                 <el-input-number v-model="ttsForm.speedRatio" size="mini" :min="0.5" :max="2.0" :step="0.1" :precision="1"></el-input-number>
                             </div>
                         </div>
@@ -313,17 +313,17 @@
                         <div class="modelSpecialPanel embedding-option-panel" v-show="isTextEmbeddingModelSelected">
                             <div class="special-row compact">
                                 <span class="special-label">VectorDB</span>
-                                <el-select v-model="embeddingForm.vectorDbId" size="mini" filterable placeholder="请选择向量库" :loading="vectorLoading" @@focus="getVectorOptData()">
+                                <el-select v-model="embeddingForm.vectorDbId" size="mini" filterable :placeholder="ncfST('Frontend.043')" :loading="vectorLoading" @@focus="getVectorOptData()">
                                     <el-option v-for="item in vectorOpt" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
                             </div>
                             <div class="special-row compact">
                                 <span class="special-label">Collection</span>
-                                <el-input v-model="embeddingForm.collectionName" size="mini" placeholder="可空，自动生成"></el-input>
+                                <el-input v-model="embeddingForm.collectionName" size="mini" :placeholder="ncfST('Frontend.044')"></el-input>
                             </div>
                             <div class="special-row compact">
-                                <span class="special-label">测试查询</span>
-                                <el-input v-model="embeddingForm.searchQuery" size="mini" placeholder="可空，首次打靶后自动查询"></el-input>
+                                <span class="special-label">{{ ncfST('Frontend.045') }}</span>
+                                <el-input v-model="embeddingForm.searchQuery" size="mini" :placeholder="ncfST('Frontend.046')"></el-input>
                             </div>
                             <div class="special-row compact">
                                 <span class="special-label">TopK</span>
@@ -344,14 +344,14 @@
                              @@compositionstart="handleCompositionStart"
                              @@compositionupdate="handleCompositionUpdate"
                              @@compositionend="handleCompositionEnd"
-                             :data-placeholder="content ? '' : (isTextToSpeechModelSelected ? '请输入待合成语音的文本' : '请输入Prompt内容')">
+                             :data-placeholder="content ? '' : (isTextToSpeechModelSelected ? ncfST('Frontend.047') : ncfST('Frontend.048'))">
                         </div>
                             
                             @* Variable hint card. *@
                             <div class="prompt-variables-hint" v-show="shouldShowPromptEditor && detectedVariables.length > 0">
                                 <div class="hint-title">
                                     <i class="el-icon-info"></i>
-                                    检测到 {{ detectedVariables.length }} 个变量
+                                    {{ ncfST('Frontend.049') }} {{ detectedVariables.length }} {{ ncfST('Frontend.050') }}
                                 </div>
                                 <div class="variables-list">
                                     <el-tag v-for="varItem in detectedVariables" 
@@ -360,8 +360,8 @@
                                             size="small"
                                             class="variable-tag">
                                         {{ varItem.fullMatch }}
-                                        <i v-if="varItem.isDefined" class="el-icon-check" title="已定义"></i>
-                                        <i v-else class="el-icon-warning" title="未定义"></i>
+                                        <i v-if="varItem.isDefined" class="el-icon-check" :title="ncfST('Frontend.051')"></i>
+                                        <i v-else class="el-icon-warning" :title="ncfST('Frontend.052')"></i>
                                     </el-tag>
                                 </div>
                             </div>
@@ -372,14 +372,14 @@
                                           resize="none"
                                           maxlength="200"
                                           show-word-limit
-                                          placeholder="请输入备注" class="remarkInputBox" @@change="promptChangeHandel($event,'remarks')" @@blur="promptRemarkSave">
+                                          :placeholder="ncfST('Frontend.053')" class="remarkInputBox" @@change="promptChangeHandel($event,'remarks')" @@blur="promptRemarkSave">
                                 </el-input>
                                 @* style="z-index: 1250;" *@
                                 <div class="operationBox">
                                     @* Select the batch-run count. *@
                                     <el-dropdown trigger="click" @@command="changeNumsBtn" type="primary" size="small">
                                         <div class="numsOfResultsBox">
-                                            连发次数：<span class="numVal">{{numsOfResults}}</span>
+                                            {{ ncfST('Frontend.054') }}<span class="numVal">{{numsOfResults}}</span>
                                             <i class="el-icon-arrow-down"></i>
                                         </div>
                                         <el-dropdown-menu slot="dropdown">
@@ -412,52 +412,52 @@
                         <div class="promptParamSection" v-show="shouldShowPromptEditor" :class="{'paramSectionHide': !promptParamVisible}">
                         <div class="titleRow" style="height:28px;">
                             <div class="titleRow_leftBox">
-                                <div class="titleContent">Prompt请求参数</div>
+                                <div class="titleContent">{{ ncfST('Frontend.055') }}</div>
                             </div>
                         </div>
                         <div class="promptPmroparaBox">
                             <el-form ref="promptParamForm" :model="promptParamForm" :rules="rules" label-width="70px" label-position="left">
                                 <div class="formItem">
-                                    <el-form-item label="前缀" prop="prefix">
-                                        <el-input size="mini" v-model="promptParamForm.prefix" autocomplete="off" placeholder="如：{{$"></el-input>
+                                    <el-form-item :label="ncfST('Frontend.056')" prop="prefix">
+                                        <el-input size="mini" v-model="promptParamForm.prefix" autocomplete="off" :placeholder="ncfST('Frontend.406')"></el-input>
                                     </el-form-item>
-                                    <el-form-item label="后缀" prop="suffix">
-                                        <el-input size="mini" v-model="promptParamForm.suffix" autocomplete="off" placeholder="如：}}"></el-input>
+                                    <el-form-item :label="ncfST('Frontend.057')" prop="suffix">
+                                        <el-input size="mini" v-model="promptParamForm.suffix" autocomplete="off" :placeholder="ncfST('Frontend.407')"></el-input>
                                     </el-form-item>
                                 </div>
                                 @* Variable name and value. *@
                                 <el-table :data="promptParamForm.variableList" border
                                           max-height="150"
                                           style="width: 100%">
-                                    <el-table-column label="变量名">
+                                    <el-table-column :label="ncfST('Frontend.058')">
                                         <template slot-scope="scope">
                                             @*<el-input size="mini" v-model="scope.row.name" autocomplete="off" placeholder="Enter a variable name"></el-input>*@
                                             <el-input size="mini" type="textarea"
                                                       autosize
                                                       autocomplete="off"
-                                                      placeholder="请输入变量名"
+                                                      :placeholder="ncfST('Frontend.059')"
                                                       v-model="scope.row.name">
                                             </el-input>
                                             @* <el-form-item :prop="'variableList.' + scope.$index + '.name'" :rules="rules.variableName" label-width="0px">
-                                            <el-input size="mini" v-model="scope.row.name" autocomplete="off" placeholder="请输入变量名"></el-input>
+                                            <el-input size="mini" v-model="scope.row.name" autocomplete="off" :placeholder="ncfST('Frontend.059')"></el-input>
                                             </el-form-item> *@
                                         </template>
                                     </el-table-column>
-                                    <el-table-column label="变量值">
+                                    <el-table-column :label="ncfST('Frontend.060')">
                                         <template slot-scope="scope">
                                             @*<el-input size="mini" v-model="scope.row.value" autocomplete="off" placeholder="Enter a variable value"></el-input>*@
                                             <el-input size="mini" type="textarea"
                                                       autosize
                                                       autocomplete="off"
-                                                      placeholder="请输入变量值"
+                                                      :placeholder="ncfST('Frontend.061')"
                                                       v-model="scope.row.value">
                                             </el-input>
                                             @* <el-form-item :prop="'variableList.' + scope.$index + '.value'" :rules="rules.variableValue" label-width="0px">
-                                            <el-input size="mini" v-model="scope.row.value" autocomplete="off" placeholder="请输入变量值"></el-input>
+                                            <el-input size="mini" v-model="scope.row.value" autocomplete="off" :placeholder="ncfST('Frontend.061')"></el-input>
                                             </el-form-item> *@
                                         </template>
                                     </el-table-column>
-                                    <el-table-column label="操作" width="50" class-name="ncf-table-actions-column">
+                                    <el-table-column :label="ncfST('Frontend.062')" width="50" class-name="ncf-table-actions-column">
                                         <template slot-scope="scope">
                                             <i class="el-icon-delete deleteIcon" @@click="deleteVariableBtn(scope.$index)"></i>
                                         </template>
@@ -466,15 +466,15 @@
                                 </el-table>
                                 @* <div v-for="(item,index) in promptParamForm.variableList" :key="index" class="formItem">
                                 <el-form-item label="" :prop="'variableList.' + index + '.name'" :rules="rules.variableName" label-width="0px">
-                                <el-input v-model="item.name" autocomplete="off" placeholder="请输入变量名"></el-input>
+                                <el-input v-model="item.name" autocomplete="off" :placeholder="ncfST('Frontend.059')"></el-input>
                                 </el-form-item>
                                 <el-form-item label="" :prop="'variableList.' + index + '.value'" :rules="rules.variableValue" label-width="0px">
-                                <el-input v-model="item.value" autocomplete="off" placeholder="请输入变量值"></el-input>
+                                <el-input v-model="item.value" autocomplete="off" :placeholder="ncfST('Frontend.061')"></el-input>
                                 </el-form-item>
                                 <i class="el-icon-delete deleteIcon" @@click="deleteVariableBtn(index)"></i>
                                 </div> *@
                                 <div class="addVariableRow">
-                                    <el-button type="primary" size="mini" icon="el-icon-plus" @@click="addVariableBtn">新增变量</el-button>
+                                    <el-button type="primary" size="mini" icon="el-icon-plus" @@click="addVariableBtn">{{ ncfST('Frontend.063') }}</el-button>
                                 </div>
                             </el-form>
                             <div class="footerBtnRow">
