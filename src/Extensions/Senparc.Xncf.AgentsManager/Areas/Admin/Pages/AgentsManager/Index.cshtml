@@ -593,7 +593,7 @@
                                                 </div>
                                                 <el-input v-model="agentGroupTaskMemberfilter" :placeholder="ncfST('Frontend.007')" suffix-icon="el-icon-search" style="margin-bottom: 15px;" @@input="handleTaskFilterChange($event,'agentGroupTask')"></el-input>
                                                 <div class="taskmain-members-title">
-                                                    Human 参与者：{{ taskHumanParticipantStatusText(agentDetailsGroupDetailsTaskDetails) }} · 机器人·{{ agentDetailsGroupTaskMemberList.length }}
+                                                    {{ ncfST('Frontend.343') }}：{{ taskHumanParticipantStatusText(agentDetailsGroupDetailsTaskDetails) }} · {{ ncfST('Frontend.075') }}{{ agentDetailsGroupTaskMemberList.length }}
                                                 </div>
                                                 <el-scrollbar class="sidebar-taskmembers-container"
                                                     wrap-class="scrollbar-wrapper">
@@ -1121,7 +1121,7 @@
                                 </div>
                                 <el-input v-model="groupTaskMemberfilter" :placeholder="ncfST('Frontend.007')" suffix-icon="el-icon-search" style="margin-bottom: 15px;" @@input="handleTaskFilterChange($event,'groupTask')"></el-input>
                                 <div class="taskmain-members-title">
-                                    Human 参与者：{{ taskHumanParticipantStatusText(groupTaskDetails) }} · 机器人·{{ groupTaskMemberList.length }}
+                                    {{ ncfST('Frontend.343') }}：{{ taskHumanParticipantStatusText(groupTaskDetails) }} · {{ ncfST('Frontend.075') }}{{ groupTaskMemberList.length }}
                                 </div>
                                 <el-scrollbar class="sidebar-taskmembers-container" wrap-class="scrollbar-wrapper">
                                     <div class="df-wn flex-dc taskmain-members-listWrap">
@@ -1402,7 +1402,7 @@
                             </div>
                             <el-input v-model="taskMemberfilter" :placeholder="ncfST('Frontend.007')" suffix-icon="el-icon-search" style="margin-bottom: 15px;" @@input="handleTaskFilterChange($event,'task')"></el-input>
                             <div class="taskmain-members-title">
-                                Human 参与者：{{ taskHumanParticipantStatusText(taskDetails) }} · 机器人·{{ taskMemberList ? taskMemberList.length : 0 }}
+                                {{ ncfST('Frontend.343') }}：{{ taskHumanParticipantStatusText(taskDetails) }} · {{ ncfST('Frontend.075') }}{{ taskMemberList ? taskMemberList.length : 0 }}
                             </div>
                             <el-scrollbar class="sidebar-taskmembers-container" wrap-class="scrollbar-wrapper">
                                 <div class="df-wn flex-dc taskmain-members-listWrap">
@@ -2048,34 +2048,34 @@
                             <el-table-column prop="agentCardUrl" label="Agent Card 地址" min-width="190" show-overflow-tooltip></el-table-column>
                             <el-table-column label="连接" width="90"><template slot-scope="{ row }"><el-tag :type="row.connectionStatus === 1 ? 'success' : (row.connectionStatus === 2 ? 'danger' : 'info')" size="mini">{{ remoteConnectionStatusText(row.connectionStatus) }}</el-tag></template></el-table-column>
                         </el-table>
-                        <div class="form-help-text">远程成员默认仅收到任务指令和当前轮的文本结论；不会收到工具调用、原始模型内容或完整历史。</div>
+                        <div class="form-help-text">{{ ncfST('Frontend.483') }}</div>
                     </div>
                 </el-form-item>
-                <el-form-item label="上下文共享">
-                    <el-select v-model="groupForm.contextSharingMode" clearable placeholder="远程成员默认：指令 + 关键结论" style="width:100%;">
-                        <el-option label="兼容旧组：完整历史（仅无远程成员）" :value="0"></el-option>
-                        <el-option label="任务指令 + 当前轮关键结论" :value="1"></el-option>
-                        <el-option label="仅任务指令" :value="2"></el-option>
+                <el-form-item label="Context sharing">
+                    <el-select v-model="groupForm.contextSharingMode" clearable :placeholder="ncfST('Frontend.484')" style="width:100%;">
+                        <el-option :label="ncfST('Frontend.378')" :value="0"></el-option>
+                        <el-option :label="ncfST('Frontend.360')" :value="1"></el-option>
+                        <el-option :label="ncfST('Frontend.356')" :value="2"></el-option>
                     </el-select>
-                    <div class="form-help-text">混合群组会采用所有远程成员要求中最严格的策略；本地群未设置时保持升级前行为。</div>
+                    <div class="form-help-text">{{ ncfST('Frontend.448') }}</div>
                 </el-form-item>
-                <el-form-item label="群主" prop="adminAgentTemplateId">
+                <el-form-item :label="ncfST('Frontend.132')" prop="adminAgentTemplateId">
                     @* @change="handleChange($event,'')" *@
                     <load-more-select v-model="groupForm.adminAgentTemplateId" service-type='agent' placeholder="请选择" />
                 </el-form-item>
-                <el-form-item label="对接人" prop="enterAgentTemplateId">
+                <el-form-item :label="ncfST('Frontend.133')" prop="enterAgentTemplateId">
                     @* @change="handleChange($event,'')" *@
                     <load-more-select v-model="groupForm.enterAgentTemplateId" service-type='agent' placeholder="请选择" />
                 </el-form-item>
-                <el-form-item label="说明">
-                    <el-input type="textarea" v-model="groupForm.description" :rows="4" placeholder="请填写"></el-input>
+                <el-form-item :label="ncfST('Frontend.134')">
+                    <el-input type="textarea" v-model="groupForm.description" :rows="4" :placeholder="ncfST('Frontend.099')"></el-input>
                 </el-form-item>
             </el-form>
         </div>
         @* Fixed content footer. *@
         <div class="drawerRtl__footer text-right">
-            <el-button :size="elSize" @@click="handleElVisibleClose('drawerGroup')">取消</el-button>
-            <el-button :size="elSize" type="primary" @@click="handleElVisibleSubmit('drawerGroup')">确认</el-button>
+            <el-button :size="elSize" @@click="handleElVisibleClose('drawerGroup')">{{ ncfST('Frontend.191') }}</el-button>
+            <el-button :size="elSize" type="primary" @@click="handleElVisibleSubmit('drawerGroup')">{{ ncfST('Frontend.192') }}</el-button>
         </div>
     </div>
 </el-drawer>
