@@ -12,7 +12,7 @@ using System.Linq;
 namespace Senparc.Xncf.XncfBuilder.OHS.Local
 {
     /// <summary>
-    /// 自动生成的NCF模板常量类，包含所有模板文件的内容
+    /// Auto-generated NCF template constants containing all template file content.
     /// </summary>
     public partial class BuildXncfAppService
     {
@@ -88,8 +88,8 @@ Code:
         #region CODE Templates
 
         /// <summary>
-        /// 请求类代码
-        /// 类型: code
+        /// Request class code
+        /// Type: code
         /// </summary>
         public const string RequestCode = @"/*----------------------------------------------------------------
 
@@ -140,8 +140,8 @@ namespace Senparc.Xncf.XncfBuilder
         #region BACKEND_TEMPLATE Templates
 
         /// <summary>
-        /// Senparc实体类模板
-        /// 类型: backend_template
+        /// Senparc entity template
+        /// Type: backend_template
         /// </summary>
         public const string SenparcEntitiesTemplate = @"using Microsoft.EntityFrameworkCore;
 using Senparc.Ncf.Database;
@@ -170,8 +170,8 @@ namespace Template_OrgName.Xncf.Template_XncfName.Models
 ";
 
         /// <summary>
-        /// 颜色模型模板
-        /// 类型: backend_template
+        /// Color model template
+        /// Type: backend_template
         /// </summary>
         public const string ColorModelTemplate = @"using Senparc.Ncf.Core.Models;
 using Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dto;
@@ -271,8 +271,8 @@ namespace Template_OrgName.Xncf.Template_XncfName
 ";
 
         /// <summary>
-        /// 颜色DTO模板
-        /// 类型: backend_template
+        /// Color DTO template
+        /// Type: backend_template
         /// </summary>
         public const string ColorDtoTemplate = @"using Senparc.Ncf.Core.Models;
 
@@ -304,8 +304,8 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dt
 ";
 
         /// <summary>
-        /// 颜色服务模板
-        /// 类型: backend_template
+        /// Color service template
+        /// Type: backend_template
         /// </summary>
         public const string ColorServiceTemplate = @"using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Repository;
@@ -381,8 +381,8 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
         #region FRONTEND_TEMPLATE Templates
 
         /// <summary>
-        /// 数据库示例索引页面视图模板
-        /// 类型: frontend_template
+        /// Database sample index page view template
+        /// Type: frontend_template
         /// </summary>
         public const string DatabaseSampleIndexViewTemplate = @"@page
 @model Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages.DatabaseSampleIndex
@@ -573,8 +573,8 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
 ";
 
         /// <summary>
-        /// 数据库示例索引页面代码后置模板
-        /// 类型: frontend_template
+        /// Database sample index page code-behind template
+        /// Type: frontend_template
         /// </summary>
         public const string DatabaseSampleIndexCodeBehindTemplate = @"using Microsoft.AspNetCore.Mvc;
 using Senparc.Ncf.Service;
@@ -827,8 +827,8 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         #region FRONTEND_SCRIPT Templates
 
         /// <summary>
-        /// 数据库示例索引页面JavaScript模板
-        /// 类型: frontend_script
+        /// Database sample index page JavaScript template
+        /// Type: frontend_script
         /// </summary>
         public const string DatabaseSampleIndexJsTemplate = @"var app = new Vue({
     el: ""#app"",
@@ -1264,10 +1264,10 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         #region FRONTEND_STYLE Templates
 
         /// <summary>
-        /// 数据库示例索引页面CSS模板
-        /// 类型: frontend_style
+        /// Database sample index page CSS template
+        /// Type: frontend_style
         /// </summary>
-        public const string DatabaseSampleIndexCssTemplate = @"/* 通用样式 */
+        public const string DatabaseSampleIndexCssTemplate = @"/* Common styles */
 .d-flex{
     display: flex;
 }
@@ -1278,7 +1278,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
     align-items: center;
 }
 
-/* 过滤器容器样式 */
+/* Filter container styles */
 .filter-container {
     margin-bottom: 20px;
     padding: 10px 0;
@@ -1288,7 +1288,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
     margin-right: 10px;
 }
 
-/* 颜色预览样式 */
+/* Color preview styles */
 .color-preview {
     width: 100%;
     height: 40px;
@@ -1324,13 +1324,13 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-/* 分页容器样式 */
+/* Pagination container styles */
 .pagination-container {
     margin-top: 20px;
     text-align: center;
 }
 
-/* 表格样式增强 */
+/* Table style enhancements */
 .el-table {
     border-radius: 8px;
     overflow: hidden;
@@ -1343,7 +1343,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
     font-weight: 600;
 }
 
-/* 颜色标签样式 */
+/* Color tag styles */
 .el-tag {
     min-width: 50px;
     text-align: center;
@@ -1352,7 +1352,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
     text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
 }
 
-/* 对话框样式 */
+/* Dialog styles */
 .el-dialog {
     border-radius: 12px;
     overflow: hidden;
@@ -1373,7 +1373,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
     padding: 30px 20px;
 }
 
-/* 滑块样式 */
+/* Slider styles */
 .el-slider {
     margin: 20px 0;
 }
@@ -1390,7 +1390,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
     border: 2px solid #409eff;
 }
 
-/* 按钮样式增强 */
+/* Button style enhancements */
 .el-button--mini {
     padding: 5px 10px;
     font-size: 12px;
@@ -1422,7 +1422,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
     border: none;
 }
 
-/* 表单项样式 */
+/* Form item styles */
 .el-form-item {
     margin-bottom: 22px;
 }
@@ -1432,12 +1432,12 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
     color: #333;
 }
 
-/* 加载动画样式 */
+/* Loading animation styles */
 .el-loading-mask {
     background-color: rgba(255, 255, 255, 0.9);
 }
 
-/* 响应式设计 */
+/* Responsive design */
 @media (max-width: 768px) {
     .filter-container {
         text-align: center;
@@ -1459,7 +1459,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
     }
 }
 
-/* 动画效果 */
+/* Animation effects */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -1475,7 +1475,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
     animation: fadeIn 0.3s ease-out;
 }
 
-/* 鼠标悬停效果 */
+/* Hover effects */
 .el-table tbody tr:hover {
     background-color: #f5f7fa !important;
     transition: background-color 0.3s ease;
@@ -1511,15 +1511,15 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         /// </summary>
         public static readonly TemplateFileInfo[] AllTemplateFiles = new TemplateFileInfo[]
         {
-            new TemplateFileInfo("RequestCode", "请求类代码", "code", "Request.cs", RequestCode),
-            new TemplateFileInfo("SenparcEntitiesTemplate", "Senparc实体类模板", "backend_template", "../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Models/DatabaseModel/Template_XncfNameSenparcEntities.cs", SenparcEntitiesTemplate),
-            new TemplateFileInfo("ColorModelTemplate", "颜色模型模板", "backend_template", "../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Models/DatabaseModel/Color.cs", ColorModelTemplate),
-            new TemplateFileInfo("ColorDtoTemplate", "颜色DTO模板", "backend_template", "../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Models/DatabaseModel/Dto/ColorDto.cs", ColorDtoTemplate),
-            new TemplateFileInfo("ColorServiceTemplate", "颜色服务模板", "backend_template", "../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Services/ColorService.cs", ColorServiceTemplate),
-            new TemplateFileInfo("DatabaseSampleIndexViewTemplate", "数据库示例索引页面视图模板", "frontend_template", "../Senparc.Xncf.XncfBuilder.Template/templates/template1/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml", DatabaseSampleIndexViewTemplate),
-            new TemplateFileInfo("DatabaseSampleIndexCodeBehindTemplate", "数据库示例索引页面代码后置模板", "frontend_template", "../Senparc.Xncf.XncfBuilder.Template/templates/template1/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml.cs", DatabaseSampleIndexCodeBehindTemplate),
-            new TemplateFileInfo("DatabaseSampleIndexJsTemplate", "数据库示例索引页面JavaScript模板", "frontend_script", "../Senparc.Xncf.XncfBuilder.Template/templates/template1/wwwroot/js/Admin/Template_XncfName/databaseSampleIndex.js", DatabaseSampleIndexJsTemplate),
-            new TemplateFileInfo("DatabaseSampleIndexCssTemplate", "数据库示例索引页面CSS模板", "frontend_style", "../Senparc.Xncf.XncfBuilder.Template/templates/template1/wwwroot/css/Admin/Template_XncfName/databaseSampleIndex.css", DatabaseSampleIndexCssTemplate),
+            new TemplateFileInfo("RequestCode", "Request class code", "code", "Request.cs", RequestCode),
+            new TemplateFileInfo("SenparcEntitiesTemplate", "Senparc entity template", "backend_template", "../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Models/DatabaseModel/Template_XncfNameSenparcEntities.cs", SenparcEntitiesTemplate),
+            new TemplateFileInfo("ColorModelTemplate", "Color model template", "backend_template", "../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Models/DatabaseModel/Color.cs", ColorModelTemplate),
+            new TemplateFileInfo("ColorDtoTemplate", "Color DTO template", "backend_template", "../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Models/DatabaseModel/Dto/ColorDto.cs", ColorDtoTemplate),
+            new TemplateFileInfo("ColorServiceTemplate", "Color service template", "backend_template", "../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Services/ColorService.cs", ColorServiceTemplate),
+            new TemplateFileInfo("DatabaseSampleIndexViewTemplate", "Database sample index page view template", "frontend_template", "../Senparc.Xncf.XncfBuilder.Template/templates/template1/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml", DatabaseSampleIndexViewTemplate),
+            new TemplateFileInfo("DatabaseSampleIndexCodeBehindTemplate", "Database sample index page code-behind template", "frontend_template", "../Senparc.Xncf.XncfBuilder.Template/templates/template1/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml.cs", DatabaseSampleIndexCodeBehindTemplate),
+            new TemplateFileInfo("DatabaseSampleIndexJsTemplate", "Database sample index page JavaScript template", "frontend_script", "../Senparc.Xncf.XncfBuilder.Template/templates/template1/wwwroot/js/Admin/Template_XncfName/databaseSampleIndex.js", DatabaseSampleIndexJsTemplate),
+            new TemplateFileInfo("DatabaseSampleIndexCssTemplate", "Database sample index page CSS template", "frontend_style", "../Senparc.Xncf.XncfBuilder.Template/templates/template1/wwwroot/css/Admin/Template_XncfName/databaseSampleIndex.css", DatabaseSampleIndexCssTemplate),
         };
 
         /// <summary>
