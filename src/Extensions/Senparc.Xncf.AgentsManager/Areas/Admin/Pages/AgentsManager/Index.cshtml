@@ -1947,44 +1947,44 @@
     <div class="drawerRtl">
         @* Content header, including the title and close icon. *@
         <div class="drawerRtl__header">
-            <div class="drawerRtl__header__title">{{ groupForm.id ? '编辑组' : '新增组' }} </div>
+            <div class="drawerRtl__header__title">{{ groupForm.id ? ncfST('Frontend.125') : ncfST('Frontend.126') }} </div>
             <div class="drawerRtl__header__close" @@click="handleElVisibleClose('drawerGroup')">&times;</div>
         </div>
         @* Main content area. *@
         <div class="drawerRtl__body">
             <el-form v-if="visible.drawerGroup" ref="groupELForm" :model="groupForm" :rules="groupFormRules"
                 :size="elSize" label-position="left" label-width="130px" class="drawerForm-container">
-                <el-form-item label="组名称" prop="name">
-                    <el-input v-model="groupForm.name" placeholder="请填写"></el-input>
+                <el-form-item :label="ncfST('Frontend.127')" prop="name">
+                    <el-input v-model="groupForm.name" :placeholder="ncfST('Frontend.099')"></el-input>
                 </el-form-item>
-                <el-form-item label="是否启用" prop="enable">
-                    <el-checkbox v-model="groupForm.enable">启用该组</el-checkbox>
-                    <div class="form-help-text">新建组默认启用。停用后不会创建新任务，也不会作为 Workflow 节点使用。</div>
+                <el-form-item :label="ncfST('Frontend.104')" prop="enable">
+                    <el-checkbox v-model="groupForm.enable">{{ ncfST('Frontend.393') }}</el-checkbox>
+                    <div class="form-help-text">{{ ncfST('Frontend.425') }}</div>
                 </el-form-item>
-                <el-form-item label="Human 参与者">
-                    <el-checkbox v-model="groupForm.includeHumanParticipant">加入 Human 文本参与者</el-checkbox>
-                    <div class="form-help-text">运行轮次到达 Human 时任务会暂停，窗口提供文本输入；回复成功后继续 MAF 工作流。</div>
+                <el-form-item :label="ncfST('Frontend.343')">
+                    <el-checkbox v-model="groupForm.includeHumanParticipant">{{ ncfST('Frontend.382') }}</el-checkbox>
+                    <div class="form-help-text">{{ ncfST('Frontend.340') }}</div>
                 </el-form-item>
-                <el-form-item label="本地成员" prop="members">
+                <el-form-item :label="ncfST('Frontend.439')" prop="members">
                     <div class="groupFMB">
                         <div class="df-wn flex-ac flex-jsb" style="gap: 10px;margin-bottom: 10px;">
                             <div class="df-wn flex-ac" style="gap: 10px;">
                                 <el-input v-model="groupAgentQueryList.filter" size="small"
-                                    placeholder="请填写"></el-input>
+                                    :placeholder="ncfST('Frontend.099')"></el-input>
                                 <el-button size="small" icon="el-icon-search"
-                                    @@click="handleFilterChange(groupAgentQueryList.filter,'groupAgent')">搜索</el-button>
+                                    @@click="handleFilterChange(groupAgentQueryList.filter,'groupAgent')">{{ ncfST('Frontend.129') }}</el-button>
                             </div>
                             <div class="groupFMB_filter_addBtn" @@click="handleElVisibleOpenBtn('dialogGroupAgent')">
-                                新增智能体
+                                {{ ncfST('Frontend.097') }}
                             </div>
                         </div>
                         <div class="df-wn flex-as flex-js" style="gap: 10px;margin-bottom: 10px;">
-                            <span class="groupFMB_ma_label">已选择:</span>
+                            <span class="groupFMB_ma_label">{{ ncfST('Frontend.130') }}</span>
                             <div class="groupFMB_ma_list">
                                 <div class="df flex-ac flex-js" style="gap:10px">
                                     <div v-for="(item,index) in groupForm.members" :key="item.id"
                                         class="df-wn flex-ac groupFMB_ma_list_item">
-                                        <el-tag type="primary" size="mini" style="margin-right:4px;">本地</el-tag>
+                                        <el-tag type="primary" size="mini" style="margin-right:4px;">{{ ncfST('Frontend.436') }}</el-tag>
                                         <span class="groupFMB_ma_list_item_text">{{ item.name }}</span>
                                         <i class="el-icon-close cursorPointer"
                                             @@click="groupMembersCancel(item,index)"></i>
@@ -1996,16 +1996,16 @@
                             style="width: 100%;margin-bottom: 10px;border: 1px solid rgba(229, 229, 229, 1);"
                             @@selection-change="handleSelectionChange">
                             <el-table-column type="selection" width="30"></el-table-column>
-                            <el-table-column prop="name" label="智能体名称" width="130"
+                            <el-table-column prop="name" :label="ncfST('Frontend.098')" width="130"
                                 show-overflow-tooltip></el-table-column>
-                            <el-table-column prop="score" label="评分" width="100">
+                            <el-table-column prop="score" :label="ncfST('Frontend.015')" width="100">
                             </el-table-column>
-                            <el-table-column prop="description" label="描述" min-width="100">
+                            <el-table-column prop="description" :label="ncfST('Frontend.131')" min-width="100">
                             </el-table-column>
-                            <el-table-column fixed="right" label="操作" width="100" class-name="ncf-table-actions-column">
+                            <el-table-column fixed="right" :label="ncfST('Frontend.061')" width="100" class-name="ncf-table-actions-column">
                                 <template slot-scope="{ row }">
                                     <el-button type="primary" size="small"
-                                        @@click="handleEditDrawerOpenBtn('dialogGroupAgent',row)">编辑</el-button>
+                                        @@click="handleEditDrawerOpenBtn('dialogGroupAgent',row)">{{ ncfST('Frontend.016') }}</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -2016,18 +2016,18 @@
                         </el-pagination> *@
                     </div>
                 </el-form-item>
-                <el-form-item label="远程 A2A 成员">
+                <el-form-item :label="ncfST('Frontend.481')">
                     <div class="groupFMB">
                         <div class="df-wn flex-ac flex-jsb" style="gap:10px;margin-bottom:10px;">
                             <div class="df-wn flex-ac" style="gap:10px;">
-                                <el-input v-model="groupRemoteAgentQueryList.filter" size="small" placeholder="按名称筛选"
+                                <el-input v-model="groupRemoteAgentQueryList.filter" size="small" :placeholder="ncfST('Frontend.417')"
                                     @@change="getRemoteAgentListData('groupRemoteAgent')"></el-input>
-                                <el-button size="small" icon="el-icon-search" @@click="getRemoteAgentListData('groupRemoteAgent')">搜索</el-button>
+                                <el-button size="small" icon="el-icon-search" @@click="getRemoteAgentListData('groupRemoteAgent')">{{ ncfST('Frontend.129') }}</el-button>
                             </div>
-                            <el-button type="warning" plain size="small" icon="el-icon-connection" @@click="openRemoteAgentManager">管理远程 A2A</el-button>
+                            <el-button type="warning" plain size="small" icon="el-icon-connection" @@click="openRemoteAgentManager">{{ ncfST('Frontend.461') }}</el-button>
                         </div>
                         <div class="df-wn flex-as flex-js" style="gap:10px;margin-bottom:10px;">
-                            <span class="groupFMB_ma_label">已选择:</span>
+                            <span class="groupFMB_ma_label">{{ ncfST('Frontend.130') }}</span>
                             <div class="groupFMB_ma_list">
                                 <div class="df flex-ac flex-js" style="gap:10px">
                                     <div v-for="item in groupForm.remoteMembers" :key="'remote-'+item.id"
