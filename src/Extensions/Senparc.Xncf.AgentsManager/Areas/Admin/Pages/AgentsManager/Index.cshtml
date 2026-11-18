@@ -2593,7 +2593,7 @@
         :rules="evaluationFormRules" :size="elSize" label-position="top" label-width="130px"
         class="drawerForm-container">
         <el-form-item label="请输入评分(0-10分)" prop="score">
-            @* <el-input v-model="evaluationForm.score" placeholder="请填写"
+            @* <el-input v-model="evaluationForm.score" placeholder="Please enter"
             @@input="handleInputNum($event,'evaluationForm.score')"></el-input> *@
             <el-slider v-model="evaluationForm.score" min="0" max="10" step="0.1"></el-slider>
         </el-form-item>

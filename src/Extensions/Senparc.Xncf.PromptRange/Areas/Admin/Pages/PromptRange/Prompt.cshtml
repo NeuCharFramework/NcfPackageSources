@@ -1147,7 +1147,7 @@
     @*Export plugin.*@
     <el-dialog title="导出 plugin 文件夹" :visible.sync="expectedPluginVisible" center @@close="expectedPluginCloseDialog">
         <el-form ref="expectedPluginFoem" :model="expectedPluginFoem" :rules="rules" label-position="left">
-            @*             <el-form-item label="靶场" prop="rangeId" label-width="130px">
+            @*             <el-form-item label="Prompt range" prop="rangeId" label-width="130px">
             <el-select v-model="expectedPluginFoem.rangeId" multiple
             collapse-tags placeholder="请选择靶场" class="selectRow" @@change="expectedPluginPromptFieldChange">
             <el-option v-for="item in promptFieldOpt"
