@@ -1742,4 +1742,10 @@
   <data name="Frontend.582" xml:space="preserve"><value>Только сохранить конфигурацию</value></data>
   <data name="Frontend.583" xml:space="preserve"><value>Безопасное состояние по умолчанию: выключено</value></data>
   <data name="Frontend.584" xml:space="preserve"><value>Ещё {0}; нажмите «Управление привязками» для просмотра</value></data>
+  <data name="Frontend.585" xml:space="preserve"><value>Системный Agent: {0}</value></data>
+  <data name="Frontend.586" xml:space="preserve"><value>Текст Human вводит вошедший пользователь; модели и инструменты не вызываются. Связь с моделью можно изменить, но нельзя менять системную идентичность или Prompt.</value></data>
+  <data name="Frontend.587" xml:space="preserve"><value>Системные Agents создаются или поддерживаются модулями (например, PromptCatalyzer). Перед изменением связи с моделью проверьте требования связанных автоматизированных задач.</value></data>
+  <data name="Frontend.588" xml:space="preserve"><value>Создаёт Prompt Range из текущего текстового Prompt и выбранной Chat-модели, выполняет оценку и автоматически переключается на ссылку уровня Range.</value></data>
+  <data name="Frontend.589" xml:space="preserve"><value>Для этого ручного Prompt нет наследуемой модели PromptRange; выберите Chat AIModel вручную.</value></data>
+  <data name="Frontend.590" xml:space="preserve"><value>Human не вызывает модель; эта связь сохраняет политику задач системного Agent и по умолчанию следует задаче группы.</value></data>
 </root>

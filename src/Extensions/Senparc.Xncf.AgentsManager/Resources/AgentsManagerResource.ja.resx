@@ -1742,4 +1742,10 @@
   <data name="Frontend.582" xml:space="preserve"><value>設定のみ保存</value></data>
   <data name="Frontend.583" xml:space="preserve"><value>安全のため既定で無効</value></data>
   <data name="Frontend.584" xml:space="preserve"><value>残り {0} 件。確認するには「バインドを管理」をクリックしてください</value></data>
+  <data name="Frontend.585" xml:space="preserve"><value>システム Agent：{0}</value></data>
+  <data name="Frontend.586" xml:space="preserve"><value>Human の入力はログイン中のユーザーが提供し、モデルやツールは呼び出しません。モデルバインドは調整できますが、システムの身元や Prompt は変更できません。</value></data>
+  <data name="Frontend.587" xml:space="preserve"><value>システム Agent はモジュールによって作成または管理されます（例：PromptCatalyzer）。モデルバインドを変更する前に、関連する自動タスクの要件を確認してください。</value></data>
+  <data name="Frontend.588" xml:space="preserve"><value>現在のプレーンテキスト Prompt と選択した Chat モデルで Prompt Range を作成し、1 回採点した後、Range レベルの参照へ自動的に切り替えます。</value></data>
+  <data name="Frontend.589" xml:space="preserve"><value>この手動 Prompt に継承可能な PromptRange モデルはありません。Chat AIModel を手動で選択してください。</value></data>
+  <data name="Frontend.590" xml:space="preserve"><value>Human はモデルを呼び出しません。このバインドはシステム Agent のタスクポリシーを保持し、既定ではグループタスクに従います。</value></data>
 </root>

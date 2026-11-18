@@ -1523,8 +1523,8 @@
             <el-form v-if="visible.drawerAgent" ref="agentELForm" :model="agentForm" :rules="agentFormRules"
                 :size="elSize" label-position="left" label-width="130px" class="drawerForm-container">
                 <el-alert v-if="agentForm.isSystemAgent"
-                          :title="'系统 Agent：' + (agentForm.systemAgentKind || agentForm.name)"
-                          :description="agentForm.isHuman ? 'Human 由当前登录用户输入文本，不调用模型或工具。可调整模型绑定策略，但不能修改系统身份或 Prompt。' : '系统 Agent 由模块自动创建或维护（例如 PromptCatalyzer）。修改模型绑定前请确认相关自动化任务的运行要求。'"
+                          :title="ncfST('Frontend.585', agentForm.systemAgentKind || agentForm.name)"
+                          :description="agentForm.isHuman ? ncfST('Frontend.586') : ncfST('Frontend.587')"
                           type="info"
                           :closable="false"
                           show-icon
@@ -1559,7 +1559,7 @@
                         <el-button size="small" type="primary" plain icon="el-icon-magic-stick"
                                    :loading="agentPromptConversionLoading"
                                    @@click="convertAgentPromptToPromptRange">{{ ncfST('Frontend.451') }}</el-button>
-                        <div class="form-help-text">使用当前明文 Prompt 和所选 Chat 模型创建靶场，完成一次打靶及 AI 评分后，自动切换为靶场级引用。</div>
+                        <div class="form-help-text">{{ ncfST('Frontend.588') }}</div>
                     </div>
                 </el-form-item>
                 <el-form-item :label="ncfST('Frontend.463')" prop="modelBinding">
@@ -1572,8 +1572,8 @@
                         <load-more-select v-model="agentForm.aiModelId" service-type="model" :chat-only="true"
                                           direction="vertical" :placeholder="ncfST('Frontend.476')" />
                     </div>
-                    <div class="form-help-text" v-if="agentForm.systemMessageType === '2' && !agentForm.isHuman">手动 Prompt 没有 PromptRange 模型可继承，必须手动选择一个 Chat 类型 AIModel。</div>
-                    <div class="form-help-text" v-else-if="agentForm.isHuman">Human 不调用模型；该绑定用于保留其系统 Agent 的任务策略配置，默认跟随组任务。</div>
+                    <div class="form-help-text" v-if="agentForm.systemMessageType === '2' && !agentForm.isHuman">{{ ncfST('Frontend.589') }}</div>
+                    <div class="form-help-text" v-else-if="agentForm.isHuman">{{ ncfST('Frontend.590') }}</div>
                 </el-form-item>
                 <el-form-item v-if="!agentForm.isHuman" :label="ncfST('Frontend.104')" prop="enable">
                     <el-checkbox v-model="agentForm.enable">{{ ncfST('Frontend.105') }}</el-checkbox>
@@ -2223,8 +2223,8 @@
     <el-form v-if="visible.dialogGroupAgent" ref="agentELForm" :model="agentForm" :rules="agentFormRules" :size="elSize"
         label-position="left" label-width="130px" class="drawerForm-container">
         <el-alert v-if="agentForm.isSystemAgent"
-                  :title="'系统 Agent：' + (agentForm.systemAgentKind || agentForm.name)"
-                  :description="agentForm.isHuman ? 'Human 由当前登录用户输入文本，不调用模型或工具。可调整模型绑定策略，但不能修改系统身份或 Prompt。' : '系统 Agent 由模块自动创建或维护（例如 PromptCatalyzer）。'"
+                  :title="ncfST('Frontend.585', agentForm.systemAgentKind || agentForm.name)"
+                  :description="agentForm.isHuman ? ncfST('Frontend.586') : ncfST('Frontend.587')"
                   type="info"
                   :closable="false"
                   show-icon

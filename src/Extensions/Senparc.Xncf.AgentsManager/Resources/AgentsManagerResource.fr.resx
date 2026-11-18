@@ -1742,4 +1742,10 @@
   <data name="Frontend.582" xml:space="preserve"><value>Enregistrer la configuration uniquement</value></data>
   <data name="Frontend.583" xml:space="preserve"><value>Désactivé par défaut pour la sécurité</value></data>
   <data name="Frontend.584" xml:space="preserve"><value>Il reste {0} éléments ; cliquez sur « Gérer les liaisons » pour les voir</value></data>
+  <data name="Frontend.585" xml:space="preserve"><value>Agent système : {0}</value></data>
+  <data name="Frontend.586" xml:space="preserve"><value>Le texte Human est saisi par l'utilisateur connecté ; aucun modèle ni outil n'est appelé. La liaison du modèle peut être ajustée, mais l'identité système et le Prompt ne peuvent pas être modifiés.</value></data>
+  <data name="Frontend.587" xml:space="preserve"><value>Les Agents système sont créés ou maintenus par les modules (par exemple PromptCatalyzer). Vérifiez les exigences des tâches automatisées associées avant de modifier la liaison du modèle.</value></data>
+  <data name="Frontend.588" xml:space="preserve"><value>Créez un Prompt Range avec le Prompt texte et le modèle Chat sélectionnés, exécutez une notation, puis passez automatiquement à la référence au niveau du Range.</value></data>
+  <data name="Frontend.589" xml:space="preserve"><value>Ce Prompt manuel ne possède aucun modèle PromptRange héritable ; sélectionnez manuellement un AIModel Chat.</value></data>
+  <data name="Frontend.590" xml:space="preserve"><value>Human n'appelle aucun modèle ; cette liaison conserve la politique de tâches de l'Agent système et suit la tâche du groupe par défaut.</value></data>
 </root>

@@ -1217,4 +1217,10 @@
   <data name="Frontend.582" xml:space="preserve"><value>仅保存配置</value></data>
   <data name="Frontend.583" xml:space="preserve"><value>安全默认关闭</value></data>
   <data name="Frontend.584" xml:space="preserve"><value>还有 {0} 项，请点击“管理绑定”查看</value></data>
+  <data name="Frontend.585" xml:space="preserve"><value>系统 Agent：{0}</value></data>
+  <data name="Frontend.586" xml:space="preserve"><value>Human 由当前登录用户输入文本，不调用模型或工具。可调整模型绑定策略，但不能修改系统身份或 Prompt。</value></data>
+  <data name="Frontend.587" xml:space="preserve"><value>系统 Agent 由模块自动创建或维护（例如 PromptCatalyzer）。修改模型绑定前请确认相关自动化任务的运行要求。</value></data>
+  <data name="Frontend.588" xml:space="preserve"><value>使用当前明文 Prompt 和所选 Chat 模型创建靶场，完成一次打靶及 AI 评分后，自动切换为靶场级引用。</value></data>
+  <data name="Frontend.589" xml:space="preserve"><value>手动 Prompt 没有 PromptRange 模型可继承，必须手动选择一个 Chat 类型 AIModel。</value></data>
+  <data name="Frontend.590" xml:space="preserve"><value>Human 不调用模型；该绑定用于保留其系统 Agent 的任务策略配置，默认跟随组任务。</value></data>
 </root>

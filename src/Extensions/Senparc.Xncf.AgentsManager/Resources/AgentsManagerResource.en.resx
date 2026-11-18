@@ -1742,4 +1742,10 @@
   <data name="Frontend.582" xml:space="preserve"><value>Save configuration only</value></data>
   <data name="Frontend.583" xml:space="preserve"><value>Secure default: off</value></data>
   <data name="Frontend.584" xml:space="preserve"><value>{0} more; click "Manage bindings" to view</value></data>
+  <data name="Frontend.585" xml:space="preserve"><value>System Agent: {0}</value></data>
+  <data name="Frontend.586" xml:space="preserve"><value>Human input is provided by the signed-in user; no model or tools are called. Model binding can be adjusted, but the system identity and Prompt cannot be changed.</value></data>
+  <data name="Frontend.587" xml:space="preserve"><value>System Agents are created or maintained by modules (for example, PromptCatalyzer). Confirm the requirements of related automation tasks before changing model binding.</value></data>
+  <data name="Frontend.588" xml:space="preserve"><value>Create a Prompt Range with the current plain-text Prompt and selected Chat model, run scoring once, then switch automatically to the Range-level reference.</value></data>
+  <data name="Frontend.589" xml:space="preserve"><value>This manual Prompt has no inheritable PromptRange model; select a Chat AIModel manually.</value></data>
+  <data name="Frontend.590" xml:space="preserve"><value>Human does not call a model; this binding preserves the system Agent task policy and follows the group task by default.</value></data>
 </root>
