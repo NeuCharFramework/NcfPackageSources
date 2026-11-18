@@ -3031,11 +3031,11 @@ var app = new Vue({
                         this.isPageLoading = false
                         console.error('导出失败:', error);
                         
-                        let errorMessage = '导出 plugins 失败';
+                        let errorMessage = ncfST('Frontend.323');
                         if (error.response) {
                             //Legacy comment translated to English.
                             if (error.response.status === 500) {
-                                errorMessage = '服务器错误：' + (error.response.data?.message || '导出过程中发生错误');
+                                errorMessage = ncfST('Frontend.426') + (error.response.data?.message || ncfST('Frontend.323'));
                             } else if (error.response.data && error.response.data.message) {
                                 errorMessage = error.response.data.message;
                             }
@@ -3993,14 +3993,14 @@ var app = new Vue({
                         })
                     } else {
                         this.$message({
-                            message: fallbackRes.data.errorMessage || '加载对话历史失败',
+                            message: fallbackRes.data.errorMessage || ncfST('Frontend.347'),
                             type: 'error'
                         })
                     }
                 }
             } catch (error) {
                 this.$message({
-                    message: '加载对话历史失败：' + (error.message || '未知错误'),
+                    message: ncfST('Frontend.347') + ': ' + (error.message || ncfST('未知错误')),
                     type: 'error'
                 })
             }
@@ -4342,7 +4342,7 @@ var app = new Vue({
             
             if (typeof THREE === 'undefined') {
                 this.$message({
-                    message: 'THREE.js 未加载，请刷新页面重试',
+                    message: ncfST('THREE.js 未加载，请刷新页面重试'),
                     type: 'error'
                 })
                 this.mapDialogVisible = false
@@ -4596,13 +4596,13 @@ var app = new Vue({
                     console.log('加载到', this.availableModelsForInit.length, '个可用 Model');
                 } else {
                     // handlingerrorresponse
-                    const errorMsg = response.data?.errorMessage || '获取模型列表失败';
+                    const errorMsg = response.data?.errorMessage || ncfST('Frontend.319');
                     this.$message.error(errorMsg);
                     console.error('获取模型失败:', errorMsg);
                 }
             } catch (error) {
                 console.error('加载 AI Model 列表失败:', error);
-                this.$message.error('加载 AI Model 列表失败: ' + (error.response?.data?.errorMessage || error.message));
+                this.$message.error(ncfST('Frontend.319') + ': ' + (error.response?.data?.errorMessage || error.message));
             } finally {
                 this.loadingModels = false;
             }
@@ -4611,7 +4611,7 @@ var app = new Vue({
         // executeinitialize
         async executeInitialization() {
             if (!this.selectedModelIdForInit) {
-                this.$message.warning('请选择一个 AI Model');
+                this.$message.warning(ncfST('Frontend.377'));
                 return;
             }
 
@@ -4629,7 +4629,7 @@ var app = new Vue({
                 if (response.data && response.data.success) {
                     const initData = response.data.data || {};
                     this.$message({
-                        message: `✅ 初始化成功！已创建 PromptCatalyzer Agent，PromptCode: ${initData.promptCode || '已创建'}`,
+                        message: ncfST('Frontend.397', initData.promptCode || ncfST('Frontend.320')),
                         type: 'success',
                         duration: 6000,
                         showClose: true
@@ -4644,13 +4644,13 @@ var app = new Vue({
                     //Legacy comment translated to English.
                     this.proceedWithOptimization();
                 } else {
-                    this.$message.error('初始化失败: ' + (response.data.errorMessage || '未知错误'));
+                    this.$message.error(ncfST('Frontend.317') + ': ' + (response.data.errorMessage || ncfST('未知错误')));
                 }
             } catch (error) {
                 console.error('初始化失败:', error);
                 const errorMsg = error.response?.data?.error || error.response?.data?.message || error.message;
                 this.$message({
-                    message: '初始化失败: ' + errorMsg,
+                    message: ncfST('Frontend.317') + ': ' + errorMsg,
                     type: 'error',
                     duration: 8000,
                     showClose: true
@@ -4768,7 +4768,7 @@ var app = new Vue({
 
         async openOptimizeDialog() {
             if (!this.promptid) {
-                this.$message.warning('请先选择一个Prompt！');
+                this.$message.warning(ncfST('Frontend.378'));
                 return;
             }
             
