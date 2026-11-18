@@ -903,4 +903,8 @@
   <data name="Frontend.856" xml:space="preserve"><value>(empty text)</value></data>
   <data name="Frontend.857" xml:space="preserve"><value>Copied to the clipboard.</value></data>
   <data name="Frontend.858" xml:space="preserve"><value>Copy failed. Copy it manually.</value></data>
+  <data name="Frontend.859" xml:space="preserve"><value>Consumed {0} reminders in the current subscription.</value></data>
+  <data name="Frontend.860" xml:space="preserve"><value>Consumed the current reminder.</value></data>
+  <data name="Frontend.861" xml:space="preserve"><value>This reminder was already consumed or no longer belongs to the current account.</value></data>
+  <data name="Frontend.862" xml:space="preserve"><value>The reminder could not be consumed automatically; its business state was preserved. Handle it on the related page.</value></data>
 </root>

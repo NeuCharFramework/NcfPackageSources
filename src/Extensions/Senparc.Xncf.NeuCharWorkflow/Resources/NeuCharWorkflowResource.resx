@@ -902,4 +902,8 @@
   <data name="Frontend.856" xml:space="preserve"><value>（空文本）</value></data>
   <data name="Frontend.857" xml:space="preserve"><value>已复制到剪贴板。</value></data>
   <data name="Frontend.858" xml:space="preserve"><value>复制失败，请手动复制。</value></data>
+  <data name="Frontend.859" xml:space="preserve"><value>已消费当前订阅下 {0} 条纽铃提醒。</value></data>
+  <data name="Frontend.860" xml:space="preserve"><value>已消费当前这一条纽铃提醒。</value></data>
+  <data name="Frontend.861" xml:space="preserve"><value>该纽铃提醒已被消费，或不再属于当前账号。</value></data>
+  <data name="Frontend.862" xml:space="preserve"><value>纽铃提醒无法自动消费；已保留业务状态，请在对应页面处理。</value></data>
 </root>

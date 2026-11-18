@@ -919,4 +919,8 @@
   <data name="Frontend.856" xml:space="preserve"><value>（空のテキスト）</value></data>
   <data name="Frontend.857" xml:space="preserve"><value>クリップボードにコピーしました。</value></data>
   <data name="Frontend.858" xml:space="preserve"><value>コピーに失敗しました。手動でコピーしてください。</value></data>
+  <data name="Frontend.859" xml:space="preserve"><value>現在の購読から {0} 件の通知を消費しました。</value></data>
+  <data name="Frontend.860" xml:space="preserve"><value>現在の通知を消費しました。</value></data>
+  <data name="Frontend.861" xml:space="preserve"><value>この通知は消費済みか、現在のアカウントに属していません。</value></data>
+  <data name="Frontend.862" xml:space="preserve"><value>通知を自動消費できませんでした。業務状態は保持されています。対応するページで処理してください。</value></data>
 </root>

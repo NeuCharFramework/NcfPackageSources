@@ -72,7 +72,7 @@ new Vue({
                 this.hasMore = page.hasMore;
                 this.nextExecutionLogId = page.nextExecutionLogId;
             } catch (error) {
-                this.$message.error(this.errorMessage(error, ncfST('读取 Workflow 任务列表失败。')));
+                this.$message.error(this.errorMessage(error, ncfST('Frontend.104')));
             } finally {
                 this.loading = false;
                 this.scheduleRefresh();
@@ -94,7 +94,7 @@ new Vue({
                     this.nextExecutionLogId = page.nextExecutionLogId;
                 }
             } catch (error) {
-                this.$message.error(this.errorMessage(error, ncfST('刷新 Workflow 任务列表失败。')));
+                this.$message.error(this.errorMessage(error, ncfST('Frontend.105')));
             } finally {
                 this.loading = false;
                 this.scheduleRefresh();
@@ -121,7 +121,7 @@ new Vue({
                     this.hasMore = false;
                 }
             } catch (error) {
-                this.$message.error(this.errorMessage(error, ncfST('加载更多 Workflow 任务失败。')));
+                this.$message.error(this.errorMessage(error, ncfST('Frontend.106')));
             } finally {
                 this.loadingMore = false;
                 this.$nextTick(() => this.handleScroll());
@@ -202,25 +202,25 @@ new Vue({
         },
         statusText(status) {
             return {
-                running: ncfST('运行中'),
-                success: ncfST('成功'),
-                failed: ncfST('失败')
-            }[status] || ncfST('未知');
+                running: ncfST('Frontend.077'),
+                success: ncfST('Frontend.127'),
+                failed: ncfST('Frontend.128')
+            }[status] || ncfST('Frontend.652');
         },
         statusType(status) {
             return { running: 'warning', success: 'success', failed: 'danger' }[status] || 'info';
         },
         sourceText(source) {
             return {
-                manual: ncfST('手动运行'),
+                manual: ncfST('Frontend.467'),
                 webhook: 'Webhook',
-                interval: ncfST('定时触发'),
-                history: ncfST('历史记录')
-            }[source] || ncfST('运行记录');
+                interval: ncfST('Frontend.471'),
+                history: ncfST('Frontend.468')
+            }[source] || ncfST('Frontend.469');
         },
         summaryText(task) {
             return task.errorMessage || task.summary ||
-                (task.status === 'running' ? ncfST('正在准备执行…') : ncfST('没有可显示的结果摘要。'));
+                (task.status === 'running' ? ncfST('Frontend.653') : ncfST('Frontend.654'));
         },
         formatDate(value) {
             if (!value) return '—';
@@ -233,14 +233,14 @@ new Vue({
             if (!task || !task.workflowId) return;
             if (task.status === 'running') {
                 if (!task.runId) {
-                    this.$message.warning(ncfST('该运行缺少实时运行标识，可能由已退出的服务进程遗留；请先中止或等待任务状态更新。'));
+                    this.$message.warning(ncfST('Frontend.656'));
                     return;
                 }
                 window.location.assign(`/Admin/NeuCharWorkflow/Index?workflowId=${encodeURIComponent(task.workflowId)}&runId=${encodeURIComponent(task.runId)}`);
                 return;
             }
             if (!task.replayAvailable || !task.executionLogId) {
-                this.$message.warning(ncfST('该任务没有可用的运行快照，可能产生于回看功能启用前。'));
+                this.$message.warning(ncfST('Frontend.486'));
                 return;
             }
             window.location.assign(`/Admin/NeuCharWorkflow/Replay?executionLogId=${encodeURIComponent(task.executionLogId)}`);
@@ -248,20 +248,20 @@ new Vue({
         async abortTask(task) {
             if (!task || task.status !== 'running' || this.abortingTaskId) return;
             if (!task.runId && !task.executionLogId) {
-                this.$message.error(ncfST('该运行缺少可中止标识，请刷新任务列表后重试。'));
+                this.$message.error(ncfST('Frontend.655'));
                 return;
             }
             try {
                 if (this.$confirm) {
-                    await this.$confirm(ncfST('将中止“{0}”的运行。', task.workflowName || ncfST('当前工作流')), ncfST('确认中止运行'), {
-                        confirmButtonText: ncfST('中止'),
-                        cancelButtonText: ncfST('继续运行'),
+                    await this.$confirm(ncfST('Frontend.508', task.workflowName || ncfST('Frontend.507')), ncfST('Frontend.509'), {
+                        confirmButtonText: ncfST('Frontend.510'),
+                        cancelButtonText: ncfST('Frontend.511'),
                         type: 'warning'
                     });
                 }
             } catch (error) {
                 if (error !== 'cancel' && error !== 'close') {
-                    this.$message.error(this.errorMessage(error, ncfST('无法显示中止确认。')));
+                    this.$message.error(this.errorMessage(error, ncfST('Frontend.512')));
                 }
                 return;
             }
@@ -272,10 +272,10 @@ new Vue({
                     runId: task.runId || null,
                     executionLogId: task.executionLogId || null
                 }, { customAlert: true });
-                this.$message.success(ncfST('已请求手动中止，任务将标记为失败。'));
+                this.$message.success(ncfST('Frontend.513'));
                 await this.refreshTasks();
             } catch (error) {
-                this.$message.error(this.errorMessage(error, ncfST('中止 Workflow 任务失败。')));
+                this.$message.error(this.errorMessage(error, ncfST('Frontend.514')));
             } finally {
                 this.abortingTaskId = '';
             }
@@ -288,17 +288,17 @@ new Vue({
                 const preview = NeuCharWorkflowUi.unwrap(previewResponse) || {};
                 const completedCount = Number(preview.completedCount || 0);
                 if (completedCount <= 0) {
-                    this.$message.info(ncfST('没有可清理的已完成任务记录；运行中的任务会始终保留。'));
+                    this.$message.info(ncfST('Frontend.515'));
                     return;
                 }
 
                 if (this.$confirm) {
                     await this.$confirm(
-                        ncfST('将永久删除 {0} 条已完成任务记录（成功 {1} 条，失败 {2} 条）。运行中的任务、工作流定义和版本不会受影响，删除后无法恢复。', completedCount, Number(preview.succeededCount || 0), Number(preview.failedCount || 0)),
-                        ncfST('确认快速清理'),
+                        ncfST('Frontend.517', completedCount, Number(preview.succeededCount || 0), Number(preview.failedCount || 0)),
+                        ncfST('Frontend.516'),
                         {
-                            confirmButtonText: ncfST('清理 {0} 条', completedCount),
-                            cancelButtonText: ncfST('取消'),
+                            confirmButtonText: ncfST('Frontend.518', completedCount),
+                            cancelButtonText: ncfST('Frontend.193'),
                             type: 'warning',
                             closeOnClickModal: false
                         });
@@ -308,11 +308,11 @@ new Vue({
                     cutoff: preview.cutoff
                 }, { customAlert: true });
                 const result = NeuCharWorkflowUi.unwrap(resultResponse) || {};
-                this.$message.success(ncfST('已清理 {0} 条已完成任务记录。', Number(result.deletedCount || 0)));
+                this.$message.success(ncfST('Frontend.519', Number(result.deletedCount || 0)));
                 await this.loadTasks();
             } catch (error) {
                 if (error !== 'cancel' && error !== 'close') {
-                    this.$message.error(this.errorMessage(error, ncfST('快速清理 Workflow 任务失败。')));
+                    this.$message.error(this.errorMessage(error, ncfST('Frontend.657')));
                 }
             } finally {
                 this.cleaning = false;
@@ -369,11 +369,11 @@ new Vue({
                 const body = NeuCharWorkflowUi.unwrap(response) || {};
                 const consumedCount = Number(body && body.consumedCount || 0);
                 this.neuBellConsumeMessage = consumedCount > 0
-                    ? (mode === 'provider' ? `已消费当前订阅下 ${consumedCount} 条纽铃提醒。` : '已消费当前这一条纽铃提醒。')
-                    : '该纽铃提醒已被消费，或不再属于当前账号。';
+                    ? (mode === 'provider' ? ncfST('Frontend.859', consumedCount) : ncfST('Frontend.860'))
+                    : ncfST('Frontend.861');
             } catch (error) {
                 this.neuBellConsumeError = true;
-                this.neuBellConsumeMessage = this.errorMessage(error, '纽铃提醒无法自动消费；已保留业务状态，请在对应页面处理。');
+                this.neuBellConsumeMessage = this.errorMessage(error, ncfST('Frontend.862'));
             }
         }
     }

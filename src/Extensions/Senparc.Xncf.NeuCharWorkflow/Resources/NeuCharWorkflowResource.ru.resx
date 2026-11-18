@@ -903,4 +903,8 @@
   <data name="Frontend.856" xml:space="preserve"><value>(пустой текст)</value></data>
   <data name="Frontend.857" xml:space="preserve"><value>Скопировано в буфер обмена.</value></data>
   <data name="Frontend.858" xml:space="preserve"><value>Не удалось скопировать. Скопируйте вручную.</value></data>
+  <data name="Frontend.859" xml:space="preserve"><value>Обработано уведомлений текущей подписки: {0}.</value></data>
+  <data name="Frontend.860" xml:space="preserve"><value>Текущее уведомление обработано.</value></data>
+  <data name="Frontend.861" xml:space="preserve"><value>Это уведомление уже обработано или больше не принадлежит текущей учётной записи.</value></data>
+  <data name="Frontend.862" xml:space="preserve"><value>Не удалось автоматически обработать уведомление; его состояние сохранено. Обработайте его на соответствующей странице.</value></data>
 </root>

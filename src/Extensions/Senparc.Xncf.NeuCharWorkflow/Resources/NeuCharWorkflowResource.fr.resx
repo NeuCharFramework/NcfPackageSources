@@ -903,4 +903,8 @@
   <data name="Frontend.856" xml:space="preserve"><value>(texte vide)</value></data>
   <data name="Frontend.857" xml:space="preserve"><value>Copié dans le presse-papiers.</value></data>
   <data name="Frontend.858" xml:space="preserve"><value>Échec de la copie. Copiez manuellement.</value></data>
+  <data name="Frontend.859" xml:space="preserve"><value>{0} notifications de l’abonnement actuel ont été consommées.</value></data>
+  <data name="Frontend.860" xml:space="preserve"><value>La notification actuelle a été consommée.</value></data>
+  <data name="Frontend.861" xml:space="preserve"><value>La notification a déjà été consommée ou n’appartient plus au compte actuel.</value></data>
+  <data name="Frontend.862" xml:space="preserve"><value>La notification n’a pas pu être consommée automatiquement ; son état métier a été conservé. Traitez-la dans la page correspondante.</value></data>
 </root>
