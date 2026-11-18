@@ -217,4 +217,32 @@
   <data name="Frontend.051" xml:space="preserve"><value>Found {0} tools (Functions). Select the arrow on the left to view parameters and input schemas.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.052" xml:space="preserve"><value>Publishing, tools, and access permissions are managed by the owning module. The address is generated from the current site and does not imply anonymous access or public reachability.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.053" xml:space="preserve"><value>Tools {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.054" xml:space="preserve"><value>(none)</value></data>
+  <data name="Frontend.055" xml:space="preserve"><value>The server response format is invalid. Confirm that you are signed in and refresh the page.</value></data>
+  <data name="Frontend.056" xml:space="preserve"><value>Request failed</value></data>
+  <data name="Frontend.057" xml:space="preserve"><value>: the interface was not found (HTTP 404). Confirm that the site has loaded the latest MCP module.</value></data>
+  <data name="Frontend.058" xml:space="preserve"><value>: your sign-in has expired or you do not have permission. Sign in again.</value></data>
+  <data name="Frontend.059" xml:space="preserve"><value>The server returned an invalid connection-test result format.</value></data>
+  <data name="Frontend.060" xml:space="preserve"><value>Add MCP endpoint</value></data>
+  <data name="Frontend.061" xml:space="preserve"><value>Endpoint name cannot be empty</value></data>
+  <data name="Frontend.062" xml:space="preserve"><value>Endpoint address cannot be empty</value></data>
+  <data name="Frontend.063" xml:space="preserve"><value>The server returned an invalid list of MCP services published by this site.</value></data>
+  <data name="Frontend.064" xml:space="preserve"><value>Failed to read MCP services published by this site</value></data>
+  <data name="Frontend.065" xml:space="preserve"><value>This browser cannot copy to the clipboard. Select and copy the endpoint address manually.</value></data>
+  <data name="Frontend.066" xml:space="preserve"><value>Endpoint address copied</value></data>
+  <data name="Frontend.067" xml:space="preserve"><value>Copy failed. Select and copy the endpoint address manually.</value></data>
+  <data name="Frontend.068" xml:space="preserve"><value>The server returned an invalid endpoint-list format.</value></data>
+  <data name="Frontend.069" xml:space="preserve"><value>Failed to read the MCP endpoint list</value></data>
+  <data name="Frontend.070" xml:space="preserve"><value>Edit MCP endpoint</value></data>
+  <data name="Frontend.071" xml:space="preserve"><value>✓ Endpoint connection test succeeded</value></data>
+  <data name="Frontend.072" xml:space="preserve"><value>✗ Endpoint connection test failed</value></data>
+  <data name="Frontend.073" xml:space="preserve"><value>Saved successfully</value></data>
+  <data name="Frontend.074" xml:space="preserve"><value>Save failed</value></data>
+  <data name="Frontend.075" xml:space="preserve"><value>Update failed</value></data>
+  <data name="Frontend.076" xml:space="preserve"><value>Delete MCP endpoint “{0}”?</value></data>
+  <data name="Frontend.077" xml:space="preserve"><value>Notice</value></data>
+  <data name="Frontend.078" xml:space="preserve"><value>Deleted successfully</value></data>
+  <data name="Frontend.079" xml:space="preserve"><value>Delete failed</value></data>
+  <data name="Frontend.080" xml:space="preserve"><value>Input Schema</value></data>
+  <data name="Frontend.081" xml:space="preserve"><value>(no JSON Schema information)</value></data>
 </root>

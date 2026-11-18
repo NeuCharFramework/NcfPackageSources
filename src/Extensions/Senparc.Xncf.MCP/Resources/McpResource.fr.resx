@@ -217,4 +217,32 @@
   <data name="Frontend.051" xml:space="preserve"><value>{0} outils trouvés (Functions). Sélectionnez la flèche à gauche pour afficher les paramètres et les schémas d'entrée.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.052" xml:space="preserve"><value>La publication, les outils et les autorisations d'accès sont gérés par le module propriétaire. L'adresse est générée à partir du site actuel et n'implique ni accès anonyme ni accessibilité publique.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.053" xml:space="preserve"><value>Outils {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.054" xml:space="preserve"><value>(aucun)</value></data>
+  <data name="Frontend.055" xml:space="preserve"><value>Le format de réponse du serveur est invalide. Vérifiez que vous êtes connecté, puis actualisez la page.</value></data>
+  <data name="Frontend.056" xml:space="preserve"><value>Échec de la requête</value></data>
+  <data name="Frontend.057" xml:space="preserve"><value> : interface introuvable (HTTP 404). Vérifiez que le site a chargé la dernière version du module MCP.</value></data>
+  <data name="Frontend.058" xml:space="preserve"><value> : votre session a expiré ou vous n'avez pas les droits nécessaires. Reconnectez-vous.</value></data>
+  <data name="Frontend.059" xml:space="preserve"><value>Le serveur a renvoyé un format de résultat de test de connexion invalide.</value></data>
+  <data name="Frontend.060" xml:space="preserve"><value>Ajouter un endpoint MCP</value></data>
+  <data name="Frontend.061" xml:space="preserve"><value>Le nom de l'endpoint ne peut pas être vide</value></data>
+  <data name="Frontend.062" xml:space="preserve"><value>L'adresse de l'endpoint ne peut pas être vide</value></data>
+  <data name="Frontend.063" xml:space="preserve"><value>Le serveur a renvoyé une liste invalide des services MCP publiés par ce site.</value></data>
+  <data name="Frontend.064" xml:space="preserve"><value>Échec de la lecture des services MCP publiés par ce site</value></data>
+  <data name="Frontend.065" xml:space="preserve"><value>Ce navigateur ne permet pas la copie dans le presse-papiers. Sélectionnez et copiez manuellement l'adresse de l'endpoint.</value></data>
+  <data name="Frontend.066" xml:space="preserve"><value>Adresse de l'endpoint copiée</value></data>
+  <data name="Frontend.067" xml:space="preserve"><value>Échec de la copie. Sélectionnez et copiez manuellement l'adresse de l'endpoint.</value></data>
+  <data name="Frontend.068" xml:space="preserve"><value>Le serveur a renvoyé un format de liste d'endpoints invalide.</value></data>
+  <data name="Frontend.069" xml:space="preserve"><value>Échec de la lecture de la liste des endpoints MCP</value></data>
+  <data name="Frontend.070" xml:space="preserve"><value>Modifier l'endpoint MCP</value></data>
+  <data name="Frontend.071" xml:space="preserve"><value>✓ Test de connexion de l'endpoint réussi</value></data>
+  <data name="Frontend.072" xml:space="preserve"><value>✗ Échec du test de connexion de l'endpoint</value></data>
+  <data name="Frontend.073" xml:space="preserve"><value>Enregistré</value></data>
+  <data name="Frontend.074" xml:space="preserve"><value>Échec de l'enregistrement</value></data>
+  <data name="Frontend.075" xml:space="preserve"><value>Échec de la mise à jour</value></data>
+  <data name="Frontend.076" xml:space="preserve"><value>Supprimer l'endpoint MCP « {0} » ?</value></data>
+  <data name="Frontend.077" xml:space="preserve"><value>Information</value></data>
+  <data name="Frontend.078" xml:space="preserve"><value>Supprimé</value></data>
+  <data name="Frontend.079" xml:space="preserve"><value>Échec de la suppression</value></data>
+  <data name="Frontend.080" xml:space="preserve"><value>Schéma d'entrée</value></data>
+  <data name="Frontend.081" xml:space="preserve"><value>(aucune information de schéma JSON)</value></data>
 </root>

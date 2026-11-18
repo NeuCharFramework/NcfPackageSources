@@ -217,4 +217,32 @@
   <data name="Frontend.051" xml:space="preserve"><value>Найдено инструментов: {0} (Functions). Выберите стрелку слева, чтобы просмотреть параметры и входные схемы.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.052" xml:space="preserve"><value>Публикацией, инструментами и разрешениями доступа управляет владеющий модуль. Адрес создаётся на основе текущего сайта и не означает анонимный доступ или доступность из публичной сети.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.053" xml:space="preserve"><value>Инструменты {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.054" xml:space="preserve"><value>(нет)</value></data>
+  <data name="Frontend.055" xml:space="preserve"><value>Неверный формат ответа сервера. Подтвердите вход в систему и обновите страницу.</value></data>
+  <data name="Frontend.056" xml:space="preserve"><value>Ошибка запроса</value></data>
+  <data name="Frontend.057" xml:space="preserve"><value>: интерфейс не найден (HTTP 404). Убедитесь, что сайт загрузил последнюю версию модуля MCP.</value></data>
+  <data name="Frontend.058" xml:space="preserve"><value>: срок действия входа истёк или у вас нет прав. Войдите снова.</value></data>
+  <data name="Frontend.059" xml:space="preserve"><value>Сервер вернул результат теста подключения в неверном формате.</value></data>
+  <data name="Frontend.060" xml:space="preserve"><value>Добавить endpoint MCP</value></data>
+  <data name="Frontend.061" xml:space="preserve"><value>Имя endpoint не может быть пустым</value></data>
+  <data name="Frontend.062" xml:space="preserve"><value>Адрес endpoint не может быть пустым</value></data>
+  <data name="Frontend.063" xml:space="preserve"><value>Сервер вернул неверный список служб MCP, опубликованных этим сайтом.</value></data>
+  <data name="Frontend.064" xml:space="preserve"><value>Не удалось прочитать службы MCP, опубликованные этим сайтом</value></data>
+  <data name="Frontend.065" xml:space="preserve"><value>Этот браузер не поддерживает копирование в буфер обмена. Выберите и скопируйте адрес endpoint вручную.</value></data>
+  <data name="Frontend.066" xml:space="preserve"><value>Адрес endpoint скопирован</value></data>
+  <data name="Frontend.067" xml:space="preserve"><value>Не удалось скопировать. Выберите и скопируйте адрес endpoint вручную.</value></data>
+  <data name="Frontend.068" xml:space="preserve"><value>Сервер вернул неверный формат списка endpoint.</value></data>
+  <data name="Frontend.069" xml:space="preserve"><value>Не удалось прочитать список endpoint MCP</value></data>
+  <data name="Frontend.070" xml:space="preserve"><value>Изменить endpoint MCP</value></data>
+  <data name="Frontend.071" xml:space="preserve"><value>✓ Проверка подключения endpoint прошла успешно</value></data>
+  <data name="Frontend.072" xml:space="preserve"><value>✗ Проверка подключения endpoint не удалась</value></data>
+  <data name="Frontend.073" xml:space="preserve"><value>Успешно сохранено</value></data>
+  <data name="Frontend.074" xml:space="preserve"><value>Ошибка сохранения</value></data>
+  <data name="Frontend.075" xml:space="preserve"><value>Ошибка обновления</value></data>
+  <data name="Frontend.076" xml:space="preserve"><value>Удалить endpoint MCP «{0}»?</value></data>
+  <data name="Frontend.077" xml:space="preserve"><value>Уведомление</value></data>
+  <data name="Frontend.078" xml:space="preserve"><value>Успешно удалено</value></data>
+  <data name="Frontend.079" xml:space="preserve"><value>Ошибка удаления</value></data>
+  <data name="Frontend.080" xml:space="preserve"><value>Входная схема</value></data>
+  <data name="Frontend.081" xml:space="preserve"><value>(информация о JSON-схеме отсутствует)</value></data>
 </root>

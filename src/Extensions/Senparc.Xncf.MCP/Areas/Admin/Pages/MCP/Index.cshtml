@@ -87,7 +87,7 @@
                                     {{ scope.row.lastTestResult ? ncfST('Frontend.032') : ncfST('Frontend.019') }}
                                 </el-tag>
                                 <span class="mcp-test-time">{{ formatDateTime(scope.row.lastTestedTime) }}</span>
-                                <div v-if="scope.row.lastToolCount != null">{{ ncfST('工具 {0}', scope.row.lastToolCount) }}</div>
+                                <div v-if="scope.row.lastToolCount != null">{{ ncfST('Frontend.053', scope.row.lastToolCount) }}</div>
                             </div>
                                 <span v-else style="color:#c0c4cc;">{{ ncfST('Frontend.035') }}</span>
                         </template>
@@ -152,7 +152,7 @@
                         :loading="preTestLoading" @@click="handleTestBeforeSave">{{ ncfST('Frontend.039') }}</el-button>
                     <el-alert v-if="preTestResult" :title="preTestResult.statusMessage"
                         :type="preTestResult.success ? 'success' : 'error'"
-                        :description="preTestResult.success ? ncfST('发现 {0} 个工具（Function）', preTestResult.toolCount) : ''"
+                        :description="preTestResult.success ? ncfST('Frontend.049', preTestResult.toolCount) : ''"
                         show-icon :closable="false" style="margin-top:8px;"></el-alert>
                 </div>
             </el-form-item>
@@ -170,7 +170,7 @@
                 show-icon :closable="false" style="margin-bottom:12px;"></el-alert>
             <div v-if="testResult.success">
                 <div style="margin-bottom:8px;color:#606266;">
-                    <span>{{ ncfST('共发现 {0} 个工具（Function）。点击左侧箭头展开查看参数与输入 Schema。', testResultTools.length) }}</span>
+                    <span>{{ ncfST('Frontend.051', testResultTools.length) }}</span>
                 </div>
                 <el-table :data="testResultTools" size="small" row-key="name"
                     :expand-row-keys="expandedTools" @@expand-change="handleToolExpandChange">
@@ -197,7 +197,7 @@
                                         <el-button size="mini" type="text" icon="el-icon-zoom-in"
                                             @@click="showSchema(props.row)">{{ ncfST('Frontend.030') }}</el-button>
                                     </div>
-                                    <pre class="mcp-schema-pre">{{ formatSchemaJson(props.row.inputSchemaJson) || '（无）' }}</pre>
+                                    <pre class="mcp-schema-pre">{{ formatSchemaJson(props.row.inputSchemaJson) || ncfST('Frontend.054') }}</pre>
                                 </div>
                             </div>
                         </template>

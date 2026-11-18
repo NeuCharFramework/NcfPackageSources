@@ -216,4 +216,32 @@
   <data name="Frontend.051" xml:space="preserve"><value>共发现 {0} 个工具（Function）。点击左侧箭头展开查看参数与输入 Schema。</value></data>
   <data name="Frontend.052" xml:space="preserve"><value>发布开关、工具和访问权限由所属模块管理。地址基于当前访问站点生成，不代表已允许匿名访问或公网可达。</value></data>
   <data name="Frontend.053" xml:space="preserve"><value>工具 {0}</value></data>
+  <data name="Frontend.054" xml:space="preserve"><value>（无）</value></data>
+  <data name="Frontend.055" xml:space="preserve"><value>服务器响应格式不正确，请确认登录状态并刷新页面</value></data>
+  <data name="Frontend.056" xml:space="preserve"><value>请求失败</value></data>
+  <data name="Frontend.057" xml:space="preserve"><value>：接口不存在（HTTP 404），请确认站点已加载新版 MCP 模块</value></data>
+  <data name="Frontend.058" xml:space="preserve"><value>：登录已失效或无访问权限，请重新登录</value></data>
+  <data name="Frontend.059" xml:space="preserve"><value>服务器返回的连接测试结果格式不正确</value></data>
+  <data name="Frontend.060" xml:space="preserve"><value>新增 MCP Endpoint</value></data>
+  <data name="Frontend.061" xml:space="preserve"><value>端点名称不能为空</value></data>
+  <data name="Frontend.062" xml:space="preserve"><value>端点地址不能为空</value></data>
+  <data name="Frontend.063" xml:space="preserve"><value>服务器返回的本站 MCP 服务列表格式不正确</value></data>
+  <data name="Frontend.064" xml:space="preserve"><value>读取本站发布的 MCP 服务失败</value></data>
+  <data name="Frontend.065" xml:space="preserve"><value>当前浏览器不支持复制，请手动选择端点地址复制</value></data>
+  <data name="Frontend.066" xml:space="preserve"><value>端点地址已复制</value></data>
+  <data name="Frontend.067" xml:space="preserve"><value>复制失败，请手动选择端点地址复制</value></data>
+  <data name="Frontend.068" xml:space="preserve"><value>服务器返回的端点列表格式不正确</value></data>
+  <data name="Frontend.069" xml:space="preserve"><value>读取 MCP Endpoint 列表失败</value></data>
+  <data name="Frontend.070" xml:space="preserve"><value>编辑 MCP Endpoint</value></data>
+  <data name="Frontend.071" xml:space="preserve"><value>✓ 端点连接测试成功</value></data>
+  <data name="Frontend.072" xml:space="preserve"><value>✗ 端点连接测试失败</value></data>
+  <data name="Frontend.073" xml:space="preserve"><value>保存成功</value></data>
+  <data name="Frontend.074" xml:space="preserve"><value>保存失败</value></data>
+  <data name="Frontend.075" xml:space="preserve"><value>更新失败</value></data>
+  <data name="Frontend.076" xml:space="preserve"><value>确认删除 MCP Endpoint「{0}」？</value></data>
+  <data name="Frontend.077" xml:space="preserve"><value>提示</value></data>
+  <data name="Frontend.078" xml:space="preserve"><value>删除成功</value></data>
+  <data name="Frontend.079" xml:space="preserve"><value>删除失败</value></data>
+  <data name="Frontend.080" xml:space="preserve"><value>输入 Schema</value></data>
+  <data name="Frontend.081" xml:space="preserve"><value>（无 JSON Schema 信息）</value></data>
 </root>
