@@ -293,4 +293,8 @@
   <data name="Parameter.Sandbox.Recursive.Help" xml:space="preserve"><value>Whether to list child directories recursively.</value></data>
   <data name="Parameter.Sandbox.MaxItems" xml:space="preserve"><value>Maximum items</value></data>
   <data name="Parameter.Sandbox.MaxItems.Help" xml:space="preserve"><value>Leave empty or use 0 to apply the system default limit.</value></data>
+  <data name="Parameter.Sandbox.NotebookPath" xml:space="preserve"><value>Workspace file path</value></data>
+  <data name="Parameter.Sandbox.NotebookPath.Help" xml:space="preserve"><value>The path must end with .ipynb, for example notebooks/demo.ipynb.</value></data>
+  <data name="Frontend.220" xml:space="preserve"><value>Standard Python 3 kernel</value></data>
+  <data name="Frontend.221" xml:space="preserve"><value>dotnet-interactive C# kernel; a C# Jupyter image is required.</value></data>
 </root>

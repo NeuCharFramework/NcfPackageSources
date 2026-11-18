@@ -293,4 +293,8 @@
   <data name="Parameter.Sandbox.Recursive.Help" xml:space="preserve"><value>Indica si se deben listar recursivamente los subdirectorios.</value></data>
   <data name="Parameter.Sandbox.MaxItems" xml:space="preserve"><value>Máximo de elementos</value></data>
   <data name="Parameter.Sandbox.MaxItems.Help" xml:space="preserve"><value>Déjalo vacío o usa 0 para aplicar el límite predeterminado del sistema.</value></data>
+  <data name="Parameter.Sandbox.NotebookPath" xml:space="preserve"><value>Ruta de archivo del espacio de trabajo</value></data>
+  <data name="Parameter.Sandbox.NotebookPath.Help" xml:space="preserve"><value>La ruta debe terminar en .ipynb, por ejemplo notebooks/demo.ipynb.</value></data>
+  <data name="Frontend.220" xml:space="preserve"><value>Kernel Python 3 estándar</value></data>
+  <data name="Frontend.221" xml:space="preserve"><value>Kernel C# de dotnet-interactive; se necesita una imagen Jupyter de C#.</value></data>
 </root>

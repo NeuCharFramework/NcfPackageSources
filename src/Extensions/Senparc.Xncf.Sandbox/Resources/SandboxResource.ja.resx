@@ -293,4 +293,8 @@
   <data name="Parameter.Sandbox.Recursive.Help" xml:space="preserve"><value>子ディレクトリを再帰的に一覧表示するかどうかです。</value></data>
   <data name="Parameter.Sandbox.MaxItems" xml:space="preserve"><value>最大項目数</value></data>
   <data name="Parameter.Sandbox.MaxItems.Help" xml:space="preserve"><value>空欄または 0 でシステム既定の上限を使用します。</value></data>
+  <data name="Parameter.Sandbox.NotebookPath" xml:space="preserve"><value>ワークスペースファイルパス</value></data>
+  <data name="Parameter.Sandbox.NotebookPath.Help" xml:space="preserve"><value>パスは .ipynb で終わる必要があります。例：notebooks/demo.ipynb。</value></data>
+  <data name="Frontend.220" xml:space="preserve"><value>標準 Python 3 カーネル</value></data>
+  <data name="Frontend.221" xml:space="preserve"><value>dotnet-interactive C# カーネル。C# Jupyter イメージが必要です。</value></data>
 </root>

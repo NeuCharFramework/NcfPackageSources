@@ -221,7 +221,7 @@ public class Sandbox_LabCreateNotebookRequest : FunctionAppRequestBase
 
     [Required]
     [MaxLength(512)]
-    [Description("工作区文件路径||必须以 .ipynb 结尾，例如 notebooks/demo.ipynb")]
+    [LocalizedDescription(typeof(SandboxResource), "Parameter.Sandbox.NotebookPath", "Parameter.Sandbox.NotebookPath.Help")]
     public string RelativePath { get; set; } = string.Empty;
 
     [Required]

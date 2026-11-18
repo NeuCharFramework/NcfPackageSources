@@ -293,4 +293,8 @@
   <data name="Parameter.Sandbox.Recursive.Help" xml:space="preserve"><value>是否递归列举子目录。</value></data>
   <data name="Parameter.Sandbox.MaxItems" xml:space="preserve"><value>最多返回数量</value></data>
   <data name="Parameter.Sandbox.MaxItems.Help" xml:space="preserve"><value>留空或 0 使用系统默认上限。</value></data>
+  <data name="Parameter.Sandbox.NotebookPath" xml:space="preserve"><value>工作区文件路径</value></data>
+  <data name="Parameter.Sandbox.NotebookPath.Help" xml:space="preserve"><value>必须以 .ipynb 结尾，例如 notebooks/demo.ipynb。</value></data>
+  <data name="Frontend.220" xml:space="preserve"><value>标准 Python 3 内核</value></data>
+  <data name="Frontend.221" xml:space="preserve"><value>dotnet-interactive C# 内核（需 C# Jupyter 镜像）。</value></data>
 </root>
