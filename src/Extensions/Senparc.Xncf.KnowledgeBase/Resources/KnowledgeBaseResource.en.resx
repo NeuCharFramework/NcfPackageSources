@@ -730,4 +730,15 @@
   <data name="Frontend.288" xml:space="preserve"><value>Clear selection</value></data>
   <data name="Frontend.289" xml:space="preserve"><value>Close without saving?</value></data>
   <data name="Frontend.290" xml:space="preserve"><value>External collection requires separate crawler, permission and cleaning configuration; this version will not fake a successful save.</value></data>
+  <data name="Frontend.291" xml:space="preserve"><value>Option</value></data>
+  <data name="Frontend.292" xml:space="preserve"><value>The knowledge base could not be found. It may have been deleted or you may not have permission to access it.</value></data>
+  <data name="Frontend.293" xml:space="preserve"><value>Failed to load the resource list. Please try again later.</value></data>
+  <data name="Frontend.294" xml:space="preserve"><value>Error</value></data>
+  <data name="Frontend.295" xml:space="preserve"><value>Knowledge base saved successfully</value></data>
+  <data name="Frontend.296" xml:space="preserve"><value>Save failed. Please check the data.</value></data>
+  <data name="Frontend.297" xml:space="preserve"><value>Save error</value></data>
+  <data name="Frontend.298" xml:space="preserve"><value>Could not save. Please try again later.</value></data>
+  <data name="Frontend.299" xml:space="preserve"><value>Success</value></data>
+  <data name="Frontend.300" xml:space="preserve"><value>Deleted successfully</value></data>
+  <data name="Frontend.301" xml:space="preserve"><value>Vectorize knowledge base “{0}”?</value></data>
 </root>

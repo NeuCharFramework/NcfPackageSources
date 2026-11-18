@@ -730,4 +730,15 @@
   <data name="Frontend.288" xml:space="preserve"><value>Очистить выбор</value></data>
   <data name="Frontend.289" xml:space="preserve"><value>Закрыть без сохранения?</value></data>
   <data name="Frontend.290" xml:space="preserve"><value>Для внешнего сбора требуется отдельная настройка обхода, разрешений и очистки; эта версия не будет имитировать успешное сохранение.</value></data>
+  <data name="Frontend.291" xml:space="preserve"><value>Вариант</value></data>
+  <data name="Frontend.292" xml:space="preserve"><value>База знаний не найдена. Возможно, она удалена или у текущей учётной записи нет доступа.</value></data>
+  <data name="Frontend.293" xml:space="preserve"><value>Не удалось загрузить список материалов. Повторите попытку позже.</value></data>
+  <data name="Frontend.294" xml:space="preserve"><value>Ошибка</value></data>
+  <data name="Frontend.295" xml:space="preserve"><value>База знаний успешно сохранена</value></data>
+  <data name="Frontend.296" xml:space="preserve"><value>Не удалось сохранить. Проверьте данные.</value></data>
+  <data name="Frontend.297" xml:space="preserve"><value>Ошибка сохранения</value></data>
+  <data name="Frontend.298" xml:space="preserve"><value>Не удалось сохранить. Повторите попытку позже.</value></data>
+  <data name="Frontend.299" xml:space="preserve"><value>Успешно</value></data>
+  <data name="Frontend.300" xml:space="preserve"><value>Успешно удалено</value></data>
+  <data name="Frontend.301" xml:space="preserve"><value>Векторизовать базу знаний «{0}»?</value></data>
 </root>

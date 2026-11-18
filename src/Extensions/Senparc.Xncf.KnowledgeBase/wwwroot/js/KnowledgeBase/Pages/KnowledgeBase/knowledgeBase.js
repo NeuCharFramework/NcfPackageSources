@@ -334,7 +334,7 @@ var app = new Vue({
             if (!item) {
                 return '';
             }
-            return item.alias || item.name || ((fallbackPrefix || '选项') + '-' + item.id);
+            return item.alias || item.name || ((fallbackPrefix || ncfST('Frontend.291')) + '-' + item.id);
         },
         isKnowledgeBaseReady(row) {
             return !!(row && row.vectorCollectionName && row.embeddedTime);
@@ -529,7 +529,7 @@ var app = new Vue({
             target.handled = true
             const knowledgeBase = (rows || []).find(item => Number(item.id) === knowledgeBaseId)
             if (!knowledgeBase) {
-                this.$message.warning('未找到要打开的知识库，可能已删除或当前账号没有权限。')
+                this.$message.warning(ncfST('Frontend.292'))
                 return
             }
 
@@ -719,10 +719,10 @@ var app = new Vue({
                             })
                         }
                     } else {
-                        app.$message({ message: '资料列表加载失败，请稍后重试。', type: 'error', duration: 5 * 1000 })
+                        app.$message({ message: ncfST('Frontend.293'), type: 'error', duration: 5 * 1000 })
                     }
                 }).catch((err) => {
-                    that.$notify({ title: '错误', message: '资料列表加载失败，请稍后重试。', type: 'error', duration: 3000 })
+                    that.$notify({ title: ncfST('Frontend.294'), message: ncfST('Frontend.293'), type: 'error', duration: 3000 })
                 })
         },
         //Legacy comment translated to English.
@@ -1017,37 +1017,37 @@ var app = new Vue({
                     retrievalConfig: that.dialog.data.retrievalConfig || that.defaultRetrievalConfig(),
                     NcfFileIds: null
                 };
-                console.log('保存知识库数据：' + JSON.stringify(data));
+                    console.log('Saving knowledge base data: ' + JSON.stringify(data));
                 service.post("/Admin/KnowledgeBase/Edit?handler=Save", data).then(res => {
-                    console.log('保存响应：', res);
+                    console.log('Save response:', res);
                     const result = that.resolveSaveResponse(res);
                     if (result.ok) {
                         that.getList();
                         that.$notify({
-                            title: "成功",
-                            message: result.message || "知识库保存成功",
+                            title: ncfST('Frontend.299'),
+                            message: result.message || ncfST('Frontend.295'),
                             type: "success",
                             duration: 2000
                         });
                         that.dialog.visible = false;
                     } else {
                         that.$notify({
-                            title: "失败",
-                            message: result.message || "保存失败，请检查数据",
+                            title: ncfST('Frontend.297'),
+                            message: result.message || ncfST('Frontend.296'),
                             type: "error",
                             duration: 5000
                         });
                     }
                     that.dialog.updateLoading = false;
                 }).catch(err => {
-                    console.error('保存错误：', err);
+                    console.error('Save error:', err);
                     const response = err && err.response && err.response.data;
                     const message = (response && (response.msg || response.Msg || response.message || response.Message || response.exception))
                         || (err && err.message)
-                        || '保存出错，请稍后重试';
+                        || ncfST('Frontend.298');
                     that.$notify({
-                        title: "错误",
-                        message: String(message),
+                        title: ncfST('Frontend.294'),
+                        message: String(message || ncfST('Frontend.298')),
                         type: "error",
                         duration: 5000
                     });
@@ -1063,8 +1063,8 @@ var app = new Vue({
                 if (res.data.success) {
                     that.getList();
                     that.$notify({
-                        title: "Success",
-                        message: "删除成功",
+                        title: ncfST('Frontend.299'),
+                        message: ncfST('Frontend.300'),
                         type: "success",
                         duration: 2000
                     });
@@ -1188,7 +1188,7 @@ var app = new Vue({
         handleEmbeddingBtn(btnType, item) {
             const that = this;
             if (btnType === 'embedding') {
-                this.$confirm(`确认对知识库 "${item.name}" 进行向量化处理吗？`, ncfST('Frontend.159'), {
+                this.$confirm(ncfST('Frontend.301', item.name), ncfST('Frontend.159'), {
                     confirmButtonText: ncfST('Frontend.007'),
                     cancelButtonText: ncfST('Frontend.097'),
                     type: 'warning'

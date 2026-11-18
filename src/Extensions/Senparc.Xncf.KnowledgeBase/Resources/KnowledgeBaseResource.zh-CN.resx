@@ -726,4 +726,15 @@
   <data name="Frontend.288" xml:space="preserve"><value>清空选择</value></data>
   <data name="Frontend.289" xml:space="preserve"><value>确认关闭？</value></data>
   <data name="Frontend.290" xml:space="preserve"><value>外部数据采集需要单独配置抓取、权限与清洗策略，本版本不会伪造保存成功。</value></data>
+  <data name="Frontend.291" xml:space="preserve"><value>选项</value></data>
+  <data name="Frontend.292" xml:space="preserve"><value>未找到要打开的知识库，可能已删除或当前账号没有权限。</value></data>
+  <data name="Frontend.293" xml:space="preserve"><value>资料列表加载失败，请稍后重试。</value></data>
+  <data name="Frontend.294" xml:space="preserve"><value>错误</value></data>
+  <data name="Frontend.295" xml:space="preserve"><value>知识库保存成功</value></data>
+  <data name="Frontend.296" xml:space="preserve"><value>保存失败，请检查数据</value></data>
+  <data name="Frontend.297" xml:space="preserve"><value>保存错误</value></data>
+  <data name="Frontend.298" xml:space="preserve"><value>保存出错，请稍后重试</value></data>
+  <data name="Frontend.299" xml:space="preserve"><value>成功</value></data>
+  <data name="Frontend.300" xml:space="preserve"><value>删除成功</value></data>
+  <data name="Frontend.301" xml:space="preserve"><value>确认对知识库“{0}”进行向量化处理吗？</value></data>
 </root>

@@ -730,4 +730,15 @@
   <data name="Frontend.288" xml:space="preserve"><value>Limpiar selección</value></data>
   <data name="Frontend.289" xml:space="preserve"><value>¿Cerrar sin guardar?</value></data>
   <data name="Frontend.290" xml:space="preserve"><value>La recopilación externa requiere configurar por separado el rastreo, los permisos y la limpieza; esta versión no simulará un guardado correcto.</value></data>
+  <data name="Frontend.291" xml:space="preserve"><value>Opción</value></data>
+  <data name="Frontend.292" xml:space="preserve"><value>No se encontró la base de conocimientos. Puede haberse eliminado o no tienes permiso para acceder.</value></data>
+  <data name="Frontend.293" xml:space="preserve"><value>No se pudo cargar la lista de recursos. Vuelve a intentarlo más tarde.</value></data>
+  <data name="Frontend.294" xml:space="preserve"><value>Error</value></data>
+  <data name="Frontend.295" xml:space="preserve"><value>Base de conocimientos guardada correctamente</value></data>
+  <data name="Frontend.296" xml:space="preserve"><value>Error al guardar. Comprueba los datos.</value></data>
+  <data name="Frontend.297" xml:space="preserve"><value>Error al guardar</value></data>
+  <data name="Frontend.298" xml:space="preserve"><value>No se pudo guardar. Vuelve a intentarlo más tarde.</value></data>
+  <data name="Frontend.299" xml:space="preserve"><value>Correcto</value></data>
+  <data name="Frontend.300" xml:space="preserve"><value>Eliminado correctamente</value></data>
+  <data name="Frontend.301" xml:space="preserve"><value>¿Vectorizar la base de conocimientos «{0}»?</value></data>
 </root>

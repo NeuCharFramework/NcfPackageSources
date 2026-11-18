@@ -730,4 +730,15 @@
   <data name="Frontend.288" xml:space="preserve"><value>Effacer la sélection</value></data>
   <data name="Frontend.289" xml:space="preserve"><value>Fermer sans enregistrer ?</value></data>
   <data name="Frontend.290" xml:space="preserve"><value>La collecte externe nécessite une configuration distincte du crawl, des autorisations et du nettoyage ; cette version ne simulera pas un enregistrement réussi.</value></data>
+  <data name="Frontend.291" xml:space="preserve"><value>Option</value></data>
+  <data name="Frontend.292" xml:space="preserve"><value>La base de connaissances est introuvable. Elle a peut-être été supprimée ou vous n'avez pas l'autorisation d'y accéder.</value></data>
+  <data name="Frontend.293" xml:space="preserve"><value>Échec du chargement de la liste des ressources. Réessayez plus tard.</value></data>
+  <data name="Frontend.294" xml:space="preserve"><value>Erreur</value></data>
+  <data name="Frontend.295" xml:space="preserve"><value>Base de connaissances enregistrée</value></data>
+  <data name="Frontend.296" xml:space="preserve"><value>Échec de l'enregistrement. Vérifiez les données.</value></data>
+  <data name="Frontend.297" xml:space="preserve"><value>Erreur d'enregistrement</value></data>
+  <data name="Frontend.298" xml:space="preserve"><value>Impossible d'enregistrer. Réessayez plus tard.</value></data>
+  <data name="Frontend.299" xml:space="preserve"><value>Succès</value></data>
+  <data name="Frontend.300" xml:space="preserve"><value>Supprimé</value></data>
+  <data name="Frontend.301" xml:space="preserve"><value>Vectoriser la base de connaissances « {0} » ?</value></data>
 </root>
