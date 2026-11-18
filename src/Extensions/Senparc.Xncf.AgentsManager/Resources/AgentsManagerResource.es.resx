@@ -1741,4 +1741,5 @@
   <data name="Frontend.581" xml:space="preserve"><value>Tras vincularlo, la recuperación RAG se ejecuta antes de las llamadas al modelo; si falla, se conserva el respaldo del modelo.</value></data>
   <data name="Frontend.582" xml:space="preserve"><value>Solo guardar la configuración</value></data>
   <data name="Frontend.583" xml:space="preserve"><value>Desactivado de forma segura por defecto</value></data>
+  <data name="Frontend.584" xml:space="preserve"><value>Quedan {0}; haz clic en «Gestionar vinculaciones» para verlos</value></data>
 </root>

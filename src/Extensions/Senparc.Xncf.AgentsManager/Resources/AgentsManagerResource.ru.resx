@@ -1741,4 +1741,5 @@
   <data name="Frontend.581" xml:space="preserve"><value>После привязки поиск RAG выполняется перед вызовом модели; при сбое поиска сохраняется резервный вызов модели.</value></data>
   <data name="Frontend.582" xml:space="preserve"><value>Только сохранить конфигурацию</value></data>
   <data name="Frontend.583" xml:space="preserve"><value>Безопасное состояние по умолчанию: выключено</value></data>
+  <data name="Frontend.584" xml:space="preserve"><value>Ещё {0}; нажмите «Управление привязками» для просмотра</value></data>
 </root>

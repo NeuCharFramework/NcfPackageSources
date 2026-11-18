@@ -1741,4 +1741,5 @@
   <data name="Frontend.581" xml:space="preserve"><value>バインド後はモデル呼び出し前に RAG 検索を優先して実行し、検索に失敗した場合はモデルのフォールバックを維持します。</value></data>
   <data name="Frontend.582" xml:space="preserve"><value>設定のみ保存</value></data>
   <data name="Frontend.583" xml:space="preserve"><value>安全のため既定で無効</value></data>
+  <data name="Frontend.584" xml:space="preserve"><value>残り {0} 件。確認するには「バインドを管理」をクリックしてください</value></data>
 </root>

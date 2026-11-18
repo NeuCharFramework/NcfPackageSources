@@ -1624,14 +1624,14 @@
                         </div>
                     </div>
                 </el-form-item>
-                <el-form-item label="工具与流程">
+                <el-form-item :label="ncfST('Frontend.399')">
                     <div class="function-binding-summary">
                         <div class="function-binding-summary__copy">
                             <strong>{{ functionBindingSummary }}</strong>
-                            <span>让模型按需调用 FunctionRender、Workflow 或兼容的 Plugin。</span>
+                            <span>{{ ncfST('Frontend.472') }}</span>
                         </div>
                         <el-button type="primary" plain icon="el-icon-setting"
-                            @@click="openFunctionBindingDrawer">管理绑定</el-button>
+                            @@click="openFunctionBindingDrawer">{{ ncfST('Frontend.458') }}</el-button>
                     </div>
                     <div class="function-binding-chips" v-if="agentForm.functionBindings && agentForm.functionBindings.length">
                         <el-tag v-for="binding in agentForm.functionBindings.slice(0, 6)"
@@ -1641,17 +1641,17 @@
                             {{ binding.name || binding.key }}
                         </el-tag>
                         <span v-if="agentForm.functionBindings.length > 6" class="form-help-text">
-                            还有 {{ agentForm.functionBindings.length - 6 }} 项，点击“管理绑定”查看
+                            {{ ncfST('Frontend.584', agentForm.functionBindings.length - 6) }}
                         </span>
                     </div>
                 </el-form-item>
-                <el-form-item v-if="!agentForm.isHuman" label="连接器权限">
+                <el-form-item v-if="!agentForm.isHuman" :label="ncfST('Frontend.487')">
                     <el-select v-model="agentForm.connectorInstanceIds" multiple filterable clearable style="width:100%"
-                               placeholder="不授权任何连接器" :loading="connectorOptionsLoading">
+                               :placeholder="ncfST('Frontend.351')" :loading="connectorOptionsLoading">
                         <el-option v-for="item in connectorOptions" :key="item.instanceId"
                                    :label="item.name + ' · ' + item.connectorName" :value="item.instanceId"></el-option>
                     </el-select>
-                    <div class="form-help-text">只有这里选中的连接器能被这个 Agent 调用。留空表示没有外部工具权限。</div>
+                    <div class="form-help-text">{{ ncfST('Frontend.388') }}</div>
                 </el-form-item>
                 <el-form-item label="MCP Endpoints" prop="mcpEndpoints">
                     <div class="mcp-endpoints-container">
@@ -1661,13 +1661,13 @@
                                     <span class="mcp-endpoint-name">{{name}}</span>
                                     <span class="mcp-endpoint-url">{{endpoint.url}}</span>
                                     <div v-if="endpoint.testResult && endpoint.testResult.success" class="mcp-endpoint-test-result">
-                                        <div class="test-status success">连接成功</div>
+                                        <div class="test-status success">{{ ncfST('Frontend.114') }}</div>
                                         <el-button size="mini" type="primary" plain @@click="showMcpToolsDialog(endpoint)">
-                                            查看工具列表 ({{endpoint.testResult.tools ? endpoint.testResult.tools.length : 0}})
+                                            {{ ncfST('Frontend.115') }} ({{endpoint.testResult.tools ? endpoint.testResult.tools.length : 0}})
                                         </el-button>
                                     </div>
                                     <div v-else-if="endpoint.testResult && !endpoint.testResult.success" class="mcp-endpoint-test-result">
-                                        <div class="test-status failed">连接失败: {{endpoint.testResult.message}}</div>
+                                        <div class="test-status failed">{{ ncfST('Frontend.116') }} {{endpoint.testResult.message}}</div>
                                     </div>
                                 </div>
                                 <div class="mcp-endpoint-actions">
@@ -1679,7 +1679,7 @@
                                         @@click="testMcpEndpoint(name, endpoint)"
                                         :loading="endpoint.testing"
                                         style="margin-right: 5px;"
-                                        title="测试连接">
+                                        :title="ncfST('Frontend.117')">
                                     </el-button>
                                     <el-button 
                                         size="mini" 
@@ -1701,19 +1701,19 @@
                         </div>
                         
                         <div class="mcp-endpoint-add" v-if="!mcpEndpointInputVisible">
-                            <el-button class="button-new-endpoint" size="small" @@click="showMcpEndpointInput">+ 添加 MCP Endpoint</el-button>
+                            <el-button class="button-new-endpoint" size="small" @@click="showMcpEndpointInput">{{ ncfST('Frontend.118') }}</el-button>
                             <el-button class="button-new-endpoint" size="small" type="primary" plain icon="el-icon-s-order"
-                                @@click="openMcpSelectDrawer">从 MCP 列表选择</el-button>
+                                @@click="openMcpSelectDrawer">{{ ncfST('Frontend.357') }}</el-button>
                         </div>
                         
                         <div v-if="mcpEndpointInputVisible" class="mcp-endpoint-input-form">
-                            <div class="mcp-endpoint-form-title">{{ mcpEndpointEditMode ? '编辑 MCP Endpoint' : '添加 MCP Endpoint' }}</div>
+                            <div class="mcp-endpoint-form-title">{{ mcpEndpointEditMode ? ncfST('Frontend.119') : ncfST('Frontend.120') }}</div>
                             <el-input
                                 ref="mcpEndpointNameInput"
                                 v-model="mcpEndpointNameValue"
                                 class="input-endpoint-name"
                                 size="small"
-                                placeholder="Endpoint 名称 (例如: mcp-server-NCF-7)"
+                                :placeholder="ncfST('Frontend.121')"
                                 style="margin-bottom: 10px; width: 100%">
                             </el-input>
                             
@@ -1722,7 +1722,7 @@
                                 v-model="mcpEndpointUrlValue"
                                 class="input-endpoint-url"
                                 size="small"
-                                placeholder="Endpoint URL (例如: http://localhost:5000/mcp/sse)"
+                                placeholder="Endpoint URL (for example: http://localhost:5000/mcp/sse)"
                                 style="margin-bottom: 10px; width: 100%">
                             </el-input>
                             
@@ -2304,14 +2304,14 @@
                 </div>
             </div>
         </el-form-item>
-        <el-form-item label="工具与流程">
+        <el-form-item :label="ncfST('Frontend.399')">
             <div class="function-binding-summary">
                 <div class="function-binding-summary__copy">
                     <strong>{{ functionBindingSummary }}</strong>
-                    <span>复杂绑定集中在右侧抽屉，当前 Agent 编辑状态会保留。</span>
+                    <span>{{ ncfST('Frontend.395') }}</span>
                 </div>
                 <el-button type="primary" plain icon="el-icon-setting"
-                    @@click="openFunctionBindingDrawer">管理绑定</el-button>
+                    @@click="openFunctionBindingDrawer">{{ ncfST('Frontend.458') }}</el-button>
             </div>
             <div class="function-binding-chips" v-if="agentForm.functionBindings && agentForm.functionBindings.length">
                 <el-tag v-for="binding in agentForm.functionBindings.slice(0, 6)"
@@ -2325,13 +2325,13 @@
                 </span>
             </div>
         </el-form-item>
-        <el-form-item v-if="!agentForm.isHuman" label="连接器权限">
+        <el-form-item v-if="!agentForm.isHuman" :label="ncfST('Frontend.487')">
             <el-select v-model="agentForm.connectorInstanceIds" multiple filterable clearable style="width:100%"
-                       placeholder="不授权任何连接器" :loading="connectorOptionsLoading">
+                       :placeholder="ncfST('Frontend.351')" :loading="connectorOptionsLoading">
                 <el-option v-for="item in connectorOptions" :key="item.instanceId"
                            :label="item.name + ' · ' + item.connectorName" :value="item.instanceId"></el-option>
             </el-select>
-            <div class="form-help-text">只有这里选中的连接器能被这个 Agent 调用。留空表示没有外部工具权限。</div>
+            <div class="form-help-text">{{ ncfST('Frontend.388') }}</div>
         </el-form-item>
         
         <el-form-item label="MCP Endpoints" prop="mcpEndpoints">
@@ -2342,13 +2342,13 @@
                             <span class="mcp-endpoint-name">{{name}}</span>
                             <span class="mcp-endpoint-url">{{endpoint.url}}</span>
                             <div v-if="endpoint.testResult && endpoint.testResult.success" class="mcp-endpoint-test-result">
-                                <div class="test-status success">连接成功</div>
+                                <div class="test-status success">{{ ncfST('Frontend.114') }}</div>
                                 <el-button size="mini" type="primary" plain @@click="showMcpToolsDialog(endpoint)">
-                                    查看工具列表 ({{endpoint.testResult.tools ? endpoint.testResult.tools.length : 0}})
+                                    {{ ncfST('Frontend.115') }} ({{endpoint.testResult.tools ? endpoint.testResult.tools.length : 0}})
                                 </el-button>
                             </div>
                             <div v-else-if="endpoint.testResult && !endpoint.testResult.success" class="mcp-endpoint-test-result">
-                                <div class="test-status failed">连接失败: {{endpoint.testResult.message}}</div>
+                                <div class="test-status failed">{{ ncfST('Frontend.116') }} {{endpoint.testResult.message}}</div>
                             </div>
                         </div>
                         <div class="mcp-endpoint-actions">
@@ -2360,7 +2360,7 @@
                                 @@click="testMcpEndpoint(name, endpoint)"
                                 :loading="endpoint.testing"
                                 style="margin-right: 5px;"
-                                title="测试连接">
+                                :title="ncfST('Frontend.117')">
                             </el-button>
                             <el-button 
                                 size="mini" 
@@ -2382,19 +2382,19 @@
                 </div>
                 
                 <div class="mcp-endpoint-add" v-if="!mcpEndpointInputVisible">
-                    <el-button class="button-new-endpoint" size="small" @@click="showMcpEndpointInput">+ 添加 MCP Endpoint</el-button>
+                    <el-button class="button-new-endpoint" size="small" @@click="showMcpEndpointInput">{{ ncfST('Frontend.118') }}</el-button>
                     <el-button class="button-new-endpoint" size="small" type="primary" plain icon="el-icon-s-order"
-                        @@click="openMcpSelectDrawer">从 MCP 列表选择</el-button>
+                        @@click="openMcpSelectDrawer">{{ ncfST('Frontend.357') }}</el-button>
                 </div>
                 
                 <div v-if="mcpEndpointInputVisible" class="mcp-endpoint-input-form">
-                    <div class="mcp-endpoint-form-title">{{ mcpEndpointEditMode ? '编辑 MCP Endpoint' : '添加 MCP Endpoint' }}</div>
+                    <div class="mcp-endpoint-form-title">{{ mcpEndpointEditMode ? ncfST('Frontend.119') : ncfST('Frontend.120') }}</div>
                     <el-input
                         ref="mcpEndpointNameInput"
                         v-model="mcpEndpointNameValue"
                         class="input-endpoint-name"
                         size="small"
-                        placeholder="Endpoint 名称 (例如: mcp-server-NCF-7)"
+                        :placeholder="ncfST('Frontend.121')"
                         style="margin-bottom: 10px; width: 100%">
                     </el-input>
                     
@@ -2403,21 +2403,21 @@
                         v-model="mcpEndpointUrlValue"
                         class="input-endpoint-url"
                         size="small"
-                        placeholder="Endpoint URL (例如: http://localhost:5000/mcp/sse)"
+                        placeholder="Endpoint URL (for example: http://localhost:5000/mcp/sse)"
                         style="margin-bottom: 10px; width: 100%">
                     </el-input>
                     
                     <div class="endpoint-input-actions">
-                        <el-button size="small" type="primary" @@click="handleMcpEndpointInputConfirm">确认</el-button>
-                        <el-button size="small" @@click="cancelMcpEndpointInput">取消</el-button>
+                        <el-button size="small" type="primary" @@click="handleMcpEndpointInputConfirm">{{ ncfST('Frontend.122') }}</el-button>
+                        <el-button size="small" @@click="cancelMcpEndpointInput">{{ ncfST('Frontend.091') }}</el-button>
                     </div>
                 </div>
             </div>
         </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-        <el-button @@click="handleElVisibleClose('dialogGroupAgent')">取 消</el-button>
-        <el-button type="primary" @@click="handleElVisibleSubmit('dialogGroupAgent')">确 定</el-button>
+        <el-button @@click="handleElVisibleClose('dialogGroupAgent')">{{ ncfST('Frontend.091') }}</el-button>
+        <el-button type="primary" @@click="handleElVisibleSubmit('dialogGroupAgent')">{{ ncfST('Frontend.122') }}</el-button>
     </div>
 </el-dialog>
 @* Agent parameter carousel dialog. *@
