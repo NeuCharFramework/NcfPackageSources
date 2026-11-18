@@ -812,4 +812,19 @@
   <data name="Frontend.765" xml:space="preserve"><value>To avoid silently changing the existing flow, only an unconnected node can be dragged into a connection.</value></data>
   <data name="Frontend.766" xml:space="preserve"><value>Copy of {0}</value></data>
   <data name="Frontend.767" xml:space="preserve"><value>The original connection changed; reopen the insert menu.</value></data>
+  <data name="Frontend.768" xml:space="preserve"><value>Loop node "{0}" can have only one "Loop end" node in its body.</value></data>
+  <data name="Frontend.769" xml:space="preserve"><value>Loop node "{0}" must connect to one loop-body entry.</value></data>
+  <data name="Frontend.770" xml:space="preserve"><value>The loop-body path of loop node "{0}" is invalid.</value></data>
+  <data name="Frontend.771" xml:space="preserve"><value>The loop body references a missing node.</value></data>
+  <data name="Frontend.772" xml:space="preserve"><value>The body of loop node "{0}" does not support end, parallel, aggregate, or merge nodes.</value></data>
+  <data name="Frontend.773" xml:space="preserve"><value>A nested loop must connect to a following node after it ends.</value></data>
+  <data name="Frontend.774" xml:space="preserve"><value>Nested loop "{0}" must explicitly configure one unique Loop end node.</value></data>
+  <data name="Frontend.775" xml:space="preserve"><value>Nested loop "{0}" must connect to a following node after it ends.</value></data>
+  <data name="Frontend.776" xml:space="preserve"><value>The break output of condition node "{0}" must connect to the current loop's break input.</value></data>
+  <data name="Frontend.777" xml:space="preserve"><value>Condition node "{0}" inside the loop body must connect both true and false branches.</value></data>
+  <data name="Frontend.778" xml:space="preserve"><value>The body of loop node "{0}" must be a single path.</value></data>
+  <data name="Frontend.779" xml:space="preserve"><value>must be an integer from 1 to 100,000 at runtime</value></data>
+  <data name="Frontend.780" xml:space="preserve"><value>Invalid upstream source</value></data>
+  <data name="Frontend.781" xml:space="preserve"><value>The count formula for loop node "{0}" cannot be empty.</value></data>
+  <data name="Frontend.782" xml:space="preserve"><value>The count formula for loop node "{0}" must be a numeric formula or an upstream numeric reference.</value></data>
 </root>

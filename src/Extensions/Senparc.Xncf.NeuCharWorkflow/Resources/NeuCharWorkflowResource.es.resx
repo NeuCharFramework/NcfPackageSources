@@ -812,4 +812,19 @@
   <data name="Frontend.765" xml:space="preserve"><value>Para evitar cambiar silenciosamente el flujo existente, solo se pueden arrastrar nodos no conectados a una conexión.</value></data>
   <data name="Frontend.766" xml:space="preserve"><value>Copia de {0}</value></data>
   <data name="Frontend.767" xml:space="preserve"><value>La conexión original ha cambiado; vuelve a abrir el menú de inserción.</value></data>
+  <data name="Frontend.768" xml:space="preserve"><value>El nodo de bucle «{0}» solo puede tener un nodo «fin del bucle» en su cuerpo.</value></data>
+  <data name="Frontend.769" xml:space="preserve"><value>El nodo de bucle «{0}» debe conectar con una entrada del cuerpo.</value></data>
+  <data name="Frontend.770" xml:space="preserve"><value>La ruta del cuerpo del nodo de bucle «{0}» no es válida.</value></data>
+  <data name="Frontend.771" xml:space="preserve"><value>El cuerpo del bucle referencia un nodo inexistente.</value></data>
+  <data name="Frontend.772" xml:space="preserve"><value>El cuerpo del nodo de bucle «{0}» no admite nodos de fin, paralelos, agregados ni de fusión.</value></data>
+  <data name="Frontend.773" xml:space="preserve"><value>Un bucle anidado debe conectar con un nodo posterior al terminar.</value></data>
+  <data name="Frontend.774" xml:space="preserve"><value>El bucle anidado «{0}» debe configurar explícitamente un único nodo de fin del bucle.</value></data>
+  <data name="Frontend.775" xml:space="preserve"><value>El bucle anidado «{0}» debe conectar con un nodo posterior al terminar.</value></data>
+  <data name="Frontend.776" xml:space="preserve"><value>La salida break del nodo de condición «{0}» debe conectar con la entrada break del bucle actual.</value></data>
+  <data name="Frontend.777" xml:space="preserve"><value>El nodo de condición «{0}» dentro del cuerpo debe conectar las ramas verdadera y falsa.</value></data>
+  <data name="Frontend.778" xml:space="preserve"><value>El cuerpo del nodo de bucle «{0}» debe ser una ruta única.</value></data>
+  <data name="Frontend.779" xml:space="preserve"><value>debe ser un entero de 1 a 100000 en tiempo de ejecución</value></data>
+  <data name="Frontend.780" xml:space="preserve"><value>Origen anterior no válido</value></data>
+  <data name="Frontend.781" xml:space="preserve"><value>La fórmula de cantidad del nodo de bucle «{0}» no puede estar vacía.</value></data>
+  <data name="Frontend.782" xml:space="preserve"><value>La fórmula de cantidad del nodo de bucle «{0}» debe ser numérica o una referencia numérica anterior.</value></data>
 </root>

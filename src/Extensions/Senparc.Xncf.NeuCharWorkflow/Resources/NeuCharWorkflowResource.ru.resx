@@ -812,4 +812,19 @@
   <data name="Frontend.765" xml:space="preserve"><value>Чтобы не менять существующий поток незаметно, в соединение можно перетаскивать только неподключённые узлы.</value></data>
   <data name="Frontend.766" xml:space="preserve"><value>Копия: {0}</value></data>
   <data name="Frontend.767" xml:space="preserve"><value>Исходное соединение изменилось; снова откройте меню вставки.</value></data>
+  <data name="Frontend.768" xml:space="preserve"><value>В теле узла цикла «{0}» может быть только один узел «конец цикла».</value></data>
+  <data name="Frontend.769" xml:space="preserve"><value>Узел цикла «{0}» должен быть соединён с входом тела цикла.</value></data>
+  <data name="Frontend.770" xml:space="preserve"><value>Путь тела узла цикла «{0}» недействителен.</value></data>
+  <data name="Frontend.771" xml:space="preserve"><value>Тело цикла ссылается на отсутствующий узел.</value></data>
+  <data name="Frontend.772" xml:space="preserve"><value>Тело узла цикла «{0}» не поддерживает конечные, параллельные, агрегирующие и объединяющие узлы.</value></data>
+  <data name="Frontend.773" xml:space="preserve"><value>После завершения вложенный цикл должен быть соединён со следующим узлом.</value></data>
+  <data name="Frontend.774" xml:space="preserve"><value>Для вложенного цикла «{0}» нужно явно настроить один уникальный узел конца цикла.</value></data>
+  <data name="Frontend.775" xml:space="preserve"><value>После завершения вложенный цикл «{0}» должен быть соединён со следующим узлом.</value></data>
+  <data name="Frontend.776" xml:space="preserve"><value>Выход break узла условия «{0}» должен быть соединён со входом break текущего цикла.</value></data>
+  <data name="Frontend.777" xml:space="preserve"><value>Узел условия «{0}» внутри тела цикла должен иметь истинную и ложную ветви.</value></data>
+  <data name="Frontend.778" xml:space="preserve"><value>Тело узла цикла «{0}» должно быть единственным путём.</value></data>
+  <data name="Frontend.779" xml:space="preserve"><value>во время выполнения должно быть целым числом от 1 до 100000</value></data>
+  <data name="Frontend.780" xml:space="preserve"><value>Недопустимый источник предыдущего узла</value></data>
+  <data name="Frontend.781" xml:space="preserve"><value>Формула количества узла цикла «{0}» не может быть пустой.</value></data>
+  <data name="Frontend.782" xml:space="preserve"><value>Формула количества узла цикла «{0}» должна быть числовой формулой или ссылкой на число предыдущего узла.</value></data>
 </root>

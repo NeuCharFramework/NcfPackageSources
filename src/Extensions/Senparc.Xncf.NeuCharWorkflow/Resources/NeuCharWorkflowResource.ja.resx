@@ -828,4 +828,19 @@
   <data name="Frontend.765" xml:space="preserve"><value>既存のフローを暗黙に変更しないため、未接続のノードだけを接続へドラッグできます。</value></data>
   <data name="Frontend.766" xml:space="preserve"><value>{0}（コピー）</value></data>
   <data name="Frontend.767" xml:space="preserve"><value>元の接続が変更されました。挿入メニューを再度開いてください。</value></data>
+  <data name="Frontend.768" xml:space="preserve"><value>ループノード「{0}」の本体には「ループ終了」ノードを 1 つだけ配置できます。</value></data>
+  <data name="Frontend.769" xml:space="preserve"><value>ループノード「{0}」はループ本体の入口に接続する必要があります。</value></data>
+  <data name="Frontend.770" xml:space="preserve"><value>ループノード「{0}」の本体パスが無効です。</value></data>
+  <data name="Frontend.771" xml:space="preserve"><value>ループ本体が存在しないノードを参照しています。</value></data>
+  <data name="Frontend.772" xml:space="preserve"><value>ループノード「{0}」の本体では、終了、並列、集約、マージノードを使用できません。</value></data>
+  <data name="Frontend.773" xml:space="preserve"><value>ネストしたループは終了後に後続ノードへ接続する必要があります。</value></data>
+  <data name="Frontend.774" xml:space="preserve"><value>ネストしたループ「{0}」には「ループ終了」ノードを 1 つ明示的に設定してください。</value></data>
+  <data name="Frontend.775" xml:space="preserve"><value>ネストしたループ「{0}」は終了後に後続ノードへ接続する必要があります。</value></data>
+  <data name="Frontend.776" xml:space="preserve"><value>条件ノード「{0}」の break 出力は現在のループの break 入力に接続する必要があります。</value></data>
+  <data name="Frontend.777" xml:space="preserve"><value>ループ本体の条件ノード「{0}」は true と false の両方の分岐に接続してください。</value></data>
+  <data name="Frontend.778" xml:space="preserve"><value>ループノード「{0}」の本体は単一のパスである必要があります。</value></data>
+  <data name="Frontend.779" xml:space="preserve"><value>実行時に 1～100000 の整数である必要があります</value></data>
+  <data name="Frontend.780" xml:space="preserve"><value>無効な上流ソース</value></data>
+  <data name="Frontend.781" xml:space="preserve"><value>ループノード「{0}」の回数式を空にすることはできません。</value></data>
+  <data name="Frontend.782" xml:space="preserve"><value>ループノード「{0}」の回数式は数式または上流の数値参照である必要があります。</value></data>
 </root>

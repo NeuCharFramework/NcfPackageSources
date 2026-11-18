@@ -812,4 +812,19 @@
   <data name="Frontend.765" xml:space="preserve"><value>为避免静默改变已有流程，只能将尚未连接的节点拖入连线。</value></data>
   <data name="Frontend.766" xml:space="preserve"><value>{0}（副本）</value></data>
   <data name="Frontend.767" xml:space="preserve"><value>原连线已变化，请重新打开插入菜单。</value></data>
+  <data name="Frontend.768" xml:space="preserve"><value>循环节点“{0}”的循环体只能有一个“循环结束”节点。</value></data>
+  <data name="Frontend.769" xml:space="preserve"><value>循环节点“{0}”必须连接一个循环体入口。</value></data>
+  <data name="Frontend.770" xml:space="preserve"><value>循环节点“{0}”的循环体路径无效。</value></data>
+  <data name="Frontend.771" xml:space="preserve"><value>循环体引用了不存在的节点。</value></data>
+  <data name="Frontend.772" xml:space="preserve"><value>循环节点“{0}”的循环体不支持结束、并行、聚合或逐项合流节点。</value></data>
+  <data name="Frontend.773" xml:space="preserve"><value>嵌套循环结束后必须连接一个后续节点。</value></data>
+  <data name="Frontend.774" xml:space="preserve"><value>嵌套循环“{0}”必须明确配置唯一的循环结束节点。</value></data>
+  <data name="Frontend.775" xml:space="preserve"><value>嵌套循环“{0}”结束后必须连接一个后续节点。</value></data>
+  <data name="Frontend.776" xml:space="preserve"><value>条件节点“{0}”的 break 输出必须连接当前循环的 break 输入端。</value></data>
+  <data name="Frontend.777" xml:space="preserve"><value>循环体内的条件节点“{0}”必须连接真/假分支。</value></data>
+  <data name="Frontend.778" xml:space="preserve"><value>循环节点“{0}”的循环体必须是一条单一路径。</value></data>
+  <data name="Frontend.779" xml:space="preserve"><value>运行时必须为 1–100000 的整数</value></data>
+  <data name="Frontend.780" xml:space="preserve"><value>已失效的上游来源</value></data>
+  <data name="Frontend.781" xml:space="preserve"><value>循环节点“{0}”的次数语法不能为空。</value></data>
+  <data name="Frontend.782" xml:space="preserve"><value>循环节点“{0}”的次数语法必须是数值公式或上游数值引用。</value></data>
 </root>

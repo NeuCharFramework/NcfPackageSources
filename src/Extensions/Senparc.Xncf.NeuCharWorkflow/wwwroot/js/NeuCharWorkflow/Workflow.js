@@ -3427,44 +3427,44 @@ new Vue({
             const graph = this.form?.graph;
             const boundaries = this.loopBoundaryNodes(loop);
             if (!boundaries.length) return '';
-            if (boundaries.length > 1) return `循环节点“${loop.name}”的循环体只能有一个“循环结束”节点。`;
+            if (boundaries.length > 1) return ncfWorkflowText('Frontend.768').replace('{0}', loop.name);
             const boundary = boundaries[0];
             const byId = new Map((graph.nodes || []).map(node => [node.id, node]));
             const outgoing = (graph.edges || []).filter(edge => edge.source === loop.id);
-            if (outgoing.length !== 1) return `循环节点“${loop.name}”必须连接一个循环体入口。`;
+            if (outgoing.length !== 1) return ncfWorkflowText('Frontend.769').replace('{0}', loop.name);
             const walk = (currentId, visited) => {
                 if (currentId === boundary.id) return '';
-                if (visited.has(currentId)) return `循环节点“${loop.name}”的循环体路径无效。`;
+                if (visited.has(currentId)) return ncfWorkflowText('Frontend.770').replace('{0}', loop.name);
                 visited.add(currentId);
                 const current = byId.get(currentId);
-                if (!current) return '循环体引用了不存在的节点。';
+                if (!current) return ncfWorkflowText('Frontend.771');
                 if (current.type === 'end' || ['parallel', 'aggregate', 'merge'].includes(current.type)) {
-                    return `循环节点“${loop.name}”的循环体不支持结束、并行、聚合或逐项合流节点。`;
+                    return ncfWorkflowText('Frontend.772').replace('{0}', loop.name);
                 }
                 if (current.type === 'loop-end') {
                     const next = (graph.edges || []).filter(edge => edge.source === currentId);
-                    return next.length === 1 ? walk(next[0].target, new Set(visited)) : '嵌套循环结束后必须连接一个后续节点。';
+                    return next.length === 1 ? walk(next[0].target, new Set(visited)) : ncfWorkflowText('Frontend.773');
                 }
                 if (current.type === 'loop') {
                     const nested = this.loopBoundaryNodes(current);
-                    if (nested.length !== 1) return `嵌套循环“${current.name}”必须明确配置唯一的循环结束节点。`;
+                    if (nested.length !== 1) return ncfWorkflowText('Frontend.774').replace('{0}', current.name);
                     const next = (graph.edges || []).filter(edge => edge.source === nested[0].id);
-                    return next.length === 1 ? walk(next[0].target, new Set(visited)) : `嵌套循环“${current.name}”结束后必须连接一个后续节点。`;
+                    return next.length === 1 ? walk(next[0].target, new Set(visited)) : ncfWorkflowText('Frontend.775').replace('{0}', current.name);
                 }
                 const next = (graph.edges || []).filter(edge => edge.source === currentId);
                 if (current.type === 'condition') {
                     for (const edge of next) {
                         if (edge.sourceHandle === 'break' && (edge.target !== boundary.id || edge.targetHandle !== 'break')) {
-                            return `条件节点“${current.name}”的 break 输出必须连接当前循环的 break 输入端。`;
+                            return ncfWorkflowText('Frontend.776').replace('{0}', current.name);
                         }
                         if (edge.sourceHandle !== 'break') {
                             const error = walk(edge.target, new Set(visited));
                             if (error) return error;
                         }
                     }
-                    return next.some(edge => edge.sourceHandle === 'true' || edge.sourceHandle === 'false') ? '' : `循环体内的条件节点“${current.name}”必须连接真/假分支。`;
+                    return next.some(edge => edge.sourceHandle === 'true' || edge.sourceHandle === 'false') ? '' : ncfWorkflowText('Frontend.777').replace('{0}', current.name);
                 }
-                return next.length === 1 ? walk(next[0].target, visited) : `循环节点“${loop.name}”的循环体必须是一条单一路径。`;
+                return next.length === 1 ? walk(next[0].target, visited) : ncfWorkflowText('Frontend.778').replace('{0}', loop.name);
             };
             return walk(outgoing[0].target, new Set());
         },
@@ -3476,22 +3476,22 @@ new Vue({
                     .filter(field => !field.isArray && !field.requiresIndex)
                     .map(field => ({
                         value: field.path,
-                        label: `${field.label} · 运行时必须为 1–100000 的整数${field.observed ? ' · 运行观察' : ''}`
+                        label: `${field.label} · ${ncfWorkflowText('Frontend.779')}${field.observed ? ' · ' + ncfWorkflowText('Frontend.484') : ''}`
                     }))
             })).filter(option => option.children.length);
         },
         loopCountSourceLabel(node) {
             const binding = node?.config?.count?.$source;
-            return binding ? this.templateBindingLabel(binding) : '已失效的上游来源';
+            return binding ? this.templateBindingLabel(binding) : ncfWorkflowText('Frontend.780');
         },
         loopCountFormulaValidationError(node) {
             const value = node?.config?.count;
             if (!this.isTemplateValue(value)) return '';
             const template = this.templateFor(value);
             const text = String(template?.text || '').trim();
-            if (!text) return `循环节点“${node.name}”的次数语法不能为空。`;
+            if (!text) return ncfWorkflowText('Frontend.781').replace('{0}', node.name);
             if (!text.includes('{{=') && !(Array.isArray(template?.bindings) && template.bindings.length)) {
-                return `循环节点“${node.name}”的次数语法必须是数值公式或上游数值引用。`;
+                return ncfWorkflowText('Frontend.782').replace('{0}', node.name);
             }
             return '';
         },

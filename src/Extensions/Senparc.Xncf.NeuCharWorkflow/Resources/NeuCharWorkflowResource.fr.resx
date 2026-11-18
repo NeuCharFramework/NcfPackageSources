@@ -812,4 +812,19 @@
   <data name="Frontend.765" xml:space="preserve"><value>Pour éviter de modifier silencieusement le flux existant, seuls les nœuds non connectés peuvent être glissés dans une connexion.</value></data>
   <data name="Frontend.766" xml:space="preserve"><value>Copie de {0}</value></data>
   <data name="Frontend.767" xml:space="preserve"><value>La connexion d’origine a changé ; rouvrez le menu d’insertion.</value></data>
+  <data name="Frontend.768" xml:space="preserve"><value>Le nœud de boucle « {0} » ne peut avoir qu’un seul nœud « fin de boucle » dans son corps.</value></data>
+  <data name="Frontend.769" xml:space="preserve"><value>Le nœud de boucle « {0} » doit se connecter à une entrée du corps.</value></data>
+  <data name="Frontend.770" xml:space="preserve"><value>Le chemin du corps du nœud de boucle « {0} » est invalide.</value></data>
+  <data name="Frontend.771" xml:space="preserve"><value>Le corps de boucle référence un nœud inexistant.</value></data>
+  <data name="Frontend.772" xml:space="preserve"><value>Le corps du nœud de boucle « {0} » ne prend pas en charge les nœuds fin, parallèle, agrégation ou fusion.</value></data>
+  <data name="Frontend.773" xml:space="preserve"><value>Une boucle imbriquée doit se connecter à un nœud suivant après sa fin.</value></data>
+  <data name="Frontend.774" xml:space="preserve"><value>La boucle imbriquée « {0} » doit configurer explicitement un seul nœud fin de boucle.</value></data>
+  <data name="Frontend.775" xml:space="preserve"><value>La boucle imbriquée « {0} » doit se connecter à un nœud suivant après sa fin.</value></data>
+  <data name="Frontend.776" xml:space="preserve"><value>La sortie break du nœud condition « {0} » doit se connecter à l’entrée break de la boucle actuelle.</value></data>
+  <data name="Frontend.777" xml:space="preserve"><value>Le nœud condition « {0} » dans le corps doit connecter les branches vraie et fausse.</value></data>
+  <data name="Frontend.778" xml:space="preserve"><value>Le corps du nœud de boucle « {0} » doit être un chemin unique.</value></data>
+  <data name="Frontend.779" xml:space="preserve"><value>doit être un entier de 1 à 100 000 à l’exécution</value></data>
+  <data name="Frontend.780" xml:space="preserve"><value>Source amont invalide</value></data>
+  <data name="Frontend.781" xml:space="preserve"><value>La formule de comptage du nœud de boucle « {0} » ne peut pas être vide.</value></data>
+  <data name="Frontend.782" xml:space="preserve"><value>La formule de comptage du nœud de boucle « {0} » doit être numérique ou référencer une valeur numérique amont.</value></data>
 </root>
