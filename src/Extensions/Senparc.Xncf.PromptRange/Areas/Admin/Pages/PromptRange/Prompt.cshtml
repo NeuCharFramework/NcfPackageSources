@@ -1204,31 +1204,31 @@
             <el-button type="primary" @@click="btnExpectedPlugins">{{ ncfST('Frontend.207') }}</el-button>
         </div>
     </el-dialog>
-    <el-dialog title="设置靶道名称"
+    <el-dialog :title="ncfST('Frontend.016')"
                :visible.sync="dialogVisible"
                width="30%"
               >
         <span>
-            请选择或输入备注名称 
-            <el-tooltip content="选择已存在的名称时，将把其名称转移到当前靶道，原靶道名称重置为“未设置”" placement="top">
+            {{ ncfST('Frontend.208') }}
+            <el-tooltip :content="ncfST('Frontend.209')" placement="top">
                 <i class="el-icon-info"></i>
             </el-tooltip>
         </span>
         <el-autocomplete class="inline-input" 
                          v-model="targetlaneName"
                          :fetch-suggestions="querySearch"
-                         placeholder="请输入靶道备注名称"
+                         :placeholder="ncfST('Frontend.210')"
                          value-key="label"
                          style="width:100%"
         @@select="handleSelect"></el-autocomplete>
         <span slot="footer" class="dialog-footer">
-            <el-button @@click="dialogVisible = false">取 消</el-button>
-            <el-button type="primary" @@click="confirmtargetlaneName">确 定</el-button>
+            <el-button @@click="dialogVisible = false">{{ ncfST('Frontend.091') }}</el-button>
+            <el-button type="primary" @@click="confirmtargetlaneName">{{ ncfST('Frontend.207') }}</el-button>
         </span>
     </el-dialog>
     
         @*Prompt comparison dialog.*@
-    <el-dialog title="对比 Prompt" 
+    <el-dialog :title="ncfST('Frontend.211')" 
                :visible.sync="compareDialogVisible" 
                width="90%" 
                top="5vh"
@@ -1238,7 +1238,7 @@
         <div class="compare-selector">
             <el-select v-model="comparePromptAId" 
                        filterable 
-                       placeholder="选择 Prompt A" 
+                       :placeholder="ncfST('Frontend.212')" 
                        @@change="loadComparePromptA"
                        style="width: 40%;">
                 <el-option v-for="item in promptOpt"
@@ -1252,12 +1252,12 @@
                        icon="el-icon-sort" 
                        @@click="swapComparePrompts"
                        style="margin: 0 20px;">
-                交换
+                {{ ncfST('Frontend.213') }}
             </el-button>
             
             <el-select v-model="comparePromptBId" 
                        filterable 
-                       placeholder="选择 Prompt B" 
+                       :placeholder="ncfST('Frontend.214')" 
                        @@change="loadComparePromptB"
                        style="width: 40%;">
                 <el-option v-for="item in promptOpt"
@@ -1270,14 +1270,14 @@
         
         @*Same-prompt warning.*@
         <el-alert v-if="isSamePrompt" 
-                  title="警告：您正在对比同一个 Prompt！" 
+                  :title="ncfST('Frontend.215')" 
                   type="warning" 
                   :closable="false"
                   show-icon
                   style="margin-bottom: 15px;">
             <template slot>
-                <p style="margin: 5px 0;">当前选择的两个 Prompt 是同一个（版本号: <strong>{{comparePromptA ? comparePromptA.fullVersion : ''}}</strong>）。</p>
-                <p style="margin: 5px 0;">建议选择不同的 Prompt 进行对比以查看差异。</p>
+                <p style="margin: 5px 0;">{{ ncfST('Frontend.216') }} <strong>{{comparePromptA ? comparePromptA.fullVersion : ''}}</strong>）。</p>
+                <p style="margin: 5px 0;">{{ ncfST('Frontend.217') }}</p>
             </template>
         </el-alert>
         
