@@ -118,7 +118,7 @@
         </el-main>
     </el-container>
 
-    <!-- 新增/编辑对话框 -->
+    <!-- Add/edit dialog -->
     <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="640px" :close-on-click-modal="false"
         :show-close="!saving" :close-on-press-escape="!saving">
         <el-form :model="form" :rules="rules" ref="mcpForm" label-width="110px">
@@ -163,7 +163,7 @@
         </div>
     </el-dialog>
 
-    <!-- 连接测试结果对话框（含可展开的 Function 信息） -->
+    <!-- Connection test result dialog, with expandable Function details -->
     <el-dialog :title="'连接测试 - ' + testResultEndpointName" :visible.sync="testDialogVisible" width="820px" top="6vh">
         <div v-if="testResult">
             <el-alert :title="testResult.statusMessage" :type="testResult.success ? 'success' : 'error'"
@@ -217,7 +217,7 @@
         </div>
     </el-dialog>
 
-    <!-- 输入 Schema 放大查看 -->
+    <!-- Enlarged view of the input schema -->
     <el-dialog :title="schemaTitle" :visible.sync="schemaDialogVisible" width="720px" append-to-body>
         <pre class="mcp-schema-pre" style="max-height:60vh;">{{ schemaText }}</pre>
         <div slot="footer" class="dialog-footer">

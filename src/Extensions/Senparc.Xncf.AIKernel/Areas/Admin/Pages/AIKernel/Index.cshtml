@@ -17,7 +17,7 @@
 }
 
 <div>
-    <!-- 使用概览统计卡片 -->
+    <!-- Usage overview statistic cards -->
     <el-row :gutter="10" style="margin-bottom: 10px">
         <el-col :span="6">
             <div class="xncf-stat-item token-stat">
@@ -333,7 +333,7 @@
         </span>
     </el-dialog>
 
-    <!-- dialog for 导入 NeuCharAI 云端模型算力 -->  
+    <!-- Dialog for importing NeuCharAI cloud model capabilities -->
     <el-dialog title="@XR["Model.ImportNeuChar"]" :visible.sync="neuCharFormDialogVisible" width="50%" :close-on-click-modal="false">
         <el-form :model="neuCharForm" label-width="120px" :rules="neuCharRules" ref="neuCharForm">  
             <el-form-item label="DeveloperId" prop="developerId">  

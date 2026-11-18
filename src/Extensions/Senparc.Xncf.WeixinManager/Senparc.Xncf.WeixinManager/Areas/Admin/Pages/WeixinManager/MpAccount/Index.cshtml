@@ -125,7 +125,7 @@
                     :limit.sync="searchData.pageSize"
                     @@pagination="fetchData"></pagination>
     </div>
-    <!--新增 / 编辑 模态框-->
+    <!-- Add/edit modal -->
     <el-dialog :title="dialog.title" :visible.sync="dialog.visible" width="40%" :close-on-click-modal="false">
         <el-form :model="mpAccountForm" :rules="mpAccountRule" ref="ref_mpAccountForm" label-width="140px" class="demo-ruleForm">
             <el-form-item label="公众号名称" prop="name">
