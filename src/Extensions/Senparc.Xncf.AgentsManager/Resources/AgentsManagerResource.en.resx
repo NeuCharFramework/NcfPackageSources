@@ -1759,4 +1759,13 @@
   <data name="Frontend.599" xml:space="preserve"><value>Module unavailable</value></data>
   <data name="Frontend.600" xml:space="preserve"><value>Callable</value></data>
   <data name="Frontend.601" xml:space="preserve"><value>MCP endpoint added: {0}</value></data>
+  <data name="Frontend.602" xml:space="preserve"><value>Confirm enabling group "{0}"?</value></data>
+  <data name="Frontend.603" xml:space="preserve"><value>After enabling, new tasks can be created and the group can be used as a Workflow node.</value></data>
+  <data name="Frontend.604" xml:space="preserve"><value>Confirm disabling group "{0}"?</value></data>
+  <data name="Frontend.605" xml:space="preserve"><value>After disabling, no new tasks will be created and the group cannot be used as a Workflow node; running tasks will not be interrupted.</value></data>
+  <data name="Frontend.606" xml:space="preserve"><value>Group "{0}" has been {1}</value></data>
+  <data name="Frontend.607" xml:space="preserve"><value>enabled</value></data>
+  <data name="Frontend.608" xml:space="preserve"><value>disabled</value></data>
+  <data name="Frontend.609" xml:space="preserve"><value>When selecting an AIModel manually, you must select a Chat model.</value></data>
+  <data name="Frontend.610" xml:space="preserve"><value>Save an AgentTemplate containing a plain-text Prompt first.</value></data>
 </root>

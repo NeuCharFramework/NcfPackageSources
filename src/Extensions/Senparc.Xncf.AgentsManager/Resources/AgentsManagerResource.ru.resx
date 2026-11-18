@@ -1759,4 +1759,13 @@
   <data name="Frontend.599" xml:space="preserve"><value>Модуль недоступен</value></data>
   <data name="Frontend.600" xml:space="preserve"><value>Доступно для вызова</value></data>
   <data name="Frontend.601" xml:space="preserve"><value>Добавлена конечная точка MCP: {0}</value></data>
+  <data name="Frontend.602" xml:space="preserve"><value>Подтвердить включение группы «{0}»?</value></data>
+  <data name="Frontend.603" xml:space="preserve"><value>После включения можно будет создавать новые задачи, а группу использовать как узел Workflow.</value></data>
+  <data name="Frontend.604" xml:space="preserve"><value>Подтвердить отключение группы «{0}»?</value></data>
+  <data name="Frontend.605" xml:space="preserve"><value>После отключения новые задачи создаваться не будут, и группу нельзя будет использовать как узел Workflow; уже запущенные задачи не будут прерваны.</value></data>
+  <data name="Frontend.606" xml:space="preserve"><value>Группа «{0}» {1}</value></data>
+  <data name="Frontend.607" xml:space="preserve"><value>включена</value></data>
+  <data name="Frontend.608" xml:space="preserve"><value>отключена</value></data>
+  <data name="Frontend.609" xml:space="preserve"><value>При ручном выборе AIModel необходимо выбрать модель Chat.</value></data>
+  <data name="Frontend.610" xml:space="preserve"><value>Сначала сохраните AgentTemplate, содержащий Prompt в виде обычного текста.</value></data>
 </root>

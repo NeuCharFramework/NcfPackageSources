@@ -144,10 +144,9 @@ var AgentsAppMethodsManage = {
       if (!group || !group.id) return
 
       const willEnable = !group.enable
-      const actionText = willEnable ? '启用' : '停用'
       const messageText = willEnable
-        ? `<div>是否确认启用组“${group.name}”？</div><div>启用后可再次创建新任务，并可作为 Workflow 节点使用。</div>`
-        : `<div>是否确认停用组“${group.name}”？</div><div>停用后不会创建新任务或作为 Workflow 节点使用；已经启动的任务不会被中断。</div>`
+        ? `<div>${ncfST('Frontend.602', group.name)}</div><div>${ncfST('Frontend.603')}</div>`
+        : `<div>${ncfST('Frontend.604', group.name)}</div><div>${ncfST('Frontend.605')}</div>`
 
       try {
         await this.$confirm(messageText, ncfST('Frontend.528'), {
@@ -163,7 +162,10 @@ var AgentsAppMethodsManage = {
           throw new Error(res?.data?.errorMessage || res?.data?.data || ncfST('Frontend.168'))
         }
 
-        this.$message({ type: 'success', message: `组已${actionText}` })
+        this.$message({
+          type: 'success',
+          message: ncfST('Frontend.606', group.name, ncfST(willEnable ? 'Frontend.607' : 'Frontend.608'))
+        })
         if (this.tabsActiveName === 'second') {
           await this.getGroupListData('group')
         } else if (this.agentDetails?.agentTemplateDto?.id) {

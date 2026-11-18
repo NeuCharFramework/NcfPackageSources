@@ -412,7 +412,7 @@ var AgentsAppMethodsGroupStartEditor = {
         return false
       }
       if (binding === 2 && !aiModelId) {
-        this.$message.error('手动选择 AIModel 时必须选择一个 Chat 类型模型。')
+        this.$message.error(ncfST('Frontend.609'))
         return false
       }
       return true
@@ -424,7 +424,7 @@ var AgentsAppMethodsGroupStartEditor = {
       const aiModelId = Number(agent.aiModelId || 0)
       const promptContent = String(agent.systemMessage || '').trim()
       if (!agentTemplateId || agent.isHuman || String(agent.systemMessageType) !== '2' || !promptContent) {
-        this.$message.error('请先保存一个包含明文 Prompt 的 AgentTemplate。')
+        this.$message.error(ncfST('Frontend.610'))
         return
       }
       if (!this.validateAgentModelBindingForm()) {

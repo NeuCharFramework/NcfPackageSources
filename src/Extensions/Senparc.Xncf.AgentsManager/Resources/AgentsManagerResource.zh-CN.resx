@@ -1185,4 +1185,13 @@
   <data name="Frontend.599" xml:space="preserve"><value>模块不可用</value></data>
   <data name="Frontend.600" xml:space="preserve"><value>可调用</value></data>
   <data name="Frontend.601" xml:space="preserve"><value>已添加 MCP 端点：{0}</value></data>
+  <data name="Frontend.602" xml:space="preserve"><value>是否确认启用组“{0}”？</value></data>
+  <data name="Frontend.603" xml:space="preserve"><value>启用后可再次创建新任务，并可作为 Workflow 节点使用。</value></data>
+  <data name="Frontend.604" xml:space="preserve"><value>是否确认停用组“{0}”？</value></data>
+  <data name="Frontend.605" xml:space="preserve"><value>停用后不会创建新任务或作为 Workflow 节点使用；已经启动的任务不会被中断。</value></data>
+  <data name="Frontend.606" xml:space="preserve"><value>组“{0}”已{1}</value></data>
+  <data name="Frontend.607" xml:space="preserve"><value>启用</value></data>
+  <data name="Frontend.608" xml:space="preserve"><value>停用</value></data>
+  <data name="Frontend.609" xml:space="preserve"><value>手动选择 AIModel 时必须选择一个 Chat 类型模型。</value></data>
+  <data name="Frontend.610" xml:space="preserve"><value>请先保存一个包含明文 Prompt 的 AgentTemplate。</value></data>
 </root>

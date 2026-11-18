@@ -1759,4 +1759,13 @@
   <data name="Frontend.599" xml:space="preserve"><value>モジュールを利用できません</value></data>
   <data name="Frontend.600" xml:space="preserve"><value>呼び出し可能</value></data>
   <data name="Frontend.601" xml:space="preserve"><value>MCP エンドポイントを追加しました：{0}</value></data>
+  <data name="Frontend.602" xml:space="preserve"><value>グループ「{0}」を有効にしますか？</value></data>
+  <data name="Frontend.603" xml:space="preserve"><value>有効にすると、新しいタスクを作成でき、このグループを Workflow ノードとして使用できます。</value></data>
+  <data name="Frontend.604" xml:space="preserve"><value>グループ「{0}」を無効にしますか？</value></data>
+  <data name="Frontend.605" xml:space="preserve"><value>無効にすると、新しいタスクは作成されず、Workflow ノードとしても使用できません。開始済みのタスクは中断されません。</value></data>
+  <data name="Frontend.606" xml:space="preserve"><value>グループ「{0}」を{1}にしました</value></data>
+  <data name="Frontend.607" xml:space="preserve"><value>有効</value></data>
+  <data name="Frontend.608" xml:space="preserve"><value>無効</value></data>
+  <data name="Frontend.609" xml:space="preserve"><value>AIModel を手動で選択する場合は、Chat モデルを選択してください。</value></data>
+  <data name="Frontend.610" xml:space="preserve"><value>プレーンテキストの Prompt を含む AgentTemplate を先に保存してください。</value></data>
 </root>

@@ -1759,4 +1759,13 @@
   <data name="Frontend.599" xml:space="preserve"><value>Module indisponible</value></data>
   <data name="Frontend.600" xml:space="preserve"><value>Appelable</value></data>
   <data name="Frontend.601" xml:space="preserve"><value>Endpoint MCP ajouté : {0}</value></data>
+  <data name="Frontend.602" xml:space="preserve"><value>Confirmer l'activation du groupe « {0} » ?</value></data>
+  <data name="Frontend.603" xml:space="preserve"><value>Après activation, de nouvelles tâches peuvent être créées et le groupe peut être utilisé comme nœud Workflow.</value></data>
+  <data name="Frontend.604" xml:space="preserve"><value>Confirmer la désactivation du groupe « {0} » ?</value></data>
+  <data name="Frontend.605" xml:space="preserve"><value>Après désactivation, aucune nouvelle tâche ne sera créée et le groupe ne pourra pas être utilisé comme nœud Workflow ; les tâches déjà lancées ne seront pas interrompues.</value></data>
+  <data name="Frontend.606" xml:space="preserve"><value>Le groupe « {0} » a été {1}</value></data>
+  <data name="Frontend.607" xml:space="preserve"><value>activé</value></data>
+  <data name="Frontend.608" xml:space="preserve"><value>désactivé</value></data>
+  <data name="Frontend.609" xml:space="preserve"><value>Lors de la sélection manuelle d'un AIModel, vous devez choisir un modèle Chat.</value></data>
+  <data name="Frontend.610" xml:space="preserve"><value>Enregistrez d'abord un AgentTemplate contenant un Prompt en texte brut.</value></data>
 </root>
