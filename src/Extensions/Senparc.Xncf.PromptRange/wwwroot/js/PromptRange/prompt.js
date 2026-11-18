@@ -2141,10 +2141,10 @@ var app = new Vue({
                 ? restaurants.filter(item => {
                     return (
                         this.createFilter(queryString)(item) &&
-                        !item.label.includes('未设置')
+                        !item.label.includes(ncfST('Frontend.496'))
                     );
                 })
-                : restaurants.filter(item => !item.label.includes('未设置'));
+                : restaurants.filter(item => !item.label.includes(ncfST('Frontend.496')));
             //Legacy comment translated to English.
             cb(results);
         },
@@ -4908,7 +4908,7 @@ var app = new Vue({
                 if (response.data && response.data.success && response.data.data) {
                     const optimizeResult = response.data.data;
                     if (!optimizeResult.success) {
-                        const err = optimizeResult.errorMessage || optimizeResult.evaluationReason || '优化未成功';
+                        const err = optimizeResult.errorMessage || optimizeResult.evaluationReason || ncfST('Frontend.307');
                         this.optimizeErrorText = String(err);
                         this.$message.error(ncfST('Frontend.237') + '：' + err);
                         return;
@@ -5000,7 +5000,7 @@ var app = new Vue({
                         this.$message.warning(ncfST('Frontend.368'));
                     }
 
-                    let message = `✅ 优化完成\n\n新 Prompt：${code}`;
+                    let message = ncfST('Frontend.398', code);
                     const evalReason = optimizeResult.evaluationReason || optimizeResult.EvaluationReason;
                     if (evalReason) {
                         message += `\n\n${evalReason}`;
@@ -7212,7 +7212,7 @@ var app = new Vue({
                 content: this.content,
                 note: this.remarks,
                 numsOfResults: 1,
-                isDraft: this.sendBtnText === '保存草稿',
+                isDraft: this.sendBtnText === PromptRangeSendCommand.draft,
                 suffix: this.promptParamForm.suffix,
                 prefix: this.promptParamForm.prefix
             }
@@ -7361,7 +7361,7 @@ var app = new Vue({
                 this.clearOutputGeneratingPlaceholder()
                 this.closePromptStream()
                 this.$message({
-                    message: error?.message || '请求失败',
+                    message: error?.message || ncfST('Frontend.273'),
                     type: 'error',
                     duration: 5 * 1000
                 })
@@ -8745,7 +8745,7 @@ var app = new Vue({
         //Legacy comment translated to English.
         async copyPromptResult(item, rawResult) {
             const text = rawResult ? item.resultString : item.resultStringHtml;
-            await window.PromptRangeUtils.CopyHelper.copyToClipboardAsync(text, '复制成功', '复制失败', true)
+            await window.PromptRangeUtils.CopyHelper.copyToClipboardAsync(text, ncfST('Frontend.477'), ncfST('Frontend.478'), true)
         },
         
         /**
@@ -9190,7 +9190,7 @@ var app = new Vue({
             
             //Legacy comment translated to English.
             this.$message({
-                message: '已还原为默认布局宽度',
+                message: ncfST('Frontend.482'),
                 type: 'success',
                 duration: 2000
             });
@@ -9355,7 +9355,7 @@ var app = new Vue({
                 );
                 
                 if (!targetRange) {
-                    throw new Error(`未找到对应的靶场: ${targetRangeName}`);
+                    throw new Error(ncfST('Frontend.489', targetRangeName));
                 }
                 
                 //Legacy comment translated to English.
@@ -9383,7 +9383,7 @@ var app = new Vue({
                 );
                 
                 if (!targetPrompt) {
-                    throw new Error('在当前靶场中未找到对应的Prompt');
+                    throw new Error(ncfST('Frontend.490'));
                 }
                 
                 //Legacy comment translated to English.
@@ -10483,7 +10483,7 @@ var app = new Vue({
         getTargetRangeName: function(id) {
             //Legacy comment translated to English.
             return window.PromptRangeUtils.NameHelper.getName(
-                this.promptFieldOpt, id, '未知靶场'
+                this.promptFieldOpt, id, ncfST('Frontend.354')
             );
         },
         
@@ -10492,20 +10492,20 @@ var app = new Vue({
             var lane = window.PromptRangeUtils.NameHelper.getOption(
                 this.promptOpt, id, 'idkey'
             );
-            return lane ? (lane.nickName || lane.label || '未知靶道') : '未知靶道';
+            return lane ? (lane.nickName || lane.label || ncfST('Frontend.355')) : ncfST('Frontend.355');
         },
         
         getTacticalName: function(id) {
             //Legacy comment translated to English.
             return window.PromptRangeUtils.NameHelper.getName(
-                this.tacticalOpt, id, '未知战术'
+                this.tacticalOpt, id, ncfST('Frontend.353')
             );
         },
         
         getModelName: function(id) {
             //Legacy comment translated to English.
             return window.PromptRangeUtils.NameHelper.getName(
-                this.modelOpt, id, '未知模型'
+                this.modelOpt, id, ncfST('Frontend.495')
             );
         },
     }
