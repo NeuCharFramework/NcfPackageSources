@@ -632,4 +632,17 @@
   <data name="Frontend.605" xml:space="preserve"><value>Formatea una fecha con el formato indicado; usa el formato predeterminado si el parámetro está vacío.</value></data>
   <data name="Frontend.606" xml:space="preserve"><value>Pausar</value></data>
   <data name="Frontend.607" xml:space="preserve"><value>Reproducir</value></data>
+  <data name="Frontend.608" xml:space="preserve"><value>Usa el valor izquierdo, el operador de comparación y el valor derecho para elegir la rama verdadera o falsa; dentro de un bucle, break puede salir inmediatamente del bucle actual.</value></data>
+  <data name="Frontend.609" xml:space="preserve"><value>Espera el número de segundos indicado antes de continuar con los nodos posteriores.</value></data>
+  <data name="Frontend.610" xml:space="preserve"><value>Entrega la misma entrada al cuerpo del bucle el número de veces indicado. Coloca Loop end al final del cuerpo; los nodos posteriores se ejecutan una vez.</value></data>
+  <data name="Frontend.611" xml:space="preserve"><value>Marca el límite del bucle For actual; continue completa una iteración y break termina el bucle inmediatamente.</value></data>
+  <data name="Frontend.612" xml:space="preserve"><value>Envía la entrada actual a otro Workflow habilitado y devuelve su salida final a los nodos posteriores. Las referencias circulares se bloquean antes de guardar y ejecutar.</value></data>
+  <data name="Frontend.613" xml:space="preserve"><value>Asigna valores en orden a las variables de Workflow declaradas. Solo se permiten fórmulas restringidas; no se ejecutan JavaScript, red, archivos ni bucles.</value></data>
+  <data name="Frontend.614" xml:space="preserve"><value>Espera a que terminen todas las ramas ascendentes activadas, las agrega según el orden de las conexiones y emite un único resultado posterior.</value></data>
+  <data name="Frontend.615" xml:space="preserve"><value>Cada entrada ascendente se envía de forma independiente al siguiente nodo; los nodos posteriores se ejecutan en serie según un orden estable.</value></data>
+  <data name="Frontend.616" xml:space="preserve"><value>Envía la misma entrada a cualquier número de nodos posteriores para ejecutar las ramas independientes de forma concurrente.</value></data>
+  <data name="Frontend.617" xml:space="preserve"><value>Procesa la plantilla indicada y la imprime en el Console de ejecución inferior para depuración; la entrada posterior no cambia.</value></data>
+  <data name="Frontend.618" xml:space="preserve"><value>Envía un recordatorio NeuBell a los suscriptores y permite configurar cómo se consume después de hacer clic.</value></data>
+  <data name="Frontend.619" xml:space="preserve"><value>Crea un recordatorio NeuBell y pausa la rama actual hasta que un administrador o un llamador externo con la clave de recuperación envíe texto.</value></data>
+  <data name="Frontend.620" xml:space="preserve"><value>Marca el final del Workflow; no se puede insertar en una conexión existente.</value></data>
 </root>

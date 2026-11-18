@@ -632,4 +632,17 @@
   <data name="Frontend.605" xml:space="preserve"><value>Форматирует дату по указанному формату; при пустом параметре используется формат по умолчанию.</value></data>
   <data name="Frontend.606" xml:space="preserve"><value>Пауза</value></data>
   <data name="Frontend.607" xml:space="preserve"><value>Воспроизвести</value></data>
+  <data name="Frontend.608" xml:space="preserve"><value>Использует левое значение, оператор сравнения и правое значение для выбора истинной или ложной ветви; внутри цикла break может немедленно выйти из текущего цикла.</value></data>
+  <data name="Frontend.609" xml:space="preserve"><value>Ожидает указанное число секунд перед продолжением к следующим узлам.</value></data>
+  <data name="Frontend.610" xml:space="preserve"><value>Передаёт один и тот же вход в тело цикла указанное число раз. Разместите Loop end в конце тела; следующие узлы выполняются один раз.</value></data>
+  <data name="Frontend.611" xml:space="preserve"><value>Обозначает границу текущего цикла For: continue завершает итерацию, а break немедленно завершает цикл.</value></data>
+  <data name="Frontend.612" xml:space="preserve"><value>Передаёт текущий вход в другой включённый Workflow и возвращает его итоговый результат следующим узлам. Циклические ссылки блокируются до сохранения и запуска.</value></data>
+  <data name="Frontend.613" xml:space="preserve"><value>Последовательно присваивает значения объявленным переменным Workflow. Разрешены только ограниченные формулы; JavaScript, сеть, файлы и циклы не выполняются.</value></data>
+  <data name="Frontend.614" xml:space="preserve"><value>Ожидает завершения всех активированных вышестоящих ветвей, объединяет их в порядке соединений и один раз выдаёт результат вниз.</value></data>
+  <data name="Frontend.615" xml:space="preserve"><value>Каждый вышестоящий вход независимо отправляется вниз; следующие узлы выполняются последовательно в стабильном порядке плана.</value></data>
+  <data name="Frontend.616" xml:space="preserve"><value>Одновременно отправляет один и тот же вход любому числу следующих узлов, чтобы независимые ветви выполнялись параллельно.</value></data>
+  <data name="Frontend.617" xml:space="preserve"><value>Обрабатывает указанный шаблон и выводит его в Console выполнения внизу страницы для отладки; вход для следующих узлов не изменяется.</value></data>
+  <data name="Frontend.618" xml:space="preserve"><value>Отправляет подписчикам уведомление NeuBell и позволяет настроить способ его обработки после нажатия.</value></data>
+  <data name="Frontend.619" xml:space="preserve"><value>Создаёт уведомление NeuBell и приостанавливает текущую ветвь, пока администратор или внешний вызов с ключом восстановления не отправит текст.</value></data>
+  <data name="Frontend.620" xml:space="preserve"><value>Обозначает конец Workflow; его нельзя вставить в существующее соединение.</value></data>
 </root>

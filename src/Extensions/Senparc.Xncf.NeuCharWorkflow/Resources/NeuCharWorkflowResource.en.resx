@@ -632,4 +632,17 @@
   <data name="Frontend.605" xml:space="preserve"><value>Formats a date using the specified format; the default format is used when the format parameter is empty.</value></data>
   <data name="Frontend.606" xml:space="preserve"><value>Pause</value></data>
   <data name="Frontend.607" xml:space="preserve"><value>Play</value></data>
+  <data name="Frontend.608" xml:space="preserve"><value>Use the left value, comparison operator, and right value to choose the true or false branch; inside a loop, break can exit the current loop immediately.</value></data>
+  <data name="Frontend.609" xml:space="preserve"><value>Wait for the specified number of seconds before continuing to downstream nodes.</value></data>
+  <data name="Frontend.610" xml:space="preserve"><value>Pass the same input to the loop body the specified number of times. Place Loop end at the end of the loop body; following nodes run once.</value></data>
+  <data name="Frontend.611" xml:space="preserve"><value>Marks the boundary of the current For loop; continue completes one iteration, while break ends the loop immediately.</value></data>
+  <data name="Frontend.612" xml:space="preserve"><value>Pass the current input to another enabled Workflow and return its final output to this node's downstream. Circular references are blocked before saving and running.</value></data>
+  <data name="Frontend.613" xml:space="preserve"><value>Assign values to declared Workflow variables in order. Only restricted formulas are allowed; JavaScript, network access, files, and loops are not executed.</value></data>
+  <data name="Frontend.614" xml:space="preserve"><value>Wait for all activated upstream branches to finish, aggregate them in connection order, and emit one downstream result.</value></data>
+  <data name="Frontend.615" xml:space="preserve"><value>Each upstream input is sent downstream independently; downstream nodes run serially in a stable execution-plan order.</value></data>
+  <data name="Frontend.616" xml:space="preserve"><value>Send the same input to any number of downstream nodes so the independent branches can run concurrently.</value></data>
+  <data name="Frontend.617" xml:space="preserve"><value>Render the specified template and print it to the execution Console at the bottom of the page for debugging; downstream input is unchanged.</value></data>
+  <data name="Frontend.618" xml:space="preserve"><value>Send a NeuBell reminder to subscribers and configure how it is consumed after being clicked.</value></data>
+  <data name="Frontend.619" xml:space="preserve"><value>Create a NeuBell reminder and pause the current branch until an administrator or an external caller with the recovery key submits text.</value></data>
+  <data name="Frontend.620" xml:space="preserve"><value>Marks the end of the Workflow; it cannot be inserted into an existing connection.</value></data>
 </root>

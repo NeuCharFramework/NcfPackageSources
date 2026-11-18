@@ -632,4 +632,17 @@
   <data name="Frontend.605" xml:space="preserve"><value>Formate une date selon le format indiqué ; le format par défaut est utilisé si le paramètre est vide.</value></data>
   <data name="Frontend.606" xml:space="preserve"><value>Pause</value></data>
   <data name="Frontend.607" xml:space="preserve"><value>Lire</value></data>
+  <data name="Frontend.608" xml:space="preserve"><value>Utilise la valeur gauche, l’opérateur de comparaison et la valeur droite pour choisir la branche vraie ou fausse ; dans une boucle, break peut quitter immédiatement la boucle actuelle.</value></data>
+  <data name="Frontend.609" xml:space="preserve"><value>Attend le nombre de secondes indiqué avant de poursuivre vers les nœuds suivants.</value></data>
+  <data name="Frontend.610" xml:space="preserve"><value>Transmet la même entrée au corps de la boucle le nombre de fois indiqué. Placez Loop end à la fin du corps ; les nœuds suivants s’exécutent une fois.</value></data>
+  <data name="Frontend.611" xml:space="preserve"><value>Marque la limite de la boucle For actuelle ; continue termine une itération et break termine immédiatement la boucle.</value></data>
+  <data name="Frontend.612" xml:space="preserve"><value>Transmet l’entrée actuelle à un autre Workflow activé et renvoie sa sortie finale aux nœuds suivants. Les références circulaires sont bloquées avant l’enregistrement et l’exécution.</value></data>
+  <data name="Frontend.613" xml:space="preserve"><value>Affecte dans l’ordre des valeurs aux variables Workflow déclarées. Seules les formules limitées sont autorisées ; JavaScript, le réseau, les fichiers et les boucles ne sont pas exécutés.</value></data>
+  <data name="Frontend.614" xml:space="preserve"><value>Attend la fin de toutes les branches amont activées, les agrège dans l’ordre des connexions et émet un seul résultat vers l’aval.</value></data>
+  <data name="Frontend.615" xml:space="preserve"><value>Chaque entrée amont est envoyée indépendamment vers l’aval ; les nœuds suivants s’exécutent séquentiellement selon un ordre stable.</value></data>
+  <data name="Frontend.616" xml:space="preserve"><value>Envoie la même entrée vers autant de nœuds aval que nécessaire afin d’exécuter les branches indépendantes en parallèle.</value></data>
+  <data name="Frontend.617" xml:space="preserve"><value>Évalue le modèle indiqué et l’affiche dans la Console d’exécution en bas de page pour le débogage ; l’entrée aval reste inchangée.</value></data>
+  <data name="Frontend.618" xml:space="preserve"><value>Envoie un rappel NeuBell aux abonnés et permet de configurer son mode de consommation après un clic.</value></data>
+  <data name="Frontend.619" xml:space="preserve"><value>Crée un rappel NeuBell et met la branche actuelle en pause jusqu’à ce qu’un administrateur ou un appelant externe disposant de la clé de reprise envoie du texte.</value></data>
+  <data name="Frontend.620" xml:space="preserve"><value>Marque la fin du Workflow ; il ne peut pas être inséré dans une connexion existante.</value></data>
 </root>

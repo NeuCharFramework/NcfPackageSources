@@ -631,4 +631,17 @@
   <data name="Frontend.605" xml:space="preserve"><value>按指定格式格式化日期；格式参数留空时使用默认格式。</value></data>
   <data name="Frontend.606" xml:space="preserve"><value>暂停</value></data>
   <data name="Frontend.607" xml:space="preserve"><value>播放</value></data>
+  <data name="Frontend.608" xml:space="preserve"><value>根据左值、比较符和右值决定真或假分支；循环体内可使用 break 立即跳出当前循环。</value></data>
+  <data name="Frontend.609" xml:space="preserve"><value>在继续执行下游节点前等待指定秒数。</value></data>
+  <data name="Frontend.610" xml:space="preserve"><value>按指定次数将同一输入交给循环体处理。请在循环体末尾放置循环结束，之后的节点只执行一次。</value></data>
+  <data name="Frontend.611" xml:space="preserve"><value>标记当前 For 循环的边界；continue 完成一轮，break 立即结束循环。</value></data>
+  <data name="Frontend.612" xml:space="preserve"><value>把当前输入传给另一个已启用的工作流，并将最终输出返回到本节点下游。保存和运行前会阻止循环引用。</value></data>
+  <data name="Frontend.613" xml:space="preserve"><value>按顺序为已声明的工作流变量赋值。只允许受限公式，不运行 JavaScript、网络、文件或循环。</value></data>
+  <data name="Frontend.614" xml:space="preserve"><value>等待所有已激活的上游分支结束，按连线顺序汇总，并只向下游输出一次。</value></data>
+  <data name="Frontend.615" xml:space="preserve"><value>每条上游输入都会独立向下游发送；下游节点按稳定的执行计划顺序串行运行。</value></data>
+  <data name="Frontend.616" xml:space="preserve"><value>把同一输入同时发送到任意多个下游节点，让独立分支并发执行。</value></data>
+  <data name="Frontend.617" xml:space="preserve"><value>解析指定模板并输出到页面底部的执行 Console，便于调试；不会改变下游输入。</value></data>
+  <data name="Frontend.618" xml:space="preserve"><value>向订阅者发送 NeuBell 提醒，并可设置点击后的消费方式。</value></data>
+  <data name="Frontend.619" xml:space="preserve"><value>创建一条 NeuBell 提醒并暂停当前分支，直到后台用户或持有恢复密钥的外部调用方提交文本。</value></data>
+  <data name="Frontend.620" xml:space="preserve"><value>标记工作流的结束位置；不能插入到已有连线中。</value></data>
 </root>

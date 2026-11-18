@@ -632,4 +632,17 @@
   <data name="Frontend.605" xml:space="preserve"><value>指定した形式で日付をフォーマットします。形式を空欄にすると既定の形式を使用します。</value></data>
   <data name="Frontend.606" xml:space="preserve"><value>一時停止</value></data>
   <data name="Frontend.607" xml:space="preserve"><value>再生</value></data>
+  <data name="Frontend.608" xml:space="preserve"><value>左値、比較演算子、右値に基づいて真または偽の分岐を選択します。ループ内では break で現在のループを直ちに終了できます。</value></data>
+  <data name="Frontend.609" xml:space="preserve"><value>指定した秒数を待ってから下流ノードへ続行します。</value></data>
+  <data name="Frontend.610" xml:space="preserve"><value>同じ入力を指定回数だけループ本体へ渡します。ループ本体の末尾に Loop end を置き、その後のノードは 1 回だけ実行します。</value></data>
+  <data name="Frontend.611" xml:space="preserve"><value>現在の For ループの境界を示します。continue は 1 回の反復を完了し、break はループを直ちに終了します。</value></data>
+  <data name="Frontend.612" xml:space="preserve"><value>現在の入力を有効な別の Workflow に渡し、最終出力をこのノードの下流へ返します。保存と実行の前に循環参照を阻止します。</value></data>
+  <data name="Frontend.613" xml:space="preserve"><value>宣言済みの Workflow 変数に順番に値を代入します。制限付きの式だけを許可し、JavaScript、ネットワーク、ファイル、ループは実行しません。</value></data>
+  <data name="Frontend.614" xml:space="preserve"><value>有効化されたすべての上流分岐の完了を待ち、接続順に集約して下流へ 1 回だけ出力します。</value></data>
+  <data name="Frontend.615" xml:space="preserve"><value>各上流入力を独立して下流へ送ります。下流ノードは安定した実行計画の順序で順番に実行されます。</value></data>
+  <data name="Frontend.616" xml:space="preserve"><value>同じ入力を任意の数の下流ノードへ同時に送り、独立した分岐を並行実行します。</value></data>
+  <data name="Frontend.617" xml:space="preserve"><value>指定したテンプレートを解析し、デバッグ用にページ下部の実行 Console へ出力します。下流入力は変更しません。</value></data>
+  <data name="Frontend.618" xml:space="preserve"><value>購読者へ NeuBell 通知を送り、クリック後の消費方法を設定できます。</value></data>
+  <data name="Frontend.619" xml:space="preserve"><value>NeuBell 通知を作成して現在の分岐を一時停止し、管理者または復元キーを持つ外部呼び出し元がテキストを送信するまで待ちます。</value></data>
+  <data name="Frontend.620" xml:space="preserve"><value>Workflow の終了位置を示します。既存の接続には挿入できません。</value></data>
 </root>

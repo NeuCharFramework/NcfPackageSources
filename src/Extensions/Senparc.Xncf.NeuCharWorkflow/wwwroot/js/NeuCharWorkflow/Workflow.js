@@ -737,67 +737,67 @@ new Vue({
             const definitions = {
                 condition: {
                     title: '条件判断',
-                    description: '根据左值、比较符和右值决定后续执行“真”或“假”分支；在循环体内还可以用 break 输出立即跳出当前循环。',
+                    description: ncfST('Frontend.608'),
                     rows: [{ label: '可配置项', value: '左值、比较符、右值、循环控制' }, { label: '输出分支', value: '真 / 假 / break' }]
                 },
                 delay: {
                     title: '等待',
-                    description: '在继续执行下游节点前等待指定的秒数。',
+                    description: ncfST('Frontend.609'),
                     rows: [{ label: '可配置项', value: '等待秒数' }]
                 },
                 loop: {
                     title: '循环（For）',
-                    description: '将同一输入按指定次数交给循环体处理。请在循环体末尾放置“循环结束”，之后的节点只执行一次。',
+                    description: ncfST('Frontend.610'),
                     rows: [{ label: '重复次数', value: '固定 1–100000 次，或引用上游单值' }, { label: '执行方式', value: '循环 → 循环体 → 循环结束 → 后续节点' }]
                 },
                 'loop-end': {
                     title: '循环结束',
-                    description: '标记当前 For 循环的边界；continue 输入完成一轮，break 输入立即结束循环，之后的节点只执行一次。',
+                    description: ncfST('Frontend.611'),
                     rows: [{ label: '输入端', value: 'continue / break' }, { label: '输出', value: '全部轮次完成或 break 后继续向下' }]
                 },
                 'sub-workflow': {
                     title: '调用工作流',
-                    description: '把当前输入传给另一个已启用的工作流，并把其最终输出交回本节点的下游。保存和运行前都会阻止循环引用。',
+                    description: ncfST('Frontend.612'),
                     rows: [{ label: '可配置项', value: '目标工作流、传入输入' }, { label: '限制', value: '仅可调用自己的已启用工作流，最多嵌套 8 层' }]
                 },
                 code: {
                     title: '安全代码',
-                    description: '按顺序为预先声明的工作流变量赋值。只允许受限公式，不运行 JavaScript、网络、文件或循环。',
+                    description: ncfST('Frontend.613'),
                     rows: [{ label: '可配置项', value: '变量赋值、受限公式' }, { label: '输出', value: '原始输入继续向下游传递' }]
                 },
                 aggregate: {
                     title: '聚合',
-                    description: '等待全部已激活的上游分支完成，再按连线顺序汇总，并只向下游输出一次。',
+                    description: ncfST('Frontend.614'),
                     rows: [{ label: '可配置项', value: '多个上游输入、输出内容' }, { label: '输出', value: '一次汇总结果' }]
                 },
                 merge: {
                     title: '逐项合流',
-                    description: '每条上游输入到达后都独立向下游发出一次；下游按稳定的执行计划顺序串行处理。',
+                    description: ncfST('Frontend.615'),
                     rows: [{ label: '可配置项', value: '多个上游输入绑定' }, { label: '输出', value: '每个输入各输出一次' }]
                 },
                 parallel: {
                     title: '并行',
-                    description: '把同一输入同时发送到任意多个下游节点，让这些独立分支并发执行。',
+                    description: ncfST('Frontend.616'),
                     rows: [{ label: '可配置项', value: '从输出端连接任意多个分支' }, { label: '输出', value: '原始输入分发至每个分支' }]
                 },
                 console: {
                     title: 'Console 打印',
-                    description: '将指定模板解析后的内容输出到本页底部的执行 Console，便于调试；不会改变下游输入。',
+                    description: ncfST('Frontend.617'),
                     rows: [{ label: '可配置项', value: '打印内容（默认 {{input}}）' }]
                 },
                 neubell: {
                     title: '发送纽铃',
-                    description: '向订阅者发送 NeuBell 提醒，并可设定点击后的消费方式。',
+                    description: ncfST('Frontend.618'),
                     rows: [{ label: '可配置项', value: '订阅、标题、内容、消费方式' }, { label: '可选消费', value: '当前提醒 / 当前订阅全部 / 仅查看' }]
                 },
                 'human-input': {
                     title: '等待人工输入',
-                    description: '创建一条 NeuBell 提醒并暂停当前分支，直到后台用户或持有恢复密钥的外部程序提交文本。',
+                    description: ncfST('Frontend.619'),
                     rows: [{ label: '输出', value: '人工提交的文本' }, { label: '外部恢复', value: '启用后可使用一次请求 ID 与节点恢复密钥调用内部 WebAPI' }]
                 },
                 end: {
                     title: '结束',
-                    description: '标记工作流的结束位置；不能插入到已有连线中。',
+                    description: ncfST('Frontend.620'),
                     rows: [{ label: '限制', value: '无后续节点，不能在线中插入' }]
                 }
             };
