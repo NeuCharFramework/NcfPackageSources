@@ -1053,52 +1053,52 @@
         </div>
     </el-dialog>
     @*Add-model dialog.*@
-    <el-dialog title="新增模型" :visible.sync="modelFormVisible" center @@close="modelFormCloseDialog">
+    <el-dialog :title="ncfST('Frontend.173')" :visible.sync="modelFormVisible" center @@close="modelFormCloseDialog">
         <el-form ref="modelForm" :model="modelForm" :rules="rules" label-position="left">
-            <el-form-item label="模型类型" prop="modelType" label-width="130px">
-                <el-select v-model="modelForm.modelType" placeholder="请选择模型类型">
+            <el-form-item :label="ncfST('Frontend.174')" prop="modelType" label-width="130px">
+                <el-select v-model="modelForm.modelType" :placeholder="ncfST('Frontend.175')">
                     <el-option v-for="(item,index) in modelTypeOpt" :key="index" :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="模型别名" prop="alias" label-width="130px">
-                <el-input v-model="modelForm.alias" autocomplete="off" placeholder="请输入模型别名"></el-input>
+            <el-form-item :label="ncfST('Frontend.176')" prop="alias" label-width="130px">
+                <el-input v-model="modelForm.alias" autocomplete="off" :placeholder="ncfST('Frontend.177')"></el-input>
             </el-form-item>
-            <el-form-item label="模型名称" prop="deploymentName" label-width="130px">
-                <el-input v-model="modelForm.deploymentName" autocomplete="off" placeholder="请输入模型名称"></el-input>
+            <el-form-item :label="ncfST('Frontend.178')" prop="deploymentName" label-width="130px">
+                <el-input v-model="modelForm.deploymentName" autocomplete="off" :placeholder="ncfST('Frontend.179')"></el-input>
             </el-form-item>
             <el-form-item v-if="modelForm.modelType==='16'||modelForm.modelType==='4'" label="API Version" prop="apiVersion" label-width="130px">
-                <el-input v-model="modelForm.apiVersion" autocomplete="off" placeholder="请输入API Version"></el-input>
+                <el-input v-model="modelForm.apiVersion" autocomplete="off" :placeholder="ncfST('Frontend.180')"></el-input>
             </el-form-item>
             <el-form-item v-if="modelForm.modelType==='16'||modelForm.modelType==='8'||modelForm.modelType==='4'" label="API key" prop="apiKey" label-width="130px">
-                <el-input v-model="modelForm.apiKey" show-password autocomplete="off" auto-complete="new-password" placeholder="请输入API key"></el-input>
+                <el-input v-model="modelForm.apiKey" show-password autocomplete="off" auto-complete="new-password" :placeholder="ncfST('Frontend.181')"></el-input>
             </el-form-item>
             <el-form-item v-if="modelForm.modelType==='16'||modelForm.modelType==='4'||modelForm.modelType==='32'" label="End Point" prop="endpoint" label-width="130px">
-                <el-input v-model="modelForm.endpoint" autocomplete="off" placeholder="请输入End Point"></el-input>
+                <el-input v-model="modelForm.endpoint" autocomplete="off" :placeholder="ncfST('Frontend.182')"></el-input>
             </el-form-item>
             <el-form-item v-if="modelForm.modelType==='8'" label="Organization Id" prop="organizationId" label-width="130px">
-                <el-input v-model="modelForm.organizationId" autocomplete="off" placeholder="请输入Organization Id"></el-input>
+                <el-input v-model="modelForm.organizationId" autocomplete="off" :placeholder="ncfST('Frontend.183')"></el-input>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @@click="modelFormVisible = false">取 消</el-button>
+            <el-button @@click="modelFormVisible = false">{{ ncfST('Frontend.091') }}</el-button>
             @* v-loading="modelFormSubmitLoading" *@
-            <el-button type="primary" @@click="modelFormSubmitBtn">确 定</el-button>
+            <el-button type="primary" @@click="modelFormSubmitBtn">{{ ncfST('Frontend.207') }}</el-button>
         </div>
     </el-dialog>
     @*Add-range dialog.*@
-    <el-dialog title="新增靶场" :visible.sync="fieldFormVisible" center @@close="fieldFormCloseDialog">
+    <el-dialog :title="ncfST('Frontend.184')" :visible.sync="fieldFormVisible" center @@close="fieldFormCloseDialog">
         <el-form ref="fieldForm" :model="fieldForm" :rules="rules" label-position="left">
-            <el-form-item label="靶场名称" prop="alias" label-width="130px">
-                <el-input v-model="fieldForm.alias" autocomplete="off" placeholder="请输入靶场名称"></el-input>
+            <el-form-item :label="ncfST('Frontend.185')" prop="alias" label-width="130px">
+                <el-input v-model="fieldForm.alias" autocomplete="off" :placeholder="ncfST('Frontend.186')"></el-input>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @@click="fieldFormVisible = false">取 消</el-button>
-            <el-button type="primary" v-loading="fieldFormSubmitLoading" @@click="fieldFormSubmitBtn">确 定</el-button>
+            <el-button @@click="fieldFormVisible = false">{{ ncfST('Frontend.091') }}</el-button>
+            <el-button type="primary" v-loading="fieldFormSubmitLoading" @@click="fieldFormSubmitBtn">{{ ncfST('Frontend.207') }}</el-button>
         </div>
     </el-dialog>
     @*AI scoring criteria dialog.*@
-    <el-dialog title="AI 评分标准" :visible.sync="aiScoreFormVisible" center>
+    <el-dialog :title="ncfST('Frontend.187')" :visible.sync="aiScoreFormVisible" center>
         <el-form ref="aiScoreForm" :model="aiScoreForm" :rules="rules" label-position="left">
 
             <div v-for="(item,index) in aiScoreForm.resultList" :key="index" class="targetShootBtnRow">
@@ -1108,53 +1108,53 @@
                     @* resize="none"
                     maxlength="200"
                     show-word-limit *@
-                    <el-input v-model="item.value" type="textarea" :rows="2" placeholder="请输入期望结果" style="width:430px;">
+                    <el-input v-model="item.value" type="textarea" :rows="2" :placeholder="ncfST('Frontend.188')" style="width:430px;">
                     </el-input>
                 </el-form-item>
                 <i slot="reference" class="el-icon-delete deleteIcon" @@click="deleteAiScoreBtn(index)"></i>
 
             </div>
             <el-button type="primary" size="mini" icon="el-icon-plus" circle @@click="aiScoreFormAddRow"></el-button>
-            <div class="warnRow" style="margin-top:20px;">注意：设置预期结果后，将会根据预期结果自动进行AI评分。</div>
+            <div class="warnRow" style="margin-top:20px;">{{ ncfST('Frontend.189') }}</div>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @@click="aiScoreFormClose">关闭</el-button>
+            <el-button @@click="aiScoreFormClose">{{ ncfST('Frontend.190') }}</el-button>
             @* v-loading="aiScoreFormSubmitLoading" *@
             @* <el-button type="primary" @@click="aiScoreFormSubmitBtn">Save</el-button> *@
         </div>
     </el-dialog>
     @*Import plugin.*@
-    <el-dialog title="导入 plugin 文件夹" :visible.sync="uploadPluginVisible" center @@close="uploadPluginCloseDialog">
+    <el-dialog :title="ncfST('Frontend.191')" :visible.sync="uploadPluginVisible" center @@close="uploadPluginCloseDialog">
         <div class="">
             @*Notice.*@
             <div class="tipsRow">
-                可直接上传 OpenAI / Semantic Kernel 标准的 plugin 文件夹，自动生成靶场。（需选择选择整个 plugin 文件夹）
+                {{ ncfST('Frontend.192') }}
             </div>
             @*Drop area.*@
             <div v-if="uploadPluginDropAreaVisible" class="el-upload-dragger" v-bind:class="{'is-dragover':uploadPluginDropHover}" @@drop="enentPluginDrop" @@dragover="pluginDropOverHandler" @@dragenter="pluginDropEnterHandler" @@dragleave="pluginDropLeaveHandler">
                 <i class="el-icon-upload"></i>
                 <div class="el-upload__text">
-                    将文件夹拖到此处，或<em @@click="enentPluginInput">点击上传</em>
+                    {{ ncfST('Frontend.193') }}<em @@click="enentPluginInput">{{ ncfST('Frontend.194') }}</em>
                 </div>
             </div>
             @*File list from the selected folder.*@
             <div v-else>
-                <el-button type="primary" size="mini" @@click="uploadPluginCloseDialog">重新上传</el-button>
+                <el-button type="primary" size="mini" @@click="uploadPluginCloseDialog">{{ ncfST('Frontend.195') }}</el-button>
                 <el-table :data="uploadPluginData"
                           max-height="300"
                           style="width: 100%">
             <el-table-column prop="name" :label="ncfST('Frontend.196')" width="200"></el-table-column>
-                    <el-table-column prop="path" label="文件路径"></el-table-column>
+                    <el-table-column prop="path" :label="ncfST('Frontend.197')"></el-table-column>
                 </el-table>
             </div>
         </div>
         <div slot="footer" class="dialog-footer">
-            <el-button @@click="uploadPluginVisible = false">取 消</el-button>
-            <el-button type="primary" @@click="submitUploadPlugins">上 传</el-button>
+            <el-button @@click="uploadPluginVisible = false">{{ ncfST('Frontend.091') }}</el-button>
+            <el-button type="primary" @@click="submitUploadPlugins">{{ ncfST('Frontend.198') }}</el-button>
         </div>
     </el-dialog>
     @*Export plugin.*@
-    <el-dialog title="导出 plugin 文件夹" :visible.sync="expectedPluginVisible" center @@close="expectedPluginCloseDialog">
+    <el-dialog :title="ncfST('Frontend.199')" :visible.sync="expectedPluginVisible" center @@close="expectedPluginCloseDialog">
         <el-form ref="expectedPluginFoem" :model="expectedPluginFoem" :rules="rules" label-position="left">
             @*             <el-form-item label="Prompt range" prop="rangeId" label-width="130px">
             <el-select v-model="expectedPluginFoem.rangeId" multiple
@@ -1167,21 +1167,21 @@
             </el-option>
             </el-select>
             </el-form-item> *@
-            <el-form-item label="靶场和靶道" prop="checkList" label-width="130px">
+            <el-form-item :label="ncfST('Frontend.200')" prop="checkList" label-width="130px">
                 @*Action button group.*@
                 <div class="plugin-export-actions">
                     <div class="action-buttons">
-                        <el-button size="mini" icon="el-icon-check" @@click="exportPluginSelectAll">全选</el-button>
-                        <el-button size="mini" icon="el-icon-refresh-left" @@click="exportPluginInvertSelection">反选</el-button>
-                        <el-button size="mini" icon="el-icon-close" @@click="exportPluginClearAll">清空</el-button>
+                        <el-button size="mini" icon="el-icon-check" @@click="exportPluginSelectAll">{{ ncfST('Frontend.201') }}</el-button>
+                        <el-button size="mini" icon="el-icon-refresh-left" @@click="exportPluginInvertSelection">{{ ncfST('Frontend.202') }}</el-button>
+                        <el-button size="mini" icon="el-icon-close" @@click="exportPluginClearAll">{{ ncfST('Frontend.035') }}</el-button>
                         <el-divider direction="vertical"></el-divider>
                         <el-button size="mini" :icon="exportPluginExpandAll ? 'el-icon-folder-opened' : 'el-icon-folder'" @@click="exportPluginToggleExpand">
-                            {{exportPluginExpandAll ? '收起全部' : '展开全部'}}
+                            {{ exportPluginExpandAll ? ncfST('Frontend.204') : ncfST('Frontend.203') }}
                         </el-button>
                     </div>
                     <div class="selection-count">
                         <el-tag size="small" type="info">
-                            已选择: <strong>{{exportPluginSelectedCount}}</strong> 个靶道
+                            {{ ncfST('Frontend.205') }} <strong>{{exportPluginSelectedCount}}</strong> {{ ncfST('Frontend.206') }}
                         </el-tag>
                     </div>
                 </div>
@@ -1200,8 +1200,8 @@
 
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @@click="expectedPluginVisible = false">取 消</el-button>
-            <el-button type="primary" @@click="btnExpectedPlugins">确 认</el-button>
+            <el-button @@click="expectedPluginVisible = false">{{ ncfST('Frontend.091') }}</el-button>
+            <el-button type="primary" @@click="btnExpectedPlugins">{{ ncfST('Frontend.207') }}</el-button>
         </div>
     </el-dialog>
     <el-dialog title="设置靶道名称"
