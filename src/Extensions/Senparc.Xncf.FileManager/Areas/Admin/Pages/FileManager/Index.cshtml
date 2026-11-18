@@ -1647,7 +1647,7 @@
                                         <el-dropdown-menu slot="dropdown">
                                             <el-dropdown-item command="download" icon="el-icon-download">{{ ncfST('Frontend.004') }}</el-dropdown-item>
                                             <el-dropdown-item command="preview" icon="el-icon-view">{{ ncfST('Frontend.098') }}</el-dropdown-item>
-                                            <el-dropdown-item v-if="isSiteAsset" command="togglePublish" icon="el-icon-s-promotion">{{ scope.row.accessLevel === 100 ? '取消公开' : '公开' }}</el-dropdown-item>
+                                            <el-dropdown-item v-if="isSiteAsset" command="togglePublish" icon="el-icon-s-promotion">{{ scope.row.accessLevel === 100 ? ncfST('Frontend.241') : ncfST('Frontend.240') }}</el-dropdown-item>
                                             <el-dropdown-item v-if="isSiteAsset && scope.row.publicUrl" command="copyUrl" icon="el-icon-document-copy">{{ ncfST('Frontend.099') }}</el-dropdown-item>
                                             <el-dropdown-item command="editNote" icon="el-icon-edit">{{ ncfST('Frontend.156') }}</el-dropdown-item>
                                             <el-dropdown-item command="toggleQuickAccess" icon="el-icon-s-opportunity">
@@ -1869,11 +1869,11 @@
                                 <el-button
                                     v-if="isTagCategoryRow(scope.row)"
                                     size="mini"
-                                    @@click="createTagUnder(scope.row)">新增标签</el-button>
+                                    @@click="createTagUnder(scope.row)">{{ ncfST('Frontend.189') }}</el-button>
                                 <el-button
                                     v-if="isTagCategoryRow(scope.row)"
                                     size="mini"
-                                    @@click="createTagCategoryUnder(scope.row)">新增分类</el-button>
+                                    @@click="createTagCategoryUnder(scope.row)">{{ ncfST('Frontend.187') }}</el-button>
                             </div>
                         </template>
                     </el-table-column>
@@ -1909,7 +1909,7 @@
                     </el-table-column>
                     <el-table-column width="48" align="center">
                         <template slot="header">
-                            <i class="el-icon-s-operation" title="列设置"></i>
+                            <i class="el-icon-s-operation" :title="ncfST('Frontend.122')"></i>
                         </template>
                         <template slot-scope="scope">
                             <el-button type="text" icon="el-icon-more" size="mini" @@click="openTagRowMenu(scope.row)"></el-button>
@@ -2191,7 +2191,7 @@
         show-icon
         :title="uploadFolderSummary">
     </el-alert>
-    <div class="file-manager-upload-tip">{{ uploadExtensionHint }}。选择文件夹后会保留完整层级结构；每批最多 20 个文件，系统会自动分批上传。</div>
+    <div class="file-manager-upload-tip">{{ uploadExtensionHint }}。{{ ncfST('Frontend.219') }}</div>
     <el-progress v-if="uploadDialog.uploading" :percentage="uploadDialog.progress" :stroke-width="10" status="success" style="margin-top: 10px;"></el-progress>
 
     <span slot="footer" class="dialog-footer">
@@ -2436,23 +2436,23 @@
         <div v-else-if="filePreviewDialog.mode === 'excel'" class="file-preview-excel" v-html="filePreviewDialog.html"></div>
         <div v-else-if="filePreviewDialog.mode === 'slides'" class="file-preview-slides">
             <div class="file-preview-slide" v-for="(slide, index) in filePreviewDialog.slides" :key="'slide-' + index">
-                <p class="file-preview-slide-title">幻灯片 {{ index + 1 }}</p>
+                <p class="file-preview-slide-title">{{ ncfST('Frontend.183') }} {{ index + 1 }}</p>
                 <pre class="file-preview-text">{{ slide }}</pre>
             </div>
         </div>
         <div v-else-if="filePreviewDialog.error" class="file-preview-error">{{ filePreviewDialog.error }}</div>
-        <div v-else class="file-preview-empty">暂无可预览内容</div>
+        <div v-else class="file-preview-empty">{{ ncfST('Frontend.194') }}</div>
     </div>
 </el-dialog>
 
-<el-dialog title="文件资源管理使用说明" :visible.sync="guideDialogVisible" width="520px" append-to-body>
+<el-dialog :title="ncfST('Frontend.127')" :visible.sync="guideDialogVisible" width="520px" append-to-body>
     <ol class="file-manager-guide">
-        <li><strong>先选用途：</strong>左侧「企业文档」用于管理知识库资料；站点静态资源可通过地址栏 scope 参数切换。</li>
-        <li><strong>再放位置：</strong>在中间目录树选择或新建文件夹；刷新页面后，当前用途和文件夹会保留在地址栏中。</li>
-        <li v-if="!isSiteAsset"><strong>知识库资料：</strong>上传后到“知识库管理 → 配置”关联资料，保存后点击“向量化”。</li>
-        <li v-else><strong>站点资源：</strong>上传默认私有；确认无误后点“公开”，再复制生成的 URL 到站点内容中。</li>
+        <li><strong>{{ ncfST('Frontend.078') }}</strong>{{ ncfST('Frontend.103') }}</li>
+        <li><strong>{{ ncfST('Frontend.080') }}</strong>{{ ncfST('Frontend.097') }}</li>
+        <li v-if="!isSiteAsset"><strong>{{ ncfST('Frontend.072') }}</strong>{{ ncfST('Frontend.065') }}</li>
+        <li v-else><strong>{{ ncfST('Frontend.072') }}</strong>{{ ncfST('Frontend.194') }}</li>
     </ol>
-    <span slot="footer" class="dialog-footer"><el-button type="primary" @@click="guideDialogVisible = false">我知道了</el-button></span>
+    <span slot="footer" class="dialog-footer"><el-button type="primary" @@click="guideDialogVisible = false">{{ ncfST('Frontend.109') }}</el-button></span>
 </el-dialog>
 
 @section scripts {
