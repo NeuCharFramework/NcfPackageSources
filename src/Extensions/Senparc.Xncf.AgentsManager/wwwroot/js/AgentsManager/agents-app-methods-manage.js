@@ -103,17 +103,17 @@ var AgentsAppMethodsManage = {
         messageText = `<div>是否确认从${item.name}组退出？</div><div>移除出后将无法看到之前参与的任务记录</div>`
       }
       if (!serviceURL) return
-      this.$confirm(messageText, '操作确认', {
+      this.$confirm(messageText, ncfST('Frontend.528'), {
         dangerouslyUseHTMLString: true, //Legacy comment translated to English.
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+        confirmButtonText: ncfST('Frontend.172'),
+        cancelButtonText: ncfST('Studio.Cancel'),
         // type: 'warning'
       }).then(() => {
         serviceAM.post(serviceURL).then(res => {
           if (res.data.success) {
             this.$message({
               type: 'success',
-              message: '操作成功!'
+              message: ncfST('Frontend.218')
             });
             if (stateType === 'stop') {
               // const agentMapStr = {
@@ -134,7 +134,7 @@ var AgentsAppMethodsManage = {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '已取消操作'
+          message: ncfST('Frontend.219')
         });
       });
     },
@@ -150,17 +150,17 @@ var AgentsAppMethodsManage = {
         : `<div>是否确认停用组“${group.name}”？</div><div>停用后不会创建新任务或作为 Workflow 节点使用；已经启动的任务不会被中断。</div>`
 
       try {
-        await this.$confirm(messageText, '操作确认', {
+        await this.$confirm(messageText, ncfST('Frontend.528'), {
           dangerouslyUseHTMLString: true,
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+          confirmButtonText: ncfST('Frontend.172'),
+          cancelButtonText: ncfST('Studio.Cancel'),
           type: 'warning'
         })
 
         const serviceURL = `/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.Enable?id=${group.id}&enable=${willEnable}`
         const res = await serviceAM.post(serviceURL)
         if (!res?.data?.success) {
-          throw new Error(res?.data?.errorMessage || res?.data?.data || '操作失败')
+          throw new Error(res?.data?.errorMessage || res?.data?.data || ncfST('Frontend.168'))
         }
 
         this.$message({ type: 'success', message: `组已${actionText}` })
@@ -172,11 +172,11 @@ var AgentsAppMethodsManage = {
         await this.refreshAgentGraphSnapshot(this.agentListViewMode === 'three')
       } catch (error) {
         if (error === 'cancel' || error === 'close') {
-          this.$message({ type: 'info', message: '已取消操作' })
+          this.$message({ type: 'info', message: ncfST('Frontend.219') })
           return
         }
         this.$message({
-          message: error?.message || '操作失败',
+          message: error?.message || ncfST('Frontend.168'),
           type: 'error',
           duration: 5 * 1000
         })
@@ -239,7 +239,7 @@ var AgentsAppMethodsManage = {
         this.$confirm(previewMessage, '删除智能体确认', {
           dangerouslyUseHTMLString: true,
           confirmButtonText: '删除智能体',
-          cancelButtonText: '取消',
+          cancelButtonText: ncfST('Studio.Cancel'),
           type: 'warning'
         }).then(() => {
           serviceAM.post(serviceURL).then(res => {
@@ -263,7 +263,7 @@ var AgentsAppMethodsManage = {
         }).catch(() => {
           this.$message({
             type: 'info',
-            message: '已取消操作'
+            message: ncfST('Frontend.219')
           })
         })
       }).catch(() => {
@@ -449,17 +449,17 @@ var AgentsAppMethodsManage = {
       let serviceURL = `/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.Delete?id=${row.id}`
       if (!serviceURL) return
       // operation confirmation prompt
-      this.$confirm('确认删除数据吗？', '操作确认', {
+      this.$confirm(ncfST('Frontend.231'), ncfST('Frontend.528'), {
         dangerouslyUseHTMLString: true, //Legacy comment translated to English.
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+        confirmButtonText: ncfST('Frontend.172'),
+        cancelButtonText: ncfST('Studio.Cancel'),
         // type: 'warning'
       }).then(() => {
         serviceAM.post(serviceURL).then(res => {
           if (res.data.success) {
             this.$message({
               type: 'success',
-              message: '操作成功!'
+              message: ncfST('Frontend.218')
             });
             if (optype === 'groupTable') {
               // reload data
@@ -479,7 +479,7 @@ var AgentsAppMethodsManage = {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '已取消操作'
+          message: ncfST('Frontend.219')
         });
       });
     },
@@ -488,23 +488,23 @@ var AgentsAppMethodsManage = {
       console.log('handleGroupDeleteBatch:', this.groupSelection);
       const selectedIds = (this.groupSelection || []).map(item => item.id).filter(Boolean)
       if (!selectedIds.length) {
-        this.$message.warning('请先选择要删除的组')
+        this.$message.warning(ncfST('Frontend.232'))
         return
       }
       let serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.DeleteBatch'
       if (!serviceURL) return
       // operation confirmation prompt
-      this.$confirm('确认批量删除数据吗？', '操作确认', {
+      this.$confirm(ncfST('Frontend.233'), ncfST('Frontend.528'), {
         dangerouslyUseHTMLString: true, //Legacy comment translated to English.
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+        confirmButtonText: ncfST('Frontend.172'),
+        cancelButtonText: ncfST('Studio.Cancel'),
         // type: 'warning'
       }).then(() => {
         serviceAM.post(serviceURL, selectedIds).then(res => {
           if (res.data.success) {
             this.$message({
               type: 'success',
-              message: '操作成功!'
+              message: ncfST('Frontend.218')
             });
             // reload data
             this.getGroupListData('group')
@@ -519,7 +519,7 @@ var AgentsAppMethodsManage = {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '已取消操作'
+          message: ncfST('Frontend.219')
         });
       });
     },
@@ -859,17 +859,17 @@ var AgentsAppMethodsManage = {
       let serviceURL = `/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.Delete?id=${row.id}`
       if (!serviceURL) return
       // operation confirmation prompt
-      this.$confirm('确认删除数据吗？', '操作确认', {
+      this.$confirm(ncfST('Frontend.231'), ncfST('Frontend.528'), {
         dangerouslyUseHTMLString: true, //Legacy comment translated to English.
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+        confirmButtonText: ncfST('Frontend.172'),
+        cancelButtonText: ncfST('Studio.Cancel'),
         // type: 'warning'
       }).then(() => {
         serviceAM.post(serviceURL).then(res => {
           if (res.data.success) {
             this.$message({
               type: 'success',
-              message: '操作成功!'
+              message: ncfST('Frontend.218')
             });
             let groupDetail = {}
             if (optype === 'agentGroupTask') {
@@ -894,7 +894,7 @@ var AgentsAppMethodsManage = {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '已取消操作'
+          message: ncfST('Frontend.219')
         });
       });
     },
@@ -918,23 +918,23 @@ var AgentsAppMethodsManage = {
 
       const selectedIds = (selectedRows || []).map(task => task.id).filter(Boolean)
       if (!selectedIds.length) {
-        this.$message.warning('请先选择要启动的任务')
+        this.$message.warning(ncfST('Frontend.234'))
         return
       }
 
       const serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.StartBatch'
       // operation confirmation prompt
-      this.$confirm('确认批量启动数据吗？', '操作确认', {
+      this.$confirm('确认批量启动数据吗？', ncfST('Frontend.528'), {
         dangerouslyUseHTMLString: true, //Legacy comment translated to English.
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+        confirmButtonText: ncfST('Frontend.172'),
+        cancelButtonText: ncfST('Studio.Cancel'),
         // type: 'warning'
       }).then(() => {
         serviceAM.post(serviceURL, selectedIds).then(res => {
           if (res.data.success) {
             this.$message({
               type: 'success',
-              message: res?.data?.data || '操作成功!'
+              message: res?.data?.data || ncfST('Frontend.218')
             });
             if (refreshListType === 'task') {
               const refreshOptions = this.buildTaskRefreshOptions('task', {
@@ -959,7 +959,7 @@ var AgentsAppMethodsManage = {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '已取消操作'
+          message: ncfST('Frontend.219')
         });
       });
     },
@@ -980,23 +980,23 @@ var AgentsAppMethodsManage = {
       }
       const selectedIds = (selectedRows || []).map(task => task.id).filter(Boolean)
       if (!selectedIds.length) {
-        this.$message.warning('请先选择要删除的任务')
+        this.$message.warning(ncfST('Frontend.236'))
         return
       }
       let serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.DeleteBatch'
       if (!serviceURL) return
       // operation confirmation prompt
-      this.$confirm('确认批量删除数据吗？', '操作确认', {
+      this.$confirm(ncfST('Frontend.233'), ncfST('Frontend.528'), {
         dangerouslyUseHTMLString: true, //Legacy comment translated to English.
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+        confirmButtonText: ncfST('Frontend.172'),
+        cancelButtonText: ncfST('Studio.Cancel'),
         // type: 'warning'
       }).then(() => {
         serviceAM.post(serviceURL, selectedIds).then(res => {
           if (res.data.success) {
             this.$message({
               type: 'success',
-              message: '操作成功!'
+              message: ncfST('Frontend.218')
             });
             let groupDetail = {}, groupType = ''
             if (opType === 'agentGroupTaskBatch') {
@@ -1024,7 +1024,7 @@ var AgentsAppMethodsManage = {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '已取消操作'
+          message: ncfST('Frontend.219')
         });
       });
     },
@@ -1032,16 +1032,16 @@ var AgentsAppMethodsManage = {
     handleTaskForceStop(optype, row) {
       if (!row || !row.id) return
       const serviceURL = `/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.ForceStop?id=${row.id}`
-      this.$confirm('确认强制停止该任务吗？', '操作确认', {
+      this.$confirm(ncfST('Frontend.237'), ncfST('Frontend.528'), {
         dangerouslyUseHTMLString: true,
-        confirmButtonText: '确定',
-        cancelButtonText: '取消'
+        confirmButtonText: ncfST('Frontend.172'),
+        cancelButtonText: ncfST('Studio.Cancel')
       }).then(() => {
         serviceAM.post(serviceURL).then(res => {
           if (res.data.success) {
             this.$message({
               type: 'success',
-              message: '操作成功!'
+              message: ncfST('Frontend.218')
             })
             let groupDetail = {}
             if (optype === 'agentGroupTask') {
@@ -1065,7 +1065,7 @@ var AgentsAppMethodsManage = {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '已取消操作'
+          message: ncfST('Frontend.219')
         })
       })
     },
@@ -1085,16 +1085,16 @@ var AgentsAppMethodsManage = {
         return
       }
       const serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.ForceStopBatch'
-      this.$confirm('确认批量强制停止所选任务吗？', '操作确认', {
+      this.$confirm(ncfST('Frontend.239'), ncfST('Frontend.528'), {
         dangerouslyUseHTMLString: true,
-        confirmButtonText: '确定',
-        cancelButtonText: '取消'
+        confirmButtonText: ncfST('Frontend.172'),
+        cancelButtonText: ncfST('Studio.Cancel')
       }).then(() => {
         serviceAM.post(serviceURL, selectedIds).then(res => {
           if (res.data.success) {
             this.$message({
               type: 'success',
-              message: '操作成功!'
+              message: ncfST('Frontend.218')
             })
             let groupDetail = {}, groupType = ''
             if (opType === 'agentGroupTaskBatch') {
@@ -1120,7 +1120,7 @@ var AgentsAppMethodsManage = {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '已取消操作'
+          message: ncfST('Frontend.219')
         })
       })
     },
@@ -1508,8 +1508,8 @@ var AgentsAppMethodsManage = {
                     </div>
     </div>`, '模型参数', {
             dangerouslyUseHTMLString: true, //Legacy comment translated to English.
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
+            confirmButtonText: ncfST('Frontend.172'),
+            cancelButtonText: ncfST('Studio.Cancel'),
             showCancelButton: false,
             // type: 'warning'
           }).then(() => { }).catch(() => { });
