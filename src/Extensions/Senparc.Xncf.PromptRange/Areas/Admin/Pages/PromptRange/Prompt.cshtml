@@ -389,13 +389,19 @@
                                     @* Test button. *@
                                     <div class="targetShootBtnRow">
                                         <el-dropdown trigger="click" @@command="changeBtn" split-button type="primary" @@click="clickSendBtn" size="small">
-                                            {{sendBtnText}}
+                                            {{ ncfST(sendBtnText === '打靶' ? 'Frontend.265' : (sendBtnText === '连发' ? 'Frontend.266' : 'Frontend.310')) }}
                                             <el-dropdown-menu slot="dropdown">
-                                                <el-dropdown-item v-for="btn of sendBtns" :key="btn.text" :disabled="btn.text==='连发'&&(!promptid||outputList.length===0||pageChange)" :command="btn.text">{{btn.text}}</el-dropdown-item>
+                                            <el-dropdown-item v-for="btn of sendBtns" :key="btn.text" :disabled="btn.text==='连发'&&(!promptid||outputList.length===0||pageChange)" :command="btn.text">
+                                                {{ ncfST(btn.text === '打靶' ? 'Frontend.265' : (btn.text === '连发' ? 'Frontend.266' : 'Frontend.310')) }}
+                                            </el-dropdown-item>
                                             </el-dropdown-menu>
                                         </el-dropdown>
                                         <el-tooltip class="item" effect="dark" placement="top">
-                                            <div slot="content" class="">打靶: 根据当前填写的内容或者选择的靶场和靶道，创建新的靶道。<br />连发：根据当前选择的靶道信息，连续输出多个结果。<br />草稿：保存当前输入的内容，并创建新的靶道。</div>
+                                            <div slot="content" class="">
+                                                {{ ncfST('Frontend.403') }}<br />
+                                                {{ ncfST('Frontend.404') }}<br />
+                                                {{ ncfST('Frontend.405') }}
+                                            </div>
                                             <i class="el-icon-warning-outline" :style="sendBtnText==='连发'?'filter:invert(1)':''"></i>
                                         </el-tooltip>
                                     </div>
@@ -844,30 +850,30 @@
                     </el-radio>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item v-if="!continueChatMode && supportsChatMode" label="打靶模式" prop="chatMode">
+            <el-form-item v-if="!continueChatMode && supportsChatMode" :label="ncfST('Frontend.105')" prop="chatMode">
                 <el-radio-group v-model="tacticalForm.chatMode" :disabled="continueChatMode">
                     <el-radio label="对话模式">
-                        <div>对话模式</div>
-                        <div style="margin-top:5px; font-size:12px; color:#909399;">以对话方式输入，输入后进行打靶</div>
+                        <div>{{ ncfST('Frontend.114') }}</div>
+                        <div style="margin-top:5px; font-size:12px; color:#909399;">{{ ncfST('Frontend.116') }}</div>
                     </el-radio>
                     <el-radio label="直接测试">
-                        <div>直接测试</div>
-                        <div style="margin-top:5px; font-size:12px; color:#909399;">直接使用当前的 Prompt 进行测试</div>
+                        <div>{{ ncfST('Frontend.115') }}</div>
+                        <div style="margin-top:5px; font-size:12px; color:#909399;">{{ ncfST('Frontend.117') }}</div>
                     </el-radio>
                 </el-radio-group>
                 <div v-if="continueChatMode" style="margin-top: 8px; font-size: 12px; color: #E6A23C;">
-                    <i class="el-icon-lock"></i> 继续聊天模式已锁定为对话模式
+                    <i class="el-icon-lock"></i> {{ ncfST('Frontend.118') }}
                 </div>
             </el-form-item>
             <el-alert v-if="!continueChatMode && !supportsChatMode"
-                      title="当前模型不支持对话模式，将按直接测试执行"
+                      :title="ncfST('Frontend.119')"
                       type="info"
                       :closable="false"
                       show-icon
                       style="margin-bottom: 12px;">
             </el-alert>
             @* History display for continued chat mode. *@
-            <el-form-item v-if="continueChatMode" label="对话历史">
+            <el-form-item v-if="continueChatMode" :label="ncfST('Frontend.120')">
                 <div class="chat-history-container" id="chatHistoryContainer" @@scroll="handleChatHistoryScroll">
                     @* Display the system message at the top of the conversation history. *@
                     <div v-if="continueChatMode" class="system-message-in-chat-history">
