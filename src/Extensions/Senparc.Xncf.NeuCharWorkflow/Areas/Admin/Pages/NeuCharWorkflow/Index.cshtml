@@ -127,10 +127,10 @@
                                    icon="el-icon-data-analysis"
                                    @@click="openWorkflowAnalytics">{{ ncfST('Frontend.031') }}</el-button>
                         <el-dropdown v-if="form.id" size="small" @@command="exportWorkflow">
-                            <el-button size="small" icon="el-icon-download">导出<i class="el-icon-arrow-down el-icon--right"></i></el-button>
+                            <el-button size="small" icon="el-icon-download">{{ ncfST('Frontend.055') }}<i class="el-icon-arrow-down el-icon--right"></i></el-button>
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="json">JSON 文件</el-dropdown-item>
-                                <el-dropdown-item command="yaml">YAML 文件</el-dropdown-item>
+                                <el-dropdown-item command="json">JSON</el-dropdown-item>
+                                <el-dropdown-item command="yaml">YAML</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                         <el-button size="small" icon="el-icon-upload2" :disabled="editingLocked" @@click="chooseWorkflowImport">{{ ncfST('Frontend.054') }}</el-button>
@@ -140,8 +140,8 @@
                                    type="warning"
                                    plain
                                    icon="el-icon-loading"
-                                   :title="form.runningCount ? '查看当前正在运行的任务' : '当前没有正在运行的任务'"
-                                   @@click="openWorkflowTasks('running')">运行中 {{form.runningCount}}</el-button>
+                                   :title="ncfST('Frontend.070')"
+                                   @@click="openWorkflowTasks('running')">{{ ncfST('Frontend.077') }} {{form.runningCount}}</el-button>
                         <el-button v-if="run.running"
                                    size="small"
                                    type="danger"
@@ -156,28 +156,28 @@
                                    title="打开添加节点面板"
                                    @@click="paletteCollapsed=false">{{ ncfST('Frontend.305') }}</el-button>
                         <el-dropdown trigger="click" @@command="handleWorkflowAction">
-                            <el-button size="small" plain icon="el-icon-more" title="更多工作流操作" aria-label="更多工作流操作"></el-button>
+                            <el-button size="small" plain icon="el-icon-more" :title="ncfST('Frontend.283')" :aria-label="ncfST('Frontend.283')"></el-button>
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item command="new" :disabled="editingLocked || saveState.saving">
-                                    <i class="el-icon-plus"></i> 新建工作流
+                                    <i class="el-icon-plus"></i> {{ ncfST('Frontend.280') }}
                                 </el-dropdown-item>
                                 <el-dropdown-item command="settings" :disabled="editingLocked">
-                                    <i class="el-icon-setting"></i> 工作流设置
+                                    <i class="el-icon-setting"></i> {{ ncfST('Frontend.481') }}
                                 </el-dropdown-item>
                                 <el-dropdown-item command="auto-layout" :disabled="editingLocked">
-                                    <i class="el-icon-magic-stick"></i> 按设置自动排版
+                                    <i class="el-icon-magic-stick"></i> {{ ncfST('Frontend.266') }}
                                 </el-dropdown-item>
                                 <el-dropdown-item command="align-grid" :disabled="editingLocked">
-                                    <i class="el-icon-s-grid"></i> 就近网格对齐
+                                    <i class="el-icon-s-grid"></i> {{ ncfST('Frontend.221') }}
                                 </el-dropdown-item>
                                 <el-dropdown-item command="fit-canvas">
-                                    <i class="el-icon-full-screen"></i> 适应画布
+                                    <i class="el-icon-full-screen"></i> {{ ncfST('Frontend.363') }}
                                 </el-dropdown-item>
                                 <el-dropdown-item command="tasks">
-                                    <i class="el-icon-document"></i> 任务列表
+                                    <i class="el-icon-document"></i> {{ ncfST('Frontend.070') }}
                                 </el-dropdown-item>
                                 <el-dropdown-item v-if="form.id" command="delete" divided :disabled="editingLocked">
-                                    <i class="el-icon-delete"></i> 删除工作流
+                                    <i class="el-icon-delete"></i> {{ ncfST('Frontend.026') }}
                                 </el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
