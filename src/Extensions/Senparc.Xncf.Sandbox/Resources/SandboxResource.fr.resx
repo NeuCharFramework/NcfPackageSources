@@ -219,4 +219,8 @@
   <data name="Function.Sandbox.List.Description" xml:space="preserve"><value>Afficher les sessions de sandbox récentes.</value></data>
   <data name="Function.Sandbox.Status.Name" xml:space="preserve"><value>État du sandbox</value></data>
   <data name="Function.Sandbox.Status.Description" xml:space="preserve"><value>Interroger une session de sandbox avec son SessionId.</value></data>
+  <data name="Function.Sandbox.Create.Name" xml:space="preserve"><value>Créer un sandbox</value></data>
+  <data name="Function.Sandbox.Create.Description" xml:space="preserve"><value>Crée une session sandbox isolée à partir d’un modèle (Docker ou stub Wasm).</value></data>
+  <data name="Function.Sandbox.Exec.Name" xml:space="preserve"><value>Exécuter du code</value></data>
+  <data name="Function.Sandbox.Exec.Description" xml:space="preserve"><value>Exécute un fragment de code dans une session de modèle Exec.</value></data>
 </root>

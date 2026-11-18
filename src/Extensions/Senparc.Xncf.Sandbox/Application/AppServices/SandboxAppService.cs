@@ -66,11 +66,8 @@ public class SandboxAppService : AppServiceBase
         _fileStore = fileStore;
     }
 
-    [FunctionRender(
-        "创建沙箱",
-        "按模板创建独立沙箱会话（Docker / Wasm Stub）",
-        typeof(Register),
-        AllowGlobalPivot = true)]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.Create.Name", "Function.Sandbox.Create.Description",
+        typeof(Register), "Create sandbox", "Create an isolated sandbox session from a template.", AllowGlobalPivot = true)]
     public async Task<StringAppResponse> Create(Sandbox_CreateRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>
@@ -149,11 +146,8 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender(
-        "执行代码",
-        "在 Exec 模板会话中运行代码片段",
-        typeof(Register),
-        AllowGlobalPivot = true)]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.Exec.Name", "Function.Sandbox.Exec.Description",
+        typeof(Register), "Execute code", "Run a code snippet in an Exec template session.", AllowGlobalPivot = true)]
     public async Task<StringAppResponse> Exec(Sandbox_ExecRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>

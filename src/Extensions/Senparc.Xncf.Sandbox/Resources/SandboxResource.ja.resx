@@ -219,4 +219,8 @@
   <data name="Function.Sandbox.List.Description" xml:space="preserve"><value>最近のサンドボックスセッションを表示します。</value></data>
   <data name="Function.Sandbox.Status.Name" xml:space="preserve"><value>サンドボックスの状態</value></data>
   <data name="Function.Sandbox.Status.Description" xml:space="preserve"><value>SessionId でサンドボックスセッションを照会します。</value></data>
+  <data name="Function.Sandbox.Create.Name" xml:space="preserve"><value>サンドボックスを作成</value></data>
+  <data name="Function.Sandbox.Create.Description" xml:space="preserve"><value>テンプレートから分離されたサンドボックスセッションを作成します（Docker / Wasm Stub）。</value></data>
+  <data name="Function.Sandbox.Exec.Name" xml:space="preserve"><value>コードを実行</value></data>
+  <data name="Function.Sandbox.Exec.Description" xml:space="preserve"><value>Exec テンプレートセッションでコードを実行します。</value></data>
 </root>

@@ -219,4 +219,8 @@
   <data name="Function.Sandbox.List.Description" xml:space="preserve"><value>View recent sandbox sessions.</value></data>
   <data name="Function.Sandbox.Status.Name" xml:space="preserve"><value>Sandbox status</value></data>
   <data name="Function.Sandbox.Status.Description" xml:space="preserve"><value>Query a sandbox session by SessionId.</value></data>
+  <data name="Function.Sandbox.Create.Name" xml:space="preserve"><value>Create sandbox</value></data>
+  <data name="Function.Sandbox.Create.Description" xml:space="preserve"><value>Create an isolated sandbox session from a template (Docker or Wasm stub).</value></data>
+  <data name="Function.Sandbox.Exec.Name" xml:space="preserve"><value>Execute code</value></data>
+  <data name="Function.Sandbox.Exec.Description" xml:space="preserve"><value>Run a code snippet in an Exec template session.</value></data>
 </root>
