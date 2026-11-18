@@ -3029,7 +3029,7 @@ var app = new Vue({
                         this.$message.success(ncfST('Frontend.280'));
                     }).catch((error) => {
                         this.isPageLoading = false
-                        console.error('导出失败:', error);
+                        console.error('Export failed:', error);
                         
                         let errorMessage = ncfST('Frontend.323');
                         if (error.response) {
@@ -3252,8 +3252,8 @@ var app = new Vue({
             try {
                 //Legacy comment translated to English.
                 if (!chatId || chatId === 0 || chatId === '0') {
-                    console.error('无效的 chatId:', chatId, '类型:', typeof chatId)
-                    console.error('当前历史记录:', this.continueChatHistory)
+                    console.error('Invalid chatId:', chatId, 'Type:', typeof chatId)
+                    console.error('Current chat history:', this.continueChatHistory)
                     this.$message({
                         message: ncfST('对话记录ID无效，请刷新页面后重试'),
                         type: 'error'
@@ -3264,7 +3264,7 @@ var app = new Vue({
                 //Legacy comment translated to English.
                 const numericChatId = typeof chatId === 'string' ? parseInt(chatId, 10) : chatId
                 if (isNaN(numericChatId) || numericChatId <= 0) {
-                    console.error('无效的 chatId（转换后）:', numericChatId, '原始值:', chatId)
+                    console.error('Invalid chatId after conversion:', numericChatId, 'Original value:', chatId)
                     this.$message({
                         message: ncfST('对话记录ID无效，请刷新页面后重试'),
                         type: 'error'
@@ -3279,9 +3279,9 @@ var app = new Vue({
                 })
                 
                 if (msgIndex === -1) {
-                    console.error('未找到对应的对话记录')
-                    console.error('查找的 chatId:', numericChatId, '原始 chatId:', chatId)
-                    console.error('历史记录中的所有 ID:', this.continueChatHistory.map(m => ({ id: m.id, idType: typeof m.id, roleType: m.roleType, sequence: m.sequence })))
+                    console.error('Conversation record not found')
+                    console.error('Searched chatId:', numericChatId, 'Original chatId:', chatId)
+                    console.error('All IDs in chat history:', this.continueChatHistory.map(m => ({ id: m.id, idType: typeof m.id, roleType: m.roleType, sequence: m.sequence })))
                     this.$message({
                         message: ncfST('未找到对应的对话记录，请刷新页面后重试'),
                         type: 'error'
@@ -3290,12 +3290,12 @@ var app = new Vue({
                 }
                 
                 const currentMsg = this.continueChatHistory[msgIndex]
-                console.log('找到的消息:', currentMsg)
+                console.log('Found message:', currentMsg)
                 
                 //Legacy comment translated to English.
                 const msgId = typeof currentMsg.id === 'string' ? parseInt(currentMsg.id, 10) : currentMsg.id
                 if (!msgId || msgId === 0 || isNaN(msgId)) {
-                    console.error('消息 ID 无效:', currentMsg.id, '类型:', typeof currentMsg.id)
+                    console.error('Invalid message ID:', currentMsg.id, 'Type:', typeof currentMsg.id)
                     this.$message({
                         message: ncfST('消息ID无效，请刷新页面后重试'),
                         type: 'error'
@@ -3330,7 +3330,7 @@ var app = new Vue({
                     })
                 }
             } catch (error) {
-                console.error('更新反馈失败:', error)
+                console.error('Failed to update feedback:', error)
                 this.$message({
                     message: ncfST('更新反馈失败：') + (error.message || ncfST('未知错误')),
                     type: 'error'
@@ -3534,7 +3534,7 @@ var app = new Vue({
                             formatter: function (params) {
                                 const promptItem = that.promptOpt.find(item => item.id === that.promptid)
                                 const fullVersion = promptItem ? promptItem.fullVersion : ''
-                                return params.data[3].fullVersion === fullVersion ? '当前' : ' ';  //Legacy comment translated to English.
+                                return params.data[3].fullVersion === fullVersion ? ncfST('Frontend.437') : ' ';  //Legacy comment translated to English.
                             },
                             textStyle: {
                                 color: '#000',
@@ -4102,7 +4102,7 @@ var app = new Vue({
                 }
             } catch (e) {
                 //Legacy comment translated to English.
-                console.warn('检查智能体时出错（请确认 AgentsManager 模块已安装）:', e)
+                console.warn('Agent check failed (confirm that the AgentsManager module is installed):', e)
                 this.createAgentExistingList = []
             }
         },
@@ -4158,7 +4158,7 @@ var app = new Vue({
                     this.$message({ message: ncfST('创建失败：') + (res.data?.msg || ncfST('未知错误')), type: 'error' })
                 }
             } catch (e) {
-                console.error('创建智能体失败:', e)
+                console.error('Failed to create agent:', e)
                 this.$message({ message: ncfST('创建失败，请确认 AgentsManager 模块已安装'), type: 'error' })
             } finally {
                 this.createAgentLoading = false
@@ -4406,7 +4406,7 @@ var app = new Vue({
                 this.map3dControls.target.set(0, 0, 0)
                 this.map3dControls.update()
             } else {
-                console.warn('OrbitControls 未找到，3D 场景将无法通过鼠标控制')
+                    console.warn('OrbitControls not found; the 3D scene cannot be controlled with the mouse')
             }
             
             //Legacy comment translated to English.
@@ -4520,7 +4520,7 @@ var app = new Vue({
                 
                 //Legacy comment translated to English.
                 if (!lastTacticNode) {
-                    console.warn('无法找到 Tactic 节点:', tacticPart)
+                    console.warn('Tactic node not found:', tacticPart)
                     return
                 }
                 
@@ -4564,7 +4564,7 @@ var app = new Vue({
         async checkPromptCatalyzerStatus() {
             try {
                 const response = await servicePR.get('/api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/CheckStatus');
-                console.log('CheckStatus 完整响应:', response);
+                console.log('Complete CheckStatus response:', response);
                 
                 //Legacy comment translated to English.
                 if (response.data && response.data.success && response.data.data) {
@@ -4572,7 +4572,7 @@ var app = new Vue({
                 }
                 return false;
             } catch (error) {
-                console.error('检查初始化状态失败:', error);
+                console.error('Failed to check initialization status:', error);
                 return false;
             }
         },
@@ -4582,7 +4582,7 @@ var app = new Vue({
             this.loadingModels = true;
             try {
                 const response = await servicePR.get('/api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/GetAvailableModels');
-                console.log('GetAvailableModels 完整响应:', response);
+                console.log('Complete GetAvailableModels response:', response);
                 
                 //Legacy comment translated to English.
                 if (response.data && response.data.success) {
@@ -4595,15 +4595,15 @@ var app = new Vue({
                         this.selectedModelIdForInit = this.availableModelsForInit[0].id;
                     }
                     
-                    console.log('加载到', this.availableModelsForInit.length, '个可用 Model');
+                    console.log('Loaded', this.availableModelsForInit.length, 'available models');
                 } else {
                     // handlingerrorresponse
                     const errorMsg = response.data?.errorMessage || ncfST('Frontend.319');
                     this.$message.error(errorMsg);
-                    console.error('获取模型失败:', errorMsg);
+                    console.error('Failed to load models:', errorMsg);
                 }
             } catch (error) {
-                console.error('加载 AI Model 列表失败:', error);
+                console.error('Failed to load the AI model list:', error);
                 this.$message.error(ncfST('Frontend.319') + ': ' + (error.response?.data?.errorMessage || error.message));
             } finally {
                 this.loadingModels = false;
@@ -4619,13 +4619,13 @@ var app = new Vue({
 
             this.initializing = true;
             try {
-                console.log('开始初始化 PromptCatalyzer，使用 Model ID:', this.selectedModelIdForInit);
+                console.log('Starting PromptCatalyzer initialization with model ID:', this.selectedModelIdForInit);
                 
                 const response = await servicePR.post('/api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/Initialize', {
                     modelId: this.selectedModelIdForInit
                 });
 
-                console.log('Initialize 完整响应:', response);
+                console.log('Complete Initialize response:', response);
                 
                 //Legacy comment translated to English.
                 if (response.data && response.data.success) {
@@ -4640,7 +4640,7 @@ var app = new Vue({
                     this.promptCatalyzerInitVisible = false;
                     
                     //Legacy comment translated to English.
-                    console.log('初始化成功，刷新页面数据...');
+                    console.log('Initialization succeeded; refreshing page data...');
                     await this.getFieldList();
                     
                     //Legacy comment translated to English.
@@ -4649,7 +4649,7 @@ var app = new Vue({
                     this.$message.error(ncfST('Frontend.317') + ': ' + (response.data.errorMessage || ncfST('未知错误')));
                 }
             } catch (error) {
-                console.error('初始化失败:', error);
+                console.error('Initialization failed:', error);
                 const errorMsg = error.response?.data?.error || error.response?.data?.message || error.message;
                 this.$message({
                     message: ncfST('Frontend.317') + ': ' + errorMsg,
@@ -4687,7 +4687,7 @@ var app = new Vue({
                     return;
                 }
                 
-                console.log(`${scoreType}完成，最终分数: ${finalScore}`);
+                console.log(`${scoreType} completed, final score: ${finalScore}`);
                 
                 //Legacy comment translated to English.
                 const optimizationThreshold = 6.0;
@@ -4705,18 +4705,18 @@ var app = new Vue({
                         }
                     ).then(async () => {
                         //Legacy comment translated to English.
-                        console.log('用户确认进行优化');
+                    console.log('User confirmed optimization');
                         await this.openOptimizeDialog();
                     }).catch(() => {
                         //Legacy comment translated to English.
-                        console.log('用户取消优化');
+                    console.log('User cancelled optimization');
                     });
                 } else {
                     //Legacy comment translated to English.
-                    console.log(`分数${finalScore.toFixed(1)}较高，无需提示优化`);
+                    console.log(`The score ${finalScore.toFixed(1)} is high; optimization is not suggested`);
                 }
             } catch (error) {
-                console.error('检查分数并提示优化时出错:', error);
+                console.error('Failed to check the score and suggest optimization:', error);
                 //Legacy comment translated to English.
             }
         },
@@ -4742,7 +4742,7 @@ var app = new Vue({
                     return;
                 }
                 
-                console.log(`当前 Prompt 平均分数: ${avgScore}`);
+                    console.log(`Current average Prompt score: ${avgScore}`);
                 
                 //Legacy comment translated to English.
                 const optimizationThreshold = 6.0;
@@ -4759,12 +4759,12 @@ var app = new Vue({
                         showClose: true
                     });
                     
-                    console.log('平均分较低，已提示用户优化');
+                    console.log('The average score is low; optimization was suggested');
                 } else {
-                    console.log(`平均分 ${avgScore.toFixed(1)} 较高，无需提示优化`);
+                    console.log(`The average score ${avgScore.toFixed(1)} is high; optimization is not suggested`);
                 }
             } catch (error) {
-                console.error('检查平均分并提示优化时出错:', error);
+                console.error('Failed to check the average score and suggest optimization:', error);
             }
         },
 
@@ -4775,7 +4775,7 @@ var app = new Vue({
             }
             
             //Legacy comment translated to English.
-            console.log('检查 PromptCatalyzer 初始化状态...');
+            console.log('Checking PromptCatalyzer initialization status...');
             const isInitialized = await this.checkPromptCatalyzerStatus();
             
             if (!isInitialized) {
@@ -4800,7 +4800,7 @@ var app = new Vue({
             }
             
             //Legacy comment translated to English.
-            console.log('PromptCatalyzer 已初始化，打开优化对话框');
+                console.log('PromptCatalyzer is initialized; opening the optimization dialog');
             this.optimizeRequirement = '';
             this.optimizeErrorText = '';
             this.optimizeDialogVisible = true;
@@ -4874,7 +4874,7 @@ var app = new Vue({
             this.optimizeErrorText = '';
             this.optimizeProgressText = ncfST('Frontend.302');
             try {
-                console.log('开始优化 Prompt（Agent 主路径）:', promptCode);
+                console.log('Starting Prompt optimization (Agent primary path):', promptCode);
                 
                 const requestData = {
                     promptCode: promptCode,
@@ -5016,7 +5016,7 @@ var app = new Vue({
                     this.$message.error(ncfST('Frontend.237') + '：' + errorMsg);
                 }
             } catch (error) {
-                console.error('优化失败:', error);
+                console.error('Optimization failed:', error);
                 const resp = error.response?.data;
                 let detail = resp?.errorMessage || resp?.message || error.message || String(error);
                 if (resp && typeof resp === 'object' && !resp.errorMessage) {
@@ -5125,11 +5125,11 @@ var app = new Vue({
                 }
             }
             
-            console.log('📊 评分统计:', {
-                总数: result.count,
-                最高分: result.max,
-                最低分: result.min,
-                分数列表: scores.slice(0, 10) //Legacy comment translated to English.
+            console.log('📊 Score statistics:', {
+                count: result.count,
+                max: result.max,
+                min: result.min,
+                scores: scores.slice(0, 10) //Legacy comment translated to English.
             })
             
             return result
@@ -5195,7 +5195,7 @@ var app = new Vue({
                     //Legacy comment translated to English.
                     currentX += nodeSpacing
                     
-                    console.log(`📍 创建T节点: ${key}, 位置(${x}, ${y}, ${z}), depth=${depth}`)
+                    console.log(`📍 Created T node: ${key}, position (${x}, ${y}, ${z}), depth=${depth}`)
                     
                     //Legacy comment translated to English.
                     const hasCurrent = node.prompts && node.prompts.some(p => p.isCurrent)
@@ -5247,7 +5247,7 @@ var app = new Vue({
                         }
                     } else {
                         //Legacy comment translated to English.
-                        console.error('意外的节点类型:', node.type, key)
+                        console.error('Unexpected node type:', node.type, key)
                         return
                     }
                     
@@ -5504,14 +5504,14 @@ var app = new Vue({
                             // A1: z + aimingSpacing, A2: z + 2*aimingSpacing, ...
                             const aimingZ = z + (aimingIndex + 1) * aimingSpacing
                                 
-                            console.log('🎯 创建Aiming节点:', {
+                            console.log('🎯 Created Aiming node:', {
                                 key: aimingKey,
                                 parentKey: key,
                                 parentPos: { x, y, z },
                                 aimingPos: { x: aimingX, y: aimingY, z: aimingZ },
                                 aimingIndex,
                                 totalAiming: aimingKeys.length,
-                                strategy: `A${aimingIndex + 1} 在 T 前方 ${(aimingIndex + 1) * aimingSpacing} 单位（朝向摄像机）`
+                                strategy: `A${aimingIndex + 1} ${(aimingIndex + 1) * aimingSpacing} units in front of T (facing the camera)`
                             })
                                 
                                 //Legacy comment translated to English.
@@ -5532,7 +5532,7 @@ var app = new Vue({
                                     )
                                     
                                     //Legacy comment translated to English.
-                                    console.log('🔍 Aiming节点评分数据检查:', {
+                                    console.log('🔍 Aiming node score data check:', {
                                         promptId,
                                         fullPromptData,
                                         evalMaxScore: fullPromptData?.evalMaxScore,
@@ -5572,7 +5572,7 @@ var app = new Vue({
                                         const rank = allScores.filter(s => s > score).length + 1
                                         const isFirst = rank === 1
                                         
-                                        console.log('✅ 使用评分:', score, '排名:', rank, '百分位:', percentile.toFixed(1) + '%', isFirst ? '🥇第一名!' : '')
+                                        console.log('✅ Score:', score, 'Rank:', rank, 'Percentile:', percentile.toFixed(1) + '%', isFirst ? '🥇First place!' : '')
                                         
                                         //Legacy comment translated to English.
                                         if (isFirst) {
@@ -5882,7 +5882,7 @@ var app = new Vue({
                     rangeNodeData.sprite.position.x = centerX
                     rangeNodeData.position.x = centerX
                     
-                    console.log(`📦 调整Range节点 ${rangeNodeData.key} 到中点: ${centerX} (子节点范围: ${minX} ~ ${maxX})`)
+                    console.log(`📦 Adjusted Range node ${rangeNodeData.key} to midpoint: ${centerX} (child range: ${minX} ~ ${maxX})`)
                     
                     //Legacy comment translated to English.
                     childTacticNodes.forEach(childData => {
@@ -5926,7 +5926,7 @@ var app = new Vue({
             const treeCenterY = -treeDepth / 2  //Legacy comment translated to English.
             const treeCenterZ = (maxZ + minZ) / 2  //Legacy comment translated to English.
             
-            console.log('📐 树的范围计算:', {
+                console.log('📐 Tree bounds calculation:', {
                 treeWidth: treeWidth.toFixed(2),
                 treeDepth: treeDepth.toFixed(2),
                 treeZSpan: treeZSpan.toFixed(2),
@@ -5970,7 +5970,7 @@ var app = new Vue({
             
             const cameraDistance = boundingBoxDiagonal * distanceMultiplier
             
-            console.log('📷 相机距离计算:', {
+                console.log('📷 Camera distance calculation:', {
                 treeWidth,
                 treeDepth,
                 treeZSpan,
@@ -5998,7 +5998,7 @@ var app = new Vue({
                 )
                 this.map3dControls.update()
                 
-                console.log('📷 相机位置已设置:', {
+                console.log('📷 Camera position set:', {
                     target: treeCenter,
                     position: this.map3dCamera.position
                 })
@@ -6088,7 +6088,7 @@ var app = new Vue({
                         if (nodeData.node.prompts && nodeData.node.prompts.length > 0) {
                             const promptId = nodeData.node.prompts[0].id
                             
-                            console.log('🎯 双击Aiming节点，选中靶道:', {
+                            console.log('🎯 Double-clicked Aiming node; selected tactic:', {
                                 nodeKey: nodeData.key,
                                 promptId: promptId,
                                 fullPath: nodeData.node.fullPath
@@ -6265,7 +6265,7 @@ var app = new Vue({
                                         (p.idkey || p.value) == promptId
                                     )
                                     
-                                    console.log('🔍 Tooltip评分数据检查:', {
+                                        console.log('🔍 Tooltip score data check:', {
                                         promptId,
                                         fullPromptData,
                                         evalMaxScore: fullPromptData?.evalMaxScore,
@@ -6298,7 +6298,7 @@ var app = new Vue({
                                             finalScore = fullPromptData.evalAvgScore
                                         }
                                         
-                                        console.log('✅ Tooltip使用评分:', finalScore)
+                                        console.log('✅ Tooltip score:', finalScore)
                                         
                                         //Legacy comment translated to English.
                                         if (finalScore !== null) {
@@ -6515,7 +6515,7 @@ var app = new Vue({
                         this.updateConnectionLine(nodeData)
                     } else {
                         //Legacy comment translated to English.
-                        console.warn('找不到父节点:', {
+                        console.warn('Parent node not found:', {
                             fullPath: nodeData.node.fullPath,
                             parentPath: nodeData.node.parentPath,
                             nodeType: nodeData.node.type,
@@ -6524,7 +6524,7 @@ var app = new Vue({
                         
                         //Legacy comment translated to English.
                         if (nodeData.node.type === 'aiming') {
-                            console.log('所有节点的 fullPath:', this.map3dNodes.map(n => n.node.fullPath))
+                            console.log('fullPath values for all nodes:', this.map3dNodes.map(n => n.node.fullPath))
                         }
                     }
                 }
@@ -9085,7 +9085,7 @@ var app = new Vue({
                     }
                 }
             } catch (e) {
-                console.error('加载区域宽度设置失败:', e);
+                console.error('Failed to load panel width settings:', e);
             }
         },
         
@@ -9095,7 +9095,7 @@ var app = new Vue({
                 localStorage.setItem('promptPage_leftAreaWidth', this.leftAreaWidth);
                 localStorage.setItem('promptPage_centerAreaWidth', this.centerAreaWidth);
             } catch (e) {
-                console.error('保存区域宽度设置失败:', e);
+                console.error('Failed to save panel width settings:', e);
             }
         },
         
@@ -9177,7 +9177,7 @@ var app = new Vue({
                 localStorage.removeItem('promptPage_leftAreaWidth');
                 localStorage.removeItem('promptPage_centerAreaWidth');
             } catch (e) {
-                console.error('清除区域宽度设置失败:', e);
+                console.error('Failed to clear panel width settings:', e);
             }
             
             //Legacy comment translated to English.
@@ -9243,7 +9243,7 @@ var app = new Vue({
                     });
                 }
             } catch (error) {
-                console.error('加载Prompt A失败:', error);
+                console.error('Failed to load Prompt A:', error);
                 this.$message({
                         message: ncfST('Frontend.484'),
                     type: 'error',
@@ -9273,7 +9273,7 @@ var app = new Vue({
                     });
                 }
             } catch (error) {
-                console.error('加载Prompt B失败:', error);
+                console.error('Failed to load Prompt B:', error);
                 this.$message({
                         message: ncfST('Frontend.485'),
                     type: 'error',
@@ -9406,7 +9406,7 @@ var app = new Vue({
                 });
                 
             } catch (error) {
-                console.error('切换Prompt失败:', error);
+                console.error('Failed to switch Prompt:', error);
                 this.$message({
                     message: error.message || ncfST('Frontend.492'),
                     type: 'error',

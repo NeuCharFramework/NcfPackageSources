@@ -155,7 +155,7 @@ var app = new Vue({
         },
         // Batch-delete button.
         btnBatchdelete() {
-            console.log('批量删除', this.multipleSelection)
+            console.log('Batch delete', this.multipleSelection)
             // Iterate through the selected rows.
             // this.$refs.multipleTable.toggleRowSelection(row);
             const idsToDelete = []
