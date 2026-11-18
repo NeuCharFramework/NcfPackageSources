@@ -760,26 +760,26 @@
     <el-tab-pane name="second">
         <span slot="label" class="agentsManager-tabLabel">
             <i class="el-icon-s-grid" aria-hidden="true"></i>
-            <span>组</span>
+            <span>{{ ncfST('Frontend.045') }}</span>
         </span>
         <div class="tabPane-container">
             @* Sidebar *@
             <div class="sidebar-container">
                 <div class="sidebar-head-container">
                     <div class="df-wn flex-ac flex-jsb sidebar-title-row">
-                        <div class="sidebar-titleRow-title text-ellipsis">组列表</div>
+                        <div class="sidebar-titleRow-title text-ellipsis">{{ ncfST('Frontend.182') }}</div>
                         <div class="sidebar-titleRow-actions">
                             <el-button class="sidebar-titleRow-add" type="primary" size="mini" icon="el-icon-plus"
-                                title="新增组" @@click="handleElVisibleOpenBtn('drawerGroup')">新增</el-button>
+                        :title="ncfST('Frontend.126')" @@click="handleElVisibleOpenBtn('drawerGroup')">{{ ncfST('Frontend.126') }}</el-button>
                         </div>
                     </div>
                     <div class="df-wn flex-ac flex-jsb sidebar-search-row">
-                        <el-input v-model="groupQueryList.filter" placeholder="请输入名称搜索" suffix-icon="el-icon-search"
+                        <el-input v-model="groupQueryList.filter" :placeholder="ncfST('Frontend.007')" suffix-icon="el-icon-search"
                             class="sidebar-searchRow-input" @@change="handleFilterChange($event,'group')"></el-input>
                         <el-popover placement="bottom" width="90" trigger="click" v-model="groupFCPVisible" popper-class="filter-popover">
                             <div class="popover-filterCriteria">
                                 <div class="sortRow" @@click="handleFilterCriteria('group','timeSort')">
-                                    <span class="sortRowText">按时间排序</span>
+                                    <span class="sortRowText">{{ ncfST('Frontend.008') }}</span>
                                     <div class="sortRowIconBox">
                                         <i class="el-icon-caret-top sortRowIconTriangle"
                                             :class="{'sortRowIconActive':groupQueryList.timeSort}"></i>
@@ -788,7 +788,7 @@
                                     </div>
                                 </div>
                                 <div class="sortRow sortRowDivision" style="margin-top: 5px; cursor: auto;">
-                                    <span class="sortRowText">选择状态</span>
+                                    <span class="sortRowText">{{ ncfST('Frontend.009') }}</span>
                                 </div>
                                 <div v-for="(fitem,findex) in groupFilterCriteria" :key="findex" class="sortRow"
                                     @@click="handleFilterCriteria('group',fitem.value)">
@@ -816,7 +816,7 @@
                         <div class="sidebar-agentitem text-ellipsis"
                         :class="{'sidebar-agentitem_active':scrollbarGroupIndex === ''}" @@click="handleGroupViewAll">
                         <i class="el-icon-s-grid sidebar-all-item-icon" aria-hidden="true"></i>
-                        全部组
+                        {{ ncfST('Frontend.019') }}
                     </div>
                     <div v-for="(item,index) in groupList" :key="item.id" class="sidebar-agentitem text-ellipsis"
                         :class="{'sidebar-agentitem_active':scrollbarGroupIndex === item.id}" :title="item.name"
@@ -825,7 +825,7 @@
                     </div>
                     </template>
                     <div v-else class="df-wn flex-ac flex-jc emptyData"
-                        style="flex-grow: 1;font-size: 14px;color: #5e6d82;margin-top:150px;">暂无数据</div>
+                        style="flex-grow: 1;font-size: 14px;color: #5e6d82;margin-top:150px;">{{ ncfST('Frontend.011') }}</div>
                 </el-scrollbar>
             </div>
             @* Main content *@
@@ -834,66 +834,66 @@
                 <template v-if="groupShowType === '1'">
                     <div class="df-wn flex-ac flex-js groupInfoRow">
                         <div class="groupInfoRow-name text-ellipsis">
-                            全部组
+                            {{ ncfST('Frontend.019') }}
                         </div>
                         <div class="df-wn groupInfoRow-operation">
-                            <el-button type="danger" size="mini" @@click="handleGroupDeleteBatch">批量删除</el-button>
+                            <el-button type="danger" size="mini" @@click="handleGroupDeleteBatch">{{ ncfST('Frontend.051') }}</el-button>
                         </div>
                     </div>
                     @* 255 *@
                     <el-table ref="groupList" :data="groupList" key="groupList" :height="`calc(100vh - 300px)`"
                         style="width: 100%;" @@selection-change="handleGroupSelectionChange">
                         <el-table-column type="selection" width="30"></el-table-column>
-                        <el-table-column prop="name" label="组名称" min-width="170" show-overflow-tooltip>
+                        <el-table-column prop="name" :label="ncfST('Frontend.127')" min-width="170" show-overflow-tooltip>
                             <template slot-scope="{ row }">
                                 @* row.enable row.state *@
                                 @* <i class="el-icon-success"></i> *@
                                 <span>{{ row.name }}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column label="状态" width="90">
+                        <el-table-column :label="ncfST('Frontend.020')" width="90">
                             <template slot-scope="{ row }">
-                                <el-tag :type="row.enable ? 'success' : 'info'" size="mini">{{ row.enable ? '已启用' : '已停用' }}</el-tag>
+                                <el-tag :type="row.enable ? 'success' : 'info'" size="mini">{{ row.enable ? ncfST('Frontend.044') : ncfST('Frontend.043') }}</el-tag>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="numberTasks" label="任务数" width="100">
+                        <el-table-column prop="numberTasks" :label="ncfST('Frontend.183')" width="100">
                         </el-table-column>
-                        <el-table-column prop="lastUpdateTime" label="最近运行时间" min-width="110">
+                        <el-table-column prop="lastUpdateTime" :label="ncfST('Frontend.184')" min-width="110">
                             <template slot-scope="{ row }">
                                 {{ row.lastUpdateTime | showFormatDate }}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="adminAgentTemplateName" label="群主" min-width="100">
+                        <el-table-column prop="adminAgentTemplateName" :label="ncfST('Frontend.132')" min-width="100">
                             <template slot-scope="{ row }">
                                 {{ row.adminAgentTemplateName }}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="enterAgentTemplateName" label="对接人" min-width="100">
+                        <el-table-column prop="enterAgentTemplateName" :label="ncfST('Frontend.133')" min-width="100">
                             <template slot-scope="{ row }">
                                 {{ row.enterAgentTemplateName }}
                             </template>
                         </el-table-column>
-                        <el-table-column fixed="right" label="操作" width="190" class-name="ncf-table-actions-column">
+                        <el-table-column fixed="right" :label="ncfST('Frontend.061')" width="190" class-name="ncf-table-actions-column">
                             <template slot-scope="{ row,$index }">
                                 <el-button type="primary" size="mini" icon="el-icon-edit"
-                                    @@click="handleEditDrawerOpenBtn('drawerGroup',row)">编辑</el-button>
+                                    @@click="handleEditDrawerOpenBtn('drawerGroup',row)">{{ ncfST('Frontend.016') }}</el-button>
                                 <el-button type="primary" size="mini" icon="el-icon-view"
-                                    @@click="handleGroupView('groupTable',row,$index)">详情</el-button>
-                                <el-tooltip content="更多操作" placement="top" :open-delay="180">
+                                    @@click="handleGroupView('groupTable',row,$index)">{{ ncfST('Frontend.017') }}</el-button>
+                                <el-tooltip :content="ncfST('Frontend.580')" placement="top" :open-delay="180">
                                     <el-dropdown trigger="click" placement="bottom-end"
                                         @@command="handleGroupAction($event,row,$index)">
                                         <el-button type="text" size="mini" icon="el-icon-more"
                                             class="ncf-table-action-more" title="更多操作" aria-label="更多操作"></el-button>
                                         <el-dropdown-menu slot="dropdown">
                                             <el-dropdown-item command="start" :disabled="!row.enable">
-                                                <i class="el-icon-video-play"></i> 启动
+                                                <i class="el-icon-video-play"></i> {{ ncfST('Frontend.048') }}
                                             </el-dropdown-item>
                                             <el-dropdown-item command="toggle">
                                                 <i :class="row.enable ? 'el-icon-video-pause' : 'el-icon-video-play'"></i>
-                                                {{ row.enable ? '停用' : '启用' }}
+                                                {{ row.enable ? ncfST('Frontend.043') : ncfST('Frontend.044') }}
                                             </el-dropdown-item>
                                             <el-dropdown-item command="delete" divided class="ncf-table-action-danger">
-                                                <i class="el-icon-delete"></i> 删除
+                                                <i class="el-icon-delete"></i> {{ ncfST('Frontend.018') }}
                                             </el-dropdown-item>
                                         </el-dropdown-menu>
                                     </el-dropdown>
@@ -911,28 +911,28 @@
                             </div>
                             <div class="df-wn  groupInfoRow-operation">
                                 <el-button type="primary" size="mini" :disabled="!groupDetails.chatGroupDto.enable"
-                                    @@click="handleElVisibleOpenBtn('drawerGroupStart',groupDetails)">启动</el-button>
+                                    @@click="handleElVisibleOpenBtn('drawerGroupStart',groupDetails)">{{ ncfST('Frontend.048') }}</el-button>
                                 <el-button :type="groupDetails.chatGroupDto.enable ? 'warning' : 'success'" size="mini"
-                                    @@click="setGroupState(groupDetails)">{{ groupDetails.chatGroupDto.enable ? '停用组' : '启用组' }}</el-button>
+                                    @@click="setGroupState(groupDetails)">{{ groupDetails.chatGroupDto.enable ? ncfST('Frontend.043') : ncfST('Frontend.044') }}</el-button>
                                 <el-button type="primary" size="mini"
-                                    @@click="handleEditDrawerOpenBtn('drawerGroup',groupDetails)">编辑</el-button>
+                                    @@click="handleEditDrawerOpenBtn('drawerGroup',groupDetails)">{{ ncfST('Frontend.016') }}</el-button>
                                 <el-button type="primary" size="mini"
-                                    @@click="handleTaskStartBatch('groupTaskBatch',groupDetails)">批量启动</el-button>
+                                    @@click="handleTaskStartBatch('groupTaskBatch',groupDetails)">{{ ncfST('Frontend.049') }}</el-button>
                                 <el-button type="warning" size="mini"
-                                    @@click="handleTaskForceStopBatch('groupTaskBatch',groupDetails)">批量停止</el-button>
+                                    @@click="handleTaskForceStopBatch('groupTaskBatch',groupDetails)">{{ ncfST('Frontend.050') }}</el-button>
                                 <el-button type="danger" size="mini"
-                                    @@click="handleTaskDeleteBatch('groupTaskBatch',groupDetails)">批量删除</el-button>
+                                    @@click="handleTaskDeleteBatch('groupTaskBatch',groupDetails)">{{ ncfST('Frontend.051') }}</el-button>
                             </div>
                         </template>
                     </div>
                     <div class="df-wn flex-ac groupInfoRow-info">
                         <template v-if="groupDetails&&groupDetails.chatGroupDto">
-                            <div class="itembox">任务数: {{ groupDetails.chatGroupDto.numberTasks }}
+                            <div class="itembox">{{ ncfST('Frontend.052') }} {{ groupDetails.chatGroupDto.numberTasks }}
                             </div>
-                            <div class="itembox" @@click="viewAgentParameters('groupTaskAdmin')">群主: {{ groupDetails.chatGroupDto.adminAgentTemplateName }}</div>
-                            <div class="itembox" @@click="viewAgentParameters('groupTaskEnter')">对接人: {{ groupDetails.chatGroupDto.enterAgentTemplateName }}</div>
+                            <div class="itembox" @@click="viewAgentParameters('groupTaskAdmin')">{{ ncfST('Frontend.053') }} {{ groupDetails.chatGroupDto.adminAgentTemplateName }}</div>
+                            <div class="itembox" @@click="viewAgentParameters('groupTaskEnter')">{{ ncfST('Frontend.054') }} {{ groupDetails.chatGroupDto.enterAgentTemplateName }}</div>
                             <div class="itembox df-wn flex-ac">
-                                <span style="margin-right: 10px;">组成员：</span>
+                                <span style="margin-right: 10px;">{{ ncfST('Frontend.055') }}</span>
                                 <div v-for="(v,i) in displayedAvatars(getGroupParticipantList(groupDetails))" :key="v.participantKey"
                                     class="df-wn flex-ac flex-jc avatarBox" :style="{zIndex:100-i}" @@click="viewAgentParameters('groupTask')">
                                     <img :src="v.avastar | showAvatar" alt="">
@@ -947,52 +947,52 @@
                         :height="`calc(100vh - 345px)`" style="width: 100%;"
                         @@selection-change="handleGroupTaskSelectionChange">
                         <el-table-column type="selection" width="30"></el-table-column>
-                        <el-table-column prop="name" label="运行任务" min-width="170" show-overflow-tooltip>
+                        <el-table-column prop="name" :label="ncfST('Frontend.056')" min-width="170" show-overflow-tooltip>
                             <template slot-scope="{ row }">
                                 <i :class="[taskStateIcon[row.status],taskStateColor[row.status]]"></i>
                                 <span>{{ row.name }}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column label="开始时间" min-width="100">
+                        <el-table-column :label="ncfST('Frontend.057')" min-width="100">
                             <template slot-scope="{ row }">
                                 {{ row.startTime | showFormatDate }}
                             </template>
                         </el-table-column>
-                        <el-table-column label="持续时长" width="100">
+                        <el-table-column :label="ncfST('Frontend.058')" width="100">
                             <template slot-scope="{ row }">
                                 {{ calculateDuration(row.startTime,row.endTime) }}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="modelName" label="模型名称" min-width="100" show-overflow-tooltip>
+                        <el-table-column prop="modelName" :label="ncfST('Frontend.059')" min-width="100" show-overflow-tooltip>
                             <template slot-scope="{ row }">
                                 {{ row.modelName }}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="promptCommand" label="任务描述" min-width="130" show-overflow-tooltip>
+                        <el-table-column prop="promptCommand" :label="ncfST('Frontend.060')" min-width="130" show-overflow-tooltip>
                             <template slot-scope="{ row }">
                                 {{ row.promptCommand }}
                             </template>
                         </el-table-column>
-                        <el-table-column fixed="right" label="操作" width="210" class-name="ncf-table-actions-column">
+                        <el-table-column fixed="right" :label="ncfST('Frontend.061')" width="210" class-name="ncf-table-actions-column">
                             <template slot-scope="{ row }">
                                 <el-button type="primary" size="mini" icon="el-icon-view"
-                                    @@click="handleTaskView('groupTask', row)">详情</el-button>
+                                    @@click="handleTaskView('groupTask', row)">{{ ncfST('Frontend.017') }}</el-button>
                                 <el-button type="primary" size="mini" icon="el-icon-refresh-right"
-                                    @@click="handleTaskAgain('groupTask', row)">再次执行</el-button>
-                                <el-tooltip content="更多操作" placement="top" :open-delay="180">
+                                    @@click="handleTaskAgain('groupTask', row)">{{ ncfST('Frontend.063') }}</el-button>
+                                <el-tooltip :content="ncfST('Frontend.580')" placement="top" :open-delay="180">
                                     <el-dropdown trigger="click" placement="bottom-end"
                                         @@command="handleTaskAction($event,'groupTask',row)">
                                         <el-button type="text" size="mini" icon="el-icon-more"
                                             class="ncf-table-action-more" title="更多操作" aria-label="更多操作"></el-button>
                                         <el-dropdown-menu slot="dropdown">
                                             <el-dropdown-item command="parameters">
-                                                <i class="el-icon-user"></i> 智能体参数
+                                                <i class="el-icon-user"></i> {{ ncfST('Frontend.062') }}
                                             </el-dropdown-item>
                                             <el-dropdown-item v-if="canForceStopTask(row)" command="force-stop">
-                                                <i class="el-icon-video-pause"></i> 强制停止
+                                                <i class="el-icon-video-pause"></i> {{ ncfST('Frontend.064') }}
                                             </el-dropdown-item>
                                             <el-dropdown-item command="delete" divided class="ncf-table-action-danger">
-                                                <i class="el-icon-delete"></i> 删除
+                                                <i class="el-icon-delete"></i> {{ ncfST('Frontend.018') }}
                                             </el-dropdown-item>
                                         </el-dropdown-menu>
                                     </el-dropdown>
@@ -1148,14 +1148,14 @@
     <el-tab-pane name="third">
         <span slot="label" class="agentsManager-tabLabel">
             <i class="el-icon-s-order" aria-hidden="true"></i>
-            <span>任务</span>
+            <span>{{ ncfST('Frontend.046') }}</span>
         </span>
         <div class="tabPane-container">
                 @* Sidebar *@
             <div class="sidebar-container">
                 <div class="sidebar-head-container sidebar-head-container-task">
                     <div class="df-wn flex-ac flex-jsb sidebar-title-row">
-                        <div class="sidebar-titleRow-title text-ellipsis">任务列表</div>
+                        <div class="sidebar-titleRow-title text-ellipsis">{{ ncfST('Frontend.185') }}</div>
                     </div>
                     <div class="task-archive-scope-tabs">
                         <span v-for="scope in taskArchiveScopeOptions" :key="scope.value"
@@ -1166,12 +1166,12 @@
                         </span>
                     </div>
                     <div class="df-wn flex-ac flex-jsb sidebar-search-row">
-                        <el-input v-model="taskQueryList.filter" placeholder="请输入名称搜索" suffix-icon="el-icon-search"
+                        <el-input v-model="taskQueryList.filter" :placeholder="ncfST('Frontend.007')" suffix-icon="el-icon-search"
                             class="sidebar-searchRow-input" @@change="handleFilterChange($event,'task')"></el-input>
                         <el-popover placement="bottom" width="90" trigger="click" v-model="taskFCPVisible" popper-class="filter-popover">
                             <div class="popover-filterCriteria">
                                 <div class="sortRow" @@click="handleFilterCriteria('task','timeSort')">
-                                    <span class="sortRowText">按时间排序</span>
+                                    <span class="sortRowText">{{ ncfST('Frontend.008') }}</span>
                                     <div class="sortRowIconBox">
                                         <i class="el-icon-caret-top sortRowIconTriangle"
                                             :class="{'sortRowIconActive':taskQueryList.timeSort}"></i>
@@ -1180,7 +1180,7 @@
                                     </div>
                                 </div>
                                 <div class="sortRow sortRowDivision" style="margin-top: 5px; cursor: auto;">
-                                    <span class="sortRowText">选择状态</span>
+                                    <span class="sortRowText">{{ ncfST('Frontend.009') }}</span>
                                 </div>
                                 <div v-for="(fitem,findex) in taskFilterCriteria" :key="findex" class="sortRow"
                                     @@click="handleFilterCriteria('task',fitem.value)">
@@ -1197,7 +1197,7 @@
                         <div class="sidebar-agentitem text-ellipsis"
                         :class="{'sidebar-agentitem_active':scrollbarTaskIndex === ''}" @@click="handleTaskViewAll">
                         <i class="el-icon-s-order sidebar-all-item-icon" aria-hidden="true"></i>
-                        全部任务
+                        {{ ncfST('Frontend.046') }}
                     </div>
                     <div v-for="(item,index) in taskList" :key="item.id || index" class="sidebar-agentitem sidebar-taskitem"
                         :class="{'sidebar-agentitem_active':scrollbarTaskIndex === index}"
@@ -1205,7 +1205,7 @@
                         :title="item.name"
                         @@click="handleTaskView('task',item,index)">
                         <span class="text-ellipsis sidebar-taskitem-name">{{ item.name }}</span>
-                        <el-tooltip :content="item.isArchived ? '取消归档' : '归档'" placement="top" :open-delay="180">
+                        <el-tooltip :content="item.isArchived ? ncfST('Frontend.186') : ncfST('Frontend.187')" placement="top" :open-delay="180">
                             <el-button type="text" size="mini" class="sidebar-taskitem-archive"
                                 :icon="item.isArchived ? 'el-icon-folder-opened' : 'el-icon-folder'"
                                 :loading="taskArchiveSavingId === item.id"
@@ -1215,7 +1215,7 @@
                     </div>
                     </template>
                     <div v-else class="df-wn flex-ac flex-jc emptyData"
-                        style="flex-grow: 1;font-size: 14px;color: #5e6d82;margin-top:150px;">暂无数据</div>
+                        style="flex-grow: 1;font-size: 14px;color: #5e6d82;margin-top:150px;">{{ ncfST('Frontend.011') }}</div>
                 </el-scrollbar>
             </div>
             @* Main content *@
@@ -1224,67 +1224,67 @@
                 <template v-if="scrollbarTaskIndex === ''">
                     <div class="df-wn flex-ac flex-js groupInfoRow">
                         <div class="groupInfoRow-name text-ellipsis">
-                            全部任务
+                            {{ ncfST('Frontend.046') }}
                         </div>
                         <div class="df-wn groupInfoRow-operation">
                             <el-button type="primary" size="mini"
-                                @@click="handleTaskStartBatch('taskBatch')">批量启动</el-button>
+                                @@click="handleTaskStartBatch('taskBatch')">{{ ncfST('Frontend.049') }}</el-button>
                             <el-button type="warning" size="mini"
-                                @@click="handleTaskForceStopBatch('taskBatch')">批量停止</el-button>
+                                @@click="handleTaskForceStopBatch('taskBatch')">{{ ncfST('Frontend.050') }}</el-button>
                             <el-button type="danger" size="mini"
-                                @@click="handleTaskDeleteBatch('taskBatch')">批量删除</el-button>
+                                @@click="handleTaskDeleteBatch('taskBatch')">{{ ncfST('Frontend.051') }}</el-button>
                         </div>
                     </div>
                     @* 255 *@
                     <el-table ref="taskList" :data="taskList" key="taskList" :height="`calc(100vh - 300px)`"
                         style="width: 100%;" @@selection-change="handleTaskSelectionChange">
                         <el-table-column type="selection" width="30"></el-table-column>
-                        <el-table-column prop="name" label="运行任务" min-width="170" show-overflow-tooltip>
+                        <el-table-column prop="name" :label="ncfST('Frontend.056')" min-width="170" show-overflow-tooltip>
                             <template slot-scope="{ row }">
                                 <i :class="[taskStateIcon[row.status],taskStateColor[row.status]]"></i>
                                 <span>{{ row.name }}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column label="开始时间" min-width="100">
+                        <el-table-column :label="ncfST('Frontend.057')" min-width="100">
                             <template slot-scope="{ row }">
                                 {{ row.startTime | showFormatDate }}
                             </template>
                         </el-table-column>
-                        <el-table-column label="持续时长" width="100">
+                        <el-table-column :label="ncfST('Frontend.058')" width="100">
                             <template slot-scope="{ row }">
                                 {{ calculateDuration(row.startTime,row.endTime) }}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="modelName" label="模型名称" min-width="100" show-overflow-tooltip>
+                        <el-table-column prop="modelName" :label="ncfST('Frontend.059')" min-width="100" show-overflow-tooltip>
                             <template slot-scope="{ row }">
                                 {{ row.modelName }}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="promptCommand" label="任务描述" min-width="130" show-overflow-tooltip>
+                        <el-table-column prop="promptCommand" :label="ncfST('Frontend.060')" min-width="130" show-overflow-tooltip>
                             <template slot-scope="{ row }">
                                 {{ row.promptCommand }}
                             </template>
                         </el-table-column>
-                        <el-table-column fixed="right" label="操作" width="210" class-name="ncf-table-actions-column">
+                        <el-table-column fixed="right" :label="ncfST('Frontend.061')" width="210" class-name="ncf-table-actions-column">
                             <template slot-scope="{ row,$index }">
                                 <el-button type="primary" size="mini" icon="el-icon-view"
-                                    @@click="handleTaskView('task', row, $index)">详情</el-button>
+                                    @@click="handleTaskView('task', row, $index)">{{ ncfST('Frontend.017') }}</el-button>
                                 <el-button type="primary" size="mini" icon="el-icon-refresh-right"
-                                    @@click="handleTaskAgain('task', row)">再次执行</el-button>
-                                <el-tooltip content="更多操作" placement="top" :open-delay="180">
+                                    @@click="handleTaskAgain('task', row)">{{ ncfST('Frontend.063') }}</el-button>
+                                <el-tooltip :content="ncfST('Frontend.580')" placement="top" :open-delay="180">
                                     <el-dropdown trigger="click" placement="bottom-end"
                                         @@command="handleTaskAction($event,'task',row,$index)">
                                     <el-button type="text" size="mini" icon="el-icon-more"
                                         class="ncf-table-action-more" title="更多操作" aria-label="更多操作"></el-button>
                                         <el-dropdown-menu slot="dropdown">
                                             <el-dropdown-item command="parameters">
-                                                <i class="el-icon-user"></i> 智能体参数
+                                                <i class="el-icon-user"></i> {{ ncfST('Frontend.062') }}
                                             </el-dropdown-item>
                                             <el-dropdown-item v-if="canForceStopTask(row)" command="force-stop">
-                                                <i class="el-icon-video-pause"></i> 强制停止
+                                                <i class="el-icon-video-pause"></i> {{ ncfST('Frontend.064') }}
                                             </el-dropdown-item>
                                         <el-dropdown-item command="delete" divided class="ncf-table-action-danger">
-                                                <i class="el-icon-delete"></i> 删除
+                                                <i class="el-icon-delete"></i> {{ ncfST('Frontend.018') }}
                                             </el-dropdown-item>
                                         </el-dropdown-menu>
                                     </el-dropdown>
