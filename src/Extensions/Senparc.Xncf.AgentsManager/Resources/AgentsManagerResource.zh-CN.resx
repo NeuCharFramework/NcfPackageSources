@@ -1141,4 +1141,13 @@
   <data name="Frontend.563" xml:space="preserve"><value>Human 回复提交失败</value></data>
   <data name="Frontend.564" xml:space="preserve"><value>Human 回复已提交</value></data>
   <data name="Frontend.565" xml:space="preserve"><value>（未提供参数）</value></data>
+  <data name="Frontend.566" xml:space="preserve"><value>当前任务用量</value></data>
+  <data name="Frontend.567" xml:space="preserve"><value>平均响应</value></data>
+  <data name="Frontend.568" xml:space="preserve"><value>累计 Token</value></data>
+  <data name="Frontend.569" xml:space="preserve"><value>最近活动</value></data>
+  <data name="Frontend.570" xml:space="preserve"><value>连接检测</value></data>
+  <data name="Frontend.571" xml:space="preserve"><value>用量仅统计当前任务中已加载的记录</value></data>
+  <data name="Frontend.572" xml:space="preserve"><value>在新窗口中编辑 Agent</value></data>
+  <data name="Frontend.573" xml:space="preserve"><value>类型 {0}</value></data>
+  <data name="Frontend.574" xml:space="preserve"><value>平台 {0}</value></data>
 </root>

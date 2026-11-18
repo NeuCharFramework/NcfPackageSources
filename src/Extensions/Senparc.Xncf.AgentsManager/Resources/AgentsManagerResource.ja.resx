@@ -1715,4 +1715,13 @@
   <data name="Frontend.563" xml:space="preserve"><value>Humanの返信の送信に失敗しました</value></data>
   <data name="Frontend.564" xml:space="preserve"><value>Humanの返信を送信しました</value></data>
   <data name="Frontend.565" xml:space="preserve"><value>（パラメーター未指定）</value></data>
+  <data name="Frontend.566" xml:space="preserve"><value>現在のタスク使用量</value></data>
+  <data name="Frontend.567" xml:space="preserve"><value>平均応答</value></data>
+  <data name="Frontend.568" xml:space="preserve"><value>合計トークン</value></data>
+  <data name="Frontend.569" xml:space="preserve"><value>最近のアクティビティ</value></data>
+  <data name="Frontend.570" xml:space="preserve"><value>接続確認</value></data>
+  <data name="Frontend.571" xml:space="preserve"><value>使用量は現在のタスクで読み込まれた記録だけを集計します</value></data>
+  <data name="Frontend.572" xml:space="preserve"><value>新しいウィンドウで Agent を編集</value></data>
+  <data name="Frontend.573" xml:space="preserve"><value>種類 {0}</value></data>
+  <data name="Frontend.574" xml:space="preserve"><value>プラットフォーム {0}</value></data>
 </root>

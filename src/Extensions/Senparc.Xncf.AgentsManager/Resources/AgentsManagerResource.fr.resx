@@ -1715,4 +1715,13 @@
   <data name="Frontend.563" xml:space="preserve"><value>Échec de l’envoi de la réponse humaine</value></data>
   <data name="Frontend.564" xml:space="preserve"><value>Réponse humaine envoyée</value></data>
   <data name="Frontend.565" xml:space="preserve"><value>(Aucun paramètre fourni)</value></data>
+  <data name="Frontend.566" xml:space="preserve"><value>Utilisation de la tâche actuelle</value></data>
+  <data name="Frontend.567" xml:space="preserve"><value>Réponse moyenne</value></data>
+  <data name="Frontend.568" xml:space="preserve"><value>Total des tokens</value></data>
+  <data name="Frontend.569" xml:space="preserve"><value>Activité récente</value></data>
+  <data name="Frontend.570" xml:space="preserve"><value>Test de connexion</value></data>
+  <data name="Frontend.571" xml:space="preserve"><value>L’utilisation compte uniquement les enregistrements chargés pour la tâche actuelle</value></data>
+  <data name="Frontend.572" xml:space="preserve"><value>Modifier l’Agent dans une nouvelle fenêtre</value></data>
+  <data name="Frontend.573" xml:space="preserve"><value>Type {0}</value></data>
+  <data name="Frontend.574" xml:space="preserve"><value>Plateforme {0}</value></data>
 </root>

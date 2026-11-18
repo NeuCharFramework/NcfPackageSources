@@ -1715,4 +1715,13 @@
   <data name="Frontend.563" xml:space="preserve"><value>Human reply submission failed</value></data>
   <data name="Frontend.564" xml:space="preserve"><value>Human reply submitted</value></data>
   <data name="Frontend.565" xml:space="preserve"><value>(No parameters provided)</value></data>
+  <data name="Frontend.566" xml:space="preserve"><value>Current task usage</value></data>
+  <data name="Frontend.567" xml:space="preserve"><value>Average response</value></data>
+  <data name="Frontend.568" xml:space="preserve"><value>Total tokens</value></data>
+  <data name="Frontend.569" xml:space="preserve"><value>Recent activity</value></data>
+  <data name="Frontend.570" xml:space="preserve"><value>Connection check</value></data>
+  <data name="Frontend.571" xml:space="preserve"><value>Usage counts only records loaded for the current task</value></data>
+  <data name="Frontend.572" xml:space="preserve"><value>Edit Agent in a new window</value></data>
+  <data name="Frontend.573" xml:space="preserve"><value>Type {0}</value></data>
+  <data name="Frontend.574" xml:space="preserve"><value>Platform {0}</value></data>
 </root>

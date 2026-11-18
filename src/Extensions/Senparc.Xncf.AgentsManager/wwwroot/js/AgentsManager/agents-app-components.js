@@ -46,19 +46,19 @@ Vue.component('participant-quick-action', {
         </div>
         <div class="participant-quick-info__description">{{ quickInfo.description }}</div>
         <div class="participant-quick-info__metrics">
-          <div><span>当前任务用量</span><strong>{{ quickInfo.currentUsageText }}</strong></div>
-          <div><span>平均响应</span><strong>{{ quickInfo.responseTimeText }}</strong></div>
-          <div><span>累计 Token</span><strong>{{ quickInfo.totalUsageText }}</strong></div>
-          <div><span>最近活动</span><strong>{{ quickInfo.activityText }}</strong></div>
+          <div><span>{{ncfST('Frontend.566')}}</span><strong>{{ quickInfo.currentUsageText }}</strong></div>
+          <div><span>{{ncfST('Frontend.567')}}</span><strong>{{ quickInfo.responseTimeText }}</strong></div>
+          <div><span>{{ncfST('Frontend.568')}}</span><strong>{{ quickInfo.totalUsageText }}</strong></div>
+          <div><span>{{ncfST('Frontend.569')}}</span><strong>{{ quickInfo.activityText }}</strong></div>
         </div>
         <div v-if="quickInfo.isRemote" class="participant-quick-info__health" :title="quickInfo.healthMessage">
-          <span>连接检测</span>
+          <span>{{ncfST('Frontend.570')}}</span>
           <span>{{ quickInfo.healthMessage }}</span>
         </div>
         <div class="participant-quick-info__footer">
-          <span>用量仅统计当前任务中已加载的记录</span>
-          <el-button v-if="quickInfo.canOpenEditor" type="text" size="mini" icon="el-icon-top-right" title="在新窗口中编辑 Agent" @click.stop="editAgent">编辑</el-button>
-          <el-button v-if="quickInfo.isRemote" type="text" size="mini" :loading="testing" @click.stop="testRemote">测试连接</el-button>
+          <span>{{ncfST('Frontend.571')}}</span>
+          <el-button v-if="quickInfo.canOpenEditor" type="text" size="mini" icon="el-icon-top-right" :title="ncfST('Frontend.572')" @click.stop="editAgent">{{ncfST('Studio.Edit')}}</el-button>
+          <el-button v-if="quickInfo.isRemote" type="text" size="mini" :loading="testing" @click.stop="testRemote">{{ncfST('Frontend.117')}}</el-button>
         </div>
       </section>
       <button slot="reference" type="button" class="taskmain-member-action" :title="'查看 ' + participant.name + ' 的信息'">
@@ -135,12 +135,12 @@ Vue.component('load-more-select', {
       <template v-else>{{item.label}}</template>
     </el-option></el-select>
     <template v-if="direction==='horizontal'">
-        <i class="cursorPointer fas fa-redo" title="刷新" @click="refreshManagementList" />
+        <i class="cursorPointer fas fa-redo" :title="ncfST('Studio.Refresh')" @click="refreshManagementList" />
     </template>
     <template v-else>
-        <el-button size="mini" @click="refreshManagementList" :loading="interesLoading">刷新</el-button>
-        <el-button v-if="serviceType === 'systemMessage'" type="primary" size="mini" @click="jumpPromptRange('promptRange')">管理PromptRange</el-button>
-        <el-button v-if="serviceType === 'model'" type="primary" size="mini" @click="jumpPromptRange('model')">管理模型</el-button>
+        <el-button size="mini" @click="refreshManagementList" :loading="interesLoading">{{ncfST('Studio.Refresh')}}</el-button>
+        <el-button v-if="serviceType === 'systemMessage'" type="primary" size="mini" @click="jumpPromptRange('promptRange')">{{ncfST('Frontend.158')}}</el-button>
+        <el-button v-if="serviceType === 'model'" type="primary" size="mini" @click="jumpPromptRange('model')">{{ncfST('Frontend.261')}}</el-button>
     </template>
     
     </div>`,
@@ -230,11 +230,11 @@ Vue.component('load-more-select', {
   },
   methods: {
     modelTypeLabel(type) {
-      return Number(type) === 2 ? 'Chat' : `类型 ${type ?? '未知'}`
+      return Number(type) === 2 ? 'Chat' : ncfST('Frontend.573', type ?? ncfST('Frontend.555'))
     },
     modelPlatformLabel(platform) {
       const labels = { 1: 'OpenAI', 2: 'Azure OpenAI', 3: 'Hugging Face', 4: 'NeuCharAI' }
-      return labels[Number(platform)] || `平台 ${platform ?? '未知'}`
+      return labels[Number(platform)] || ncfST('Frontend.574', platform ?? ncfST('Frontend.555'))
     },
     jumpPromptRange(urlType) {
       let url = ''

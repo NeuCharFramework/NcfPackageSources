@@ -1715,4 +1715,13 @@
   <data name="Frontend.563" xml:space="preserve"><value>No se pudo enviar la respuesta humana</value></data>
   <data name="Frontend.564" xml:space="preserve"><value>Respuesta humana enviada</value></data>
   <data name="Frontend.565" xml:space="preserve"><value>(No se proporcionaron parámetros)</value></data>
+  <data name="Frontend.566" xml:space="preserve"><value>Uso de la tarea actual</value></data>
+  <data name="Frontend.567" xml:space="preserve"><value>Respuesta media</value></data>
+  <data name="Frontend.568" xml:space="preserve"><value>Tokens totales</value></data>
+  <data name="Frontend.569" xml:space="preserve"><value>Actividad reciente</value></data>
+  <data name="Frontend.570" xml:space="preserve"><value>Comprobación de conexión</value></data>
+  <data name="Frontend.571" xml:space="preserve"><value>El uso solo cuenta los registros cargados en la tarea actual</value></data>
+  <data name="Frontend.572" xml:space="preserve"><value>Editar Agent en una ventana nueva</value></data>
+  <data name="Frontend.573" xml:space="preserve"><value>Tipo {0}</value></data>
+  <data name="Frontend.574" xml:space="preserve"><value>Plataforma {0}</value></data>
 </root>

@@ -1715,4 +1715,13 @@
   <data name="Frontend.563" xml:space="preserve"><value>Не удалось отправить ответ человека</value></data>
   <data name="Frontend.564" xml:space="preserve"><value>Ответ человека отправлен</value></data>
   <data name="Frontend.565" xml:space="preserve"><value>(Параметры не указаны)</value></data>
+  <data name="Frontend.566" xml:space="preserve"><value>Использование текущей задачи</value></data>
+  <data name="Frontend.567" xml:space="preserve"><value>Среднее время ответа</value></data>
+  <data name="Frontend.568" xml:space="preserve"><value>Всего токенов</value></data>
+  <data name="Frontend.569" xml:space="preserve"><value>Последняя активность</value></data>
+  <data name="Frontend.570" xml:space="preserve"><value>Проверка подключения</value></data>
+  <data name="Frontend.571" xml:space="preserve"><value>Использование учитывает только записи, загруженные для текущей задачи</value></data>
+  <data name="Frontend.572" xml:space="preserve"><value>Редактировать Agent в новом окне</value></data>
+  <data name="Frontend.573" xml:space="preserve"><value>Тип {0}</value></data>
+  <data name="Frontend.574" xml:space="preserve"><value>Платформа {0}</value></data>
 </root>
