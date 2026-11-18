@@ -2218,7 +2218,7 @@
     </div>
 </el-drawer>
 @* Add-agent dialog. *@
-<el-dialog :title="agentForm.id ? (agentForm.isSystemAgent ? '编辑系统 Agent' : '编辑智能体') : '新增智能体'" :visible.sync="visible.dialogGroupAgent" :show-close="false"
+<el-dialog :title="agentForm.id ? ncfST('Frontend.096') : ncfST('Frontend.097')" :visible.sync="visible.dialogGroupAgent" :show-close="false"
     :close-on-click-modal="false" :close-on-press-escape="false">
     <el-form v-if="visible.dialogGroupAgent" ref="agentELForm" :model="agentForm" :rules="agentFormRules" :size="elSize"
         label-position="left" label-width="130px" class="drawerForm-container">
@@ -2229,44 +2229,44 @@
                   :closable="false"
                   show-icon
                   style="margin-bottom:16px;"></el-alert>
-        <el-form-item label="智能体名称" prop="name">
-            <el-input v-model="agentForm.name" placeholder="请填写" :disabled="agentForm.isHuman"></el-input>
+        <el-form-item :label="ncfST('Frontend.098')" prop="name">
+            <el-input v-model="agentForm.name" :placeholder="ncfST('Frontend.099')" :disabled="agentForm.isHuman"></el-input>
         </el-form-item>
         <el-form-item v-if="!agentForm.isHuman" label="SystemMessage" required>
             <el-radio-group v-model="agentForm.systemMessageType" @@change="handleSystemMessageTypeChange">
-                <el-radio label="1" border>自选</el-radio>
-                <el-radio label="2" border>手动</el-radio>
+                <el-radio label="1" border>{{ ncfST('Frontend.100') }}</el-radio>
+                <el-radio label="2" border>{{ ncfST('Frontend.101') }}</el-radio>
             </el-radio-group>
         </el-form-item>
-        <el-form-item v-if="!agentForm.isHuman && agentForm.systemMessageType === '1'" label="自选" prop="systemMessage">
+        <el-form-item v-if="!agentForm.isHuman && agentForm.systemMessageType === '1'" :label="ncfST('Frontend.100')" prop="systemMessage">
             <load-more-select v-model="agentForm.systemMessage" service-type="systemMessage" direction="vertical"
-                placeholder="请选择" @@options-loaded="handleSystemMessageOptionsLoaded" />
+                :placeholder="ncfST('Frontend.102')" @@options-loaded="handleSystemMessageOptionsLoaded" />
         </el-form-item>
-        <el-form-item v-if="!agentForm.isHuman && agentForm.systemMessageType === '2'" label="手动输入" prop="systemMessage">
-            <el-input v-model="agentForm.systemMessage" type="textarea" :rows="4" placeholder="请填写"></el-input>
+        <el-form-item v-if="!agentForm.isHuman && agentForm.systemMessageType === '2'" :label="ncfST('Frontend.103')" prop="systemMessage">
+            <el-input v-model="agentForm.systemMessage" type="textarea" :rows="4" :placeholder="ncfST('Frontend.099')"></el-input>
             <div v-if="agentForm.id" style="margin-top:8px;">
                 <el-button size="small" type="primary" plain icon="el-icon-magic-stick"
                            :loading="agentPromptConversionLoading"
-                           @@click="convertAgentPromptToPromptRange">生成到 PromptRange 并打靶评分</el-button>
+                           @@click="convertAgentPromptToPromptRange">{{ ncfST('Frontend.451') }}</el-button>
             </div>
         </el-form-item>
-        <el-form-item label="绑定模型" prop="modelBinding">
+        <el-form-item :label="ncfST('Frontend.463')" prop="modelBinding">
             <el-radio-group v-model="agentForm.modelBinding" @@change="handleAgentModelBindingChange">
-                <el-radio :label="0" border :disabled="agentForm.isHuman">从 PromptRange 继承</el-radio>
-                <el-radio :label="1" border>跟随组任务</el-radio>
-                <el-radio :label="2" border>手动选择 AIModel</el-radio>
+                <el-radio :label="0" border :disabled="agentForm.isHuman">{{ ncfST('Frontend.358') }}</el-radio>
+                <el-radio :label="1" border>{{ ncfST('Frontend.478') }}</el-radio>
+                <el-radio :label="2" border>{{ ncfST('Frontend.411') }}</el-radio>
             </el-radio-group>
             <div v-if="agentForm.modelBinding === 2" style="margin-top:10px;">
                 <load-more-select v-model="agentForm.aiModelId" service-type="model" :chat-only="true"
-                                  direction="vertical" placeholder="请选择 Chat 模型" />
+                                  direction="vertical" :placeholder="ncfST('Frontend.476')" />
             </div>
             <div class="form-help-text" v-if="agentForm.systemMessageType === '2' && !agentForm.isHuman">手动 Prompt 必须手动选择一个 Chat 类型 AIModel。</div>
         </el-form-item>
-        <el-form-item v-if="!agentForm.isHuman" label="是否启用" prop="enable">
-            <el-checkbox v-model="agentForm.enable">启用智能体</el-checkbox>
+        <el-form-item v-if="!agentForm.isHuman" :label="ncfST('Frontend.104')" prop="enable">
+            <el-checkbox v-model="agentForm.enable">{{ ncfST('Frontend.105') }}</el-checkbox>
         </el-form-item>
-        <el-form-item label="绑定知识库" prop="knowledgeBaseId">
-            <el-select v-model="agentForm.knowledgeBaseId" clearable filterable style="width:100%" placeholder="不绑定知识库">
+        <el-form-item :label="ncfST('Frontend.464')" prop="knowledgeBaseId">
+            <el-select v-model="agentForm.knowledgeBaseId" clearable filterable style="width:100%" :placeholder="ncfST('Frontend.352')">
                 <el-option v-for="item in knowledgeBaseOptions" :key="item.id"
                     :label="getKnowledgeBaseOptionLabel(item)"
                     :value="item.id" :disabled="!item.isEmbedded"></el-option>
@@ -2276,23 +2276,23 @@
                     {{ getKnowledgeBaseBindingInfo(agentForm.knowledgeBaseId).text }}
                 </el-tag>
                 <el-button size="mini" type="primary" plain icon="el-icon-folder-opened"
-                    @@click="openKnowledgeBase(agentForm.knowledgeBaseId, 'materials')">管理资料</el-button>
+                    @@click="openKnowledgeBase(agentForm.knowledgeBaseId, 'materials')">{{ ncfST('Frontend.459') }}</el-button>
                 <el-button size="mini" plain icon="el-icon-setting"
-                    @@click="openKnowledgeBase(agentForm.knowledgeBaseId, 'edit')">编辑设置</el-button>
+                    @@click="openKnowledgeBase(agentForm.knowledgeBaseId, 'edit')">{{ ncfST('Frontend.469') }}</el-button>
             </div>
         </el-form-item>
-        <el-form-item label="说明" prop="description">
-            <el-input type="textarea" v-model="agentForm.description" :rows="4" placeholder="请填写"></el-input>
+        <el-form-item :label="ncfST('Frontend.134')" prop="description">
+            <el-input type="textarea" v-model="agentForm.description" :rows="4" :placeholder="ncfST('Frontend.099')"></el-input>
         </el-form-item>
-        <el-form-item label="外接平台" prop="hookRobotType">
-            <el-select v-model="agentForm.hookRobotType" style="width:100%" placeholder="请选择">
+        <el-form-item :label="ncfST('Frontend.106')" prop="hookRobotType">
+            <el-select v-model="agentForm.hookRobotType" style="width:100%" :placeholder="ncfST('Frontend.102')">
                 <el-option label="None" :value="0"></el-option>
                 <el-option label="WeChatMp" :value="1"></el-option>
                 <el-option label="WeChatWorkRobot" :value="2"></el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="外接平台参数" prop="hookRobotParameter">
-            <el-input v-model="agentForm.hookRobotParameter" placeholder="请填写" :disabled="agentForm.hookRobotType === 0"></el-input>
+        <el-form-item :label="ncfST('Frontend.107')" prop="hookRobotParameter">
+            <el-input v-model="agentForm.hookRobotParameter" :placeholder="ncfST('Frontend.099')" :disabled="agentForm.hookRobotType === 0"></el-input>
         </el-form-item>
         <el-form-item label="Agent 头像" prop="avastar">
             <div class="df-wn flex-ac flex-js agentForm-agentAvatarBox">
