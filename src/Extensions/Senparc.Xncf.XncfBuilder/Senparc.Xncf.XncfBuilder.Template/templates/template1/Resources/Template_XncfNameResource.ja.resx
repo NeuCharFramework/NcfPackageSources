@@ -20,6 +20,15 @@
   <data name="Area.DatabaseSample" xml:space="preserve">
     <value>データベース操作サンプル</value>
   </data>
+  <data name="Area.DatabaseListSample" xml:space="preserve">
+    <value>データ一覧サンプル</value>
+  </data>
+  <data name="Area.StartupLog" xml:space="preserve">
+    <value>Template_XncfName 起動</value>
+  </data>
+  <data name="Area.RegisteredLog" xml:space="preserve">
+    <value>Area:Template_OrgName.Xncf.Template_XncfName を登録しました</value>
+  </data>
   <data name="Parameter.Sample.Name" xml:space="preserve">
     <value>名前||二重縦線の前はパラメーター名、後ろは説明です</value>
   </data>
@@ -104,6 +113,18 @@
   <data name="Function.EventBusRoundTrip.Timeout" xml:space="preserve">
     <value>EventBus ラウンドトリップがタイムアウトしました。ホストの EventBus 登録とこの XNCF アセンブリのスキャンを確認してください。</value>
   </data>
+  <data name="Function.Sample.Name" xml:space="preserve">
+    <value>計算サンプル関数</value>
+  </data>
+  <data name="Function.Sample.Description" xml:space="preserve">
+    <value>基本計算、パラメーター UI、ログ、多言語応答を確認します。</value>
+  </data>
+  <data name="Function.Sample.Result" xml:space="preserve">
+    <value>【{0}】の計算結果：{1}。計算手順はログを確認してください。</value>
+  </data>
+  <data name="Function.Api.ExceptionHandled" xml:space="preserve">
+    <value>例外を処理しました：{0}</value>
+  </data>
   <data name="Frontend.001" xml:space="preserve">
     <value>Colorデータベース管理</value>
   </data>
@@ -114,7 +135,7 @@
     <value>色を追加</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>Refresh</value>
+    <value>更新</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
     <value>デバッグ情報</value>
@@ -141,7 +162,7 @@
     <value>簡易データ表示テスト：</value>
   </data>
   <data name="Frontend.013" xml:space="preserve">
-    <value>Time:</value>
+    <value>時刻：</value>
   </data>
   <data name="Frontend.014" xml:space="preserve">
     <value>表示するデータがありません！</value>
@@ -159,22 +180,22 @@
     <value>色のプレビュー</value>
   </data>
   <data name="Frontend.019" xml:space="preserve">
-    <value>Created</value>
+    <value>作成日時</value>
   </data>
   <data name="Frontend.020" xml:space="preserve">
-    <value>Updated at</value>
+    <value>更新日時</value>
   </data>
   <data name="Frontend.021" xml:space="preserve">
     <value>アクション</value>
   </data>
   <data name="Frontend.022" xml:space="preserve">
-    <value>Edit</value>
+    <value>編集</value>
   </data>
   <data name="Frontend.023" xml:space="preserve">
     <value>ランダム</value>
   </data>
   <data name="Frontend.024" xml:space="preserve">
-    <value>Delete</value>
+    <value>削除</value>
   </data>
   <data name="Frontend.025" xml:space="preserve">
     <value>追加メモ</value>
@@ -216,22 +237,22 @@
     <value>データの読み込みに失敗: {0}</value>
   </data>
   <data name="Frontend.038" xml:space="preserve">
-    <value>Operation completed</value>
+    <value>操作が完了しました</value>
   </data>
   <data name="Frontend.039" xml:space="preserve">
     <value>作成に失敗しました</value>
   </data>
   <data name="Frontend.040" xml:space="preserve">
-    <value>Update failed</value>
+    <value>更新に失敗しました</value>
   </data>
   <data name="Frontend.041" xml:space="preserve">
     <value>この色を完全に削除します。続行しますか?</value>
   </data>
   <data name="Frontend.042" xml:space="preserve">
-    <value>Notice</value>
+    <value>通知</value>
   </data>
   <data name="Frontend.043" xml:space="preserve">
-    <value>Confirm</value>
+    <value>確認</value>
   </data>
   <data name="Frontend.044" xml:space="preserve">
     <value>キャンセル</value>
@@ -302,6 +323,8 @@
   <data name="Frontend.066" xml:space="preserve">
     <value>青の値は 0 から 255 の範囲にしてください</value>
   </data>
-
   <data name="Frontend.067" xml:space="preserve">
+    <value>その他の操作</value>
+  </data>
+
 </root>

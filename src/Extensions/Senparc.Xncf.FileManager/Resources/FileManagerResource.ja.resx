@@ -127,13 +127,13 @@
     <value>複数ファイルを同時にアップロードできます</value>
   </data>
   <data name="Frontend.011" xml:space="preserve">
-    <value>Name</value>
+    <value>名前</value>
   </data>
   <data name="Frontend.012" xml:space="preserve">
     <value>メモ</value>
   </data>
   <data name="Frontend.013" xml:space="preserve">
-    <value>Notes (optional)</value>
+    <value>メモ（任意）</value>
   </data>
   <data name="Frontend.014" xml:space="preserve">
     <value>サイズ</value>
@@ -241,7 +241,7 @@
     <value>更新しました</value>
   </data>
   <data name="Frontend.049" xml:space="preserve">
-    <value>Update failed</value>
+    <value>更新に失敗しました</value>
   </data>
   <data name="Frontend.050" xml:space="preserve">
     <value>このファイルを削除しますか?</value>

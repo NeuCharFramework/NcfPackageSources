@@ -5,16 +5,16 @@
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <data name="Module.MenuName" xml:space="preserve"><value>NeuChar Workflow</value></data>
-  <data name="Module.Description" xml:space="preserve"><value>Secure server-side workflows composed from Functions, system nodes, and controlled Agents.</value></data>
+  <data name="Module.Description" xml:space="preserve"><value>Function、システムノード、制御された Agent で構成する安全なサーバー側 Workflow。</value></data>
   <data name="Area.Workflow" xml:space="preserve"><value>Workflow</value></data>
   <data name="Area.Tasks" xml:space="preserve"><value>Tasks</value></data>
-  <data name="Area.Replay" xml:space="preserve"><value>Run replay</value></data>
+  <data name="Area.Replay" xml:space="preserve"><value>実行を再生</value></data>
   <data name="Title.Designer" xml:space="preserve"><value>NeuChar Workflow</value></data>
-  <data name="Title.Tasks" xml:space="preserve"><value>Workflow tasks</value></data>
-  <data name="Title.Replay" xml:space="preserve"><value>Workflow run replay</value></data>
-  <data name="Designer.Introduction" xml:space="preserve"><value>Compose Functions, system nodes, and Agents. Parameters, types, connections, and module state are checked before save and run.</value></data>
-  <data name="Action.Refresh" xml:space="preserve"><value>Refresh</value></data>
-  <data name="Action.NewWorkflow" xml:space="preserve"><value>New workflow</value></data>
+  <data name="Title.Tasks" xml:space="preserve"><value>Workflow タスク</value></data>
+  <data name="Title.Replay" xml:space="preserve"><value>Workflow 実行の再生</value></data>
+  <data name="Designer.Introduction" xml:space="preserve"><value>Function、システムノード、Agent を組み合わせます。保存と実行の前に、パラメーター、型、接続、モジュール状態を確認します。</value></data>
+  <data name="Action.Refresh" xml:space="preserve"><value>更新</value></data>
+  <data name="Action.NewWorkflow" xml:space="preserve"><value>新しい Workflow</value></data>
 
   <data name="Frontend.001" xml:space="preserve"><value>タスク一覧</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
   <data name="Frontend.002" xml:space="preserve"><value>実行リプレイ</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
@@ -630,6 +630,22 @@
 
   <data name="Frontend.604" xml:space="preserve"><value>現在のUTC時刻をISOテキストで返します。</value></data>
   <data name="Frontend.605" xml:space="preserve"><value>指定した形式で日付をフォーマットします。形式を空欄にすると既定の形式を使用します。</value></data>
+  <data name="AiCreation.NotAuthorized" xml:space="preserve"><value>現在の管理者を利用できません。</value></data>
+  <data name="AiCreation.ModuleUnavailable" xml:space="preserve"><value>NeuChar Workflow は有効になっていません。</value></data>
+  <data name="AiCreation.NameRequired" xml:space="preserve"><value>Workflow 名が必要です。</value></data>
+  <data name="AiCreation.MetadataTooLarge" xml:space="preserve"><value>Workflow 名または説明が許可されたサイズを超えています。</value></data>
+  <data name="AiCreation.TriggerNotAllowed" xml:space="preserve"><value>AI 作成 Workflow は現在、手動トリガーのみ対応します。</value></data>
+  <data name="AiCreation.GraphTooLarge" xml:space="preserve"><value>Workflow グラフが空であるか、許可されたサイズを超えています。</value></data>
+  <data name="AiCreation.SensitiveConfig" xml:space="preserve"><value>AI Workflow 作成では資格情報や外部復元シークレットを指定できません。</value></data>
+  <data name="AiCreation.GraphLimit" xml:space="preserve"><value>AI 作成 Workflow はノード 30 個、接続 60 本までです。</value></data>
+  <data name="AiCreation.ManualTriggerRequired" xml:space="preserve"><value>グラフには手動トリガーを 1 つだけ含める必要があります。</value></data>
+  <data name="AiCreation.EndRequired" xml:space="preserve"><value>グラフには終了ノードを 1 つだけ含める必要があります。</value></data>
+  <data name="AiCreation.NodeNotAllowed" xml:space="preserve"><value>このノード種別は AI 作成 Workflow では許可されていません。</value></data>
+  <data name="AiCreation.DisconnectedNode" xml:space="preserve"><value>AI 作成 Workflow のすべてのノードは手動トリガーから接続されている必要があります。</value></data>
+  <data name="AiCreation.FunctionReferenceRequired" xml:space="preserve"><value>Function ノードには moduleUid と functionKey が必要です。</value></data>
+  <data name="AiCreation.FunctionNotFound" xml:space="preserve"><value>指定された Function が存在しません。</value></data>
+  <data name="AiCreation.FunctionModuleUnavailable" xml:space="preserve"><value>Function のモジュールが有効になっていません。</value></data>
+  <data name="AiCreation.FunctionAiDenied" xml:space="preserve"><value>指定された Function は AI 呼び出しを許可していません。</value></data>
   <data name="Frontend.606" xml:space="preserve"><value>一時停止</value></data>
   <data name="Frontend.607" xml:space="preserve"><value>再生</value></data>
   <data name="Frontend.608" xml:space="preserve"><value>左値、比較演算子、右値に基づいて真または偽の分岐を選択します。ループ内では break で現在のループを直ちに終了できます。</value></data>
@@ -671,7 +687,7 @@
   <data name="Frontend.624" xml:space="preserve"><value>1～100,000 回の固定回数、または上流の単一値</value></data>
   <data name="Frontend.625" xml:space="preserve"><value>ループ → ループ本体 → ループ終了 → 次のノード</value></data>
   <data name="Frontend.626" xml:space="preserve"><value>入力ポート</value></data>
-  <data name="Frontend.627" xml:space="preserve"><value>continue / break</value></data>
+  <data name="Frontend.627" xml:space="preserve"><value>続行 / 中断</value></data>
   <data name="Frontend.628" xml:space="preserve"><value>出力</value></data>
   <data name="Frontend.629" xml:space="preserve"><value>すべての反復が完了するか break の後に下流へ進みます</value></data>
   <data name="Frontend.630" xml:space="preserve"><value>対象 Workflow と入力</value></data>
