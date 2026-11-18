@@ -693,4 +693,7 @@
   <data name="Frontend.646" xml:space="preserve"><value>Al activarlo, un ID de solicitud de un solo uso y una clave de recuperación del nodo pueden llamar a la WebAPI interna</value></data>
   <data name="Frontend.647" xml:space="preserve"><value>No hay nodo siguiente; no se puede insertar en una conexión existente</value></data>
   <data name="Frontend.648" xml:space="preserve"><value>Arrástralo al lienzo para añadirlo; no se puede insertar en una conexión</value></data>
+  <data name="Frontend.649" xml:space="preserve"><value>Esperando una solicitud Webhook externa</value></data>
+  <data name="Frontend.650" xml:space="preserve"><value>Ejecutado manualmente por el usuario</value></data>
+  <data name="Frontend.651" xml:space="preserve"><value>Se inicia cuando un usuario envía un mensaje mediante la página de chat</value></data>
 </root>

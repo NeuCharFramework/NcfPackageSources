@@ -692,4 +692,7 @@
   <data name="Frontend.646" xml:space="preserve"><value>启用后可使用一次请求 ID 与节点恢复密钥调用内部 WebAPI</value></data>
   <data name="Frontend.647" xml:space="preserve"><value>无后续节点，不能在线中插入</value></data>
   <data name="Frontend.648" xml:space="preserve"><value>可拖到画布添加；不能插入连线</value></data>
+  <data name="Frontend.649" xml:space="preserve"><value>等待外部 Webhook 请求</value></data>
+  <data name="Frontend.650" xml:space="preserve"><value>由用户手动运行</value></data>
+  <data name="Frontend.651" xml:space="preserve"><value>用户通过聊天页面发送消息启动</value></data>
 </root>

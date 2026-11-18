@@ -693,4 +693,7 @@
   <data name="Frontend.646" xml:space="preserve"><value>When enabled, a one-time request ID and node recovery key can call the internal WebAPI</value></data>
   <data name="Frontend.647" xml:space="preserve"><value>No following node; cannot be inserted into an existing edge</value></data>
   <data name="Frontend.648" xml:space="preserve"><value>Drag onto the canvas to add; cannot be inserted into an edge</value></data>
+  <data name="Frontend.649" xml:space="preserve"><value>Waiting for an external Webhook request</value></data>
+  <data name="Frontend.650" xml:space="preserve"><value>Run manually by the user</value></data>
+  <data name="Frontend.651" xml:space="preserve"><value>Started when a user sends a message through the chat page</value></data>
 </root>

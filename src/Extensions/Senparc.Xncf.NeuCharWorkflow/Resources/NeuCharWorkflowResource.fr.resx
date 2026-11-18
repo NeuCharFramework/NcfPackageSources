@@ -693,4 +693,7 @@
   <data name="Frontend.646" xml:space="preserve"><value>Une fois activé, un ID de requête et une clé de récupération du nœud peuvent appeler la WebAPI interne</value></data>
   <data name="Frontend.647" xml:space="preserve"><value>Aucun nœud suivant ; insertion impossible dans une liaison existante</value></data>
   <data name="Frontend.648" xml:space="preserve"><value>Faites-le glisser sur le canevas pour l'ajouter ; insertion impossible dans une liaison</value></data>
+  <data name="Frontend.649" xml:space="preserve"><value>En attente d'une requête Webhook externe</value></data>
+  <data name="Frontend.650" xml:space="preserve"><value>Exécuté manuellement par l'utilisateur</value></data>
+  <data name="Frontend.651" xml:space="preserve"><value>Démarre lorsqu'un utilisateur envoie un message depuis la page de chat</value></data>
 </root>

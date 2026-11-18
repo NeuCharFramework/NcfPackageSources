@@ -693,4 +693,7 @@
   <data name="Frontend.646" xml:space="preserve"><value>有効にすると、1 回限りのリクエスト ID とノード復旧キーで内部 WebAPI を呼び出せます</value></data>
   <data name="Frontend.647" xml:space="preserve"><value>後続ノードがないため、既存の接続には挿入できません</value></data>
   <data name="Frontend.648" xml:space="preserve"><value>キャンバスへドラッグして追加できます。接続には挿入できません</value></data>
+  <data name="Frontend.649" xml:space="preserve"><value>外部 Webhook リクエストを待機中</value></data>
+  <data name="Frontend.650" xml:space="preserve"><value>ユーザーが手動で実行</value></data>
+  <data name="Frontend.651" xml:space="preserve"><value>ユーザーがチャットページからメッセージを送信すると開始します</value></data>
 </root>

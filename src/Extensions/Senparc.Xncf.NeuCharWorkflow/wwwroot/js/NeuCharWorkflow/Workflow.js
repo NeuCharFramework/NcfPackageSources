@@ -2563,9 +2563,9 @@ new Vue({
         nodeSummary(node) {
             if (node.type === 'function') { const fn = this.findFunction(node.config); return fn ? fn.moduleName : 'Function 已失效'; }
             if (node.type === 'interval-trigger') return `每 ${this.form.intervalSeconds} 秒`;
-            if (node.type === 'webhook-trigger') return '等待外部 Webhook 请求';
-            if (node.type === 'manual-trigger') return '由用户手动运行';
-            if (node.type === 'chat-trigger') return '用户通过聊天页面发送消息启动';
+            if (node.type === 'webhook-trigger') return ncfST('Frontend.649');
+            if (node.type === 'manual-trigger') return ncfST('Frontend.650');
+            if (node.type === 'chat-trigger') return ncfST('Frontend.651');
             if (node.type === 'delay') return `${node.config.seconds || 0} 秒`;
             if (node.type === 'loop') return this.isTemplateValue(node.config?.count)
                 ? `按语法动态计算次数`

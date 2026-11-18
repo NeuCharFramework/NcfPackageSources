@@ -693,4 +693,7 @@
   <data name="Frontend.646" xml:space="preserve"><value>После включения одноразовый ID запроса и ключ восстановления узла могут вызвать внутренний WebAPI</value></data>
   <data name="Frontend.647" xml:space="preserve"><value>Нет следующего узла; вставка в существующее соединение невозможна</value></data>
   <data name="Frontend.648" xml:space="preserve"><value>Перетащите на холст для добавления; вставка в соединение невозможна</value></data>
+  <data name="Frontend.649" xml:space="preserve"><value>Ожидание внешнего запроса Webhook</value></data>
+  <data name="Frontend.650" xml:space="preserve"><value>Запускается пользователем вручную</value></data>
+  <data name="Frontend.651" xml:space="preserve"><value>Запускается, когда пользователь отправляет сообщение со страницы чата</value></data>
 </root>
