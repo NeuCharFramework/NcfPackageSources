@@ -77,19 +77,19 @@ if (typeof Vue !== 'undefined' && typeof Vue.component === 'function') {
                 keyword: '',
                 module: '',
                 systemNodes: [
-                    { type: 'condition', name: '条件判断', label: '条件', icon: 'el-icon-s-operation' },
-                    { type: 'delay', name: '等待', label: '等待', icon: 'el-icon-time' },
-                    { type: 'loop', name: '循环（For）', label: '循环', icon: 'el-icon-refresh' },
-                    { type: 'loop-end', name: '循环结束', label: '循环结束', icon: 'el-icon-circle-check' },
-                    { type: 'sub-workflow', name: '调用工作流', label: '调用流程', icon: 'el-icon-document' },
-                    { type: 'code', name: '安全代码', label: '安全代码', icon: 'el-icon-edit-outline' },
-                    { type: 'aggregate', name: '聚合', label: '聚合', icon: 'el-icon-collection' },
-                    { type: 'merge', name: '逐项合流', label: '逐项合流', icon: 'el-icon-sort' },
-                    { type: 'parallel', name: '并行', label: '并行', icon: 'el-icon-share' },
-                    { type: 'console', name: 'Console 打印', label: 'Console', icon: 'el-icon-monitor' },
-                    { type: 'neubell', name: '发送纽铃', label: '发送纽铃', icon: 'el-icon-bell' },
-                    { type: 'human-input', name: '等待人工输入', label: '人工输入', icon: 'el-icon-user-solid' },
-                    { type: 'end', name: '结束', label: '结束', icon: 'el-icon-circle-check' }
+                    { type: 'condition', name: ncfWorkflowText('Frontend.116'), label: ncfWorkflowText('Frontend.413'), icon: 'el-icon-s-operation' },
+                    { type: 'delay', name: ncfWorkflowText('Frontend.115'), label: ncfWorkflowText('Frontend.415'), icon: 'el-icon-time' },
+                    { type: 'loop', name: ncfWorkflowText('Frontend.416'), label: ncfWorkflowText('Frontend.417'), icon: 'el-icon-refresh' },
+                    { type: 'loop-end', name: ncfWorkflowText('Frontend.418'), label: ncfWorkflowText('Frontend.418'), icon: 'el-icon-circle-check' },
+                    { type: 'sub-workflow', name: ncfWorkflowText('Frontend.419'), label: ncfWorkflowText('Frontend.420'), icon: 'el-icon-document' },
+                    { type: 'code', name: ncfWorkflowText('Frontend.421'), label: ncfWorkflowText('Frontend.421'), icon: 'el-icon-edit-outline' },
+                    { type: 'aggregate', name: ncfWorkflowText('Frontend.118'), label: ncfWorkflowText('Frontend.422'), icon: 'el-icon-collection' },
+                    { type: 'merge', name: ncfWorkflowText('Frontend.423'), label: ncfWorkflowText('Frontend.423'), icon: 'el-icon-sort' },
+                    { type: 'parallel', name: ncfWorkflowText('Frontend.424'), label: ncfWorkflowText('Frontend.424'), icon: 'el-icon-share' },
+                    { type: 'console', name: ncfWorkflowText('Frontend.134'), label: ncfWorkflowText('Frontend.425'), icon: 'el-icon-monitor' },
+                    { type: 'neubell', name: ncfWorkflowText('Frontend.119'), label: ncfWorkflowText('Frontend.427'), icon: 'el-icon-bell' },
+                    { type: 'human-input', name: ncfWorkflowText('Frontend.137'), label: ncfWorkflowText('Frontend.429'), icon: 'el-icon-user-solid' },
+                    { type: 'end', name: ncfWorkflowText('Frontend.124'), label: ncfWorkflowText('Frontend.430'), icon: 'el-icon-circle-check' }
                 ]
             };
         },
