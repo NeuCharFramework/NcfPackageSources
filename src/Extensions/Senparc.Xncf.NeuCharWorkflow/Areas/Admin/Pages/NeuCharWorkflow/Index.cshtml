@@ -689,7 +689,7 @@
 
                     <aside ref="inspector" class="workflow-inspector">
                         <div class="pane-heading">
-                            <strong v-show="!inspectorCollapsed">节点设置</strong>
+                            <strong v-show="!inspectorCollapsed">{{ ncfST('Frontend.341') }}</strong>
                             <el-button type="text"
                                        :icon="inspectorCollapsed?'el-icon-s-unfold':'el-icon-s-fold'"
                                        :title="inspectorCollapsed?'展开节点设置':'折叠节点设置'"
@@ -698,49 +698,49 @@
                         <div v-show="!inspectorCollapsed" class="inspector-content">
                             <template v-if="selectedNode">
                                 <el-form label-position="top" size="small" :class="{'form-locked':editingLocked}">
-                                    <el-form-item label="名称"><el-input v-model="selectedNode.name" :disabled="editingLocked"></el-input></el-form-item>
+                                    <el-form-item :label="ncfST('Frontend.225')"><el-input v-model="selectedNode.name" :disabled="editingLocked"></el-input></el-form-item>
 
                                     <template v-if="selectedNode.type==='condition'">
-                                        <el-form-item label="条件为真时">
-                                            <el-select clearable :disabled="editingLocked" :value="targetFor(selectedNode,'true')" placeholder="也可直接拖拽连线" @@change="setTarget(selectedNode,'true',$event)">
+                                        <el-form-item :label="ncfST('Frontend.472')">
+                                            <el-select clearable :disabled="editingLocked" :value="targetFor(selectedNode,'true')" :placeholder="ncfST('Frontend.264')" @@change="setTarget(selectedNode,'true',$event)">
                                                 <el-option v-for="target in availableTargets(selectedNode,'true')" :key="target.id" :label="target.name" :value="target.id"></el-option>
                                             </el-select>
                                         </el-form-item>
-                                        <el-form-item label="条件为假时">
-                                            <el-select clearable :disabled="editingLocked" :value="targetFor(selectedNode,'false')" placeholder="也可直接拖拽连线" @@change="setTarget(selectedNode,'false',$event)">
+                                        <el-form-item :label="ncfST('Frontend.473')">
+                                            <el-select clearable :disabled="editingLocked" :value="targetFor(selectedNode,'false')" :placeholder="ncfST('Frontend.264')" @@change="setTarget(selectedNode,'false',$event)">
                                                 <el-option v-for="target in availableTargets(selectedNode,'false')" :key="target.id" :label="target.name" :value="target.id"></el-option>
                                             </el-select>
                                         </el-form-item>
-                                        <el-form-item label="循环控制（可选）">
-                                            <el-select v-model="selectedNode.config.breakOn" :disabled="editingLocked" clearable placeholder="普通条件判断">
-                                                <el-option label="不启用 break" value=""></el-option>
-                                                <el-option label="条件为真时跳出循环" value="true"></el-option>
-                                                <el-option label="条件为假时跳出循环" value="false"></el-option>
+                                        <el-form-item :label="ncfST('Frontend.474')">
+                                            <el-select v-model="selectedNode.config.breakOn" :disabled="editingLocked" clearable :placeholder="ncfST('Frontend.281')">
+                                                <el-option :label="ncfST('Frontend.149')" value=""></el-option>
+                                                <el-option :label="ncfST('Frontend.472')" value="true"></el-option>
+                                                <el-option :label="ncfST('Frontend.473')" value="false"></el-option>
                                             </el-select>
-                                            <p class="node-config-help">启用后，把节点的 break 端口连接到当前“循环结束”的 break 输入端；另一结果继续走真/假分支。</p>
+                                            <p class="node-config-help">{{ ncfST('Frontend.204') }}</p>
                                         </el-form-item>
-                                        <el-form-item label="break 后续节点">
-                                            <el-select clearable :disabled="editingLocked" :value="targetFor(selectedNode,'break')" placeholder="仅在循环控制启用时使用" @@change="setTarget(selectedNode,'break',$event)">
+                                        <el-form-item :label="ncfST('Frontend.148')">
+                                            <el-select clearable :disabled="editingLocked" :value="targetFor(selectedNode,'break')" :placeholder="ncfST('Frontend.155')" @@change="setTarget(selectedNode,'break',$event)">
                                                 <el-option v-for="target in availableTargets(selectedNode,'break')" :key="target.id" :label="target.name" :value="target.id"></el-option>
                                             </el-select>
                                         </el-form-item>
                                     </template>
-                                    <el-form-item v-else-if="selectedNode.type==='parallel'" label="并行分支">
+                                    <el-form-item v-else-if="selectedNode.type==='parallel'" :label="ncfST('Frontend.230')">
                                         <div class="workflow-parallel-branches">
                                             <strong>{{outgoingEdges(selectedNode.id).length}} 个后续分支</strong>
-                                            <span>请从节点右侧输出端依次拖拽到每个要同时运行的节点。</span>
+                                            <span>{{ ncfST('Frontend.348') }}</span>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item v-else-if="selectedNode.type!=='end'" label="后续节点">
-                                        <el-select clearable :disabled="editingLocked" :value="targetFor(selectedNode,'default')" placeholder="也可直接拖拽连线" @@change="setTarget(selectedNode,'default',$event)">
+                                    <el-form-item v-else-if="selectedNode.type!=='end'" :label="ncfST('Frontend.203')">
+                                        <el-select clearable :disabled="editingLocked" :value="targetFor(selectedNode,'default')" :placeholder="ncfST('Frontend.264')" @@change="setTarget(selectedNode,'default',$event)">
                                             <el-option v-for="target in availableTargets(selectedNode,'default')" :key="target.id" :label="target.name" :value="target.id"></el-option>
                                         </el-select>
                                     </el-form-item>
 
                                     <template v-if="selectedNode.type==='function' && selectedFunction">
-                                        <el-alert v-if="!selectedFunction.moduleAvailable" title="模块未安装或未开启，节点不可执行" type="warning" :closable="false"></el-alert>
-                                        <el-alert v-if="selectedFunction.catalogError" title="Function 参数元数据读取异常，请检查模块日志" type="warning" :closable="false"></el-alert>
-                                        <el-alert v-if="incomingEdges(selectedNode.id).length>1" title="此 Function 有多个上游；任一有效来源到达都可以触发，单次工作流运行中该节点最多执行一次。" type="info" :closable="false"></el-alert>
+                                        <el-alert v-if="!selectedFunction.moduleAvailable" :title="ncfST('Frontend.293')" type="warning" :closable="false"></el-alert>
+                                        <el-alert v-if="selectedFunction.catalogError" :title="ncfST('Frontend.189')" type="warning" :closable="false"></el-alert>
+                                        <el-alert v-if="incomingEdges(selectedNode.id).length>1" :title="ncfST('Frontend.298')" type="info" :closable="false"></el-alert>
                                         <div class="workflow-object-card workflow-function-card">
                                             <div class="workflow-object-card-header">
                                                 <div>
@@ -754,14 +754,14 @@
                                                                size="mini"
                                                                icon="el-icon-setting"
                                                                :disabled="editingLocked"
-                                                               @@click="openFunctionPage(selectedFunction,'settings')">设置</el-button>
+                                                               @@click="openFunctionPage(selectedFunction,'settings')">{{ ncfST('Frontend.344') }}</el-button>
                                                     <el-button v-if="functionPageUrl(selectedFunction,'run')"
                                                                type="success"
                                                                plain
                                                                size="mini"
                                                                icon="el-icon-video-play"
                                                                :disabled="editingLocked"
-                                                               @@click="openFunctionPage(selectedFunction,'run')">执行</el-button>
+                                                               @@click="openFunctionPage(selectedFunction,'run')">{{ ncfST('Frontend.257') }}</el-button>
                                                 </div>
                                             </div>
                                         </div>
