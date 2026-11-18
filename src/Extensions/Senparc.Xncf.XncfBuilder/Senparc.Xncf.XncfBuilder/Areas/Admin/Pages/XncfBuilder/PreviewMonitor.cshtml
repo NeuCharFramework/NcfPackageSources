@@ -11,9 +11,9 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
+    <el-breadcrumb-item>@XncfBuilderResource.Get("Frontend.016", "扩展模块")</el-breadcrumb-item>
     <el-breadcrumb-item>XncfBuilder</el-breadcrumb-item>
-    <el-breadcrumb-item>预览监控</el-breadcrumb-item>
+    <el-breadcrumb-item>@XncfBuilderResource.Get("Frontend.006", "XNCF 预览监控")</el-breadcrumb-item>
 }
 
 <div>
@@ -22,7 +22,7 @@
         <el-header class="module-header">
             <span class="start-title">
                 <i class="fa fa-dashboard"></i>&nbsp;
-                <span class="module-header-v">XNCF 预览监控</span>
+                <span class="module-header-v">@XncfBuilderResource.Get("Frontend.006", "XNCF 预览监控")</span>
             </span>
         </el-header>
 
@@ -30,7 +30,7 @@
             <el-alert
                 v-if="persistenceStatus && !persistenceStatus.isAvailable"
                 style="margin-bottom:16px;"
-                title="预览状态数据库持久化尚未就绪"
+                :title="ncfST('Frontend.034')"
                 type="warning"
                 show-icon
                 :closable="false"
@@ -40,7 +40,7 @@
             <el-alert
                 v-if="developmentStatus && !developmentStatus.isAvailable"
                 style="margin-top:12px;"
-                title="隔离开发任务数据库持久化尚未就绪"
+                :title="ncfST('Frontend.034')"
                 type="warning"
                 show-icon
                 :closable="false"
@@ -48,35 +48,35 @@
             </el-alert>
 
             <el-alert
-                title="隔离预览流水线"
+                :title="ncfST('Frontend.033')"
                 type="info"
                 show-icon
                 :closable="false"
-                description="每个任务依次执行宿主引用校验、隔离构建、启动新预览、健康检查和原子替换。新预览通过检查前，当前可用的旧预览不会停止。">
+                :description="ncfST('Frontend.043')">
             </el-alert>
 
             <el-row :gutter="16" style="margin: 18px 0;">
                 <el-col :xs="12" :sm="6">
                     <el-card shadow="never">
-                        <div style="color:#909399;font-size:13px;">运行中</div>
+                        <div style="color:#909399;font-size:13px;">{{ ncfST('Frontend.030') }}</div>
                         <div style="font-size:28px;color:#67c23a;">{{ runningCount }}</div>
                     </el-card>
                 </el-col>
                 <el-col :xs="12" :sm="6">
                     <el-card shadow="never">
-                        <div style="color:#909399;font-size:13px;">处理中 / 排队</div>
+                        <div style="color:#909399;font-size:13px;">{{ ncfST('Frontend.011') }}</div>
                         <div style="font-size:28px;color:#e6a23c;">{{ workingCount }}</div>
                     </el-card>
                 </el-col>
                 <el-col :xs="12" :sm="6">
                     <el-card shadow="never">
-                        <div style="color:#909399;font-size:13px;">失败 / 中断</div>
+                        <div style="color:#909399;font-size:13px;">{{ ncfST('Frontend.012') }}</div>
                         <div style="font-size:28px;color:#f56c6c;">{{ failedCount }}</div>
                     </el-card>
                 </el-col>
                 <el-col :xs="12" :sm="6">
                     <el-card shadow="never">
-                        <div style="color:#909399;font-size:13px;">会话总数</div>
+                        <div style="color:#909399;font-size:13px;">{{ ncfST('Frontend.010') }}</div>
                         <div style="font-size:28px;color:#409eff;">{{ sessions.length }}</div>
                     </el-card>
                 </el-col>
@@ -84,15 +84,15 @@
 
             <div class="filter-container">
                 <el-button type="primary" size="small" icon="el-icon-refresh" :loading="loading" @@click="loadState(true)">
-                    刷新状态
+                    {{ ncfST('Frontend.009') }}
                 </el-button>
-                <el-tag type="info" size="small">自动刷新：2 秒</el-tag>
-                <span style="margin-left:10px;color:#909399;font-size:12px;">最近更新：{{ formatDate(updatedAt) }}</span>
+                <el-tag type="info" size="small">{{ ncfST('Frontend.028') }}</el-tag>
+                <span style="margin-left:10px;color:#909399;font-size:12px;">{{ ncfST('Frontend.042', formatDate(updatedAt)) }}</span>
             </div>
 
             <el-card shadow="never">
                 <div slot="header" class="clearfix">
-                    <span><i class="fa fa-tasks"></i>&nbsp;模块预览会话</span>
+                    <span><i class="fa fa-tasks"></i>&nbsp;{{ ncfST('Frontend.040') }}</span>
                 </div>
 
                 <el-table
@@ -100,7 +100,7 @@
                     row-key="sessionId"
                     border
                     stripe
-                    empty-text="当前没有预览会话"
+                    :empty-text="ncfST('Frontend.041')"
                     @@expand-change="handleExpandChange">
                     <el-table-column type="expand">
                         <template slot-scope="scope">
@@ -149,13 +149,13 @@
                         </template>
                     </el-table-column>
 
-                    <el-table-column prop="moduleProjectName" label="模块" min-width="230"></el-table-column>
-                    <el-table-column label="当前阶段" min-width="150">
+                            <el-table-column prop="moduleProjectName" :label="ncfST('Frontend.020')" min-width="230"></el-table-column>
+                    <el-table-column :label="ncfST('Frontend.014')" min-width="150">
                         <template slot-scope="scope">
                             <el-tag :type="tagType(scope.row)" size="small">{{ stageLabel(scope.row.stage) }}</el-tag>
                         </template>
                     </el-table-column>
-                    <el-table-column label="流水线进度" min-width="250">
+                    <el-table-column :label="ncfST('Frontend.023')" min-width="250">
                         <template slot-scope="scope">
                             <el-progress
                                 :percentage="scope.row.progressPercent"
@@ -166,7 +166,7 @@
                             <div v-if="scope.row.errorMessage" style="color:#f56c6c;font-size:12px;line-height:18px;">{{ scope.row.errorMessage }}</div>
                         </template>
                     </el-table-column>
-                    <el-table-column label="进程" width="100">
+                    <el-table-column :label="ncfST('Frontend.031')" width="100">
                         <template slot-scope="scope">{{ scope.row.processId > 0 ? scope.row.processId : '—' }}</template>
                     </el-table-column>
                     <el-table-column label="Host" min-width="135">
@@ -174,13 +174,13 @@
                             <el-tag :type="hostTagType(scope.row.hostStatus)" size="small">{{ hostStatusLabel(scope.row.hostStatus) }}</el-tag>
                         </template>
                     </el-table-column>
-                    <el-table-column label="开始 / 更新" min-width="185">
+                    <el-table-column :label="ncfST('Frontend.013')" min-width="185">
                         <template slot-scope="scope">
                             <div>{{ formatDate(scope.row.startedAt) }}</div>
                             <div style="color:#909399;font-size:12px;">{{ formatDate(scope.row.updatedAt) }}</div>
                         </template>
                     </el-table-column>
-                    <el-table-column label="操作" width="155" fixed="right" class-name="ncf-table-actions-column">
+                    <el-table-column :label="ncfST('Frontend.017')" width="155" fixed="right" class-name="ncf-table-actions-column">
                         <template slot-scope="scope">
                             <el-button
                                 v-if="scope.row.url && scope.row.isRunning"
