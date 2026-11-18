@@ -4681,7 +4681,7 @@ var app = new Vue({
                 
                 //Legacy comment translated to English.
                 if (finalScore === null || finalScore === undefined || finalScore === -1) {
-                    console.log('无法获取有效分数，跳过优化提示');
+                    console.log(ncfST('Frontend.350'));
                     return;
                 }
                 
@@ -4693,11 +4693,11 @@ var app = new Vue({
                 if (finalScore < optimizationThreshold) {
                     //Legacy comment translated to English.
                     this.$confirm(
-                        `当前 Prompt 的${scoreType}为 ${finalScore.toFixed(1)} 分（低于 ${optimizationThreshold} 分）。是否使用 AI 自动优化功能来改进 Prompt？`,
-                        '💡 建议优化',
+                        ncfST('Frontend.396', scoreType, finalScore.toFixed(1), optimizationThreshold),
+                        ncfST('Frontend.344'),
                         {
-                            confirmButtonText: '立即优化',
-                            cancelButtonText: '暂不优化',
+                            confirmButtonText: ncfST('Frontend.387'),
+                            cancelButtonText: ncfST('Frontend.388'),
                             type: 'warning',
                             center: true
                         }
@@ -4736,7 +4736,7 @@ var app = new Vue({
                 
                 //Legacy comment translated to English.
                 if (avgScore === -1 || avgScore === null || avgScore === undefined) {
-                    console.log('当前 Prompt 尚无平均分数');
+                    console.log(ncfST('Frontend.331'));
                     return;
                 }
                 
@@ -4749,8 +4749,8 @@ var app = new Vue({
                 if (avgScore < optimizationThreshold) {
                     //Legacy comment translated to English.
                     this.$notify({
-                        title: '💡 优化建议',
-                        message: `当前 Prompt 的平均分为 ${avgScore.toFixed(1)} 分，建议使用 AI 自动优化功能来改进。点击"优化"按钮开始。`,
+                        title: ncfST('Frontend.344'),
+                        message: ncfST('Frontend.395', avgScore.toFixed(1)),
                         type: 'warning',
                         duration: 8000,
                         position: 'bottom-right',
@@ -4821,7 +4821,7 @@ var app = new Vue({
                 if (!formHasValues) {
                     this.aiScoreForm.resultList = arr.map((item, index) => ({
                         id: index + 1,
-                        label: '预期结果',
+                        label: ncfST('Frontend.384'),
                         value: typeof item === 'string' ? item : String(item)
                     }));
                 }
@@ -4870,14 +4870,14 @@ var app = new Vue({
             //Legacy comment translated to English.
             this.optimizing = true;
             this.optimizeErrorText = '';
-            this.optimizeProgressText = 'Agent 正在推理并调用工具（可能需要数分钟，请勿关闭此窗口）…';
+            this.optimizeProgressText = ncfST('Frontend.302');
             try {
                 console.log('开始优化 Prompt（Agent 主路径）:', promptCode);
                 
                 const requestData = {
                     promptCode: promptCode,
                     promptContent: promptDetail.promptContent || this.content,
-                    userRequirement: this.optimizeRequirement || '提高 Prompt 的质量和效果',
+                    userRequirement: this.optimizeRequirement || ncfST('Frontend.344'),
                     context: {
                         modelId: this.modelid || promptDetail.modelId,
                         currentTemperature: promptDetail.temperature || this.parameterViewList.find(p => p.formField === 'temperature')?.value || 0.7,
@@ -4912,7 +4912,7 @@ var app = new Vue({
                         return;
                     }
 
-                    this.optimizeProgressText = 'Agent 已完成，正在刷新靶道并选中新版本…';
+                    this.optimizeProgressText = ncfST('Frontend.301');
                     await this.getFieldList();
                     //Legacy comment translated to English.
                     await this.getPromptOptData();
@@ -4947,7 +4947,7 @@ var app = new Vue({
 
                     if (this.autoShootAfterOptimize) {
                         this.syncAiScoreFormFromPromptDetail();
-                        this.optimizeProgressText = '正在打靶（与手动打靶相同，可在主界面查看输出）…';
+                        this.optimizeProgressText = ncfST('Frontend.361');
                         //Legacy comment translated to English.
                         const savedTactics = this.tacticalForm.tactics;
                         this.tacticalForm.tactics = 'rapid';
@@ -4966,7 +4966,7 @@ var app = new Vue({
                         if (!filled && this.aiScoreForm.resultList && this.aiScoreForm.resultList.some(r => r && r.value)) {
                             item.alResultList = this.aiScoreForm.resultList.map((x, idx) => ({
                                 id: idx + 1,
-                                label: '预期结果',
+                                label: ncfST('Frontend.384'),
                                 value: x.value
                             }));
                             filled = true;
@@ -4977,7 +4977,7 @@ var app = new Vue({
                                 if (Array.isArray(arr) && arr.some(x => x !== undefined && x !== null && String(x).trim() !== '')) {
                                     item.alResultList = arr.map((v, idx) => ({
                                         id: idx + 1,
-                                        label: '预期结果',
+                                        label: ncfST('Frontend.384'),
                                         value: typeof v === 'string' ? v : String(v)
                                     }));
                                     filled = true;
@@ -4987,7 +4987,7 @@ var app = new Vue({
                             }
                         }
                         if (filled) {
-                            this.optimizeProgressText = '正在 AI 评分（与手动 AI 评分相同）…';
+                            this.optimizeProgressText = ncfST('Frontend.360');
                             item.scoreType = '1';
                             this.$set(this.robotScoreLoadingMap, item.id, true);
                             await this.saveManualScore(item, latestIndex);
@@ -5009,7 +5009,7 @@ var app = new Vue({
                     this.optimizeErrorText = '';
                     this.optimizeDialogVisible = false;
                 } else {
-                    const errorMsg = response.data?.errorMessage || '未返回有效的优化结果';
+                    const errorMsg = response.data?.errorMessage || ncfST('Frontend.357');
                     this.optimizeErrorText = String(errorMsg);
                     this.$message.error('优化失败：' + errorMsg);
                 }
