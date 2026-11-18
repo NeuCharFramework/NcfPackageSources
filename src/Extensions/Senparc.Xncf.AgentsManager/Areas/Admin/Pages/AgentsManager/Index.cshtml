@@ -631,11 +631,11 @@
                                         </div>
                                         <div class="task-header_right">
                                             <el-button type="primary" size="mini"
-                                                @@click="viewAgentParameters('agentTask')">智能体参数</el-button>
+                                                @@click="viewAgentParameters('agentTask')">{{ ncfST('Frontend.062') }}</el-button>
                                             <el-button type="info" size="mini"
-                                                @@click="openUsageAnalytics('agentTask',agentDetailsTaskDetails)">用量统计</el-button>
+                                                @@click="openUsageAnalytics('agentTask',agentDetailsTaskDetails)">{{ ncfST('Frontend.076') }}</el-button>
                                             <el-button type="primary" size="mini"
-                                                @@click="handleTaskAgain('agentTask',agentDetailsTaskDetails)">再次执行</el-button>
+                                                @@click="handleTaskAgain('agentTask',agentDetailsTaskDetails)">{{ ncfST('Frontend.063') }}</el-button>
                                         </div>
                                     </template>
                                 </div>
@@ -644,38 +644,38 @@
                                 <div class="df flex-ac flex-jc task-info">
                                     <template v-if="agentDetailsTaskDetails">
                                         <div class="itembox">
-                                            <div class="lable">任务开始时间:</div>
+                                            <div class="lable">{{ ncfST('Frontend.066') }}</div>
                                             <div class="value">{{ agentDetailsTaskDetails.startTime | showFormatDate }}
                                             </div>
                                         </div>
                                         <div class="itembox">
-                                            <div class="lable">模型:</div>
+                                            <div class="lable">{{ ncfST('Frontend.038') }}</div>
                                             <div class="value">{{ agentDetailsTaskDetails.modelName }}</div>
                                         </div>
                                         <div class="itembox">
-                                            <div class="lable">任务描述:</div>
+                                            <div class="lable">{{ ncfST('Frontend.181') }}</div>
                                             <div class="value">
                                                 <span class="text-ellipsis">{{ agentDetailsTaskDetails.promptCommand }}</span>
                                                 @* Details button *@
                                                 <el-button type="text" size="mini"
-                                                    @@click="viewTaskDescription(agentDetailsTaskDetails)">详情</el-button>
+                                                    @@click="viewTaskDescription(agentDetailsTaskDetails)">{{ ncfST('Frontend.017') }}</el-button>
                                             </div>
                                         </div>
                                         <div class="itembox">
-                                            <div class="lable">任务结束时间:</div>
+                                            <div class="lable">{{ ncfST('Frontend.067') }}</div>
                                             <div class="value">{{ agentDetailsTaskDetails.endTime | showFormatDate }}
                                             </div>
                                         </div>
                                         <div class="itembox">
-                                            <div class="lable">打分:</div>
+                                            <div class="lable">{{ ncfST('Frontend.068') }}</div>
                                             <div class="value">{{ agentDetailsTaskDetails.score }}</div>
                                         </div>
                                         <div class="itembox">
-                                            <div class="lable">任务评价:</div>
+                                            <div class="lable">{{ ncfST('Frontend.069') }}</div>
                                             <div class="value">
                                                 @* Edit button *@
                                                 <el-button type="text" size="mini"
-                                                    @@click="taskEvaluation(agentDetailsTaskDetails)">编辑</el-button>
+                                                    @@click="taskEvaluation(agentDetailsTaskDetails)">{{ ncfST('Frontend.016') }}</el-button>
                                             </div>
                                         </div>
                                     </template>
@@ -707,27 +707,27 @@
                                     </div>
                                     <div class="taskmain-members">
                                         <div class="taskmain-members-usage">
-                                            <div class="taskmain-members-usage-title">用量概览</div>
+                                            <div class="taskmain-members-usage-title">{{ ncfST('Frontend.070') }}</div>
                                             <div class="taskmain-members-usage-list">
                                                 <div class="taskmain-members-usage-item">
-                                                    <span class="taskmain-members-usage-label">消息总数</span>
+                                                    <span class="taskmain-members-usage-label">{{ ncfST('Frontend.071') }}</span>
                                                     <span class="taskmain-members-usage-value">{{ formatUsageCount(taskUsageSummaryByType.agentTask.messageCount) }}</span>
                                                 </div>
                                                 <div class="taskmain-members-usage-item">
-                                                    <span class="taskmain-members-usage-label">总 Token（输入+输出）</span>
+                                                    <span class="taskmain-members-usage-label">{{ ncfST('Frontend.072') }}</span>
                                                     <span class="taskmain-members-usage-value">{{ formatUsageCount(taskUsageSummaryByType.agentTask.totalTokens) }}</span>
                                                 </div>
                                                 <div class="taskmain-members-usage-item">
-                                                    <span class="taskmain-members-usage-label">平均响应时长</span>
+                                                    <span class="taskmain-members-usage-label">{{ ncfST('Frontend.073') }}</span>
                                                     <span class="taskmain-members-usage-value">{{ formatResponseMilliseconds(taskUsageSummaryByType.agentTask.averageResponseMilliseconds) }}</span>
                                                 </div>
                                                 <div class="taskmain-members-usage-item">
-                                                    <span class="taskmain-members-usage-label">最大时长</span>
+                                                    <span class="taskmain-members-usage-label">{{ ncfST('Frontend.074') }}</span>
                                                     <span class="taskmain-members-usage-value">{{ formatResponseMilliseconds(taskUsageSummaryByType.agentTask.maxResponseMilliseconds) }}</span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <el-input v-model="agentTaskMemberfilter" placeholder="请输入名称搜索" suffix-icon="el-icon-search" style="margin-bottom: 15px;" @@input="handleTaskFilterChange($event,'agentTask')"></el-input>
+                                        <el-input v-model="agentTaskMemberfilter" :placeholder="ncfST('Frontend.007')" suffix-icon="el-icon-search" style="margin-bottom: 15px;" @@input="handleTaskFilterChange($event,'agentTask')"></el-input>
                                         <div class="taskmain-members-title">
                                             机器人·{{ agentDetailsTaskMemberList ? agentDetailsTaskMemberList.length : 0 }}
                                         </div>
@@ -1021,52 +1021,52 @@
                             </div>
                             <div class="task-header_right">
                                 <el-button type="primary" size="mini"
-                                    @@click="viewAgentParameters('groupTask')">智能体参数</el-button>
+                                    @@click="viewAgentParameters('groupTask')">{{ ncfST('Frontend.062') }}</el-button>
                                 <el-button type="info" size="mini"
-                                    @@click="openUsageAnalytics('groupTask',groupTaskDetails)">用量统计</el-button>
+                                    @@click="openUsageAnalytics('groupTask',groupTaskDetails)">{{ ncfST('Frontend.076') }}</el-button>
                                 <el-button type="primary" size="mini"
-                                    @@click="handleTaskAgain('groupTask',groupTaskDetails)">再次执行</el-button>
+                                    @@click="handleTaskAgain('groupTask',groupTaskDetails)">{{ ncfST('Frontend.063') }}</el-button>
                                 <el-button type="warning" size="mini"
-                                    @@click="handleTaskForceStop('groupTask',groupTaskDetails)">强制停止</el-button>
+                                    @@click="handleTaskForceStop('groupTask',groupTaskDetails)">{{ ncfST('Frontend.064') }}</el-button>
                             </div>
                         </template>
                     </div>
                     <div class="df flex-ac flex-jc task-info">
                         <template v-if="groupTaskDetails">
                             <div class="itembox">
-                                <div class="lable">任务开始时间:</div>
+                                <div class="lable">{{ ncfST('Frontend.066') }}</div>
                                 <div class="value">{{ groupTaskDetails.startTime |
                                     showFormatDate }}
                                 </div>
                             </div>
                             <div class="itembox">
-                                <div class="lable">模型:</div>
+                                <div class="lable">{{ ncfST('Frontend.038') }}</div>
                                 <div class="value">{{ groupTaskDetails.modelName }}</div>
                             </div>
                             <div class="itembox">
-                                <div class="lable">任务描述:</div>
+                                <div class="lable">{{ ncfST('Frontend.181') }}</div>
                                 <div class="value">
                                     <span class="text-ellipsis">{{ groupTaskDetails.promptCommand }}</span>
                                     @* Details button *@
                                     <el-button type="text" size="mini"
-                                        @@click="viewTaskDescription(groupTaskDetails)">详情</el-button>
+                                        @@click="viewTaskDescription(groupTaskDetails)">{{ ncfST('Frontend.017') }}</el-button>
                                 </div>
                             </div>
                             <div class="itembox">
-                                <div class="lable">任务结束时间:</div>
+                                <div class="lable">{{ ncfST('Frontend.067') }}</div>
                                 <div class="value">{{ groupTaskDetails.endTime |
                                     showFormatDate }}</div>
                             </div>
                             <div class="itembox">
-                                <div class="lable">打分:</div>
+                                <div class="lable">{{ ncfST('Frontend.068') }}</div>
                                 <div class="value">{{ groupTaskDetails.score }}</div>
                             </div>
                             <div class="itembox">
-                                <div class="lable">任务评价:</div>
+                                <div class="lable">{{ ncfST('Frontend.069') }}</div>
                                 <div class="value">
                                     @* Edit button *@
                                     <el-button type="text" size="mini"
-                                        @@click="taskEvaluation(groupTaskDetails)">编辑</el-button>
+                                        @@click="taskEvaluation(groupTaskDetails)">{{ ncfST('Frontend.016') }}</el-button>
                                 </div>
                             </div>
                         </template>
@@ -1099,27 +1099,27 @@
                         <div class="taskmain-members">
                             <template v-if="groupTaskDetails">
                                 <div class="taskmain-members-usage">
-                                    <div class="taskmain-members-usage-title">用量概览</div>
+                                    <div class="taskmain-members-usage-title">{{ ncfST('Frontend.070') }}</div>
                                     <div class="taskmain-members-usage-list">
                                         <div class="taskmain-members-usage-item">
-                                            <span class="taskmain-members-usage-label">消息总数</span>
+                                            <span class="taskmain-members-usage-label">{{ ncfST('Frontend.071') }}</span>
                                             <span class="taskmain-members-usage-value">{{ formatUsageCount(taskUsageSummaryByType.groupTask.messageCount) }}</span>
                                         </div>
                                         <div class="taskmain-members-usage-item">
-                                            <span class="taskmain-members-usage-label">总 Token（输入+输出）</span>
+                                            <span class="taskmain-members-usage-label">{{ ncfST('Frontend.072') }}</span>
                                             <span class="taskmain-members-usage-value">{{ formatUsageCount(taskUsageSummaryByType.groupTask.totalTokens) }}</span>
                                         </div>
                                         <div class="taskmain-members-usage-item">
-                                            <span class="taskmain-members-usage-label">平均响应时长</span>
+                                            <span class="taskmain-members-usage-label">{{ ncfST('Frontend.073') }}</span>
                                             <span class="taskmain-members-usage-value">{{ formatResponseMilliseconds(taskUsageSummaryByType.groupTask.averageResponseMilliseconds) }}</span>
                                         </div>
                                         <div class="taskmain-members-usage-item">
-                                            <span class="taskmain-members-usage-label">最大时长</span>
+                                            <span class="taskmain-members-usage-label">{{ ncfST('Frontend.074') }}</span>
                                             <span class="taskmain-members-usage-value">{{ formatResponseMilliseconds(taskUsageSummaryByType.groupTask.maxResponseMilliseconds) }}</span>
                                         </div>
                                     </div>
                                 </div>
-                                <el-input v-model="groupTaskMemberfilter" placeholder="请输入名称搜索" suffix-icon="el-icon-search" style="margin-bottom: 15px;" @@input="handleTaskFilterChange($event,'groupTask')"></el-input>
+                                <el-input v-model="groupTaskMemberfilter" :placeholder="ncfST('Frontend.007')" suffix-icon="el-icon-search" style="margin-bottom: 15px;" @@input="handleTaskFilterChange($event,'groupTask')"></el-input>
                                 <div class="taskmain-members-title">
                                     Human 参与者：{{ taskHumanParticipantStatusText(groupTaskDetails) }} · 机器人·{{ groupTaskMemberList.length }}
                                 </div>
@@ -1307,49 +1307,49 @@
                         @* type="text" *@
                         <div class="task-header_right">
                             <el-button type="primary" size="mini"
-                                @@click="viewAgentParameters('taskDetail')">智能体参数</el-button>
+                                @@click="viewAgentParameters('taskDetail')">{{ ncfST('Frontend.062') }}</el-button>
                             <el-button type="info" size="mini"
-                                @@click="openUsageAnalytics('task',taskDetails)">用量统计</el-button>
+                                @@click="openUsageAnalytics('task',taskDetails)">{{ ncfST('Frontend.076') }}</el-button>
                             <el-button type="primary" size="mini"
-                                @@click="handleTaskAgain('task',taskDetails)">再次执行</el-button>
+                                @@click="handleTaskAgain('task',taskDetails)">{{ ncfST('Frontend.063') }}</el-button>
                             <el-button type="warning" size="mini"
-                                @@click="handleTaskForceStop('task',taskDetails)">强制停止</el-button>
+                                @@click="handleTaskForceStop('task',taskDetails)">{{ ncfST('Frontend.064') }}</el-button>
                         </div>
                     </div>
                     <div class="df flex-ac flex-jc task-info">
                         <div class="itembox">
-                            <div class="lable">任务开始时间:</div>
+                            <div class="lable">{{ ncfST('Frontend.066') }}</div>
                             <div class="value">{{ taskDetails.startTime |
                                 showFormatDate }}
                             </div>
                         </div>
                         <div class="itembox">
-                            <div class="lable">模型:</div>
+                            <div class="lable">{{ ncfST('Frontend.038') }}</div>
                             <div class="value">{{ taskDetails.modelName }}</div>
                         </div>
                         <div class="itembox">
-                            <div class="lable">任务描述:</div>
+                            <div class="lable">{{ ncfST('Frontend.181') }}</div>
                             <div class="value">
                                 <span class="text-ellipsis">{{ taskDetails.promptCommand }}</span>
                                 @* Details button *@
                                 <el-button type="text" size="mini"
-                                    @@click="viewTaskDescription(taskDetails)">详情</el-button>
+                                    @@click="viewTaskDescription(taskDetails)">{{ ncfST('Frontend.017') }}</el-button>
                             </div>
                         </div>
                         <div class="itembox">
-                            <div class="lable">任务结束时间:</div>
+                            <div class="lable">{{ ncfST('Frontend.067') }}</div>
                             <div class="value">{{ taskDetails.endTime |
                                 showFormatDate }}</div>
                         </div>
                         <div class="itembox">
-                            <div class="lable">打分:</div>
+                            <div class="lable">{{ ncfST('Frontend.068') }}</div>
                             <div class="value">{{ taskDetails.score }}</div>
                         </div>
                         <div class="itembox">
-                            <div class="lable">任务评价:</div>
+                            <div class="lable">{{ ncfST('Frontend.069') }}</div>
                             <div class="value">
                                 @* Edit button *@
-                                <el-button type="text" size="mini" @@click="taskEvaluation(taskDetails)">编辑</el-button>
+                                <el-button type="text" size="mini" @@click="taskEvaluation(taskDetails)">{{ ncfST('Frontend.016') }}</el-button>
                             </div>
                         </div>
                     </div>
@@ -1380,27 +1380,27 @@
                         </div>
                         <div class="taskmain-members">
                             <div class="taskmain-members-usage">
-                                <div class="taskmain-members-usage-title">用量概览</div>
+                                <div class="taskmain-members-usage-title">{{ ncfST('Frontend.070') }}</div>
                                 <div class="taskmain-members-usage-list">
                                     <div class="taskmain-members-usage-item">
-                                        <span class="taskmain-members-usage-label">消息总数</span>
+                                        <span class="taskmain-members-usage-label">{{ ncfST('Frontend.071') }}</span>
                                         <span class="taskmain-members-usage-value">{{ formatUsageCount(taskUsageSummaryByType.task.messageCount) }}</span>
                                     </div>
                                     <div class="taskmain-members-usage-item">
-                                        <span class="taskmain-members-usage-label">总 Token（输入+输出）</span>
+                                        <span class="taskmain-members-usage-label">{{ ncfST('Frontend.072') }}</span>
                                         <span class="taskmain-members-usage-value">{{ formatUsageCount(taskUsageSummaryByType.task.totalTokens) }}</span>
                                     </div>
                                     <div class="taskmain-members-usage-item">
-                                        <span class="taskmain-members-usage-label">平均响应时长</span>
+                                        <span class="taskmain-members-usage-label">{{ ncfST('Frontend.073') }}</span>
                                         <span class="taskmain-members-usage-value">{{ formatResponseMilliseconds(taskUsageSummaryByType.task.averageResponseMilliseconds) }}</span>
                                     </div>
                                     <div class="taskmain-members-usage-item">
-                                        <span class="taskmain-members-usage-label">最大时长</span>
+                                        <span class="taskmain-members-usage-label">{{ ncfST('Frontend.074') }}</span>
                                         <span class="taskmain-members-usage-value">{{ formatResponseMilliseconds(taskUsageSummaryByType.task.maxResponseMilliseconds) }}</span>
                                     </div>
                                 </div>
                             </div>
-                            <el-input v-model="taskMemberfilter" placeholder="请输入名称搜索" suffix-icon="el-icon-search" style="margin-bottom: 15px;" @@input="handleTaskFilterChange($event,'task')"></el-input>
+                            <el-input v-model="taskMemberfilter" :placeholder="ncfST('Frontend.007')" suffix-icon="el-icon-search" style="margin-bottom: 15px;" @@input="handleTaskFilterChange($event,'task')"></el-input>
                             <div class="taskmain-members-title">
                                 Human 参与者：{{ taskHumanParticipantStatusText(taskDetails) }} · 机器人·{{ taskMemberList ? taskMemberList.length : 0 }}
                             </div>
