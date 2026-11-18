@@ -264,7 +264,7 @@ var app = new Vue({
             aiScoreForm: {
                 resultList: [{
                     id: 1,
-                    label: '预期结果',
+                    label: ncfST('Frontend.188'),
                     value: ''
                 }]
             },
@@ -464,9 +464,9 @@ var app = new Vue({
         },
         promptInputTitle() {
             if (this.isSpeechToTextModelSelected) {
-                return '语音识别输入'
+                return ncfST('Frontend.385')
             }
-            return '输入Prompt'
+            return ncfST('Frontend.382')
         },
         shouldShowPromptEditor() {
             return !this.isSpeechToTextModelSelected
@@ -506,9 +506,9 @@ var app = new Vue({
             const versionParts = this.comparePromptA.fullVersion ? this.comparePromptA.fullVersion.split('-') : [];
             
             return {
-                targetRangeName: versionParts[0] || '未知靶场',
-                targetLaneName: versionParts[1] || '未知靶道',
-                tacticalName: versionParts[2] || '未知战术',
+                targetRangeName: versionParts[0] || ncfST('Frontend.354'),
+                targetLaneName: versionParts[1] || ncfST('Frontend.355'),
+                tacticalName: versionParts[2] || ncfST('Frontend.353'),
                 modelName: this.getModelName(this.comparePromptA.modelId)
             };
         },
@@ -521,9 +521,9 @@ var app = new Vue({
             const versionParts = this.comparePromptB.fullVersion ? this.comparePromptB.fullVersion.split('-') : [];
             
             return {
-                targetRangeName: versionParts[0] || '未知靶场',
-                targetLaneName: versionParts[1] || '未知靶道',
-                tacticalName: versionParts[2] || '未知战术',
+                targetRangeName: versionParts[0] || ncfST('Frontend.354'),
+                targetLaneName: versionParts[1] || ncfST('Frontend.355'),
+                tacticalName: versionParts[2] || ncfST('Frontend.353'),
                 modelName: this.getModelName(this.comparePromptB.modelId)
             };
         },
@@ -2041,7 +2041,7 @@ var app = new Vue({
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: '已取消操作'
+                    message: ncfST('Frontend.329')
                 });
             });
         },
@@ -2097,7 +2097,7 @@ var app = new Vue({
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: '已取消操作'
+                    message: ncfST('Frontend.329')
                 });
             });
         },
@@ -2115,7 +2115,7 @@ var app = new Vue({
         confirmtargetlaneName() {
             if(!this.targetlaneName){
                 this.$message({
-                        message: ncfST('靶道名称不能为空！'),
+                        message: ncfST('Frontend.422'),
                     type: 'error'
                 })
                 return
@@ -2195,7 +2195,7 @@ var app = new Vue({
             //Legacy comment translated to English.
             if (!this.tacticalForm.chatMode) {
                 this.$message({
-                        message: ncfST('请选择打靶测试模式'),
+                        message: ncfST('Frontend.379'),
                     type: 'warning',
                     duration: 3000
                 })
@@ -2205,7 +2205,7 @@ var app = new Vue({
             //Legacy comment translated to English.
             if (this.promptid && !this.tacticalForm.tactics) {
                 this.$message({
-                        message: ncfST('请选择战术'),
+                        message: ncfST('Frontend.286'),
                     type: 'warning',
                     duration: 3000
                 })
@@ -2217,7 +2217,7 @@ var app = new Vue({
                 // checkwhetherhasinputcontent
                 if (!this.tacticalChatInput || !this.tacticalChatInput.trim()) {
                     this.$message({
-                        message: ncfST('请输入对话内容'),
+                        message: ncfST('Frontend.602'),
                         type: 'warning',
                         duration: 3000
                     })
@@ -2240,7 +2240,7 @@ var app = new Vue({
             const normalizedUserMessage = typeof userMessage === 'string' ? userMessage.trim() : ''
             if (!normalizedUserMessage) {
                 this.$message({
-                    message: '请输入对话内容',
+                    message: ncfST('Frontend.602'),
                     type: 'warning',
                     duration: 3000
                 })
@@ -3065,9 +3065,9 @@ var app = new Vue({
         //Legacy comment translated to English.
         deleteAiScoreBtn(index) {
             //console.log('delete', index)
-            this.$confirm('此操作将删除该期望结果, 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
+            this.$confirm(ncfST('Frontend.362'), ncfST('Frontend.343'), {
+                confirmButtonText: ncfST('Frontend.421'),
+                cancelButtonText: ncfST('Frontend.091'),
                 type: 'warning'
             }).then(() => {
                 this.aiScoreForm.resultList.splice(index, 1)
@@ -3147,7 +3147,7 @@ var app = new Vue({
             if (source === 'A' || source === 'B') {
                 const prompt = source === 'A' ? this.comparePromptA : this.comparePromptB;
                 if (!prompt || !prompt.fullVersion) {
-                    this.$message.warning('无法获取版本号');
+                    this.$message.warning(ncfST('Frontend.349'));
                     return;
                 }
                 fullVersion = prompt.fullVersion;
@@ -3155,12 +3155,12 @@ var app = new Vue({
             } else {
                 //Legacy comment translated to English.
             if (!this.promptid) {
-                this.$message.info('请选择靶道后再复制信息！')
+                this.$message.info(ncfST('Frontend.381'))
                 return
             }
             const promptItem = this.promptOpt.find(item => item.id === this.promptid)
                 if (!promptItem) {
-                    this.$message.warning('无法获取当前 Prompt 信息');
+                    this.$message.warning(ncfST('Frontend.346'));
                     return;
                 }
                 fullVersion = promptItem.fullVersion;
@@ -3168,7 +3168,7 @@ var app = new Vue({
             }
             
             const message = label ? `复制${label}【${fullVersion}】成功` : `复制【${fullVersion}】成功`;
-            await window.PromptRangeUtils.CopyHelper.copyToClipboardAsync(fullVersion, message, '复制失败', true)
+            await window.PromptRangeUtils.CopyHelper.copyToClipboardAsync(fullVersion, message, ncfST('Frontend.304'), true)
         },
         //Legacy comment translated to English.
         formatDate(d) {
