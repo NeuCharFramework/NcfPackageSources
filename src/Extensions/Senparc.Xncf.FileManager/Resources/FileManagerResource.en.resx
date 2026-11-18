@@ -511,4 +511,5 @@
   <data name="Frontend.277" xml:space="preserve"><value>A tag with the same name already exists in this category</value></data>
   <data name="Frontend.278" xml:space="preserve"><value>Tag updated</value></data>
   <data name="Frontend.279" xml:space="preserve"><value>Tag created</value></data>
+  <data name="Frontend.280" xml:space="preserve"><value>Request failed</value></data>
 </root>

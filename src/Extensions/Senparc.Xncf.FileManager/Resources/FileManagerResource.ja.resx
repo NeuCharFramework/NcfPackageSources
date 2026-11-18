@@ -511,4 +511,5 @@
   <data name="Frontend.277" xml:space="preserve"><value>このカテゴリには同名のタグが既にあります</value></data>
   <data name="Frontend.278" xml:space="preserve"><value>タグを更新しました</value></data>
   <data name="Frontend.279" xml:space="preserve"><value>タグを作成しました</value></data>
+  <data name="Frontend.280" xml:space="preserve"><value>リクエストに失敗しました</value></data>
 </root>

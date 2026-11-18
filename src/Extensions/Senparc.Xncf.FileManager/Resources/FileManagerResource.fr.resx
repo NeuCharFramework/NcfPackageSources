@@ -511,4 +511,5 @@
   <data name="Frontend.277" xml:space="preserve"><value>Une étiquette portant le même nom existe déjà dans cette catégorie</value></data>
   <data name="Frontend.278" xml:space="preserve"><value>Étiquette mise à jour</value></data>
   <data name="Frontend.279" xml:space="preserve"><value>Étiquette créée</value></data>
+  <data name="Frontend.280" xml:space="preserve"><value>Échec de la requête</value></data>
 </root>

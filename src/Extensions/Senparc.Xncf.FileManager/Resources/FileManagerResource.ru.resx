@@ -511,4 +511,5 @@
   <data name="Frontend.277" xml:space="preserve"><value>В этой категории уже есть метка с таким именем</value></data>
   <data name="Frontend.278" xml:space="preserve"><value>Метка обновлена</value></data>
   <data name="Frontend.279" xml:space="preserve"><value>Метка создана</value></data>
+  <data name="Frontend.280" xml:space="preserve"><value>Ошибка запроса</value></data>
 </root>

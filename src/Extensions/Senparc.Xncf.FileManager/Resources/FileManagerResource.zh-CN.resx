@@ -507,4 +507,5 @@
   <data name="Frontend.277" xml:space="preserve"><value>该分类下已存在同名标签</value></data>
   <data name="Frontend.278" xml:space="preserve"><value>标签已更新</value></data>
   <data name="Frontend.279" xml:space="preserve"><value>标签已创建</value></data>
+  <data name="Frontend.280" xml:space="preserve"><value>请求失败</value></data>
 </root>

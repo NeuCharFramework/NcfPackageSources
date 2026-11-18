@@ -4693,7 +4693,7 @@
                             this.filePreviewDialog.mode = 'error';
                             var data = error && error.response && error.response.data;
                             var message = typeof data === 'string' ? data : (data && (data.errorMessage || data.message || data.title));
-                            this.filePreviewDialog.error = ncfST('Frontend.205', message || (error && error.message) || ncfST('请求失败'));
+                            this.filePreviewDialog.error = ncfST('Frontend.205', message || (error && error.message) || ncfST('Frontend.280'));
                         } finally {
                             this.filePreviewDialog.loading = false;
                         }
