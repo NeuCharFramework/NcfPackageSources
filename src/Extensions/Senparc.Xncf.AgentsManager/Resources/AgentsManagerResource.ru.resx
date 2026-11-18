@@ -1727,4 +1727,6 @@
   <data name="Frontend.575" xml:space="preserve"><value>Конфигурация публикации A2A сохранена (сейчас отключена)</value></data>
   <data name="Frontend.576" xml:space="preserve"><value>Не удалось скопировать; скопируйте адрес вручную</value></data>
   <data name="Frontend.577" xml:space="preserve"><value>Недоступных удалённых Agents A2A: {0}; повторите проверку вручную в списке участников</value></data>
+  <data name="Frontend.578" xml:space="preserve"><value>Участник этой задачи</value></data>
+  <data name="Frontend.579" xml:space="preserve"><value>Не включено для этой задачи</value></data>
 </root>

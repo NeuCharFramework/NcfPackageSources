@@ -1727,4 +1727,6 @@
   <data name="Frontend.575" xml:space="preserve"><value>A2A publishing configuration saved (currently disabled)</value></data>
   <data name="Frontend.576" xml:space="preserve"><value>Copy failed; copy the address manually</value></data>
   <data name="Frontend.577" xml:space="preserve"><value>{0} remote A2A Agents are unavailable; retry them manually from the member list</value></data>
+  <data name="Frontend.578" xml:space="preserve"><value>Included in this task</value></data>
+  <data name="Frontend.579" xml:space="preserve"><value>Not enabled for this task</value></data>
 </root>

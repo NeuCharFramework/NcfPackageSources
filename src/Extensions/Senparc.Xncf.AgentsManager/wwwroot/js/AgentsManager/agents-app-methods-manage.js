@@ -1150,7 +1150,7 @@ var AgentsAppMethodsManage = {
       if (!task?.executionPolicyCaptured) {
         return ncfST('Frontend.444')
       }
-      return task.includeHumanParticipant ? ncfST('Frontend.140') : ncfST('Frontend.501')
+      return task.includeHumanParticipant ? ncfST('Frontend.578') : ncfST('Frontend.579')
     },
     taskDescriptionCopyText() {
       const detail = this.taskDescriptionDetails || {}
