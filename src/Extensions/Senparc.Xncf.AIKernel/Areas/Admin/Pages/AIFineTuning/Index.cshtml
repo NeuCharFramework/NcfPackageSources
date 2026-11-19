@@ -577,7 +577,7 @@
 </div>
 
 @section scripts {
-    @await Html.PartialAsync("~/Areas/Admin/Pages/Shared/_AIKernelLocalizationScripts.cshtml")
+    @await Html.PartialAsync("_AIKernelLocalizationScripts")
     <script src="~/lib/echarts/dist/echarts.js"></script>
     <script src="~/js/Admin/AIFineTuning/index.js" asp-append-version="true"></script>
 }

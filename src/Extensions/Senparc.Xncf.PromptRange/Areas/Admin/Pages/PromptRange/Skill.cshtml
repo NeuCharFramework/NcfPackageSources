@@ -112,7 +112,7 @@
 </div>
 
 @section scripts {
-    <partial name="~/Areas/Admin/Pages/Shared/_PromptRangeLocalizationScripts.cshtml" />
+    @await Html.PartialAsync("_PromptRangeLocalizationScripts")
 <script>
     new Vue({
         el: '#app',

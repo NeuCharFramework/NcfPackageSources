@@ -212,7 +212,7 @@
 
 
 @section scripts {
-    <partial name="~/Areas/Admin/Pages/Shared/_LocalizationScripts.cshtml" />
+    @await Html.PartialAsync("_LocalizationScripts")
     <script>
         new Vue({
             el: "#app",
