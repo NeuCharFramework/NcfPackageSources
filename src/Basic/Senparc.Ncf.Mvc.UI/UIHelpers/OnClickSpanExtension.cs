@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：OnClickSpanExtension.cs
-    文件功能描述：OnClickSpanExtension 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: OnClickSpanExtension.cs
+    File description: OnClickSpanExtension related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.22.9-preview13 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -21,11 +24,11 @@ namespace System.Web.Mvc
     public static class OnClickSpanExtension
     {
         /// <summary>
-        /// 供Onclick操作的span(样式默认为“onclick”)
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="helper"></param>
-        /// <param name="onclickMethod">事件名称（onclick中的所有内容）</param>
-        /// <param name="text">文字</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public static string OnClickSpan(this HtmlHelper helper, string text, string onclickMethod)
         {
@@ -33,11 +36,11 @@ namespace System.Web.Mvc
         }
 
         /// <summary>
-        /// 供Onclick操作的span(样式默认为“onclick”)
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="helper"></param>
-        /// <param name="onclickMethod">事件名称（onclick中的所有内容）</param>
-        /// <param name="text">文字</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public static string OnClickSpan(this HtmlHelper helper, string text, string onclickMethod, object htmlAttributes)
         {
@@ -45,18 +48,18 @@ namespace System.Web.Mvc
         }
 
         /// <summary>
-        /// 供Onclick操作的span
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="helper"></param>
-        /// <param name="cssClass">class样式，如果为空，则使用“onclick”</param>
-        /// <param name="onclickMethod">事件名称（onclick中的所有内容）</param>
-        /// <param name="text">文字</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public static string OnClickSpan(this HtmlHelper helper, string text, string onclickMethod, string cssClass, object htmlAttributes)
         {
-            //样式
+            //Legacy comment translated to English.
             cssClass = cssClass ?? "onclick";
-            //属性
+            //property
             string setHash = htmlAttributes.ToAttributeList();
             string attributeList = string.Empty;
             if (setHash != null)

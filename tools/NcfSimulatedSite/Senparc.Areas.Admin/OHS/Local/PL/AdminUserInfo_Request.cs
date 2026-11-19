@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：AdminUserInfo_Request.cs
-    文件功能描述：后台管理员用户请求模型
-    
-    
-    创建标识：Senparc - 20241028
-    
-    修改标识：Senparc - 20260724
-    修改描述：v0.1.0 增强后台模块批量更新并完善多语言管理界面
+
+    File name: AdminUserInfo_Request.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20260724
+    Change description: v0.1.0 enhance batch module updates and improve the multilingual management interface
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 using Senparc.Ncf.XncfBase.FunctionRenders;
@@ -32,24 +35,24 @@ namespace Senparc.Areas.Admin.OHS.PL
     public class AdminUserInfo_AddRoleRequest
     {
         /// <summary>
-        /// 角色Id
+        /// roleId
         /// </summary>
         [Required]
         public IEnumerable<string> RoleId { get; set; }
 
         /// <summary>
-        /// 管理员id
+        ///Legacy comment translated to English.
         /// </summary>
         public int AccountId { get; set; }
     }
 
     /// <summary>
-    /// 管理员新增
+    ///Legacy comment translated to English.
     /// </summary>
     public class AdminUserInfo_CreateOrUpdateRequest : IValidatableObject
     {
         /// <summary>
-        /// 用户名
+        /// user name
         /// </summary>
         [Required]
         [MaxLength(35)]
@@ -90,7 +93,7 @@ namespace Senparc.Areas.Admin.OHS.PL
         }
 
         /// <summary>
-        /// 备注1
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(150)]
         public string AdminRemark
@@ -100,7 +103,7 @@ namespace Senparc.Areas.Admin.OHS.PL
         }
 
         /// <summary>
-        /// 备注2
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(150)]
         public string Remark

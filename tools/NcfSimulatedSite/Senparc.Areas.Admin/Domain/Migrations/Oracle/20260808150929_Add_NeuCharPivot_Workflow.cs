@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：20260808150929_Add_NeuCharPivot_Workflow.cs
-    文件功能描述：数据库迁移与模型快照
 
+    File name: 20260808150929_Add_NeuCharPivot_Workflow.cs
+    File description: database migration and model snapshot
 
-    创建标识：Senparc - 20260809
+    Created by: Senparc - 20260809
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.5.0 集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
+    Modified by: Senparc - 20260813
+    Change description: v0.5.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -26,46 +26,83 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Oracle
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             /* Provider-version drift intentionally excluded from this feature migration.
+
                NeuCharPivot must not rewrite flags in pre-existing tables.
+
             migrationBuilder.AlterColumn<bool>(
+
                 name: "Flag",
+
                 table: "ADMIN_AdminUserInfos",
+
                 type: "BOOLEAN",
+
                 nullable: false,
+
                 oldClrType: typeof(bool),
+
                 oldType: "NUMBER(1)");
 
+
             migrationBuilder.AlterColumn<bool>(
+
                 name: "Flag",
+
                 table: "ADMIN_AdminChatSessionModule",
+
                 type: "BOOLEAN",
+
                 nullable: false,
+
                 oldClrType: typeof(bool),
+
                 oldType: "NUMBER(1)");
 
+
             migrationBuilder.AlterColumn<bool>(
+
                 name: "Flag",
+
                 table: "ADMIN_AdminChatSession",
+
                 type: "BOOLEAN",
+
                 nullable: false,
+
                 oldClrType: typeof(bool),
+
                 oldType: "NUMBER(1)");
 
+
             migrationBuilder.AlterColumn<bool>(
+
                 name: "Flag",
+
                 table: "ADMIN_AdminChatMessage",
+
                 type: "BOOLEAN",
+
                 nullable: false,
+
                 oldClrType: typeof(bool),
+
                 oldType: "NUMBER(1)");
 
+
             migrationBuilder.AlterColumn<bool>(
+
                 name: "Flag",
+
                 table: "ADMIN_AdminAuthConfig",
+
                 type: "BOOLEAN",
+
                 nullable: false,
+
                 oldClrType: typeof(bool),
+
                 oldType: "NUMBER(1)");
+
             */
 
             migrationBuilder.CreateTable(
@@ -232,45 +269,81 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Oracle
                 name: "ADMIN_NeuCharWorkflow");
 
             /* Counterpart of the intentionally excluded provider-version drift above.
+
             migrationBuilder.AlterColumn<bool>(
+
                 name: "Flag",
+
                 table: "ADMIN_AdminUserInfos",
+
                 type: "NUMBER(1)",
+
                 nullable: false,
+
                 oldClrType: typeof(bool),
+
                 oldType: "BOOLEAN");
 
+
             migrationBuilder.AlterColumn<bool>(
+
                 name: "Flag",
+
                 table: "ADMIN_AdminChatSessionModule",
+
                 type: "NUMBER(1)",
+
                 nullable: false,
+
                 oldClrType: typeof(bool),
+
                 oldType: "BOOLEAN");
 
+
             migrationBuilder.AlterColumn<bool>(
+
                 name: "Flag",
+
                 table: "ADMIN_AdminChatSession",
+
                 type: "NUMBER(1)",
+
                 nullable: false,
+
                 oldClrType: typeof(bool),
+
                 oldType: "BOOLEAN");
 
+
             migrationBuilder.AlterColumn<bool>(
+
                 name: "Flag",
+
                 table: "ADMIN_AdminChatMessage",
+
                 type: "NUMBER(1)",
+
                 nullable: false,
+
                 oldClrType: typeof(bool),
+
                 oldType: "BOOLEAN");
 
+
             migrationBuilder.AlterColumn<bool>(
+
                 name: "Flag",
+
                 table: "ADMIN_AdminAuthConfig",
+
                 type: "NUMBER(1)",
+
                 nullable: false,
+
                 oldClrType: typeof(bool),
+
                 oldType: "BOOLEAN");
+
             */
         }
     }

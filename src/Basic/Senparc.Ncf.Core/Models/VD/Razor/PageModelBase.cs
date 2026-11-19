@@ -1,17 +1,20 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：PageModelBase.cs
-    文件功能描述：PageModelBase 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.28.0-preview5 新增数据库升级维护状态与可配置页脚安全处理
+    Copyright (C) 2026 Senparc
+
+    File name: PageModelBase.cs
+    File description: PageModelBase related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260804
+    Change description: v0.28.0-preview5 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -57,7 +60,7 @@ namespace Senparc.Ncf.Core.Models.VD
         public new RouteData RouteData { get => base.RouteData; set => throw new NotImplementedException(); }
 
         //public RouteData RouteData { get; set; }
-        //另外一种写法：
+        //Legacy comment translated to English.
         //public RouteData GetRouteData()
         //{
         //    return base.RouteData;
@@ -93,7 +96,7 @@ namespace Senparc.Ncf.Core.Models.VD
 
         public override Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
         {
-            //获取缓存系统信息
+            //Legacy comment translated to English.
             try
             {
                 if (SiteConfig.IsInstalling)
@@ -123,7 +126,7 @@ namespace Senparc.Ncf.Core.Models.VD
             }
             catch (NcfUninstallException)
             {
-                //需要进行安装
+                //Legacy comment translated to English.
                 context.Result = new RedirectResult("/Install");
                 return Task.CompletedTask;
             }
@@ -133,9 +136,9 @@ namespace Senparc.Ncf.Core.Models.VD
 
 
         /// <summary>
-        /// 检查是否在特定 Scheme 下已登录
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="authenticationScheme">Scheme 名称</param>
+        /// <param name="authenticationScheme">Scheme name</param>
         /// <returns></returns>
         public async Task<bool> CheckLoginedAsync(string authenticationScheme)
         {

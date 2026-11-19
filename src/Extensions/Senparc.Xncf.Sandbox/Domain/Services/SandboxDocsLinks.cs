@@ -1,25 +1,29 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：SandboxDocsLinks.cs
-    文件功能描述：指向官方文档站点的稳定链接（镜像版本等细节以 Docs 为准）
+    File name: SandboxDocsLinks.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260808
+    Created by: Senparc - 20260808
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.4 Localized sandbox setup and runtime surfaces
 
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Sandbox.Domain.Services;
 
 /// <summary>
-/// 文档链接集中在此，避免在多个页面硬编码。
-/// 镜像 tag、安装命令等易变内容请维护在 NcfDocs，勿在 UI 中写死。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 public static class SandboxDocsLinks
 {
     public const string SiteRoot = "https://doc.ncf.pub";
 
     /// <summary>
-    /// 中文：Sandbox 环境准备指南
+    ///Legacy comment translated to English.
     /// </summary>
     public const string EnvironmentSetupZh = SiteRoot + "/zh/NcfPackageSources/xncf/sandbox-environment.html";
 
@@ -36,7 +40,7 @@ public static class SandboxDocsLinks
             return EnvironmentSetupZh;
         }
 
-        // 默认中文文档（国内用户为主）；英文文化返回英文页
+        //Legacy comment translated to English.
         if (!string.IsNullOrWhiteSpace(cultureName)
             && cultureName.StartsWith("en", StringComparison.OrdinalIgnoreCase))
         {

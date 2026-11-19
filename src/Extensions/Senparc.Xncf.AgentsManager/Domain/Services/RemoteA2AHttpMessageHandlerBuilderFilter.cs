@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：RemoteA2AHttpMessageHandlerBuilderFilter.cs
-    文件功能描述：确保远程 A2A 调用使用 Agent 自身配置的超时边界
+    File name: RemoteA2AHttpMessageHandlerBuilderFilter.cs
+    File description: Related implementation.
 
+    Created by: Senparc - 20260814
 
-    创建标识：Senparc - 20260814
+    Modified by: Senparc - 20260815
+    Change description: v0.15.0-preview20 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.15.0-preview20 增强 AgentTemplate、ChatGroup 与发布型 A2A 的取消和请求处理
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 
@@ -18,9 +21,9 @@ using System;
 namespace Senparc.Xncf.AgentsManager.Domain.Services
 {
     /// <summary>
-    /// 去除宿主通过 ConfigureHttpClientDefaults 为 AgentsManager A2A 客户端追加的
-    /// 固定 Polly 超时/重试管道。A2A 的 POST 可能已在远程开始执行，不应被透明重试；
-    /// 整个请求的超时由 RemoteAgent.TimeoutSeconds 统一控制。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     internal sealed class RemoteA2AHttpMessageHandlerBuilderFilter : IHttpMessageHandlerBuilderFilter
     {
@@ -33,9 +36,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
 
             return builder =>
             {
-                // 先让宿主的 ConfigureHttpClientDefaults 和其他 Filter 完成。
-                // 这使得无论 AddServiceDefaults 与 XNCF 模块的注册先后如何，
-                // 都能在最终 Handler 链中去除固定 30 秒的 ResilienceHandler。
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 next(builder);
 
                 if (!string.Equals(

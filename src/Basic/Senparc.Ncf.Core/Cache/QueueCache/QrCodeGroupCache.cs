@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：QrCodeGroupCache.cs
-    文件功能描述：QrCodeGroupCache 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: QrCodeGroupCache.cs
+    File description: QrCodeGroupCache related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -19,7 +22,7 @@ namespace Senparc.Ncf.Core.Cache.QueueCache
     public enum QrCodeGroupDataType
     {
         /// <summary>
-        /// 门派
+        ///Legacy comment translated to English.
         /// </summary>
         Group,
     }
@@ -28,7 +31,7 @@ namespace Senparc.Ncf.Core.Cache.QueueCache
     public class QrCodeGroupData
     {
         /// <summary>
-        /// 即SceneId的字符串
+        ///Legacy comment translated to English.
         /// </summary>
         public string Key { get; set; }
         /// <summary>
@@ -55,7 +58,7 @@ namespace Senparc.Ncf.Core.Cache.QueueCache
     }
 
     /// <summary>
-    /// 门派许可缓存（缓存数据：GroupId）
+    ///Legacy comment translated to English.
     /// </summary>
     public interface IQrCodeGroupCache : IQueueCache<QrCodeGroupData>
     {

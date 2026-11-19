@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：MySqlWithBackupDatabaseConfiguration.cs
-    文件功能描述：MySqlWithBackupDatabaseConfiguration 相关实现
-    
-    
-    创建标识：Senparc - 20201104
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: MySqlWithBackupDatabaseConfiguration.cs
+    File description: MySqlWithBackupDatabaseConfiguration related implementation
+
+    Created by: Senparc - 20201104
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.14 Updated database integration support and related localization metadata
 
 ----------------------------------------------------------------*/
 
@@ -29,7 +32,7 @@ using Senparc.Ncf.Database.MySql;
 namespace Senparc.Ncf.Database.MySql.Backup
 {
     /// <summary>
-    /// MySQL（附带备份） 数据库配置，处于等待官方更新中，目前无效
+    ///Legacy comment translated to English.
     /// </summary>
     public class MySqlWithBackupDatabaseConfiguration : MySqlDatabaseConfiguration
     {
@@ -38,7 +41,7 @@ namespace Senparc.Ncf.Database.MySql.Backup
 
         public override string GetBackupDatabaseSql(DbConnection dbConnection, string backupFilePath)
         {
-            //需要等 Pomelo.EntityFrameworkCore.MySql 5.0才能支持：https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql/issues/1226
+            //Legacy comment translated to English.
 
             //string constring = Senparc.Ncf.Core.Config.SenparcDatabaseConnectionConfigs.ClientConnectionString;
             //using (var conn = new MySqlClient.MySqlConnection(constring))

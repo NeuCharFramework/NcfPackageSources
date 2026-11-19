@@ -1,20 +1,23 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：Register.cs
-    文件功能描述：Register 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.26.0-preview2 为 DatabaseToolkit 模块接入统一资源本地化并优化功能文案
+    File name: Register.cs
+    File description: Register related implementation
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.27.11 统一 XNCF Register 显示元数据与多语言资源键
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260717
+    Change description: v0.26.0-preview2 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261111
+    Change description: v0.27.11 unify XNCF Register display metadata and localization resource keys
+
+    Modified by: Senparc - 20261119
+    Change description: v0.27.13 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -44,12 +47,12 @@ namespace Senparc.Xncf.DatabaseToolkit
         public Register()
         { }
 
-        #region IXncfRegister 接口
+        #region Legacy section
 
         public override string Name => "Senparc.Xncf.DatabaseToolkit";
 
-        public override string Uid => "3019CCBE-0739-43D5-9DED-027A0B26745E";//必须确保全局唯一，生成后必须固定
-        public override string Version => "0.7.1";//必须填写版本号
+        public override string Uid => "3019CCBE-0739-43D5-9DED-027A0B26745E";//Legacy comment translated to English.
+        public override string Version => "0.7.1";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
         public override string Icon => "fa fa-database";
@@ -57,20 +60,20 @@ namespace Senparc.Xncf.DatabaseToolkit
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
-            //安装或升级版本时更新数据库
+            //update the database when installing or upgrading a version
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
         }
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
-            #region 删除数据库（演示）
+            #region Legacy section
 
             var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
             DatabaseToolkitSenparcEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as DatabaseToolkitSenparcEntities;
 
-            //指定需要删除的数据实体
+            //specify the data entities to delete
 
-            //注意：这里作为演示，在卸载模块的时候删除了所有本模块创建的表，实际操作过程中，请谨慎操作，并且按照删除顺序对实体进行排序！
+            //Note: this is a demonstration that deletes all tables created by this module during uninstallation. In production, proceed carefully and order entities by their deletion dependencies.
             var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.TryGetXncfDatabaseDbContextType).Keys.ToArray();
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
 

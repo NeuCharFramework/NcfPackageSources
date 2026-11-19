@@ -1,22 +1,22 @@
 ﻿@page
 @model Senparc.Xncf.WeixinManager.Areas.Admin.WeixinManager.MpAccount_IndexModel
 @{
-    ViewData["Title"] = "公众号管理";
+    ViewData["Title"] = XR["Frontend.020"];
     Layout = "_Layout_Vue";
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
-    <el-breadcrumb-item>模块管理</el-breadcrumb-item>
-    <el-breadcrumb-item>微信管理</el-breadcrumb-item>
-    <el-breadcrumb-item>公众号管理</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.001"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.002"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.003"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.020"]</el-breadcrumb-item>
 }
 
 <div>
     <div class="admin-role">
         <div class="filter-container">
-            <el-button size="small" class="filter-item" type="primary" icon="el-icon-plus" @@click="add">增加</el-button>
-            <el-button size="small" class="filter-item" type="danger" icon="el-icon-delete" @@click="del">删除</el-button>
+            <el-button size="small" class="filter-item" type="primary" icon="el-icon-plus" @@click="add">{{ ncfST('Frontend.021') }}</el-button>
+            <el-button size="small" class="filter-item" type="danger" icon="el-icon-delete" @@click="del">{{ ncfST('Frontend.022') }}</el-button>
         </div>
         <el-table :data="tableData"
                   border
@@ -34,7 +34,7 @@
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="名称">
+                             :label="ncfST('Frontend.023')">
                 <template slot-scope="scope">
                     {{ scope.row.name}}
                 </template>
@@ -86,40 +86,37 @@
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="备注">
+                             :label="ncfST('Frontend.024')">
                 <template slot-scope="scope">
                     {{ scope.row.adminRemark}}
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="说明">
+                             :label="ncfST('Frontend.025')">
                 <template slot-scope="scope">
                     {{ scope.row.remark}}
                 </template>
             </el-table-column>
             <el-table-column align="center"
                              width="145"
-                             label="添加时间">
+                             :label="ncfST('Frontend.026')">
                 <template slot-scope="scope">
                     {{formaTableTime(scope.row.addTime)}}
                 </template>
             </el-table-column>
             <el-table-column align="center"
                              width="80"
-                             label="消息URL">
+                             :label="ncfST('Frontend.027')">
                 <template slot-scope="scope">
-                    <a :href="'/WeixinMp/'+ scope.row.name + '?parameter=' + scope.row.id" :title="'[你的域名]/WeixinMp/' + scope.row.name + '?parameter=' + scope.row.id"><i class="fa fa-external-link"></i> 打开</a>
+                    <a :href="'/WeixinMp/'+ scope.row.name + '?parameter=' + scope.row.id" :title="ncfST('Frontend.034') + '/WeixinMp/' + scope.row.name + '?parameter=' + scope.row.id"><i class="fa fa-external-link"></i> {{ ncfST('Frontend.028') }}</a>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" align="center" width="200" fixed="right">
+            <el-table-column :label="ncfST('Frontend.029')" align="center" width="200" fixed="right" class-name="ncf-table-actions-column">
                 <template slot-scope="scope">
-                    <el-button size="mini"
-                               type="primary"
-                               @@click="edit(scope.$index, scope.row)"><i class="fa fa-edit"> 编辑</i></el-button>
-                    <el-button size="mini"
-                               type="primary" @@click="openUserMan(scope.row.id)">
-                        <i class="fa fa-users">用户管理</i>
-                    </el-button>
+                    <el-button size="mini" type="primary" icon="el-icon-edit"
+                               @@click="edit(scope.$index, scope.row)">{{ ncfST('Frontend.017') }}</el-button>
+                    <el-button size="mini" type="info" icon="el-icon-user"
+                               @@click="openUserMan(scope.row.id)">{{ ncfST('Frontend.030') }}</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -128,10 +125,10 @@
                     :limit.sync="searchData.pageSize"
                     @@pagination="fetchData"></pagination>
     </div>
-    <!--新增 / 编辑 模态框-->
+    <!-- Add/edit modal -->
     <el-dialog :title="dialog.title" :visible.sync="dialog.visible" width="40%" :close-on-click-modal="false">
         <el-form :model="mpAccountForm" :rules="mpAccountRule" ref="ref_mpAccountForm" label-width="140px" class="demo-ruleForm">
-            <el-form-item label="公众号名称" prop="name">
+            <el-form-item :label="ncfST('Frontend.031')" prop="name">
                 <el-input v-model="mpAccountForm.name"></el-input>
             </el-form-item>
             <el-form-item label="AppId" prop="appId">
@@ -149,20 +146,20 @@
             <el-form-item label="PromptRangeCode" prop="promptRangeCode">
                 <el-input v-model="mpAccountForm.promptRangeCode"></el-input>
             </el-form-item>
-            <el-form-item label="备注" prop="adminRemark">
+            <el-form-item :label="ncfST('Frontend.024')" prop="adminRemark">
                 <el-input v-model="mpAccountForm.adminRemark"></el-input>
             </el-form-item>
             <el-form-item label="URL">
                 <template>
-                    <p>微信后台配置的服务器地址(URL)</p>
-                    <p v-if="dialog.data.id > 0"><a :href="'/WeixinMp/'+ dialog.data.name + '?parameter=' + dialog.data.id"><i class="fa fa-external-link"></i> [您的域名]/WeixinMp/{{mpAccountForm.name}}?parameter={{dialog.data.id}}</a></p>
-                    <p>注意：“公众号名称”必须与所对应的 MessageHandler 所标记的 [MpMessageHandler(name)] 中的 name 对应</p>
+                    <p>{{ ncfST('Frontend.032') }}</p>
+                    <p v-if="dialog.data.id > 0"><a :href="'/WeixinMp/'+ dialog.data.name + '?parameter=' + dialog.data.id"><i class="fa fa-external-link"></i> {{ ncfST('Frontend.033') }}/WeixinMp/{{mpAccountForm.name}}?parameter={{dialog.data.id}}</a></p>
+                    <p>{{ ncfST('Frontend.035') }}</p>
                 </template>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @@click="dialog.visible = false">取 消</el-button>
-            <el-button :loading="dialog.loading" type="primary" @@click="saveMpAccount">确 认</el-button>
+            <el-button @@click="dialog.visible = false">{{ ncfST('Frontend.036') }}</el-button>
+            <el-button :loading="dialog.loading" type="primary" @@click="saveMpAccount">{{ ncfST('Frontend.037') }}</el-button>
         </div>
     </el-dialog>
 </div>
@@ -197,29 +194,29 @@
                 },
                 mpAccountRule: {
                     name: [
-                        { required: true, message: '请输入公众号名称', trigger: 'blur' },
-                        { min: 1, max: 100, message: '长度在 1 至 100 之间', trigger: 'blur' }
+                        { required: true, message: ncfST('Frontend.038'), trigger: 'blur' },
+                        { min: 1, max: 100, message: ncfST('Frontend.042'), trigger: 'blur' }
                     ],
                     appId: [
-                        { required: true, message: '请输入AppId', trigger: 'blur' },
-                        { min: 1, max: 100, message: '长度在 1 至 100 之间', trigger: 'blur' }
+                        { required: true, message: ncfST('Frontend.039'), trigger: 'blur' },
+                        { min: 1, max: 100, message: ncfST('Frontend.042'), trigger: 'blur' }
                     ],
                     appSecret: [
-                        { required: true, message: '请输入AppSecret', trigger: 'blur' },
-                        { min: 1, max: 100, message: '长度在 1 至 100 之间', trigger: 'blur' }
+                        { required: true, message: ncfST('Frontend.040'), trigger: 'blur' },
+                        { min: 1, max: 100, message: ncfST('Frontend.042'), trigger: 'blur' }
                     ],
                     token: [
-                        { required: true, message: '请输入Token', trigger: 'blur' },
-                        { min: 1, max: 500, message: '长度在 1 至 500 之间', trigger: 'blur' }
+                        { required: true, message: ncfST('Frontend.041'), trigger: 'blur' },
+                        { min: 1, max: 500, message: ncfST('Frontend.043'), trigger: 'blur' }
                     ],
                     encodingAESKey: [
-                        { min: 0, max: 500, message: '长度在 1 至 500 之间', trigger: 'blur' }
+                        { min: 0, max: 500, message: ncfST('Frontend.043'), trigger: 'blur' }
                     ],
                     promptRangeCode: [
-                        { min: 0, max: 500, message: '长度在 1 至 100 之间', trigger: 'blur' }
+                        { min: 0, max: 500, message: ncfST('Frontend.042'), trigger: 'blur' }
                     ],
                     adminRemark: [
-                        { min: 0, max: 100, message: '长度在 1 至 100 之间', trigger: 'blur' }
+                        { min: 0, max: 100, message: ncfST('Frontend.042'), trigger: 'blur' }
                     ]
                 },
                 uid: '',
@@ -232,7 +229,7 @@
                 this.uid = resizeUrl().uid;
             },
             methods: {
-                // 打开用户管理
+                // Open user management.
                 openUserMan(id) {
                     window.location.href='/Admin/WeixinManager/WeixinUser?mpid=' + id + '&uid=' + this.uid
             },
@@ -248,7 +245,7 @@
                 },
                 add: function () {
                     this.dialog.visible = true;
-                    this.dialog.title = '新增公众号';
+                    this.dialog.title = ncfST('Frontend.044');
                     this.dialog.data.id = 0;
                     this.mpAccountForm = {
                         name: '',
@@ -263,7 +260,7 @@
                 edit: function (index, row) {
                     this.dialog.data.id = row.id;
                     this.dialog.visible = true;
-                    this.dialog.title = '编辑公众号';
+                    this.dialog.title = ncfST('Frontend.045');
                     service.get('@Url.Page("Edit")?handler=Ajax&id=' + row.id).then(res => {
                         const responseData = res.data.data;
                         //debugger
@@ -282,18 +279,18 @@
                 //    //
                 //},
                 saveMpAccount: function () {
-                    //保存
+                    // Save.
                     var obj = JSON.parse(JSON.stringify(this.mpAccountForm));
                     obj.id = this.dialog.data.id;
                     this.$refs.ref_mpAccountForm.validate().then(res => {
                         return service.post('@Url.Page("Edit")?handler=Ajax', obj);
                     }).then(res => {
-                        var message = '新增公众号成功';
+                        var message = ncfST('Frontend.046');
                         if (this.dialog.data.id > 0) {
-                            message = '编辑公众号成功';
+                            message = ncfST('Frontend.047');
                         }
                         this.$notify({
-                            title: '成功',
+                            title: ncfST('Frontend.048'),
                             message: message,
                             type: 'success',
                             duration: 2000
@@ -308,8 +305,8 @@
                     var delIds = this.multipleSelection;
                     if (delIds.length === 0) {
                         this.$notify({
-                            title: '警告',
-                            message: '请勾选公众号',
+                            title: ncfST('Frontend.049'),
+                            message: ncfST('Frontend.050'),
                             type: 'warning',
                             duration: 2000
                         });
@@ -321,12 +318,12 @@
                         ids.push(ele.id);
                     })
 
-                    app.$confirm('是否删除所都选的项目？', { type: 'warning' }).then(res => {
+                    app.$confirm(ncfST('Frontend.051'), { type: 'warning' }).then(res => {
                         return service.post('@Url.Page("Index")?handler=Delete', ids);
                     }).then(res => {
                         this.$notify({
-                            title: '成功',
-                            message: '已成功删除' + ids.length + '条',
+                            title: ncfST('Frontend.048'),
+                            message: ncfST('Frontend.052', ids.length),
                             type: 'success',
                             duration: 2000
                         });

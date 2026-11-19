@@ -1,16 +1,20 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：NeuCharWorkflowHumanInputService.cs
-    文件功能描述：Workflow 原生人工输入请求的暂停、恢复与受控外部访问
+    File name: NeuCharWorkflowHumanInputService.cs
+    File description: Native Workflow human-input suspension, resumption, and controlled external access
 
-    创建标识：Senparc - 20260815
+    Created by: Senparc - 20260815
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 支持 Human Input 人工节点暂停与外部恢复
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 support Human Input node suspension and external resumption
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 增强工作流函数调用、任务控制与回放管理
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 enhance Workflow function calls, task control, and replay management
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -37,7 +41,7 @@ public sealed record WorkflowHumanInputResolution(
     string? Reason,
     string Message);
 
-/// <summary>供外部受控调用方轮询的最小待输入视图，绝不返回恢复密钥。</summary>
+/// <summary>Minimal pending-input view for controlled external callers; never return the resume key.</summary>
 public sealed record WorkflowExternalHumanInput(
     string RequestId,
     int WorkflowId,
@@ -47,9 +51,9 @@ public sealed record WorkflowExternalHumanInput(
     DateTimeOffset CreatedAt);
 
 /// <summary>
-/// Workflow 自身的人工输入等待队列。
-/// 每个等待项只存在于当前 Host 进程：重启、扩缩容或跨实例请求不会保留执行句柄。
-/// 外部恢复必须同时提供节点保存的恢复密钥和一次性的请求 ID。
+/// The Workflow-owned human-input wait queue.
+/// Each wait item exists only in the current host process; restarts, scaling, and cross-instance requests do not preserve the execution handle.
+/// External resumption requires both the resume key stored on the node and a one-time request ID.
 /// </summary>
 public sealed class NeuCharWorkflowHumanInputService
 {
@@ -82,15 +86,15 @@ public sealed class NeuCharWorkflowHumanInputService
     {
         if (workflowId <= 0 || string.IsNullOrWhiteSpace(correlationId) || adminUserId <= 0)
         {
-            throw new InvalidOperationException("无法为缺少 Workflow 运行关联的信息创建人工输入请求。");
+            throw new InvalidOperationException("Cannot create a human-input request without Workflow run context.");
         }
         if (externalResumeEnabled && string.IsNullOrWhiteSpace(externalResumeKey))
         {
-            throw new InvalidOperationException("已启用外部恢复，但未配置恢复密钥。");
+            throw new InvalidOperationException("External resumption is enabled, but no resume key is configured.");
         }
         if (_pending.Count >= Capacity)
         {
-            throw new InvalidOperationException("当前等待人工输入的 Workflow 请求过多，请先处理已有请求。");
+            throw new InvalidOperationException("Too many Workflow requests are waiting for human input; handle the existing requests first.");
         }
 
         var request = new PendingRequest(
@@ -99,11 +103,11 @@ public sealed class NeuCharWorkflowHumanInputService
             adminUserId.ToString(),
             nodeId,
             nodeName,
-            Limit(prompt, 4_000, "Workflow 正在等待人工输入。"),
+            Limit(prompt, 4_000, "Workflow is waiting for human input."),
             externalResumeEnabled ? Hash(externalResumeKey!) : null);
         if (!_pending.TryAdd(request.RequestId, request))
         {
-            throw new InvalidOperationException("无法创建人工输入请求，请重试。");
+            throw new InvalidOperationException("Could not create the human-input request. Please retry.");
         }
         return request;
     }
@@ -155,15 +159,15 @@ public sealed class NeuCharWorkflowHumanInputService
         cancellationToken.ThrowIfCancellationRequested();
         if (!TryGet(requestId, out var request))
         {
-            return NotHandled("人工输入请求不存在、已处理或已失效。");
+            return NotHandled("The human-input request does not exist, was already handled, or has expired.");
         }
         if (!string.Equals(request.CorrelationId, correlationId?.Trim(), StringComparison.Ordinal))
         {
-            return Failure("人工输入请求不属于当前 Workflow 运行。");
+            return Failure("The human-input request does not belong to the current Workflow run.");
         }
         if (!string.Equals(request.OwnerUserId, userId?.Trim(), StringComparison.Ordinal))
         {
-            return Failure("当前账号无权处理该人工输入请求。");
+            return Failure("The current account cannot handle this human-input request.");
         }
         return await ResolveCoreAsync(request, approved, input, reason, cancellationToken).ConfigureAwait(false);
     }
@@ -179,11 +183,11 @@ public sealed class NeuCharWorkflowHumanInputService
         cancellationToken.ThrowIfCancellationRequested();
         if (!TryGet(requestId, out var request))
         {
-            return NotHandled("人工输入请求不存在、已处理或已失效。");
+            return NotHandled("The human-input request does not exist, was already handled, or has expired.");
         }
         if (!request.MatchesExternalKey(externalResumeKey))
         {
-            return Failure("外部恢复密钥无效，或该节点未启用外部恢复。");
+            return Failure("The external resume key is invalid, or external resumption is disabled for this node.");
         }
         return await ResolveCoreAsync(request, approved, input, reason, cancellationToken).ConfigureAwait(false);
     }
@@ -207,15 +211,15 @@ public sealed class NeuCharWorkflowHumanInputService
         var normalizedReason = reason?.Trim();
         if (approved && string.IsNullOrWhiteSpace(normalizedInput))
         {
-            return Failure("请填写人工输入后再继续 Workflow。");
+            return Failure("Enter the human input before continuing the Workflow.");
         }
         if (normalizedInput?.Length > MaxInputLength || normalizedReason?.Length > MaxReasonLength)
         {
-            return Failure("人工输入或说明超过允许长度。");
+            return Failure("The human input or explanation exceeds the allowed length.");
         }
         if (!_pending.TryRemove(request.RequestId, out var removed))
         {
-            return NotHandled("人工输入请求已被其他入口处理。");
+            return NotHandled("The human-input request was handled by another entry point.");
         }
 
         var decision = new WorkflowHumanInputDecision(approved, normalizedInput, normalizedReason);
@@ -227,14 +231,25 @@ public sealed class NeuCharWorkflowHumanInputService
             decision.Approved,
             decision.Input,
             decision.Reason,
-            decision.Approved ? "人工输入已提交，Workflow 将继续执行。" : "已拒绝本次人工输入，Workflow 将结束当前分支。");
+            decision.Approved ? "Human input submitted; the Workflow will continue." : "This human input was rejected; the Workflow will end the current branch.");
     }
 
     private bool TryGet(string? requestId, out PendingRequest request)
     {
+        if (string.IsNullOrWhiteSpace(requestId))
+        {
+            request = null!;
+            return false;
+        }
+
+        if (_pending.TryGetValue(requestId.Trim(), out var found))
+        {
+            request = found;
+            return true;
+        }
+
         request = null!;
-        return !string.IsNullOrWhiteSpace(requestId)
-               && _pending.TryGetValue(requestId.Trim(), out request);
+        return false;
     }
 
     private async Task ConsumeNeuBellAsync(PendingRequest request, CancellationToken cancellationToken)
@@ -263,7 +278,7 @@ public sealed class NeuCharWorkflowHumanInputService
         }
         catch
         {
-            // 提醒清理由最佳努力完成；人工决策已经生效，不能因此再次阻断 Workflow。
+            // Notification cleanup is best-effort; the human decision is already effective and must not block the Workflow again.
         }
     }
 
@@ -304,7 +319,7 @@ public sealed class NeuCharWorkflowHumanInputService
             CorrelationId = correlationId.Trim();
             OwnerUserId = ownerUserId.Trim();
             NodeId = nodeId?.Trim() ?? string.Empty;
-            NodeName = string.IsNullOrWhiteSpace(nodeName) ? "等待人工输入" : nodeName.Trim();
+            NodeName = string.IsNullOrWhiteSpace(nodeName) ? "Waiting for human input" : nodeName.Trim();
             Prompt = prompt;
             _externalResumeKeyHash = externalResumeKeyHash;
             RequestId = Guid.NewGuid().ToString("N");
@@ -320,7 +335,7 @@ public sealed class NeuCharWorkflowHumanInputService
         public string Prompt { get; }
         public string? NeuBellItemId { get; private set; }
         public DateTimeOffset CreatedAt { get; }
-        /// <summary>完成后返回人工决策；调用方只能等待，不能篡改决策。</summary>
+        /// <summary>Return the human decision after completion; callers may wait but cannot alter the decision.</summary>
         public Task<WorkflowHumanInputDecision> Completion => _completion.Task;
 
         public void SetNeuBellItemId(string? itemId) =>

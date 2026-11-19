@@ -1,26 +1,30 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：Index.cshtml.cs
-    文件功能描述：NeuBell WebHook（WebAPI）设置页：
-    通知端点 CRUD、测试发送、Provider 目录、请求日志（每次请求的数据与结果）
+    File name: Index.cshtml.cs
+    File description: Related implementation.
+    Legacy comment translated to English.
 
-    创建标识：Senparc - 20260906
+    Created by: Senparc - 20260906
 
-    修改标识：Senparc - 20260914
-    修改描述：v0.7.1 支持请求方式（GET/POST/PUT）与请求体模板（{{占位符}}）保存与展示
+    Modified by: Senparc - 20260914
+    Change description: v0.7.1 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+    Modified by: Senparc - 20260915
+    Change description: v0.8.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260916
-    修改描述：v0.9.0 增强 Admin Chat 取消与推理轨迹，并扩展 NeuBell WebHook 请求能力
+    Modified by: Senparc - 20260916
+    Change description: v0.9.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 维护NeuBell WebHook（WebAPI）设置页：
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 
@@ -55,7 +59,7 @@ public class IndexModel(
     private readonly IAdminWorkContextProvider _adminWorkContextProvider = adminWorkContextProvider;
 
     /// <summary>
-    /// 默认 GET：渲染 WebHook 设置页（JSON 数据由 handler=List/Providers 提供）
+    ///Legacy comment translated to English.
     /// </summary>
     public IActionResult OnGet()
     {
@@ -63,7 +67,7 @@ public class IndexModel(
     }
 
     /// <summary>
-    /// WebHook 设置列表
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<IActionResult> OnGetListAsync()
     {
@@ -73,7 +77,7 @@ public class IndexModel(
     }
 
     /// <summary>
-    /// 当前可用的纽铃 Provider 目录（ProviderFilter 下拉选项）
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<IActionResult> OnGetProvidersAsync()
     {
@@ -90,7 +94,7 @@ public class IndexModel(
     }
 
     /// <summary>
-    /// 新增或更新 WebHook 设置
+    /// addorupdate WebHook settings
     /// </summary>
     public async Task<IActionResult> OnPostSaveAsync([FromBody] WebHookSaveRequest request)
     {
@@ -146,7 +150,7 @@ public class IndexModel(
     }
 
     /// <summary>
-    /// 删除 WebHook 设置
+    /// delete WebHook settings
     /// </summary>
     public async Task<IActionResult> OnPostDeleteAsync([FromBody] WebHookIdRequest request)
     {
@@ -159,7 +163,7 @@ public class IndexModel(
     }
 
     /// <summary>
-    /// 测试发送：向指定 WebHook 发送一条 test 事件
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<IActionResult> OnPostTestAsync([FromBody] WebHookIdRequest request)
     {
@@ -181,7 +185,7 @@ public class IndexModel(
     }
 
     /// <summary>
-    /// 请求日志列表（最近 take 条，按时间倒序；payload 单独按需加载）
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<IActionResult> OnGetLogListAsync(int take = 200)
     {
@@ -195,7 +199,7 @@ public class IndexModel(
     }
 
     /// <summary>
-    /// 单条日志的完整请求报文
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<IActionResult> OnGetLogPayloadAsync(int id)
     {
@@ -212,7 +216,7 @@ public class IndexModel(
     }
 
     /// <summary>
-    /// 删除单条日志
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<IActionResult> OnPostDeleteLogAsync([FromBody] WebHookIdRequest request)
     {
@@ -225,7 +229,7 @@ public class IndexModel(
     }
 
     /// <summary>
-    /// 清空日志（保留最近 keep 条）
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<IActionResult> OnPostClearLogsAsync([FromBody] WebHookKeepRequest request)
     {

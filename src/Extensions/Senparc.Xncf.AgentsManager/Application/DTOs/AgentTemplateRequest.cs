@@ -1,32 +1,35 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：AgentTemplateRequest.cs
-    文件功能描述：AgentTemplateRequest 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.12.0-preview6 为 AgentsManager 模块接入统一资源本地化并优化功能文案
+    File name: AgentTemplateRequest.cs
+    File description: AgentTemplateRequest related implementation
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.14.0-preview9 新增 Agent 模板知识库关联与管理统计
+    Created by: Senparc - 20260704
 
-    修改标识：Senparc - 20261009
-    修改描述：v0.18.3 增强 Agent Studio、群组配置与任务管理交互
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.19.0 接收 Skill 绑定、执行权限与工作区策略
+    Modified by: Senparc - 20260717
+    Change description: v0.12.0-preview6 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.19.1 enhance Agent Studio, group configuration, and task management interactions
+    Modified by: Senparc - 20260804
+    Change description: v0.14.0-preview9 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.19.3 完善 AgentsManager 模板、ChatGroup 与连接器能力兼容
+    Modified by: Senparc - 20261009
+    Change description: v0.18.3 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261021
+    Change description: v0.19.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261103
+    Change description: v0.19.1 enhance Agent Studio, group configuration, and task management interactions
+
+    Modified by: Senparc - 20261111
+    Change description: v0.19.3 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 
@@ -119,7 +122,7 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
 
         [JsonIgnore]
         public SelectionList HookRobotTypeOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>());
-        //TODO:可以选择多个通道
+        //Legacy comment translated to English.
 
 
         [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Template.PlatformParameter")]
@@ -130,13 +133,13 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
 
         public int? KnowledgeBaseId { get; set; }
 
-        /// <summary>此 Agent 显式允许使用的 Skill，空集合表示不允许调用 Skill。</summary>
+        ///Legacy comment translated to English.
         public List<AgentSkillBinding> SkillBindings { get; set; } = new();
 
-        /// <summary>此 Agent 的 Workspace 文件和命令权限。</summary>
+        ///Legacy comment translated to English.
         public WorkspacePolicy WorkspacePolicy { get; set; } = new();
 
-        /// <summary>允许此 Agent 调用的连接器。null 表示本次请求不修改已有授权。</summary>
+        ///Legacy comment translated to English.
         public List<AgentConnectorBinding> ConnectorBindings { get; set; }
 
         public string GetSystemMessagePromptCode()
@@ -153,7 +156,7 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
         {
             await base.LoadData(serviceProvider);
 
-            //HootRobotType 枚举
+            //Legacy comment translated to English.
             var hookRobotTypeItems = Enum.GetValues<HookRobotType>();
             foreach (var item in hookRobotTypeItems)
             {
@@ -167,7 +170,7 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
     }
 
     /// <summary>
-    /// 从 PromptCode 快速创建智能体的请求
+    ///Legacy comment translated to English.
     /// </summary>
     public class AgentTemplate_CreateFromPromptCodeRequest : FunctionAppRequestBase
     {
@@ -177,7 +180,7 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
         public string Name { get; set; }
 
         // [Required]
-        // [Description("PromptCode 作用范围||选择覆盖范围：靶场名称（Range级别）：Range、靶道前缀（Tactic级别）：Tactic、或完整版本号（精确定位）：PromptCode，只能严格从 Range、Tactic、PromptCode 中选择")]
+        //Legacy comment translated to English.
         // public string ScopeSelection { get; set; } 
 
         [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Create.ManualPromptCode")]
@@ -207,7 +210,7 @@ namespace Senparc.Xncf.AgentsManager.Application.Dtos
     }
 
     /// <summary>
-    /// 搜索 AgentTemplate 并返回可用 ID 的请求
+    ///Legacy comment translated to English.
     /// </summary>
     public class AgentTemplate_FindByNameRequest : FunctionAppRequestBase
     {

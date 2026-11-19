@@ -1,37 +1,41 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：SandboxOrchestrator.cs
-    文件功能描述：沙箱会话编排、配额与 TTL 回收
+    File name: SandboxOrchestrator.cs
+    File description: Sandbox session orchestration, quotas, and TTL cleanup
 
-    创建标识：Senparc - 20260808
+    Created by: Senparc - 20260808
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.2.0 增加 NCF 预览沙箱工作负载
+    Modified by: Senparc - 20260815
+    Change description: v0.2.0 add the NCF preview sandbox workload
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 增强 jupyter-csharp 模板与沙箱会话管理
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 enhance the jupyter-csharp template and sandbox session management
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 支持创建与更新会话 TTL/永久保持策略
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 support session TTL and keep-alive policies
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 enhance sandbox preview, Jupyter workspaces, and session lifecycle management
 
-    修改标识：Senparc - 20260829
-    修改描述：v0.3.0 强化沙箱工作区边界校验与会话路径隔离
+    Modified by: Senparc - 20260829
+    Change description: v0.3.0 strengthen sandbox workspace boundary checks and session path isolation
 
-    修改标识：Senparc - 20260918
-    修改描述：v0.3.3 支持会话别名、附加端口映射与交互式标准输入
+    Modified by: Senparc - 20260918
+    Change description: v0.3.3 support session aliases, additional port mappings, and interactive standard input
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
+    Modified by: Senparc - 20261005
+    Change description: v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
-    修改标识：Senparc - 20261028
-    修改描述：多租户模式下单例编排器恢复请求租户上下文，后台 TTL/孤儿回收按租户迭代
+    Modified by: Senparc - 20261028
+    Change description: In multi-tenant mode, restore request tenant context in the singleton orchestrator and iterate background TTL/orphan cleanup by tenant
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.4.0 add bulk file upload functionality to Sandbox Lab
+    Modified by: Senparc - 20261103
+    Change description: v0.4.0 add bulk file upload functionality to Sandbox Lab
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.4 Localized sandbox setup and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -56,7 +60,9 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
     private readonly IHttpContextAccessor? _httpContextAccessor;
     private readonly IBackgroundTenantScopeFactory? _tenantScopeFactory;
     private readonly SemaphoreSlim _gate = new(1, 1);
+    private readonly CancellationTokenSource _shutdown = new();
     private Timer? _ttlTimer;
+    private Task? _startupTask;
 
     public SandboxOrchestrator(
         IServiceScopeFactory scopeFactory,
@@ -76,7 +82,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
     }
 
     /// <summary>
-    /// 捕获当前请求的租户快照（非请求上下文返回未匹配快照，保持 fail-closed）。
+    /// Capture the current request tenant snapshot; return no match outside a request context to remain fail-closed.
     /// </summary>
     private RequestTenantSnapshot CaptureCurrentTenant()
     {
@@ -87,7 +93,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
     }
 
     /// <summary>
-    /// 创建还原了当前请求租户上下文的作用域（用于请求触发的沙箱操作）。
+    /// Create a scope that restores the current request tenant context for request-triggered sandbox operations.
     /// </summary>
     private IServiceScope CreateTenantScope()
     {
@@ -96,16 +102,18 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         return scope;
     }
 
-    public async Task StartAsync(CancellationToken cancellationToken)
+    public Task StartAsync(CancellationToken cancellationToken)
     {
         Directory.CreateDirectory(_workspaceRoot);
-        await ReconcileOrphansAsync(cancellationToken).ConfigureAwait(false);
         _ttlTimer = new Timer(
             async _ =>
             {
                 try
                 {
-                    await SweepExpiredAsync(CancellationToken.None).ConfigureAwait(false);
+                    await SweepExpiredAsync(_shutdown.Token).ConfigureAwait(false);
+                }
+                catch (OperationCanceledException) when (_shutdown.IsCancellationRequested)
+                {
                 }
                 catch (Exception ex)
                 {
@@ -115,17 +123,36 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
             null,
             TimeSpan.FromSeconds(30),
             TimeSpan.FromSeconds(30));
+
+        // Docker probing and orphan reconciliation are optional housekeeping. Do not make
+        // the whole host wait for a missing/unresponsive Docker CLI during startup.
+        _startupTask = ReconcileOrphansInBackgroundAsync(_shutdown.Token);
+        return Task.CompletedTask;
     }
 
-    public Task StopAsync(CancellationToken cancellationToken)
+    public async Task StopAsync(CancellationToken cancellationToken)
     {
+        _shutdown.Cancel();
         _ttlTimer?.Change(Timeout.Infinite, 0);
-        return Task.CompletedTask;
+        if (_startupTask == null)
+        {
+            return;
+        }
+
+        try
+        {
+            await _startupTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException) when (
+            cancellationToken.IsCancellationRequested || _shutdown.IsCancellationRequested)
+        {
+        }
     }
 
     public void Dispose()
     {
         _ttlTimer?.Dispose();
+        _shutdown.Dispose();
         _gate.Dispose();
     }
 
@@ -145,13 +172,13 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
     {
         if (!SandboxTemplateCatalog.TryGet(templateKey, out var template))
         {
-            throw new InvalidOperationException($"未知模板：{templateKey}");
+            throw new InvalidOperationException($"Unknown template: {templateKey}");
         }
 
         var normalizedAlias = (alias ?? string.Empty).Trim();
         if (normalizedAlias.Length > 128)
         {
-            throw new InvalidOperationException("别名不能超过 128 个字符。");
+            throw new InvalidOperationException("The alias must be at most 128 characters.");
         }
 
         var parsedExtraPorts = SandboxPortMappings.Parse(extraPortMappings, _quota.MaxExtraPortMappings);
@@ -159,7 +186,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
             && !string.Equals(template.Key, SandboxTemplateKeys.JupyterPython, StringComparison.OrdinalIgnoreCase)
             && !string.Equals(template.Key, SandboxTemplateKeys.JupyterCsharp, StringComparison.OrdinalIgnoreCase))
         {
-            throw new InvalidOperationException("附加端口映射仅支持 JupyterLab 模板。");
+            throw new InvalidOperationException("Additional port mappings are supported only for the JupyterLab template.");
         }
 
         await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
@@ -171,13 +198,13 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
             var userCount = await sessionService.CountActiveByUserAsync(ownerUserId).ConfigureAwait(false);
             if (userCount >= _quota.MaxSessionsPerUser)
             {
-                throw new InvalidOperationException($"已达到每用户并发上限（{_quota.MaxSessionsPerUser}）。请先销毁空闲沙箱。");
+                throw new InvalidOperationException($"The per-user session limit ({_quota.MaxSessionsPerUser}) has been reached. Destroy an idle sandbox first.");
             }
 
             var globalCount = await sessionService.CountActiveGlobalAsync().ConfigureAwait(false);
             if (globalCount >= _quota.MaxGlobalSessions)
             {
-                throw new InvalidOperationException($"已达到全局并发上限（{_quota.MaxGlobalSessions}）。");
+                throw new InvalidOperationException($"The global session limit ({_quota.MaxGlobalSessions}) has been reached.");
             }
 
             var runtimeKind = preferredRuntime ?? template.PreferredRuntime;
@@ -186,7 +213,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
             if (string.Equals(template.Key, SandboxTemplateKeys.NcfPreview, StringComparison.OrdinalIgnoreCase)
                 && ncfPreview == null)
             {
-                throw new InvalidOperationException("NCF 预览必须通过受控工作负载服务创建。");
+                throw new InvalidOperationException("NCF previews must be created through the controlled workload service.");
             }
 
             var sessionId = Guid.NewGuid().ToString("N");
@@ -219,7 +246,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
                         hostPort: null,
                         accessUrl: null,
                         accessToken: null,
-                        message: $"Exec 模板已登记。请调用 Exec 运行代码；{ttlMessage}");
+                        message: $"The Exec template has been registered. Call Exec to run code; {ttlMessage}");
                     await sessionService.SaveObjectAsync(entity).ConfigureAwait(false);
                     return entity.ToInfo();
                 }
@@ -248,13 +275,13 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
                     entity.SetExtraPorts(created.ExtraPorts);
                 }
 
-                // 列表链接直接使用 Docker 为该容器分配的本机端口；NCF 预览仍通过站点代理访问。
+                // List links use the host port assigned by Docker; NCF previews still use the site proxy.
                 var accessUrl = string.Equals(template.Key, SandboxTemplateKeys.NcfPreview, StringComparison.OrdinalIgnoreCase)
                     ? SandboxNcfPreviewPaths.GetEntryUrl(sessionId)
                     : SandboxJupyterPaths.GetDirectLabEntryUrl(
                         sessionId,
-                        created.HostPort ?? throw new InvalidOperationException("Jupyter 容器未返回本机端口。"),
-                        created.AccessToken ?? throw new InvalidOperationException("Jupyter 容器未返回访问令牌。"));
+                        created.HostPort ?? throw new InvalidOperationException("The Jupyter container did not return a host port."),
+                        created.AccessToken ?? throw new InvalidOperationException("The Jupyter container did not return an access token."));
                 entity.MarkRunning(
                     created.RuntimeHandle,
                     created.HostPort,
@@ -290,7 +317,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
     {
         if (string.IsNullOrWhiteSpace(sessionId))
         {
-            throw new InvalidOperationException("SessionId 不能为空。");
+            throw new InvalidOperationException("SessionId is required.");
         }
 
         await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
@@ -299,16 +326,16 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
             using var scope = CreateTenantScope();
             var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
             var entity = await sessionService.GetBySessionIdAsync(sessionId.Trim()).ConfigureAwait(false)
-                         ?? throw new InvalidOperationException("会话不存在。");
+                         ?? throw new InvalidOperationException("The session does not exist.");
 
             if (entity.Status is not (SandboxSessionStatus.Creating or SandboxSessionStatus.Running))
             {
-                throw new InvalidOperationException("只有创建中或运行中的会话可以修改 TTL。");
+                throw new InvalidOperationException("Only creating or running sessions can change TTL.");
             }
 
             if (!SandboxTemplateCatalog.TryGet(entity.TemplateKey, out var template))
             {
-                throw new InvalidOperationException($"会话模板不存在：{entity.TemplateKey}");
+                throw new InvalidOperationException($"The session template does not exist: {entity.TemplateKey}");
             }
 
             var expiresAtUtc = SandboxTtlPolicy.ResolveExpiresAtUtc(
@@ -340,13 +367,13 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
     {
         if (string.IsNullOrWhiteSpace(sessionId))
         {
-            throw new InvalidOperationException("SessionId 不能为空。");
+            throw new InvalidOperationException("SessionId is required.");
         }
 
         var normalizedAlias = (alias ?? string.Empty).Trim();
         if (normalizedAlias.Length > 128)
         {
-            throw new InvalidOperationException("别名不能超过 128 个字符。");
+            throw new InvalidOperationException("The alias must be at most 128 characters.");
         }
 
         await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
@@ -355,7 +382,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
             using var scope = CreateTenantScope();
             var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
             var entity = await sessionService.GetBySessionIdAsync(sessionId.Trim()).ConfigureAwait(false)
-                         ?? throw new InvalidOperationException("会话不存在。");
+                         ?? throw new InvalidOperationException("The session does not exist.");
 
             entity.SetAlias(normalizedAlias.Length == 0 ? null : normalizedAlias);
             await sessionService.SaveObjectAsync(entity).ConfigureAwait(false);
@@ -376,11 +403,11 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         using var scope = CreateTenantScope();
         var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
         var entity = await sessionService.GetBySessionIdAsync(sessionId).ConfigureAwait(false)
-                     ?? throw new InvalidOperationException($"会话不存在：{sessionId}");
+                     ?? throw new InvalidOperationException($"The session does not exist: {sessionId}");
 
         if (!SandboxTemplateCatalog.TryGet(entity.TemplateKey, out var template) || template.Interactive)
         {
-            throw new InvalidOperationException("当前会话模板不支持 Exec。");
+            throw new InvalidOperationException("The current session template does not support Exec.");
         }
 
         var normalizedCode = SandboxExecCodeDefaults.Normalize(entity.TemplateKey, code);
@@ -425,27 +452,27 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         var normalizedCommand = (command ?? string.Empty).Trim();
         if (normalizedCommand.Length == 0)
         {
-            throw new InvalidOperationException("Lab 命令不能为空。");
+            throw new InvalidOperationException("The Lab command is required.");
         }
 
         if (normalizedCommand.Length > _quota.MaxInteractiveCommandCharacters)
         {
             throw new InvalidOperationException(
-                $"Lab 命令不能超过 {_quota.MaxInteractiveCommandCharacters} 个字符。");
+                $"The Lab command must be at most {_quota.MaxInteractiveCommandCharacters} characters.");
         }
 
         var normalizedStdin = stdinContent ?? string.Empty;
         if (normalizedStdin.Length > _quota.MaxInteractiveStdinCharacters)
         {
             throw new InvalidOperationException(
-                $"标准输入内容不能超过 {_quota.MaxInteractiveStdinCharacters} 个字符。");
+                $"Standard input must be at most {_quota.MaxInteractiveStdinCharacters} characters.");
         }
 
         var timeout = timeoutSeconds <= 0 ? 30 : timeoutSeconds;
         if (timeout > _quota.MaxInteractiveCommandSeconds)
         {
             throw new InvalidOperationException(
-                $"Lab 命令超时时间不能超过 {_quota.MaxInteractiveCommandSeconds} 秒。");
+                $"The Lab command timeout must be at most {_quota.MaxInteractiveCommandSeconds} seconds.");
         }
 
         var relativeDirectory = SandboxWorkspacePaths.NormalizeRelativePath(
@@ -510,7 +537,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         if (contentLength is > 0 && contentLength > _quota.MaxWorkspaceFileBytes)
         {
             throw new InvalidOperationException(
-                $"上传文件不能超过 {_quota.MaxWorkspaceFileBytes} 字节。");
+                $"An uploaded file must be at most {_quota.MaxWorkspaceFileBytes} bytes.");
         }
 
         var normalizedPath = SandboxWorkspacePaths.NormalizeRelativePath(relativePath);
@@ -519,7 +546,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         EnsureWorkspacePathSafe(workspace, target);
         if (File.Exists(target) && !overwrite)
         {
-            throw new InvalidOperationException($"工作区文件已存在：{normalizedPath}");
+            throw new InvalidOperationException($"The Workspace file already exists: {normalizedPath}");
         }
 
         Directory.CreateDirectory(Path.GetDirectoryName(target)!);
@@ -544,7 +571,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
                     if (length > _quota.MaxWorkspaceFileBytes)
                     {
                         throw new InvalidOperationException(
-                            $"上传文件不能超过 {_quota.MaxWorkspaceFileBytes} 字节。");
+                            $"An uploaded file must be at most {_quota.MaxWorkspaceFileBytes} bytes.");
                     }
 
                     await output.WriteAsync(buffer.AsMemory(0, read), cancellationToken)
@@ -554,7 +581,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
 
             if (contentLength.HasValue && contentLength.Value != length)
             {
-                throw new InvalidOperationException("上传文件长度与声明长度不一致。");
+                throw new InvalidOperationException("The uploaded file length does not match the declared length.");
             }
 
             File.Move(temporaryTarget, target, overwrite);
@@ -590,14 +617,14 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         EnsureWorkspacePathSafe(workspace, target);
         if (!File.Exists(target))
         {
-            throw new FileNotFoundException("工作区文件不存在。", normalizedPath);
+            throw new FileNotFoundException("The Workspace file does not exist.", normalizedPath);
         }
 
         var info = new FileInfo(target);
         if (info.Length > _quota.MaxWorkspaceReadBytes)
         {
             throw new InvalidOperationException(
-                $"读取文件不能超过 {_quota.MaxWorkspaceReadBytes} 字节。");
+                $"A file read must be at most {_quota.MaxWorkspaceReadBytes} bytes.");
         }
 
         var requestedMaxBytes = maxBytes <= 0
@@ -606,7 +633,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         if (info.Length > requestedMaxBytes)
         {
             throw new InvalidOperationException(
-                $"文件大小超过本次读取上限 {requestedMaxBytes} 字节。");
+                $"The file size exceeds this read limit of {requestedMaxBytes} bytes.");
         }
 
         var content = await File.ReadAllBytesAsync(target, cancellationToken).ConfigureAwait(false);
@@ -641,7 +668,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         EnsureWorkspacePathSafe(workspace, directory);
         if (!Directory.Exists(directory))
         {
-            throw new DirectoryNotFoundException($"工作区目录不存在：{normalizedDirectory}");
+            throw new DirectoryNotFoundException($"The Workspace directory does not exist: {normalizedDirectory}");
         }
 
         var limit = maxItems <= 0
@@ -720,7 +747,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
     }
 
     /// <summary>
-    /// 供反向代理解析上游；勿下发给浏览器。
+    /// Used by the reverse proxy to resolve the upstream; never send it to the browser.
     /// </summary>
     public async Task<SandboxJupyterProxyTarget?> TryGetJupyterProxyTargetAsync(
         string sessionId,
@@ -749,7 +776,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
             return null;
         }
 
-        // 代理高频请求不 Touch/写库，避免 Lab 静态资源打爆 DB；TTL 仍按创建时 ExpiresAtUtc。
+        // High-frequency proxy requests do not touch or write the database, preventing Lab static assets from overwhelming it; TTL still uses ExpiresAtUtc from creation.
         return new SandboxJupyterProxyTarget
         {
             SessionId = entity.SessionId,
@@ -830,7 +857,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
     {
         if (string.IsNullOrWhiteSpace(sessionId))
         {
-            throw new InvalidOperationException("SessionId 不能为空。");
+            throw new InvalidOperationException("SessionId is required.");
         }
 
         var normalizedSessionId = sessionId.Trim();
@@ -847,7 +874,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
 
             if (!entity.CanDeleteRecord())
             {
-                throw new InvalidOperationException("只有已停止、已过期或已清理完成的失败会话才能删除记录，请先销毁运行环境。");
+                throw new InvalidOperationException("Only stopped, expired, or fully cleaned-up failed sessions can delete records; destroy the runtime first.");
             }
 
             TryDeleteWorkspace(normalizedSessionId);
@@ -863,17 +890,17 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
     private async Task<ISandboxRuntime> ResolveRuntimeAsync(SandboxRuntimeKind kind, CancellationToken cancellationToken)
     {
         var runtime = _runtimes.FirstOrDefault(z => z.Kind == kind)
-                      ?? throw new InvalidOperationException($"未注册运行时：{kind}");
+                      ?? throw new InvalidOperationException($"Runtime is not registered: {kind}");
 
         if (!await runtime.IsAvailableAsync(cancellationToken).ConfigureAwait(false))
         {
             if (kind == SandboxRuntimeKind.Docker)
             {
                 throw new InvalidOperationException(
-                    "Docker 运行时不可用。请安装并启动 Docker（或 Podman 兼容 docker CLI），且不要降级为裸进程执行不可信代码。");
+                    "The Docker runtime is unavailable. Install and start Docker (or a Podman-compatible docker CLI); do not fall back to running untrusted code as a bare process.");
             }
 
-            throw new InvalidOperationException($"运行时 {kind} 当前不可用。Wasm Provider 仍为 Stub，请改用 Docker。");
+            throw new InvalidOperationException($"Runtime {kind} is unavailable. The Wasm provider is still a stub; use Docker instead.");
         }
 
         return runtime;
@@ -886,16 +913,16 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
     {
         if (string.IsNullOrWhiteSpace(sessionId))
         {
-            throw new InvalidOperationException("SessionId 不能为空。");
+            throw new InvalidOperationException("SessionId is required.");
         }
 
         var entity = await sessionService.GetBySessionIdAsync(sessionId.Trim()).ConfigureAwait(false)
-                     ?? throw new InvalidOperationException($"会话不存在：{sessionId}");
+                     ?? throw new InvalidOperationException($"The session does not exist: {sessionId}");
         if (entity.Status != SandboxSessionStatus.Running
             || string.IsNullOrWhiteSpace(entity.RuntimeHandle)
             || entity.RuntimeHandle.StartsWith("exec-placeholder:", StringComparison.OrdinalIgnoreCase))
         {
-            throw new InvalidOperationException("当前会话不是可控制的运行中 Lab。");
+            throw new InvalidOperationException("The current session is not a controllable running Lab.");
         }
 
         if (!SandboxTemplateCatalog.TryGet(entity.TemplateKey, out var template)
@@ -903,7 +930,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
             || !template.SupportsInteractiveControl)
         {
             throw new InvalidOperationException(
-                $"模板 {entity.TemplateKey} 不支持持久化 Lab 控制。");
+                $"Template {entity.TemplateKey} does not support persistent Lab control.");
         }
 
         var runtime = await ResolveRuntimeAsync(entity.RuntimeKind, cancellationToken).ConfigureAwait(false);
@@ -918,7 +945,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         var normalizedTarget = Path.GetFullPath(target);
         if (!SandboxWorkspacePaths.IsWithinWorkspace(workspace, normalizedTarget))
         {
-            throw new InvalidOperationException("工作区路径越界。");
+            throw new InvalidOperationException("The Workspace path is outside the allowed boundary.");
         }
 
         var current = normalizedWorkspace.TrimEnd(Path.DirectorySeparatorChar);
@@ -931,13 +958,13 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
             if (Directory.Exists(current)
                 && new DirectoryInfo(current).Attributes.HasFlag(FileAttributes.ReparsePoint))
             {
-                throw new InvalidOperationException("工作区不允许穿过符号链接或重解析点。");
+                throw new InvalidOperationException("The Workspace cannot cross symbolic links or reparse points.");
             }
 
             if (File.Exists(current)
                 && new FileInfo(current).Attributes.HasFlag(FileAttributes.ReparsePoint))
             {
-                throw new InvalidOperationException("工作区不允许操作符号链接或重解析点。");
+                throw new InvalidOperationException("The Workspace cannot operate on symbolic links or reparse points.");
             }
         }
     }
@@ -965,7 +992,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         {
             if (_tenantScopeFactory != null)
             {
-                // 沙箱会话为租户功能表：后台 TTL 回收必须按租户迭代。
+                // Sandbox sessions are tenant-scoped data; background TTL cleanup must iterate by tenant.
                 await _tenantScopeFactory.ForEachEnabledTenantAsync(
                     async (scopeServiceProvider, ct) =>
                     {
@@ -1039,12 +1066,19 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         {
             if (!await runtime.IsAvailableAsync(cancellationToken).ConfigureAwait(false))
             {
+                if (runtime.Kind == SandboxRuntimeKind.Docker)
+                {
+                    _logger.LogWarning(
+                        "Sandbox Docker runtime is unavailable. The Sandbox module remains loaded, " +
+                        "but Docker-backed features are disabled until Docker CLI and daemon are available.");
+                }
+
                 continue;
             }
 
             if (_tenantScopeFactory != null)
             {
-                // 沙箱会话为租户功能表：启动时的孤儿回收必须按租户迭代。
+                // Sandbox sessions are tenant-scoped data; startup orphan cleanup must iterate by tenant.
                 await _tenantScopeFactory.ForEachEnabledTenantAsync(
                     async (scopeServiceProvider, ct) =>
                     {
@@ -1060,6 +1094,24 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
                 runtime,
                 scope.ServiceProvider.GetRequiredService<SandboxSessionService>(),
                 cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    private async Task ReconcileOrphansInBackgroundAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            await ReconcileOrphansAsync(cancellationToken).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(
+                ex,
+                "Sandbox startup reconciliation failed. The Sandbox module remains loaded, " +
+                "but orphan cleanup will be retried by normal lifecycle operations.");
         }
     }
 
@@ -1096,8 +1148,8 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
                 }
 
                 var reason = allHandles.Contains(handle)
-                    ? "Sandbox 容器已停止，应用启动时已同步为已停止。"
-                    : "Sandbox 容器已不存在，应用启动时已同步为已停止。";
+                    ? "The Sandbox container has stopped; startup synchronized it to Stopped."
+                    : "The Sandbox container no longer exists; startup synchronized it to Stopped.";
                 entity.MarkStopped(reason);
                 TryDeleteWorkspace(entity.SessionId);
                 await sessionService.SaveObjectAsync(entity).ConfigureAwait(false);
@@ -1145,8 +1197,8 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
     private static string FormatTtlMessage(DateTime expiresAtUtc)
     {
         return SandboxTtlPolicy.IsUnlimited(expiresAtUtc)
-            ? "TTL 已设为永久保持，须由管理员手动销毁。"
-            : $"TTL 到期时间（UTC）：{expiresAtUtc:u}。";
+            ? "TTL is set to keep-alive; an administrator must destroy it manually."
+            : $"TTL expiration time (UTC): {expiresAtUtc:u}.";
     }
 
     private void TryDeleteWorkspace(string sessionId)

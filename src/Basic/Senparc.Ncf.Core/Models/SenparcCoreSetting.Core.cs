@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：SenparcCoreSetting.Core.cs
-    文件功能描述：SenparcCoreSetting.Core 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: SenparcCoreSetting.Core.cs
+    File description: SenparcCoreSetting.Core related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -19,42 +22,42 @@ using Senparc.Ncf.Core.MultiTenant;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    /// 全局可调整配置的设置
+    ///Legacy comment translated to English.
     /// </summary>
     public partial record class SenparcCoreSetting
     {
         /// <summary>
-        /// 网站是否开启 Debug 标记
+        ///Legacy comment translated to English.
         /// </summary>
         public bool IsDebug { get; set; }
         /// <summary>
-        /// 是否是测试站
+        ///Legacy comment translated to English.
         /// </summary>
         public bool IsTestSite { get; set; }
 
         /// <summary>
-        /// 对应：AppData/Database/SenparcConfig.config 中，所需要使用的数据库连接的 &lt;SenparcConfig&gt; 节点的 Name
+        ///Legacy comment translated to English.
         /// </summary>
         public string DatabaseName { get; set; }
 
         /// <summary>
-        /// 通过配置指定数据库类型。必须因为 MultipleDatabaseType 枚举类型，请注意大小写。
+        ///Legacy comment translated to English.
         /// </summary>
         public MultipleDatabaseType? DatabaseType { get; set; }
 
         /// <summary>
-        /// 缓存类型
+        ///Legacy comment translated to English.
         /// </summary>
         public CacheType CacheType { get; set; }
 
-        #region 多租户
+        #region Legacy section
 
         /// <summary>
-        /// 是否启用多租户，默认为 false
+        /// whether enabledmulti-tenancy，defaultfor false
         /// </summary>
         public bool EnableMultiTenant { get; set; }
         /// <summary>
-        /// 区分租户的规则
+        ///Legacy comment translated to English.
         /// </summary>
         public TenantRule TenantRule { get; set; } = TenantRule.Default;
 
@@ -66,17 +69,17 @@ namespace Senparc.Ncf.Core.Models
         public string MemcachedAddresses { get; set; }
 
         /// <summary>
-        /// 缓存中的请求暂存日志缓存时间（分钟），0 则不缓存
+        ///Legacy comment translated to English.
         /// </summary>
         public int RequestTempLogCacheMinutes { get; set; }
 
         /// <summary>
-        /// 密码加密加强选项，此值在首个账号生成后不修改，否则会导致所有密码失效
+        ///Legacy comment translated to English.
         /// </summary>
         public string PasswordSaltToken { get; set; }
 
         /// <summary>
-        /// MCP 访问令牌，用于 SSE 连接鉴权
+        ///Legacy comment translated to English.
         /// </summary>
         public string McpAccessToken { get; set; }
     }

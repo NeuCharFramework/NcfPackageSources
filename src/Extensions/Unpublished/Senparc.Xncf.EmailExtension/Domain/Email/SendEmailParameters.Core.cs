@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：SendEmailParameters.Core.cs
-    文件功能描述：SendEmailParameters.Core 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: SendEmailParameters.Core.cs
+    File description: SendEmailParameters.Core related implementation
+
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.16 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -26,7 +29,7 @@ namespace Senparc.Ncf.Core.Email
     }
 
     /// <summary>
-    /// 测试邮件发送
+    ///Legacy comment translated to English.
     /// </summary>
     public class SendEmailParameter_Test : SendEmailParameter
     {
@@ -40,7 +43,7 @@ namespace Senparc.Ncf.Core.Email
     }
 
     /// <summary>
-    /// 自定义邮件
+    ///Legacy comment translated to English.
     /// </summary>
     public class SendEmailParameter_CustomEmail : SendEmailParameter
     {

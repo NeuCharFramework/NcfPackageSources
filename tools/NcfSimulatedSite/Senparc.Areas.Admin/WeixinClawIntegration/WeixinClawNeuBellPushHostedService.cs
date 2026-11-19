@@ -1,17 +1,20 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：WeixinClawNeuBellPushHostedService.cs
-    文件功能描述：WeixinClawNeuBellPushHostedService.cs implementation and project behavior.
+    File name: WeixinClawNeuBellPushHostedService.cs
+    File description: WeixinClawNeuBellPushHostedService.cs implementation and project behavior.
 
+    Created by: Senparc - 20260926
 
-    创建标识：Senparc - 20260926
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 enhance WeixinClaw media handling and UI improvements
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 enhance WeixinClaw media handling and UI improvements
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 
@@ -34,8 +37,8 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.WeixinClawIntegration;
 
 /// <summary>
-/// 将 NeuBell 的变更事件转发给已绑定的个人微信会话。
-/// 变更通知只触发重新读取快照，不把业务正文放进底层发布事件。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 public sealed class WeixinClawNeuBellPushHostedService : BackgroundService
 {

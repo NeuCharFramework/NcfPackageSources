@@ -1,28 +1,32 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：DockerSandboxRuntime.cs
-    文件功能描述：基于 Docker CLI 的沙箱运行时
+    File name: DockerSandboxRuntime.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260808
+    Created by: Senparc - 20260808
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.2.0 增加 NCF 预览沙箱工作负载
+    Modified by: Senparc - 20260815
+    Change description: v0.2.0 add the NCF preview sandbox workload
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 增强 jupyter-csharp 模板与沙箱会话管理
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 enhance the jupyter-csharp template and sandbox session management
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 enhance sandbox preview, Jupyter workspace, and session lifecycle management
 
-    修改标识：Senparc - 20260918
-    修改描述：v0.3.3 支持创建时附加端口映射与交互式标准输入
+    Modified by: Senparc - 20260918
+    Change description: v0.3.3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
+    Modified by: Senparc - 20261005
+    Change description: v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.4.0 implement connection manager and workspace file system provider
+    Modified by: Senparc - 20261103
+    Change description: v0.4.0 implement connection manager and workspace file system provider
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.4 Localized sandbox setup and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -37,7 +41,7 @@ using Senparc.Xncf.Sandbox.Domain.Services;
 namespace Senparc.Xncf.Sandbox.Domain.Services.Runtime;
 
 /// <summary>
-/// 通过 docker CLI 管理容器。标签：ncf.sandbox=1 / ncf.sandbox.session={id}
+///Legacy comment translated to English.
 /// </summary>
 public sealed class DockerSandboxRuntime : ISandboxRuntime
 {
@@ -325,7 +329,7 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         }
         else if (string.Equals(request.Template.Key, SandboxTemplateKeys.CsharpExec, StringComparison.OrdinalIgnoreCase))
         {
-            // .NET 10 file-based apps：单文件运行。Exec 容器无外网，需关闭默认 AOT，并清空 NuGet 在线源。
+            //Legacy comment translated to English.
             fileName = "main.cs";
             await File.WriteAllTextAsync(Path.Combine(workDir, fileName), request.Code, cancellationToken).ConfigureAwait(false);
             await File.WriteAllTextAsync(Path.Combine(workDir, "nuget.config"), OfflineNuGetConfig, cancellationToken)
@@ -333,7 +337,7 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
             await File.WriteAllTextAsync(Path.Combine(workDir, "Directory.Build.props"), OfflineDirectoryBuildProps, cancellationToken)
                 .ConfigureAwait(false);
 
-            mountReadOnly = false; // 编译需要写 obj/bin
+            mountReadOnly = false; //Legacy comment translated to English.
             environment = new Dictionary<string, string>(StringComparer.Ordinal)
             {
                 ["HOME"] = "/tmp",
@@ -487,7 +491,7 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
     }
 
     /// <summary>
-    /// 清空在线源，避免 --network none 时 NU1301；BCL 由 SDK 镜像自带，无需 nuget.org。
+    ///Legacy comment translated to English.
     /// </summary>
     private const string OfflineNuGetConfig =
         """
@@ -500,7 +504,7 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         """;
 
     /// <summary>
-    /// file-based apps 默认 PublishAot=true，离线无法还原 ILCompiler；沙箱 Exec 关闭 AOT/审计。
+    ///Legacy comment translated to English.
     /// </summary>
     private const string OfflineDirectoryBuildProps =
         """

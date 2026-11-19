@@ -30,6 +30,15 @@ test('/Admin 与首页是同一个标签', function () {
     assert.equal(home.id, index.id);
 });
 
+test('XNCF URLs resolve module UIDs from uid or moduleUid query parameters', function () {
+    assert.equal(
+        tabs.moduleUidFromUrl('/Admin/XncfModule/Start?uid=module-a', shellHref),
+        'module-a');
+    assert.equal(
+        tabs.moduleUidFromUrl('/Admin/NeuCharPivot/Access?moduleUid=module-b', shellHref),
+        'module-b');
+});
+
 test('登录、外链和 Razor handler 不进入标签', function () {
     assert.equal(tabs.parseAdminUrl('/Admin/Login?handler=Logout', shellHref), null);
     assert.equal(tabs.parseAdminUrl('https://example.com/Admin/Index', shellHref), null);
@@ -93,6 +102,113 @@ test('菜单名称会回填到相同地址的标签', function () {
     ], shellHref);
     assert.equal(applied.activeTab.title, '菜单管理');
     assert.equal(applied.activeTab.menuIndex, '9');
+});
+
+test('XNCF 标签会携带模块名称、注册页面和稳定的 UID 颜色', function () {
+    const state = tabs.openTab(initial(), '/Admin/Sandbox/Index?uid=sandbox', 'Sandbox panel', null, 20, shellHref).state;
+    const applied = tabs.applyMenuTitles(state, [
+        {
+            id: 'module-sandbox',
+            menuName: 'Sandbox',
+            url: '/Admin/XncfModule/Start?uid=sandbox',
+            children: [
+                { id: 'sandbox-setup', menuName: 'Settings / Execute', url: '/Admin/XncfModule/Start?uid=sandbox', children: [] },
+                { id: 'sandbox-home', menuName: 'Sandbox panel', url: '/Admin/Sandbox/Index?uid=sandbox', children: [] },
+                { id: 'sandbox-setup-page', menuName: 'Environment setup', url: '/Admin/Sandbox/Setup?uid=sandbox', children: [] }
+            ]
+        }
+    ], shellHref);
+    const tab = applied.activeTab;
+    assert.equal(tab.moduleName, 'Sandbox');
+    assert.equal(tab.moduleUid, 'sandbox');
+    assert.equal(tab.moduleLinks.length, 3);
+    assert.equal(tab.moduleLinks.some(function (link) { return link.title === 'Environment setup'; }), true);
+    assert.equal(tab.accentColor, tabs.accentColorFromUid('sandbox'));
+    assert.match(tab.accentColor, /^hsl\(/);
+});
+
+test('UID 配色会混合 GUID 各段，避免相同前缀导致颜色过于接近', function () {
+    const prefix = '11111111-2222-3333-4444-';
+    const first = tabs.accentColorFromUid(prefix + '000000000001');
+    const second = tabs.accentColorFromUid(prefix + 'ffffffffffff');
+    assert.notEqual(first, second);
+});
+
+test('刷新后保留 XNCF 标签的模块上下文和 accent 色', function () {
+    const restored = initial({
+        storedTabs: [{
+            url: '/Admin/Sandbox/Index?uid=sandbox',
+            title: 'Sandbox panel',
+            moduleName: 'Sandbox',
+            moduleUid: 'sandbox',
+            moduleLinks: [
+                { id: 'sandbox-home', title: 'Sandbox panel', url: '/Admin/Sandbox/Index?uid=sandbox' }
+            ],
+            accentColor: tabs.accentColorFromUid('sandbox')
+        }],
+        openUrl: '/Admin/Sandbox/Index?uid=sandbox'
+    });
+    const tab = restored.tabs.find(function (item) { return !item.isShell; });
+    assert.equal(tab.moduleName, 'Sandbox');
+    assert.equal(tab.moduleUid, 'sandbox');
+    assert.equal(tab.moduleLinks.length, 1);
+    assert.equal(tab.accentColor, tabs.accentColorFromUid('sandbox'));
+});
+
+test('直接链接先使用短路径标题，加载后可用页面 title 替换，菜单标题保持优先', function () {
+    let state = initial();
+    state = tabs.openTab(state, '/Admin/NeuCharWorkflow/Index?uid=workflow', 'Go to NeuChar Workflow home', null, 20, shellHref).state;
+    let tab = state.tabs.find(function (item) { return !item.isShell; });
+    assert.equal(tab.title, 'Index');
+    const titled = tabs.updateTabPageTitle(state, tab.id, 'NeuChar Workflow');
+    assert.equal(titled.changed, true);
+    assert.equal(titled.tab.title, 'NeuChar Workflow');
+
+    state = tabs.openTab(state, '/Admin/PromptRange/Prompt?uid=prompt', 'Prompt page', 42, 30, shellHref).state;
+    tab = state.tabs.find(function (item) { return item.id === '/admin/promptrange/prompt?uid=prompt'; });
+    const menuTitled = tabs.updateTabPageTitle(state, tab.id, 'PromptRange Prompt');
+    assert.equal(menuTitled.changed, false);
+    assert.equal(menuTitled.tab.title, 'Prompt page');
+});
+
+test('新标签记录来源标签，并可以返回来源', function () {
+    let state = initial();
+    state = tabs.openTab(state, '/Admin/SystemConfig/Index', 'System configuration', 11, 20, shellHref).state;
+    state = tabs.openTab(state, '/Admin/NeuCharWorkflow/Index?uid=workflow', 'Workflow home', null, 30, shellHref).state;
+    const current = state.tabs.find(function (item) { return item.id === '/admin/neucharworkflow/index?uid=workflow'; });
+    assert.equal(current.sourceTabId, '/admin/systemconfig/index');
+    assert.equal(current.sourceTabTitle, 'System configuration');
+    const returned = tabs.returnToSource(state, current.id, shellHref);
+    assert.equal(returned.handled, true);
+    assert.equal(returned.state.activeId, '/admin/systemconfig/index');
+});
+
+test('从模块标签打开新页面时保留模块浮窗上下文和 UID 颜色', function () {
+    let state = initial();
+    state = tabs.openTab(state, '/Admin/XncfModule/Start?uid=sandbox', 'Settings / Execute', 11, 20, shellHref).state;
+    state = tabs.applyMenuTitles(state, [
+        {
+            id: 'module-sandbox',
+            menuName: 'Sandbox',
+            url: '/Admin/XncfModule/Start?uid=sandbox',
+            children: [
+                { id: 'sandbox-setup', menuName: 'Settings / Execute', url: '/Admin/XncfModule/Start?uid=sandbox', children: [] }
+            ]
+        }
+    ], shellHref).state;
+
+    const opened = tabs.openTab(
+        state,
+        '/Admin/NeuCharPivot/Access?moduleUid=sandbox',
+        'NeuCharPivot - Access control',
+        null,
+        30,
+        shellHref);
+    const tab = opened.tab;
+    assert.equal(tab.moduleName, 'Sandbox');
+    assert.equal(tab.moduleUid, 'sandbox');
+    assert.equal(tab.moduleLinks.length, 1);
+    assert.equal(tab.accentColor, tabs.accentColorFromUid('sandbox'));
 });
 
 test('标签超出可视宽度时才显示左右滚动', function () {

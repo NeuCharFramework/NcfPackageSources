@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：AdminChatTrajectoryRepository.cs
-    文件功能描述：AdminChatTrajectoryRepository 相关功能实现
+    File name: AdminChatTrajectoryRepository.cs
+    File description: Related implementation.
 
+    Created by: Senparc - 20260915
 
-    创建标识：Senparc - 20260915
+    Modified by: Senparc - 20260915
+    Change description: v0.8.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;

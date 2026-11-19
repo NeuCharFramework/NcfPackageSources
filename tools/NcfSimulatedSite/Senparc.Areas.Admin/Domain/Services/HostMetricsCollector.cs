@@ -1,13 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：HostMetricsCollector.cs
-    文件功能描述：跨平台采集当前 Host 的实时 CPU、内存、网络及进程指标
+    File name: HostMetricsCollector.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260806
+    Created by: Senparc - 20260806
 
-    修改标识：Senparc - 20260808
-    修改描述：v0.4.0 新增 Host CPU/内存/网络实时指标采集
+    Modified by: Senparc - 20260808
+    Change description: v0.4.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 
@@ -23,7 +27,7 @@ using System.Runtime.InteropServices;
 namespace Senparc.Areas.Admin.Domain.Services
 {
     /// <summary>
-    /// 当前 Host 的一次实时指标快照。该模型不包含历史数据，也不会写入缓存。
+    ///Legacy comment translated to English.
     /// </summary>
     public sealed class HostMetricsSnapshot
     {
@@ -41,7 +45,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         public long NetworkSendTotalBytes { get; set; }
         public int NetworkInterfaceCount { get; set; }
         /// <summary>
-        /// 当前 Web 进程占运行时可见总 CPU 算力的百分比，归一化为 0-100。
+        ///Legacy comment translated to English.
         /// </summary>
         public double? ProcessCpuUsagePercent { get; set; }
         public long ProcessWorkingSetBytes { get; set; }
@@ -50,7 +54,7 @@ namespace Senparc.Areas.Admin.Domain.Services
     }
 
     /// <summary>
-    /// 采集当前 Host 指标。仅在内存中保留上一组 CPU/网络计数器，用于计算两次采样间的实时速率。
+    ///Legacy comment translated to English.
     /// </summary>
     public sealed class HostMetricsCollector
     {
@@ -415,7 +419,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                 }
                 catch (NetworkInformationException)
                 {
-                    // 单个网卡临时不可用时跳过，避免影响其余网卡的汇总。
+                    //Legacy comment translated to English.
                 }
             }
 

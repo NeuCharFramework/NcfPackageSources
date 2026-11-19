@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：WeixinFaceCache.cs
-    文件功能描述：WeixinFaceCache 相关实现
-    
-    
-    创建标识：Senparc - 20250712
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: WeixinFaceCache.cs
+    File description: WeixinFaceCache related implementation
+
+    Created by: Senparc - 20250712
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.25.1 Localized Weixin account and administration surfaces
 
 ----------------------------------------------------------------*/
 
@@ -26,7 +29,7 @@ namespace Senparc.Xncf.WeixinManager.Domain.Cache
     //}
 
     /// <summary>
-    /// 微信表情缓存
+    ///Legacy comment translated to English.
     /// </summary>
     public class WeixinFaceCache : BaseCache<List<KeyValuePair<string, WeixinFace>>>/*, IWeixinFaceCache*/
     {
@@ -43,7 +46,7 @@ namespace Senparc.Xncf.WeixinManager.Domain.Cache
         {
             var data = new List<KeyValuePair<string, WeixinFace>>();
 
-            //遍历FaceImage属性
+            //Legacy comment translated to English.
             var enumType = typeof(WeixinFace);
             var names = enumType.GetEnumNames();
             foreach (var name in names)

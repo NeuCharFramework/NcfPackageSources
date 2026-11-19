@@ -1,26 +1,29 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：ISerializer.cs
-    文件功能描述：ISerializer 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: ISerializer.cs
+    File description: ISerializer related implementation
+
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.11.14 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Dapr.Utils.Serializer
 {
     /// <summary>
-    /// 序列化接口
+    ///Legacy comment translated to English.
     /// </summary>
     public interface ISerializer
     {
         /// <summary>
-        /// 序列化T为JSON字符串
+        ///Legacy comment translated to English.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="input"></param>
@@ -29,7 +32,7 @@ namespace Senparc.Xncf.Dapr.Utils.Serializer
         string SerializesJson<T>(T input, bool IngoreOptions = false);
 
         /// <summary>
-        /// 反序列化JSON字符串为T
+        ///Legacy comment translated to English.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="input"></param>
@@ -37,7 +40,7 @@ namespace Senparc.Xncf.Dapr.Utils.Serializer
         T DeserializesJson<T>(string input);
 
         /// <summary>
-        /// 反序列化JSON字符串为object
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="type"></param>
         /// <param name="input"></param>

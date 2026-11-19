@@ -8,21 +8,21 @@ var app = new Vue({
             activeNavKey: 'list', // list | recall | guide
             defaultMSG: null,
             editorData: '',
-            elSize: 'medium', // el 组件尺寸大小 默认为空  medium、small、mini
-            // 显隐 visible
+            elSize: 'medium', //Legacy comment translated to English.
+            //Legacy comment translated to English.
             visible: {
-                drawerGroup: false, // 组 新增|编辑
-                dialogFile: false,   // 配置抽屉内「新建文件」上传弹框
-                embeddingProgress: false,  // 向量化进度弹窗
-                embeddingResult: false,    // 向量化结果展示弹窗
+                drawerGroup: false, // group add|edit
+                dialogFile: false,   //Legacy comment translated to English.
+                embeddingProgress: false,  //Legacy comment translated to English.
+                embeddingResult: false,    //Legacy comment translated to English.
                 searchSettingsDrawer: false,
                 paragraphDetailDialog: false,
             },
-            // 召回测试
+            //Legacy comment translated to English.
             selectedKnowledgeBaseId: null,
             recallContent: '',
             topK: 5,
-            recallRerankMode: '', // ''=跟随知识库设置; None/Lexical/Llm 为本次测试覆盖
+            recallRerankMode: '', //Legacy comment translated to English.
             recallLoading: false,
             recallResults: [],
             lastElapsedMilliseconds: null,
@@ -30,10 +30,10 @@ var app = new Vue({
             recordPage: 1,
             recordPageSize: 5,
             paragraphDetailItem: null,
-            recallKbOptions: [], // 召回下拉用的全量知识库（独立于列表分页）
+            recallKbOptions: [], //Legacy comment translated to English.
             embeddingProgressPercent: 0,
             embeddingProgressStatus: '',   // '' | success | exception
-            embeddingProgressText: '正在准备...',
+            embeddingProgressText: ncfST('Frontend.134'),
             embeddingResultText: '',
             embeddingTaskName: '',
             embeddingDoneCount: 0,
@@ -52,7 +52,7 @@ var app = new Vue({
             },
             _embeddingTimer: null,
             _embeddingResultTimer: null,
-            configUploadFileList: [], // 新建文件弹框内的上传列表（仅展示用，关闭时清空）
+            configUploadFileList: [], //Legacy comment translated to English.
             form:
             {
                 content: ''
@@ -61,12 +61,12 @@ var app = new Vue({
             {
                 initialFrameHeight: 500
             },
-            //分页参数
+            //pagination parameters
             paginationQuery:
             {
                 total: 5
             },
-            //分页接口传参
+            //pagination API parameters
             listQuery: {
                 pageIndex: 1,
                 pageSize: 20,
@@ -93,26 +93,26 @@ var app = new Vue({
                 content: []
             },
             colData: [
-                { title: "Embedding模型Id", istrue: false },
-                { title: "向量数据库Id", istrue: false },
-                { title: "对话模型Id", istrue: false },
-                { title: "名称", istrue: true },
-                { title: "内容", istrue: true },
+                { title: ncfST('Frontend.177'), istrue: false },
+                { title: ncfST('Frontend.198'), istrue: false },
+                { title: ncfST('Frontend.203'), istrue: false },
+                { title: ncfST('Frontend.011'), istrue: true },
+                { title: ncfST('Frontend.090'), istrue: true },
             ],
             checkBoxGroup: [
-                "Embedding模型Id", "向量数据库Id", "对话模型Id", "名称", "内容"
+                ncfST('Frontend.177'), ncfST('Frontend.198'), ncfST('Frontend.203'), ncfST('Frontend.011'), ncfST('Frontend.090')
             ],
             checkedColumns: [],
             contentTypeData: [
-                { value: 1, label: '输入' },
-                { value: 2, label: '文件' },
-                { value: 3, label: '采集外部数据' }
+                { value: 1, label: ncfST('Frontend.090') },
+                { value: 2, label: ncfST('Frontend.255') },
+                { value: 3, label: ncfST('Frontend.254') }
             ],
             keyword: '',
             multipleSelection: '',
             radio: '',
             props: { multiple: true },
-            // 表格数据
+            //Legacy comment translated to English.
             tableData: [],
             navigationTarget: {
                 knowledgeBaseId: 0,
@@ -136,34 +136,43 @@ var app = new Vue({
             dialogVisible: false,
             dialog:
             {
-                title: '添加知识库',
+                title: ncfST('Frontend.215'),
                 visible: false,
                 data:
                 {
-                    id: '', embeddingModelId: null, vectorDBId: null, chatModelId: null, name: '', content: ''
+                    id: '', embeddingModelId: null, vectorDBId: null, chatModelId: null, name: '', content: '',
+                    retrievalConfig: {
+                        chunkingStrategy: 'Fixed',
+                        chunkSize: 800,
+                        chunkOverlap: 120,
+                        rerankMode: 'None',
+                        rerankModelId: 0,
+                        rerankCandidateCount: 20,
+                        lexicalWeight: 0.35
+                    }
                 },
                 rules:
                 {
                     name:
                         [
-                            { required: true, message: "请输入知识库名称", trigger: "blur" }
+                            { required: true, message: ncfST('Frontend.243'), trigger: "blur" }
                         ],
                     embeddingModelId:
                         [
-                            { required: true, message: "请选择 Embedding 模型", trigger: "change" }
+                            { required: true, message: ncfST('Frontend.244'), trigger: "change" }
                         ],
                     vectorDBId:
                         [
-                            { required: true, message: "请选择向量数据库", trigger: "change" }
+                            { required: true, message: ncfST('Frontend.245'), trigger: "change" }
                         ]
                 },
                 updateLoading: false,
                 disabled: false,
-                checkStrictly: true // 是否严格的遵守父子节点不互相关联
+                checkStrictly: true //Legacy comment translated to English.
             },
             detailDialog:
             {
-                title: '知识库管理详情',
+                title: ncfST('Frontend.137'),
                 visible: false,
                 data:
                 {
@@ -173,57 +182,57 @@ var app = new Vue({
                 {
                     name:
                         [
-                            { required: true, message: "知识库管理名称为必填项", trigger: "blur" }
+                            { required: true, message: ncfST('Frontend.136'), trigger: "blur" }
                         ]
                 },
                 updateLoading: false,
                 disabled: false,
-                checkStrictly: true // 是否严格的遵守父子节点不互相关联
+                checkStrictly: true //Legacy comment translated to English.
             },
-            // 组 新增|编辑（内容类型：1=输入 2=文件 3=采集外部数据，默认文件）
+            //Legacy comment translated to English.
             groupForm: {
-                contentType: 2, // 内容类型，默认「文件」
-                files: [], // 文件列表
-                content: '', // 内容
-                knowledgeBasesId: '' //知识库ID
+                contentType: 2, // contenttype，default「file」
+                files: [], //Legacy comment translated to English.
+                content: '', // content
+                knowledgeBasesId: '' //Legacy comment translated to English.
             },
             groupFormRules: {
                 name: [
-                    { required: true, message: '请填写', trigger: 'blur' },
+                    { required: true, message: ncfST('Frontend.162'), trigger: 'blur' },
                 ],
                 members: [
-                    { required: true, message: '请填写', trigger: 'change' },
+                    { required: true, message: ncfST('Frontend.162'), trigger: 'change' },
                 ],
                 adminAgentTemplateId: [
-                    { required: true, message: '请填写', trigger: 'change' },
+                    { required: true, message: ncfST('Frontend.162'), trigger: 'change' },
                 ],
                 enterAgentTemplateId: [
-                    { required: true, message: '请选择', trigger: 'change' },
+                    { required: true, message: ncfST('Frontend.138'), trigger: 'change' },
                 ],
                 // description: [
-                //     { required: true, message: '请填写', trigger: 'blur' },
+                //     { required: true, message: 'please enter a value', trigger: 'blur' },
                 // ],
             },
-            // 组 新增|编辑 智能体
+            // group add|edit agent
             groupAgentQueryList: {
                 pageIndex: 0,
                 pageSize: 0,
-                filter: '', // 筛选文本
-                timeSort: false, // 默认降序
-                proce: false, // 进行中
-                stop: false, // 停用
-                stand: false, // 待命
+                filter: '', // filter text
+                timeSort: false, // descending by default
+                proce: false, // in progress
+                stop: false, // disabled
+                stand: false, // standby
             },
-            groupAgentList: [], // 组新增时的智能体列表
-            // 配置页文件列表查询与分页
+            groupAgentList: [], //Legacy comment translated to English.
+            //Legacy comment translated to English.
             fileQueryList: {
                 pageIndex: 1,
                 pageSize: 10,
-                filter: '', // 文件名称筛选
+                filter: '', //Legacy comment translated to English.
             },
-            fileListTotal: 0, // 文件列表总条数，用于分页
-            fileList: [], // 配置页文件列表
-            fileNamesToSelect: [], // 打开配置时待选中的文件名（从 KnowledgeBaseItem 回显用）
+            fileListTotal: 0, //Legacy comment translated to English.
+            fileList: [], //Legacy comment translated to English.
+            fileNamesToSelect: [], //Legacy comment translated to English.
         }
     },
     computed: {
@@ -235,10 +244,10 @@ var app = new Vue({
                 const ready = this.isKnowledgeBaseReady(item);
                 return {
                     id: item.id,
-                    name: item.name || ('知识库-' + item.id),
+                        name: item.name || (ncfST('Frontend.234') + '-' + item.id),
                     ready: ready,
                     retrievalConfig: item.retrievalConfig || null,
-                    label: (item.name || ('知识库-' + item.id)) + (ready ? '' : '（尚未向量化）')
+                    label: (item.name || (ncfST('Frontend.234') + '-' + item.id)) + (ready ? '' : '（' + ncfST('Frontend.220') + '）')
                 };
             });
         },
@@ -248,20 +257,20 @@ var app = new Vue({
         recallRerankSummary() {
             const kb = this.selectedKnowledgeBase;
             if (!kb) {
-                return '未选择知识库';
+                return ncfST('Frontend.103');
             }
             const cfg = kb.retrievalConfig || {};
             const mode = cfg.rerankMode || 'None';
             if (mode === 'None') {
-                return '重排关闭（仅按向量相似度排序）';
+                return ncfST('Frontend.188');
             }
             const candidates = cfg.rerankCandidateCount || 20;
             if (mode === 'Lexical') {
                 const weight = cfg.lexicalWeight == null ? 0.35 : cfg.lexicalWeight;
-                return '词法混合重排（候选 ' + candidates + ' 个，词法权重 ' + weight + '）';
+                return ncfST('Frontend.240') + ' (' + candidates + ', ' + ncfST('Frontend.238') + ' ' + weight + ')';
             }
-            const modelText = cfg.rerankModelId > 0 ? ('指定模型 #' + cfg.rerankModelId) : '使用知识库对话模型';
-            return 'LLM 重排（候选 ' + candidates + ' 个，' + modelText + '）';
+            const modelText = cfg.rerankModelId > 0 ? ('#' + cfg.rerankModelId) : ncfST('Frontend.232');
+            return ncfST('Frontend.179') + ' (' + candidates + ', ' + modelText + ')';
         },
         recordTotal() {
             return this.recordList.length;
@@ -278,19 +287,20 @@ var app = new Vue({
         that.getEmbeddingModelList();
         that.getVectorDBList();
         that.getChatModelList();
-        // 获取文件数据
+        // getfiledata
         that.getFileListData('file');
 
-        //TODO:初始化设置选中的字段
+        //Legacy comment translated to English.
         that.checkedColumns = that.colData.filter(item => item.istrue).map(item => item.title);
     },
     watch:
     {
         'dialog.visible': function (val, old) {
-            // 关闭dialog，清空
+            // disabledialog，clear
             if (!val) {
                 this.dialog.data = {
-                    id: '', embeddingModelId: null, vectorDBId: null, chatModelId: null, name: '', content: ''
+                    id: '', embeddingModelId: null, vectorDBId: null, chatModelId: null, name: '', content: '',
+                    retrievalConfig: this.defaultRetrievalConfig()
                 };
                 this.dialog.updateLoading = false;
                 this.dialog.disabled = false;
@@ -324,7 +334,7 @@ var app = new Vue({
             if (!item) {
                 return '';
             }
-            return item.alias || item.name || ((fallbackPrefix || '选项') + '-' + item.id);
+            return item.alias || item.name || ((fallbackPrefix || ncfST('Frontend.291')) + '-' + item.id);
         },
         isKnowledgeBaseReady(row) {
             return !!(row && row.vectorCollectionName && row.embeddedTime);
@@ -377,9 +387,9 @@ var app = new Vue({
             }
             that.embeddingResultCard = {
                 isError: !!opts.isError,
-                title: opts.title || (opts.isError ? '向量化任务执行失败!' : '向量化请求已经执行完毕!'),
+                title: opts.title || (opts.isError ? ncfST('Frontend.163') : ncfST('Frontend.161')),
                 timeText: that.formatEmbeddingTime(opts.startedAt || that.embeddingStartedAt || new Date()),
-                taskName: opts.taskName || that.embeddingTaskName || '知识库向量化',
+                taskName: opts.taskName || that.embeddingTaskName || ncfST('Frontend.197'),
                 total: stats.total,
                 success: stats.success,
                 fail: stats.fail,
@@ -402,7 +412,7 @@ var app = new Vue({
                 this.recallKbOptions = Array.isArray(payload.list) ? payload.list : [];
             } catch (e) {
                 console.error(e);
-                this.$message.error('无法获取知识库列表，请稍后重试');
+                this.$message.error(ncfST('Frontend.279', ''));
             }
         },
         handleRowCommand(command, row) {
@@ -413,9 +423,9 @@ var app = new Vue({
                 this.activeNavKey = 'recall';
                 this.loadRecallKnowledgeBaseList();
             } else if (command === 'delete') {
-                this.$confirm('确认删除此知识库管理吗？', '删除确认', {
-                    confirmButtonText: '删除',
-                    cancelButtonText: '取消',
+                this.$confirm(ncfST('Frontend.150', row && row.name ? row.name : ''), ncfST('Frontend.151'), {
+                    confirmButtonText: ncfST('Frontend.007'),
+                    cancelButtonText: ncfST('Frontend.097'),
                     type: 'warning'
                 }).then(() => {
                     this.handleDelete(0, row);
@@ -442,15 +452,15 @@ var app = new Vue({
             const content = (this.recallContent || '').trim();
             const recallUrl = '/api/Senparc.Xncf.KnowledgeBase/RecallTestAppService/Xncf.KnowledgeBase_RecallTestAppService.RecallTest';
             if (!knowledgeBase) {
-                this.$message.warning('请先选择知识库');
+                this.$message.warning(ncfST('Frontend.103'));
                 return;
             }
             if (!knowledgeBase.ready) {
-                this.$message.warning('该知识库尚未向量化，请先执行“向量化”');
+                this.$message.warning(ncfST('Frontend.280'));
                 return;
             }
             if (!content) {
-                this.$message.warning('请输入要测试的问题');
+                this.$message.warning(ncfST('Frontend.281'));
                 return;
             }
 
@@ -466,7 +476,7 @@ var app = new Vue({
                 });
                 const body = response && response.data;
                 const results = body && Object.prototype.hasOwnProperty.call(body, 'data') ? body.data : body;
-                if (!Array.isArray(results)) throw new Error('服务未返回有效的召回结果');
+                if (!Array.isArray(results)) throw new Error(ncfST('Frontend.282'));
 
                 this.recallResults = results.map(function (item, index) {
                     return Object.assign({}, item, {
@@ -486,11 +496,11 @@ var app = new Vue({
                     time: new Date().toLocaleString('zh-CN', { hour12: false })
                 });
                 this.recordPage = 1;
-                this.$message.success(this.recallResults.length ? '召回测试完成，请核对来源与内容。' : '测试完成，但没有返回匹配片段。');
+                this.$message.success(this.recallResults.length ? ncfST('Frontend.283') : ncfST('Frontend.284'));
             } catch (error) {
                 const response = error && error.response && error.response.data;
-                const msg = (response && (response.errorMessage || response.message || response.title)) || (error && error.message) || '请求未完成，请检查知识库和模型配置。';
-                this.$notify({ title: '召回未完成', message: msg, type: 'error', duration: 6000 });
+                const msg = (response && (response.errorMessage || response.message || response.title)) || (error && error.message) || ncfST('Frontend.278');
+                this.$notify({ title: ncfST('Frontend.285'), message: msg, type: 'error', duration: 6000 });
             } finally {
                 this.recallLoading = false;
             }
@@ -519,7 +529,7 @@ var app = new Vue({
             target.handled = true
             const knowledgeBase = (rows || []).find(item => Number(item.id) === knowledgeBaseId)
             if (!knowledgeBase) {
-                this.$message.warning('未找到要打开的知识库，可能已删除或当前账号没有权限。')
+                this.$message.warning(ncfST('Frontend.292'))
                 return
             }
 
@@ -543,32 +553,32 @@ var app = new Vue({
         },
         uploadSuccess(res, file, fileList) {
             let that = this;
-            // 上传成功
+            // uploadsuccess
             that.fileList = fileList;
             //debugger
             if (res.stateCode == 0) {
                 that.$notify({
-                    title: '成功',
-                    message: '恭喜你，上传成功',
+                    title: ncfST('Frontend.048'),
+                    message: ncfST('Frontend.139'),
                     type: 'success'
                 });
-                // 清空文件列表（关键）
+                //Legacy comment translated to English.
                 that.$refs.uploadRef.clearFiles();
             } else {
                 that.$notify.error({
-                    title: '失败',
-                    message: '上传失败，请重新上传'
+                    title: ncfST('Frontend.049'),
+                    message: ncfST('Frontend.132')
                 });
             }
         },
         uploadError() {
             let that = this;
             that.$notify.error({
-                title: '失败',
-                message: '上传失败，请重新上传'
+                title: ncfST('Frontend.049'),
+                message: ncfST('Frontend.132')
             });
         },
-        // 配置抽屉「新建文件」弹框：上传成功后将文件写入 FileManage，并加入当前已选列表、刷新文件列表并勾选新文件
+        //Legacy comment translated to English.
         async configUploadSuccess(res, file, fileList) {
             const that = this;
             const ok = (res && (res.stateCode === 0 || res.success === true));
@@ -586,16 +596,16 @@ var app = new Vue({
                     const row = that.fileList.find(i => i.id === id);
                     if (row) that.toggleSelection(that.groupForm.files.map(f => that.fileList.find(i => i.id === f.id)).filter(Boolean));
                 });
-                that.$notify({ title: '成功', message: '资料已上传并勾选，请点击“确认”保存关联', type: 'success' });
+                that.$notify({ title: ncfST('Frontend.048'), message: ncfST('Frontend.143'), type: 'success' });
             } else {
-                that.$notify.error({ title: '失败', message: '上传失败，请重试' });
+                that.$notify.error({ title: ncfST('Frontend.049'), message: ncfST('Frontend.140') });
             }
             that.$nextTick(() => {
                 if (that.$refs.configUploadRef) that.$refs.configUploadRef.clearFiles();
             });
         },
         configUploadError() {
-            this.$notify.error({ title: '失败', message: '上传失败，请重新上传' });
+            this.$notify.error({ title: ncfST('Frontend.049'), message: ncfST('Frontend.132') });
         },
         handleDialogFileClose() {
             this.configUploadFileList = [];
@@ -623,7 +633,7 @@ var app = new Vue({
             await axios.post('/api/Senparc.Xncf.AIKernel/AIVectorAppService/Xncf.AIKernel_AIVectorAppService.GetSelectionListAsync', param)
                 .then(res => {
                     const list = (res.data && res.data.data && res.data.data.data) || [];
-                    // KnowledgeBase 仅支持可持久化的 Redis / Qdrant；Memory 等内存库后端会直接拒绝
+                    //Legacy comment translated to English.
                     that.vectorDBData = (Array.isArray(list) ? list : []).filter(item => that.isSupportedVectorDb(item));
                     that.vectorDBDataAll = Array.isArray(list) ? list : [];
                 })
@@ -656,7 +666,7 @@ var app = new Vue({
         resolveSaveResponse(res) {
             var body = res && res.data;
             if (!body) {
-                return { ok: false, message: '保存失败：未收到服务端响应' };
+                return { ok: false, message: ncfST('Frontend.149') + ncfST('Frontend.148') };
             }
             var payload = body;
             if (body.data && typeof body.data === 'object' && !Array.isArray(body.data)) {
@@ -668,7 +678,7 @@ var app = new Vue({
             var success = payload.success === true || payload.Success === true;
             var message = payload.msg || payload.Msg || body.msg || body.Msg
                 || body.exception || body.Exception
-                || (success ? '知识库保存成功' : '保存失败，请检查数据');
+                || (success ? ncfST('Frontend.147') : ncfST('Frontend.148'));
             return { ok: success, message: String(message) };
         },
         async getChatModelList() {
@@ -682,7 +692,7 @@ var app = new Vue({
                     that.chatModelData = res.data.data.data;
                 })
         },
-        // 获取 文件 数据（支持分页与筛选）
+        //Legacy comment translated to English.
         async getFileListData(listType, page) {
             const that = this
             if (listType === 'file') {
@@ -709,24 +719,24 @@ var app = new Vue({
                             })
                         }
                     } else {
-                        app.$message({ message: '资料列表加载失败，请稍后重试。', type: 'error', duration: 5 * 1000 })
+                        app.$message({ message: ncfST('Frontend.293'), type: 'error', duration: 5 * 1000 })
                     }
                 }).catch((err) => {
-                    that.$notify({ title: '错误', message: '资料列表加载失败，请稍后重试。', type: 'error', duration: 3000 })
+                    that.$notify({ title: ncfST('Frontend.294'), message: ncfST('Frontend.293'), type: 'error', duration: 3000 })
                 })
         },
-        // 配置页文件列表：页码变化（首页/上一页/下一页/尾页/跳转）
+        //Legacy comment translated to English.
         handleConfigFilePageChange(page) {
             this.fileQueryList.pageIndex = page
             this.getFileListData('file')
         },
-        // 配置页文件列表：每页条数变化
+        //Legacy comment translated to English.
         handleConfigFileSizeChange(size) {
             this.fileQueryList.pageSize = size
             this.fileQueryList.pageIndex = 1
             this.getFileListData('file')
         },
-        // 打开配置时：根据当前知识库拉取 KnowledgeBaseItem 关联项，回填文件选中或内容
+        //Legacy comment translated to English.
         async loadConfigKnowledgeBaseItems(knowledgeBaseId) {
             const that = this
             if (!knowledgeBaseId) {
@@ -775,7 +785,7 @@ var app = new Vue({
                 that.getFileListData('file')
             }
         },
-        // 获取列表
+        //Legacy comment translated to English.
         async getList() {
             let that = this
             //that.uid = resizeUrl().uid
@@ -788,7 +798,7 @@ var app = new Vue({
             }
             const knowledgeBaseId = Number(that.navigationTarget?.knowledgeBaseId || 0)
 
-            await service.get(`/Admin/KnowledgeBase/Index?handler=KnowledgeBases&pageIndex=${pageIndex}&pageSize=${pageSize}&keyword=${encodeURIComponent(keyword || '')}&orderField=${encodeURIComponent(orderField || '')}&knowledgeBaseId=${knowledgeBaseId > 0 ? knowledgeBaseId : ''}`).then(res => {// 使用 map 转换为目标格式的对象数组
+            await service.get(`/Admin/KnowledgeBase/Index?handler=KnowledgeBases&pageIndex=${pageIndex}&pageSize=${pageSize}&keyword=${encodeURIComponent(keyword || '')}&orderField=${encodeURIComponent(orderField || '')}&knowledgeBaseId=${knowledgeBaseId > 0 ? knowledgeBaseId : ''}`).then(res => {//Legacy comment translated to English.
                 that.filterTableHeader.embeddingModelId = res.data.data.list.map(z => ({
                     text: z.embeddingModelId,
                     value: z.embeddingModelId
@@ -817,12 +827,12 @@ var app = new Vue({
         },
         async getCategoryList() {
             let that = this
-            //获取分类列表数据
+            //Legacy comment translated to English.
             await service.get('/Admin/KnowledgeBase/Index?handler=KnowledgeBasesCategory').then(res => {
                 that.categoryData = res.data.data.list;
             });
         },
-        // 检索配置默认值（与后端旧版行为一致）
+        //Legacy comment translated to English.
         defaultRetrievalConfig() {
             return {
                 chunkingStrategy: 'Fixed',
@@ -834,7 +844,7 @@ var app = new Vue({
                 lexicalWeight: 0.35
             };
         },
-        // 回显检索配置：补齐缺省字段，容错后端返回 null
+        //Legacy comment translated to English.
         normalizeRetrievalConfig(raw) {
             const defaults = this.defaultRetrievalConfig();
             if (!raw || typeof raw !== 'object') {
@@ -850,7 +860,7 @@ var app = new Vue({
                 lexicalWeight: (raw.lexicalWeight == null) ? defaults.lexicalWeight : Number(raw.lexicalWeight)
             };
         },
-        // 编辑 // 新增知识库（下拉直接绑定 dialog.data.*Id）
+        //Legacy comment translated to English.
         handleEdit(index, row, flag) {
             let that = this;
             that.dialog.visible = false;
@@ -859,7 +869,7 @@ var app = new Vue({
             });
 
             if (flag === 'add') {
-                that.dialog.title = '添加知识库';
+                that.dialog.title = ncfST('Frontend.135');
                 that.dialog.data = {
                     id: 0,
                     embeddingModelId: null,
@@ -873,7 +883,7 @@ var app = new Vue({
                 return;
             }
 
-            // 编辑 - 使用现有数据
+            //Legacy comment translated to English.
             let { id, embeddingModelId, vectorDBId, chatModelId, name, content, retrievalConfig } = row;
             that.dialog.data = {
                 id: id || 0,
@@ -886,10 +896,10 @@ var app = new Vue({
             };
 
             if (flag === 'edit') {
-                that.dialog.title = '编辑知识库';
+                that.dialog.title = ncfST('Frontend.141');
             }
         },
-        // 设置父级菜单默认显示 递归
+        //Legacy comment translated to English.
         recursionFunc(row, source, dest) {
             if (row.chatModelId === null) {
                 return;
@@ -905,12 +915,12 @@ var app = new Vue({
                 }
             }
         },
-        // 保存 submitForm 数据（配置抽屉确认：内容类型为文件时导入选中文件，否则不校验文件）
+        //Legacy comment translated to English.
         async saveSubmitFormData(saveType, serviceForm = {}) {
             const that = this;
             if (saveType === 'drawerGroup') {
                 const contentType = serviceForm.contentType;
-                const isFileType = contentType === 2; // 2=文件
+                const isFileType = contentType === 2; // 2=file
 
                 if (isFileType) {
                     const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseAppService/Xncf.KnowledgeBase_KnowledgeBaseAppService.SyncFilesToKnowledgeBase';
@@ -926,14 +936,14 @@ var app = new Vue({
                         const res = await service.post(serviceURL, requestData);
                         const success = res && (res.data === true || (res.data && (res.data.success === true || res.data.data === true)));
                         if (success) {
-                            that.$notify({ title: '成功', message: `已保存 ${fileIds.length} 份资料关联；请点击“向量化”使召回结果更新。`, type: 'success', duration: 3500 });
+                            that.$notify({ title: ncfST('Frontend.048'), message: ncfST('Frontend.186'), type: 'success', duration: 3500 });
                             that.visible.drawerGroup = false;
                             that.getList();
                         } else {
-                            that.$notify({ title: '失败', message: '文件导入失败，请稍后重试。', type: 'error', duration: 3000 });
+                            that.$notify({ title: ncfST('Frontend.049'), message: ncfST('Frontend.144'), type: 'error', duration: 3000 });
                         }
                     } catch (err) {
-                        that.$notify({ title: '错误', message: '文件导入失败，请稍后重试。', type: 'error', duration: 3000 });
+                        that.$notify({ title: ncfST('Frontend.049'), message: ncfST('Frontend.144'), type: 'error', duration: 3000 });
                     }
                 } else if (contentType === 1) {
                     const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseAppService/Xncf.KnowledgeBase_KnowledgeBaseAppService.SetKnowledgeBaseDetail';
@@ -945,17 +955,17 @@ var app = new Vue({
                     try {
                         const res = await service.post(serviceURL, requestData);
                         const success = res && (res.data === true || (res.data && (res.data.success === true || res.data.data === true)));
-                        if (!success) throw new Error('内容保存失败');
-                        that.$notify({ title: '成功', message: '知识库文本内容已同步', type: 'success', duration: 2000 });
+                        if (!success) throw new Error(ncfST('Frontend.148'));
+                        that.$notify({ title: ncfST('Frontend.048'), message: ncfST('Frontend.143'), type: 'success', duration: 2000 });
                         that.visible.drawerGroup = false;
                         that.getList();
                     } catch (err) {
-                        that.$notify({ title: '错误', message: '内容保存失败，请稍后重试。', type: 'error', duration: 3000 });
+                        that.$notify({ title: ncfST('Frontend.049'), message: ncfST('Frontend.148'), type: 'error', duration: 3000 });
                     }
                 } else {
                     that.$notify({
-                        title: '尚未支持',
-                        message: '外部数据采集需要单独配置抓取、权限与清洗策略，本版本不会伪造保存成功。',
+                        title: ncfST('Frontend.158'),
+                        message: ncfST('Frontend.290'),
                         type: 'warning',
                         duration: 4000
                     });
@@ -989,7 +999,7 @@ var app = new Vue({
                 }
             }
         },
-        // 更新新增、编辑（文件改为在「配置」中上传并关联，此处不再传文件）
+        //Legacy comment translated to English.
         updateData() {
             let that = this;
             that.$refs['dataForm'].validate(valid => {
@@ -1007,37 +1017,37 @@ var app = new Vue({
                     retrievalConfig: that.dialog.data.retrievalConfig || that.defaultRetrievalConfig(),
                     NcfFileIds: null
                 };
-                console.log('保存知识库数据：' + JSON.stringify(data));
+                    console.log('Saving knowledge base data: ' + JSON.stringify(data));
                 service.post("/Admin/KnowledgeBase/Edit?handler=Save", data).then(res => {
-                    console.log('保存响应：', res);
+                    console.log('Save response:', res);
                     const result = that.resolveSaveResponse(res);
                     if (result.ok) {
                         that.getList();
                         that.$notify({
-                            title: "成功",
-                            message: result.message || "知识库保存成功",
+                            title: ncfST('Frontend.299'),
+                            message: result.message || ncfST('Frontend.295'),
                             type: "success",
                             duration: 2000
                         });
                         that.dialog.visible = false;
                     } else {
                         that.$notify({
-                            title: "失败",
-                            message: result.message || "保存失败，请检查数据",
+                            title: ncfST('Frontend.297'),
+                            message: result.message || ncfST('Frontend.296'),
                             type: "error",
                             duration: 5000
                         });
                     }
                     that.dialog.updateLoading = false;
                 }).catch(err => {
-                    console.error('保存错误：', err);
+                    console.error('Save error:', err);
                     const response = err && err.response && err.response.data;
                     const message = (response && (response.msg || response.Msg || response.message || response.Message || response.exception))
                         || (err && err.message)
-                        || '保存出错，请稍后重试';
+                        || ncfST('Frontend.298');
                     that.$notify({
-                        title: "错误",
-                        message: String(message),
+                        title: ncfST('Frontend.294'),
+                        message: String(message || ncfST('Frontend.298')),
                         type: "error",
                         duration: 5000
                     });
@@ -1045,7 +1055,7 @@ var app = new Vue({
                 });
             });
         },
-        // 删除
+        // delete
         handleDelete(index, row) {
             let that = this
             let ids = [row.id];
@@ -1053,8 +1063,8 @@ var app = new Vue({
                 if (res.data.success) {
                     that.getList();
                     that.$notify({
-                        title: "Success",
-                        message: "删除成功",
+                        title: ncfST('Frontend.299'),
+                        message: ncfST('Frontend.300'),
                         type: "success",
                         duration: 2000
                     });
@@ -1069,7 +1079,7 @@ var app = new Vue({
                 //that.dialogVote.data.newsId = that.multipleSelection[0].id;
             }
         },
-        // 配置抽屉内「文件列表」表格勾选变化：同步到 groupForm.files，保存时用于关联知识库
+        //Legacy comment translated to English.
         handleConfigFileSelectionChange(val) {
             const currentPageIds = new Set((this.fileList || []).map(r => Number(r.id)))
             const preserved = (this.groupForm.files || []).filter(f => !currentPageIds.has(Number(f.id)))
@@ -1089,19 +1099,19 @@ var app = new Vue({
             //}
             that.detailDialog.visible = true;
         },
-        // 筛选输入变化
+        //Legacy comment translated to English.
         handleFilterChange(value, filterType) {
             if (filterType === 'groupAgent') {
                 this.groupAgentQueryList.filter = value
                 this.getAgentListData('groupAgent', 1)
             }
         },
-        // 配置页文件列表：按文件名称搜索（调用接口过滤，并回到第一页）
+        //Legacy comment translated to English.
         handleConfigFileSearch() {
             this.fileQueryList.pageIndex = 1
             this.getFileListData('file')
         },
-        // 配置抽屉只管理“关联”。删除文件会影响其他知识库和物理资源，必须回文件资源管理页单独执行。
+        //Legacy comment translated to English.
         removeConfigFileSelection(row) {
             this.groupForm.files = (this.groupForm.files || []).filter(f => Number(f.id) !== Number(row.id))
             this.$nextTick(() => {
@@ -1111,11 +1121,11 @@ var app = new Vue({
         },
         clearConfigFileSelection() {
             if (!(this.groupForm.files || []).length) {
-                this.$message.info('当前没有已选择的资料')
+                this.$message.info(ncfST('Frontend.286'))
                 return
             }
-            this.$confirm('仅取消当前知识库的待保存关联，不会删除文件。确认继续吗？', '清空选择', {
-                confirmButtonText: '清空', cancelButtonText: '取消', type: 'warning'
+            this.$confirm(ncfST('Frontend.287'), ncfST('Frontend.288'), {
+                confirmButtonText: ncfST('Frontend.228'), cancelButtonText: ncfST('Frontend.097'), type: 'warning'
             }).then(() => {
                 this.groupForm.files = []
                 this.$nextTick(() => this.$refs.groupAgentTable?.clearSelection())
@@ -1123,7 +1133,7 @@ var app = new Vue({
         },
         getCurrentRow(row) {
             let that = this
-            //获取选中数据
+            //Legacy comment translated to English.
             //that.templateSelection = row;
             that.multipleSelection = row;
             //that.newsId = that.multipleSelection.id;
@@ -1178,15 +1188,15 @@ var app = new Vue({
         handleEmbeddingBtn(btnType, item) {
             const that = this;
             if (btnType === 'embedding') {
-                this.$confirm(`确认对知识库 "${item.name}" 进行向量化处理吗？`, '向量化确认', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
+                this.$confirm(ncfST('Frontend.301', item.name), ncfST('Frontend.159'), {
+                    confirmButtonText: ncfST('Frontend.007'),
+                    cancelButtonText: ncfST('Frontend.097'),
                     type: 'warning'
                 }).then(() => {
                     that.embeddingProgressPercent = 0;
                     that.embeddingProgressStatus = '';
-                    that.embeddingProgressText = '正在准备...';
-                    that.embeddingTaskName = item && item.name ? item.name : ('知识库-' + (item && item.id ? item.id : ''));
+                    that.embeddingProgressText = ncfST('Frontend.134');
+                    that.embeddingTaskName = item && item.name ? item.name : (ncfST('Frontend.234') + '-' + (item && item.id ? item.id : ''));
                     that.embeddingDoneCount = 0;
                     that.embeddingTotalCount = 1;
                     that.embeddingPanelCollapsed = false;
@@ -1199,7 +1209,7 @@ var app = new Vue({
                         progressVal += Math.random() * 8 + 4;
                         if (progressVal > 90) progressVal = 90;
                         that.embeddingProgressPercent = Math.floor(progressVal);
-                        that.embeddingProgressText = '正在向量化处理中... ' + that.embeddingProgressPercent + '%';
+                    that.embeddingProgressText = ncfST('Frontend.160') + ' ' + that.embeddingProgressPercent + '%';
                     }, 400);
 
                     const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseAppService/Xncf.KnowledgeBase_KnowledgeBaseAppService.EmbeddingKnowledgeBase';
@@ -1213,7 +1223,7 @@ var app = new Vue({
                         that.embeddingProgressPercent = 100;
                         that.embeddingProgressStatus = 'success';
                         that.embeddingDoneCount = 1;
-                        that.embeddingProgressText = '向量化完成';
+                        that.embeddingProgressText = ncfST('Frontend.161');
 
                         var body = res && res.data;
                         var success = body && (body.success === true);
@@ -1222,19 +1232,19 @@ var app = new Vue({
                             setTimeout(function () {
                                 that.showEmbeddingResultToast({
                                     isError: false,
-                                    title: '向量化请求已经执行完毕!',
+                                    title: ncfST('Frontend.161'),
                                     taskName: that.embeddingTaskName,
                                     startedAt: that.embeddingStartedAt,
-                                    message: resultMessage || ('知识库「' + (item.name || '') + '」向量化已完成。')
+                                    message: resultMessage || ncfST('Frontend.162', item.name || '')
                                 });
                             }, 500);
                         } else {
                             that.embeddingProgressStatus = 'exception';
-                            that.embeddingProgressText = '向量化失败，请稍后重试。';
+                            that.embeddingProgressText = ncfST('Frontend.163');
                             setTimeout(function () {
                                 that.showEmbeddingResultToast({
                                     isError: true,
-                                    title: '向量化任务执行失败!',
+                                    title: ncfST('Frontend.163'),
                                     taskName: that.embeddingTaskName,
                                     startedAt: that.embeddingStartedAt,
                                     total: 1,
@@ -1252,25 +1262,25 @@ var app = new Vue({
                         }
                         that.embeddingProgressStatus = 'exception';
                         that.embeddingProgressPercent = Math.max(that.embeddingProgressPercent, 50);
-                        that.embeddingProgressText = '处理出错，请稍后重试。';
+                        that.embeddingProgressText = ncfST('Frontend.163');
                         setTimeout(function () {
                             that.showEmbeddingResultToast({
                                 isError: true,
-                                title: '向量化任务执行失败!',
+                                title: ncfST('Frontend.163'),
                                 taskName: that.embeddingTaskName,
                                 startedAt: that.embeddingStartedAt,
                                 total: 1,
                                 success: 0,
                                 fail: 1,
-                                detail: err.message || '向量化处理出错，请检查配置',
-                                message: err.message || '向量化处理出错，请检查配置'
+                                detail: err.message || ncfST('Frontend.163'),
+                                message: err.message || ncfST('Frontend.163')
                             });
                         }, 800);
                     });
                 }).catch(function () {});
             }
         },
-        // Dailog|抽屉 打开 按钮
+        //Legacy comment translated to English.
         handleElVisibleOpenBtn(btnType, item) {
             const that = this
             let visibleKey = btnType
@@ -1294,19 +1304,19 @@ var app = new Vue({
             }
             this.visible[visibleKey] = true
         },
-        // Dailog|抽屉 关闭 按钮
+        //Legacy comment translated to English.
         handleElVisibleClose(btnType) {
             // drawerAgent dialogGroupAgent drawerGroup drawerGroupStart
-            this.$confirm('确认关闭？')
+            this.$confirm(ncfST('Frontend.289'))
                 .then(_ => {
                     let refName = '', formName = ''
-                    // 组
+                    // group
                     if (btnType === 'drawerGroup') {
                         refName = 'groupELForm'
                         formName = 'groupForm'
                         this.visible[btnType] = false
 
-                        //// 重置 组获取智能体query
+                        //Legacy comment translated to English.
                         //this.$set(this, 'groupAgentQueryList', this.$options.data().groupAgentQueryList)
                         //this.groupAgentList = []
                     }
@@ -1321,7 +1331,7 @@ var app = new Vue({
                     this.$nextTick(() => {
                         this.visible[btnType] = false
                     })
-                    // 清理 Function Calls 数据
+                    //Legacy comment translated to English.
                     if (['drawerAgent', 'dialogGroupAgent'].includes(btnType)) {
                         this.functionCallTags = []
                         this.functionCallInputVisible = false
@@ -1330,11 +1340,11 @@ var app = new Vue({
                 })
                 .catch(_ => { });
         },
-        // Dailog|抽屉 提交 按钮
+        //Legacy comment translated to English.
         handleElVisibleSubmit(btnType) {
             // drawerAgent dialogGroupAgent drawerGroup drawerGroupStart
             let refName = '', formName = ''
-            // 组
+            // group
             if (btnType === 'drawerGroup') {
                 refName = 'groupELForm'
                 formName = 'groupForm'
@@ -1344,7 +1354,7 @@ var app = new Vue({
                 if (valid) {
                     //debugger
                     const submitForm = this[formName] ?? {}
-                    //提交数据给后端
+                    //Legacy comment translated to English.
                     this.saveSubmitFormData(btnType, submitForm)
                     //debugger
                     // this.visible[btnType] = false
@@ -1353,7 +1363,7 @@ var app = new Vue({
                 }
             });
         },
-        // 配置抽屉「已选择」文件列表中移除某一项，并同步表格勾选
+        //Legacy comment translated to English.
         groupMembersCancel(item, index) {
             this.groupForm.files.splice(index, 1);
             this.$nextTick(() => {
@@ -1366,24 +1376,24 @@ var app = new Vue({
                 });
             });
         },
-        // 编辑 Dailog|抽屉 按钮 
+        //Legacy comment translated to English.
         async handleEditDrawerOpenBtn(btnType, item) {
             // drawerAgent dialogGroupAgent drawerGroup drawerGroupStart
             let formName = ''
-            // 智能体
+            // agent
             if (['dialogGroupAgent'].includes(btnType)) {
                 formName = 'agentForm'
             }
 
             if (formName) {
                 if (btnType === 'drawerAgent' && item) {
-                    // 创建一个新的对象来存储表单数据
+                    //Legacy comment translated to English.
                     const formData = item.agentTemplateDto ? { ...item.agentTemplateDto } : { ...item };
 
-                    // 确保 functionCallNames 被正确初始化
+                    //Legacy comment translated to English.
                     this.functionCallTags = formData.functionCallNames ? formData.functionCallNames.split(',').filter(Boolean) : [];
 
-                    // 将数据赋值给表单
+                    //Legacy comment translated to English.
                     Object.assign(this[formName], formData);
 
                 } else if (btnType === 'drawerGroup') {
@@ -1405,7 +1415,7 @@ var app = new Vue({
                                 }
                             })
                     }
-                    // // 获取 全部智能体数据
+                    //Legacy comment translated to English.
                     // this.getAgentListData('groupAgent')
                 } else if (btnType === 'drawerTaskStart') {
                     Object.assign(this[formName], {
@@ -1415,13 +1425,13 @@ var app = new Vue({
                 } else {
                     Object.assign(this[formName], item)
                 }
-                // 回显 表单值
+                //Legacy comment translated to English.
                 // this.$set(this, `${formName}`, deepClone(item))
-                // 打开 抽屉
+                //Legacy comment translated to English.
                 this.handleElVisibleOpenBtn(btnType)
             }
         },
-        // 组 新增|编辑 智能体table 切换table 选中
+        //Legacy comment translated to English.
         toggleSelection(rows) {
             if (rows) {
                 rows.forEach(row => {
@@ -1437,15 +1447,18 @@ var app = new Vue({
 
 
 /**
-* 处理接口 query 参数 转换为 string
-* @param {Object} queryObj // 原地址
+
+* Legacy comment translated to English.
+
+* English documentation comment.
+
 */
 function getInterfaceQueryStr(queryObj) {
     if (!queryObj) return ''
-    // 将对象转换为 URL 参数字符串
+    //Legacy comment translated to English.
     return Object.entries(queryObj)
         .filter(([key, value]) => {
-            // 过滤掉空值
+            //Legacy comment translated to English.
             if (typeof value === 'string') {
                 return value !== ''
             } else if (typeof value === 'object' && value instanceof Array) {

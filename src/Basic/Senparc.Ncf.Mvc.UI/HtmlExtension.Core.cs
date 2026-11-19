@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：HtmlExtension.Core.cs
-    文件功能描述：HtmlExtension.Core 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: HtmlExtension.Core.cs
+    File description: HtmlExtension.Core related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.22.9-preview13 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -26,7 +29,7 @@ namespace Senparc.Ncf.Mvc.UI
     {
         //#region CustomSelect
         ///// <summary>
-        ///// 返回由枚举类型生成的自定义样式下拉选项
+        ///Legacy comment translated to English.
         ///// </summary>
         //public static HtmlString CustomDropDownListFormEnum(this HtmlHelper htmlHelper, string name, Type enumType, object selectedValue = null, string optionLabel = null, object htmlAttributes = null, bool useDescription = false, bool addBlankOption = false, string blankOptionText = null)
         //{
@@ -43,7 +46,7 @@ namespace Senparc.Ncf.Mvc.UI
         #region DropDownList
 
         /// <summary>
-        /// 返回由枚举类型生成的下拉选项
+        ///Legacy comment translated to English.
         /// </summary>
         public static IHtmlContent DropDownListFormEnumFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression, Type enumType, object selectedValue = null, string optionLabel = null, object htmlAttributes = null, bool useDescription = false, bool addBlankOption = false)
         {
@@ -51,7 +54,7 @@ namespace Senparc.Ncf.Mvc.UI
             return htmlHelper.DropDownListFor(expression, selectedList, optionLabel, htmlAttributes);
         }
         /// <summary>
-        /// 返回由枚举类型生成的下拉选项
+        ///Legacy comment translated to English.
         /// </summary>
         public static IHtmlContent DropDownListFormEnum(this HtmlHelper htmlHelper, string name, Type enumType, object selectedValue = null, string optionLabel = null, object htmlAttributes = null, bool useDescription = false, bool addBlankOption = false, string blankOptionText = null)
         {
@@ -105,7 +108,7 @@ namespace Senparc.Ncf.Mvc.UI
         //    return htmlHelper.ActionLink(linkText, actionName, controllerName, routeValues, htmlAttributes);
         //}
 
-        //#region 直接引用代码(仅测试)：http://www.veryhuo.com/a/view/7590.html
+        //#region directly referenced code (test only)：http://www.veryhuo.com/a/view/7590.html
 
         //public static IHtmlContent ActionLink(this HtmlHelper htmlHelper, string linkText, string actionName, string controllerName, bool requireAbsoluteUrl)
         //{

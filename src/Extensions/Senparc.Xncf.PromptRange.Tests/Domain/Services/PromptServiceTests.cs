@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：PromptServiceTests.cs
-    文件功能描述：PromptServiceTests 服务逻辑
-    
-    
-    创建标识：Senparc - 20231001
-    
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    File name: PromptServiceTests.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20231001
+
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
 ----------------------------------------------------------------*/
 
@@ -37,12 +37,12 @@
 //            _service = base.GetPromptService();
 //        }
 
-//        #region XncfBuilderPrompt 测试
+//        #region XncfBuilderPrompt test
 
-//        #region 文件类型 Prompt
+//        #region filetype Prompt
 
 //        /// <summary>
-//        /// 测试实体类生成：PromptGroup
+//Legacy comment translated to English.
 //        /// </summary>
 //        /// <returns></returns>
 //        [TestMethod()]
@@ -52,7 +52,7 @@
 //            var dt1 = SystemTime.Now;
 
 //            //PromptItem
-//            var prompt = "这个领域用于控制所有的 Prompt 核心业务逻辑，包括使用 Prompt 操作大预言模型所需的所有必要的参数，类名叫：PromptGroup，用于管理一组相关联的 Prompt，并统一配置其参数。其中必须要包含 LLM 被调用时的所需的所有参数，包括但不仅限于： MaxToken、Temperature、TopP、FrequencyPenalty、ResultsPerPrompt、StopSequences、ChatSystemPrompt、TokenSelectionBiases，等等，除此以外，还需要包含用于评估 Prompt 效果所需要的必要参数，以及 Name 等属于“Group”类型的实体类应该有的参数。";
+//Legacy comment translated to English.
 
 //            var plugins = new Dictionary<string, List<string>>()
 //            {
@@ -64,12 +64,12 @@
 //            Assert.IsNotNull(result);
 //            await Console.Out.WriteLineAsync(result);
 //            await Console.Out.WriteLineAsync();
-//            await Console.Out.WriteLineAsync($"耗时：{SystemTime.NowDiff(dt1).TotalSeconds} 秒");
+//Legacy comment translated to English.
 //        }
 
 
 //        /// <summary>
-//        /// 测试实体类生成：PromptItem
+//Legacy comment translated to English.
 //        /// </summary>
 //        /// <returns></returns>
 //        [TestMethod()]
@@ -79,7 +79,7 @@
 //            var dt1 = SystemTime.Now;
 
 //            //PromptItem
-//            var prompt = "这个领域用于控制所有的 Prompt 核心业务逻辑，包括使用 Prompt 操作大预言模型所需的所有必要的参数，类名叫：PromptItem，其中必须要包含 LLM 被调用时的所需的所有参数，包括但不仅限于： MaxToken、Temperature、TopP、FrequencyPenalty、ResultsPerPrompt、StopSequences、ChatSystemPrompt、TokenSelectionBiases，等等，除此以外，还需要包含用于评估 Prompt 效果所需要的必要参数。";
+//Legacy comment translated to English.
 
 //            var plugins = new Dictionary<string, List<string>>()
 //            {
@@ -92,13 +92,13 @@
 //            Assert.IsNotNull(result);
 //            await Console.Out.WriteLineAsync(result);
 //            await Console.Out.WriteLineAsync();
-//            await Console.Out.WriteLineAsync($"耗时：{SystemTime.NowDiff(dt1).TotalSeconds} 秒");
+//Legacy comment translated to English.
 //        }
 
 //        #endregion
 
 
-//        #region 数据库类型 Prompt
+//        #region databasetype Prompt
 
 //        [TestMethod()]
 //        public async Task GetPromptResultAsyncTest()

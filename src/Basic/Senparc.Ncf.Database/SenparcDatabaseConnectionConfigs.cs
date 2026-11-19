@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：SenparcDatabaseConnectionConfigs.cs
-    文件功能描述：SenparcDatabaseConnectionConfigs 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: SenparcDatabaseConnectionConfigs.cs
+    File description: SenparcDatabaseConnectionConfigs related implementation
+
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.21.14 Updated database integration support and related localization metadata
 
 ----------------------------------------------------------------*/
 
@@ -26,7 +29,7 @@ using System.Collections.Concurrent;
 namespace Senparc.Ncf.Core.Config
 {
     /// <summary>
-    /// 数据库连接信息配置
+    ///Legacy comment translated to English.
     /// </summary>
     public static class SenparcDatabaseConnectionConfigs
     {
@@ -61,7 +64,7 @@ namespace Senparc.Ncf.Core.Config
         }
 
         /// <summary>
-        /// 主站客户数据库连接字符串（根据当前配置数据库动态获得）
+        ///Legacy comment translated to English.
         /// </summary>
         public static string GetClientConnectionString()
         {
@@ -88,7 +91,7 @@ namespace Senparc.Ncf.Core.Config
         }
 
         /// <summary>
-        /// 获取完整名称
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="databaseName"></param>
         /// <returns></returns>

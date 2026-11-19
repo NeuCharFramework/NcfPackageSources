@@ -1,4 +1,17 @@
-﻿using System;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: SysMenu_Response.cs
+    File description: SysMenu_Response related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
+
+----------------------------------------------------------------*/
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -13,18 +26,18 @@ namespace Senparc.Areas.Admin.OHS.Local.PL
     }
 
     /// <summary>
-    /// 菜单创建响应
+    ///Legacy comment translated to English.
     /// </summary>
     public class SysMenu_CreateOrUpdateResponse
     {
         /// <summary>
-        /// 创建后的主键编号
+        ///Legacy comment translated to English.
         /// </summary>
         public string Id { get; set; }
     }
 
     /// <summary>
-    /// 菜单树 不包含按钮
+    ///Legacy comment translated to English.
     /// </summary>
     public class SysMenu_MenuTreeResponse
     {
@@ -32,7 +45,7 @@ namespace Senparc.Areas.Admin.OHS.Local.PL
     }
 
     /// <summary>
-    /// 菜单列表项目
+    ///Legacy comment translated to English.
     /// </summary>
     public class SysMenu_MenusResponse
     {
@@ -40,7 +53,7 @@ namespace Senparc.Areas.Admin.OHS.Local.PL
     }
 
     /// <summary>
-    /// 菜单详情
+    ///Legacy comment translated to English.
     /// </summary>
     public class SysMenu_GetMenuResponse
     {

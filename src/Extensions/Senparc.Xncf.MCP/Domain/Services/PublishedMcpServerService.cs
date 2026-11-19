@@ -1,13 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：PublishedMcpServerService.cs
-    文件功能描述：读取本站运行时实际发布的 MCP 服务及访问端点
+    File name: PublishedMcpServerService.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20261004
+    Created by: Senparc - 20261004
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.5.10 Remove DatabaseSample and related components from MCP extension
+    Modified by: Senparc - 20261103
+    Change description: v0.5.10 Remove DatabaseSample and related components from MCP extension
+
+    Modified by: Senparc - 20261119
+    Change description: v0.5.14 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 

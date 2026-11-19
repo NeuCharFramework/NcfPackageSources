@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：XncfBuilderResource.cs
-    文件功能描述：XncfBuilderResource 相关实现
-    
-    
-    创建标识：Senparc - 20260717
-    
-    修改标识：Senparc - 20260717
-    修改描述：v0.37.0-preview5 增强 XNCF 构建、数据库迁移与 AI 生成流程的本地化支持
+
+    File name: XncfBuilderResource.cs
+    File description: XncfBuilderResource related implementation
+
+    Created by: Senparc - 20260717
+
+    Modified by: Senparc - 20260717
+    Change description: v0.37.0-preview5 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.41.10 Localized XNCF Builder tools and template surfaces
 
 ----------------------------------------------------------------*/
 #nullable enable

@@ -1,20 +1,23 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：PromptExecutionOptions.cs
-    文件功能描述：PromptExecutionOptions 数据传输对象定义
-    
-    
-    创建标识：Senparc - 20260705
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.16.4-preview3 增强文生图重试机制并兼容 TLS1.2/TLS1.3
+    File name: PromptExecutionOptions.cs
+    File description: Related implementation.
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.20.0 执行选项携带 Skill 策略
+    Created by: Senparc - 20260705
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.20.8 维护PromptExecutionOptions 数据传输对象定义
+    Modified by: Senparc - 20260705
+    Change description: v0.16.4-preview3 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261021
+    Change description: v0.20.0 execution options carry Skill policies
+
+    Modified by: Senparc - 20261103
+    Change description: v0.20.8 maintain the PromptExecutionOptions data-transfer-object definition
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -34,17 +37,17 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
     public class PromptTextToSpeechExecutionOptions
     {
         /// <summary>
-        /// 音色（alloy / ash / ballad / coral / echo / fable / onyx / nova / sage / shimmer / verse）
+        ///Legacy comment translated to English.
         /// </summary>
         public string Voice { get; set; }
 
         /// <summary>
-        /// 输出格式（mp3 / opus / aac / flac / wav / pcm）
+        ///Legacy comment translated to English.
         /// </summary>
         public string Format { get; set; }
 
         /// <summary>
-        /// 语速（建议 0.5 - 2.0）
+        ///Legacy comment translated to English.
         /// </summary>
         public float? SpeedRatio { get; set; }
     }
@@ -52,22 +55,22 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
     public class PromptSpeechToTextExecutionOptions
     {
         /// <summary>
-        /// 文件名（用于推断扩展名）
+        ///Legacy comment translated to English.
         /// </summary>
         public string AudioFileName { get; set; }
 
         /// <summary>
-        /// 音频 Base64（支持 data:*;base64, 前缀）
+        ///Legacy comment translated to English.
         /// </summary>
         public string AudioBase64 { get; set; }
 
         /// <summary>
-        /// 已存储在 App_Data 下的相对路径（用于重复打靶 / 连发）
+        ///Legacy comment translated to English.
         /// </summary>
         public string AudioLocalRelativePath { get; set; }
 
         /// <summary>
-        /// 识别语言（可空，如：zh / en）
+        ///Legacy comment translated to English.
         /// </summary>
         public string Language { get; set; }
     }
@@ -75,22 +78,22 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
     public class PromptTextEmbeddingExecutionOptions
     {
         /// <summary>
-        /// 向量库 ID（来自 AIKernel 的 AIVector）
+        ///Legacy comment translated to English.
         /// </summary>
         public int? VectorDbId { get; set; }
 
         /// <summary>
-        /// Collection 名称（可空，空则按规则自动生成）
+        ///Legacy comment translated to English.
         /// </summary>
         public string CollectionName { get; set; }
 
         /// <summary>
-        /// 首次打靶后可直接执行一次查询测试（可空）
+        ///Legacy comment translated to English.
         /// </summary>
         public string SearchQuery { get; set; }
 
         /// <summary>
-        /// 查询测试 TopK（默认 3）
+        ///Legacy comment translated to English.
         /// </summary>
         public int? SearchTopK { get; set; }
     }

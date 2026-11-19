@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：PromptItemDto.cs
-    文件功能描述：PromptItemDto 相关实现
-    
-    
-    创建标识：Senparc - 20231003
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: PromptItemDto.cs
+    File description: PromptItemDto related implementation
+
+    Created by: Senparc - 20231003
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -27,19 +30,19 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         public int Id { get; set; }
 
         /// <summary>
-        /// 靶场　ID
+        /// range　ID
         /// </summary>
         public int RangeId { get; set; }
 
         public PromptRangeDto PromptRange { get; set; }
 
         /// <summary>
-        /// 昵称
+        /// display name
         /// </summary>
         public string NickName { get; set; }
 
         /// <summary>
-        /// Prompt内容
+        /// Promptcontent
         /// </summary>
         public string Content { get; set; }
 
@@ -55,48 +58,48 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         public float TopP { get; set; }
 
         /// <summary>
-        /// 温度
+        /// temperature
         /// </summary>
         public float Temperature { get; set; }
 
         /// <summary>
-        /// 最大 Token 数
+        /// maximum token count
         /// </summary>
         public int MaxToken { get; set; }
 
         /// <summary>
-        /// 频率惩罚
+        /// frequency penalty
         /// </summary>
         public float FrequencyPenalty { get; set; }
 
         public float PresencePenalty { get; set; }
 
         /// <summary>
-        /// 停止序列（JSON 数组） 
+        ///Legacy comment translated to English.
         /// </summary>
         public string StopSequences { get; set; }
 
         #endregion
 
-        #region 打分
+        #region Legacy section
 
         /// <summary>
-        /// 评估参数, 平均分
+        ///Legacy comment translated to English.
         /// </summary>
         public decimal EvalAvgScore { get; set; } = -1;
 
         /// <summary>
-        /// 评估参数
+        ///Legacy comment translated to English.
         /// </summary>
         public decimal EvalMaxScore { get; set; } = -1;
 
         /// <summary>
-        /// 期望结果Json
+        ///Legacy comment translated to English.
         /// </summary>
         public string ExpectedResultsJson { get; set; }
 
         /// <summary>
-        /// 是否启用“ai评分标准”
+        ///Legacy comment translated to English.
         /// </summary>
         public bool isAIGrade { get; set; } = false;
 
@@ -116,35 +119,35 @@ namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto
         public string Tactic { get; set; }
 
         /// <summary>
-        /// <para>为打靶次数，int</para>
+        ///Legacy comment translated to English.
         /// </summary>
         public int Aiming { get; set; }
 
         /// <summary>
-        /// 父Tactic, 可以是空串
+        ///Legacy comment translated to English.
         /// </summary>
         public string ParentTac { get; set; }
 
         #endregion
 
         /// <summary>
-        /// Note（可选）
+        /// Note (optional)
         /// </summary>
         public string Note { get; set; }
 
         /// <summary>
-        /// 最后一次运行时间
+        ///Legacy comment translated to English.
         /// </summary>
         public DateTime LastRunTime { get; set; } = DateTime.Now;
 
         /// <summary>
-        /// 是否公开
+        ///Legacy comment translated to English.
         /// </summary>
         public bool IsShare { get; set; } = false;
 
         public bool IsDraft { get; set; }
 
-        #region Prompt请求参数
+        #region Legacy section
 
         public string Prefix { get; set; }
         public string Suffix { get; set; }

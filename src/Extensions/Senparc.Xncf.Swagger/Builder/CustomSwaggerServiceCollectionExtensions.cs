@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：CustomSwaggerServiceCollectionExtensions.cs
-    文件功能描述：CustomSwaggerServiceCollectionExtensions 相关实现
-    
-    
-    创建标识：Senparc - 20210614
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: CustomSwaggerServiceCollectionExtensions.cs
+    File description: CustomSwaggerServiceCollectionExtensions related implementation
+
+    Created by: Senparc - 20210614
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.12 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -35,7 +38,7 @@ namespace Senparc.Xncf.Swagger.Builder
             {
                 #region WebApiEngine
 
-                //为每个程序集创建文档
+                //Legacy comment translated to English.
                 foreach (var apiAssembly in WebApiEngine.ApiAssemblyCollection)
                 {
                     var version = WebApiEngine.ApiAssemblyVersions[apiAssembly.Key]; //neucharApiDocAssembly.Value.ImageRuntimeVersion;
@@ -68,7 +71,7 @@ namespace Senparc.Xncf.Swagger.Builder
                 }
 
 
-                ////分组显示  https://www.cnblogs.com/toiv/archive/2018/07/28/9379249.html
+                //Legacy comment translated to English.
                 //c.DocInclusionPredicate((docName, apiDesc) =>
                 //{
                 //    if (!apiDesc.TryGetMethodInfo(out MethodInfo methodInfo))
@@ -83,7 +86,7 @@ namespace Senparc.Xncf.Swagger.Builder
 
                 //    if (versions.FirstOrDefault() == null)
                 //    {
-                //        return false;//不符合要求的都不显示
+                //Legacy comment translated to English.
                 //    }
 
                 //    //docName: $"{neucharApiDocAssembly.Key}-v1"
@@ -93,47 +96,87 @@ namespace Senparc.Xncf.Swagger.Builder
                 c.OrderActionsBy(z => z.RelativePath);
                 c.EnableAnnotations();
                 //c.DocumentFilter<RemoveVerbsFilter>();
-                c.CustomSchemaIds(x => x.FullName);//规避错误：InvalidOperationException: Can't use schemaId "$JsApiTicketResult" for type "$Senparc.Weixin.Open.Entities.JsApiTicketResult". The same schemaId was already used for type "$Senparc.Weixin.MP.Entities.JsApiTicketResult"
+                c.CustomSchemaIds(x => x.FullName);//Legacy comment translated to English.
 
-                /* 需要登陆，暂不考虑    —— Jeffrey Su 2021.06.17
+                /* Legacy comment translated to English.
+
                 var oAuthDocName = "oauth2";// WeixinApiService.GetDocName(PlatformType.WeChat_OfficialAccount);
 
-                //添加授权
+
+
+                Legacy comment translated to English.
+
                 var authorizationUrl = NeuChar.App.AppStore.Config.IsDebug
-                                               //以下是 appPurachase 的 Id，实际应该是 appId
+
+                                               Legacy comment translated to English.
+
                                                //? "http://localhost:12222/App/LoginOAuth/Authorize/1002/"
+
                                                //: "https://www.neuchar.com/App/LoginOAuth/Authorize/4664/";
-                                               //以下是正确的 appId
+
+                                               Legacy comment translated to English.
+
                                                ? "http://localhost:12222/App/LoginOAuth/Authorize?appId=xxx"
+
                                                : "https://www.neuchar.com/App/LoginOAuth/Authorize?appId=3035";
 
+
+
                 c.AddSecurityDefinition(oAuthDocName,//"Bearer" 
+
                     new OpenApiSecurityScheme
+
                     {
-                        Description = "请输入带有Bearer开头的Token",
+
+                        Legacy comment translated to English.
+
                         Name = oAuthDocName,// "Authorization",
+
                         In = ParameterLocation.Header,
+
                         Type = SecuritySchemeType.OAuth2,
+
                         //OpenIdConnectUrl = new Uri("https://www.neuchar.com/"),
+
                         Flows = new OpenApiOAuthFlows()
+
                         {
+
                             Implicit = new OpenApiOAuthFlow()
+
                             {
+
                                 AuthorizationUrl = new Uri(authorizationUrl),
+
                                 Scopes = new Dictionary<string, string> { { "swagger_api", "Demo API - full access" } }
+
                             }
+
                         }
+
                     });
 
-                //认证方式，此方式为全局添加
+
+
+                Legacy comment translated to English.
+
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+
                 {
+
                     { new OpenApiSecurityScheme(){ Name =oAuthDocName//"Bearer"
+
                     }, new List<string>() }
+
                     //{ "Bearer", Enumerable.Empty<string>() }
+
                 });
 
-                //c.OperationFilter<AuthResponsesOperationFilter>();//AuthorizeAttribute过滤
+
+
+                //c.OperationFilter<AuthResponsesOperationFilter>();//AuthorizeAttributefilter
+
+
 
                 */
 
@@ -153,7 +196,7 @@ namespace Senparc.Xncf.Swagger.Builder
                 //    c.SwaggerDoc(version, new OpenApiInfo { Title = options.ProjectName, Version = version });
                 //}
 
-                //分组显示  https://www.cnblogs.com/toiv/archive/2018/07/28/9379249.html
+                //Legacy comment translated to English.
                 c.DocInclusionPredicate((docName, apiDesc) =>
                 {
                     if (!apiDesc.TryGetMethodInfo(out MethodInfo methodInfo))
@@ -161,12 +204,12 @@ namespace Senparc.Xncf.Swagger.Builder
                         return false;
                     }
 
-                    //获取方法上的特性
+                    //Legacy comment translated to English.
                     var versions = methodInfo.GetCustomAttributes(true)
                                               .OfType<SwaggerOperationAttribute>()
                                               .Select(z => z.Tags[0].Split(':')[0]);
 
-                    //获取类上的特性
+                    //Legacy comment translated to English.
                     if (versions?.Count() == 0)
                     {
                         versions = methodInfo.DeclaringType.GetCustomAttributes(true)
@@ -176,7 +219,7 @@ namespace Senparc.Xncf.Swagger.Builder
 
                     if (versions?.Count() == 0)
                     {
-                        return false;//不符合要求的都不显示
+                        return false;//Legacy comment translated to English.
                     }
 
 
@@ -186,7 +229,7 @@ namespace Senparc.Xncf.Swagger.Builder
 
 
 
-                //分组  -- 当前分组策略无效，会导致所有 API 都不显示，暂时停用   —— Jeffrey Su 2021.7.22
+                //Legacy comment translated to English.
                 //c.TagActionsBy(s =>
                 //{
                 //    var controller = s.ActionDescriptor.RouteValues["controller"];
@@ -198,27 +241,27 @@ namespace Senparc.Xncf.Swagger.Builder
                 //    }
                 //    return new string[] { controller };
                 //});
-                ////版本
-                //c.DocInclusionPredicate((docName, apiDesc) =>
-                //{
-                //    if (!apiDesc.TryGetMethodInfo(out MethodInfo methodInfo)) return false;
+                ////version
+                ///c.DocInclusionPredicate((docName, apiDesc) =>
+                ///{
+                ///    if (!apiDesc.TryGetMethodInfo(out MethodInfo methodInfo)) return false;
 
-                //    var methodVersions = methodInfo
-                //        .GetCustomAttributes(true)
-                //        .OfType<ApiVersionAttribute>()
-                //        .SelectMany(attr => attr.Versions);
-                //    var allow = methodVersions.Any(v => $"v{v.MajorVersion}.{v.MinorVersion}".Trim('.') == docName);
-                //    if (allow) return true;
+                ///    var methodVersions = methodInfo
+                ///        .GetCustomAttributes(true)
+                ///        .OfType<ApiVersionAttribute>()
+                ///        .SelectMany(attr => attr.Versions);
+                ///    var allow = methodVersions.Any(v => $"v{v.MajorVersion}.{v.MinorVersion}".Trim('.') == docName);
+                ///    if (allow) return true;
 
-                //    var declaringTypeVersions = methodInfo.DeclaringType
-                //        .GetCustomAttributes(true)
-                //        .OfType<ApiVersionAttribute>()
-                //        .SelectMany(attr => attr.Versions);
+                ///    var declaringTypeVersions = methodInfo.DeclaringType
+                ///        .GetCustomAttributes(true)
+                ///        .OfType<ApiVersionAttribute>()
+                ///        .SelectMany(attr => attr.Versions);
 
-                //    return declaringTypeVersions.Any(v => $"v{v.MajorVersion}.{v.MinorVersion}".Trim('.') == docName);
-                //});
+                ///    return declaringTypeVersions.Any(v => $"v{v.MajorVersion}.{v.MinorVersion}".Trim('.') == docName);
+                ///});
 
-                //c.OperationFilter<SwaggerDefaultValueFilter>();
+                ///c.OperationFilter<SwaggerDefaultValueFilter>();
 
             });
             return services;

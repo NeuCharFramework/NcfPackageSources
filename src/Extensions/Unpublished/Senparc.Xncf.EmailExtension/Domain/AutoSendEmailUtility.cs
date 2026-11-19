@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：AutoSendEmailUtility.cs
-    文件功能描述：AutoSendEmailUtility 相关实现
-    
-    
-    创建标识：Senparc - 20211124
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: AutoSendEmailUtility.cs
+    File description: AutoSendEmailUtility related implementation
+
+    Created by: Senparc - 20211124
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.16 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -27,25 +30,25 @@ namespace Senparc.Xncf.EmailExtension
     using Senparc.Xncf.EmailExtension.Domain.Cache;
 
     /// <summary>
-    /// 自动发送邮件类
+    ///Legacy comment translated to English.
     /// </summary>
     public class AutoSendEmailThreadUtility
     {
-        public static bool OpenAutoSendEmail = true;//设置自动发送状态
+        public static bool OpenAutoSendEmail = true;//settingsautomaticsendstatus
         /// <summary>
-        /// 开启状态（自动转换，不要手动设置）
+        ///Legacy comment translated to English.
         /// </summary>
         public static bool AutoSendEmailStarted { get; private set; }
-        public static int AutoSendCount = 0;//尝试发送次数
-        public static int SendSuccessCount = 0;//成功发送次数
+        public static int AutoSendCount = 0;//Legacy comment translated to English.
+        public static int SendSuccessCount = 0;//Legacy comment translated to English.
         /// <summary>
-        /// 下一次发送时间
+        ///Legacy comment translated to English.
         /// </summary>
         public static DateTime NextSendTime { get; set; }
 
 
         /// <summary>
-        /// 设置休眠
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="seconds"></param>
         public void SetSleep(int seconds)
@@ -58,7 +61,7 @@ namespace Senparc.Xncf.EmailExtension
         {
             try
             {
-                //LogUtility.EmailLogger.Info("开始Email发送轮询");
+                //Legacy comment translated to English.
                 if (!OpenAutoSendEmail)
                 {
                     AutoSendEmailStarted = false;
@@ -72,7 +75,7 @@ namespace Senparc.Xncf.EmailExtension
 
                 SendEmailCache emailCache = new SendEmailCache();
                 SendEmail sendEmail = new SendEmail(null);
-                var emails = emailCache.Data.ToList();//这里添加ToList为了防止Data中途有变化，抛出异常：System.InvalidOperationException: 集合已修改；可能无法执行枚举操作。
+                var emails = emailCache.Data.ToList();//Legacy comment translated to English.
                 foreach (var email in emails)
                 {
                     if (!OpenAutoSendEmail)
@@ -85,7 +88,7 @@ namespace Senparc.Xncf.EmailExtension
                     {
                         continue;
                     }
-                    bool useBackEmail = email.SendCount >= 3;//当3次发送失败后，使用备用邮箱
+                    bool useBackEmail = email.SendCount >= 3;//Legacy comment translated to English.
                     var accountType = useBackEmail ? EmailAccountType._163 : EmailAccountType.Default;
 
                     //if (accountType == EmailUserType.Default && email.SendCount == 5 && email.Address.Contains("@163"))

@@ -1,13 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：NcfLocalizationServiceCollectionExtensions.cs
-    文件功能描述：模块功能与本地化支持
-    
-    创建标识：Senparc - 20261110
-    
-    修改标识：Senparc - 20261111
-    修改描述：v0.30.4-preview10 统一本地化资源回退与语言配置能力
+
+    File name: NcfLocalizationServiceCollectionExtensions.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20261110
+
+    Modified by: Senparc - 20261111
+    Change description: v0.30.4-preview10 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 

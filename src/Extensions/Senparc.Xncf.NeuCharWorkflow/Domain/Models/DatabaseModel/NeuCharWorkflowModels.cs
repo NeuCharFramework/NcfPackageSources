@@ -1,20 +1,23 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：NeuCharWorkflowModels.cs
-    文件功能描述：数据模型、DTO 与映射定义
 
+    File name: NeuCharWorkflowModels.cs
+    File description: Data models, DTOs, and mapping definitions
 
-    创建标识：Senparc - 20260810
+    Created by: Senparc - 20260810
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Modified by: Senparc - 20260813
+    Change description: v0.1.0-preview1 improve workflow orchestration, replay, Webhook, and parallel execution
 
-    修改标识：Senparc - 20260913
-    修改描述：v0.4.0 新增 Chat 消息持久化实体，会话历史可跨主机重启恢复
+    Modified by: Senparc - 20260913
+    Change description: v0.4.0 add the Chat message persistence entity so history survives Host restarts
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.4.0 增强 Chat 触发器消息持久化与恢复能力
+    Modified by: Senparc - 20260915
+    Change description: v0.4.0 improve Chat trigger message persistence and recovery
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -83,7 +86,7 @@ public class NeuCharWorkflow : EntityBase<int>
         SetUpdateTime();
     }
 
-    /// <summary>仅由从 Admin 旧表切换时使用，保留旧数据的审计时间与幂等来源键。</summary>
+    /// <summary>Used only when switching from the legacy Admin table; preserves audit timestamps and the idempotent source key.</summary>
     public void RestoreFromLegacy(
         string legacySourceKey,
         DateTime? lastRunAt,
@@ -154,7 +157,7 @@ public class NeuCharWorkflowVersion : EntityBase<int>
         };
     }
 
-    /// <summary>仅用于 Admin 历史版本的幂等迁移。</summary>
+    /// <summary>Used only for idempotent migration from historical Admin versions.</summary>
     public void RestoreFromLegacy(
         string legacySourceKey,
         string name,
@@ -202,11 +205,11 @@ public class NeuCharWorkflowExecutionLog : EntityBase<int>
     public bool? Succeeded { get; private set; }
     public string? ResultSummary { get; private set; }
     public string? Error { get; private set; }
-    /// <summary>运行时工作流定义的内容哈希；相同哈希会复用上一份快照，避免重复保存大图数据。</summary>
+    /// <summary>Content hash of the runtime workflow definition. The same hash reuses the previous snapshot to avoid storing large graph data repeatedly.</summary>
     [MaxLength(64)] public string? ReplaySnapshotHash { get; private set; }
-    /// <summary>仅在与上一份快照不同的运行中保存完整定义。</summary>
+    /// <summary>Stores the complete definition only when it differs from the previous snapshot.</summary>
     public string? ReplaySnapshotJson { get; private set; }
-    /// <summary>按执行顺序保存的节点事件，用于完成后的只读回看。</summary>
+    /// <summary>Node events stored in execution order for read-only replay after completion.</summary>
     public string? ReplayEventsJson { get; private set; }
 
     private NeuCharWorkflowExecutionLog() { }
@@ -244,13 +247,13 @@ public class NeuCharWorkflowExecutionLog : EntityBase<int>
 public class NeuCharWorkflowChatMessage : EntityBase<int>
 {
     public int WorkflowId { get; private set; }
-    /// <summary>参与者标识（user:xxx 或 guest:令牌）的 SHA256 十六进制摘要；只保存摘要，不保存原始令牌。</summary>
+    /// <summary>SHA256 hexadecimal digest of the participant key (user:xxx or guest:token); only the digest is stored.</summary>
     [MaxLength(64)] public string ParticipantKeyHash { get; private set; } = string.Empty;
-    /// <summary>消息角色：user、assistant 或 error。</summary>
+    /// <summary>Message role: user, assistant, or error.</summary>
     [MaxLength(16)] public string Role { get; private set; } = "user";
-    /// <summary>消息内容，已在服务端截断到 8000 个字符。</summary>
+    /// <summary>Message content, truncated to 8000 characters on the server.</summary>
     public string Content { get; private set; } = string.Empty;
-    /// <summary>该消息关联的工作流运行；未启动运行的消息为空。</summary>
+    /// <summary>Workflow run associated with this message; empty when no run was started.</summary>
     public Guid? RunId { get; private set; }
 
     private NeuCharWorkflowChatMessage() { }
@@ -268,7 +271,7 @@ public class NeuCharWorkflowChatMessage : EntityBase<int>
         string.IsNullOrEmpty(value) || value.Length <= length ? value : value[..length];
 }
 
-/// <summary>运行时冻结的工作流定义。该定义与实时编辑器相互独立，只用于任务回看和从回看复制草稿。</summary>
+/// <summary>Frozen workflow definition captured at runtime. It is independent from the live editor and is used only for task replay and draft copying.</summary>
 public sealed record NeuCharWorkflowReplayDefinition(
     string Name,
     string? Description,

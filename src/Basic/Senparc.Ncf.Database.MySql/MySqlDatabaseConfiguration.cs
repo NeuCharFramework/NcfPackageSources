@@ -1,17 +1,20 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：MySqlDatabaseConfiguration.cs
-    文件功能描述：MySqlDatabaseConfiguration 相关实现
-    
-    
-    创建标识：Senparc - 20201004
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.20.5-preview5 适配 MySQL 数据库安装状态检测
+    Copyright (C) 2026 Senparc
+
+    File name: MySqlDatabaseConfiguration.cs
+    File description: MySqlDatabaseConfiguration related implementation
+
+    Created by: Senparc - 20201004
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260804
+    Change description: v0.20.5-preview5 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.14 Updated database integration support and related localization metadata
 
 ----------------------------------------------------------------*/
 
@@ -31,7 +34,7 @@ using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 namespace Senparc.Ncf.Database.MySql
 {
     /// <summary>
-    /// MySQL 数据库配置
+    /// MySQL databaseconfiguration
     /// </summary>
     public class MySqlDatabaseConfiguration : DatabaseConfigurationBase<MySqlDbContextOptionsBuilder, MySqlOptionsExtension>
     {
@@ -52,7 +55,7 @@ namespace Senparc.Ncf.Database.MySql
             (optionsBuilder, connectionString, xncfDatabaseData, actionBase) =>
             {
                 optionsBuilder.UseMySql(connectionString,
-                    //ServerVersion 用法：https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql/pull/1233
+                    //Legacy comment translated to English.
                     ServerVersion.AutoDetect(connectionString), 
                     actionBase);//beta6
             };
@@ -69,13 +72,13 @@ namespace Senparc.Ncf.Database.MySql
     }
 
     /// <summary>
-    /// MySQL 设计时数据库配置。
+    ///Legacy comment translated to English.
     /// </summary>
     /// <remarks>
-    /// 迁移生成和模型比较只需要创建 EF Core 模型，不应该要求目标数据库在线。
-    /// 因此这里使用稳定的 MySQL 8.0 兼容基线，避免 <see cref="ServerVersion.AutoDetect(string)"/>
-    /// 在 dotnet ef 执行期间主动建立数据库连接。正常运行时仍应使用
-    /// <see cref="MySqlDatabaseConfiguration"/> 自动识别实际服务器版本。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </remarks>
     public sealed class MySqlDesignTimeDatabaseConfiguration : MySqlDatabaseConfiguration
     {

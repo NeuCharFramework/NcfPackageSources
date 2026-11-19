@@ -45,19 +45,21 @@
                     {{formaTableTime(scope.row.addTime)}}
                 </template>
             </el-table-column>
-            <el-table-column label="@AR["AdminUserInfo.Actions"]" align="center">
+            <el-table-column label="@AR["AdminUserInfo.Actions"]" align="center" class-name="ncf-table-actions-column">
                 <template slot-scope="scope">
                     <el-button size="mini"
                                type="primary"
+                               icon="el-icon-edit"
                                v-has="['admin-edit']"
                                @@click="handleEdit(scope.$index, scope.row)">@AR["Common.编辑"]</el-button>
                     <el-button size="mini"
-                               type="primary"
+                               type="info"
+                               icon="el-icon-setting"
                                v-has="['admin-grant']"
                                @@click="handleSet(scope.$index, scope.row)">@AR["AdminUserInfo.SetRole"]</el-button>
                     <template v-has="['admin-delete']">
                         <el-popconfirm placement="top" title="@AR["AdminUserInfo.DeleteConfirm"]" @@on-confirm="handleDelete(scope.$index, scope.row)">
-                            <el-button size="mini" type="danger" slot="reference">@AR["Common.删除"]</el-button>
+                            <el-button size="mini" type="danger" icon="el-icon-delete" slot="reference">@AR["Common.删除"]</el-button>
                         </el-popconfirm>
                     </template>
                 </template>

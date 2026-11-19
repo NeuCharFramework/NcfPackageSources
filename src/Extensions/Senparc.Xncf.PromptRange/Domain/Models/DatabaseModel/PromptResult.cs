@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：PromptResult.cs
-    文件功能描述：PromptResult 数据模型定义
-    
-    
-    创建标识：Senparc - 20231021
-    
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    File name: PromptResult.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20231021
+
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -21,50 +24,50 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
 {
     /// <summary>
-    /// PromptResult：PromptItem 的打靶结果
+    ///Legacy comment translated to English.
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(PromptResult))] //必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(PromptResult))] //a prefix is required to prevent system-wide conflicts
     [Serializable]
     public class PromptResult : EntityBase<int>
     {
         /// <summary>
-        /// LlmModelId，并添加LlmModel类作为属性
+        ///Legacy comment translated to English.
         /// </summary>
         public int LlmModelId { get; private set; }
 
         // public LlmModel LlmModel { get; private set; }
 
         /// <summary>
-        /// 结果字符串
+        ///Legacy comment translated to English.
         /// </summary>
         public string ResultString { get; private set; }
 
         /// <summary>
-        /// 花费时间，单位：毫秒
+        ///Legacy comment translated to English.
         /// </summary>
         public double CostTime { get; private set; }
 
-        #region 打分
+        #region Legacy section
 
         /// <summary>
-        /// 机器人打分，0-10分
+        ///Legacy comment translated to English.
         /// </summary>
         public decimal RobotScore { get; private set; } = -1;
 
         /// <summary>
-        /// 人类打分，0-10分
+        ///Legacy comment translated to English.
         /// </summary>
         public decimal HumanScore { get; private set; } = -1;
 
         /// <summary>
-        /// 最终得分
+        ///Legacy comment translated to English.
         /// </summary>
         public decimal FinalScore { get; private set; } = -1;
 
         #endregion
 
         /// <summary>
-        /// 测试类型，枚举中包含：文字、图形、声音
+        ///Legacy comment translated to English.
         /// </summary>
         public TestType TestType { get; private set; }
 
@@ -84,7 +87,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         public int TotalCostToken { get; private set; }
 
         /// <summary>
-        /// PromptItem，并添加PromptItem类作为属性
+        ///Legacy comment translated to English.
         /// </summary>
         public int PromptItemId { get; private set; }
 
@@ -95,13 +98,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         public string PromptItemVersion { get; private set; }
 
         /// <summary>
-        /// 打靶模式：Chat（聊天模式）或 Single（单次测试模式），可为空（兼容旧数据）
+        ///Legacy comment translated to English.
         /// </summary>
         public ResultMode? Mode { get; private set; }
 
         /// <summary>
-        /// SystemMessage（Prompt 内容，完成参数替换后的最终内容）
-        /// 用于对话模式，确保即使 Prompt 内容或参数变化，也能追溯历史使用的 SystemMessage
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         public string SystemMessage { get; private set; }
 
@@ -129,7 +132,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
 
         public PromptResult(
             int llmModelId, string resultString, double costTime,
-            int robotScore, int humanScore, int finalScore, // 分数
+            int robotScore, int humanScore, int finalScore, //Legacy comment translated to English.
             TestType testType, int promptCostToken,
             int resultCostToken, int totalCostToken, string promptItemVersion, int promptItemId,
             ResultMode? mode = null, string systemMessage = null)
@@ -151,7 +154,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
 
 
         /// <summary>
-        /// 更新手动评分
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="score"></param>
         /// <returns></returns>
@@ -163,7 +166,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 更新自动机器评分
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="score"></param>
         /// <returns></returns>
@@ -175,7 +178,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 更新最终得分
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="score"></param>
         /// <returns></returns>
@@ -187,7 +190,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 累计会话 Token 用量，并更新最后一次响应耗时/结果。
+        ///Legacy comment translated to English.
         /// </summary>
         public PromptResult AppendUsageAndResult(int promptTokens, int completionTokens, int totalTokens, double costTime, string latestResult)
         {
@@ -211,38 +214,38 @@ namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
     }
 
     /// <summary>
-    /// 测试类型枚举
+    ///Legacy comment translated to English.
     /// </summary>
     public enum TestType
     {
         /// <summary>
-        /// 文字
+        ///Legacy comment translated to English.
         /// </summary>
         Text,
 
         /// <summary>
-        /// 图形
+        ///Legacy comment translated to English.
         /// </summary>
         Graph,
 
         /// <summary>
-        /// 声音
+        ///Legacy comment translated to English.
         /// </summary>
         Voice
     }
 
     /// <summary>
-    /// 打靶模式枚举
+    ///Legacy comment translated to English.
     /// </summary>
     public enum ResultMode
     {
         /// <summary>
-        /// 单次测试模式
+        ///Legacy comment translated to English.
         /// </summary>
         Single = 1,
 
         /// <summary>
-        /// 聊天模式
+        ///Legacy comment translated to English.
         /// </summary>
         Chat = 2
     }

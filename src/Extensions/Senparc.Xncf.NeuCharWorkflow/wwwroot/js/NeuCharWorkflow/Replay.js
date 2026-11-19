@@ -1,3 +1,7 @@
+window.ncfWorkflowText = window.ncfWorkflowText || function (source) {
+    return typeof window.ncfST === 'function' ? window.ncfST(source) : source;
+};
+
 new Vue({
     el: '#app',
     data() {
@@ -6,6 +10,7 @@ new Vue({
             loadError: '',
             replay: null,
             graph: { nodes: [], edges: [] },
+            canvasViewportSize: { width: 0, height: 0 },
             stepIndex: -1,
             nodeStates: {},
             timelineRenderLimit: 300,
@@ -20,16 +25,21 @@ new Vue({
             return this.replay && this.stepIndex >= 0 ? this.replay.events[this.stepIndex] || null : null;
         },
         stepLabel() {
-            if (!this.replay) return '正在读取运行记录…';
-            if (this.stepIndex < 0) return '运行开始前';
-            return `步骤 ${this.stepIndex + 1} / ${this.replay.events.length}`;
+            if (!this.replay) return ncfWorkflowText('Frontend.107');
+            if (this.stepIndex < 0) return ncfWorkflowText('Frontend.108');
+            return ncfWorkflowText('Frontend.109').replace('{0}', this.stepIndex + 1).replace('{1}', this.replay.events.length);
         },
         canvasInset() { return 240; },
         canvasSize() {
             const nodes = this.graph.nodes || [];
             const right = Math.max(760, ...nodes.map(node => Number(node.x || 0) + 240));
             const bottom = Math.max(520, ...nodes.map(node => Number(node.y || 0) + 130));
-            return { width: right + this.canvasInset * 2, height: bottom + this.canvasInset * 2 };
+            const viewportWidth = Number(this.canvasViewportSize && this.canvasViewportSize.width) || 0;
+            const viewportHeight = Number(this.canvasViewportSize && this.canvasViewportSize.height) || 0;
+            return {
+                width: right + this.canvasInset * 2 + viewportWidth / 2,
+                height: bottom + this.canvasInset * 2 + viewportHeight / 2
+            };
         },
         canvasStyle() {
             return { width: `${this.canvasSize.width}px`, minHeight: `${this.canvasSize.height}px` };
@@ -46,8 +56,13 @@ new Vue({
     created() {
         this.loadReplay();
     },
+    mounted() {
+        this.scheduleInitialCenter();
+        window.addEventListener('resize', this.scheduleInitialCenter);
+    },
     beforeDestroy() {
         this.stopPlayback();
+        window.removeEventListener('resize', this.scheduleInitialCenter);
     },
     methods: {
         routeExecutionLogId() {
@@ -57,21 +72,22 @@ new Vue({
         async loadReplay() {
             const executionLogId = this.routeExecutionLogId();
             if (!executionLogId) {
-                this.loadError = '缺少需要回看的任务标识。';
+                this.loadError = ncfWorkflowText('Frontend.110');
                 return;
             }
             this.loading = true;
             try {
                 const response = await service.get(`/Admin/NeuCharWorkflow/Replay?handler=Data&executionLogId=${executionLogId}`);
                 this.replay = NeuCharWorkflowUi.unwrap(response);
-                if (!this.replay) throw new Error('未找到任务回看数据。');
+                if (!this.replay) throw new Error(ncfWorkflowText('Frontend.111'));
                 this.replay.events = Array.isArray(this.replay.events) ? this.replay.events : [];
                 this.timelineRenderLimit = Math.min(this.timelineChunkSize, this.replay.events.length);
                 this.graph = NeuCharWorkflowUi.parseJson(this.replay.definition && this.replay.definition.graphJson, { nodes: [], edges: [] }) || { nodes: [], edges: [] };
                 this.graph.nodes = Array.isArray(this.graph.nodes) ? this.graph.nodes : [];
                 this.graph.edges = Array.isArray(this.graph.edges) ? this.graph.edges : [];
+                this.scheduleInitialCenter();
             } catch (error) {
-                this.loadError = this.errorMessage(error, '无法读取任务回看。运行中的任务需要等待结束，旧任务可能尚未保存快照。');
+                this.loadError = this.errorMessage(error, ncfWorkflowText('Frontend.112'));
             } finally {
                 this.loading = false;
             }
@@ -82,8 +98,48 @@ new Vue({
                 top: `${this.canvasInset + Math.max(24, Number(node.y || 0))}px`
             };
         },
+        isHorizontalLayout() {
+            return !!(this.graph && this.graph.layout && this.graph.layout.direction === 'horizontal');
+        },
         findNode(id) {
             return this.graph.nodes.find(node => node.id === id);
+        },
+        scheduleInitialCenter() {
+            if (!this.graph.nodes.length) return;
+            const retry = remaining => {
+                if (this.centerGraph() || remaining <= 0) return;
+                const next = () => retry(remaining - 1);
+                if (typeof window.requestAnimationFrame === 'function') window.requestAnimationFrame(next);
+                else window.setTimeout(next, 0);
+            };
+            const schedule = () => {
+                if (typeof window.requestAnimationFrame === 'function') window.requestAnimationFrame(() => retry(3));
+                else window.setTimeout(() => retry(3), 0);
+            };
+            if (typeof this.$nextTick === 'function') this.$nextTick(schedule);
+            else schedule();
+        },
+        centerGraph() {
+            const nodes = this.graph.nodes || [];
+            const viewport = this.$refs && this.$refs.canvasViewport;
+            if (!nodes.length || !viewport || !viewport.clientWidth || !viewport.clientHeight) return false;
+            const viewportSize = { width: viewport.clientWidth, height: viewport.clientHeight };
+            const previousSize = this.canvasViewportSize || {};
+            if (previousSize.width !== viewportSize.width || previousSize.height !== viewportSize.height) {
+                this.canvasViewportSize = viewportSize;
+                return false;
+            }
+            const firstNode = nodes[0];
+            const firstNodeLeft = this.canvasInset + Math.max(24, Number(firstNode.x || 0));
+            const left = this.canvasInset + Math.min(...nodes.map(node => Math.max(24, Number(node.x || 0))));
+            const top = this.canvasInset + Math.min(...nodes.map(node => Math.max(24, Number(node.y || 0))));
+            const right = this.canvasInset + Math.max(...nodes.map(node => Math.max(24, Number(node.x || 0)) + 234));
+            const bottom = this.canvasInset + Math.max(...nodes.map(node => Math.max(24, Number(node.y || 0)) + 92));
+            const targetLeft = Math.max(0, firstNodeLeft + 117 - viewport.clientWidth / 2);
+            const targetTop = Math.max(0, (top + bottom) / 2 - viewport.clientHeight / 2);
+            viewport.scrollLeft = Math.min(targetLeft, Math.max(0, viewport.scrollWidth - viewport.clientWidth));
+            viewport.scrollTop = Math.min(targetTop, Math.max(0, viewport.scrollHeight - viewport.clientHeight));
+            return true;
         },
         centerCurrentNode() {
             const event = this.currentEvent;
@@ -108,19 +164,23 @@ new Vue({
         },
         edgeStartX(edge) {
             const source = this.findNode(edge.source);
-            return this.canvasInset + Number(source && source.x || 0) + 208;
+            const left = this.canvasInset + Math.max(24, Number(source && source.x || 0));
+            return left + (this.isHorizontalLayout() ? 234 : 117);
         },
         edgeStartY(edge) {
             const source = this.findNode(edge.source);
-            return this.canvasInset + Number(source && source.y || 0) + 43;
+            const top = this.canvasInset + Math.max(24, Number(source && source.y || 0));
+            return top + (this.isHorizontalLayout() ? 46 : 92);
         },
         edgeEndX(edge) {
             const target = this.findNode(edge.target);
-            return this.canvasInset + Number(target && target.x || 0) + 12;
+            const left = this.canvasInset + Math.max(24, Number(target && target.x || 0));
+            return left + (this.isHorizontalLayout() ? 0 : 117);
         },
         edgeEndY(edge) {
             const target = this.findNode(edge.target);
-            return this.canvasInset + Number(target && target.y || 0) + 43;
+            const top = this.canvasInset + Math.max(24, Number(target && target.y || 0));
+            return top + (this.isHorizontalLayout() ? 46 : 0);
         },
         nodeState(id) { return this.nodeStates[id] || 'pending'; },
         goToStep(index) {
@@ -188,17 +248,29 @@ new Vue({
             this.playTimer = null;
             this.playing = false;
         },
-        eventSummary(event) { return event.message || this.eventStatusText(event.status); },
+        eventSummary(event) {
+            return window.ncfWorkflowText(event.message || this.eventStatusText(event.status));
+        },
         eventStatusText(status) {
-            return { running: '执行中', success: '执行完成', failed: '执行失败', branch: '选择分支', console: 'Console 输出' }[status] || '状态更新';
+            const source = {
+                running: ncfWorkflowText('Frontend.400'),
+                success: ncfWorkflowText('Frontend.401'),
+                failed: ncfWorkflowText('Frontend.402'),
+                branch: ncfWorkflowText('Frontend.403'),
+                console: ncfWorkflowText('Frontend.404')
+            }[status] || ncfWorkflowText('Frontend.405');
+            return window.ncfWorkflowText(source);
         },
         eventType(status) { return { success: 'success', failed: 'danger', running: 'warning', branch: 'primary' }[status] || 'info'; },
-        statusText(status) { return { success: '运行成功', failed: '运行失败' }[status] || '运行完成'; },
+        statusText(status) {
+            const source = { success: ncfWorkflowText('Frontend.406'), failed: ncfWorkflowText('Frontend.407') }[status] || ncfWorkflowText('Frontend.408');
+            return window.ncfWorkflowText(source);
+        },
         nodeTypeText(type) {
             return {
-                'manual-trigger': '手动触发', 'interval-trigger': '定时触发', 'webhook-trigger': 'Webhook 触发',
-                function: 'Function', delay: '等待', condition: '条件判断', agent: 'Agent', 'agent-group': 'Agent 组',
-                aggregate: '聚合', console: 'Console', neubell: '发送纽铃', end: '结束'
+                'manual-trigger': ncfWorkflowText('Frontend.248'), 'interval-trigger': ncfWorkflowText('Frontend.471'), 'webhook-trigger': ncfWorkflowText('Frontend.470'),
+                function: 'Function', delay: ncfWorkflowText('Frontend.115'), condition: ncfWorkflowText('Frontend.413'), agent: 'Agent', 'agent-group': ncfWorkflowText('Frontend.117'),
+                aggregate: ncfWorkflowText('Frontend.422'), console: 'Console', neubell: ncfWorkflowText('Frontend.427'), end: ncfWorkflowText('Frontend.430')
             }[type] || type;
         },
         formatDate(value) {
@@ -216,10 +288,10 @@ new Vue({
                     executionLogId: this.replay.executionLogId
                 }, { customAlert: true });
                 const workflow = NeuCharWorkflowUi.unwrap(response);
-                if (!workflow || !workflow.id) throw new Error('复制工作流失败。');
+                if (!workflow || !workflow.id) throw new Error(ncfWorkflowText('Frontend.114'));
                 window.location.assign(`/Admin/NeuCharWorkflow/Index?workflowId=${workflow.id}`);
             } catch (error) {
-                this.$message.error(this.errorMessage(error, '无法从当前回看创建工作流草稿。'));
+                this.$message.error(this.errorMessage(error, ncfWorkflowText('Frontend.113')));
             } finally {
                 this.copying = false;
             }

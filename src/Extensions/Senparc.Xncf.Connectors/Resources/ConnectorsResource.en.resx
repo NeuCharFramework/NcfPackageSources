@@ -7,6 +7,72 @@
   <data name="Module.Connectors.MenuName" xml:space="preserve"><value>Connectors</value></data>
   <data name="Module.Connectors.Description" xml:space="preserve"><value>Configure external tools as selectable connectors. After an account is configured, Chat, Workflow and Agent templates can use it according to permissions.</value></data>
   <data name="Area.Connectors.Config" xml:space="preserve"><value>Connector setup</value></data>
+  <data name="Area.Extensions" xml:space="preserve"><value>Extensions</value></data>
   <data name="Function.Connectors.Invoke.Name" xml:space="preserve"><value>Invoke connector</value></data>
   <data name="Function.Connectors.Invoke.Description" xml:space="preserve"><value>Invoke an enabled connector action. Add a Function node in Workflow, then choose the connector and action.</value></data>
+
+  <data name="Frontend.001" xml:space="preserve"><value>Actions available to AI</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.002" xml:space="preserve"><value>Example: corporate WeCom</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.003" xml:space="preserve"><value>Save</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.004" xml:space="preserve"><value>Configure the account and secret first, then choose which actions AI may use. Chat can narrow access temporarily, Workflow Function nodes can call connectors directly, and Agent templates control connector access per Agent.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.005" xml:space="preserve"><value>Delete</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.006" xml:space="preserve"><value>Cancel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.007" xml:space="preserve"><value>Available types</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.008" xml:space="preserve"><value>Name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.009" xml:space="preserve"><value>External tool connector</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.010" xml:space="preserve"><value>Secrets are stored only on the server. Leave the field empty while editing to keep the saved secret.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.011" xml:space="preserve"><value>Configured</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.012" xml:space="preserve"><value>Extension module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.013" xml:space="preserve"><value>Test</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.014" xml:space="preserve"><value>Types are provided by installed modules. Corporate WeCom attendance is provided by Weixin Management.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.015" xml:space="preserve"><value>Edit</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.016" xml:space="preserve"><value>Description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.017" xml:space="preserve"><value>No module has registered a connector yet. Install and enable Weixin Management to see corporate WeCom attendance here.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.018" xml:space="preserve"><value>Nothing is configured. Select a type above and enter the corporate WeCom CorpId and application Secret.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.019" xml:space="preserve"><value>Which team or scenario uses this account?</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.020" xml:space="preserve"><value>Connector</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.021" xml:space="preserve"><value>Configure</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.022" xml:space="preserve"><value>Configure this connector</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.023" xml:space="preserve"><value>{0} actions</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.024" xml:space="preserve"><value>Available for selection in Chat, Workflow, and Agent after enabling</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.025" xml:space="preserve"><value>Please select</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.026" xml:space="preserve"><value>Extension modules</value></data>
+  <data name="Frontend.027" xml:space="preserve"><value>Enabled</value></data>
+  <data name="Frontend.028" xml:space="preserve"><value>Disabled</value></data>
+  <data name="Frontend.029" xml:space="preserve"><value>No description provided</value></data>
+  <data name="Frontend.030" xml:space="preserve"><value>Connection not tested yet</value></data>
+  <data name="Frontend.031" xml:space="preserve"><value>{0}</value></data>
+  <data name="Frontend.032" xml:space="preserve"><value>Edit connector</value></data>
+  <data name="Frontend.033" xml:space="preserve"><value>Configure connector</value></data>
+  <data name="Frontend.034" xml:space="preserve"><value>Saved; leave empty to keep it unchanged</value></data>
+  <data name="Frontend.035" xml:space="preserve"><value>Save failed</value></data>
+  <data name="Frontend.036" xml:space="preserve"><value>Saved</value></data>
+  <data name="Frontend.037" xml:space="preserve"><value>Save failed. Please try again later.</value></data>
+  <data name="Frontend.038" xml:space="preserve"><value>Connection succeeded</value></data>
+  <data name="Frontend.039" xml:space="preserve"><value>Connection failed</value></data>
+  <data name="Frontend.040" xml:space="preserve"><value>Test failed. Please try again later.</value></data>
+  <data name="Frontend.041" xml:space="preserve"><value>Delete connector "{0}"? References authorized for Agents will also stop working.</value></data>
+  <data name="Frontend.042" xml:space="preserve"><value>Delete failed</value></data>
+  <data name="Parameter.Connectors.Instance" xml:space="preserve"><value>Connector||Select a configured and enabled connector</value></data>
+  <data name="Parameter.Connectors.Action" xml:space="preserve"><value>Action||Select the connector action to execute</value></data>
+  <data name="Parameter.Connectors.StartTime" xml:space="preserve"><value>Start time||Attendance record start time, for example 2026-11-01 or 2026-11-01 09:00. Leave empty to start at midnight today</value></data>
+  <data name="Parameter.Connectors.EndTime" xml:space="preserve"><value>End time||Attendance record end time. Leave empty to use the current time; the range can be at most 30 days</value></data>
+  <data name="Parameter.Connectors.UserIds" xml:space="preserve"><value>Member accounts||WeCom userids separated by commas or spaces</value></data>
+  <data name="Parameter.Connectors.CheckinType" xml:space="preserve"><value>Attendance type||1 work, 2 off-site, 3 all. Leave empty to use all</value></data>
+  <data name="Parameter.Connectors.Arguments" xml:space="preserve"><value>Additional arguments||JSON object. Filled-in dedicated fields take priority; suitable for other connector actions</value></data>
+  <data name="Error.NameRequired" xml:space="preserve"><value>Please enter a connector name.</value></data>
+  <data name="Error.TypeNotFound" xml:space="preserve"><value>No connector type was found. Confirm that the corresponding module is installed.</value></data>
+  <data name="Error.InstanceNotFound" xml:space="preserve"><value>The connector was not found.</value></data>
+  <data name="Error.TypeChangeForbidden" xml:space="preserve"><value>A saved connector cannot be changed to another type. Create a new connector instead.</value></data>
+  <data name="Error.FieldRequired" xml:space="preserve"><value>Please fill in {0}.</value></data>
+  <data name="Error.OptionInvalid" xml:space="preserve"><value>The selected option for {0} is invalid.</value></data>
+  <data name="Error.ActionRequired" xml:space="preserve"><value>Select at least one action that can be given to AI.</value></data>
+  <data name="Error.TypeNotInstalled" xml:space="preserve"><value>The connector type is not installed.</value></data>
+  <data name="Error.TestFailed" xml:space="preserve"><value>Connection test failed. Check the account and secret.</value></data>
+  <data name="Error.Disabled" xml:space="preserve"><value>The connector does not exist or is disabled.</value></data>
+  <data name="Error.ActionNotFound" xml:space="preserve"><value>This connector does not have the requested action.</value></data>
+  <data name="Error.ActionNotEnabled" xml:space="preserve"><value>This action is not enabled for the connector.</value></data>
+  <data name="Error.InvocationFailed" xml:space="preserve"><value>Connector invocation failed. Try again later or check account permissions.</value></data>
+  <data name="Message.Saved" xml:space="preserve"><value>Connector saved.</value></data>
+  <data name="Message.Deleted" xml:space="preserve"><value>Connector deleted.</value></data>
 </root>

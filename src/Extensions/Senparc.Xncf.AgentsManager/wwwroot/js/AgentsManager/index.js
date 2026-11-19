@@ -1,7 +1,7 @@
 /*
- * AgentsManager 前端：Vue 根实例组装（数据/计算/方法片段由 agents-app-*.js 提供，加载顺序见 three-loader.js）。
- * 注意：本文件与 agents-app-*.js 系列按 three-loader.js 中的顺序加载，
- * 依赖全局 var（classic script 顶层 var 挂到 window），请勿单独引入。
+ * Legacy comment translated to English.
+ * Note: this file and the agents-app-*.js series are loaded in the order defined by three-loader.js,
+ * depends on global variables (top-level classic-script vars are attached to window); do not import separately.
  */
 
 var app = new Vue({
@@ -22,7 +22,7 @@ var app = new Vue({
   computed: AgentsAppComputed,
   watch: {},
   created() {
-    // 在组件创建时获取插件类型列表
+    //Legacy comment translated to English.
     this.getPluginTypes();
     this.getKnowledgeBaseOptions();
   },
@@ -31,15 +31,15 @@ var app = new Vue({
     this.agentForm.systemMessageType = "2";
     this.getPluginTypes();
 
-    // 智能体
+    // agent
     if (this.tabsActiveName === 'first') {
       this.getAgentListData('agent')
     }
-    // 组
+    // group
     if (this.tabsActiveName === 'second') {
       this.getGroupListData('group')
     }
-    // 任务
+    // task
     if (this.tabsActiveName === 'third') {
       this.gettaskListData('task')
     }

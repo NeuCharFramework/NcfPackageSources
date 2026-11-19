@@ -1,17 +1,20 @@
 /*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：PromptRangeSkillService.cs
-    文件功能描述：PromptRange Skill 目录与执行服务
-    
-    
-    创建标识：Senparc - 20261016
-    
-    修改标识：Senparc - 20261021
-    修改描述：v0.20.0 按策略提供 Skill 目录与执行
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.20.8 add local upload functionality for Skill packages with size validation
+    Copyright (C) 2026 Senparc
+
+    File name: PromptRangeSkillService.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20261016
+
+    Modified by: Senparc - 20261021
+    Change description: v0.20.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261103
+    Change description: v0.20.8 add local upload functionality for Skill packages with size validation
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
 ----------------------------------------------------------------*/
 

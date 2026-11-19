@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：IIntegrationEventHandler.cs
-    文件功能描述：IIntegrationEventHandler 相关实现
-    
-    
-    创建标识：Senparc - 20260216
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: IIntegrationEventHandler.cs
+    File description: IIntegrationEventHandler related implementation
+
+    Created by: Senparc - 20260216
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.7.1-preview2 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -18,9 +21,9 @@ using System.Threading.Tasks;
 namespace Senparc.Ncf.Shared.Abstractions.Events
 {
     /// <summary>
-    /// 事件处理器泛型接口
+    ///Legacy comment translated to English.
     /// </summary>
-    /// <typeparam name="TIntegrationEvent">具体的事件类型</typeparam>
+    ///Legacy comment translated to English.
     public interface IIntegrationEventHandler<in TIntegrationEvent>
         where TIntegrationEvent : IIntegrationEvent
     {

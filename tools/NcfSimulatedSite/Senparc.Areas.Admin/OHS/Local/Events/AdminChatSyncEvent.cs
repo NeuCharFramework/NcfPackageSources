@@ -1,16 +1,20 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：AdminChatSyncEvent.cs
-    文件功能描述：Admin Chat 安全同步通知事件
+    File name: AdminChatSyncEvent.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260726
+    Created by: Senparc - 20260726
 
-    修改标识：Senparc - 20260726
-    修改描述：v0.1.0 增加后台 Admin Chat 同步服务以支持桌面管理交互
+    Modified by: Senparc - 20260726
+    Change description: v0.1.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.2.0 增强后台管理员交互与桌面 Admin Chat 安全同步
+    Modified by: Senparc - 20260729
+    Change description: v0.2.0 enhance admin interaction and secure desktop Admin Chat synchronization
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 
@@ -21,7 +25,7 @@ using Senparc.Ncf.Shared.Abstractions.Events;
 namespace Senparc.Areas.Admin.OHS.Local.Events;
 
 /// <summary>
-/// 通知受权客户端重新读取 Admin Chat 数据；事件本身不携带聊天正文或认证信息。
+///Legacy comment translated to English.
 /// </summary>
 public sealed record AdminChatSyncEvent(
     int AdminUserId,

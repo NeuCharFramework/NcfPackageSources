@@ -1,17 +1,20 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：Register.Area.cs
-    文件功能描述：Register.Area 相关实现
-    
-    
-    创建标识：Senparc - 20250113
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.3.0-preview2 为 SenMapic 模块接入统一资源本地化并优化功能文案
+    Copyright (C) 2026 Senparc
+
+    File name: Register.Area.cs
+    File description: Register.Area related implementation
+
+    Created by: Senparc - 20250113
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260717
+    Change description: v0.3.0-preview2 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.13 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -28,34 +31,34 @@ using Microsoft.Extensions.Hosting;
 
 namespace Senparc.Xncf.SenMapic
 {
-    public partial class Register : IAreaRegister, //注册 XNCF 页面接口（按需选用）
-                                    IXncfRazorRuntimeCompilation  //赋能 RazorPage 运行时编译
+    public partial class Register : IAreaRegister, //register the XNCF page interface (optional)
+                                    IXncfRazorRuntimeCompilation  //enable RazorPage runtime compilation
     {
-        #region IAreaRegister 接口
+        #region Legacy section
 
         public string HomeUrl => "/Admin/SenMapic/Index";
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-                         new AreaPageMenuItem(GetAreaHomeUrl(), SenMapicResource.Get("Area.Home", "首页"),"fa fa-laptop"),
+                         new AreaPageMenuItem(GetAreaHomeUrl(), SenMapicResource.Get("Area.Home", "Home"),"fa fa-laptop"),
                          new AreaPageMenuItem(GetAreaUrl($"/Admin/SenMapic/Index"),"SenMapic","fa fa-file"),
-			 			 new AreaPageMenuItem(GetAreaUrl($"/Admin/SenMapic/DatabaseSample"), SenMapicResource.Get("Area.DatabaseSample", "数据库操作示例"),"fa fa-bookmark-o")
+			 			 new AreaPageMenuItem(GetAreaUrl($"/Admin/SenMapic/DatabaseSample"), SenMapicResource.Get("Area.DatabaseSample", "Database operations sample"),"fa fa-bookmark-o")
 			 		};
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
         {
             builder.AddRazorPagesOptions(options =>
             {
-                //此处可配置页面权限
+                //configure page permissions here
             });
 
-            SenparcTrace.SendCustomLog("SenMapic 启动", "完成 Area:Senparc.Xncf.SenMapic 注册");
+            SenparcTrace.SendCustomLog("SenMapic startup", "Completed Area:Senparc.Xncf.SenMapic registration");
 
             return builder;
         }
 
         #endregion
 
-        #region IXncfRazorRuntimeCompilation 接口
+        #region Legacy section
         public string LibraryPath => Path.GetFullPath(Path.Combine(SiteConfig.WebRootPath, "..", "..", "Senparc.Xncf.SenMapic"));
         #endregion
     }

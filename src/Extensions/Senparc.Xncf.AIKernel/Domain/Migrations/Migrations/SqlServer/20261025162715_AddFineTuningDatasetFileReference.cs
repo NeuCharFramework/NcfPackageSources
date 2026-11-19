@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：20261025162715_AddFineTuningDatasetFileReference.cs
-    文件功能描述：20261025162715_AddFineTuningDatasetFileReference 相关定义与实现
+    File name: 20261025162715_AddFineTuningDatasetFileReference.cs
+    File description: 20261025162715_AddFineTuningDatasetFileReference related definitions and implementation
 
+    Created by: Senparc - 20210105
 
-    创建标识：Senparc - 20210105
-
-    修改标识：Senparc - 20261103
-    修改描述：v0.17.0 支持 AddFineTuningDatasetFileReference 数据库迁移
+    Modified by: Senparc - 20261103
+    Change description: v0.17.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

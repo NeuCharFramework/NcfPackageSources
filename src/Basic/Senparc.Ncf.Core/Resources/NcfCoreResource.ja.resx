@@ -22,4 +22,83 @@
   <data name="Auth.HandlerNotFound" xml:space="preserve"><value>404。対応するハンドラーが見つかりません。リクエストのメソッドと URL を確認してください。メソッド：{0}</value></data>
   <data name="Auth.Forbidden" xml:space="preserve"><value>このリソースにアクセスする権限がありません。</value></data>
 
+
+  <data name="Frontend.900" xml:space="preserve"><value>ファインチューニングWorkerを確認</value></data>
+  <data name="Frontend.901" xml:space="preserve"><value>選択したファインチューニングWorkerの状態、機能、キューを確認します。利用可能なWorkerが1つだけの場合は自動選択されます。</value></data>
+  <data name="Frontend.902" xml:space="preserve"><value>ファインチューニング環境を確認</value></data>
+  <data name="Frontend.903" xml:space="preserve"><value>インストールやコマンド実行を行わずに、ファインチューニングの設定、シークレット、Worker、モデルディレクトリ、FileManagerの状態を確認します。利用可能なWorkerが1つだけの場合は自動選択されます。</value></data>
+  <data name="Frontend.904" xml:space="preserve"><value>ファインチューニングデータセットファイルをアップロード</value></data>
+  <data name="Frontend.905" xml:space="preserve"><value>大きなJSONLファインチューニングデータセットをストリームとして保存・アップロードします。</value></data>
+  <data name="Frontend.906" xml:space="preserve"><value>ファインチューニングデータセットを作成</value></data>
+  <data name="Frontend.907" xml:space="preserve"><value>Workerで検証したJSONLファインチューニングデータセットを保存します。Workerは自動的に読み込まれ、Workflowから小規模なJSONLテキストを送信できます。</value></data>
+  <data name="Frontend.908" xml:space="preserve"><value>ファインチューニングタスクを作成</value></data>
+  <data name="Frontend.909" xml:space="preserve"><value>承認済みのローカルモデル、データセット、学習パラメーターでファインチューニングタスクを作成します。Worker、モデル、データセットは自動的に読み込まれ、Workflowは既定のパラメーターで実行できます。</value></data>
+  <data name="Frontend.910" xml:space="preserve"><value>ファインチューニングアダプターを検証</value></data>
+  <data name="Frontend.911" xml:space="preserve"><value>成功したファインチューニングタスクに対し、選択したCPU、CUDA、MLXバックエンドで制限付きオフラインテストを実行します。タスク記録と異なる場合は明示的な確認が必要です。</value></data>
+  <data name="Frontend.912" xml:space="preserve"><value>分離XNCF開発タスクを作成</value></data>
+  <data name="Frontend.913" xml:space="preserve"><value>ソースコードのスナップショットを作成します。新しいモジュールは分離Workspaceにローカルインストールされたテンプレートから生成し、既存モジュールは変更前にコピーします。対象ソースは書き換えません。</value></data>
+  <data name="Frontend.914" xml:space="preserve"><value>分離XNCFファイルを読み取る</value></data>
+  <data name="Frontend.915" xml:space="preserve"><value>分離Workspace内のモジュールのテキストファイルとSHA-256値を読み取ります。対象ソースやWorkspace外のファイルは読み取れません。</value></data>
+  <data name="Frontend.916" xml:space="preserve"><value>分離XNCFファイルを書き込む</value></data>
+  <data name="Frontend.917" xml:space="preserve"><value>分離Workspace内のコードファイルをアトミックに書き込みます。プロジェクト、NuGet、MSBuild、アプリケーション設定ファイルは変更できません。可能な場合は読み取ったSHA-256を返します。</value></data>
+  <data name="Frontend.918" xml:space="preserve"><value>分離XNCF開発タスクを検証</value></data>
+  <data name="Frontend.919" xml:space="preserve"><value>分離モジュールのパスとSenparc.Webの直接プロジェクト参照を検証し、制御された差分概要を生成します。</value></data>
+  <data name="Frontend.920" xml:space="preserve"><value>Sandbox XNCFプレビューを開始</value></data>
+  <data name="Frontend.921" xml:space="preserve"><value>Sandboxでクリーンな分離Workspaceのコピーをビルド・実行します。Sandboxが利用できない場合は安全に失敗し、メインサイトのプロセスにはフォールバックしません。</value></data>
+  <data name="Frontend.922" xml:space="preserve"><value>分離XNCF開発タスクの状態を取得</value></data>
+  <data name="Frontend.923" xml:space="preserve"><value>分離Workspace、差分、検証、Sandboxプレビュー、人間による承認状態を返します。</value></data>
+  <data name="Frontend.924" xml:space="preserve"><value>XNCFタスクの人間によるマージを依頼</value></data>
+  <data name="Frontend.925" xml:space="preserve"><value>現在の分離Workspaceの差分を固定し、管理者の承認を依頼します。この操作は対象ソースに書き込みません。</value></data>
+  <data name="Frontend.926" xml:space="preserve"><value>分離XNCF開発タスクを破棄</value></data>
+  <data name="Frontend.927" xml:space="preserve"><value>対応するSandboxプレビューを停止し、分離Workspaceを回収します。対象ソースは変更しません。</value></data>
+  <data name="Frontend.928" xml:space="preserve"><value>Sandboxを作成</value></data>
+  <data name="Frontend.929" xml:space="preserve"><value>テンプレート（Docker / Wasm Stub）から分離Sandboxセッションを作成します。</value></data>
+  <data name="Frontend.930" xml:space="preserve"><value>Sandboxを一覧表示</value></data>
+  <data name="Frontend.931" xml:space="preserve"><value>最近のSandboxセッションを表示します。</value></data>
+  <data name="Frontend.932" xml:space="preserve"><value>Sandboxの状態を取得</value></data>
+  <data name="Frontend.933" xml:space="preserve"><value>SessionIdで検索します。</value></data>
+  <data name="Frontend.934" xml:space="preserve"><value>コードを実行</value></data>
+  <data name="Frontend.935" xml:space="preserve"><value>Execテンプレートセッションでコード断片を実行します。</value></data>
+  <data name="Frontend.936" xml:space="preserve"><value>Labコマンドを実行</value></data>
+  <data name="Frontend.937" xml:space="preserve"><value>実行中の永続JupyterLab Workspaceで、時間制限付きのShellコマンドを実行します。</value></data>
+  <data name="Frontend.938" xml:space="preserve"><value>Labファイルをアップロード</value></data>
+  <data name="Frontend.939" xml:space="preserve"><value>実行中の永続JupyterLab WorkspaceにBase64ファイル内容を書き込みます。</value></data>
+  <data name="Frontend.940" xml:space="preserve"><value>Labファイルをアップロード</value></data>
+  <data name="Frontend.941" xml:space="preserve"><value>複数のアップロード済みファイルをストリームとして実行中の永続JupyterLab Workspaceに書き込みます。</value></data>
+  <data name="Frontend.942" xml:space="preserve"><value>Labファイルをダウンロード</value></data>
+  <data name="Frontend.943" xml:space="preserve"><value>実行中の永続JupyterLab Workspaceからファイルを読み取り、Base64内容を返します。</value></data>
+  <data name="Frontend.944" xml:space="preserve"><value>Labファイルを一覧表示</value></data>
+  <data name="Frontend.945" xml:space="preserve"><value>実行中の永続JupyterLab Workspace内のファイルを一覧表示します。</value></data>
+  <data name="Frontend.946" xml:space="preserve"><value>Notebookを作成</value></data>
+  <data name="Frontend.947" xml:space="preserve"><value>実行中のJupyterLab WorkspaceにPythonまたはC#の.ipynbファイルを作成します。</value></data>
+  <data name="Frontend.948" xml:space="preserve"><value>エイリアスを更新</value></data>
+  <data name="Frontend.949" xml:space="preserve"><value>Sandboxセッションのエイリアスを設定または解除します（解除する場合は空欄）。</value></data>
+  <data name="Frontend.950" xml:space="preserve"><value>Sandboxを破棄</value></data>
+  <data name="Frontend.951" xml:space="preserve"><value>指定したセッションを停止してクリーンアップします。</value></data>
+  <data name="Frontend.952" xml:space="preserve"><value>Sandbox記録を削除</value></data>
+  <data name="Frontend.953" xml:space="preserve"><value>停止済み、期限切れ、またはクリーンアップ済みセッションの記録を完全に削除します。</value></data>
+  <data name="Frontend.954" xml:space="preserve"><value>TTLを更新</value></data>
+  <data name="Frontend.955" xml:space="preserve"><value>延長、短縮、または永久保持に設定します。</value></data>
+  <data name="Frontend.956" xml:space="preserve"><value>管理者ログイン</value></data>
+  <data name="Frontend.957" xml:space="preserve"><value>現在の管理者ログインをテストします。</value></data>
+  <data name="Frontend.958" xml:space="preserve"><value>デジタルパイプを設定</value></data>
+  <data name="Frontend.959" xml:space="preserve"><value>デジタルパイプの表示を設定します。</value></data>
+  <data name="Frontend.960" xml:space="preserve"><value>ログイン有効期限設定を表示</value></data>
+  <data name="Frontend.961" xml:space="preserve"><value>AdminモジュールのWebログインとJWT有効期限設定を表示します。</value></data>
+  <data name="Frontend.962" xml:space="preserve"><value>ログイン有効期限を設定</value></data>
+  <data name="Frontend.963" xml:space="preserve"><value>Webログイン継続時間とJWT有効期限を分単位で設定します。</value></data>
+  <data name="Frontend.964" xml:space="preserve"><value>表示可能なNeuBell通知をテスト</value></data>
+  <data name="Frontend.965" xml:space="preserve"><value>Admin Footerのポップアップとバッジに表示されるNeuBellテスト通知を送信または消費します。WebHookのURL、メソッド、複数行本文テンプレートを設定し、要求と結果を非同期で記録します。</value></data>
+  <data name="Frontend.966" xml:space="preserve"><value>キャッシュをテスト</value></data>
+  <data name="Frontend.967" xml:space="preserve"><value>現在のキャッシュ種別と分散ロックをテストします。</value></data>
+  <data name="Frontend.968" xml:space="preserve"><value>Agentテンプレートを管理</value></data>
+  <data name="Frontend.969" xml:space="preserve"><value>Agentテンプレートを管理します。</value></data>
+  <data name="Frontend.970" xml:space="preserve"><value>パラメーターを設定</value></data>
+  <data name="Frontend.971" xml:space="preserve"><value>バックアップ間隔、バックアップ先、関連パラメーターを設定します。</value></data>
+  <data name="Frontend.972" xml:space="preserve"><value>Agentを設定</value></data>
+  <data name="Frontend.973" xml:space="preserve"><value>単純な値と選択メタデータをテストします。</value></data>
+  <data name="Frontend.974" xml:space="preserve"><value>複数行パラメーターを設定</value></data>
+  <data name="Frontend.975" xml:space="preserve"><value>複数行テキストパラメーターのメタデータをテストします。</value></data>
+  <data name="Frontend.976" xml:space="preserve"><value>自分のFunction</value></data>
+  <data name="Frontend.977" xml:space="preserve"><value>自分のFunctionの説明</value></data>
 </root>

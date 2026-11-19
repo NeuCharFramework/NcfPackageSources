@@ -1,13 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：DesktopAdminAuthHandoffStore.cs
-    文件功能描述：短期、单次、绑定 DesktopBridge 会话的管理员换票状态
+    File name: DesktopAdminAuthHandoffStore.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260804
+    Created by: Senparc - 20260804
 
-    修改标识：Senparc - 20260808
-    修改描述：v0.4.0-preview4 新增单次绑定会话的管理员换票状态存储
+    Modified by: Senparc - 20260808
+    Change description: v0.4.0-preview4 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.12 Localized DesktopBridge pairing and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -35,12 +39,12 @@ public sealed class DesktopAdminAuthHandoffStore
     {
         if (string.IsNullOrWhiteSpace(desktopSessionToken))
         {
-            throw new DesktopAdminAuthHandoffException("桌面会话无效。");
+            throw new DesktopAdminAuthHandoffException("The desktop session is invalid.");
         }
 
         if (!TryDecodeCodeChallenge(codeChallenge, out var challengeBytes))
         {
-            throw new DesktopAdminAuthHandoffException("PKCE challenge 无效。");
+            throw new DesktopAdminAuthHandoffException("The PKCE challenge is invalid.");
         }
 
         var now = DateTimeOffset.UtcNow;
@@ -134,7 +138,7 @@ public sealed class DesktopAdminAuthHandoffStore
 
             handoff.Status = HandoffStatus.Denied;
             handoff.Message = string.IsNullOrWhiteSpace(message)
-                ? "WebView 登录不能用于桌面授权。"
+                ? "WebView login cannot be used for desktop authorization."
                 : message.Trim();
             return true;
         }
@@ -297,7 +301,7 @@ public class DesktopAdminAuthHandoffException : Exception
 public sealed class DesktopAdminAuthHandoffRateLimitException : DesktopAdminAuthHandoffException
 {
     public DesktopAdminAuthHandoffRateLimitException()
-        : base("桌面登录授权请求过于频繁，请稍后重试。")
+        : base("Desktop login authorization requests are being sent too frequently. Try again later.")
     {
     }
 }

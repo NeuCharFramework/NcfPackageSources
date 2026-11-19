@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：WorkspaceDocumentTools.cs
-    文件功能描述：WorkspaceDocumentTools 相关定义与实现
+    File name: WorkspaceDocumentTools.cs
+    File description: WorkspaceDocumentTools related definitions and implementation
 
+    Created by: Senparc - 20261026
 
-    创建标识：Senparc - 20261026
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 add comprehensive unit tests for AdminChatWorkspaceAssetService functionality
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 add comprehensive unit tests for AdminChatWorkspaceAssetService functionality
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 

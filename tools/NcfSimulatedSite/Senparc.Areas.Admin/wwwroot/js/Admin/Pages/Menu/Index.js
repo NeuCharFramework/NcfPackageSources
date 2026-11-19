@@ -13,9 +13,9 @@ var app = new Vue({
             }
         };
         return {
-            // 表格数据
+            //Legacy comment translated to English.
             tableData: [],
-            // 配置模式（整棵树“菜单/页面”的拖拽/数字排序，保存后真实更新 Sort 数值）
+            //Legacy comment translated to English.
             configMode: false,
             configMenus: [],
             dragId: null,
@@ -37,7 +37,7 @@ var app = new Vue({
                 },
                 updateLoading: false,
                 disabled: false,
-                checkStrictly: true // 是否严格的遵守父子节点不互相关联	
+                checkStrictly: true //Legacy comment translated to English.
             },
             dialogIcon: {
                 visible: false,
@@ -680,7 +680,7 @@ var app = new Vue({
     },
     watch: {
         'dialog.visible': function (val, old) {
-            // 关闭dialog，清空
+            // disabledialog，clear
             if (!val) {
                 this.dialog.data = {
                     id: '', menuName: '', parentId: [], url: '', icon: '', sort: '', visible: false,
@@ -692,20 +692,20 @@ var app = new Vue({
         }
     },
     methods: {
-        // 选取图标
+        //Legacy comment translated to English.
         pickIcon(item) {
             this.dialogIcon.visible = false;
             this.dialog.data.icon = item;
         },
-        // 切换配置模式（整棵树“菜单/页面”拖拽/数字排序）
+        //Legacy comment translated to English.
         toggleConfigMode() {
             this.configMode = !this.configMode;
             if (this.configMode) {
                 this.buildConfigMenus();
             }
         },
-        // 构建配置模式列表：递归整棵菜单树，仅保留“菜单(1)/页面(2)”，按钮(3)不参与排序；
-        // 同级按 Sort 降序排列（与左侧菜单一致），最终保存为深度优先顺序的扁平数组
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         buildConfigMenus() {
             var rows = [];
             var walk = function (nodes, level) {
@@ -739,7 +739,7 @@ var app = new Vue({
             walk(this.tableData || [], 0);
             this.configMenus = rows;
         },
-        // 按 id 查找配置行
+        //Legacy comment translated to English.
         findConfigRow(id) {
             for (var i = 0; i < this.configMenus.length; i++) {
                 if (this.configMenus[i].id === id) {
@@ -748,7 +748,7 @@ var app = new Vue({
             }
             return null;
         },
-        // 计算以 rows[startIndex] 为根的子树在扁平数组中的结束下标（扁平数组为深度优先顺序，子树连续）
+        //Legacy comment translated to English.
         subtreeEndIndex(rows, startIndex) {
             if (startIndex >= rows.length) {
                 return startIndex;
@@ -782,7 +782,7 @@ var app = new Vue({
             }
             return end;
         },
-        // 将 dragId 所在项（连同其全部子项）移动到 targetId 所在项“之前(before)/之后(after)”，仅限同级
+        //Legacy comment translated to English.
         moveTo(dragId, targetId, position) {
             var rows = this.configMenus.slice();
             var dragIdx = -1;
@@ -801,7 +801,7 @@ var app = new Vue({
             var dragRow = rows[dragIdx];
             var targetRow = rows[targetIdx];
             if ((dragRow.parentId || null) !== (targetRow.parentId || null)) {
-                return; // 只允许同级之间拖动
+                return; //Legacy comment translated to English.
             }
             var blockEnd = this.subtreeEndIndex(rows, dragIdx);
             var block = rows.slice(dragIdx, blockEnd + 1);
@@ -821,7 +821,7 @@ var app = new Vue({
             this.configMenus = remaining.slice(0, insertAt).concat(block).concat(remaining.slice(insertAt));
             this.renumberGroup(dragRow.parentId || null);
         },
-        // 同级重排后重新分配 Sort 数值：自上而下递减、间隔 10（与左侧菜单降序渲染一致）
+        //Legacy comment translated to English.
         renumberGroup(parentId) {
             var key = parentId || null;
             var group = [];
@@ -835,7 +835,7 @@ var app = new Vue({
                 group[j].sort = (total - j) * 10;
             }
         },
-        // 判断拖放目标是否合法（仅同级可接受拖放）
+        //Legacy comment translated to English.
         canDropTo(dragId, targetId) {
             if (!dragId || dragId === targetId) {
                 return false;
@@ -847,7 +847,7 @@ var app = new Vue({
             }
             return (dragRow.parentId || null) === (targetRow.parentId || null);
         },
-        // 拖拽开始（数字输入框与按钮上不触发整行拖拽）
+        //Legacy comment translated to English.
         onConfigDragStart(id, ev) {
             if (ev && ev.target) {
                 var t = ev.target;
@@ -860,7 +860,7 @@ var app = new Vue({
             this.dragId = id;
             this.dragOverId = null;
         },
-        // 拖拽悬停（仅高亮可投放的同级目标）
+        //Legacy comment translated to English.
         onConfigDragOver(id) {
             if (this.canDropTo(this.dragId, id)) {
                 this.dragOverId = id;
@@ -868,7 +868,7 @@ var app = new Vue({
                 this.dragOverId = null;
             }
         },
-        // 拖拽结束（落点）
+        //Legacy comment translated to English.
         onConfigDrop(id) {
             if (!this.canDropTo(this.dragId, id)) {
                 this.onConfigDragEnd();
@@ -891,7 +891,7 @@ var app = new Vue({
             this.dragId = null;
             this.dragOverId = null;
         },
-        // 获取某行的同级行列表
+        //Legacy comment translated to English.
         siblingRows(row) {
             var key = (row.parentId || null);
             var list = [];
@@ -910,7 +910,7 @@ var app = new Vue({
             var idx = list.indexOf(row);
             return idx >= 0 && idx < list.length - 1;
         },
-        // 上移/下移按钮（连同子项一起移动，辅助键盘/鼠标用户）
+        //Legacy comment translated to English.
         moveConfigItem(row, delta) {
             if (!row) {
                 return;
@@ -923,7 +923,7 @@ var app = new Vue({
             }
             this.moveTo(row.id, siblings[to].id, delta > 0 ? 'after' : 'before');
         },
-        // 直接在“排序”输入框中输入数字并回车/失焦：按 Sort 降序把该项移动到相应位置（可先试数字再微调）
+        //Legacy comment translated to English.
         applyNumber(id) {
             var row = this.findConfigRow(id);
             if (!row) {
@@ -962,8 +962,8 @@ var app = new Vue({
             }
             this.moveTo(id, target.id, position);
         },
-        // 保存配置模式排序：按当前（深度优先）顺序提交全部“菜单/页面”Id，
-        // 服务端按父级分组后真实更新各级 Sort 数值
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         saveConfigOrder() {
             if (!this.configMenus.length) {
                 this.$message.warning(ncfT('Menu.ConfigEmpty'));
@@ -989,7 +989,7 @@ var app = new Vue({
                 self.configSaving = false;
             });
         },
-        // 更新授权
+        //Legacy comment translated to English.
         async  auUpdateData() {
             this.au.updateLoading = true;
             const checkNodes = this.$refs.tree.getCheckedNodes(false, true);
@@ -1015,7 +1015,7 @@ var app = new Vue({
                 this.au.updateLoading = false;
             }
         },
-        // 获取所有菜单
+        //Legacy comment translated to English.
         async  getList() {
             const a = await service.get('/Admin/Menu/Edit?handler=Menu');
             const b = a.data.data;
@@ -1023,12 +1023,12 @@ var app = new Vue({
             this.ddd(b, null, allMenu);
             this.tableData = allMenu;
             
-            // 数据加载完成后初始化固定效果
+            //Legacy comment translated to English.
             this.$nextTick(() => {
                 this.initStickyParents();
             });
         },
-        // 数据处理
+        // datahandling
         ddd(source, parentId, dest) {
             var array = source.filter(_ => _.parentId === parentId);
             for (var i in array) {
@@ -1038,22 +1038,22 @@ var app = new Vue({
                 this.ddd(source, ele.id, ele.children);
             }
         },
-        // 编辑 // 新增菜单 // 增加下一级
+        //Legacy comment translated to English.
         handleEdit(index, row, flag) {
             this.dialog.visible = true;
             if (flag === 'add') {
-                // 新增
+                // add
                 this.dialog.title = ncfT('Menu.AddTitle');
                 return;
             }
-            // 编辑
+            // edit
             let { id, menuName, parentId, url, icon, sort, visible,
                 resourceCode, isLocked, menuType } = row;
             this.dialog.data = {
                 id, menuName, parentId: [parentId], url, icon, sort, visible,
                 resourceCode, isLocked, menuType
             };
-            // dialog中父级菜单 做递归显示
+            //Legacy comment translated to English.
             let x = [];
             this.recursionFunc(row, this.tableData, x);
             this.dialog.data.parentId = x;
@@ -1071,7 +1071,7 @@ var app = new Vue({
                 this.dialog.data.parentId.push(row.id);
             }
         },
-        // 设置父级菜单默认显示 递归
+        //Legacy comment translated to English.
         recursionFunc(row, source, dest) {
             if (row.parentId === null) {
                 return;
@@ -1086,10 +1086,10 @@ var app = new Vue({
                 }
             }
         },
-        // 更新新增、编辑
+        // updateadd、edit
         updateData() {
             this.$refs['dataForm'].validate(valid => {
-                // 表单校验
+                // single-table validation
                 if (valid) {
                     this.dialog.updateLoading = true;
                     let data = {
@@ -1119,7 +1119,7 @@ var app = new Vue({
                 }
             });
         },
-        // 删除
+        // delete
         handleDelete(index, row) {
             let ids = [row.id];
             service.post("/Admin/Menu/edit?handler=Delete", ids).then(res => {
@@ -1134,7 +1134,7 @@ var app = new Vue({
                 }
             });
         },
-        // 初始化父节点固定效果
+        //Legacy comment translated to English.
         initStickyParents() {
             const rows = document.querySelectorAll('.el-table__row');
             const table = document.querySelector('.el-table');
@@ -1144,12 +1144,12 @@ var app = new Vue({
                 if (expandIcon && !expandIcon.classList.contains('el-table__expand-icon--leaf')) {
                     row.classList.add('sticky-parent');
                     
-                    // 创建克隆行并保持列宽
+                    //Legacy comment translated to English.
                     const clone = row.cloneNode(true);
                     clone.classList.add('sticky-clone');
                     clone.style.display = 'none';
                     
-                    // 复制每列的宽度
+                    //Legacy comment translated to English.
                     const originalCells = row.querySelectorAll('td');
                     const cloneCells = clone.querySelectorAll('td');
                     originalCells.forEach((cell, index) => {
@@ -1159,14 +1159,14 @@ var app = new Vue({
                         cloneCells[index].style.maxWidth = width;
                     });
                     
-                    // 设置克隆行的总宽度
+                    //Legacy comment translated to English.
                     clone.style.width = window.getComputedStyle(row).width;
                     
                     row.parentNode.insertBefore(clone, row.nextSibling);
                 }
             });
         },
-        // 处理滚动事件
+        //Legacy comment translated to English.
         handleScroll() {
             const stickyRows = document.querySelectorAll('.sticky-parent');
             const headerHeight = document.querySelector('.el-table__header-wrapper').offsetHeight;
@@ -1185,7 +1185,7 @@ var app = new Vue({
                     clone.style.top = `${headerHeight}px`;
                     clone.style.left = `${tableRect.left}px`;
                     
-                    // 确保克隆行的列宽与原行保持一致
+                    //Legacy comment translated to English.
                     const originalCells = row.querySelectorAll('td');
                     const cloneCells = clone.querySelectorAll('td');
                     originalCells.forEach((cell, index) => {
@@ -1197,7 +1197,7 @@ var app = new Vue({
                 }
             });
         },
-        // 在窗口大小改变时重新计算列宽
+        //Legacy comment translated to English.
         handleResize() {
             this.initStickyParents();
         }

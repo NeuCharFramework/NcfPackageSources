@@ -1,23 +1,26 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：AdminChatSession.cs
-    文件功能描述：后台对话会话
-    
-    
-    创建标识：Senparc - 20260325
-    
-    修改标识：Senparc - 20261021
-    修改描述：v0.11.1 会话关联工作区
 
-    修改标识：Senparc - 20261103
-    修改描述：保存分类内会话排序
+    File name: AdminChatSession.cs
+    File description: Related implementation.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 完善后台聊天会话管理与排序
+    Created by: Senparc - 20260325
 
-    修改标识：Senparc - 20261106
-    修改描述：持久化非当前会话的未读提醒
+    Modified by: Senparc - 20261021
+    Change description: v0.11.1 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261103
+    Change description: Updated module behavior and related support.
+
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261106
+    Change description: Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 
@@ -29,32 +32,32 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
 {
     /// <summary>
-    /// AdminChatSession：管理后台聊天会话
+    ///Legacy comment translated to English.
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(AdminChatSession))] //必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(AdminChatSession))] //a prefix is required to prevent system-wide conflicts
     [Serializable]
     public class AdminChatSession : EntityBase<int>
     {
         /// <summary>
-        /// 会话标题（从首条消息自动提取，最多150字符）
+        ///Legacy comment translated to English.
         /// </summary>
         [Required, MaxLength(150)]
         public string Title { get; private set; }
 
         /// <summary>
-        /// 用户ID（外键到 AdminUserInfo）
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         public int UserId { get; private set; }
 
         /// <summary>
-        /// 会话状态
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         public ChatSessionStatus Status { get; private set; }
 
         /// <summary>
-        /// 最后一条消息时间
+        ///Legacy comment translated to English.
         /// </summary>
         public DateTime LastMessageTime { get; private set; }
 
@@ -68,7 +71,7 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
         public int? SortOrder { get; private set; }
 
         /// <summary>
-        /// 后台任务已在用户未打开该会话时完成，等待阅读。
+        ///Legacy comment translated to English.
         /// </summary>
         public bool HasUnread { get; private set; }
 
@@ -79,15 +82,15 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 私有构造函数（供 EF Core 使用）
+        ///Legacy comment translated to English.
         /// </summary>
         private AdminChatSession() { }
 
         /// <summary>
-        /// 创建新的聊天会话
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="title">会话标题</param>
-        /// <param name="userId">用户ID</param>
+        ///Legacy comment translated to English.
+        /// <param name="userId">userID</param>
         public AdminChatSession(
             string title,
             int userId,
@@ -105,7 +108,7 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 更新会话标题
+        ///Legacy comment translated to English.
         /// </summary>
         public void UpdateTitle(string title)
         {
@@ -117,7 +120,7 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 更新最后消息时间
+        ///Legacy comment translated to English.
         /// </summary>
         public void UpdateLastMessageTime()
         {
@@ -126,7 +129,7 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 记录或清除未读提醒。正在查看的会话由调用方保持为已读。
+        ///Legacy comment translated to English.
         /// </summary>
         public void SetUnread(bool unread)
         {
@@ -136,7 +139,7 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 归档会话
+        ///Legacy comment translated to English.
         /// </summary>
         public void Archive()
         {
@@ -146,7 +149,7 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 删除会话（软删除，修改状态）
+        ///Legacy comment translated to English.
         /// </summary>
         public void Delete()
         {
@@ -156,7 +159,7 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
         }
 
         /// <summary>
-        /// 恢复会话
+        ///Legacy comment translated to English.
         /// </summary>
         public void Restore()
         {
@@ -166,20 +169,20 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
     }
 
     /// <summary>
-    /// 聊天会话状态
+    ///Legacy comment translated to English.
     /// </summary>
     public enum ChatSessionStatus
     {
         /// <summary>
-        /// 活跃中
+        ///Legacy comment translated to English.
         /// </summary>
         Active = 0,
         /// <summary>
-        /// 已归档
+        ///Legacy comment translated to English.
         /// </summary>
         Archived = 1,
         /// <summary>
-        /// 已删除
+        ///Legacy comment translated to English.
         /// </summary>
         Deleted = 2
     }

@@ -1,14 +1,13 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
-  
-    文件名：Index.cshtml.cs
-    文件功能描述：Index.cshtml.cs 相关实现
-    
-    
-    创建标识：Senparc - 20241028
-    
-    修改标识：Senparc - 20260729
-    修改描述：v0.2.0 增强后台管理员交互与桌面 Admin Chat 安全同步
+
+    File name: Index.cshtml.cs
+    File description: Index.cshtml related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 
@@ -36,13 +35,13 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         public PagedList<AdminUserInfo> AdminUserInfoList { get; set; }
 
         /// <summary>
-        /// 属性绑定，支持GET
+        /// 灞炴�х粦瀹氾紝鏀寔GET
         /// </summary>
         [BindProperty(SupportsGet = true)]
         public int PageIndex { get; set; } = 1;
 
         /// <summary>
-        /// 排序方法
+        /// 鎺掑簭鏂规硶
         /// </summary>
         [BindProperty(SupportsGet = true)]
         public string OrderField { get; set; } = "AddTime Desc,Id";

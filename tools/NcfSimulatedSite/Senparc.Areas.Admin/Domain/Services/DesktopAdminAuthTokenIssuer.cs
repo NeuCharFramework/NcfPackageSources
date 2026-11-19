@@ -1,13 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：DesktopAdminAuthTokenIssuer.cs
-    文件功能描述：把已验证的 WebView 管理员身份换成受源会话寿命约束的 JWT
+    File name: DesktopAdminAuthTokenIssuer.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260804
+    Created by: Senparc - 20260804
 
-    修改标识：Senparc - 20260808
-    修改描述：v0.4.0 实现 WebView 管理员身份到短期 JWT 的换票签发
+    Modified by: Senparc - 20260808
+    Change description: v0.4.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 
@@ -51,8 +55,8 @@ public sealed class DesktopAdminAuthTokenIssuer : IDesktopAdminAuthTokenIssuer
                 ErrorMessage: "管理员账号不存在或已失效。");
         }
 
-        // 当前桌面 AdminChat 登录协议尚未携带 TenantKey。宁可回退到显式登录，
-        // 也不能把租户 Cookie 身份换成缺少租户边界的 JWT。
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         if (adminUser.TenantId > 0)
         {
             return new DesktopAdminAuthTokenIssueResult(

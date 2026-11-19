@@ -107,7 +107,14 @@
       }
     },
     methods: {
-      st(key) { return ncfT('AgentsManager.Studio.' + key); },
+      st(key) {
+        const localizedKey = 'AgentsManager.Studio.' + key;
+        const translations = global.AgentsManagerI18n || global.ncfI18n;
+        if (translations && Object.prototype.hasOwnProperty.call(translations, localizedKey)) {
+          return translations[localizedKey];
+        }
+        return typeof global.ncfT === 'function' ? global.ncfT(localizedKey) : localizedKey;
+      },
       studioKey(agent) { return state.key(agent); },
       studioStatus(task) {
         return task.humanPendingCount ? this.st('HumanPending') : this.taskStateText[task.status];

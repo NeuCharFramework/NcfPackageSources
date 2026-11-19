@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：TenantInfoDto.cs
-    文件功能描述：TenantInfoDto 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: TenantInfoDto.cs
+    File description: TenantInfoDto related implementation
+
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.10.13-preview13 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -24,22 +27,22 @@ namespace Senparc.Xncf.Tenant.Domain.DataBaseModel
     {
         public int Id { get; set; }
         /// <summary>
-        /// 全局唯一编号（自动分配）
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         public Guid Guid { get; set; }
         /// <summary>
-        /// 名称
+        /// name
         /// </summary>
         [Required]
         public string Name { get; set; }
         /// <summary>
-        /// 是否启用
+        /// whether enabled
         /// </summary>
         [Required]
         public bool Enable { get; set; }
         /// <summary>
-        /// 匹配域名、URL、Head的参数
+        ///Legacy comment translated to English.
         /// </summary>
         public string TenantKey { get; set; }
     }

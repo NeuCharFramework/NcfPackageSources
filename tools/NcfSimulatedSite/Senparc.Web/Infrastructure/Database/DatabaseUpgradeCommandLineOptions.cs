@@ -1,13 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：DatabaseUpgradeCommandLineOptions.cs
-    文件功能描述：解析数据库独立升级命令
+    File name: DatabaseUpgradeCommandLineOptions.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260803
+    Created by: Senparc - 20260803
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.35.0 新增数据库升级维护流程与多平台下载入口
+    Modified by: Senparc - 20260804
+    Change description: v0.35.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.39.9 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 

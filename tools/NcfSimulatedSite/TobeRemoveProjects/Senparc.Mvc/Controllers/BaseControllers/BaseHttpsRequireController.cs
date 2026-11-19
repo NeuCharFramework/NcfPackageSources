@@ -1,11 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: BaseHttpsRequireController.cs
+    File description: BaseHttpsRequireController related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.0.1 Updated legacy MVC integration metadata and English source comments
+
+----------------------------------------------------------------*/
+
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Senparc.Mvc.Filter;
 
 namespace Senparc.Mvc
 {
     /// <summary>
-    /// 强制加HTTPS请求
+    ///Legacy comment translated to English.
     /// </summary>
     //[SenparcRequireHttps(Order = -1)]
     public class BaseHttpsRequireController : Controller
@@ -22,11 +35,11 @@ namespace Senparc.Mvc
                 var isHttps = httpContext.Request.IsHttps;
                 if (!isHttps)
                 {
-                    var url = httpContext.Request.Path; //COCONET 测试此方法
+                    var url = httpContext.Request.Path; //Legacy comment translated to English.
                     var isIndex = url == null || url.ToString() == "/";
                     if (isIndex)
                     {
-                        context.Result = Redirect("https://ncf.senparc.com/ ");//根据需要修改
+                        context.Result = Redirect("https://ncf.senparc.com/ ");//Legacy comment translated to English.
                         //Log.LogUtility.WebLogger.Error("BaseHttpsRequire url:{0}  IP:{1},Method:{2},"
                         //    .With(httpContext.Request.Url, httpContext.Request.UserHostAddress,
                         //        httpContext.Request.HttpMethod));

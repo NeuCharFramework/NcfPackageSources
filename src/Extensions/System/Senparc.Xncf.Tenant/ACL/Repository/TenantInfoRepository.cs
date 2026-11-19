@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：TenantInfoRepository.cs
-    文件功能描述：TenantInfoRepository 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: TenantInfoRepository.cs
+    File description: TenantInfoRepository related implementation
+
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.15.17 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -19,7 +22,7 @@ using Senparc.Xncf.Tenant.Domain.Models;
 namespace Senparc.Xncf.Tenant.ACL.Repository
 {
     /// <summary>
-    /// 租户 TenantInfo 的专用 TenantInfoClientRepositoryBase
+    ///Legacy comment translated to English.
     /// </summary>
     public class TenantInfoRepository : ClientRepositoryBase<TenantInfo>
     {

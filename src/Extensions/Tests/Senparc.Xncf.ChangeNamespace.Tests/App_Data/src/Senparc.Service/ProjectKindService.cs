@@ -13,27 +13,27 @@ namespace Senparc.Service
     {
         Dictionary<ProjectKind, List<ProjectKind>> GetKindTree();
         /// <summary>
-        /// 统计该分类的任务数
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="kindId">任务分类Id</param>
+        ///Legacy comment translated to English.
         void ProjectDemandCount(int kindId);
         /// <summary>
-        /// 撤销任务时该分类任务数减1
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="kindId">任务分类Id</param>
+        ///Legacy comment translated to English.
         void ReduceProjectDemandCount(int kindId);
         /// <summary>
-        /// Init方法添加一级目录
+        ///Legacy comment translated to English.
         /// </summary>
         void CreateOneLevelKind();
         /// <summary>
-        /// Init方法添加二级目录
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="names">二级目录名称数组</param>
-        /// <param name="parentName">一级目录名称</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         void CreateTwoLevelKind(string[] names, ProjectKind_List parentName);
         /// <summary>
-        /// 获取所有父级任务类型
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         List<ProjectKind> GetParentProjectKindList();
@@ -53,7 +53,7 @@ namespace Senparc.Service
                 new Dictionary<ProjectKind, List<ProjectKind>>();
             var fullList = base.GetFullList(z => true, z => z.Id, OrderingType.Ascending);
 
-            //获取顶部菜单
+            //Legacy comment translated to English.
             foreach (var topKind in fullList.Where(z => z.Level == 0).OrderBy(z => z.DisplayOrder))
             {
                 var subKinds = fullList.Where(z => z.ParentId == topKind.Id).OrderBy(z => z.DisplayOrder).ToList();

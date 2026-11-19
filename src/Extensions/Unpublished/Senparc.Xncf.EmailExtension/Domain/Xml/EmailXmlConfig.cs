@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：EmailXmlConfig.cs
-    文件功能描述：EmailXmlConfig 相关实现
-    
-    
-    创建标识：Senparc - 20211221
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: EmailXmlConfig.cs
+    File description: EmailXmlConfig related implementation
+
+    Created by: Senparc - 20211221
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.16 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -48,9 +51,9 @@ namespace Senparc.Xncf.EmailExtension.Domain.Xml
         }
 
         /// <summary>
-        /// 获取Email格式XML的节点
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="ToUse">用途标记，ToUse节点内容</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public static XmlConfig_Email GetEmailConfig(SendEmailType toUse)
         {
@@ -93,7 +96,7 @@ namespace Senparc.Xncf.EmailExtension.Domain.Xml
 
                 xml.Save(filename);
 
-                //备份
+                //Legacy comment translated to English.
                 string newPath = Path.Combine(Path.GetDirectoryName(filename), "email_bak");
                 string newFileName = Path.GetFileName(filename) +
                                      $".bak.{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.{config.ToUse}.config";

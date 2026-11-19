@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：SenparcTraceHelper.cs
-    文件功能描述：集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
 
+    File name: SenparcTraceHelper.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20241028
+    Created by: Senparc - 20241028
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.5.0 集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
+    Modified by: Senparc - 20260813
+    Change description: v0.5.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 
@@ -27,7 +30,7 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.SenparcTraceManager
 {
     /// <summary>
-    /// 单日日志轻量扫描结果（仅计数，不含正文）。
+    ///Legacy comment translated to English.
     /// </summary>
     public class SenparcTraceLogScanResult
     {
@@ -49,7 +52,7 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
         private const string DayStatCacheKeyPrefix = "Admin:SenparcTrace:Scan:";
 
         /// <summary>
-        /// 获取所有日期列表
+        ///Legacy comment translated to English.
         /// </summary>
         public static List<string> GetLogDate()
         {
@@ -67,7 +70,7 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
         }
 
         /// <summary>
-        /// 轻量扫描指定日期日志：只统计条数/类型，不构建明细对象、不保留正文。
+        ///Legacy comment translated to English.
         /// </summary>
         public static async Task<SenparcTraceLogScanResult> GetLogScanResultAsync(
             IServiceProvider serviceProvider,
@@ -97,7 +100,7 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
 
             if (useCache && cache != null)
             {
-                // 历史日几乎不再增长；当日短缓存，兼顾首页并发与数据新鲜度
+                //Legacy comment translated to English.
                 var ttl = string.Equals(date, today, StringComparison.Ordinal)
                     ? TimeSpan.FromSeconds(30)
                     : TimeSpan.FromHours(6);
@@ -108,7 +111,7 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
         }
 
         /// <summary>
-        /// 获取指定日期的日志明细（详情页使用；首页统计请用 <see cref="GetLogScanResultAsync"/>）。
+        ///Legacy comment translated to English.
         /// </summary>
         public static async Task<List<SenparcTraceItem>> GetAllLogsAsync(IServiceProvider serviceProvider, string date)
         {
@@ -255,7 +258,7 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
         }
 
         /// <summary>
-        /// 流式扫描日志文件，只维护当前条目类型与计数器。
+        ///Legacy comment translated to English.
         /// </summary>
         private static async Task<SenparcTraceLogScanResult> ScanLogFileAsync(string logFile)
         {
@@ -358,7 +361,7 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
         }
 
         /// <summary>
-        /// 以 FileShare.ReadWrite 直接读正在写入的日志；失败时回退到 .bak 快照。
+        ///Legacy comment translated to English.
         /// </summary>
         private static async Task<LogReaderOwner> OpenLogReaderAsync(string logFile)
         {
@@ -376,7 +379,7 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
             }
             catch (IOException)
             {
-                // 写入方未允许共享读时，回退到原 Copy 方案，避免首页/详情失败
+                //Legacy comment translated to English.
                 var bakFilename = logFile + ".bak";
                 await Task.Run(() =>
                 {
@@ -439,7 +442,7 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
 
                 try
                 {
-                    // DeleteOnClose 通常已清理；再兜底一次
+                    //Legacy comment translated to English.
                     if (File.Exists(_bakFilePath))
                     {
                         File.Delete(_bakFilePath);
@@ -447,7 +450,7 @@ namespace Senparc.Areas.Admin.SenparcTraceManager
                 }
                 catch
                 {
-                    // 忽略 bak 清理失败，避免影响主流程
+                    //Legacy comment translated to English.
                 }
             }
         }

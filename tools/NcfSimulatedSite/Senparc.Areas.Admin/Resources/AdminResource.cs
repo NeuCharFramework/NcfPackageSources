@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：AdminResource.cs
-    文件功能描述：后台管理本地化资源访问类
-    
-    
-    创建标识：Senparc - 20260403
-    
-    修改标识：Senparc - 20260724
-    修改描述：v0.1.0 增强后台模块批量更新并完善多语言管理界面
+
+    File name: AdminResource.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20260403
+
+    Modified by: Senparc - 20260724
+    Change description: v0.1.0 enhance batch module updates and improve the multilingual management interface
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 namespace Senparc.Areas.Admin

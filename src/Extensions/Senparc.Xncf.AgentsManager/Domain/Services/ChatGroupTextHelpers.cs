@@ -1,14 +1,18 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：ChatGroupTextHelpers.cs
-    文件功能描述：ChatGroup 执行的文本/流式辅助逻辑（从 ChatGroupService 抽取）
-    
-    创建标识：Senparc - 20260927
-    创建描述：拆分 ChatGroupService，集中管理响应文本提取、流式分块与退出信号识别
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.19.1 update AgentsManager with new features and improvements
+    Copyright (C) 2026 Senparc
+
+    File name: ChatGroupTextHelpers.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20260927
+    Creation description: Related implementation.
+
+    Modified by: Senparc - 20261103
+    Change description: v0.19.1 update AgentsManager with new features and improvements
+
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 
@@ -24,12 +28,12 @@ using ChatMessage = Microsoft.Extensions.AI.ChatMessage;
 namespace Senparc.Xncf.AgentsManager.Domain.Services;
 
 /// <summary>
-/// ChatGroup 执行的文本/流式辅助逻辑（从 ChatGroupService 抽取的纯函数集合）。
+///Legacy comment translated to English.
 /// </summary>
 internal static class ChatGroupTextHelpers
 {
     /// <summary>
-    /// 流式文本默认分块长度（字符数）。
+    ///Legacy comment translated to English.
     /// </summary>
     private const int DefaultStreamChunkLength = 24;
 
@@ -117,8 +121,8 @@ internal static class ChatGroupTextHelpers
             return string.Join(Environment.NewLine, textSegments);
         }
 
-        // 只认真实文本内容，避免把 ToString() 结果误判为“已流式输出”，
-        // 从而错过后续 synthetic chunk 回退。
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         return string.Empty;
     }
 

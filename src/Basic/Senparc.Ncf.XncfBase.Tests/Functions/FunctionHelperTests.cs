@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：FunctionHelperTests.cs
-    文件功能描述：单元测试用例
-    
-    
-    创建标识：Senparc - 20211014
-    
-    修改标识：Senparc - 20260704
-    修改描述：v0.0.2 补充函数参数归一化相关单元测试
+
+    File name: FunctionHelperTests.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20211014
+
+    Modified by: Senparc - 20260704
+    Change description: v0.0.2 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 using Microsoft.Extensions.DependencyInjection;

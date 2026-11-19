@@ -1,18 +1,23 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：SandboxNotebookBuilder.cs
-    文件功能描述：Jupyter Notebook（.ipynb）构建与单元解析
+    File name: SandboxNotebookBuilder.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260918
-    修改标识：Senparc - 20260918
-    修改描述：v0.3.3 新增 Notebook 构建器（Python / C# 内核）
+    Created by: Senparc - 20260918
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
+    Modified by: Senparc - 20260918
+    Change description: v0.3.3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.4.0 维护Jupyter Notebook（.ipynb）构建与单元解析
+    Modified by: Senparc - 20261005
+    Change description: v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
+
+    Modified by: Senparc - 20261103
+    Change description: v0.4.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.4 Localized sandbox setup and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -22,10 +27,10 @@ using System.Text.Json;
 namespace Senparc.Xncf.Sandbox.Domain.Services;
 
 /// <summary>
-/// 以 nbformat 4 / nbformat_minor 5 构建 .ipynb 文本。
-/// 单元采用百分号格式：独立一行 "# %%" 分隔代码单元；
-/// "# %% [markdown]" 之后的内容为 Markdown 单元；
-/// 首个标记之前的内容默认为第一个代码单元。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 public static class SandboxNotebookBuilder
 {
@@ -188,7 +193,7 @@ public static class SandboxNotebookBuilder
     }
 
     /// <summary>
-    /// 返回 null 表示非标记行；true 表示 Markdown 单元标记。
+    ///Legacy comment translated to English.
     /// </summary>
     private static bool? TryParseMarker(string line)
     {

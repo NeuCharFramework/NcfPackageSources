@@ -28,4 +28,9 @@
     <value>RequestTempId||AppService 返回的 requestTempId，例如：RequestTempId-639189862069965960-fc2ab5f5</value>
   </data>
 
+
+  <data name="Function.SystemManager.UpdateCloudAccount.Name" xml:space="preserve"><value>更新 NeuChar 云账户信息</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Function.SystemManager.UpdateCloudAccount.Description" xml:space="preserve"><value>使用 NeuChar 开发者页面提供的 AppKey 和 Secret 绑定云账户并激活高级功能</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Function.SystemManager.ViewTempLog.Name" xml:space="preserve"><value>查看 RequestTempId 暂存日志</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Function.SystemManager.ViewTempLog.Description" xml:space="preserve"><value>按 AppService 返回的 RequestTempId 查询有效期内的暂存日志</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
 </root>

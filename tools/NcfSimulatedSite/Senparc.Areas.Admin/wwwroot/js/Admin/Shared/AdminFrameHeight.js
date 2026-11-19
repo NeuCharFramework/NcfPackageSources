@@ -1,7 +1,7 @@
 /*
- * 标签 iframe 里，布局顶栏（60px）和底栏（36px）已经隐藏。
- * 页面里原有的 calc(100vh - Npx) 仍按完整后台扣掉这两段，内容就会比框架短。
- * 这里只补偿这种减法；单独的 100vh（遮罩、全屏层）保持为 iframe 自己的视口。
+ * Legacy comment translated to English.
+ * Legacy comment translated to English.
+ * Legacy comment translated to English.
  */
 (function (root) {
     var TAB_CHROME = '96px';

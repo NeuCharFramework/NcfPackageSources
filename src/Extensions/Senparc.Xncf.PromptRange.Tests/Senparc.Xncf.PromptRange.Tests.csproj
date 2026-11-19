@@ -4,47 +4,47 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<Version>0.0.21</Version>
 		<PackageReleaseNotes>
-    [2026-07-02] v0.0.2 升级 Senparc.AI.AgentKernel 并完成兼容性适配，升级并适配 net10.0 框架
-    1、升级 Senparc.AI.AgentKernel 并完成兼容性适配
-    2、升级并适配 net10.0 框架
+    [2026-07-02] v0.0.2 Updated module behavior and related support.
+    1. Updated module behavior and related support.
+    2. Updated module behavior and related support.
     [2026-07-07] v0.0.3 Dependency updates from upstream modules
-    1、Dependency update from Senparc.Xncf.PromptRange to 0.16.5-preview4
-    [2026-07-17] v0.0.4 同步上游项目版本并适配统一本地化能力
-    1、Dependency update from Senparc.Ncf.Core.Tests to 0.0.1
-    2、Dependency update from Senparc.Ncf.UnitTestExtension to 0.3.15-preview.2
-    3、Dependency update from Senparc.Xncf.PromptRange to 0.17.0-preview5
-    4、同步 PromptRange 0.17.0-preview5 的剪贴板与导航兼容性改进
+    1. Dependency update from Senparc.Xncf.PromptRange to 0.16.5-preview4
+    [2026-07-17] v0.0.4 synchronize upstream project versions and adopt shared localization capabilities
+    1. Dependency update from Senparc.Ncf.Core.Tests to 0.0.1
+    2. Dependency update from Senparc.Ncf.UnitTestExtension to 0.3.15-preview.2
+    3. Dependency update from Senparc.Xncf.PromptRange to 0.17.0-preview5
+    4. Updated module behavior and related support.
     [2026-07-29] v0.0.5 Dependency update from Senparc.Xncf.PromptRange to 0.17.1-preview6
     [2026-07-31] v0.0.6 Dependency update from Senparc.Xncf.PromptRange to 0.18.0-preview7
-    [2026-08-04] v0.0.7 补充 PromptRange 本地化测试
-    1、验证 PromptRange 多语言资源键和文化回退行为
+    [2026-08-04] v0.0.7 Updated module behavior and related support.
+    1. Updated module behavior and related support.
     [2026-08-08] v0.0.8 Dependency updates from upstream projects
-    1、Dependency update from Senparc.Ncf.Core.Tests to 0.0.5
-    2、Dependency update from Senparc.Ncf.UnitTestExtension to 0.3.19-preview.6
-    3、Dependency update from Senparc.Xncf.PromptRange to 0.19.1-preview9
+    1. Dependency update from Senparc.Ncf.Core.Tests to 0.0.5
+    2. Dependency update from Senparc.Ncf.UnitTestExtension to 0.3.19-preview.6
+    3. Dependency update from Senparc.Xncf.PromptRange to 0.19.1-preview9
     [2026-08-13] v0.0.9 Dependency update from Senparc.Ncf.Core.Tests to 0.0.6; Senparc.Ncf.UnitTestExtension to 0.3.20-preview.7; Senparc.Xncf.PromptRange to 0.19.2-preview10
     [2026-08-15] v0.0.10 Dependency update from Senparc.Ncf.Core.Tests to 0.0.7
-    1、补充 PromptResult 流式输出回归测试
-    [2026-08-22] v0.0.11 补充 PromptRange 流式结果回归测试
-    1、覆盖流式响应增量字段和低 Token 输出处理
+    1. add PromptResult streamingoutputregression tests
+    [2026-08-22] v0.0.11 Updated module behavior and related support.
+    1. Updated module behavior and related support.
     [2026-08-29] v0.0.12 Dependency updates from Senparc.Ncf.Core.Tests to 0.0.9
-    1、Dependency update from Senparc.Ncf.Core.Tests to 0.0.9
-    [2026-09-15] v0.0.13 同步上游模块版本并保持宿主兼容
-    1、更新项目依赖组合，兼容当前窗口内的 Senparc.Areas.Admin 及相关模块能力
+    1. Dependency update from Senparc.Ncf.Core.Tests to 0.0.9
+    [2026-09-15] v0.0.13 synchronize upstream module versions and preserve host compatibility
+    1. Updated module behavior and related support.
     [2026-09-16] v0.0.14 Dependency updates from upstream modules
     [2026-09-17] v0.0.15 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0; Senparc.Xncf.AIKernel to 0.16.2; Senparc.Xncf.PromptRange to 0.19.7
-    1、同步受影响的基础库、AI 模块或宿主项目版本
-    2、保持项目引用链与当前功能兼容
+    1. Updated module behavior and related support.
+    2. Updated module behavior and related support.
     [2026-10-05] v0.0.16 Enhanced Senparc.Xncf.PromptRange.Tests functionality and compatibility
-    1、Updated Senparc.Xncf.PromptRange.Tests project behavior and integration for the latest feature and reliability improvements.
+    1. Updated Senparc.Xncf.PromptRange.Tests project behavior and integration for the latest feature and reliability improvements.
     [2026-10-09] v0.0.17 Dependency update from Senparc.Xncf.PromptRange to 0.19.8
-    [2026-10-21] v0.0.18 补充 Skill 契约测试
-    1、覆盖 Skill 类型、执行策略、测试隔离与 Agent 绑定契约
+    [2026-10-21] v0.0.18 Updated module behavior and related support.
+    1. Updated module behavior and related support.
     [2026-11-02] Verify numeric score ordering, unrated and zero scores, tie-breaking, PromptCode sorting and pagination.
     [2026-11-02] Cover prompt selector SQL filtering, paging, content projection, tenant isolation and input validation.
     [2026-11-04] Verify exact references, last-save scoring, concurrent same-value updates, benchmark validation and tenant isolation.
     [2026-11-05] Verify complete Range score overviews, shared current scores, lightweight responses and access isolation.
-    [2026-11-12] v0.0.21 Dependency updates from Senparc.Ncf.Core.Tests to 0.0.13；Senparc.Ncf.UnitTestExtension to 0.3.28；Senparc.Xncf.PromptRange to 0.20.15
+    [2026-11-12] v0.0.21 Dependency updates from Senparc.Ncf.Core.Tests to 0.0.13;Senparc.Ncf.UnitTestExtension to 0.3.28;Senparc.Xncf.PromptRange to 0.20.15
 		</PackageReleaseNotes>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>

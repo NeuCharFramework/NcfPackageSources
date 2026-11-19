@@ -1,20 +1,23 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：Register.Area.cs
-    文件功能描述：Register.Area 相关实现
 
+    File name: Register.Area.cs
+    File description: Register.Area related implementation
 
-    创建标识：Senparc - 20250105
+    Created by: Senparc - 20250105
 
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.3.0-preview2 为 FileManager 模块接入统一资源本地化并优化功能文案
+    Modified by: Senparc - 20260717
+    Change description: v0.3.0-preview2 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.6.0-preview1 完善文件资源边界、安全删除策略与静态资源管理
+    Modified by: Senparc - 20260813
+    Change description: v0.6.0-preview1 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.8.5 Localized file management and upload surfaces
 
 ----------------------------------------------------------------*/
 
@@ -31,33 +34,33 @@ using Microsoft.Extensions.Hosting;
 
 namespace Senparc.Xncf.FileManager
 {
-    public partial class Register : IAreaRegister, //注册 XNCF 页面接口（按需选用）
-                                    IXncfRazorRuntimeCompilation  //赋能 RazorPage 运行时编译
+    public partial class Register : IAreaRegister, //register the XNCF page interface (optional)
+                                    IXncfRazorRuntimeCompilation  //enable RazorPage runtime compilation
     {
-        #region IAreaRegister 接口
+        #region Legacy section
 
         public string HomeUrl => "/Admin/FileManager/Index";
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-                         // HomeUrl 已指向同一页面；不要重复注册“首页”，也不要把示例页暴露给实际管理员。
-                         new AreaPageMenuItem(GetAreaUrl($"/Admin/FileManager/Index"), FileManagerResource.Get("Area.FileManager.Files", "文件资源管理"),"fa fa-file")
+                         //Legacy comment translated to English.
+                         new AreaPageMenuItem(GetAreaUrl($"/Admin/FileManager/Index"), FileManagerResource.Get("Area.FileManager.Files", "File resource management"),"fa fa-file")
         };
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
         {
             builder.AddRazorPagesOptions(options =>
             {
-                //此处可配置页面权限
+                //configure page permissions here
             });
 
-            SenparcTrace.SendCustomLog("FileManager 启动", "完成 Area:Senparc.Xncf.FileManager 注册");
+            SenparcTrace.SendCustomLog("FileManager startup", "Completed Area:Senparc.Xncf.FileManager registration");
 
             return builder;
         }
 
         #endregion
 
-        #region IXncfRazorRuntimeCompilation 接口
+        #region Legacy section
         public string LibraryPath => Path.GetFullPath(Path.Combine(SiteConfig.WebRootPath, "..", "..", "Senparc.Xncf.FileManager"));
         #endregion
     }

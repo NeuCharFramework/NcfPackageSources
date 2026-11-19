@@ -79,268 +79,268 @@
     <value>对上述结果计算三次方</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>+ 新增属性||+ 新增属性</value>
+    <value>+ 新增属性</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
-    <value>+ 新增标签||+ 新增标签</value>
+    <value>+ 新增标签</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>上传文件||上传文件</value>
+    <value>上传文件</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>上传时间||上传时间</value>
+    <value>上传时间</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>个召回段落||个召回段落</value>
+    <value>个召回段落</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>了解更多关于检索方法。||了解更多关于检索方法。</value>
+    <value>了解更多关于检索方法。</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>保存||保存</value>
+    <value>保存</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>倒排索引||倒排索引</value>
+    <value>倒排索引</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>倒排索引是一种用于高效检索的结构。按术语组织，每个术语指向包含它的文档或网页。||倒排索引是一种用于高效检索的结构。按术语组织，每个术语指向包含它的文档或网页。</value>
+    <value>倒排索引是一种用于高效检索的结构。按术语组织，每个术语指向包含它的文档或网页。</value>
   </data>
   <data name="Frontend.010" xml:space="preserve">
-    <value>关键词||关键词</value>
+    <value>关键词</value>
   </data>
   <data name="Frontend.011" xml:space="preserve">
-    <value>关闭||关闭</value>
+    <value>关闭</value>
   </data>
   <data name="Frontend.012" xml:space="preserve">
-    <value>内容||内容</value>
+    <value>内容</value>
   </data>
   <data name="Frontend.013" xml:space="preserve">
-    <value>内容类型||内容类型</value>
+    <value>内容类型</value>
   </data>
   <data name="Frontend.014" xml:space="preserve">
-    <value>删除||删除</value>
+    <value>删除</value>
   </data>
   <data name="Frontend.015" xml:space="preserve">
-    <value>取消||取消</value>
+    <value>取消</value>
   </data>
   <data name="Frontend.016" xml:space="preserve">
-    <value>召回测试||召回测试</value>
+    <value>召回测试</value>
   </data>
   <data name="Frontend.017" xml:space="preserve">
-    <value>召回率||召回率</value>
+    <value>召回率</value>
   </data>
   <data name="Frontend.018" xml:space="preserve">
-    <value>名称||名称</value>
+    <value>名称</value>
   </data>
   <data name="Frontend.019" xml:space="preserve">
-    <value>向量化||向量化</value>
+    <value>向量化</value>
   </data>
   <data name="Frontend.020" xml:space="preserve">
-    <value>向量化结果||向量化结果</value>
+    <value>向量化结果</value>
   </data>
   <data name="Frontend.021" xml:space="preserve">
-    <value>向量化进度||向量化进度</value>
+    <value>向量化进度</value>
   </data>
   <data name="Frontend.022" xml:space="preserve">
-    <value>字符||字符</value>
+    <value>字符</value>
   </data>
   <data name="Frontend.023" xml:space="preserve">
-    <value>属性名||属性名</value>
+    <value>属性名</value>
   </data>
   <data name="Frontend.024" xml:space="preserve">
-    <value>属性管理||属性管理</value>
+    <value>属性管理</value>
   </data>
   <data name="Frontend.025" xml:space="preserve">
-    <value>已选择:||已选择:</value>
+    <value>已选择:</value>
   </data>
   <data name="Frontend.026" xml:space="preserve">
-    <value>当前选中 {0} 行||当前选中 {0} 行</value>
+    <value>当前选中 {0} 行</value>
   </data>
   <data name="Frontend.027" xml:space="preserve">
-    <value>打开||打开</value>
+    <value>打开</value>
   </data>
   <data name="Frontend.028" xml:space="preserve">
-    <value>扩展模块||扩展模块</value>
+    <value>扩展模块</value>
   </data>
   <data name="Frontend.029" xml:space="preserve">
-    <value>批量删除||批量删除</value>
+    <value>批量删除</value>
   </data>
   <data name="Frontend.030" xml:space="preserve">
-    <value>搜索||搜索</value>
+    <value>搜索</value>
   </data>
   <data name="Frontend.031" xml:space="preserve">
-    <value>操作||操作</value>
+    <value>操作</value>
   </data>
   <data name="Frontend.032" xml:space="preserve">
-    <value>数据源||数据源</value>
+    <value>数据源</value>
   </data>
   <data name="Frontend.033" xml:space="preserve">
-    <value>文件列表||文件列表</value>
+    <value>文件列表</value>
   </data>
   <data name="Frontend.034" xml:space="preserve">
-    <value>文件名||文件名</value>
+    <value>文件名</value>
   </data>
   <data name="Frontend.035" xml:space="preserve">
-    <value>文件名称||文件名称</value>
+    <value>文件名称</value>
   </data>
   <data name="Frontend.036" xml:space="preserve">
-    <value>文件大小||文件大小</value>
+    <value>文件大小</value>
   </data>
   <data name="Frontend.037" xml:space="preserve">
-    <value>新增||新增</value>
+    <value>新增</value>
   </data>
   <data name="Frontend.038" xml:space="preserve">
-    <value>新建文件||新建文件</value>
+    <value>新建文件</value>
   </data>
   <data name="Frontend.039" xml:space="preserve">
-    <value>时间↓||时间↓</value>
+    <value>时间↓</value>
   </data>
   <data name="Frontend.040" xml:space="preserve">
-    <value>暂无召回结果，请选择知识库、输入源文本并点击「测试」||暂无召回结果，请选择知识库、输入源文本并点击「测试」</value>
+    <value>暂无召回结果，请选择知识库、输入源文本并点击「测试」</value>
   </data>
   <data name="Frontend.041" xml:space="preserve">
-    <value>查询||查询</value>
+    <value>查询</value>
   </data>
   <data name="Frontend.042" xml:space="preserve">
-    <value>查询内容||查询内容</value>
+    <value>查询内容</value>
   </data>
   <data name="Frontend.043" xml:space="preserve">
-    <value>标签名||标签名</value>
+    <value>标签名</value>
   </data>
   <data name="Frontend.044" xml:space="preserve">
-    <value>标签管理||标签管理</value>
+    <value>标签管理</value>
   </data>
   <data name="Frontend.045" xml:space="preserve">
-    <value>根据给定的查询文本测试知识的召回效果。||根据给定的查询文本测试知识的召回效果。</value>
+    <value>根据给定的查询文本测试知识的召回效果。</value>
   </data>
   <data name="Frontend.046" xml:space="preserve">
-    <value>检索方法||检索方法</value>
+    <value>检索方法</value>
   </data>
   <data name="Frontend.047" xml:space="preserve">
-    <value>检索设置||检索设置</value>
+    <value>检索设置</value>
   </data>
   <data name="Frontend.048" xml:space="preserve">
-    <value>段落详情||段落详情</value>
+    <value>段落详情</value>
   </data>
   <data name="Frontend.049" xml:space="preserve">
-    <value>测试||测试</value>
+    <value>测试</value>
   </data>
   <data name="Frontend.050" xml:space="preserve">
-    <value>添加时间||添加时间</value>
+    <value>添加时间</value>
   </data>
   <data name="Frontend.051" xml:space="preserve">
-    <value>源文本||源文本</value>
+    <value>源文本</value>
   </data>
   <data name="Frontend.052" xml:space="preserve">
-    <value>知识库||知识库</value>
+    <value>知识库</value>
   </data>
   <data name="Frontend.053" xml:space="preserve">
-    <value>知识库管理||知识库管理</value>
+    <value>知识库管理</value>
   </data>
   <data name="Frontend.054" xml:space="preserve">
-    <value>知识库管理列表||知识库管理列表</value>
+    <value>知识库管理列表</value>
   </data>
   <data name="Frontend.055" xml:space="preserve">
-    <value>知识库管理管理||知识库管理管理</value>
+    <value>知识库管理管理</value>
   </data>
   <data name="Frontend.056" xml:space="preserve">
-    <value>确定||确定</value>
+    <value>确定</value>
   </data>
   <data name="Frontend.057" xml:space="preserve">
-    <value>确认||确认</value>
+    <value>确认</value>
   </data>
   <data name="Frontend.058" xml:space="preserve">
-    <value>确认删除此知识库管理吗？||确认删除此知识库管理吗？</value>
+    <value>确认删除此知识库管理吗？</value>
   </data>
   <data name="Frontend.059" xml:space="preserve">
-    <value>筛选列||筛选列</value>
+    <value>筛选列</value>
   </data>
   <data name="Frontend.060" xml:space="preserve">
-    <value>编辑||编辑</value>
+    <value>编辑</value>
   </data>
   <data name="Frontend.061" xml:space="preserve">
-    <value>记录||记录</value>
+    <value>记录</value>
   </data>
   <data name="Frontend.062" xml:space="preserve">
-    <value>请填写||请填写</value>
+    <value>请填写</value>
   </data>
   <data name="Frontend.063" xml:space="preserve">
-    <value>请输入关键字||请输入关键字</value>
+    <value>请输入关键字</value>
   </data>
   <data name="Frontend.064" xml:space="preserve">
-    <value>请输入内容||请输入内容</value>
+    <value>请输入内容</value>
   </data>
   <data name="Frontend.065" xml:space="preserve">
-    <value>请输入名称||请输入名称</value>
+    <value>请输入名称</value>
   </data>
   <data name="Frontend.066" xml:space="preserve">
-    <value>请输入查询文本||请输入查询文本</value>
+    <value>请输入查询文本</value>
   </data>
   <data name="Frontend.067" xml:space="preserve">
-    <value>请选择内容类型||请选择内容类型</value>
+    <value>请选择内容类型</value>
   </data>
   <data name="Frontend.068" xml:space="preserve">
-    <value>输入关键字搜索并选择知识库||输入关键字搜索并选择知识库</value>
+    <value>输入关键字搜索并选择知识库</value>
   </data>
   <data name="Frontend.069" xml:space="preserve">
-    <value>选择Embedding模型||选择Embedding模型</value>
+    <value>选择Embedding模型</value>
   </data>
   <data name="Frontend.070" xml:space="preserve">
-    <value>选择向量数据库||选择向量数据库</value>
+    <value>选择向量数据库</value>
   </data>
   <data name="Frontend.071" xml:space="preserve">
-    <value>选择对话模型||选择对话模型</value>
+    <value>选择对话模型</value>
   </data>
   <data name="Frontend.072" xml:space="preserve">
-    <value>选择文件||选择文件</value>
+    <value>选择文件</value>
   </data>
   <data name="Frontend.073" xml:space="preserve">
-    <value>选择文件后将上传至文件管理，并可在下方文件列表中勾选后与当前知识库关联||选择文件后将上传至文件管理，并可在下方文件列表中勾选后与当前知识库关联</value>
+    <value>选择文件后将上传至文件管理，并可在下方文件列表中勾选后与当前知识库关联</value>
   </data>
   <data name="Frontend.074" xml:space="preserve">
-    <value>配置||配置</value>
+    <value>配置</value>
   </data>
   <data name="Frontend.075" xml:space="preserve">
-    <value>重置||重置</value>
+    <value>重置</value>
   </data>
   <data name="Frontend.076" xml:space="preserve">
-    <value>获取列表失败||获取列表失败</value>
+    <value>获取列表失败</value>
   </data>
   <data name="Frontend.077" xml:space="preserve">
-    <value>添加成功||添加成功</value>
+    <value>添加成功</value>
   </data>
   <data name="Frontend.078" xml:space="preserve">
-    <value>添加失败||添加失败</value>
+    <value>添加失败</value>
   </data>
   <data name="Frontend.079" xml:space="preserve">
-    <value>编辑成功||编辑成功</value>
+    <value>编辑成功</value>
   </data>
   <data name="Frontend.080" xml:space="preserve">
-    <value>编辑失败||编辑失败</value>
+    <value>编辑失败</value>
   </data>
   <data name="Frontend.081" xml:space="preserve">
-    <value>删除成功||删除成功</value>
+    <value>删除成功</value>
   </data>
   <data name="Frontend.082" xml:space="preserve">
-    <value>删除失败||删除失败</value>
+    <value>删除失败</value>
   </data>
   <data name="Frontend.083" xml:space="preserve">
-    <value>上传成功||上传成功</value>
+    <value>上传成功</value>
   </data>
   <data name="Frontend.084" xml:space="preserve">
-    <value>上传失败||上传失败</value>
+    <value>上传失败</value>
   </data>
   <data name="Frontend.085" xml:space="preserve">
-    <value>向量化失败||向量化失败</value>
+    <value>向量化失败</value>
   </data>
   <data name="Frontend.086" xml:space="preserve">
-    <value>加载失败||加载失败</value>
+    <value>加载失败</value>
   </data>
   <data name="Frontend.087" xml:space="preserve">
-    <value>暂无数据||暂无数据</value>
+    <value>暂无数据</value>
   </data>
   <data name="Frontend.088" xml:space="preserve">
-    <value>提示||提示</value>
+    <value>提示</value>
   </data>
   <data name="Page.EditKnowledgeBase" xml:space="preserve">
     <value>编辑知识库</value>
@@ -349,262 +349,392 @@
     <value>新增知识库</value>
   </data>
   <data name="Frontend.089" xml:space="preserve">
-    <value>类型||类型</value>
+    <value>类型</value>
   </data>
   <data name="Frontend.090" xml:space="preserve">
-    <value>来源||来源</value>
+    <value>来源</value>
   </data>
   <data name="Frontend.091" xml:space="preserve">
-    <value>重要||重要</value>
+    <value>重要</value>
   </data>
   <data name="Frontend.092" xml:space="preserve">
-    <value>待审核||待审核</value>
+    <value>待审核</value>
   </data>
   <data name="Frontend.093" xml:space="preserve">
-    <value>演示||演示</value>
+    <value>演示</value>
   </data>
   <data name="Frontend.094" xml:space="preserve">
-    <value>分段-{0}||分段-{0}</value>
+    <value>分段-{0}</value>
   </data>
   <data name="Frontend.095" xml:space="preserve">
-    <value>知识库-{0}||知识库-{0}</value>
+    <value>知识库-{0}</value>
   </data>
   <data name="Frontend.096" xml:space="preserve">
-    <value>检索设置已保存||检索设置已保存</value>
+    <value>检索设置已保存</value>
   </data>
   <data name="Frontend.097" xml:space="preserve">
-    <value>请输入属性名||请输入属性名</value>
+    <value>请输入属性名</value>
   </data>
   <data name="Frontend.098" xml:space="preserve">
-    <value>保存成功||保存成功</value>
+    <value>保存成功</value>
   </data>
   <data name="Frontend.099" xml:space="preserve">
-    <value>确认删除该属性？||确认删除该属性？</value>
+    <value>确认删除该属性？</value>
   </data>
   <data name="Frontend.100" xml:space="preserve">
-    <value>已删除||已删除</value>
+    <value>已删除</value>
   </data>
   <data name="Frontend.101" xml:space="preserve">
-    <value>请输入标签名||请输入标签名</value>
+    <value>请输入标签名</value>
   </data>
   <data name="Frontend.102" xml:space="preserve">
-    <value>确认删除该标签？||确认删除该标签？</value>
+    <value>确认删除该标签？</value>
   </data>
   <data name="Frontend.103" xml:space="preserve">
-    <value>请先选择知识库||请先选择知识库</value>
+    <value>请先选择知识库</value>
   </data>
   <data name="Frontend.104" xml:space="preserve">
-    <value>[召回示例1]||[召回示例1]</value>
+    <value>[召回示例1]</value>
   </data>
   <data name="Frontend.105" xml:space="preserve">
-    <value>离线评估召回完成||离线评估召回完成</value>
+    <value>离线评估召回完成</value>
   </data>
   <data name="Frontend.106" xml:space="preserve">
-    <value>在线评估召回完成||在线评估召回完成</value>
+    <value>在线评估召回完成</value>
   </data>
   <data name="Frontend.107" xml:space="preserve">
-    <value>错误||错误</value>
+    <value>错误</value>
   </data>
   <data name="Frontend.108" xml:space="preserve">
-    <value>向量化处理出错，请检查配置||向量化处理出错，请检查配置</value>
+    <value>向量化处理出错，请检查配置</value>
   </data>
   <data name="Frontend.109" xml:space="preserve">
-    <value>首页||首页</value>
+    <value>首页</value>
   </data>
   <data name="Frontend.110" xml:space="preserve">
-    <value>知识库管理列表页面||知识库管理列表页面</value>
+    <value>知识库管理列表页面</value>
   </data>
   <data name="Frontend.111" xml:space="preserve">
-    <value>Embedding模型Id||Embedding模型Id</value>
+    <value>Embedding模型Id</value>
   </data>
   <data name="Frontend.112" xml:space="preserve">
-    <value>向量数据库Id||向量数据库Id</value>
+    <value>向量数据库Id</value>
   </data>
   <data name="Frontend.113" xml:space="preserve">
-    <value>对话模型Id||对话模型Id</value>
+    <value>对话模型Id</value>
   </data>
   <data name="Frontend.114" xml:space="preserve">
-    <value>请输入Embedding模型Id||请输入Embedding模型Id</value>
+    <value>请输入Embedding模型Id</value>
   </data>
   <data name="Frontend.115" xml:space="preserve">
-    <value>请输入向量数据库Id||请输入向量数据库Id</value>
+    <value>请输入向量数据库Id</value>
   </data>
   <data name="Frontend.116" xml:space="preserve">
-    <value>请输入对话模型Id||请输入对话模型Id</value>
+    <value>请输入对话模型Id</value>
   </data>
   <data name="Frontend.117" xml:space="preserve">
-    <value>编辑知识库关联||编辑知识库关联</value>
+    <value>编辑知识库关联</value>
   </data>
   <data name="Frontend.118" xml:space="preserve">
-    <value>新增知识库关联||新增知识库关联</value>
+    <value>新增知识库关联</value>
   </data>
   <data name="Frontend.119" xml:space="preserve">
-    <value>当前选中 {0} 行||当前选中 {0} 行</value>
+    <value>当前选中 {0} 行</value>
   </data>
   <data name="Frontend.120" xml:space="preserve">
-    <value>打开||打开</value>
+    <value>打开</value>
   </data>
   <data name="Frontend.121" xml:space="preserve">
-    <value>召回返回的片段数量||召回返回的片段数量</value>
+    <value>召回返回的片段数量</value>
   </data>
   <data name="Frontend.122" xml:space="preserve">
-    <value>知识库Id||知识库Id</value>
+    <value>知识库Id</value>
   </data>
   <data name="Frontend.123" xml:space="preserve">
-    <value>输入||输入</value>
+    <value>输入</value>
   </data>
   <data name="Frontend.124" xml:space="preserve">
-    <value>文件||文件</value>
+    <value>文件</value>
   </data>
   <data name="Frontend.125" xml:space="preserve">
-    <value>采集外部数据||采集外部数据</value>
+    <value>采集外部数据</value>
   </data>
   <data name="Frontend.126" xml:space="preserve">
-    <value>新增知识库管理详情||新增知识库管理详情</value>
+    <value>新增知识库管理详情</value>
   </data>
   <data name="Frontend.127" xml:space="preserve">
-    <value>知识库管理详情名称为必填项||知识库管理详情名称为必填项</value>
+    <value>知识库管理详情名称为必填项</value>
   </data>
   <data name="Frontend.128" xml:space="preserve">
-    <value>知识库管理详情详情||知识库管理详情详情</value>
+    <value>知识库管理详情详情</value>
   </data>
   <data name="Frontend.129" xml:space="preserve">
-    <value>成功||成功</value>
+    <value>成功</value>
   </data>
   <data name="Frontend.130" xml:space="preserve">
-    <value>恭喜你，上传成功||恭喜你，上传成功</value>
+    <value>恭喜你，上传成功</value>
   </data>
   <data name="Frontend.131" xml:space="preserve">
-    <value>失败||失败</value>
+    <value>失败</value>
   </data>
   <data name="Frontend.132" xml:space="preserve">
-    <value>上传失败，请重新上传||上传失败，请重新上传</value>
+    <value>上传失败，请重新上传</value>
   </data>
   <data name="Frontend.133" xml:space="preserve">
-    <value>编辑知识库管理详情||编辑知识库管理详情</value>
+    <value>编辑知识库管理详情</value>
   </data>
   <data name="Frontend.134" xml:space="preserve">
-    <value>正在准备...||正在准备...</value>
+    <value>正在准备...</value>
   </data>
   <data name="Frontend.135" xml:space="preserve">
-    <value>新增知识库管理||新增知识库管理</value>
+    <value>新增知识库管理</value>
   </data>
   <data name="Frontend.136" xml:space="preserve">
-    <value>知识库管理名称为必填项||知识库管理名称为必填项</value>
+    <value>知识库管理名称为必填项</value>
   </data>
   <data name="Frontend.137" xml:space="preserve">
-    <value>知识库管理详情||知识库管理详情</value>
+    <value>知识库管理详情</value>
   </data>
   <data name="Frontend.138" xml:space="preserve">
-    <value>请选择||请选择</value>
+    <value>请选择</value>
   </data>
   <data name="Frontend.139" xml:space="preserve">
-    <value>文件已上传至文件管理||文件已上传至文件管理</value>
+    <value>文件已上传至文件管理</value>
   </data>
   <data name="Frontend.140" xml:space="preserve">
-    <value>上传失败，请重试||上传失败，请重试</value>
+    <value>上传失败，请重试</value>
   </data>
   <data name="Frontend.141" xml:space="preserve">
-    <value>编辑知识库管理||编辑知识库管理</value>
+    <value>编辑知识库管理</value>
   </data>
   <data name="Frontend.142" xml:space="preserve">
-    <value>请至少选择一个文件后再保存||请至少选择一个文件后再保存</value>
+    <value>请至少选择一个文件后再保存</value>
   </data>
   <data name="Frontend.143" xml:space="preserve">
-    <value>文件已关联到知识库并写入条目||文件已关联到知识库并写入条目</value>
+    <value>文件已关联到知识库并写入条目</value>
   </data>
   <data name="Frontend.144" xml:space="preserve">
-    <value>文件导入失败||文件导入失败</value>
+    <value>文件导入失败</value>
   </data>
   <data name="Frontend.145" xml:space="preserve">
-    <value>文件导入失败:||文件导入失败:</value>
+    <value>文件导入失败:</value>
   </data>
   <data name="Frontend.146" xml:space="preserve">
-    <value>已保存||已保存</value>
+    <value>已保存</value>
   </data>
   <data name="Frontend.147" xml:space="preserve">
-    <value>知识库保存成功||知识库保存成功</value>
+    <value>知识库保存成功</value>
   </data>
   <data name="Frontend.148" xml:space="preserve">
-    <value>保存失败，请检查数据||保存失败，请检查数据</value>
+    <value>保存失败，请检查数据</value>
   </data>
   <data name="Frontend.149" xml:space="preserve">
-    <value>保存出错：||保存出错：</value>
+    <value>保存出错：</value>
   </data>
   <data name="Frontend.150" xml:space="preserve">
-    <value>确认删除文件「{0}」吗？删除后数据库与物理文件均会移除。||确认删除文件「{0}」吗？删除后数据库与物理文件均会移除。</value>
+    <value>确认删除文件「{0}」吗？删除后数据库与物理文件均会移除。</value>
   </data>
   <data name="Frontend.151" xml:space="preserve">
-    <value>删除确认||删除确认</value>
+    <value>删除确认</value>
   </data>
   <data name="Frontend.152" xml:space="preserve">
-    <value>请先勾选需要删除的文件||请先勾选需要删除的文件</value>
+    <value>请先勾选需要删除的文件</value>
   </data>
   <data name="Frontend.153" xml:space="preserve">
-    <value>确认删除已选中的 {0} 个文件吗？删除后数据库与物理文件均会移除。||确认删除已选中的 {0} 个文件吗？删除后数据库与物理文件均会移除。</value>
+    <value>确认删除已选中的 {0} 个文件吗？删除后数据库与物理文件均会移除。</value>
   </data>
   <data name="Frontend.154" xml:space="preserve">
-    <value>批量删除确认||批量删除确认</value>
+    <value>批量删除确认</value>
   </data>
   <data name="Frontend.155" xml:space="preserve">
-    <value>部分完成||部分完成</value>
+    <value>部分完成</value>
   </data>
   <data name="Frontend.156" xml:space="preserve">
-    <value>已删除 {0}/{1} 个文件||已删除 {0}/{1} 个文件</value>
+    <value>已删除 {0}/{1} 个文件</value>
   </data>
   <data name="Frontend.157" xml:space="preserve">
-    <value>文件已删除||文件已删除</value>
+    <value>文件已删除</value>
   </data>
   <data name="Frontend.158" xml:space="preserve">
-    <value>删除失败:||删除失败:</value>
+    <value>删除失败:</value>
   </data>
   <data name="Frontend.159" xml:space="preserve">
-    <value>向量化确认||向量化确认</value>
+    <value>向量化确认</value>
   </data>
   <data name="Frontend.160" xml:space="preserve">
-    <value>正在向量化处理中...||正在向量化处理中...</value>
+    <value>正在向量化处理中...</value>
   </data>
   <data name="Frontend.161" xml:space="preserve">
-    <value>向量化完成||向量化完成</value>
+    <value>向量化完成</value>
   </data>
   <data name="Frontend.162" xml:space="preserve">
-    <value>知识库「{0}」向量化已完成。||知识库「{0}」向量化已完成。</value>
+    <value>知识库「{0}」向量化已完成。</value>
   </data>
   <data name="Frontend.163" xml:space="preserve">
-    <value>处理出错：||处理出错：</value>
+    <value>处理出错：</value>
   </data>
   <data name="Frontend.164" xml:space="preserve">
-    <value>确认关闭？||确认关闭？</value>
+    <value>确认关闭？</value>
   </data>
   <data name="Frontend.165" xml:space="preserve">
-    <value>抛出异常测试，传输参数：{0} {1}||抛出异常测试，传输参数：{0} {1}</value>
+    <value>抛出异常测试，传输参数：{0} {1}</value>
   </data>
   <data name="Frontend.166" xml:space="preserve">
-    <value>被除数不能为0！||被除数不能为0！</value>
+    <value>被除数不能为0！</value>
   </data>
   <data name="Frontend.167" xml:space="preserve">
-    <value>未知的运算符：{0}||未知的运算符：{0}</value>
+    <value>未知的运算符：{0}</value>
   </data>
   <data name="Frontend.168" xml:space="preserve">
-    <value>知识库 '{0}' 未配置 Embedding 模型，请先在'配置'中选择模型。||知识库 '{0}' 未配置 Embedding 模型，请先在'配置'中选择模型。</value>
+    <value>知识库 '{0}' 未配置 Embedding 模型，请先在'配置'中选择模型。</value>
   </data>
   <data name="Frontend.169" xml:space="preserve">
-    <value>Embedding 模型 ID {0} 不存在。||Embedding 模型 ID {0} 不存在。</value>
+    <value>Embedding 模型 ID {0} 不存在。</value>
   </data>
   <data name="Frontend.170" xml:space="preserve">
-    <value>Embedding 向量库 ID {0} 不存在。||Embedding 向量库 ID {0} 不存在。</value>
+    <value>Embedding 向量库 ID {0} 不存在。</value>
   </data>
   <data name="Frontend.171" xml:space="preserve">
-    <value>Embedding 模型 AIKernel 模型未找到：{0}。||Embedding 模型 AIKernel 模型未找到：{0}。</value>
+    <value>Embedding 模型 AIKernel 模型未找到：{0}。</value>
   </data>
   <data name="Frontend.172" xml:space="preserve">
-    <value>知识库 '{0}' 向量化完成！||知识库 '{0}' 向量化完成！</value>
+    <value>知识库 '{0}' 向量化完成！</value>
   </data>
   <data name="Frontend.173" xml:space="preserve">
-    <value>数据为空||数据为空</value>
+    <value>数据为空</value>
   </data>
   <data name="Frontend.174" xml:space="preserve">
-    <value>保存成功||保存成功</value>
+    <value>保存成功</value>
   </data>
 
+
+  <data name="Function.Sample.Name" xml:space="preserve"><value>示例函数</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Function.Sample.Description" xml:space="preserve"><value>演示 FunctionRender 参数与返回值</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.175" xml:space="preserve"><value>* 修改「切片策略 / 大小 / 重叠」需重新保存内容或资料并重新向量化后生效；「重排」配置保存后立即对召回生效，不影响已构建的向量。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.176" xml:space="preserve"><value>* 向量库仅支持 Redis / Qdrant；Memory 无法跨请求持久化。保存后可在「配置」中关联资料并执行向量化。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.177" xml:space="preserve"><value>Embedding模型</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.178" xml:space="preserve"><value>LLM 重排</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.179" xml:space="preserve"><value>LLM 重排（使用对话模型）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.180" xml:space="preserve"><value>上传知识库资料</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.181" xml:space="preserve"><value>个候选（先取候选再重排出 Top K）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.182" xml:space="preserve"><value>仅支持可安全提取的文本和 Office 文件。上传后会自动勾选；仍需点击当前抽屉的“确认”才会关联到知识库。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.183" xml:space="preserve"><value>使用指南</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.184" xml:space="preserve"><value>使用步骤：选择已完成向量化的知识库 → 输入用户会问的问题 → 查看来源和相似度 → 不理想时回到“配置”调整资料并重新向量化。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.185" xml:space="preserve"><value>例如：如何创建一个新的知识库？</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.186" xml:space="preserve"><value>保存资料关联后，已构建的向量会失效；请返回列表点击“向量化”后再进行召回测试。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.187" xml:space="preserve"><value>先从 5 开始。结果太少可提高，结果太杂可降低；本设置只影响当前页面后续测试。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.188" xml:space="preserve"><value>关闭（默认）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.189" xml:space="preserve"><value>切换到左侧「召回测试」，选择该知识库并输入真实问题，核验召回来源与相似度。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.190" xml:space="preserve"><value>切片大小 / 重叠</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.191" xml:space="preserve"><value>切片策略</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.192" xml:space="preserve"><value>刷新</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.193" xml:space="preserve"><value>发起一次测试</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.194" xml:space="preserve"><value>取消选择</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.195" xml:space="preserve"><value>召回片段详情</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.196" xml:space="preserve"><value>可关联资料</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.197" xml:space="preserve"><value>向量化状态</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.198" xml:space="preserve"><value>向量数据库</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.199" xml:space="preserve"><value>固定长度（默认）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.200" xml:space="preserve"><value>在列表中点击「配置」，关联文本内容或上传/勾选资料文件，确认保存关联。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.201" xml:space="preserve"><value>字符 · 重叠</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.202" xml:space="preserve"><value>完成</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.203" xml:space="preserve"><value>对话模型</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.204" xml:space="preserve"><value>尽量输入真实用户会问的完整问题，避免只输入一个关键词。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.205" xml:space="preserve"><value>已向量化</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.206" xml:space="preserve"><value>已选择资料:</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.207" xml:space="preserve"><value>开始测试</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.208" xml:space="preserve"><value>当前没有可用的持久化向量库。请先在 AIKernel 中配置 Redis 或 Qdrant（Memory 内存库不可用于知识库）。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.209" xml:space="preserve"><value>打开来源</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.210" xml:space="preserve"><value>按文件名搜索</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.211" xml:space="preserve"><value>按段落</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.212" xml:space="preserve"><value>提示：修改资料关联后，已构建的向量会失效，请务必重新执行向量化。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.213" xml:space="preserve"><value>搜索并选择已向量化的知识库</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.214" xml:space="preserve"><value>搜索知识库名称</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.215" xml:space="preserve"><value>新建知识库</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.216" xml:space="preserve"><value>新手操作顺序：新建知识库并配置 Embedding 与向量库 → 在“配置”中关联资料 → 点击“向量化” → 到“召回测试”核验结果。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.217" xml:space="preserve"><value>暂无知识库</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.218" xml:space="preserve"><value>更多</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.219" xml:space="preserve"><value>最高相似度</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.220" xml:space="preserve"><value>未向量化</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.221" xml:space="preserve"><value>本页测试记录</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.222" xml:space="preserve"><value>查看全文</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.223" xml:space="preserve"><value>检索与切片</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.224" xml:space="preserve"><value>检索方式</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.225" xml:space="preserve"><value>测试时间</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.226" xml:space="preserve"><value>测试结果</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.227" xml:space="preserve"><value>测试问题</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.228" xml:space="preserve"><value>清空选择</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.229" xml:space="preserve"><value>点击「向量化」，等待进度完成；成功后状态会显示为「已向量化」。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.230" xml:space="preserve"><value>点击「新建知识库」，填写名称并选择 Embedding 模型、向量数据库与对话模型。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.231" xml:space="preserve"><value>用一个真实问题检查知识库返回了哪些资料片段。相似度分数用于排序参考，不等同于“召回率”。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.232" xml:space="preserve"><value>留空则使用本知识库的对话模型</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.233" xml:space="preserve"><value>知识库使用指南</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.234" xml:space="preserve"><value>知识库列表</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.235" xml:space="preserve"><value>管理知识库资料</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.236" xml:space="preserve"><value>系统将问题和资料片段转换为向量后按语义相近程度排序。不同模型和向量库的分数范围可能不同，因此不要把它当作固定百分比或召回率。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.237" xml:space="preserve"><value>若结果不理想，回到「配置」调整资料后重新向量化再测。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.238" xml:space="preserve"><value>词法权重</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.239" xml:space="preserve"><value>词法混合</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.240" xml:space="preserve"><value>词法混合（无额外模型调用）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.241" xml:space="preserve"><value>语义向量检索</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.242" xml:space="preserve"><value>请输入内容（可选）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.243" xml:space="preserve"><value>请输入知识库名称</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.244" xml:space="preserve"><value>请选择 Embedding 模型</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.245" xml:space="preserve"><value>请选择 Redis 或 Qdrant 向量库</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.246" xml:space="preserve"><value>请选择切片策略</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.247" xml:space="preserve"><value>请选择对话模型</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.248" xml:space="preserve"><value>请选择重排模式</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.249" xml:space="preserve"><value>跟随知识库设置</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.250" xml:space="preserve"><value>返回片段</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.251" xml:space="preserve"><value>返回片段数量（Top K）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.252" xml:space="preserve"><value>还没有测试结果</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.253" xml:space="preserve"><value>选择知识库并输入问题后，结果会显示在这里。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.254" xml:space="preserve"><value>选择知识库资料</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.255" xml:space="preserve"><value>选择资料文件</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.256" xml:space="preserve"><value>递归结构化（长文推荐）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.257" xml:space="preserve"><value>重排候选数</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.258" xml:space="preserve"><value>重排模型</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.259" xml:space="preserve"><value>重排（Re-ranking）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.260" xml:space="preserve"><value>重排（本次测试）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.261" xml:space="preserve"><value>本次最多返回 {0} 个片段</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.262" xml:space="preserve"><value>{0} 个片段</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.263" xml:space="preserve"><value>耗时 {0} ms</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.264" xml:space="preserve"><value>第 {0} 条</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.265" xml:space="preserve"><value>重排分</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.266" xml:space="preserve"><value>原排名 #{0}</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.267" xml:space="preserve"><value>来源：</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.268" xml:space="preserve"><value>（词法分数在融合得分中的占比）</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.269" xml:space="preserve"><value>当前已选 {0} 份资料</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.270" xml:space="preserve"><value>处理完成 {0}</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.271" xml:space="preserve"><value>处理失败 {0}</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.272" xml:space="preserve"><value>正在处理 {0}</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.273" xml:space="preserve"><value>您于 {0} 发起的【{1}】</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.274" xml:space="preserve"><value>共处理 {0} 条，成功 {1} 条，失败 {2} 条</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.275" xml:space="preserve"><value>当前知识库配置：</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.276" xml:space="preserve"><value>第 {0} 条 · 相似度</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.277" xml:space="preserve"><value>· 重排前第 {0} 条</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.278" xml:space="preserve"><value>请求未完成，请检查知识库和模型配置。</value></data>
+  <data name="Frontend.279" xml:space="preserve"><value>无法获取知识库列表：{0}</value></data>
+  <data name="Frontend.280" xml:space="preserve"><value>该知识库尚未向量化，请先回到知识库管理页执行“向量化”。</value></data>
+  <data name="Frontend.281" xml:space="preserve"><value>请输入要测试的问题</value></data>
+  <data name="Frontend.282" xml:space="preserve"><value>服务未返回有效的召回结果</value></data>
+  <data name="Frontend.283" xml:space="preserve"><value>召回测试完成，请核对来源与内容。</value></data>
+  <data name="Frontend.284" xml:space="preserve"><value>测试完成，但没有返回匹配片段。</value></data>
+  <data name="Frontend.285" xml:space="preserve"><value>召回未完成</value></data>
+  <data name="Frontend.286" xml:space="preserve"><value>当前没有已选择的资料</value></data>
+  <data name="Frontend.287" xml:space="preserve"><value>仅取消当前知识库的待保存关联，不会删除文件。确认继续吗？</value></data>
+  <data name="Frontend.288" xml:space="preserve"><value>清空选择</value></data>
+  <data name="Frontend.289" xml:space="preserve"><value>确认关闭？</value></data>
+  <data name="Frontend.290" xml:space="preserve"><value>外部数据采集需要单独配置抓取、权限与清洗策略，本版本不会伪造保存成功。</value></data>
+  <data name="Frontend.291" xml:space="preserve"><value>选项</value></data>
+  <data name="Frontend.292" xml:space="preserve"><value>未找到要打开的知识库，可能已删除或当前账号没有权限。</value></data>
+  <data name="Frontend.293" xml:space="preserve"><value>资料列表加载失败，请稍后重试。</value></data>
+  <data name="Frontend.294" xml:space="preserve"><value>错误</value></data>
+  <data name="Frontend.295" xml:space="preserve"><value>知识库保存成功</value></data>
+  <data name="Frontend.296" xml:space="preserve"><value>保存失败，请检查数据</value></data>
+  <data name="Frontend.297" xml:space="preserve"><value>保存错误</value></data>
+  <data name="Frontend.298" xml:space="preserve"><value>保存出错，请稍后重试</value></data>
+  <data name="Frontend.299" xml:space="preserve"><value>成功</value></data>
+  <data name="Frontend.300" xml:space="preserve"><value>删除成功</value></data>
+  <data name="Frontend.301" xml:space="preserve"><value>确认对知识库“{0}”进行向量化处理吗？</value></data>
 </root>

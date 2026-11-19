@@ -1,21 +1,24 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：WurflThread.cs
-    文件功能描述：WurflThread 相关实现
-    
-    
-    创建标识：Senparc - 20211124
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: WurflThread.cs
+    File description: WurflThread related implementation
+
+    Created by: Senparc - 20211124
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.16 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
 namespace Senparc.Utility
 {
     ///// <summary>
-    ///// 异步初始化的线程
+    ///Legacy comment translated to English.
     ///// </summary>
     //public class WurflThread
     //{
@@ -29,7 +32,7 @@ namespace Senparc.Utility
     //        {
     //            lock (WurflUtility.RegisterLock)
     //            {
-    //                Thread.Sleep(10 * 1000);//停止10秒，先等第一个请求的页面通过
+    //Legacy comment translated to English.
 
     //                WurflUtility.RegisterState = "begin";
     //                var startTime = DateTime.Now;

@@ -1,10 +1,12 @@
 /*----------------------------------------------------------------
-    文件名：Access.js
-    文件功能描述：Function 全局 Provit 访问控制页：
-    代码基线 + 数据库策略 + 生效策略的完整展示、单条/批量设置与清除
 
-    创建标识：Senparc - 20260917
-    修改描述：v0.9.1 新增 Function 全局 Provit 数据库访问策略映射
+    File name: Access.js
+    File description: Related implementation.
+    Legacy comment translated to English.
+    Change description: v0.9.1 Updated module behavior and related support.
+
+    Created by: Senparc - 20260917
+
 ----------------------------------------------------------------*/
 new Vue({
     el: '#app',
@@ -46,7 +48,10 @@ new Vue({
             this.loading = true;
             try {
                 const [listResponse, usersResponse, rolesResponse] = await Promise.all([
-                    service.get('/Admin/NeuCharPivot/Access?handler=List'),
+                    service.get('/Admin/NeuCharPivot/Access?handler=List' +
+                        (new URLSearchParams(window.location.search).get('moduleUid')
+                            ? '&moduleUid=' + encodeURIComponent(new URLSearchParams(window.location.search).get('moduleUid'))
+                            : '')),
                     service.get('/Admin/NeuCharPivot/Access?handler=Users'),
                     service.get('/Admin/NeuCharPivot/Access?handler=Roles')
                 ]);

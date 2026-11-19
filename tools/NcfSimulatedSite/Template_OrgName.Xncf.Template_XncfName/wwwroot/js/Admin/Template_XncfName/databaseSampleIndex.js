@@ -56,7 +56,7 @@ var app = new Vue({
         }
     },
     mounted() {
-        //wait page load  
+        //wait page load
         setTimeout(async () => {
             await this.init();
         }, 100)
@@ -92,14 +92,14 @@ var app = new Vue({
                     console.log('Has res.data.data.list?:', res.data && res.data.data && res.data.data.list);
                     console.log('res.data.data.list value:', res.data && res.data.data ? res.data.data.list : 'nested data not found');
                     console.log('==================');
-                    
-                    // 尝试多种可能的数据结构
+
+                    //Legacy comment translated to English.
                     let dataList = null;
                     let totalCount = 0;
                     let dataSource = '';
-                    
+
                     if (res.data && res.data.data && res.data.data.data && res.data.data.data.list) {
-                        // NCF框架标准格式 + 新的API格式: {data: {data: {success, message, data: {list, totalCount}}}}
+                        //Legacy comment translated to English.
                         dataList = res.data.data.data.list;
                         totalCount = res.data.data.data.totalCount || 0;
                         dataSource = 'NCF标准格式: res.data.data.data.list';
@@ -107,19 +107,19 @@ var app = new Vue({
                         console.log('✅ List数据:', dataList);
                         console.log('✅ TotalCount:', totalCount);
                     } else if (res.data && res.data.data && res.data.data.list) {
-                        // 简单格式: {data: {list, totalCount}}
+                        //Legacy comment translated to English.
                         dataList = res.data.data.list;
                         totalCount = res.data.data.totalCount || 0;
                         dataSource = '简单格式: res.data.data.list';
                         console.log('✅ 使用简单格式: res.data.data.list');
                     } else if (res.data && Array.isArray(res.data)) {
-                        // 如果data直接是数组
+                        //Legacy comment translated to English.
                         dataList = res.data;
                         totalCount = res.data.length;
                         dataSource = '数组格式: res.data (array)';
                         console.log('✅ 使用数组格式: res.data (array)');
                     } else if (res && res.list) {
-                        // 如果list在顶层
+                        //Legacy comment translated to English.
                         dataList = res.list;
                         totalCount = res.totalCount || 0;
                         dataSource = '顶层格式: res.list';
@@ -135,33 +135,33 @@ var app = new Vue({
                         totalCount = 0;
                         dataSource = '无法识别格式';
                     }
-                    
+
                     console.log('🎯 Final dataList:', dataList);
                     console.log('🎯 Final totalCount:', totalCount);
                     console.log('🎯 Data source:', dataSource);
-                    
-                    // 数据赋值前的状态
+
+                    //Legacy comment translated to English.
                     console.log('📋 赋值前 tableData:', this.tableData);
                     console.log('📋 赋值前 total:', this.total);
-                    
+
                     this.tableData = dataList || [];
                     this.total = totalCount;
-                    
-                    // 数据赋值后的状态
+
+                    //Legacy comment translated to English.
                     console.log('📋 赋值后 tableData:', this.tableData);
                     console.log('📋 赋值后 tableData.length:', this.tableData.length);
                     console.log('📋 赋值后 total:', this.total);
-                    
-                    // 强制Vue更新
+
+                    //Legacy comment translated to English.
                     this.$forceUpdate();
                     console.log('🔄 Vue已强制更新');
-                    
-                    // 延迟检查数据是否正确绑定
+
+                    //Legacy comment translated to English.
                     setTimeout(() => {
                         console.log('⏰ 延迟检查 tableData:', this.tableData);
                         console.log('⏰ 延迟检查 tableData.length:', this.tableData ? this.tableData.length : 'null');
                     }, 100);
-                    
+
                     this.tableLoading = false
                 })
                 .catch(error => {
@@ -185,7 +185,7 @@ var app = new Vue({
                         blue: this.addForm.blue,
                         additionNote: this.addForm.additionNote
                     });
-                    
+
                     await service.post('/Admin/Template_XncfName/DatabaseSampleIndex?handler=CreateColor', {
                         red: this.addForm.red,
                         green: this.addForm.green,
@@ -198,7 +198,7 @@ var app = new Vue({
                     })
                         .then(res => {
                             console.log('📥 创建响应:', res);
-                            // 兼容NCF框架的嵌套响应格式
+                            // support the nested response format used by the NCF framework
                             const responseData = res.data.data || res.data;
                             this.$message({
                                 type: responseData.success ? 'success' : 'error',
@@ -252,7 +252,7 @@ var app = new Vue({
                         blue: this.editForm.blue,
                         additionNote: this.editForm.additionNote
                     });
-                    
+
                     await service.post('/Admin/Template_XncfName/DatabaseSampleIndex?handler=UpdateColor', {
                         id: this.editForm.id,
                         red: this.editForm.red,
@@ -266,7 +266,7 @@ var app = new Vue({
                     })
                         .then(res => {
                             console.log('📥 更新响应:', res);
-                            // 兼容NCF框架的嵌套响应格式
+                            // support the nested response format used by the NCF framework
                             const responseData = res.data.data || res.data;
                             this.$message({
                                 type: responseData.success ? 'success' : 'error',
@@ -289,28 +289,28 @@ var app = new Vue({
         },
         dateformatter(date) {
             if (!date) return '';
-            
+
             try {
-                // 使用原生JavaScript格式化日期
+                //Legacy comment translated to English.
                 const d = new Date(date);
-                
-                // 检查日期是否有效
+
+                //Legacy comment translated to English.
                 if (isNaN(d.getTime())) {
-                    return date; // 如果无法解析，返回原始值
+                    return date; //Legacy comment translated to English.
                 }
-                
-                // 格式化为 YYYY-MM-DD HH:mm:ss
+
+                //Legacy comment translated to English.
                 const year = d.getFullYear();
                 const month = String(d.getMonth() + 1).padStart(2, '0');
                 const day = String(d.getDate()).padStart(2, '0');
                 const hours = String(d.getHours()).padStart(2, '0');
                 const minutes = String(d.getMinutes()).padStart(2, '0');
                 const seconds = String(d.getSeconds()).padStart(2, '0');
-                
+
                 return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
             } catch (error) {
                 console.warn('日期格式化错误:', error, '原始值:', date);
-                return date; // 如果格式化失败，返回原始值
+                return date; //Legacy comment translated to English.
             }
         },
         editColor(row) {
@@ -330,7 +330,7 @@ var app = new Vue({
                 type: 'warning'
             }).then(async () => {
                 console.log('📤 发送删除请求:', { id: row.id });
-                
+
                 await service.post('/Admin/Template_XncfName/DatabaseSampleIndex?handler=DeleteColor', {
                     id: row.id
                 }, {
@@ -340,7 +340,7 @@ var app = new Vue({
                 })
                     .then(res => {
                         console.log('📥 删除响应:', res);
-                        // 兼容NCF框架的嵌套响应格式
+                        // support the nested response format used by the NCF framework
                         const responseData = res.data.data || res.data;
                         this.$message({
                             type: responseData.success ? 'success' : 'error',
@@ -363,7 +363,7 @@ var app = new Vue({
         },
         async randomizeColor(row) {
             console.log('📤 发送随机化请求:', { id: row.id });
-            
+
             await service.post('/Admin/Template_XncfName/DatabaseSampleIndex?handler=RandomizeColor', {
                 id: row.id
             }, {
@@ -373,7 +373,7 @@ var app = new Vue({
             })
                 .then(res => {
                     console.log('📥 随机化响应:', res);
-                    // 兼容NCF框架的嵌套响应格式
+                    // support the nested response format used by the NCF framework
                     const responseData = res.data.data || res.data;
                     this.$message({
                         type: responseData.success ? 'success' : 'error',
@@ -409,8 +409,8 @@ var app = new Vue({
             console.log('Show Debug:', this.showDebug);
             console.log('Vue instance $el:', this.$el);
             console.log('================================');
-            
-            // 测试Vue响应性
+
+            //Legacy comment translated to English.
             if (this.tableData && this.tableData.length === 0) {
                 console.log('测试：添加假数据');
                 this.tableData = [
@@ -425,4 +425,4 @@ var app = new Vue({
             }
         }
     }
-}); 
+});

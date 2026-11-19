@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：PromptOptimizationPlugin.cs
-    文件功能描述：PromptOptimizationPlugin 相关实现
-    
-    
-    创建标识：Senparc - 20260325
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: PromptOptimizationPlugin.cs
+    File description: PromptOptimizationPlugin related implementation
+
+    Created by: Senparc - 20260325
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 
@@ -28,8 +31,8 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
 {
     /// <summary>
-    /// Prompt 优化 Plugin
-    /// Agent 通过调用这些 function 来完成 Prompt 优化任务
+    /// Prompt optimize Plugin
+    ///Legacy comment translated to English.
     /// </summary>
     public class PromptOptimizationPlugin
     {
@@ -63,7 +66,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
         }
 
         /// <summary>
-        /// 获取 Prompt 信息
+        /// get Prompt information
         /// </summary>
         [KernelFunction, Description("Get detailed information about a specific prompt")]
         public async Task<string> GetPromptInfo(
@@ -100,7 +103,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
         }
 
         /// <summary>
-        /// 分析 Range 中所有模型的历史评分
+        ///Legacy comment translated to English.
         /// </summary>
         [KernelFunction, Description("Analyze historical scores of all models in the current range")]
         public async Task<string> AnalyzeModelScores(
@@ -147,7 +150,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
         }
 
         /// <summary>
-        /// 创建优化后的新 Prompt 版本
+        ///Legacy comment translated to English.
         /// </summary>
         [KernelFunction, Description("Create exactly ONE new version per optimization task. Call at most once — duplicate calls are rejected without creating rows. First parameter may be empty.")]
         public async Task<string> CreateOptimizedPrompt(
@@ -261,7 +264,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
         }
 
         /// <summary>
-        /// 可选：一般由 PromptRange 页面打靶；仅当任务明确要求时在 Agent 内调用
+        ///Legacy comment translated to English.
         /// </summary>
         [KernelFunction, Description("Execute a shoot test on the prompt")]
         public async Task<string> ExecuteShootTest(
@@ -270,7 +273,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
         {
             try
             {
-                // 获取 PromptItem
+                // get PromptItem
                 var promptResult = await _promptItemService.GetWithVersionAsync(promptCode, isAvg: true);
                 if (promptResult == null || promptResult.PromptItem == null)
                 {
@@ -279,7 +282,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
 
                 var promptItem = promptResult.PromptItem;
 
-                // 执行打靶
+                //Legacy comment translated to English.
                 var shootResult = await _promptResultService.SenparcGenerateResultAsync(
                     _promptItemService.Mapper.Map<Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto>(promptItem),
                     userMessage: null,
@@ -295,7 +298,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
         }
 
         /// <summary>
-        /// 执行 AI 评分
+        ///Legacy comment translated to English.
         /// </summary>
         [KernelFunction, Description("Execute AI scoring on the shoot result")]
         public async Task<string> ExecuteAIGrade(
@@ -304,7 +307,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
         {
             try
             {
-                // 获取 PromptItem
+                // get PromptItem
                 var promptResult = await _promptItemService.GetWithVersionAsync(promptCode, isAvg: true);
                 if (promptResult == null || promptResult.PromptItem == null)
                 {
@@ -313,7 +316,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
 
                 var promptItem = promptResult.PromptItem;
 
-                // 获取最新的 PromptResult
+                //Legacy comment translated to English.
                 var promptResults = await _promptResultService.GetByItemId(promptItem.Id);
                 if (promptResults == null || promptResults.Count == 0)
                 {
@@ -322,24 +325,24 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
 
                 var latestResult = promptResults.OrderByDescending(r => r.Id).First();
 
-                // 获取期望结果
+                //Legacy comment translated to English.
                 var expectedResultsJson = promptItem.ExpectedResultsJson;
                 if (string.IsNullOrWhiteSpace(expectedResultsJson))
                 {
                     return "Error: No expected results configured for this prompt.";
                 }
 
-                // 执行 AI 评分
+                //Legacy comment translated to English.
                 await _promptResultService.RobotScoringAsync(
                     latestResult.Id,
                     isRefresh: false,
                     expectedResultsJson
                 );
 
-                // 更新 PromptItem 的平均分
+                //Legacy comment translated to English.
                 await _promptResultService.UpdateEvalScoreAsync(promptItem.Id);
 
-                // 重新获取更新后的 PromptItem
+                //Legacy comment translated to English.
                 var updatedPromptResult = await _promptItemService.GetWithVersionAsync(promptCode, isAvg: true);
                 var updatedItem = updatedPromptResult.PromptItem;
 

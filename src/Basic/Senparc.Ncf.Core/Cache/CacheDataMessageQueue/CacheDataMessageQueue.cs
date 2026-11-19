@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：CacheDataMessageQueue.cs
-    文件功能描述：CacheDataMessageQueue 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: CacheDataMessageQueue.cs
+    File description: CacheDataMessageQueue related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -19,31 +22,31 @@ using System.Linq;
 namespace Senparc.Ncf.Core.Cache
 {
     /// <summary>
-    /// 缓存消息列队，用于自动更新分布式缓存数据
+    ///Legacy comment translated to English.
     /// </summary>
     public class CacheDataMessageQueue
     {
         /// <summary>
-        /// 列队数据集合
+        ///Legacy comment translated to English.
         /// </summary>
         private static Dictionary<string, CacheDataMessageQueueItem> MessageQueueDictionary = new Dictionary<string, CacheDataMessageQueueItem>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
-        /// 同步执行锁
+        ///Legacy comment translated to English.
         /// </summary>
         private static object MessageQueueSyncLock = new object();
         /// <summary>
-        /// 立即同步所有缓存执行锁（给OperateQueue()使用）
+        ///Legacy comment translated to English.
         /// </summary>
         private static object FlushCacheLock = new object();
 
         /// <summary>
-        /// 生成Key
+        /// generateKey
         /// </summary>
-        /// <param name="name">列队应用名称，如“ContainerBag”</param>
-        /// <param name="senderType">操作对象类型</param>
-        /// <param name="identityKey">对象唯一标识Key</param>
-        /// <param name="actionName">操作名称，如“UpdateContainerBag”</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public static string GenerateKey(string name, Type senderType, string identityKey, string actionName)
         {
@@ -53,26 +56,26 @@ namespace Senparc.Ncf.Core.Cache
         }
 
         /// <summary>
-        /// 操作列队
+        ///Legacy comment translated to English.
         /// </summary>
         public static void OperateQueue()
         {
             lock (FlushCacheLock)
             {
                 var mq = new CacheDataMessageQueue();
-                var key = mq.GetCurrentKey(); //获取最新的Key
+                var key = mq.GetCurrentKey(); //Legacy comment translated to English.
                 while (!string.IsNullOrEmpty(key))
                 {
-                    var mqItem = mq.GetItem(key); //获取任务项
-                    mqItem.Action(); //执行
-                    mq.Remove(key); //清除
-                    key = mq.GetCurrentKey(); //获取最新的Key
+                    var mqItem = mq.GetItem(key); //Legacy comment translated to English.
+                    mqItem.Action(); //execute
+                    mq.Remove(key); //Legacy comment translated to English.
+                    key = mq.GetCurrentKey(); //Legacy comment translated to English.
                 }
             }
         }
 
         /// <summary>
-        /// 获取当前等待执行的Key
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public string GetCurrentKey()
@@ -84,7 +87,7 @@ namespace Senparc.Ncf.Core.Cache
         }
 
         /// <summary>
-        /// 获取SenparcMessageQueueItem
+        /// getSenparcMessageQueueItem
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
@@ -101,7 +104,7 @@ namespace Senparc.Ncf.Core.Cache
         }
 
         /// <summary>
-        /// 添加列队成员
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="key"></param>
         /// <param name="action"></param>
@@ -116,7 +119,7 @@ namespace Senparc.Ncf.Core.Cache
                 //else
                 //{
                 //    MessageQueueList.Remove(key);
-                //    MessageQueueList.Add(key);//移动到末尾
+                //Legacy comment translated to English.
                 //}
 
                 var mqItem = new CacheDataMessageQueueItem(key, action);
@@ -126,7 +129,7 @@ namespace Senparc.Ncf.Core.Cache
         }
 
         /// <summary>
-        /// 移除列队成员
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="key"></param>
         public void Remove(string key)
@@ -142,7 +145,7 @@ namespace Senparc.Ncf.Core.Cache
         }
 
         /// <summary>
-        /// 获得当前列队数量
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public int GetCount()

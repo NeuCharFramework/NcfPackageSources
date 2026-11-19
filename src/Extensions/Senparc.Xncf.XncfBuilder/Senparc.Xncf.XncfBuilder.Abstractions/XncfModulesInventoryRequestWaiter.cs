@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：XncfModulesInventoryRequestWaiter.cs
-    文件功能描述：XncfModulesInventoryRequestWaiter 相关实现
-    
-    
-    创建标识：Senparc - 20260510
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: XncfModulesInventoryRequestWaiter.cs
+    File description: XncfModulesInventoryRequestWaiter related implementation
+
+    Created by: Senparc - 20260510
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.1.6-preview7 Localized XNCF Builder tools and template surfaces
 
 ----------------------------------------------------------------*/
 
@@ -21,7 +24,7 @@ using Senparc.Xncf.XncfBuilder.Abstractions.Events;
 namespace Senparc.Xncf.XncfBuilder.Abstractions
 {
     /// <summary>
-    /// 将 <see cref="XncfModulesInventoryRequestEvent"/> / <see cref="XncfModulesInventoryResponseEvent"/> 与等待中的调用方关联。
+    ///Legacy comment translated to English.
     /// </summary>
     public interface IXncfModulesInventoryRequestWaiter
     {

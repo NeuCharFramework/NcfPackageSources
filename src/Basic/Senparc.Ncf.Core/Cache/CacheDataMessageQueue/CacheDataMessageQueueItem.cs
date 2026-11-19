@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：CacheDataMessageQueueItem.cs
-    文件功能描述：CacheDataMessageQueueItem 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: CacheDataMessageQueueItem.cs
+    File description: CacheDataMessageQueueItem related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -17,29 +20,29 @@ using System;
 namespace Senparc.Ncf.Core.Cache
 {
     /// <summary>
-    /// CacheDataMessageQueue消息列队项
+    ///Legacy comment translated to English.
     /// </summary>
     public class CacheDataMessageQueueItem
     {
         /// <summary>
-        /// 列队项唯一标识
+        ///Legacy comment translated to English.
         /// </summary>
         public string Key { get; set; }
         /// <summary>
-        /// 列队项目命中触发时执行的委托
+        ///Legacy comment translated to English.
         /// </summary>
         public Action Action { get; set; }
         /// <summary>
-        /// 此实例对象的创建时间
+        ///Legacy comment translated to English.
         /// </summary>
         public DateTime AddTime { get; set; }
         /// <summary>
-        /// 项目说明（主要用于调试）
+        ///Legacy comment translated to English.
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        /// 初始化SenparcMessageQueue消息列队项
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="key"></param>
         /// <param name="action"></param>

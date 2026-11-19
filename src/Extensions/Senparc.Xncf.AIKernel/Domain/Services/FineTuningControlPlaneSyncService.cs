@@ -1,20 +1,23 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：FineTuningControlPlaneSyncService.cs
-    文件功能描述：同步微调控制面与外部训练状态
-    
-    
-    创建标识：Senparc - 20261014
-    
-    修改标识：Senparc - 20261021
-    修改描述：v0.17.0 同步微调控制面与外部训练状态
 
-    修改标识：Senparc - 20261028
-    修改描述：多租户模式下按租户迭代同步微调控制面，避免根作用域缺失租户上下文
+    File name: FineTuningControlPlaneSyncService.cs
+    File description: Related implementation.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.17.0 enhance event synchronization with concurrent cursor management
+    Created by: Senparc - 20261014
+
+    Modified by: Senparc - 20261021
+    Change description: v0.17.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261028
+    Change description: Updated module behavior and related support.
+
+    Modified by: Senparc - 20261103
+    Change description: v0.17.0 enhance event synchronization with concurrent cursor management
+
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
 ----------------------------------------------------------------*/
 
@@ -51,11 +54,22 @@ public sealed class FineTuningControlPlaneSyncService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        await SynchronizeAsync(stoppingToken);
-        using var timer = new PeriodicTimer(PollInterval);
-        while (await timer.WaitForNextTickAsync(stoppingToken))
+        try
         {
             await SynchronizeAsync(stoppingToken);
+            using var timer = new PeriodicTimer(PollInterval);
+            while (await timer.WaitForNextTickAsync(stoppingToken))
+            {
+                await SynchronizeAsync(stoppingToken);
+            }
+        }
+        catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
+        {
+            _logger.LogDebug("Fine-tuning control-plane synchronization stopped.");
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Fine-tuning control-plane synchronization loop stopped unexpectedly.");
         }
     }
 
@@ -68,8 +82,8 @@ public sealed class FineTuningControlPlaneSyncService : BackgroundService
 
         try
         {
-            // 微调工作器与任务数据均挂在租户下，后台同步必须按租户迭代，
-            // 否则根作用域缺少租户上下文（多租户模式下 fail-closed 或写入错误租户）。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             await _tenantScopeFactory.ForEachEnabledTenantAsync(
                 async (scopeServiceProvider, ct) =>
                 {

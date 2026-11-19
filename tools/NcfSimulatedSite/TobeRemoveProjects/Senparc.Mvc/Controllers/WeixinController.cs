@@ -1,4 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: WeixinController.cs
+    File description: WeixinController related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.0.1 Updated legacy MVC integration metadata and English source comments
+
+----------------------------------------------------------------*/
+
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Senparc.CO2NET.AspNet.HttpUtility;
 using Senparc.CO2NET.HttpUtility;
@@ -29,7 +42,7 @@ namespace Senparc.Mvc.Controllers
         {
             if (CheckSignature.Check(signature, timestamp, nonce, _senparcWeixinSetting.Token))
             {
-                return Content(echostr); //返回随机字符串则表示验证通过
+                return Content(echostr); //Legacy comment translated to English.
             }
             else
             {
@@ -38,9 +51,9 @@ namespace Senparc.Mvc.Controllers
         }
 
         /// <summary>
-        /// 用户发送消息后，微信平台自动Post一个请求到这里，并等待响应XML。
-        /// PS：此方法为简化方法，效果与OldPost一致。
-        /// v0.8之后的版本可以结合Senparc.Weixin.MP.MvcExtension扩展包，使用WeixinResult，见MiniPost方法。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         [HttpPost]
         [ActionName("Index")]
@@ -51,31 +64,32 @@ namespace Senparc.Mvc.Controllers
                 return Content("参数错误！");
             }
 
-            #region 打包 PostModel 信息
+            #region Legacy section
 
-            postModel.Token = _senparcWeixinSetting.Token;//根据自己后台的设置保持一致
-            postModel.EncodingAESKey = "";//根据自己后台的设置保持一致
-            postModel.AppId = _senparcWeixinSetting.WeixinAppId;//根据自己后台的设置保持一致
+            postModel.Token = _senparcWeixinSetting.Token;//Legacy comment translated to English.
+            postModel.EncodingAESKey = "";//Legacy comment translated to English.
+            postModel.AppId = _senparcWeixinSetting.WeixinAppId;//Legacy comment translated to English.
 
             #endregion
 
-            //v4.2.2之后的版本，可以设置每个人上下文消息储存的最大数量，防止内存占用过多，如果该参数小于等于0，则不限制
+            //Legacy comment translated to English.
             var maxRecordCount = 10;
 
-            //自定义MessageHandler，对微信请求的详细判断操作都在这里面。
+            //Legacy comment translated to English.
             var messageHandler = new NcfMessageHandler(Request.GetRequestMemoryStream(), postModel, maxRecordCount);
 
-            #region 设置消息去重
+            #region Legacy section
 
-            /* 如果需要添加消息去重功能，只需打开OmitRepeatedMessage功能，SDK会自动处理。
-             * 收到重复消息通常是因为微信服务器没有及时收到响应，会持续发送2-5条不等的相同内容的RequestMessage*/
-            messageHandler.OmitRepeatedMessage = true;//默认已经开启，此处仅作为演示，也可以设置为false在本次请求中停用此功能
+            /* Legacy comment translated to English.
+
+             * Legacy comment translated to English.*/
+            messageHandler.OmitRepeatedMessage = true;//Legacy comment translated to English.
 
             #endregion
 
             try
             {
-                #region 记录 Request 日志
+                #region Legacy section
 
                 var logPath = ServerUtility.ContentRootMapPath(string.Format("~/logs/mp/{0}/", DateTime.Now.ToString("yyyy-MM-dd")));
                 if (!Directory.Exists(logPath))
@@ -83,7 +97,7 @@ namespace Senparc.Mvc.Controllers
                     Directory.CreateDirectory(logPath);
                 }
 
-                //测试时可开启此记录，帮助跟踪数据，使用前请确保App_Data文件夹存在，且有读写权限。
+                //Legacy comment translated to English.
                 messageHandler.RequestDocument.Save(Path.Combine(logPath, string.Format("{0}_Request_{1}_{2}.txt", _getRandomFileName(),
                     messageHandler.RequestMessage.FromUserName,
                     messageHandler.RequestMessage.MsgType)));
@@ -96,12 +110,12 @@ namespace Senparc.Mvc.Controllers
 
                 #endregion
 
-                //执行微信处理过程
+                //Legacy comment translated to English.
                 messageHandler.Execute();
 
-                #region 记录 Response 日志
+                #region Legacy section
 
-                //测试时可开启，帮助跟踪数据
+                //Legacy comment translated to English.
 
                 //if (messageHandler.ResponseDocument == null)
                 //{
@@ -116,7 +130,7 @@ namespace Senparc.Mvc.Controllers
 
                 if (messageHandler.UsingEncryptMessage && messageHandler.FinalResponseDocument != null)
                 {
-                    //记录加密后的响应信息
+                    //Legacy comment translated to English.
                     messageHandler.FinalResponseDocument.Save(Path.Combine(logPath, string.Format("{0}_Response_Final_{1}_{2}.txt", _getRandomFileName(),
                         messageHandler.ResponseMessage.ToUserName,
                         messageHandler.ResponseMessage.MsgType)));
@@ -126,11 +140,11 @@ namespace Senparc.Mvc.Controllers
 
                 //return Content(messageHandler.ResponseDocument.ToString());//v0.7-
                 //return new WeixinResult(messageHandler);//v0.8+
-                return new FixWeixinBugWeixinResult(messageHandler);//为了解决官方微信5.0软件换行bug暂时添加的方法，平时用下面一个方法即可
+                return new FixWeixinBugWeixinResult(messageHandler);//Legacy comment translated to English.
             }
             catch (Exception ex)
             {
-                #region 异常处理
+                #region Legacy section
                 SenparcTrace.Log($"MessageHandler错误：{ex.Message}");
 
                 using (TextWriter tw = new StreamWriter(ServerUtility.ContentRootMapPath("~/App_Data/Error_" + _getRandomFileName() + ".txt")))

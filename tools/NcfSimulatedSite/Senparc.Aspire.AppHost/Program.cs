@@ -1,17 +1,20 @@
 /*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：Program.cs
-    文件功能描述：Program 相关实现
-    
-    
-    创建标识：Senparc - 20241119
-    
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
-    修改标识：Senparc - 20260724
-    修改描述：v0.0.5 恢复模拟站点的 Aspire 服务编排
+    Copyright (C) 2026 Senparc
+
+    File name: Program.cs
+    File description: Program related implementation
+
+    Created by: Senparc - 20241119
+
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
+
+    Modified by: Senparc - 20260724
+    Change description: v0.0.5 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.0.22 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 

@@ -30,17 +30,17 @@ namespace Senparc.Areas.Admin.Domain.Models.Tests
                 Note = "TestAccount"
             });
 
-            //使用 PasswordSaltToken
+            //use PasswordSaltToken
             var result = adminUserInfo.GetSHA512Password(pwd, salt, true);
             Console.WriteLine(result);
             Assert.AreEqual("g016e97e8c9b281f8ab4a6cc9ecf04315c6c079df49", result);
 
-            //不使用 PasswordSaltToken
+            //notuse PasswordSaltToken
             result = adminUserInfo.GetSHA512Password(pwd, salt, false);
             Console.WriteLine(result);
             Assert.AreEqual("g01f53df7b515d060492e60174ead8560abbaf457aebfa5cc686454b8292a2b5b8b", result);
 
-            //使用 PasswordSaltToken，但是未设置
+            //Legacy comment translated to English.
             Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.PasswordSaltToken = null;
             result = adminUserInfo.GetSHA512Password(pwd, salt, true);
             Console.WriteLine(result);

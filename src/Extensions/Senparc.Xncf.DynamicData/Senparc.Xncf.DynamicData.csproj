@@ -1,80 +1,83 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.7.11</Version>
+    <Version>0.7.12</Version>
     <AssemblyName>Senparc.Xncf.DynamicData</AssemblyName>
     <RootNamespace>Senparc.Xncf.DynamicData</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <Description>动态数据基础模块，用于创建和管理动态数据</Description>
+    <Description>Dynamic data foundation module for creating and managing dynamic data</Description>
     <Copyright>Senparc</Copyright>
     <PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.DynamicData</PackageTags>
     <Authors>Senparc</Authors>
     <Owners>Senparc</Owners>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <Title>动态数据基础模块</Title>
+    <Title>Dynamic Data Foundation Module</Title>
     <!--<ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>      v0.1.0 创世
-      [2024-08-11] v0.1.2.0-preview1 新增 DtoBase&lt;T&gt; 类型
-      [2024-08-12] v0.1.3-preview1 添加 TableData 的数据插入方法，通过单元测试
-      [2024-08-12] v0.1.4-preview1 优化 DynamicData Service,重构封装 DataTemplate、ColumnTemplate 对象
-      [2024-08-13] v0.2.0-preview1 优化 ServiceBase，提供 Mapping&lt;T&gt;(entity) 快捷方法；为 DynamicData 添加根据 Entity 类型自动创建表结构的功能
-      [2024-09-10] v0.2.3-preview1 升级缓存基础库
-      [2024-09-27] v0.2.4-pre-alpha.1 完善 DynamicData 早期图形界面
-      [2024-10-09] v0.2.6-pre-alpha 升级基础库
-      [2024-10-16] v0.2.7-pre-alpha 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
-      [2024-11-08] v0.2.9-pre-alpha 升级 Senparc.AI
-      [2024-11-15] v0.3.0-pre-alpha 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
-      [2024-11-21] v0.4.2-pre-alpha 更新 CO2NET 及缓存基础库
-      [2024-11-28] v0.4.3-pre-alpha update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
-      [2024-12-27] v0.4.4-pre-alpha Add exception log for UseXncfModules() auto progress
-      [2025-01-25] v0.4.8-pre-alpha Update Agents functions, support for function calling
-      [2025-04-29] v0.4.10-pre-alpha Update CO2NET and AIKernel
-      [2025-05-18] v0.4.11-pre-alpha Update Installation
-      [2025-06-20] v0.4.12-pre-alpha Add MCP functions in XncfRegisterBase class
-      [2025-11-01] update basic libraries, including Senparc.AI
-      [2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
-      [2026-07-17] v0.6.0-preview2 为 DynamicData 模块接入统一资源本地化并优化功能文案
-      1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
-      2、更新 FunctionRender 与请求模型文案的资源化解析
-      3、统一模块注册信息、菜单名称与功能描述的本地化输出
-      4、同步管理页面与前端交互文案的多语言显示
-      5、完善数据表及接口配置页复制操作的兼容性与反馈
-      [2026-07-29] v0.6.1-preview3 Dependency update from Senparc.Ncf.AreaBase to 0.22.0-preview3
-      [2026-07-31] v0.7.0-preview4 扩展 DynamicData 管理界面的多语言能力
-      1、新增数据表、布局与页面配置资源及前端本地化脚本
-      2、升级 CO2NET MagicObject 1.2.0 与 WebApi 2.1.9-preview
-      [2026-08-04] v0.7.1-preview5 Dependency updates from upstream projects
-      1、Dependency update from Senparc.Ncf.AreaBase to 0.23.1-preview5
-      2、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.5-preview5
-      [2026-08-08] v0.7.2-preview6 Dependency updates from upstream projects
-      1、Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
-      2、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
-      [2026-08-13] v0.7.3-preview7 Dependency update from Senparc.Ncf.AreaBase to 0.23.3-preview7; Senparc.Ncf.DatabasePlant to 0.21.7-preview7
-      [2026-08-15] v0.7.4-preview8 Dependency update from Senparc.Ncf.DatabasePlant to 0.21.8-preview8
-      [2026-08-22] v0.7.5-preview9 同步 Senparc.Xncf.DynamicData 依赖版本
-      1、递归更新上游项目依赖，保持 Senparc.Xncf.DynamicData 与当前版本组合兼容
-      [2026-08-29] v0.7.6 Dependency updates from Senparc.Ncf.DatabasePlant to 0.21.10
-      1、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.10
-      [2026-09-16] v0.7.7 Dependency updates from Senparc.Web to 0.39.1
-      [2026-09-17] v0.7.8 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
-      1、同步受影响的基础库、AI 模块或宿主项目版本
-      2、保持项目引用链与当前功能兼容
-      [2026-10-05] v0.7.9 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
-      1、Updated Senparc.Xncf.DynamicData project behavior and integration for the latest feature and reliability improvements.
-      2、chore: update package versions and dependencies across multiple projects
-      [2026-11-03] v0.7.10 以中文资源为基准统一整理多语言文案
-      1、补齐并校正各语言资源条目，使模块界面文案与中文基准保持一致
-      2、Dependency update from Senparc.Ncf.AreaBase to 0.23.10
-      3、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.14
-      [2026-11-11] v0.7.10 统一模块注册显示名称与说明的多语言资源键
-      1、Register 通过 XncfRegisterText 用稳定资源键和中文基准文本解析菜单名称与模块说明。
-      [2026-11-12] v0.7.11 统一模块注册显示名称与说明的多语言资源键
-      1、模块注册信息优先使用稳定资源键解析多语言显示文本。
-      2、兼容现有资源与默认文案，避免缺少翻译时影响模块加载。
+    <PackageReleaseNotes>v0.1.0 initial release
+        [2024-08-11] v0.1.2.0-preview1 add DtoBase&lt;T&gt; type
+        [2024-08-12] v0.1.3-preview1 Updated module behavior and related support.
+        [2024-08-12] v0.1.4-preview1 Updated module behavior and related support.
+        [2024-08-13] v0.2.0-preview1 Updated module behavior and related support.
+        [2024-09-10] v0.2.3-preview1 upgrade the cache foundation libraries
+        [2024-09-27] v0.2.4-pre-alpha.1 Updated module behavior and related support.
+        [2024-10-09] v0.2.6-pre-alpha Updated module behavior and related support.
+        [2024-10-16] v0.2.7-pre-alpha Updated module behavior and related support.
+        [2024-11-08] v0.2.9-pre-alpha upgrade Senparc.AI
+        [2024-11-15] v0.3.0-pre-alpha Updated module behavior and related support.
+        [2024-11-21] v0.4.2-pre-alpha Updated module behavior and related support.
+        [2024-11-28] v0.4.3-pre-alpha update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
+        [2024-12-27] v0.4.4-pre-alpha Add exception log for UseXncfModules() auto progress
+        [2025-01-25] v0.4.8-pre-alpha Update Agents functions, support for function calling
+        [2025-04-29] v0.4.10-pre-alpha Update CO2NET and AIKernel
+        [2025-05-18] v0.4.11-pre-alpha Update Installation
+        [2025-06-20] v0.4.12-pre-alpha Add MCP functions in XncfRegisterBase class
+        [2025-11-01] update basic libraries, including Senparc.AI
+        [2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
+        [2026-07-17] v0.6.0-preview2 Updated module behavior and related support.
+        1. integrateshared resource-localization mechanism, supportmodulefeature textdisplay dynamically according to the current culture
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        4. Updated module behavior and related support.
+        5. Updated module behavior and related support.
+        [2026-07-29] v0.6.1-preview3 Dependency update from Senparc.Ncf.AreaBase to 0.22.0-preview3
+        [2026-07-31] v0.7.0-preview4 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-08-04] v0.7.1-preview5 Dependency updates from upstream projects
+        1. Dependency update from Senparc.Ncf.AreaBase to 0.23.1-preview5
+        2. Dependency update from Senparc.Ncf.DatabasePlant to 0.21.5-preview5
+        [2026-08-08] v0.7.2-preview6 Dependency updates from upstream projects
+        1. Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
+        2. Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
+        [2026-08-13] v0.7.3-preview7 Dependency update from Senparc.Ncf.AreaBase to 0.23.3-preview7; Senparc.Ncf.DatabasePlant to 0.21.7-preview7
+        [2026-08-15] v0.7.4-preview8 Dependency update from Senparc.Ncf.DatabasePlant to 0.21.8-preview8
+        [2026-08-22] v0.7.5-preview9 synchronize Senparc.Xncf.DynamicData dependency version
+        1. Updated module behavior and related support.
+        [2026-08-29] v0.7.6 Dependency updates from Senparc.Ncf.DatabasePlant to 0.21.10
+        1. Dependency update from Senparc.Ncf.DatabasePlant to 0.21.10
+        [2026-09-16] v0.7.7 Dependency updates from Senparc.Web to 0.39.1
+        [2026-09-17] v0.7.8 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-10-05] v0.7.9 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
+        1. Updated Senparc.Xncf.DynamicData project behavior and integration for the latest feature and reliability improvements.
+        2. chore: update package versions and dependencies across multiple projects
+        [2026-11-03] v0.7.10 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Dependency update from Senparc.Ncf.AreaBase to 0.23.10
+        3. Dependency update from Senparc.Ncf.DatabasePlant to 0.21.14
+        [2026-11-11] v0.7.10 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        [2026-11-12] v0.7.11 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-11-19] v0.7.12 Localized DynamicData configuration and layout surfaces
+        1. Updated localized labels, resource fallbacks, and user-facing messages across affected surfaces.
+        2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

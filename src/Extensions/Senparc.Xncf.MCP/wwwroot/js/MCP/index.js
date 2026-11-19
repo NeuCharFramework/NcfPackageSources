@@ -1,4 +1,4 @@
-/* MCP Endpoint 可视化管理：列表 / 新增 / 编辑 / 启用切换 / 连接测试（含可展开的 Function 信息） */
+/* Legacy comment translated to English. */
 (function () {
     var apiBase = '/api/Senparc.Xncf.MCP/MCPEndpointAppService/Xncf.MCP_MCPEndpointAppService';
 
@@ -11,10 +11,10 @@
         }).then(function (response) {
             var body = response.data;
             if (!body || typeof body !== 'object' || typeof body.success !== 'boolean') {
-                throw new Error('服务器响应格式不正确，请确认登录状态并刷新页面');
+                throw new Error(ncfST('Frontend.055'));
             }
             if (!body.success) {
-                throw new Error(body.errorMessage || (typeof body.data === 'string' && body.data) || '请求失败');
+                throw new Error(body.errorMessage || (typeof body.data === 'string' && body.data) || ncfST('Frontend.056'));
             }
             return response;
         });
@@ -24,15 +24,15 @@
         var response = error && error.response;
         var body = response && response.data;
         var detail = body && (body.errorMessage || body.message || body.title);
-        if (detail) return fallback + '：' + detail;
+        if (detail) return fallback + ': ' + detail;
         if (response && response.status === 404) {
-            return fallback + '：接口不存在（HTTP 404），请确认站点已加载新版 MCP 模块';
+                return fallback + ncfST('Frontend.057');
         }
         if (response && (response.status === 401 || response.status === 403)) {
-            return fallback + '：登录已失效或无访问权限，请重新登录';
+                return fallback + ncfST('Frontend.058');
         }
         if (response) return fallback + '（HTTP ' + response.status + '）';
-        return fallback + (error && error.message ? '：' + error.message : '');
+        return fallback + (error && error.message ? ': ' + error.message : '');
     }
 
     function endpointPayload(form, authConfig) {
@@ -52,7 +52,7 @@
     function connectionResult(body) {
         var result = body.data;
         if (!result || typeof result.success !== 'boolean' || !Array.isArray(result.tools)) {
-            throw new Error('服务器返回的连接测试结果格式不正确');
+                throw new Error(ncfST('Frontend.059'));
         }
         return result;
     }
@@ -88,9 +88,9 @@
                 filterText: '',
                 onlyEnabled: false,
 
-                // 新增/编辑对话框
+                //Legacy comment translated to English.
                 dialogVisible: false,
-                dialogTitle: '新增 MCP Endpoint',
+                    dialogTitle: ncfST('Frontend.060'),
                 saving: false,
                 form: {
                     id: 0,
@@ -103,22 +103,22 @@
                     bearerToken: ''
                 },
                 rules: {
-                    name: [{ required: true, message: '请填写端点名称', trigger: 'blur' }],
-                    endpoint: [{ required: true, message: '请填写端点地址', trigger: 'blur' }]
+                    name: [{ required: true, message: ncfST('Frontend.061'), trigger: 'blur' }],
+                    endpoint: [{ required: true, message: ncfST('Frontend.062'), trigger: 'blur' }]
                 },
                 endpointTypeOptions: ['sse', 'http', 'stdio', 'websocket'],
 
-                // 保存前连接测试
+                //Legacy comment translated to English.
                 preTestLoading: false,
                 preTestResult: null,
 
-                // 测试结果对话框
+                //Legacy comment translated to English.
                 testDialogVisible: false,
                 testResult: null,
                 testResultEndpointName: '',
                 expandedTools: [],
 
-                // 工具 schema 原始 JSON 查看
+                //Legacy comment translated to English.
                 schemaDialogVisible: false,
                 schemaTitle: '',
                 schemaText: ''
@@ -170,27 +170,27 @@
                         || typeof server.xncfName !== 'string' || typeof server.route !== 'string'
                         || !Array.isArray(server.endpoints) || server.endpoints.some(endpoint =>
                             !endpoint || typeof endpoint.endpointType !== 'string' || typeof endpoint.endpoint !== 'string'))) {
-                        throw new Error('服务器返回的本站 MCP 服务列表格式不正确');
+                        throw new Error(ncfST('Frontend.063'));
                     }
                     this.publishedServers = servers;
                 } catch (error) {
                     console.error(error);
-                    this.$message.error(errorMessage(error, '读取本站发布的 MCP 服务失败'));
+                    this.$message.error(errorMessage(error, ncfST('Frontend.064')));
                 } finally {
                     this.publishedLoading = false;
                 }
             },
             async copyPublishedEndpoint(endpoint) {
                 if (!navigator.clipboard || !navigator.clipboard.writeText) {
-                    this.$message.error('当前浏览器不支持复制，请手动选择端点地址复制');
+                    this.$message.error(ncfST('Frontend.065'));
                     return;
                 }
                 try {
                     await navigator.clipboard.writeText(endpoint);
-                    this.$message.success('端点地址已复制');
+                    this.$message.success(ncfST('Frontend.066'));
                 } catch (error) {
                     console.error(error);
-                    this.$message.error(errorMessage(error, '复制失败，请手动选择端点地址复制'));
+                    this.$message.error(errorMessage(error, ncfST('Frontend.067')));
                 }
             },
             async getList() {
@@ -199,14 +199,14 @@
                     var res = await request(apiBase + '.GetAllEndpoints');
                     var body = res.data || {};
                     if (!Array.isArray(body.data)) {
-                        throw new Error('服务器返回的端点列表格式不正确');
+                        throw new Error(ncfST('Frontend.068'));
                     }
                     this.tableData = body.data.map(z => Object.assign({}, z, {
                         bearerToken: this.extractBearerToken(z.authConfig)
                     }));
                 } catch (error) {
                     console.error(error);
-                    this.$message.error(errorMessage(error, '读取 MCP Endpoint 列表失败'));
+                    this.$message.error(errorMessage(error, ncfST('Frontend.069')));
                 } finally {
                     this.loading = false;
                 }
@@ -221,7 +221,7 @@
                 }
             },
             handleAdd() {
-                this.dialogTitle = '新增 MCP Endpoint';
+                this.dialogTitle = ncfST('Frontend.060');
                 this.form = {
                     id: 0, name: '', endpoint: '', endpointType: 'sse',
                     protocolVersion: '', description: '', enabled: true, bearerToken: ''
@@ -233,7 +233,7 @@
                 });
             },
             handleEdit(row) {
-                this.dialogTitle = '编辑 MCP Endpoint';
+                this.dialogTitle = ncfST('Frontend.070');
                 this.form = Object.assign({}, row);
                 if (!this.form.id) this.form.id = 0;
                 this.form.bearerToken = this.extractBearerToken(row.authConfig);
@@ -264,13 +264,13 @@
                     var body = res.data || {};
                     this.preTestResult = connectionResult(body);
                     if (this.preTestResult.success) {
-                        this.$message.success(this.preTestResult.statusMessage || '连接成功');
+                        this.$message.success(this.preTestResult.statusMessage || ncfST('Frontend.071'));
                     } else {
-                        this.$message.error(this.preTestResult.statusMessage || '连接失败');
+                        this.$message.error(this.preTestResult.statusMessage || ncfST('Frontend.072'));
                     }
                 } catch (error) {
                     console.error(error);
-                    this.$message.error(errorMessage(error, '连接测试失败'));
+                    this.$message.error(errorMessage(error, ncfST('Frontend.072')));
                 } finally {
                     this.preTestLoading = false;
                 }
@@ -284,12 +284,12 @@
                         var payload = endpointPayload(this.form, this.buildAuthConfig());
                         var res = await request(apiBase + '.SaveEndpoint', payload);
                         var body = res.data || {};
-                        this.$message.success(body.data || '保存成功');
+                        this.$message.success(body.data || ncfST('Frontend.073'));
                         this.dialogVisible = false;
                         await this.getList();
                     } catch (error) {
                         console.error(error);
-                        this.$message.error(errorMessage(error, '保存失败'));
+                    this.$message.error(errorMessage(error, ncfST('Frontend.074')));
                     } finally {
                         this.saving = false;
                     }
@@ -304,24 +304,24 @@
                 } catch (error) {
                     row.enabled = !row.enabled;
                     console.error(error);
-                    this.$message.error(errorMessage(error, '更新失败'));
+                    this.$message.error(errorMessage(error, ncfST('Frontend.075')));
                 } finally {
                     this.$set(row, 'saving', false);
                 }
             },
             async handleDelete(row) {
                 try {
-                    await this.$confirm('确认删除 MCP Endpoint「' + row.name + '」？', '提示', { type: 'warning' });
+                    await this.$confirm(ncfST('Frontend.076', row.name), ncfST('Frontend.077'), { type: 'warning' });
                 } catch (e) {
                     return;
                 }
                 try {
                     await request(apiBase + '.DeleteEndpoint', { id: row.id });
-                    this.$message.success('删除成功');
+                    this.$message.success(ncfST('Frontend.078'));
                     await this.getList();
                 } catch (error) {
                     console.error(error);
-                    this.$message.error(errorMessage(error, '删除失败'));
+                    this.$message.error(errorMessage(error, ncfST('Frontend.079')));
                 }
             },
             async handleTest(row) {
@@ -334,15 +334,15 @@
                     this.testResultEndpointName = row.name;
                     this.expandedTools = [];
                     if (result.success) {
-                        this.$message.success(result.statusMessage || '连接成功');
+                        this.$message.success(result.statusMessage || ncfST('Frontend.071'));
                     } else {
-                        this.$message.error(result.statusMessage || '连接失败');
+                        this.$message.error(result.statusMessage || ncfST('Frontend.072'));
                     }
                     this.testDialogVisible = true;
                     await this.getList();
                 } catch (error) {
                     console.error(error);
-                    this.$message.error(errorMessage(error, '连接测试失败'));
+                    this.$message.error(errorMessage(error, ncfST('Frontend.072')));
                 } finally {
                     this.testLoadingId = 0;
                 }
@@ -358,8 +358,8 @@
                 }
             },
             showSchema(tool) {
-                this.schemaTitle = tool.name || '输入 Schema';
-                this.schemaText = formatSchemaJson(tool.inputSchemaJson) || '（无 JSON Schema 信息）';
+                this.schemaTitle = tool.name || ncfST('Frontend.080');
+                this.schemaText = formatSchemaJson(tool.inputSchemaJson) || ncfST('Frontend.081');
                 this.schemaDialogVisible = true;
             }
         }

@@ -1,17 +1,20 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：AdminChatMemoryDocument.cs
-    文件功能描述：AdminChatMemoryDocument 相关定义与实现
+    File name: AdminChatMemoryDocument.cs
+    File description: AdminChatMemoryDocument related definitions and implementation
 
+    Created by: Senparc - 20261103
 
-    创建标识：Senparc - 20261103
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 完善聊天记忆的存储、检索与上下文处理
+    Modified by: Senparc - 20261105
+    Change description: v0.12.26 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261105
-    修改描述：v0.12.26 整理记忆文档与证据内容
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 

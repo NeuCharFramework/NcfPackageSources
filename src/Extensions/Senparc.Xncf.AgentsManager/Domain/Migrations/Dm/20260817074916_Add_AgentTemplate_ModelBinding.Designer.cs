@@ -1,17 +1,17 @@
-﻿/*-----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：20260817074916_Add_AgentTemplate_ModelBinding.Designer.cs
-    文件功能描述：AgentTemplate 模型绑定数据库迁移
-    
-    
-    创建标识：Senparc - 20231021
-    
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 补充 AgentTemplate.AiModelId 多数据库迁移
+﻿/*----------------------------------------------------------------
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
+    Copyright (C) 2026 Senparc
+
+    File name: 20260817074916_Add_AgentTemplate_ModelBinding.Designer.cs
+    File description: AgentTemplate model-binding database migration
+
+    Created by: Senparc - 20231021
+
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260822
+    Change description: v0.16.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

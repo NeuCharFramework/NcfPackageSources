@@ -1,17 +1,21 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：AccountDto.cs
-    文件功能描述：AccountDto 相关功能实现
-    
-    
-    创建标识：Senparc - 20241028
-    
-    修改标识：Senparc - 20260705
-    修改描述：v0.0.3 新增登录超时配置并补齐多数据库迁移支持
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.0.4 新增登录超时配置并补齐多数据库迁移支持
+    Copyright (C) 2026 Senparc
+
+    File name: AccountDto.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20260705
+    Change description: v0.0.3 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260705
+    Change description: v0.0.4 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -41,7 +45,7 @@ namespace Senparc.Areas.Admin.Domain.Models.Dto
         public string TenantKey { get; set; }
 
         /// <summary>
-        /// 验证码
+        ///Legacy comment translated to English.
         /// </summary>
         public string ValidateCode { get; set; }
     }
@@ -49,7 +53,7 @@ namespace Senparc.Areas.Admin.Domain.Models.Dto
     public class AccountLoginResultDto
     {
         /// <summary>
-        /// 用户名
+        /// user name
         /// </summary>
         public string UserName { get; set; }
 
@@ -59,19 +63,19 @@ namespace Senparc.Areas.Admin.Domain.Models.Dto
         public string Token { get; set; }
 
         /// <summary>
-        /// JWT 过期时间（UTC）
+        ///Legacy comment translated to English.
         /// </summary>
         public DateTimeOffset? TokenExpiresUtc { get; set; }
 
         /// <summary>
-        /// 角色列表
+        ///Legacy comment translated to English.
         /// </summary>
         public IEnumerable<string> RoleCodes { get; set; }
 
         public IEnumerable<Ncf.Core.Models.DataBaseModel.SysMenuTreeItemDto> MenuTree { get; set; }
 
         /// <summary>
-        /// 操作代码
+        ///Legacy comment translated to English.
         /// </summary>
         public IEnumerable<string> PermissionCodes { get; set; }
         public string RealName { get; internal set; }

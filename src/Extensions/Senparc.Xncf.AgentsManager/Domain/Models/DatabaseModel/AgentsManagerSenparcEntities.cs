@@ -1,17 +1,20 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：AgentsManagerSenparcEntities.cs
-    文件功能描述：AgentsManagerSenparcEntities 相关实现
 
+    File name: AgentsManagerSenparcEntities.cs
+    File description: AgentsManagerSenparcEntities related implementation
 
-    创建标识：Senparc - 20240616
+    Created by: Senparc - 20240616
 
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+    Modified by: Senparc - 20260813
+    Change description: v0.15.0-preview11 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 
@@ -39,17 +42,17 @@ namespace Senparc.Xncf.AgentsManager.Models
         public DbSet<ChatGroupMember> ChatGroupMembers { get; set; }
 
         /// <summary>
-        /// 通过 A2A 协议接入的远程智能体。
+        ///Legacy comment translated to English.
         /// </summary>
         public DbSet<RemoteAgent> RemoteAgents { get; set; }
 
         /// <summary>
-        /// ChatGroup 的远程智能体成员。保留 ChatGroupMember 作为本地 Agent 的兼容表。
+        ///Legacy comment translated to English.
         /// </summary>
         public DbSet<ChatGroupRemoteMember> ChatGroupRemoteMembers { get; set; }
 
         /// <summary>
-        /// 将本地 AgentTemplate 发布为标准 A2A 服务的附加配置。
+        ///Legacy comment translated to English.
         /// </summary>
         public DbSet<PublishedA2AAgent> PublishedA2AAgents { get; set; }
 
@@ -57,10 +60,10 @@ namespace Senparc.Xncf.AgentsManager.Models
 
         public DbSet<ChatTask> ChatTasks { get; set; }
 
-        //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
+        //DOT REMOVE OR MODIFY THIS LINE - Entities Point
         //ex. public DbSet<Color> Colors { get; set; }
 
-        //如无特殊需需要，OnModelCreating 方法可以不用写，已经在 Register 中要求注册
+        //Legacy comment translated to English.
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
         //}

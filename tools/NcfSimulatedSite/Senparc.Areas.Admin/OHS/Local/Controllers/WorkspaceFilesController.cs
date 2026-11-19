@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：WorkspaceFilesController.cs
-    文件功能描述：WorkspaceFilesController 相关定义与实现
+    File name: WorkspaceFilesController.cs
+    File description: WorkspaceFilesController related definitions and implementation
 
+    Created by: Senparc - 20261102
 
-    创建标识：Senparc - 20261102
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 add streamed large-file Workspace uploads with tenant-aware ownership checks
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 add streamed large-file Workspace uploads with tenant-aware ownership checks
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 

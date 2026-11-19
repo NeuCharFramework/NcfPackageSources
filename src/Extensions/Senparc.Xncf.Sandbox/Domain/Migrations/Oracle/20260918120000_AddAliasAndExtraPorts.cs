@@ -1,20 +1,20 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：20260918120000_AddAliasAndExtraPorts.cs
-    文件功能描述：数据库迁移与模型快照
+    File name: 20260918120000_AddAliasAndExtraPorts.cs
+    File description: database migration and model snapshot
 
+    Created by: Senparc - 20260918
 
-    创建标识：Senparc - 20260918
+    Modified by: Senparc - 20260918
+    Change description: v0.3.3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260918
-    修改描述：v0.3.3 增加沙箱会话别名与附加端口映射列
+    Modified by: Senparc - 20261005
+    Change description: v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
-
-    修改标识：Senparc - 20261103
-    修改描述：v0.4.0 支持 AddAliasAndExtraPorts 数据库迁移
+    Modified by: Senparc - 20261103
+    Change description: v0.4.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

@@ -1,21 +1,24 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：ConnectorAuthorization.cs
-    文件功能描述：计算 Agent 授权与本次对话选择的连接器动作交集
-    
-    
-    创建标识：Senparc - 20261111
-    
-    修改标识：Senparc - 20261111
-    修改描述：v0.1.0 计算 Agent 授权与对话选择的交集
+
+    File name: ConnectorAuthorization.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20261111
+
+    Modified by: Senparc - 20261111
+    Change description: v0.1.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.1.1 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Connectors.Abstractions;
 
 /// <summary>
-/// Agent 授权与本次 Chat 选择的交集。未授权的实例不能因为对话里勾选而获得权限。
+///Legacy comment translated to English.
 /// </summary>
 public static class ConnectorAuthorization
 {

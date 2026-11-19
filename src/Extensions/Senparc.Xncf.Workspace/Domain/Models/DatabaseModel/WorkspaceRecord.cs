@@ -1,17 +1,20 @@
 /*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：WorkspaceRecord.cs
-    文件功能描述：工作区元数据实体
-    
-    
-    创建标识：Senparc - 20261021
-    
-    修改标识：Senparc - 20261021
-    修改描述：v0.1.1 持久化工作区所有者与存储信息
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.2.2 维护工作区元数据实体
+    Copyright (C) 2026 Senparc
+
+    File name: WorkspaceRecord.cs
+    File description: Workspace metadata entity
+
+    Created by: Senparc - 20261021
+
+    Modified by: Senparc - 20261021
+    Change description: v0.1.1 persist Workspace ownership and storage information
+
+    Modified by: Senparc - 20261103
+    Change description: v0.2.2 maintain the Workspace metadata entity
+
+    Modified by: Senparc - 20261119
+    Change description: v0.2.9 Localized workspace management and runtime surfaces
 
 ----------------------------------------------------------------*/
 

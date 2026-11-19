@@ -1,17 +1,20 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：SenMapicEngineExtension.cs
-    文件功能描述：SenMapicEngineExtension 相关实现
-    
-    
-    创建标识：Senparc - 20250113
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.3.1-preview3 限制站点地图抓取目标并安全处理重定向
+    Copyright (C) 2026 Senparc
+
+    File name: SenMapicEngineExtension.cs
+    File description: SenMapicEngineExtension related implementation
+
+    Created by: Senparc - 20250113
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260729
+    Change description: v0.3.1-preview3 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.13 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -35,12 +38,12 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
     public partial class SenMapicEngine
     {
         /// <summary>
-        /// 重置
+        ///Legacy comment translated to English.
         /// </summary>
         private void ResetUrlPath(string rootDomain)
         {
             _urlPath.Clear();
-            _urlPath.Add(new UrlPathCollection(rootDomain, 0, new List<string>()));//定义域名级别
+            _urlPath.Add(new UrlPathCollection(rootDomain, 0, new List<string>()));//Legacy comment translated to English.
             for (int i = 1; i <= _maxDeep; i++)
             {
                 _urlPath.Add(new UrlPathCollection(null, i, new List<string>()));
@@ -48,7 +51,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         /// <summary>
-        /// 获取带协议完整域名，如Http://www.senparc.com
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
@@ -63,7 +66,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         /// <summary>
-        /// 获取域名，如www.senparc.com
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
@@ -78,7 +81,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         /// <summary>
-        /// 获取协议，如http
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
@@ -93,7 +96,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         /// <summary>
-        /// 去掉Url末尾的/。如果为../或/，则不过滤
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
@@ -107,14 +110,14 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             {
                 while (url.EndsWith("/"))
                 {
-                    url = url.Substring(0, url.Length - 1);//去掉末尾的“/”
+                    url = url.Substring(0, url.Length - 1);//Legacy comment translated to English.
                 }
                 return url;
             }
         }
 
         /// <summary>
-        /// 去掉Url开头的/，如果字符串等于/，则返回/
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
@@ -128,14 +131,14 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             {
                 while (url.StartsWith("/"))
                 {
-                    url = url.Substring(1, url.Length - 1);//去掉末尾的“/”
+                    url = url.Substring(1, url.Length - 1);//Legacy comment translated to English.
                 }
                 return url;
             }
         }
 
         /// <summary>
-        /// 获取包含[协议]://[域名]/[地址]的完整Url
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="url"></param>
         /// <param name="parentUrl"></param>
@@ -146,17 +149,17 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             try
             {
                 newUrl = this.RemoveUrlEndingSlash(url);
-                //parentUrl = this.RemoveUrlEndingSlash(parentUrl);//parent末尾有没有/要分情况
-                //过滤特殊协议
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 if (newUrl.StartsWith("mailto:")
                         || newUrl.StartsWith("javascript:")
                         || newUrl.StartsWith("ftp://")
                         || newUrl.StartsWith("skype:")
-                        || newUrl.StartsWith("callto:")//同skype:，格式：callto://szw2003/
+                        || newUrl.StartsWith("callto:")//Legacy comment translated to English.
                         || newUrl.StartsWith("tencent:")
                         || newUrl.StartsWith("msnim:")
                         || newUrl.StartsWith("file:")
-                        || newUrl.StartsWith("ymsgr:") //TODO:更多协议过滤
+                        || newUrl.StartsWith("ymsgr:") //Legacy comment translated to English.
                         || newUrl.StartsWith("\\")
                         || newUrl.StartsWith("+")
                         || (!newUrl.Contains("?") && (this.EndWithAny(newUrl, new[] { ".js", ".mp3", ".chm", ".wmv", ".flv", ".zip", ".rar", ".jpg", ".gif", ".bmp", ".png" })))
@@ -173,49 +176,49 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
                 string tempFullUrl;
 
-                if (Regex.IsMatch(newUrl.ToUpper(), "^HTTP(S){0,1}://", RegexOptions.IgnoreCase))//以http(s)开头
+                if (Regex.IsMatch(newUrl.ToUpper(), "^HTTP(S){0,1}://", RegexOptions.IgnoreCase))//Legacy comment translated to English.
                 {
                     if (!IsAvailableUrl(newUrl))
                     {
-                        return null;//不符合要求的url,如http://non
+                        return null;//Legacy comment translated to English.
                     }
 
                     string newUrlDomain = GetDomain(newUrl);
                     if (newUrlDomain == null || !_currentDomain.ToUpper().Contains(newUrlDomain.ToUpper()))
                     {
-                        return null;//新域名为空，或连接到其他域名
+                        return null;//Legacy comment translated to English.
                     }
 
-                    //TODO:继续完善允许二级域名的情况（需要考虑.com.cn和.com等域名的情况）
-                    //string topDomain = domain.Substring(domain.IndexOf("."), domain.Length - domain.IndexOf("."));//如:senparc.com过滤后为http://.com
+                    //Legacy comment translated to English.
+                    //Legacy comment translated to English.
                     //if (!topDomain.Contains("."))
                     //{
-                    //    topDomain = domain;//TODO:仍无法过滤类似abc.(com.cn)的情况
+                    //Legacy comment translated to English.
                     //}
-                    //if (domain == null || (domain != _currentDomain && !_currentDomain.ToUpper().EndsWith(topDomain.ToUpper())))//二级域名予以承认
+                    //Legacy comment translated to English.
                     //{
-                    //    return null;//domain==null的情况会发生在href=“http://”或“http://#/a.htm”的情况下
+                    //Legacy comment translated to English.
                     //}
 
                     //if (!parentUrl.IsNullOrEmpty() && newUrlDomain.ToUpper() != _currentDomain.ToUpper())
                     //{
-                    //    return null;//跳转到不同网站
+                    //Legacy comment translated to English.
                     //}
 
                     tempFullUrl = newUrl;
                 }
                 else
                 {
-                    tempFullUrl = parentUrl;//当前父层Url(不能去掉末尾/)
+                    tempFullUrl = parentUrl;//Legacy comment translated to English.
 
-                    string parentFullDomain = GetFullDomain(parentUrl);//复层链接完整Url
+                    string parentFullDomain = GetFullDomain(parentUrl);//Legacy comment translated to English.
 
-                    //本地路径
+                    //Legacy comment translated to English.
                     if (newUrl.StartsWith("/"))
                     {
-                        tempFullUrl = parentFullDomain + newUrl;//绝对路径(e.g. http://www.senparc.com/)
+                        tempFullUrl = parentFullDomain + newUrl;//Legacy comment translated to English.
                     }
-                    else if (newUrl.StartsWith("?"))//参数形式，直接加到当前路径结尾
+                    else if (newUrl.StartsWith("?"))//Legacy comment translated to English.
                     {
                         if (tempFullUrl.Contains("?"))
                         {
@@ -226,9 +229,9 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                             tempFullUrl += newUrl;
                         }
                     }
-                    else//其他开头，如相对路径
+                    else//Legacy comment translated to English.
                     {
-                        if (parentUrl.EndsWith("/"))//上级目录以“/”结尾
+                        if (parentUrl.EndsWith("/"))//Legacy comment translated to English.
                         {
                             tempFullUrl += newUrl;
                         }
@@ -236,43 +239,43 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                         {
                             if (Regex.IsMatch(tempFullUrl.ToUpper(), @"^HTTP(S)?://", RegexOptions.IgnoreCase) && tempFullUrl.LastIndexOf("/") <= 7)
                             {
-                                //TODO:一般搜索引擎会认为这是两个不同的Url，这里不处理也可以
-                                tempFullUrl += "/";//出现http://www.senparc.com的情况，补足为http://www.senparc.com/
+                                //Legacy comment translated to English.
+                                tempFullUrl += "/";//Legacy comment translated to English.
                             }
-                            tempFullUrl = tempFullUrl.Substring(0, tempFullUrl.LastIndexOf("/")) + "/" + newUrl;//（TODO:可以考虑中间出现./的情况）       
+                            tempFullUrl = tempFullUrl.Substring(0, tempFullUrl.LastIndexOf("/")) + "/" + newUrl;//Legacy comment translated to English.
                         }
                     }
 
 
-                    if (tempFullUrl.Contains("/../"))//或newUrl.Contains("../")
+                    if (tempFullUrl.Contains("/../"))//ornewUrl.Contains("../")
                     {
                         if (_currentPageCount > 0 && _currentUrl.ToUpper().StartsWith(newUrl.ToUpper()))
                         {
-                            return null;//如果当前查询到的URL是当前域名根目录，则过滤
+                            return null;//Legacy comment translated to English.
                         }
 
                         int domainLength = _currentOriginalFullDomain.Length;
                         while (tempFullUrl.Contains("/../"))
                         {
-                            int indexOfParentMark = tempFullUrl.IndexOf("/../");//出现../的Index
+                            int indexOfParentMark = tempFullUrl.IndexOf("/../");//Legacy comment translated to English.
                             string parentUrlPath;
-                            if (indexOfParentMark <= domainLength)//出现了http://www.senparc.com/../这样的情况，过滤掉就行
+                            if (indexOfParentMark <= domainLength)//Legacy comment translated to English.
                             {
                                 parentUrlPath = _currentOriginalFullDomain;
                             }
                             else
                             {
-                                int indexOfParentLevel = tempFullUrl.Substring(0, indexOfParentMark).LastIndexOf("/");//../之前的最近一个/
-                                parentUrlPath = tempFullUrl.Substring(0, indexOfParentLevel);//上一级
+                                int indexOfParentLevel = tempFullUrl.Substring(0, indexOfParentMark).LastIndexOf("/");//Legacy comment translated to English.
+                                parentUrlPath = tempFullUrl.Substring(0, indexOfParentLevel);//Legacy comment translated to English.
                             }
 
-                            string afterPath = tempFullUrl.Substring(indexOfParentMark + 4, tempFullUrl.Length - indexOfParentMark - 4);//剩下部分
+                            string afterPath = tempFullUrl.Substring(indexOfParentMark + 4, tempFullUrl.Length - indexOfParentMark - 4);//Legacy comment translated to English.
                             tempFullUrl = parentUrlPath + "/" + afterPath;
                         }
 
                         if (!tempFullUrl.ToUpper().StartsWith(_currentProtocol.ToUpper() + "://" + _currentDomain.ToUpper()))
                         {
-                            return null;//路径描述有误，默认为当前域名根目录，但是由于已经收录，所以过滤。（如出现了http://www.senparc.com/../../的情况）
+                            return null;//Legacy comment translated to English.
                         }
                         newUrl = tempFullUrl;
                     }
@@ -282,7 +285,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             }
             catch (Exception e)
             {
-                var ex = new Exception($"GetFullUrl方法内部出错：URL:{url},newUrl:{newUrl}", e);
+                var ex = new Exception($"GetFullUrl failed internally. URL: {url}, new URL: {newUrl}", e);
                 SenparcTrace.BaseExceptionLog(ex);
                 throw;
             }
@@ -291,7 +294,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
 
         /// <summary>
-        /// 抓取单个Url（无统计数据）
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
@@ -305,13 +308,13 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         /// <summary>
-        /// 爬行Url，并带回UrlData信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="url"></param>
-        /// <returns>返回UrlData信息，如果不符合爬行条件（如CotentType类型不符合等），则返回null</returns>
+        ///Legacy comment translated to English.
         private async Task<UrlData> CrawlUrl(string url, string parentUrl, int deep, bool singleUrl, string linkText)
         {
-            //BMK:此方法收集时有的网站会发生“未将对象引用设置到对象的实例”错误，如：http://www.w2tx.cn/batch.common.php?action=viewnews&op=up&itemid=77&catid=70
+            //Legacy comment translated to English.
 
             UrlData urlData = null;
             HttpResponseMessage webResponse = null;
@@ -319,17 +322,17 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             DateTime requestEndTime = DateTime.MinValue;
             try
             {
-                //已改为在外部判断
+                //Legacy comment translated to English.
                 //if (deep > _maxDeep || _currentUrls.Count >= _maxPageCount)
                 //{
-                //    return null;//超出范围，不予收录
+                //Legacy comment translated to English.
                 //}
 
-                url = RemoveUrlEndingSlash(url);//去掉末尾的“/”
+                url = RemoveUrlEndingSlash(url);//Legacy comment translated to English.
 
-                if (!this.IsAvailableUrl(url)//非标准Url
-                    || this.ContainsFilterOmitWord(url)//包含过滤关键字
-                    || this._currentUrls.ContainsKey(url) //已经收录
+                if (!this.IsAvailableUrl(url)//Legacy comment translated to English.
+                    || this.ContainsFilterOmitWord(url)//Legacy comment translated to English.
+                    || this._currentUrls.ContainsKey(url) //Legacy comment translated to English.
                     )
                 {
                     return null;
@@ -337,15 +340,15 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
                 if (!this._currentAvaliableUrlTemp.ContainsKey(url))
                 {
-                    this._currentAvaliableUrlTemp.Add(url, new AvailableUrl(url, parentUrl, deep, linkText, AvailableUrlStatus.Started));//添加到待选Url
+                    this._currentAvaliableUrlTemp.Add(url, new AvailableUrl(url, parentUrl, deep, linkText, AvailableUrlStatus.Started));//Legacy comment translated to English.
                 }
                 else if (this._currentAvaliableUrlTemp[url].Status != AvailableUrlStatus.UnStart)
                 {
-                    return null;//已经由别的线程开始，或已经完成
+                    return null;//Legacy comment translated to English.
                 }
 
-                //开始访问
-                var responseResult = await RequestPage(url);//爬行获取webReponse
+                //Legacy comment translated to English.
+                var responseResult = await RequestPage(url);//Legacy comment translated to English.
                 webResponse = responseResult.response;
                 requestStartTime = responseResult.requestStartTime;
                 requestEndTime = responseResult.requestEndTime;
@@ -356,21 +359,21 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                     return null;
                 }
 
-                this._currentAvaliableUrlTemp[url].Status = AvailableUrlStatus.Finished;//标记完成
+                this._currentAvaliableUrlTemp[url].Status = AvailableUrlStatus.Finished;//Legacy comment translated to English.
 
-                //比对URL，如果发生302或301（自动添加末尾/）的情况
+                //Legacy comment translated to English.
                 if (url.ToUpper() != webResponse.RequestMessage.RequestUri.AbsoluteUri.ToUpper())
                 {
-                    //发生改变
-                    this._currentAvaliableUrlTemp[url].Url = webResponse.RequestMessage.RequestUri.AbsoluteUri;//更新AvaliableUrlTemp中的信息。
-                    url = webResponse.RequestMessage.RequestUri.AbsoluteUri;//url调整为新的url
+                    //Legacy comment translated to English.
+                    this._currentAvaliableUrlTemp[url].Url = webResponse.RequestMessage.RequestUri.AbsoluteUri;//Legacy comment translated to English.
+                    url = webResponse.RequestMessage.RequestUri.AbsoluteUri;//Legacy comment translated to English.
                     if (this._currentUrls.ContainsKey(url) || this.ContainsFilterOmitWord(url))
                     {
-                        return null;//已经收录过，或包含过滤词，停止收录
+                        return null;//Legacy comment translated to English.
                     }
                     else if (!url.IsNullOrEmpty() && !_currentDomain.ToUpper().Contains(this.GetDomain(url).ToUpper()))
                     {
-                        return null;//如果跳转到其他网站网页，则终止
+                        return null;//Legacy comment translated to English.
                     }
                 }
 
@@ -385,16 +388,16 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
                 //DateTime dt1 = DateTime.Now;
 
-                //判断Gzip压缩
+                //Legacy comment translated to English.
                 string ce = webResponse.Content.Headers.ContentEncoding.FirstOrDefault();
                 Stream receiveStream = null;
                 receiveStream = SenMapicUtility.GetReceiveStream(ce, webResponse);
 
-                //判断字符集
+                //Legacy comment translated to English.
                 string contentType = webResponse.Content.Headers.ContentType?.MediaType;
                 string charterSet = webResponse.Content.Headers.ContentType?.CharSet;
 
-                //从Content-Type中获取charterSet。出于效率考虑不使用LINQ
+                //Legacy comment translated to English.
                 charterSet = GetCharterSetFromContentType(charterSet);
 
                 if (!contentType.ToUpper().StartsWith("TEXT/"))
@@ -403,23 +406,23 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                 }
 
                 Encoding encode = GetEncodingTypeFormCharterSet(charterSet, true);
-                string htmlTotal = GetTrueEncodingHtml(receiveStream, ref encode) ?? ""; //获取html TODO:如果是301跳转，且html无内容，可能导致htmlTotal中为空
+                string htmlTotal = GetTrueEncodingHtml(receiveStream, ref encode) ?? ""; //Legacy comment translated to English.
                 receiveStream.Dispose();
 
                 int htmlByteCount = htmlTotal.IsNullOrEmpty() ? 0 : encode.GetByteCount(htmlTotal); //System.Text.Encoding.Default.GetByteCount(htmlTotal);
-                string titleHtml = htmlTotal.Length > 1000 ? htmlTotal.Substring(0, 1000) : htmlTotal;//取Html前一部分（只用于取网页Title），否则当网页非常大的时候（出现过790k），服务器运算时间过长
+                string titleHtml = htmlTotal.Length > 1000 ? htmlTotal.Substring(0, 1000) : htmlTotal;//Legacy comment translated to English.
                 urlData = new UrlData(url, deep, htmlTotal, titleHtml, (int)HttpStatusCode.OK, (double)htmlByteCount / 1024, null, (int)TimeSpan.FromTicks(_requestPageTicks).TotalMilliseconds, linkText);
 
-                #region 调试 - 下载记录时间
+                #region Legacy section
                 //DateTime dt2 = DateTime.Now;
-                //LogUtility.SitemapLogger.Debug("url:{0},接收时间：{1},字符数：{2}。平均1000字符耗时：{3}".With(url,
+                //Legacy comment translated to English.
                 //    (dt2 - dt1).TotalMilliseconds.ToString("###,###ms"),
                 //    webResponse.ContentLength,
                 //    ((dt2 - dt1).TotalMilliseconds / ((webResponse.ContentLength == 0 ? -1 : webResponse.ContentLength) / 1000)).ToString("###,###ms")));
 
                 //if (_currentDeep == _maxDeep || _currentUrls.Count == _maxPageCount)
                 //{
-                //    return urlData;//正常返回、收录
+                //Legacy comment translated to English.
                 //}
                 #endregion
             }
@@ -430,23 +433,23 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                 {
                     result = (int)((HttpWebResponse)e.Response).StatusCode;
                 }
-                else //if (e.Status == WebExceptionStatus.UnknownError)//不使用Timeout，为了兼容SL
+                else //Legacy comment translated to English.
                 {
                     result = 9;
 
-                    //如果网页超时严重，则强制退出
+                    //Legacy comment translated to English.
                     if (this._currentUrls.Count(z => z.Value.Result == 9) >= this._maxTimeoutTimes)
                     {
                         this.StopBuild();
                     }
                 }
-                //LogUtility.WebLogger.Error("SitemapDebug异常({0})：{1}".With(url, e.Message), e);
+                //Legacy comment translated to English.
                 return new UrlData(url, deep, "", "", result, 0, null, linkText);
             }
             catch (Exception e)
             {
-                var ex = new Exception($"SitemapDebug异常({url})", e);
-                //记录异常
+                var ex = new Exception($"SitemapDebug failed ({url})", e);
+                //Legacy comment translated to English.
                 SenparcTrace.BaseExceptionLog(ex);
                 return new UrlData(url, deep, "", "", 0, 0, null, linkText);
             }
@@ -454,7 +457,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             {
                 if (webResponse != null)
                 {
-                    webResponse.Dispose();//关闭链接
+                    webResponse.Dispose();//Legacy comment translated to English.
                 }
 
                 if (urlData != null)
@@ -463,7 +466,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
                     int currentRequestMilliSeconds = (int)(requestEndTime - requestStartTime).TotalMilliseconds;
                     _requestPageCount++;
-                    _requestPageTicks += (requestEndTime - requestStartTime).Ticks;//添加时差
+                    _requestPageTicks += (requestEndTime - requestStartTime).Ticks;//Legacy comment translated to English.
 
                     urlData.ResponseMillionSeconds = currentRequestMilliSeconds;
                 }
@@ -471,14 +474,14 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                 if (!singleUrl && (DateTime.Now - this.CurrentSiteStartTime).TotalMinutes >= MaxBuildMinutesForSingleSite)
                 {
                     this.StopBuild();
-                    SenparcTrace.SendCustomLog("SiteMap", $"SitemapBuild超时退出（{MaxBuildMinutesForSingleSite}分钟）。当前Url:{url}");
+                    SenparcTrace.SendCustomLog("SiteMap", $"SitemapBuild timed out after {MaxBuildMinutesForSingleSite} minutes. Current URL: {url}");
                 }
             }
-            return urlData;//返回收集完成的UrlData
+            return urlData;//Legacy comment translated to English.
         }
 
         /// <summary>
-        /// 从Content-Type中获取CharterSet,如果无法获取，返回null。出于效率考虑不使用LINQ。
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="charterSet"></param>
         /// <returns></returns>
@@ -505,10 +508,10 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         /// <summary>
-        /// 获取Encoding
+        /// getEncoding
         /// </summary>
-        /// <param name="charterSet">charterSet字符串，如utf-8</param>
-        /// <param name="returnDefaultEncodingIfFailed">当为True时，如果获取Encoding失败，返回Encoding.Default，否则返回null</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         private static Encoding GetEncodingTypeFormCharterSet(string charterSet, bool returnDefaultEncodingIfFailed)
         {
@@ -521,10 +524,10 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             {
                 if (returnDefaultEncodingIfFailed)
                 {
-                    encode = Encoding.GetEncoding("gb2312");//SL中没有Default，这里也可以使用utf-8(国内网站建议使用gb312)
+                    encode = Encoding.GetEncoding("gb2312");//Legacy comment translated to English.
                 }
             }
-            #region 使用Switch判断，已废除此方法
+            #region Legacy section
             //switch (charterSet.ToUpper())
             //{
             //    case "GB2312":
@@ -544,7 +547,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         /// <summary>
-        /// 从响应流中以正确的编码返回内容
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="receiveStream"></param>
         /// <param name="encode"></param>
@@ -575,25 +578,25 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                     if (!charterChecked && charCount > 1000)
                     {
                         charterChecked = true;
-                        //判断编码
-                        string newCharSet = Regex.Match(html, charSetPttern).Groups["charset"].Value;//匹配Html中的charset
+                        //Legacy comment translated to English.
+                        string newCharSet = Regex.Match(html, charSetPttern).Groups["charset"].Value;//Legacy comment translated to English.
                         if (!newCharSet.IsNullOrEmpty())
                         {
                             Encoding newEncoding = GetEncodingTypeFormCharterSet(newCharSet, false);
                             if (newEncoding != null)
                             {
-                                if (newEncoding.WebName == encode.WebName)//这里不使用BodyName是为了兼容SL。SL中没有BodyName
+                                if (newEncoding.WebName == encode.WebName)//Legacy comment translated to English.
                                 {
-                                    html += sr.ReadToEnd();//编码相同
+                                    html += sr.ReadToEnd();//Legacy comment translated to English.
                                     break;
                                 }
                                 else
                                 {
-                                    //编码不同
+                                    //Legacy comment translated to English.
                                     //byte[] newBytes = cacheChar.Select(z=> Convert.FromBase64CharArray(cacheChar.ToArray(), 0, cacheChar.Count);
                                     byte[] newBytes = encode.GetBytes(html);
-                                    string previousHtml = newEncoding.GetString(newBytes, 0, html.Length);//不加0,,html.Length参数，在SL下会发生错误：CS0122  Encoding.GetString(byte[]) is inaccessible due to its protection level
-                                    encode = newEncoding;//转换编码
+                                    string previousHtml = newEncoding.GetString(newBytes, 0, html.Length);//Legacy comment translated to English.
+                                    encode = newEncoding;//Legacy comment translated to English.
                                     using (StreamReader newSr = new StreamReader(receiveStream, encode))
                                     {
                                         html = previousHtml + newSr.ReadToEnd();
@@ -612,9 +615,9 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                     }
                 }
 
-                return html;//TODO:如果301跳转，并且只靠Header信息，没有html说明，可能导致无法获取html内容
+                return html;//Legacy comment translated to English.
             }
-            #region 老办法
+            #region Legacy section
             //StringBuilder htmlSB = new StringBuilder();
             //StreamReader sr = new StreamReader(receiveStream,encode);
             ////List<byte[]> bufferList = new List<byte[]>();
@@ -632,8 +635,8 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             //}
             //sr.Dispose();
 
-            //////最终确认Encoding
-            //////获取前10个buffer，使用系统查询出来的encoding，查看是否有其他编码（权衡效率）
+            ///Legacy comment translated to English.
+            ///Legacy comment translated to English.
             ////StringBuilder sbTempHtml = new StringBuilder();
             ////for (int i = 0; i < Math.Min(15, bufferList.Count); i++)
             ////{
@@ -648,13 +651,13 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             ////    Encoding finalEncoding = GetEncodingTypeFormCharterSet(charterSet);
             ////    if (finalEncoding != null && finalEncoding != encode)
             ////    {
-            ////        encode = finalEncoding;//编码不同则根据后者确定
+            ///Legacy comment translated to English.
             ////    }
             ////}
 
             ////foreach (var item in bufferList)
             ////{
-            ////    htmlSB.Append(encode.GetString(item));//TODO:內容完整性有損失，有待調整
+            ///Legacy comment translated to English.
             ////}
 
             //return htmlSB.ToString();
@@ -662,7 +665,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         /// <summary>
-        /// 停止收集（要等下一个Url开始才会响应）
+        ///Legacy comment translated to English.
         /// </summary>
         private void StopBuild()
         {
@@ -671,7 +674,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         /// <summary>
-        /// 以任意关键字结尾
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="str"></param>
         /// <param name="endStr"></param>
@@ -690,7 +693,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
 
         /// <summary>
-        /// 是否符合Url格式标准
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
@@ -785,9 +788,9 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
 
-        #region 过滤关键字
+        #region Legacy section
         /// <summary>
-        /// 获取过滤关键字列表
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="keywords"></param>
         /// <returns></returns>
@@ -808,28 +811,28 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
         private FilterOmitWord GetOperatorKind(string keywordWithOperator)
         {
-            keywordWithOperator = keywordWithOperator.ToUpper().Trim();//转成大写
+            keywordWithOperator = keywordWithOperator.ToUpper().Trim();//Legacy comment translated to English.
 
-            var allKeywordsOperator = new[] { "?", "^", "$", "=" };//所有关键字
-            var needKeywordsOperator = new[] { "^", "$", "=" };//必须要加关键字的操作符
+            var allKeywordsOperator = new[] { "?", "^", "$", "=" };//Legacy comment translated to English.
+            var needKeywordsOperator = new[] { "^", "$", "=" };//Legacy comment translated to English.
 
             FilterOmitWord result = new FilterOmitWord("error", FilterOmitWord.OperatorKind.None);
             if (keywordWithOperator.IsNullOrEmpty())
             {
-                return result;//表达式为空
+                return result;//Legacy comment translated to English.
             }
 
             if (keywordWithOperator.Length == 1 && needKeywordsOperator.Contains(keywordWithOperator))
             {
-                return result;//表达式错误
+                return result;//Legacy comment translated to English.
             }
 
-            string firstChar = keywordWithOperator.Substring(0, 1);//第一个字符
+            string firstChar = keywordWithOperator.Substring(0, 1);//Legacy comment translated to English.
 
             if (allKeywordsOperator.Contains(firstChar))
             {
-                //包含操作符
-                string keyword = keywordWithOperator.Substring(1, keywordWithOperator.Length - 1);//关键字
+                //Legacy comment translated to English.
+                string keyword = keywordWithOperator.Substring(1, keywordWithOperator.Length - 1);//Legacy comment translated to English.
                 switch (firstChar)
                 {
                     case "?":
@@ -845,19 +848,19 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                         result = new FilterOmitWord(keyword, FilterOmitWord.OperatorKind.Equal);
                         break;
                     default:
-                        throw new Exception("未知操作符");
+                        throw new Exception("Unknown operator.");
                 }
             }
             else
             {
-                //普通情况
+                //Legacy comment translated to English.
                 result = new FilterOmitWord(keywordWithOperator, FilterOmitWord.OperatorKind.Contains);
             }
             return result;
         }
 
         /// <summary>
-        /// 是否包含过滤关键字
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
@@ -905,7 +908,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
 
         public void InitializeForTest()
         {
-            #region 测试用
+            #region Legacy section
             _currentProtocol = "http";
             _currentDomain = "www.baidu.com";
             _currentOriginalFullDomain = "http://www.baidu.com";

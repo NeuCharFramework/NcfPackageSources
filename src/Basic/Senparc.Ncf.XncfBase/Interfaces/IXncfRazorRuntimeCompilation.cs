@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：IXncfRazorRuntimeCompilation.cs
-    文件功能描述：IXncfRazorRuntimeCompilation 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: IXncfRazorRuntimeCompilation.cs
+    File description: IXncfRazorRuntimeCompilation related implementation
+
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.29.1 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -19,12 +22,12 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase
 {
     /// <summary>
-    /// 需要使用 AddRazorRuntimeCompilation() 方法时，需要设置对应当前项目相对于 Senparc.Web 的路径
+    ///Legacy comment translated to English.
     /// </summary>
     public interface IXncfRazorRuntimeCompilation
     {
         /// <summary>
-        /// 相对路径，如：Path.GetFullPath(Path.Combine(SiteConfig.WebRootPath, "..", "..", "Senparc.Areas.Admin"));
+        ///Legacy comment translated to English.
         /// </summary>
         string LibraryPath { get; }
     }

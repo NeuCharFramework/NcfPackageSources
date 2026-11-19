@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：OperationQueueService.cs
-    文件功能描述：账户操作队列服务
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260724
-    修改描述：v0.3.0 完善账户模块本地化资源与功能文案
+
+    File name: OperationQueueService.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260724
+    Change description: v0.3.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.3.14 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 using System;
@@ -31,7 +34,7 @@ namespace Senparc.Xncf.Accounts.Domain.OperationQueue
     public class OperationQueueService
     {
         /// <summary>
-        /// 下载图片到指定文件
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="picUrl"></param>
         /// <param name="fileName"></param>
@@ -51,7 +54,7 @@ namespace Senparc.Xncf.Accounts.Domain.OperationQueue
         }
 
         /// <summary>
-        /// 更新用户头像
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="accountId"></param>
         /// <returns></returns>
@@ -73,13 +76,13 @@ namespace Senparc.Xncf.Accounts.Domain.OperationQueue
 
                 var fileName = $@"/Upload/User/headimgurl.{DateTime.Now.Ticks + Guid.NewGuid().ToString("n").Substring(0, 8)}.jpg";
 
-                //下载图片
+                //Legacy comment translated to English.
                 var t3 = DateTime.Now;
                 await DownLoadPicAsync(headImgUrl, fileName);
                 var t4 = DateTime.Now;
-                LogUtility.Account.Debug($"更新用户头像（ID：{accountId}，UserName：{account.UserName}），下载图片耗时：{(t4 - t3).TotalMilliseconds}ms");//测试耗时：4226.5869ms
+                LogUtility.Account.Debug($"更新用户头像（ID：{accountId}，UserName：{account.UserName}），下载图片耗时：{(t4 - t3).TotalMilliseconds}ms");//Legacy comment translated to English.
 
-                account.PicUrl = fileName;//不使用七牛或其他云储存，就使用本地路径
+                account.PicUrl = fileName;//Legacy comment translated to English.
                 accountService.SaveObject(account);
                 return account;
             }

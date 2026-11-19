@@ -22,4 +22,83 @@
   <data name="Auth.HandlerNotFound" xml:space="preserve"><value>404. Обработчик не найден. Проверьте метод и URL запроса. Метод: {0}</value></data>
   <data name="Auth.Forbidden" xml:space="preserve"><value>У вас нет разрешения на доступ к этому ресурсу.</value></data>
 
+
+  <data name="Frontend.900" xml:space="preserve"><value>Проверить Worker тонкой настройки</value></data>
+  <data name="Frontend.901" xml:space="preserve"><value>Проверяет состояние, возможности и очередь выбранного Worker тонкой настройки. Если доступен только один Worker, он выбирается автоматически.</value></data>
+  <data name="Frontend.902" xml:space="preserve"><value>Проверить среду тонкой настройки</value></data>
+  <data name="Frontend.903" xml:space="preserve"><value>Проверяет настройки, секреты, Workers, каталоги моделей и состояние FileManager тонкой настройки без установки и выполнения команд. Если доступен только один Worker, он выбирается автоматически.</value></data>
+  <data name="Frontend.904" xml:space="preserve"><value>Загрузить файл набора данных тонкой настройки</value></data>
+  <data name="Frontend.905" xml:space="preserve"><value>Сохраняет и загружает потоковый JSONL-набор данных тонкой настройки для больших файлов.</value></data>
+  <data name="Frontend.906" xml:space="preserve"><value>Создать набор данных тонкой настройки</value></data>
+  <data name="Frontend.907" xml:space="preserve"><value>Сохраняет JSONL-набор данных тонкой настройки, проверенный Worker. Worker загружается автоматически; подходит для отправки небольшого JSONL-текста из Workflow.</value></data>
+  <data name="Frontend.908" xml:space="preserve"><value>Создать задачу тонкой настройки</value></data>
+  <data name="Frontend.909" xml:space="preserve"><value>Создаёт задачу тонкой настройки с утверждёнными локальной моделью, набором данных и параметрами обучения. Worker, модель и набор данных загружаются автоматически, а Workflow может выполняться с параметрами по умолчанию.</value></data>
+  <data name="Frontend.910" xml:space="preserve"><value>Проверить адаптер тонкой настройки</value></data>
+  <data name="Frontend.911" xml:space="preserve"><value>Запускает ограниченный офлайн-тестовый prompt для успешно завершённой задачи тонкой настройки с выбранным CPU-, CUDA- или MLX-бэкендом; если он отличается от записи задачи, требуется явное подтверждение.</value></data>
+  <data name="Frontend.912" xml:space="preserve"><value>Создать изолированную задачу разработки XNCF</value></data>
+  <data name="Frontend.913" xml:space="preserve"><value>Создаёт снимок исходного кода. Новые модули генерируются из локально установленных шаблонов в изолированном Workspace; существующие модули копируются перед изменением. Целевой исходный код не изменяется.</value></data>
+  <data name="Frontend.914" xml:space="preserve"><value>Прочитать изолированный файл XNCF</value></data>
+  <data name="Frontend.915" xml:space="preserve"><value>Читает текстовые файлы и значения SHA-256 модуля в изолированном Workspace; целевой исходный код и файлы за пределами Workspace читать нельзя.</value></data>
+  <data name="Frontend.916" xml:space="preserve"><value>Записать изолированный файл XNCF</value></data>
+  <data name="Frontend.917" xml:space="preserve"><value>Атомарно записывает файлы кода в изолированный Workspace. Файлы проекта, NuGet, MSBuild и конфигурации приложения изменять нельзя; при возможности возвращается прочитанный SHA-256.</value></data>
+  <data name="Frontend.918" xml:space="preserve"><value>Проверить изолированную задачу разработки XNCF</value></data>
+  <data name="Frontend.919" xml:space="preserve"><value>Проверяет путь изолированного модуля и прямую ссылку проекта Senparc.Web, затем создаёт контролируемое сводное описание различий.</value></data>
+  <data name="Frontend.920" xml:space="preserve"><value>Запустить предпросмотр Sandbox XNCF</value></data>
+  <data name="Frontend.921" xml:space="preserve"><value>Собирает и запускает в Sandbox очищенную копию изолированного Workspace. При недоступности Sandbox операция безопасно завершается и не переходит к процессу основного сайта.</value></data>
+  <data name="Frontend.922" xml:space="preserve"><value>Получить состояние изолированной задачи разработки XNCF</value></data>
+  <data name="Frontend.923" xml:space="preserve"><value>Возвращает изолированный Workspace, различия, результаты проверки, предпросмотр Sandbox и состояние одобрения человеком.</value></data>
+  <data name="Frontend.924" xml:space="preserve"><value>Запросить слияние задачи XNCF человеком</value></data>
+  <data name="Frontend.925" xml:space="preserve"><value>Фиксирует текущие различия изолированного Workspace и запрашивает одобрение администратора. Эта операция не записывает целевой исходный код.</value></data>
+  <data name="Frontend.926" xml:space="preserve"><value>Отбросить изолированную задачу разработки XNCF</value></data>
+  <data name="Frontend.927" xml:space="preserve"><value>Останавливает соответствующий предпросмотр Sandbox и возвращает изолированный Workspace; целевой исходный код не изменяется.</value></data>
+  <data name="Frontend.928" xml:space="preserve"><value>Создать Sandbox</value></data>
+  <data name="Frontend.929" xml:space="preserve"><value>Создаёт изолированную сессию Sandbox из шаблона (Docker / Wasm Stub).</value></data>
+  <data name="Frontend.930" xml:space="preserve"><value>Список Sandbox</value></data>
+  <data name="Frontend.931" xml:space="preserve"><value>Показывает последние сессии Sandbox.</value></data>
+  <data name="Frontend.932" xml:space="preserve"><value>Получить состояние Sandbox</value></data>
+  <data name="Frontend.933" xml:space="preserve"><value>Запрос по SessionId.</value></data>
+  <data name="Frontend.934" xml:space="preserve"><value>Выполнить код</value></data>
+  <data name="Frontend.935" xml:space="preserve"><value>Выполняет фрагмент кода в сессии шаблона Exec.</value></data>
+  <data name="Frontend.936" xml:space="preserve"><value>Выполнить команду Lab</value></data>
+  <data name="Frontend.937" xml:space="preserve"><value>Выполняет ограниченную по времени команду Shell в работающем постоянном Workspace JupyterLab.</value></data>
+  <data name="Frontend.938" xml:space="preserve"><value>Загрузить файл Lab</value></data>
+  <data name="Frontend.939" xml:space="preserve"><value>Записывает содержимое файла Base64 в работающий постоянный Workspace JupyterLab.</value></data>
+  <data name="Frontend.940" xml:space="preserve"><value>Загрузить файлы Lab</value></data>
+  <data name="Frontend.941" xml:space="preserve"><value>Записывает несколько загруженных файлов потоком в работающий постоянный Workspace JupyterLab.</value></data>
+  <data name="Frontend.942" xml:space="preserve"><value>Скачать файл Lab</value></data>
+  <data name="Frontend.943" xml:space="preserve"><value>Читает файл из работающего постоянного Workspace JupyterLab и возвращает содержимое Base64.</value></data>
+  <data name="Frontend.944" xml:space="preserve"><value>Список файлов Lab</value></data>
+  <data name="Frontend.945" xml:space="preserve"><value>Перечисляет файлы работающего постоянного Workspace JupyterLab.</value></data>
+  <data name="Frontend.946" xml:space="preserve"><value>Создать Notebook</value></data>
+  <data name="Frontend.947" xml:space="preserve"><value>Создаёт файл .ipynb Python или C# в работающем Workspace JupyterLab.</value></data>
+  <data name="Frontend.948" xml:space="preserve"><value>Обновить псевдоним</value></data>
+  <data name="Frontend.949" xml:space="preserve"><value>Устанавливает или удаляет псевдоним сессии Sandbox (оставьте пустым, чтобы удалить его).</value></data>
+  <data name="Frontend.950" xml:space="preserve"><value>Уничтожить Sandbox</value></data>
+  <data name="Frontend.951" xml:space="preserve"><value>Останавливает и очищает указанную сессию.</value></data>
+  <data name="Frontend.952" xml:space="preserve"><value>Удалить запись Sandbox</value></data>
+  <data name="Frontend.953" xml:space="preserve"><value>Безвозвратно удаляет запись остановленной, просроченной или очищенной сессии.</value></data>
+  <data name="Frontend.954" xml:space="preserve"><value>Обновить TTL</value></data>
+  <data name="Frontend.955" xml:space="preserve"><value>Продлить, сократить или установить бессрочное хранение.</value></data>
+  <data name="Frontend.956" xml:space="preserve"><value>Вход администратора</value></data>
+  <data name="Frontend.957" xml:space="preserve"><value>Проверяет текущий вход администратора.</value></data>
+  <data name="Frontend.958" xml:space="preserve"><value>Настроить цифровой канал</value></data>
+  <data name="Frontend.959" xml:space="preserve"><value>Настраивает отображение цифрового канала.</value></data>
+  <data name="Frontend.960" xml:space="preserve"><value>Просмотреть настройки срока действия входа</value></data>
+  <data name="Frontend.961" xml:space="preserve"><value>Показывает настройки срока действия Web-входа и JWT в модуле Admin.</value></data>
+  <data name="Frontend.962" xml:space="preserve"><value>Настроить срок действия входа</value></data>
+  <data name="Frontend.963" xml:space="preserve"><value>Настраивает в минутах длительность Web-входа и срок действия JWT.</value></data>
+  <data name="Frontend.964" xml:space="preserve"><value>Проверить видимые уведомления NeuBell</value></data>
+  <data name="Frontend.965" xml:space="preserve"><value>Отправляет или обрабатывает тестовые уведомления NeuBell, показанные во всплывающем окне и значке Footer Admin; настраивает URL, метод и многострочный шаблон тела WebHook, а затем асинхронно записывает запрос и результат.</value></data>
+  <data name="Frontend.966" xml:space="preserve"><value>Проверить кэш</value></data>
+  <data name="Frontend.967" xml:space="preserve"><value>Проверяет текущий тип кэша и распределённую блокировку.</value></data>
+  <data name="Frontend.968" xml:space="preserve"><value>Управлять шаблонами Agent</value></data>
+  <data name="Frontend.969" xml:space="preserve"><value>Управляет шаблонами Agent.</value></data>
+  <data name="Frontend.970" xml:space="preserve"><value>Настроить параметры</value></data>
+  <data name="Frontend.971" xml:space="preserve"><value>Настраивает интервал резервного копирования, путь и связанные параметры.</value></data>
+  <data name="Frontend.972" xml:space="preserve"><value>Настроить Agent</value></data>
+  <data name="Frontend.973" xml:space="preserve"><value>Проверяет простые значения и метаданные выбора.</value></data>
+  <data name="Frontend.974" xml:space="preserve"><value>Настроить многострочные параметры</value></data>
+  <data name="Frontend.975" xml:space="preserve"><value>Проверяет метаданные текстовых многострочных параметров.</value></data>
+  <data name="Frontend.976" xml:space="preserve"><value>Моя функция</value></data>
+  <data name="Frontend.977" xml:space="preserve"><value>Описание моей функции.</value></data>
 </root>

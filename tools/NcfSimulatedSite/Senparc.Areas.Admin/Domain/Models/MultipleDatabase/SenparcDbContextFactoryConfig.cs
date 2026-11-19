@@ -6,14 +6,14 @@ using System.Text;
 namespace Senparc.Areas.Admin.Domain.Models
 {
     /// <summary>
-    /// SenparcDbContextFactory 的公共配置
+    /// shared configuration for SenparcDbContextFactory
     /// </summary>
     public static class SenparcDbContextFactoryConfig
     {
         private static string _rootDirectoryPath = null;
 
         /// <summary>
-        /// 用于寻找 App_Data 文件夹，从而找到数据库连接字符串配置信息
+        /// used to find the App_Data folder and then locate the database connection-string configuration
         /// </summary>
         public static string RootDirectoryPath
         {

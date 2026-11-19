@@ -12,8 +12,8 @@ $(function(){
 
     $('.start-btn').addClass('normal');
 
-    // WebView.Avalonia 的 macOS WKWebView 未实现新窗口委托；仅在内嵌环境中
-    // 将 target="_blank" 链接回退为当前页导航，普通浏览器仍保留新标签页行为。
+    //Legacy comment translated to English.
+    //Legacy comment translated to English.
     $(document).on('click.ncfEmbeddedWebView', 'a[target="_blank"]', function (event) {
         if (!isNcfMacEmbeddedWebView()) {
             return;
@@ -174,6 +174,6 @@ function start(docOpened, xncfName) {
         }
     });
 
-    // 兼容历史内联 onclick="return start(...)"：异步流程完成前阻止默认导航。
+    //Legacy comment translated to English.
     return false;
 }

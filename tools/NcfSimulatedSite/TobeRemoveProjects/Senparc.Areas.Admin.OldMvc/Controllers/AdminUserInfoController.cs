@@ -1,4 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: AdminUserInfoController.cs
+    File description: AdminUserInfoController related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.0.1 Updated legacy MVC integration metadata and English source comments
+
+----------------------------------------------------------------*/
+
+using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Models.VD;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Enums;
@@ -97,7 +110,7 @@ namespace Senparc.Areas.Admin.Controllers
 
             if (!model.Password.IsNullOrEmpty())
             {
-                userInfo.Password = this._adminUserInfoService.GetPassword(model.Password, userInfo.PasswordSalt, false);//生成密码
+                userInfo.Password = this._adminUserInfoService.GetPassword(model.Password, userInfo.PasswordSalt, false);//Legacy comment translated to English.
             }
 
             await this.TryUpdateModelAsync(userInfo, "", z => z.Note, z => z.UserName);

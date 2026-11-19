@@ -1,10 +1,11 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：NeuBellTestProviderTests.cs
-    文件功能描述：纽铃可见提醒示例 Provider 测试
+    File name: NeuBellTestProviderTests.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260805
+    Created by: Senparc - 20260805
 
 ----------------------------------------------------------------*/
 

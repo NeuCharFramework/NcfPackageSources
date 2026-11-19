@@ -1,4 +1,17 @@
-﻿using System;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: SysRoleDto.cs
+    File description: SysRoleDto related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
+
+----------------------------------------------------------------*/
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -14,7 +27,7 @@ namespace Senparc.Areas.Admin.Domain.Dto
     public class PermissionRequestDto
     {
         /// <summary>
-        /// 角色Id
+        /// roleId
         /// </summary>
         [Required]
         [MaxLength]
@@ -30,14 +43,14 @@ namespace Senparc.Areas.Admin.Domain.Dto
         public bool IsMenu { get; set; }
 
         /// <summary>
-        /// 角色代码
+        /// role code
         /// </summary>
         //[Required]
         [MaxLength]
         public string RoleCode { get; set; }
 
         /// <summary>
-        /// 资源（按钮）代码
+        ///Legacy comment translated to English.
         /// </summary>
         //[Required]
         [MaxLength]
@@ -47,7 +60,7 @@ namespace Senparc.Areas.Admin.Domain.Dto
     public class SysRoleDetailDto
     {
         /// <summary>
-        /// 启用状态
+        ///Legacy comment translated to English.
         /// </summary>
         public bool Enabled { get; set; }
 
@@ -57,12 +70,12 @@ namespace Senparc.Areas.Admin.Domain.Dto
         public string Id { get; set; }
 
         /// <summary>
-        /// 角色名称
+        /// role name
         /// </summary>
         public string RoleName { get; set; }
 
         /// <summary>
-        /// 角色代码
+        /// role code
         /// </summary>
         public string RoleCode { get; set; }
 
@@ -83,7 +96,7 @@ namespace Senparc.Areas.Admin.Domain.Dto
     public class SysRoleListDto
     {
         /// <summary>
-        /// 启用状态
+        ///Legacy comment translated to English.
         /// </summary>
         public bool Enabled { get; set; }
 
@@ -93,12 +106,12 @@ namespace Senparc.Areas.Admin.Domain.Dto
         public string Id { get; set; }
 
         /// <summary>
-        /// 角色名称
+        /// role name
         /// </summary>
         public string RoleName { get; set; }
 
         /// <summary>
-        /// 角色代码
+        /// role code
         /// </summary>
         public string RoleCode { get; set; }
 

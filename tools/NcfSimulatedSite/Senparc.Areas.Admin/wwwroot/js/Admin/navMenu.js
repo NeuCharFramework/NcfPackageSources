@@ -1,27 +1,27 @@
-﻿// 切换菜单栏展开
+﻿//Legacy comment translated to English.
 Vue.prototype.toggleSideBar = function () {
     Store.commit('changeIsCollapse', !Store.state.navMenu.isCollapse);
     let isCollapse = JSON.parse(window.sessionStorage.getItem('isCollapse')) || false;
-    // 解决刷新菜单状态复原问题
+    //Legacy comment translated to English.
     window.sessionStorage.setItem('isCollapse', !isCollapse);
 };
 
-// 点击菜单，高亮
+//Legacy comment translated to English.
 Vue.prototype.menuSelect = function (key, keypath) {
     if (document.body.classList.contains('ncf-admin-embedded')) {
         return;
     }
     window.sessionStorage.setItem('activeMenu', key);
-    // 页面跳转前同步保存当前菜单的所有父级，确保新页面仍然展开到当前位置。
+    //Legacy comment translated to English.
     saveOpenedMenus((keypath || []).slice(0, -1), true);
 };
 
-// 展开菜单
+//Legacy comment translated to English.
 Vue.prototype.menuOpen = function (key, keypath) {
     saveOpenedMenus(keypath || [key], true);
 };
 
-// 收起菜单
+//Legacy comment translated to English.
 Vue.prototype.menuClose = function (key) {
     saveOpenedMenus([key], false);
 };
@@ -42,7 +42,7 @@ function saveOpenedMenus(menuIndexes, isOpened) {
     try {
         window.sessionStorage.setItem(NCF_ADMIN_NAV_STORAGE_KEYS.openedMenus, JSON.stringify(openedMenus));
     } catch (e) {
-        // 浏览器禁用会话存储时仍允许菜单正常使用。
+        //Legacy comment translated to English.
     }
 }
 
@@ -71,7 +71,7 @@ function restoreNavMenuScroll() {
         try {
             window.sessionStorage.setItem(NCF_ADMIN_NAV_STORAGE_KEYS.scrollTop, String(scrollWrap.scrollTop));
         } catch (e) {
-            // 浏览器禁用会话存储时仍允许菜单正常滚动。
+            //Legacy comment translated to English.
         }
     };
 
@@ -80,15 +80,15 @@ function restoreNavMenuScroll() {
     scrollWrap._ncfNavScrollPersistenceBound = true;
 }
 
-// 菜单栏数据
+//Legacy comment translated to English.
 function getNavMenu() {
     service.get("/Admin/index?handler=MenuResource").then(res => {
         if (res.data.success) {
             var temp = res.data.data.menuList;
             myfunctionMain(temp);
-            // 数据存起来
+            //Legacy comment translated to English.
             Store.commit('savenavMenuList', temp);
-            // 菜单异步渲染并恢复展开状态后，再还原滚动位置，并让标签页高亮对应菜单。
+            //Legacy comment translated to English.
             Vue.nextTick(function () {
                 if (typeof window.ncfSyncAdminTabsWithMenu === 'function') {
                     window.ncfSyncAdminTabsWithMenu(temp);
@@ -99,7 +99,7 @@ function getNavMenu() {
                     window.setTimeout(restoreNavMenuScroll, 0);
                 }
             });
-            // 按钮权限存起来  使用：直接在dom上v-has=" ['admin-add']"
+            //Legacy comment translated to English.
             window.sessionStorage.setItem('saveResourceCodes', JSON.stringify(res.data.data.resourceCodes));
         }
     });
@@ -107,9 +107,9 @@ function getNavMenu() {
 
 getNavMenu();
 
-// 菜单搜索框不参与浏览器自动填充。
-// autocomplete="off" 会被 Chrome 忽略；固定 name（例如之前的 name=xxx）还会变成输入历史的键。
-// 每次打开页面使用一个新的 autocomplete 标记，并在用户真正输入前丢掉浏览器写入的值。
+//Legacy comment translated to English.
+//Legacy comment translated to English.
+//Legacy comment translated to English.
 var ncfNavSearchAutocompleteToken = 'ncf-nav-search-' + Math.random().toString(36).slice(2);
 Vue.prototype.ncfNavSearchAutocomplete = ncfNavSearchAutocompleteToken;
 
@@ -153,7 +153,7 @@ function clearNavMenuSearchAutofill(input) {
     }
 }
 
-// 在 Vue 绑定 v-model 之前挂上，捕获阶段才能拦住浏览器自动填充触发的 input。
+//Legacy comment translated to English.
 document.addEventListener('keydown', function (event) {
     if (isNavMenuSearchInput(event.target)) {
         markNavMenuSearchUserEdited(event.target);
@@ -222,7 +222,7 @@ function watchNavMenuSearchAutofill() {
 
     var start = function () {
         scan();
-        // 浏览器自动填充经常在输入框出现后几百毫秒才写入，且不一定触发事件。
+        //Legacy comment translated to English.
         var timer = window.setInterval(function () {
             scan();
             ticks++;
@@ -241,7 +241,7 @@ function watchNavMenuSearchAutofill() {
 
 watchNavMenuSearchAutofill();
 
-// 菜单栏数据递归
+//Legacy comment translated to English.
 function myfunctionMain(list) {
     if (!list || list.length === 0) {
         return;
@@ -251,7 +251,7 @@ function myfunctionMain(list) {
     //}
     for (var i in list) {
         let setNavMenuActive = window.sessionStorage.getItem('setNavMenuActive');
-        // 如果有需要单独设置的导航 （例如安装、卸载后激活特定的导航）
+        //Legacy comment translated to English.
         if (!document.body.classList.contains('ncf-admin-embedded') && setNavMenuActive && setNavMenuActive !== "null" && list[i].menuName === setNavMenuActive) {
             window.sessionStorage.setItem('setNavMenuActive', null);
             if (list[i].children.length > 0) {

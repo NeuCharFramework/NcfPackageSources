@@ -75,7 +75,7 @@ namespace Senparc.Xncf.WeixinManager.Tests
             Senparc.Ncf.Core.Register.TryRegisterMiniCore(services => { });
             serviceCollection.AddSenparcGlobalServices(config);
 
-            serviceCollection.AddMemoryCache();//使用内存缓存
+            serviceCollection.AddMemoryCache();//Legacy comment translated to English.
             serviceCollection.AddRouting();
 
             serviceCollection.StartWebEngine(config, _env.Object, null);
@@ -86,7 +86,7 @@ namespace Senparc.Xncf.WeixinManager.Tests
 
             //自动依赖注入扫描
             serviceCollection.ScanAssamblesForAutoDI();
-            //已经添加完所有程序集自动扫描的委托，立即执行扫描（必须）
+            //Legacy comment translated to English.
             AssembleScanHelper.RunScan(null);
 
 

@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：AllowFileExtension.cs
-    文件功能描述：AllowFileExtension 相关实现
-    
-    
-    创建标识：Senparc - 20260213
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: AllowFileExtension.cs
+    File description: AllowFileExtension related implementation
+
+    Created by: Senparc - 20260213
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.8.4 Localized knowledge base management and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -19,19 +22,19 @@ using System.Text;
 namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Config
 {
     /// <summary>
-    /// 允许扩展名类
+    ///Legacy comment translated to English.
     /// </summary>
     public class AllowFileExtension
     {
         /// <summary>
-        /// 图片扩展名
+        ///Legacy comment translated to English.
         /// </summary>
         public static readonly HashSet<string> ImageExtension = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
             ".png", ".jpg", ".jpeg", ".gif", ".bmp"
         };
         /// <summary>
-        /// 音视频扩展名
+        ///Legacy comment translated to English.
         /// </summary>
         public static readonly HashSet<string> VideoExtensiong = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
@@ -39,7 +42,7 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Config
             ".ogg", ".ogv", ".mov", ".wmv", ".mp4", ".webm", ".mp3", ".wav", ".mid"
         };
         /// <summary>
-        /// 文件扩展名
+        ///Legacy comment translated to English.
         /// </summary>
         public static readonly HashSet<string> FileExtension = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {

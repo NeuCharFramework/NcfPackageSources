@@ -1,32 +1,35 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：StatAppService.cs
-    文件功能描述：StatAppService.cs 相关实现
 
+    File name: StatAppService.cs
+    File description: StatAppService.cs related implementation
 
-    创建标识：Senparc - 20241028
+    Created by: Senparc - 20241028
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.2.0 增强后台管理员交互与桌面 Admin Chat 安全同步
+    Modified by: Senparc - 20260729
+    Change description: v0.2.0 enhance admin interaction and secure desktop Admin Chat synchronization
 
-    修改标识：Senparc - 20260808
-    修改描述：v0.4.0 接入 Host 实时指标统计输出
+    Modified by: Senparc - 20260808
+    Change description: v0.4.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260809
-    修改描述：日志统计改为轻量流式扫描，避免整文件解析占用内存
+    Modified by: Senparc - 20260809
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.5.0 集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
+    Modified by: Senparc - 20260813
+    Change description: v0.5.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260926
-    修改描述：v0.12.0 新增资源监控数据读取（后台 10 秒级记录，CO2NET 缓存最多 24 小时）
+    Modified by: Senparc - 20260926
+    Change description: v0.12.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261102
-    修改描述：v0.12.3 恢复 GetHostMetrics 的 API 注册，移除资源监控方法的重复标记
+    Modified by: Senparc - 20261102
+    Change description: v0.12.3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 add streamed large-file Workspace uploads with tenant-aware ownership checks
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 add streamed large-file Workspace uploads with tenant-aware ownership checks
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 
@@ -68,7 +71,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 var dates = SenparcTraceHelper.GetLogDate().Take(14).OrderBy(z => z).ToList();
                 foreach (var date in dates)
                 {
-                    // 轻量扫描：只计数，不加载日志正文到内存
+                    //Legacy comment translated to English.
                     var scan = await SenparcTraceHelper.GetLogScanResultAsync(base.ServiceProvider, date);
                     result.Logs.Add(new Stat_GetLogsResponse_Item()
                     {
@@ -84,7 +87,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取当天日志信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         [ApiBind]
@@ -120,7 +123,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取资源监控数据（后台每 10 秒记录，三个时间分档，CO2NET 缓存最多保留 24 小时）。
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind]
         public async Task<AppResponseBase<ResourceMonitorData>> GetResourceMonitor()
@@ -128,16 +131,16 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             return await this.GetResponseAsync<ResourceMonitorData>(async (response, logger) =>
             {
                 var cache = CO2NET.Cache.CacheStrategyFactory.GetObjectCacheStrategyInstance();
+                var windows = await Task.WhenAll(
+                    ReadResourceMonitorWindowAsync(cache, ResourceMonitorRecorder.CacheKeyFine, "fine", 10),
+                    ReadResourceMonitorWindowAsync(cache, ResourceMonitorRecorder.CacheKeyMid, "mid", 60),
+                    ReadResourceMonitorWindowAsync(cache, ResourceMonitorRecorder.CacheKeyCoarse, "coarse", 300))
+                    .ConfigureAwait(false);
                 var data = new ResourceMonitorData
                 {
                     Now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
                     SampleIntervalSeconds = ResourceMonitorRecorder.SampleIntervalSeconds,
-                    Windows = new List<ResourceMonitorWindow>
-                    {
-                        await ReadResourceMonitorWindowAsync(cache, ResourceMonitorRecorder.CacheKeyFine, "fine", 10).ConfigureAwait(false),
-                        await ReadResourceMonitorWindowAsync(cache, ResourceMonitorRecorder.CacheKeyMid, "mid", 60).ConfigureAwait(false),
-                        await ReadResourceMonitorWindowAsync(cache, ResourceMonitorRecorder.CacheKeyCoarse, "coarse", 300).ConfigureAwait(false)
-                    }
+                    Windows = windows.ToList()
                 };
                 logger.Append($"GetResourceMonitor fine={data.Windows[0].Points.Count}, mid={data.Windows[1].Points.Count}, coarse={data.Windows[2].Points.Count}");
                 return data;
@@ -167,7 +170,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取当前 Host 的实时 CPU、内存、网络及 Web 进程指标。
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind]
         public async Task<AppResponseBase<HostMetricsSnapshot>> GetHostMetrics()

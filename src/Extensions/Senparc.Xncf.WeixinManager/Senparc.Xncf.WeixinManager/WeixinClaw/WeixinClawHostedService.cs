@@ -1,17 +1,20 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：WeixinClawHostedService.cs
-    文件功能描述：WeixinClawHostedService.cs implementation and project behavior.
+    File name: WeixinClawHostedService.cs
+    File description: WeixinClawHostedService.cs implementation and project behavior.
 
+    Created by: Senparc - 20260920
 
-    创建标识：Senparc - 20260920
+    Modified by: Senparc - 20261005
+    Change description: v0.24.9 0.24.9 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.24.9 0.24.9 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
+    Modified by: Senparc - 20261103
+    Change description: v0.24.16 add comprehensive tests for MCP endpoint management and background tenant scope
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.24.16 add comprehensive tests for MCP endpoint management and background tenant scope
+    Modified by: Senparc - 20261119
+    Change description: v0.25.1 Localized Weixin account and administration surfaces
 
 ----------------------------------------------------------------*/
 
@@ -240,8 +243,8 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                 }
                 catch (Exception ex) when (IsExpectedLongPollTimeout(ex, stoppingToken))
                 {
-                    // 宿主仍可能带着通用 30 秒 Polly 超时。被取消的 getupdates
-                    // 只是一次空轮询，不应记成账号错误。
+                    //Legacy comment translated to English.
+                    //Legacy comment translated to English.
                     _logger.LogDebug(
                         ex,
                         "个人微信 Claw 账号 {AccountId} 长轮询达到宿主超时边界，继续下一轮：{ExceptionType}",

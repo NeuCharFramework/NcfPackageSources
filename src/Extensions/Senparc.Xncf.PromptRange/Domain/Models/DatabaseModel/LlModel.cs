@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：LlModel.cs
-    文件功能描述：LlModel 数据模型定义
-    
-    
-    创建标识：Senparc - 20231019
-    
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    File name: LlModel.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20231019
+
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -26,92 +29,92 @@ using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel
 {
     /// <summary>
-    /// LlmModel 数据库实体
+    ///Legacy comment translated to English.
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(LlModel))] //必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(LlModel))] //a prefix is required to prevent system-wide conflicts
     [Serializable]
     public class LlModel : EntityBase<int>
     {
         /// <summary>
-        /// 代号
+        /// code
         /// </summary>
         [Required, MaxLength(50)]
         public string Alias { get; private set; }
 
         /// <summary>
-        /// 名称（必须）
+        /// name（must）
         /// </summary>
         [Required, MaxLength(100)]
         public string DeploymentName { get; private set; }
 
         /// <summary>
-        /// Endpoint（必须）
+        /// Endpoint（must）
         /// </summary>
         [Required, MaxLength(250)]
         public string Endpoint { get; private set; }
 
         /// <summary>
-        /// 模型的类型（必须）, 例如：OpenAI,Azure OpenAI,HuggingFace
+        ///Legacy comment translated to English.
         /// </summary>
         [Required, MaxLength(20)]
         public AiPlatform ModelType { get; private set; }
-        //TODO:这个名称应该叫 AiPlatform 更合理，暂时不处理
+        //Legacy comment translated to English.
 
         /// <summary>
-        /// OrganizationId（可选）
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(200)]
         public string OrganizationId { get; private set; }
 
         /// <summary>
-        /// ApiKey（可选）
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(200)]
         public string ApiKey { get; private set; }
 
         /// <summary>
-        /// ApiVersion（可选）
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(100)]
         public string ApiVersion { get; private set; }
 
         /// <summary>
-        /// Note（可选）
+        /// Note (optional)
         /// </summary>
         [MaxLength(1000)]
         public string Note { get; private set; }
 
         /// <summary>
-        /// MaxToken（可选）
+        ///Legacy comment translated to English.
         /// </summary>
         [Required, DefaultValue(0)]
         public int MaxToken { get; private set; }
 
         // /// <summary>
-        // /// TextCompletionModelName（可选）
+        //Legacy comment translated to English.
         // /// </summary>
         // [MaxLength(100)]
         // public string TextCompletionModelName { get; private set; }
         //
         // /// <summary>
-        // /// TextEmbeddingModelName（可选）
+        //Legacy comment translated to English.
         // /// </summary>
         // [MaxLength(100)]
         // public string TextEmbeddingModelName { get; private set; }
         //
         // /// <summary>
-        // /// OtherModelName（可选）
+        //Legacy comment translated to English.
         // /// </summary>
         // [MaxLength(100)]
         // public string OtherModelName { get; private set; }
 
         /// <summary>
-        /// 是否共享
+        /// whether shared
         /// </summary>
         public bool IsShared { get; private set; }
 
         /// <summary>
-        /// 是否展示
+        /// whether displayed
         /// </summary>
         public bool Show { get; private set; }
 

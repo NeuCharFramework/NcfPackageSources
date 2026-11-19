@@ -1,8 +1,10 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：NeuCharWorkflowEngineTests.cs
-    文件功能描述：NeuChar Workflow 声明式图安全校验测试
+    File name: NeuCharWorkflowEngineTests.cs
+    File description: Related implementation.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.AppServices;

@@ -61,7 +61,7 @@
                                 {{scope.row.uid}}
                             </template>
                         </el-table-column>
-                        <el-table-column label="@AR["Xncf.Actions"]" width="95">
+                        <el-table-column label="@AR["Xncf.Actions"]" width="95" class-name="ncf-table-actions-column">
                             <template slot="header" slot-scope="scope">
                                 <el-input v-model="newTableSearch"
                                             size="mini"
@@ -114,7 +114,7 @@
                                 {{formaTableTime(scope.row.xncfModule.addTime)}}
                             </template>
                         </el-table-column>
-                        <el-table-column label="@AR["Xncf.Actions"]" width="185">
+                        <el-table-column label="@AR["Xncf.Actions"]" width="185" class-name="ncf-table-actions-column">
                             <template slot="header" slot-scope="scope">
                                 <el-input v-model="oldTableSearch"
                                             size="mini"
@@ -194,7 +194,7 @@
                                 {{scope.row.uid}}
                             </template>
                         </el-table-column>
-                        <el-table-column label="@AR["Xncf.Actions"]" width="95">
+                        <el-table-column label="@AR["Xncf.Actions"]" width="95" class-name="ncf-table-actions-column">
                             <template slot="header" slot-scope="scope">
                                 <el-input v-model="updatedTableSearch"
                                           size="mini"

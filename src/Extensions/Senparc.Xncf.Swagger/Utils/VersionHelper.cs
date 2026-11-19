@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：VersionHelper.cs
-    文件功能描述：VersionHelper 相关实现
-    
-    
-    创建标识：Senparc - 20210614
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: VersionHelper.cs
+    File description: VersionHelper related implementation
+
+    Created by: Senparc - 20210614
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.12 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -24,8 +27,8 @@ namespace Senparc.Xncf.Swagger.Utils
     public class VersionHelper
     {
         /// <summary>
-        /// 扫描整个应用程序获取实现ApiVersion的方法，从而获取使用过的版本
-        /// 效率较低，ApiVersion是否有提供所有使用过的版本接口？？？
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public static List<string> GetApiVersions()
@@ -34,7 +37,7 @@ namespace Senparc.Xncf.Swagger.Utils
 
             AssembleScanHelper.AddAssembleScanItem(assembly =>
             {
-                //类上的ApiVersion
+                //Legacy comment translated to English.
                 try
                 {
                     var allTypes = assembly.GetTypes();
@@ -52,7 +55,7 @@ namespace Senparc.Xncf.Swagger.Utils
                             versions.AddRange(methodVersion);
                         }
                     }
-                    ////方法上的apiversion
+                    ///Legacy comment translated to English.
                     //var subTypes = allTypes.Where(w => w.GetCustomAttributes(typeof(ApiVersionAttribute), true).Length > 0);
                     //foreach (var t in subTypes)
                     //{

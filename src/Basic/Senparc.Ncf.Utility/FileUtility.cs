@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：FileUtility.cs
-    文件功能描述：FileUtility 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: FileUtility.cs
+    File description: FileUtility related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.21.3-preview5 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -19,7 +22,7 @@ namespace Senparc.Ncf.Utility
     public class FileUtility
     {
         /// <summary>
-        /// 获取随机文件名
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public static string GetRandomFileName()

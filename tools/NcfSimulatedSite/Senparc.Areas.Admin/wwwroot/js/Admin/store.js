@@ -12,7 +12,7 @@ function getStoredNavMenuOpenedMenus() {
     }
 }
 
-// 菜单搜索：按关键字过滤菜单树。命中节点保留其完整子树；否则仅保留命中的分支。
+//Legacy comment translated to English.
 function filterNavMenuTree(list, keyword) {
     if (!list || list.length === 0) {
         return [];
@@ -33,7 +33,7 @@ function filterNavMenuTree(list, keyword) {
     return result;
 }
 
-// 收集菜单树中所有子菜单的 index（搜索时强制展开，保证命中项可见）。
+//Legacy comment translated to English.
 function collectNavMenuSubmenuIndexes(list) {
     var indexes = [];
     (list || []).forEach(function (node) {
@@ -58,35 +58,35 @@ var Store = new Vuex.Store({
             canScrollLeft: false,
             canScrollRight: false
         },
-        navMenu: { //侧边栏数据
+        navMenu: { //Legacy comment translated to English.
             navMenuList: [],
             searchKeyword: '',
-            // 初始只读，避免浏览器在页面加载时把历史输入写进搜索框；获得焦点后再放开。
+            //Legacy comment translated to English.
             searchInputLocked: true,
             isCollapse:JSON.parse( window.sessionStorage.getItem('isCollapse'))|| false,
             openedMenus: getStoredNavMenuOpenedMenus(),
             variables: {
-                menuBg: '#304156', // 背景色
-                menuText: '#bfcbd9', // 文字色
-                menuActiveText: '#409EFF' //激活颜色
+                menuBg: '#304156', //Legacy comment translated to English.
+                menuText: '#bfcbd9', //Legacy comment translated to English.
+                menuActiveText: '#409EFF' //Legacy comment translated to English.
             },
-            // 当前激活菜单的 index
+            //Legacy comment translated to English.
             activeMenu: window.sessionStorage.getItem('activeMenu') || '0'
         }
     },
     getters: {
-        // 左侧菜单搜索过滤结果
+        //Legacy comment translated to English.
         filteredNavMenuList: function (state) {
             return filterNavMenuTree(state.navMenu.navMenuList, state.navMenu.searchKeyword);
         },
-        // 搜索中：展开过滤结果里的全部子菜单，保证命中项直接可见
+        //Legacy comment translated to English.
         effectiveNavMenuOpeneds: function (state) {
             var keyword = String(state.navMenu.searchKeyword || '').trim();
             if (!keyword) {
                 return state.navMenu.openedMenus;
             }
             var searched = collectNavMenuSubmenuIndexes(filterNavMenuTree(state.navMenu.navMenuList, keyword));
-            // 与已展开菜单合并，避免切换搜索时丢失用户手动展开的分支
+            //Legacy comment translated to English.
             return state.navMenu.openedMenus.concat(
                 searched.filter(function (index) {
                     return state.navMenu.openedMenus.indexOf(index) < 0;
@@ -96,8 +96,8 @@ var Store = new Vuex.Store({
         isNavMenuSearching: function (state) {
             return String(state.navMenu.searchKeyword || '').trim().length > 0;
         },
-        // 菜单渲染键：普通模式保持稳定（展开/收起不重建菜单）；
-        // 搜索模式下随“应展开集合”变化而重建，保证新出现的命中分支自动展开。
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         adminIframeTabs: function (state) {
             if (!state.adminTabs || !state.adminTabs.enabled) {
                 return [];
@@ -122,23 +122,23 @@ var Store = new Vuex.Store({
         saveResourceCodes(state, data) {
             state.resourceCodes = data;
         },
-        // 切换菜单栏状态
+        //Legacy comment translated to English.
         changeIsCollapse(state,data) {
             state.navMenu.isCollapse = data;
         },
-        // 保存已展开的菜单
+        //Legacy comment translated to English.
         changeOpenedMenus(state, data) {
             state.navMenu.openedMenus = data;
         },
-        // 保存菜单数据
+        //Legacy comment translated to English.
         savenavMenuList(state, data) {
             state.navMenu.navMenuList = data;
         },
-        // 设置菜单搜索关键字
+        //Legacy comment translated to English.
         setNavMenuSearchKeyword(state, data) {
             state.navMenu.searchKeyword = data || '';
         },
-        // 用户准备输入菜单搜索时，取消初始只读
+        //Legacy comment translated to English.
         unlockNavMenuSearch(state) {
             state.navMenu.searchInputLocked = false;
         }

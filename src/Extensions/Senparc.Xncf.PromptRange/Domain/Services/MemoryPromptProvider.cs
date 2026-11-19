@@ -1,20 +1,23 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：MemoryPromptProvider.cs
-    文件功能描述：MemoryPromptProvider 相关定义与实现
+    File name: MemoryPromptProvider.cs
+    File description: MemoryPromptProvider related definitions and implementation
 
+    Created by: Senparc - 20261103
 
-    创建标识：Senparc - 20261103
+    Modified by: Senparc - 20261103
+    Change description: v0.20.8 implement AdminChat memory storage and management system
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.20.8 implement AdminChat memory storage and management system
+    Modified by: Senparc - 20261104
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261104
-    修改描述：提取前判断当前保存意图，区分等待后续内容与立即更新
+    Modified by: Senparc - 20261105
+    Change description: v0.20.14 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261105
-    修改描述：v0.20.14 支持省略保存对象的跨轮请求，并区分用户事实与助手候选
+    Modified by: Senparc - 20261119
+    Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
 ----------------------------------------------------------------*/
 

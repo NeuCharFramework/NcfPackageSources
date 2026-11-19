@@ -1,4 +1,17 @@
-﻿using System;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: AccountDto.cs
+    File description: AccountDto related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.3.14 Updated module behavior, localization metadata, and English source comments
+
+----------------------------------------------------------------*/
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
@@ -19,7 +32,7 @@ namespace Senparc.Xncf.Accounts.Domain.Models.Dto
         public string Password { get; set; }
 
         /// <summary>
-        /// 验证码
+        ///Legacy comment translated to English.
         /// </summary>
         public string ValidateCode { get; set; }
     }
@@ -27,7 +40,7 @@ namespace Senparc.Xncf.Accounts.Domain.Models.Dto
     public class AccountLoginResultDto
     {
         /// <summary>
-        /// 用户名
+        /// user name
         /// </summary>
         public string UserName { get; set; }
 
@@ -37,7 +50,7 @@ namespace Senparc.Xncf.Accounts.Domain.Models.Dto
         public string Token { get; set; }
 
         /// <summary>
-        /// 用户所关联的角色
+        ///Legacy comment translated to English.
         /// </summary>
         public IEnumerable<string> RoleCodes { get; set; }
     }

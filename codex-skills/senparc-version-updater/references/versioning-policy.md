@@ -1,102 +1,104 @@
-# 版本号与发布说明策略
+# Versioning and Release Notes Policy
 
-## 版本号决策
+## Version Decision
 
-按项目改动强度选择升级级别：
+Choose the bump level according to the project change:
 
-1. `major`：破坏性变更（兼容性中断、公共接口删除或行为不兼容）。
-2. `minor`：新增非破坏能力（新增特性、扩展公共接口、增强功能）。
-3. `patch`：修复与维护（bugfix、重构、测试、文档、被动依赖升级）。
-4. 版本号必须保持单调不下降：更新后的 `<Version>` 不得小于更新前版本。
-5. 在同一个未合并窗口内，允许版本号保持不变（用于合并追加发布说明），但禁止回退到更低版本。
+1. `major`: breaking changes, incompatible public API removal, or incompatible behavior.
+2. `minor`: new non-breaking capabilities, public API expansion, or feature enhancement.
+3. `patch`: fixes and maintenance, including bug fixes, refactors, tests, documentation, and passive dependency updates.
+4. Versions must be monotonic: the resulting `<Version>` must not be lower than the previous version.
+5. Within one unmerged window, the version may remain unchanged while release notes are merged, but it must never move backwards.
+6. All new changelog headers, release-note summaries and details, dependency notes, and other generated comments must be written in English.
 
-## 提交范围基线（master/main）
+## Comparison Window (`master`/`main`)
 
-版本判断与变更汇总必须基于 `master/main` 对比窗口：
+Version decisions and change summaries must use the comparison window against `master` or `main`:
 
-1. 基线分支优先级：`origin/master` -> `origin/main` -> `master` -> `main`。
-2. 使用 `merge-base(HEAD, 基线分支)` 作为起点提交（`comparison_base`）。
-3. 本次更新内容 = `comparison_base..HEAD` 的全部提交 + 当前未提交改动；变更文件必须取每个提交所触及路径的并集，不能只使用最终净差异 `git diff comparison_base..HEAD`。
-3.1 变更文件统计范围必须为“全仓库”，不能只限制在单个目标项目目录。
-3.2 在窗口内先修改、后恢复的文件仍属于本次提交触及范围，必须映射到对应项目并覆盖功能性发布说明。
-3.3 已删除的 `.cs` 和非纯时间戳变化的 `*.Generated.cs` 不写文件头，但仍必须把所属项目加入 `changed_csprojs`。
-3.4 模块 `Domain/Migrations/<数据库名称>/` 下的自动生成迁移文件不写文件头，因为下次仍可能被重新生成。这些文件必须继续纳入变更监控，并把所属非测试项目加入 `changed_csprojs`，在其 `.csproj` 的版本与 `<PackageReleaseNotes>` 中记录对应的功能性变更。
-4. 如果无法解析 `master/main` 或无法计算 merge-base，流程必须报错终止，不允许降级到“最近一次修改 .csproj”的窗口。
+1. Baseline priority: `origin/master` -> `origin/main` -> `master` -> `main`.
+2. Use `merge-base(HEAD, baseline)` as `comparison_base`.
+3. The update scope is every commit in `comparison_base..HEAD` plus current uncommitted changes. Changed files are the union of paths touched by every commit, not only the final net diff from `git diff comparison_base..HEAD`.
+3.1. Scan the entire repository; do not restrict impact discovery to the selected project directory.
+3.2. Files changed and later restored within the window still belong to the touched-file set and must map to their projects for functional release-note coverage.
+3.3. Deleted `.cs` files and non-timestamp-only `*.Generated.cs` files do not receive headers, but their containing projects must still be included in `changed_csprojs`.
+3.4. Auto-generated migration files under `Domain/Migrations/<database-name>/` do not receive headers. They remain in change monitoring, their containing non-test projects must be included in `changed_csprojs`, and their functional changes must be recorded in project version metadata and `<PackageReleaseNotes>`.
+4. If `master`/`main` cannot be resolved or merge-base calculation fails, stop with an error. Never fall back to a "last changed csproj" window.
 
-## 未合并分支的版本升级规则
+## Unmerged Branch Rules
 
-对于尚未合并到 `master/main` 的提交窗口（同一个 `comparison_base..HEAD`）：
+For commits not yet merged into `master`/`main` (the same `comparison_base..HEAD` window):
 
-1. 版本号最多升级一次。
-2. 后续新增提交不再重复升级版本号。
-3. 后续新增提交的内容应合并追加到同一个版本号下的 `<PackageReleaseNotes>` 中。
-4. 仅当合并到 `master/main` 后进入新的比较窗口时，才再次按 `major/minor/patch` 进行下一次版本升级。
+1. Bump a project version at most once.
+2. Do not create another version bump for later commits in the same window.
+3. Merge later changes into the same version's `<PackageReleaseNotes>` block.
+4. Only after the branch is merged and a new comparison window begins should another `major`/`minor`/`patch` decision be made.
 
-## 受影响项目覆盖规则
+## Affected Project Coverage
 
-1. 提交路径并集中位于项目目录内的任意文件（包括 `.cs`、`.cshtml`、`.js`、`.resx`、`.axaml` 等）都必须反向映射到对应项目并加入 `changed_csprojs`；直接发生变化的 `.csproj` 同样必须加入。
-2. 对每个 changed `.props` 文件，必须解析显式 `<Import Project="..." />`，支持 `$(MSBuildThisFileDirectory)`、`$(MSBuildProjectDirectory)`，并递归跟踪 `.props` 引用链。
-3. 直接或间接导入 changed `.props` 的所有非测试项目都必须加入 `changed_csprojs`，即使这些项目自身没有 `.cs` 文件变化。
-4. `changed_csprojs` 中的每个项目都必须更新自身 `.csproj`（版本与发布说明）。
-5. 不允许只更新单一主项目并忽略其他已变更代码所在项目或 `.props` 导入项目。
-6. 本次执行中只要编辑了 `.cs` 文件（包含仅头注释更新），其映射到的项目都必须同步合并更新当前窗口版本号下的 `<PackageReleaseNotes>`（禁止只改 `.cs` 不改 `.csproj`）。
-7. `.props` 文件不添加 C# 文件头；其依赖版本、兼容性或构建行为影响必须写入每个导入项目的功能性发布说明。
-8. 测试项目（包括 `*.Tests.csproj`、`*Tests.csproj` 和位于 `Tests`、`*.Tests`、`*Tests` 目录下的项目）不发布，不新增、升级或删除 `<Version>`，也不要求新增包发布说明；已有发布说明如果顺序错误，可保留内容并调整整条记录的顺序。
-9. 测试项目不参与版本更新，但遍历递归依赖时仍须穿过测试项目，以发现后续非测试项目。
+1. Any file under a project path touched by the commit union, including `.cs`, `.cshtml`, `.js`, `.resx`, and `.axaml`, maps back to its `.csproj`; directly changed `.csproj` files are included as well.
+2. For every changed `.props`, resolve explicit `<Import Project="..." />` paths, including `$(MSBuildThisFileDirectory)` and `$(MSBuildProjectDirectory)`, and recursively follow `.props` imports.
+3. Every non-test project that directly or indirectly imports a changed `.props` must be included in `changed_csprojs`, even when none of its `.cs` files changed.
+4. Every project in `changed_csprojs` must update its own `.csproj` version and release notes.
+5. Do not update only the selected primary project while ignoring projects containing other changed code or importing changed `.props`.
+6. If any `.cs` file is edited during this run, including a header-only edit, its mapped project must merge/update the current-window version block in `<PackageReleaseNotes>`.
+7. A `.props` file does not receive a C# header; its dependency, compatibility, or build behavior impact must be described functionally in every importing project's release notes.
+8. Test projects, including `*.Tests.csproj`, `*Tests.csproj`, and projects under `Tests`, `*.Tests`, or `*Tests` directories, are not released. Do not add, update, or remove their `<Version>`, and do not require new package release notes. Existing notes may be reordered as complete blocks when needed.
+9. Test projects are excluded from version updates but must still be traversed when discovering recursive non-test dependents.
 
-## 预览版处理
+## Prerelease Handling
 
-当当前版本包含 `-preview.N` 后缀时：
+When the current version contains a `-preview.N` suffix:
 
-1. 先按 `major/minor/patch` 计算基础版本号。
-2. 保持 `preview` 通道，并将 `N` 递增（无数字时从 `1` 开始）。
+1. Calculate the base `major`/`minor`/`patch` bump first.
+2. Preserve the preview channel and increment `N` (starting at `1` when no number exists).
 
-示例：
+Examples:
 
 1. `1.4.2-preview.3` + `patch` -> `1.4.3-preview.4`
 2. `1.4.2-preview.3` + `minor` -> `1.5.0-preview.4`
 3. `1.4.2` + `patch` -> `1.4.3`
 
-## PackageReleaseNotes 追加格式
+## Appending `<PackageReleaseNotes>`
 
-按时间顺序添加到 `<PackageReleaseNotes>`；新记录通常位于末尾，并保持缩进一致：
+Append entries in chronological order, normally at the end, preserving the surrounding indentation:
 
 ```xml
-[YYYY-MM-DD] vX.Y.Z <一行总结>
-1、<变更点一>
-2、<变更点二>
+[YYYY-MM-DD] vX.Y.Z <one-line summary>
+1. <detail one>
+2. <detail two>
 ```
 
-内容要求：
+Requirements:
 
-1. 必须描述当前项目的功能性变更（功能新增、行为调整、兼容性适配、缺陷修复、交互优化、依赖升级影响等）。
-2. 禁止写流程追踪文本或窗口标识文本（如 `Repository baseline sync`、`sync window`、`comparison_base..HEAD` 等）。
-3. 同一未合并窗口内允许合并多次提交内容，但描述仍需保持“项目功能变化”视角，而非“流程同步”视角。
-4. `<PackageReleaseNotes>` 标签必须位于 `<Version>` 标签之后。
-5. `<PackageReleaseNotes>` 不要求紧邻 `<Version>`；若当前已在其后（包括人为调整位置），无需改动位置。
-6. 若 `<PackageReleaseNotes>` 在 `<Version>` 之前，必须调整到 `<Version>` 之后并保持内容与缩进。
-7. `<Version>` 标签必须位于 `<TargetFramework>` 或 `<TargetFrameworks>` 标签之后。
-8. `<Version>` 不要求紧邻 `<TargetFramework>`/`<TargetFrameworks>`；若当前已在其后（包括人为调整位置），无需改动位置。
-9. 若 `<Version>` 在 `<TargetFramework>`/`<TargetFrameworks>` 之前，必须调整到其后并保持内容与缩进。
-10. `<PackageReleaseNotes>` 内不允许空行（包括条目之间、条目与明细之间）。
-11. `<PackageReleaseNotes>` 新增行的缩进必须与上一条内容行保持相同空格数量。
-12. 同一未合并窗口内若版本号不变，也必须把本次新增的项目改动合并进当前版本对应的说明块，不允许跳过。
-13. 检查并修正已有带日期记录的顺序：由旧到新排列，越新的记录越靠下；移动时必须保留每条记录及其全部明细。
-14. 同一天的记录在无法确定先后时保持原有相对顺序，新记录排在该日期已有记录之后。
-15. 保留未注明日期的历史记录及其相对顺序，不得将其误归入其他记录或臆造日期；无法可靠确定位置时提示人工核对。
-16. 合并当前版本的已有说明块时，以该块包含的最近一次实际变更日期作为记录日期，并将整块移动到正确的时间位置。
+1. Describe functional project changes: new capabilities, behavior changes, compatibility work, fixes, UX improvements, or dependency impact.
+2. Do not write process-tracking or window-identification text such as `Repository baseline sync`, `sync window`, or `comparison_base..HEAD`.
+3. Multiple commits in one unmerged window may be merged into one functional description; do not describe the synchronization process itself.
+4. Write every new summary and detail in English, including passive dependency notes.
+5. `<PackageReleaseNotes>` must appear after `<Version>`.
+5. It does not need to be adjacent to `<Version>`; if already after it, keep the existing position.
+6. If it appears before `<Version>`, move it after `<Version>` while preserving content and indentation.
+7. `<Version>` must appear after `<TargetFramework>` or `<TargetFrameworks>`.
+8. `<Version>` does not need to be adjacent to the framework tags; if already after them, keep the existing position.
+9. If `<Version>` appears before the framework tags, move it after them while preserving content and indentation.
+10. Do not leave blank lines inside `<PackageReleaseNotes>`, including between entries and detail lines.
+11. New release-note lines must use the same indentation as the previous content line.
+12. If the version remains unchanged within one unmerged window, merge all new project changes into the current version block; do not skip them.
+13. Check and correct dated release-note order from oldest to newest, moving each entry together with all detail lines.
+14. Preserve the existing relative order of entries with the same date when sequence is unknown; append a new same-date entry after existing entries for that date.
+15. Preserve undated legacy entries and their relative order. Do not invent dates; report entries whose chronological position cannot be established.
+16. When merging into the current version block, use the most recent actual change date represented by the block and move the complete block to the correct position.
 
-对于被动升级项目，建议使用：
+For passive dependency updates, use:
 
 ```xml
 [YYYY-MM-DD] vX.Y.Z Dependency update from <ProjectName> to <SourceVersion>
 ```
 
-## 递归依赖升级规则
+## Recursive Dependency Updates
 
-1. 所有直接变更项目（changed `.cs` 所属项目 + changed `.props` 导入项目）按实际改动升级（major/minor/patch）。
-2. 被动依赖项目默认执行 `patch` 升级。
-3. 被动依赖项目若缺失 `<Version>`，需先补齐 `<Version>` 后再追加发布说明。
-4. 若被动项目再次被其他项目引用，继续递归升级，直到链路结束。
-5. 使用 visited 集合避免循环引用导致死循环。
-6. 递归计算必须从全部直接变更项目的并集开始，不得只从命令行指定但实际未变更的 `primary_csproj` 开始。
+1. All direct changed projects (projects containing changed `.cs` files plus changed `.props` importers) use their actual `major`/`minor`/`patch` decision.
+2. Passive dependent projects use a `patch` bump by default.
+3. If a passive dependent project lacks `<Version>`, create it before writing release notes.
+4. Continue recursively when a dependent project is itself referenced by another project until the chain ends.
+5. Use a visited set to avoid cycles.
+6. Start recursive discovery from the union of all direct changed projects, not only from an unrelated command-line primary project.

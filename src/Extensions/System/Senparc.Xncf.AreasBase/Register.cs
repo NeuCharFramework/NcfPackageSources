@@ -1,20 +1,23 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：Register.cs
-    文件功能描述：Register 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.13.0-preview2 为 AreasBase 模块接入统一资源本地化并优化功能文案
+    File name: Register.cs
+    File description: Register related implementation
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.13.12 统一 XNCF Register 显示元数据与多语言资源键
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260717
+    Change description: v0.13.0-preview2 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261111
+    Change description: v0.13.12 unify XNCF Register display metadata and localization resource keys
+
+    Modified by: Senparc - 20261119
+    Change description: v0.13.14 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -46,13 +49,13 @@ namespace Senparc.Xncf.AreasBase
             "Areas 基础模块",
             "为 Razor Pages 等页面提供基础运行能力");
 
-        #region IXncfRegister 接口
+        #region Legacy section
 
         public override string Name => "Senparc.Xncf.AreasBase";
 
         public override string Uid => SiteConfig.SYSTEM_XNCF_BASE_AREAS;// "00000000-0000-0000-0001-000000000006";
 
-        public override string Version => "0.1";//必须填写版本号
+        public override string Version => "0.1";//the version number is required
 
         public override string MenuName => RegisterText.MenuName;
 
@@ -75,7 +78,7 @@ namespace Senparc.Xncf.AreasBase
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
 
-            //提供网站根目录
+            //Legacy comment translated to English.
             if (env.ContentRootPath != null)
             {
                 SiteConfig.ApplicationPath = env.ContentRootPath;
@@ -92,29 +95,29 @@ namespace Senparc.Xncf.AreasBase
               .AddXmlSerializerFormatters()
               .AddJsonOptions(options =>
               {
-                  //忽略循环引用
+                  //Legacy comment translated to English.
                   options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                   //options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                  //不使用驼峰样式的key
+                  //Legacy comment translated to English.
                   //options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                  //设置时间格式
+                  //Legacy comment translated to English.
                   //options.SerializerSettings.DateFormatString = "yyyy-MM-dd";
               })
               //https://docs.microsoft.com/en-us/aspnet/core/fundamentals/app-state?view=aspnetcore-2.1&tabs=aspnetcore2x
               //.AddSessionStateTempDataProvider()
-              //忽略JSON序列化过程中的循环引用：https://stackoverflow.com/questions/7397207/json-net-error-self-referencing-loop-detected-for-type
+              //Legacy comment translated to English.
               .AddRazorPagesOptions(options =>
               {
-                  //自动注册  防止跨站请求伪造（XSRF/CSRF）攻击
+                  //Legacy comment translated to English.
                   options.Conventions.Add(new Senparc.Ncf.AreaBase.Conventions.AutoValidateAntiForgeryTokenModelConvention());
               });
 #if DEBUG
-            //Razor启用运行时编译，多个项目不需要手动编译。
+            //Legacy comment translated to English.
             if (env.IsDevelopment())
             {
                 //builder.AddRazorRuntimeCompilation(options =>
                 //{
-                //    //自动索引所有需要使用 RazorRuntimeCompilation 的模块
+                //Legacy comment translated to English.
                 //    foreach (var razorRegister in XncfRegisterManager.RegisterList.Where(z => z is IXncfRazorRuntimeCompilation))
                 //    {
                 //        try

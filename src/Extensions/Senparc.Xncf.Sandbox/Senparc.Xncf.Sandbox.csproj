@@ -1,85 +1,88 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.4.3</Version>
+    <Version>0.4.4</Version>
     <AssemblyName>Senparc.Xncf.Sandbox</AssemblyName>
     <RootNamespace>Senparc.Xncf.Sandbox</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <Description>NCF 独立沙箱编排：Docker/Wasm 快速创建与销毁实验环境</Description>
+    <Description>NCF isolated sandbox orchestration: quickly create and destroy Docker/Wasm test environments</Description>
     <Copyright>Senparc</Copyright>
     <PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.Sandbox</PackageTags>
     <Authors>Senparc</Authors>
     <Owners>Senparc</Owners>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <Title>沙箱环境</Title>
+    <Title>Sandbox Environment</Title>
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>      v0.1.0-preview1 创世：独立沙箱模块骨架
-      1、引入 ISandboxRuntime 抽象（Docker + Wasm Stub）
-      2、Session 生命周期、配额与 TTL 回收
-      3、Function/Admin 管理入口与 Jupyter/Exec 模板占位
-      [2026-08-13] v0.1.1-preview2 Dependency update from Senparc.Ncf.AreaBase to 0.23.3-preview7; Senparc.Ncf.DatabasePlant to 0.21.7-preview7
-      [2026-08-15] v0.2.0 增加 NCF 预览沙箱工作负载
-      1、增加固定 NCF/XNCF 预览模板、Docker 运行参数、启动超时和受控依赖恢复网络
-      2、提供隔离预览工作区、状态访问和反向代理链路，未配置固定镜像摘要时安全失败
-      3、新增 jupyter-csharp 模板与镜像解析，完善 Docker/Wasm 运行参数与会话状态管理
-      4、优化管理端沙箱会话交互与 Jupyter 路径约束，改善创建/回收体验
-      5、支持创建与更新会话 TTL，并可选择永久保持（需手动销毁）
-      6、管理端展示无限 TTL 状态，并提供会话生命周期调整入口
-      7、增加 Jupyter C# 模板、预览代理和工作区路径约束，完善 Docker/Wasm 运行时配置
-      8、支持会话 TTL 更新和永久保持状态，管理端提供生命周期调整与回收反馈
-      [2026-08-29] v0.3.0 支持从全局 NeuCharPivot 受控调用 Sandbox Function
-      1、新增全局调用入口并复用既有 Function 执行路径，保持模块和参数校验
-      2、通过显式启用与管理员访问边界限制全局调用，保留原 Sandbox 页面入口
-      3、统一宿主工作区、会话目录和目标路径的边界校验，避免相邻目录被误判为工作区子路径
-      [2026-09-15] v0.3.1 补充 Sandbox 数据库迁移并保持工作区边界兼容
-      1、补充 Sandbox 模块迁移文件，支持当前数据库初始化流程
-      2、保持工作区文件树和路径边界校验行为稳定
-      [2026-09-16] v0.3.2 Dependency updates from Senparc.Web to 0.39.1
-      [2026-09-17] v0.3.3 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
-      1、同步受影响的基础库、AI 模块或宿主项目版本
-      2、保持项目引用链与当前功能兼容
-      [2026-09-18] v0.3.3 增强 JupyterLab 外部控制与会话管理
-      1、创建 JupyterLab 容器支持可选附加端口映射（loopback 或外部 0.0.0.0 绑定），容器内 Web 站点可被外部访问
-      2、新增 创建 Notebook Function：在 Lab 工作区生成 Python / C#（dotnet-interactive）.ipynb 文件
-      3、执行 Lab 命令支持可选标准输入内容（docker exec -i），可向终端程序/REPL 批量提交指令
-      4、每用户沙箱并发上限由 2 提高到 10（全局上限由 20 提高到 50）
-      5、会话支持可选别名（创建时设置或随时修改/清除），管理页列表展示别名与附加端口并提供重命名入口
-      6、新增 SandboxSession.Alias / ExtraPorts 持久化列（含六种数据库迁移），别名与端口记录不随容器销毁清除
-      [2026-09-18] v0.3.3 增强 JupyterLab 外部控制与会话管理
-      1、创建 JupyterLab 容器支持可选附加端口映射（loopback 或外部 0.0.0.0 绑定），容器内 Web 站点可被外部访问
-      2、新增 创建 Notebook Function：在 Lab 工作区生成 Python / C#（dotnet-interactive）.ipynb 文件
-      3、执行 Lab 命令支持可选标准输入内容（docker exec -i），可向终端程序/REPL 批量提交指令
-      4、每用户沙箱并发上限由 2 提高到 10（全局上限由 20 提高到 50）
-      5、会话支持可选别名（创建时设置或随时修改/清除），管理页列表展示别名与附加端口并提供重命名入口
-      6、新增 SandboxSession.Alias / ExtraPorts 持久化列（含六种数据库迁移），别名与端口记录不随容器销毁清除
-      [2026-10-05] v0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
-      1、Updated Senparc.Xncf.Sandbox project behavior and integration for the latest feature and reliability improvements.
-      2、feat: enhance Sandbox with external JupyterLab control, port mappings, session alias and raised quota
-      [2026-10-21] v0.3.5 沙箱创建与 Notebook 缺少模板或语言时不再静默回退到 Python
-      1、创建请求缺少模板时返回明确错误
-      2、Notebook 缺少语言时要求明确填写 python 或 csharp
-      [2026-11-03] v0.4.0 统一 Docker 隔离运行时底层能力
-      1、DockerSandboxRuntime 改为 IIsolatedRuntimeProvider 业务适配器
-      2、容器启动、执行、日志、销毁、查询与进程超时由共享 Provider 管理
-      3、Exec 与 Jupyter 统一应用结构化挂载、资源、网络及 capability 策略
-      4、支持沙箱批量文件上传和隔离运行时连接
-      5、按租户恢复沙箱编排上下文并迭代执行后台回收
-      6、Dependency update from Senparc.Xncf.Sandbox.Abstractions to 0.3.1
-    [2026-11-03] Reuse shared documentation help and automatically select the current documentation language.
-    [2026-11-05] v0.4.2 区分沙箱环境准备与会话面板帮助，并统一多语言文案
-    1、环境准备帮助不再指向会话面板操作说明
-    2、补齐并校正各语言资源条目，使模块界面文案与中文基准保持一致
-    3、Dependency update from Senparc.Ncf.AreaBase to 0.23.10
-    4、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.14
-    5、Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
-    6、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
-    [2026-11-11] v0.4.2 统一模块注册显示名称与说明的多语言资源键
-    1、Register 通过 XncfRegisterText 用稳定资源键和中文基准文本解析菜单名称与模块说明。
-    [2026-11-12] v0.4.3 统一模块注册显示名称与说明的多语言资源键
-    1、模块注册信息优先使用稳定资源键解析多语言显示文本。
-    2、兼容现有资源与默认文案，避免缺少翻译时影响模块加载。
+    <PackageReleaseNotes>v0.1.0-preview1 initial release: sandboxmodule
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        [2026-08-13] v0.1.1-preview2 Dependency update from Senparc.Ncf.AreaBase to 0.23.3-preview7; Senparc.Ncf.DatabasePlant to 0.21.7-preview7
+        [2026-08-15] v0.2.0 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        4. Updated module behavior and related support.
+        5. Updated module behavior and related support.
+        6. Updated module behavior and related support.
+        7. Updated module behavior and related support.
+        8. Updated module behavior and related support.
+        [2026-08-29] v0.3.0 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        [2026-09-15] v0.3.1 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-09-16] v0.3.2 Dependency updates from Senparc.Web to 0.39.1
+        [2026-09-17] v0.3.3 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-09-18] v0.3.3 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        4. Updated module behavior and related support.
+        5. Updated module behavior and related support.
+        6. Updated module behavior and related support.
+        [2026-09-18] v0.3.3 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        4. Updated module behavior and related support.
+        5. Updated module behavior and related support.
+        6. Updated module behavior and related support.
+        [2026-10-05] v0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
+        1. Updated Senparc.Xncf.Sandbox project behavior and integration for the latest feature and reliability improvements.
+        2. feat: enhance Sandbox with external JupyterLab control, port mappings, session alias and raised quota
+        [2026-10-21] v0.3.5 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-11-03] v0.4.0 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        4. Updated module behavior and related support.
+        5. Updated module behavior and related support.
+        6. Dependency update from Senparc.Xncf.Sandbox.Abstractions to 0.3.1
+        [2026-11-03] Reuse shared documentation help and automatically select the current documentation language.
+        [2026-11-05] v0.4.2 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Dependency update from Senparc.Ncf.AreaBase to 0.23.10
+        4. Dependency update from Senparc.Ncf.DatabasePlant to 0.21.14
+        5. Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
+        6. Dependency update from Senparc.Xncf.AreasBase to 0.13.12
+        [2026-11-11] v0.4.2 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        [2026-11-12] v0.4.3 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-11-19] v0.4.4 Localized sandbox setup and runtime surfaces
+        1. Updated localized labels, resource fallbacks, and user-facing messages across affected surfaces.
+        2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

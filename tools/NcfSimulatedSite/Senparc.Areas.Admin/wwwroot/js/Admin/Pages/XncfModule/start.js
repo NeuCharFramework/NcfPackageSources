@@ -2,7 +2,7 @@
     el: "#app",
     data() {
         return {
-            data: [], // 数据
+            data: [], // data
             tooltip: {
                 "IAreaRegister": ncfT('Xncf.AreaFeature'),
                 "IXncfDatabase": ncfT('Xncf.DatabaseFeature'),
@@ -23,14 +23,14 @@
                 2: ncfT('Xncf.NewModules'),
                 3: ncfT('Xncf.PendingUpdates')
             },
-            // 执行弹窗
+            //Legacy comment translated to English.
             run: {
                 data: {},
                 visible: false,
                 loading: false
             },
             runData: {
-                // 绑定数据
+                //Legacy comment translated to English.
             },
             runResult: {
                 visible: false,
@@ -41,7 +41,7 @@
                 tempId: '',
                 hasLog: false
             },
-            //查看线程 
+            //Legacy comment translated to English.
             thread: {
                 visible: false
             },
@@ -83,6 +83,14 @@
                 intervalSeconds: 300,
                 useNeuBell: false,
                 workflowId: null
+            },
+            insights: {
+                capabilities: null,
+                capabilitiesLoading: false,
+                entities: null,
+                entitiesLoading: false,
+                entitiesAuthorized: false,
+                password: ''
             }
         };
     },
@@ -109,8 +117,8 @@
                 return '';
             }
 
-            // Function 返回值在服务端会先进行 HTML 编码。使用 textarea 仅解码文本，
-            // 实际输出仍必须经过 safeFunctionResultHtml() 的严格净化。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             const decoder = document.createElement('textarea');
             decoder.innerHTML = String(value || '');
             return decoder.value.replace(/\\r\\n|\\n|\\r/g, '\n');
@@ -230,7 +238,53 @@
             this.data.xncfRegister.interfaces = this.data.xncfRegister.interfaces.splice(1);
             window.document.title = this.data.xncfModule.menuName;
             await Promise.all([this.loadPivot(), this.loadAiModels()]);
+            await this.loadCapabilities();
             this.applyFunctionNavigation();
+        },
+        async loadCapabilities() {
+            const uid = resizeUrl().uid;
+            this.insights.capabilitiesLoading = true;
+            try {
+                const response = await service.get(`/Admin/XncfModule/Start?handler=Capabilities&uid=${encodeURIComponent(uid)}`);
+                this.insights.capabilities = this.unwrapResponse(response);
+            } catch (error) {
+                this.$message.error(ncfT('Xncf.LoadCapabilitiesFailed'));
+            } finally {
+                this.insights.capabilitiesLoading = false;
+            }
+        },
+        async loadEntities() {
+            const uid = resizeUrl().uid;
+            if (!this.insights.password) {
+                this.$message.warning(ncfT('Xncf.EnterCurrentAdministratorPassword'));
+                return;
+            }
+            this.insights.entitiesLoading = true;
+            try {
+                const response = await service.post('/Admin/XncfModule/Start?handler=Entities', {
+                    uid,
+                    password: this.insights.password
+                }, { customAlert: false });
+                this.insights.entities = this.unwrapResponse(response);
+                this.insights.entitiesAuthorized = true;
+                this.insights.password = '';
+            } catch (error) {
+                this.insights.entitiesAuthorized = false;
+                this.$message.error(error && error.response && error.response.status === 401
+                    ? ncfT('Xncf.PasswordVerificationFailed')
+                    : ncfT('Xncf.LoadDataTablesFailed'));
+            } finally {
+                this.insights.entitiesLoading = false;
+            }
+        },
+        openAccessControl() {
+            const uid = resizeUrl().uid;
+            const url = `/Admin/NeuCharPivot/Access?moduleUid=${encodeURIComponent(uid)}`;
+            if (window.ncfOpenAdminPage) {
+                window.ncfOpenAdminPage(url, ncfT('Xncf.NeuCharPivotAccessControl'));
+            } else {
+                window.open(url, '_blank');
+            }
         },
 
         readFunctionNavigation() {

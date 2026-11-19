@@ -4,58 +4,58 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<Version>0.0.13</Version>
 		<PackageReleaseNotes>
-		  [2026-07-17] v0.0.1 同步上游项目版本并适配统一本地化能力
-		  1、Dependency update from Senparc.Ncf.Database.MySql.Backcup to 0.20.2-preview2
-		  2、Dependency update from Senparc.Ncf.Database.MySql to 0.20.2-preview2
-		  3、Dependency update from Senparc.Ncf.Database.Oracle to 0.10.2-preview2
-		  4、Dependency update from Senparc.Ncf.Database.PostgreSQL to 0.13.2-preview2
-		  5、Dependency update from Senparc.Ncf.Database.SqlServer to 0.20.2-preview2
-		  6、Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.2-preview2
-		  7、Dependency update from Senparc.Ncf.Database to 0.21.2-preview2
-		  8、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.2-preview2
+		  [2026-07-17] v0.0.1 synchronize upstream project versions and adopt shared localization capabilities
+		  1. Dependency update from Senparc.Ncf.Database.MySql.Backcup to 0.20.2-preview2
+		  2. Dependency update from Senparc.Ncf.Database.MySql to 0.20.2-preview2
+		  3. Dependency update from Senparc.Ncf.Database.Oracle to 0.10.2-preview2
+		  4. Dependency update from Senparc.Ncf.Database.PostgreSQL to 0.13.2-preview2
+		  5. Dependency update from Senparc.Ncf.Database.SqlServer to 0.20.2-preview2
+		  6. Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.2-preview2
+		  7. Dependency update from Senparc.Ncf.Database to 0.21.2-preview2
+		  8. Dependency update from Senparc.Ncf.DatabasePlant to 0.21.2-preview2
 		  [2026-07-29] v0.0.2 Dependency update from Senparc.Ncf.Database.MySql.Backcup to 0.20.3-preview3
 		  [2026-07-31] v0.0.3 Dependency update from Senparc.Ncf.Database.MySql to 0.20.4-preview4
 		  [2026-08-04] v0.0.4 Dependency updates from upstream projects
-		  1、Dependency update from Senparc.Ncf.Database.MySql.Backup to 0.20.5-preview5
-		  2、Dependency update from Senparc.Ncf.Database.MySql to 0.20.5-preview5
-		  3、Dependency update from Senparc.Ncf.Database.Oracle to 0.10.5-preview5
-		  4、Dependency update from Senparc.Ncf.Database.PostgreSQL to 0.13.5-preview5
-		  5、Dependency update from Senparc.Ncf.Database.SqlServer to 0.20.5-preview5
-		  6、Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.5-preview5
-		  7、Dependency update from Senparc.Ncf.Database to 0.21.5-preview5
-		  8、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.5-preview5
+		  1. Dependency update from Senparc.Ncf.Database.MySql.Backup to 0.20.5-preview5
+		  2. Dependency update from Senparc.Ncf.Database.MySql to 0.20.5-preview5
+		  3. Dependency update from Senparc.Ncf.Database.Oracle to 0.10.5-preview5
+		  4. Dependency update from Senparc.Ncf.Database.PostgreSQL to 0.13.5-preview5
+		  5. Dependency update from Senparc.Ncf.Database.SqlServer to 0.20.5-preview5
+		  6. Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.5-preview5
+		  7. Dependency update from Senparc.Ncf.Database to 0.21.5-preview5
+		  8. Dependency update from Senparc.Ncf.DatabasePlant to 0.21.5-preview5
 		  [2026-08-08] v0.0.5 Dependency updates from upstream projects
-		  1、Dependency update from Senparc.Ncf.Database.MySql.Backcup to 0.20.6-preview6
-		  2、Dependency update from Senparc.Ncf.Database.MySql to 0.20.6-preview6
-		  3、Dependency update from Senparc.Ncf.Database.Oracle to 0.10.6-preview6
-		  4、Dependency update from Senparc.Ncf.Database.PostgreSQL to 0.13.6-preview6
-		  5、Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.6-preview6
-		  6、Dependency update from Senparc.Ncf.Database.SqlServer to 0.20.6-preview6
-		  7、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
-		  8、Dependency update from Senparc.Ncf.Database to 0.21.6-preview6
+		  1. Dependency update from Senparc.Ncf.Database.MySql.Backcup to 0.20.6-preview6
+		  2. Dependency update from Senparc.Ncf.Database.MySql to 0.20.6-preview6
+		  3. Dependency update from Senparc.Ncf.Database.Oracle to 0.10.6-preview6
+		  4. Dependency update from Senparc.Ncf.Database.PostgreSQL to 0.13.6-preview6
+		  5. Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.6-preview6
+		  6. Dependency update from Senparc.Ncf.Database.SqlServer to 0.20.6-preview6
+		  7. Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
+		  8. Dependency update from Senparc.Ncf.Database to 0.21.6-preview6
 		  [2026-08-13] v0.0.6 Dependency update from Senparc.Ncf.Database.MySql.Backcup to 0.20.7-preview7; Senparc.Ncf.Database.MySql to 0.20.7-preview7; Senparc.Ncf.Database.Oracle to 0.10.7-preview7; Senparc.Ncf.Database.PostgreSQL to 0.13.7-preview7; Senparc.Ncf.Database.SqlServer to 0.20.7-preview7; Senparc.Ncf.Database.Sqlite to 0.20.7-preview7; Senparc.Ncf.Database to 0.21.7-preview7; Senparc.Ncf.DatabasePlant to 0.21.7-preview7
 		  [2026-08-15] v0.0.7 Dependency update from Senparc.Ncf.Database.MySql.Backcup to 0.20.8-preview8; Senparc.Ncf.Database.MySql to 0.20.8-preview8; Senparc.Ncf.Database.Oracle to 0.10.8-preview8; Senparc.Ncf.Database.PostgreSQL to 0.13.8-preview8; Senparc.Ncf.Database.SqlServer to 0.20.8-preview8; Senparc.Ncf.Database.Sqlite to 0.20.8-preview8; Senparc.Ncf.Database to 0.21.8-preview8; Senparc.Ncf.DatabasePlant to 0.21.8-preview8
-		  1、Dependency update from Senparc.Ncf.Database 及相关数据库项目到 preview8
-		  2、补充多库支持矩阵日志 BuildSupportMatrixLog 单测
-		  [2026-08-22] v0.0.8 补充多数据库支持矩阵日志回归测试
-		  1、覆盖 BuildSupportMatrixLog 的数据库绑定和矩阵输出行为
+		  1. Updated module behavior and related support.
+		  2. Updated module behavior and related support.
+		  [2026-08-22] v0.0.8 Updated module behavior and related support.
+		  1. Updated module behavior and related support.
 		  [2026-08-29] v0.0.9 Dependency updates from Senparc.Ncf.Database.MySql.Backcup to 0.20.10; Dependency update from Senparc.Ncf.Database.MySql to 0.20.10; Dependency update from Senparc.Ncf.Database.Oracle to 0.10.10; Dependency update from Senparc.Ncf.Database.PostgreSQL to 0.13.10; Dependency update from Senparc.Ncf.Database.SqlServer to 0.20.10; Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.10; Dependency update from Senparc.Ncf.Database to 0.21.10; Dependency update from Senparc.Ncf.DatabasePlant to 0.21.10
-		  1、Dependency update from Senparc.Ncf.Database.MySql.Backcup to 0.20.10
-		  2、Dependency update from Senparc.Ncf.Database.MySql to 0.20.10
-		  3、Dependency update from Senparc.Ncf.Database.Oracle to 0.10.10
-		  4、Dependency update from Senparc.Ncf.Database.PostgreSQL to 0.13.10
-		  5、Dependency update from Senparc.Ncf.Database.SqlServer to 0.20.10
-		  6、Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.10
-		  7、Dependency update from Senparc.Ncf.Database to 0.21.10
-		  8、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.10
+		  1. Dependency update from Senparc.Ncf.Database.MySql.Backcup to 0.20.10
+		  2. Dependency update from Senparc.Ncf.Database.MySql to 0.20.10
+		  3. Dependency update from Senparc.Ncf.Database.Oracle to 0.10.10
+		  4. Dependency update from Senparc.Ncf.Database.PostgreSQL to 0.13.10
+		  5. Dependency update from Senparc.Ncf.Database.SqlServer to 0.20.10
+		  6. Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.10
+		  7. Dependency update from Senparc.Ncf.Database to 0.21.10
+		  8. Dependency update from Senparc.Ncf.DatabasePlant to 0.21.10
 		  [2026-09-16] v0.0.10 Dependency updates from upstream modules
 		  [2026-09-17] v0.0.11 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
-		  1、同步受影响的基础库、AI 模块或宿主项目版本
-		  2、保持项目引用链与当前功能兼容
+		  1. Updated module behavior and related support.
+		  2. Updated module behavior and related support.
 		  [2026-10-05] v0.0.12 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
-		  1、Updated Senparc.Ncf.DatabaseTests project behavior and integration for the latest feature and reliability improvements.
-		  2、chore: update package versions and dependencies across multiple projects
-		  [2026-11-12] v0.0.13 Dependency updates from Senparc.Ncf.Database.MySql.Backup to 0.20.13；Senparc.Ncf.Database.MySql to 0.20.13；Senparc.Ncf.Database.Oracle to 0.10.13；Senparc.Ncf.Database.PostgreSQL to 0.13.13
+		  1. Updated Senparc.Ncf.DatabaseTests project behavior and integration for the latest feature and reliability improvements.
+		  2. chore: update package versions and dependencies across multiple projects
+		  [2026-11-12] v0.0.13 Dependency updates from Senparc.Ncf.Database.MySql.Backup to 0.20.13;Senparc.Ncf.Database.MySql to 0.20.13;Senparc.Ncf.Database.Oracle to 0.10.13;Senparc.Ncf.Database.PostgreSQL to 0.13.13
 		</PackageReleaseNotes>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>

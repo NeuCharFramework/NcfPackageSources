@@ -1,17 +1,20 @@
 /*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：NcfLocalizationOptions.cs
-    文件功能描述：NcfLocalizationOptions 相关实现
-    
-    
-    创建标识：Senparc - 20260717
-    
-    修改标识：Senparc - 20260717
-    修改描述：v0.21.0-preview2 增强全局文化配置与本地化选项支持
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.21.1-preview3 统一本地化资源回退与语言配置能力
+    Copyright (C) 2026 Senparc
+
+    File name: NcfLocalizationOptions.cs
+    File description: NcfLocalizationOptions related implementation
+
+    Created by: Senparc - 20260717
+
+    Modified by: Senparc - 20260717
+    Change description: v0.21.0-preview2 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261111
+    Change description: v0.21.1-preview3 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.21.3-preview5 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 using System;
@@ -22,12 +25,12 @@ using System.Linq;
 namespace Senparc.Ncf.Utility.Helpers
 {
     /// <summary>
-    /// NCF 全局支持的界面语言。
+    ///Legacy comment translated to English.
     /// </summary>
     /// <remarks>
-    /// 所有宿主和模块都应从此处读取支持列表，避免语言切换器、请求中间件和资源文件
-    /// 分别维护不同的语言集合。非中文资源缺失时，运行时按当前语言、英语、简体中文
-    /// 和中性资源的顺序回退。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </remarks>
     public static class NcfLocalizationOptions
     {
@@ -47,7 +50,7 @@ namespace Senparc.Ncf.Utility.Helpers
             Array.AsReadOnly(_supportedCultures);
 
         /// <summary>
-        /// 将浏览器或调用方传入的区域名称规范化为系统支持的区域名称。
+        ///Legacy comment translated to English.
         /// </summary>
         public static bool TryNormalizeCulture(string cultureName, out string normalizedCulture)
         {

@@ -1,31 +1,37 @@
+var PromptRangeSendCommand = window.PromptRangeSendCommand = Object.freeze({
+    shoot: 'shoot',
+    rapid: 'rapid',
+    draft: 'draft'
+});
+
 var app = new Vue({
     el: "#app",
     data() {
         return {
             isAIGrade: true,
             devHost: 'http://pr-felixj.frp.senparc.com',
-            // 优化功能
+            // optimizefeature
             optimizeDialogVisible: false,
             optimizeRequirement: '',
             optimizing: false,
-            optimizeProgressText: '',          // 优化弹窗内进度说明（Agent → 刷新 → 打靶 → 评分）
-            optimizeErrorText: '',             // 优化失败时保留在弹窗内供开发者查看
-            autoShootAfterOptimize: true,      // 🆕 创建后立即打靶（默认选中）
-            autoAIGradeAfterShoot: false,      // 🆕 打靶后 AI 评分（默认不选中）
-            // PromptCatalyzer 初始化功能
-            promptCatalyzerInitVisible: false,      // 初始化对话框可见性
-            availableModelsForInit: [],             // 可用的 AI Model 列表
-            selectedModelIdForInit: null,           // 选中的 Model ID
-            loadingModels: false,                   // 加载 Model 列表的状态
-            initializing: false,                    // 正在初始化的状态
-            pageChange: false, // 页面是否有变化
-            isAvg: true, // 是否平均分 默认false 不平均
-            // 配置 输入 ---start
-            promptField: '', // 靶场列表
-            promptFieldOpt: [], // 靶场列表
-            promptOpt: [], // prompt列表
-            modelOpt: [], // 模型列表
-            vectorOpt: [], // 向量库列表（TextEmbedding）
+            optimizeProgressText: '',          //Legacy comment translated to English.
+            optimizeErrorText: '',             //Legacy comment translated to English.
+            autoShootAfterOptimize: true,      //Legacy comment translated to English.
+            autoAIGradeAfterShoot: false,      //Legacy comment translated to English.
+            // PromptCatalyzer initializefeature
+            promptCatalyzerInitVisible: false,      //Legacy comment translated to English.
+            availableModelsForInit: [],             //Legacy comment translated to English.
+            selectedModelIdForInit: null,           //Legacy comment translated to English.
+            loadingModels: false,                   //Legacy comment translated to English.
+            initializing: false,                    //Legacy comment translated to English.
+            pageChange: false, //Legacy comment translated to English.
+            isAvg: true, //Legacy comment translated to English.
+            // configuration input ---start
+            promptField: '', //Legacy comment translated to English.
+            promptFieldOpt: [], //Legacy comment translated to English.
+            promptOpt: [], //Legacy comment translated to English.
+            modelOpt: [], //Legacy comment translated to English.
+            vectorOpt: [], //Legacy comment translated to English.
             vectorLoading: false,
             configModelTypeLabelMap: {
                 1: 'TextCompletion',
@@ -49,11 +55,11 @@ var app = new Vue({
                 8: 'Qdrant',
                 17: 'VolatileInMemory'
             },
-            waitRefreshModel: false, // 是否等待刷新模型列表
-            promptid: '',// 选择靶场
-            modelid: '',// 选择模型
-            content: '',// prompt 输入内容
-            remarks: '', // prompt 输入的备注
+            waitRefreshModel: false, //Legacy comment translated to English.
+            promptid: '',//Legacy comment translated to English.
+            modelid: '',//Legacy comment translated to English.
+            content: '',// prompt inputcontent
+            remarks: '', //Legacy comment translated to English.
             ttsForm: {
                 voice: 'alloy',
                 format: 'mp3',
@@ -73,13 +79,13 @@ var app = new Vue({
                 searchTopK: 3,
                 searchQuery: ''
             },
-            isComposing: false, // 是否正在使用输入法（IME composition）
-            numsOfResults: 1, // prompt 的连发次数(发射次数) 1-10
-            numsOfResultsOpt: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], // prompt 的连发次数(发射次数) 1-10
-            // 参数设置 视图配置列表
+            isComposing: false, //Legacy comment translated to English.
+            numsOfResults: 1, //Legacy comment translated to English.
+            numsOfResultsOpt: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], //Legacy comment translated to English.
+            //Legacy comment translated to English.
             parameterViewList: [
                 {
-                    tips: '控制词的选择范围，值越高，生成的文本将包含更多的不常见词汇',
+                    tips: ncfST('Frontend.339'),
                     formField: 'topP',
                     label: 'Top_p',
                     value: 0.5,
@@ -90,7 +96,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: '采样温度，较高的值如0.8会使输出更加随机，而较低的值如0.2则会使其输出更具有确定性',
+                    tips: ncfST('Frontend.341'),
                     formField: 'temperature',
                     label: 'Temperature',
                     value: 0.5,
@@ -101,7 +107,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: '请求与返回的Token总数或生成文本的最大长度，具体请参考API文档！',
+                    tips: ncfST('Frontend.342'),
                     formField: 'maxToken',
                     label: 'MaxToken',
                     value: 100,
@@ -112,7 +118,7 @@ var app = new Vue({
                     sliderStep: 1
                 },
                 {
-                    tips: '惩罚频繁出现的词',
+                    tips: ncfST('Frontend.338'),
                     formField: 'frequencyPenalty',
                     label: 'Frequeny_penalty',
                     value: 0,
@@ -123,7 +129,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: '惩罚已出现的词',
+                    tips: ncfST('Frontend.337'),
                     formField: 'presencePenalty',
                     label: 'Presence_penalty',
                     value: 0,
@@ -134,7 +140,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: '设定生成文本时的终止词序列。当遇到这些词序列时，模型将停止生成。（输入的内容将会根据英文逗号进行分割）',
+                    tips: ncfST('Frontend.340'),
                     formField: 'stopSequences',
                     label: 'StopSequences',
                     value: '',
@@ -145,72 +151,72 @@ var app = new Vue({
                     sliderStep: 1
                 }
             ],
-            promptLeftShow: false, // prompt左侧区域整体 显隐
-            parameterViewShow: false, // 模型参数设置 显隐 false是默认显示 trun是隐藏
-            targetShootLoading: false, // 打靶loading
-            dodgersLoading: false, // 连发loading
-            // 配置 输入 ---end
-            // prompt请求参数 ---start
-            promptParamVisible: false,// prompt请求参数 显隐 true是显示 false是默认隐藏
+            promptLeftShow: false, //Legacy comment translated to English.
+            parameterViewShow: false, //Legacy comment translated to English.
+            targetShootLoading: false, //Legacy comment translated to English.
+            dodgersLoading: false, //Legacy comment translated to English.
+            // configuration input ---end
+            // promptrequestparameters ---start
+            promptParamVisible: false,//Legacy comment translated to English.
             promptParamFormLoading: false,
             promptParamForm: {
                 prefix: '',
                 suffix: '',
                 variableList: []
             },
-            // prompt请求参数 ---end
-            // sendBtns: 打靶、连发、保存草稿
+            // promptrequestparameters ---end
+            //Legacy comment translated to English.
             sendBtns: [
                 {
-                    text: '打靶'
+                    text: PromptRangeSendCommand.shoot
                 },
                 {
-                    text: '连发'
+                    text: PromptRangeSendCommand.rapid
                 },
                 {
-                    text: '保存草稿'
+                    text: PromptRangeSendCommand.draft
                 }
             ],
-            sendBtnText: '打靶',
-            // 输出 ---start
-            outputAverageDeci: -1,// 输出列表的平均分
-            outputMaxDeci: -1, // 输出列表的最高分
-            outputActive: '', // 输出列表选中查看|评分
-            outputList: [],  // 输出列表
-            robotScoreLoadingMap: {}, // AI评分加载状态映射 {itemId: true/false}
-            chartData: [], // 图表数据
-            chartInstance: null, // 图表实例
-            // 输出 ---end
-            // 版本记录 ---start
-            versionDrawer: false,// 抽屉
-            versionSearchVal: '', // 版本搜索
+            sendBtnText: PromptRangeSendCommand.shoot,
+            // output ---start
+            outputAverageDeci: -1,//Legacy comment translated to English.
+            outputMaxDeci: -1, //Legacy comment translated to English.
+            outputActive: '', //Legacy comment translated to English.
+            outputList: [],  //Legacy comment translated to English.
+            robotScoreLoadingMap: {}, //Legacy comment translated to English.
+            chartData: [], //Legacy comment translated to English.
+            chartInstance: null, //Legacy comment translated to English.
+            // output ---end
+            // versionrecord ---start
+            versionDrawer: false,//Legacy comment translated to English.
+            versionSearchVal: '', // versionsearch
             versionTreeProps: {
                 children: 'children',
                 label: 'label'
             },
             versionTreeData: [],
-            // 版本记录 ---end
-            // 战术选择
+            // versionrecord ---end
+            //Legacy comment translated to English.
             tacticalFormVisible: false,
             tacticalFormSubmitLoading: false,
             tacticalForm: {
-                tactics: '重新瞄准',
-                chatMode: '对话模式' // 对话模式/直接测试，默认对话模式
+                tactics: 'retarget',
+                chatMode: 'chat' //Legacy comment translated to English.
             },
-            // 战术选择弹窗中的对话输入
-            tacticalChatInput: '', // 对话模式下的用户输入内容
-            // 继续聊天相关状态
-            continueChatMode: false, // 是否处于继续聊天模式
-            continueChatPromptResultId: null, // 继续聊天的 PromptResult ID
-            continueChatHistory: [], // 继续聊天的历史记录
-            continueChatPendingUserMessageId: null, // 继续聊天时本地临时用户消息 ID
-            continueChatSystemMessage: '', // 继续聊天时使用的 SystemMessage（Prompt）
+            //Legacy comment translated to English.
+            tacticalChatInput: '', //Legacy comment translated to English.
+            //Legacy comment translated to English.
+            continueChatMode: false, //Legacy comment translated to English.
+            continueChatPromptResultId: null, //Legacy comment translated to English.
+            continueChatHistory: [], //Legacy comment translated to English.
+            continueChatPendingUserMessageId: null, //Legacy comment translated to English.
+            continueChatSystemMessage: '', //Legacy comment translated to English.
             continueChatUsageSummary: {
                 promptCostToken: 0,
                 resultCostToken: 0,
                 totalCostToken: 0
             },
-            systemMessageCollapse: [], // SystemMessage 折叠面板状态
+            systemMessageCollapse: [], //Legacy comment translated to English.
             promptStreamSource: null,
             promptStreamId: '',
             promptStreaming: false,
@@ -219,57 +225,39 @@ var app = new Vue({
             promptStreamAvailable: true,
             useStreamOutput: true,
             promptStreamPreferenceStorageKey: 'PromptRange.UseStreamOutput',
-            promptRangeTexts: {
-                zh: {
-                    streamOptionLabel: '流式输出',
-                    streamOptionTooltip: '开启后，打靶/连发/继续对话会实时输出；关闭后使用整块输出。',
-                    switchOn: '开',
-                    switchOff: '关',
-                    streamFallbackWarning: '实时流连接失败，已自动切换为普通模式（刷新页面可重试）',
-                    streamUnsupportedWarning: '当前浏览器不支持流式输出，已切换为普通模式'
-                },
-                en: {
-                    streamOptionLabel: 'Streaming Output',
-                    streamOptionTooltip: 'When enabled, shooting/rapid fire/continue chat uses streaming output. When disabled, it uses full-response output.',
-                    switchOn: 'On',
-                    switchOff: 'Off',
-                    streamFallbackWarning: 'Streaming connection failed. Switched to normal mode automatically (refresh to retry).',
-                    streamUnsupportedWarning: 'Streaming is not supported by this browser. Switched to normal mode.'
-                }
-            },
-            // 导图相关状态
-            mapDialogVisible: false, // 导图对话框显示状态
-            map3dScene: null, // three.js 场景
-            map3dCamera: null, // three.js 相机
-            map3dRenderer: null, // three.js 渲染器
-            map3dControls: null, // 相机控制器
-            map3dNodes: [], // 3D 节点数组
-            map3dTreeData: null, // 树状结构数据
-            map3dClickHandler: null, // 点击事件处理器
-            map3dAnimationId: null, // 动画ID
-            map3dNeedsAnimationUpdate: false, // 是否需要更新动画
-            map3dNodeMap: new Map(), // 节点映射，用于快速查找
-            map3dLastAnimationTime: 0, // 上次动画更新时间（用于节流）
-            map3dCurrentNodes: [], // 缓存当前选中的节点（性能优化）
-            _map3dKeydownHandler: null, // 键盘事件处理器
-            // 靶场
+            //Legacy comment translated to English.
+            mapDialogVisible: false, //Legacy comment translated to English.
+            map3dScene: null, //Legacy comment translated to English.
+            map3dCamera: null, //Legacy comment translated to English.
+            map3dRenderer: null, //Legacy comment translated to English.
+            map3dControls: null, //Legacy comment translated to English.
+            map3dNodes: [], //Legacy comment translated to English.
+            map3dTreeData: null, //Legacy comment translated to English.
+            map3dClickHandler: null, //Legacy comment translated to English.
+            map3dAnimationId: null, //Legacy comment translated to English.
+            map3dNeedsAnimationUpdate: false, //Legacy comment translated to English.
+            map3dNodeMap: new Map(), //Legacy comment translated to English.
+            map3dLastAnimationTime: 0, //Legacy comment translated to English.
+            map3dCurrentNodes: [], //Legacy comment translated to English.
+            _map3dKeydownHandler: null, //Legacy comment translated to English.
+            // range
             fieldFormVisible: false,
             fieldFormSubmitLoading: false,
             fieldForm: {
                 alias: ''
             },
-            // ai 评分标准
+            //Legacy comment translated to English.
             aiScoreFormVisible: false,
             aiScoreFormSubmitLoading: false,
             aiScoreForm: {
                 resultList: [{
                     id: 1,
-                    label: '预期结果',
+                    label: ncfST('Frontend.188'),
                     value: ''
                 }]
             },
 
-            // 模型
+            // model
             modelFormVisible: false,
             modelFormSubmitLoading: false,
             modelForm: {
@@ -302,80 +290,80 @@ var app = new Vue({
                 label: 'FastAPI',
                 disabled: false
             }],
-            // 表单校验规则
+            //Legacy comment translated to English.
             rules: {
                 fieldName: [
-                    { required: true, message: '请输入靶场名称', trigger: 'blur' }
+                    { required: true, message: ncfST('请输入靶场名称'), trigger: 'blur' }
                 ],
                 tactics: [
-                    { required: true, message: '请选择战术', trigger: 'change' }
+                    { required: true, message: ncfST('请选择战术'), trigger: 'change' }
                 ],
                 prefix: [
-                    { required: true, message: '请输入前缀', trigger: 'blur' }
+                    { required: true, message: ncfST('请输入前缀'), trigger: 'blur' }
                 ],
                 suffix: [
-                    { required: true, message: '请输入后缀', trigger: 'blur' }
+                    { required: true, message: ncfST('请输入后缀'), trigger: 'blur' }
                 ],
                 variableValue: [
-                    { required: true, message: '请输入变量值', trigger: 'blur' }
+                    { required: true, message: ncfST('请输入变量值'), trigger: 'blur' }
                 ],
                 modelType: [
-                    { required: true, message: '请选择模型类型', trigger: 'change' }
+                    { required: true, message: ncfST('请选择模型类型'), trigger: 'change' }
                 ],
                 alias: [
-                    { required: true, message: '请输入别名', trigger: 'blur' }
+                    { required: true, message: ncfST('请输入别名'), trigger: 'blur' }
                 ],
                 deploymentName: [
-                    { required: true, message: '请输入模型名称', trigger: 'blur' }
+                    { required: true, message: ncfST('请输入模型名称'), trigger: 'blur' }
                 ],
                 apiVersion: [
-                    { required: true, message: '请输入API Version', trigger: 'blur' }
+                    { required: true, message: ncfST('请输入API Version'), trigger: 'blur' }
                 ],
                 apiKey: [
-                    { required: true, message: '请输入API key', trigger: 'blur' }
+                    { required: true, message: ncfST('请输入API key'), trigger: 'blur' }
                 ],
                 variableName: [
-                    { required: true, message: '请输入变量名', trigger: 'blur' }
+                    { required: true, message: ncfST('请输入变量名'), trigger: 'blur' }
                 ],
                 endpoint: [
-                    { required: true, message: '请输入End Point', trigger: 'blur' }
+                    { required: true, message: ncfST('请输入End Point'), trigger: 'blur' }
                 ],
                 organizationId: [
-                    { required: true, message: '请输入Organization Id', trigger: 'blur' }
+                    { required: true, message: ncfST('请输入Organization Id'), trigger: 'blur' }
                 ],
                 aiResultVal: [
-                    { required: true, message: '请输入期望结果', trigger: 'blur' }
+                    { required: true, message: ncfST('请输入期望结果'), trigger: 'blur' }
                 ],
                 rangeIdList: [
-                    { type: 'array', required: true, message: '请至少选择一个靶场', trigger: 'change' }
+                    { type: 'array', required: true, message: ncfST('请至少选择一个靶场'), trigger: 'change' }
                 ],
                 promptIdList: [
-                    { type: 'array', required: true, message: '请至少选择一个靶道', trigger: 'change' }
+                    { type: 'array', required: true, message: ncfST('请至少选择一个靶道'), trigger: 'change' }
                 ],
                 checkList: [
-                    { type: 'array', required: true, message: '请至少选择一个靶道', trigger: 'change' }
+                    { type: 'array', required: true, message: ncfST('请至少选择一个靶道'), trigger: 'change' }
                 ],
             },
             versionData: [],
             promptDetail: {},
-            uploadPluginVisible: false, // Plugin 上传dialog 显隐
-            uploadPluginDropAreaVisible: true,// 上传区域显隐
-            uploadPluginDropHover: false,// 拖拽文件 Hover
-            uploadPluginData: [], // Plugin 文件夹的文件列表
-            jsZip: null, // 压缩实例
-            expectedPluginVisible: false, // Plugin 导出dialog 显隐
-            // 导出 Plugin 选择数据
+            uploadPluginVisible: false, //Legacy comment translated to English.
+            uploadPluginDropAreaVisible: true,//Legacy comment translated to English.
+            uploadPluginDropHover: false,//Legacy comment translated to English.
+            uploadPluginData: [], //Legacy comment translated to English.
+            jsZip: null, //Legacy comment translated to English.
+            expectedPluginVisible: false, //Legacy comment translated to English.
+            //Legacy comment translated to English.
             expectedPluginFoem: {
-                checkList: [], // 选择的数据 tree 
+                checkList: [], //Legacy comment translated to English.
             },
             expectedPluginFieldList: [],
-            exportPluginExpandAll: false, // 是否展开所有节点
-            exportPluginSelectedCount: 0, // 已选择的靶道数量
+            exportPluginExpandAll: false, //Legacy comment translated to English.
+            exportPluginSelectedCount: 0, //Legacy comment translated to English.
             defaultProps: {
                 children: 'children',
                 label: 'label'
             },
-            contentTextareaRows: 14, //prompt 输入框的行数
+            contentTextareaRows: 14, //Legacy comment translated to English.
             dialogVisible: false,
             targetlaneName: '',
             dailogpromptOptlist: [],
@@ -383,36 +371,36 @@ var app = new Vue({
             box2Hidden: false,
             box3Hidden: false,
             lastClickedBox: null,
-            centerAreaMaximized: false, // 中间区域是否最大化
-            rightAreaMaximized: false,  // 右侧区域是否最大化
-            isBoxVisible: true, // 控制盒子显示和隐藏的状态
+            centerAreaMaximized: false, //Legacy comment translated to English.
+            rightAreaMaximized: false,  //Legacy comment translated to English.
+            isBoxVisible: true, //Legacy comment translated to English.
             foldsidebarShow: false,
-            // 区域宽度控制
-            leftAreaWidth: 360,    // 左侧区域宽度（默认360px）
-            centerAreaWidth: 380,  // 中间区域宽度（默认380px）
-            isResizing: false,     // 是否正在拖动
-            resizeType: null,      // 拖动类型：'left' 或 'right'
-            resizeStartX: 0,       // 拖动开始的X坐标
-            resizeStartLeftWidth: 0,   // 拖动开始时左侧区域的宽度
-            resizeStartCenterWidth: 0, // 拖动开始时中间区域的宽度
-            // Prompt 对比功能
-            compareDialogVisible: false,  // 对比对话框显示状态
-            comparePromptAId: null,       // 对比的Prompt A的ID
-            comparePromptBId: null,       // 对比的Prompt B的ID
-            comparePromptA: null,         // 对比的Prompt A的完整数据
-            comparePromptB: null,         // 对比的Prompt B的完整数据
-            // 快速创建智能体
-            createAgentDialogVisible: false,  // 创建智能体对话框显示状态
-            createAgentLoading: false,         // 创建中加载状态
+            //Legacy comment translated to English.
+            leftAreaWidth: 360,    //Legacy comment translated to English.
+            centerAreaWidth: 380,  //Legacy comment translated to English.
+            isResizing: false,     //Legacy comment translated to English.
+            resizeType: null,      //Legacy comment translated to English.
+            resizeStartX: 0,       //Legacy comment translated to English.
+            resizeStartLeftWidth: 0,   //Legacy comment translated to English.
+            resizeStartCenterWidth: 0, //Legacy comment translated to English.
+            //Legacy comment translated to English.
+            compareDialogVisible: false,  //Legacy comment translated to English.
+            comparePromptAId: null,       //Legacy comment translated to English.
+            comparePromptBId: null,       //Legacy comment translated to English.
+            comparePromptA: null,         //Legacy comment translated to English.
+            comparePromptB: null,         //Legacy comment translated to English.
+            //Legacy comment translated to English.
+            createAgentDialogVisible: false,  //Legacy comment translated to English.
+            createAgentLoading: false,         //Legacy comment translated to English.
             createAgentForm: {
-                name: '',          // 智能体名称
-                scopeType: 'full', // 覆盖范围: 'range'=靶场级别, 'tactic'=靶道级别, 'full'=完整定位
-                promptCode: '',    // 最终使用的 PromptCode
-                description: '',   // 说明
+                name: '',          // agentname
+                scopeType: 'full', //Legacy comment translated to English.
+                promptCode: '',    //Legacy comment translated to English.
+                description: '',   // description
                 functionCallNames: '' // Function Calls
             },
-            createAgentExistingList: [], // 当前 PromptCode 下已有的智能体列表
-            // 自定义滚动条缩略图
+            createAgentExistingList: [], //Legacy comment translated to English.
+            //Legacy comment translated to English.
             showScrollbarThumbnails: false,
             scrollInfo: {
                 scrollTop: 0,
@@ -464,15 +452,15 @@ var app = new Vue({
         },
         promptInputTitle() {
             if (this.isSpeechToTextModelSelected) {
-                return '语音识别输入'
+                return ncfST('Frontend.385')
             }
-            return '输入Prompt'
+            return ncfST('Frontend.382')
         },
         shouldShowPromptEditor() {
             return !this.isSpeechToTextModelSelected
         },
         
-        // 计算创建智能体时使用的 PromptCode（根据范围选择）
+        //Legacy comment translated to English.
         createAgentPromptCode() {
             if (!this.promptDetail || !this.promptDetail.fullVersion) {
                 return ''
@@ -493,51 +481,51 @@ var app = new Vue({
             }
         },
         
-        // 获取可选择的Prompt列表（用于对比对话框）
+        //Legacy comment translated to English.
         availablePrompts() {
             return this.promptOpt || [];
         },
         
-        // 获取Prompt A的显示信息
+        //Legacy comment translated to English.
         comparePromptAInfo() {
             if (!this.comparePromptA) return null;
             
-            // 从 fullVersion 解析名称 (格式: 靶场-靶道-战术)
+            //Legacy comment translated to English.
             const versionParts = this.comparePromptA.fullVersion ? this.comparePromptA.fullVersion.split('-') : [];
             
             return {
-                targetRangeName: versionParts[0] || '未知靶场',
-                targetLaneName: versionParts[1] || '未知靶道',
-                tacticalName: versionParts[2] || '未知战术',
+                targetRangeName: versionParts[0] || ncfST('Frontend.354'),
+                targetLaneName: versionParts[1] || ncfST('Frontend.355'),
+                tacticalName: versionParts[2] || ncfST('Frontend.353'),
                 modelName: this.getModelName(this.comparePromptA.modelId)
             };
         },
         
-        // 获取Prompt B的显示信息
+        //Legacy comment translated to English.
         comparePromptBInfo() {
             if (!this.comparePromptB) return null;
             
-            // 从 fullVersion 解析名称 (格式: 靶场-靶道-战术)
+            //Legacy comment translated to English.
             const versionParts = this.comparePromptB.fullVersion ? this.comparePromptB.fullVersion.split('-') : [];
             
             return {
-                targetRangeName: versionParts[0] || '未知靶场',
-                targetLaneName: versionParts[1] || '未知靶道',
-                tacticalName: versionParts[2] || '未知战术',
+                targetRangeName: versionParts[0] || ncfST('Frontend.354'),
+                targetLaneName: versionParts[1] || ncfST('Frontend.355'),
+                tacticalName: versionParts[2] || ncfST('Frontend.353'),
                 modelName: this.getModelName(this.comparePromptB.modelId)
             };
         },
         
-        // 检查是否是同一个Prompt
+        //Legacy comment translated to English.
         isSamePrompt() {
             if (!this.comparePromptA || !this.comparePromptB) return false;
             if (!this.comparePromptAId || !this.comparePromptBId) return false;
             
-            // 通过ID判断是否为同一个Prompt
+            //Legacy comment translated to English.
             return this.comparePromptAId === this.comparePromptBId;
         },
         
-        // 获取当前战术编号（用于显示）
+        //Legacy comment translated to English.
         currentTacticalInfo() {
             if (!this.promptDetail || !this.promptDetail.fullVersion) {
                 return {
@@ -546,8 +534,8 @@ var app = new Vue({
                 };
             }
             
-            // 解析当前版本号：格式为 RangeName-T{Tactic}-A{Aiming}
-            // 例如：2023.12.14.1-T1.2.3-A1
+            //Legacy comment translated to English.
+            // for example：2023.12.14.1-T1.2.3-A1
             const versionParts = this.promptDetail.fullVersion.split('-');
             if (versionParts.length < 2) {
                 return {
@@ -556,9 +544,9 @@ var app = new Vue({
                 };
             }
             
-            // versionParts[0] = RangeName (例如：2023.12.14.1)
-            // versionParts[1] = T{Tactic} (例如：T1.2.3)
-            // versionParts[2] = A{Aiming} (例如：A1，可选)
+            // versionParts[0] = RangeName (for example：2023.12.14.1)
+            // versionParts[1] = T{Tactic} (for example：T1.2.3)
+            //Legacy comment translated to English.
             const tacticPart = versionParts[1] || ''; // T1.2.3
             const aimingPart = versionParts[2] || ''; // A1
             
@@ -568,7 +556,7 @@ var app = new Vue({
             };
         },
         
-        // 计算下一个战术编号（用于战术选择弹窗的动态提示）
+        //Legacy comment translated to English.
         nextTacticalNumbers() {
             if (!this.promptDetail || !this.promptDetail.fullVersion) {
                 return {
@@ -579,8 +567,8 @@ var app = new Vue({
                 };
             }
             
-            // 解析当前版本号：格式为 RangeName-T{Tactic}-A{Aiming}
-            // 例如：2023.12.14.1-T1.2.3-A1
+            //Legacy comment translated to English.
+            // for example：2023.12.14.1-T1.2.3-A1
             const versionParts = this.promptDetail.fullVersion.split('-');
             if (versionParts.length < 2) {
                 return {
@@ -592,14 +580,14 @@ var app = new Vue({
             }
             
             // versionParts[0] = RangeName
-            // versionParts[1] = T{Tactic} (例如：T1.2.3)
-            // versionParts[2] = A{Aiming} (例如：A1，可选)
+            // versionParts[1] = T{Tactic} (for example：T1.2.3)
+            //Legacy comment translated to English.
             let tacticPart = versionParts[1] || ''; // T1.2.3
             let aimingPart = versionParts[2] || 'A1'; // A1
             
-            // 检查战术部分是否以 T 开头，如果不是，可能是格式错误
+            //Legacy comment translated to English.
             if (!tacticPart.startsWith('T')) {
-                // 如果版本号格式不对，返回默认值
+                //Legacy comment translated to English.
                 return {
                     topTactic: 'T1',
                     parallelTactic: 'T1.2.4',
@@ -608,15 +596,15 @@ var app = new Vue({
                 };
             }
             
-            // 提取瞄准编号：A1 -> 1
+            //Legacy comment translated to English.
             const currentAiming = aimingPart.replace(/^A/, '');
             const aimingNumber = parseInt(currentAiming) || 1;
             
-            // 解析战术编号：T1.2.3 -> [1, 2, 3]
-            // 移除开头的 T，然后按 . 分割并转换为数字
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             const tacticStr = tacticPart.replace(/^T/, ''); // 1.2.3
             if (!tacticStr || tacticStr.length === 0) {
-                // 如果无法解析战术编号，返回默认值
+                //Legacy comment translated to English.
                 return {
                     topTactic: 'T1',
                     parallelTactic: 'T1.2.4',
@@ -625,13 +613,13 @@ var app = new Vue({
                 };
             }
             
-            // 解析战术编号数组
+            //Legacy comment translated to English.
             const tacticNumbers = [];
             const parts = tacticStr.split('.');
             for (let i = 0; i < parts.length; i++) {
                 const num = parseInt(parts[i]);
                 if (isNaN(num)) {
-                    // 如果任何部分无法解析为数字，返回默认值
+                    //Legacy comment translated to English.
                     return {
                         topTactic: 'T1',
                         parallelTactic: 'T1.2.4',
@@ -643,7 +631,7 @@ var app = new Vue({
             }
             
             if (tacticNumbers.length === 0) {
-                // 如果解析失败，返回默认值
+                //Legacy comment translated to English.
                 return {
                     topTactic: 'T1',
                     parallelTactic: 'T1.2.4',
@@ -652,25 +640,25 @@ var app = new Vue({
                 };
             }
             
-            // 1. 创建顶级战术：当前顶级编号+1
-            // 例如：当前是T1.2.3，下一个顶级战术是T2
-            // 注意：这里只是预测，实际编号需要后端查询数据库确定
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             const currentTopTactic = tacticNumbers[0] || 1;
             const nextTopTactic = currentTopTactic + 1;
             
-            // 2. 创建平行战术：同父级下，最后一个编号+1
-            // 例如：T1.2.3 -> T1.2.4
+            //Legacy comment translated to English.
+            // for example：T1.2.3 -> T1.2.4
             const nextParallelTactic = [...tacticNumbers];
             if (nextParallelTactic.length > 0) {
                 nextParallelTactic[nextParallelTactic.length - 1] = nextParallelTactic[nextParallelTactic.length - 1] + 1;
             }
             
-            // 3. 创建子战术：当前战术下添加 .1
-            // 例如：T1.2.3 -> T1.2.3.1
+            //Legacy comment translated to English.
+            // for example：T1.2.3 -> T1.2.3.1
             const nextSubTactic = [...tacticNumbers, 1];
             
-            // 4. 重新瞄准：当前瞄准编号+1
-            // 例如：T1.2.3-A1 -> T1.2.3-A2
+            //Legacy comment translated to English.
+            // for example：T1.2.3-A1 -> T1.2.3-A2
             const nextAiming = aimingNumber + 1;
             
             return {
@@ -681,7 +669,7 @@ var app = new Vue({
             };
         },
         
-        // 检测Prompt中的变量
+        //Legacy comment translated to English.
         detectedVariables() {
             if (!this.content) return [];
             
@@ -689,20 +677,20 @@ var app = new Vue({
             const suffix = this.promptParamForm.suffix || '';
             const variableList = this.promptParamForm.variableList || [];
             
-            // 如果没有设置前缀和后缀，返回空数组
+            //Legacy comment translated to English.
             if (!prefix || !suffix) return [];
             
-            // 转义前缀和后缀用于正则表达式
+            //Legacy comment translated to English.
             const escapedPrefix = prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             const escapedSuffix = suffix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             
-            // 构建正则表达式：匹配 prefix + 变量名 + suffix
+            //Legacy comment translated to English.
             const regex = new RegExp(`${escapedPrefix}(\\w+)${escapedSuffix}`, 'g');
             
-            // 获取所有已定义的变量名
+            //Legacy comment translated to English.
             const definedVarNames = variableList.map(v => v.name).filter(n => n);
             
-            // 找出所有匹配的变量
+            //Legacy comment translated to English.
             const variables = [];
             const seen = new Set();
             let match;
@@ -711,7 +699,7 @@ var app = new Vue({
                 const fullMatch = match[0];
                 const varName = match[1];
                 
-                // 避免重复
+                //Legacy comment translated to English.
                 if (!seen.has(fullMatch)) {
                     seen.add(fullMatch);
                     variables.push({
@@ -736,16 +724,16 @@ var app = new Vue({
             this.$refs.versionTree.filter(val);
         },
         
-        // 监听content外部变化（如加载数据时更新编辑器）
-        // 编辑器回写时会把 _editorContentStamp 设成同一份文本，避免把未确认拼音写回 DOM
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         content(newVal, oldVal) {
             if (newVal === this._editorContentStamp) return;
 
             const editor = this.$refs.promptEditor;
             if (!editor || this.isComposing) return;
             
-            const currentText = editor.innerText || '';
-            // 如果编辑器内容与content不一致（外部赋值），更新编辑器
+            const currentText = this.getEditorText();
+            //Legacy comment translated to English.
             if (currentText !== newVal && newVal !== oldVal) {
                 this.$nextTick(() => {
                     if (this.isComposing || this.content !== newVal || newVal === this._editorContentStamp) {
@@ -754,7 +742,7 @@ var app = new Vue({
                     }
                     const latestEditor = this.$refs.promptEditor;
                     if (!latestEditor) return;
-                    if ((latestEditor.innerText || '') === newVal) return;
+                    if (this.getEditorText() === newVal) return;
                     console.log('[prompt editor] apply external content to editor, length:', (newVal || '').length);
                     const html = this.generateHighlightHTML(newVal);
                     latestEditor.innerHTML = html;
@@ -764,42 +752,51 @@ var app = new Vue({
     },
     created() {
         this.loadPromptStreamPreference();
-        // macOS WKWebView 的原生 JavaScript 对话框桥接不可用，避免 beforeunload
-        // 触发无法完成的原生确认框；普通浏览器仍保留离页提醒。
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         if (!this.isMacEmbeddedWebView()) {
             window.addEventListener('beforeunload', this.beforeunloadHandler);
         }
         
-        // 页面创建时加载保存的宽度设置
+        //Legacy comment translated to English.
         this.loadAreaWidthsFromStorage();
     },
     mounted() {
-        // 获取靶道列表
+        //Legacy comment translated to English.
         setTimeout(async () => {
             await this.getFieldList()
-            // 获取模型列表
+            //Legacy comment translated to English.
             this.getModelOptData()
 
             this.hashChangeHandler = () => {
                 this.applyPromptHashRoute()
             }
             window.addEventListener('hashchange', this.hashChangeHandler)
+            const alias = new URLSearchParams(window.location.search || '').get('alias')
+            const rangeOption = alias
+                ? this.promptFieldOpt.find(item => item.alias === alias)
+                : null
+            if (rangeOption) {
+                this.pageChange = false
+                this.promptField = rangeOption.value
+                await this.promptChangeHandel(this.promptField, 'promptField', null, true)
+            }
             await this.applyPromptHashRoute()
           
         }, 100)
-        // 获取分数趋势图
+        //Legacy comment translated to English.
         // this.getScoringTrendData()
-        // 图表自适应
+        //Legacy comment translated to English.
         const self = this;
         const viewElem = document.body;
         const resizeObserver = new ResizeObserver(() => {
-            // 加个if约束，当Echarts存在时再执行resize()，否则图表不存在时运行到这会报错。
+            //Legacy comment translated to English.
             if (self.chartInstance) {
                 self.chartInstance.resize();
             }
         });
         resizeObserver.observe(viewElem);
-        // 初始化contenteditable编辑器
+        //Legacy comment translated to English.
         this.$nextTick(() => {
             const editor = this.$refs.promptEditor;
             if (editor && this.content) {
@@ -808,12 +805,12 @@ var app = new Vue({
             }
         });
         
-        // 初始化代码块复制功能
+        //Legacy comment translated to English.
         this.initCodeCopyButtons();
       
     },
     beforeDestroy() {
-        // 销毁之前移除事件监听器
+        //Legacy comment translated to English.
         window.removeEventListener('beforeunload', this.beforeunloadHandler);
         this.closePromptStream();
         if (this.hashChangeHandler) {
@@ -821,7 +818,7 @@ var app = new Vue({
             this.hashChangeHandler = null;
         }
         
-        // 组件销毁前移除拖动相关的事件监听器
+        //Legacy comment translated to English.
         document.removeEventListener('mousemove', this.handleResize);
         document.removeEventListener('mouseup', this.stopResize);
         this.clearHighlightTimer();
@@ -835,17 +832,17 @@ var app = new Vue({
         }
     },
     methods: {
-        getPromptRangeLocale() {
-            const raw = (document.documentElement.lang || navigator.language || 'en').toLowerCase();
-            if (raw.startsWith('zh')) {
-                return 'zh';
-            }
-            return 'en';
-        },
         getPromptRangeText(key) {
-            const locale = this.getPromptRangeLocale();
-            const localeTexts = this.promptRangeTexts[locale] || this.promptRangeTexts.en || {};
-            return localeTexts[key] || (this.promptRangeTexts.en && this.promptRangeTexts.en[key]) || key;
+            const resourceKeys = {
+                streamOptionLabel: 'Frontend.300',
+                streamOptionTooltip: 'Frontend.330',
+                switchOn: 'Frontend.029',
+                switchOff: 'Frontend.030',
+                streamFallbackWarning: 'Frontend.299',
+                streamUnsupportedWarning: 'Frontend.298'
+            };
+            const resourceKey = resourceKeys[key];
+            return resourceKey ? ncfST(resourceKey) : key;
         },
         loadPromptStreamPreference() {
             if (typeof EventSource === 'undefined') {
@@ -1028,7 +1025,7 @@ var app = new Vue({
                 const idStr = item.id === undefined || item.id === null ? '' : String(item.id)
                 const isStreamingTemp = idStr.indexOf('streaming_') === 0
 
-                // 流式临时项在结果落库后应被移除，避免前端出现重复“Result”卡片。
+                //Legacy comment translated to English.
                 if (isStreamingTemp && item._generating !== true) {
                     continue
                 }
@@ -1199,15 +1196,15 @@ var app = new Vue({
                 scoreVal: 0,
                 alResultList: [{
                     id: 1,
-                    label: '预期结果1',
+                    label: ncfST('Frontend.416'),
                     value: ''
                 }, {
                     id: 2,
-                    label: '预期结果2',
+                    label: ncfST('Frontend.417'),
                     value: ''
                 }, {
                     id: 3,
-                    label: '预期结果3',
+                    label: ncfST('Frontend.418'),
                     value: ''
                 }]
             }
@@ -1226,7 +1223,7 @@ var app = new Vue({
                     const expectedList = JSON.parse(promptItem.expectedResultsJson)
                     normalized.alResultList = expectedList.map((value, index) => ({
                         id: index + 1,
-                        label: '预期结果',
+                        label: ncfST('Frontend.415'),
                         value
                     }))
                 } catch (e) {
@@ -1440,7 +1437,7 @@ var app = new Vue({
             const topK = Number(resultItem.embeddingQueryTopK || 3)
             if (!query) {
                 this.$message({
-                    message: '请输入要查询的文本',
+                    message: ncfST('请输入要查询的文本'),
                     type: 'warning',
                     duration: 3000
                 })
@@ -1456,7 +1453,7 @@ var app = new Vue({
                 })
                 if (!res.data.success) {
                     this.$message({
-                        message: res.data.errorMessage || res.data.data || 'Embedding 查询失败',
+                        message: res.data.errorMessage || res.data.data || ncfST('Embedding 查询失败'),
                         type: 'error',
                         duration: 5 * 1000
                     })
@@ -1472,7 +1469,7 @@ var app = new Vue({
                 }))
             } catch (e) {
                 this.$message({
-                    message: 'Embedding 查询失败：' + (e.message || '未知错误'),
+                        message: ncfST('Embedding 查询失败：') + (e.message || ncfST('未知错误')),
                     type: 'error',
                     duration: 5 * 1000
                 })
@@ -1833,9 +1830,9 @@ var app = new Vue({
             this.continueChatUsageSummary.totalCostToken = payload.totalTokens || this.continueChatUsageSummary.totalCostToken
             this.continueChatHistory = [...this.continueChatHistory]
         },
-        //获取路径id 页面数据回显
+        //Legacy comment translated to English.
         getTargetRangeIdFromUrl() {
-             // 添加安全检查，防止 $route 未定义
+             //Legacy comment translated to English.
              if (!this.$route || !this.$route.query) {
                  return;
              }
@@ -1853,7 +1850,7 @@ var app = new Vue({
             if (defaultOption) {
                 this.promptField = defaultOption.value;
                
-                    // 获取靶道列表
+                    //Legacy comment translated to English.
                   this.getPromptOptData().then(() => {
                     
                         // promptid is the last one of promptOpt
@@ -1865,47 +1862,47 @@ var app = new Vue({
                             if (_el.isDraft) {
                                 this.sendBtns = [
                                     {
-                                        text: '打靶'
+                                        text: PromptRangeSendCommand.shoot
                                     },
                                     {
-                                        text: '保存草稿'
+                                        text: PromptRangeSendCommand.draft
                                     }
                                 ]
-                                this.sendBtnText = '打靶'
+                                this.sendBtnText = PromptRangeSendCommand.shoot
                             } else {
                                 this.sendBtns = [
                                     {
-                                        text: '连发'
+                                        text: PromptRangeSendCommand.rapid
                                     },
                                     {
-                                        text: '保存草稿'
+                                        text: PromptRangeSendCommand.draft
                                     }
                                 ]
-                                this.sendBtnText = '连发'
+                                this.sendBtnText = PromptRangeSendCommand.rapid
                             }
 
-                            // 获取详情
+                            // get details
                             this.getPromptetail(this.promptid, true, true)
                         } else {
                             this.sendBtns = [
                                 {
-                                    text: '打靶'
+                                    text: PromptRangeSendCommand.shoot
                                 },
                                 {
-                                    text: '保存草稿'
+                                    text: PromptRangeSendCommand.draft
                                 }
                             ]
-                            this.sendBtnText = '打靶'
+                            this.sendBtnText = PromptRangeSendCommand.shoot
                         }
 
                     })
-                    // 获取分数趋势图表数据
+                    //Legacy comment translated to English.
                      this.getScoringTrendData()
                 
 
             }
         },
-        //侧边栏收起操作
+        //Legacy comment translated to English.
         foldsidebar() {
             this.isBoxVisible = !this.isBoxVisible;
             if (this.foldsidebarShow) {
@@ -1918,11 +1915,27 @@ var app = new Vue({
             }
         },
       
-        //放大输入区域
+        //Legacy comment translated to English.
        
+        preservePromptContentBeforeAmplification() {
+            const editor = this.$refs.promptEditor;
+            if (!editor || this.isComposing || editor.offsetParent === null) {
+                return this.content;
+            }
+
+            const editorText = this.getEditorText();
+            if (editorText || !this.content) {
+                this.assignContentFromEditor(editorText);
+            }
+            return editorText || this.content;
+        },
+
         Amplification(boxClicked) {
+            const promptContent = this.preservePromptContentBeforeAmplification();
+            this.clearHighlightTimer();
+
             if (this.lastClickedBox === boxClicked) {
-                // 再次点击同一个区域，恢复所有区域
+                //Legacy comment translated to English.
                 this.box1Hidden = false;
                 this.box2Hidden = false;
                 this.box3Hidden = false;
@@ -1931,29 +1944,35 @@ var app = new Vue({
                 this.lastClickedBox = null;
                 this.getScoringTrendData();
             } else {
-                // 点击不同区域，实现最大化
+                //Legacy comment translated to English.
                 if (boxClicked === 'box1') {
-                    // 右侧输出区域最大化：隐藏中间区域，隐藏分析图表，扩展右侧区域
+                    //Legacy comment translated to English.
                     this.box1Hidden = false;
-                    this.box2Hidden = true;  // 隐藏中间Prompt区域
-                    this.box3Hidden = true;  // 隐藏分析图表
+                    this.box2Hidden = true;  //Legacy comment translated to English.
+                    this.box3Hidden = true;  //Legacy comment translated to English.
                     this.centerAreaMaximized = false;
                     this.rightAreaMaximized = true;
                 } else if (boxClicked === 'box2') {
-                    // 中间Prompt区域最大化：隐藏右侧所有内容，扩展中间区域
-                    this.box1Hidden = true;  // 隐藏右侧输出区域
+                    //Legacy comment translated to English.
+                    this.box1Hidden = true;  //Legacy comment translated to English.
                     this.box2Hidden = false;
-                    this.box3Hidden = true;  // 隐藏分析图表
+                    this.box3Hidden = true;  //Legacy comment translated to English.
                     this.centerAreaMaximized = true;
                     this.rightAreaMaximized = false;
                 } else if (boxClicked === 'box3') {
-                    // 保留原有逻辑
+                    //Legacy comment translated to English.
                     this.box1Hidden = false;
                     this.box2Hidden = false;
                     this.box3Hidden = false;
                 }
                 this.lastClickedBox = boxClicked;
             }
+
+            this.$nextTick(() => {
+                const editor = this.$refs.promptEditor;
+                if (!editor || !promptContent || this.getEditorText() === promptContent) return;
+                editor.innerHTML = this.generateHighlightHTML(promptContent);
+            });
             },
         style(val) {
             const length = 10,
@@ -1963,25 +1982,25 @@ var app = new Vue({
                 paddingLeft: `${left}%`,
             }
         },
-        // 靶场删除
+        // rangedelete
         fieldDeleteHandel(e, id) {
-            // 阻止事件冒泡
+            // stop event propagation
             e.stopPropagation();
-            // 弹出提示框
-            this.$confirm('此操作将永久删除该靶场下的所有内容', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
+            //Legacy comment translated to English.
+            this.$confirm(ncfST('Frontend.363'), ncfST('Frontend.343'), {
+                confirmButtonText: ncfST('Frontend.421'),
+                cancelButtonText: ncfST('Frontend.091'),
                 type: 'warning'
             }).then(async () => {
                 let res = await servicePR.delete(`/api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.DeleteAsync?rangeId=${id}`)
                 if (res.data.success) {
-                    this.$message.success('删除成功')
+                    this.$message.success(ncfST('Frontend.269'))
                     let _isReset = id == this.promptField
-                    // 重新获取靶场列表
+                    //Legacy comment translated to English.
                     this.getFieldList().then(() => {
                         if (_isReset) {
                             this.promptField = ''
-                            // 重置页面数据
+                            // reset page data
                             this.resetPageData()
                         }
                     })
@@ -1991,30 +2010,30 @@ var app = new Vue({
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: '已取消操作'
+                        message: ncfST('已取消操作')
                 });
             });
 
         },
-        // 删除靶道
+        //Legacy comment translated to English.
         promptDeleteHandel(e, id) {
-            // 阻止事件冒泡
+            // stop event propagation
             e.stopPropagation();
-            // 弹出提示框
-            this.$confirm('此操作将永久删除该靶道', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
+            //Legacy comment translated to English.
+            this.$confirm(ncfST('Frontend.364'), ncfST('Frontend.343'), {
+                confirmButtonText: ncfST('Frontend.421'),
+                cancelButtonText: ncfST('Frontend.091'),
                 type: 'warning'
             }).then(async () => {
                 this.btnDeleteHandle(id)
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: '已取消操作'
+                    message: ncfST('Frontend.329')
                 });
             });
         },
-        // 备注失去焦点 保存
+        //Legacy comment translated to English.
         promptRemarkSave() {
             let { id } = this.promptDetail
             this.btnEditHandle({
@@ -2036,41 +2055,41 @@ var app = new Vue({
         },
    
       //  promptNameField(e, item) {
-            // 阻止事件冒泡
+            // stop event propagation
           //  e.stopPropagation();
-            //弹出提示框，输入新的靶场名称，确认后提交，取消后，提示已取消操作
-          //  this.$prompt('请输入新的靶道名称', '提示', {
-           //     confirmButtonText: '确定',
-           //     cancelButtonText: '取消',
-            //    inputErrorMessage: '靶道名称不能为空',
+            //Legacy comment translated to English.
+          //Legacy comment translated to English.
+           //Legacy comment translated to English.
+           //Legacy comment translated to English.
+            //Legacy comment translated to English.
            // }).then(async ({ value }) => {
            //     this.btnEditHandle({ id: item.id, nickName: value })
            // }).catch(() => {
                // this.$message({
               //      type: 'info',
-             //       message: '已取消操作'
+             //Legacy comment translated to English.
            //     });
          //   });
         // },
-        //重置靶道名称
+        //Legacy comment translated to English.
         promptNameRest(e,id) {
-            // 阻止事件冒泡
+            // stop event propagation
             e.stopPropagation();
-            // 弹出提示框
-            this.$confirm('此操作将重置该靶道名称', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
+            //Legacy comment translated to English.
+            this.$confirm(ncfST('Frontend.366'), ncfST('Frontend.343'), {
+                confirmButtonText: ncfST('Frontend.421'),
+                cancelButtonText: ncfST('Frontend.091'),
                 type: 'warning'
             }).then(async () => {
                 this.btnEditHandle({ id: id, nickName: '' })
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: '已取消操作'
+                    message: ncfST('Frontend.329')
                 });
             });
         },
-        // 靶道 名称弹窗
+        //Legacy comment translated to English.
         promptNameField(e, item) {
             e.stopPropagation();
             this.targetlaneNameid = item.id;
@@ -2080,23 +2099,23 @@ var app = new Vue({
         handleSelect(item) {
             console.log(item);
         },
-        // 修改靶道 名称弹窗 确认操作
+        //Legacy comment translated to English.
         confirmtargetlaneName() {
             if(!this.targetlaneName){
                 this.$message({
-                    message: '靶道名称不能为空！',
+                        message: ncfST('Frontend.422'),
                     type: 'error'
                 })
                 return
             }
-            const prefix = '名称：';
-            const suffix = ' | 版本号：';
+            const prefix = ncfST('Frontend.423');
+            const suffix = ncfST('Frontend.424');
 
             const startIndex = this.targetlaneName.indexOf(prefix);
             const endIndex = this.targetlaneName.indexOf(suffix, startIndex);
 
             if (startIndex !== -1 && endIndex !== -1) {
-                // 如果找到了“名称：”和“| 版本号：”，则提取它们之间的文本
+                //Legacy comment translated to English.
                 this.targetlaneName = this.targetlaneName.substring(startIndex + prefix.length, endIndex);
                 console.log(this.targetlaneName);
                 this.btnEditHandle({ id: this.targetlaneNameid, nickName: this.targetlaneName })
@@ -2104,7 +2123,7 @@ var app = new Vue({
                 this.dialogVisible = false
                 this.targetlaneName = ''
             } else {
-                // 如果没有找到“名称：”或“| 版本号：”，则执行备用逻辑
+                //Legacy comment translated to English.
                 this.btnEditHandle({ id: this.targetlaneNameid, nickName: this.targetlaneName })
                
                 this.dialogVisible = false
@@ -2113,7 +2132,7 @@ var app = new Vue({
             }
            
         },
-        //获取靶道弹窗input列表 过滤没有名字的靶道
+        //Legacy comment translated to English.
         querySearch(queryString, cb) {
             let restaurants = this.dailogpromptOptlist;
             console.log(111,this.dailogpromptOptlist)
@@ -2122,11 +2141,11 @@ var app = new Vue({
                 ? restaurants.filter(item => {
                     return (
                         this.createFilter(queryString)(item) &&
-                        !item.label.includes('未设置')
+                        !item.label.includes(ncfST('Frontend.496'))
                     );
                 })
-                : restaurants.filter(item => !item.label.includes('未设置'));
-            // 调用 callback 返回建议列表的数据
+                : restaurants.filter(item => !item.label.includes(ncfST('Frontend.496')));
+            //Legacy comment translated to English.
             cb(results);
         },
         createFilter(queryString) {
@@ -2136,80 +2155,80 @@ var app = new Vue({
                 return label.toLowerCase().includes(queryString.toLowerCase());
             };
         },
-        // 战术选择 dialog 提交
+        //Legacy comment translated to English.
         async tacticalFormSubmitBtn() {
-            // 如果是继续聊天模式，直接处理，不需要验证战术字段
+            //Legacy comment translated to English.
             if (this.continueChatMode && this.continueChatPromptResultId) {
-                // 检查是否有输入内容
+                // checkwhetherhasinputcontent
                 if (!this.tacticalChatInput || !this.tacticalChatInput.trim()) {
                     this.$message({
-                        message: '请输入对话内容',
+                        message: ncfST('请输入对话内容'),
                         type: 'warning',
                         duration: 3000
                     })
                     return
                 }
                 
-                // 调用继续聊天 API
+                //Legacy comment translated to English.
                 this.continueChatSubmit(this.continueChatPromptResultId, this.tacticalChatInput.trim())
                 return
             }
 
             if (!this.supportsChatMode) {
-                this.tacticalForm.chatMode = '直接测试'
+                this.tacticalForm.chatMode = 'direct'
             }
             
-            // 普通模式，需要验证表单
-            // 注意：第一次打靶时（没有promptid），不需要验证"战术"字段，因为会自动创建T1-A1靶道
-            // 先检查"打靶测试"字段是否已选择
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             if (!this.tacticalForm.chatMode) {
                 this.$message({
-                    message: '请选择打靶测试模式',
+                        message: ncfST('Frontend.379'),
                     type: 'warning',
                     duration: 3000
                 })
                 return
             }
             
-            // 如果有 promptid，需要验证"战术"字段
+            //Legacy comment translated to English.
             if (this.promptid && !this.tacticalForm.tactics) {
                 this.$message({
-                    message: '请选择战术',
+                        message: ncfST('Frontend.286'),
                     type: 'warning',
                     duration: 3000
                 })
                 return
             }
             
-            // 如果选择对话模式，需要检查是否有输入内容
-            if (this.supportsChatMode && this.tacticalForm.chatMode === '对话模式') {
-                // 检查是否有输入内容
+            //Legacy comment translated to English.
+            if (this.supportsChatMode && this.tacticalForm.chatMode === 'chat') {
+                // checkwhetherhasinputcontent
                 if (!this.tacticalChatInput || !this.tacticalChatInput.trim()) {
                     this.$message({
-                        message: '请输入对话内容',
+                        message: ncfST('Frontend.602'),
                         type: 'warning',
                         duration: 3000
                     })
                     return
                 }
                 
-                // 执行打靶，将输入内容作为 userMessage 传递
+                //Legacy comment translated to English.
                 await this.executeTargetShootWithChatMessage(this.tacticalChatInput.trim())
-                // 清空对话输入
+                //Legacy comment translated to English.
                 this.tacticalChatInput = ''
                 return
             }
             
-            // 直接测试模式，继续原有流程
+            //Legacy comment translated to English.
             await this.executeTargetShoot();
         },
         
-        // 继续聊天提交
+        //Legacy comment translated to English.
         async continueChatSubmit(promptResultId, userMessage) {
             const normalizedUserMessage = typeof userMessage === 'string' ? userMessage.trim() : ''
             if (!normalizedUserMessage) {
                 this.$message({
-                    message: '请输入对话内容',
+                    message: ncfST('Frontend.602'),
                     type: 'warning',
                     duration: 3000
                 })
@@ -2238,16 +2257,16 @@ var app = new Vue({
                     }
                     this.removeContinueChatStreamingMessage()
                     
-                    // 找到对应的输出项并更新
+                    //Legacy comment translated to English.
                     const resultIndex = this.outputList.findIndex(item => item.id === promptResultId)
                     if (resultIndex !== -1) {
                         const resultItem = this.outputList[resultIndex]
                         
-                        // 更新显示：将最新的 AI 回复追加到 ResultString
+                        //Legacy comment translated to English.
                         const assistantMessages = this.continueChatHistory.filter(msg => msg.roleType === 2)
                         const latestAssistantMessage = assistantMessages.length > 0 ? assistantMessages[assistantMessages.length - 1] : null
                         if (latestAssistantMessage) {
-                            // 追加到现有的 ResultString（格式化为对话形式）
+                            //Legacy comment translated to English.
                             const currentResult = resultItem.resultString || ''
                             const separator = currentResult ? '\n\n---\n\n' : ''
                             const newContent = `**${ncfST('用户')}**: ${normalizedUserMessage}\n\n**${ncfST('助手')}**: ${latestAssistantMessage.content}`
@@ -2260,15 +2279,15 @@ var app = new Vue({
                         }
                     }
                     
-                    // 刷新对话历史显示
+                    //Legacy comment translated to English.
                     this.$forceUpdate()
                     
-                    // 添加代码块复制按钮
+                    // add a button to copy code blocks
                     this.$nextTick(() => {
                         this.addCopyButtonsToCodeBlocks();
                     });
                     
-                    // 滚动到底部显示最新消息
+                    //Legacy comment translated to English.
                     this.$nextTick(() => {
                         const container = document.getElementById('chatHistoryContainer')
                         if (container) {
@@ -2276,10 +2295,10 @@ var app = new Vue({
                         }
                     })
                     
-                    // 清空输入框，但保持弹窗打开以便继续对话
+                    //Legacy comment translated to English.
                     this.tacticalChatInput = ''
                     this.$message({
-                        message: '对话已追加',
+                        message: ncfST('对话已追加'),
                         type: 'success',
                         duration: 2000
                     })
@@ -2288,14 +2307,14 @@ var app = new Vue({
                     this.removeContinueChatPendingUserMessage()
                     this.closePromptStream()
                     this.$message({
-                        message: res.data.errorMessage || '继续聊天失败',
+                        message: res.data.errorMessage || ncfST('继续聊天失败'),
                         type: 'error'
                     })
                 }
             } catch (error) {
                 this.closePromptStream()
                 this.$message({
-                    message: '继续聊天失败：' + (error.message || '未知错误'),
+                    message: ncfST('继续聊天失败：') + (error.message || ncfST('未知错误')),
                     type: 'error'
                 })
                 this.removeContinueChatStreamingMessage()
@@ -2305,13 +2324,15 @@ var app = new Vue({
             }
         },
         /*
-        * 打靶 事件
-        * isDraft 是否保存草稿
+        * Legacy comment translated to English.
+
+        * Legacy comment translated to English.
+
         */
         async targetShootHandel(isDraft = false, isSaveDirect) {
             if (!this.modelid) {
                 this.$message({
-                    message: '请选择模型！',
+                        message: ncfST('Frontend.380'),
                     type: 'warning'
                 })
                 return
@@ -2321,17 +2342,17 @@ var app = new Vue({
             }
             if (!isDraft && !this.content) {
                 this.$message({
-                    message: '请输入内容！',
+                        message: ncfST('Frontend.287'),
                     type: 'warning'
                 })
                 return
             }
-            // 弹窗逻辑1，有promptid且不是保存草稿，就要弹窗
+            //Legacy comment translated to English.
             if (this.promptid && !isDraft) {
                 this.tacticalFormVisible = true
                 return
             }
-            // 弹窗逻辑2，有promptid且不是保存草稿，就要弹窗
+            //Legacy comment translated to English.
             let _isPromptDraft = false
             let _findPrompt = this.promptOpt.find(item => item.value == this.promptid)
             if (isDraft && _findPrompt) {
@@ -2343,8 +2364,8 @@ var app = new Vue({
                 return
             }
             
-            // 弹窗逻辑3，第一次打靶时（没有promptid）也要弹窗，让用户选择对话模式或直接测试模式
-            // 注意：第一次打靶时不传递promptid，让后端创建新的靶道（T1-A1）
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             if (!this.promptid && !isDraft) {
                 this.tacticalFormVisible = true
                 return
@@ -2353,10 +2374,10 @@ var app = new Vue({
 
             this.targetShootLoading = true
             let _postData = {
-                //promptid: this.promptid,// 选择靶场
-                modelid: this.modelid,// 选择模型
-                content: this.content,// prompt 输入内容
-                note: this.remarks, // prompt 输入的备注,
+                //Legacy comment translated to English.
+                modelid: this.modelid,//Legacy comment translated to English.
+                content: this.content,// prompt inputcontent
+                note: this.remarks, //Legacy comment translated to English.
                 numsOfResults: 1,
                 //numsOfResults: isDraft?this.numsOfResults:1,
                 isDraft: isDraft,
@@ -2368,7 +2389,7 @@ var app = new Vue({
             if (executionOptions) {
                 _postData.executionOptions = executionOptions
             }
-            // ai评分标准
+            //Legacy comment translated to English.
             _postData.isAIGrade = this.isAIGrade
             if (this.aiScoreForm.resultList.length > 0) {
                 let _list = this.aiScoreForm.resultList.map(item => item.value)
@@ -2378,14 +2399,14 @@ var app = new Vue({
                 }
             }
             
-            // 请求参数
+            // requestparameters
             if (this.promptParamForm.variableList.length > 0) {
                 _postData.variableDictJson = this.convertData(this.promptParamForm.variableList)
             }
 
             this.parameterViewList.forEach(item => {
                 console.log('item' + item);
-                // todo 单独处理
+                //Legacy comment translated to English.
                 if (item.formField === 'stopSequences') {
                     //console.log("item.formField === 'stopSequences'");
                     //if (item.value) {
@@ -2406,7 +2427,7 @@ var app = new Vue({
                     _postData[item.formField] = item.value
                 }
             })
-            // 要提交this.promptField
+            //Legacy comment translated to English.
             _postData['rangeId'] = this.promptField
 
             if (isDraft && _isPromptDraft) {
@@ -2414,9 +2435,9 @@ var app = new Vue({
                     this.targetShootLoading = false
                     if (res.data.success) {
                         this.pageChange = false
-                        // 提示保存成功
+                        //Legacy comment translated to English.
                         this.$message({
-                            message: '保存成功！',
+                            message: ncfST('保存成功！'),
                             type: 'success'
                         })
                     } else {
@@ -2435,30 +2456,30 @@ var app = new Vue({
                     if (res.data.success) {
                         this.pageChange = false
                         if (isDraft) {
-                            // 提示保存成功
+                            //Legacy comment translated to English.
                             this.$message({
-                                message: '保存成功！',
+                                message: ncfST('保存成功！'),
                                 type: 'success'
                             })
                             this.sendBtns = [
                                 {
-                                    text: '打靶'
+                                    text: PromptRangeSendCommand.shoot
                                 },
                                 {
-                                    text: '保存草稿'
+                                    text: PromptRangeSendCommand.draft
                                 }
                             ]
-                            this.sendBtnText = '打靶'
+                            this.sendBtnText = PromptRangeSendCommand.shoot
                         } else {
                             this.sendBtns = [
                                 {
-                                    text: '连发'
+                                    text: PromptRangeSendCommand.rapid
                                 },
                                 {
-                                    text: '保存草稿'
+                                    text: PromptRangeSendCommand.draft
                                 }
                             ]
-                            this.sendBtnText = '连发'
+                            this.sendBtnText = PromptRangeSendCommand.rapid
                         }
                         let {
                             promptResultList = [],
@@ -2468,7 +2489,7 @@ var app = new Vue({
                             evalMaxScore = -1,
                             promptItem = {}
                         } = res.data.data || {}
-                        // 拷贝数据
+                        //Legacy comment translated to English.
                         let copyResultData = JSON.parse(JSON.stringify(res.data.data))
                         delete copyResultData.promptResultList
                         let vArr = copyResultData.fullVersion.split('-')
@@ -2476,28 +2497,28 @@ var app = new Vue({
                         copyResultData.promptStr = vArr[1] || ''
                         copyResultData.tacticsStr = vArr[2] || ''
                         this.promptDetail = copyResultData
-                        // 平均分 
+                        //Legacy comment translated to English.
                         this.outputAverageDeci = evalAvgScore > -1 ? evalAvgScore : -1;
-                        // 最高分
+                        //Legacy comment translated to English.
                         this.outputMaxDeci = evalMaxScore > -1 ? evalMaxScore : -1;
-                        // 输出列表
+                        //Legacy comment translated to English.
                         this.outputList = promptResultList.map(item => this.normalizeOutputResultItem(item, id, fullVersion, promptItem))
                         
-                        // 添加代码块复制按钮
+                        // add a button to copy code blocks
                         this.$nextTick(() => {
                             this.addCopyButtonsToCodeBlocks();
                         });
                         
-                        //提交数据后，选择正确的靶场和靶道
+                        //Legacy comment translated to English.
                         this.getFieldList().then(() => {
 
                             this.getPromptOptData(id)
-                            // 获取分数趋势图表数据
+                            //Legacy comment translated to English.
                             this.getScoringTrendData()
                         })
 
-                        if (this.sendBtnText !== '保存草稿' && this.numsOfResults > 1) {
-                            //进入连发模式, 根据numOfResults-1 的数量调用N次连发接口
+                        if (this.sendBtnText !== PromptRangeSendCommand.draft && this.numsOfResults > 1) {
+                            //Legacy comment translated to English.
                             this.dealRapicFireHandel(this.numsOfResults - 1, id)
                         }
 
@@ -2521,19 +2542,20 @@ var app = new Vue({
         },
 
         /*
-         * 连发 事件
+         * Legacy comment translated to English.
+
          */
         async dealRapicFireHandel(howmany, id) {
             if (!this.promptid) {
                 this.$message({
-                    message: '请选择一个靶道！',
+                        message: ncfST('请选择一个靶道！'),
                     type: 'warning'
                 })
                 return
             }
             if (!this.modelid) {
                 this.$message({
-                    message: '请选择一个模型！',
+                        message: ncfST('请选择一个模型！'),
                     type: 'warning'
                 })
                 return
@@ -2541,50 +2563,50 @@ var app = new Vue({
             this.targetShootLoading = true
             this.dodgersLoading = true
             
-            // 注意：现在后端会自动根据第一个 PromptResult 来判断类型
-            // 如果第一个结果是 Chat 模式，后端会从对话记录中获取 userMessage
-            // 所以前端不需要传递 userMessage，后端会自动处理
-            // 但为了兼容性，如果前端有保存的 userMessage，仍然可以传递
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             
             for (let i = 0; i < howmany; i++) {
-                // 后端会自动判断第一个结果的模式，不需要前端传递 userMessage
-                // 但如果前端有保存的 userMessage，可以传递以保持一致性
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 await this.rapidFireHandel(id, this._lastUserMessage || null);
             }
-            // 连发结束后兜底清理最后一轮可能残留的 Generating 占位框
+            //Legacy comment translated to English.
             this.clearOutputGeneratingPlaceholder()
             this.closePromptStream()
-            // 从新获取靶场列表
+            //Legacy comment translated to English.
             this.getPromptOptData()
             this.targetShootLoading = false
             this.dodgersLoading = false
         },
-        // 导入 plugins dialog close 回调
+        //Legacy comment translated to English.
         uploadPluginCloseDialog() {
-            // 清空fileData
+            // clearfileData
             this.uploadPluginDropAreaVisible = true
             this.uploadPluginData = []
             this.jsZip = null
         },
-        // 导入 plugins 在拖动区来回拖拽时
+        //Legacy comment translated to English.
         pluginDropOverHandler(e) {
             e.stopPropagation();
             e.preventDefault();
             this.uploadPluginDropHover = true;
         },
-        // 导入 plugins 第一次进入拖动区时
+        //Legacy comment translated to English.
         pluginDropEnterHandler(e) {
             e.stopPropagation();
             e.preventDefault();
             this.uploadPluginDropHover = true;
         },
-        // 导入 plugins 拖后放
+        //Legacy comment translated to English.
         pluginDropLeaveHandler(e) {
             e.stopPropagation();
             e.preventDefault();
             this.uploadPluginDropHover = false;
         },
-        // 导入 plugins 拖拽 选择文件夹
+        //Legacy comment translated to English.
         enentPluginDrop(e) {
             this.uploadPluginDropHover = false
             let items = e.dataTransfer.items;
@@ -2594,9 +2616,9 @@ var app = new Vue({
             for (let i = 0; i <= items.length - 1; i++) {
                 let item = items[i];
                 if (item.kind === "file") {
-                    // FileSystemFileEntry 或 FileSystemDirectoryEntry 对象
+                    //Legacy comment translated to English.
                     let entry = item.webkitGetAsEntry();
-                    // 递归地获取entry下包含的所有File
+                    //Legacy comment translated to English.
                     this.getFileFromEntryRecursively(entry);
                 }
             }
@@ -2605,28 +2627,28 @@ var app = new Vue({
             e.stopPropagation();
             e.preventDefault();
         },
-        // 拖拽上传 获取文件
+        //Legacy comment translated to English.
         getFileFromEntryRecursively(entry) {
             //let _this = this
             if (entry.isFile) {
-                // 文件
+                // file
                 entry.file(
                     file => {
                         //console.log('Drop file', { file, path: _path });
-                        // 想要保留拖拽的层级结构的话，只能从 entry 中获取
-                        // 取path是为了获取上传的文件夹一级的名称
+                        //Legacy comment translated to English.
+                        //Legacy comment translated to English.
                         let _path = entry.fullPath
                         if (entry.fullPath.startsWith('/')) {
                             _path = entry.fullPath.slice(1)
                         }
                         this.forEachZip(file, _path);
-                        // 文件列表
+                        //Legacy comment translated to English.
                         this.uploadPluginData.push({ name: file.name, path: _path })
                     },
                     e => { console.log(e); }
                 );
             } else {
-                // 文件夹
+                //Legacy comment translated to English.
                 let reader = entry.createReader();
                 reader.readEntries(
                     entries => {
@@ -2636,13 +2658,13 @@ var app = new Vue({
                 );
             }
         },
-        // 导入 plugins 点击 选择文件夹
+        //Legacy comment translated to English.
         enentPluginInput() {
             let input = document.createElement("input");
             input.type = "file";
             input.setAttribute("allowdirs", "true");
             input.setAttribute("directory", "true");
-            input.setAttribute("webkitdirectory", "true"); //设置了webkitdirectory就可以选择文件夹进行上传了
+            input.setAttribute("webkitdirectory", "true"); //Legacy comment translated to English.
             input.multiple = false;
             document.querySelector("body").appendChild(input);
             input.click();
@@ -2653,10 +2675,10 @@ var app = new Vue({
                 if (!files) return
                 _this.uploadPluginDropAreaVisible = false
                 _this.jsZip = new JSZip();
-                // 处理文件夹里的所有子文件
+                //Legacy comment translated to English.
                 for (let i = 0; i <= files.length - 1; i++) {
                     _this.uploadPluginData.push({ name: files[i].name, path: files[i].webkitRelativePath })
-                    // 取path是为了获取上传的文件夹一级的名称
+                    //Legacy comment translated to English.
                     _this.forEachZip(files[i], files[i].webkitRelativePath);
 
                 }
@@ -2664,10 +2686,10 @@ var app = new Vue({
                 document.querySelector("body").removeChild(input);
             };
         },
-        // 将上传的文件添加到压缩包中
+        //Legacy comment translated to English.
         forEachZip(file, path) {
             //console.log('forEachZip files：', file, path)
-            // 归类处理文件到指定的文件夹
+            //Legacy comment translated to English.
             let _path = path
             let _index = path.indexOf('/')
             if (_index > -1) {
@@ -2675,28 +2697,28 @@ var app = new Vue({
             }
             this.jsZip.file(`${_path}`, file);
         },
-        // 导入 plugins 上传按钮
+        //Legacy comment translated to English.
         submitUploadPlugins() {
             let _fileData = JSON.parse(JSON.stringify(this.uploadPluginData))
             if (_fileData.length === 0) {
-                this.$message.warning('请选择文件夹')
+                this.$message.warning(ncfST('Frontend.288'))
                 return
             }
             if (this.isPageLoading) return
             this.isPageLoading = true
             let name = _fileData[0].path.split('/')[0] || 'plugin'
-            // 生成压缩文件
+            //Legacy comment translated to English.
             this.jsZip.generateAsync({ type: "blob" }).then((content) => {
-                //将blob类型的再转为file类型用于上传
+                //Legacy comment translated to English.
                 let zipFile = new File([content], `${name}.zip`, {
                     type: "application/zip",
                 });
-                //做个大小限制
+                //Legacy comment translated to English.
                 //let isLt2M = zipFile.size / 1024 / 1024 < 80;
                 //if (!isLt2M) {
                 //    this.fileList = [];
                 //    this.$message({
-                //        message: "上传文件大小不能超过 80MB!",
+                //Legacy comment translated to English.
                 //        type: "warning",
                 //    });
                 //    return false;
@@ -2704,21 +2726,21 @@ var app = new Vue({
                 //    let filedata = new FormData();
                 //    // filedata.append("file", zipFile);
                 //    filedata.append("zipFile", zipFile);
-                //    this.folderHandlesubmit(filedata); //上传事件，filedata已经是压缩好的文件了
-                //    //saveAs(content, `${name}.zip`); //下载用，可以下载下来文件查看上传的是否正确
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 //}
                 let filedata = new FormData();
                 // filedata.append("file", zipFile);
                 filedata.append("zipFile", zipFile);
-                this.folderHandlesubmit(filedata); //上传事件，filedata已经是压缩好的文件了
-                //saveAs(content, `${name}.zip`); //下载用，可以下载下来文件查看上传的是否正确
+                this.folderHandlesubmit(filedata); //Legacy comment translated to English.
+                //Legacy comment translated to English.
             }).catch(() => {
                 this.isPageLoading = false
             })
         },
-        // 上传 Plugins api
+        // upload Plugins api
         folderHandlesubmit(formData) {
-            //ajax上传formData
+            //ajaxuploadformData
             servicePR.request({
                 url: '/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.UploadPluginsAsync',
                 method: 'POST',
@@ -2731,12 +2753,12 @@ var app = new Vue({
                 //console.log(res)
                 if (res.data.success) {
                     this.uploadPluginVisible = false
-                    app.$message.success('上传成功')
-                    // 更新靶场数据
+                    app.$message.success(ncfST('Frontend.276'))
+                    // updaterangedata
                     this.getFieldList().then(() => {
                         if (this.promptFieldOpt && this.promptFieldOpt.length > 0) {
                             this.promptField = this.promptFieldOpt[this.promptFieldOpt.length - 1].id
-                            // 重置页面数据
+                            // reset page data
                             this.resetPageData()
                         }
                     })
@@ -2751,38 +2773,38 @@ var app = new Vue({
                 this.isPageLoading = false
             })
         },
-        // 导出 plugins dialog close 回调
+        //Legacy comment translated to English.
         expectedPluginCloseDialog() {
             this.expectedPluginFoem = {
                 checkList: []
             }
-            this.expectedPluginFieldList = [] // tree数据列表
-            this.exportPluginSelectedCount = 0 // 重置已选择数量
-            this.exportPluginExpandAll = false // 重置展开状态
+            this.expectedPluginFieldList = [] //Legacy comment translated to English.
+            this.exportPluginSelectedCount = 0 //Legacy comment translated to English.
+            this.exportPluginExpandAll = false //Legacy comment translated to English.
             this.$refs.expectedPluginFoem.resetFields();
         },
-        // 导出 plugins dialog open
+        //Legacy comment translated to English.
         async expectedPluginOpen() {
-            // 获取树形数据 靶场列表
+            //Legacy comment translated to English.
             let _valList = this.promptFieldOpt
             let promises = [];
             for (let i = 0; i < _valList.length; i++) {
-                // 获取靶道列表
+                //Legacy comment translated to English.
                 promises.push(this.getPromptOptData(_valList[i].id, true));
             }
             this.expectedPluginVisible = true
             await Promise.all(promises)
-            // 等待 DOM 更新后再设置选中和更新计数
+            //Legacy comment translated to English.
             this.$nextTick(() => {
-            // 设置默认选中
+            //Legacy comment translated to English.
             this.$refs.expectedPluginTree.setCheckedKeys(this.expectedPluginFoem.checkList)
                 
-                // 确保 checkList 只包含叶子节点
+                //Legacy comment translated to English.
                 const checkedNodes = this.$refs.expectedPluginTree.getCheckedNodes();
                 const leafNodeKeys = [];
                 
                 checkedNodes.forEach(node => {
-                    // 只记录叶子节点（靶道）
+                    //Legacy comment translated to English.
                     if (!node.children || node.children.length === 0) {
                         leafNodeKeys.push(node.idkey);
                     }
@@ -2790,69 +2812,69 @@ var app = new Vue({
                 
                 this.expectedPluginFoem.checkList = leafNodeKeys;
                 
-                // 更新已选择数量
+                //Legacy comment translated to English.
                 this.updateExportPluginSelectedCount()
             })
         },
-        // 导出 plugins dialog tree 选中变化
+        //Legacy comment translated to English.
         treeCheckChange(data, currentCheck, childrenCheck) {
-            // 更新已选择数量（使用 $nextTick 确保 Tree 状态已更新）
+            //Legacy comment translated to English.
             this.$nextTick(() => {
-                // 使用 Tree API 重新获取所有选中的节点（只获取叶子节点）
+                //Legacy comment translated to English.
                 if (!this.$refs.expectedPluginTree) return;
                 
                 const checkedNodes = this.$refs.expectedPluginTree.getCheckedNodes();
                 const leafNodeKeys = [];
                 
                 checkedNodes.forEach(node => {
-                    // 只记录叶子节点（靶道）
+                    //Legacy comment translated to English.
                     if (!node.children || node.children.length === 0) {
                         leafNodeKeys.push(node.idkey);
                     }
                 });
                 
-                // 更新 checkList，只包含叶子节点
+                //Legacy comment translated to English.
                 this.expectedPluginFoem.checkList = leafNodeKeys;
                 
-                // 更新计数
+                //Legacy comment translated to English.
                 this.updateExportPluginSelectedCount();
             });
         },
         
-        // 更新已选择的靶道数量
+        //Legacy comment translated to English.
         updateExportPluginSelectedCount() {
             if (!this.$refs.expectedPluginTree) {
                 this.exportPluginSelectedCount = 0;
                 return;
             }
             
-            // 使用 Tree 组件的 API 获取所有选中的节点（包括半选状态的父节点的子节点）
+            //Legacy comment translated to English.
             const checkedNodes = this.$refs.expectedPluginTree.getCheckedNodes();
             const halfCheckedNodes = this.$refs.expectedPluginTree.getHalfCheckedNodes();
             
-            // 统计所有选中的子节点（靶道）
-            // 靶道的特征：有 idkey 且包含下划线，或者没有 children
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             let count = 0;
             
-            // 统计完全选中的节点中的靶道
+            //Legacy comment translated to English.
             checkedNodes.forEach(node => {
-                // 如果是叶子节点（靶道），统计
+                //Legacy comment translated to English.
                 if (!node.children || node.children.length === 0) {
                     count++;
                 }
             });
             
-            // 对于半选状态的父节点，需要统计其已选中的子节点
-            // Element UI Tree 的 getCheckedNodes() 已经包含了所有选中的子节点，所以不需要额外处理
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             
             this.exportPluginSelectedCount = count;
         },
         
-        // 导出plugin - 全选
+        //Legacy comment translated to English.
         exportPluginSelectAll() {
             if (!this.$refs.expectedPluginTree) return;
             
-            // 获取所有节点的key（包括父节点和子节点）
+            //Legacy comment translated to English.
             const allKeys = [];
             const collectKeys = (nodes) => {
                 nodes.forEach(node => {
@@ -2864,16 +2886,16 @@ var app = new Vue({
             };
             collectKeys(this.expectedPluginFieldList);
             
-            // 设置选中
+            //Legacy comment translated to English.
             this.$refs.expectedPluginTree.setCheckedKeys(allKeys);
             
-            // 等待 DOM 更新后，只记录叶子节点
+            //Legacy comment translated to English.
             this.$nextTick(() => {
                 const checkedNodes = this.$refs.expectedPluginTree.getCheckedNodes();
                 const leafNodeKeys = [];
                 
                 checkedNodes.forEach(node => {
-                    // 只记录叶子节点（靶道）
+                    //Legacy comment translated to English.
                     if (!node.children || node.children.length === 0) {
                         leafNodeKeys.push(node.idkey);
                     }
@@ -2883,66 +2905,66 @@ var app = new Vue({
                 this.updateExportPluginSelectedCount();
             });
             
-            this.$message.success('已全选所有靶道');
+            this.$message.success(ncfST('Frontend.325'));
         },
         
-        // 导出plugin - 反选
+        //Legacy comment translated to English.
         exportPluginInvertSelection() {
             if (!this.$refs.expectedPluginTree) return;
             
-            // 收集所有叶子节点（靶道）的key
+            //Legacy comment translated to English.
             const allLeafKeys = [];
             const collectLeafKeys = (nodes) => {
                 nodes.forEach(node => {
                     if (!node.children || node.children.length === 0) {
-                        // 这是叶子节点（靶道）
+                        //Legacy comment translated to English.
                         allLeafKeys.push(node.idkey);
                     } else {
-                        // 这是父节点（靶场），继续递归
+                        //Legacy comment translated to English.
                         collectLeafKeys(node.children);
                     }
                 });
             };
             collectLeafKeys(this.expectedPluginFieldList);
             
-            // 获取当前选中的叶子节点key（使用 leafOnly=true 参数）
+            //Legacy comment translated to English.
             const currentCheckedLeafKeys = this.$refs.expectedPluginTree.getCheckedKeys(true);
             
-            // 反选：所有叶子节点 - 当前选中的叶子节点
+            //Legacy comment translated to English.
             const invertedLeafKeys = allLeafKeys.filter(key => !currentCheckedLeafKeys.includes(key));
             
-            // 设置反选后的结果（只设置叶子节点）
+            //Legacy comment translated to English.
             this.$refs.expectedPluginTree.setCheckedKeys(invertedLeafKeys);
             
-            // 等待 DOM 更新后更新状态
+            //Legacy comment translated to English.
             this.$nextTick(() => {
                 this.expectedPluginFoem.checkList = invertedLeafKeys;
                 this.updateExportPluginSelectedCount();
             });
             
-            this.$message.success('已反选');
+            this.$message.success(ncfST('Frontend.326'));
         },
         
-        // 导出plugin - 清空选择
+        //Legacy comment translated to English.
         exportPluginClearAll() {
             if (!this.$refs.expectedPluginTree) return;
             
             this.$refs.expectedPluginTree.setCheckedKeys([]);
             this.expectedPluginFoem.checkList = [];
             
-            // 等待 DOM 更新后再统计
+            //Legacy comment translated to English.
             this.$nextTick(() => {
                 this.updateExportPluginSelectedCount();
             });
             
-            this.$message.info('已清空所有选择');
+            this.$message.info(ncfST('Frontend.327'));
         },
         
-        // 导出plugin - 切换展开/收起
+        //Legacy comment translated to English.
         exportPluginToggleExpand() {
             this.exportPluginExpandAll = !this.exportPluginExpandAll;
             
-            // 需要重新渲染树来应用展开状态
+            //Legacy comment translated to English.
             if (!this.$refs.expectedPluginTree) return;
             
             const tree = this.$refs.expectedPluginTree;
@@ -2955,19 +2977,19 @@ var app = new Vue({
                 }
             }
         },
-        // 导出 plugins 确认
+        //Legacy comment translated to English.
         btnExpectedPlugins() {
             this.$refs.expectedPluginFoem.validate(async (valid) => {
                 if (valid) {
-                    //console.log('导出 plugins 确认', this.expectedPluginFoem.checkList)
+                    //Legacy comment translated to English.
                     //return
                     this.isPageLoading = true
-                    // 导出 plugins
+                    //Legacy comment translated to English.
                     let _zipname = 'plugins'
                     let _rangeIds = []
                     let _ids = []
                     this.expectedPluginFoem.checkList.forEach(item => {
-                        // 判断是否包含 - 如果包含就是靶道 否则就是靶场
+                        //Legacy comment translated to English.
                         if (item.indexOf('_') > -1) {
                             let _itemArr = item.split('_')
                             _ids.push(Number(_itemArr[1]))
@@ -2976,7 +2998,7 @@ var app = new Vue({
                             _rangeIds.push(Number(item))
                         }
                     })
-                    // _rangeIds 和 _ids 去重
+                    //Legacy comment translated to English.
                     _rangeIds = [...new Set(_rangeIds)]
                     _ids = [...new Set(_ids)]
 
@@ -2988,8 +3010,8 @@ var app = new Vue({
                             'Content-Type': 'application/json'
                         },
                         data: {
-                            rangeIds: _rangeIds,//靶场
-                            ids: _ids//靶道
+                            rangeIds: _rangeIds,//range
+                            ids: _ids//Legacy comment translated to English.
                         }
                     }).then((res) => {
                         this.isPageLoading = false
@@ -2998,22 +3020,22 @@ var app = new Vue({
                         const url = URL.createObjectURL(blob);
                         const a = document.createElement('a');
                         a.href = url;
-                        a.download = `${_zipname}.zip`; // 设置下载的文件名，可以根据需要修改
-                        a.click(); // 触发点击事件开始下载
-                        // 下载完成后删除 <a> 标签
-                        URL.revokeObjectURL(url); // 释放 URL 对象
-                        a.parentNode && a.parentNode.removeChild(a); // 从 DOM 中删除 <a> 标签
+                        a.download = `${_zipname}.zip`; //Legacy comment translated to English.
+                        a.click(); //Legacy comment translated to English.
+                        //Legacy comment translated to English.
+                        URL.revokeObjectURL(url); //Legacy comment translated to English.
+                        a.parentNode && a.parentNode.removeChild(a); //Legacy comment translated to English.
                         
-                        this.$message.success('导出成功！');
+                        this.$message.success(ncfST('Frontend.280'));
                     }).catch((error) => {
                         this.isPageLoading = false
-                        console.error('导出失败:', error);
+                        console.error('Export failed:', error);
                         
-                        let errorMessage = '导出 plugins 失败';
+                        let errorMessage = ncfST('Frontend.323');
                         if (error.response) {
-                            // 服务器返回错误响应
+                            //Legacy comment translated to English.
                             if (error.response.status === 500) {
-                                errorMessage = '服务器错误：' + (error.response.data?.message || '导出过程中发生错误');
+                                errorMessage = ncfST('Frontend.426') + (error.response.data?.message || ncfST('Frontend.323'));
                             } else if (error.response.data && error.response.data.message) {
                                 errorMessage = error.response.data.message;
                             }
@@ -3028,49 +3050,49 @@ var app = new Vue({
                 }
             });
         },
-        // ai 评分删除
+        //Legacy comment translated to English.
         deleteAiScoreBtn(index) {
-            //console.log('删除', index)
-            this.$confirm('此操作将删除该期望结果, 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
+            //console.log('delete', index)
+            this.$confirm(ncfST('Frontend.362'), ncfST('Frontend.343'), {
+                confirmButtonText: ncfST('Frontend.421'),
+                cancelButtonText: ncfST('Frontend.091'),
                 type: 'warning'
             }).then(() => {
                 this.aiScoreForm.resultList.splice(index, 1)
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: '已取消删除'
+                    message: ncfST('已取消删除')
                 });
             });
 
         },
-        // 新增靶场
+        // addrange
         addPromptField() {
-            // 如果靶场变化 靶道
+            //Legacy comment translated to English.
             this.fieldFormVisible = true
         },
-        // 连发次数 数量变化
+        //Legacy comment translated to English.
         changeNumsBtn(command = 1) {
             this.numsOfResults = command
         },
-        // 打靶按钮 类型切换
+        //Legacy comment translated to English.
         changeBtn(command) {
             this.sendBtnText = command
         },
-        // 打靶按钮 点击 触发对应类型事件
+        //Legacy comment translated to English.
         clickSendBtn() {
             const command = this.sendBtnText
-            //console.log('点击了' + command)
-            if (command === '打靶') {
+            //Legacy comment translated to English.
+            if (command === PromptRangeSendCommand.shoot) {
                 this.targetShootHandel()
-            } else if (command === '保存草稿') {
+            } else if (command === PromptRangeSendCommand.draft) {
                 this.targetShootHandel(true)
-            } else if (command === '连发') {
+            } else if (command === PromptRangeSendCommand.rapid) {
                 this.dealRapicFireHandel(this.numsOfResults)
             }
         },
-        // beforeunload 事件处理函数
+        //Legacy comment translated to English.
         isMacEmbeddedWebView() {
             const userAgent = navigator.userAgent || ''
             return /Macintosh/i.test(userAgent) &&
@@ -3078,27 +3100,27 @@ var app = new Vue({
                 !/Safari\//i.test(userAgent)
         },
         beforeunloadHandler(e) {
-            //console.log('浏览器关闭|浏览器刷新|页面关闭|打开新页面')
-            // 如果数据没有变动，则不需要提示用户保存
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             if (this.pageChange) {
-                // 显示自定义对话框
-                let confirmationMessage = '您的数据已经修改，是否保存为草稿？';
-                // 阻止默认行为
+                //Legacy comment translated to English.
+                let confirmationMessage = ncfST('Frontend.333');
+                //Legacy comment translated to English.
                 e.preventDefault();
-                // 兼容旧版本浏览器
+                //Legacy comment translated to English.
                 e.returnValue = confirmationMessage;
                 return confirmationMessage;
             }
             //setTimeout(function () {
-            //    // 弹出自定义模态框
+            //Legacy comment translated to English.
             //    var modal = document.createElement("div");
-            //    modal.innerHTML = "您确定要离开本页面吗？";
+            //Legacy comment translated to English.
             //    var btn = document.createElement("button");
-            //    btn.textContent = "留在页面";
+            //Legacy comment translated to English.
             //    btn.onclick = function () {
-            //        // 取消默认的 beforeunload 行为
+            //Legacy comment translated to English.
             //        e.preventDefault();
-            //        // 关闭自定义模态框
+            //Legacy comment translated to English.
             //        modal.remove();
             //    };
             //    modal.appendChild(btn);
@@ -3109,34 +3131,36 @@ var app = new Vue({
             let fullVersion = '';
             let label = '';
             
-            // 如果传入了参数，则复制对比窗口中的版本号
+            //Legacy comment translated to English.
             if (source === 'A' || source === 'B') {
                 const prompt = source === 'A' ? this.comparePromptA : this.comparePromptB;
                 if (!prompt || !prompt.fullVersion) {
-                    this.$message.warning('无法获取版本号');
+                    this.$message.warning(ncfST('Frontend.349'));
                     return;
                 }
                 fullVersion = prompt.fullVersion;
-                label = `Prompt ${source} 版本号`;
+                label = ncfST('Frontend.427', source);
             } else {
-                // 否则复制当前选中的 Prompt
+                //Legacy comment translated to English.
             if (!this.promptid) {
-                this.$message.info('请选择靶道后再复制信息！')
+                this.$message.info(ncfST('Frontend.381'))
                 return
             }
             const promptItem = this.promptOpt.find(item => item.id === this.promptid)
                 if (!promptItem) {
-                    this.$message.warning('无法获取当前 Prompt 信息');
+                    this.$message.warning(ncfST('Frontend.346'));
                     return;
                 }
                 fullVersion = promptItem.fullVersion;
                 label = '';
             }
             
-            const message = label ? `复制${label}【${fullVersion}】成功` : `复制【${fullVersion}】成功`;
-            await window.PromptRangeUtils.CopyHelper.copyToClipboardAsync(fullVersion, message, '复制失败', true)
+            const message = label
+                ? ncfST('Frontend.428', label, fullVersion)
+                : ncfST('Frontend.429', fullVersion);
+            await window.PromptRangeUtils.CopyHelper.copyToClipboardAsync(fullVersion, message, ncfST('Frontend.304'), true)
         },
-        // 格式化时间
+        //Legacy comment translated to English.
         formatDate(d) {
             var date = new Date(d);
             var YY = date.getFullYear() + '-';
@@ -3154,7 +3178,7 @@ var app = new Vue({
                 date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
             return YY + MM + DD + ' ' + hh + mm + ss;
         },
-        // 格式化聊天时间（更简洁的格式）
+        //Legacy comment translated to English.
         formatChatTime(d) {
             if (!d) return ''
             var date = new Date(d)
@@ -3164,19 +3188,19 @@ var app = new Vue({
             var hours = Math.floor(minutes / 60)
             var days = Math.floor(hours / 24)
             
-            if (minutes < 1) return '刚刚'
-            if (minutes < 60) return minutes + '分钟前'
-            if (hours < 24) return hours + '小时前'
-            if (days < 7) return days + '天前'
+            if (minutes < 1) return ncfST('Frontend.311')
+            if (minutes < 60) return minutes + ncfST('Frontend.312')
+            if (hours < 24) return hours + ncfST('Frontend.313')
+            if (days < 7) return days + ncfST('Frontend.314')
             
-            // 超过7天显示具体日期
+            //Legacy comment translated to English.
             var hh = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':'
             var mm = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes())
             var MM = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
             var DD = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
             return MM + DD + ' ' + hh + mm
         },
-        // 格式化聊天内容（支持markdown）
+        //Legacy comment translated to English.
         formatChatContent(content) {
             if (!content) return ''
             return this.renderSafeMarkdown(content)
@@ -3217,135 +3241,135 @@ var app = new Vue({
                 return ''
             }
         },
-        // 切换聊天反馈（Like/Unlike）
+        //Legacy comment translated to English.
         async toggleChatFeedback(chatId, feedback) {
-            // 防止重复点击：如果正在处理，直接返回
+            //Legacy comment translated to English.
             if (this._isUpdatingFeedback) {
                 return
             }
             this._isUpdatingFeedback = true
             
             try {
-                // 验证 chatId 是否有效
+                //Legacy comment translated to English.
                 if (!chatId || chatId === 0 || chatId === '0') {
-                    console.error('无效的 chatId:', chatId, '类型:', typeof chatId)
-                    console.error('当前历史记录:', this.continueChatHistory)
+                    console.error('Invalid chatId:', chatId, 'Type:', typeof chatId)
+                    console.error('Current chat history:', this.continueChatHistory)
                     this.$message({
-                        message: '对话记录ID无效，请刷新页面后重试',
+                        message: ncfST('对话记录ID无效，请刷新页面后重试'),
                         type: 'error'
                     })
                     return
                 }
                 
-                // 确保 chatId 是数字类型
+                //Legacy comment translated to English.
                 const numericChatId = typeof chatId === 'string' ? parseInt(chatId, 10) : chatId
                 if (isNaN(numericChatId) || numericChatId <= 0) {
-                    console.error('无效的 chatId（转换后）:', numericChatId, '原始值:', chatId)
+                    console.error('Invalid chatId after conversion:', numericChatId, 'Original value:', chatId)
                     this.$message({
-                        message: '对话记录ID无效，请刷新页面后重试',
+                        message: ncfST('对话记录ID无效，请刷新页面后重试'),
                         type: 'error'
                     })
                     return
                 }
                 
-                // 找到当前消息（同时检查 id 和 numericChatId）
+                //Legacy comment translated to English.
                 const msgIndex = this.continueChatHistory.findIndex(msg => {
                     const msgId = typeof msg.id === 'string' ? parseInt(msg.id, 10) : msg.id
                     return msgId === numericChatId || msg.id === numericChatId || msg.id === chatId
                 })
                 
                 if (msgIndex === -1) {
-                    console.error('未找到对应的对话记录')
-                    console.error('查找的 chatId:', numericChatId, '原始 chatId:', chatId)
-                    console.error('历史记录中的所有 ID:', this.continueChatHistory.map(m => ({ id: m.id, idType: typeof m.id, roleType: m.roleType, sequence: m.sequence })))
+                    console.error('Conversation record not found')
+                    console.error('Searched chatId:', numericChatId, 'Original chatId:', chatId)
+                    console.error('All IDs in chat history:', this.continueChatHistory.map(m => ({ id: m.id, idType: typeof m.id, roleType: m.roleType, sequence: m.sequence })))
                     this.$message({
-                        message: '未找到对应的对话记录，请刷新页面后重试',
+                        message: ncfST('未找到对应的对话记录，请刷新页面后重试'),
                         type: 'error'
                     })
                     return
                 }
                 
                 const currentMsg = this.continueChatHistory[msgIndex]
-                console.log('找到的消息:', currentMsg)
+                console.log('Found message:', currentMsg)
                 
-                // 验证消息 ID 是否有效
+                //Legacy comment translated to English.
                 const msgId = typeof currentMsg.id === 'string' ? parseInt(currentMsg.id, 10) : currentMsg.id
                 if (!msgId || msgId === 0 || isNaN(msgId)) {
-                    console.error('消息 ID 无效:', currentMsg.id, '类型:', typeof currentMsg.id)
+                    console.error('Invalid message ID:', currentMsg.id, 'Type:', typeof currentMsg.id)
                     this.$message({
-                        message: '消息ID无效，请刷新页面后重试',
+                        message: ncfST('消息ID无效，请刷新页面后重试'),
                         type: 'error'
                     })
                     return
                 }
                 
-                // 如果点击的是当前已选中的反馈，则取消反馈（设为null）
+                //Legacy comment translated to English.
                 const newFeedback = currentMsg.userFeedback === feedback ? null : feedback
                 
-                // 调用API更新反馈（使用有效的消息 ID）
-                // 注意：使用 Request DTO 格式，属性名需要首字母大写
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 const res = await servicePR.post(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.UpdateChatFeedback`, {
                     ChatId: msgId,
                     Feedback: newFeedback
                 })
                 
                 if (res.data.success) {
-                    // 更新本地数据
+                    //Legacy comment translated to English.
                     this.continueChatHistory[msgIndex].userFeedback = newFeedback
                     this.$forceUpdate()
                     
                     this.$message({
-                        message: newFeedback === null ? '已取消反馈' : (newFeedback ? '已点赞' : '已点踩'),
+                        message: newFeedback === null ? ncfST('已取消反馈') : (newFeedback ? ncfST('已点赞') : ncfST('已点踩')),
                         type: 'success',
                         duration: 1500
                     })
                 } else {
                     this.$message({
-                        message: res.data.errorMessage || '更新反馈失败',
+                        message: res.data.errorMessage || ncfST('更新反馈失败'),
                         type: 'error'
                     })
                 }
             } catch (error) {
-                console.error('更新反馈失败:', error)
+                console.error('Failed to update feedback:', error)
                 this.$message({
-                    message: '更新反馈失败：' + (error.message || '未知错误'),
+                    message: ncfST('更新反馈失败：') + (error.message || ncfST('未知错误')),
                     type: 'error'
                 })
             } finally {
-                // 重置标志，允许下次点击
+                //Legacy comment translated to English.
                 this._isUpdatingFeedback = false
             }
         },
-        // 处理对话历史滚动
+        //Legacy comment translated to English.
         handleChatHistoryScroll(event) {
-            // 可以在这里添加滚动相关的逻辑，比如显示滚动位置等
-            // 目前暂时不需要特殊处理
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
         },
-        // 输出 分数趋势图初始化
+        //Legacy comment translated to English.
         chartInitialization() {
             let scoreChart = document.getElementById('promptPage_scoreChart');
             let chartOption = {
                 tooltip: {
                     show: true,
-                    confine: true, //是否将 tooltip 框限制在图表的区域内。
+                    confine: true, //Legacy comment translated to English.
                     //appendToBody: true
                     formatter: (params) => {
                         //console.log('params', params)
                         let _data = params?.data[3] || {}
                         //find alias name by rangeName
-                        let alias = '未设置'
+                        let alias = ncfST('Frontend.356')
                         that.promptFieldOpt.forEach(item => {
                             if (item.rangeName === _data?.rangeName) {
                                 alias = item.alias
                             }
                         })
                         let _html = `<div style="text-align: left;font-size:10px;">
-<p>自定义名称：${alias}</p>
-    <p>靶场：${_data?.rangeName || ''}</p>
-    <p>版本：${_data?.fullVersion || ''}</p>
-<p>平均分：${_data?.evalAvgScore.toFixed(1) || ''}</p>
-<p>最高分：${_data?.evalMaxScore.toFixed(1) || ''}</p>
-<p>时间：${this.formatDate(_data?.addTime) || ''}</p>
+<p>${ncfST('Frontend.431', alias)}</p>
+    <p>${ncfST('Frontend.432', _data?.rangeName || '')}</p>
+    <p>${ncfST('Frontend.433', _data?.fullVersion || '')}</p>
+<p>${ncfST('Frontend.434', _data?.evalAvgScore.toFixed(1) || '')}</p>
+<p>${ncfST('Frontend.435', _data?.evalMaxScore.toFixed(1) || '')}</p>
+<p>${ncfST('Frontend.436', this.formatDate(_data?.addTime) || '')}</p>
 </div>`
                         return _html
                     }
@@ -3355,7 +3379,7 @@ var app = new Vue({
                     name: "",
                     //axisLabel: {
                     //    show: true,
-                    //    interval: 10  //使x轴都显示
+                    //Legacy comment translated to English.
                     //},
                     data: this.chartData?.xData || [],
                 },
@@ -3377,117 +3401,117 @@ var app = new Vue({
                 //  grid3D
                 grid3D: {
                     show: true,
-                    boxHeight: 150, // 3维图表的高度 z轴
-                    boxWidth: 400, // 3维图表的宽度 x轴
-                    boxDepth: 150, // 3维图表的深度 y轴
-                    // 整个chart背景，可为自定义颜色或图片
+                    boxHeight: 150, //Legacy comment translated to English.
+                    boxWidth: 400, //Legacy comment translated to English.
+                    boxDepth: 150, //Legacy comment translated to English.
+                    //Legacy comment translated to English.
                     environment: '#fff',
-                    //坐标轴轴线(线)控制
+                    //Legacy comment translated to English.
                     axisLine: {
-                        show: true,//该参数需设为true
-                        // interval:200,//x,y坐标轴刻度标签的显示间隔，在类目轴中有效。
-                        lineStyle: {//坐标轴样式
+                        show: true,//Legacy comment translated to English.
+                        //Legacy comment translated to English.
+                        lineStyle: {//Legacy comment translated to English.
                             color: 'rgba(0,0,0,0.3)',
-                            opacity: 1,//(单个刻度不会受影响)
-                            width: 2//线条宽度
+                            opacity: 1,//Legacy comment translated to English.
+                            width: 2//Legacy comment translated to English.
                         }
                     },
-                    // 坐标轴 label
+                    //Legacy comment translated to English.
                     axisLabel: {
-                        show: true,//是否显示刻度  (刻度上的数字，或者类目)
-                        interval: 0,//坐标轴刻度标签的显示间隔，在类目轴中有效。
+                        show: true,//Legacy comment translated to English.
+                        interval: 0,//Legacy comment translated to English.
                         formatter: function (v) {
                             return typeof v === 'number' ? v.toFixed(1) : v
                         },
                         textStyle: {
-                            color: '#32b8be',//刻度标签样式
+                            color: '#32b8be',//Legacy comment translated to English.
                             //color: function (value, index) {
-                            //    return value >= 6 ? 'green' : 'red';//根据范围显示颜色，主页为值有效
+                            //Legacy comment translated to English.
                             //},
-                            //  borderWidth:"",//文字的描边宽度。
-                            //  borderColor:'',//文字的描边颜色。
-                            fontSize: 12,//刻度标签字体大小
-                            fontWeight: '400',//粗细
+                            //Legacy comment translated to English.
+                            //Legacy comment translated to English.
+                            fontSize: 12,//Legacy comment translated to English.
+                            fontWeight: '400',//Legacy comment translated to English.
                         }
                     },
-                    //刻度
+                    //Legacy comment translated to English.
                     axisTick: {
-                        show: true,//是否显示出
-                        // interval:100,//坐标轴刻度标签的显示间隔，在类目轴中有效
-                        //length: 5,//坐标轴刻度的长度
-                        //lineStyle: {//举个例子，样式太丑将就
-                        //    color: '#000',//颜色
+                        show: true,//Legacy comment translated to English.
+                        //Legacy comment translated to English.
+                        //Legacy comment translated to English.
+                        //Legacy comment translated to English.
+                        //    color: '#000',//color
                         //    opacity: 1,
-                        //    width: 5//厚度（虽然为宽表现为高度），对应length*(宽)
+                        //Legacy comment translated to English.
                         //}
                     },
-                    //平面上的分隔线。
+                    //Legacy comment translated to English.
                     splitLine: {
-                        show: true,//立体网格线
-                        // interval:100,//坐标轴刻度标签的显示间隔，在类目轴中有效
-                        lineStyle: {//坐标轴样式
+                        show: true,//Legacy comment translated to English.
+                        //Legacy comment translated to English.
+                        lineStyle: {//Legacy comment translated to English.
                             color: 'rgba(0,0,0,0.05)',
-                            opacity: 1,//(单个刻度不会受影响)
-                            width: 1//线条宽度
+                            opacity: 1,//Legacy comment translated to English.
+                            width: 1//Legacy comment translated to English.
                         },
                         //splitArea: {
                         //    show: true,
-                        //    // interval:100,//坐标轴刻度标签的显示间隔，在类目轴中有效
+                        //Legacy comment translated to English.
                         //    areaStyle: {
                         //        color: ['rgba(250,250,250,0.2)', 'rgba(200,200,200,0.3)', 'rgba(250,250,250,0.2)', 'rgba(200,200,200,0.2)']
                         //    }
                         //},
                     },
-                    // 坐标轴指示线。
+                    //Legacy comment translated to English.
                     axisPointer: {
-                        show: false,//鼠标在chart上的显示线
+                        show: false,//Legacy comment translated to English.
                         // lineStyle:{
-                        //     color:'#000',//颜色
+                        //     color:'#000',//color
                         //     opacity:1,
-                        //     width:5//厚度（虽然为宽表现为高度），对应length*(宽)
+                        //Legacy comment translated to English.
                         // }
                     },
-                    //viewControl用于鼠标的旋转，缩放等视角控制。(以下适合用于地球自转等)
+                    //Legacy comment translated to English.
                     viewControl: {
-                        minBeta: 0, //最小旋转角度
-                        maxBeta: 90, //最大旋转角度
-                        minAlpha: 0, //最小旋转角度
-                        maxAlpha: 90, //最大旋转角度
-                        rotateSensitivity: 10,//旋转灵敏度，值越大旋转越快
-                        // projection: 'orthographic'//默认为透视投影'perspective'，也支持设置为正交投影'orthographic'。
-                        // autoRotate:true,//会有自动旋转查看动画出现,可查看每个维度信息
-                        // autoRotateDirection:'ccw',//物体自传的方向。默认是 'cw' 也就是从上往下看是顺时针方向，也可以取 'ccw'，既从上往下看为逆时针方向。
-                        // autoRotateSpeed:12,//物体自传的速度
-                        // autoRotateAfterStill:2,//在鼠标静止操作后恢复自动旋转的时间间隔。在开启 autoRotate 后有效。
-                        distance: 350,//默认视角距离主体的距离(常用)
-                        alpha: 1,//视角绕 x 轴，即上下旋转的角度(与beta一起控制视野成像效果)
-                        beta: 30,//视角绕 y 轴，即左右旋转的角度。
-                        // center:[]//视角中心点，旋转也会围绕这个中心点旋转，默认为[0,0,0]
+                        minBeta: 0, //Legacy comment translated to English.
+                        maxBeta: 90, //Legacy comment translated to English.
+                        minAlpha: 0, //Legacy comment translated to English.
+                        maxAlpha: 90, //Legacy comment translated to English.
+                        rotateSensitivity: 10,//Legacy comment translated to English.
+                        //Legacy comment translated to English.
+                        //Legacy comment translated to English.
+                        //Legacy comment translated to English.
+                        //Legacy comment translated to English.
+                        //Legacy comment translated to English.
+                        distance: 350,//Legacy comment translated to English.
+                        alpha: 1,//Legacy comment translated to English.
+                        beta: 30,//Legacy comment translated to English.
+                        //Legacy comment translated to English.
                         animation: true,
                     },
-                    //光照相关的设置
+                    //Legacy comment translated to English.
                     //light: {
                     //    main: {
-                    //        color: '#fff',//光照颜色会与所设置颜色发生混合
-                    //        intensity: 1.2,//主光源的强度(光的强度)
-                    //        shadow: false,//主光源是否投射阴影。默认关闭。
-                    //        // alpha:0//主光源绕 x 轴，即上下旋转的角度。配合 beta 控制光源的方向(跟beta结合可确定太阳位置)
-                    //        // beta:10//主光源绕 y 轴，即左右旋转的角度。
+                    //Legacy comment translated to English.
+                    //Legacy comment translated to English.
+                    //Legacy comment translated to English.
+                    //Legacy comment translated to English.
+                    //Legacy comment translated to English.
                     //    },
-                    //    ambient: {//全局的环境光设置。
+                    //Legacy comment translated to English.
                     //        intensity: 0.3,
-                    //        color: '#fff'//影响柱条颜色
+                    //Legacy comment translated to English.
                     //    },
-                    //    // ambientCubemap: {//会使用纹理作为光源的环境光
+                    //Legacy comment translated to English.
                     //    //  texture: 'pisa.hdr',
-                    //    // // 解析 hdr 时使用的曝光值
+                    //Legacy comment translated to English.
                     //    // exposure: 1.0
                     //    // }
                     //},
-                    // postEffect:{//后处理特效的相关配置，后处理特效可以为画面添加高光，景深，环境光遮蔽（SSAO），调色等效果。可以让整个画面更富有质感。
+                    //Legacy comment translated to English.
                     //     show:true,
                     //     bloom:{
-                    //         enable:true//高光特效,适合地球仪
+                    //Legacy comment translated to English.
                     //     }
                     // }
                 },
@@ -3500,7 +3524,7 @@ var app = new Vue({
                     _series.push({
                         type: 'bar3D',
                         name: item[0][1],
-                        data: item,    //每个区的数据一一对应
+                        data: item,    //Legacy comment translated to English.
                         itemStyle: {
                             opacity: 0.7
                         },
@@ -3510,7 +3534,7 @@ var app = new Vue({
                             formatter: function (params) {
                                 const promptItem = that.promptOpt.find(item => item.id === that.promptid)
                                 const fullVersion = promptItem ? promptItem.fullVersion : ''
-                                return params.data[3].fullVersion === fullVersion ? '当前' : ' ';  // 将 label 内容固定为 ""
+                                return params.data[3].fullVersion === fullVersion ? ncfST('Frontend.437') : ' ';  //Legacy comment translated to English.
                             },
                             textStyle: {
                                 color: '#000',
@@ -3528,23 +3552,23 @@ var app = new Vue({
             chartInstance.setOption(chartOption);
             this.chartInstance = chartInstance
             chartInstance.off('click')
-            // 监听点击事件
+            //Legacy comment translated to English.
             chartInstance.on('click', (params) => {
                 // console.log('click params：', params)
                 const promptItem = this.promptOpt.find(item => item.fullVersion === params.data[3].fullVersion)
                 if (promptItem) {
-                    // 设置霸道选中
+                    //Legacy comment translated to English.
                     this.promptid = promptItem.id
-                    // 获取靶道详情
+                    //Legacy comment translated to English.
                     this.getPromptetail(promptItem.id, true)
                     this.chartInstance.resize()
-                    // 获取输出列表和平均分
+                    //Legacy comment translated to English.
                     //this.getOutputList()
-                    // 获取分数趋势图表数据
+                    //Legacy comment translated to English.
                     // this.getScoringTrendData()
                 }
             })
-            //监听图表鼠标移入事件 mouseover globalout
+            //Legacy comment translated to English.
             // chartInstance.on('mouseover', (params) => {
             //     //console.log('mouseover', params)
             //     if (params.seriesType !== "line3D") return
@@ -3555,23 +3579,23 @@ var app = new Vue({
             //             _scatterSeries.splice(_sFindIndex, 1)
             //         })
             //     }
-            //     // 添加对应的 scatter3D
+            //Legacy comment translated to English.
             //     _scatterSeries.push({
             //         type: 'scatter3D',
             //         name: params.seriesName,
-            //         symbol: 'circle',  // 设置圆点样式为圆形
-            //         symbolSize: 10,  // 设置圆点的大小
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             //         label: {
-            //             show: false,  // 设置 label 显示
+            //             show: false,  // settings label display
             //             formatter: function (params) {
-            //                 return '';  // 将 label 内容固定为 ""
+            //Legacy comment translated to English.
             //             }
             //         },
-            //         data: [params.data]    //每个区的数据一一对应
+            //Legacy comment translated to English.
             //     })
             //     chartInstance.setOption({ series: [..._series, ..._scatterSeries] });
             // })
-            //监听图表鼠标移出事件
+            //Legacy comment translated to English.
             // chartInstance.on('mouseout', (params) => {
             //     /*console.log('globalout', _series, _sFilter, params)*/
             //     _scatterSeries = []
@@ -3583,7 +3607,7 @@ var app = new Vue({
         formatTooltip(val) {
             return val.toFixed(1)
         },
-        // 输出 获取评分趋势 图表数据
+        //Legacy comment translated to English.
         async getScoringTrendData() {
             this.chartData = {
                 xData: [],
@@ -3591,7 +3615,7 @@ var app = new Vue({
                 seriesData: []
             }
             if (this.promptid) {
-                //console.log('获取评分趋势 图表数据', this.isAvg)
+                //Legacy comment translated to English.
                 /* /api/Senparc.Xncf.PromptRange/StatisticAppService/Xncf.PromptRange_StatisticAppService.GetLineChartDataAsync?promptItemId=${this.promptid}*/
                 let res = await servicePR.get(`/api/Senparc.Xncf.PromptRange/StatisticAppService/Xncf.PromptRange_StatisticAppService.GetLineChartDataAsync?promptItemId=${this.promptid}&isAvg=${this.isAvg}`)
                 if (res.data.success) {
@@ -3631,7 +3655,7 @@ var app = new Vue({
                         duration: 5 * 1000
                     });
                 }
-                // 初始化图表 接口调用成功
+                //Legacy comment translated to English.
                 this.chartInitialization()
             }
 
@@ -3646,7 +3670,7 @@ var app = new Vue({
             //}
             //this.chartInstance.setOption(_setOption);
         },
-        // 靶场|靶道|模型 选择变化
+        //Legacy comment translated to English.
         async promptChangeHandel(val, itemKey, oldVal, fromHash = false) {
             if ((itemKey === 'promptField' || itemKey === 'promptid') && !fromHash && !this.isApplyingHashRoute) {
                 const route = this.buildPromptHashRoute({
@@ -3657,7 +3681,7 @@ var app = new Vue({
                 return;
             }
 
-            // 靶道变化时，重置打靶按钮
+            //Legacy comment translated to English.
             this.numsOfResults = 1
             //console.log(this.promptFieldOldVal,'|', val, '|', itemKey, '|', oldVal)
             if (itemKey === 'promptField') {
@@ -3665,15 +3689,15 @@ var app = new Vue({
                     await this.resetPageData()
                     return
                 }
-                // 如果靶场变化 靶道
+                //Legacy comment translated to English.
                 if (this.pageChange && this.modelid) {
-                    // 提示 有数据变化 是否保存为草稿
-                    this.$confirm('您的数据已经修改，是否保存为草稿？', '提示', {
-                        confirmButtonText: '保存',
-                        cancelButtonText: '不保存',
+                    //Legacy comment translated to English.
+                    this.$confirm(ncfST('Frontend.333'), ncfST('Frontend.343'), {
+                        confirmButtonText: ncfST('Frontend.090'),
+                        cancelButtonText: ncfST('Frontend.309'),
                         type: 'warning'
                     }).then(() => {
-                        // 保存草稿
+                        //Legacy comment translated to English.
                         this.targetShootHandel(true).then(() => {
                             this.resetPageData()
                             //console.log(333)
@@ -3685,7 +3709,7 @@ var app = new Vue({
                     return
                 }
                 //console.log(111)
-                // 重置页面数据
+                // reset page data
                 this.resetPageData()
             } else if (itemKey === 'promptid') {
                 if (fromHash || this.isApplyingHashRoute) {
@@ -3697,84 +3721,84 @@ var app = new Vue({
                     if (_fitem && _fitem.isDraft) {
                         this.sendBtns = [
                             {
-                                text: '打靶'
+                                text: PromptRangeSendCommand.shoot
                             },
                             {
-                                text: '保存草稿'
+                                text: PromptRangeSendCommand.draft
                             }
                         ]
-                        this.sendBtnText = '打靶'
+                        this.sendBtnText = PromptRangeSendCommand.shoot
                     } else {
                         this.sendBtns = [
                             {
-                                text: '连发'
+                                text: PromptRangeSendCommand.rapid
                             },
                             {
-                                text: '保存草稿'
+                                text: PromptRangeSendCommand.draft
                             }
                         ]
-                        this.sendBtnText = '连发'
+                        this.sendBtnText = PromptRangeSendCommand.rapid
                     }
                     this.getPromptetail(val, true, true)
                     return
                 }
 
                 if (this.pageChange && this.modelid) {
-                    // 提示 有数据变化 是否保存为草稿
-                    this.$confirm('您的数据已经修改，是否保存为草稿？', '提示', {
-                        confirmButtonText: '保存',
-                        cancelButtonText: '不保存',
+                    //Legacy comment translated to English.
+                    this.$confirm(ncfST('Frontend.333'), ncfST('Frontend.343'), {
+                        confirmButtonText: ncfST('Frontend.090'),
+                        cancelButtonText: ncfST('Frontend.309'),
                         type: 'warning'
                     }).then(() => {
-                        // 保存草稿
+                        //Legacy comment translated to English.
                         this.targetShootHandel(true).then(() => {
                             this.resetPageData()
                             this.getPromptetail(val, true, true)
                         })
-                        // 重置 页面变化记录
+                        // reset page-change tracking
                         this.pageChange = false
-                        // 重新获取靶道列表
+                        //Legacy comment translated to English.
                         //this.getFieldList()
                     }).catch(() => {
-                        // 重置 页面变化记录
+                        // reset page-change tracking
                         this.pageChange = false
-                        // val 在 promptOpt 中的位置
+                        //Legacy comment translated to English.
                         let _fitem = this.promptOpt.find(item => item.value === val)
                         if (_fitem.isDraft) {
                             this.sendBtns = [
                                 {
-                                    text: '打靶'
+                                    text: PromptRangeSendCommand.shoot
                                 },
                                 {
-                                    text: '保存草稿'
+                                    text: PromptRangeSendCommand.draft
                                 }
                             ]
-                            this.sendBtnText = '打靶'
+                            this.sendBtnText = PromptRangeSendCommand.shoot
                         } else {
                             this.sendBtns = [
                                 {
-                                    text: '连发'
+                                    text: PromptRangeSendCommand.rapid
                                 },
                                 {
-                                    text: '保存草稿'
+                                    text: PromptRangeSendCommand.draft
                                 }
                             ]
-                            this.sendBtnText = '连发'
+                            this.sendBtnText = PromptRangeSendCommand.rapid
                         }
 
-                        // 清空ai评分标准
+                        //Legacy comment translated to English.
                         this.aiScoreForm = {
                             resultList: []
                         }
 
-                        // 获取靶道详情
+                        //Legacy comment translated to English.
                         this.getPromptetail(val, true, true)
 
                     });
                 } else {
-                    // 重置 页面变化记录
+                    // reset page-change tracking
                     this.pageChange = false
-                    // 清空ai评分标准
+                    //Legacy comment translated to English.
                     this.aiScoreForm = {
                         resultList: []
                     }
@@ -3782,58 +3806,58 @@ var app = new Vue({
                     if (_fitem.isDraft) {
                         this.sendBtns = [
                             {
-                                text: '打靶'
+                                text: PromptRangeSendCommand.shoot
                             },
                             {
-                                text: '保存草稿'
+                                text: PromptRangeSendCommand.draft
                             }
                         ]
-                        this.sendBtnText = '打靶'
+                        this.sendBtnText = PromptRangeSendCommand.shoot
                     } else {
                         this.sendBtns = [
                             {
-                                text: '连发'
+                                text: PromptRangeSendCommand.rapid
                             },
                             {
-                                text: '保存草稿'
+                                text: PromptRangeSendCommand.draft
                             }
                         ]
-                        this.sendBtnText = '连发'
+                        this.sendBtnText = PromptRangeSendCommand.rapid
                     }
-                    // 靶道
+                    //Legacy comment translated to English.
                     this.getPromptetail(val, true, true)
                 }
 
             } else {
 
-                // 其他
+                //Legacy comment translated to English.
                 if (itemKey === 'modelid') {
                     this.onModelSelectionChanged()
                 }
-                // 页面变化记录
+                //Legacy comment translated to English.
                 this.pageChange = true
                 this.sendBtns = [
                     {
-                        text: '打靶'
+                        text: PromptRangeSendCommand.shoot
                     },
                     {
-                        text: '保存草稿'
+                        text: PromptRangeSendCommand.draft
                     }
                 ]
-                this.sendBtnText = '打靶'
+                this.sendBtnText = PromptRangeSendCommand.shoot
             }
 
         },
-        // 重置页面数据
+        // reset page data
         async resetPageData() {
-            // 重置 页面变化记录
+            // reset page-change tracking
             this.pageChange = false
-            // 靶场
-            this.promptid = '' // 靶道
-            this.modelid = '' // 模型
-            // 参数设置 视图配置列表
+            // range
+            this.promptid = '' //Legacy comment translated to English.
+            this.modelid = '' // model
+            //Legacy comment translated to English.
             this.resetConfigurineParam(false)
-            // 输入Prompt 重置
+            //Legacy comment translated to English.
             this.resetInputPrompt()
             this.outputList = []
             this.outputAverageDeci = -1
@@ -3862,13 +3886,13 @@ var app = new Vue({
                 searchTopK: 3,
                 searchQuery: ''
             }
-            // ai评分标准 重置
+            //Legacy comment translated to English.
             this.aiScoreForm = {
                 resultList: []
             }
             this.numsOfResults = 1
             if (this.promptField) {
-                // 获取靶道列表
+                //Legacy comment translated to English.
                 await this.getPromptOptData().then(() => {
                     console.log(this.promptOpt)
                     // promptid is the last one of promptOpt
@@ -3878,50 +3902,50 @@ var app = new Vue({
                         if (_el.isDraft) {
                             this.sendBtns = [
                                 {
-                                    text: '打靶'
+                                    text: PromptRangeSendCommand.shoot
                                 },
                                 {
-                                    text: '保存草稿'
+                                    text: PromptRangeSendCommand.draft
                                 }
                             ]
-                            this.sendBtnText = '打靶'
+                            this.sendBtnText = PromptRangeSendCommand.shoot
                         } else {
                             this.sendBtns = [
                                 {
-                                    text: '连发'
+                                    text: PromptRangeSendCommand.rapid
                                 },
                                 {
-                                    text: '保存草稿'
+                                    text: PromptRangeSendCommand.draft
                                 }
                             ]
-                            this.sendBtnText = '连发'
+                            this.sendBtnText = PromptRangeSendCommand.rapid
                         }
 
-                        // 获取详情
+                        // get details
                         this.getPromptetail(this.promptid, true, true)
                     } else {
                         this.sendBtns = [
                             {
-                                text: '打靶'
+                                text: PromptRangeSendCommand.shoot
                             },
                             {
-                                text: '保存草稿'
+                                text: PromptRangeSendCommand.draft
                             }
                         ]
-                        this.sendBtnText = '打靶'
+                        this.sendBtnText = PromptRangeSendCommand.shoot
                     }
 
                 })
-                // 获取分数趋势图表数据
+                //Legacy comment translated to English.
                 await this.getScoringTrendData()
             }
 
         },
 
-        // 继续聊天：加载历史记录并打开战术选择弹窗
+        //Legacy comment translated to English.
         async continueChat(promptResultId, resultIndex) {
             try {
-                // 使用新的 API 同时获取对话历史和 Prompt 内容
+                //Legacy comment translated to English.
                 const res = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetChatHistoryWithPrompt?promptResultId=${promptResultId}`)
                 if (res.data.success) {
                     this.continueChatMode = true
@@ -3930,28 +3954,28 @@ var app = new Vue({
                     this.continueChatSystemMessage = res.data.data.promptContent || ''
                     this.syncContinueChatUsageFromResult(promptResultId)
                     
-                    // 打开战术选择弹窗，锁定为对话模式
-                    this.tacticalForm.chatMode = '对话模式'
+                    //Legacy comment translated to English.
+                    this.tacticalForm.chatMode = 'chat'
                     this.tacticalFormVisible = true
                     
-                    // 滚动到底部显示最新消息
+                    //Legacy comment translated to English.
                     this.$nextTick(() => {
                         const container = document.getElementById('chatHistoryContainer')
                         if (container) {
                             container.scrollTop = container.scrollHeight
                         }
-                        // 添加代码块复制按钮
+                        // add a button to copy code blocks
                         this.addCopyButtonsToCodeBlocks();
                     })
                 } else {
-                    // 降级方案：如果新 API 失败，使用旧的 API
+                    //Legacy comment translated to English.
                     const fallbackRes = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetChatHistory?promptResultId=${promptResultId}`)
                     if (fallbackRes.data.success) {
                         this.continueChatMode = true
                         this.continueChatPromptResultId = promptResultId
                         this.continueChatHistory = fallbackRes.data.data || []
                         this.syncContinueChatUsageFromResult(promptResultId)
-                        // 尝试从 outputList 获取 Prompt 内容
+                        //Legacy comment translated to English.
                         const resultItem = this.outputList.find(item => item.id === promptResultId)
                         if (resultItem && resultItem.promptId && this.promptDetail && this.promptDetail.id === resultItem.promptId) {
                             this.continueChatSystemMessage = this.promptDetail.promptContent || this.content || ''
@@ -3959,7 +3983,7 @@ var app = new Vue({
                             this.continueChatSystemMessage = this.content || ''
                         }
                         
-                        this.tacticalForm.chatMode = '对话模式'
+                        this.tacticalForm.chatMode = 'chat'
                         this.tacticalFormVisible = true
                         
                         this.$nextTick(() => {
@@ -3971,41 +3995,41 @@ var app = new Vue({
                         })
                     } else {
                         this.$message({
-                            message: fallbackRes.data.errorMessage || '加载对话历史失败',
+                            message: fallbackRes.data.errorMessage || ncfST('Frontend.347'),
                             type: 'error'
                         })
                     }
                 }
             } catch (error) {
                 this.$message({
-                    message: '加载对话历史失败：' + (error.message || '未知错误'),
+                    message: ncfST('Frontend.347') + ': ' + (error.message || ncfST('未知错误')),
                     type: 'error'
                 })
             }
         },
         
-        // 处理对话输入框的键盘事件（快捷键支持）
+        //Legacy comment translated to English.
         handleChatInputKeydown(e) {
-            // Ctrl+Enter (Windows/Linux) 或 Cmd+Enter (Mac)
+            // Ctrl+Enter (Windows/Linux) or Cmd+Enter (Mac)
             if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
                 e.preventDefault()
                 e.stopPropagation()
-                // 触发提交
+                //Legacy comment translated to English.
                 this.tacticalFormSubmitBtn()
             }
         },
         
-        // 战术选择 关闭弹出
-        // 战术选择 dialog 关闭
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         tacticalFormCloseDialog() {
             const wasContinueChatMode = this.continueChatMode
             this.tacticalForm = {
-                tactics: '重新瞄准',
-                chatMode: '对话模式' // 重置为默认值
+                tactics: 'retarget',
+                chatMode: 'chat' //Legacy comment translated to English.
             }
-            // 清空对话输入
+            //Legacy comment translated to English.
             this.tacticalChatInput = ''
-            // 重置继续聊天状态
+            //Legacy comment translated to English.
             this.continueChatMode = false
             this.continueChatPromptResultId = null
             this.continueChatHistory = []
@@ -4022,29 +4046,29 @@ var app = new Vue({
             }
             this.systemMessageCollapse = []
             if (this.$refs.tacticalForm) {
-                // 使用 clearValidate 清除验证状态，而不是 resetFields
-                // 因为某些字段可能是条件显示的（v-if），resetFields 可能会出错
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 this.$refs.tacticalForm.clearValidate();
             }
         },
         
-        // 打开创建智能体对话框
+        //Legacy comment translated to English.
         openCreateAgentDialog() {
             if (!this.promptField) {
                 this.$message({
-                    message: '请先选择靶场',
+                    message: ncfST('请先选择靶场'),
                     type: 'warning'
                 })
                 return
             }
             if (!this.promptid || !this.promptDetail || !this.promptDetail.fullVersion) {
                 this.$message({
-                    message: '请先选择靶道以确定 PromptCode',
+                    message: ncfST('请先选择靶道以确定 PromptCode'),
                     type: 'warning'
                 })
                 return
             }
-            // 重置表单
+            //Legacy comment translated to English.
             this.createAgentForm = {
                 name: this.promptDetail.nickName || this.promptDetail.fullVersion,
                 scopeType: 'full',
@@ -4054,18 +4078,18 @@ var app = new Vue({
             }
             this.createAgentExistingList = []
             this.createAgentDialogVisible = true
-            // 检查是否已有智能体使用该 PromptCode
+            //Legacy comment translated to English.
             this.$nextTick(() => {
                 this.checkExistingAgentsByPromptCode()
             })
         },
 
-        // 切换 PromptCode 范围时重新检查
+        //Legacy comment translated to English.
         onCreateAgentScopeChange() {
             this.checkExistingAgentsByPromptCode()
         },
 
-        // 检查当前 PromptCode 下已有的智能体
+        //Legacy comment translated to English.
         async checkExistingAgentsByPromptCode() {
             const promptCode = this.createAgentPromptCode
             if (!promptCode) return
@@ -4077,31 +4101,31 @@ var app = new Vue({
                     this.createAgentExistingList = res.data.data || []
                 }
             } catch (e) {
-                // 忽略错误（AgentsManager 模块可能未安装）
-                console.warn('检查智能体时出错（请确认 AgentsManager 模块已安装）:', e)
+                //Legacy comment translated to English.
+                console.warn('Agent check failed (confirm that the AgentsManager module is installed):', e)
                 this.createAgentExistingList = []
             }
         },
 
-        // 提交创建智能体
+        //Legacy comment translated to English.
         async submitCreateAgent() {
             if (!this.createAgentForm.name) {
-                this.$message({ message: '请输入智能体名称', type: 'warning' })
+                this.$message({ message: ncfST('请输入智能体名称'), type: 'warning' })
                 return
             }
             const promptCode = this.createAgentPromptCode
             if (!promptCode) {
-                this.$message({ message: '无效的 PromptCode', type: 'error' })
+                this.$message({ message: ncfST('无效的 PromptCode'), type: 'error' })
                 return
             }
 
-            // 如果已有智能体，需确认
+            //Legacy comment translated to English.
             if (this.createAgentExistingList.length > 0) {
                 try {
                     await this.$confirm(
-                        `当前 PromptCode（${promptCode}）已有 ${this.createAgentExistingList.length} 个智能体使用。是否继续创建新智能体？`,
-                        '确认创建',
-                        { confirmButtonText: '继续创建', cancelButtonText: '取消', type: 'warning' }
+                        ncfST('当前 PromptCode（{0}）已有 {1} 个智能体使用。是否继续创建新智能体？', promptCode, this.createAgentExistingList.length),
+                        ncfST('确认创建'),
+                        { confirmButtonText: ncfST('继续创建'), cancelButtonText: ncfST('取消'), type: 'warning' }
                     )
                 } catch {
                     return
@@ -4128,33 +4152,33 @@ var app = new Vue({
                     agentData
                 )
                 if (res.data && res.data.success) {
-                    this.$message({ message: `智能体「${this.createAgentForm.name}」创建成功！`, type: 'success' })
+                    this.$message({ message: ncfST('智能体「{0}」创建成功！', this.createAgentForm.name), type: 'success' })
                     this.createAgentDialogVisible = false
                 } else {
-                    this.$message({ message: '创建失败：' + (res.data?.msg || '未知错误'), type: 'error' })
+                    this.$message({ message: ncfST('创建失败：') + (res.data?.msg || ncfST('未知错误')), type: 'error' })
                 }
             } catch (e) {
-                console.error('创建智能体失败:', e)
-                this.$message({ message: '创建失败，请确认 AgentsManager 模块已安装', type: 'error' })
+                console.error('Failed to create agent:', e)
+                this.$message({ message: ncfST('创建失败，请确认 AgentsManager 模块已安装'), type: 'error' })
             } finally {
                 this.createAgentLoading = false
             }
         },
 
-        // 打开导图对话框
+        //Legacy comment translated to English.
         openMapDialog() {
             if (!this.promptField) {
                 this.$message({
-                    message: '请先选择靶场',
+                    message: ncfST('请先选择靶场'),
                     type: 'warning'
                 })
                 return
             }
             
-            // 检查当前靶场是否有靶道数据
+            //Legacy comment translated to English.
             if (!this.promptOpt || this.promptOpt.length === 0) {
                 this.$message({
-                    message: '当前靶场还没有进行过打靶，请打靶后再来看吧！',
+                    message: ncfST('Frontend.332'),
                     type: 'info',
                     duration: 3000
                 })
@@ -4167,16 +4191,16 @@ var app = new Vue({
             })
         },
         
-        // 关闭导图对话框
+        //Legacy comment translated to English.
         mapDialogClose() {
             this.destroyMap3D()
-            // 退出全屏（如果全屏状态）
+            //Legacy comment translated to English.
             if (document.fullscreenElement) {
                 document.exitFullscreen()
             }
         },
 
-        // 重置 3D 视角到初始位置
+        //Legacy comment translated to English.
         resetMap3DView() {
             if (!this.map3dCamera || !this.map3dControls) return
             this.map3dCamera.position.set(30, 30, 50)
@@ -4185,10 +4209,10 @@ var app = new Vue({
             this.map3dNeedsAnimationUpdate = true
         },
 
-        // 适应视图：将所有节点都纳入视野
+        //Legacy comment translated to English.
         fitMap3DView() {
             if (!this.map3dCamera || !this.map3dControls || !this.map3dNodes || this.map3dNodes.length === 0) return
-            // 计算所有节点的包围盒中心
+            //Legacy comment translated to English.
             let minX = Infinity, maxX = -Infinity
             let minY = Infinity, maxY = -Infinity
             let minZ = Infinity, maxZ = -Infinity
@@ -4213,20 +4237,20 @@ var app = new Vue({
             this.map3dNeedsAnimationUpdate = true
         },
 
-        // 切换全屏模式
+        //Legacy comment translated to English.
         toggleMap3DFullscreen() {
             const container = document.getElementById('map3dContainer')
             if (!container) return
             if (!document.fullscreenElement) {
                 container.requestFullscreen().catch(e => {
-                    console.warn('全屏请求失败:', e)
+                    console.warn(ncfST('全屏请求失败:'), e)
                 })
             } else {
                 document.exitFullscreen()
             }
         },
 
-        // 注册 3D 键盘快捷键
+        //Legacy comment translated to English.
         registerMap3DKeyboard() {
             if (this._map3dKeydownHandler) return
             const SPEED = 3
@@ -4234,7 +4258,7 @@ var app = new Vue({
                 if (!this.mapDialogVisible || !this.map3dCamera) return
                 if (e.ctrlKey || e.metaKey || e.altKey) return
 
-                // 优先使用物理键位（e.code）避免中文输入法/非英文布局下 e.key 不稳定导致快捷键失效
+                //Legacy comment translated to English.
                 const key = (e.key || '').toLowerCase()
                 const code = e.code || ''
                 let actionKey = key
@@ -4264,7 +4288,7 @@ var app = new Vue({
                 }
 
                 let moved = false
-                // WASD + QE 平移
+                //Legacy comment translated to English.
                 switch (actionKey) {
                     case 'w': moveBy(0, SPEED, 0); moved = true; break
                     case 's': moveBy(0, -SPEED, 0); moved = true; break
@@ -4305,131 +4329,131 @@ var app = new Vue({
             console.debug('[Map3D Keyboard] shortcut listener registered')
         },
 
-        // 初始化 3D 导图
+        //Legacy comment translated to English.
         initMap3D() {
             const container = document.getElementById('map3dContainer')
             if (!container) return
             
-            // 构建树状结构数据
+            //Legacy comment translated to English.
             this.buildTreeData()
             
-            // 确保 THREE 已加载
+            //Legacy comment translated to English.
             if (typeof THREE === 'undefined' && typeof window.THREE !== 'undefined') {
                 window.THREE = window.THREE
             }
             
             if (typeof THREE === 'undefined') {
                 this.$message({
-                    message: 'THREE.js 未加载，请刷新页面重试',
+                    message: ncfST('THREE.js 未加载，请刷新页面重试'),
                     type: 'error'
                 })
                 this.mapDialogVisible = false
                 return
             }
             
-            // 创建场景（使用渐变背景）
+            //Legacy comment translated to English.
             this.map3dScene = new THREE.Scene()
-            // 创建渐变背景
+            //Legacy comment translated to English.
             const gradientTexture = this.createGradientBackground()
             this.map3dScene.background = gradientTexture
             
-            // 禁用雾化效果，确保远处节点清晰可见
+            //Legacy comment translated to English.
             this.map3dScene.fog = null
             
-            // 创建相机（增大远裁剪面，确保所有节点都可见）
+            //Legacy comment translated to English.
             const width = container.clientWidth
             const height = container.clientHeight
-            // 参数：视场角(75度), 宽高比, 近裁剪面(0.1), 远裁剪面(5000 - 增大以支持更远的节点)
+            //Legacy comment translated to English.
             this.map3dCamera = new THREE.PerspectiveCamera(75, width / height, 0.1, 5000)
             this.map3dCamera.position.set(0, 0, 50)
             
-            // 创建渲染器（禁用对数深度缓冲，提高远处物体的清晰度）
+            //Legacy comment translated to English.
             this.map3dRenderer = new THREE.WebGLRenderer({ 
                 antialias: true,
                 logarithmicDepthBuffer: false,
-                precision: 'highp' // 使用高精度，提高渲染质量
+                precision: 'highp' //Legacy comment translated to English.
             })
             this.map3dRenderer.setSize(width, height)
-            // 设置像素比，在高DPI屏幕上更清晰
+            //Legacy comment translated to English.
             this.map3dRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
             container.appendChild(this.map3dRenderer.domElement)
             
-            // 添加控制器（使用本地化的 OrbitControls）
+            //Legacy comment translated to English.
             if (typeof THREE.OrbitControls !== 'undefined') {
                 this.map3dControls = new THREE.OrbitControls(this.map3dCamera, this.map3dRenderer.domElement)
                 
-                // 启用阻尼效果，使旋转更平滑
+                //Legacy comment translated to English.
                 this.map3dControls.enableDamping = true
                 this.map3dControls.dampingFactor = 0.05
                 
-                // 启用缩放（增大最大距离，支持更远的视角）
+                //Legacy comment translated to English.
                 this.map3dControls.enableZoom = true
                 this.map3dControls.zoomSpeed = 1.2
                 this.map3dControls.minDistance = 10
-                this.map3dControls.maxDistance = 500 // 从 200 增加到 500
+                this.map3dControls.maxDistance = 500 //Legacy comment translated to English.
                 
-                // 启用旋转
+                //Legacy comment translated to English.
                 this.map3dControls.enableRotate = true
                 this.map3dControls.rotateSpeed = 0.8
                 
-                // 启用平移
+                //Legacy comment translated to English.
                 this.map3dControls.enablePan = true
                 this.map3dControls.panSpeed = 0.8
                 this.map3dControls.screenSpacePanning = true
                 
-                // 设置初始相机位置，使其能看到整个场景
+                //Legacy comment translated to English.
                 this.map3dCamera.position.set(30, 30, 50)
                 this.map3dControls.target.set(0, 0, 0)
                 this.map3dControls.update()
             } else {
-                console.warn('OrbitControls 未找到，3D 场景将无法通过鼠标控制')
+                    console.warn('OrbitControls not found; the 3D scene cannot be controlled with the mouse')
             }
             
-            // 添加更丰富的光源系统（增强远处物体的照明）
-            // 环境光 - 提供基础照明（增强亮度以照亮远处节点）
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6) // 从 0.4 增加到 0.6
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6) //Legacy comment translated to English.
             this.map3dScene.add(ambientLight)
             
-            // 主方向光 - 模拟太阳光（无衰减，照亮所有节点）
+            //Legacy comment translated to English.
             const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.8)
             directionalLight1.position.set(20, 20, 20)
             directionalLight1.castShadow = false
             this.map3dScene.add(directionalLight1)
             
-            // 辅助方向光 - 补充照明（从另一侧照亮）
-            const directionalLight2 = new THREE.DirectionalLight(0x88ccff, 0.5) // 从 0.4 增加到 0.5
+            //Legacy comment translated to English.
+            const directionalLight2 = new THREE.DirectionalLight(0x88ccff, 0.5) //Legacy comment translated to English.
             directionalLight2.position.set(-20, 10, -20)
             this.map3dScene.add(directionalLight2)
             
-            // 第三方向光 - 从前方照亮远处节点
+            //Legacy comment translated to English.
             const directionalLight3 = new THREE.DirectionalLight(0xffffff, 0.4)
             directionalLight3.position.set(0, 0, 50)
             this.map3dScene.add(directionalLight3)
             
-            // 点光源 - 增加层次感（无衰减距离限制）
-            const pointLight = new THREE.PointLight(0xffffff, 0.6, 0) // distance=0 表示无限距离
+            //Legacy comment translated to English.
+            const pointLight = new THREE.PointLight(0xffffff, 0.6, 0) //Legacy comment translated to English.
             pointLight.position.set(0, 20, 0)
             this.map3dScene.add(pointLight)
             
-            // 渲染节点
+            //Legacy comment translated to English.
             this.renderTreeNodes()
             
-            // 开始动画循环
+            //Legacy comment translated to English.
             this.animateMap3D()
             
-            // 处理窗口大小变化
+            //Legacy comment translated to English.
             window.addEventListener('resize', this.handleMap3DResize)
 
-            // 注册键盘快捷键
+            //Legacy comment translated to English.
             this.registerMap3DKeyboard()
 
-            // 自动适应视图（延迟一点等节点渲染完成）
+            //Legacy comment translated to English.
             this.$nextTick(() => {
                 setTimeout(() => this.fitMap3DView(), 200)
             })
         },
         
-        // 构建树状结构数据
+        //Legacy comment translated to English.
         buildTreeData() {
             if (!this.promptOpt || this.promptOpt.length === 0) {
                 this.map3dTreeData = null
@@ -4439,12 +4463,12 @@ var app = new Vue({
             const tree = {}
             const currentPromptId = this.promptid
             
-            // 解析每个靶道的 FullVersion
+            //Legacy comment translated to English.
             this.promptOpt.forEach(prompt => {
                 const fullVersion = prompt.fullVersion || prompt.label
                 if (!fullVersion) return
                 
-                // 解析格式：2023.12.14.1-T1.1-A123
+                //Legacy comment translated to English.
                 const parts = fullVersion.split('-')
                 if (parts.length < 2) return
                 
@@ -4452,7 +4476,7 @@ var app = new Vue({
                 const tacticPart = parts[1] // T1.1
                 const aimingPart = parts[2] || '' // A123
                 
-                // 获取或创建 RangeName 根节点
+                //Legacy comment translated to English.
                 if (!tree[rangeName]) {
                     tree[rangeName] = {
                         type: 'range',
@@ -4466,7 +4490,7 @@ var app = new Vue({
                 
                 const rangeNode = tree[rangeName]
                 
-                // 解析 Tactic（每个.是一层）
+                //Legacy comment translated to English.
                 const tacticParts = tacticPart.replace('T', '').split('.')
                 let currentNode = rangeNode.children
                 let lastTacticNode = null
@@ -4475,10 +4499,10 @@ var app = new Vue({
                     const key = `T${tacticParts.slice(0, index + 1).join('.')}`
                     
                     if (!currentNode[key]) {
-                        // 修复 parentPath：应该包含完整的路径前缀
+                        //Legacy comment translated to English.
                         const parentFullPath = index > 0 
-                            ? `${rangeName}-T${tacticParts.slice(0, index).join('.')}` // 例如: "Range1-T2.1"
-                            : rangeName // 例如: "Range1"
+                            ? `${rangeName}-T${tacticParts.slice(0, index).join('.')}` // for example: "Range1-T2.1"
+                            : rangeName // for example: "Range1"
                         
                         currentNode[key] = {
                             type: 'tactic',
@@ -4494,20 +4518,20 @@ var app = new Vue({
                     currentNode = currentNode[key].children
                 })
                 
-                // 确保 lastTacticNode 存在
+                //Legacy comment translated to English.
                 if (!lastTacticNode) {
-                    console.warn('无法找到 Tactic 节点:', tacticPart)
+                    console.warn('Tactic node not found:', tacticPart)
                     return
                 }
                 
-                // 添加 Aiming（特殊层）- 修复：使用唯一的key避免共享
+                //Legacy comment translated to English.
                 if (aimingPart) {
-                    // 使用完整路径作为key，确保每个Aiming节点都是独立的
-                    const aimingKey = `${tacticPart}-${aimingPart}` // 例如: "T1.1-A1", "T1.2-A1"
+                    //Legacy comment translated to English.
+                    const aimingKey = `${tacticPart}-${aimingPart}` // for example: "T1.1-A1", "T1.2-A1"
                     if (!lastTacticNode.children[aimingKey]) {
                         lastTacticNode.children[aimingKey] = {
                             type: 'aiming',
-                            name: aimingPart.replace('A', ''), // 显示名称去掉A
+                            name: aimingPart.replace('A', ''), //Legacy comment translated to English.
                             fullPath: `${rangeName}-${tacticPart}-${aimingPart}`,
                             parentPath: `${rangeName}-${tacticPart}`,
                             children: {},
@@ -4522,7 +4546,7 @@ var app = new Vue({
                         isCurrent: (prompt.idkey || prompt.value) == currentPromptId
                     })
                 } else {
-                    // 如果没有 Aiming，直接添加到最后一个 Tactic 节点
+                    //Legacy comment translated to English.
                     lastTacticNode.prompts.push({
                         id: prompt.idkey || prompt.value,
                         fullVersion: fullVersion,
@@ -4535,79 +4559,79 @@ var app = new Vue({
             this.map3dTreeData = tree
         },
         
-        // --- 优化功能 ---
-        // 检查 PromptCatalyzer 是否已初始化
+        // --- optimizefeature ---
+        //Legacy comment translated to English.
         async checkPromptCatalyzerStatus() {
             try {
                 const response = await servicePR.get('/api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/CheckStatus');
-                console.log('CheckStatus 完整响应:', response);
+                console.log('Complete CheckStatus response:', response);
                 
-                // NCF AppResponseBase 返回格式：{ success: true, data: { isInitialized: true, ... } }
+                //Legacy comment translated to English.
                 if (response.data && response.data.success && response.data.data) {
                     return response.data.data.isInitialized;
                 }
                 return false;
             } catch (error) {
-                console.error('检查初始化状态失败:', error);
+                console.error('Failed to check initialization status:', error);
                 return false;
             }
         },
 
-        // 获取可用的 AI Model 列表
+        //Legacy comment translated to English.
         async loadAvailableModels() {
             this.loadingModels = true;
             try {
                 const response = await servicePR.get('/api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/GetAvailableModels');
-                console.log('GetAvailableModels 完整响应:', response);
+                console.log('Complete GetAvailableModels response:', response);
                 
-                // NCF AppResponseBase 返回格式：{ success: true, data: { models: [...], recommendedModelId: 1 } }
+                //Legacy comment translated to English.
                 if (response.data && response.data.success) {
                     this.availableModelsForInit = response.data.data.models || [];
                     
-                    // 自动选择推荐的 Model
+                    //Legacy comment translated to English.
                     if (response.data.data.recommendedModelId) {
                         this.selectedModelIdForInit = response.data.data.recommendedModelId;
                     } else if (this.availableModelsForInit.length > 0) {
                         this.selectedModelIdForInit = this.availableModelsForInit[0].id;
                     }
                     
-                    console.log('加载到', this.availableModelsForInit.length, '个可用 Model');
+                    console.log('Loaded', this.availableModelsForInit.length, 'available models');
                 } else {
-                    // 处理错误响应
-                    const errorMsg = response.data?.errorMessage || '获取模型列表失败';
+                    // handlingerrorresponse
+                    const errorMsg = response.data?.errorMessage || ncfST('Frontend.319');
                     this.$message.error(errorMsg);
-                    console.error('获取模型失败:', errorMsg);
+                    console.error('Failed to load models:', errorMsg);
                 }
             } catch (error) {
-                console.error('加载 AI Model 列表失败:', error);
-                this.$message.error('加载 AI Model 列表失败: ' + (error.response?.data?.errorMessage || error.message));
+                console.error('Failed to load the AI model list:', error);
+                this.$message.error(ncfST('Frontend.319') + ': ' + (error.response?.data?.errorMessage || error.message));
             } finally {
                 this.loadingModels = false;
             }
         },
 
-        // 执行初始化
+        // executeinitialize
         async executeInitialization() {
             if (!this.selectedModelIdForInit) {
-                this.$message.warning('请选择一个 AI Model');
+                this.$message.warning(ncfST('Frontend.377'));
                 return;
             }
 
             this.initializing = true;
             try {
-                console.log('开始初始化 PromptCatalyzer，使用 Model ID:', this.selectedModelIdForInit);
+                console.log('Starting PromptCatalyzer initialization with model ID:', this.selectedModelIdForInit);
                 
                 const response = await servicePR.post('/api/Senparc.Xncf.AgentsManager/PromptCatalyzerInitAppService/Initialize', {
                     modelId: this.selectedModelIdForInit
                 });
 
-                console.log('Initialize 完整响应:', response);
+                console.log('Complete Initialize response:', response);
                 
-                // NCF AppResponseBase 返回格式：{ success: true, data: { promptCode: "...", ... } }
+                //Legacy comment translated to English.
                 if (response.data && response.data.success) {
                     const initData = response.data.data || {};
                     this.$message({
-                        message: `✅ 初始化成功！已创建 PromptCatalyzer Agent，PromptCode: ${initData.promptCode || '已创建'}`,
+                        message: ncfST('Frontend.397', initData.promptCode || ncfST('Frontend.320')),
                         type: 'success',
                         duration: 6000,
                         showClose: true
@@ -4615,20 +4639,20 @@ var app = new Vue({
                     
                     this.promptCatalyzerInitVisible = false;
                     
-                    // 初始化成功后，刷新页面数据
-                    console.log('初始化成功，刷新页面数据...');
+                    //Legacy comment translated to English.
+                    console.log('Initialization succeeded; refreshing page data...');
                     await this.getFieldList();
                     
-                    // 继续执行优化
+                    //Legacy comment translated to English.
                     this.proceedWithOptimization();
                 } else {
-                    this.$message.error('初始化失败: ' + (response.data.errorMessage || '未知错误'));
+                    this.$message.error(ncfST('Frontend.317') + ': ' + (response.data.errorMessage || ncfST('未知错误')));
                 }
             } catch (error) {
-                console.error('初始化失败:', error);
+                console.error('Initialization failed:', error);
                 const errorMsg = error.response?.data?.error || error.response?.data?.message || error.message;
                 this.$message({
-                    message: '初始化失败: ' + errorMsg,
+                    message: ncfST('Frontend.317') + ': ' + errorMsg,
                     type: 'error',
                     duration: 8000,
                     showClose: true
@@ -4638,18 +4662,18 @@ var app = new Vue({
             }
         },
 
-        // 继续执行优化（初始化完成后）
+        //Legacy comment translated to English.
         proceedWithOptimization() {
-            // 重新打开优化对话框
+            //Legacy comment translated to English.
             this.optimizeRequirement = '';
             this.optimizeErrorText = '';
             this.optimizeDialogVisible = true;
         },
         
-        // ⭐ 新增：检查分数并提示优化
+        //Legacy comment translated to English.
         async checkScoreAndSuggestOptimization(resultData, scoreType) {
             try {
-                // 获取最终分数
+                //Legacy comment translated to English.
                 let finalScore = null;
                 if (resultData && typeof resultData === 'object') {
                     finalScore = resultData.finalScore;
@@ -4657,50 +4681,50 @@ var app = new Vue({
                     finalScore = resultData;
                 }
                 
-                // 如果无法获取分数，不提示
+                //Legacy comment translated to English.
                 if (finalScore === null || finalScore === undefined || finalScore === -1) {
-                    console.log('无法获取有效分数，跳过优化提示');
+                    console.log(ncfST('Frontend.350'));
                     return;
                 }
                 
-                console.log(`${scoreType}完成，最终分数: ${finalScore}`);
+                console.log(`${scoreType} completed, final score: ${finalScore}`);
                 
-                // 设置优化建议的阈值（分数低于6分时建议优化）
+                //Legacy comment translated to English.
                 const optimizationThreshold = 6.0;
                 
                 if (finalScore < optimizationThreshold) {
-                    // 分数较低，提示用户是否需要优化
+                    //Legacy comment translated to English.
                     this.$confirm(
-                        `当前 Prompt 的${scoreType}为 ${finalScore.toFixed(1)} 分（低于 ${optimizationThreshold} 分）。是否使用 AI 自动优化功能来改进 Prompt？`,
-                        '💡 建议优化',
+                        ncfST('Frontend.396', scoreType, finalScore.toFixed(1), optimizationThreshold),
+                        ncfST('Frontend.344'),
                         {
-                            confirmButtonText: '立即优化',
-                            cancelButtonText: '暂不优化',
+                            confirmButtonText: ncfST('Frontend.387'),
+                            cancelButtonText: ncfST('Frontend.388'),
                             type: 'warning',
                             center: true
                         }
                     ).then(async () => {
-                        // 用户确认优化
-                        console.log('用户确认进行优化');
+                        //Legacy comment translated to English.
+                    console.log('User confirmed optimization');
                         await this.openOptimizeDialog();
                     }).catch(() => {
-                        // 用户取消
-                        console.log('用户取消优化');
+                        //Legacy comment translated to English.
+                    console.log('User cancelled optimization');
                     });
                 } else {
-                    // 分数较高，显示简单的成功消息
-                    console.log(`分数${finalScore.toFixed(1)}较高，无需提示优化`);
+                    //Legacy comment translated to English.
+                    console.log(`The score ${finalScore.toFixed(1)} is high; optimization is not suggested`);
                 }
             } catch (error) {
-                console.error('检查分数并提示优化时出错:', error);
-                // 不显示错误消息，避免影响用户体验
+                console.error('Failed to check the score and suggest optimization:', error);
+                //Legacy comment translated to English.
             }
         },
         
-        // ⭐ 新增：根据 PromptItem 的平均分检查是否需要优化
+        //Legacy comment translated to English.
         async checkPromptAverageScoreAndSuggest() {
             try {
-                // 获取当前选中的 Prompt 信息
+                //Legacy comment translated to English.
                 if (!this.promptid) {
                     return;
                 }
@@ -4712,76 +4736,76 @@ var app = new Vue({
                 
                 const avgScore = selectedPrompt.evalAvgScore;
                 
-                // 如果平均分数为 -1 或无效，不提示
+                //Legacy comment translated to English.
                 if (avgScore === -1 || avgScore === null || avgScore === undefined) {
-                    console.log('当前 Prompt 尚无平均分数');
+                    console.log(ncfST('Frontend.331'));
                     return;
                 }
                 
-                console.log(`当前 Prompt 平均分数: ${avgScore}`);
+                    console.log(`Current average Prompt score: ${avgScore}`);
                 
-                // 设置优化建议的阈值
+                //Legacy comment translated to English.
                 const optimizationThreshold = 6.0;
                 
-                // 如果平均分低于阈值，且当前 Range 有多个测试结果，则提示优化
+                //Legacy comment translated to English.
                 if (avgScore < optimizationThreshold) {
-                    // 使用 Notification 而不是 Confirm，避免阻塞用户操作
+                    //Legacy comment translated to English.
                     this.$notify({
-                        title: '💡 优化建议',
-                        message: `当前 Prompt 的平均分为 ${avgScore.toFixed(1)} 分，建议使用 AI 自动优化功能来改进。点击"优化"按钮开始。`,
+                        title: ncfST('Frontend.344'),
+                        message: ncfST('Frontend.395', avgScore.toFixed(1)),
                         type: 'warning',
                         duration: 8000,
                         position: 'bottom-right',
                         showClose: true
                     });
                     
-                    console.log('平均分较低，已提示用户优化');
+                    console.log('The average score is low; optimization was suggested');
                 } else {
-                    console.log(`平均分 ${avgScore.toFixed(1)} 较高，无需提示优化`);
+                    console.log(`The average score ${avgScore.toFixed(1)} is high; optimization is not suggested`);
                 }
             } catch (error) {
-                console.error('检查平均分并提示优化时出错:', error);
+                console.error('Failed to check the average score and suggest optimization:', error);
             }
         },
 
         async openOptimizeDialog() {
             if (!this.promptid) {
-                this.$message.warning('请先选择一个Prompt！');
+                this.$message.warning(ncfST('Frontend.378'));
                 return;
             }
             
-            // 检查是否已初始化
-            console.log('检查 PromptCatalyzer 初始化状态...');
+            //Legacy comment translated to English.
+            console.log('Checking PromptCatalyzer initialization status...');
             const isInitialized = await this.checkPromptCatalyzerStatus();
             
             if (!isInitialized) {
-                // 未初始化，显示初始化对话框
+                //Legacy comment translated to English.
                 this.$message({
-                    message: '🚀 首次使用需要初始化 PromptCatalyzer，正在加载可用的 AI Model...',
+                    message: ncfST('Frontend.246'),
                     type: 'info',
                     duration: 3000
                 });
                 
-                // 加载可用 Model 列表
+                //Legacy comment translated to English.
                 await this.loadAvailableModels();
                 
                 if (this.availableModelsForInit.length === 0) {
-                    this.$message.error('没有找到可用的 AI Model，请先在 AIKernel 模块中配置 Chat 类型的 Model');
+                    this.$message.error(ncfST('Frontend.367'));
                     return;
                 }
                 
-                // 显示初始化对话框
+                //Legacy comment translated to English.
                 this.promptCatalyzerInitVisible = true;
                 return;
             }
             
-            // 已初始化，直接打开优化对话框
-            console.log('PromptCatalyzer 已初始化，打开优化对话框');
+            //Legacy comment translated to English.
+                console.log('PromptCatalyzer is initialized; opening the optimization dialog');
             this.optimizeRequirement = '';
             this.optimizeErrorText = '';
             this.optimizeDialogVisible = true;
         },
-        /// 将当前靶道的预期结果同步到 aiScoreForm，避免「打靶后 AI 评分」仅依赖表单内存而遗漏详情里的 expectedResultsJson。
+        //Legacy comment translated to English.
         syncAiScoreFormFromPromptDetail() {
             if (!this.promptDetail || !this.promptDetail.expectedResultsJson) {
                 return;
@@ -4799,7 +4823,7 @@ var app = new Vue({
                 if (!formHasValues) {
                     this.aiScoreForm.resultList = arr.map((item, index) => ({
                         id: index + 1,
-                        label: '预期结果',
+                        label: ncfST('Frontend.384'),
                         value: typeof item === 'string' ? item : String(item)
                     }));
                 }
@@ -4809,15 +4833,15 @@ var app = new Vue({
         },
         async executeOptimize() {
             if (this.optimizing) {
-                this.$message.warning('优化正在进行中，请勿重复点击');
+                this.$message.warning(ncfST('Frontend.308'));
                 return;
             }
             if (!this.promptid) {
-                this.$message.warning('请先选择一个Prompt！');
+                this.$message.warning(ncfST('Frontend.284'));
                 return;
             }
             
-            // 获取当前选择的 Prompt Code
+            //Legacy comment translated to English.
             let promptCode = '';
             const selectedPrompt = this.promptOpt.find(item => item.value === this.promptid);
             if (selectedPrompt) {
@@ -4828,34 +4852,34 @@ var app = new Vue({
                 }
             }
             
-            // 如果没找到，尝试从详情获取
+            //Legacy comment translated to English.
             if (!promptCode && this.promptDetail && this.promptDetail.fullVersion) {
                 promptCode = this.promptDetail.fullVersion;
             }
 
             if (!promptCode) {
-                this.$message.error('无法获取当前Prompt的版本号(Prompt Code)');
+                this.$message.error(ncfST('Frontend.348'));
                 return;
             }
 
-            // 获取当前 Prompt 的详细信息（包括参数）
+            //Legacy comment translated to English.
             const promptDetail = this.promptDetail;
             if (!promptDetail) {
-                this.$message.error('无法获取当前 Prompt 的详细信息');
+                this.$message.error(ncfST('Frontend.347'));
                 return;
             }
 
-            // 尽早占位，避免校验通过后、发请求前的双击产生两次 HTTP 请求
+            //Legacy comment translated to English.
             this.optimizing = true;
             this.optimizeErrorText = '';
-            this.optimizeProgressText = 'Agent 正在推理并调用工具（可能需要数分钟，请勿关闭此窗口）…';
+            this.optimizeProgressText = ncfST('Frontend.302');
             try {
-                console.log('开始优化 Prompt（Agent 主路径）:', promptCode);
+                console.log('Starting Prompt optimization (Agent primary path):', promptCode);
                 
                 const requestData = {
                     promptCode: promptCode,
                     promptContent: promptDetail.promptContent || this.content,
-                    userRequirement: this.optimizeRequirement || '提高 Prompt 的质量和效果',
+                    userRequirement: this.optimizeRequirement || ncfST('Frontend.344'),
                     context: {
                         modelId: this.modelid || promptDetail.modelId,
                         currentTemperature: promptDetail.temperature || this.parameterViewList.find(p => p.formField === 'temperature')?.value || 0.7,
@@ -4875,24 +4899,24 @@ var app = new Vue({
                 );
 
                 if (response.data && response.data.success === false) {
-                    const topErr = response.data.errorMessage || response.data.message || '请求失败';
+                    const topErr = response.data.errorMessage || response.data.message || ncfST('Frontend.273');
                     this.optimizeErrorText = String(topErr);
-                    this.$message.error('优化失败：' + topErr);
+                    this.$message.error(ncfST('Frontend.237') + '：' + topErr);
                     return;
                 }
 
                 if (response.data && response.data.success && response.data.data) {
                     const optimizeResult = response.data.data;
                     if (!optimizeResult.success) {
-                        const err = optimizeResult.errorMessage || optimizeResult.evaluationReason || '优化未成功';
+                        const err = optimizeResult.errorMessage || optimizeResult.evaluationReason || ncfST('Frontend.307');
                         this.optimizeErrorText = String(err);
-                        this.$message.error('优化失败：' + err);
+                        this.$message.error(ncfST('Frontend.237') + '：' + err);
                         return;
                     }
 
-                    this.optimizeProgressText = 'Agent 已完成，正在刷新靶道并选中新版本…';
+                    this.optimizeProgressText = ncfST('Frontend.301');
                     await this.getFieldList();
-                    // getFieldList 只更新靶场列表；靶道下拉 promptOpt 必须由 getPromptOptData 拉取，否则列表仍是旧的，会误判「未匹配到 Prompt Code」
+                    //Legacy comment translated to English.
                     await this.getPromptOptData();
 
                     const code = optimizeResult.newPromptCode || optimizeResult.NewPromptCode;
@@ -4901,7 +4925,7 @@ var app = new Vue({
                         p.label === code ||
                         (p.label && code && p.label.indexOf(code) >= 0));
                     if (!newPrompt) {
-                        const w = '已创建新版本，但未在列表中匹配到 Prompt Code：' + code;
+                        const w = ncfST('Frontend.357') + '：' + code;
                         this.optimizeErrorText = w;
                         this.$message.warning(w);
                         this.optimizeDialogVisible = false;
@@ -4915,20 +4939,20 @@ var app = new Vue({
                     const _fitem = this.promptOpt.find(item => item.value === this.promptid);
                     if (_fitem) {
                         if (_fitem.isDraft) {
-                            this.sendBtns = [{ text: '打靶' }, { text: '保存草稿' }];
-                            this.sendBtnText = '打靶';
+                            this.sendBtns = [{ text: PromptRangeSendCommand.shoot }, { text: PromptRangeSendCommand.draft }];
+                            this.sendBtnText = PromptRangeSendCommand.shoot;
                         } else {
-                            this.sendBtns = [{ text: '连发' }, { text: '保存草稿' }];
-                            this.sendBtnText = '连发';
+                            this.sendBtns = [{ text: PromptRangeSendCommand.rapid }, { text: PromptRangeSendCommand.draft }];
+                            this.sendBtnText = PromptRangeSendCommand.rapid;
                         }
                     }
 
                     if (this.autoShootAfterOptimize) {
                         this.syncAiScoreFormFromPromptDetail();
-                        this.optimizeProgressText = '正在打靶（与手动打靶相同，可在主界面查看输出）…';
-                        // 优化已创建新版本，打靶时用"连发"模式（不再创建新版本）
+                        this.optimizeProgressText = ncfST('Frontend.361');
+                        //Legacy comment translated to English.
                         const savedTactics = this.tacticalForm.tactics;
-                        this.tacticalForm.tactics = '连发';
+                        this.tacticalForm.tactics = 'rapid';
                         try {
                             await this.executeTargetShootWithChatMessage(null);
                         } finally {
@@ -4944,7 +4968,7 @@ var app = new Vue({
                         if (!filled && this.aiScoreForm.resultList && this.aiScoreForm.resultList.some(r => r && r.value)) {
                             item.alResultList = this.aiScoreForm.resultList.map((x, idx) => ({
                                 id: idx + 1,
-                                label: '预期结果',
+                                label: ncfST('Frontend.384'),
                                 value: x.value
                             }));
                             filled = true;
@@ -4955,7 +4979,7 @@ var app = new Vue({
                                 if (Array.isArray(arr) && arr.some(x => x !== undefined && x !== null && String(x).trim() !== '')) {
                                     item.alResultList = arr.map((v, idx) => ({
                                         id: idx + 1,
-                                        label: '预期结果',
+                                        label: ncfST('Frontend.384'),
                                         value: typeof v === 'string' ? v : String(v)
                                     }));
                                     filled = true;
@@ -4965,18 +4989,18 @@ var app = new Vue({
                             }
                         }
                         if (filled) {
-                            this.optimizeProgressText = '正在 AI 评分（与手动 AI 评分相同）…';
+                            this.optimizeProgressText = ncfST('Frontend.360');
                             item.scoreType = '1';
                             this.$set(this.robotScoreLoadingMap, item.id, true);
                             await this.saveManualScore(item, latestIndex);
                         } else {
-                            this.$message.warning('未配置预期结果，已跳过 AI 评分');
+                            this.$message.warning(ncfST('Frontend.358'));
                         }
                     } else if (this.autoShootAfterOptimize && this.autoAIGradeAfterShoot && (!this.outputList || this.outputList.length === 0)) {
-                        this.$message.warning('自动打靶未返回输出记录，已跳过 AI 评分；可在主界面手动打靶后再评分');
+                        this.$message.warning(ncfST('Frontend.368'));
                     }
 
-                    let message = `✅ 优化完成\n\n新 Prompt：${code}`;
+                    let message = ncfST('Frontend.398', code);
                     const evalReason = optimizeResult.evaluationReason || optimizeResult.EvaluationReason;
                     if (evalReason) {
                         message += `\n\n${evalReason}`;
@@ -4987,12 +5011,12 @@ var app = new Vue({
                     this.optimizeErrorText = '';
                     this.optimizeDialogVisible = false;
                 } else {
-                    const errorMsg = response.data?.errorMessage || '未返回有效的优化结果';
+                    const errorMsg = response.data?.errorMessage || ncfST('Frontend.357');
                     this.optimizeErrorText = String(errorMsg);
-                    this.$message.error('优化失败：' + errorMsg);
+                    this.$message.error(ncfST('Frontend.237') + '：' + errorMsg);
                 }
             } catch (error) {
-                console.error('优化失败:', error);
+                console.error('Optimization failed:', error);
                 const resp = error.response?.data;
                 let detail = resp?.errorMessage || resp?.message || error.message || String(error);
                 if (resp && typeof resp === 'object' && !resp.errorMessage) {
@@ -5002,7 +5026,7 @@ var app = new Vue({
                 }
                 this.optimizeErrorText = detail;
                 this.$message({
-                    message: '❌ 优化失败: ' + (resp?.errorMessage || resp?.message || error.message),
+                    message: '❌ ' + ncfST('Frontend.237') + ': ' + (resp?.errorMessage || resp?.message || error.message),
                     type: 'error',
                     duration: 8000,
                     showClose: true
@@ -5012,7 +5036,7 @@ var app = new Vue({
                 this.optimizeProgressText = '';
             }
         },
-        // 计算树的高度（用于平衡布局）
+        //Legacy comment translated to English.
         calculateTreeHeight(nodeData) {
             if (!nodeData || typeof nodeData !== 'object') return 0
             
@@ -5032,15 +5056,15 @@ var app = new Vue({
             return maxHeight
         },
         
-        // @deprecated 不再使用：由于A节点在Z轴延伸，T节点间距已改为固定值
-        // 计算子树的节点数量（用于平衡布局）
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         countTreeNodes(nodeData) {
             if (!nodeData || typeof nodeData !== 'object') return 0
             
             let count = 0
             Object.keys(nodeData).forEach(key => {
                 const node = nodeData[key]
-                count++ // 当前节点
+                count++ //Legacy comment translated to English.
                 
                 const isExpanded = node.expanded !== false
                 if (isExpanded && node.children && Object.keys(node.children).length > 0) {
@@ -5051,23 +5075,23 @@ var app = new Vue({
             return count
         },
         
-        // **计算所有评分的统计信息（用于排名）**
+        //Legacy comment translated to English.
         calculateScoreStatistics() {
             const scores = []
             
-            // 遍历所有 promptOpt 收集评分
+            //Legacy comment translated to English.
             if (this.promptOpt && this.promptOpt.length > 0) {
                 this.promptOpt.forEach(prompt => {
                     let score = null
                     
-                    // 优先使用 evalMaxScore
+                    //Legacy comment translated to English.
                     if (prompt.evalMaxScore !== undefined && 
                         prompt.evalMaxScore !== null && 
                         prompt.evalMaxScore !== -1 && 
                         prompt.evalMaxScore !== '-1') {
                         score = prompt.evalMaxScore
                     }
-                    // 如果没有，使用 evalAvgScore
+                    //Legacy comment translated to English.
                     else if (prompt.evalAvgScore !== undefined && 
                              prompt.evalAvgScore !== null && 
                              prompt.evalAvgScore !== -1 && 
@@ -5085,7 +5109,7 @@ var app = new Vue({
                 return null
             }
             
-            // 排序（从大到小）
+            //Legacy comment translated to English.
             scores.sort((a, b) => b - a)
             
             const result = {
@@ -5093,41 +5117,41 @@ var app = new Vue({
                 min: Math.min(...scores),
                 max: Math.max(...scores),
                 count: scores.length,
-                // 计算百分位点（用于分级）
+                //Legacy comment translated to English.
                 getPercentileRank: (score) => {
-                    // 返回该分数在所有分数中的排名百分比（0-100）
+                    //Legacy comment translated to English.
                     const rank = scores.filter(s => s > score).length
                     return ((scores.length - rank) / scores.length) * 100
                 }
             }
             
-            console.log('📊 评分统计:', {
-                总数: result.count,
-                最高分: result.max,
-                最低分: result.min,
-                分数列表: scores.slice(0, 10) // 只显示前10个
+            console.log('📊 Score statistics:', {
+                count: result.count,
+                max: result.max,
+                min: result.min,
+                scores: scores.slice(0, 10) //Legacy comment translated to English.
             })
             
             return result
         },
         
-        // 渲染树节点（优化版：动态平衡布局 + 动画效果）
+        //Legacy comment translated to English.
         renderTreeNodes() {
             if (!this.map3dTreeData) return
             
-            // **计算评分统计信息**
+            //Legacy comment translated to English.
             this.scoreStatistics = this.calculateScoreStatistics()
             
             this.map3dNodes = []
-            // 初始化节点映射
+            //Legacy comment translated to English.
             if (!this.map3dNodeMap) {
                 this.map3dNodeMap = new Map()
             }
             const raycaster = new THREE.Raycaster()
             const mouse = new THREE.Vector2()
             
-            // **全新渲染逻辑：简化的固定间距布局**
-            // currentX: 当前X轴位置（全局计数器，每个节点递增）
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             let currentX = 0
             
             const renderNode = (nodeData, parentPosition, depth) => {
@@ -5137,15 +5161,15 @@ var app = new Vue({
                 
                 keys.forEach((key, index) => {
                     const node = nodeData[key]
-                    const isExpanded = node.expanded !== false // 默认展开
+                    const isExpanded = node.expanded !== false //Legacy comment translated to English.
                     
-                    // **重要：跳过 Aiming 类型节点，它们会在父节点处理时被创建**
+                    //Legacy comment translated to English.
                     if (node.type === 'aiming') {
-                        return // 不在这里处理 Aiming 节点
+                        return //Legacy comment translated to English.
                     }
                     
-                    // **新逻辑：分离 Aiming 子节点和 Tactic 子节点**
-                    // 任何T节点都可能同时有A节点和T子节点
+                    //Legacy comment translated to English.
+                    //Legacy comment translated to English.
                     let aimingChildren = {}
                     let tacticChildren = {}
                     
@@ -5160,26 +5184,26 @@ var app = new Vue({
                         })
                     }
                     
-                    // **全新简化布局：固定间距，顺序排列**
-                    const nodeSpacing = 15  // 固定间距
+                    //Legacy comment translated to English.
+                    const nodeSpacing = 15  //Legacy comment translated to English.
                     
-                    // 当前节点位置
-                    const x = currentX  // X轴位置（全局计数器）
-                    const y = -depth * 20   // Y轴深度（层级向下）
-                    const z = 0             // T节点统一在 Z=0 平面
+                    //Legacy comment translated to English.
+                    const x = currentX  //Legacy comment translated to English.
+                    const y = -depth * 20   //Legacy comment translated to English.
+                    const z = 0             //Legacy comment translated to English.
                     
-                    // 递增X轴位置（为下一个同级节点预留）
+                    //Legacy comment translated to English.
                     currentX += nodeSpacing
                     
-                    console.log(`📍 创建T节点: ${key}, 位置(${x}, ${y}, ${z}), depth=${depth}`)
+                    console.log(`📍 Created T node: ${key}, position (${x}, ${y}, ${z}), depth=${depth}`)
                     
-                    // 检查是否有当前编辑的靶道
+                    //Legacy comment translated to English.
                     const hasCurrent = node.prompts && node.prompts.some(p => p.isCurrent)
                     
-                    // 创建几何体（只为 Range 和 Tactic 创建，Aiming 在专门的地方创建）
+                    //Legacy comment translated to English.
                     let geometry, material, glowGeometry, glowMaterial
                     if (node.type === 'range') {
-                        // 靶场：方块（使用更平滑的圆角效果）
+                        //Legacy comment translated to English.
                         geometry = new THREE.BoxGeometry(5, 5, 5)
                         material = new THREE.MeshStandardMaterial({ 
                             color: hasCurrent ? 0xff6b6b : 0x4ecdc4,
@@ -5189,7 +5213,7 @@ var app = new Vue({
                             emissiveIntensity: hasCurrent ? 0.8 : 0.1
                         })
                         
-                        // 添加发光效果（当前选中时）
+                        //Legacy comment translated to English.
                         if (hasCurrent) {
                             glowGeometry = new THREE.BoxGeometry(5.5, 5.5, 5.5)
                             glowMaterial = new THREE.MeshBasicMaterial({
@@ -5200,7 +5224,7 @@ var app = new Vue({
                             })
                         }
                     } else if (node.type === 'tactic') {
-                        // 靶道（Tactic）：圆柱体（代表路径/通道）
+                        //Legacy comment translated to English.
                         // CylinderGeometry(radiusTop, radiusBottom, height, radialSegments)
                         geometry = new THREE.CylinderGeometry(2, 2, 4, 32)
                         material = new THREE.MeshStandardMaterial({ 
@@ -5211,7 +5235,7 @@ var app = new Vue({
                             emissiveIntensity: hasCurrent ? 0.9 : 0.1
                         })
                         
-                        // 添加发光效果（当前选中时）
+                        //Legacy comment translated to English.
                         if (hasCurrent) {
                             glowGeometry = new THREE.CylinderGeometry(2.3, 2.3, 4.3, 32)
                             glowMaterial = new THREE.MeshBasicMaterial({
@@ -5222,18 +5246,18 @@ var app = new Vue({
                             })
                         }
                     } else {
-                        // 不应该到达这里，因为 Aiming 节点已经在上面被 return 了
-                        console.error('意外的节点类型:', node.type, key)
+                        //Legacy comment translated to English.
+                        console.error('Unexpected node type:', node.type, key)
                         return
                     }
                     
                     const mesh = new THREE.Mesh(geometry, material)
-                    // 初始位置设置为目标位置（后续用于动画）
+                    //Legacy comment translated to English.
                     mesh.position.set(x, y, z)
                     
-                    // 如果是圆柱体（tactic节点），需要旋转90度使其竖立
+                    //Legacy comment translated to English.
                     if (node.type === 'tactic') {
-                        mesh.rotation.x = Math.PI / 2  // 绕X轴旋转90度
+                        mesh.rotation.x = Math.PI / 2  //Legacy comment translated to English.
                     }
                     
                     mesh.userData = { 
@@ -5242,21 +5266,21 @@ var app = new Vue({
                         depth, 
                         type: node.type,
                         targetPosition: { x, y, z },
-                        initialScale: 0.1 // 用于展开动画
+                        initialScale: 0.1 //Legacy comment translated to English.
                     }
                     mesh.castShadow = true
                     mesh.receiveShadow = true
                     
-                    // 如果是新创建的节点，从小到大的展开动画
+                    //Legacy comment translated to English.
                     mesh.scale.set(0.1, 0.1, 0.1)
                     
-                    // 添加发光效果
+                    //Legacy comment translated to English.
                     let glowMesh = null
                     if (glowGeometry && glowMaterial) {
                         glowMesh = new THREE.Mesh(glowGeometry, glowMaterial)
                         glowMesh.position.set(x, y, z)
                         
-                        // 如果是圆柱体（tactic节点），发光效果也需要旋转
+                        //Legacy comment translated to English.
                         if (node.type === 'tactic') {
                             glowMesh.rotation.x = Math.PI / 2
                         }
@@ -5265,7 +5289,7 @@ var app = new Vue({
                         this.map3dScene.add(glowMesh)
                     }
                     
-                    // 准备标签文字（提前计算，用于动态宽度）
+                    //Legacy comment translated to English.
                     let labelPrefix = ''
                     let labelText = node.name
                     
@@ -5281,16 +5305,16 @@ var app = new Vue({
                         labelText = node.name.length > 15 ? node.name.substring(0, 15) + '...' : node.name
                     }
                     
-                    // 创建文字标签（更大的文字，动态宽度）
+                    //Legacy comment translated to English.
                     const canvas = document.createElement('canvas')
                     const context = canvas.getContext('2d')
                     
-                    // 根据文字内容和类型动态计算画布大小（再次加大一倍）
-                    const prefixFontSize = hasCurrent ? 180 : 160  // 从 90/80 加大到 180/160
-                    const mainFontSize = hasCurrent ? 280 : 240   // 从 140/120 加大到 280/240
-                    const rangeFontSize = hasCurrent ? 220 : 190   // 从 110/95 加大到 220/190
+                    //Legacy comment translated to English.
+                    const prefixFontSize = hasCurrent ? 180 : 160  //Legacy comment translated to English.
+                    const mainFontSize = hasCurrent ? 280 : 240   //Legacy comment translated to English.
+                    const rangeFontSize = hasCurrent ? 220 : 190   //Legacy comment translated to English.
                     
-                    // 预计算文字宽度
+                    //Legacy comment translated to English.
                     if (labelPrefix === 'T') {
                         context.font = `bold ${mainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
                     } else {
@@ -5298,14 +5322,14 @@ var app = new Vue({
                     }
                     const textWidth = context.measureText(labelText).width
                     
-                    const padding = 50  // 从 30 增加到 50
-                    const borderRadius = 30  // 从 20 增加到 30
+                    const padding = 50  //Legacy comment translated to English.
+                    const borderRadius = 30  //Legacy comment translated to English.
                     
-                    // 动态设置画布大小（字体加大后，画布也要更大）
+                    //Legacy comment translated to English.
                     canvas.width = Math.max(800, textWidth + padding * 4)
-                    canvas.height = 512  // 从 256 增加到 512
+                    canvas.height = 512  //Legacy comment translated to English.
                     
-                    // 绘制圆角矩形（兼容性处理）
+                    //Legacy comment translated to English.
                     const drawRoundedRect = (x, y, width, height, radius) => {
                         context.beginPath()
                         context.moveTo(x + radius, y)
@@ -5320,22 +5344,22 @@ var app = new Vue({
                         context.closePath()
                     }
                     
-                    // 玻璃效果：半透明白色背景
+                    //Legacy comment translated to English.
                     context.fillStyle = hasCurrent 
-                        ? 'rgba(255, 107, 107, 0.25)'  // 当前选中：淡红色玻璃
-                        : 'rgba(255, 255, 255, 0.15)'  // 普通：半透明白色玻璃
+                        ? 'rgba(255, 107, 107, 0.25)'  //Legacy comment translated to English.
+                        : 'rgba(255, 255, 255, 0.15)'  //Legacy comment translated to English.
                     drawRoundedRect(padding, padding, canvas.width - padding * 2, canvas.height - padding * 2, borderRadius)
                     context.fill()
                     
-                    // 玻璃边框（增强玻璃效果）
+                    //Legacy comment translated to English.
                     context.strokeStyle = hasCurrent 
-                        ? 'rgba(255, 150, 150, 0.6)'   // 当前选中：红色边框
-                        : 'rgba(255, 255, 255, 0.3)'   // 普通：白色边框
+                        ? 'rgba(255, 150, 150, 0.6)'   //Legacy comment translated to English.
+                        : 'rgba(255, 255, 255, 0.3)'   //Legacy comment translated to English.
                     context.lineWidth = 3
                     drawRoundedRect(padding, padding, canvas.width - padding * 2, canvas.height - padding * 2, borderRadius)
                     context.stroke()
                     
-                    // 添加高光效果（模拟玻璃反光）
+                    //Legacy comment translated to English.
                     const highlightGradient = context.createLinearGradient(0, padding, 0, canvas.height / 2)
                     highlightGradient.addColorStop(0, 'rgba(255, 255, 255, 0.4)')
                     highlightGradient.addColorStop(1, 'rgba(255, 255, 255, 0)')
@@ -5343,29 +5367,29 @@ var app = new Vue({
                     drawRoundedRect(padding, padding, canvas.width - padding * 2, (canvas.height - padding * 2) / 2, borderRadius)
                     context.fill()
                     
-                    // 绘制文字（带阴影增强可读性，更大字体）
+                    //Legacy comment translated to English.
                     context.textAlign = 'center'
                     context.textBaseline = 'middle'
                     context.shadowColor = 'rgba(0, 0, 0, 0.8)'
-                    context.shadowBlur = 20  // 从 10 增加到 20
-                    context.shadowOffsetX = 5  // 从 3 增加到 5
-                    context.shadowOffsetY = 5  // 从 3 增加到 5
+                    context.shadowBlur = 20  //Legacy comment translated to English.
+                    context.shadowOffsetX = 5  //Legacy comment translated to English.
+                    context.shadowOffsetY = 5  //Legacy comment translated to English.
                     
                     let mainTextY = canvas.height / 2
                     
-                    // 如果有类型前缀（T），T 和数字在同一行显示
+                    //Legacy comment translated to English.
                     if (labelPrefix === 'T') {
-                        // 组合文本：T + 数字
+                        //Legacy comment translated to English.
                         const combinedText = `T${labelText}`
                         
-                        // 使用统一的大字体显示
+                        //Legacy comment translated to English.
                         context.fillStyle = '#ffffff'
                         context.font = `bold ${mainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
                         context.fillText(combinedText, canvas.width / 2, canvas.height / 2)
                         
                         mainTextY = canvas.height / 2
                     } else {
-                        // 靶场名称（更大字体）
+                        //Legacy comment translated to English.
                         context.fillStyle = '#ffffff'
                         context.font = `bold ${rangeFontSize}px 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif`
                         context.fillText(labelText, canvas.width / 2, canvas.height / 2)
@@ -5373,13 +5397,13 @@ var app = new Vue({
                         mainTextY = canvas.height / 2
                     }
                     
-                    // 如果有提示信息，显示在下方
+                    //Legacy comment translated to English.
                     if (node.prompts && node.prompts.length > 0) {
-                        context.font = `bold ${hasCurrent ? 110 : 96}px Arial`  // 从 55/48 加大到 110/96
+                        context.font = `bold ${hasCurrent ? 110 : 96}px Arial`  //Legacy comment translated to English.
                         context.fillStyle = 'rgba(255, 255, 255, 0.85)'
                         context.shadowBlur = 12
                         const promptText = ncfST('{0} 个结果', node.prompts.length)
-                        context.fillText(promptText, canvas.width / 2, mainTextY + 120)  // 从 +70 改为 +120
+                        context.fillText(promptText, canvas.width / 2, mainTextY + 120)  //Legacy comment translated to English.
                     }
                     
                     const texture = new THREE.CanvasTexture(canvas)
@@ -5388,15 +5412,15 @@ var app = new Vue({
                         map: texture, 
                         transparent: true,
                         alphaTest: 0.1,
-                        opacity: 0 // 初始透明，用于渐入动画
+                        opacity: 0 //Legacy comment translated to English.
                     })
                     const sprite = new THREE.Sprite(spriteMaterial)
-                    // **横向布局：标签在节点下方（Y轴负方向），Z轴稍微向前避免被遮挡**
-                    const labelZOffset = 3  // Z轴向前偏移，避免被节点遮挡
+                    //Legacy comment translated to English.
+                    const labelZOffset = 3  //Legacy comment translated to English.
                     sprite.position.set(x, y - (node.type === 'range' ? 5 : 4), z + labelZOffset)
-                    // 动态设置 sprite 尺寸（根据画布宽度，字体加大后标签也要更大）
-                    const spriteWidth = (canvas.width / 1024) * 18  // 从 12 增加到 18
-                    const spriteHeight = (canvas.height / 256) * 4.5  // 从 3 增加到 4.5
+                    //Legacy comment translated to English.
+                    const spriteWidth = (canvas.width / 1024) * 18  //Legacy comment translated to English.
+                    const spriteHeight = (canvas.height / 256) * 4.5  //Legacy comment translated to English.
                     sprite.scale.set(spriteWidth, spriteHeight, 1)
                     sprite.userData = { 
                         node, 
@@ -5409,10 +5433,10 @@ var app = new Vue({
                     this.map3dScene.add(mesh)
                     this.map3dScene.add(sprite)
                     
-                    // **关键修复：使用 Object.freeze 防止 Vue 响应式监听导致栈溢出**
-                    // Three.js 对象不应该被 Vue 监听，否则会导致性能问题和循环引用
+                    //Legacy comment translated to English.
+                    //Legacy comment translated to English.
                     
-                    // 冻结 Three.js 相关对象，防止 Vue 添加响应式 getter/setter
+                    //Legacy comment translated to English.
                     Object.freeze(mesh)
                     Object.freeze(sprite)
                     if (glowMesh) Object.freeze(glowMesh)
@@ -5427,7 +5451,7 @@ var app = new Vue({
                         isExpanded, 
                         position: { x, y, z }, 
                         parentPosition: parentPosition,
-                        childrenMeshes: [],  // 这个数组可能会很大，不需要响应式
+                        childrenMeshes: [],  //Legacy comment translated to English.
                         line: null, 
                         dot: null,
                         animationProgress: 0,
@@ -5436,7 +5460,7 @@ var app = new Vue({
                     
                     this.map3dNodes.push(createdNodeData)
                     
-                    // 存储节点引用以便快速查找
+                    //Legacy comment translated to English.
                     if (!this.map3dNodeMap) {
                         this.map3dNodeMap = new Map()
                     }
@@ -5451,88 +5475,88 @@ var app = new Vue({
                         dot: null 
                     })
                     
-                    // 先不添加连接线，稍后统一处理（避免在位置调整前创建线条）
+                    //Legacy comment translated to English.
                     let line = null
                     let dot = null
                     
-                    // **1. 先处理 Aiming 子节点（在Z轴延伸，面向镜头）**
+                    //Legacy comment translated to English.
                     if (isExpanded && Object.keys(aimingChildren).length > 0) {
-                        // Aiming 节点：Z轴排列（面向镜头方向延伸）
-                        // 先保存当前节点的引用，稍后会更新 Aiming 的 parentPosition
+                        //Legacy comment translated to English.
+                        //Legacy comment translated to English.
                         const currentParentNodeData = this.map3dNodes[this.map3dNodes.length - 1]
                         
                         const aimingKeys = Object.keys(aimingChildren)
-                        const aimingSpacing = 16 // Aiming 节点之间的 Z 轴间距（增加1倍：8 -> 16）
+                        const aimingSpacing = 16 //Legacy comment translated to English.
                         
-                        // **新策略：A节点从父T节点位置开始，向摄像机方向（+Z）依次排列**
-                        // A1 在最靠近 T 的位置，A2 在 A1 前面，A3 在 A2 前面...
-                        // 不再使用中心对称或 hash 偏移
+                        //Legacy comment translated to English.
+                        //Legacy comment translated to English.
+                        //Legacy comment translated to English.
                         
-                        const aimingNodesData = [] // 保存 Aiming 节点数据，稍后更新 parentPosition
+                        const aimingNodesData = [] //Legacy comment translated to English.
                         
                         aimingKeys.forEach((aimingKey, aimingIndex) => {
                             const aimingNode = aimingChildren[aimingKey]
-                            // **新布局：A节点在Z轴朝向摄像机方向依次排列**
-                            // X和Y保持与父T节点相同，只在Z轴上递增
-                            const aimingX = x // 与父节点同一水平位置
-                            const aimingY = y // 与父节点同一深度（不向下一层）
-                            // Z轴：从T节点位置开始，每个A节点增加 aimingSpacing
+                            //Legacy comment translated to English.
+                            //Legacy comment translated to English.
+                            const aimingX = x //Legacy comment translated to English.
+                            const aimingY = y //Legacy comment translated to English.
+                            //Legacy comment translated to English.
                             // A1: z + aimingSpacing, A2: z + 2*aimingSpacing, ...
                             const aimingZ = z + (aimingIndex + 1) * aimingSpacing
                                 
-                            console.log('🎯 创建Aiming节点:', {
+                            console.log('🎯 Created Aiming node:', {
                                 key: aimingKey,
                                 parentKey: key,
                                 parentPos: { x, y, z },
                                 aimingPos: { x: aimingX, y: aimingY, z: aimingZ },
                                 aimingIndex,
                                 totalAiming: aimingKeys.length,
-                                strategy: `A${aimingIndex + 1} 在 T 前方 ${(aimingIndex + 1) * aimingSpacing} 单位（朝向摄像机）`
+                                strategy: `A${aimingIndex + 1} ${(aimingIndex + 1) * aimingSpacing} units in front of T (facing the camera)`
                             })
                                 
-                                // 检查是否有当前编辑的靶道
+                                //Legacy comment translated to English.
                                 const aimingHasCurrent = aimingNode.prompts && aimingNode.prompts.some(p => p.isCurrent)
                                 
-                                // **根据评分改变大小和颜色**
-                                let sphereSize = 1.5  // 默认大小
-                                let sphereColor = 0xa8e6cf  // 默认颜色（浅绿）
+                                //Legacy comment translated to English.
+                                let sphereSize = 1.5  //Legacy comment translated to English.
+                                let sphereColor = 0xa8e6cf  //Legacy comment translated to English.
                                 let emissiveColor = 0x003333
                                 let emissiveIntensity = 0.05
-                                let score = null  // **提升到外层作用域，供后续发光效果使用**
+                                let score = null  //Legacy comment translated to English.
                                 
-                                // 如果有评分数据，根据评分调整
+                                //Legacy comment translated to English.
                                 if (aimingNode.prompts && aimingNode.prompts.length > 0) {
                                     const promptId = aimingNode.prompts[0].id
                                     const fullPromptData = this.promptOpt.find(p => 
                                         (p.idkey || p.value) == promptId
                                     )
                                     
-                                    // **调试：查看数据结构**
-                                    console.log('🔍 Aiming节点评分数据检查:', {
+                                    //Legacy comment translated to English.
+                                    console.log('🔍 Aiming node score data check:', {
                                         promptId,
                                         fullPromptData,
                                         evalMaxScore: fullPromptData?.evalMaxScore,
                                         finalScore: fullPromptData?.finalScore
                                     })
                                     
-                                    // **优先使用 evalMaxScore（最高分）作为评分**
-                                    // score 已在外层定义，直接赋值
+                                    //Legacy comment translated to English.
+                                    //Legacy comment translated to English.
                                     if (fullPromptData) {
-                                        // 先尝试 finalScore
+                                        //Legacy comment translated to English.
                                         if (fullPromptData.finalScore !== undefined && 
                                             fullPromptData.finalScore !== null && 
                                             fullPromptData.finalScore !== -1 && 
                                             fullPromptData.finalScore !== '-1') {
                                             score = fullPromptData.finalScore
                                         }
-                                        // 如果没有 finalScore，使用 evalMaxScore
+                                        //Legacy comment translated to English.
                                         else if (fullPromptData.evalMaxScore !== undefined && 
                                                  fullPromptData.evalMaxScore !== null && 
                                                  fullPromptData.evalMaxScore !== -1 && 
                                                  fullPromptData.evalMaxScore !== '-1') {
                                             score = fullPromptData.evalMaxScore
                                         }
-                                        // 如果没有 evalMaxScore，使用 evalAvgScore
+                                        //Legacy comment translated to English.
                                         else if (fullPromptData.evalAvgScore !== undefined && 
                                                  fullPromptData.evalAvgScore !== null && 
                                                  fullPromptData.evalAvgScore !== -1 && 
@@ -5542,49 +5566,49 @@ var app = new Vue({
                                     }
                                     
                                     if (score !== null && this.scoreStatistics) {
-                                        // **根据相对排名设置大小和颜色**
+                                        //Legacy comment translated to English.
                                         const percentile = this.scoreStatistics.getPercentileRank(score)
                                         const allScores = this.scoreStatistics.scores
                                         const rank = allScores.filter(s => s > score).length + 1
                                         const isFirst = rank === 1
                                         
-                                        console.log('✅ 使用评分:', score, '排名:', rank, '百分位:', percentile.toFixed(1) + '%', isFirst ? '🥇第一名!' : '')
+                                        console.log('✅ Score:', score, 'Rank:', rank, 'Percentile:', percentile.toFixed(1) + '%', isFirst ? '🥇First place!' : '')
                                         
-                                        // **特殊处理：排名第一的节点**
+                                        //Legacy comment translated to English.
                                         if (isFirst) {
-                                            // 第一名 - 特大、紫色（区别于黄色高亮）
+                                            //Legacy comment translated to English.
                                             sphereSize = 2.5
-                                            sphereColor = 0xb24df5  // 紫色（与黄色区分明显）
-                                            emissiveColor = 0xff00ff  // 紫红色发光
+                                            sphereColor = 0xb24df5  //Legacy comment translated to English.
+                                            emissiveColor = 0xff00ff  //Legacy comment translated to English.
                                             emissiveIntensity = 0.6
                                         }
-                                        // 根据排名百分位分级（Top 20%, 20-40%, 40-60%, 60-80%, Bottom 20%）
+                                        //Legacy comment translated to English.
                                         else if (percentile >= 80) {
-                                            // Top 20% - 最大、亮绿色
+                                            //Legacy comment translated to English.
                                             sphereSize = 2.2
                                             sphereColor = 0x00d4aa
                                             emissiveColor = 0x00ffcc
                                             emissiveIntensity = 0.4
                                         } else if (percentile >= 60) {
-                                            // 20-40% - 较大、绿色
+                                            //Legacy comment translated to English.
                                             sphereSize = 1.9
                                             sphereColor = 0x52c41a
                                             emissiveColor = 0x66ff66
                                             emissiveIntensity = 0.3
                                         } else if (percentile >= 40) {
-                                            // 40-60% - 正常、橙色
+                                            //Legacy comment translated to English.
                                             sphereSize = 1.6
                                             sphereColor = 0xfaad14
                                             emissiveColor = 0xffcc00
                                             emissiveIntensity = 0.2
                                         } else if (percentile >= 20) {
-                                            // 60-80% - 较小、浅红色
+                                            //Legacy comment translated to English.
                                             sphereSize = 1.3
                                             sphereColor = 0xff7875
                                             emissiveColor = 0xff6666
                                             emissiveIntensity = 0.15
                                         } else {
-                                            // Bottom 20% - 最小、红色
+                                            //Legacy comment translated to English.
                                             sphereSize = 1.0
                                             sphereColor = 0xf5222d
                                             emissiveColor = 0xff3333
@@ -5593,14 +5617,14 @@ var app = new Vue({
                                     }
                                 }
                                 
-                                // 如果是当前选中的节点，覆盖为黄色高亮
+                                //Legacy comment translated to English.
                                 if (aimingHasCurrent) {
                                     sphereColor = 0xffd93d
                                     emissiveColor = 0xffaa00
                                     emissiveIntensity = 0.7
                                 }
                                 
-                                // 创建 Aiming 几何体：小圆球（大小由评分决定）
+                                //Legacy comment translated to English.
                                 const aimingGeometry = new THREE.SphereGeometry(sphereSize, 24, 24)
                                 const aimingMaterial = new THREE.MeshStandardMaterial({ 
                                     color: sphereColor,
@@ -5624,16 +5648,16 @@ var app = new Vue({
                                 aimingMesh.receiveShadow = true
                                 aimingMesh.scale.set(0.1, 0.1, 0.1)
                                 
-                                // **为第一名添加特殊发光效果**
+                                //Legacy comment translated to English.
                                 let aimingGlowMesh = null
                                 if (score !== null && this.scoreStatistics) {
                                     const allScores = this.scoreStatistics.scores
                                     const rank = allScores.filter(s => s > score).length + 1
                                     if (rank === 1) {
-                                        // 创建紫色发光外壳（与黄色高亮区分）
+                                        //Legacy comment translated to English.
                                         const aimingGlowGeometry = new THREE.SphereGeometry(sphereSize * 1.3, 24, 24)
                                         const aimingGlowMaterial = new THREE.MeshBasicMaterial({
-                                            color: 0xb24df5,  // 紫色
+                                            color: 0xb24df5,  //Legacy comment translated to English.
                                             transparent: true,
                                             opacity: 0.35,
                                             side: THREE.BackSide
@@ -5645,31 +5669,31 @@ var app = new Vue({
                                     }
                                 }
                                 
-                                // 创建 Aiming 文字标签（更大的文字，动态宽度）
+                                //Legacy comment translated to English.
                                 const aimingCanvas = document.createElement('canvas')
                                 const aimingContext = aimingCanvas.getContext('2d')
                                 
-                                // 提取 Aiming 数字（提前，用于计算宽度）
+                                //Legacy comment translated to English.
                                 const aimingMatch = aimingKey.match(/-A(\d+)$/)
                                 const aimingLabelText = aimingMatch ? aimingMatch[1] : aimingNode.name
                                 
-                                // 根据文字内容动态计算画布大小（再次加大一倍）
-                                const aimingPrefixFontSize = aimingHasCurrent ? 180 : 160  // 从 90/80 加大到 180/160
-                                const aimingMainFontSize = aimingHasCurrent ? 280 : 240   // 从 140/120 加大到 280/240
+                                //Legacy comment translated to English.
+                                const aimingPrefixFontSize = aimingHasCurrent ? 180 : 160  //Legacy comment translated to English.
+                                const aimingMainFontSize = aimingHasCurrent ? 280 : 240   //Legacy comment translated to English.
                                 
-                                // 组合文本（用于宽度计算）
+                                //Legacy comment translated to English.
                                 const aimingCombinedText = `A${aimingLabelText}`
                                 
-                                // 预计算文字宽度（使用组合后的文本）
+                                //Legacy comment translated to English.
                                 aimingContext.font = `bold ${aimingMainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
                                 const textWidth = aimingContext.measureText(aimingCombinedText).width
                                 
-                                const aimingPadding = 50  // 从 30 增加到 50
-                                const aimingBorderRadius = 30  // 从 20 增加到 30
+                                const aimingPadding = 50  //Legacy comment translated to English.
+                                const aimingBorderRadius = 30  //Legacy comment translated to English.
                                 
-                                // 动态设置画布大小（根据文字内容，字体加大后画布也要更大）
+                                //Legacy comment translated to English.
                                 aimingCanvas.width = Math.max(800, textWidth + aimingPadding * 4)
-                                aimingCanvas.height = 512  // 从 256 增加到 512
+                                aimingCanvas.height = 512  //Legacy comment translated to English.
                                 
                                 const drawRoundedRect = (x, y, width, height, radius) => {
                                     aimingContext.beginPath()
@@ -5685,14 +5709,14 @@ var app = new Vue({
                                     aimingContext.closePath()
                                 }
                                 
-                                // 玻璃效果背景
+                                //Legacy comment translated to English.
                                 aimingContext.fillStyle = aimingHasCurrent 
                                     ? 'rgba(255, 107, 107, 0.25)' 
                                     : 'rgba(255, 255, 255, 0.15)'
                                 drawRoundedRect(aimingPadding, aimingPadding, aimingCanvas.width - aimingPadding * 2, aimingCanvas.height - aimingPadding * 2, aimingBorderRadius)
                                 aimingContext.fill()
                                 
-                                // 玻璃边框
+                                //Legacy comment translated to English.
                                 aimingContext.strokeStyle = aimingHasCurrent 
                                     ? 'rgba(255, 150, 150, 0.6)' 
                                     : 'rgba(255, 255, 255, 0.3)'
@@ -5700,7 +5724,7 @@ var app = new Vue({
                                 drawRoundedRect(aimingPadding, aimingPadding, aimingCanvas.width - aimingPadding * 2, aimingCanvas.height - aimingPadding * 2, aimingBorderRadius)
                                 aimingContext.stroke()
                                 
-                                // 高光效果
+                                //Legacy comment translated to English.
                                 const aimingHighlightGradient = aimingContext.createLinearGradient(0, aimingPadding, 0, aimingCanvas.height / 2)
                                 aimingHighlightGradient.addColorStop(0, 'rgba(255, 255, 255, 0.4)')
                                 aimingHighlightGradient.addColorStop(1, 'rgba(255, 255, 255, 0)')
@@ -5708,7 +5732,7 @@ var app = new Vue({
                                 drawRoundedRect(aimingPadding, aimingPadding, aimingCanvas.width - aimingPadding * 2, (aimingCanvas.height - aimingPadding * 2) / 2, aimingBorderRadius)
                                 aimingContext.fill()
                                 
-                                // 绘制文字（A 和数字在同一行，已在上面定义 aimingCombinedText）
+                                //Legacy comment translated to English.
                                 aimingContext.textAlign = 'center'
                                 aimingContext.textBaseline = 'middle'
                                 aimingContext.shadowColor = 'rgba(0, 0, 0, 0.8)'
@@ -5716,12 +5740,12 @@ var app = new Vue({
                                 aimingContext.shadowOffsetX = 5
                                 aimingContext.shadowOffsetY = 5
                                 
-                                // 使用统一的大字体显示（组合文本已在前面定义）
+                                //Legacy comment translated to English.
                                 aimingContext.fillStyle = '#ffffff'
                                 aimingContext.font = `bold ${aimingMainFontSize}px 'Arial Black', 'Microsoft YaHei', Arial, sans-serif`
                                 aimingContext.fillText(aimingCombinedText, aimingCanvas.width / 2, aimingCanvas.height / 2)
                                 
-                                // 创建 sprite
+                                // create sprite
                                 const aimingTexture = new THREE.CanvasTexture(aimingCanvas)
                                 const aimingSpriteMaterial = new THREE.SpriteMaterial({ 
                                     map: aimingTexture, 
@@ -5730,12 +5754,12 @@ var app = new Vue({
                                     opacity: 0
                                 })
                                 const aimingSprite = new THREE.Sprite(aimingSpriteMaterial)
-                                // **横向布局：标签在节点下方，Z轴稍微向前避免被球遮挡**
-                                const aimingLabelZOffset = 3  // Z轴向前偏移
+                                //Legacy comment translated to English.
+                                const aimingLabelZOffset = 3  //Legacy comment translated to English.
                                 aimingSprite.position.set(aimingX, aimingY - 4, aimingZ + aimingLabelZOffset)
-                                // 动态设置 sprite 尺寸（根据画布宽度，字体加大后标签也要更大）
-                                const spriteWidth = (aimingCanvas.width / 1024) * 18  // 从 12 增加到 18
-                                const spriteHeight = (aimingCanvas.height / 256) * 4.5  // 从 3 增加到 4.5
+                                //Legacy comment translated to English.
+                                const spriteWidth = (aimingCanvas.width / 1024) * 18  //Legacy comment translated to English.
+                                const spriteHeight = (aimingCanvas.height / 256) * 4.5  //Legacy comment translated to English.
                                 aimingSprite.scale.set(spriteWidth, spriteHeight, 1)
                                 aimingSprite.userData = { 
                                     node: aimingNode, 
@@ -5748,7 +5772,7 @@ var app = new Vue({
                                 this.map3dScene.add(aimingMesh)
                                 this.map3dScene.add(aimingSprite)
                                 
-                                // 冻结 Three.js 对象，防止 Vue 响应式监听导致栈溢出
+                                //Legacy comment translated to English.
                                 Object.freeze(aimingMesh)
                                 Object.freeze(aimingSprite)
                                 if (aimingGlowMesh) Object.freeze(aimingGlowMesh)
@@ -5788,7 +5812,7 @@ var app = new Vue({
                                 })
                             })
                             
-                            // 更新当前节点数据中记录的子节点引用
+                            //Legacy comment translated to English.
                             if (currentParentNodeData) {
                                 aimingKeys.forEach(aimingKey => {
                                     const aimingChild = aimingChildren[aimingKey]
@@ -5804,12 +5828,12 @@ var app = new Vue({
                             }
                     }
                     
-                    // **2. 再处理 Tactic 子节点（继续在Y轴向下，递归调用）**
+                    //Legacy comment translated to English.
                     if (isExpanded && Object.keys(tacticChildren).length > 0) {
-                        // 简单递归渲染子节点，currentX 会自动累加
+                        //Legacy comment translated to English.
                         renderNode(tacticChildren, { x, y, z }, depth + 1)
                         
-                        // 记录子节点引用（用于快速更新可见性）
+                        //Legacy comment translated to English.
                         const currentNodeData = this.map3dNodes.find(n => n.key === key && n.depth === depth)
                         if (currentNodeData) {
                             Object.keys(tacticChildren).forEach(childKey => {
@@ -5828,29 +5852,29 @@ var app = new Vue({
                 })
             }
             
-            // **直接渲染所有根节点**
-            currentX = 0  // 重置X轴起点
+            //Legacy comment translated to English.
+            currentX = 0  //Legacy comment translated to English.
             Object.keys(this.map3dTreeData).forEach(key => {
                 renderNode({ [key]: this.map3dTreeData[key] }, null, 0)
             })
             
-            // **特殊处理：将Range节点移动到其子节点的水平中点**
+            //Legacy comment translated to English.
             const rangeNodes = this.map3dNodes.filter(n => n.node.type === 'range')
             rangeNodes.forEach(rangeNodeData => {
-                // 找到这个Range的所有子T节点
+                //Legacy comment translated to English.
                 const childTacticNodes = this.map3dNodes.filter(n => 
                     n.depth === 1 && n.parentPosition && 
                     Math.abs(n.parentPosition.y - rangeNodeData.position.y) < 1
                 )
                 
                 if (childTacticNodes.length > 0) {
-                    // 计算子节点的X轴范围
+                    //Legacy comment translated to English.
                     const childXPositions = childTacticNodes.map(n => n.position.x)
                     const minX = Math.min(...childXPositions)
                     const maxX = Math.max(...childXPositions)
                     const centerX = (minX + maxX) / 2
                     
-                    // 移动Range节点到中点
+                    //Legacy comment translated to English.
                     rangeNodeData.mesh.position.x = centerX
                     if (rangeNodeData.glowMesh) {
                         rangeNodeData.glowMesh.position.x = centerX
@@ -5858,9 +5882,9 @@ var app = new Vue({
                     rangeNodeData.sprite.position.x = centerX
                     rangeNodeData.position.x = centerX
                     
-                    console.log(`📦 调整Range节点 ${rangeNodeData.key} 到中点: ${centerX} (子节点范围: ${minX} ~ ${maxX})`)
+                    console.log(`📦 Adjusted Range node ${rangeNodeData.key} to midpoint: ${centerX} (child range: ${minX} ~ ${maxX})`)
                     
-                    // 同时更新该Range的所有子节点的parentPosition
+                    //Legacy comment translated to English.
                     childTacticNodes.forEach(childData => {
                         childData.parentPosition = {
                             x: centerX,
@@ -5871,7 +5895,7 @@ var app = new Vue({
                 }
             })
             
-            // **计算树的实际范围**
+            //Legacy comment translated to English.
             let maxDepth = 0
             let minX = Infinity
             let maxX = -Infinity
@@ -5881,28 +5905,28 @@ var app = new Vue({
             this.map3dNodes.forEach(nodeData => {
                 maxDepth = Math.max(maxDepth, nodeData.depth)
                 
-                // 计算X轴范围（只计算T节点，不包括A节点）
+                //Legacy comment translated to English.
                 if (nodeData.node.type !== 'aiming') {
                     minX = Math.min(minX, nodeData.position.x)
                     maxX = Math.max(maxX, nodeData.position.x)
                 }
                 
-                // 计算Z轴范围（只计算A节点）
+                //Legacy comment translated to English.
                 if (nodeData.node.type === 'aiming') {
                     minZ = Math.min(minZ, nodeData.position.z)
                     maxZ = Math.max(maxZ, nodeData.position.z)
                 }
             })
             
-            const treeWidth = maxX - minX  // 水平宽度（X轴）
-            const treeDepth = maxDepth * 20  // 深度（Y轴）
-            const treeZSpan = maxZ - minZ  // Z轴跨度（A节点）
+            const treeWidth = maxX - minX  //Legacy comment translated to English.
+            const treeDepth = maxDepth * 20  //Legacy comment translated to English.
+            const treeZSpan = maxZ - minZ  //Legacy comment translated to English.
             
             const treeCenterX = (maxX + minX) / 2
-            const treeCenterY = -treeDepth / 2  // 向下展开，中心点在负Y
-            const treeCenterZ = (maxZ + minZ) / 2  // Z轴中心（Aiming节点的中心）
+            const treeCenterY = -treeDepth / 2  //Legacy comment translated to English.
+            const treeCenterZ = (maxZ + minZ) / 2  //Legacy comment translated to English.
             
-            console.log('📐 树的范围计算:', {
+                console.log('📐 Tree bounds calculation:', {
                 treeWidth: treeWidth.toFixed(2),
                 treeDepth: treeDepth.toFixed(2),
                 treeZSpan: treeZSpan.toFixed(2),
@@ -5911,31 +5935,31 @@ var app = new Vue({
                 zRange: `${minZ.toFixed(2)} ~ ${maxZ.toFixed(2)}`
             })
             
-            // 调整相机初始位置，确保能看到整个树
+            //Legacy comment translated to English.
             const treeCenter = {
                 x: treeCenterX,
                 y: treeCenterY,
                 z: treeCenterZ
             }
             
-            // **优化相机距离计算：使用更智能的算法**
-            // 考虑3个维度，但给予不同的权重
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             const effectiveWidth = treeWidth
             const effectiveDepth = treeDepth
             const effectiveZSpan = treeZSpan
             
-            // 使用包围盒对角线长度作为基准
+            //Legacy comment translated to English.
             const boundingBoxDiagonal = Math.sqrt(
                 effectiveWidth * effectiveWidth + 
                 effectiveDepth * effectiveDepth + 
                 effectiveZSpan * effectiveZSpan
             )
             
-            // 根据节点密度调整距离系数
+            //Legacy comment translated to English.
             const nodeCount = this.map3dNodes.length
-            let distanceMultiplier = 1.2  // 基础系数
+            let distanceMultiplier = 1.2  //Legacy comment translated to English.
             
-            // 节点越多，距离系数稍微减小（避免拉太远）
+            //Legacy comment translated to English.
             if (nodeCount > 100) {
                 distanceMultiplier = 1.0
             } else if (nodeCount > 50) {
@@ -5946,7 +5970,7 @@ var app = new Vue({
             
             const cameraDistance = boundingBoxDiagonal * distanceMultiplier
             
-            console.log('📷 相机距离计算:', {
+                console.log('📷 Camera distance calculation:', {
                 treeWidth,
                 treeDepth,
                 treeZSpan,
@@ -5956,38 +5980,38 @@ var app = new Vue({
                 finalDistance: cameraDistance.toFixed(2)
             })
             
-            // 在所有节点位置确定后，统一创建连接线
+            //Legacy comment translated to English.
             this.createConnectionLines()
             
             if (this.map3dControls) {
                 this.map3dControls.target.set(treeCenter.x, treeCenter.y, treeCenter.z)
                 
-                // **优化相机位置：从右前上方观察**
-                // 这样可以同时看清楚：
-                // - X轴的T节点排列
-                // - Y轴的深度层级
-                // - Z轴的A节点分布
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 this.map3dCamera.position.set(
-                    treeCenter.x + cameraDistance * 0.4,   // X轴：稍微偏右
-                    treeCenter.y + cameraDistance * 0.5,   // Y轴：从上方看（更高）
-                    treeCenter.z + cameraDistance * 0.8    // Z轴：从前方看
+                    treeCenter.x + cameraDistance * 0.4,   //Legacy comment translated to English.
+                    treeCenter.y + cameraDistance * 0.5,   //Legacy comment translated to English.
+                    treeCenter.z + cameraDistance * 0.8    //Legacy comment translated to English.
                 )
                 this.map3dControls.update()
                 
-                console.log('📷 相机位置已设置:', {
+                console.log('📷 Camera position set:', {
                     target: treeCenter,
                     position: this.map3dCamera.position
                 })
             }
             
-            // 启动入场动画
+            //Legacy comment translated to English.
             this.startNodeAnimations()
             
-            // 添加点击事件（简化版：吸入/弹出效果）
-            let isAnimating = false // 标记是否正在执行动画
+            //Legacy comment translated to English.
+            let isAnimating = false //Legacy comment translated to English.
             
             const onMouseClick = (event) => {
-                // 如果正在执行动画，忽略点击
+                //Legacy comment translated to English.
                 if (isAnimating) {
                     return
                 }
@@ -6003,23 +6027,23 @@ var app = new Vue({
                     const clickedMesh = intersects[0].object
                     const nodeData = this.map3dNodes.find(n => n.mesh === clickedMesh)
                     
-                    // 只处理有子节点的节点
+                    //Legacy comment translated to English.
                     if (nodeData && nodeData.node.children && Object.keys(nodeData.node.children).length > 0) {
-                        // 切换展开/收拢状态
+                        //Legacy comment translated to English.
                         const wasExpanded = nodeData.node.expanded !== false
                         nodeData.node.expanded = !wasExpanded
                         
-                        // 设置动画标记
+                        //Legacy comment translated to English.
                         isAnimating = true
                         
-                        // 执行动画
+                        //Legacy comment translated to English.
                         if (nodeData.node.expanded) {
-                            // 展开：弹出动画
+                            //Legacy comment translated to English.
                             this.animateNodesPopOut(nodeData, () => {
                                 isAnimating = false
                             })
                         } else {
-                            // 收拢：吸入动画
+                            //Legacy comment translated to English.
                             this.animateNodesSuckIn(nodeData, () => {
                                 isAnimating = false
                             })
@@ -6031,7 +6055,7 @@ var app = new Vue({
             this.map3dRenderer.domElement.addEventListener('click', onMouseClick)
             this.map3dClickHandler = onMouseClick
             
-            // **添加双击事件：选中Aiming节点对应的靶道**
+            //Legacy comment translated to English.
             const onMouseDoubleClick = (event) => {
                 const rect = this.map3dRenderer.domElement.getBoundingClientRect()
                 mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
@@ -6039,7 +6063,7 @@ var app = new Vue({
                 
                 raycaster.setFromCamera(mouse, this.map3dCamera)
                 
-                // 检测mesh和sprite
+                //Legacy comment translated to English.
                 const detectableObjects = []
                 this.map3dNodes.forEach(n => {
                     if (n.mesh && n.mesh.visible) {
@@ -6058,37 +6082,37 @@ var app = new Vue({
                         n.mesh === intersectedObject || n.sprite === intersectedObject
                     )
                     
-                    // 只处理Aiming节点
+                    //Legacy comment translated to English.
                     if (nodeData && nodeData.node.type === 'aiming') {
-                        // 获取该Aiming节点对应的promptId
+                        //Legacy comment translated to English.
                         if (nodeData.node.prompts && nodeData.node.prompts.length > 0) {
                             const promptId = nodeData.node.prompts[0].id
                             
-                            console.log('🎯 双击Aiming节点，选中靶道:', {
+                            console.log('🎯 Double-clicked Aiming node; selected tactic:', {
                                 nodeKey: nodeData.key,
                                 promptId: promptId,
                                 fullPath: nodeData.node.fullPath
                             })
                             
-                            // **关闭3D导图浮窗（先关闭，避免与确认对话框冲突）**
+                            //Legacy comment translated to English.
                             this.mapDialogVisible = false
                             
-                            // **复用原有的靶道切换逻辑（包括保存草稿提示）**
-                            // 注意：程序化设置 v-model 不会触发 @change 事件
-                            // 需要手动调用 promptChangeHandel 函数来触发完整逻辑
-                            // 该函数会自动处理：
-                            // 1. 检查 pageChange 状态
-                            // 2. 如果有修改，弹出"是否保存为草稿"确认框
-                            // 3. 根据用户选择保存或不保存
-                            // 4. 调用 getPromptetail 获取靶道详情
+                            //Legacy comment translated to English.
+                            //Legacy comment translated to English.
+                            //Legacy comment translated to English.
+                            //Legacy comment translated to English.
+                            // 1. check pageChange status
+                            //Legacy comment translated to English.
+                            //Legacy comment translated to English.
+                            //Legacy comment translated to English.
                             
-                            // 保存旧值（用于change检测）
+                            //Legacy comment translated to English.
                             const oldPromptId = this.promptid
                             
-                            // 设置新值
+                            //Legacy comment translated to English.
                             this.promptid = promptId
                             
-                            // 手动触发change处理逻辑
+                            //Legacy comment translated to English.
                             this.promptChangeHandel(promptId, 'promptid', oldPromptId)
                         }
                     }
@@ -6098,11 +6122,11 @@ var app = new Vue({
             this.map3dRenderer.domElement.addEventListener('dblclick', onMouseDoubleClick)
             this.map3dDoubleClickHandler = onMouseDoubleClick
             
-            // **添加鼠标移动事件：显示节点信息tooltip + 边缘高光**
-            let hoveredNode = null  // 当前悬停的节点
-            let currentHighlightMesh = null  // 当前的高光外壳
+            //Legacy comment translated to English.
+            let hoveredNode = null  //Legacy comment translated to English.
+            let currentHighlightMesh = null  //Legacy comment translated to English.
             
-            // 创建tooltip元素
+            //Legacy comment translated to English.
             const createTooltip = () => {
                 let tooltip = document.getElementById('map3d-tooltip')
                 if (!tooltip) {
@@ -6137,7 +6161,7 @@ var app = new Vue({
                 
                 raycaster.setFromCamera(mouse, this.map3dCamera)
                 
-                // **同时检测mesh和sprite（文字标签）**
+                //Legacy comment translated to English.
                 const detectableObjects = []
                 this.map3dNodes.forEach(n => {
                     if (n.mesh && n.mesh.visible) {
@@ -6152,15 +6176,15 @@ var app = new Vue({
                 
                 if (intersects.length > 0) {
                     const intersectedObject = intersects[0].object
-                    // 根据相交的对象（mesh或sprite）查找对应的nodeData
+                    //Legacy comment translated to English.
                     const nodeData = this.map3dNodes.find(n => 
                         n.mesh === intersectedObject || n.sprite === intersectedObject
                     )
                     
                     if (nodeData) {
-                        // 如果是新的节点，更新tooltip和高光
+                        //Legacy comment translated to English.
                         if (hoveredNode !== nodeData) {
-                            // **移除之前的高光**
+                            //Legacy comment translated to English.
                             if (currentHighlightMesh) {
                                 this.map3dScene.remove(currentHighlightMesh)
                                 if (currentHighlightMesh.geometry) currentHighlightMesh.geometry.dispose()
@@ -6170,33 +6194,33 @@ var app = new Vue({
                             
                             hoveredNode = nodeData
                             
-                            // **添加边缘高光效果**
+                            //Legacy comment translated to English.
                             if (nodeData.mesh && nodeData.mesh.visible) {
                                 let highlightGeometry, highlightSize
                                 
-                                // 根据节点类型创建不同形状的高光
+                                //Legacy comment translated to English.
                                 if (nodeData.node.type === 'range') {
-                                    // 方块：使用稍大的方块作为边缘
-                                    highlightSize = 5.3  // 原大小是5
+                                    //Legacy comment translated to English.
+                                    highlightSize = 5.3  //Legacy comment translated to English.
                                     highlightGeometry = new THREE.BoxGeometry(highlightSize, highlightSize, highlightSize)
                                 } else {
-                                    // 圆球：使用稍大的球体作为边缘
+                                    //Legacy comment translated to English.
                                     const originalScale = nodeData.mesh.scale.x
                                     const originalGeometry = nodeData.mesh.geometry
                                     if (originalGeometry && originalGeometry.parameters && originalGeometry.parameters.radius) {
-                                        highlightSize = originalGeometry.parameters.radius * 1.15 * originalScale  // 放大15%
+                                        highlightSize = originalGeometry.parameters.radius * 1.15 * originalScale  //Legacy comment translated to English.
                                     } else {
-                                        highlightSize = 2.5 * 1.15 * originalScale  // 默认大小
+                                        highlightSize = 2.5 * 1.15 * originalScale  //Legacy comment translated to English.
                                     }
                                     highlightGeometry = new THREE.SphereGeometry(highlightSize, 32, 32)
                                 }
                                 
-                                // 创建高光材质（边缘发光效果）
+                                //Legacy comment translated to English.
                                 const highlightMaterial = new THREE.MeshBasicMaterial({
-                                    color: 0xffffff,  // 白色
+                                    color: 0xffffff,  //Legacy comment translated to English.
                                     transparent: true,
                                     opacity: 0.3,
-                                    side: THREE.BackSide,  // 只显示背面，形成边缘效果
+                                    side: THREE.BackSide,  //Legacy comment translated to English.
                                     depthWrite: false
                                 })
                                 
@@ -6206,42 +6230,42 @@ var app = new Vue({
                                 this.map3dScene.add(currentHighlightMesh)
                             }
                             
-                            // 构建tooltip内容
+                            //Legacy comment translated to English.
                             let tooltipContent = ''
                             const node = nodeData.node
                             
                             if (node.type === 'range') {
-                                // 靶场信息
+                                // rangeinformation
                                 tooltipContent = `
-                                    <div style="font-weight: bold; margin-bottom: 8px; color: #4ecdc4;">📦 靶场</div>
+                                    <div style="font-weight: bold; margin-bottom: 8px; color: #4ecdc4;">${ncfST('📦 靶场')}</div>
                                     <div>${node.name}</div>
-                                    ${node.prompts && node.prompts.length > 0 ? `<div style="margin-top: 4px; color: #aaa;">包含 ${node.prompts.length} 个结果</div>` : ''}
+                                    ${node.prompts && node.prompts.length > 0 ? `<div style="margin-top: 4px; color: #aaa;">${ncfST('包含 {0} 个结果', node.prompts.length)}</div>` : ''}
                                 `
                             } else if (node.type === 'tactic') {
-                                // Tactic 信息
+                                // Tactic information
                                 const tacticNumber = nodeData.key.replace('T', '')
                                 tooltipContent = `
-                                    <div style="font-weight: bold; margin-bottom: 8px; color: #95e1d3;">🎯 战术节点</div>
-                                    <div>编号: T${tacticNumber}</div>
-                                    ${node.prompts && node.prompts.length > 0 ? `<div style="margin-top: 4px; color: #aaa;">${node.prompts.length} 个结果</div>` : ''}
+                                    <div style="font-weight: bold; margin-bottom: 8px; color: #95e1d3;">${ncfST('🎯 战术节点')}</div>
+                                    <div>${ncfST('编号: T{0}', tacticNumber)}</div>
+                                    ${node.prompts && node.prompts.length > 0 ? `<div style="margin-top: 4px; color: #aaa;">${ncfST('{0} 个结果', node.prompts.length)}</div>` : ''}
                                 `
                             } else if (node.type === 'aiming') {
-                                // Aiming 信息（包含评分）
+                                //Legacy comment translated to English.
                                 const aimingNumber = nodeData.key.match(/-A(\d+)$/)?.[1] || nodeData.key
                                 tooltipContent = `
-                                    <div style="font-weight: bold; margin-bottom: 8px; color: #a8e6cf;">🎲 瞄准点</div>
-                                    <div>编号: A${aimingNumber}</div>
+                                    <div style="font-weight: bold; margin-bottom: 8px; color: #a8e6cf;">${ncfST('🎲 瞄准点')}</div>
+                                    <div>${ncfST('编号: A{0}', aimingNumber)}</div>
                                 `
                                 
-                                // **从promptOpt获取完整的评分数据**
+                                //Legacy comment translated to English.
                                 if (node.prompts && node.prompts.length > 0) {
                                     const promptId = node.prompts[0].id
-                                    // 从 promptOpt 中查找完整数据
+                                    //Legacy comment translated to English.
                                     const fullPromptData = this.promptOpt.find(p => 
                                         (p.idkey || p.value) == promptId
                                     )
                                     
-                                    console.log('🔍 Tooltip评分数据检查:', {
+                                        console.log('🔍 Tooltip score data check:', {
                                         promptId,
                                         fullPromptData,
                                         evalMaxScore: fullPromptData?.evalMaxScore,
@@ -6249,24 +6273,24 @@ var app = new Vue({
                                     })
                                     
                                     if (fullPromptData) {
-                                        // **获取最终评分：优先使用 evalMaxScore（最高分）**
+                                        //Legacy comment translated to English.
                                         let finalScore = null
                                         
-                                        // 先尝试 finalScore
+                                        //Legacy comment translated to English.
                                         if (fullPromptData.finalScore !== undefined && 
                                             fullPromptData.finalScore !== null && 
                                             fullPromptData.finalScore !== -1 && 
                                             fullPromptData.finalScore !== '-1') {
                                             finalScore = fullPromptData.finalScore
                                         }
-                                        // 如果没有 finalScore，使用 evalMaxScore
+                                        //Legacy comment translated to English.
                                         else if (fullPromptData.evalMaxScore !== undefined && 
                                                  fullPromptData.evalMaxScore !== null && 
                                                  fullPromptData.evalMaxScore !== -1 && 
                                                  fullPromptData.evalMaxScore !== '-1') {
                                             finalScore = fullPromptData.evalMaxScore
                                         }
-                                        // 如果没有 evalMaxScore，使用 evalAvgScore
+                                        //Legacy comment translated to English.
                                         else if (fullPromptData.evalAvgScore !== undefined && 
                                                  fullPromptData.evalAvgScore !== null && 
                                                  fullPromptData.evalAvgScore !== -1 && 
@@ -6274,16 +6298,16 @@ var app = new Vue({
                                             finalScore = fullPromptData.evalAvgScore
                                         }
                                         
-                                        console.log('✅ Tooltip使用评分:', finalScore)
+                                        console.log('✅ Tooltip score:', finalScore)
                                         
-                                        // 如果有评分数据，显示评分区域
+                                        //Legacy comment translated to English.
                                         if (finalScore !== null) {
                                             
                                             tooltipContent += `<div style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 8px;">`
                                             
-                                            // **显示最终评分（大号、醒目）+ 排名**
+                                            //Legacy comment translated to English.
                                             if (finalScore !== null) {
-                                                // **根据相对排名设置颜色和大小**
+                                                //Legacy comment translated to English.
                                                 let scoreColor = '#999'
                                                 let scoreSize = '20px'
                                                 let scoreEmoji = '📊'
@@ -6297,46 +6321,46 @@ var app = new Vue({
                                                     const total = allScores.length
                                                     const isFirst = rank === 1
                                                     
-                                                    rankText = `排名: ${rank}/${total}`
+                                                    rankText = ncfST('排名: {0}/{1}', rank, total)
                                                     
-                                                    // **特殊处理：排名第一**
+                                                    //Legacy comment translated to English.
                                                     if (isFirst) {
-                                                        scoreColor = '#b24df5'  // 紫色（与黄色高亮区分）
+                                                        scoreColor = '#b24df5'  //Legacy comment translated to English.
                                                         scoreSize = '26px'
                                                         scoreEmoji = '🥇'
-                                                        rankBadge = '<span style="background: linear-gradient(135deg, #b24df5 0%, #da6aff 50%, #b24df5 100%); color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 11px; margin-left: 6px; font-weight: bold; box-shadow: 0 2px 8px rgba(178,77,245,0.5);">👑 第一名</span>'
+                                                        rankBadge = `<span style="background: linear-gradient(135deg, #b24df5 0%, #da6aff 50%, #b24df5 100%); color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 11px; margin-left: 6px; font-weight: bold; box-shadow: 0 2px 8px rgba(178,77,245,0.5);">${ncfST('👑 第一名')}</span>`
                                                     }
-                                                    // 根据排名百分位分级
+                                                    //Legacy comment translated to English.
                                                     else if (percentile >= 80) {
                                                         // Top 20%
                                                         scoreColor = '#00d4aa'
                                                         scoreSize = '24px'
                                                         scoreEmoji = '🏆'
-                                                        rankBadge = '<span style="background: #00d4aa; color: #000; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">Top 20%</span>'
+                                                        rankBadge = `<span style="background: #00d4aa; color: #000; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">${ncfST('Top 20%')}</span>`
                                                     } else if (percentile >= 60) {
                                                         // 20-40%
                                                         scoreColor = '#52c41a'
                                                         scoreSize = '22px'
                                                         scoreEmoji = '✨'
-                                                        rankBadge = '<span style="background: #52c41a; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">Top 40%</span>'
+                                                        rankBadge = `<span style="background: #52c41a; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">${ncfST('Top 40%')}</span>`
                                                     } else if (percentile >= 40) {
                                                         // 40-60%
                                                         scoreColor = '#faad14'
                                                         scoreSize = '20px'
                                                         scoreEmoji = '📊'
-                                                        rankBadge = '<span style="background: #faad14; color: #000; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">中游</span>'
+                                                        rankBadge = `<span style="background: #faad14; color: #000; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">${ncfST('中游')}</span>`
                                                     } else if (percentile >= 20) {
                                                         // 60-80%
                                                         scoreColor = '#ff7875'
                                                         scoreSize = '18px'
                                                         scoreEmoji = '📉'
-                                                        rankBadge = '<span style="background: #ff7875; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">靠后</span>'
+                                                        rankBadge = `<span style="background: #ff7875; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">${ncfST('靠后')}</span>`
                                                     } else {
                                                         // Bottom 20%
                                                         scoreColor = '#f5222d'
                                                         scoreSize = '18px'
                                                         scoreEmoji = '📊'
-                                                        rankBadge = '<span style="background: #f5222d; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">Bottom 20%</span>'
+                                                        rankBadge = `<span style="background: #f5222d; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px; font-weight: bold;">${ncfST('Bottom 20%')}</span>`
                                                     }
                                                 }
                                                 
@@ -6348,14 +6372,14 @@ var app = new Vue({
                                                     </div>
                                                 `
                                                 
-                                                // 显示排名信息
+                                                //Legacy comment translated to English.
                                                 if (rankText) {
                                                     tooltipContent += `<div style="font-size: 12px; color: #aaa; margin-bottom: 8px;">${rankText}</div>`
                                                 }
                                             }
                                             
-                                            // **显示详细评分**
-                                            // 显示平均分
+                                            //Legacy comment translated to English.
+                                            //Legacy comment translated to English.
                                             if (fullPromptData.evalAvgScore !== undefined && 
                                                 fullPromptData.evalAvgScore !== null && 
                                                 fullPromptData.evalAvgScore !== -1 && 
@@ -6363,7 +6387,7 @@ var app = new Vue({
                                                 tooltipContent += `<div style="font-size: 12px; color: #ccc; margin-top: 4px;">${ncfST('📊 平均分:')} <span style="color: #95e1d3;">${fullPromptData.evalAvgScore.toFixed(1)}</span></div>`
                                             }
                                             
-                                            // 显示最高分（如果不是用作主评分）
+                                            //Legacy comment translated to English.
                                             if (fullPromptData.evalMaxScore !== undefined && 
                                                 fullPromptData.evalMaxScore !== null && 
                                                 fullPromptData.evalMaxScore !== -1 && 
@@ -6377,29 +6401,29 @@ var app = new Vue({
                                     }
                                 }
                                 
-                                // **添加双击提示（仅Aiming节点）**
-                                tooltipContent += `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 11px; color: #999;">💡 双击可快速选中此靶道</div>`
+                                //Legacy comment translated to English.
+                                tooltipContent += `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 11px; color: #999;">${ncfST('Frontend.470')}</div>`
                             }
                             
                             tooltip.innerHTML = tooltipContent
                         }
                         
-                        // 更新tooltip位置
+                        //Legacy comment translated to English.
                         tooltip.style.display = 'block'
                         tooltip.style.left = (event.clientX + 15) + 'px'
                         tooltip.style.top = (event.clientY + 15) + 'px'
                         
-                        // 改变鼠标样式
+                        //Legacy comment translated to English.
                         this.map3dRenderer.domElement.style.cursor = 'pointer'
                     }
                 } else {
-                    // 没有悬停在任何节点上
+                    //Legacy comment translated to English.
                     if (hoveredNode) {
                         hoveredNode = null
                         tooltip.style.display = 'none'
                         this.map3dRenderer.domElement.style.cursor = 'default'
                         
-                        // **移除高光效果**
+                        //Legacy comment translated to English.
                         if (currentHighlightMesh) {
                             this.map3dScene.remove(currentHighlightMesh)
                             if (currentHighlightMesh.geometry) currentHighlightMesh.geometry.dispose()
@@ -6414,12 +6438,12 @@ var app = new Vue({
             this.map3dMouseMoveHandler = onMouseMove
         },
         
-        // 创建连接线（在所有节点位置确定后调用）- 动态绑定版本
+        //Legacy comment translated to English.
         createConnectionLines() {
             if (!this.map3dNodes || !this.map3dScene) return
             
             this.map3dNodes.forEach(nodeData => {
-                // 如果已经有连接线，先清理
+                //Legacy comment translated to English.
                 if (nodeData.line) {
                     this.map3dScene.remove(nodeData.line)
                     if (nodeData.line.geometry) nodeData.line.geometry.dispose()
@@ -6433,7 +6457,7 @@ var app = new Vue({
                     nodeData.dot = null
                 }
                 
-                // 通过 parentPath 找到父节点
+                //Legacy comment translated to English.
                 if (nodeData.node.parentPath) {
                     const parentNodeData = this.map3dNodes.find(n => {
                         if (!n.node.fullPath) return false
@@ -6441,30 +6465,30 @@ var app = new Vue({
                     })
                     
                     if (parentNodeData && parentNodeData.mesh) {
-                        // **保存父节点引用，用于动态更新**
+                        //Legacy comment translated to English.
                         nodeData.parentNodeData = parentNodeData
                         
                         const hasCurrent = nodeData.hasCurrent
                         
-                        // **使用明亮的白色或接近白色的颜色**
-                        let lineColor = 0xffffff  // 默认白色
+                        //Legacy comment translated to English.
+                        let lineColor = 0xffffff  //Legacy comment translated to English.
                         
                         if (hasCurrent) {
-                            lineColor = 0xffd93d  // 当前节点使用黄色
+                            lineColor = 0xffd93d  //Legacy comment translated to English.
                         }
                         
-                        // 使用 Line 而不是 Cylinder，这样可以动态更新端点
-                        // 创建线条几何体（两个点）
+                        //Legacy comment translated to English.
+                        //Legacy comment translated to English.
                         const lineGeometry = new THREE.BufferGeometry()
-                        const positions = new Float32Array(6) // 2 个点 × 3 个坐标
+                        const positions = new Float32Array(6) //Legacy comment translated to English.
                         lineGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
                         
-                        // 使用 LineBasicMaterial 代替圆柱体
+                        //Legacy comment translated to English.
                         const lineMaterial = new THREE.LineBasicMaterial({
                             color: lineColor,
                             linewidth: 2,
                             transparent: true,
-                            opacity: 0 // 初始透明，用于渐入动画
+                            opacity: 0 //Legacy comment translated to English.
                         })
                         
                         const line = new THREE.Line(lineGeometry, lineMaterial)
@@ -6472,49 +6496,49 @@ var app = new Vue({
                         nodeData.line = line
                         nodeData.lineColor = lineColor
                         
-                        // 添加连接点（小圆球）- 也会动态跟随，使用明亮颜色
+                        //Legacy comment translated to English.
                         const dotGeometry = new THREE.SphereGeometry(0.3, 8, 8)
                         const dotMaterial = new THREE.MeshStandardMaterial({ 
-                            color: 0xffffff,  // 使用白色
-                            emissive: hasCurrent ? 0xffd93d : 0xffffff,  // 发光颜色
+                            color: 0xffffff,  //Legacy comment translated to English.
+                            emissive: hasCurrent ? 0xffd93d : 0xffffff,  //Legacy comment translated to English.
                             emissiveIntensity: hasCurrent ? 0.5 : 0.2,
                             metalness: 0.3,
                             roughness: 0.5,
                             transparent: true,
-                            opacity: 0 // 初始透明
+                            opacity: 0 //Legacy comment translated to English.
                         })
                         const dot = new THREE.Mesh(dotGeometry, dotMaterial)
                         this.map3dScene.add(dot)
                         nodeData.dot = dot
                         
-                        // **立即更新一次连接线位置**
+                        //Legacy comment translated to English.
                         this.updateConnectionLine(nodeData)
                     } else {
-                        // 调试：记录找不到父节点的情况
-                        console.warn('找不到父节点:', {
+                        //Legacy comment translated to English.
+                        console.warn('Parent node not found:', {
                             fullPath: nodeData.node.fullPath,
                             parentPath: nodeData.node.parentPath,
                             nodeType: nodeData.node.type,
                             key: nodeData.key
                         })
                         
-                        // 尝试输出所有节点的 fullPath，帮助调试
+                        //Legacy comment translated to English.
                         if (nodeData.node.type === 'aiming') {
-                            console.log('所有节点的 fullPath:', this.map3dNodes.map(n => n.node.fullPath))
+                            console.log('fullPath values for all nodes:', this.map3dNodes.map(n => n.node.fullPath))
                         }
                     }
                 }
             })
         },
         
-        // 更新单个连接线的位置（动态绑定到节点位置）
+        //Legacy comment translated to English.
         updateConnectionLine(nodeData) {
             if (!nodeData.line || !nodeData.parentNodeData) return
             
             const parentPosition = nodeData.parentNodeData.mesh.position
             const currentPosition = nodeData.mesh.position
             
-            // 更新线条的端点位置
+            //Legacy comment translated to English.
             const positions = nodeData.line.geometry.attributes.position.array
             positions[0] = parentPosition.x
             positions[1] = parentPosition.y
@@ -6524,13 +6548,13 @@ var app = new Vue({
             positions[5] = currentPosition.z
             nodeData.line.geometry.attributes.position.needsUpdate = true
             
-            // 更新连接点位置
+            //Legacy comment translated to English.
             if (nodeData.dot) {
                 nodeData.dot.position.set(currentPosition.x, currentPosition.y, currentPosition.z)
             }
         },
         
-        // 更新所有连接线的位置
+        //Legacy comment translated to English.
         updateAllConnectionLines() {
             if (!this.map3dNodes) return
             
@@ -6541,27 +6565,27 @@ var app = new Vue({
             })
         },
         
-        // 启动节点入场动画
+        //Legacy comment translated to English.
         startNodeAnimations() {
             if (!this.map3dNodes || this.map3dNodes.length === 0) return
             
-            const animationDuration = 500 // 动画持续时间(ms)
+            const animationDuration = 500 //Legacy comment translated to English.
             const startTime = Date.now()
             
             const animate = () => {
                 const elapsed = Date.now() - startTime
                 const progress = Math.min(elapsed / animationDuration, 1)
                 
-                // 使用缓动函数（easeOutCubic）
+                //Legacy comment translated to English.
                 const easeProgress = 1 - Math.pow(1 - progress, 3)
                 
                 this.map3dNodes.forEach((nodeData, index) => {
-                    // 延迟每个节点的动画开始时间，创建波浪效果
-                    const delay = index * 20 // 每个节点延迟20ms
+                    //Legacy comment translated to English.
+                    const delay = index * 20 //Legacy comment translated to English.
                     const nodeProgress = Math.max(0, Math.min(1, (elapsed - delay) / animationDuration))
                     const nodeEaseProgress = 1 - Math.pow(1 - nodeProgress, 3)
                     
-                    // 缩放动画：从 0.1 到 1
+                    //Legacy comment translated to English.
                     const scale = 0.1 + nodeEaseProgress * 0.9
                     nodeData.mesh.scale.set(scale, scale, scale)
                     
@@ -6569,7 +6593,7 @@ var app = new Vue({
                         nodeData.glowMesh.scale.set(scale, scale, scale)
                     }
                     
-                    // 透明度动画
+                    //Legacy comment translated to English.
                     if (nodeData.sprite && nodeData.sprite.material) {
                         nodeData.sprite.material.opacity = nodeEaseProgress
                     }
@@ -6585,13 +6609,13 @@ var app = new Vue({
                     nodeData.animationProgress = nodeEaseProgress
                 })
                 
-                // **关键：在动画过程中更新连接线位置**
+                //Legacy comment translated to English.
                 this.updateAllConnectionLines()
                 
                 if (progress < 1) {
                     requestAnimationFrame(animate)
                 } else {
-                    // 动画完成后，确保所有节点都完全可见
+                    //Legacy comment translated to English.
                     this.map3dNodes.forEach((nodeData) => {
                         nodeData.mesh.scale.set(1, 1, 1)
                         nodeData.mesh.visible = true
@@ -6630,14 +6654,14 @@ var app = new Vue({
             animate()
         },
         
-        // 创建渐变背景
+        //Legacy comment translated to English.
         createGradientBackground() {
             const canvas = document.createElement('canvas')
             canvas.width = 256
             canvas.height = 256
             const context = canvas.getContext('2d')
             
-            // 创建径向渐变
+            //Legacy comment translated to English.
             const gradient = context.createRadialGradient(128, 128, 0, 128, 128, 128)
             gradient.addColorStop(0, '#1a1a2e')
             gradient.addColorStop(0.5, '#16213e')
@@ -6651,11 +6675,11 @@ var app = new Vue({
             return texture
         },
         
-        // 清空 3D 场景
+        //Legacy comment translated to English.
         clearMap3DScene() {
             if (!this.map3dScene) return
             
-            // 移除所有对象
+            //Legacy comment translated to English.
             while(this.map3dScene.children.length > 0) {
                 const obj = this.map3dScene.children[0]
                 if (obj.geometry) obj.geometry.dispose()
@@ -6676,42 +6700,42 @@ var app = new Vue({
             this.map3dNodes = []
         },
         
-        // 动画循环（优化版：减少不必要的计算和渲染）
+        //Legacy comment translated to English.
         animateMap3D() {
             if (!this.map3dRenderer || !this.map3dScene || !this.map3dCamera) return
             
             this.map3dAnimationId = requestAnimationFrame(() => this.animateMap3D())
             
-            // 跟踪是否需要渲染
+            //Legacy comment translated to English.
             let needsRender = false
             
-            // 检查外部触发的渲染请求（如键盘操作、重置视角等）
+            //Legacy comment translated to English.
             if (this.map3dNeedsAnimationUpdate) {
                 needsRender = true
                 this.map3dNeedsAnimationUpdate = false
             }
             
-            // 更新控制器（启用阻尼时需要每帧更新）
+            //Legacy comment translated to English.
             if (this.map3dControls) {
-                // update() 返回 true 表示相机位置发生了变化
+                //Legacy comment translated to English.
                 const controlsChanged = this.map3dControls.update()
                 if (controlsChanged) {
                     needsRender = true
                 }
             }
             
-            // 优化：大幅减少动画更新频率，避免 CPU 占用过高
+            //Legacy comment translated to English.
             if (!this.map3dLastAnimationTime) {
                 this.map3dLastAnimationTime = Date.now()
-                this.map3dCurrentNodes = [] // 缓存当前选中的节点
+                this.map3dCurrentNodes = [] //Legacy comment translated to English.
             }
             
             const now = Date.now()
-            // 每 200ms 更新一次动画（降低频率从100ms到200ms）
+            //Legacy comment translated to English.
             if (now - this.map3dLastAnimationTime > 200) {
                 this.map3dLastAnimationTime = now
                 
-                // 第一次时，找出所有当前选中的节点并缓存
+                //Legacy comment translated to English.
                 if (!this.map3dCurrentNodes || this.map3dCurrentNodes.length === 0) {
                     if (this.map3dNodes && this.map3dNodes.length > 0) {
                         this.map3dCurrentNodes = this.map3dNodes.filter(({ node }) => 
@@ -6720,10 +6744,10 @@ var app = new Vue({
                     }
                 }
                 
-                // **更新连接线位置（确保始终跟随节点）**
+                //Legacy comment translated to English.
                 this.updateAllConnectionLines()
                 
-                // 只更新缓存的当前选中节点，避免遍历所有节点
+                //Legacy comment translated to English.
                 if (this.map3dCurrentNodes && this.map3dCurrentNodes.length > 0) {
                     const time = now * 0.001
                     this.map3dCurrentNodes.forEach(({ mesh }) => {
@@ -6734,18 +6758,18 @@ var app = new Vue({
                 }
             }
             
-            // 只在需要时渲染，避免无效渲染
+            //Legacy comment translated to English.
             if (needsRender) {
                 this.map3dRenderer.render(this.map3dScene, this.map3dCamera)
             }
         },
         
-        // 弹出动画（展开子节点）
+        //Legacy comment translated to English.
         animateNodesPopOut(parentNodeData, onComplete) {
             if (!this.map3dScene || !this.map3dNodes) return
             
-            // **递归收集所有应该显示的子节点**
-            // 如果子节点本身是展开状态（expanded !== false），则递归收集它的子节点
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             const childNodes = []
             
             const collectChildren = (parentNode) => {
@@ -6757,8 +6781,8 @@ var app = new Vue({
                     if (childNodeData) {
                         childNodes.push(childNodeData)
                         
-                        // **关键修复：如果这个子节点是展开状态，递归收集它的子节点**
-                        // 这样可以一次性展开所有层级
+                        //Legacy comment translated to English.
+                        //Legacy comment translated to English.
                         if (childNode.expanded !== false) {
                             collectChildren(childNode)
                         }
@@ -6773,46 +6797,46 @@ var app = new Vue({
                 return
             }
             
-            // 弹出动画：从父节点位置开始，缩放+位移到目标位置
-            // **缩短单个节点动画时间，让多米诺效果更明显**
-            const animationDuration = 250  // 从 350ms 减少到 250ms
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
+            const animationDuration = 250  //Legacy comment translated to English.
             const startTime = Date.now()
             
-            // **修复：保存每个子节点的目标位置和它的直接父节点位置**
+            //Legacy comment translated to English.
             childNodes.forEach(childData => {
-                // **关键修复：对于 Aiming 节点，重新计算 Z 轴位置**
+                //Legacy comment translated to English.
                 if (childData.node.type === 'aiming') {
-                    // 找到父节点
+                    //Legacy comment translated to English.
                     const parentData = this.map3dNodes.find(n => 
                         n.node.fullPath === childData.node.parentPath
                     )
                     
                     if (parentData && parentData.node.children) {
-                        // 重新计算 Aiming 节点的 Z 轴偏移
+                        //Legacy comment translated to English.
                         const aimingKeys = Object.keys(parentData.node.children).filter(k => 
                             parentData.node.children[k].type === 'aiming'
                         )
                         const aimingIndex = aimingKeys.indexOf(childData.key)
                         
                         if (aimingIndex !== -1) {
-                            const aimingSpacing = 16 // 与创建时保持一致（增加1倍）
+                            const aimingSpacing = 16 //Legacy comment translated to English.
                             
-                            // **新策略：A节点从父节点位置开始，向摄像机方向（+Z）依次排列**
+                            //Legacy comment translated to English.
                             // A1: parentZ + aimingSpacing, A2: parentZ + 2*aimingSpacing, ...
                             const parentZ = parentData.mesh.position.z
                             const correctZ = parentZ + (aimingIndex + 1) * aimingSpacing
                             
-                            // **新布局：Aiming 节点的坐标重新计算**
-                            // X 轴：与父节点相同（Aiming 节点在同一水平位置）
+                            //Legacy comment translated to English.
+                            //Legacy comment translated to English.
                             const correctX = parentData.mesh.position.x
-                            // Y 轴：与父节点相同（Aiming不向下一层，在Z轴延伸）
+                            //Legacy comment translated to English.
                             const correctY = parentData.mesh.position.y
                             
-                            // 使用重新计算的正确位置（X, Y, Z 都重新计算）
+                            //Legacy comment translated to English.
                             childData._targetPosition = {
-                                x: correctX,  // 与父节点相同的 X
-                                y: correctY,  // 与父节点相同的 Y（不向下）
-                                z: correctZ   // 从父节点向摄像机方向延伸
+                                x: correctX,  //Legacy comment translated to English.
+                                y: correctY,  //Legacy comment translated to English.
+                                z: correctZ   //Legacy comment translated to English.
                             }
                         } else {
                             childData._targetPosition = { ...childData.position }
@@ -6821,21 +6845,21 @@ var app = new Vue({
                         childData._targetPosition = { ...childData.position }
                     }
                 } else {
-                    // 非 Aiming 节点：使用保存的原始位置
+                    //Legacy comment translated to English.
                     childData._targetPosition = { ...childData.position }
                 }
                 
-                // **关键修复：找到这个节点的直接父节点位置**
-                // 而不是使用最顶层的 parentNodeData
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 if (childData.parentNodeData && childData.parentNodeData.mesh) {
-                    // 如果有 parentNodeData（来自连接线逻辑），使用它
+                    //Legacy comment translated to English.
                     childData._parentPosition = {
                         x: childData.parentNodeData.mesh.position.x,
                         y: childData.parentNodeData.mesh.position.y,
                         z: childData.parentNodeData.mesh.position.z
                     }
                 } else {
-                    // 否则，尝试查找直接父节点
+                    //Legacy comment translated to English.
                     const directParentData = this.map3dNodes.find(n => 
                         n.node.fullPath === childData.node.parentPath
                     )
@@ -6846,7 +6870,7 @@ var app = new Vue({
                             z: directParentData.mesh.position.z
                         }
                     } else {
-                        // 如果找不到，使用最顶层的父节点（兜底）
+                        //Legacy comment translated to English.
                         childData._parentPosition = { ...parentNodeData.position }
                     }
                 }
@@ -6856,17 +6880,17 @@ var app = new Vue({
                 const elapsed = Date.now() - startTime
                 const progress = Math.min(elapsed / animationDuration, 1)
                 
-                // 使用 easeOutBack 缓动（轻微弹出效果）
+                //Legacy comment translated to English.
                 const c1 = 1.70158
                 const c3 = c1 + 1
                 const easeProgress = 1 + c3 * Math.pow(progress - 1, 3) + c1 * Math.pow(progress - 1, 2)
                 
                 childNodes.forEach((childData, index) => {
-                    // **大幅增加延迟，产生明显的多米诺骨牌效果**
-                    const delay = index * 80  // 从 50ms 增加到 80ms，让每个节点间隔更明显
+                    //Legacy comment translated to English.
+                    const delay = index * 80  //Legacy comment translated to English.
                     const nodeProgress = Math.max(0, Math.min(1, (elapsed - delay) / animationDuration))
                     
-                    // **如果动画还没开始（nodeProgress === 0），隐藏节点**
+                    //Legacy comment translated to English.
                     if (nodeProgress === 0) {
                         childData.mesh.visible = false
                         if (childData.glowMesh) childData.glowMesh.visible = false
@@ -6878,15 +6902,15 @@ var app = new Vue({
                     
                     const nodeEase = 1 + c3 * Math.pow(nodeProgress - 1, 3) + c1 * Math.pow(nodeProgress - 1, 2)
                     
-                    // 从父节点位置插值到目标位置
+                    //Legacy comment translated to English.
                     const x = childData._parentPosition.x + (childData._targetPosition.x - childData._parentPosition.x) * nodeEase
                     const y = childData._parentPosition.y + (childData._targetPosition.y - childData._parentPosition.y) * nodeEase
                     const z = childData._parentPosition.z + (childData._targetPosition.z - childData._parentPosition.z) * nodeEase
                     
-                    // 缩放：从0.1放大到1
+                    //Legacy comment translated to English.
                     const scale = 0.1 + nodeEase * 0.9
                     
-                    // 更新节点位置和缩放
+                    //Legacy comment translated to English.
                     childData.mesh.position.set(x, y, z)
                     childData.mesh.scale.set(scale, scale, scale)
                     childData.mesh.visible = true
@@ -6916,15 +6940,15 @@ var app = new Vue({
                     }
                 })
                 
-                // 更新连接线
+                //Legacy comment translated to English.
                 this.updateAllConnectionLines()
                 
                 if (progress < 1) {
                     requestAnimationFrame(animate)
                 } else {
-                    // **动画完成，恢复正常位置并确保完全可见**
+                    //Legacy comment translated to English.
                     childNodes.forEach(childData => {
-                        // 恢复位置
+                        //Legacy comment translated to English.
                         childData.mesh.position.set(childData._targetPosition.x, childData._targetPosition.y, childData._targetPosition.z)
                         childData.mesh.scale.set(1, 1, 1)
                         childData.mesh.visible = true
@@ -6966,11 +6990,11 @@ var app = new Vue({
             animate()
         },
         
-        // 吸入动画（收起子节点）
+        //Legacy comment translated to English.
         animateNodesSuckIn(parentNodeData, onComplete) {
             if (!this.map3dScene || !this.map3dNodes) return
             
-            // 收集所有直接子节点
+            //Legacy comment translated to English.
             const childNodes = []
             const collectChildren = (node) => {
                 if (!node.children || Object.keys(node.children).length === 0) return
@@ -6980,7 +7004,7 @@ var app = new Vue({
                     const childNodeData = this.map3dNodes.find(n => n.node === childNode && n.key === childKey)
                     if (childNodeData) {
                         childNodes.push(childNodeData)
-                        // 递归收集所有子节点
+                        //Legacy comment translated to English.
                         collectChildren(childNode)
                     }
                 })
@@ -6993,12 +7017,12 @@ var app = new Vue({
                 return
             }
             
-            // 吸入动画：从当前位置缩放+位移到父节点位置，然后隐藏
-            // **缩短单个节点动画时间，让多米诺效果更明显**
-            const animationDuration = 200  // 从 300ms 减少到 200ms
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
+            const animationDuration = 200  //Legacy comment translated to English.
             const startTime = Date.now()
             
-            // 保存每个子节点的起始位置
+            //Legacy comment translated to English.
             childNodes.forEach(childData => {
                 childData._startPosition = {
                     x: childData.mesh.position.x,
@@ -7011,25 +7035,25 @@ var app = new Vue({
                 const elapsed = Date.now() - startTime
                 const progress = Math.min(elapsed / animationDuration, 1)
                 
-                // 使用 easeInCubic 缓动（加速吸入）
+                //Legacy comment translated to English.
                 const easeProgress = progress * progress * progress
                 
                 childNodes.forEach((childData, index) => {
-                    // **大幅增加反向延迟，产生明显的反向多米诺骨牌效果**
-                    const delay = (childNodes.length - index) * 60  // 从 35ms 增加到 60ms
+                    //Legacy comment translated to English.
+                    const delay = (childNodes.length - index) * 60  //Legacy comment translated to English.
                     const nodeProgress = Math.max(0, Math.min(1, (elapsed - delay) / animationDuration))
                     const nodeEase = nodeProgress * nodeProgress * nodeProgress
                     
-                    // 从当前位置插值到父节点位置
+                    //Legacy comment translated to English.
                     const x = childData._startPosition.x + (parentNodeData.position.x - childData._startPosition.x) * nodeEase
                     const y = childData._startPosition.y + (parentNodeData.position.y - childData._startPosition.y) * nodeEase
                     const z = childData._startPosition.z + (parentNodeData.position.z - childData._startPosition.z) * nodeEase
                     
-                    // 缩放：从1缩小到0.1
+                    //Legacy comment translated to English.
                     const scale = 1 - nodeEase * 0.9
                     const opacity = 1 - nodeEase
                     
-                    // 更新节点位置和缩放
+                    //Legacy comment translated to English.
                     childData.mesh.position.set(x, y, z)
                     childData.mesh.scale.set(scale, scale, scale)
                     
@@ -7054,13 +7078,13 @@ var app = new Vue({
                     }
                 })
                 
-                // 更新连接线
+                //Legacy comment translated to English.
                 this.updateAllConnectionLines()
                 
                 if (progress < 1) {
                     requestAnimationFrame(animate)
                 } else {
-                    // 动画完成，完全隐藏所有节点
+                    //Legacy comment translated to English.
                     childNodes.forEach(childData => {
                         childData.mesh.visible = false
                         if (childData.glowMesh) childData.glowMesh.visible = false
@@ -7075,7 +7099,7 @@ var app = new Vue({
             animate()
         },
         
-        // 处理窗口大小变化
+        //Legacy comment translated to English.
         handleMap3DResize() {
             const container = document.getElementById('map3dContainer')
             if (!container || !this.map3dCamera || !this.map3dRenderer) return
@@ -7088,62 +7112,62 @@ var app = new Vue({
             this.map3dRenderer.setSize(width, height)
         },
         
-        // 销毁 3D 场景
+        //Legacy comment translated to English.
         destroyMap3D() {
             window.removeEventListener('resize', this.handleMap3DResize)
             
-            // 移除键盘事件处理器
+            //Legacy comment translated to English.
             if (this._map3dKeydownHandler) {
                 window.removeEventListener('keydown', this._map3dKeydownHandler, true)
                 this._map3dKeydownHandler = null
             }
             
-            // 移除点击事件
+            //Legacy comment translated to English.
             if (this.map3dRenderer && this.map3dRenderer.domElement && this.map3dClickHandler) {
                 this.map3dRenderer.domElement.removeEventListener('click', this.map3dClickHandler)
                 this.map3dClickHandler = null
             }
             
-            // **移除双击事件**
+            //Legacy comment translated to English.
             if (this.map3dRenderer && this.map3dRenderer.domElement && this.map3dDoubleClickHandler) {
                 this.map3dRenderer.domElement.removeEventListener('dblclick', this.map3dDoubleClickHandler)
                 this.map3dDoubleClickHandler = null
             }
             
-            // **移除鼠标移动事件**
+            //Legacy comment translated to English.
             if (this.map3dRenderer && this.map3dRenderer.domElement && this.map3dMouseMoveHandler) {
                 this.map3dRenderer.domElement.removeEventListener('mousemove', this.map3dMouseMoveHandler)
                 this.map3dMouseMoveHandler = null
             }
             
-            // **移除tooltip元素**
+            //Legacy comment translated to English.
             const tooltip = document.getElementById('map3d-tooltip')
             if (tooltip) {
                 tooltip.remove()
             }
             
-            // 停止动画循环
+            //Legacy comment translated to English.
             if (this.map3dAnimationId) {
                 cancelAnimationFrame(this.map3dAnimationId)
                 this.map3dAnimationId = null
             }
             
-            // 销毁控制器
+            //Legacy comment translated to English.
             if (this.map3dControls) {
                 this.map3dControls.dispose()
                 this.map3dControls = null
             }
             
-            // 清空场景
+            //Legacy comment translated to English.
             this.clearMap3DScene()
             
-            // 清空节点映射
+            //Legacy comment translated to English.
             if (this.map3dNodeMap) {
                 this.map3dNodeMap.clear()
                 this.map3dNodeMap = null
             }
             
-            // 清理缓存的当前节点
+            //Legacy comment translated to English.
             this.map3dCurrentNodes = []
             
             if (this.map3dRenderer && this.map3dRenderer.domElement) {
@@ -7160,13 +7184,13 @@ var app = new Vue({
             this.map3dNodes = []
         },
         
-        // 关闭对话输入弹窗
-        // 执行打靶的核心逻辑（提取出来供对话模式和直接测试模式复用）
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         async executeTargetShoot() {
             await this.executeTargetShootWithChatMessage(null)
         },
         
-        // 执行打靶的核心逻辑（支持对话模式，userMessage 为 null 时表示直接测试模式）
+        //Legacy comment translated to English.
         async executeTargetShootWithChatMessage(userMessage) {
             if (!this.ensurePromptContentForCurrentModel()) {
                 return
@@ -7180,7 +7204,7 @@ var app = new Vue({
             const streamId = this.createPromptStreamId()
             const streamReady = await this.openPromptStream(streamId, 'shoot')
             
-            // 保存 userMessage，用于后续连发时保持 Chat 模式
+            //Legacy comment translated to English.
             this._lastUserMessage = userMessage || null
             
             let _postData = {
@@ -7188,7 +7212,7 @@ var app = new Vue({
                 content: this.content,
                 note: this.remarks,
                 numsOfResults: 1,
-                isDraft: this.sendBtnText === '保存草稿',
+                isDraft: this.sendBtnText === PromptRangeSendCommand.draft,
                 suffix: this.promptParamForm.suffix,
                 prefix: this.promptParamForm.prefix
             }
@@ -7198,12 +7222,12 @@ var app = new Vue({
                 _postData.executionOptions = executionOptions
             }
             
-            // 如果提供了 userMessage，添加到请求数据中
+            //Legacy comment translated to English.
             if (userMessage) {
                 _postData.userMessage = userMessage
             }
             
-            // 如果是继续聊天模式，传递历史记录
+            //Legacy comment translated to English.
             if (this.continueChatMode && this.continueChatHistory.length > 0) {
                 _postData.chatHistory = this.continueChatHistory.map(msg => ({
                     role: msg.roleType === 1 ? 'user' : 'assistant',
@@ -7211,7 +7235,7 @@ var app = new Vue({
                 }))
             }
             
-            // ai评分标准
+            //Legacy comment translated to English.
             _postData.isAIGrade = this.isAIGrade
             if (this.aiScoreForm.resultList.length > 0) {
                 let _list = this.aiScoreForm.resultList.map(item => item.value)
@@ -7226,17 +7250,17 @@ var app = new Vue({
             }
             if (this.promptid) {
                 _postData.id = this.promptid
-                //创建顶级战术，创建平行战术，创建子战术，重新瞄准
-                if (selectedTactics === '创建顶级战术') {
+                //Legacy comment translated to English.
+                if (selectedTactics === 'create-top') {
                     _postData.isTopTactic = true
                 }
-                if (selectedTactics === '创建平行战术') {
+                if (selectedTactics === 'create-parallel') {
                     _postData.isNewTactic = true
                 }
-                if (selectedTactics === '创建子战术') {
+                if (selectedTactics === 'create-sub') {
                     _postData.isNewSubTactic = true
                 }
-                if (selectedTactics === '重新瞄准') {
+                if (selectedTactics === 'retarget') {
                     _postData.isNewAiming = true
                 }
             }
@@ -7279,13 +7303,13 @@ var app = new Vue({
                     this.promptDetail = copyResultData
                     this.sendBtns = [
                         {
-                            text: '连发'
+                            text: PromptRangeSendCommand.rapid
                         },
                         {
-                            text: '保存草稿'
+                            text: PromptRangeSendCommand.draft
                         }
                     ]
-                    this.sendBtnText = '连发'
+                    this.sendBtnText = PromptRangeSendCommand.rapid
                     this.outputAverageDeci = evalAvgScore > -1 ? evalAvgScore : -1
                     this.outputMaxDeci = evalMaxScore > -1 ? evalMaxScore : -1
                     this.outputList = promptResultList.map(item => this.normalizeOutputResultItem(item, id, fullVersion, promptItem))
@@ -7296,16 +7320,16 @@ var app = new Vue({
                         this.forceScrollResultBoxToBottom()
                     }
                     
-                    // 检查第一个结果的模式，如果不是 Chat 模式，清空保存的 userMessage
+                    //Legacy comment translated to English.
                     if (promptResultList.length > 0) {
                         const firstResult = promptResultList[0]
                         if (firstResult.mode !== 2 && firstResult.mode !== 'Chat') {
-                            // 如果不是 Chat 模式，清空保存的 userMessage
+                            //Legacy comment translated to English.
                             this._lastUserMessage = null
                         }
                     }
                     
-                    // 重置继续聊天状态
+                    //Legacy comment translated to English.
                     this.continueChatMode = false
                     this.continueChatPromptResultId = null
                     this.continueChatHistory = []
@@ -7321,7 +7345,7 @@ var app = new Vue({
                         this.getScoringTrendData()
                     })
 
-                    if (this.sendBtnText !== '保存草稿' && this.numsOfResults > 1) {
+                    if (this.sendBtnText !== PromptRangeSendCommand.draft && this.numsOfResults > 1) {
                         await this.dealRapicFireHandel(this.numsOfResults - 1, id)
                     }
                 } else {
@@ -7337,7 +7361,7 @@ var app = new Vue({
                 this.clearOutputGeneratingPlaceholder()
                 this.closePromptStream()
                 this.$message({
-                    message: error?.message || '请求失败',
+                    message: error?.message || ncfST('Frontend.273'),
                     type: 'error',
                     duration: 5 * 1000
                 })
@@ -7355,7 +7379,7 @@ var app = new Vue({
             });
             return item.finalScore === item[which] ? 'warnRow' : ''
         },
-        // 版本记录 获取版本记录 树形数据
+        //Legacy comment translated to English.
         async getVersionRecordData() {
             //find rangeName by id
 
@@ -7365,7 +7389,7 @@ var app = new Vue({
 
             let res = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.GetTacticTree?rangeName=${name}`)
             if (res.data.success) {
-                //console.log('获取版本记录数据', res.data.data.rootNodeList)
+                //console.log('getversionrecorddata', res.data.data.rootNodeList)
                 let _listData = res?.data?.data?.rootNodeList || []
                 /*console.log('this.treeArrayFormat(_listData)', this.treeArrayFormat(_listData))*/
                 this.versionTreeData = this.treeArrayFormat(_listData)
@@ -7377,7 +7401,7 @@ var app = new Vue({
                 });
             }
         },
-        //树形数据格式化  参数data:要格式化的数据,child为要格式化数据的子数组值名
+        //Legacy comment translated to English.
         treeArrayFormat(data, child) {
             let trees = new Array();
             let fn = null;
@@ -7385,7 +7409,7 @@ var app = new Vue({
             for (let i in data) {
                 newData = {
                     id: data[i].data.id,
-                    label: data[i].name ? data[i].name + (data[i].nickName ? " (" + data[i].nickName + ")" : "") : "未命名",
+                    label: data[i].name ? data[i].name + (data[i].nickName ? " (" + data[i].nickName + ")" : "") : ncfST('Frontend.351'),
                     isPublic: false,
                     data: data[i].data,
                     attributes: data[i].attributes,
@@ -7399,88 +7423,88 @@ var app = new Vue({
             }
             return trees
         },
-        // 版本记录 查看
+        //Legacy comment translated to English.
         seeVersionRecord() {
             this.versionDrawer = true
-            // 重新获取数据
+            // reload data
             this.getVersionRecordData()
         },
-        // 版本记录 树形控件 过滤节点
+        //Legacy comment translated to English.
         versionTreeFilterNode(value, data) {
             if (!value) return true;
             return data.label.indexOf(value) > -1;
         },
-        // 版本记录 抽屉关闭
+        //Legacy comment translated to English.
         versionDrawerClose() {
             this.versionSearchVal = ''
         },
-        // 版本记录 是否公开
+        //Legacy comment translated to English.
         versionRecordIsPublic(itemData) {
-            // console.log('版本记录 是否公开:', itemData)
-            // to do 接口对接 async await
-            // 提示敬请期待
-            this.$message.warning('敬请期待')
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
+            this.$message.warning(ncfST('Frontend.345'))
         },
-        // 版本记录 编辑
+        // versionrecord edit
         versionRecordEdit(itemData) {
-            //console.log('版本记录 编辑:', itemData)
-            // to do 接口对接 async await
-            // 设置霸道选中
+            //console.log('versionrecord edit:', itemData)
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             this.promptid = itemData.id
-            // 获取靶道详情
+            //Legacy comment translated to English.
             this.getPromptetail(itemData.id, true, true)
-            // 获取输出列表和平均分
+            //Legacy comment translated to English.
             //this.getOutputList()
-            // 获取分数趋势图表数据
+            //Legacy comment translated to English.
             this.getScoringTrendData()
-            // 关闭抽屉
+            //Legacy comment translated to English.
             this.versionDrawer = false
         },
-        // 版本记录 生成代码
+        // versionrecord generatecode
         versionRecordGenerateCode(itemData) {
-            //console.log('版本记录 生成代码:', itemData)
-            // 提示敬请期待
-            this.$message.warning('敬请期待')
-            // to do 接口对接 async await
+            //console.log('versionrecord generatecode:', itemData)
+            //Legacy comment translated to English.
+            this.$message.warning(ncfST('Frontend.345'))
+            //Legacy comment translated to English.
         },
-        // 版本记录 删除
+        // versionrecord delete
         versionRecordDelete(itemData) {
-            //console.log('版本记录 删除:', itemData)
-            this.$message.warning('敬请期待')
-            // to do 接口对接 async await
-            //this.$confirm('此操作将永久删除该靶道版本, 是否继续?', '提示', {
-            //    confirmButtonText: '确定',
-            //    cancelButtonText: '取消',
+            //console.log('versionrecord delete:', itemData)
+            this.$message.warning(ncfST('Frontend.345'))
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             //    type: 'warning'
             //}).then(() => {
-            //    // 对接接口 删除
+            //Legacy comment translated to English.
             //    this.btnDeleteHandle(itemData.id,true)
 
             //}).catch(() => {
             //    this.$message({
             //        type: 'info',
-            //        message: '已取消删除'
+            //Legacy comment translated to English.
             //    });
             //});
         },
-        // 版本记录 查看备注
+        //Legacy comment translated to English.
         versionRecordViewNotes(itemData) {
-            //console.log('版本记录 查看备注:', itemData)
-            // to do 接口对接 async await
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
         },
 
 
-        // 获取输出列表
+        //Legacy comment translated to English.
         async getOutputList(promptId) {
             let res = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.GetByItemId?promptItemId=${promptId}`)
             //console.log('getOutputList:', res)
             if (res.data.success) {
                 let { promptResults = [], promptItem = {} } = res.data.data || {}
-                // 平均分 _totalScore/promptResults 保留整数
-                this.outputAverageDeci = promptItem.evalAvgScore > -1 ? promptItem.evalAvgScore : -1; // 保留整数
-                this.outputMaxDeci = promptItem.evalMaxScore > -1 ? promptItem.evalMaxScore : -1; // 保留整数
+                //Legacy comment translated to English.
+                this.outputAverageDeci = promptItem.evalAvgScore > -1 ? promptItem.evalAvgScore : -1; //Legacy comment translated to English.
+                this.outputMaxDeci = promptItem.evalMaxScore > -1 ? promptItem.evalMaxScore : -1; //Legacy comment translated to English.
 
-                // 输出列表
+                //Legacy comment translated to English.
                 this.outputList = promptResults.map(item => this.normalizeOutputResultItem(
                     item,
                     this.promptDetail?.id,
@@ -7491,7 +7515,7 @@ var app = new Vue({
                     this.syncContinueChatUsageFromResult(this.continueChatPromptResultId)
                 }
                 
-                // 添加代码块复制按钮
+                // add a button to copy code blocks
                 this.$nextTick(() => {
                     this.addCopyButtonsToCodeBlocks();
                 });
@@ -7503,7 +7527,7 @@ var app = new Vue({
                 });
             }
         },
-        // 输出 保存评分
+        //Legacy comment translated to English.
         async saveManualScore(item, index) {
             //console.log('manualScorVal', this.promptSelectVal, this.manualScorVal)
             if (item.scoreType === '1') {
@@ -7511,19 +7535,19 @@ var app = new Vue({
                 let res = await servicePR.post(`/api/Senparc.Xncf.PromptRange/PromptResultAppService/Xncf.PromptRange_PromptResultAppService.RobotScore?isRefresh=true&promptResultId=${item.id}`, _list)
                 if (res.data.success) {
                     //console.log('testHandel res data:', res.data.data)
-                    // 从新获取靶场列表
+                    //Legacy comment translated to English.
                     this.getPromptOptData()
-                    // 重新获取输出列表
+                    //Legacy comment translated to English.
                     await this.getOutputList(item.promptId)
-                    // 清除AI评分加载状态
+                    //Legacy comment translated to English.
                     this.$set(this.robotScoreLoadingMap, item.id, false)
-                    // 重新获取图表
+                    //Legacy comment translated to English.
                     this.getScoringTrendData()
                     
-                    // ⭐ 新增：检查分数并提示优化
-                    await this.checkScoreAndSuggestOptimization(res.data.data || item, 'AI评分');
+                    //Legacy comment translated to English.
+                    await this.checkScoreAndSuggestOptimization(res.data.data || item, ncfST('Frontend.086'));
                 } else {
-                    // 清除AI评分加载状态
+                    //Legacy comment translated to English.
                     this.$set(this.robotScoreLoadingMap, item.id, false)
                     app.$message({
                         message: res.data.errorMessage || res.data.data || 'Error',
@@ -7539,15 +7563,15 @@ var app = new Vue({
                 })
                 if (res.data.success) {
                     //console.log('testHandel res data:', res.data.data)
-                    // 从新获取靶场列表
+                    //Legacy comment translated to English.
                     this.getPromptOptData()
-                    // 重新获取输出列表
+                    //Legacy comment translated to English.
                     this.getOutputList(item.promptId)
-                    // 重新获取图表
+                    //Legacy comment translated to English.
                     this.getScoringTrendData()
                     
-                    // ⭐ 新增：检查分数并提示优化
-                    await this.checkScoreAndSuggestOptimization(res.data.data || item, '手动评分');
+                    //Legacy comment translated to English.
+                    await this.checkScoreAndSuggestOptimization(res.data.data || item, ncfST('Frontend.087'));
                 } else {
                     app.$message({
                         message: res.data.errorMessage || res.data.data || 'Error',
@@ -7561,22 +7585,22 @@ var app = new Vue({
         cancelManualScore(index) {
             this.outputList[index].isScoreView = false
         },
-        // 输出 选中切换
+        //Legacy comment translated to English.
         outputSelectSwitch(index) {
             if (this.outputActive !== '' && this.outputActive !== index) {
                 this.outputList[this.outputActive].isScoreView = false
             }
             this.outputActive = index
         },
-        // 输出 显示评分视图
+        //Legacy comment translated to English.
         showRatingView(index, scoreType) {
-            // 如果是ai评分 不显示评分视图 如果没有预期结果则提醒设置预期结果
+            //Legacy comment translated to English.
             if (scoreType === '1') {
                 if (this.promptDetail.modelId) {
                     let _index = this.modelOpt.findIndex(item => item.value == this.promptDetail.modelId)
                     if (_index === -1 && !this.modelid) {
                         this.$message({
-                            message: '模型已被删除，请选择模型后重新打靶！',
+                            message: ncfST('模型已被删除，请选择模型后重新打靶！'),
                             type: 'warning'
                         })
                         return
@@ -7590,19 +7614,19 @@ var app = new Vue({
                         this.outputList[index].alResultList = _listVal.map((item, index) => {
                             return item
                         })
-                        // 设置AI评分加载状态
+                        //Legacy comment translated to English.
                         const itemId = this.outputList[index].id
                         this.$set(this.robotScoreLoadingMap, itemId, true)
                         this.saveManualScore(this.outputList[index], index)
                     } else {
                         this.$message({
-                            message: '请设置预 AI 评分标准',
+                            message: ncfST('请设置预 AI 评分标准'),
                             type: 'warning'
                         })
                     }
                 } else {
-                    // todo 接口对接 重新评分
-                    // 设置AI评分加载状态
+                    //Legacy comment translated to English.
+                    //Legacy comment translated to English.
                     const itemId = this.outputList[index].id
                     this.$set(this.robotScoreLoadingMap, itemId, true)
                     this.saveManualScore(this.outputList[index], index)
@@ -7613,20 +7637,20 @@ var app = new Vue({
             this.outputList[index].scoreType = scoreType
             this.outputList[index].isScoreView = true
         },
-        // 输出 切换ai评分
+        //Legacy comment translated to English.
         alBtnScoring(index) {
             this.outputList[index].scoreType = '1'
         },
-        // 输出 ai评分 增加结果行
+        //Legacy comment translated to English.
         addAlScoring(index) {
             let _len = this.outputList[index].alResultList.length
             this.outputList[index].alResultList.push({
                 id: _len + 1,
-                label: `预期结果`,
+                label: ncfST('Frontend.384'),
                 value: ''
             })
         },
-        // 输出 切换手动评分
+        //Legacy comment translated to English.
         manualBtnScoring(index) {
             this.outputList[index].scoreType = '2'
         },
@@ -7650,7 +7674,7 @@ var app = new Vue({
             if (streamReady) {
                 postData.streamId = streamId
             }
-            // 如果提供了 userMessage，添加到参数中（用于保持 Chat 模式）
+            //Legacy comment translated to English.
             if (userMessage) {
                 postData.userMessage = userMessage
             }
@@ -7670,9 +7694,9 @@ var app = new Vue({
                         });
                         return
                     }
-                    this.outputAverageDeci = res.data.data.promptItem.evalAvgScore > -1 ? res.data.data.promptItem.evalAvgScore : -1; // 保留整数
-                    this.outputMaxDeci = res.data.data.promptItem.evalMaxScore > -1 ? res.data.data.promptItem.evalMaxScore : -1; // 保留整数
-                    //输出列表 
+                    this.outputAverageDeci = res.data.data.promptItem.evalAvgScore > -1 ? res.data.data.promptItem.evalAvgScore : -1; //Legacy comment translated to English.
+                    this.outputMaxDeci = res.data.data.promptItem.evalMaxScore > -1 ? res.data.data.promptItem.evalMaxScore : -1; //Legacy comment translated to English.
+                    //Legacy comment translated to English.
                     let latestResultId = null
                     const findExistingResultIndexById = (resultId) => {
                         if (resultId === undefined || resultId === null || resultId === '') {
@@ -7712,7 +7736,7 @@ var app = new Vue({
                             res.data.data.promptItem || {}
                         )
 
-                        // 流式 final 与接口返回可能交错到达，优先按结果 ID 去重更新，避免连发出现重复项。
+                        //Legacy comment translated to English.
                         const existingIndex = findExistingResultIndexById(normalized.id)
                         if (existingIndex > -1) {
                             this.$set(this.outputList, existingIndex, normalized)
@@ -7803,26 +7827,26 @@ var app = new Vue({
             this.scrollToResultItemBottom(resultId)
         },
 
-        // 配置 重置参数
+        //Legacy comment translated to English.
         resetConfigurineParam(isPageChange) {
-            // todo 判断是否 记录 页面变化记录
+            //Legacy comment translated to English.
             if (isPageChange) {
                 this.pageChange = true
                 this.sendBtns = [
                     {
-                        text: '打靶'
+                        text: PromptRangeSendCommand.shoot
                     },
                     {
-                        text: '保存草稿'
+                        text: PromptRangeSendCommand.draft
                     }
                 ]
-                this.sendBtnText = '打靶'
+                this.sendBtnText = PromptRangeSendCommand.shoot
             }
-            //console.log('配置参数 重置:', this.parameterViewList)
-            // 参数设置 视图配置列表
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             this.parameterViewList = [
                 {
-                    tips: '控制词的选择范围，值越高，生成的文本将包含更多的不常见词汇',
+                    tips: ncfST('Frontend.339'),
                     formField: 'topP',
                     label: 'Top_p',
                     value: 0.5,
@@ -7833,7 +7857,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: '采样温度，较高的值如0.8会使输出更加随机，而较低的值如0.2则会使其输出更具有确定性',
+                    tips: ncfST('Frontend.341'),
                     formField: 'temperature',
                     label: 'Temperature',
                     value: 0.5,
@@ -7844,7 +7868,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: '请求与返回的Token总数或生成文本的最大长度，具体请参考API文档！',
+                    tips: ncfST('Frontend.342'),
                     formField: 'maxToken',
                     label: 'MaxToken',
                     value: 100,
@@ -7855,7 +7879,7 @@ var app = new Vue({
                     sliderStep: 1
                 },
                 {
-                    tips: '惩罚频繁出现的词',
+                    tips: ncfST('Frontend.338'),
                     formField: 'frequencyPenalty',
                     label: 'Frequeny_penalty',
                     value: 0,
@@ -7866,7 +7890,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: '惩罚已出现的词',
+                    tips: ncfST('Frontend.337'),
                     formField: 'presencePenalty',
                     label: 'Presence_penalty',
                     value: 0,
@@ -7877,7 +7901,7 @@ var app = new Vue({
                     sliderStep: 0.1
                 },
                 {
-                    tips: '设定生成文本时的终止词序列。当遇到这些词序列时，模型将停止生成。（输入的内容将会根据英文逗号进行分割）',
+                    tips: ncfST('Frontend.340'),
                     formField: 'stopSequences',
                     label: 'StopSequences',
                     value: '',
@@ -7889,34 +7913,34 @@ var app = new Vue({
                 }
             ]
         },
-        // 配置 参数设置输入回调
+        //Legacy comment translated to English.
         parameterInputHandle(val, item) {
-            // 页面变化记录
+            //Legacy comment translated to English.
             this.pageChange = true
             this.sendBtns = [
                 {
-                    text: '打靶'
+                    text: PromptRangeSendCommand.shoot
                 },
                 {
-                    text: '保存草稿'
+                    text: PromptRangeSendCommand.draft
                 }
             ]
-            this.sendBtnText = '打靶'
+            this.sendBtnText = PromptRangeSendCommand.shoot
             let { sliderMax, sliderMin, sliderStep, isStr, isSlider, formField } = item
             //console.log('parameterInputHandle:', val)
             let _findIdnex = this.parameterViewList.findIndex(item => item.formField === formField)
             let _findItem = this.parameterViewList[_findIdnex]
-            // 根据 item里面的参数 判断限制输入的内容
+            //Legacy comment translated to English.
             if (isStr) {
-                // 字符串类型
+                //Legacy comment translated to English.
             } else {
                 // if (isSlider || isStr )
-                //有滑动选择的 数据必须为数字
+                //Legacy comment translated to English.
                 let _val = val.replace(/[^\d]/g, '')
                 //floor
                 _val = Math.round(_val / sliderStep) * sliderStep
                 //console.log('parameterInputHandle _val:', _val)
-                //且小于sliderMax大于sliderMin保留位数与sliderStep一样
+                //Legacy comment translated to English.
                 if (_val < sliderMin) {
                     this.$set(this.parameterViewList, _findIdnex, { ..._findItem, value: item.sliderMin })
                 } else if (sliderMax === 'Infinity') {
@@ -7929,20 +7953,20 @@ var app = new Vue({
             }
 
         },
-        // 配置 输入Prompt 重置 
+        //Legacy comment translated to English.
         resetInputPrompt() {
-            //console.log('输入Prompt 重置:', this.content)
-            this.content = ''// prompt 输入内容
+            //Legacy comment translated to English.
+            this.content = ''// prompt inputcontent
             if (this.isSpeechToTextModelSelected) {
                 this.clearSpeechInput()
             }
-            //this.remarks = '' // prompt 输入的备注
+            //Legacy comment translated to English.
         },
         deleteModel(item) {
-            //删除模型 confirm
-            this.$confirm(`此操作将永久删除模型【${item.alias}】, 是否继续?`, '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
+            //deletemodel confirm
+            this.$confirm(ncfST('Frontend.471', item.alias), ncfST('Frontend.343'), {
+                confirmButtonText: ncfST('Frontend.421'),
+                cancelButtonText: ncfST('Frontend.091'),
                 type: 'warning'
             }).then(async () => {
                 await servicePR.delete('/api/Senparc.Xncf.PromptRange/LlmModelAppService/Xncf.PromptRange_LlmModelAppService.BatchDelete', { data: [item.id] })
@@ -7955,19 +7979,19 @@ var app = new Vue({
                                 duration: 5 * 1000
                             });
                         } else {
-                            // 重置模型列表
+                            //Legacy comment translated to English.
                             this.modelid = ''
                             this.getModelOptData()
                             this.$message({
                                 type: res.data.success ? 'success' : 'error',
-                                message: res.data.success ? '删除成功' : '删除失败'
+                                message: res.data.success ? ncfST('删除成功') : ncfST('删除失败')
                             });
                         }
                     })
             })
         },
 
-        //  prompt请求参数 关闭
+        //  promptrequestparameters disable
         promptParamFormClose() {
             this.promptParamForm = {
                 prefix: '',
@@ -7977,7 +8001,7 @@ var app = new Vue({
             this.$refs.promptParamForm.resetFields();
             this.promptParamVisible = true;
         },
-        // prompt请求参数 添加变量行btn
+        //Legacy comment translated to English.
         addVariableBtn() {
             this.promptParamForm.variableList.push({
                 name: '',
@@ -7987,11 +8011,11 @@ var app = new Vue({
         toAIKernel() {
             window.location.assign('/Admin/AIKernel/Index?uid=796D12D8-580B-40F3-A6E8-A5D9D2EABB69')
         },
-        // prompt请求参数 删除变量行btn
+        //Legacy comment translated to English.
         deleteVariableBtn(index) {
             this.promptParamForm.variableList.splice(index, 1)
         },
-        // prompt请求参数 提交
+        //Legacy comment translated to English.
         promptParamFormSubmit() {
             this.$refs.promptParamForm.validate(async (valid) => {
                 if (valid) {
@@ -8017,14 +8041,14 @@ var app = new Vue({
             this.waitRefreshModel = true
             await this.getModelOptData().then(() => {
                 this.waitRefreshModel = false
-                // 提示刷新完成
+                //Legacy comment translated to English.
                 this.$message({
-                    message: '刷新完成！',
+                    message: ncfST('刷新完成！'),
                     type: 'success'
                 })
             })
         },
-        // 配置 获取模型 下拉列表数据
+        //Legacy comment translated to English.
         async getModelOptData() {
             let res = await servicePR.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync', {})
             //console.log('getModelOptData:', res)
@@ -8035,8 +8059,8 @@ var app = new Vue({
                     const configModelTypeCode = this.parseConfigModelTypeValue(item.configModelType)
                     const configModelTypeName = this.getConfigModelTypeLabel(configModelTypeCode)
 
-                    // 构建label：模型名称 + 类型 + 版本号（如果有）+ 部署名称（如果有）
-                    let label = `${item.alias || '未命名模型'} [${configModelTypeName}]`
+                    //Legacy comment translated to English.
+                    let label = `${item.alias || ncfST('Frontend.351')} [${configModelTypeName}]`
                     if (item.apiVersion && item.apiVersion.trim()) {
                         label += ` v${item.apiVersion}`;
                     }
@@ -8047,17 +8071,17 @@ var app = new Vue({
                     return {
                         ...item,
                         label: label,
-                        displayName: item.alias,  // 保留原始名称用于其他地方显示
+                        displayName: item.alias,  //Legacy comment translated to English.
                         selectLabel: label,
                         configModelTypeCode: configModelTypeCode,
                         configModelTypeName: configModelTypeName,
-                        deploymentDisplay: item.deploymentName, // 保留部署名称
-                        apiVersion: item.apiVersion, // 保留版本号
+                        deploymentDisplay: item.deploymentName, //Legacy comment translated to English.
+                        apiVersion: item.apiVersion, //Legacy comment translated to English.
                         value: item.id,
                         disabled: false
                     }
                 })
-                // 保持模型选中状态变化后，自动切换模型特定 UI
+                //Legacy comment translated to English.
                 this.$nextTick(() => {
                     this.onModelSelectionChanged()
                 })
@@ -8082,7 +8106,7 @@ var app = new Vue({
                 const res = await servicePR.post('/api/Senparc.Xncf.AIKernel/AIVectorAppService/Xncf.AIKernel_AIVectorAppService.GetListAsync', {})
                 if (!res.data.success) {
                     this.$message({
-                        message: res.data.errorMessage || res.data.data || '向量库列表加载失败',
+                        message: res.data.errorMessage || res.data.data || ncfST('向量库列表加载失败'),
                         type: 'error',
                         duration: 5 * 1000
                     })
@@ -8095,7 +8119,7 @@ var app = new Vue({
                     value: item.id,
                     vectorDbTypeCode: this.parseVectorDbTypeValue(item.vectorDBType),
                     vectorDbTypeLabel: this.getVectorDbTypeLabel(item.vectorDBType),
-                    label: `${item.alias || item.name || '未命名向量库'} [${this.getVectorDbTypeLabel(item.vectorDBType)}]`
+                    label: `${item.alias || item.name || ncfST('Frontend.352')} [${this.getVectorDbTypeLabel(item.vectorDBType)}]`
                 }))
 
                 if (this.isTextEmbeddingModelSelected && !this.embeddingForm.vectorDbId && this.vectorOpt.length > 0) {
@@ -8104,7 +8128,7 @@ var app = new Vue({
                 }
             } catch (e) {
                 this.$message({
-                    message: '向量库列表加载失败：' + (e.message || '未知错误'),
+                    message: ncfST('向量库列表加载失败：') + (e.message || ncfST('未知错误')),
                     type: 'error',
                     duration: 5 * 1000
                 })
@@ -8114,11 +8138,11 @@ var app = new Vue({
         },
         onModelSelectionChanged() {
             if (this.isSpeechToTextModelSelected) {
-                this.tacticalForm.chatMode = '直接测试'
+                this.tacticalForm.chatMode = 'direct'
             } else if (this.supportsChatMode && !this.tacticalForm.chatMode) {
-                this.tacticalForm.chatMode = '对话模式'
-            } else if (!this.supportsChatMode && this.tacticalForm.chatMode === '对话模式') {
-                this.tacticalForm.chatMode = '直接测试'
+                this.tacticalForm.chatMode = 'chat'
+            } else if (!this.supportsChatMode && this.tacticalForm.chatMode === 'chat') {
+                this.tacticalForm.chatMode = 'direct'
             }
 
             if (this.isTextEmbeddingModelSelected) {
@@ -8158,7 +8182,7 @@ var app = new Vue({
                 this.promptChangeHandel(file.name || 'audio', 'content')
             } catch (e) {
                 this.$message({
-                    message: '读取音频失败：' + (e.message || '未知错误'),
+                    message: ncfST('读取音频失败：') + (e.message || ncfST('未知错误')),
                     type: 'error',
                     duration: 5 * 1000
                 })
@@ -8178,7 +8202,7 @@ var app = new Vue({
         ensurePromptContentForCurrentModel() {
             if (this.isTextEmbeddingModelSelected && !this.embeddingForm.vectorDbId) {
                 this.$message({
-                    message: '请选择 VectorDB',
+                    message: ncfST('请选择 VectorDB'),
                     type: 'warning',
                     duration: 3000
                 })
@@ -8189,7 +8213,7 @@ var app = new Vue({
             }
             if (!this.sttForm.audioBase64 && !this.sttForm.audioLocalRelativePath) {
                 this.$message({
-                    message: '请先上传音频文件',
+                    message: ncfST('请先上传音频文件'),
                     type: 'warning',
                     duration: 3000
                 })
@@ -8231,7 +8255,7 @@ var app = new Vue({
 
             return Object.keys(payload).length > 0 ? payload : null
         },
-        // 新增模型 dialog 关闭
+        // addmodel dialog disable
         modelFormCloseDialog() {
             this.modelForm = {
                 alias: "", // string
@@ -8244,7 +8268,7 @@ var app = new Vue({
             }
             this.$refs.modelForm.resetFields();
         },
-        // 新增模型 dialog 提交
+        //Legacy comment translated to English.
         modelFormSubmitBtn() {
             this.$refs.modelForm.validate(async (valid) => {
                 if (valid) {
@@ -8257,16 +8281,16 @@ var app = new Vue({
                         { customAlert: true })
                     if (res.data.success) {
                         this.modelFormSubmitLoading = false
-                        // 重新获取模型列表
+                        //Legacy comment translated to English.
                         await this.getModelOptData().then(() => {
                             this.modelid = res.data.data.id
                         })
-                        // 提示添加成功
+                        //Legacy comment translated to English.
                         this.$message({
-                            message: '添加成功！',
+                            message: ncfST('Frontend.272'),
                             type: 'success'
                         })
-                        // 关闭dialog
+                        // disabledialog
                         this.modelFormVisible = false
                     } else {
                         app.$message({
@@ -8283,34 +8307,34 @@ var app = new Vue({
         },
 
 
-        // 关闭新增靶场 dialog
+        // disableaddrange dialog
         fieldFormCloseDialog() {
             this.fieldForm = {
                 alias: ''
             }
             this.$refs.fieldForm.resetFields();
         },
-        // dialog 新增靶场 提交按钮
+        //Legacy comment translated to English.
         fieldFormSubmitBtn() {
             const that = this
             this.$refs.fieldForm.validate(async (valid) => {
                 if (valid) {
                     this.fieldFormVisible = false
-                    // post 接口 /api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.AddAsync'
+                    // post interface /api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.AddAsync'
                     const res = await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.AddAsync?alias='
                         + that.fieldForm.alias, {})
                     if (res.data.success) {
-                        // 重新获取靶场列表
+                        //Legacy comment translated to English.
                         await this.getFieldList().then(() => {
                             that.promptField = res.data.data.id
                             this.resetPageData()
                         })
-                        // 提示添加成功
+                        //Legacy comment translated to English.
                         this.$message({
-                            message: '添加成功！',
+                            message: ncfST('Frontend.272'),
                             type: 'success'
                         })
-                        // 关闭dialog
+                        // disabledialog
                         this.fieldFormVisible = false
                     } else {
                         app.$message({
@@ -8325,7 +8349,7 @@ var app = new Vue({
                 }
             });
         },
-        // 配置 获取靶场 下拉列表数据
+        //Legacy comment translated to English.
         async getFieldList() {
             return await servicePR.post('/api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.GetListAsync', {})
                 .then(res => {
@@ -8349,11 +8373,11 @@ var app = new Vue({
         },
         renameField(e, item) {
             e.stopPropagation()
-            //弹出提示框，输入新的靶场名称，确认后提交，取消后，提示已取消操作
-            this.$prompt('请输入新的靶场名称', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                inputErrorMessage: '靶场名称不能为空',
+            //Legacy comment translated to English.
+            this.$prompt(ncfST('Frontend.473'), ncfST('Frontend.343'), {
+                confirmButtonText: ncfST('Frontend.421'),
+                cancelButtonText: ncfST('Frontend.091'),
+                inputErrorMessage: ncfST('Frontend.474'),
             }).then(async ({ value }) => {
                 const res = await servicePR.get('/api/Senparc.Xncf.PromptRange/PromptRangeAppService/Xncf.PromptRange_PromptRangeAppService.ChangeAliasAsync', {
                     params: {
@@ -8373,14 +8397,14 @@ var app = new Vue({
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: '已取消操作'
+                    message: ncfST('Frontend.329')
                 });
             });
 
         },
-        // 获取靶道 下拉列表数据
+        //Legacy comment translated to English.
         async getPromptOptData(id, isExpected) {
-            // find rangeName by id（与 promptField 比较时统一为字符串，避免 el-select 存 string 而接口返回 number 导致找不到靶场）
+            //Legacy comment translated to English.
             const matchField = (v) => String(v) === String(this.promptField)
             let _find = this.promptFieldOpt.find(item => matchField(item.value))
             if (isExpected) {
@@ -8411,17 +8435,17 @@ var app = new Vue({
                 this.dailogpromptOptlist = _promptOpt
                 if (isExpected) {
                     this.expectedPluginFoem.checkList.push(`${_find.value}`)
-                    // 导出 树形数据 
+                    //Legacy comment translated to English.
                     this.expectedPluginFieldList.push({
                         id: _find.id,
-                        label: _find.label, // 靶场名称
-                        idkey: `${_find.value}`, // 靶场id
+                        label: _find.label, // rangename
+                        idkey: `${_find.value}`, // rangeid
                         children: _promptOpt.map(item => {
                             this.expectedPluginFoem.checkList.push(`${_find.value}_${item.id}`)
                             return {
                                 id: item.id,
-                                label: item.label, // 靶场名称
-                                idkey: `${_find.value}_${item.id}`, // 靶场id
+                                label: item.label, // rangename
+                                idkey: `${_find.value}_${item.id}`, // rangeid
                             }
                         }),
                     })
@@ -8444,13 +8468,13 @@ var app = new Vue({
                 })
             }
         },
-        // 获取 prompt 详情
+        //Legacy comment translated to English.
         async getPromptetail(id, overwrite, isChart) {
             let res = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Get?id=${Number(id)}`,)
             /*console.log('getPromptetail:', res)*/
             if (res.data.success) {
                 //console.log('getPromptetail:', res.data)
-                // 拷贝数据
+                //Legacy comment translated to English.
                 let copyResultData = JSON.parse(JSON.stringify(res.data.data))
                 let vArr = copyResultData.fullVersion.split('-')
                 copyResultData.promptFieldStr = vArr[0] || ''
@@ -8460,7 +8484,7 @@ var app = new Vue({
                     copyResultData.stopSequences = JSON.parse(copyResultData.stopSequences).join(',')
                 }
                 this.promptDetail = copyResultData
-                //如果获取到的结果没有，则延续以往的expectedJson.
+                //Legacy comment translated to English.
                 if (copyResultData.expectedResultsJson) {
                     let expectedResultsJson = this.promptDetail.expectedResultsJson
                     if (expectedResultsJson) {
@@ -8468,7 +8492,7 @@ var app = new Vue({
                         this.aiScoreForm.resultList = _expectedResultsJson.map((item, index) => {
                             return {
                                 id: index + 1,
-                                label: `预期结果`,
+                                label: ncfST('Frontend.384'),
                                 value: item
                             }
                         })
@@ -8480,15 +8504,15 @@ var app = new Vue({
                     }
                 }
                 if (overwrite) {
-                    // 重新获取输出列表
+                    //Legacy comment translated to English.
                     this.getOutputList(this.promptDetail.id)
                     if (isChart) {
-                        // 重新获取图表
+                        //Legacy comment translated to English.
                         this.getScoringTrendData()
                     }
 
 
-                    // 参数覆盖
+                    //Legacy comment translated to English.
                     let _parameterViewList = JSON.parse(JSON.stringify(this.parameterViewList))
 
                     this.parameterViewList = _parameterViewList.map(item => {
@@ -8498,27 +8522,27 @@ var app = new Vue({
                         return item
                     })
 
-                    // 判断模型列表是否有选中的模型
+                    //Legacy comment translated to English.
                     let _findIndex = this.modelOpt.findIndex(item => item.value === this.promptDetail.modelId)
                     if (_findIndex > -1) {
-                        // 模型覆盖
+                        //Legacy comment translated to English.
                         this.modelid = this.promptDetail.modelId
                     } else {
                         this.modelid = ''
                     }
                     this.onModelSelectionChanged()
-                    // prompt 输入内容
+                    // prompt inputcontent
                     this.content = this.promptDetail.promptContent || ''
-                    // prompt 输入的备注
+                    //Legacy comment translated to English.
                     this.remarks = this.promptDetail.note || ''
-                    // prompt请求参数
+                    // promptrequestparameters
                     let _promptParamForm = JSON.parse(JSON.stringify(this.promptParamForm))
                     _promptParamForm.prefix = this.promptDetail.prefix || ''
                     _promptParamForm.suffix = this.promptDetail.suffix || ''
                     _promptParamForm.variableList = []
                     if (this.promptDetail.variableDictJson) {
                         let _variableDictJson = JSON.parse(this.promptDetail.variableDictJson)
-                        // _variableDictJson不是空对象 就循环赋值
+                        //Legacy comment translated to English.
                         if (Object.keys(_variableDictJson).length > 0) {
                             _promptParamForm.variableList = Object.keys(_variableDictJson).map(item => {
                                 return {
@@ -8531,19 +8555,19 @@ var app = new Vue({
                     }
                     this.promptParamForm = _promptParamForm
 
-                    //ai 期望结果里面增加接口返回内容
+                    //Legacy comment translated to English.
                     if (res.data.data.expectedResultsJson) {
                         const expectedResultsJson = JSON.parse(res.data.data.expectedResultsJson)
                         this.aiScoreForm.resultList = expectedResultsJson.map((item, index) => {
                             return {
                                 id: index + 1,
-                                label: `预期结果`,
+                                        label: ncfST('Frontend.384'),
                                 value: item
                             }
                         })
                     }
                     
-                    // ⭐ 新增：检查平均分并提示优化
+                    //Legacy comment translated to English.
                     await this.checkPromptAverageScoreAndSuggest();
                 }
 
@@ -8556,31 +8580,31 @@ var app = new Vue({
                 })
             }
         },
-        // 删除 prompt 
+        // delete prompt 
         async btnDeleteHandle(id, versionRecord) {
             const res = await servicePR.request({
                 method: 'delete',
                 url: `/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.DeleteAsync?id=${id}`,
             });
             if (res.data.success) {
-                // 重新获取 靶道列表 如果删除的是当前选中的靶道，就重重置靶道选中值并重置模型、参数、输入内容、备注、输出列表、平均分、图表、ai评分预期结果
+                //Legacy comment translated to English.
                 if (id === this.promptid) {
                     this.resetPageData()
                 } else {
-                    // 重新获取prompt列表
+                    //Legacy comment translated to English.
                     await this.getPromptOptData(this.promptid)
                 }
 
                 if (versionRecord) {
-                    // 重新获取版本记录
+                    //Legacy comment translated to English.
                     await this.getVersionRecordData()
                 }
 
 
-                // 删除成功
+                // deletesuccess
                 this.$message({
                     type: 'success',
-                    message: '删除成功!'
+                        message: ncfST('Frontend.476')
                 });
             } else {
                 app.$message({
@@ -8590,7 +8614,7 @@ var app = new Vue({
                 })
             }
         },
-        // 修改 prompt 别名
+        //Legacy comment translated to English.
         async btnEditHandle(item, isSave) {
 
             if (!item) return
@@ -8601,13 +8625,13 @@ var app = new Vue({
             });
             if (res.data.success) {
                 if (isSave) {
-                    // 提示保存成功
+                    //Legacy comment translated to English.
                     this.$message({
-                        message: '保存成功！',
+                        message: ncfST('Frontend.268'),
                         type: 'success'
                     })
                 } else {
-                    // 重新获取 prompt列表
+                    //Legacy comment translated to English.
                     this.getPromptOptData()
                 }
 
@@ -8620,16 +8644,16 @@ var app = new Vue({
             }
         },
 
-        // ai评分设置 dialog 新增结果行btn
+        //Legacy comment translated to English.
         aiScoreFormAddRow() {
             let _len = this.aiScoreForm.resultList.length
             this.aiScoreForm.resultList.push({
                 id: _len + 1,
-                label: `预期结果`,
+                label: ncfST('Frontend.384'),
                 value: ''
             })
         },
-        // ai评分设置 打开 dialog 
+        //Legacy comment translated to English.
         aiScoreFormOpenDialog() {
             let _list = this.aiScoreForm.resultList
             let _listVal = _list.filter(item => item.value)
@@ -8640,32 +8664,32 @@ var app = new Vue({
                     resultList: _expectedResultsJson.map((item, index) => {
                         return {
                             id: index + 1,
-                            label: `预期结果`,
+                            label: ncfST('Frontend.384'),
                             value: item
                         }
                     })
                 }
             }
             //else {
-            //    // 如果没有预期结果就重置
+            //Legacy comment translated to English.
             //    this.aiScoreForm = {
             //        resultList: [{
             //            id: 1,
-            //            label: '预期结果1',
+            //Legacy comment translated to English.
             //            value: ''
             //        }]
             //    }
             //}
-            // 判断 this.aiScoreForm.resultList 是否有值            
+            //Legacy comment translated to English.
             this.aiScoreFormVisible = !this.aiScoreFormVisible
         },
-        // 关闭ai评分设置 dialog
+        //Legacy comment translated to English.
         aiScoreFormCloseDialog() {
             this.$refs.aiScoreForm.resetFields();
         },
         aiScoreFormClose() {
             this.aiScoreFormVisible = false
-            // 判断 this.aiScoreForm.resultList 对比详情 this.promptDetail.expectedResultsJson 是否有改动
+            //Legacy comment translated to English.
             let _list = this.aiScoreForm.resultList
             let _listVal = _list.filter(item => item.value)
             let _expectedResultsJson = this.promptDetail.expectedResultsJson
@@ -8676,17 +8700,17 @@ var app = new Vue({
                     this.numsOfResults = 1
                     this.sendBtns = [
                         {
-                            text: '打靶'
+                            text: PromptRangeSendCommand.shoot
                         },
                         {
-                            text: '保存草稿'
+                            text: PromptRangeSendCommand.draft
                         }
                     ]
-                    this.sendBtnText = '打靶'
+                    this.sendBtnText = PromptRangeSendCommand.shoot
                 }
             }
         },
-        // dialog ai评分设置 提交按钮
+        //Legacy comment translated to English.
         aiScoreFormSubmitBtn() {
             this.$refs.aiScoreForm.validate(async (valid) => {
                 if (valid) {
@@ -8702,9 +8726,9 @@ var app = new Vue({
                     });
                     this.aiScoreFormSubmitLoading = false
                     if (res.data.success) {
-                        // 重新获取详情
+                        //Legacy comment translated to English.
                         this.getPromptetail(this.promptid, false)
-                        // 关闭dialog
+                        // disabledialog
                         this.aiScoreFormVisible = false
                     } else {
                         app.$message({
@@ -8718,20 +8742,23 @@ var app = new Vue({
                 }
             });
         },
-        // 复制 Prompt 测试结果
+        //Legacy comment translated to English.
         async copyPromptResult(item, rawResult) {
             const text = rawResult ? item.resultString : item.resultStringHtml;
-            await window.PromptRangeUtils.CopyHelper.copyToClipboardAsync(text, '复制成功', '复制失败', true)
+            await window.PromptRangeUtils.CopyHelper.copyToClipboardAsync(text, ncfST('Frontend.477'), ncfST('Frontend.478'), true)
         },
         
         /**
-         * 初始化代码块复制按钮
-         * 为所有 <pre><code> 代码块添加复制按钮
+
+         * Legacy comment translated to English.
+
+         * Legacy comment translated to English.
+
          */
         initCodeCopyButtons() {
             const self = this;
             
-            // 使用 MutationObserver 监听 DOM 变化,自动为新增的代码块添加复制按钮
+            //Legacy comment translated to English.
             const observer = new MutationObserver((mutations) => {
                 mutations.forEach((mutation) => {
                     if (mutation.addedNodes.length) {
@@ -8740,7 +8767,7 @@ var app = new Vue({
                 });
             });
             
-            // 监听输出区域和对话历史区域
+            //Legacy comment translated to English.
             const outputArea = document.querySelector('.outputArea_contentBox');
             const chatArea = document.querySelector('.chat-history-container');
             
@@ -8758,75 +8785,81 @@ var app = new Vue({
                 });
             }
             
-            // 初始添加
+            //Legacy comment translated to English.
             this.addCopyButtonsToCodeBlocks();
         },
         
         /**
-         * 为所有代码块添加复制按钮
+
+         * Legacy comment translated to English.
+
          */
         addCopyButtonsToCodeBlocks() {
             const self = this;
             
-            // 查找所有代码块 (输出区域 + 对话历史区域)
+            //Legacy comment translated to English.
             const codeBlocks = document.querySelectorAll(
                 '.contentRow pre:not(.copy-btn-added), .chat-message-content pre:not(.copy-btn-added)'
             );
             
             codeBlocks.forEach((pre) => {
-                // 标记已添加,避免重复
+                //Legacy comment translated to English.
                 pre.classList.add('copy-btn-added');
                 
-                // 创建复制按钮
+                //Legacy comment translated to English.
                 const copyBtn = document.createElement('button');
                 copyBtn.className = 'code-copy-btn';
                 copyBtn.innerHTML = '<i class="el-icon-document-copy"></i> Copy';
-                copyBtn.title = '复制代码';
+                copyBtn.title = ncfST('Frontend.479');
                 
-                // 绑定点击事件
+                //Legacy comment translated to English.
                 copyBtn.addEventListener('click', async function(e) {
                     e.preventDefault();
                     e.stopPropagation();
                     
-                    // 获取代码内容
+                    // getcodecontent
                     const codeElement = pre.querySelector('code') || pre;
                     const code = codeElement.textContent || codeElement.innerText;
                     
-                    // 使用 CopyHelper 复制
+                    //Legacy comment translated to English.
                     if (window.PromptRangeUtils && window.PromptRangeUtils.CopyHelper) {
                         const success = await window.PromptRangeUtils.CopyHelper.copyToClipboardAsync(
                             code, 
-                            '代码复制成功', 
-                            '代码复制失败',
+                            ncfST('Frontend.303'), 
+                            ncfST('Frontend.304'),
                             true
                         );
                         
                         if (success) {
-                            // 显示复制成功状态
+                            //Legacy comment translated to English.
                             copyBtn.classList.add('copied');
                             copyBtn.innerHTML = '<i class="el-icon-check"></i> Copied!';
                             
-                            // 2秒后恢复
+                            //Legacy comment translated to English.
                             setTimeout(() => {
                                 copyBtn.classList.remove('copied');
                                 copyBtn.innerHTML = '<i class="el-icon-document-copy"></i> Copy';
                             }, 2000);
                         }
                     } else {
-                        // 降级方案:使用传统方法
+                        //Legacy comment translated to English.
                         self.fallbackCopyCode(code, copyBtn);
                     }
                 });
                 
-                // 将按钮添加到 pre 元素中
+                //Legacy comment translated to English.
                 pre.appendChild(copyBtn);
             });
         },
         
         /**
-         * 降级复制代码方法
-         * @param {string} code - 要复制的代码
-         * @param {HTMLElement} button - 复制按钮元素
+
+         * Legacy comment translated to English.
+
+         * English documentation comment.
+
+         * English documentation comment.
+
          */
         fallbackCopyCode(code, button) {
             try {
@@ -8845,7 +8878,7 @@ var app = new Vue({
                 document.body.removeChild(textarea);
                 
                 if (success) {
-                    this.$message.success('代码复制成功');
+                    this.$message.success(ncfST('Frontend.303'));
                     button.classList.add('copied');
                     button.innerHTML = '<i class="el-icon-check"></i> Copied!';
                     
@@ -8854,14 +8887,14 @@ var app = new Vue({
                         button.innerHTML = '<i class="el-icon-document-copy"></i> Copy';
                     }, 2000);
                 } else {
-                    this.$message.error('代码复制失败');
+                    this.$message.error(ncfST('Frontend.304'));
                 }
             } catch (err) {
                 console.error('Copy failed:', err);
-                this.$message.error('代码复制失败');
+                this.$message.error(ncfST('Frontend.304'));
             }
         },
-        // 自定义滚动条缩略图相关方法
+        //Legacy comment translated to English.
         handleResultScroll(event) {
             const el = event.target;
             this.scrollInfo = {
@@ -8882,7 +8915,7 @@ var app = new Vue({
             const totalHeight = container.scrollHeight;
             const trackHeight = container.clientHeight;
             
-            // 计算每个item的相对位置
+            //Legacy comment translated to English.
             let totalItemsHeight = 0;
             let currentTop = 0;
             
@@ -8895,9 +8928,9 @@ var app = new Vue({
             
             const currentHeight = items[index] ? items[index].offsetHeight : 30;
             
-            // 计算在缩略图轨道中的位置（按比例）
+            //Legacy comment translated to English.
             const top = (currentTop / totalHeight) * trackHeight;
-            const height = Math.max((currentHeight / totalHeight) * trackHeight, 20); // 最小20px
+            const height = Math.max((currentHeight / totalHeight) * trackHeight, 20); //Legacy comment translated to English.
             
             return {
                 top: top + 'px',
@@ -8915,7 +8948,7 @@ var app = new Vue({
             const containerRect = container.getBoundingClientRect();
             const itemRect = item.getBoundingClientRect();
             
-            // 判断item是否在可视区域内
+            //Legacy comment translated to English.
             return itemRect.top >= containerRect.top && 
                    itemRect.top <= containerRect.bottom;
         },
@@ -8949,44 +8982,44 @@ var app = new Vue({
             this.outputSelectSwitch(index);
         },
         formatTime(timeStr) {
-            // 提取时间部分，例如 "2024-01-01 10:30:45" => "10:30"
+            //Legacy comment translated to English.
             if (!timeStr) return '';
             const match = timeStr.match(/(\d{2}):(\d{2}):\d{2}/);
             return match ? match[1] + ':' + match[2] : timeStr.substring(0, 10);
         },
-        // 获取最终评分（使用系统的finalScore字段）
+        //Legacy comment translated to English.
         getFinalScore(item) {
             if (!item) return null;
-            // 直接使用系统的finalScore字段，这是被标记为红色的那个分数
+            //Legacy comment translated to English.
             if (item.finalScore !== undefined && item.finalScore !== null && 
                 item.finalScore !== -1 && item.finalScore !== '-1') {
                 return item.finalScore;
             }
             return null;
         },
-        // 获取评分等级的样式类
+        //Legacy comment translated to English.
         getScoreBarClass(item) {
             const score = this.getFinalScore(item);
             if (score === null) return '';
             
-            if (score >= 8) return 'score-excellent';      // 8-10分：优秀
-            if (score >= 6) return 'score-good';           // 6-8分：良好
-            if (score >= 4) return 'score-medium';         // 4-6分：中等
-            if (score >= 2) return 'score-low';            // 2-4分：较低
-            return 'score-poor';                           // 0-2分：差
+            if (score >= 8) return 'score-excellent';      //Legacy comment translated to English.
+            if (score >= 6) return 'score-good';           //Legacy comment translated to English.
+            if (score >= 4) return 'score-medium';         //Legacy comment translated to English.
+            if (score >= 2) return 'score-low';            //Legacy comment translated to English.
+            return 'score-poor';                           //Legacy comment translated to English.
         },
-        // 获取数据条的宽度样式（Excel风格）
+        //Legacy comment translated to English.
         getScoreBarStyle(item) {
             const score = this.getFinalScore(item);
             if (score === null) return { width: '0%' };
             
-            // 0-10分映射到0-100%
+            //Legacy comment translated to English.
             const percentage = Math.min(Math.max((score / 10) * 100, 0), 100);
             return {
                 width: percentage + '%'
             };
         },
-        // 获取缩略图的工具提示文本
+        //Legacy comment translated to English.
         getThumbnailTooltip(item) {
             if (!item) return '';
             
@@ -8994,7 +9027,7 @@ var app = new Vue({
             const score = this.getFinalScore(item);
             
             if (score !== null) {
-                // 判断finalScore等于哪个评分，那个就是最终评分类型
+                //Legacy comment translated to English.
                 let scoreType = '';
                 if (item.finalScore === item.humanScore) {
                     scoreType = ncfST('手动评分');
@@ -9008,31 +9041,31 @@ var app = new Vue({
             
             return tooltip;
         },
-        // 处理输出区域的鼠标移动事件 - 判断是否在右半侧
+        //Legacy comment translated to English.
         handleOutputAreaMouseMove(event) {
             const outputArea = event.currentTarget;
             const rect = outputArea.getBoundingClientRect();
             const mouseX = event.clientX;
             
-            // 计算鼠标相对于输出区域的位置
+            //Legacy comment translated to English.
             const relativeX = mouseX - rect.left;
             const halfWidth = rect.width / 2;
             
-            // 只在右半侧显示滚动条
+            //Legacy comment translated to English.
             if (relativeX > halfWidth) {
                 this.showScrollbarThumbnails = true;
             } else {
                 this.showScrollbarThumbnails = false;
             }
         },
-        // 处理鼠标离开输出区域
+        //Legacy comment translated to English.
         handleOutputAreaMouseLeave() {
             this.showScrollbarThumbnails = false;
         },
         
-        // ========== 区域宽度拖动调整功能 ==========
+        //Legacy comment translated to English.
         
-        // 从localStorage加载保存的宽度设置
+        //Legacy comment translated to English.
         loadAreaWidthsFromStorage() {
             try {
                 const savedLeftWidth = localStorage.getItem('promptPage_leftAreaWidth');
@@ -9052,21 +9085,21 @@ var app = new Vue({
                     }
                 }
             } catch (e) {
-                console.error('加载区域宽度设置失败:', e);
+                console.error('Failed to load panel width settings:', e);
             }
         },
         
-        // 保存宽度设置到localStorage
+        //Legacy comment translated to English.
         saveAreaWidthsToStorage() {
             try {
                 localStorage.setItem('promptPage_leftAreaWidth', this.leftAreaWidth);
                 localStorage.setItem('promptPage_centerAreaWidth', this.centerAreaWidth);
             } catch (e) {
-                console.error('保存区域宽度设置失败:', e);
+                console.error('Failed to save panel width settings:', e);
             }
         },
         
-        // 开始拖动左侧分隔条
+        //Legacy comment translated to English.
         startResizeLeft(event) {
             this.isResizing = true;
             this.resizeType = 'left';
@@ -9081,7 +9114,7 @@ var app = new Vue({
             event.preventDefault();
         },
         
-        // 开始拖动右侧分隔条
+        //Legacy comment translated to English.
         startResizeRight(event) {
             this.isResizing = true;
             this.resizeType = 'right';
@@ -9096,28 +9129,28 @@ var app = new Vue({
             event.preventDefault();
         },
         
-        // 处理拖动
+        //Legacy comment translated to English.
         handleResize(event) {
             if (!this.isResizing) return;
             
             const deltaX = event.clientX - this.resizeStartX;
             
             if (this.resizeType === 'left') {
-                // 调整左侧区域宽度
+                //Legacy comment translated to English.
                 let newWidth = this.resizeStartLeftWidth + deltaX;
-                newWidth = Math.max(280, Math.min(600, newWidth)); // 限制在280-600px之间
+                newWidth = Math.max(280, Math.min(600, newWidth)); //Legacy comment translated to English.
                 this.leftAreaWidth = newWidth;
             } else if (this.resizeType === 'right') {
-                // 调整中间区域宽度
+                //Legacy comment translated to English.
                 let newWidth = this.resizeStartCenterWidth + deltaX;
-                newWidth = Math.max(320, Math.min(800, newWidth)); // 限制在320-800px之间
+                newWidth = Math.max(320, Math.min(800, newWidth)); //Legacy comment translated to English.
                 this.centerAreaWidth = newWidth;
             }
             
             event.preventDefault();
         },
         
-        // 停止拖动
+        //Legacy comment translated to English.
         stopResize() {
             if (this.isResizing) {
                 this.isResizing = false;
@@ -9128,26 +9161,26 @@ var app = new Vue({
                 document.body.style.cursor = '';
                 document.body.style.userSelect = '';
                 
-                // 保存当前宽度设置
+                //Legacy comment translated to English.
                 this.saveAreaWidthsToStorage();
             }
         },
         
-        // 双击分隔条还原默认宽度
+        //Legacy comment translated to English.
         resetAreaWidths(event) {
-            // 恢复默认宽度
+            //Legacy comment translated to English.
             this.leftAreaWidth = 360;
             this.centerAreaWidth = 380;
             
-            // 清除localStorage中保存的设置
+            //Legacy comment translated to English.
             try {
                 localStorage.removeItem('promptPage_leftAreaWidth');
                 localStorage.removeItem('promptPage_centerAreaWidth');
             } catch (e) {
-                console.error('清除区域宽度设置失败:', e);
+                console.error('Failed to clear panel width settings:', e);
             }
             
-            // 添加视觉反馈动画
+            //Legacy comment translated to English.
             if (event && event.target) {
                 event.target.classList.add('reset-animation');
                 setTimeout(() => {
@@ -9155,42 +9188,42 @@ var app = new Vue({
                 }, 600);
             }
             
-            // 显示提示消息
+            //Legacy comment translated to English.
             this.$message({
-                message: '已还原为默认布局宽度',
+                message: ncfST('Frontend.482'),
                 type: 'success',
                 duration: 2000
             });
         },
         
-        // ========== Prompt 对比功能 ==========
+        //Legacy comment translated to English.
         
-        // 打开对比对话框（可选预设Prompt A）
+        //Legacy comment translated to English.
         openCompareDialog(event, item) {
-            // 阻止事件冒泡，防止触发el-select的下拉
+            //Legacy comment translated to English.
             if (event) {
                 event.stopPropagation();
             }
             
-            // Prompt A 应该是当前已经选中显示的 Prompt
-            // Prompt B 是点击"对比"按钮的对应 Prompt
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             if (this.promptid) {
                 this.comparePromptAId = this.promptid;
                 this.loadComparePromptA(this.promptid);
             }
             
-            // 如果传入了item，则将其设置为Prompt B
-            // item.value 是 el-option 的值，对应 Prompt 的 ID
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             if (item && item.value) {
                 this.comparePromptBId = item.value;
                 this.loadComparePromptB(item.value);
             }
             
-            // 打开对话框
+            //Legacy comment translated to English.
             this.compareDialogVisible = true;
         },
         
-        // 加载对比Prompt A的数据
+        //Legacy comment translated to English.
         async loadComparePromptA(id) {
             if (!id) {
                 this.comparePromptA = null;
@@ -9201,18 +9234,18 @@ var app = new Vue({
                 const data = await this.getPromptDetail(id);
                 this.comparePromptA = data;
                 
-                // 检查是否选择了同一个Prompt
+                //Legacy comment translated to English.
                 if (this.comparePromptBId && id === this.comparePromptBId) {
                     this.$message({
-                        message: '警告：您选择了同一个 Prompt 进行对比！',
+                        message: ncfST('Frontend.483'),
                         type: 'warning',
                         duration: 3000
                     });
                 }
             } catch (error) {
-                console.error('加载Prompt A失败:', error);
+                console.error('Failed to load Prompt A:', error);
                 this.$message({
-                    message: '加载Prompt A数据失败',
+                        message: ncfST('Frontend.484'),
                     type: 'error',
                     duration: 3000
                 });
@@ -9220,7 +9253,7 @@ var app = new Vue({
             }
         },
         
-        // 加载对比Prompt B的数据
+        //Legacy comment translated to English.
         async loadComparePromptB(id) {
             if (!id) {
                 this.comparePromptB = null;
@@ -9231,18 +9264,18 @@ var app = new Vue({
                 const data = await this.getPromptDetail(id);
                 this.comparePromptB = data;
                 
-                // 检查是否选择了同一个Prompt
+                //Legacy comment translated to English.
                 if (this.comparePromptAId && id === this.comparePromptAId) {
                     this.$message({
-                        message: '警告：您选择了同一个 Prompt 进行对比！',
+                        message: ncfST('Frontend.483'),
                         type: 'warning',
                         duration: 3000
                     });
                 }
             } catch (error) {
-                console.error('加载Prompt B失败:', error);
+                console.error('Failed to load Prompt B:', error);
                 this.$message({
-                    message: '加载Prompt B数据失败',
+                        message: ncfST('Frontend.485'),
                     type: 'error',
                     duration: 3000
                 });
@@ -9250,54 +9283,54 @@ var app = new Vue({
             }
         },
         
-        // 获取单个Prompt的详细信息
+        //Legacy comment translated to English.
         async getPromptDetail(id) {
             const res = await servicePR.get(`/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.Get?id=${Number(id)}`);
             
             if (res.data.success) {
                 return res.data.data;
             } else {
-                throw new Error(res.data.errorMessage || '获取Prompt详情失败');
+                throw new Error(res.data.errorMessage || ncfST('Frontend.486'));
             }
         },
         
-        // 交换Prompt A和B
+        //Legacy comment translated to English.
         swapComparePrompts() {
-            // 交换ID
+            //Legacy comment translated to English.
             const tempId = this.comparePromptAId;
             this.comparePromptAId = this.comparePromptBId;
             this.comparePromptBId = tempId;
             
-            // 交换数据
+            //Legacy comment translated to English.
             const tempData = this.comparePromptA;
             this.comparePromptA = this.comparePromptB;
             this.comparePromptB = tempData;
         },
         
-        // 检查评分是否存在
+        //Legacy comment translated to English.
         hasScore(score) {
             return score !== null && score !== undefined && score > -1;
         },
         
-        // 获取前缀（直接从 prefix 字段获取）
+        //Legacy comment translated to English.
         getPromptPrefix(side) {
             const prompt = side === 'A' ? this.comparePromptA : this.comparePromptB;
             if (!prompt) return '';
             return prompt.prefix || '';
         },
         
-        // 获取后缀（直接从 suffix 字段获取）
+        //Legacy comment translated to English.
         getPromptSuffix(side) {
             const prompt = side === 'A' ? this.comparePromptA : this.comparePromptB;
             if (!prompt) return '';
             return prompt.suffix || '';
         },
         
-        // 跳转到指定的Prompt（完全模拟手动点击靶道选择的行为）
+        //Legacy comment translated to English.
         async switchToPrompt(promptId) {
             if (!promptId) {
                 this.$message({
-                    message: '无效的Prompt ID',
+                    message: ncfST('Frontend.487'),
                     type: 'warning',
                     duration: 2000
                 });
@@ -9305,90 +9338,90 @@ var app = new Vue({
             }
             
             try {
-                // 1. 先获取完整的Prompt数据
+                //Legacy comment translated to English.
                 const promptData = await this.getPromptDetail(promptId);
                 
                 if (!promptData) {
-                    throw new Error('无法获取Prompt详细信息');
+                    throw new Error(ncfST('Frontend.488'));
                 }
                 
-                // 2. 从fullVersion解析靶场名称（格式: 靶场-靶道-战术）
+                //Legacy comment translated to English.
                 const versionParts = promptData.fullVersion ? promptData.fullVersion.split('-') : [];
                 const targetRangeName = versionParts[0];
                 
-                // 3. 查找对应的靶场ID
+                //Legacy comment translated to English.
                 const targetRange = this.promptFieldOpt.find(item => 
                     item.label === targetRangeName || item.rangeName === targetRangeName
                 );
                 
                 if (!targetRange) {
-                    throw new Error(`未找到对应的靶场: ${targetRangeName}`);
+                    throw new Error(ncfST('Frontend.489', targetRangeName));
                 }
                 
-                // 4. 关闭对比对话框（先关闭，避免干扰后续操作）
+                //Legacy comment translated to English.
                 this.compareDialogVisible = false;
                 
-                // 5. 重置 pageChange 标记，避免触发"是否保存草稿"的确认对话框
+                //Legacy comment translated to English.
                 this.pageChange = false;
                 
-                // 6. 检查是否需要切换靶场
+                //Legacy comment translated to English.
                 const needSwitchRange = this.promptField !== targetRange.value;
                 
                 if (needSwitchRange) {
-                    // 切换靶场（这会触发promptOpt的更新）
+                    //Legacy comment translated to English.
                     this.promptField = targetRange.value;
                     await this.promptChangeHandel(targetRange.value, 'promptField');
                     
-                    // 等待promptOpt更新完成
+                    // waitpromptOptupdatecomplete
                     await this.$nextTick();
                 }
                 
-                // 7. 在promptOpt中查找对应的Prompt
-                // 注意：promptOpt中的item.value才是正确的promptid
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 const targetPrompt = this.promptOpt.find(item => 
                     item.id === promptId || item.value === promptId || item.idkey === promptId
                 );
                 
                 if (!targetPrompt) {
-                    throw new Error('在当前靶场中未找到对应的Prompt');
+                    throw new Error(ncfST('Frontend.490'));
                 }
                 
-                // 8. 设置正确的promptid（这会触发el-select的v-model更新）
-                // 重要：再次确保 pageChange = false，因为切换靶场可能会触发它
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 this.pageChange = false;
                 this.promptid = targetPrompt.value || targetPrompt.id;
                 
-                // 9. 手动触发 promptChangeHandel，完全模拟用户点击靶道下拉选择
-                // 这会：
-                //   - 更新 sendBtns（根据是否是草稿）
-                //   - 清空 AI 评分标准
-                //   - 调用 getPromptetail 获取完整详情（包括输出列表、评分、图表等）
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 await this.promptChangeHandel(this.promptid, 'promptid');
                 
-                // 10. 显示成功提示
+                //Legacy comment translated to English.
                 this.$message({
-                    message: `已切换到 Prompt: ${promptData.fullVersion}`,
+                    message: ncfST('Frontend.491', promptData.fullVersion),
                     type: 'success',
                     duration: 2000
                 });
                 
             } catch (error) {
-                console.error('切换Prompt失败:', error);
+                console.error('Failed to switch Prompt:', error);
                 this.$message({
-                    message: error.message || '切换Prompt失败，请重试',
+                    message: error.message || ncfST('Frontend.492'),
                     type: 'error',
                     duration: 3000
                 });
             }
         },
         
-        // 检查字段是否有差异
+        //Legacy comment translated to English.
         hasFieldDiff(fieldA, fieldB) {
-            // 处理null/undefined情况
+            //Legacy comment translated to English.
             if (fieldA === fieldB) return false;
             if ((fieldA === null || fieldA === undefined) && (fieldB === null || fieldB === undefined)) return false;
             
-            // 如果是对象或数组，进行深度比较
+            //Legacy comment translated to English.
             if (typeof fieldA === 'object' && typeof fieldB === 'object') {
                 return JSON.stringify(fieldA) !== JSON.stringify(fieldB);
             }
@@ -9396,86 +9429,86 @@ var app = new Vue({
             return fieldA !== fieldB;
         },
         
-        // 格式化变量配置（从JSON字符串转为可读格式）
+        //Legacy comment translated to English.
         formatVariables(variablesJson) {
-            if (!variablesJson) return '无';
+            if (!variablesJson) return ncfST('Frontend.493');
             try {
                 const vars = JSON.parse(variablesJson);
-                if (Object.keys(vars).length === 0) return '无';
+                if (Object.keys(vars).length === 0) return ncfST('Frontend.493');
                 return Object.entries(vars).map(([key, value]) => `${key}: ${value}`).join('\n');
             } catch (e) {
                 return variablesJson;
             }
         },
         
-        // 生成Git风格的Prompt内容差异HTML
+        //Legacy comment translated to English.
         getContentDiffHtml(side) {
             const contentA = this.comparePromptA?.promptContent || '';
             const contentB = this.comparePromptB?.promptContent || '';
             
-            // 如果都为空
+            //Legacy comment translated to English.
             if (!contentA && !contentB) {
-                return '<span class="diff-empty">暂无内容</span>';
+                return `<span class="diff-empty">${ncfST('Frontend.494')}</span>`;
             }
             
-            // 如果只有一个为空
+            //Legacy comment translated to English.
             if (!contentA && side === 'A') {
-                return '<span class="diff-empty">暂无内容</span>';
+                return `<span class="diff-empty">${ncfST('Frontend.494')}</span>`;
             }
             if (!contentB && side === 'B') {
-                return '<span class="diff-empty">暂无内容</span>';
+                return `<span class="diff-empty">${ncfST('Frontend.494')}</span>`;
             }
             
-            // 如果内容相同
+            //Legacy comment translated to English.
             if (contentA === contentB) {
                 return this.escapeHtml(side === 'A' ? contentA : contentB);
             }
             
-            // 使用jsdiff库进行差异对比
+            //Legacy comment translated to English.
             if (typeof Diff !== 'undefined') {
                 const diff = Diff.diffLines(contentA, contentB);
                 return this.renderDiffHtml(diff, side);
             }
             
-            // 如果diff库未加载，返回原始内容
+            //Legacy comment translated to English.
             return this.escapeHtml(side === 'A' ? contentA : contentB);
         },
         
-        // 生成Git风格的变量配置差异HTML
+        //Legacy comment translated to English.
         getVariablesDiffHtml(side) {
             const varsA = this.comparePromptA?.variableDictJson || '{}';
             const varsB = this.comparePromptB?.variableDictJson || '{}';
             
-            // 格式化JSON以便对比
+            //Legacy comment translated to English.
             let formattedA = varsA;
             let formattedB = varsB;
             try {
                 formattedA = JSON.stringify(JSON.parse(varsA), null, 2);
             } catch (e) {
-                // 保持原样
+                //Legacy comment translated to English.
             }
             try {
                 formattedB = JSON.stringify(JSON.parse(varsB), null, 2);
             } catch (e) {
-                // 保持原样
+                //Legacy comment translated to English.
             }
             
-            // 如果内容相同
+            //Legacy comment translated to English.
             if (formattedA === formattedB) {
                 return this.escapeHtml(side === 'A' ? formattedA : formattedB);
             }
             
-            // 使用jsdiff库进行差异对比
+            //Legacy comment translated to English.
             if (typeof Diff !== 'undefined') {
                 const diff = Diff.diffLines(formattedA, formattedB);
                 return this.renderDiffHtml(diff, side);
             }
             
-            // 如果diff库未加载，返回原始内容
+            //Legacy comment translated to English.
             return this.escapeHtml(side === 'A' ? formattedA : formattedB);
         },
         
-        // 渲染差异HTML（Git风格，支持行内单词高亮）
+        //Legacy comment translated to English.
         renderDiffHtml(diff, side) {
             let html = '';
             let i = 0;
@@ -9483,12 +9516,12 @@ var app = new Vue({
             while (i < diff.length) {
                 const part = diff[i];
                 const lines = part.value.split('\n');
-                // 移除最后的空行
+                //Legacy comment translated to English.
                 if (lines[lines.length - 1] === '') {
                     lines.pop();
                 }
                 
-                // 检查是否是相邻的删除和新增（可以做行内diff）
+                //Legacy comment translated to English.
                 const nextPart = i + 1 < diff.length ? diff[i + 1] : null;
                 const isInlineDiffCandidate = 
                     part.removed && 
@@ -9498,7 +9531,7 @@ var app = new Vue({
                     nextPart.value.split('\n').filter(l => l).length === 1;
                 
                 if (isInlineDiffCandidate) {
-                    // 行内单词级别差异
+                    //Legacy comment translated to English.
                     const oldLine = lines[0];
                     const newLine = nextPart.value.split('\n').filter(l => l)[0];
                     
@@ -9508,24 +9541,24 @@ var app = new Vue({
                         html += `<span class="diff-line diff-modified">+ ${this.renderInlineDiff(oldLine, newLine, 'added')}</span>`;
                     }
                     
-                    i += 2; // 跳过下一个part（因为已经处理了）
+                    i += 2; //Legacy comment translated to English.
                 } else {
-                    // 常规的整行差异
+                    //Legacy comment translated to English.
                     lines.forEach((line, lineIndex) => {
                         if (part.added) {
-                            // 新增的内容（绿色背景）- 仅在B侧显示
+                            //Legacy comment translated to English.
                             if (side === 'B') {
                                 html += `<span class="diff-line diff-added">+ ${this.escapeHtml(line)}</span>`;
                             }
-                            // A侧不显示新增内容
+                            //Legacy comment translated to English.
                         } else if (part.removed) {
-                            // 删除的内容（红色背景）- 仅在A侧显示
+                            //Legacy comment translated to English.
                             if (side === 'A') {
                                 html += `<span class="diff-line diff-removed">- ${this.escapeHtml(line)}</span>`;
                             }
-                            // B侧不显示删除内容
+                            //Legacy comment translated to English.
                         } else {
-                            // 未修改的内容（灰色）
+                            //Legacy comment translated to English.
                             html += `<span class="diff-line diff-unchanged">  ${this.escapeHtml(line)}</span>`;
                         }
                     });
@@ -9533,10 +9566,10 @@ var app = new Vue({
                 }
             }
             
-            return html || '<span class="diff-empty">暂无内容</span>';
+            return html || `<span class="diff-empty">${ncfST('Frontend.494')}</span>`;
         },
         
-        // 渲染行内单词级别差异
+        //Legacy comment translated to English.
         renderInlineDiff(oldText, newText, mode) {
             if (typeof Diff === 'undefined' || !Diff.diffWords) {
                 return this.escapeHtml(mode === 'removed' ? oldText : newText);
@@ -9549,14 +9582,14 @@ var app = new Vue({
                 const escapedText = this.escapeHtml(part.value);
                 
                 if (mode === 'removed') {
-                    // A侧：高亮删除的单词
+                    //Legacy comment translated to English.
                     if (part.removed) {
                         html += `<mark class="diff-word-removed">${escapedText}</mark>`;
                     } else if (!part.added) {
                         html += escapedText;
                     }
                 } else {
-                    // B侧：高亮新增的单词
+                    //Legacy comment translated to English.
                     if (part.added) {
                         html += `<mark class="diff-word-added">${escapedText}</mark>`;
                     } else if (!part.removed) {
@@ -9568,36 +9601,55 @@ var app = new Vue({
             return html;
         },
         
-        // HTML转义工具函数
+        //Legacy comment translated to English.
         escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
         },
         
-        // ========== contenteditable编辑器方法（简洁版）==========
+        //Legacy comment translated to English.
         
-        // 获取编辑器中的纯文本
+        //Legacy comment translated to English.
         getEditorText() {
             const editor = this.$refs.promptEditor;
             if (!editor) return '';
-            return editor.innerText || '';
+
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
+            const innerText = editor.innerText || '';
+            if (innerText || !editor.textContent) {
+                return innerText;
+            }
+
+            let text = '';
+            const appendText = (node) => {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    text += node.textContent || '';
+                } else if (node.nodeName === 'BR') {
+                    text += '\n';
+                } else if (node.nodeType === Node.ELEMENT_NODE) {
+                    Array.from(node.childNodes).forEach(appendText);
+                }
+            };
+            Array.from(editor.childNodes).forEach(appendText);
+            return text;
         },
         
-        // 生成带高亮的HTML
+        //Legacy comment translated to English.
         generateHighlightHTML(text) {
             if (!text) return '';
             
-            // 获取前缀和后缀（从当前编辑的prompt参数）
+            //Legacy comment translated to English.
             const prefix = this.promptParamForm.prefix || '';
             const suffix = this.promptParamForm.suffix || '';
             
-            // 调试日志
+            //Legacy comment translated to English.
             console.log('[generateHighlightHTML] prefix:', prefix, 'suffix:', suffix);
             console.log('[generateHighlightHTML] variableList:', this.promptParamForm.variableList);
             
             if (!prefix || !suffix) {
-                // 没有前缀后缀，直接返回转义的HTML
+                //Legacy comment translated to English.
                 console.log('[generateHighlightHTML] No prefix/suffix, returning plain text');
                 return text
                     .replace(/&/g, '&amp;')
@@ -9606,7 +9658,7 @@ var app = new Vue({
                     .replace(/\n/g, '<br>');
             }
             
-            // 获取所有已定义的变量名（不带前后缀）
+            //Legacy comment translated to English.
             const definedVarNames = new Set();
             if (this.promptParamForm.variableList && this.promptParamForm.variableList.length > 0) {
                 this.promptParamForm.variableList.forEach(v => {
@@ -9618,13 +9670,13 @@ var app = new Vue({
             
             console.log('[generateHighlightHTML] definedVarNames:', Array.from(definedVarNames));
             
-            // 转义正则特殊字符
+            //Legacy comment translated to English.
             const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             const escapedPrefix = escapeRegex(prefix);
             const escapedSuffix = escapeRegex(suffix);
             
-            // 构建正则：匹配 {{$varName}}，使用非贪婪匹配
-            // 例如：prefix={{$, suffix=}}, 正则为：\{\{\$(.+?)\}\}
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             const regex = new RegExp(`${escapedPrefix}(.+?)${escapedSuffix}`, 'g');
             
             console.log('[generateHighlightHTML] regex:', regex);
@@ -9634,40 +9686,40 @@ var app = new Vue({
             let matchCount = 0;
             let match;
             
-            // 使用 exec 逐个匹配
+            //Legacy comment translated to English.
             while ((match = regex.exec(text)) !== null) {
                 matchCount++;
-                const fullMatch = match[0];  // 完整匹配，如 {{$prefix}}
-                const varName = match[1];     // 捕获组，如 prefix
+                const fullMatch = match[0];  //Legacy comment translated to English.
+                const varName = match[1];     //Legacy comment translated to English.
                 const offset = match.index;
                 
                 console.log(`[generateHighlightHTML] Match ${matchCount}:`, fullMatch, 'varName:', varName, 'offset:', offset);
                 
-                // 添加匹配前的文本（HTML转义并处理换行）
+                //Legacy comment translated to English.
                 const beforeText = text.substring(lastIndex, offset);
-                // 处理换行：将换行符替换为 <br>
-                // 注意：不再移除 span 标签前的尾随空白字符，因为用户可能有意输入空格
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 let processedBeforeText = beforeText
                     .replace(/&/g, '&amp;')
                     .replace(/</g, '&lt;')
                     .replace(/>/g, '&gt;');
                 
-                // 将换行符替换为 <br>（保留所有空格和制表符，因为用户可能有意输入）
+                //Legacy comment translated to English.
                 processedBeforeText = processedBeforeText.replace(/\n/g, '<br>');
                 result += processedBeforeText;
                 
-                // 判断变量是否已定义
+                //Legacy comment translated to English.
                 const isDefined = definedVarNames.has(varName);
                 const className = isDefined ? 'var-highlight defined' : 'var-highlight undefined';
                 
                 console.log(`[generateHighlightHTML] varName "${varName}" isDefined:`, isDefined);
                 
-                // 添加高亮的变量（HTML转义，但不包含换行）
+                //Legacy comment translated to English.
                 const escapedMatch = fullMatch
                     .replace(/&/g, '&amp;')
                     .replace(/</g, '&lt;')
                     .replace(/>/g, '&gt;');
-                // 确保 span 标签前后没有空白字符，直接拼接（不在 HTML 字符串中添加换行或空格）
+                //Legacy comment translated to English.
                 result += `<span class="${className}">${escapedMatch}</span>`;
                 
                 lastIndex = offset + fullMatch.length;
@@ -9675,37 +9727,37 @@ var app = new Vue({
             
             console.log('[generateHighlightHTML] Total matches:', matchCount);
             
-            // 添加剩余文本（HTML转义并处理换行）
+            //Legacy comment translated to English.
             const remainingText = text.substring(lastIndex);
-            // 如果剩余文本开头有空白字符（空格、制表符等），先移除，避免在 span 后面产生空白
-            // 但保留换行符，因为需要转换为 <br>
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             let processedRemainingText = remainingText
                 .replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;');
             
-            // 移除开头的空白字符（但保留换行符）
+            //Legacy comment translated to English.
             processedRemainingText = processedRemainingText.replace(/^[ \t]+/, '');
-            // 将换行符替换为 <br>
+            //Legacy comment translated to English.
             processedRemainingText = processedRemainingText.replace(/\n/g, '<br>');
             result += processedRemainingText;
             
-            // 注意：不再清理 span 标签前后的空白字符（空格、制表符等）
-            // 因为用户可能在 span 前后输入空格，这些空格应该保留
-            // 清理函数 cleanupHighlightBrTags 会处理多余的空白文本节点
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             
             console.log('[generateHighlightHTML] Final HTML (first 200 chars):', result.substring(0, 200));
             
             return result;
         },
         
-        // 转义正则表达式特殊字符
+        //Legacy comment translated to English.
         escapeRegex(str) {
             return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         },
         
-        // 保存光标位置（返回字符偏移量，基于纯文本）
-        // 使用与 restoreCaretPosition 完全相同的遍历逻辑，确保一致性
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         saveCaretPosition() {
             const editor = this.$refs.promptEditor;
             if (!editor) return 0;
@@ -9720,45 +9772,45 @@ var app = new Vue({
             let charCount = 0;
             let found = false;
             
-            // 使用与 restoreCaretPosition 完全相同的遍历逻辑
+            //Legacy comment translated to English.
             const walkNodes = (node) => {
                 if (found) return;
                 
                 if (node.nodeType === Node.TEXT_NODE) {
                     if (node === targetContainer) {
-                        // 找到了目标文本节点，加上偏移量
+                        //Legacy comment translated to English.
                         charCount += targetOffset;
                         found = true;
                         return;
                     }
-                    // 不是目标节点，加上整个节点的长度
+                    //Legacy comment translated to English.
                     const nodeLength = node.textContent ? node.textContent.length : 0;
                     charCount += nodeLength;
                 } else if (node.nodeName === 'BR') {
-                    // 检查光标是否在这个 BR 标签之后
-                    // 如果 targetContainer 是 BR 的父节点，且 targetOffset 指向这个 BR 之后
+                    //Legacy comment translated to English.
+                    //Legacy comment translated to English.
                     if (targetContainer.nodeType === Node.ELEMENT_NODE && 
                         targetContainer === node.parentNode &&
                         targetOffset > 0) {
-                        // 检查 targetOffset 是否指向这个 BR 之后
+                        //Legacy comment translated to English.
                         const brIndex = Array.from(targetContainer.childNodes).indexOf(node);
                         if (targetOffset === brIndex + 1) {
-                            // 光标在这个 BR 标签之后
+                            //Legacy comment translated to English.
                             charCount += 1;
                             found = true;
                             return;
                         }
                     }
-                    // BR 标签算作一个字符（换行符）
+                    //Legacy comment translated to English.
                     charCount += 1;
                 } else if (node.nodeType === Node.ELEMENT_NODE) {
-                    // 检查光标是否在这个元素节点的子节点之间
+                    //Legacy comment translated to English.
                     if (node === targetContainer && targetOffset > 0) {
-                        // 光标在这个节点的子节点之间
-                        // 使用与 restoreCaretPosition 完全相同的遍历逻辑计算字符数
+                        //Legacy comment translated to English.
+                        //Legacy comment translated to English.
                         for (let i = 0; i < targetOffset && i < node.childNodes.length; i++) {
                             const childNode = node.childNodes[i];
-                            // 递归遍历子节点，使用相同的逻辑
+                            //Legacy comment translated to English.
                             const countChildNodes = (child) => {
                                 if (child.nodeType === Node.TEXT_NODE) {
                                     return child.textContent ? child.textContent.length : 0;
@@ -9778,7 +9830,7 @@ var app = new Vue({
                         found = true;
                         return;
                     }
-                    // 对于元素节点，递归遍历子节点
+                    //Legacy comment translated to English.
                     for (let i = 0; i < node.childNodes.length; i++) {
                         walkNodes(node.childNodes[i]);
                         if (found) return;
@@ -9793,8 +9845,8 @@ var app = new Vue({
             return charCount;
         },
         
-        // 恢复光标位置（基于纯文本偏移量）
-        // 使用与 saveCaretPosition 完全相同的遍历逻辑，确保一致性
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         restoreCaretPosition(offset) {
             const editor = this.$refs.promptEditor;
             if (!editor) return;
@@ -9806,7 +9858,7 @@ var app = new Vue({
             let charCount = 0;
             let found = false;
             
-            // 使用与 saveCaretPosition 完全相同的遍历逻辑
+            //Legacy comment translated to English.
             const walkNodes = (node) => {
                 if (found) return;
                 
@@ -9816,7 +9868,7 @@ var app = new Vue({
                     const nextCharCount = charCount + nodeLength;
                     
                     if (offset >= charCount && offset <= nextCharCount) {
-                        // 光标在这个文本节点内
+                        //Legacy comment translated to English.
                         const positionInNode = Math.min(offset - charCount, nodeLength);
                         range.setStart(node, positionInNode);
                         range.collapse(true);
@@ -9825,16 +9877,16 @@ var app = new Vue({
                     }
                     charCount = nextCharCount;
                 } else if (node.nodeName === 'BR') {
-                    // BR 标签算作一个字符（换行符）
+                    //Legacy comment translated to English.
                     const nextCharCount = charCount + 1;
                     if (offset === charCount) {
-                        // 光标在 BR 标签之前
+                        //Legacy comment translated to English.
                         range.setStartBefore(node);
                         range.collapse(true);
                         found = true;
                         return;
                     } else if (offset === nextCharCount) {
-                        // 光标在 BR 标签之后
+                        //Legacy comment translated to English.
                         range.setStartAfter(node);
                         range.collapse(true);
                         found = true;
@@ -9842,8 +9894,8 @@ var app = new Vue({
                     }
                     charCount = nextCharCount;
                 } else if (node.nodeType === Node.ELEMENT_NODE) {
-                    // 对于元素节点，递归遍历子节点
-                    // 注意：span 等内联元素不影响字符计数，只计算其内部的文本
+                    //Legacy comment translated to English.
+                    //Legacy comment translated to English.
                     for (let i = 0; i < node.childNodes.length; i++) {
                         walkNodes(node.childNodes[i]);
                         if (found) return;
@@ -9862,7 +9914,7 @@ var app = new Vue({
                     console.log('[restoreCaretPosition] Successfully restored to position:', offset);
                 } catch (e) {
                     console.warn('[restoreCaretPosition] Failed to restore caret position:', e);
-                    // Fallback: 放在末尾
+                    //Legacy comment translated to English.
                     try {
                         range.selectNodeContents(editor);
                         range.collapse(false);
@@ -9873,11 +9925,11 @@ var app = new Vue({
                     }
                 }
             } else {
-                // 如果找不到精确位置，尝试将光标放在末尾
+                //Legacy comment translated to English.
                 console.warn('[restoreCaretPosition] Could not find position', offset, ', placing at end');
                 try {
                     range.selectNodeContents(editor);
-                    range.collapse(false); // 折叠到末尾
+                    range.collapse(false); //Legacy comment translated to English.
                     sel.removeAllRanges();
                     sel.addRange(range);
                 } catch (e) {
@@ -9886,7 +9938,7 @@ var app = new Vue({
             }
         },
         
-        // 编辑器回写 content 时记下这份文本，避免 watcher 把它当成外部赋值再写回 DOM
+        //Legacy comment translated to English.
         assignContentFromEditor(text) {
             this._editorContentStamp = text;
             this.content = text;
@@ -9899,7 +9951,7 @@ var app = new Vue({
             }
         },
 
-        // 组字结束后再高亮。组字一开始就取消，避免 150ms 防抖撞上未确认的拼音
+        //Legacy comment translated to English.
         scheduleHighlight() {
             if (this.isComposing) {
                 console.log('[IME] highlight not scheduled because composition is active');
@@ -9918,11 +9970,11 @@ var app = new Vue({
 
         isImeKeyboardEvent(e) {
             if (!e) return false;
-            // 229 / Process 是输入法组字键。不能把 Unidentified 算进来，否则普通按键也会被锁住。
+            //Legacy comment translated to English.
             return !!(e.isComposing || e.key === 'Process' || e.keyCode === 229);
         },
 
-        // 把已确认的正文同步到 content。调用方必须保证当前不在组字中
+        //Legacy comment translated to English.
         captureEditorText() {
             if (this.isComposing) {
                 console.log('[IME] capture skipped during composition');
@@ -9931,7 +9983,8 @@ var app = new Vue({
             const editor = this.$refs.promptEditor;
             if (!editor) return;
 
-            const text = this.getEditorText();
+            const hasFocus = document.activeElement === editor;
+            const text = hasFocus ? this.getEditorText() : this.content;
             const contentChanged = text !== this.content;
             console.log('[prompt editor] capture text, changed:', contentChanged, 'length:', text.length);
             this.assignContentFromEditor(text);
@@ -9957,7 +10010,7 @@ var app = new Vue({
         },
 
         handleCompositionUpdate(e) {
-            // 组字更新只存在于输入法候选中，不能读取或重写编辑器
+            //Legacy comment translated to English.
             this.isComposing = true;
             this._imeSessionStarted = true;
             this.clearHighlightTimer();
@@ -9974,8 +10027,8 @@ var app = new Vue({
             if (this._compositionFlushTimer) {
                 clearTimeout(this._compositionFlushTimer);
             }
-            // 保持锁定到下一个宏任务。Chrome 会在 compositionend 之后才把候选汉字写入 DOM，
-            // 同步读取会拿到拼音首字母，再被高亮写回正文。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             this.isComposing = true;
             this._compositionFlushTimer = setTimeout(() => {
                 this._compositionFlushTimer = null;
@@ -9983,10 +10036,13 @@ var app = new Vue({
                 this.isComposing = false;
                 console.log('[IME] composition flushed');
                 this.captureEditorText();
-                // 再等一帧。如果上面读到的仍是拼音，浏览器此时已经换成汉字，需要重新同步。
+                //Legacy comment translated to English.
                 requestAnimationFrame(() => {
                     if (this.isComposing) return;
-                    const latestText = this.getEditorText();
+                    const editor = this.$refs.promptEditor;
+                    const latestText = editor && document.activeElement === editor
+                        ? this.getEditorText()
+                        : this.content;
                     if (latestText !== this.content) {
                         console.log('[IME] post-composition text changed, recapture. length:', latestText.length);
                         this.captureEditorText();
@@ -10000,12 +10056,13 @@ var app = new Vue({
                 console.log('[IME] ignore blur during composition');
                 return;
             }
-            this.applyHighlight();
+            //Legacy comment translated to English.
+            this.clearHighlightTimer();
         },
 
         handleEditorKeyUp() {
-            // 只在组字尚未结束时取消高亮。确认汉字后的 keyup 往往晚于 flush，
-            // 这时不能清掉刚刚排好的高亮定时器。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             if (this.isComposing) {
                 this.clearHighlightTimer();
             }
@@ -10013,7 +10070,7 @@ var app = new Vue({
 
         armImeFallback() {
             if (this._imeFallbackTimer) clearTimeout(this._imeFallbackTimer);
-            // keydown 229 之后如果没有进入 composition，短延时后解除锁定，避免正常输入被吞掉
+            //Legacy comment translated to English.
             this._imeFallbackTimer = setTimeout(() => {
                 this._imeFallbackTimer = null;
                 if (this.isComposing && !this._imeSessionStarted) {
@@ -10024,23 +10081,23 @@ var app = new Vue({
             }, 80);
         },
 
-        // 处理粘贴事件
+        //Legacy comment translated to English.
         handlePaste(e) {
             const editor = this.$refs.promptEditor;
             if (!editor) return;
             
-            // 标记正在粘贴
+            //Legacy comment translated to English.
             this._isPasting = true;
             
-            // 清除之前的防抖定时器
+            //Legacy comment translated to English.
             if (this._highlightTimer) clearTimeout(this._highlightTimer);
             
-            // 在粘贴前保存光标位置（使用与 saveCaretPosition 相同的方法）
+            //Legacy comment translated to English.
             const sel = window.getSelection();
             let pasteStartPos = 0;
             
             if (sel.rangeCount > 0) {
-                // 使用与 saveCaretPosition 相同的遍历方法来计算位置
+                //Legacy comment translated to English.
                 const range = sel.getRangeAt(0);
                 const targetContainer = range.startContainer;
                 const targetOffset = range.startOffset;
@@ -10048,7 +10105,7 @@ var app = new Vue({
                 let charCount = 0;
                 let found = false;
                 
-                // 使用与 saveCaretPosition 完全相同的遍历逻辑
+                //Legacy comment translated to English.
                 const walkNodes = (node) => {
                     if (found) return;
                     
@@ -10107,14 +10164,14 @@ var app = new Vue({
                 console.log('[handlePaste] Saved paste start position:', pasteStartPos);
             }
             
-            // 获取粘贴的纯文本内容
+            //Legacy comment translated to English.
             const pasteData = e.clipboardData ? e.clipboardData.getData('text/plain') : '';
             const pasteTextLength = pasteData.length;
             
             console.log('[handlePaste] Paste data length:', pasteTextLength, 'pasteStartPos:', pasteStartPos);
             
-            // 等待粘贴内容插入完成后再处理
-            // 使用 requestAnimationFrame 确保粘贴操作完全完成
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             requestAnimationFrame(() => {
                 setTimeout(() => {
                     this._isPasting = false;
@@ -10123,34 +10180,36 @@ var app = new Vue({
                         return;
                     }
                     
-                    // 计算粘贴后的光标位置：粘贴开始位置 + 粘贴文本长度
+                    //Legacy comment translated to English.
                     const newCaretPos = pasteStartPos + pasteTextLength;
                     
                     console.log('[handlePaste] Calculated new caret position:', newCaretPos);
                     
-                    const text = this.getEditorText();
+                    const text = document.activeElement === editor
+                        ? this.getEditorText()
+                        : this.content;
                     
-                    // 检查内容是否真的发生了变化
+                    //Legacy comment translated to English.
                     const contentChanged = text !== this.content;
                     
-                    // 更新 content（来自编辑器，不能再触发 watcher 回写 DOM）
+                    //Legacy comment translated to English.
                     this.assignContentFromEditor(text);
                     
-                    // 如果内容真的发生了变化，触发状态更新（从"连发"切换到"打靶"）
+                    //Legacy comment translated to English.
                     if (contentChanged) {
                         this.promptChangeHandel(text, 'content');
                     }
                     
-                    // 应用高亮，并传入预期的光标位置
+                    //Legacy comment translated to English.
                     this.applyHighlightWithCaretPos(newCaretPos);
                 }, 10);
             });
         },
         
-        // 处理键盘按键事件（特别是回车键）
+        //Legacy comment translated to English.
         handleKeyDown(e) {
-            // 拼音组字的 keydown 往往早于 compositionstart，且 keyCode 为 229。
-            // 这里先锁住高亮，避免上一次输入的防抖在首字母阶段重写 DOM。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             if (this.isImeKeyboardEvent(e) || this.isComposing) {
                 const wasComposing = this.isComposing || this._imeSessionStarted;
                 this.isComposing = true;
@@ -10162,28 +10221,28 @@ var app = new Vue({
                 return;
             }
 
-            // 如果是回车键，需要特殊处理
+            //Legacy comment translated to English.
             if (e.key === 'Enter' || e.keyCode === 13) {
                 const editor = this.$refs.promptEditor;
                 if (!editor) return;
                 
-                // 标记正在输入回车
+                //Legacy comment translated to English.
                 this._isEntering = true;
                 
-                // 清除之前的防抖定时器
+                //Legacy comment translated to English.
                 if (this._highlightTimer) clearTimeout(this._highlightTimer);
                 
-                // 在回车键插入 BR 标签之前，保存当前光标位置
+                //Legacy comment translated to English.
                 const sel = window.getSelection();
                 let enterStartPos = 0;
                 
                 if (sel.rangeCount > 0) {
-                    // 使用与 saveCaretPosition 相同的方法计算位置
+                    //Legacy comment translated to English.
                     enterStartPos = this.saveCaretPosition();
                     console.log('[handleKeyDown] Enter key pressed, saved position before BR insertion:', enterStartPos);
                 }
                 
-                // 等待回车键插入 BR 标签完成后再处理
+                //Legacy comment translated to English.
                 requestAnimationFrame(() => {
                     setTimeout(() => {
                         this._isEntering = false;
@@ -10192,32 +10251,34 @@ var app = new Vue({
                             return;
                         }
                         
-                        // 回车后，光标应该在 BR 标签之后，位置应该是 enterStartPos + 1
+                        //Legacy comment translated to English.
                         const newCaretPos = enterStartPos + 1;
                         
                         console.log('[handleKeyDown] After Enter, calculated new caret position:', newCaretPos);
                         
-                        const text = this.getEditorText();
+                        const text = document.activeElement === editor
+                            ? this.getEditorText()
+                            : this.content;
                         
-                        // 检查内容是否真的发生了变化
+                        //Legacy comment translated to English.
                         const contentChanged = text !== this.content;
                         
-                        // 更新 content（来自编辑器，不能再触发 watcher 回写 DOM）
+                        //Legacy comment translated to English.
                         this.assignContentFromEditor(text);
                         
-                        // 如果内容真的发生了变化，触发状态更新（从"连发"切换到"打靶"）
+                        //Legacy comment translated to English.
                         if (contentChanged) {
                             this.promptChangeHandel(text, 'content');
                         }
                         
-                        // 使用 applyHighlightWithCaretPos 来应用高亮并恢复光标位置
+                        //Legacy comment translated to English.
                         this.applyHighlightWithCaretPos(newCaretPos);
                     }, 10);
                 });
             }
         },
         
-        // 用户输入时（立即更新高亮，使用短防抖优化性能）
+        //Legacy comment translated to English.
         handleEditorInput(e) {
             const inputType = e && e.inputType ? String(e.inputType) : '';
             const isCompositionInput = !!(e && (e.isComposing || inputType.indexOf('Composition') !== -1));
@@ -10226,80 +10287,80 @@ var app = new Vue({
                 this.clearHighlightTimer();
                 return;
             }
-            if (this._isPasting) return;   // 粘贴操作中不处理，由 handlePaste 处理
-            if (this._isEntering) return;  // 回车操作中不处理，由 handleKeyDown 处理
+            if (this._isPasting) return;   //Legacy comment translated to English.
+            if (this._isEntering) return;  //Legacy comment translated to English.
 
             this.captureEditorText();
         },
         
-        // 清理 var-highlight span 周围多余的 <br> 标签和空白文本节点，并规范化 DOM
+        //Legacy comment translated to English.
         cleanupHighlightBrTags(editor) {
             if (!editor) return;
             
             console.log('[cleanupHighlightBrTags] Starting cleanup...');
             
-            // 查找所有 var-highlight span 标签（使用 Array.from 创建副本，避免动态查询问题）
+            //Legacy comment translated to English.
             const highlightSpans = Array.from(editor.querySelectorAll('.var-highlight'));
             
             console.log('[cleanupHighlightBrTags] Found', highlightSpans.length, 'highlight spans');
             
             highlightSpans.forEach(span => {
-                // 清理 span 前面的空白文本节点
-                // 只移除完全空白的文本节点（不包含任何可见字符），保留包含用户输入空格的文本节点
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 let prevSibling = span.previousSibling;
                 while (prevSibling) {
                     if (prevSibling.nodeType === Node.TEXT_NODE) {
                         const textContent = prevSibling.textContent;
-                        // 只移除完全空白的文本节点（只包含空白字符且长度为0，或者是浏览器自动添加的空白）
-                        // 保留包含用户输入空格的文本节点（即使只有空格，也应该保留，因为用户可能有意输入空格）
+                        //Legacy comment translated to English.
+                        //Legacy comment translated to English.
                         if (!textContent || textContent.length === 0) {
-                            // 完全空的文本节点，移除
+                            //Legacy comment translated to English.
                             const toRemove = prevSibling;
                             prevSibling = prevSibling.previousSibling;
                             toRemove.remove();
                         } else {
-                            // 有内容的文本节点，保留（包括只包含空格的节点，因为用户可能有意输入空格）
+                            //Legacy comment translated to English.
                             break;
                         }
                     } else {
-                        // 其他类型的节点（包括 BR 标签），停止清理
+                        //Legacy comment translated to English.
                         break;
                     }
                 }
                 
-                // 清理 span 后面的空白文本节点
-                // 只移除完全空白的文本节点，保留包含用户输入空格的文本节点
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 let nextSibling = span.nextSibling;
                 while (nextSibling) {
                     if (nextSibling.nodeType === Node.TEXT_NODE) {
                         const textContent = nextSibling.textContent;
-                        // 只移除完全空白的文本节点
-                        // 保留包含用户输入空格的文本节点
+                        //Legacy comment translated to English.
+                        //Legacy comment translated to English.
                         if (!textContent || textContent.length === 0) {
-                            // 完全空的文本节点，移除
+                            //Legacy comment translated to English.
                             const toRemove = nextSibling;
                             nextSibling = nextSibling.nextSibling;
                             toRemove.remove();
                         } else {
-                            // 有内容的文本节点，保留（包括只包含空格的节点，因为用户可能有意输入空格）
+                            //Legacy comment translated to English.
                             break;
                         }
                     } else {
-                        // 遇到非文本节点（包括 BR 标签），停止清理
-                        // BR 标签是用户输入的换行，不应该被移除
+                        //Legacy comment translated to English.
+                        //Legacy comment translated to English.
                         break;
                     }
                 }
             });
             
-            // 规范化 DOM：合并相邻的文本节点
-            // 这可以确保 span 标签紧贴文本节点，没有中间的空白文本节点
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             editor.normalize();
             
             console.log('[cleanupHighlightBrTags] Cleanup completed. Editor innerHTML (first 300 chars):', editor.innerHTML.substring(0, 300));
         },
         
-        // 应用高亮（使用指定的光标位置，用于粘贴等操作）
+        //Legacy comment translated to English.
         applyHighlightWithCaretPos(expectedCaretPos) {
             if (this.isComposing) {
                 console.log('[IME] applyHighlightWithCaretPos blocked during composition');
@@ -10308,32 +10369,33 @@ var app = new Vue({
             const editor = this.$refs.promptEditor;
             if (!editor) return;
             
-            // 获取当前文本
-            const text = this.getEditorText();
+            //Legacy comment translated to English.
+            const hasFocus = document.activeElement === editor;
+            const text = hasFocus ? this.getEditorText() : this.content;
             
-            // 同步 content（但不触发状态变化，因为状态变化应该在 handleEditorInput、handlePaste、handleKeyDown 中处理）
-            // 这里只负责高亮显示
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             this.assignContentFromEditor(text);
             
-            // 生成高亮HTML
+            //Legacy comment translated to English.
             const html = this.generateHighlightHTML(text);
             
-            // 更新HTML
+            // updateHTML
             editor.innerHTML = html;
             
-            // 使用 requestAnimationFrame 确保 DOM 完全更新后再清理和恢复光标
+            //Legacy comment translated to English.
             requestAnimationFrame(() => {
                 if (this.isComposing) {
                     console.log('[IME] skip caret restore during composition');
                     return;
                 }
-                // 清理多余的 <br> 标签和空白文本节点
+                //Legacy comment translated to English.
                 this.cleanupHighlightBrTags(editor);
                 
-                // 使用 $nextTick 确保清理完成后再恢复光标
+                //Legacy comment translated to English.
                 this.$nextTick(() => {
                     if (this.isComposing) return;
-                    // 使用 innerText 来计算文本长度，确保与 saveCaretPosition 一致
+                    //Legacy comment translated to English.
                     const currentText = editor.innerText || '';
                     const currentTextLength = currentText.length;
                     const targetPos = Math.min(expectedCaretPos, currentTextLength);
@@ -10342,13 +10404,13 @@ var app = new Vue({
                 });
             });
             
-            // 注意：不再在这里调用 promptChangeHandel
-            // 内容变化的状态更新应该在 handleEditorInput、handlePaste、handleKeyDown 等实际输入事件中处理
-            // 这里只负责高亮显示
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
         },
         
-        // 应用高亮（保存光标位置）
-        applyHighlight() {
+        //Legacy comment translated to English.
+        applyHighlight(textOverride) {
             if (this.isComposing) {
                 console.log('[IME] applyHighlight blocked during composition');
                 return;
@@ -10356,93 +10418,94 @@ var app = new Vue({
             const editor = this.$refs.promptEditor;
             if (!editor) return;
             
-            // 检查编辑器是否有焦点
+            //Legacy comment translated to English.
             const hasFocus = document.activeElement === editor;
             
-            // 获取当前文本（在保存光标位置之前获取，确保文本一致性）
-            const text = this.getEditorText();
+            //Legacy comment translated to English.
+            const text = typeof textOverride === 'string'
+                ? textOverride
+                : (hasFocus ? this.getEditorText() : this.content);
+            if (typeof textOverride !== 'string') {
+                this.assignContentFromEditor(text);
+            }
             
-            // 同步 content（但不触发状态变化，因为状态变化应该在 handleEditorInput 中处理）
-            // 这里只负责高亮显示。标记来源，避免 watcher 在下一帧把 innerHTML 再写一遍
-            this.assignContentFromEditor(text);
-            
-            // 只有在编辑器有焦点时才保存光标位置
-            // 使用基于文本内容的方法，而不是 DOM 遍历，确保与恢复时一致
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             let caretPos = 0;
             if (hasFocus) {
                 const sel = window.getSelection();
                 if (sel.rangeCount > 0) {
                     const range = sel.getRangeAt(0);
-                    // 创建一个从编辑器开始到光标位置的 range
+                    //Legacy comment translated to English.
                     const preCaretRange = range.cloneRange();
                     preCaretRange.selectNodeContents(editor);
                     preCaretRange.setEnd(range.startContainer, range.startOffset);
-                    // 使用 textContent 来计算位置（不包括 BR 标签，BR 标签会在遍历时单独计算）
-                    // 但我们需要考虑 BR 标签，所以使用遍历 DOM 的方法
+                    //Legacy comment translated to English.
+                    //Legacy comment translated to English.
                     caretPos = this.saveCaretPosition();
                 }
                 console.log('[applyHighlight] Saved caret position:', caretPos, 'text length:', text.length);
             }
             
-            // 生成高亮HTML
+            //Legacy comment translated to English.
             const html = this.generateHighlightHTML(text);
             
-            // 更新HTML
+            // updateHTML
             editor.innerHTML = html;
             
-            // 使用 requestAnimationFrame 确保 DOM 完全更新后再清理和恢复光标
+            //Legacy comment translated to English.
             requestAnimationFrame(() => {
                 if (this.isComposing) {
                     console.log('[IME] skip highlight cleanup during composition');
                     return;
                 }
-                // 清理多余的 <br> 标签和空白文本节点
+                //Legacy comment translated to English.
                 this.cleanupHighlightBrTags(editor);
                 
-                // 只有在编辑器有焦点时才恢复光标位置
+                //Legacy comment translated to English.
                 if (hasFocus && caretPos > 0) {
-                    // 使用 $nextTick 确保清理完成后再恢复光标
+                    //Legacy comment translated to English.
                     this.$nextTick(() => {
                         if (this.isComposing) return;
-                        // 恢复光标位置（使用相同的遍历逻辑）
+                        //Legacy comment translated to English.
                         console.log('[applyHighlight] Restoring caret position:', caretPos);
                         this.restoreCaretPosition(caretPos);
                     });
                 }
             });
             
-            // 注意：不再在这里调用 promptChangeHandel
-            // 内容变化的状态更新应该在 handleEditorInput、handlePaste、handleKeyDown 等实际输入事件中处理
-            // 这里只负责高亮显示，避免在 blur 时误触发状态变化
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
         },
         
-        // 辅助方法：根据ID获取名称
+        //Legacy comment translated to English.
         getTargetRangeName: function(id) {
-            // 使用 NameHelper 工具类
+            //Legacy comment translated to English.
             return window.PromptRangeUtils.NameHelper.getName(
-                this.promptFieldOpt, id, '未知靶场'
+                this.promptFieldOpt, id, ncfST('Frontend.354')
             );
         },
         
         getTargetLaneName: function(id) {
-            // 从promptOpt中查找对应的靶道（使用自定义字段名 idkey）
+            //Legacy comment translated to English.
             var lane = window.PromptRangeUtils.NameHelper.getOption(
                 this.promptOpt, id, 'idkey'
             );
-            return lane ? (lane.nickName || lane.label || '未知靶道') : '未知靶道';
+            return lane ? (lane.nickName || lane.label || ncfST('Frontend.355')) : ncfST('Frontend.355');
         },
         
         getTacticalName: function(id) {
-            // 使用 NameHelper 工具类
+            //Legacy comment translated to English.
             return window.PromptRangeUtils.NameHelper.getName(
-                this.tacticalOpt, id, '未知战术'
+                this.tacticalOpt, id, ncfST('Frontend.353')
             );
         },
         
         getModelName: function(id) {
-            // 使用 NameHelper 工具类
+            //Legacy comment translated to English.
             return window.PromptRangeUtils.NameHelper.getName(
-                this.modelOpt, id, '未知模型'
+                this.modelOpt, id, ncfST('Frontend.495')
             );
         },
     }

@@ -1,16 +1,20 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：NeuCharWorkflowHumanInputController.cs
-    文件功能描述：等待人工输入节点的受控外部恢复接口
+    File name: NeuCharWorkflowHumanInputController.cs
+    File description: Controlled external resume endpoint for Human Input nodes
 
-    创建标识：Senparc - 20260815
+    Created by: Senparc - 20260815
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 支持 Human Input 人工节点暂停与外部恢复
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 support pausing and externally resuming Human Input nodes
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 增强工作流函数调用、任务控制与回放管理
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 improve workflow function calls, task control, and replay management
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -25,8 +29,10 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.NeuCharWorkflow.OHS.Local.Controllers;
 
 /// <summary>
-/// 外部调用方通过节点设置的恢复密钥读取当前待输入请求并提交一次性输入。
-/// 该接口允许匿名访问，但不会绕过恢复密钥校验；请求和恢复句柄只在当前 Host 进程中有效。
+/// External callers use the resume key configured on a node to read the pending
+/// input request and submit a one-time response. Anonymous access is allowed,
+/// but resume-key validation is still required; requests and resume handles are
+/// valid only within the current Host process.
 /// </summary>
 [ApiController]
 [AllowAnonymous]

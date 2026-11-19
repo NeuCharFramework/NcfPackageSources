@@ -73,6 +73,9 @@ public class AgentStudioRenderingTests
         await page.SectionWriters["scripts"]();
         var scripts = writer.ToString();
         Assert.IsTrue(scripts.Contains("window.ncfI18n", StringComparison.Ordinal));
+        Assert.IsTrue(scripts.Contains("window.AgentsManagerI18n", StringComparison.Ordinal));
+        Assert.IsFalse(scripts.Contains("\"AgentsManager.Studio.Title\":\"AgentsManager.Studio.Title\"", StringComparison.Ordinal),
+            "The Studio title must be emitted as localized content rather than its resource key.");
         Assert.IsTrue(scripts.Contains("src=\"/js/AgentsManager/three-loader.js?v=", StringComparison.Ordinal));
         Assert.IsFalse(scripts.Contains("<partial", StringComparison.OrdinalIgnoreCase));
         Assert.IsFalse(scripts.Contains("asp-append-version", StringComparison.Ordinal));

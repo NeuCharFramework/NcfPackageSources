@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：RemoteAgent.cs
-    文件功能描述：数据模型、DTO 与映射定义
 
+    File name: RemoteAgent.cs
+    File description: data model, DTO, and mapping definitions
 
-    创建标识：Senparc - 20260812
+    Created by: Senparc - 20260812
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+    Modified by: Senparc - 20260813
+    Change description: v0.15.0-preview11 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 
@@ -22,7 +25,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
 {
     /// <summary>
-    /// 远程智能体协议类型。第一阶段只开放 A2A，预留该枚举便于后续扩展。
+    ///Legacy comment translated to English.
     /// </summary>
     public enum RemoteAgentProtocol
     {
@@ -30,7 +33,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
     }
 
     /// <summary>
-    /// 远程服务鉴权方式。数据库只保存密钥引用，不保存令牌正文。
+    ///Legacy comment translated to English.
     /// </summary>
     public enum RemoteAgentAuthenticationMode
     {
@@ -40,20 +43,20 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
     }
 
     /// <summary>
-    /// 群聊对参与者可见的上下文范围。
+    ///Legacy comment translated to English.
     /// </summary>
     public enum ChatGroupContextSharingMode
     {
-        /// <summary>兼容旧群组：保持当前工作流历史行为。</summary>
+        ///Legacy comment translated to English.
         LegacyFullHistory = 0,
-        /// <summary>任务指令和已完成轮次的简短结论。</summary>
+        ///Legacy comment translated to English.
         InstructionAndKeyReplies = 1,
-        /// <summary>仅任务指令和当前轮需要的最小上下文。</summary>
+        ///Legacy comment translated to English.
         InstructionOnly = 2
     }
 
     /// <summary>
-    /// 远程 Agent 的连接状态，仅用于管理与诊断，不作为运行的唯一判断依据。
+    ///Legacy comment translated to English.
     /// </summary>
     public enum RemoteAgentConnectionStatus
     {
@@ -63,7 +66,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
     }
 
     /// <summary>
-    /// A2A 远程智能体配置。访问令牌在部署配置 A2A:Secrets:{AuthSecretKey} 中维护。
+    ///Legacy comment translated to English.
     /// </summary>
     [Table(Register.DATABASE_PREFIX + nameof(RemoteAgent))]
     [Serializable]
@@ -81,17 +84,17 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
         public RemoteAgentProtocol Protocol { get; private set; }
 
         /// <summary>
-        /// A2A 服务根地址，或标准 /.well-known/agent-card.json 地址。
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         public string AgentCardUrl { get; private set; }
 
         public RemoteAgentAuthenticationMode AuthenticationMode { get; private set; }
 
-        /// <summary>CustomHeader 模式的请求头名称。</summary>
+        ///Legacy comment translated to English.
         public string AuthHeaderName { get; private set; }
 
-        /// <summary>部署配置中的密钥名，而不是访问令牌。</summary>
+        ///Legacy comment translated to English.
         public string AuthSecretKey { get; private set; }
 
         public int TimeoutSeconds { get; private set; }

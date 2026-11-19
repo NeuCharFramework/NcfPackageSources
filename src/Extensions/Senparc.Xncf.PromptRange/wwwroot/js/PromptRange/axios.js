@@ -1,8 +1,11 @@
 ﻿/**
- * axios封装
- * 请求拦截、响应拦截、错误统一处理
+
+ * Axios wrapper.
+
+ * Centralizes request interception, response interception, and error handling.
+
  */
-// 创建一个axios实例
+// Create the Axios instance.
 var servicePR = axios.create({
     timeout: 100000 // request timeout
 });
@@ -19,7 +22,7 @@ function buildPromptRangeErrorMessage(data) {
 
     return `${baseMessage}\nRequestTempId: ${data.requestTempId}`;
 }
-// 请求拦截
+// Request interceptor.
 servicePR.interceptors.request.use(
     config => {
         if (config.method.toUpperCase() === 'POST') {
@@ -33,11 +36,11 @@ servicePR.interceptors.request.use(
         return Promise.reject(error);
     }
 );
-// 响应拦截器
+// Response interceptor.
 servicePR.interceptors.response.use(
     response => {
         //console.log('response', response)
-        // 二进制数据处理
+                // Binary response handling.
         //if (response.request.responseType === 'blob' || response.request.responseType === 'arraybuffer') {
         //    if (response.data.type === 'application/json') {
         //        const reader = new FileReader();
@@ -56,13 +59,13 @@ servicePR.interceptors.response.use(
         //} else
         if (response.status === 200) {
             if (response.request.responseType === 'blob' || response.request.responseType === 'arraybuffer') {
-                // console.log('文件流：', response)
+                //Legacy comment translated to English.
                 return Promise.resolve(response);
             } else if (response.data.success) {
                 return Promise.resolve(response);
             } else {
-                // 请求已发出，其他状态
-                // 切换隐藏时不给错误提示，直接刷新
+                // The request completed with an application-level error.
+                // Hidden state changes are refreshed without showing an alert.
                 if (response.config.url.includes('HideManager') || response.config.url.includes('ChangeState')) {
                     return;
                 }

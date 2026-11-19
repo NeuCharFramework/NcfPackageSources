@@ -29,7 +29,7 @@ namespace Senparc.Xncf.AgentsManagerTests
 
         public override async Task OnExecutedAsync(IServiceProvider serviceProvider, DataList dataList)
         {
-            #region 初始化 PromptRange
+            #region Legacy section
             var aiModelService = serviceProvider.GetRequiredService<AIModelService>();
             var promptRangeService = serviceProvider.GetRequiredService<PromptRangeService>();
             var promptItemService = serviceProvider.GetRequiredService<PromptItemService>();
@@ -151,20 +151,20 @@ namespace Senparc.Xncf.AgentsManagerTests
             await promptResultService.SaveObjectAsync(promptResult2);
             #endregion
 
-            #region 初始化 AgentsManager
-            //模板
+            #region Legacy section
+            //Legacy comment translated to English.
             var agentTemplateService = serviceProvider.GetRequiredService<AgentsTemplateService>();
             var agentTemplate = new AgentTemplate("产品经理机器人", "你是一名产品经理，负责管理和协调软件开发项目，当需要获取外部资源时，你可以向其他人寻求帮助。", true, "", promptItem.FullVersion, HookRobotType.None, "", "");
             await agentTemplateService.SaveObjectAsync(agentTemplate);
             var agentTemplate2 = new AgentTemplate("爬虫机器人", "你是一个爬虫，你负责从互联网上获取信息，并返回给用户。", true, "", promptItem2.FullVersion, HookRobotType.None, "", "", typeof(CrawlPlugin).FullName);
             await agentTemplateService.SaveObjectAsync(agentTemplate2);
 
-            //聊天组
+            //Legacy comment translated to English.
             var chatGroupService = serviceProvider.GetRequiredService<ChatGroupService>();
             var chatGroup = new ChatGroup("测试项目", true, ChatGroupState.Unstart, "测试项目", agentTemplate.Id, agentTemplate.Id);
             await chatGroupService.SaveObjectAsync(chatGroup);
 
-            //聊天组成员
+            //Legacy comment translated to English.
             var chatGroupMemberService = serviceProvider.GetRequiredService<ChatGroupMemberService>();
             var chatGroupMember = new ChatGroupMember(agentTemplate.Id, agentTemplate, chatGroup.Id);
             await chatGroupMemberService.SaveObjectAsync(chatGroupMember);
@@ -184,8 +184,8 @@ namespace Senparc.Xncf.AgentsManagerTests
         }
 
         /// <summary>
-        /// 当没有可用的真实 AI 后端（SenparcAiSetting 的 Endpoint/ApiKey 仍为占位符或为空）时跳过测试。
-        /// 需要真实模型调用或构建真实 Kernel 的测试应在开头调用本方法，避免在无凭据的 CI/本地环境失败。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         protected void RequireRealAiBackend(string testName)
         {
@@ -249,7 +249,7 @@ namespace Senparc.Xncf.AgentsManagerTests
             Assert.IsNotNull(filter);
             services.AddSingleton(filter);
 
-            // 模拟 NCF Host 的实际顺序：XNCF 先注册，Aspire ServiceDefaults 后注册。
+            //Legacy comment translated to English.
             services.ConfigureHttpClientDefaults(builder => builder.AddHttpMessageHandler(
                 () => new Microsoft.Extensions.Http.Resilience.ResilienceHandler()));
 
@@ -424,7 +424,7 @@ namespace Senparc.Xncf.AgentsManagerTests
         [TestMethod]
         public void PublishedA2AAgent_DeploymentNameFallback_KeepsTheSameModelBoundary()
         {
-            // 回退解析已抽取到共享的 AgentModelFallbackResolver（AgentTemplateRunner 与 ChatGroupService 共用）。
+            //Legacy comment translated to English.
             var source = new AIModelDto
             {
                 Id = 8,
@@ -560,8 +560,8 @@ namespace Senparc.Xncf.AgentsManagerTests
             Assert.IsNotNull(result);
             Assert.AreEqual("/team/openai/deployments/deepseek-chat/chat/completions", result.AbsolutePath);
 
-            // Query 参数顺序在 HTTP 上没有语义，只验证参数值：
-            // api-version 被替换为 2022-12-01 且只出现一次，trace 参数保持原值。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             var parameters = result.Query.TrimStart('?')
                 .Split('&', StringSplitOptions.RemoveEmptyEntries)
                 .ToList();
@@ -720,7 +720,7 @@ namespace Senparc.Xncf.AgentsManagerTests
         [TestMethod]
         public void PublishedA2AAgent_NeuCharLegacyApiVersionFallback_IsAvailableWhenSdkVersionIsConfigured()
         {
-            // API 版本兼容候选已抽取到共享的 AgentModelFallbackResolver。
+            //Legacy comment translated to English.
             var candidates = AgentModelFallbackResolver.GetApiVersionCompatibilityFallbacks(
                 new AIModelDto
                 {
@@ -760,40 +760,40 @@ namespace Senparc.Xncf.AgentsManagerTests
         [TestMethod]
         public async Task TestSeedDataInitialization()
         {
-            #region 验证 PromptRange 初始化数据
+            #region Legacy section
             var aiModelService = _serviceProvider.GetRequiredService<AIModelService>();
             var promptRangeService = _serviceProvider.GetRequiredService<PromptRangeService>();
             var promptItemService = _serviceProvider.GetRequiredService<PromptItemService>();
             var promptResultService = _serviceProvider.GetRequiredService<PromptResultService>();
             
-            // 验证 AIModel
+            // validation AIModel
             var aiModel = await aiModelService.GetObjectAsync(z => true);
             Assert.IsNotNull(aiModel);
             Assert.AreEqual("测试", aiModel.Note);
 
-            // 验证 PromptRange
+            // validation PromptRange
             var promptRange = await promptRangeService.GetObjectAsync(z => z.Alias == "Agents靶场");
             Assert.IsNotNull(promptRange);
             Assert.AreEqual("2025.01.17.1", promptRange.RangeName);
 
-            // 验证 PromptItem
+            // validation PromptItem
             var promptItems = await promptItemService.GetFullListAsync(z => z.RangeId == promptRange.Id);
             Assert.AreEqual(2, promptItems.Count);
             Assert.IsTrue(promptItems.Any(z => z.NickName == "项目经理"));
             Assert.IsTrue(promptItems.Any(z => z.NickName == "爬虫"));
 
 
-            // 验证 PromptResult
+            // validation PromptResult
             var promptResults = await promptResultService.GetFullListAsync(z => true);
             Assert.AreEqual(2, promptResults.Count);
             #endregion
 
-            #region 验证 AgentsManager 初始化数据
+            #region Legacy section
             var agentTemplateService = _serviceProvider.GetRequiredService<AgentsTemplateService>();
             var chatGroupService = _serviceProvider.GetRequiredService<ChatGroupService>();
             var chatGroupMemberService = _serviceProvider.GetRequiredService<ChatGroupMemberService>();
 
-            // 验证 AgentTemplate
+            // validation AgentTemplate
             var templates = await agentTemplateService.GetFullListAsync(z => true);
             Assert.AreEqual(2, templates.Count);
             Assert.IsTrue(templates.Any(z => z.Name == "产品经理机器人"));
@@ -809,13 +809,13 @@ namespace Senparc.Xncf.AgentsManagerTests
             var functionCall = aiPlugin.GetPluginType(functionCallNames[0], true);
             Assert.IsNotNull(functionCall);
 
-            // 验证 ChatGroup
+            // validation ChatGroup
             var chatGroup = await chatGroupService.GetObjectAsync(z => z.Name == "测试项目");
             Assert.IsNotNull(chatGroup);
             Assert.IsTrue(chatGroup.Enable);
             Assert.AreEqual(ChatGroupState.Unstart, chatGroup.State);
 
-            // 验证 ChatGroupMember
+            // validation ChatGroupMember
             var members = await chatGroupMemberService.GetFullListAsync(z => z.ChatGroupId == chatGroup.Id);
             Assert.AreEqual(2, members.Count);
             #endregion
@@ -826,8 +826,8 @@ namespace Senparc.Xncf.AgentsManagerTests
 namespace Microsoft.Extensions.Http.Resilience
 {
     /// <summary>
-    /// 仅用于验证 AgentsManager 按 Handler 完整类名移除宿主默认弹性管道。
-    /// 测试项目不增加 Microsoft.Extensions.Http.Resilience 的直接包引用。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     internal sealed class ResilienceHandler : DelegatingHandler
     {

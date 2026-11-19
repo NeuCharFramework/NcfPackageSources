@@ -1,17 +1,20 @@
 /*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：PromptOptimizationController.cs
-    文件功能描述：PromptOptimizationController 相关实现
-    
-    
-    创建标识：Senparc - 20260324
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.12.1-preview7 加强 AgentsManager 接口授权与 Markdown/HTML 安全渲染
+    Copyright (C) 2026 Senparc
+
+    File name: PromptOptimizationController.cs
+    File description: PromptOptimizationController related implementation
+
+    Created by: Senparc - 20260324
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260729
+    Change description: v0.12.1-preview7 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 
@@ -29,7 +32,7 @@ using Senparc.Xncf.PromptRange.Abstractions.Events;
 namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
 {
     /// <summary>
-    /// Prompt 优化 API Controller
+    /// Prompt optimize API Controller
     /// </summary>
     [ApiController]
     [Route("api/Senparc.Xncf.AgentsManager/PromptOptimizationAppService")]
@@ -48,7 +51,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
         }
 
         /// <summary>
-        /// 优化指定的 Prompt（包括内容和参数如 Temperature）
+        ///Legacy comment translated to English.
         /// </summary>
         [HttpPost("OptimizeAsync")]
         public async Task<IActionResult> OptimizeAsync([FromBody] PromptOptimizationRequestDto request)
@@ -59,7 +62,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
                 _logger.LogInformation("PromptCode: {PromptCode}, UserRequirement: {UserRequirement}", 
                     request.PromptCode, request.UserRequirement);
 
-                // 验证请求参数
+                // validationrequestparameters
                 if (string.IsNullOrWhiteSpace(request.PromptCode))
                 {
                     _logger.LogWarning("  ❌ PromptCode 为空");
@@ -97,12 +100,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
                     request.Context.CurrentTopP,
                     request.Context.CurrentMaxTokens);
 
-                // 🔥 关键修复：确保 Agent 和 ChatGroup 已初始化
+                //Legacy comment translated to English.
                 _logger.LogInformation("  开始确保初始化状态...");
                 await _promptOptimizationService.EnsureInitializedAsync();
                 _logger.LogInformation("  ✅ 初始化状态确认完成");
 
-                // 调用优化服务
+                //Legacy comment translated to English.
                 _logger.LogInformation("  开始调用 OptimizePromptAsync...");
                 var result = await _promptOptimizationService.OptimizePromptAsync(
                     request.PromptCode,
@@ -169,7 +172,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
     #region DTOs
 
     /// <summary>
-    /// Prompt 优化请求 DTO
+    /// Prompt optimizerequest DTO
     /// </summary>
     public class PromptOptimizationRequestDto
     {

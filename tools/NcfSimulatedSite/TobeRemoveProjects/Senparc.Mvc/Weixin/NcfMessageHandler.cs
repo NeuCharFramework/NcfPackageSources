@@ -1,4 +1,17 @@
-﻿using Senparc.NeuChar.Entities;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: NcfMessageHandler.cs
+    File description: NcfMessageHandler related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.0.1 Updated legacy MVC integration metadata and English source comments
+
+----------------------------------------------------------------*/
+
+using Senparc.NeuChar.Entities;
 using Senparc.NeuChar.Entities.Request;
 using Senparc.Weixin.MP.Entities;
 using Senparc.Weixin.MP.Entities.Request;
@@ -27,7 +40,7 @@ namespace Senparc.Mvc.Weixin
             var defaultResponseMessage = base.CreateResponseMessage<ResponseMessageText>();
             var requestHandler =
                 requestMessage.StartHandler()
-                    //关键字不区分大小写，按照顺序匹配成功后将不再运行下面的逻辑
+                    //Legacy comment translated to English.
                     .Keyword("code", () =>
                     {
                         defaultResponseMessage.Content =

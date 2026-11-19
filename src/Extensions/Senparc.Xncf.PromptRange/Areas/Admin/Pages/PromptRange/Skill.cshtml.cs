@@ -1,17 +1,20 @@
 /*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：Skill.cshtml.cs
-    文件功能描述：PromptRange Skill 管理页
-    
-    
-    创建标识：Senparc - 20261020
-    
-    修改标识：Senparc - 20261021
-    修改描述：v0.20.0 提供 Skill 管理页
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.20.8 enhance Sandbox functionality with language validation and request handling improvements
+    Copyright (C) 2026 Senparc
+
+    File name: Skill.cshtml.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20261020
+
+    Modified by: Senparc - 20261021
+    Change description: v0.20.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261103
+    Change description: v0.20.8 enhance Sandbox functionality with language validation and request handling improvements
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
 ----------------------------------------------------------------*/
 

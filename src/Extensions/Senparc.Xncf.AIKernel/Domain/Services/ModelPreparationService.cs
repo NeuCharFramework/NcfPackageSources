@@ -1,17 +1,20 @@
 /*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：ModelPreparationService.cs
-    文件功能描述：准备微调所需模型与数据
-    
-    
-    创建标识：Senparc - 20261014
-    
-    修改标识：Senparc - 20261021
-    修改描述：v0.17.0 准备微调所需模型与数据
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.17.0 add bilingual contextual documentation help with iframe dialog and new-window access
+    Copyright (C) 2026 Senparc
+
+    File name: ModelPreparationService.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20261014
+
+    Modified by: Senparc - 20261021
+    Change description: v0.17.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261103
+    Change description: v0.17.0 add bilingual contextual documentation help with iframe dialog and new-window access
+
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
 ----------------------------------------------------------------*/
 

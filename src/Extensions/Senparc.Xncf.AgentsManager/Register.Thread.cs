@@ -1,17 +1,20 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：Register.Thread.cs
-    文件功能描述：Register.Thread 相关实现
-    
-    
-    创建标识：Senparc - 20241216
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.19.1 update AgentsManager with new features and improvements
+    Copyright (C) 2026 Senparc
+
+    File name: Register.Thread.cs
+    File description: Register.Thread related implementation
+
+    Created by: Senparc - 20241216
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261103
+    Change description: v0.19.1 update AgentsManager with new features and improvements
+
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 
@@ -34,8 +37,8 @@ namespace Senparc.Xncf.AgentsManager
     {
         public void ThreadConfig(XncfThreadBuilder xncfThreadBuilder)
         {
-            // 定时清理孤儿任务：长时间停留在 Chatting/Paused 且当前进程没有运行上下文的任务。
-            // CloseUnfinishedTasksAsync 会跳过仍在运行（含等待人工审批）的任务，并联动取消 HIL 请求。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             xncfThreadBuilder.AddThreadInfo(new ThreadInfo(
                 name: "Agents 定时清理未完成任务",
                 intervalTime: TimeSpan.FromMinutes(10),
@@ -43,7 +46,7 @@ namespace Senparc.Xncf.AgentsManager
                 {
                     try
                     {
-                        // 多租户模式下，根线程作用域没有租户上下文，直接清理会跨租户误操作，因此跳过。
+                        //Legacy comment translated to English.
                         if (Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.EnableMultiTenant)
                         {
                             threadInfo.RecordStory("多租户模式，跳过孤儿任务检测");

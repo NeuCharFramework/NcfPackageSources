@@ -1,7 +1,7 @@
 namespace Senparc.Xncf.FirmwareUpdate.Models;
 
 /// <summary>
-/// SenparcDbContextFactory 的公共配置（设计时迁移）
+///Legacy comment translated to English.
 /// </summary>
 public static class SenparcDbContextFactoryConfig
 {

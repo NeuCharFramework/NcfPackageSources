@@ -2081,6 +2081,51 @@ assert.strictEqual(replayScrollTarget.top, 160,
     'Replay step navigation should center the selected node vertically.');
 assert.strictEqual(replayScrollTarget.behavior, 'smooth',
     'Replay step navigation should use a smooth scroll request.');
+const replayVerticalGraphContext = {
+    graph: {
+        layout: { direction: 'vertical' },
+        nodes: [{ id: 'source', x: 0, y: 0 }, { id: 'target', x: 0, y: 165 }]
+    },
+    canvasInset: 240,
+    findNode: replayVueOptions.methods.findNode,
+    isHorizontalLayout: replayVueOptions.methods.isHorizontalLayout
+};
+assert.strictEqual(replayVueOptions.methods.edgeStartX.call(replayVerticalGraphContext, { source: 'source' }), 381,
+    'Vertical replay edges should leave the source node through its bottom center.');
+assert.strictEqual(replayVueOptions.methods.edgeStartY.call(replayVerticalGraphContext, { source: 'source' }), 356,
+    'Vertical replay edges should leave the source node at its bottom edge.');
+assert.strictEqual(replayVueOptions.methods.edgeEndX.call(replayVerticalGraphContext, { target: 'target' }), 381,
+    'Vertical replay edges should enter the target node through its top center.');
+assert.strictEqual(replayVueOptions.methods.edgeEndY.call(replayVerticalGraphContext, { target: 'target' }), 405,
+    'Vertical replay edges should enter the target node at its top edge.');
+replayScrollTarget = null;
+const replayGraphCenterContext = {
+    graph: { nodes: [{ id: 'first', x: 300, y: 100 }, { id: 'second', x: 500, y: 300 }] },
+    canvasInset: 240,
+    canvasViewportSize: { width: 400, height: 300 },
+    $nextTick(callback) { callback(); },
+    $refs: {
+        canvasViewport: {
+            clientWidth: 400, clientHeight: 300, scrollWidth: 1200, scrollHeight: 900,
+            scrollLeft: 0, scrollTop: 0
+        }
+    }
+};
+replayVueOptions.methods.centerGraph.call(replayGraphCenterContext);
+assert.strictEqual(replayGraphCenterContext.$refs.canvasViewport.scrollLeft, 457,
+    'The initial replay view should center the first workflow node horizontally.');
+assert.strictEqual(replayGraphCenterContext.$refs.canvasViewport.scrollTop, 336,
+    'The initial replay view should center the workflow nodes vertically.');
+const replayCanvasSizeContext = {
+    graph: { nodes: [{ x: 500, y: 300 }] },
+    canvasInset: 240,
+    canvasViewportSize: { width: 1000, height: 600 }
+};
+const replayCanvasSize = replayVueOptions.computed.canvasSize.call(replayCanvasSizeContext);
+assert.strictEqual(replayCanvasSize.width, 1740,
+    'The replay canvas should reserve horizontal space so a centered graph is reachable by scrolling.');
+assert.strictEqual(replayCanvasSize.height, 1300,
+    'The replay canvas should reserve vertical space so a centered graph is reachable by scrolling.');
 
 async function verifyUnsavedChangeGuards() {
     let modalArguments = null;

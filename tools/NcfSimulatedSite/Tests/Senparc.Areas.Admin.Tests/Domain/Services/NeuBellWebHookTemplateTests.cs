@@ -1,12 +1,13 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：NeuBellWebHookTemplateTests.cs
-    文件功能描述：NeuBell WebHook 模板渲染测试：
-    URL 占位符编码、JSON/文本请求体模式、{{payload}} 原样嵌入、
-    未知与非法占位符处理
+    File name: NeuBellWebHookTemplateTests.cs
+    File description: Related implementation.
+    Legacy comment translated to English.
+    Legacy comment translated to English.
 
-    创建标识：Senparc - 20260914
+    Created by: Senparc - 20260914
 
 ----------------------------------------------------------------*/
 

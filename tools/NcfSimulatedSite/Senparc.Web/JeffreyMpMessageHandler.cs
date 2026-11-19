@@ -1,4 +1,17 @@
-﻿using Senparc.NeuChar.App.AppStore;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: JeffreyMpMessageHandler.cs
+    File description: JeffreyMpMessageHandler related implementation
+
+    Created by: Senparc - 20241121
+
+    Modified by: Senparc - 20261119
+    Change description: v0.39.9 Updated module behavior, localization metadata, and English source comments
+
+----------------------------------------------------------------*/
+
+using Senparc.NeuChar.App.AppStore;
 using Senparc.NeuChar.Entities;
 using Senparc.NeuChar.MessageHandlers;
 using Senparc.Weixin.MP.Entities;
@@ -23,7 +36,7 @@ namespace Senparc.Web
         private readonly ServiceProvider _services;
 
 
-        //特殊的构造函数
+        //Legacy comment translated to English.
         public JeffreyMpMessageHandler(MpAccountDto mpAccountDto, Stream stream, PostModel postModel, int maxRecordCount, ServiceProvider services) : this(stream, postModel, maxRecordCount)
         {
             this._mpAccountDto = mpAccountDto;

@@ -1,170 +1,173 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.12.28</Version>
-		<PackageReleaseNotes>    [2026-07-02] v0.0.2 支持流式输出并优化交互体验，优化 AgentsManager 前端界面与历史消息展示效果
-    1、支持流式输出并优化交互体验
-    2、优化 AgentsManager 前端界面与历史消息展示效果
-    [2026-07-05] v0.0.3 新增登录超时配置并补齐多数据库迁移支持，重构系统配置初始化与更新流程并统一模型处理
-    1、新增登录超时配置并补齐多数据库迁移支持
-    2、重构系统配置初始化与更新流程并统一模型处理
-    [2026-07-05] v0.0.4 新增登录超时配置并补齐多数据库迁移支持，重构系统配置初始化与更新流程并统一模型处理
-    1、新增登录超时配置并补齐多数据库迁移支持
-    2、重构系统配置初始化与更新流程并统一模型处理
-    [2026-07-07] v0.0.5 优化后台当前账号名显示逻辑并增强回退兼容性
-    1、Header 与 Vue Layout 优先读取 User.Identity.Name，并兼容 AdminWorkContext 与 Model.UserName 回退
-    2、修复账号名称缺失场景下顶部显示异常问题，提升后台展示稳定性
-    3、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
-    [2026-07-17] v0.1.0 完善后台管理界面、功能表单与多语言资源本地化
-    1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
-    2、更新 FunctionRender 与请求模型文案的资源化解析
-    3、统一模块注册信息、菜单名称与功能描述的本地化输出
-    4、同步管理页面与前端交互文案的多语言显示
-    5、增加 XNCF 模块批量更新操作并完善后台管理资源本地化
-    6、增加 AdminChatAppService 与 AdminChatSyncEvent
-    7、为桌面端管理交互提供站点侧同步能力
-    [2026-07-29] v0.2.0 增强后台管理员交互与桌面 Admin Chat 安全同步
-    1、完善后台管理员信息、模块管理和聊天流式交互的状态处理
-    2、通过 AdminOnly JWT 保护桌面同步接口并限制同步内容
-    [2026-07-31] v0.2.1 适配 AgentKernel 原生聊天接口与 CO2NET 4.2.0
-    1、将后台聊天调用切换到新版 RunChatAsync 接口并保留会话重试行为
-    2、升级 Senparc.AI 组件版本以消除旧 CO2NET 扩展方法签名依赖
-    [2026-08-04] v0.3.0 新增后台纽铃管理与可配置多语言页脚
-    1、新增纽铃提供程序目录、模块可用性判断、快照服务与控制器
-    2、支持后台配置 FooterContent 并完善页脚所有权和生命周期处理
-    3、统一中文“纽铃”与其他语言“NeuBell”，并迁移资源键、前端标识、API 路由和 SSE 事件名
-    4、增加纽铃 Provider 内部触发测试及对应日志
-    [2026-08-08] v0.4.0 新增桌面管理员换票签发与 Host 实时指标展示
-    1、实现 DesktopAdminAuthTokenIssuer，将已验证 WebView 管理员身份换成受源会话寿命约束的 JWT
-    2、新增 HostMetricsCollector，采集并展示 CPU、内存、网络与进程实时指标
-    3、补充纽铃可见提醒示例 Provider 与请求参数，完善首页与页脚相关交互
-    4、同步多语言资源以支持指标面板与换票相关文案
-    [2026-08-13] v0.5.0 集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
-    1、新增 NeuCharPivot 工作流、执行日志、版本与自动保存管理入口
-    2、集成 A2A 发布配置、NeuBell、Webhook、回放和并行工作流页面
-    3、优化 AgentsManager 统计、操作交互及后台认证兼容
-    [2026-08-15] v0.5.1 优化管理端 AI 插件与知识库交互
-    1、适配 AgentsManager 与 KnowledgeBase 的新状态和请求流程，改善管理端模型助手调用与反馈
-    [2026-08-22] v0.6.0 新增管理端 Chat 会话工作流能力
-    1、新增 Admin Chat 会话工作流持久化、工具工厂和执行服务，支持工作流上下文复用
-    2、完善 Chat 模块选择、启动器交互和管理端 AI 工具调用反馈
-    [2026-08-29] v0.7.0 新增 NeuCharPivot 全局浮动调用与工作流分析管理能力
-    1、新增全局 NeuCharPivot 浮动入口、函数执行页和访问控制，改善模块功能导航
-    2、增加 NeuCharPivot 循环任务与 Workflow 关联的多数据库迁移和管理端状态处理
-    3、优化聚合模块、筛选栏、工具栏及函数匹配交互，保持 Admin Chat 与工作流配置兼容
-    [2026-09-15] v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
-    1、新增 Admin Chat Harness 执行、轨迹记录以及 Replay、Resume、Fork 和工具审批交互
-    2、完善 Admin Chat 消息轨迹持久化、NeuBell WebHook 配置和请求结果日志
-    3、增加 NeuCharPivot 管理页面、菜单排序和前端交互优化，并补齐多数据库迁移
-    [2026-09-16] v0.9.0 增强 Admin Chat 取消与推理轨迹，并扩展 NeuBell WebHook 请求能力
-    1、支持 Admin Chat 请求取消、推理内容流式展示及轨迹回放兼容
-    2、扩展 NeuBell WebHook 的 GET/POST/PUT 请求、请求体模板、URL 校验与请求日志
-    3、同步管理端页面交互、配置说明及多数据库迁移
-    [2026-09-17] v0.10.0 增强 Admin Chat FunctionRender 工具调用与参数 schema
-    1、支持实例 FunctionRender 方法绑定，并将选择项与显示文本写入 AI schema
-    2、同步 Senparc.AI.AgentKernel 至 0.1.14-preview5，保持后台 Chat 工具调用兼容
-    [2026-09-26] v0.11.0 管理员登录新增图形验证码（连续 2 次密码错误后启用），增强防爆破防护
-    1、新增 LoginCaptchaService：纯 SVG 高干扰验证码（逐字符旋转/位移/字号/颜色 + 干扰曲线与噪点），无第三方依赖
-    2、同一账号连续密码错误达到 2 次后登录必须通过图形验证码校验；验证码一次性、2 分钟时效，存于 CO2NET 对象缓存
-    3、登录页支持按用户名预判是否需要验证码、点击图片刷新，验证码错误/密码错误时服务端直接下发新验证码
-    4、补齐 6 语言资源（zh/en/ja/fr/es/ru）验证码相关文案
-    [2026-10-01] v0.10.2 等待租户菜单与权限初始化完成
-    1、初始化失败会在租户创建流程中显式传播，不再继续执行后续模块安装
-    [2026-10-01] v0.10.1 修复 NeuBell WebHook 监控订阅资源泄漏
-    1、轮询与事件订阅竞争结束后统一取消并等待未完成任务，确保 Channel 订阅及时释放
-    [2026-10-05] v0.10.3 持久化微信 Claw 会话上下文，支持 NeuBell 启动补偿推送与重复通知去重
-    [2026-10-09] v0.11.0 增强后台 Admin Chat 群组配置与提示词上下文控制
-    1、支持 Admin Chat 群组创建、提示词配置和模块助手上下文整理
-    2、限制历史消息与当前输入长度，提升后台对话稳定性和可控性
-    [2026-10-21] v0.11.1 增强后台对话的工作区、Skill 与会话体验
-    1、AdminChat 支持工作区上下文、最近任务与会话标题生成
-    2、接入 PromptRange Skill 目录与执行
-    3、调整对话布局、模块展示和助手头像样式
-    4、为会话增加工作区字段，并补齐各数据库迁移
-    5、适配 Senparc.AI.AgentKernel 0.1.15-preview2
-    [2026-10-24] Add private Workspace attachments, bounded local Office/PDF reading and explicit opt-in image vision. Preserve attachment references and original files; never insert binary Base64 into text prompts. Refresh live Markdown styles in the running host.
-    1. Upload, paste or drop up to 4 files per message. User uploads do not grant AI write/CLI permission. Read/write size limits come from Workspace configuration and are displayed by the upload control.
-    2. DOCX/XLSX/PPTX and text use local extraction; PDF text is read per page, up to 200 pages. Old DOC/XLS/PPT are stored without claiming text extraction. Scanned pages require OCR or explicitly authorized image screenshots; no paid OCR is called automatically.
-    3. Document tools paginate up to 4000 characters per call and share a 16000-character per-turn output budget with Workspace listing/reading/search. These are character safeguards, not exact token estimates; model-reported Usage remains authoritative.
-    4. Vision is off by default and limited to 2 images per message. Browsers create an EXIF-free JPEG preview with a maximum 1536-pixel side and 512 KB; original files remain unchanged. The selected model must support image input.
-    5. Chat messages persist only canonical attachment references and ETags in a nullable AttachmentsJson column. File changes invalidate stale references; generated migrations cover all six database providers.
-    6. Admin design-time factories locate the real Senparc.Web configuration when launched from DatabasePlant and refuse to silently target its example database.
-    [2026-10-24] Add authenticated HTML browser previews, bounded file/ZIP downloads, and expiring revocable read-only snapshot shares. Anonymous snapshots disable scripts and external resources; keep App_Data and Data Protection keys private and persistent.
-    1. Browser preview and downloads require session and Workspace ownership; anonymous links grant read-only access to a frozen HTML snapshot, never directory access or downloads.
-    2. Snapshots expire after 1 hour, 24 hours or 7 days; up to 10 active shares per owner. Revocation/expiry blocks new requests, not previously saved copies. Expired snapshots are purged on access or owner management.
-    3. HTML and each resource are limited to 2 MB, generated snapshots to 8 MB and 100 resources. ZIPs are limited to 1000 entries, 32 levels and 64 MB uncompressed; per-file reads also honor Workspace configuration.
-    4. App_Data/WorkspaceAssetShares is private encrypted storage outside wwwroot. Persist it and Data Protection keys together; replicas must share both. Use HTTPS, exclude capability URLs from access logs and keep App_Data out of static-file mappings/backups accessible to clients.
-    5. Fix doubled live Markdown line breaks without changing stream text, paragraphs or code-block whitespace.
-    [2026-10-24] Expand Workspace previews while preserving Chat minimum width; render Markdown with a source toggle.
-    [2026-10-24] Fix Chat Workspace asset panel template nesting, file entry fields, and split-pane resizing.
-    [2026-11-01] Improve missing custom NeuCharPivot Block handling
-    1. Show a friendly placeholder with the missing module UID and Function Code instead of opening an error popup.
-    2. Add hover/click guidance and prefilled links to the Pivot and module settings pages.
-    3. Preserve missing-block metadata when loading Admin home panels and cover the client fallback behavior with regression tests.
-    [2026-11-02] Upgrade Memory with database encryption, Workspace scopes, Off/Read-only/Learn modes, evidence/history, token budgets and compact dropdown settings.
-    [2026-11-02] Add private per-user tiered Chat Memory, opt-in automatic extraction with PromptRange, revision-safe editing, and personal/tenant SystemMessage settings.
-    [2026-11-02] Route AdminChat large attachments through streaming Workspace processing
-    1. Support files above the local parsing limit through a 300 MiB streaming upload endpoint.
-    2. Skip full-text extraction for large attachments and expose Workspace/Python batch-processing guidance with file size metadata.
-    [2026-11-02] Add shared bilingual contextual documentation help with an iframe dialog, new-window access and page/feature pilots.
-    [2026-11-02] Merge live Host metrics and historical resource trends into one linear, zoomable monitor with network throughput and selectable time ranges.
-    [2026-11-02] Display average/highest prompt scores and add score/PromptCode sorting to the shared PromptRange picker.
-    [2026-11-02] Add the reusable v-prompt-range selector with range/lane filters, keyword search, preview and cursor insertion; integrate both AdminChat composers.
-    [2026-11-02] Fix sparse resource-monitor rendering with ECharts 3 and reuse Host panel spacing, borders and header styles.
-    [2026-11-02] Restore the GetHostMetrics API binding and show specific global Pivot access denial reasons without changing access policies.
-    [2026-11-02] Add streamed large-file Workspace uploads and clean up unsubmitted Chat attachments
-    1. Add a multi-file Workspace management upload flow with a 300 MiB per-file limit and tenant-aware ownership checks.
-    2. Remove unsubmitted Chat attachment resources through a protected server endpoint and preserve submitted attachment files.
-    3. Allow the first Chat turn to be attachment-only and clean up pending resources when changing sessions.
-    [2026-11-02] v0.12.1 修复分支合并遗留的微信 Claw 绑定重复声明，保留实体及索引功能
-    [2026-11-03] Report verified Memory save outcomes and scopes, distinguish skipped/rejected extraction, and prevent assistant-only persistence claims; clarify private database storage.
-    [2026-11-03] Add collapsible Workspace groups, resizable/collapsible Chat sidebar, account-owned persistent in-group session ordering across devices, and reduced-motion-aware live task indicators.
-    [2026-11-03] Isolate AdminChat live generation, streamed messages, usage and trajectory callbacks by originating session; reject stale detail responses when navigating between sessions.
-    [2026-11-03] Redesign Memory settings with a structured header, collapsible guidance, consistent actions, scope badges and responsive layouts.
-    [2026-11-03] v0.12.15 增强 AdminChat 记忆存储、作用域及检索，并支持会话排序和侧栏调整
-    1、支持 Workspace 附件、流式大文件上传、预览与受控分享
-    2、增加 PromptRange 选择、双语上下文帮助、登录验证码和资源监控
-    3、完善多租户访问控制、数据库迁移和后台界面交互
-    4、Dependency update from Senparc.Ncf.Mvc.UI to 0.22.6-preview10
-    5、Dependency update from Senparc.Xncf.NeuCharWorkflow.Abstractions to 0.3.1
-    [2026-11-03] Expand bilingual documentation help to all interactive Admin pages, legacy forms and contextual panels; validate every route and anchor.
-    [2026-11-03] Add bilingual Memory documentation and contextual help for Chat launchers, modes, entries, loading reports, Markdown and SystemMessage settings.
-    [2026-11-03] Receive WorkspaceAgent runtime files through project references to fix mixed-configuration CI builds and publishing.
-    [2026-11-03] Version embedded Admin assets with content hashes to prevent stale documentation catalogs; keep contextual help attached to Chat controls without crowding sidebar actions.
-    [2026-11-05] v0.12.26 完善后台上下文帮助、现代皮肤与本地语音导航
-    1、允许按明确请求保存普通人物事实，并把同一会话内的有限引用整理为待审核候选，不自动持久化助手主张
-    2、提供可复用的 PromptCode 标注、干净的聊天引用持久化、共享人工或 AI 评分和只读提示词查询
-    3、仅在存在保存意图时自动变更记忆；对延后内容和非保存请求不做写入，并严格校验抽取结果
-    4、用有限上下文解析多轮记忆保存命令；自动持久化用户陈述的证据，助手衍生变更需要审核，并避免虚构的审核动作
-    5、提供基于滑块的 PromptCode 评分、实时草稿条、独立 Range 对比和只读预览
-    6、上下文帮助对齐已审核的双语界面章节和稳定锚点，区分页面概览与控件说明，并兼容旧章节链接
-    7、调整管理端现代皮肤、布局间距和页脚交互
-    8、新增浏览器本地语音导航，菜单匹配不上传音频或文本
-    9、为 Workspace 首页提供独立样式表
-    10、Dependency update from Senparc.Ncf.AreaBase to 0.23.10
-    11、Dependency update from Senparc.Ncf.Core to 0.30.4-preview10
-    12、Dependency update from Senparc.Ncf.Mvc.UI to 0.22.7-preview11
-    13、Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
-    14、Dependency update from Senparc.Xncf.PromptRange.Abstractions to 0.3.2-preview7
-    15、Dependency update from Senparc.Xncf.Workspace to 0.2.7
-    16、Dependency update from Senparc.Xncf.FileManager to 0.8.3
-    17、Dependency update from Senparc.Ncf.XncfBase to 0.28.2
-    18、Dependency update from Senparc.Xncf.WeixinManager to 0.24.18
-    19、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
-    20、Dependency update from Senparc.Xncf.Menu to 0.14.12
-    21、Dependency update from Senparc.Xncf.SystemCore to 0.14.12
-    22、Dependency update from Senparc.Xncf.SystemManager to 0.15.12
-    23、Dependency update from Senparc.Xncf.SystemPermission to 0.15.12
-    24、Dependency update from Senparc.Xncf.Tenant to 0.15.15
-    25、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.12
-    [2026-11-10] v0.12.27 将 Oracle 提示词引用列改为 NCLOB
-    1、AdminChat 消息的 PromptReferencesJson 在 Oracle 上使用 NCLOB，避免超过 NVARCHAR2(2000) 时被截断
-    [2026-11-11] v0.12.28 适配 Agent Framework Harness 1.28，并完善后台语言与语音导航
-    1、移除已删除的 DisableFileAccess，文件访问保持默认关闭。
-    2、依赖 Senparc.AI.AgentKernel 0.1.17 与 Microsoft Agent Framework Harness 1.28.0。
-    3、内置系统菜单和已加载 XNCF 模块菜单按当前文化重新解析显示文本，用户自定义菜单仍使用数据库原文。
-    4、语音导航优先使用浏览器本地语音识别，并补齐多语言提示。
-    5、Register 通过 XncfRegisterText 用稳定资源键解析菜单名称与模块说明。
+		<Version>0.12.29</Version>
+		<PackageReleaseNotes>[2026-07-02] v0.0.2 supportstreamingoutputimproveinteraction, improve AgentsManager frontendinterface
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-07-05] v0.0.3 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-07-05] v0.0.4 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-07-07] v0.0.5 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    3. Updated module behavior and related support.
+		    [2026-07-17] v0.1.0 Updated module behavior and related support.
+		    1. integrateshared resource-localization mechanism, supportmodulefeature textdisplay dynamically according to the current culture
+		    2. Updated module behavior and related support.
+		    3. Updated module behavior and related support.
+		    4. Updated module behavior and related support.
+		    5. Updated module behavior and related support.
+		    6. Updated module behavior and related support.
+		    7. Updated module behavior and related support.
+		    [2026-07-29] v0.2.0 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-07-31] v0.2.1 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-08-04] v0.3.0 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    3. Updated module behavior and related support.
+		    4. Updated module behavior and related support.
+		    [2026-08-08] v0.4.0 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    3. Updated module behavior and related support.
+		    4. Updated module behavior and related support.
+		    [2026-08-13] v0.5.0 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    3. Updated module behavior and related support.
+		    [2026-08-15] v0.5.1 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    [2026-08-22] v0.6.0 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-08-29] v0.7.0 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    3. Updated module behavior and related support.
+		    [2026-09-15] v0.8.0 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    3. Updated module behavior and related support.
+		    [2026-09-16] v0.9.0 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    3. Updated module behavior and related support.
+		    [2026-09-17] v0.10.0 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-09-26] v0.11.0 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    3. Updated module behavior and related support.
+		    4. Updated module behavior and related support.
+		    [2026-10-01] v0.10.2 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    [2026-10-01] v0.10.1 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    [2026-10-05] v0.10.3 Updated module behavior and related support.
+		    [2026-10-09] v0.11.0 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-10-21] v0.11.1 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    3. Updated module behavior and related support.
+		    4. Updated module behavior and related support.
+		    5. adapt Senparc.AI.AgentKernel 0.1.15-preview2
+		    [2026-10-24] Add private Workspace attachments, bounded local Office/PDF reading and explicit opt-in image vision. Preserve attachment references and original files; never insert binary Base64 into text prompts. Refresh live Markdown styles in the running host.
+		    1. Upload, paste or drop up to 4 files per message. User uploads do not grant AI write/CLI permission. Read/write size limits come from Workspace configuration and are displayed by the upload control.
+		    2. DOCX/XLSX/PPTX and text use local extraction; PDF text is read per page, up to 200 pages. Old DOC/XLS/PPT are stored without claiming text extraction. Scanned pages require OCR or explicitly authorized image screenshots; no paid OCR is called automatically.
+		    3. Document tools paginate up to 4000 characters per call and share a 16000-character per-turn output budget with Workspace listing/reading/search. These are character safeguards, not exact token estimates; model-reported Usage remains authoritative.
+		    4. Vision is off by default and limited to 2 images per message. Browsers create an EXIF-free JPEG preview with a maximum 1536-pixel side and 512 KB; original files remain unchanged. The selected model must support image input.
+		    5. Chat messages persist only canonical attachment references and ETags in a nullable AttachmentsJson column. File changes invalidate stale references; generated migrations cover all six database providers.
+		    6. Admin design-time factories locate the real Senparc.Web configuration when launched from DatabasePlant and refuse to silently target its example database.
+		    [2026-10-24] Add authenticated HTML browser previews, bounded file/ZIP downloads, and expiring revocable read-only snapshot shares. Anonymous snapshots disable scripts and external resources; keep App_Data and Data Protection keys private and persistent.
+		    1. Browser preview and downloads require session and Workspace ownership; anonymous links grant read-only access to a frozen HTML snapshot, never directory access or downloads.
+		    2. Snapshots expire after 1 hour, 24 hours or 7 days; up to 10 active shares per owner. Revocation/expiry blocks new requests, not previously saved copies. Expired snapshots are purged on access or owner management.
+		    3. HTML and each resource are limited to 2 MB, generated snapshots to 8 MB and 100 resources. ZIPs are limited to 1000 entries, 32 levels and 64 MB uncompressed; per-file reads also honor Workspace configuration.
+		    4. App_Data/WorkspaceAssetShares is private encrypted storage outside wwwroot. Persist it and Data Protection keys together; replicas must share both. Use HTTPS, exclude capability URLs from access logs and keep App_Data out of static-file mappings/backups accessible to clients.
+		    5. Fix doubled live Markdown line breaks without changing stream text, paragraphs or code-block whitespace.
+		    [2026-10-24] Expand Workspace previews while preserving Chat minimum width; render Markdown with a source toggle.
+		    [2026-10-24] Fix Chat Workspace asset panel template nesting, file entry fields, and split-pane resizing.
+		    [2026-11-01] Improve missing custom NeuCharPivot Block handling
+		    1. Show a friendly placeholder with the missing module UID and Function Code instead of opening an error popup.
+		    2. Add hover/click guidance and prefilled links to the Pivot and module settings pages.
+		    3. Preserve missing-block metadata when loading Admin home panels and cover the client fallback behavior with regression tests.
+		    [2026-11-02] Upgrade Memory with database encryption, Workspace scopes, Off/Read-only/Learn modes, evidence/history, token budgets and compact dropdown settings.
+		    [2026-11-02] Add private per-user tiered Chat Memory, opt-in automatic extraction with PromptRange, revision-safe editing, and personal/tenant SystemMessage settings.
+		    [2026-11-02] Route AdminChat large attachments through streaming Workspace processing
+		    1. Support files above the local parsing limit through a 300 MiB streaming upload endpoint.
+		    2. Skip full-text extraction for large attachments and expose Workspace/Python batch-processing guidance with file size metadata.
+		    [2026-11-02] Add shared bilingual contextual documentation help with an iframe dialog, new-window access and page/feature pilots.
+		    [2026-11-02] Merge live Host metrics and historical resource trends into one linear, zoomable monitor with network throughput and selectable time ranges.
+		    [2026-11-02] Display average/highest prompt scores and add score/PromptCode sorting to the shared PromptRange picker.
+		    [2026-11-02] Add the reusable v-prompt-range selector with range/lane filters, keyword search, preview and cursor insertion; integrate both AdminChat composers.
+		    [2026-11-02] Fix sparse resource-monitor rendering with ECharts 3 and reuse Host panel spacing, borders and header styles.
+		    [2026-11-02] Restore the GetHostMetrics API binding and show specific global Pivot access denial reasons without changing access policies.
+		    [2026-11-02] Add streamed large-file Workspace uploads and clean up unsubmitted Chat attachments
+		    1. Add a multi-file Workspace management upload flow with a 300 MiB per-file limit and tenant-aware ownership checks.
+		    2. Remove unsubmitted Chat attachment resources through a protected server endpoint and preserve submitted attachment files.
+		    3. Allow the first Chat turn to be attachment-only and clean up pending resources when changing sessions.
+		    [2026-11-02] v0.12.1 Updated module behavior and related support.
+		    [2026-11-03] Report verified Memory save outcomes and scopes, distinguish skipped/rejected extraction, and prevent assistant-only persistence claims; clarify private database storage.
+		    [2026-11-03] Add collapsible Workspace groups, resizable/collapsible Chat sidebar, account-owned persistent in-group session ordering across devices, and reduced-motion-aware live task indicators.
+		    [2026-11-03] Isolate AdminChat live generation, streamed messages, usage and trajectory callbacks by originating session; reject stale detail responses when navigating between sessions.
+		    [2026-11-03] Redesign Memory settings with a structured header, collapsible guidance, consistent actions, scope badges and responsive layouts.
+		    [2026-11-03] v0.12.15 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    3. Updated module behavior and related support.
+		    4. Dependency update from Senparc.Ncf.Mvc.UI to 0.22.6-preview10
+		    5. Dependency update from Senparc.Xncf.NeuCharWorkflow.Abstractions to 0.3.1
+		    [2026-11-03] Expand bilingual documentation help to all interactive Admin pages, legacy forms and contextual panels; validate every route and anchor.
+		    [2026-11-03] Add bilingual Memory documentation and contextual help for Chat launchers, modes, entries, loading reports, Markdown and SystemMessage settings.
+		    [2026-11-03] Receive WorkspaceAgent runtime files through project references to fix mixed-configuration CI builds and publishing.
+		    [2026-11-03] Version embedded Admin assets with content hashes to prevent stale documentation catalogs; keep contextual help attached to Chat controls without crowding sidebar actions.
+		    [2026-11-05] v0.12.26 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    3. Updated module behavior and related support.
+		    4. Updated module behavior and related support.
+		    5. Updated module behavior and related support.
+		    6. Updated module behavior and related support.
+		    7. Updated module behavior and related support.
+		    8. Updated module behavior and related support.
+		    9. Updated module behavior and related support.
+		    10. Dependency update from Senparc.Ncf.AreaBase to 0.23.10
+		    11. Dependency update from Senparc.Ncf.Core to 0.30.4-preview10
+		    12. Dependency update from Senparc.Ncf.Mvc.UI to 0.22.7-preview11
+		    13. Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
+		    14. Dependency update from Senparc.Xncf.PromptRange.Abstractions to 0.3.2-preview7
+		    15. Dependency update from Senparc.Xncf.Workspace to 0.2.7
+		    16. Dependency update from Senparc.Xncf.FileManager to 0.8.3
+		    17. Dependency update from Senparc.Ncf.XncfBase to 0.28.2
+		    18. Dependency update from Senparc.Xncf.WeixinManager to 0.24.18
+		    19. Dependency update from Senparc.Xncf.AreasBase to 0.13.12
+		    20. Dependency update from Senparc.Xncf.Menu to 0.14.12
+		    21. Dependency update from Senparc.Xncf.SystemCore to 0.14.12
+		    22. Dependency update from Senparc.Xncf.SystemManager to 0.15.12
+		    23. Dependency update from Senparc.Xncf.SystemPermission to 0.15.12
+		    24. Dependency update from Senparc.Xncf.Tenant to 0.15.15
+		    25. Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.12
+		    [2026-11-10] v0.12.27 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    [2026-11-11] v0.12.28 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    3. Updated module behavior and related support.
+		    4. Updated module behavior and related support.
+		    5. Updated module behavior and related support.
+		    [2026-11-19] v0.12.29 Localized administration, chat, and workflow surfaces
+		    1. Updated localized labels, resource fallbacks, and user-facing messages across affected surfaces.
+		    2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
 		</PackageReleaseNotes>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
 		<!--<RazorLangVersion>2.0</RazorLangVersion>-->

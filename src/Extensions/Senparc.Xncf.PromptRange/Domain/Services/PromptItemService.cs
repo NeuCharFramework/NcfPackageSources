@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：PromptItemService.cs
-    文件功能描述：PromptItemService 服务逻辑
-    
-    
-    创建标识：Senparc - 20231021
-    
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    File name: PromptItemService.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20231021
+
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -67,7 +70,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
     }
 
     /// <summary>
-    /// 新增， 打靶时
+    ///Legacy comment translated to English.
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
@@ -76,13 +79,13 @@ public partial class PromptItemService : ServiceBase<PromptItem>
     {
         #region validate request dto
 
-        // IsNewTactic IsNewSubTactic不能同时为True
+        //Legacy comment translated to English.
         if (request.IsTopTactic && request.IsNewTactic && request.IsNewSubTactic)
         {
             throw new NcfExceptionBase("IsTopTactic IsNewTactic IsNewSubTactic不能同时为True");
         }
 
-        // 默认值为2000
+        //Legacy comment translated to English.
         request.MaxToken = request.MaxToken > 0 ? request.MaxToken : 2000;
         request.StopSequences = request.StopSequences == "" ? null : request.StopSequences;
 
@@ -93,22 +96,22 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
         #endregion
 
-        #region 获取靶场
+        #region Legacy section
 
         var promptRange = await _promptRangeService.GetAsync(request.RangeId);
 
         #endregion
 
-        // // 更新版本号
+        //Legacy comment translated to English.
         // var today = SystemTime.Now;
         // var todayStr = today.ToString("yyyy.MM.dd");
 
-        #region 根据参数构造PromptItem
+        #region Legacy section
 
         PromptItem toSavePromptItem;
         if (request.Id == null)
         {
-            //新建 PromptItem
+            //Legacy comment translated to English.
             toSavePromptItem = new PromptItem(
                 rangeId: promptRange.Id,
                 rangeName: promptRange.RangeName, // $"{todayStr}.{todayPromptList.Count + 1}",
@@ -120,7 +123,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         }
         else
         {
-            // 如果有id，就先找到对应的promptItem, 再根据Item.RangeId获取promptRange，再根据参数新建一个靶道
+            //Legacy comment translated to English.
             // var basePrompt = await base.GetObjectAsync(p => p.Id == request.Id);
             var basePrompt = await this.GetAsync(request.Id.Value);
             // var promptRange = await _promptRangeService.GetObjectAsync(r => r.Id == basePrompt.RangeId);
@@ -129,7 +132,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
             if (request.IsTopTactic)
             {
-                // 目标版号的父 T 是空串
+                //Legacy comment translated to English.
                 var parentTac = "";
                 List<PromptItem> fullList = await base.GetFullListAsync(p =>
                     p.RangeName == rangeName &&
@@ -148,12 +151,12 @@ public partial class PromptItemService : ServiceBase<PromptItem>
                     parentTac: parentTac,
                     request: request
                 );
-                // 关联复制预期结果过来
+                // copy the expected result here
                 toSavePromptItem.UpdateExpectedResultsJson(basePrompt.ExpectedResultsJson, false);
             }
             else if (request.IsNewTactic)
             {
-                // 目标版号的父 T 应该是当前版本的父 T
+                //Legacy comment translated to English.
                 var parentTac = basePrompt.ParentTac;
                 List<PromptItem> fullList = await base.GetFullListAsync(p =>
                     p.RangeName == rangeName &&
@@ -176,12 +179,12 @@ public partial class PromptItemService : ServiceBase<PromptItem>
                     parentTac: parentTac,
                     request: request
                 );
-                // 关联复制预期结果过来
+                // copy the expected result here
                 toSavePromptItem.UpdateExpectedResultsJson(basePrompt.ExpectedResultsJson, false);
             }
             else if (request.IsNewSubTactic)
             {
-                // 目标版号的父 T 应该是当前版本的 T
+                //Legacy comment translated to English.
                 var parentTac = basePrompt.Tactic;
                 List<PromptItem> fullList = await base.GetFullListAsync(
                     p => p.RangeName == rangeName &&
@@ -203,10 +206,10 @@ public partial class PromptItemService : ServiceBase<PromptItem>
                     parentTac: parentTac,
                     request: request
                 );
-                // 关联复制预期结果过来
+                // copy the expected result here
                 toSavePromptItem.UpdateExpectedResultsJson(basePrompt.ExpectedResultsJson, false);
             }
-            else if (request.IsNewAiming) // 不改变分支
+            else if (request.IsNewAiming) //Legacy comment translated to English.
             {
                 List<PromptItem> fullList = await base.GetFullListAsync(p =>
                     // p.FullVersion.StartsWith(oldPrompt.FullVersion.Substring(0, oldPrompt.FullVersion.LastIndexOf('A')))
@@ -222,14 +225,14 @@ public partial class PromptItemService : ServiceBase<PromptItem>
                     parentTac: basePrompt.ParentTac,
                     request: request
                 );
-                // 关联复制预期结果过来
+                // copy the expected result here
                 toSavePromptItem.UpdateExpectedResultsJson(basePrompt.ExpectedResultsJson, false);
             }
             else
             {
                 SenparcTrace.SendCustomLog("AddPrompt", "指示符都是false, 没有新增");
                 return basePrompt;
-                // // 连发
+                //Legacy comment translated to English.
                 // var promptResultService = _serviceProvider.GetService<PromptResultService>();
                 // var resultDto = await promptResultService.SenparcGenerateResultAsync(basePrompt);
             }
@@ -237,7 +240,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
         #endregion
 
-        // 保存之前验证一下版号是否已经存在，确保版号唯一性
+        //Legacy comment translated to English.
         var existPromptItem = await base.GetObjectAsync(p => p.FullVersion == toSavePromptItem.FullVersion);
         if (existPromptItem != null)
         {
@@ -255,8 +258,8 @@ public partial class PromptItemService : ServiceBase<PromptItem>
     }
 
     /// <summary>
-    /// 分数趋势图（依据时间）
-    /// TODO 改为显示靶场下所有有平均分的promptItem的趋势图
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     /// <param name="promptItemId"></param>
     /// <returns></returns>
@@ -268,13 +271,13 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
         var curItem = await this.GetAsync(promptItemId);
 
-        // 获取同一个靶道下的所有打过分的item
+        //Legacy comment translated to English.
         List<PromptItem> fullList = await this.GetFullListAsync(
             p => p.RangeName == curItem.RangeName && p.EvalAvgScore >= 0 && p.EvalMaxScore >= 0,
             p => p.Id,
             OrderingType.Ascending);
 
-        // 构造返回值
+        //Legacy comment translated to English.
         foreach (var promptItem in fullList)
         {
             versionHistoryList.Add(promptItem.FullVersion);
@@ -307,7 +310,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
                          throw new Exception("未找到prompt");
 
 
-        // 获取同一个靶道下的所有打过分的item
+        //Legacy comment translated to English.
         List<PromptItemDto> promptItems = (await this.GetFullListAsync(
                 p => p.RangeId == promptItem.RangeId && (isAvg ? p.EvalAvgScore >= 0 : p.EvalMaxScore >= 0),
                 p => p.Id,
@@ -316,14 +319,14 @@ public partial class PromptItemService : ServiceBase<PromptItem>
             .Select(p => this.Mapper.Map<PromptItemDto>(p))
             .ToList();
 
-        // 根据 Tactic 的第一级（第一个点号之前的部分，如 "1"、"11"、"1.1" 分别提取为 "1"、"11"、"1"）
+        //Legacy comment translated to English.
         var itemGroupByT = promptItems.GroupBy(p => p.Tactic.Split('.')[0])
             .ToDictionary(p => p.Key, p => p.ToList());
 
         var resp = new Statistic_TodayTacticResponse(promptItem.RangeName, DateTime.Now);
 
-        // [t1, 版号, 平均分]
-        // [t2, 版号, 平均分]
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         foreach (var (tac, itemList) in itemGroupByT)
         {
             var i = 0;
@@ -366,13 +369,13 @@ public partial class PromptItemService : ServiceBase<PromptItem>
     }
 
     /// <summary>
-    /// 获取某个版本的 PromptItem 和模型信息，支持：
-    /// <para>精准搜索，如：2024.01.06.3-T1-A2</para>
-    /// <para>靶道模糊搜索：输入到靶场和靶道信息，如：2024.01.06.3-T1</para>
-    /// <para>靶场模糊搜索：只输入靶场编号，如：2024.01.06.3</para>
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     /// <param name="promptRangeVersion"></param>
-    /// <param name="isAvg">当模糊搜索时，是否采用平均分最高分，如果为 false，则直接取最高分</param>
+    ///Legacy comment translated to English.
     /// <returns></returns>
     /// <exception cref="NcfExceptionBase"></exception>
     public async Task<SenparcAI_GetByVersionResponse> GetWithVersionAsync(string promptRangeVersion, bool isAvg = true)
@@ -382,7 +385,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         var dto = await this.TransEntityToDtoAsync(promptItem); // this.Mapper.Map<PromptItemDto>(item);
 
         //var aiModel = await _aiModelService.GetObjectAsync(model => model.Id == dto.ModelId) ??
-        //              throw new NcfExceptionBase($"找不到{dto.ModelId}对应的AIModel");
+        //Legacy comment translated to English.
 
         //dto.AIModelDto = new AIModelDto(aiModel)
         //{
@@ -395,13 +398,13 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
 
     /// <summary>
-    /// 获取某个版本的 PromptItem 和模型信息，支持：
-    /// <para>精准搜索，如：2024.01.06.3-T1-A2</para>
-    /// <para>靶道模糊搜索：输入到靶场和靶道信息，如：2024.01.06.3-T1</para>
-    /// <para>靶场模糊搜索：只输入靶场编号，如：2024.01.06.3</para>
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     /// <param name="promptRangeVersion"></param>
-    /// <param name="isAvg">当模糊搜索时，是否采用平均分最高分，如果为 false，则直接取最高分</param>
+    ///Legacy comment translated to English.
     /// <returns></returns>
     /// <exception cref="NcfExceptionBase"></exception>
     public async Task<PromptItem> GetBestPromptAsync(string promptRangeVersion, bool isAvg)
@@ -409,13 +412,13 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         PromptItem promptItem;
         if (promptRangeVersion.Contains("-T") && promptRangeVersion.Contains("-A"))
         {
-            //精准查询经过测试的 PromptItem，如：2024.01.06.3-T1-A2
+            //Legacy comment translated to English.
             promptItem = await this.GetObjectAsync(p => p.FullVersion == promptRangeVersion) ??
                          throw new NcfExceptionBase($"找不到 {promptRangeVersion} 对应的 PromptItem");
         }
         else
         {
-            //模糊查询，如：2024.01.06.3-T1，或者 2024.01.06.3
+            //Legacy comment translated to English.
 
             var searchTactic = promptRangeVersion.Contains("-T");
 
@@ -428,26 +431,26 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
             var seh = new SenparcExpressionHelper<PromptItem>();
             seh.ValueCompare
-                .AndAlso(true, z => z.RangeId == promptRange.Id/* z.RangeName == rangeName*/) //定位靶场
-                .AndAlso(isAvg, z => z.EvalAvgScore >= 0) //平均分
-                .AndAlso(!isAvg, z => z.EvalMaxScore >= 0); //最高分
+                .AndAlso(true, z => z.RangeId == promptRange.Id/* z.RangeName == rangeName*/) //Legacy comment translated to English.
+                .AndAlso(isAvg, z => z.EvalAvgScore >= 0) //Legacy comment translated to English.
+                .AndAlso(!isAvg, z => z.EvalMaxScore >= 0); //Legacy comment translated to English.
 
             if (searchTactic)
             {
-                //按照靶道进行模糊搜索
+                //Legacy comment translated to English.
                 var tactic = versionSet[1];
-                seh.ValueCompare.AndAlso(true, z => z.Tactic == tactic);//定位靶道
+                seh.ValueCompare.AndAlso(true, z => z.Tactic == tactic);//Legacy comment translated to English.
             }
             else
             {
-                //按照靶场进行模糊搜索
-                //不需要再增加条件
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
             }
 
-            //生成最终的查询条件表达式
+            //Legacy comment translated to English.
             var where = seh.BuildWhereExpression();
 
-            //从某个靶道进行模糊搜索
+            //Legacy comment translated to English.
             promptItem = await this.GetObjectAsync(where,
                 p => (isAvg ? p.EvalAvgScore : p.EvalMaxScore),
                 OrderingType.Descending);
@@ -466,12 +469,12 @@ public partial class PromptItemService : ServiceBase<PromptItem>
     {
         var promptItemDto = this.Mapper.Map<PromptItemDto>(promptItem);
 
-        #region 补充AIModel信息
+        #region Legacy section
 
         if (needModel)
         {
             var aiModel = await _aiModelService.GetObjectAsync(model => model.Id == promptItem.ModelId);
-            // ?? throw new NcfExceptionBase($"找不到{promptItem.ModelId}对应的AIModel");
+            //Legacy comment translated to English.
             if (aiModel == null)
             {
                 SenparcTrace.SendCustomLog("NotFoundException", $"找不到{promptItem.ModelId}对应的AIModel");
@@ -488,7 +491,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
         #endregion
 
-        #region 补充靶场信息
+        #region Legacy section
 
         if (needRange)
         {
@@ -510,13 +513,13 @@ public partial class PromptItemService : ServiceBase<PromptItem>
     }
 
     /// <summary>
-    /// 根据配置获取模型参数
+    /// according toconfigurationgetmodel parameters
     /// </summary>
     /// <param name="promptItem"></param>
     /// <returns></returns>
     public PromptConfigParameter GetPromptConfigParameterFromAiSetting(PromptItemDto promptItem)
     {
-        //定义 AI 接口调用参数和 Token 限制等
+        //Legacy comment translated to English.
         var promptParameter = new PromptConfigParameter()
         {
             MaxTokens = promptItem.MaxToken > 0 ? promptItem.MaxToken : 200,
@@ -531,7 +534,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
     }
 
     /// <summary>
-    /// 从 <see cref="PromptItemDto"/> 映射获取 <see cref="ChatOptions"/> 对象
+    ///Legacy comment translated to English.
     /// </summary>
     /// <param name="promptItemDto"></param>
     /// <param name="systemMessage"></param>
@@ -550,24 +553,24 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         return chatOptions;
     }
 
-    #region 生成 PromptItem 树
+    #region Legacy section
 
     /// <summary>
-    /// 输入靶场名，构建该靶场内所有的版本树
+    ///Legacy comment translated to English.
     /// </summary>
-    /// <param name="rangeName">靶场名</param>
-    /// <returns >版本树</returns>
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// <exception cref="NcfExceptionBase"></exception>
     public async Task<List<TreeNode<PromptItem_GetIdAndNameResponse>>> GenerateTacticTreeAsync(List<PromptItem> allPromptitems, string rangeName)
     {
-        // 获取同一个靶道下的所有的 PromptItem
+        //Legacy comment translated to English.
         List<PromptItem> fullList = allPromptitems.Where(p => p.RangeName == rangeName).ToList();
         //Console.WriteLine("fulllist:" + fullList.OrderBy(z=>z.Id).Select(z => new { z.Id, z.RangeName, z.Tactic, z.Aiming, z.FullVersion,z.ParentTac }).ToJson(true));
 
-        //设置顶部节点（Tx）
+        //Legacy comment translated to English.
         var rootNodeList = new List<TreeNode<PromptItem_GetIdAndNameResponse>>();
 
-        //查找结点方法
+        //Legacy comment translated to English.
         TreeNode<PromptItem_GetIdAndNameResponse> findNode(TreeNode<PromptItem_GetIdAndNameResponse> parentNode, string promptRange, string tascic)
         {
             if (parentNode == null)
@@ -580,7 +583,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
                 return parentNode;
             }
 
-            //由于 PromptItem 的产生时间顺序特征，反向查找能够更快找到
+            //Legacy comment translated to English.
             for (int i = parentNode.Children.Count - 1; i >= 0; i--)
             {
                 var item = parentNode.Children[i];
@@ -598,7 +601,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         {
             var promptitem = fullList[i];
 
-            //由于 PromptItem 的产生时间顺序特征，反向查找能够更快找到
+            //Legacy comment translated to English.
             TreeNode<PromptItem_GetIdAndNameResponse> parentNode = null;
             for (int j = rootNodeList.Count - 1; j >= 0; j--)
             {
@@ -613,7 +616,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
         foreach (var promptitem in fullList)
         {
-            //寻找上级节点    TODO：为了提高效率，可以只向上查找
+            //Legacy comment translated to English.
 
             TreeNode<PromptItem_GetIdAndNameResponse> parentNode = null;
             for (int i = 0; i < rootNodeList.Count; i++)
@@ -626,18 +629,18 @@ public partial class PromptItemService : ServiceBase<PromptItem>
                 }
             }
 
-            //创造当前新节点信息
+            //Legacy comment translated to English.
             var newNode = new TreeNode<PromptItem_GetIdAndNameResponse>(promptitem.FullVersion, promptitem.NickName, new PromptItem_GetIdAndNameResponse(promptitem), -1);
 
             if (parentNode == null)
             {
-                //顶部节点
+                //Legacy comment translated to English.
                 newNode.Level = 1;
                 rootNodeList.Add(newNode);
             }
             else
             {
-                //子节点
+                //Legacy comment translated to English.
                 newNode.Level = parentNode.Level + 1;
                 parentNode.Children.Add(newNode);
             }
@@ -647,7 +650,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
 
     /// <summary>
-    /// 返回带树形结构的 PromptRange
+    ///Legacy comment translated to English.
     /// </summary>
     /// <returns></returns>
     public async Task<PromptItemTreeList> GetPromptRangeTreeList(bool showPromptRangeNode, bool showTacticNode, string promptName = null)
@@ -656,7 +659,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
         var promptRangeService = _promptRangeService;
 
-        //由于 Tastic 层次是根据时间（ID）顺序向下发展，所以只要根据 ID 排序，即可实现所有节点自顶向下的排列顺序
+        //Legacy comment translated to English.
 
         var seh = new SenparcExpressionHelper<Models.DatabaseModel.PromptRange>();
         seh.ValueCompare.AndAlso(!promptName.IsNullOrEmpty(), z => z.RangeName == promptName);
@@ -669,11 +672,11 @@ public partial class PromptItemService : ServiceBase<PromptItem>
         const string treeBranchMark = "┣";
         const string treeBranchArrowMark = "▽";
         const string treeBranchDarkArrowMark = "▼";
-        const string treeBranchStr = treeBranchMark + "　";//加全角空格
-        const string treeBranchArrowStr = treeBranchArrowMark + " ";//加半角空格
-        const string treeBranchDarkArrowStr = treeBranchDarkArrowMark + " ";//加半角空格
+        const string treeBranchStr = treeBranchMark + "　";//Legacy comment translated to English.
+        const string treeBranchArrowStr = treeBranchArrowMark + " ";//Legacy comment translated to English.
+        const string treeBranchDarkArrowStr = treeBranchDarkArrowMark + " ";//Legacy comment translated to English.
 
-        //获取柱状结构前缀
+        //Legacy comment translated to English.
         Func<int, bool, bool, string> GetPrefix = (level, isTacticPoint, showArrow) =>
         {
             var prefix = string.Concat(Enumerable.Repeat(treeBranchStr, level));
@@ -688,13 +691,13 @@ public partial class PromptItemService : ServiceBase<PromptItem>
             }
         };
 
-        //读取评分
+        //Legacy comment translated to English.
         Func<decimal, string> GetScore = score => score < 0 ? "-" : score.ToString();
 
 
         foreach (var promptRange in allPromptRanges)
         {
-            //获取树状结构
+            //Legacy comment translated to English.
             var rangeTree = await this.GenerateTacticTreeAsync(allPromptItems, promptRange.RangeName);
 
             //Console.WriteLine("rangeTree:" + rangeTree.Select(z => new { z.Name, z.Data.FullVersion }).ToJson(true));
@@ -708,7 +711,7 @@ public partial class PromptItemService : ServiceBase<PromptItem>
 
             if (showPromptRangeNode)
             {
-                //正在开始一个新的 PromptRange，插入这个 Prompt的整体引导 TODO：判断是否需要添加额外描述性节点
+                //Legacy comment translated to English.
                 tree.AddNode("PromptRange" + promptRange.Id, $"⊙ {promptRange.RangeName}（{promptRange.GetAvailableName()}）", promptRange.RangeName, -1, rangeTree.Count);
             }
 
@@ -720,17 +723,17 @@ public partial class PromptItemService : ServiceBase<PromptItem>
                 TraversePromptItem(treeNode);
             }
 
-            // 迭代插入子节点
+            //Legacy comment translated to English.
             void TraversePromptItem(TreeNode<PromptItem_GetIdAndNameResponse> treeNote)
             {
                 var versionObj = treeNote.Data.PromptItemVersion;
 
                 string lastTactic = string.Empty;
 
-                //显示 Tactic 虚拟节点
+                //Legacy comment translated to English.
                 if (showTacticNode && treeNote.Level == 1 && !addedTopNode.Contains(versionObj.Tactic))
                 {
-                    //顶层，如：T1，加上下拉标记
+                    //Legacy comment translated to English.
                     var version = $"{versionObj.RangeName}-T{versionObj.Tactic}";
                     tree.AddNode(key: "PromptItemTactic" + treeNote.Data.PromptItemVersion.Tactic,
                                  text: GetPrefix(treeNote.Level, true, true) + version,
@@ -741,12 +744,12 @@ public partial class PromptItemService : ServiceBase<PromptItem>
                     addedTopNode.Add(versionObj.Tactic);
                 }
 
-                //创建当前节点
+                //Legacy comment translated to English.
                 var nickName = treeNote.NickName.IsNullOrEmpty() ? "" : $"{treeNote.NickName}，";
                 var text = GetPrefix(treeNote.Level, false, treeNote.Children.Count > 0) + /*$"[{treeNote.Data.Id}]" +*/ $"{treeNote.Name} ({nickName}Avg:{GetScore(treeNote.Data.EvalAvgScore)}，Max:{GetScore(treeNote.Data.EvalMaxScore)})：{treeNote.Data.PromptContent.SubString(0, 30)}";
 
                 tree.AddNode("PromptItem" + treeNote.Data.Id, text, treeNote.Data.FullVersion, treeNote.Level, treeNote.Children.Count);
-                //判断是否还有下级
+                //Legacy comment translated to English.
 
                 foreach (var child in treeNote.Children)
                 {

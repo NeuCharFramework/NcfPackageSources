@@ -6,4 +6,50 @@
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <data name="Module.DesktopBridge.MenuName" xml:space="preserve"><value>DesktopBridge 桌面桥接</value></data>
   <data name="Module.DesktopBridge.Description" xml:space="preserve"><value>为 NCF 桌面机器人提供受保护的本机或远程状态、设备配对和 EventBus 活动流。</value></data>
+  <data name="AuthHandoff.Title" xml:space="preserve"><value>桌面 AdminChat 授权</value></data>
+  <data name="AuthHandoff.ConfirmTitle" xml:space="preserve"><value>授权桌面 AdminChat</value></data>
+  <data name="AuthHandoff.ConfirmDescription" xml:space="preserve"><value>确认后，当前 GUI 将以此管理员身份使用 AdminChat。只传递一次性授权结果，不会读取或复制浏览器 Cookie。</value></data>
+  <data name="AuthHandoff.GuiOnly" xml:space="preserve"><value>仅当此页面由你正在使用的 NCF GUI 自动打开时继续。</value></data>
+  <data name="AuthHandoff.Authorize" xml:space="preserve"><value>授权此 GUI</value></data>
+  <data name="AuthHandoff.FailedTitle" xml:space="preserve"><value>未能授权桌面 AdminChat</value></data>
+  <data name="AuthHandoff.RequestMissing" xml:space="preserve"><value>桌面授权请求不存在或已过期，请返回 GUI 后重试。</value></data>
+  <data name="AuthHandoff.LoginExpired" xml:space="preserve"><value>WebView 管理员登录已失效，请重新登录。</value></data>
+  <data name="AuthHandoff.TenantUnsupported" xml:space="preserve"><value>多租户管理员暂不支持 WebView 自动授权，请使用显式登录。</value></data>
+  <data name="AuthHandoff.LoginExpiring" xml:space="preserve"><value>WebView 管理员登录即将过期，请重新登录。</value></data>
+  <data name="AuthHandoff.RequestInvalidated" xml:space="preserve"><value>桌面授权请求已失效，请返回 GUI 后重试。</value></data>
+
+  <data name="Frontend.001" xml:space="preserve"><value>待审批请求</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.002" xml:space="preserve"><value>活动会话</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.003" xml:space="preserve"><value>仅当此页面由你正在使用的 NCF GUI 自动打开时继续。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.004" xml:space="preserve"><value>到期时间</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.005" xml:space="preserve"><value>发起时间</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.006" xml:space="preserve"><value>安全配对说明</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.007" xml:space="preserve"><value>已授权</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.008" xml:space="preserve"><value>待审批 @Model.PendingPairings.Count</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.009" xml:space="preserve"><value>扩展模块</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.010" xml:space="preserve"><value>批准</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.011" xml:space="preserve"><value>批准人</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.012" xml:space="preserve"><value>批准时间</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.013" xml:space="preserve"><value>拒绝</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.014" xml:space="preserve"><value>授权桌面 AdminChat</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.015" xml:space="preserve"><value>授权此 GUI</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.016" xml:space="preserve"><value>撤销</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.017" xml:space="preserve"><value>操作</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.018" xml:space="preserve"><value>最近使用</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.019" xml:space="preserve"><value>未能授权桌面 AdminChat</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.020" xml:space="preserve"><value>来源地址</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.021" xml:space="preserve"><value>桌面端</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.022" xml:space="preserve"><value>正在授权桌面 AdminChat</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.023" xml:space="preserve"><value>活动会话 @Model.Sessions.Count</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.024" xml:space="preserve"><value>状态</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.025" xml:space="preserve"><value>环境变量令牌属于兼容通道，不会在活动会话列表中显示，也不能从此页面撤销。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.026" xml:space="preserve"><value>确认后，当前 GUI 将以此管理员身份使用 AdminChat。只传递一次性授权结果，不会读取或复制浏览器 Cookie。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.027" xml:space="preserve"><value>设备配对与会话</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.028" xml:space="preserve"><value>过期时间</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.029" xml:space="preserve"><value>配对码</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.030" xml:space="preserve"><value>当前没有待审批的配对请求</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.031" xml:space="preserve"><value>当前没有通过配对签发的活动会话</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.032" xml:space="preserve"><value>待审批 {0}</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.033" xml:space="preserve"><value>活动会话 {0}</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
+  <data name="Frontend.034" xml:space="preserve"><value>桌面端留空令牌后会生成 5 分钟有效的配对码。请核对配对码和来源地址后批准；会话令牌有效 24 小时、不会在后台显示，并可随时撤销。</value><comment>Auto-completed for locale parity from the neutral Chinese source.</comment></data>
 </root>

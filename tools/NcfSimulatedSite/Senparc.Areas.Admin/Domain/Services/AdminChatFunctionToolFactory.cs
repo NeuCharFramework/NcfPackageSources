@@ -1,29 +1,32 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：AdminChatFunctionToolFactory.cs
-    文件功能描述：AdminChatFunctionToolFactory.cs 相关实现
+    File name: AdminChatFunctionToolFactory.cs
+    File description: AdminChatFunctionToolFactory.cs related implementation
 
+    Created by: Senparc - 20260820
 
-    创建标识：Senparc - 20260820
+    Modified by: Senparc - 20260822
+    Change description: v0.6.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.6.0 新增管理端 Chat 会话工作流能力
+    Modified by: Senparc - 20260917
+    Change description: v0.10.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260917
-    修改描述：v0.10.0 绑定实例 FunctionRender 并暴露选择项 schema 元数据
+    Modified by: Senparc - 20261018
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261018
-    修改描述：展平单请求 Function schema 并兼容扁平参数调用
+    Modified by: Senparc - 20261021
+    Change description: v0.11.1 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.11.1 按当前模块构建函数工具
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 enhance Sandbox functionality with language validation and request handling improvements
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 enhance Sandbox functionality with language validation and request handling improvements
+    Modified by: Senparc - 20261111
+    Change description: v0.12.28 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.12.28 完善 Admin Chat 与模块工作区交互能力兼容
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 

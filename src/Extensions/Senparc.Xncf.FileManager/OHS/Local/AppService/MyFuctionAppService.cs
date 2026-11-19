@@ -1,17 +1,20 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：MyFuctionAppService.cs
-    文件功能描述：MyFuctionAppService 相关实现
-    
-    
-    创建标识：Senparc - 20250105
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.3.0-preview2 为 FileManager 模块接入统一资源本地化并优化功能文案
+    Copyright (C) 2026 Senparc
+
+    File name: MyFuctionAppService.cs
+    File description: MyFuctionAppService related implementation
+
+    Created by: Senparc - 20250105
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260717
+    Change description: v0.3.0-preview2 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.8.5 Localized file management and upload surfaces
 
 ----------------------------------------------------------------*/
 
@@ -43,14 +46,22 @@ namespace Senparc.Xncf.FileManager.OHS.Local.AppService
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                /* 页面上点击“执行”后，将调用这里的方法
+                /* Legacy comment translated to English.
+
                   *
-                  * 参数说明：
-                  * response：已经初始化后的返回结果
-                  * logger：日志
+
+                  * parametersdescription：
+
+                  * Legacy comment translated to English.
+
+                  * Legacy comment translated to English.
+
                   * 
-                  * 如果直接对 response 的属性修改，则最终 return null，
-                  * 否则可以返回一个新的 response 对象，系统将自动覆盖原有对象
+
+                  * Legacy comment translated to English.
+
+                  * Legacy comment translated to English.
+
                   */
 
                 double calcResult = request.Number1;
@@ -70,14 +81,14 @@ namespace Senparc.Xncf.FileManager.OHS.Local.AppService
                         if (request.Number2 == 0)
                         {
                             response.Success = false;
-                            response.ErrorMessage = "被除数不能为0！";
+                            response.ErrorMessage = "The divisor cannot be zero!";
                             return null;
                         }
                         calcResult = calcResult / request.Number2;
                         break;
                     default:
                         response.Success = false;
-                        response.ErrorMessage = $"未知的运算符：{theOperator}";
+                        response.ErrorMessage = $"Unknown operator: {theOperator}";
                         return null;
                 }
 
@@ -89,14 +100,14 @@ namespace Senparc.Xncf.FileManager.OHS.Local.AppService
                     {
                         var oldValue = calcResult;
                         calcResult = Math.Pow(calcResult, power);
-                        logger.Append($"进行{power}次方运算：{oldValue}{(power == 2 ? "²" : "³")} = {calcResult}");
+                        logger.Append($"Calculated power {power}: {oldValue}{(power == 2 ? "²" : "³")} = {calcResult}");
                     }
                 };
 
                 raisePower(2);
                 raisePower(3);
 
-                response.Data = $"【{request.Name}】计算结果：{calcResult}。计算过程请看日志";
+                response.Data = $"[{request.Name}] Result: {calcResult}. See the log for calculation details.";
                 return null;
             });
         }

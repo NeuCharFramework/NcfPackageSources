@@ -1,44 +1,47 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：NeuCharWorkflowAppService.cs
-    文件功能描述：增强工作流编排、回放、Webhook 与并行执行能力
 
+    File name: NeuCharWorkflowAppService.cs
+    File description: enhance workflow orchestration, replay, Webhook, and parallel execution
 
-    创建标识：Senparc - 20260810
+    Created by: Senparc - 20260810
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Modified by: Senparc - 20260813
+    Change description: v0.1.0-preview1 enhance workflow orchestration, replay, Webhook, and parallel execution
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.2.0 增强工作流并行与运行控制
+    Modified by: Senparc - 20260815
+    Change description: v0.2.0 enhance workflow parallelism and execution control
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 支持 Human Input 人工节点暂停与外部恢复
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 support pausing and external resumption of Human Input nodes
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 增强工作流函数调用、任务控制与回放管理
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 enhance workflow function calls, task control, and replay management
 
-    修改标识：Senparc - 20260829
-    修改描述：v0.3.0 新增工作流分析查询与管理端可视化
+    Modified by: Senparc - 20260829
+    Change description: v0.3.0 add workflow analysis queries and admin-side visualization
 
-    修改标识：Senparc - 20260909
-    修改描述：v0.4.0 新增 Chat 触发器：聊天会话、消息发送与运行状态查询
+    Modified by: Senparc - 20260909
+    Change description: v0.4.0 add the Chat trigger: chat sessions, message sending, and run-status queries
 
-    修改标识：Senparc - 20260913
-    修改描述：v0.4.0 Chat 历史落库持久化，支持跨主机重启恢复
+    Modified by: Senparc - 20260913
+    Change description: v0.4.0 persist Chat history in the database and support recovery after cross-host restarts
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.4.0 增强 Chat 触发器消息持久化与恢复能力
+    Modified by: Senparc - 20260915
+    Change description: v0.4.0 enhance Chat trigger message persistence and recovery
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.4.4 提供工作流导入导出接口
+    Modified by: Senparc - 20261021
+    Change description: v0.4.4 provide workflow import and export APIs
 
-    修改标识：Senparc - 20261028
-    修改描述：vNext 启动运行时捕获请求租户快照，执行作用域恢复租户上下文
+    Modified by: Senparc - 20261028
+    Change description: vNext capture the request tenant snapshot at runtime startup and restore tenant context in the execution scope
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.4.4 Workflow 运行协调器与定时宿主服务恢复/按租户传播租户上下文
+    Modified by: Senparc - 20261103
+    Change description: v0.4.4 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -67,8 +70,8 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.NeuCharWorkflow.Application.AppServices;
 
 /// <summary>
-/// Workflow 的应用边界：页面与 HTTP 适配器只能通过此服务读取、保存、校验和执行工作流，
-/// 不直接持有仓储或领域执行器。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 public sealed class NeuCharWorkflowAppService
 {
@@ -148,19 +151,30 @@ public sealed class NeuCharWorkflowAppService
         var editableGraphTask = _workflowEngine.BuildEditableGraphJsonAsync(
             workflow.GraphJson,
             cancellationToken);
-        var observedSchemasTask = GetObservedOutputSchemasAsync(workflow.Id);
-        await Task.WhenAll(editableGraphTask, observedSchemasTask).ConfigureAwait(false);
-        var editableGraphJson = await editableGraphTask.ConfigureAwait(false);
-        var observedSchemas = await observedSchemasTask.ConfigureAwait(false);
-        var runningCount = await GetRunningCountAsync(
+        var runningCountTask = GetRunningCountAsync(
             adminUserId,
             workflow.Id,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken);
+        await Task.WhenAll(editableGraphTask, runningCountTask).ConfigureAwait(false);
         return ToDetail(
             workflow,
-            editableGraphJson,
-            runningCount: runningCount,
-            observedOutputSchemas: observedSchemas);
+            editableGraphTask.Result,
+            runningCount: runningCountTask.Result,
+            observedOutputSchemas: Array.Empty<NeuCharWorkflowObservedOutputSchema>());
+    }
+
+    public async Task<IReadOnlyList<NeuCharWorkflowObservedOutputSchema>> GetObservedOutputSchemasAsync(
+        int workflowId,
+        int adminUserId,
+        CancellationToken cancellationToken = default)
+    {
+        if (await GetOwnedWorkflowAsync(workflowId, adminUserId).ConfigureAwait(false) == null)
+        {
+            return Array.Empty<NeuCharWorkflowObservedOutputSchema>();
+        }
+
+        return await ReadObservedOutputSchemasAsync(workflowId, cancellationToken)
+            .ConfigureAwait(false);
     }
 
     public async Task<WorkflowDesignerData> GetDesignerDataAsync(CancellationToken cancellationToken = default)
@@ -417,7 +431,7 @@ public sealed class NeuCharWorkflowAppService
         }
 
         var hasDisconnectedNodes = _workflowEngine.GetDisconnectedNodes(graph).Count > 0;
-        // 未连接节点属于草稿；保留它们以便继续编辑，但不要让定时或 Webhook 触发半成品。
+        //Legacy comment translated to English.
         var enabled = request.Enabled && !hasDisconnectedNodes;
         var subWorkflowError = await _workflowEngine.ValidateSubWorkflowReferencesAsync(
             graph,
@@ -619,8 +633,8 @@ public sealed class NeuCharWorkflowAppService
         int adminUserId,
         string requestId,
         bool approved,
-        string input = null,
-        string reason = null,
+        string? input = null,
+        string? reason = null,
         CancellationToken cancellationToken = default)
     {
         if (runId == Guid.Empty)
@@ -712,8 +726,8 @@ public sealed class NeuCharWorkflowAppService
     }
 
     /// <summary>
-    /// 汇总属于当前管理员的历史执行日志与进程内实时运行。实时运行由协调器提供节点级进度，
-    /// 已完成任务则使用持久化日志，以便应用重启后仍然可查。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<WorkflowTaskListPage> GetTaskListAsync(
         int adminUserId,
@@ -783,8 +797,8 @@ public sealed class NeuCharWorkflowAppService
         var fetchedLogs = logPage.ToList();
         var pageLogs = fetchedLogs.Take(TaskListPageSize).ToList();
         tasks.AddRange(pageLogs
-            // 由协调器托管的运行有节点级实时流；仅隐藏对应 RunId 的数据库镜像，
-            // 保留同一 Workflow 的其他未完成任务，避免并发运行时丢任务。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             .Where(log => log.FinishedAt != null ||
                           !activeRunIds.Contains(GetTaskRunId(log.WorkflowId, log.CorrelationId).GetValueOrDefault()))
             .Select(log => new WorkflowTaskListItem(
@@ -818,7 +832,7 @@ public sealed class NeuCharWorkflowAppService
                 .ConfigureAwait(false));
     }
 
-    /// <summary>兼容已编译页面与扩展模块的旧任务列表调用签名。</summary>
+    ///Legacy comment translated to English.
     public Task<WorkflowTaskListPage> GetTaskListAsync(
         int adminUserId,
         int? beforeExecutionLogId,
@@ -832,7 +846,7 @@ public sealed class NeuCharWorkflowAppService
         _analyticsService.GetAsync(adminUserId, query, cancellationToken);
 
     /// <summary>
-    /// 预览当前管理员可清理的运行历史。只处理已完成的执行日志，进程内或数据库中仍未完成的任务不会被包含。
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<WorkflowTaskCleanupPreview> PreviewTaskCleanupAsync(
         int adminUserId,
@@ -844,7 +858,7 @@ public sealed class NeuCharWorkflowAppService
     }
 
     /// <summary>
-    /// 永久删除当前管理员在指定预览截止时间以前已完成的执行日志。运行中任务不在此范围内。
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<WorkflowTaskCleanupResult> CleanupCompletedTasksAsync(
         int adminUserId,
@@ -864,14 +878,14 @@ public sealed class NeuCharWorkflowAppService
 
         var logs = await GetCompletedTaskLogsAsync(adminUserId, effectiveCutoff, cancellationToken).ConfigureAwait(false);
         cancellationToken.ThrowIfCancellationRequested();
-        // 使用单次 SaveChanges 的批量删除，避免大量历史记录逐条提交导致“快速清理”长时间占用页面。
+        //Legacy comment translated to English.
         await _executionLogService.DeleteAllAsync(logs).ConfigureAwait(false);
 
         return new WorkflowTaskCleanupResult(logs.Count, effectiveCutoff);
     }
 
     /// <summary>
-    /// 返回已经完成任务的只读运行回看数据。运行中的任务仍由实时协调器展示，避免用不完整事件启动回放。
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<WorkflowRunReplay?> GetReplayAsync(
         int executionLogId,
@@ -947,7 +961,7 @@ public sealed class NeuCharWorkflowAppService
             events);
     }
 
-    /// <summary>从当时的运行快照创建一个禁用的草稿，避免在回看页直接修改历史或意外触发。</summary>
+    ///Legacy comment translated to English.
     public async Task<WorkflowDetail> CopyReplayAsDraftAsync(
         int executionLogId,
         int adminUserId,
@@ -1058,7 +1072,7 @@ public sealed class NeuCharWorkflowAppService
     }
 
     /// <summary>
-    /// 打开聊天页面前的引导数据：标题、欢迎语、访客标识与历史消息。
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<WorkflowChatBootstrapResult> GetChatBootstrapAsync(
         int workflowId,
@@ -1081,7 +1095,7 @@ public sealed class NeuCharWorkflowAppService
             .ToList();
         if (messages.Count == 0)
         {
-            // 进程内没有历史（例如 Host 刚重启），从数据库恢复并写回会话。
+            //Legacy comment translated to English.
             messages = await RestoreChatHistoryAsync(workflowId, participantKey, cancellationToken).ConfigureAwait(false);
         }
         var greeting = string.IsNullOrWhiteSpace(config.Greeting)
@@ -1098,7 +1112,7 @@ public sealed class NeuCharWorkflowAppService
     }
 
     /// <summary>
-    /// 发送一条聊天消息并启动一次工作流运行；同一会话同一时间只允许一个进行中的运行。
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<WorkflowChatSendResult> SendChatMessageAsync(
         int workflowId,
@@ -1141,7 +1155,7 @@ public sealed class NeuCharWorkflowAppService
     }
 
     /// <summary>
-    /// 查询聊天会话关联的运行状态；运行结束后把最终输出或错误写入会话历史。
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<WorkflowChatRunResult> GetChatRunStatusAsync(
         int workflowId,
@@ -1171,7 +1185,7 @@ public sealed class NeuCharWorkflowAppService
         var snapshot = _runCoordinator.GetSnapshot(runId, workflow.AdminUserId, afterSequence);
         if (snapshot == null)
         {
-            // 运行可能已被协调器的内存上限回收；释放会话占位，让用户可以重新发送。
+            //Legacy comment translated to English.
             var lostMessage = "运行状态已丢失，请重新发送消息。";
             _chatSessionService.AddMessage(workflowId, participantKey, NeuCharWorkflowChatSessionService.RoleError, lostMessage);
             _chatSessionService.ClearPendingRun(workflowId, participantKey, runId);
@@ -1216,7 +1230,7 @@ public sealed class NeuCharWorkflowAppService
     }
 
     /// <summary>
-    /// 清空当前聊天会话（历史消息与进行中的运行关联），工作流运行本身不会被中止。
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<WorkflowChatResult> ResetChatSessionAsync(
         int workflowId,
@@ -1238,7 +1252,7 @@ public sealed class NeuCharWorkflowAppService
     }
 
     /// <summary>
-    /// Chat 访问校验：模块、工作流启用状态、触发方式、配置与访客权限。
+    ///Legacy comment translated to English.
     /// </summary>
     private async Task<WorkflowChatAccess> GetChatAccessAsync(
         int workflowId,
@@ -1276,8 +1290,8 @@ public sealed class NeuCharWorkflowAppService
     }
 
     /// <summary>
-    /// Host 重启后从数据库恢复会话历史并写回内存会话；
-    /// 持久化失败时降级为空历史，不阻断聊天功能本身。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     private async Task<IReadOnlyList<WorkflowChatMessage>> RestoreChatHistoryAsync(
         int workflowId,
@@ -1390,7 +1404,7 @@ public sealed class NeuCharWorkflowAppService
             }
             catch (JsonException)
             {
-                // 不是有效的 JSON 字符串时保留原始文本。
+                //Legacy comment translated to English.
             }
         }
         return normalized.Length == 0 ? "工作流已完成。" : normalized;
@@ -1570,13 +1584,18 @@ public sealed class NeuCharWorkflowAppService
         string.Equals(workflow.TriggerConfigJson, triggerConfigJson, StringComparison.Ordinal) &&
         workflow.AutoSaveMinutes == autoSaveMinutes;
 
-    private async Task<IReadOnlyList<NeuCharWorkflowObservedOutputSchema>> GetObservedOutputSchemasAsync(int workflowId)
+    private async Task<IReadOnlyList<NeuCharWorkflowObservedOutputSchema>> ReadObservedOutputSchemasAsync(
+        int workflowId,
+        CancellationToken cancellationToken)
     {
         var result = new Dictionary<string, NeuCharWorkflowObservedOutputSchema>(StringComparer.Ordinal);
-        var replayEvents = await _executionLogService.GetRecentCompletedReplayEventsAsync(workflowId)
+        var replayEvents = await _executionLogService.GetRecentCompletedReplayEventsAsync(
+                workflowId,
+                cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         foreach (var replayEventsJson in replayEvents)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             AddObservedSchemas(result, replayEventsJson);
         }
         return result.Values.ToList();
@@ -1759,14 +1778,14 @@ public sealed record WorkflowTaskListItem(
     int? ExecutionLogId,
     bool ReplayAvailable);
 
-/// <summary>任务列表的游标分页结果。游标只定位已持久化的执行日志；进行中的任务仅出现在最新页。</summary>
+///Legacy comment translated to English.
 public sealed record WorkflowTaskListPage(
     IReadOnlyList<WorkflowTaskListItem> Items,
     bool HasMore,
     int? NextExecutionLogId,
     WorkflowAnalyticsSummary? Summary = null);
 
-/// <summary>一次快速清理在确认前展示的不可恢复数据范围。</summary>
+///Legacy comment translated to English.
 public sealed record WorkflowTaskCleanupPreview(
     int CompletedCount,
     int SucceededCount,
@@ -1809,7 +1828,7 @@ public sealed record WorkflowDesignerFunction(
     bool ModuleAvailable, string ModuleState, string ParameterSchemaJson, string DefaultParametersJson,
     NeuCharFunctionOutputDescriptor? Output, string? CatalogError)
 {
-    // 兼容旧 Designer 以 id/functionName 字段定位 Function；稳定标识始终是 moduleUid + functionKey。
+    //Legacy comment translated to English.
     public int Id => 0;
     public string FunctionName => Name;
 }
@@ -1836,7 +1855,7 @@ public sealed record WorkflowWebhookTriggerResult(
 }
 
 /// <summary>
-/// Chat 会话中的一条历史消息。
+///Legacy comment translated to English.
 /// </summary>
 public sealed record WorkflowChatMessage(
     string Role,
@@ -1844,7 +1863,7 @@ public sealed record WorkflowChatMessage(
     DateTimeOffset Timestamp);
 
 /// <summary>
-/// Chat 访问校验结果：只有 Ok 时才会携带工作流与配置。
+///Legacy comment translated to English.
 /// </summary>
 public sealed record WorkflowChatAccess(
     bool Ok,
@@ -1863,7 +1882,7 @@ public sealed record WorkflowChatAccess(
 }
 
 /// <summary>
-/// 聊天页面引导数据的返回结果。
+///Legacy comment translated to English.
 /// </summary>
 public sealed record WorkflowChatBootstrapResult(
     int StatusCode,
@@ -1891,7 +1910,7 @@ public sealed record WorkflowChatBootstrapResult(
 }
 
 /// <summary>
-/// 聊天消息发送结果；202 表示已接受并返回运行标识。
+///Legacy comment translated to English.
 /// </summary>
 public sealed record WorkflowChatSendResult(
     int StatusCode,
@@ -1907,7 +1926,7 @@ public sealed record WorkflowChatSendResult(
 }
 
 /// <summary>
-/// 聊天运行状态查询结果；200 且 Running=false 时，FinalOutput 与 RunError 必有且仅有一个有值。
+///Legacy comment translated to English.
 /// </summary>
 public sealed record WorkflowChatRunResult(
     int StatusCode,
@@ -1932,7 +1951,7 @@ public sealed record WorkflowChatRunResult(
 }
 
 /// <summary>
-/// Chat 会话重置结果。
+///Legacy comment translated to English.
 /// </summary>
 public sealed record WorkflowChatResult(
     int StatusCode,

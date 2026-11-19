@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：SystemPermissionSenparcEntities.cs
-    文件功能描述：SystemPermissionSenparcEntities 相关实现
-    
-    
-    创建标识：Senparc - 20211128
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: SystemPermissionSenparcEntities.cs
+    File description: SystemPermissionSenparcEntities related implementation
+
+    Created by: Senparc - 20211128
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.15.14 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -28,24 +31,24 @@ namespace Senparc.Xncf.SystemPermission.Models
 
 
         /// <summary>
-        /// 权限
+        ///Legacy comment translated to English.
         /// </summary>
         public DbSet<SysRolePermission> SysRolePermissions { get; set; }
 
         /// <summary>
-        /// 系统角色
+        ///Legacy comment translated to English.
         /// </summary>
         public DbSet<SysRole> SysRoles { get; set; }
 
         /// <summary>
-        /// 系统角色管理员
+        ///Legacy comment translated to English.
         /// </summary>
         public DbSet<SysRoleAdminUserInfo> SysRoleAdminUserInfos { get; set; }
 
-        //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
+        //DOT REMOVE OR MODIFY THIS LINE - Entities Point
         //ex. public DbSet<Color> Colors { get; set; }
 
-        //如无特殊需需要，OnModelCreating 方法可以不用写，已经在 Register 中要求注册
+        //Legacy comment translated to English.
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
         //}

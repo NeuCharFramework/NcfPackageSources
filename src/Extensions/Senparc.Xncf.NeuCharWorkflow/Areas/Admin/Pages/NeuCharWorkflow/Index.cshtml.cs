@@ -1,26 +1,29 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：Index.cshtml.cs
-    文件功能描述：增强工作流编排、回放、Webhook 与并行执行能力
 
+    File name: Index.cshtml.cs
+    File description: enhance workflow orchestration, replay, Webhook, and parallel execution
 
-    创建标识：Senparc - 20260810
+    Created by: Senparc - 20260810
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+    Modified by: Senparc - 20260813
+    Change description: v0.1.0-preview1 enhance workflow orchestration, replay, Webhook, and parallel execution
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 支持 Human Input 人工节点暂停与外部恢复
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 support pausing and external resumption of Human Input nodes
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 增强工作流函数调用、任务控制与回放管理
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 enhance workflow function calls, task control, and replay management
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.4.4 管理端支持导出和导入工作流文件
+    Modified by: Senparc - 20261021
+    Change description: v0.4.4 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.4.4 enhance fine-tuning functionality with artifact tracking and import/export capabilities
+    Modified by: Senparc - 20261103
+    Change description: v0.4.4 enhance fine-tuning functionality with artifact tracking and import/export capabilities
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -37,7 +40,7 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.NeuCharWorkflow.Areas.NeuCharWorkflow.Pages;
 
 /// <summary>
-/// Workflow 管理页面适配器。所有业务读写均交由 Application 服务，页面仅处理 Admin 会话、HTTP 与视图响应。
+///Legacy comment translated to English.
 /// </summary>
 public class IndexModel(
     Lazy<XncfModuleService> xncfModuleService,
@@ -55,6 +58,12 @@ public class IndexModel(
             .ConfigureAwait(false);
         return workflow == null ? NotFound() : Ok(workflow);
     }
+
+    public async Task<IActionResult> OnGetObservedOutputSchemasAsync(int id) =>
+        Ok(await workflowAppService.GetObservedOutputSchemasAsync(
+            id,
+            CurrentAdminUserId,
+            HttpContext.RequestAborted).ConfigureAwait(false));
 
     public async Task<IActionResult> OnGetDesignerDataAsync() =>
         Ok(await workflowAppService.GetDesignerDataAsync(HttpContext.RequestAborted).ConfigureAwait(false));

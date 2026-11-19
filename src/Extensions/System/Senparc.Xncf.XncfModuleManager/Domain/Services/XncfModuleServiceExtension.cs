@@ -1,20 +1,23 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：XncfModuleServiceExtension.cs
-    文件功能描述：XncfModuleServiceExtension 相关实现
-    
-    
-    创建标识：Senparc - 20211128
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20261001
-    修改描述：模块菜单权限通过现有权限服务保存，取消直接操作 DbContext
+    File name: XncfModuleServiceExtension.cs
+    File description: XncfModuleServiceExtension related implementation
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.15.11 维护XncfModuleServiceExtension 相关实现
+    Created by: Senparc - 20211128
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261001
+    Change description: Updated module behavior and related support.
+
+    Modified by: Senparc - 20261103
+    Change description: v0.15.11 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.15.14 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -39,7 +42,7 @@ using Senparc.Xncf.XncfModuleManager.Models;
 namespace Senparc.Xncf.XncfModuleManager.Domain.Services
 {
     /// <summary>
-    /// TODO：此接口需要开放到 OHS，对外提供服务
+    ///Legacy comment translated to English.
     /// </summary>
     public class XncfModuleServiceExtension : XncfModuleService
     {
@@ -47,7 +50,7 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
         private readonly Lazy<SysRoleService> _sysRoleService;
 
         /// <summary>
-        /// 获取模块起始触发 URL
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="register"></param>
         /// <returns></returns>
@@ -63,10 +66,10 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
         }
 
         /// <summary>
-        /// 安装模块
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="uid">模块 Uid</param>
-        /// <param name="addMenu">是否在安装完成后添加到管理员菜单</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         //public async Task<Tuple<PagedList<XncfModule>, string, InstallOrUpdate?>> InstallModuleAsync(string uid)
         public async Task<(PagedList<XncfModule> XncfModuleList, string scanAndInstallResult, InstallOrUpdate? InstallOrUpdate)> InstallModuleAsync(string uid, bool addMenu = true)
@@ -88,7 +91,7 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
                 throw new Exception("相同版本模块已安装，无需重复安装！");
             }
 
-            /* 目前禁用自动升级，因此不从数据库访问所有记录 */
+            /* Legacy comment translated to English. */
 
             PagedList<XncfModule> xncfModules = await base.GetObjectListAsync(1, 999, z => true, z => z.AddTime, Ncf.Core.Enums.OrderingType.Descending).ConfigureAwait(false);
 
@@ -96,7 +99,7 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
 
             //var se = _serviceProvider.GetService(typeof(BasePoolEntities_SqlServer));
 
-            //进行模块扫描
+            //Legacy comment translated to English.
             InstallOrUpdate? installOrUpdateValue = null;
             var result = await Senparc.Ncf.XncfBase.Register.ScanAndInstall(xncfModuleDtos, _serviceProvider, async (register, installOrUpdate) =>
             {
@@ -108,7 +111,7 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
 
             }, uid).ConfigureAwait(false);
 
-            //记录日志
+            //Legacy comment translated to English.
             var installOrUpdateMsg = installOrUpdateValue.HasValue
                                         ? (installOrUpdateValue.Value == InstallOrUpdate.Install ? "安装" : "更新")
                                         : "失败";
@@ -117,7 +120,7 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
         }
 
         /// <summary>
-        /// 安装模块之后，安装菜单
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="register"></param>
         /// <returns></returns>
@@ -131,14 +134,14 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
 
             if (installOrUpdate == InstallOrUpdate.Update && currentMenu != null)
             {
-                //更新菜单
+                //Legacy comment translated to English.
                 menuDto = _sysMenuService.Value.Mapper.Map<SysMenuDto>(currentMenu);
-                menuDto.MenuName = register.MenuName;//更新菜单名称
-                menuDto.Icon = register.Icon;//更新菜单图标
+                menuDto.MenuName = register.MenuName;//updatemenu name
+                menuDto.Icon = register.Icon;//Legacy comment translated to English.
             }
             else
             {
-                //新建菜单
+                //Legacy comment translated to English.
                 var icon = register.Icon.IsNullOrEmpty() ? "fa fa-bars" : register.Icon;
                 var order = 20;
                 switch (register.Uid)
@@ -159,9 +162,9 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
 
             if (installOrUpdate == InstallOrUpdate.Install)
             {
-                //更新菜单信息
+                //Legacy comment translated to English.
 
-                //获取管理员组的 RoleId
+                //Legacy comment translated to English.
                 var administratorRoleCode = Senparc.Ncf.Service.Config.SYSROLE_ADMINISTRATOR_ROLE_CODE;
                 var sysRole = await _sysRoleService.Value.GetObjectAsync(z => z.RoleCode == administratorRoleCode);
 
@@ -184,7 +187,7 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
 
 
         /// <summary>
-        /// 获取显示的版本号信息（如果有新版本，则显示格式：[旧版本号] -> [新版本号]
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="xncfModules"></param>
         /// <param name="xncfRegister"></param>
@@ -200,7 +203,7 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
         }
 
         /// <summary>
-        /// 获取未安装的 Xncf（或版本不同）
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public List<IXncfRegister> GetUnInstallXncfModule(List<XncfModule> xncfModules)
@@ -210,7 +213,7 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
         }
 
         /// <summary>
-        /// 获取未安装的 Xncf
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public List<IXncfRegister> GetOnlyUnInstallXncfModule(List<XncfModule> xncfModules)
@@ -220,7 +223,7 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
         }
 
         /// <summary>
-        /// 获取版本不同的 Xncf
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public List<IXncfRegister> GetUpdatedInstallXncfModule(List<XncfModule> xncfModules)

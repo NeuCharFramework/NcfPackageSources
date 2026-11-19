@@ -18,7 +18,7 @@ const servicePath = path.resolve(
     __dirname,
     '../../../../../src/Extensions/Senparc.Xncf.AgentsManager/Application/AppService/ChatGroupAppService.cs');
 const scriptDir = path.dirname(scriptPath);
-// index.js 已按功能拆分：按 three-loader.js 的加载顺序拼接后再执行
+//Legacy comment translated to English.
 const scriptFiles = [
     'studio-state.js',
     'agents-app-utils.js',

@@ -24,9 +24,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Web.DatabasePlant",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.Accounts", "Senparc.Xncf.Accounts\Senparc.Xncf.Accounts.csproj", "{1D1A334A-7DFD-4830-88F9-5E3347158040}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.Installer", "Senparc.Xncf.Installer\Senparc.Xncf.Installer.csproj", "{540DC001-C430-449A-90AA-FEF131E1633E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5930]Senparc.Xncf.Installer", "..\..\src\Extensions\System\Senparc.Xncf.Installer\[5930]Senparc.Xncf.Installer.csproj", "{540DC001-C430-449A-90AA-FEF131E1633E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.Installer.Interface", "Senparc.Xncf.Installer.Interface\Senparc.Xncf.Installer.Interface.csproj", "{FFA57F48-BF90-4BC0-B719-FC72CE592CA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5930]Senparc.Xncf.Installer.Interface", "..\..\src\Extensions\System\Senparc.Xncf.Installer.Interface\[5930]Senparc.Xncf.Installer.Interface.csproj", "{FFA57F48-BF90-4BC0-B719-FC72CE592CA3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Areas.Admin.Tests", "Tests\Senparc.Areas.Admin.Tests\Senparc.Areas.Admin.Tests.csproj", "{6228437D-3EF6-43D9-A75C-255C883F293B}"
 EndProject

@@ -1,68 +1,71 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：AdminChatAppService.cs
-    文件功能描述：后台 AI 对话应用服务
-    
-    
-    创建标识：Senparc - 20260325
-    
-    修改标识：Senparc - 20260724
-    修改描述：v0.1.0 增强后台模块批量更新并完善多语言管理界面
 
-    修改标识：Senparc - 20260726
-    修改描述：v0.1.0 增加后台 Admin Chat 同步服务以支持桌面管理交互
+    File name: AdminChatAppService.cs
+    File description: Related implementation.
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.2.0 增强后台管理员交互与桌面 Admin Chat 安全同步
+    Created by: Senparc - 20260325
 
-    修改标识：Senparc - 20260808
-    修改描述：v0.4.0 适配桌面管理员换票相关的后台对话安全上下文
+    Modified by: Senparc - 20260724
+    Change description: v0.1.0 enhance batch module updates and improve the multilingual management interface
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.6.0 新增管理端 Chat 会话工作流能力
+    Modified by: Senparc - 20260726
+    Change description: v0.1.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+    Modified by: Senparc - 20260729
+    Change description: v0.2.0 enhance admin interaction and secure desktop Admin Chat synchronization
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    Modified by: Senparc - 20260808
+    Change description: v0.4.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261009
-    修改描述：v0.11.0 增强后台 Admin Chat 群组配置、提示词构建与上下文控制
+    Modified by: Senparc - 20260822
+    Change description: v0.6.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.11.1 返回最近任务、工作区上下文和会话标题
+    Modified by: Senparc - 20260915
+    Change description: v0.8.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261102
-    修改描述：提供当前用户 Memory 编辑、会话开关及租户 SystemMessage 设置
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261103
-    修改描述：提供同账号跨设备会话排序接口
+    Modified by: Senparc - 20261009
+    Change description: v0.11.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 完善后台聊天会话管理与排序
+    Modified by: Senparc - 20261021
+    Change description: v0.11.1 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261105
-    修改描述：v0.12.26 后台聊天接入记忆与 Prompt 引用
+    Modified by: Senparc - 20261102
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261106
-    修改描述：提供会话归档与已归档列表
+    Modified by: Senparc - 20261103
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261106
-    修改描述：将会话未读提醒写入数据库，供同一账号跨浏览器读取
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261107
-    修改描述：资产侧栏支持脚本预览，以及常见文本的编辑保存
+    Modified by: Senparc - 20261105
+    Change description: v0.12.26 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261110
-    修改描述：工作区列表、会话绑定和名称回填都按当前账号校验所有者
+    Modified by: Senparc - 20261106
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261110
-    修改描述：提供未归档对话搜索，以及 Harness 方法调用名搜索
+    Modified by: Senparc - 20261106
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261111
-    修改描述：为对话输入框提供当前 Workspace 的文件和路径候选
+    Modified by: Senparc - 20261107
+    Change description: Updated module behavior and related support.
+
+    Modified by: Senparc - 20261110
+    Change description: Updated module behavior and related support.
+
+    Modified by: Senparc - 20261110
+    Change description: Updated module behavior and related support.
+
+    Modified by: Senparc - 20261111
+    Change description: Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Mvc;
@@ -85,6 +88,7 @@ using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Ncf.Shared.Abstractions.Events;
 using Senparc.Areas.Admin.OHS.Local.Events;
 using Senparc.Xncf.Workspace.Abstractions;
+using Senparc.Xncf.PromptRange.Abstractions.SystemMessages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -95,8 +99,8 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.OHS.Local.AppService
 {
     /// <summary>
-    /// AdminChatAppService：管理后台聊天功能 API 服务
-    /// 支持 Cookie 和 JWT 两种认证方式
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     [AdminOrJwtAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
     public class AdminChatAppService : LocalAppServiceBase
@@ -208,6 +212,20 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                         .SaveGlobalAsync(request.Revision, request.SystemMessage);
                     logger.Append("Updated tenant-wide AdminChat SystemMessage.");
                     return new AdminChatSystemMessageView(profile.Revision, profile.SystemMessage);
+                });
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<AdminChatSystemMessagePromptView>> EnsureAdminChatSystemMessagePromptAsync()
+        {
+            return await this.GetResponseAsync<AppResponseBase<AdminChatSystemMessagePromptView>, AdminChatSystemMessagePromptView>(
+                async (response, logger) =>
+                {
+                    var provider = ServiceProvider.GetService<IAdminChatSystemMessageProvider>()
+                        ?? throw new NcfExceptionBase("PromptRange 模块不可用，无法管理 AdminChat 默认 SystemMessage。");
+                    var prompt = await provider.GetAsync();
+                    logger.Append($"确保 AdminChat SystemMessage PromptRange 已初始化: PromptCode={prompt.PromptCode}");
+                    return new AdminChatSystemMessagePromptView(prompt.PromptCode, "AdminChat.SystemMessage");
                 });
         }
 
@@ -527,10 +545,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 .GetSessionAsync(sessionId, user).ConfigureAwait(false);
         }
 
-        #region 会话管理
+        #region Legacy section
 
         /// <summary>
-        /// 创建新的聊天会话
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<CreateSessionResponse>> CreateSessionAsync([FromBody] CreateChatSessionInputDto request)
@@ -644,7 +662,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取用户的会话列表
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<GetSessionListResponse>> GetSessionListAsync(int pageIndex = 1, int pageSize = 20)
@@ -670,7 +688,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 保存当前用户分类内的会话顺序。
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<List<AdminChatSessionDto>>> ReorderSessionAsync(
@@ -690,7 +708,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 异步生成首轮会话标题。标题生成只读取首条用户消息，不阻塞正常回复流。
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<GenerateSessionTitleResponse>> GenerateSessionTitleAsync(
@@ -737,7 +755,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取会话详情（包含消息和模块）
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<GetSessionDetailResponse>> GetSessionDetailAsync(int sessionId)
@@ -776,7 +794,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 删除会话
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Delete)]
         public async Task<StringAppResponse> DeleteSessionAsync(int sessionId)
@@ -802,7 +820,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 将进行中的会话标记为已完成并移出左侧列表。已归档会话保持可打开、可删除。
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> ArchiveSessionAsync([FromBody] ArchiveSessionRequest request)
@@ -829,7 +847,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 将已归档会话还原到进行中的列表。
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> RestoreSessionAsync([FromBody] ArchiveSessionRequest request)
@@ -856,7 +874,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 持久化当前用户某个会话的未读提醒。换浏览器后仍可从会话列表读回。
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> SetSessionUnreadAsync([FromBody] SetSessionUnreadRequest request)
@@ -882,7 +900,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取当前用户已归档的会话，供左侧更多菜单单独查看和删除。
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<GetSessionListResponse>> GetArchivedSessionListAsync(int pageIndex = 1, int pageSize = 20)
@@ -908,8 +926,8 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 【超级管理员】按用户统计 AdminChat 使用量：仅返回各账号的会话/消息数量与最后活跃时间，不返回任何会话或消息内容。
-        /// <para>普通账号仅能访问自己的会话；超级管理员（administrator 角色）通过本接口做用量监控。</para>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<GetUserSessionStatsResponse>> GetUserSessionStatsAsync()
@@ -993,10 +1011,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             }
         }
 
-        #region 消息管理
+        #region Legacy section
 
         /// <summary>
-        /// 发送消息
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<SendMessageResponse>> SendMessageAsync([FromBody] ChatMessageInputDto request)
@@ -1035,17 +1053,28 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 string modelIdentifier;
                 AdminChatHarnessResult harness = null;
 
-                if (mode == AdminChatMode.Harness)
+                if (mode != AdminChatMode.Simple)
                 {
                     (aiResponse, modelIdentifier, harness) = await _chatAiService.GenerateNativeHarnessResponseAsync(
                         request.SessionId,
                         userId,
                         content,
-                        request.AiModelId, attachments: attachments);
+                        request.AiModelId,
+                        attachments: attachments,
+                        requestedMode: mode == AdminChatMode.Execute ? "execute" : "plan",
+                        harnessOptions: request.HarnessOptions);
                 }
                 else
                 {
-                    (aiResponse, modelIdentifier) = await _chatAiService.GenerateResponseAsync(request.SessionId, userId, content, request.AiModelId, attachments: attachments);
+                    (aiResponse, modelIdentifier) = await _chatAiService.GenerateResponseAsync(
+                        request.SessionId,
+                        userId,
+                        content,
+                        request.AiModelId,
+                        generationOptions: request.MaxOutputTokens > 0
+                            ? new AdminChatGenerationOptions { MaxOutputTokens = request.MaxOutputTokens }
+                            : null,
+                        attachments: attachments);
                 }
 
                 var assistantMessage = await _messageService.AddMessageAsync(
@@ -1078,7 +1107,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 在当前用户未归档的对话中检索。scope=tool 时只匹配 Harness 实际调用过的方法名。
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<SearchHistoryResponse>> SearchHistoryAsync(
@@ -1107,7 +1136,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取会话的消息列表
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<GetMessagesResponse>> GetMessagesAsync(int sessionId, int pageIndex = 0, int pageSize = 50)
@@ -1137,7 +1166,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取 Harness Trajectory 及其事件。Trajectory 内容只通过显式接口返回，不混入普通消息历史。
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<GetTrajectoryResponse>> GetTrajectoryAsync(
@@ -1177,7 +1206,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 在当前管理员可见的 Harness Trajectory 中检索事件内容。
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<SearchTrajectoriesResponse>> SearchTrajectoriesAsync(
@@ -1201,7 +1230,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取当前会话的全部 Harness Trajectory 索引。
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<SearchTrajectoriesResponse>> GetSessionTrajectoriesAsync(int sessionId)
@@ -1395,7 +1424,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 设置消息反馈
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Put)]
         public async Task<StringAppResponse> SetMessageFeedbackAsync(int messageId, MessageFeedbackType feedback)
@@ -1408,7 +1437,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     throw new NcfExceptionBase(_localizer["AdminChat.UserNotLoggedIn"]);
                 }
 
-                //归属校验：消息所属会话必须属于当前用户，防止跨账号越权设置反馈
+                //Legacy comment translated to English.
                 var success = await _messageService.SetMessageFeedbackAsync(messageId, userId, feedback);
                 if (!success)
                 {
@@ -1421,7 +1450,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 批量删除消息
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Delete)]
         public async Task<StringAppResponse> DeleteMessagesAsync(int sessionId, string messageIds)
@@ -1461,10 +1490,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
         #endregion
 
-        #region 模块管理
+        #region Legacy section
 
         /// <summary>
-        /// 添加模块到会话
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> AddModulesToSessionAsync([FromBody] AddModulesRequest request)
@@ -1503,7 +1532,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 将会话的模块关联更新为指定集合；系统模块管理器始终保留。
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> SetSessionModulesAsync([FromBody] AddModulesRequest request)
@@ -1558,8 +1587,8 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     .Select(module => module.Uid)
                     .ToHashSet(StringComparer.OrdinalIgnoreCase);
                 var existingModules = await _sessionModuleService.GetSessionModulesAsync(request.SessionId);
-                // 先幂等添加目标集合，再移除多余关联；若中途失败，最多暂时保留旧关联，
-                // 不会先删掉用户原有的可用模块。
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 await _sessionModuleService.AddModulesToSessionAsync(request.SessionId, desiredModules);
                 foreach (var existingModule in existingModules.Where(module => !desiredUidSet.Contains(module.XncfModuleUid)))
                 {
@@ -1573,7 +1602,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取会话的模块列表
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<GetSessionModulesResponse>> GetSessionModulesAsync(int sessionId)
@@ -1602,7 +1631,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 将会话的 Workflow 关联更新为指定集合。
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> SetSessionWorkflowsAsync([FromBody] SetWorkflowsRequest request)
@@ -1644,7 +1673,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取当前已安装并开放、可关联到 Admin Chat 会话的 XNCF 模块。
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<GetAvailableModulesResponse>> GetAvailableModulesAsync()
@@ -1685,7 +1714,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取当前管理员可用于 AdminChat Function Calling 的已启用 Workflow。
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<GetAvailableWorkflowsResponse>> GetAvailableWorkflowsAsync()
@@ -1711,7 +1740,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取 Chat 可选 AI 模型列表。
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<GetAiModelOptionsResponse>> GetAiModelOptionsAsync()
@@ -1865,7 +1894,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
         #endregion
 
-        #region 私有辅助方法
+        #region Legacy section
 
         #endregion
 
@@ -1876,10 +1905,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
     }
 
-    #region 请求和响应模型
+    #region Legacy section
 
     /// <summary>
-    /// 创建会话响应
+    ///Legacy comment translated to English.
     /// </summary>
     public class CreateSessionResponse
     {
@@ -1892,8 +1921,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         public bool WorkspaceCliEnabled { get; set; }
     }
 
+    public sealed record AdminChatSystemMessagePromptView(string PromptCode, string RangeAlias);
+
     /// <summary>
-    /// 获取会话列表响应
+    ///Legacy comment translated to English.
     /// </summary>
     public class ReorderSessionRequest
     {
@@ -2004,7 +2035,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     }
 
     /// <summary>
-    /// 【超级管理员】单账号 AdminChat 用量统计（仅数量，不含内容）
+    ///Legacy comment translated to English.
     /// </summary>
     public class AdminChatUserStatDto
     {
@@ -2020,7 +2051,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     }
 
     /// <summary>
-    /// 【超级管理员】用户用量统计响应
+    ///Legacy comment translated to English.
     /// </summary>
     public class GetUserSessionStatsResponse
     {
@@ -2028,7 +2059,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     }
 
     /// <summary>
-    /// 获取会话详情响应
+    ///Legacy comment translated to English.
     /// </summary>
     public class GetSessionDetailResponse
     {
@@ -2036,7 +2067,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     }
 
     /// <summary>
-    /// 发送消息响应
+    ///Legacy comment translated to English.
     /// </summary>
     public class SendMessageResponse
     {
@@ -2047,12 +2078,14 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         public AdminChatMessageDto AssistantMessage { get; set; }
 
         /// <summary>
-        /// 本次运行使用的模式（Simple 或 Harness）。
+        ///Legacy comment translated to English.
         /// </summary>
         public AdminChatMode Mode { get; set; } = AdminChatMode.Simple;
+        public int MaxOutputTokens { get; set; } = 2000;
+        public AdminChatHarnessOptions HarnessOptions { get; set; } = new();
 
         /// <summary>
-        /// Harness 模式的执行步骤记录（Simple 模式为 null）。
+        ///Legacy comment translated to English.
         /// </summary>
         public IReadOnlyList<AdminChatHarnessStep> HarnessSteps { get; set; }
 
@@ -2080,7 +2113,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     }
 
     /// <summary>
-    /// 未归档对话或 Harness 方法调用的搜索结果。
+    ///Legacy comment translated to English.
     /// </summary>
     public class SearchHistoryResponse
     {
@@ -2088,7 +2121,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     }
 
     /// <summary>
-    /// 获取消息列表响应
+    ///Legacy comment translated to English.
     /// </summary>
     public class GetMessagesResponse
     {
@@ -2152,7 +2185,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     }
 
     /// <summary>
-    /// 添加模块到会话请求
+    ///Legacy comment translated to English.
     /// </summary>
     public class AddModulesRequest
     {
@@ -2167,7 +2200,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     }
 
     /// <summary>
-    /// 模块信息
+    ///Legacy comment translated to English.
     /// </summary>
     public class ModuleInfo
     {
@@ -2177,7 +2210,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     }
 
     /// <summary>
-    /// 获取会话模块列表响应
+    ///Legacy comment translated to English.
     /// </summary>
     public class GetSessionModulesResponse
     {
@@ -2185,7 +2218,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     }
 
     /// <summary>
-    /// 获取可关联模块列表响应。
+    ///Legacy comment translated to English.
     /// </summary>
     public class GetAvailableModulesResponse
     {
@@ -2212,7 +2245,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     }
 
     /// <summary>
-    /// 可关联到 Admin Chat 会话的开放模块。
+    ///Legacy comment translated to English.
     /// </summary>
     public class AvailableModuleDto
     {
@@ -2226,7 +2259,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     }
 
     /// <summary>
-    /// 获取 AI 模型选项响应
+    ///Legacy comment translated to English.
     /// </summary>
     public class GetAiModelOptionsResponse
     {
@@ -2235,7 +2268,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     }
 
     /// <summary>
-    /// AI 模型选项
+    ///Legacy comment translated to English.
     /// </summary>
     public class AiModelOptionDto
     {

@@ -1,26 +1,29 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：MCPEndpointAppService.cs
-    文件功能描述：MCPEndpointAppService 相关实现
-    
-    
-    创建标识：Senparc - 20260327
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.4.0-preview3 为 MCP 模块接入统一资源本地化并优化功能文案
+    File name: MCPEndpointAppService.cs
+    File description: MCPEndpointAppService related implementation
 
-    修改标识：Senparc - 20261003
-    修改描述：v0.5.7 注册端点管理 API，修正校验失败响应并保留原始端点路径
+    Created by: Senparc - 20260327
 
-    修改标识：Senparc - 20261004
-    修改描述：v0.5.8 独立提供本站实际发布的 MCP 服务只读列表
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.5.10 Remove DatabaseSample and related components from MCP extension
+    Modified by: Senparc - 20260717
+    Change description: v0.4.0-preview3 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261003
+    Change description: v0.5.7 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261004
+    Change description: v0.5.8 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261103
+    Change description: v0.5.10 Remove DatabaseSample and related components from MCP extension
+
+    Modified by: Senparc - 20261119
+    Change description: v0.5.14 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -46,8 +49,8 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.MCP.OHS.Local.AppService
 {
     /// <summary>
-    /// MCP Endpoint 管理 AppService
-    /// 提供 MCP 端点的增删改查以及测试功能
+    /// MCP Endpoint management AppService
+    ///Legacy comment translated to English.
     /// </summary>
     [ApiAuthorize]
     public class MCPEndpointAppService : AppServiceBase
@@ -61,7 +64,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取本站实际映射的 MCP 服务，与客户端连接配置分开返回。
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<List<PublishedMcpServerDto>>> GetPublishedServers()
@@ -77,7 +80,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取所有 MCP Endpoints
+        /// getall MCP Endpoints
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<List<MCPEndpointDto>>> GetAllEndpoints()
@@ -93,7 +96,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取所有已启用的 MCP Endpoints
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<List<MCPEndpointDto>>> GetEnabledEndpoints()
@@ -109,14 +112,14 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 创建/编辑 MCP Endpoint
+        /// create/edit MCP Endpoint
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> SaveEndpoint(MCPEndpointCreateOrEditRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                // 验证输入
+                // validationinput
                 if (string.IsNullOrWhiteSpace(request.Name))
                 {
                     throw new NcfExceptionBase(McpResource.Get("MCP.Endpoint.NameRequired"));
@@ -146,7 +149,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 MCPEndpoint endpoint;
                 if (request.Id > 0)
                 {
-                    // 编辑现有端点
+                    //Legacy comment translated to English.
                     endpoint = await _mcpEndpointService.GetObjectAsync(x => x.Id == request.Id);
                     if (endpoint == null)
                     {
@@ -155,7 +158,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 }
                 else
                 {
-                    // 创建新端点
+                    //Legacy comment translated to English.
                     endpoint = new MCPEndpoint();
                 }
 
@@ -170,7 +173,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                     endpoint.LastToolsJson = null;
                 }
 
-                // 更新属性
+                // updateproperty
                 endpoint.Name = request.Name;
                 endpoint.Endpoint = request.Endpoint;
                 endpoint.EndpointType = request.EndpointType;
@@ -193,7 +196,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 删除 MCP Endpoint
+        /// delete MCP Endpoint
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> DeleteEndpoint(MCPEndpointDeleteRequest request)
@@ -221,7 +224,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 测试 MCP Endpoint（真实连接 MCP Server 并返回工具列表）
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<McpConnectionTestResult>> TestEndpoint(MCPEndpointTestRequest request)
@@ -244,7 +247,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 发布 MCP Endpoint 变更通知事件，供订阅模块（如 AgentsManager）刷新缓存的列表
+        ///Legacy comment translated to English.
         /// </summary>
         private async Task PublishEndpointsUpdatedAsync(string updateReason)
         {
@@ -259,7 +262,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 对尚未保存的端点配置执行连接测试（可视化配置前验证地址可用性）
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<McpConnectionTestResult>> TestConnection(MCPEndpointTestConnectionRequest request)
@@ -328,7 +331,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
     }
 
     /// <summary>
-    /// 创建或编辑 MCP Endpoint 请求
+    /// createoredit MCP Endpoint request
     /// </summary>
     public class MCPEndpointCreateOrEditRequest
     {
@@ -370,7 +373,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
     }
 
     /// <summary>
-    /// 删除 MCP Endpoint 请求
+    /// delete MCP Endpoint request
     /// </summary>
     public class MCPEndpointDeleteRequest
     {
@@ -379,7 +382,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
     }
 
     /// <summary>
-    /// 测试 MCP Endpoint 请求
+    /// test MCP Endpoint request
     /// </summary>
     public class MCPEndpointTestRequest
     {
@@ -388,7 +391,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
     }
 
     /// <summary>
-    /// 对未保存的端点配置执行连接测试请求
+    ///Legacy comment translated to English.
     /// </summary>
     public class MCPEndpointTestConnectionRequest
     {

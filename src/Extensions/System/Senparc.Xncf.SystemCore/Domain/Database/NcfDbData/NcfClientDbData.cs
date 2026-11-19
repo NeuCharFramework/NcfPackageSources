@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：NcfClientDbData.cs
-    文件功能描述：NcfClientDbData 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: NcfClientDbData.cs
+    File description: NcfClientDbData related implementation
+
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.14.14 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -47,11 +50,11 @@ namespace Senparc.Xncf.SystemCore.Domain.Database
         }
 
         /// <summary>
-        /// 关闭连接（长时间保持一个连接操作会导致数据库操作时间逐渐变长）
+        ///Legacy comment translated to English.
         /// </summary>
         public override void CloseConnection()
         {
-            //COCONET 升级到.net core的过程中注释掉
+            //Legacy comment translated to English.
             //BaseDataContext.Database.Connection.Close();
             dataContext = null;
         }
@@ -65,10 +68,10 @@ namespace Senparc.Xncf.SystemCore.Domain.Database
                     //var connectionString = Ncf.Core.Config.SenparcDatabaseConfigs.ClientConnectionString;
 
                     //dataContext = SenparcDI.GetService<SenparcEntities>();
-                    //TODO:当前采用注入可以保证HttpContext单例，如果要全局单例，可采用单件模式（需要先解决释放的问题）
+                    //Legacy comment translated to English.
                 }
                 //var hashCode = dataContext.GetHashCode();
-                //System.Web.HttpContext.Current.Response.Write(dataContext.GetHashCode() + "<br />");//测试同一Request只有一个SenparcEntities实例
+                //Legacy comment translated to English.
                 return dataContext;
             }
 

@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：ApiAppService.cs
-    文件功能描述：XNCF 模板示例实现
-    
-    
-    创建标识：Senparc - 20211226
-    
-    修改标识：Senparc - 20260726
-    修改描述：v1.1.0 补充示例模板 EventBus 请求-响应回环与多语言能力
+
+    File name: ApiAppService.cs
+    File description: XNCF template sample implementation
+
+    Created by: Senparc - 20211226
+
+    Modified by: Senparc - 20260726
+    Change description: v1.1.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v1.1.15 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 using Senparc.CO2NET;
@@ -29,13 +32,16 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
         }
 
         /*
-         * 使用 [ApiBind] 可将任意方法或类快速创建动态 WebApi。
-         * 在 DDD 系统中，出于安全和防腐考虑，建议只在 AppService 上使用。
-         * 当 AppService 上添加 [ApiBind] 标签满足不了需求时，仍然可以手动创建 ApiController。
+         * Legacy comment translated to English.
+
+         * Legacy comment translated to English.
+
+         * Legacy comment translated to English.
+
          */
 
         /// <summary>
-        /// 将 AppService 暴露为 WebApi
+        /// expose AppService as a Web API
         /// </summary>
         /// <returns></returns>
         [ApiBind]
@@ -49,21 +55,28 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
         }
 
         /// <summary>
-        /// 自定义 Post 类型和复杂参数，同时测试异常抛出和自定义状态码
+        /// custom Post types and complex parameters while testing exception throwing and custom status codes
         /// </summary>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> MyCustomApi(Api_MyCustomApiRequest request)
         {
-            //StringAppResponse 是 AppResponseBase<string> 的快捷写法
+            //StringAppResponse is a shorthand for AppResponseBase<string>
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                throw new NcfExceptionBase($"抛出异常测试，传输参数：{request.FirstName} {request.LastName}");
+                throw new NcfExceptionBase(Template_XncfNameResource.Format(
+                    "Frontend.063",
+                    "Exception test with parameters: {0} {1}",
+                    request.FirstName,
+                    request.LastName));
                 response.StateCode = 100;
             },
             exceptionHandler: (ex, response, logger) =>
             {
-                logger.Append($"正在处理异常，信息：{ex.Message}");
+                logger.Append(Template_XncfNameResource.Format(
+                    "Function.Api.ExceptionHandled",
+                    "Handled exception: {0}",
+                    ex.Message));
             },
             afterFunc: (response, logger) =>
             {

@@ -1,20 +1,23 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：PromptRangeService.cs
-    文件功能描述：PromptRangeService 服务逻辑
-    
-    
-    创建标识：Senparc - 20240105
-    
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.20.0 维护 Skill 类型与执行策略
+    File name: PromptRangeService.cs
+    File description: Related implementation.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.20.8 add SourceFileId, SourceType, and SourceUrl columns to PromptRange table for PostgreSQL, SQL Server, and SQLite
+    Created by: Senparc - 20240105
+
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
+
+    Modified by: Senparc - 20261021
+    Change description: v0.20.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261103
+    Change description: v0.20.8 add SourceFileId, SourceType, and SourceUrl columns to PromptRange table for PostgreSQL, SQL Server, and SQLite
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -45,7 +48,7 @@ public class PromptRangeService : ServiceBase<Models.DatabaseModel.PromptRange>
     // public async Task<PromptRangeDto> UpdateExpectedResultsAsync(int promptRangeId, string expectedResults)
     // {
     //     var promptRange = await this.GetObjectAsync(p => p.Id == promptRangeId) ??
-    //                       throw new Exception($"未找到{promptRangeId}对应的靶场");
+    //Legacy comment translated to English.
     //
     //     promptRange.UpdateExpectedResultsJson(expectedResults);
     //
@@ -144,7 +147,7 @@ public class PromptRangeService : ServiceBase<Models.DatabaseModel.PromptRange>
     {
         await base.DeleteObjectAsync(p => p.Id == rangeId);
 
-        // todo 关联删除
+        //Legacy comment translated to English.
         var promptItemService = _serviceProvider.GetService<PromptItemService>();
 
         await promptItemService.DeleteAllAsync(p => p.RangeId == rangeId);

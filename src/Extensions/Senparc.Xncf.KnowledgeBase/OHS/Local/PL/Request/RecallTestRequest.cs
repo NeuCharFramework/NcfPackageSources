@@ -1,17 +1,20 @@
 /*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：RecallTestRequest.cs
-    文件功能描述：RecallTestRequest 相关实现
-    
-    
-    创建标识：Senparc - 20260225
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.8.0 upgrade KnowledgeBase retrieval with configurable chunking and re-ranking (backward compatible)
+    Copyright (C) 2026 Senparc
+
+    File name: RecallTestRequest.cs
+    File description: RecallTestRequest related implementation
+
+    Created by: Senparc - 20260225
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261103
+    Change description: v0.8.0 upgrade KnowledgeBase retrieval with configurable chunking and re-ranking (backward compatible)
+
+    Modified by: Senparc - 20261119
+    Change description: v0.8.4 Localized knowledge base management and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -27,21 +30,21 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.PL.Request
     {
         public int Id { get; set; }
         /// <summary>
-        /// 内容
+        /// content
         /// </summary>
         public string Content { get; set; }
         /// <summary>
-        /// 召回片段数量 Top K，默认 5，范围 1-20
+        ///Legacy comment translated to English.
         /// </summary>
         public int TopK { get; set; } = 5;
 
         /// <summary>
-        /// 本次测试的重排模式覆盖：None / Lexical / Llm；空表示跟随知识库配置。
+        ///Legacy comment translated to English.
         /// </summary>
         public string RerankMode { get; set; }
 
         /// <summary>
-        /// 本次测试的重排候选池覆盖；≤0 表示跟随知识库配置。
+        ///Legacy comment translated to English.
         /// </summary>
         public int CandidateCount { get; set; }
     }

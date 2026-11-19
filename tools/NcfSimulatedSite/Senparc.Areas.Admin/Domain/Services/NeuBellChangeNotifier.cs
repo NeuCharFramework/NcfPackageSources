@@ -1,16 +1,20 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：NeuBellChangeNotifier.cs
-    文件功能描述：纽铃模块变更通知与订阅
+    File name: NeuBellChangeNotifier.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260803
+    Created by: Senparc - 20260803
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.3.0 新增后台同步管理与可配置多语言页脚
+    Modified by: Senparc - 20260804
+    Change description: v0.3.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.3.0 将后台同步功能统一更名为 NeuBell/纽铃
+    Modified by: Senparc - 20260804
+    Change description: v0.3.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 

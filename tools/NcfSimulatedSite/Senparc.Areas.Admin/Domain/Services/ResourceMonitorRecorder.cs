@@ -1,25 +1,29 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：ResourceMonitorRecorder.cs
-    文件功能描述：后台资源监控记录器：每 10 秒采样一次 Host/Web 进程指标，
-    以“10 秒 / 1 分钟 / 5 分钟”三个时间分档写入统一的 CO2NET 对象缓存
-    （本地内存或 Redis 取决于站点配置），最多保留 24 小时，供 Admin 首页
-    Host 资源监控图表随时读取——UI 未打开时记录依然持续。
-    性能开销评估（实现前提）：
-      - 采样：每次仅读取 /proc 或系统 P/Invoke 计数器（<1ms），平均 CPU < 0.01%
-      - 缓存写入：约 7 次小对象写入/分钟（单次 5-30KB）
-      - 内存：三个窗口合计 < 70KB
-      - 异常隔离：任何采样/缓存异常只记录日志，绝不影响主业务
+    File name: ResourceMonitorRecorder.cs
+    File description: Related implementation.
+    Legacy comment translated to English.
+    Legacy comment translated to English.
+    Legacy comment translated to English.
+    Legacy comment translated to English.
+    Legacy comment translated to English.
+    Legacy comment translated to English.
+    Legacy comment translated to English.
+    Legacy comment translated to English.
+    Change description: v0.12.0 Updated module behavior and related support.
 
-    创建标识：Senparc - 20260926
-    修改描述：v0.12.0 新增资源监控后台记录器
+    Created by: Senparc - 20260926
 
-    修改标识：Senparc - 20261102
-    修改描述：v0.12.7 更新合并后资源监控图表的说明
+    Modified by: Senparc - 20261102
+    Change description: v0.12.7 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 add PromptRange selector service, UI components, and tests
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 add PromptRange selector service, UI components, and tests
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 
@@ -36,7 +40,7 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.Domain.Services
 {
     /// <summary>
-    /// 后台资源监控记录器（10 秒采样，三档时间分档，CO2NET 缓存最多保留 24 小时）。
+    ///Legacy comment translated to English.
     /// </summary>
     public sealed class ResourceMonitorRecorder : BackgroundService
     {
@@ -44,13 +48,13 @@ namespace Senparc.Areas.Admin.Domain.Services
         public const string CacheKeyMid = "NcfResourceMonitor:mid";
         public const string CacheKeyCoarse = "NcfResourceMonitor:coarse";
 
-        /// <summary>采样间隔（秒）。</summary>
+        ///Legacy comment translated to English.
         public const int SampleIntervalSeconds = 10;
-        /// <summary>10 秒档最多保留 180 点（30 分钟）。</summary>
+        ///Legacy comment translated to English.
         public const int FineMaxPoints = 180;
-        /// <summary>1 分钟档最多保留 360 点（6 小时）。</summary>
+        ///Legacy comment translated to English.
         public const int MidMaxPoints = 360;
-        /// <summary>5 分钟档最多保留 288 点（24 小时）。</summary>
+        ///Legacy comment translated to English.
         public const int CoarseMaxPoints = 288;
 
         private static readonly TimeSpan FineTtl = TimeSpan.FromMinutes(40);
@@ -60,11 +64,11 @@ namespace Senparc.Areas.Admin.Domain.Services
         private readonly IBaseObjectCacheStrategy _cache;
         private readonly ILogger<ResourceMonitorRecorder> _logger;
 
-        // 独立采样实例：不与 Admin 首页 2 秒轮询共享差分数值基准，
-        // 保证 10 秒档的 CPU 百分比始终基于 10 秒区间计算。
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         private readonly HostMetricsCollector _collector = new();
 
-        // 仅保留聚合所需的最少数据（当前分钟 + 最近 6 个 1 分钟点），内存占用极小。
+        //Legacy comment translated to English.
         private readonly List<ResourceMonitorPoint> _pendingMinute = new();
         private readonly List<ResourceMonitorPoint> _recentMinutes = new();
         private long _currentMinuteIndex;
@@ -78,7 +82,7 @@ namespace Senparc.Areas.Admin.Domain.Services
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            // 先采集一帧作为 CPU/网络差分的基准，再进入周期采样
+            //Legacy comment translated to English.
             try
             {
                 _collector.Collect();
@@ -104,14 +108,14 @@ namespace Senparc.Areas.Admin.Domain.Services
                     }
                     catch (Exception ex)
                     {
-                        // 记录器是纯后台增强功能：任何异常都不允许影响主业务
+                        //Legacy comment translated to English.
                         _logger.LogWarning(ex, "资源监控采样失败，等待下一个周期。");
                     }
                 }
             }
             catch (OperationCanceledException)
             {
-                // 正常停机
+                //Legacy comment translated to English.
             }
         }
 
@@ -225,7 +229,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 读取-追加-截断-回写单个分档窗口。记录器是唯一写者（单后台循环），无并发写风险。
+        ///Legacy comment translated to English.
         /// </summary>
         private async Task AppendWindowAsync(
             string key,

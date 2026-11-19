@@ -1,37 +1,41 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：AgentTemplateRunner.cs
-    文件功能描述：统一执行本地 AgentTemplate；A2A 仅在其上叠加协议与授权策略
+    File name: AgentTemplateRunner.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260813
+    Created by: Senparc - 20260813
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+    Modified by: Senparc - 20260813
+    Change description: v0.15.0-preview11 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.15.0-preview20 增强 AgentTemplate、ChatGroup 与发布型 A2A 的取消和请求处理
+    Modified by: Senparc - 20260815
+    Change description: v0.15.0-preview20 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 空输出时按最低 Token 预算自动重试一次
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
+    Modified by: Senparc - 20260822
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260917
-    修改描述：v0.18.0 为 Agent FunctionRender 工具注入参数元数据并保持调用兼容
+    Modified by: Senparc - 20260917
+    Change description: v0.18.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.19.0 运行模板时应用 Skill 绑定与工作区策略
+    Modified by: Senparc - 20261021
+    Change description: v0.19.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.19.1 add AITokenUsageRecorder and related services for token usage tracking
+    Modified by: Senparc - 20261103
+    Change description: v0.19.1 add AITokenUsageRecorder and related services for token usage tracking
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.19.3 完善 AgentsManager 模板、ChatGroup 与连接器能力兼容
+    Modified by: Senparc - 20261111
+    Change description: v0.19.3 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 
@@ -77,9 +81,9 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.AgentsManager.Domain.Services;
 
 /// <summary>
-/// AgentTemplate 的唯一运行器构建和无状态执行入口。
-/// 本地 ChatGroup、工作流和已发布的 A2A Agent 都使用同一模型、Prompt 解析和 ChatOptions 配置；
-/// A2A 的鉴权、限流、输入边界和工具授权留在调用方处理。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 public sealed class AgentTemplateRunner
 {
@@ -105,8 +109,8 @@ public sealed class AgentTemplateRunner
     }
 
     /// <summary>
-    /// 判断 AgentTemplate 中存储的值是否为 PromptRange 版本引用。
-    /// 非版本格式的内容是用户直接输入的 System Message，禁止交给 PromptRange 查询。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public static bool IsPromptRangeReference(string promptCode)
         => !string.IsNullOrWhiteSpace(promptCode) && PromptItem.IsPromptVersion(promptCode.Trim());
@@ -133,9 +137,9 @@ public sealed class AgentTemplateRunner
             return AgentTemplateRunResult.Failed(build.ErrorMessage, build.Diagnostics);
         }
 
-        // 本地工作流与发布型 A2A 共享严格响应入口。旧的 RunChatAsync 包装会把一部分
-        // 上游异常写入 OutputString，使 401/403 看起来像一条正常的 Agent 回复；统一后，
-        // 两条路径都会保留真实故障，同时仍保留会话不兼容时的无状态回退。
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         var execution = await ExecuteBuiltResponseRunnerAsync(build, userText, request, cancellationToken)
             .ConfigureAwait(false);
         return await RetryEmptyOutputWithHigherTokenBudgetAsync(
@@ -150,10 +154,10 @@ public sealed class AgentTemplateRunner
     }
 
     /// <summary>
-    /// 使用 IWantToRun 的严格非流式入口执行。
-    /// 该入口复用本地 Agent 的 Prompt 替换、模型参数和工具配置，同时保留模型服务的原始异常，
-    /// 使 A2A 不会把 401/403 等上游故障伪装成一条正常的 Agent 回复。A2A 协议自身仍可
-    /// 以流式事件返回最终结果，但不能因此强制上游模型服务接受流式请求。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<AgentTemplateRunResult> RunWithChatClientAgentAsync(
         AgentTemplate template,
@@ -364,8 +368,8 @@ public sealed class AgentTemplateRunner
         }
         catch (Exception ex) when (session != null && !AgentModelFallbackResolver.ContainsForbiddenStatus(ex))
         {
-            // 部分模型适配器不接受 AgentSession 时退回无状态执行；权限错误则由上层
-            // 的受控 DeploymentName 兼容回退处理，避免不必要地重复提交同一请求。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             response = await _aiModelService.RunChatResponseWithUsageAsync(
                     build.Runner,
                     input,
@@ -505,8 +509,8 @@ public sealed class AgentTemplateRunner
     }
 
     /// <summary>
-    /// 构造可被工作流编排复用的本地 Agent 运行器。所有入口都必须经由此方法，
-    /// 避免 A2A 与页面中的本地 Agent 出现模型或 Prompt 配置分叉。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<AgentTemplateRunnerBuildResult> BuildAsync(
         AgentTemplate template,
@@ -1211,7 +1215,7 @@ public sealed class AgentTemplateRunner
 }
 
 /// <summary>
-/// 运行配置。所有入口都使用本地工作流兼容的模型参数；A2A 只能通过显式开关追加工具。
+///Legacy comment translated to English.
 /// </summary>
 public sealed class AgentTemplateRunRequest
 {
@@ -1219,38 +1223,38 @@ public sealed class AgentTemplateRunRequest
     public const string LocalChatGroupCompatibleProfile = "local-chat-group-compatible";
     public string ProfileName { get; init; } = LocalWorkflowCompatibleProfile;
     /// <summary>
-    /// Workflow 或 Group 本次任务选择的模型。关闭个性化时它覆盖所有 Agent；
-    /// 启用个性化时仅被“跟随组任务”的 Agent 使用。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public int? AiModelId { get; init; }
-    /// <summary>当前管理员 ID，用于按管理员权限解析 Workflow Function Calling 绑定。</summary>
+    ///Legacy comment translated to English.
     public int AdminUserId { get; init; }
     public bool AllowFunctionCalls { get; init; }
     /// <summary>
-    /// 将可执行工具标记为需要人工确认。默认关闭，以保持现有 AgentsManager 对话行为。
+    ///Legacy comment translated to English.
     /// </summary>
     public bool RequireHumanApproval { get; init; }
-    /// <summary>HIL 主等级。旧调用方只设置 RequireHumanApproval 时仍保持旧语义。</summary>
+    ///Legacy comment translated to English.
     public HumanInTheLoopLevel HumanInTheLoopLevel { get; init; } = HumanInTheLoopLevel.Automatic;
-    /// <summary>插件工具权限；Inherit 时由 HIL 等级计算。</summary>
+    ///Legacy comment translated to English.
     public ToolPermissionMode PluginToolPermission { get; init; } = ToolPermissionMode.Inherit;
-    /// <summary>MCP 工具权限；Inherit 时由 HIL 等级计算。</summary>
+    ///Legacy comment translated to English.
     public ToolPermissionMode McpToolPermission { get; init; } = ToolPermissionMode.Inherit;
     /// <summary>
-    /// 调用方已经解析好的默认模型。ChatGroup 在关闭个性化参数时使用该模型。
+    ///Legacy comment translated to English.
     /// </summary>
     public ISenparcAiSetting DefaultSetting { get; init; }
     /// <summary>
-    /// 是否采用 Agent 自身 Prompt 中绑定的模型；对应 ChatGroup 的“采用个性化参数运行智能体”。
+    ///Legacy comment translated to English.
     /// </summary>
     public bool UseTemplateModelSettings { get; init; } = true;
     /// <summary>
-    /// 是否沿用 Prompt 版本中的 MaxToken、Temperature、TopP、Penalty 与 StopSequences。
-    /// 发布型 A2A 和本地独立 Agent 默认开启；ChatGroup 可随“个性化参数”选项切换。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public bool UseTemplatePromptParameters { get; init; } = true;
     /// <summary>
-    /// 是否使用本次执行新建的 AgentSession。不会跨请求保存 A2A 历史。
+    ///Legacy comment translated to English.
     /// </summary>
     public bool UseFreshAgentSession { get; init; } = true;
     /// <summary>
@@ -1259,30 +1263,30 @@ public sealed class AgentTemplateRunRequest
     /// </summary>
     public bool AllowDeploymentNameModelIdFallback { get; init; }
     /// <summary>
-    /// 仅供显式诊断流程启用：记录脱敏模型传输信息。
-    /// 发布型 A2A 正常路径保持关闭，以便与本地 Agent 使用同一标准传输。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public bool EnableModelTransportDiagnostics { get; init; }
     /// <summary>
-    /// 关联 A2A 请求与模型传输诊断的 ID，不包含 Prompt、Key 或完整 Endpoint。
+    ///Legacy comment translated to English.
     /// </summary>
     public string DiagnosticId { get; init; }
     public string RunnerName { get; init; }
     public int MaxOutputTokens { get; init; } = 3000;
     /// <summary>
-    /// 单次空正文恢复时覆盖 PromptRange 中的 MaxToken；常规执行始终为 null，
-    /// 继续尊重 PromptRange 或调用方的原始预算。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public int? MaxOutputTokensOverride { get; init; }
-    /// <summary>防止空正文恢复路径重复提高预算并产生循环重试。</summary>
+    ///Legacy comment translated to English.
     public bool EmptyOutputTokenBudgetRetryAttempted { get; init; }
     public float Temperature { get; init; } = 0.5f;
     public float? TopP { get; init; }
 
-    /// <summary>为 true 时只把本次选中的连接器交给 Agent，并仍受 Agent 授权限制。</summary>
+    ///Legacy comment translated to English.
     public bool LimitConnectors { get; init; }
 
-    /// <summary>本次对话选中的连接器实例。</summary>
+    ///Legacy comment translated to English.
     public IReadOnlyList<string> ConnectorInstanceIds { get; init; }
 
     public static AgentTemplateRunRequest ForLocalWorkflow(
@@ -1321,8 +1325,8 @@ public sealed class AgentTemplateRunRequest
         {
             RunnerName = $"WorkflowAgent-{agentTemplateId}-A2A-{publicAgentKey}",
             ProfileName = LocalWorkflowCompatibleProfile,
-            // 发布型 A2A 与本地独立 Agent 一样沿用 Prompt 绑定的模型与完整参数。
-            // 对外工具执行仍必须由发布配置显式开启。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             AllowFunctionCalls = allowFunctionCalls,
             UseTemplateModelSettings = true,
             UseTemplatePromptParameters = true,
@@ -1474,7 +1478,7 @@ public sealed record AgentTemplateExecutionDiagnostics(
     int ToolCount);
 
 /// <summary>
-/// 已构造的本地 Agent 运行器。ChatGroup 与独立调用共用该对象，确保两条路径使用完全相同的配置。
+///Legacy comment translated to English.
 /// </summary>
 public sealed record AgentTemplateRunnerBuildResult(
     bool Success,

@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：RemoteA2AAgentFactory.cs
-    文件功能描述：领域服务与业务流程实现
 
+    File name: RemoteA2AAgentFactory.cs
+    File description: domain services and business-process implementation
 
-    创建标识：Senparc - 20260812
+    Created by: Senparc - 20260812
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+    Modified by: Senparc - 20260813
+    Change description: v0.15.0-preview11 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 
@@ -28,8 +31,8 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.AgentsManager.Domain.Services
 {
     /// <summary>
-    /// 将已保存的 RemoteAgent 配置转换为 Microsoft Agent Framework 的 AIAgent。
-    /// 令牌只从部署配置读取，永不写入数据库、日志或对话上下文。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public class RemoteA2AAgentFactory
     {

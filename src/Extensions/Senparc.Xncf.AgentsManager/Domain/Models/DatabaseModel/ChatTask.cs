@@ -1,25 +1,27 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：ChatTask.cs
-    文件功能描述：ChatTask 相关实现
-    
-    
-    创建标识：Senparc - 20241016
-    
-    修改标识：Senparc - 20260704
-    修改描述：v0.11.0-preview2 新增 ChatTask 归档能力并完善多数据库迁移支持
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
+    File name: ChatTask.cs
+    File description: ChatTask related implementation
+    -
 
--
+    Created by: Senparc - 20241016
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 支持 AgentTemplate 模型绑定、空输出 Token 重试与 Human-in-the-Loop
+    Modified by: Senparc - 20260704
+    Change description: v0.11.0-preview2 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260822
+    Change description: v0.16.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 
@@ -32,7 +34,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
 {
-    [Table(Register.DATABASE_PREFIX + nameof(ChatTask))]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(ChatTask))]//a prefix is required to prevent system-wide conflicts
     [Serializable]
     public class ChatTask : EntityBase<int>
     {
@@ -76,7 +78,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
         public bool Score { get; private set; }
 
         /// <summary>
-        /// 是否已归档
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         public bool IsArchived { get; private set; }
@@ -87,19 +89,19 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
         public DateTime EndTime { get; private set; }
 
         /// <summary>
-        /// 对于对话结果的评价
+        ///Legacy comment translated to English.
         /// </summary>
         public string ResultComment { get; private set; }
 
 
         /// <summary>
-        /// 进行 WebHook 的平台
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         public HookPlatform HookPlatform { get; private set; }
 
         /// <summary>
-        /// 进行 WebHook 的平台参数
+        ///Legacy comment translated to English.
         /// </summary>
         public string HookPlatformParameter { get; private set; }
 

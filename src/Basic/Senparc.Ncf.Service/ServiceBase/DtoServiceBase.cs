@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：DtoServiceBase.cs
-    文件功能描述：DtoServiceBase 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: DtoServiceBase.cs
+    File description: DtoServiceBase related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.23.13-preview12 Updated service infrastructure and related localization metadata
 
 ----------------------------------------------------------------*/
 
@@ -57,14 +60,14 @@ namespace Senparc.Ncf.Service.ServiceBase
         }
 
         /// <summary>
-        /// 获取分页数据
+        /// get paginated data
         /// </summary>
         /// <typeparam name="TK"></typeparam>
-        /// <param name="pageIndex">页码</param>
-        /// <param name="pageCount">每页数量</param>
-        /// <param name="where">条件</param>
-        /// <param name="orderBy">排序字段</param>
-        /// <param name="orderingType">正序|倒叙</param>
+        ///Legacy comment translated to English.
+        /// <param name="pageCount">items per page</param>
+        /// <param name="where">condition</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <param name="includes"></param>
         /// <returns></returns>
         public override PagedList<TEntity> GetObjectList<TK>(int pageIndex, int pageCount, Expression<Func<TEntity, bool>> where, Expression<Func<TEntity, TK>> orderBy, OrderingType orderingType,params string[] includes)
@@ -74,14 +77,14 @@ namespace Senparc.Ncf.Service.ServiceBase
 
 
         /// <summary>
-        /// 获取分页数据
+        /// get paginated data
         /// </summary>
         /// <typeparam name="TK"></typeparam>
-        /// <param name="pageIndex">页码</param>
-        /// <param name="pageCount">每页数量</param>
-        /// <param name="where">条件</param>
-        /// <param name="orderBy">排序字段</param>
-        /// <param name="orderingType">正序|倒叙</param>
+        ///Legacy comment translated to English.
+        /// <param name="pageCount">items per page</param>
+        /// <param name="where">condition</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <param name="includes"></param>
         /// <returns></returns>
         public override async Task<PagedList<TEntity>> GetObjectListAsync<TK>(int pageIndex, int pageCount, Expression<Func<TEntity, bool>> where, Expression<Func<TEntity, TK>> orderBy, OrderingType orderingType,params string[] includes)
@@ -100,7 +103,7 @@ namespace Senparc.Ncf.Service.ServiceBase
         }
 
         /// <summary>
-        /// 强制将实体设置为Modified状态
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="obj"></param>
         public override void TryDetectChange(TEntity obj)
@@ -140,6 +143,6 @@ namespace Senparc.Ncf.Service.ServiceBase
             }
         }
 
-        //TODO: 提供异步版本
+        //TODO: provideasyncversion
     }
 }

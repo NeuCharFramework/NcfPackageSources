@@ -1,9 +1,22 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: ColorRequestDto.cs
+    File description: ColorRequestDto related implementation
+
+    Created by: Senparc - 20250524
+
+    Modified by: Senparc - 20261119
+    Change description: v1.1.15 Updated module behavior, localization metadata, and English source comments
+
+----------------------------------------------------------------*/
+
 using System.ComponentModel.DataAnnotations;
 
 namespace Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dto
 {
     /// <summary>
-    /// 创建颜色请求DTO
+    /// createcolorrequestDTO
     /// </summary>
     public class CreateColorRequestDto
     {
@@ -17,13 +30,13 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dt
         public int Blue { get; set; }
 
         /// <summary>
-        /// 附加备注
+        ///Legacy comment translated to English.
         /// </summary>
         public string AdditionNote { get; set; }
     }
 
     /// <summary>
-    /// 更新颜色请求DTO
+    /// updatecolorrequestDTO
     /// </summary>
     public class UpdateColorRequestDto
     {
@@ -40,13 +53,13 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dt
         public int Blue { get; set; }
 
         /// <summary>
-        /// 附加备注
+        ///Legacy comment translated to English.
         /// </summary>
         public string AdditionNote { get; set; }
     }
 
     /// <summary>
-    /// 删除颜色请求DTO
+    /// deletecolorrequestDTO
     /// </summary>
     public class DeleteColorRequestDto
     {
@@ -55,7 +68,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dt
     }
 
     /// <summary>
-    /// 随机化颜色请求DTO
+    ///Legacy comment translated to English.
     /// </summary>
     public class RandomizeColorRequestDto
     {

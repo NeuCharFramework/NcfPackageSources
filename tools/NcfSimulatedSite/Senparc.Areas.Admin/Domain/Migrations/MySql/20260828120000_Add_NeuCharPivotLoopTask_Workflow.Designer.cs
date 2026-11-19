@@ -1,17 +1,17 @@
-﻿/*-----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：20260828120000_Add_NeuCharPivotLoopTask_Workflow.Designer.cs
-    文件功能描述：20260828120000_Add_NeuCharPivotLoopTask_Workflow.Designer.cs 相关实现
+    File name: 20260828120000_Add_NeuCharPivotLoopTask_Workflow.Designer.cs
+    File description: 20260828120000_Add_NeuCharPivotLoopTask_Workflow.Designer.cs related implementation
 
+    Created by: Senparc - 20260809
 
-    创建标识：Senparc - 20260809
+    Modified by: Senparc - 20260822
+    Change description: v0.6.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.6.0 新增管理端 Chat 会话工作流能力
-
-    修改标识：Senparc - 20260829
-    修改描述：v0.7.0 新增 NeuCharPivot 全局浮动调用与工作流分析管理能力
+    Modified by: Senparc - 20260829
+    Change description: v0.7.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

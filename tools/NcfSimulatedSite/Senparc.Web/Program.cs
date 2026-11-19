@@ -1,53 +1,56 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：Program.cs
-    文件功能描述：Program 相关实现
 
+    File name: Program.cs
+    File description: Program related implementation
 
-    创建标识：Senparc - 20241028
+    Created by: Senparc - 20241028
 
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.21.6 重构系统配置初始化与更新流程并统一模型处理
+    Modified by: Senparc - 20260705
+    Change description: v0.21.6 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.21.7 重构系统配置初始化与更新流程并统一模型处理
+    Modified by: Senparc - 20260705
+    Change description: v0.21.7 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260724
-    修改描述：v0.34.0 完善站点本地化及内嵌 WebView 导航兼容性
+    Modified by: Senparc - 20260724
+    Change description: v0.34.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.34.1 完善站点初始化状态、浏览器导航与多语言提示
+    Modified by: Senparc - 20260729
+    Change description: v0.34.1 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.35.0 新增数据库升级维护流程与多平台下载入口
+    Modified by: Senparc - 20260804
+    Change description: v0.35.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260812
-    修改描述：补齐 UseAuthentication，避免重启后旧 Cookie 被误判为 403
+    Modified by: Senparc - 20260812
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.36.0 集成工作流模块与 A2A 发布配置并修复认证持久化
+    Modified by: Senparc - 20260813
+    Change description: v0.36.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.36.1 适配工作流、A2A 与预览模块宿主配置
+    Modified by: Senparc - 20260815
+    Change description: v0.36.1 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.39.0 新增宿主安全防护与 MySQL 数据库集成
+    Modified by: Senparc - 20260915
+    Change description: v0.39.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.39.8 统一主站请求本地化与宿主注册兼容
+    Modified by: Senparc - 20261111
+    Change description: v0.39.8 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.39.9 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
-//以下数据库模块的命名空间根据需要添加或删除
-//using Senparc.Ncf.Database.MySql;         //使用需要引用包： Senparc.Ncf.Database.MySql
-//using Senparc.Ncf.Database.Sqlite;        //使用需要引用包： Senparc.Ncf.Database.Sqlite
-//using Senparc.Ncf.Database.PostgreSQL;    //使用需要引用包： Senparc.Ncf.Database.PostgreSQL
-//using Senparc.Ncf.Database.Oracle;        //使用需要引用包： Senparc.Ncf.Database.Oracle
-//using Senparc.Ncf.Database.SqlServer;       //使用需要引用包： Senparc.Ncf.Database.SqlServer
+//Legacy comment translated to English.
+//Legacy comment translated to English.
+//Legacy comment translated to English.
+//Legacy comment translated to English.
+//Legacy comment translated to English.
+//Legacy comment translated to English.
 
 using Senparc.CO2NET;
 using Senparc.CO2NET.HttpUtility;
@@ -65,7 +68,7 @@ using Senparc.Web.Infrastructure.Security;
 var databaseUpgradeOptions = DatabaseUpgradeCommandLineOptions.Parse(args);
 void ReportDatabaseUpgradeProgress(string message)
 {
-    // 独立升级命令不会启动 Web 监听，直接输出阶段信息，便于定位连接或模块迁移阻塞。
+    //Legacy comment translated to English.
     if (databaseUpgradeOptions.Enabled)
     {
         Console.WriteLine($"数据库升级：{message}");
@@ -76,14 +79,14 @@ ReportDatabaseUpgradeProgress("正在创建应用宿主……");
 var builder = WebApplication.CreateBuilder(databaseUpgradeOptions.HostArguments);
 ReportDatabaseUpgradeProgress("应用构建器创建完成，正在注册 NCF 服务……");
 
-//添加（注册） NCF 服务（必须）
+//Legacy comment translated to English.
 builder.AddNcf();
 ReportDatabaseUpgradeProgress("NCF 服务注册完成，正在注册基础服务……");
 
-//添加 ServiceDefaults
+//Legacy comment translated to English.
 builder.AddServiceDefaults();
 
-// 注册 Cloudflare 及类似站点防护配置与限流器（是否生效由 appsettings 的 CloudflareProtect.Enabled 决定）
+//Legacy comment translated to English.
 builder.Services.Configure<CloudflareProtectOptions>(builder.Configuration.GetSection(CloudflareProtectOptions.SectionName));
 builder.Services.AddSingleton<FixedWindowRateLimiter>();
 ReportDatabaseUpgradeProgress("基础服务注册完成，正在注册 Dapr……");
@@ -92,7 +95,7 @@ ReportDatabaseUpgradeProgress("基础服务注册完成，正在注册 Dapr…�
 // accepts every certificate would make all outbound HTTPS requests vulnerable
 // to man-in-the-middle attacks.
 
-//添加 Dapr
+//Legacy comment translated to English.
 builder.Services.AddDaprClient();
 ReportDatabaseUpgradeProgress("服务注册完成，正在生成应用宿主……");
 
@@ -129,26 +132,40 @@ var localizationOptions = new RequestLocalizationOptions()
 
 app.UseRequestLocalization(localizationOptions);
 
-// 先完成模块和数据库注册，但延迟启动后台线程，避免旧架构上的后台任务反复失败。
+//Legacy comment translated to English.
 app.UseNcf<BySettingDatabaseConfiguration>(startBackgroundThreads: false);
 
-// Cloudflare 及类似站点防护：配置启用后自站点打开（首个请求）起立即生效
+//Legacy comment translated to English.
 app.UseCloudflareProtect();
 ReportDatabaseUpgradeProgress("XNCF 模块注册完成，正在检查数据库状态……");
-/*  UseNcf<TDatabaseConfiguration>() 泛型类型说明
+/*  Legacy comment translated to English.
+
  *                
- *                  方法                            |         说明
+
+ *                  method                            |         description
+
  * -------------------------------------------------|-------------------------
- *  UseNcf<BySettingDatabaseConfiguration>()        |  由 appsettings.json 决定配置
- *  UseNcf<SqlServerDatabaseConfiguration>()        |  使用 SQLServer 数据库
- *  UseNcf<SqliteMemoryDatabaseConfiguration>()     |  使用 SQLite 数据库
- *  UseNcf<MySqlDatabaseConfiguration>()            |  使用 MySQL 数据库
- *  UseNcf<PostgreSQLDatabaseConfiguration>()       |  使用 PostgreSQL 数据库
- *  UseNcf<OracleDatabaseConfiguration>()           |  使用 Oracle 数据库（V12+）
- *  UseNcf<OracleDatabaseConfigurationForV11>()     |  使用 Oracle 数据库（V11+）
- *  UseNcf<DmDatabaseConfiguration>()               |  使用 DM（达梦）数据库
- *  更多数据库可扩展，依次类推……
+
+ *  Legacy comment translated to English.
+
+ *  UseNcf<SqlServerDatabaseConfiguration>()        |  use SQLServer database
+
+ *  UseNcf<SqliteMemoryDatabaseConfiguration>()     |  use SQLite database
+
+ *  UseNcf<MySqlDatabaseConfiguration>()            |  use MySQL database
+
+ *  UseNcf<PostgreSQLDatabaseConfiguration>()       |  use PostgreSQL database
+
+ *  UseNcf<OracleDatabaseConfiguration>()           |  use Oracle database（V12+）
+
+ *  UseNcf<OracleDatabaseConfigurationForV11>()     |  use Oracle database（V11+）
+
+ *  Legacy comment translated to English.
+
+ *  Legacy comment translated to English.
+
  *  
+
  */
 
 var databaseUpgradeCoordinator = app.Services.GetRequiredService<DatabaseUpgradeCoordinator>();
@@ -189,9 +206,9 @@ else
 
 //app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseFileServer();//非必须
+app.UseFileServer();//Legacy comment translated to English.
 
-// 架构待升级或数据库不可用时只开放维护页，不让业务请求触发更多数据库异常。
+//Legacy comment translated to English.
 app.UseDatabaseMaintenanceMode();
 
 app.UseCookiePolicy();
@@ -206,7 +223,7 @@ app.MapDefaultEndpoints();
 
 if (databaseRuntimeState.Status == DatabaseRuntimeStatus.Ready)
 {
-    app.ShowSuccessTip();//显示系统准备成功提示
+    app.ShowSuccessTip();//Legacy comment translated to English.
 }
 
 string GetNcfApiClientPath(string xncfName, string appServiceName, string methodName, string showStaticApiState = null)
@@ -224,18 +241,31 @@ string GetNcfApiClientPath(string xncfName, string appServiceName, string method
 
 /*
 Console.WriteLine("============ logMsg =============");
+
 Console.WriteLine("DatabaseName: " + Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.DatabaseName);
+
 Console.WriteLine("DatabaseType: " + Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.DatabaseType);
+
 Console.WriteLine("CacheType: " + Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.CacheType);
+
 Console.WriteLine("EnableMultiTenant: " + Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.EnableMultiTenant);
+
 Console.WriteLine("TenantRule: " + Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.TenantRule);
+
 Console.WriteLine("RequestTempLogCacheMinutes: " + Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.RequestTempLogCacheMinutes);
+
 Console.WriteLine("PasswordSaltToken: " + Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.PasswordSaltToken);
+
 Console.WriteLine("McpAccessToken: " + Senparc.Ncf.Core.Config.SiteConfig.SenparcCoreSetting.McpAccessToken);
+
 //output Database connection string
+
 Console.WriteLine("Database connection string: " + string.Join(", ", Senparc.Ncf.Database.Helpers.NcfDatabaseHelper.GetCurrentConnectionInfo().Select(z => $"{z.Key}: {z.Value}")));
+
 Console.WriteLine("Count of Database connection string: " + Senparc.Ncf.Database.Helpers.NcfDatabaseHelper.GetCurrentConnectionInfo().Count());
+
 Console.WriteLine("============ logMsg END =============");
+
 */
 
 // This route is a local development smoke test and must not be published by

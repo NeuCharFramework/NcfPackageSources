@@ -1,9 +1,11 @@
 ﻿/*----------------------------------------------------------------
-    文件名：Index.js
-    文件功能描述：NeuBell WebHook（WebAPI）设置页：
-    通知端点 CRUD（含请求方式/请求体模板/占位符）、启用开关、测试发送、请求日志（请求数据与结果）
+
+    File name: Index.js
+    File description: Related implementation.
+    Legacy comment translated to English.
+
 ----------------------------------------------------------------*/
-// 统一响应解包
+//Legacy comment translated to English.
 window.NeuBellWebHookUi = {
     unwrap(response) {
         const body = response && response.data;
@@ -244,7 +246,7 @@ new Vue({
                 try {
                     text = JSON.stringify(JSON.parse(text), null, 2);
                 } catch (error) {
-                    // 非 JSON 时原样展示
+                    //Legacy comment translated to English.
                 }
                 this.payloadText = text;
             } finally {

@@ -146,7 +146,7 @@
   <data name="AdminChat.Memory.Failed" xml:space="preserve"><value>Memory operation failed. Reload before retrying.</value></data>
   <data name="AdminChat.Memory.UpdateWarning" xml:space="preserve"><value>Memory was not updated this turn; existing memories were retained. Check PromptRange or reopen Memory settings.</value></data>
   <data name="Admin.Title" xml:space="preserve">
-    <value>NCF Admin Panel</value>
+    <value>System Admin Panel</value>
   </data>
   <data name="Admin.Nav.Home" xml:space="preserve">
     <value>Home</value>
@@ -160,6 +160,8 @@
   <data name="Admin.Tabs.Untitled" xml:space="preserve">
     <value>Untitled page</value>
   </data>
+  <data name="Admin.Tabs.BackToSource" xml:space="preserve"><value>Back to source:</value></data>
+  <data name="Admin.Tabs.CurrentPage" xml:space="preserve"><value>Current page</value></data>
   <data name="Admin.Tabs.ScrollLeft" xml:space="preserve">
     <value>Scroll tabs left</value>
   </data>
@@ -312,7 +314,7 @@
   <data name="Xncf.Install.ModuleNotFound" xml:space="preserve"><value>The target module was not found and cannot be installed.</value></data>
   <data name="Xncf.Install.Success" xml:space="preserve"><value>Installation completed successfully.</value></data>
   <data name="Xncf.Install.Failed" xml:space="preserve"><value>Installation failed: {0}</value></data>
-  <data name="Admin.Register.MenuName" xml:space="preserve"><value>NCF System Admin Panel</value></data>
+  <data name="Admin.Register.MenuName" xml:space="preserve"><value>System Admin Panel</value></data>
   <data name="Admin.Register.Description" xml:space="preserve"><value>This is the admin backend module used for self-management of the NCF system backend. Do not remove this module. If you really must, back up your data first.</value></data>
   <data name="Admin.Area.MenuManagement" xml:space="preserve"><value>Menu Management</value></data>
   <data name="Admin.Area.TraceLog" xml:space="preserve"><value>SenparcTrace Logs</value></data>
@@ -712,114 +714,114 @@
   <data name="AdminChat.NoMenuOrFunctions" xml:space="preserve"><value>This module has no available menus or functions.</value></data>
   <data name="AdminChat.NoMatchingModules" xml:space="preserve"><value>No matching modules</value></data>
   <data name="AdminChat.ConfirmAdd" xml:space="preserve"><value>Confirm add</value></data>
-  <data name="Frontend.001" xml:space="preserve"><value>Extension Modules||Extension Modules</value></data>
-  <data name="Frontend.002" xml:space="preserve"><value>Home||Home</value></data>
-  <data name="Frontend.003" xml:space="preserve"><value>Database sample||Database sample</value></data>
-  <data name="Frontend.004" xml:space="preserve"><value>Add||Add</value></data>
-  <data name="Frontend.005" xml:space="preserve"><value>Add||Add</value></data>
-  <data name="Frontend.006" xml:space="preserve"><value>Edit||Edit</value></data>
-  <data name="Frontend.007" xml:space="preserve"><value>Delete||Delete</value></data>
-  <data name="Frontend.008" xml:space="preserve"><value>Cancel||Cancel</value></data>
-  <data name="Frontend.009" xml:space="preserve"><value>Confirm||Confirm</value></data>
-  <data name="Frontend.010" xml:space="preserve"><value>Confirm||Confirm</value></data>
-  <data name="Frontend.011" xml:space="preserve"><value>Save||Save</value></data>
-  <data name="Frontend.012" xml:space="preserve"><value>Close||Close</value></data>
-  <data name="Frontend.013" xml:space="preserve"><value>Back||Back</value></data>
-  <data name="Frontend.014" xml:space="preserve"><value>Search||Search</value></data>
-  <data name="Frontend.015" xml:space="preserve"><value>Search||Search</value></data>
-  <data name="Frontend.016" xml:space="preserve"><value>Reset||Reset</value></data>
-  <data name="Frontend.017" xml:space="preserve"><value>Refresh||Refresh</value></data>
-  <data name="Frontend.018" xml:space="preserve"><value>Actions||Actions</value></data>
-  <data name="Frontend.019" xml:space="preserve"><value>Name||Name</value></data>
-  <data name="Frontend.020" xml:space="preserve"><value>Kind||Kind</value></data>
-  <data name="Frontend.021" xml:space="preserve"><value>Status||Status</value></data>
-  <data name="Frontend.022" xml:space="preserve"><value>Notes||Notes</value></data>
-  <data name="Frontend.023" xml:space="preserve"><value>Description||Description</value></data>
-  <data name="Frontend.024" xml:space="preserve"><value>Details||Details</value></data>
-  <data name="Frontend.025" xml:space="preserve"><value>Configure||Configure</value></data>
-  <data name="Frontend.026" xml:space="preserve"><value>Manage||Manage</value></data>
-  <data name="Frontend.027" xml:space="preserve"><value>List||List</value></data>
-  <data name="Frontend.028" xml:space="preserve"><value>Upload||Upload</value></data>
-  <data name="Frontend.029" xml:space="preserve"><value>Download||Download</value></data>
-  <data name="Frontend.030" xml:space="preserve"><value>Import||Import</value></data>
-  <data name="Frontend.031" xml:space="preserve"><value>Export||Export</value></data>
-  <data name="Frontend.032" xml:space="preserve"><value>Enabled||Enabled</value></data>
-  <data name="Frontend.033" xml:space="preserve"><value>Disabled||Disabled</value></data>
-  <data name="Frontend.034" xml:space="preserve"><value>All||All</value></data>
-  <data name="Frontend.035" xml:space="preserve"><value>No Data||No Data</value></data>
-  <data name="Frontend.036" xml:space="preserve"><value>No content||No content</value></data>
-  <data name="Frontend.037" xml:space="preserve"><value>Select||Select</value></data>
-  <data name="Frontend.038" xml:space="preserve"><value>Please fill in||Please fill in</value></data>
-  <data name="Frontend.039" xml:space="preserve"><value>Please enter||Please enter</value></data>
-  <data name="Frontend.040" xml:space="preserve"><value>Added time||Added time</value></data>
-  <data name="Frontend.041" xml:space="preserve"><value>Started||Started</value></data>
-  <data name="Frontend.042" xml:space="preserve"><value>Finished||Finished</value></data>
-  <data name="Frontend.043" xml:space="preserve"><value>Created||Created</value></data>
-  <data name="Frontend.044" xml:space="preserve"><value>Updated at||Updated at</value></data>
-  <data name="Frontend.045" xml:space="preserve"><value>File name||File name</value></data>
-  <data name="Frontend.046" xml:space="preserve"><value>File size||File size</value></data>
-  <data name="Frontend.047" xml:space="preserve"><value>Upload time||Upload time</value></data>
-  <data name="Frontend.048" xml:space="preserve"><value>Delete selected||Delete selected</value></data>
-  <data name="Frontend.049" xml:space="preserve"><value>Add file||Add file</value></data>
-  <data name="Frontend.050" xml:space="preserve"><value>Select file||Select file</value></data>
-  <data name="Frontend.051" xml:space="preserve"><value>Previous||Previous</value></data>
-  <data name="Frontend.052" xml:space="preserve"><value>Next||Next</value></data>
-  <data name="Frontend.053" xml:space="preserve"><value>Success||Success</value></data>
-  <data name="Frontend.054" xml:space="preserve"><value>Failed||Failed</value></data>
-  <data name="Frontend.055" xml:space="preserve"><value>Success||Success</value></data>
-  <data name="Frontend.056" xml:space="preserve"><value>Operation failed||Operation failed</value></data>
-  <data name="Frontend.057" xml:space="preserve"><value>Failed to load||Failed to load</value></data>
-  <data name="Frontend.058" xml:space="preserve"><value>Modules added successfully||Modules added successfully</value></data>
-  <data name="Frontend.059" xml:space="preserve"><value>Add failed||Add failed</value></data>
-  <data name="Frontend.060" xml:space="preserve"><value>Updated successfully||Updated successfully</value></data>
-  <data name="Frontend.061" xml:space="preserve"><value>Update failed||Update failed</value></data>
-  <data name="Frontend.062" xml:space="preserve"><value>Deleted successfully||Deleted successfully</value></data>
-  <data name="Frontend.063" xml:space="preserve"><value>Delete failed||Delete failed</value></data>
-  <data name="Frontend.064" xml:space="preserve"><value>Uploaded successfully||Uploaded successfully</value></data>
-  <data name="Frontend.065" xml:space="preserve"><value>Upload failed||Upload failed</value></data>
-  <data name="Frontend.066" xml:space="preserve"><value>Copied successfully||Copied successfully</value></data>
-  <data name="Frontend.067" xml:space="preserve"><value>Copy failed||Copy failed</value></data>
-  <data name="Frontend.068" xml:space="preserve"><value>Notice||Notice</value></data>
-  <data name="Frontend.069" xml:space="preserve"><value>Warning||Warning</value></data>
-  <data name="Frontend.070" xml:space="preserve"><value>Error||Error</value></data>
-  <data name="Frontend.071" xml:space="preserve"><value>Yes||Yes</value></data>
-  <data name="Frontend.072" xml:space="preserve"><value>No||No</value></data>
-  <data name="Frontend.073" xml:space="preserve"><value>Enabled||Enabled</value></data>
-  <data name="Frontend.074" xml:space="preserve"><value>Unknown||Unknown</value></data>
-  <data name="Frontend.075" xml:space="preserve"><value>Not set||Not set</value></data>
-  <data name="Frontend.076" xml:space="preserve"><value>No records||No records</value></data>
-  <data name="Frontend.077" xml:space="preserve"><value>Enter a keyword||Enter a keyword</value></data>
-  <data name="Frontend.078" xml:space="preserve"><value>Select a type||Select a type</value></data>
-  <data name="Frontend.079" xml:space="preserve"><value>Select status||Select status</value></data>
-  <data name="Frontend.080" xml:space="preserve"><value>Create||Create</value></data>
-  <data name="Frontend.081" xml:space="preserve"><value>Submit||Submit</value></data>
-  <data name="Frontend.082" xml:space="preserve"><value>View||View</value></data>
-  <data name="Frontend.083" xml:space="preserve"><value>Set as default||Set as default</value></data>
-  <data name="Frontend.084" xml:space="preserve"><value>Test||Test</value></data>
-  <data name="Frontend.085" xml:space="preserve"><value>Connected successfully||Connected successfully</value></data>
-  <data name="Frontend.086" xml:space="preserve"><value>Connection failed||Connection failed</value></data>
-  <data name="Frontend.087" xml:space="preserve"><value>Password is required!||Password is required!</value></data>
-  <data name="Frontend.088" xml:space="preserve"><value>{0} is duplicated.||{0} is duplicated.</value></data>
-  <data name="Frontend.089" xml:space="preserve"><value>Administrators cannot delete themselves!||Administrators cannot delete themselves!</value></data>
-  <data name="Frontend.090" xml:space="preserve"><value>Administrator does not exist!||Administrator does not exist!</value></data>
-  <data name="Frontend.091" xml:space="preserve"><value>Deleted successfully!||Deleted successfully!</value></data>
-  <data name="Frontend.092" xml:space="preserve"><value>WeChat log file does not exist:||WeChat log file does not exist:</value></data>
-  <data name="Frontend.093" xml:space="preserve"><value>{0} must be longer than 16 characters!||{0} must be longer than 16 characters!</value></data>
-  <data name="Frontend.094" xml:space="preserve"><value>The current session is not linked to any XNCF Module.||The current session is not linked to any XNCF Module.</value></data>
-  <data name="Frontend.095" xml:space="preserve"><value>No matching Module was found: "{0}". Call GetSessionModuleList first to confirm the modules in the current session.||No matching Module was found: "{0}". Call GetSessionModuleList first to confirm the modules in the current session.</value></data>
-  <data name="Frontend.096" xml:space="preserve"><value>Module not found: "{0}". Call GetSessionModuleList first to confirm the available modules.||Module not found: "{0}". Call GetSessionModuleList first to confirm the available modules.</value></data>
-  <data name="Frontend.097" xml:space="preserve"><value>Runtime registration for Module {0} was not found, so database information cannot be read.||Runtime registration for Module {0} was not found, so database information cannot be read.</value></data>
-  <data name="Frontend.098" xml:space="preserve"><value>No Module is registered in the system.||No Module is registered in the system.</value></data>
-  <data name="Frontend.099" xml:space="preserve"><value>SenparcAiSetting was not loaded. Check the appsettings.json configuration.||SenparcAiSetting was not loaded. Check the appsettings.json configuration.</value></data>
-  <data name="Frontend.100" xml:space="preserve"><value>SenparcAiSetting.AiPlatform is still UnSet. Set an available platform in appsettings.json first.||SenparcAiSetting.AiPlatform is still UnSet. Set an available platform in appsettings.json first.</value></data>
-  <data name="Frontend.101" xml:space="preserve"><value>The AIKernel Module is not installed or not enabled, so the system cannot switch to the specified AI model.||The AIKernel Module is not installed or not enabled, so the system cannot switch to the specified AI model.</value></data>
-  <data name="Frontend.102" xml:space="preserve"><value>AIModelService could not be resolved, so the specified AI model cannot be loaded.||AIModelService could not be resolved, so the specified AI model cannot be loaded.</value></data>
-  <data name="Frontend.103" xml:space="preserve"><value>The selected AI model does not exist: {0}||The selected AI model does not exist: {0}</value></data>
-  <data name="Frontend.104" xml:space="preserve"><value>The selected AI model is not a Chat type: {0}||The selected AI model is not a Chat type: {0}</value></data>
-  <data name="Frontend.105" xml:space="preserve"><value>The current user is not signed in, so renewal is not possible.||The current user is not signed in, so renewal is not possible.</value></data>
-  <data name="Frontend.106" xml:space="preserve"><value>User information does not exist!||User information does not exist!</value></data>
-  <data name="Frontend.107" xml:space="preserve"><value>The username does not exist or the password is incorrect: {0}!||The username does not exist or the password is incorrect: {0}!</value></data>
-  <data name="Frontend.108" xml:space="preserve"><value>The username does not exist or the password is incorrect!||The username does not exist or the password is incorrect!</value></data>
+  <data name="Frontend.001" xml:space="preserve"><value>Extension Modules</value></data>
+  <data name="Frontend.002" xml:space="preserve"><value>Home</value></data>
+  <data name="Frontend.003" xml:space="preserve"><value>Database sample</value></data>
+  <data name="Frontend.004" xml:space="preserve"><value>Add</value></data>
+  <data name="Frontend.005" xml:space="preserve"><value>Add</value></data>
+  <data name="Frontend.006" xml:space="preserve"><value>Edit</value></data>
+  <data name="Frontend.007" xml:space="preserve"><value>Delete</value></data>
+  <data name="Frontend.008" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>Confirm</value></data>
+  <data name="Frontend.010" xml:space="preserve"><value>Confirm</value></data>
+  <data name="Frontend.011" xml:space="preserve"><value>Save</value></data>
+  <data name="Frontend.012" xml:space="preserve"><value>Close</value></data>
+  <data name="Frontend.013" xml:space="preserve"><value>Back</value></data>
+  <data name="Frontend.014" xml:space="preserve"><value>Search</value></data>
+  <data name="Frontend.015" xml:space="preserve"><value>Search</value></data>
+  <data name="Frontend.016" xml:space="preserve"><value>Reset</value></data>
+  <data name="Frontend.017" xml:space="preserve"><value>Refresh</value></data>
+  <data name="Frontend.018" xml:space="preserve"><value>Actions</value></data>
+  <data name="Frontend.019" xml:space="preserve"><value>Name</value></data>
+  <data name="Frontend.020" xml:space="preserve"><value>Kind</value></data>
+  <data name="Frontend.021" xml:space="preserve"><value>Status</value></data>
+  <data name="Frontend.022" xml:space="preserve"><value>Notes</value></data>
+  <data name="Frontend.023" xml:space="preserve"><value>Description</value></data>
+  <data name="Frontend.024" xml:space="preserve"><value>Details</value></data>
+  <data name="Frontend.025" xml:space="preserve"><value>Configure</value></data>
+  <data name="Frontend.026" xml:space="preserve"><value>Manage</value></data>
+  <data name="Frontend.027" xml:space="preserve"><value>List</value></data>
+  <data name="Frontend.028" xml:space="preserve"><value>Upload</value></data>
+  <data name="Frontend.029" xml:space="preserve"><value>Download</value></data>
+  <data name="Frontend.030" xml:space="preserve"><value>Import</value></data>
+  <data name="Frontend.031" xml:space="preserve"><value>Export</value></data>
+  <data name="Frontend.032" xml:space="preserve"><value>Enabled</value></data>
+  <data name="Frontend.033" xml:space="preserve"><value>Disabled</value></data>
+  <data name="Frontend.034" xml:space="preserve"><value>All</value></data>
+  <data name="Frontend.035" xml:space="preserve"><value>No Data</value></data>
+  <data name="Frontend.036" xml:space="preserve"><value>No content</value></data>
+  <data name="Frontend.037" xml:space="preserve"><value>Select</value></data>
+  <data name="Frontend.038" xml:space="preserve"><value>Please fill in</value></data>
+  <data name="Frontend.039" xml:space="preserve"><value>Please enter</value></data>
+  <data name="Frontend.040" xml:space="preserve"><value>Added time</value></data>
+  <data name="Frontend.041" xml:space="preserve"><value>Started</value></data>
+  <data name="Frontend.042" xml:space="preserve"><value>Finished</value></data>
+  <data name="Frontend.043" xml:space="preserve"><value>Created</value></data>
+  <data name="Frontend.044" xml:space="preserve"><value>Updated at</value></data>
+  <data name="Frontend.045" xml:space="preserve"><value>File name</value></data>
+  <data name="Frontend.046" xml:space="preserve"><value>File size</value></data>
+  <data name="Frontend.047" xml:space="preserve"><value>Upload time</value></data>
+  <data name="Frontend.048" xml:space="preserve"><value>Delete selected</value></data>
+  <data name="Frontend.049" xml:space="preserve"><value>Add file</value></data>
+  <data name="Frontend.050" xml:space="preserve"><value>Select file</value></data>
+  <data name="Frontend.051" xml:space="preserve"><value>Previous</value></data>
+  <data name="Frontend.052" xml:space="preserve"><value>Next</value></data>
+  <data name="Frontend.053" xml:space="preserve"><value>Success</value></data>
+  <data name="Frontend.054" xml:space="preserve"><value>Failed</value></data>
+  <data name="Frontend.055" xml:space="preserve"><value>Success</value></data>
+  <data name="Frontend.056" xml:space="preserve"><value>Operation failed</value></data>
+  <data name="Frontend.057" xml:space="preserve"><value>Failed to load</value></data>
+  <data name="Frontend.058" xml:space="preserve"><value>Modules added successfully</value></data>
+  <data name="Frontend.059" xml:space="preserve"><value>Add failed</value></data>
+  <data name="Frontend.060" xml:space="preserve"><value>Updated successfully</value></data>
+  <data name="Frontend.061" xml:space="preserve"><value>Update failed</value></data>
+  <data name="Frontend.062" xml:space="preserve"><value>Deleted successfully</value></data>
+  <data name="Frontend.063" xml:space="preserve"><value>Delete failed</value></data>
+  <data name="Frontend.064" xml:space="preserve"><value>Uploaded successfully</value></data>
+  <data name="Frontend.065" xml:space="preserve"><value>Upload failed</value></data>
+  <data name="Frontend.066" xml:space="preserve"><value>Copied successfully</value></data>
+  <data name="Frontend.067" xml:space="preserve"><value>Copy failed</value></data>
+  <data name="Frontend.068" xml:space="preserve"><value>Notice</value></data>
+  <data name="Frontend.069" xml:space="preserve"><value>Warning</value></data>
+  <data name="Frontend.070" xml:space="preserve"><value>Error</value></data>
+  <data name="Frontend.071" xml:space="preserve"><value>Yes</value></data>
+  <data name="Frontend.072" xml:space="preserve"><value>No</value></data>
+  <data name="Frontend.073" xml:space="preserve"><value>Enabled</value></data>
+  <data name="Frontend.074" xml:space="preserve"><value>Unknown</value></data>
+  <data name="Frontend.075" xml:space="preserve"><value>Not set</value></data>
+  <data name="Frontend.076" xml:space="preserve"><value>No records</value></data>
+  <data name="Frontend.077" xml:space="preserve"><value>Enter a keyword</value></data>
+  <data name="Frontend.078" xml:space="preserve"><value>Select a type</value></data>
+  <data name="Frontend.079" xml:space="preserve"><value>Select status</value></data>
+  <data name="Frontend.080" xml:space="preserve"><value>Create</value></data>
+  <data name="Frontend.081" xml:space="preserve"><value>Submit</value></data>
+  <data name="Frontend.082" xml:space="preserve"><value>View</value></data>
+  <data name="Frontend.083" xml:space="preserve"><value>Set as default</value></data>
+  <data name="Frontend.084" xml:space="preserve"><value>Test</value></data>
+  <data name="Frontend.085" xml:space="preserve"><value>Connected successfully</value></data>
+  <data name="Frontend.086" xml:space="preserve"><value>Connection failed</value></data>
+  <data name="Frontend.087" xml:space="preserve"><value>Password is required!</value></data>
+  <data name="Frontend.088" xml:space="preserve"><value>{0} is duplicated.</value></data>
+  <data name="Frontend.089" xml:space="preserve"><value>Administrators cannot delete themselves!</value></data>
+  <data name="Frontend.090" xml:space="preserve"><value>Administrator does not exist!</value></data>
+  <data name="Frontend.091" xml:space="preserve"><value>Deleted successfully!</value></data>
+  <data name="Frontend.092" xml:space="preserve"><value>WeChat log file does not exist:</value></data>
+  <data name="Frontend.093" xml:space="preserve"><value>{0} must be longer than 16 characters!</value></data>
+  <data name="Frontend.094" xml:space="preserve"><value>The current session is not linked to any XNCF Module.</value></data>
+  <data name="Frontend.095" xml:space="preserve"><value>No matching Module was found: "{0}". Call GetSessionModuleList first to confirm the modules in the current session.</value></data>
+  <data name="Frontend.096" xml:space="preserve"><value>Module not found: "{0}". Call GetSessionModuleList first to confirm the available modules.</value></data>
+  <data name="Frontend.097" xml:space="preserve"><value>Runtime registration for Module {0} was not found, so database information cannot be read.</value></data>
+  <data name="Frontend.098" xml:space="preserve"><value>No Module is registered in the system.</value></data>
+  <data name="Frontend.099" xml:space="preserve"><value>SenparcAiSetting was not loaded. Check the appsettings.json configuration.</value></data>
+  <data name="Frontend.100" xml:space="preserve"><value>SenparcAiSetting.AiPlatform is still UnSet. Set an available platform in appsettings.json first.</value></data>
+  <data name="Frontend.101" xml:space="preserve"><value>The AIKernel Module is not installed or not enabled, so the system cannot switch to the specified AI model.</value></data>
+  <data name="Frontend.102" xml:space="preserve"><value>AIModelService could not be resolved, so the specified AI model cannot be loaded.</value></data>
+  <data name="Frontend.103" xml:space="preserve"><value>The selected AI model does not exist: {0}</value></data>
+  <data name="Frontend.104" xml:space="preserve"><value>The selected AI model is not a Chat type: {0}</value></data>
+  <data name="Frontend.105" xml:space="preserve"><value>The current user is not signed in, so renewal is not possible.</value></data>
+  <data name="Frontend.106" xml:space="preserve"><value>User information does not exist!</value></data>
+  <data name="Frontend.107" xml:space="preserve"><value>The username does not exist or the password is incorrect: {0}!</value></data>
+  <data name="Frontend.108" xml:space="preserve"><value>The username does not exist or the password is incorrect!</value></data>
   <data name="Admin.Home.AgentsOverview" xml:space="preserve"><value>Agents operations overview</value></data>
   <data name="Admin.Home.AgentsOverviewLive" xml:space="preserve"><value>Live</value></data>
   <data name="Admin.Home.AgentsManage" xml:space="preserve"><value>Manage Agents</value></data>
@@ -865,6 +867,28 @@
   <data name="DocHelp.LoadFailed" xml:space="preserve"><value>Document loading failed or timed out. Retry or open in a new window.</value></data>
   <data name="DocHelp.Retry" xml:space="preserve"><value>Retry</value></data>
   <data name="DocHelp.InvalidTopic" xml:space="preserve"><value>The documentation index is invalid. Please contact your administrator.</value></data>
+  <data name="AdminChat.Settings.Title" xml:space="preserve"><value>Chat settings</value></data>
+  <data name="AdminChat.Settings.ModeLabel" xml:space="preserve"><value>Mode</value></data>
+  <data name="AdminChat.Settings.ModeTitle" xml:space="preserve"><value>Choose execution mode</value></data>
+  <data name="AdminChat.Settings.ModeCaption" xml:space="preserve"><value>Strategy used by the next request in this conversation.</value></data>
+  <data name="AdminChat.Settings.LauncherModeCaption" xml:space="preserve"><value>This mode applies only to the next request; Plan and Execute use MAF Harness.</value></data>
+  <data name="AdminChat.Settings.HarnessAdvanced" xml:space="preserve"><value>Harness advanced settings</value></data>
+  <data name="AdminChat.Settings.MaxIterations" xml:space="preserve"><value>Max iterations</value></data>
+  <data name="AdminChat.Settings.MaxOutputTokens" xml:space="preserve"><value>Max output tokens</value></data>
+  <data name="AdminChat.Settings.CapabilityNotice" xml:space="preserve"><value>FileMemory can only be changed with /harness file-memory on|off; Agent Skills and Hosted Web Search are off by default. Enabling them changes privacy, tool, and external-access boundaries.</value></data>
+  <data name="AdminChat.Settings.Close" xml:space="preserve"><value>Close chat settings</value></data>
+  <data name="AdminChat.Settings.Stop" xml:space="preserve"><value>Stop</value></data>
+  <data name="AdminChat.Mode.Simple" xml:space="preserve"><value>Chat</value></data>
+  <data name="AdminChat.Mode.SimpleDescription" xml:space="preserve"><value>One response without the MAF long-running task loop.</value></data>
+  <data name="AdminChat.Mode.Plan" xml:space="preserve"><value>Plan</value></data>
+  <data name="AdminChat.Mode.PlanDescription" xml:space="preserve"><value>Plan first, then call tools as needed and wait for approval.</value></data>
+  <data name="AdminChat.Mode.Execute" xml:space="preserve"><value>Execute</value></data>
+  <data name="AdminChat.Mode.ExecuteDescription" xml:space="preserve"><value>Enter MAF execution mode directly for well-defined tasks.</value></data>
+  <data name="AdminChat.Command.Mode" xml:space="preserve"><value>Switch execution mode</value></data>
+  <data name="AdminChat.Command.Help" xml:space="preserve"><value>Show available commands</value></data>
+  <data name="AdminChat.Command.MaxToken" xml:space="preserve"><value>Set output limit</value></data>
+  <data name="AdminChat.Command.MaxIterations" xml:space="preserve"><value>Set Harness max iterations</value></data>
+  <data name="AdminChat.Command.Harness" xml:space="preserve"><value>Set Harness capabilities</value></data>
   <data name="AdminChat.UserStats" xml:space="preserve"><value>Usage Stats</value></data>
   <data name="AdminChat.UserStatsTitle" xml:space="preserve"><value>User Usage Statistics (AdminChat)</value></data>
   <data name="AdminChat.UserStatsTip" xml:space="preserve"><value>Only the per-account session/message counts are shown. No session or message content is exposed.</value></data>
@@ -939,4 +963,601 @@
   <data name="SystemMenu.TenantInfo" xml:space="preserve"><value>Tenant information</value></data>
   <data name="SystemMenu.ExtensionModules" xml:space="preserve"><value>Extension modules</value></data>
   <data name="SystemMenu.ModuleManagement" xml:space="preserve"><value>Module management</value></data>
+  <data name="Xncf.ModuleFunctionCatalog" xml:space="preserve"><value>Module Function catalog and execution entry points</value></data>
+  <data name="Xncf.ModuleFunctionAccessControl" xml:space="preserve"><value>Manage access control in a NeuCharPivot iframe tab</value></data>
+  <data name="Xncf.Capabilities" xml:space="preserve"><value>Capabilities</value></data>
+  <data name="Xncf.ModuleCapabilities" xml:space="preserve"><value>Module capabilities</value></data>
+  <data name="Xncf.Refresh" xml:space="preserve"><value>Refresh</value></data>
+  <data name="Xncf.NoAdditionalInterfaces" xml:space="preserve"><value>No additional interfaces declared</value></data>
+  <data name="Xncf.RuntimeDataCapabilities" xml:space="preserve"><value>Runtime and data capabilities</value></data>
+  <data name="Xncf.RegisteredThreads" xml:space="preserve"><value>Registered threads</value></data>
+  <data name="Xncf.DedicatedDatabase" xml:space="preserve"><value>Dedicated database</value></data>
+  <data name="Xncf.DatabasePrefix" xml:space="preserve"><value>Database prefix</value></data>
+  <data name="Xncf.DatabaseContext" xml:space="preserve"><value>Database context</value></data>
+  <data name="Xncf.DataTables" xml:space="preserve"><value>Data tables</value></data>
+  <data name="Xncf.DataTablesAndMigrations" xml:space="preserve"><value>Data tables and migrations</value></data>
+  <data name="Xncf.DatabaseReauthenticationRequired" xml:space="preserve"><value>This area contains database schema and data statistics. Re-enter the current administrator password to continue.</value></data>
+  <data name="Xncf.CurrentAdministratorPassword" xml:space="preserve"><value>Current administrator password</value></data>
+  <data name="Xncf.VerifyAndView" xml:space="preserve"><value>Verify and view</value></data>
+  <data name="Xncf.EntityCount" xml:space="preserve"><value>Entity count</value></data>
+  <data name="Xncf.TablePrefix" xml:space="preserve"><value>Table prefix</value></data>
+  <data name="Xncf.AppliedMigrations" xml:space="preserve"><value>Applied migrations</value></data>
+  <data name="Xncf.PendingMigrations" xml:space="preserve"><value>Pending migrations</value></data>
+  <data name="Xncf.Table" xml:space="preserve"><value>Table</value></data>
+  <data name="Xncf.Entity" xml:space="preserve"><value>Entity</value></data>
+  <data name="Xncf.CurrentRowCount" xml:space="preserve"><value>Current row count</value></data>
+  <data name="Xncf.Columns" xml:space="preserve"><value>Columns</value></data>
+  <data name="Xncf.MigrationHistory" xml:space="preserve"><value>Migration history</value></data>
+  <data name="Xncf.LoadCapabilitiesFailed" xml:space="preserve"><value>Failed to load module capabilities.</value></data>
+  <data name="Xncf.EnterCurrentAdministratorPassword" xml:space="preserve"><value>Enter the current administrator password.</value></data>
+  <data name="Xncf.PasswordVerificationFailed" xml:space="preserve"><value>Password verification failed.</value></data>
+  <data name="Xncf.LoadDataTablesFailed" xml:space="preserve"><value>Failed to load data table information.</value></data>
+  <data name="Xncf.NeuCharPivotAccessControl" xml:space="preserve"><value>NeuCharPivot - Access control</value></data>
+  <data name="Xncf.ModuleNotLoaded" xml:space="preserve"><value>The module is not loaded.</value></data>
+  <data name="Xncf.PasswordRequired" xml:space="preserve"><value>Enter the password.</value></data>
+  <data name="Xncf.Function" xml:space="preserve"><value>Function</value></data>
+  <data name="Xncf.Key" xml:space="preserve"><value>Key</value></data>
+  <data name="Xncf.NeuCharPivot" xml:space="preserve"><value>NeuCharPivot</value></data>
+  <data name="Admin.Pagination.Goto" xml:space="preserve"><value>Go to</value></data>
+  <data name="Admin.Pagination.PageSize" xml:space="preserve"><value>per page</value></data>
+  <data name="Admin.Pagination.Total" xml:space="preserve"><value>{total} total</value></data>
+  <data name="Admin.Pagination.Page" xml:space="preserve"><value>Page</value></data>
+
+  <data name="Frontend.109" xml:space="preserve"><value>GET (no body; data is passed through URL placeholders)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.110" xml:space="preserve"><value>NeuBell WebHook settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.111" xml:space="preserve"><value>POST (default, with a JSON body)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.112" xml:space="preserve"><value>PUT (with a request body)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.113" xml:space="preserve"><value>Provider filter</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.114" xml:space="preserve"><value>WebHook URL</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.115" xml:space="preserve"><value>WebHook settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.116" xml:space="preserve"><value>WebHook request payload</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.117" xml:space="preserve"><value>For example: operations duty bot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.118" xml:space="preserve"><value>This records request data and results for parameter-triggered NeuBell notifications, settings-page tests, and monitored change notifications.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.119" xml:space="preserve"><value>Action value ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.120" xml:space="preserve"><value>Placeholders</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.121" xml:space="preserve"><value>Complete default JSON payload</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.122" xml:space="preserve"><value>Configured</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.123" xml:space="preserve"><value>Payload</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.124" xml:space="preserve"><value>Search name, URL, or Provider</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.125" xml:space="preserve"><value>Count ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.126" xml:space="preserve"><value>Add WebHook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.127" xml:space="preserve"><value>Notify on added</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.128" xml:space="preserve"><value>Method</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.129" xml:space="preserve"><value>Time</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.130" xml:space="preserve"><value>No request logs yet.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.131" xml:space="preserve"><value>Titles added/removed in this event (joined with 、)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.132" xml:space="preserve"><value>Item ID ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.133" xml:space="preserve"><value>Item updated at</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.134" xml:space="preserve"><value>Item title ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.135" xml:space="preserve"><value>Item link (absolute when a site root is configured) ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.136" xml:space="preserve"><value>Template</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.137" xml:space="preserve"><value>Clear (keep 50)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.138" xml:space="preserve"><value>Choose Add WebHook in the upper right to configure an external WebAPI notification endpoint.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.139" xml:space="preserve"><value>Leave empty to use the default JSON payload; values starting with { or [ are treated as JSON. For example: {</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.140" xml:space="preserve"><value>Leave empty for all Providers</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.141" xml:space="preserve"><value>Tenant identifier (empty without a tenant)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.142" xml:space="preserve"><value>Removed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.143" xml:space="preserve"><value>Notify on removed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.144" xml:space="preserve"><value>Signature</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.145" xml:space="preserve"><value>Signing secret</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.146" xml:space="preserve"><value>Result</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.147" xml:space="preserve"><value>Duration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.148" xml:space="preserve"><value>Request body template</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.149" xml:space="preserve"><value>Request method</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.150" xml:space="preserve"><value>Request logs</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.151" xml:space="preserve"><value>No WebHooks yet</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.152" xml:space="preserve"><value>Notification time (ISO 8601) ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.153" xml:space="preserve"><value>Configured requests include X-NeuBell-Signature (HMAC-SHA256)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.154" xml:space="preserve"><value>(same format as Workflow text templates,</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.155" xml:space="preserve"><value>NeuCharPivot panel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.156" xml:space="preserve"><value>Provit Block list (drag to reorder)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.157" xml:space="preserve"><value>admin-home (Admin home)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.158" xml:space="preserve"><value>One-line description</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.159" xml:space="preserve"><value>Theme color</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.160" xml:space="preserve"><value>For example: Admin home operations panel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.161" xml:space="preserve"><value>Column count</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.162" xml:space="preserve"><value>Create panel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.163" xml:space="preserve"><value>Send</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.164" xml:space="preserve"><value>Block title</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.165" xml:space="preserve"><value>Bind a panel (Provit Panel) to a page such as admin-home, combine Provit Blocks from any XNCF module, and support creation or editing through AI Chat.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.166" xml:space="preserve"><value>Disabled</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.167" xml:space="preserve"><value>References prefilled from missing blocks on the home page</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.168" xml:space="preserve"><value>Search panel name or page identifier</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.169" xml:space="preserve"><value>No blocks yet. Click “Add block” to choose from Pivot Functions in any XNCF module.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.170" xml:space="preserve"><value>Module UID:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.171" xml:space="preserve"><value>Orange</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.172" xml:space="preserve"><value>Add Provit Block</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.173" xml:space="preserve"><value>Add block</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.174" xml:space="preserve"><value>Gray</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.175" xml:space="preserve"><value>Click “Create panel” in the upper-right to bind the panel to a page such as admin-home.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.176" xml:space="preserve"><value>Describe your need to AI in one sentence, for example: add host monitoring and to-do blocks in three columns</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.177" xml:space="preserve"><value>Purple</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.178" xml:space="preserve"><value>Green</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.179" xml:space="preserve"><value>Blue</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.180" xml:space="preserve"><value>No panels yet</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.181" xml:space="preserve"><value>Select Function</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.182" xml:space="preserve"><value>Choose a Pivot Function from any XNCF module as a block for this panel.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.183" xml:space="preserve"><value>Select module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.184" xml:space="preserve"><value>Panel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.185" xml:space="preserve"><value>Panel name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.186" xml:space="preserve"><value>Page identifier</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.187" xml:space="preserve"><value>Function status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.188" xml:space="preserve"><value>Function: all</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.189" xml:space="preserve"><value>Function: available</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.190" xml:space="preserve"><value>Function: removed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.191" xml:space="preserve"><value>LoopTask status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.192" xml:space="preserve"><value>LoopTask: last failed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.193" xml:space="preserve"><value>LoopTask: countdown</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.194" xml:space="preserve"><value>LoopTask: all</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.195" xml:space="preserve"><value>LoopTask: disabled</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.196" xml:space="preserve"><value>LoopTask: pending</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.197" xml:space="preserve"><value>LoopTask: running</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.198" xml:space="preserve"><value>LoopTask: not configured</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.199" xml:space="preserve"><value>NeuCharPivot module navigation</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.200" xml:space="preserve"><value>NeuCharPivot aggregate</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.201" xml:space="preserve"><value>Pivot execution</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.202" xml:space="preserve"><value>Workflow links</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.203" xml:space="preserve"><value>Workflow trigger</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.204" xml:space="preserve"><value>Workflow: all</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.205" xml:space="preserve"><value>Workflow: linked</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.206" xml:space="preserve"><value>Workflow: unlinked</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.207" xml:space="preserve"><value>Last failed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.208" xml:space="preserve"><value>Available / total</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.209" xml:space="preserve"><value>Enabled / configured</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.210" xml:space="preserve"><value>Removed in current version</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.211" xml:space="preserve"><value>Success / failed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.212" xml:space="preserve"><value>Run</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.213" xml:space="preserve"><value>Running / countdown</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.214" xml:space="preserve"><value>Execution status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.215" xml:space="preserve"><value>Search modules, Functions, or Workflows</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.216" xml:space="preserve"><value>Module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.217" xml:space="preserve"><value>Module navigation</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.218" xml:space="preserve"><value>Module closed</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.219" xml:space="preserve"><value>Module status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.220" xml:space="preserve"><value>Module status: unavailable</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.221" xml:space="preserve"><value>Module status: all</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.222" xml:space="preserve"><value>Module status: available</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.223" xml:space="preserve"><value>No matching NeuCharPivot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.224" xml:space="preserve"><value>Aggregate</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.225" xml:space="preserve"><value>This module is not installed or enabled; Functions retain their configuration but cannot run.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.226" xml:space="preserve"><value>Adjust the filters, or open “Settings / Execute → NeuCharPivot” in any module to generate an action panel first.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.227" xml:space="preserve"><value>Reset filters</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.228" xml:space="preserve"><value>Review module panels, parameterized Functions, LoopTask countdowns, and Workflows triggered after completion in one place.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.229" xml:space="preserve"><value>Global Function Provit access control</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.230" xml:space="preserve"><value>Function no longer exists; policy retained as redundant</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.231" xml:space="preserve"><value>Apply the “restricted” policy to Functions. In restricted mode, only bound users, roles, or permission codes can access global Provit; bind at least one item.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.232" xml:space="preserve"><value>Configure database access policies for Functions in any XNCF module by binding users, roles, or permission codes. A database policy overrides code attributes; after a module is removed, the policy remains redundant and becomes effective again after reinstall until manually cleared.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.233" xml:space="preserve"><value>Code baseline</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.234" xml:space="preserve"><value>Code baseline (FunctionRenderAttribute)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.235" xml:space="preserve"><value>Any signed-in administrator</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.236" xml:space="preserve"><value>Save policy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.237" xml:space="preserve"><value>Allowed permission codes</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.238" xml:space="preserve"><value>Allowed users</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.239" xml:space="preserve"><value>Allowed roles</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.240" xml:space="preserve"><value>Restricted</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.241" xml:space="preserve"><value>Apply to selected</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.242" xml:space="preserve"><value>No database policy is configured; the code baseline is currently applied.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.243" xml:space="preserve"><value>Existing bindings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.244" xml:space="preserve"><value>Apply</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.245" xml:space="preserve"><value>Open</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.246" xml:space="preserve"><value>Current database policy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.247" xml:space="preserve"><value>Bulk restricted</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.248" xml:space="preserve"><value>Bulk restricted settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.249" xml:space="preserve"><value>Bulk open</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.250" xml:space="preserve"><value>Bulk restore inheritance</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.251" xml:space="preserve"><value>Bulk clear</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.252" xml:space="preserve"><value>Bulk disable</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.253" xml:space="preserve"><value>Search module / Function</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.254" xml:space="preserve"><value>Database policy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.255" xml:space="preserve"><value>Not set (code baseline)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.256" xml:space="preserve"><value>Module unavailable</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.257" xml:space="preserve"><value>Module cleared</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.258" xml:space="preserve"><value>Module cleared; the code baseline cannot be read, so the database record is authoritative.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.259" xml:space="preserve"><value>Mode</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.260" xml:space="preserve"><value>Clear</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.261" xml:space="preserve"><value>Effective policy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.262" xml:space="preserve"><value>Target information</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.263" xml:space="preserve"><value>Disabled</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.264" xml:space="preserve"><value>Retained as redundant after saving; takes effect automatically after module reinstall</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.265" xml:space="preserve"><value>Policy mode</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.266" xml:space="preserve"><value>Inherit code</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.267" xml:space="preserve"><value>Record the reason for this policy change for later auditing</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.268" xml:space="preserve"><value>Settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.269" xml:space="preserve"><value>Configure global Provit access policy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.270" xml:space="preserve"><value>Access control</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.271" xml:space="preserve"><value>Enter permission resource codes</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.272" xml:space="preserve"><value>Enter permission resource codes (for example sandbox.execute; any match grants access)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.273" xml:space="preserve"><value>Select admin users</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.274" xml:space="preserve"><value>Select admin users (any match grants access)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.275" xml:space="preserve"><value>Select or enter role codes</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.276" xml:space="preserve"><value>Select or enter role codes (any match grants access)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.277" xml:space="preserve"><value>(None)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.278" xml:space="preserve"><value>Chat editing</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.279" xml:space="preserve"><value>ChatAgent · current XNCF module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.280" xml:space="preserve"><value>ChatAgent summarizes all Functions into a declarative quick-action panel. It does not execute AI-generated scripts or arbitrary internal methods.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.281" xml:space="preserve"><value>NeuBell notification</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.282" xml:space="preserve"><value>Function Calling is disabled during NeuCharPivot generation; full AdminChat still loads only publicly registered FunctionRender functions from modules explicitly associated with the session. Pivot/Workflow execution performs server-side allowlist and module-state checks again.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.283" xml:space="preserve"><value>Not linked</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.284" xml:space="preserve"><value>For example: put frequent actions in the first group and expose only required parameters</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.285" xml:space="preserve"><value>Send and update Pivot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.286" xml:space="preserve"><value>All required parameters are checked again before enabling; nothing runs when the module is disabled or the Function is removed.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.287" xml:space="preserve"><value>Trigger Workflow after completion</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.288" xml:space="preserve"><value>Current reference:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.289" xml:space="preserve"><value>Open full AdminChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.290" xml:space="preserve"><value>The module is not installed or enabled; all Pivot Functions and scheduled tasks are disabled at the foundation.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.291" xml:space="preserve"><value>Generate NeuCharPivot for this module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.292" xml:space="preserve"><value>Generate interface</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.293" xml:space="preserve"><value>Automatic execution</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.294" xml:space="preserve"><value>Select AI compute</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.295" xml:space="preserve"><value>Interval (seconds)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.296" xml:space="preserve"><value>Workflow capability is not enabled. The list remains visible, but mobile commands will not take effect.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.297" xml:space="preserve"><value>Personal WeChat Bot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.298" xml:space="preserve"><value>Personal WeChat integration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.299" xml:space="preserve"><value>Personal WeChat integration is disabled; mobile commands will not enter Admin.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.300" xml:space="preserve"><value>Create binding configuration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.301" xml:space="preserve"><value>Available Workflows</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.302" xml:space="preserve"><value>Command prefix @Model.PageData.CommandPrefix@(Model.PageData.RequireCommandPrefix ? " · required" : " · optional")</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.303" xml:space="preserve"><value>Complete binding in WeChat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.304" xml:space="preserve"><value>Copy</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.305" xml:space="preserve"><value>Current Admin user ID</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.306" xml:space="preserve"><value>No Workflow is available for the current administrator.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.307" xml:space="preserve"><value>Current capabilities</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.308" xml:space="preserve"><value>Mobile commands</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.309" xml:space="preserve"><value>Open Personal WeChat Bot</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.310" xml:space="preserve"><value>Bind the current administrator to a WeChat account to query and run Workflows from a phone.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.311" xml:space="preserve"><value>Send the binding code to the other person</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.312" xml:space="preserve"><value>Query by the current administrator ID @Model.PageData.WorkflowUserId. Sending “Get Workflow list” on the phone returns the same result.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.313" xml:space="preserve"><value>Search ID or name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.314" xml:space="preserve"><value>Database binding configuration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.315" xml:space="preserve"><value>enabled</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.316" xml:space="preserve"><value>The system stores only an irreversible hash. After creation or modification succeeds, immediately send the plaintext binding code to the corresponding WeChat user.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.317" xml:space="preserve"><value>Ask the other person to send “Bind WeChat account”. After binding, send “Get Workflow list” to see the same list as this page.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.318" xml:space="preserve"><value>No enabled binding configuration exists. Create a binding for the WeChat account in Personal WeChat Bot first so the phone can identify the administrator.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.319" xml:space="preserve"><value>Integration status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.320" xml:space="preserve"><value>First binding</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.321" xml:space="preserve"><value>Pivot Block is not initialized</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.322" xml:space="preserve"><value>Open module NeuCharPivot settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.323" xml:space="preserve"><value>Open panel settings and prefill the code</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.324" xml:space="preserve"><value>The Function referenced by this block was not found in the database. Initialize or restore the Function, then return to panel settings and select it again.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.325" xml:space="preserve"><value>Manage panels</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.326" xml:space="preserve"><value>日本語</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.327" xml:space="preserve"><value>Simplified Chinese</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.328" xml:space="preserve"><value>Suzhou Senparc Network Technology Co., Ltd.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.329" xml:space="preserve"><value>Function Calling parameters</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.330" xml:space="preserve"><value>XNCF module</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.331" xml:space="preserve"><value>Accepts regular input parameters only</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.332" xml:space="preserve"><value>Open</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.333" xml:space="preserve"><value>Search Workflow name / description / parameters</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.334" xml:space="preserve"><value>No enabled Workflow is available</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.335" xml:space="preserve"><value>Clear selection</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.336" xml:space="preserve"><value>AI quick chat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.337" xml:space="preserve"><value>Admin Chat quick chat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.338" xml:space="preserve"><value>NeuBell reminder</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.339" xml:space="preserve"><value>Shows only browser logs captured after this page loaded; server stdout is not included.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.340" xml:space="preserve"><value>Close all</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.341" xml:space="preserve"><value>Switch to the full page</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.342" xml:space="preserve"><value>No module currently provides NeuBell information.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.343" xml:space="preserve"><value>No logs</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.344" xml:space="preserve"><value>Server time</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.345" xml:space="preserve"><value>Browser Console</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.346" xml:space="preserve"><value>Consume</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.347" xml:space="preserve"><value>Consume all</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.348" xml:space="preserve"><value>Clear</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.349" xml:space="preserve"><value>Choose module reminders to show in the Footer. The setting is saved in this account’s browser.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.350" xml:space="preserve"><value>Supports plain text and &lt;a&gt; tags with absolute http/https links; other HTML is encoded.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.351" xml:space="preserve"><value>1 hour</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.352" xml:space="preserve"><value>24 hours</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.353" xml:space="preserve"><value>7 days</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.354" xml:space="preserve"><value>AdminChat command</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.355" xml:space="preserve"><value>Anonymous HTML snapshot sharing</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.356" xml:space="preserve"><value>Harness task trace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.357" xml:space="preserve"><value>Workspace PDF preview</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.358" xml:space="preserve"><value>Workspace name</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.359" xml:space="preserve"><value>Workspace files and paths</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.360" xml:space="preserve"><value>Workspace assets</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.361" xml:space="preserve"><value>Previous section</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.362" xml:space="preserve"><value>Upload materials</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.363" xml:space="preserve"><value>Next section</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.364" xml:space="preserve"><value>Download / save as</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.365" xml:space="preserve"><value>Download current directory (.zip)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.366" xml:space="preserve"><value>Do not use Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.367" xml:space="preserve"><value>Start directly without referencing modules</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.368" xml:space="preserve"><value>Add callable modules or Workflows to the current conversation</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.369" xml:space="preserve"><value>Select a Workspace for the current conversation</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.370" xml:space="preserve"><value>Authorize sending a compressed image to the vision model for this turn only; this may use extra tokens.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.371" xml:space="preserve"><value>Remove from this turn and delete Workspace files</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.372" xml:space="preserve"><value>Anyone with the link can view this snapshot.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.373" xml:space="preserve"><value>Task trace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.374" xml:space="preserve"><value>For example: Yield C# sample project</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.375" xml:space="preserve"><value>Save file</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.376" xml:space="preserve"><value>Allow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.377" xml:space="preserve"><value>Allow AI to write files</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.378" xml:space="preserve"><value>Allow AI to execute Python</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.379" xml:space="preserve"><value>Close asset panel</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.380" xml:space="preserve"><value>Share expiration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.381" xml:space="preserve"><value>Create read-only snapshot link</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.382" xml:space="preserve"><value>Anonymous snapshot link</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.383" xml:space="preserve"><value>Cancel editing</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.384" xml:space="preserve"><value>Writable</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.385" xml:space="preserve"><value>CLI executable</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.386" xml:space="preserve"><value>Optional: add a note or rejection reason</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.387" xml:space="preserve"><value>Open in external browser (read-only)</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.388" xml:space="preserve"><value>Expand to the maximum available width</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.389" xml:space="preserve"><value>Referenced modules</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.390" xml:space="preserve"><value>Current session</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.391" xml:space="preserve"><value>Current directory is empty</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.392" xml:space="preserve"><value>Reject</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.393" xml:space="preserve"><value>Search models</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.394" xml:space="preserve"><value>Undo</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.395" xml:space="preserve"><value>Create Workspace</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.396" xml:space="preserve"><value>No Harness traces</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.397" xml:space="preserve"><value>Unsaved</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.398" xml:space="preserve"><value>View live execution</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.399" xml:space="preserve"><value>Search traces, tools, or results</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.400" xml:space="preserve"><value>Finding Workspace…</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.401" xml:space="preserve"><value>Text preview is not supported for this file type</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.402" xml:space="preserve"><value>No matching files or paths</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.403" xml:space="preserve"><value>Manage anonymous sharing</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.404" xml:space="preserve"><value>Edit file</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.405" xml:space="preserve"><value>Vision</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.406" xml:space="preserve"><value>Assets</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.407" xml:space="preserve"><value>Go to</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.408" xml:space="preserve"><value>Go to line</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.409" xml:space="preserve"><value>The default system prompt is managed by PromptRange; the current text contains personal or tenant preferences.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.410" xml:space="preserve"><value>, @@ reference file or path</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.411" xml:space="preserve"><value>, enter @@ to reference a file or path</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.412" xml:space="preserve"><value>Supports plain text and &lt;a&gt; tags with absolute http/https links; other HTML is encoded.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.413" xml:space="preserve"><value>Fork</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.414" xml:space="preserve"><value>Thinking</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.415" xml:space="preserve"><value>Waiting for tool confirmation</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.416" xml:space="preserve"><value>Replay event #{0} ·</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.417" xml:space="preserve"><value>Press Ctrl + Enter or Cmd + Enter to start</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.418" xml:space="preserve"><value>Fork</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.419" xml:space="preserve"><value>No valid shares</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.420" xml:space="preserve"><value>{0} more items</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.421" xml:space="preserve"><value>View preview</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.422" xml:space="preserve"><value>Return to text</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.423" xml:space="preserve"><value>Tree view</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.424" xml:space="preserve"><value>View source</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.425" xml:space="preserve"><value>Loading preview…</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.426" xml:space="preserve"><value>Missing Function:</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.427" xml:space="preserve"><value>Select all filtered results</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.428" xml:space="preserve"><value>Selected {0} / {1}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.429" xml:space="preserve"><value>NeuBell · WebHook settings</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.430" xml:space="preserve"><value>Edit WebHook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.431" xml:space="preserve"><value>Add WebHook</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.432" xml:space="preserve"><value>Personal WeChat integration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.433" xml:space="preserve"><value>No matching Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.434" xml:space="preserve"><value>Database policies: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.435" xml:space="preserve"><value>Orphan policies: {0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.436" xml:space="preserve"><value>available Workflows</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.437" xml:space="preserve"><value>panels</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.438" xml:space="preserve"><value>Up to {0} files</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.439" xml:space="preserve"><value>Show unavailable modules ({0})</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.440" xml:space="preserve"><value>Module version</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.441" xml:space="preserve"><value>Up to {0} files</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.442" xml:space="preserve"><value>{0} total</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.443" xml:space="preserve"><value>{0} per page</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.444" xml:space="preserve"><value>Go to</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.445" xml:space="preserve"><value>Page</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.446" xml:space="preserve"><value>10 per page</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.447" xml:space="preserve"><value>20 per page</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.448" xml:space="preserve"><value>30 per page</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.449" xml:space="preserve"><value>40 per page</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.450" xml:space="preserve"><value>Command prefix {0} · required</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.451" xml:space="preserve"><value>Command prefix {0} · optional</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.452" xml:space="preserve"><value>Harness disabled</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.453" xml:space="preserve"><value>Bind WeChat account</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.454" xml:space="preserve"><value>Get Workflow list</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.455" xml:space="preserve"><value>The current command prefix is</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.456" xml:space="preserve"><value>{0} / {1} items</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.457" xml:space="preserve"><value>Input</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.458" xml:space="preserve"><value>{0} new messages</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.459" xml:space="preserve"><value>Command prefix</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+
+  <data name="WeixinClaw.Workflow.IntegrationDisabled" xml:space="preserve"><value>Workflow integration is disabled or the host has not loaded the NeuCharWorkflow module.</value></data>
+  <data name="WeixinClaw.Workflow.NoAvailable" xml:space="preserve"><value>No Workflows are currently available.</value></data>
+  <data name="WeixinClaw.Workflow.ListPrompt" xml:space="preserve"><value>Available Workflows are listed below. Send /workflow &lt;WorkflowId&gt; &lt;input&gt; next time to run a specific Workflow:</value></data>
+  <data name="WeixinClaw.Workflow.NotFound" xml:space="preserve"><value>The Workflow does not exist, is disabled, or the current administrator has no access.</value></data>
+  <data name="WeixinClaw.Workflow.Completed" xml:space="preserve"><value>Workflow "{0}" completed:
+{1}</value></data>
+  <data name="WeixinClaw.Workflow.Failed" xml:space="preserve"><value>Workflow "{0}" failed: {1}</value></data>
+  <data name="WeixinClaw.Workflow.HelpList" xml:space="preserve"><value>{0}workflow - List available Workflows and Workflow IDs</value></data>
+  <data name="WeixinClaw.Workflow.HelpExecute" xml:space="preserve"><value>{0}workflow &lt;WorkflowId&gt; &lt;input&gt; - Execute the specified Workflow</value></data>
+
+  <data name="Frontend.500" xml:space="preserve"><value>NeuCharPivot · Access control</value></data>
+
+  <data name="Frontend.501" xml:space="preserve"><value>Access control</value></data>
+
+  <data name="Frontend.502" xml:space="preserve"><value>Global Function Provit access control</value></data>
+
+  <data name="Frontend.503" xml:space="preserve"><value>Configure database access policies for Functions in any XNCF module by binding users, roles, or permission codes. Database policies override code attributes; after a module is cleared, the policy is retained and becomes effective again after reinstall until manually cleared.</value></data>
+
+  <data name="Frontend.504" xml:space="preserve"><value>Search module / Function</value></data>
+
+  <data name="Frontend.505" xml:space="preserve"><value>Refresh</value></data>
+
+  <data name="Frontend.506" xml:space="preserve"><value>{0} Functions</value></data>
+
+  <data name="Frontend.507" xml:space="preserve"><value>Database policies: {0}</value></data>
+
+  <data name="Frontend.508" xml:space="preserve"><value>Orphan policies: {0}</value></data>
+
+  <data name="Frontend.509" xml:space="preserve"><value>Bulk open</value></data>
+
+  <data name="Frontend.510" xml:space="preserve"><value>Bulk restricted</value></data>
+
+  <data name="Frontend.511" xml:space="preserve"><value>Bulk disable</value></data>
+
+  <data name="Frontend.512" xml:space="preserve"><value>Bulk restore inheritance</value></data>
+
+  <data name="Frontend.513" xml:space="preserve"><value>Bulk clear</value></data>
+
+  <data name="Frontend.514" xml:space="preserve"><value>Module</value></data>
+
+  <data name="Frontend.515" xml:space="preserve"><value>Module cleared</value></data>
+
+  <data name="Frontend.516" xml:space="preserve"><value>Module unavailable</value></data>
+
+  <data name="Frontend.517" xml:space="preserve"><value>Code baseline</value></data>
+
+  <data name="Frontend.518" xml:space="preserve"><value>Global access allowed</value></data>
+
+  <data name="Frontend.519" xml:space="preserve"><value>Global access not declared</value></data>
+
+  <data name="Frontend.520" xml:space="preserve"><value>Any signed-in administrator</value></data>
+
+  <data name="Frontend.521" xml:space="preserve"><value>Database policy</value></data>
+
+  <data name="Frontend.522" xml:space="preserve"><value>Source: database policy</value></data>
+
+  <data name="Frontend.523" xml:space="preserve"><value>Effective after reinstall</value></data>
+
+  <data name="Frontend.524" xml:space="preserve"><value>Source: code attributes</value></data>
+
+  <data name="Frontend.525" xml:space="preserve"><value>Effective policy</value></data>
+
+  <data name="Frontend.526" xml:space="preserve"><value>Actions</value></data>
+
+  <data name="Frontend.527" xml:space="preserve"><value>Settings</value></data>
+
+  <data name="Frontend.528" xml:space="preserve"><value>Clear</value></data>
+
+  <data name="Frontend.529" xml:space="preserve"><value>Configure global Provit access policy</value></data>
+
+  <data name="Frontend.530" xml:space="preserve"><value>Target information</value></data>
+
+  <data name="Frontend.531" xml:space="preserve"><value>Unknown version</value></data>
+
+  <data name="Frontend.532" xml:space="preserve"><value>Retained as an orphan after saving; becomes effective after module reinstall</value></data>
+
+  <data name="Frontend.533" xml:space="preserve"><value>The Function no longer exists; the policy remains as an orphan</value></data>
+
+  <data name="Frontend.534" xml:space="preserve"><value>(None)</value></data>
+
+  <data name="Frontend.535" xml:space="preserve"><value>Description</value></data>
+
+  <data name="Frontend.536" xml:space="preserve"><value>Code baseline (FunctionRenderAttribute)</value></data>
+
+  <data name="Frontend.537" xml:space="preserve"><value>Allowed in global Provit</value></data>
+
+  <data name="Frontend.538" xml:space="preserve"><value>Not allowed in global Provit</value></data>
+
+  <data name="Frontend.539" xml:space="preserve"><value>The module was cleared, so the code baseline cannot be read; the database policy is authoritative.</value></data>
+
+  <data name="Frontend.540" xml:space="preserve"><value>Current database policy</value></data>
+
+  <data name="Frontend.541" xml:space="preserve"><value>Mode</value></data>
+
+  <data name="Frontend.542" xml:space="preserve"><value>Created at</value></data>
+
+  <data name="Frontend.543" xml:space="preserve"><value>Existing bindings</value></data>
+
+  <data name="Frontend.544" xml:space="preserve"><value>Notes</value></data>
+
+  <data name="Frontend.545" xml:space="preserve"><value>No database policy is configured; the code baseline is currently applied.</value></data>
+
+  <data name="Frontend.546" xml:space="preserve"><value>Policy mode</value></data>
+
+  <data name="Frontend.547" xml:space="preserve"><value>Inherit code</value></data>
+
+  <data name="Frontend.548" xml:space="preserve"><value>Open</value></data>
+
+  <data name="Frontend.549" xml:space="preserve"><value>Restricted</value></data>
+
+  <data name="Frontend.550" xml:space="preserve"><value>Disabled</value></data>
+
+  <data name="Frontend.551" xml:space="preserve"><value>Select or enter role codes (any match grants access)</value></data>
+
+  <data name="Frontend.552" xml:space="preserve"><value>Allowed roles</value></data>
+
+  <data name="Frontend.553" xml:space="preserve"><value>Allowed permission codes</value></data>
+
+  <data name="Frontend.554" xml:space="preserve"><value>Enter permission codes (for example sandbox.execute; any match grants access)</value></data>
+
+  <data name="Frontend.555" xml:space="preserve"><value>Allowed users</value></data>
+
+  <data name="Frontend.556" xml:space="preserve"><value>Select admin users (any match grants access)</value></data>
+
+  <data name="Frontend.557" xml:space="preserve"><value>Record the reason for this policy change for later auditing</value></data>
+
+  <data name="Frontend.558" xml:space="preserve"><value>Cancel</value></data>
+
+  <data name="Frontend.559" xml:space="preserve"><value>Save policy</value></data>
+
+  <data name="Frontend.560" xml:space="preserve"><value>Bulk restricted settings</value></data>
+
+  <data name="Frontend.561" xml:space="preserve"><value>Apply the “restricted” policy to the {0} selected Functions. In restricted mode, only bound users, roles, or permission codes (any match) can access global Provit; bind at least one item.</value></data>
+
+  <data name="Frontend.562" xml:space="preserve"><value>Select or enter role codes</value></data>
+
+  <data name="Frontend.563" xml:space="preserve"><value>Enter permission resource codes</value></data>
+
+  <data name="Frontend.564" xml:space="preserve"><value>Select admin users</value></data>
+
+  <data name="Frontend.565" xml:space="preserve"><value>Apply</value></data>
+
+  <data name="Frontend.566" xml:space="preserve"><value>Unknown</value></data>
+
+  <data name="Frontend.567" xml:space="preserve"><value>Effective after reinstall</value></data>
+
+  <data name="Frontend.568" xml:space="preserve"><value>Do not use database policies; follow code attributes only (AllowGlobalPivot / GlobalPivotRoleCodes / GlobalPivotPermissionCodes).</value></data>
+
+  <data name="Frontend.569" xml:space="preserve"><value>Any signed-in admin can access this Function through global Provit (overrides code constraints; use with care).</value></data>
+
+  <data name="Frontend.570" xml:space="preserve"><value>Only users, roles, or permission codes bound below (any match) may access it; all other accounts are denied.</value></data>
+
+  <data name="Frontend.571" xml:space="preserve"><value>Explicitly deny all global Provit access, even when code attributes allow it.</value></data>
+
+  <data name="Frontend.572" xml:space="preserve"><value>Policy saved</value></data>
+
+  <data name="Frontend.573" xml:space="preserve"><value>Save failed</value></data>
+
+  <data name="Frontend.574" xml:space="preserve"><value>Clear the database policy for {0} / {1}? The code baseline will apply again after clearing.</value></data>
+
+  <data name="Frontend.575" xml:space="preserve"><value>Clear policy</value></data>
+
+  <data name="Frontend.576" xml:space="preserve"><value>Policy cleared</value></data>
+
+  <data name="Frontend.577" xml:space="preserve"><value>Clear failed</value></data>
+
+  <data name="Frontend.578" xml:space="preserve"><value>Open all {0} selected Functions (any signed-in administrator can access them)?</value></data>
+
+  <data name="Frontend.579" xml:space="preserve"><value>Disable all {0} selected Functions (global Provit access will always be denied)?</value></data>
+
+  <data name="Frontend.580" xml:space="preserve"><value>Restore {0} selected Functions to “inherit code” (database policies will no longer override the code baseline)?</value></data>
+
+  <data name="Frontend.581" xml:space="preserve"><value>Clear database policies for {0} selected Functions (restore the code baseline)? This cannot be undone.</value></data>
+
+  <data name="Frontend.582" xml:space="preserve"><value>Confirm operation?</value></data>
+
+  <data name="Frontend.583" xml:space="preserve"><value>Bulk operation</value></data>
+
+  <data name="Frontend.584" xml:space="preserve"><value>Confirm</value></data>
+
+  <data name="Frontend.585" xml:space="preserve"><value>Bulk operation completed; {0} policies affected</value></data>
+
+  <data name="Frontend.586" xml:space="preserve"><value>Bulk operation failed</value></data>
+
+  <data name="Frontend.600" xml:space="preserve"><value>Choose which module reminders appear in the Footer. The setting is saved in this account’s browser.</value></data>
+  <data name="Frontend.601" xml:space="preserve"><value>No module currently provides NeuBell information.</value></data>
+  <data name="Frontend.602" xml:space="preserve"><value>Consume all</value></data>
+  <data name="Frontend.603" xml:space="preserve"><value>Consume</value></data>
+  <data name="Frontend.604" xml:space="preserve"><value>NeuBell reminders</value></data>
+  <data name="Frontend.605" xml:space="preserve"><value>Close all</value></data>
+  <data name="Frontend.606" xml:space="preserve"><value>Collapse</value></data>
+  <data name="Frontend.607" xml:space="preserve"><value>{0} more; click to expand</value></data>
+  <data name="Frontend.608" xml:space="preserve"><value>NeuBell test reminder</value></data>
+  <data name="Frontend.609" xml:space="preserve"><value>Sent by a Function; consume this item in Function or clear all reminders for the current subscription.</value></data>
+  <data name="Frontend.610" xml:space="preserve"><value>DesktopBridge remote connection review</value></data>
+  <data name="Frontend.611" xml:space="preserve"><value>{0} device pairing requests are waiting for review.</value></data>
+  <data name="Frontend.612" xml:space="preserve"><value>There are no pending device pairing requests.</value></data>
+  <data name="AdminChat.WorkflowCreation.Capabilities.Description" xml:space="preserve"><value>List safe triggers, nodes, and FunctionRender choices available for AI Workflow creation. Call this before designing a graph.</value></data>
+  <data name="AdminChat.WorkflowCreation.Validate.Description" xml:space="preserve"><value>Validate a proposed safe Workflow graph without saving it. The graph must contain one manual trigger and one end node.</value></data>
+  <data name="AdminChat.WorkflowCreation.Create.Description" xml:space="preserve"><value>Create and optionally enable a validated Workflow. This operation always requires explicit administrator approval.</value></data>
+  <data name="AdminChat.WorkflowCreation.Name" xml:space="preserve"><value>Workflow name, at most 200 characters.</value></data>
+  <data name="AdminChat.WorkflowCreation.DescriptionField" xml:space="preserve"><value>Optional Workflow description.</value></data>
+  <data name="AdminChat.WorkflowCreation.Trigger" xml:space="preserve"><value>The only supported AI-created trigger is manual.</value></data>
+  <data name="AdminChat.WorkflowCreation.Graph" xml:space="preserve"><value>JSON graph with nodes and edges. Use node types and FunctionRender references returned by workflow_get_creation_capabilities.</value></data>
+  <data name="AdminChat.WorkflowCreation.Enabled" xml:space="preserve"><value>Enable after creation. Manual-trigger Workflows remain operator-triggered.</value></data>
 </root>

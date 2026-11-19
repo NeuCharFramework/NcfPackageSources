@@ -4,14 +4,14 @@
     <OutputType>Exe</OutputType>
     <UseAppHost>false</UseAppHost>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.2.3</Version>
+    <Version>0.2.4</Version>
     <AssemblyName>Senparc.Xncf.WorkspaceAgent</AssemblyName>
     <RootNamespace>Senparc.Xncf.WorkspaceAgent</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
-    <Description>Workspace 隔离运行时 Agent：提供文件系统访问、命令执行与长连接协议。</Description>
+    <Description>Workspace isolated-runtime Agent: provides file-system access, command execution, and long-lived connection protocols.</Description>
     <Copyright>Senparc</Copyright>
     <PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.Workspace,WorkspaceAgent</PackageTags>
     <Authors>Senparc</Authors>
@@ -19,16 +19,20 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Title>Workspace Agent</Title>
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
-      [2026-10-24] Fix Workspace Agent deployment and support native or DLL startup.
-      [2026-11-03] v0.2.1 提供隔离工作区 Agent、文件系统访问和运行时连接
-      [2026-11-03] Rename to Senparc.Xncf.WorkspaceAgent and propagate runtime files through project references for build and publish.
-      [2026-11-11] v0.2.2 按行窗口读取工作区文本并限制单行大小
-      1、实现 read-text-window，跳过起始行后返回指定行数。
-      2、扫描时限制单行字节数，避免一次读入超大行。
-      [2026-11-12] v0.2.3 增强 Workspace Agent 搜索能力与错误诊断
-      1、文件系统引擎支持相对路径 glob 和内容正则搜索。
-      2、操作失败时输出更明确的诊断信息，并保持单行大小限制。
+    <PackageReleaseNotes>[2026-10-24] Fix Workspace Agent deployment and support native or DLL startup.
+        [2026-11-03] v0.2.1 Updated module behavior and related support.
+        [2026-11-03] Rename to Senparc.Xncf.WorkspaceAgent and propagate runtime files through project references for build and publish.
+        [2026-11-11] v0.2.2 read workspace text by line window and limit individual line size
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-11-12] v0.2.3 Updated module behavior and related support.
+        1. the file-system engine supports relative-path globs and content regex search.
+        2. output clearer diagnostics on operation failure while preserving the single-line size limit.
+        [2026-11-19] v0.2.4 Improved Workspace Agent runtime diagnostics and packaging
+        1. package the Agent DLL, dependency manifest, and runtime configuration into the tool directory.
+        2. copy runtime files to consumer output and publish directories through the buildTransitive target.
+        3. Kept runtime behavior and module integration aligned with the affected service and registration changes.
+        4. Standardized related English source comments and package metadata for the current release.
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -50,6 +54,11 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <TargetsForTfmSpecificContentInPackage>
+      $(TargetsForTfmSpecificContentInPackage);IncludeWorkspaceAgentRuntimeFilesForTfmPackage
+    </TargetsForTfmSpecificContentInPackage>
+  </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Senparc.Xncf.Workspace.Abstractions\Senparc.Xncf.Workspace.Abstractions.csproj" />
@@ -65,5 +74,27 @@
       <WorkspaceAgentRuntimeFiles Include="$(TargetPath);$(ProjectDepsFilePath);$(ProjectRuntimeConfigFilePath)" />
     </ItemGroup>
   </Target>
+
+  <Target Name="IncludeWorkspaceAgentRuntimeFilesForTfmPackage"
+          Returns="@(TfmSpecificPackageFile)">
+    <ItemGroup>
+      <TfmSpecificPackageFile Include="$(TargetPath)">
+        <PackagePath>tools/WorkspaceAgent/</PackagePath>
+      </TfmSpecificPackageFile>
+      <TfmSpecificPackageFile Include="$(ProjectDepsFilePath)">
+        <PackagePath>tools/WorkspaceAgent/</PackagePath>
+      </TfmSpecificPackageFile>
+      <TfmSpecificPackageFile Include="$(ProjectRuntimeConfigFilePath)">
+        <PackagePath>tools/WorkspaceAgent/</PackagePath>
+      </TfmSpecificPackageFile>
+    </ItemGroup>
+  </Target>
+
+  <ItemGroup>
+    <None Include="buildTransitive/Senparc.Xncf.WorkspaceAgent.targets"
+          Pack="true"
+          PackagePath="buildTransitive/Senparc.Xncf.WorkspaceAgent.targets"
+          Visible="false" />
+  </ItemGroup>
 
 </Project>

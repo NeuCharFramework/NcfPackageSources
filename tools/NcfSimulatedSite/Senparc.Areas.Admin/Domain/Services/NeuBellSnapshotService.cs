@@ -1,16 +1,20 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：NeuBellSnapshotService.cs
-    文件功能描述：聚合 XNCF 纽铃 Provider 并使用 NCF 全局缓存策略缓存快照
+    File name: NeuBellSnapshotService.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260803
+    Created by: Senparc - 20260803
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.3.0 新增后台同步管理与可配置多语言页脚
+    Modified by: Senparc - 20260804
+    Change description: v0.3.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.3.0 将后台同步功能统一更名为 NeuBell/纽铃
+    Modified by: Senparc - 20260804
+    Change description: v0.3.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 
@@ -63,7 +67,7 @@ public sealed class NeuBellSnapshotService
         }
 
         var cache = CacheStrategyFactory.GetObjectCacheStrategyInstance();
-        // Provider 之间没有依赖，并行读取可避免总延迟随模块数线性增长。
+        //Legacy comment translated to English.
         var snapshotTasks = providers
             .Select(provider => GetSnapshotAsync(provider, context, cache, cancellationToken))
             .ToArray();
@@ -85,7 +89,7 @@ public sealed class NeuBellSnapshotService
             var snapshot = cache.Get<NeuBellSnapshot>(cacheKey);
             if (snapshot == null)
             {
-                // 单个可选模块不得长时间占用 Footer 状态请求。
+                //Legacy comment translated to English.
                 using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
                 timeout.CancelAfter(ProviderTimeout);
                 snapshot = await provider.GetSnapshotAsync(context, timeout.Token).ConfigureAwait(false);
@@ -98,7 +102,7 @@ public sealed class NeuBellSnapshotService
             if (snapshot != null
                 && !string.Equals(snapshot.ModuleUid, provider.ModuleUid, StringComparison.OrdinalIgnoreCase))
             {
-                // 拒绝身份不一致的快照，防止 Provider 绕过模块开放状态筛选。
+                //Legacy comment translated to English.
                 _logger.LogWarning(
                     "纽铃 Provider {ProviderId} 返回了不匹配的 ModuleUid {SnapshotModuleUid}，已忽略。",
                     provider.ProviderId,

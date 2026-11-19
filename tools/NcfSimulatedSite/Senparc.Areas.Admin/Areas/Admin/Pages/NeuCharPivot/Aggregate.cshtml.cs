@@ -1,17 +1,20 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：Aggregate.cshtml.cs
-    文件功能描述：集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
 
+    File name: Aggregate.cshtml.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260809
+    Created by: Senparc - 20260809
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.5.0 集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
+    Modified by: Senparc - 20260813
+    Change description: v0.5.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260829
-    修改描述：v0.7.0 新增 NeuCharPivot 全局浮动调用与工作流分析管理能力
+    Modified by: Senparc - 20260829
+    Change description: v0.7.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 

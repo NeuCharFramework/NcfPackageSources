@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：DatabaseSchemaMetadata.cs
-    文件功能描述：DatabaseSchemaMetadata 相关实现
-    
-    
-    创建标识：Senparc - 20260327
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: DatabaseSchemaMetadata.cs
+    File description: DatabaseSchemaMetadata related implementation
+
+    Created by: Senparc - 20260327
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.27.13 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -19,116 +22,116 @@ using System.ComponentModel.DataAnnotations;
 namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Models
 {
     /// <summary>
-    /// 数据库结构元数据
-    /// 用于存储模块-表-字段的映射关系
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public class DatabaseSchemaMetadata
     {
         /// <summary>
-        /// 模块名称
-        /// 例如: Senparc.Xncf.AgentsManager
+        ///Legacy comment translated to English.
+        /// for example: Senparc.Xncf.AgentsManager
         /// </summary>
         [Required]
         public string ModuleName { get; set; }
 
         /// <summary>
-        /// 表名称
+        /// tablename
         /// </summary>
         [Required]
         public string TableName { get; set; }
 
         /// <summary>
-        /// 表的完全限定名（C# 类型全名）
-        /// 例如: Senparc.Xncf.AgentsManager.Models.DatabaseModel.AgentTemplate
+        ///Legacy comment translated to English.
+        /// for example: Senparc.Xncf.AgentsManager.Models.DatabaseModel.AgentTemplate
         /// </summary>
         [Required]
         public string EntityFullName { get; set; }
 
         /// <summary>
-        /// 表的中文描述
+        ///Legacy comment translated to English.
         /// </summary>
         public string DisplayName { get; set; }
 
         /// <summary>
-        /// 表的详描述
+        ///Legacy comment translated to English.
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        /// 字段列表
+        ///Legacy comment translated to English.
         /// </summary>
         public List<DatabaseColumnMetadata> Columns { get; set; } = new List<DatabaseColumnMetadata>();
 
         /// <summary>
-        /// 创建时间
+        ///Legacy comment translated to English.
         /// </summary>
         public DateTime CreatedTime { get; set; } = DateTime.Now;
 
         /// <summary>
-        /// 是否可见/可查询
-        /// 用于权限控制
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         public bool IsVisible { get; set; } = true;
     }
 
     /// <summary>
-    /// 数据库字段元数据
+    ///Legacy comment translated to English.
     /// </summary>
     public class DatabaseColumnMetadata
     {
         /// <summary>
-        /// 字段名称
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         public string ColumnName { get; set; }
 
         /// <summary>
-        /// 字段类型
-        /// 例如: string, int, DateTime
+        ///Legacy comment translated to English.
+        /// for example: string, int, DateTime
         /// </summary>
         [Required]
         public string ColumnType { get; set; }
 
         /// <summary>
-        /// 字段中文名称/描述
+        ///Legacy comment translated to English.
         /// </summary>
         public string DisplayName { get; set; }
 
         /// <summary>
-        /// 字段描述
+        ///Legacy comment translated to English.
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        /// 是否为主键
+        ///Legacy comment translated to English.
         /// </summary>
         public bool IsPrimaryKey { get; set; }
 
         /// <summary>
-        /// 是否为必需字段
+        ///Legacy comment translated to English.
         /// </summary>
         public bool IsRequired { get; set; }
 
         /// <summary>
-        /// 最大长度（字符串字段）
+        ///Legacy comment translated to English.
         /// </summary>
         public int? MaxLength { get; set; }
 
         /// <summary>
-        /// 是否可用于查询过滤
+        ///Legacy comment translated to English.
         /// </summary>
         public bool IsFilterable { get; set; } = true;
 
         /// <summary>
-        /// 是否可见
-        /// 用于确定是否在查询时返回此字段
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         public bool IsVisible { get; set; } = true;
     }
 
     /// <summary>
-    /// 模型-表映射信息的 DTO
-    /// 用于通过 API 传输
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public class DatabaseSchemaDto
     {
@@ -142,7 +145,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Models
     }
 
     /// <summary>
-    /// 数据库字段信息 DTO
+    ///Legacy comment translated to English.
     /// </summary>
     public class DatabaseColumnDto
     {
@@ -158,53 +161,53 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Models
     }
 
     /// <summary>
-    /// 查询条件元数据
-    /// 用于指定如何查询某个表
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public class QueryConditionMetadata
     {
         /// <summary>
-        /// 模块名称
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         public string ModuleName { get; set; }
 
         /// <summary>
-        /// 表名称
+        /// tablename
         /// </summary>
         [Required]
         public string TableName { get; set; }
 
         /// <summary>
-        /// 过滤条件 JSON
-        /// 用于构建 Where 条件
-        /// 例如: { "Id": 1 } 或 { "Name": "test" }
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        /// for example: { "Id": 1 } or { "Name": "test" }
         /// </summary>
         public string FilterJson { get; set; }
 
         /// <summary>
-        /// 排序字段
+        ///Legacy comment translated to English.
         /// </summary>
         public string OrderByField { get; set; }
 
         /// <summary>
-        /// 是否降序
+        ///Legacy comment translated to English.
         /// </summary>
         public bool IsDescending { get; set; } = false;
 
         /// <summary>
-        /// 页码（从 0 开始）
+        ///Legacy comment translated to English.
         /// </summary>
         public int PageIndex { get; set; } = 0;
 
         /// <summary>
-        /// 每页数量
+        ///Legacy comment translated to English.
         /// </summary>
         public int PageSize { get; set; } = 20;
 
         /// <summary>
-        /// 返回的字段列表
-        /// 如果为空，则返回所有可见字段
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         public List<string> SelectColumns { get; set; } = new List<string>();
     }

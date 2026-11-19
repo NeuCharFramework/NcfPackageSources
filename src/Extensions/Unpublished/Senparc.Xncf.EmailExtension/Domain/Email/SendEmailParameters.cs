@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：SendEmailParameters.cs
-    文件功能描述：SendEmailParameters 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: SendEmailParameters.cs
+    File description: SendEmailParameters related implementation
+
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.16 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -18,7 +21,7 @@ using System;
 namespace Senparc.Ncf.Core.Email
 {
     /// <summary>
-    /// 发送注册激活验证码
+    ///Legacy comment translated to English.
     /// </summary>
     public class SendEmailParameter_LiveCode : SendEmailParameter
     {
@@ -35,7 +38,7 @@ namespace Senparc.Ncf.Core.Email
         }
     }
     /// <summary>
-    /// 通过注册激活验证
+    ///Legacy comment translated to English.
     /// </summary>
     public class SendEmailParameter_PassLiveCode : SendEmailParameter
     {
@@ -47,7 +50,7 @@ namespace Senparc.Ncf.Core.Email
         }
     }
     /// <summary>
-    /// 重设密码
+    ///Legacy comment translated to English.
     /// </summary>
     public class SendEmailParameter_ResetPassword : SendEmailParameter
     {
@@ -61,7 +64,7 @@ namespace Senparc.Ncf.Core.Email
 
 
     /// <summary>
-    /// 邀请码
+    ///Legacy comment translated to English.
     /// </summary>
     public class SendEmailParameter_InviteCode : SendEmailParameter
     {
@@ -74,7 +77,7 @@ namespace Senparc.Ncf.Core.Email
     }
 
     /// <summary>
-    /// 订单创建
+    ///Legacy comment translated to English.
     /// </summary>
     public class SendEmailParameter_OrderCreate : SendEmailParameter
     {
@@ -91,7 +94,7 @@ namespace Senparc.Ncf.Core.Email
     }
 
     /// <summary>
-    /// 订单创建支付成功
+    ///Legacy comment translated to English.
     /// </summary>
     public class SendEmailParameter_OrderPaySuccess : SendEmailParameter
     {
@@ -108,7 +111,7 @@ namespace Senparc.Ncf.Core.Email
     }
 
     /// <summary>
-    /// 订单取消
+    ///Legacy comment translated to English.
     /// </summary>
     public class SendEmailParameter_OrderCancelled : SendEmailParameter
     {

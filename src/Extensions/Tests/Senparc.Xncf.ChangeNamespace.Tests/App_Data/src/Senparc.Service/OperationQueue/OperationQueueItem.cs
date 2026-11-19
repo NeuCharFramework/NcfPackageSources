@@ -5,35 +5,35 @@ using System.Collections.Generic;
 namespace Senparc.Service.OperationQueue
 {
     /// <summary>
-    /// 操作列队项
+    ///Legacy comment translated to English.
     /// </summary>
     public class OperationQueueItem
     {
         /// <summary>
-        /// 列队项唯一标识
+        ///Legacy comment translated to English.
         /// </summary>
         public string Key { get; set; }
         /// <summary>
-        /// 列队项目命中触发时执行的委托
+        ///Legacy comment translated to English.
         /// </summary>
         public OperationQueueType OperationQueueType { get; set; }
         /// <summary>
-        /// 此实例对象的创建时间
+        ///Legacy comment translated to English.
         /// </summary>
         public DateTime AddTime { get; set; }
 
         /// <summary>
-        /// 储存数据
+        ///Legacy comment translated to English.
         /// </summary>
         public List<object> Data { get; set; }
 
         /// <summary>
-        /// 项目说明（主要用于调试）
+        ///Legacy comment translated to English.
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        /// 初始化SenparcMessageQueue消息列队项
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="key"></param>
         /// <param name="data"></param>

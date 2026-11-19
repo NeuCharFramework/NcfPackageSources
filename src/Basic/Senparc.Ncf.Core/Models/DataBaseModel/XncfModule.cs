@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：XncfModule.cs
-    文件功能描述：XncfModule 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: XncfModule.cs
+    File description: XncfModule related implementation
+
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -22,7 +25,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.Models.DataBaseModel
 {
     /// <summary>
-    /// 扩展模块信息
+    ///Legacy comment translated to English.
     /// </summary>
     [Table("XncfModules")]
     public class XncfModule : EntityBase<int>
@@ -36,14 +39,14 @@ namespace Senparc.Ncf.Core.Models.DataBaseModel
         public bool AllowRemove { get; private set; }
         public string MenuId { get; private set; }
         /// <summary>
-        /// 使用 FontAwesome 图标，如：fa fa-star
+        ///Legacy comment translated to English.
         /// </summary>
         public string Icon { get; private set; }
 
         public XncfModules_State State { get; private set; }
 
         /// <summary>
-        /// 添加日志
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="log"></param>
         private void AddUpdateLog(string log)

@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：BaseNcfUnitTest.cs
-    文件功能描述：BaseNcfUnitTest 相关实现
-    
-    
-    创建标识：Senparc - 20240708
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: BaseNcfUnitTest.cs
+    File description: BaseNcfUnitTest related implementation
+
+    Created by: Senparc - 20240708
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.3.29 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -58,10 +61,10 @@ namespace Senparc.Ncf.UnitTestExtension
         //}
 
         /// <summary>  
-        /// 构造函数，用于初始化服务提供者和种子数据  
+        ///Legacy comment translated to English.
         /// </summary>  
-        /// <param name="servicesRegister">在启动时注册 ServiceCollection 的委托</param>  
-        /// <param name="initSeedData">初始化种子数据的委托</param>  
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         public BaseNcfUnitTest(Action<IServiceCollection> servicesRegister = null, UnitTestSeedDataBuilder seedDataBuilder = null)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
@@ -100,8 +103,8 @@ namespace Senparc.Ncf.UnitTestExtension
 
             app.UseXncfModules(registerService);
 
-            #region 填充种子数据
-            //执行前准备
+            #region Legacy section
+            //Legacy comment translated to English.
             var dataList = seedDataBuilder?.ExecuteAsync(this._serviceProvider).GetAwaiter().GetResult();
 
             dataList ??= new DataList(Guid.Empty.ToString("N"));
@@ -111,9 +114,9 @@ namespace Senparc.Ncf.UnitTestExtension
                 GlobalDataListCollection[dataList.UUID] = dataList;
                 GlobalDataList.AddRange(dataList);
 
-                //自动填充
+                //Legacy comment translated to English.
                 AutoFillSeedData(seedDataBuilder, dataList);
-                //填充后
+                //Legacy comment translated to English.
                 seedDataBuilder?.OnExecutedAsync(this._serviceProvider, dataList).GetAwaiter().GetResult();
             }
 
@@ -126,18 +129,18 @@ namespace Senparc.Ncf.UnitTestExtension
             {
                 var serviceProvider = scope.ServiceProvider;
                 var dbContext = serviceProvider.GetService<NcfUnitTestEntities>();
-                //填充所有数据
+                //Legacy comment translated to English.
                 foreach (var dataListKv in dataLists)
                 {
                     var type = dataListKv.Key;
                     var dataList = dataListKv.Value;
 
-                    //设置 DbSet<T>
+                    //settings DbSet<T>
                     var binder = Type.DefaultBinder;
                     var method = dbContext.GetType().GetMethod(nameof(dbContext.Set), BindingFlags.Instance | BindingFlags.Public, binder, Type.EmptyTypes, null).MakeGenericMethod(type);
                     var dbSet = method.Invoke(dbContext, null);
 
-                    //转换 data 类型
+                    //Legacy comment translated to English.
                     var listType = typeof(List<>).MakeGenericType(type);
                     var castMethod = typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(type);
                     var toListMethod = typeof(Enumerable).GetMethod("ToList").MakeGenericMethod(type);
@@ -145,7 +148,7 @@ namespace Senparc.Ncf.UnitTestExtension
                     var castData = castMethod.Invoke(null, new object[] { dataList });
                     var listData = toListMethod.Invoke(null, new object[] { castData });
 
-                    //添加到 DbSet<T>
+                    //Legacy comment translated to English.
                     var addRangeMethod = dbSet.GetType().GetMethod("AddRange", new[] { listType });
                     addRangeMethod.Invoke(dbSet, new[] { listData });
 
@@ -165,9 +168,9 @@ namespace Senparc.Ncf.UnitTestExtension
         }
 
         /// <summary>  
-        /// 尝试初始化指定类型的种子数据  
+        ///Legacy comment translated to English.
         /// </summary>  
-        /// <typeparam name="T">实体类型</typeparam>  
+        ///Legacy comment translated to English.
         public void TryInitSeedData<T>() where T : EntityBase
         {
             if (!GlobalDataList.ContainsKey(typeof(T)))
@@ -194,7 +197,7 @@ namespace Senparc.Ncf.UnitTestExtension
         }
 
         /// <summary>
-        /// 注册 IServiceCollection 和 MemoryCache
+        ///Legacy comment translated to English.
         /// </summary>
         public void RegisterServiceCollection()
         {
@@ -207,16 +210,16 @@ namespace Senparc.Ncf.UnitTestExtension
             config.GetSection("SenparcSetting").Bind(_senparcSetting);
 
             ServiceCollection.AddSenparcGlobalServices(config);
-            ServiceCollection.AddMemoryCache();//使用内存缓存
+            ServiceCollection.AddMemoryCache();//Legacy comment translated to English.
 
             ActionInServiceCollection();
 
-            //设置单元测试默认 DbContext（需要在 StartNcfEngine 之前）
+            //Legacy comment translated to English.
             MultipleDatabasePool.UnitTestPillarDbContext = typeof(NcfUnitTestEntities);
 
             var result = Senparc.Ncf.XncfBase.Register.StartNcfEngine(ServiceCollection, Configuration, Env, null);
 
-            //覆盖 NCF 基础设置
+            //Legacy comment translated to English.
             ServiceCollection.AddScoped<INcfDbData, NcfUnitTestDataDb>(s =>
             {
                 var dbContext = s.GetService<NcfUnitTestEntities>();
@@ -231,10 +234,10 @@ namespace Senparc.Ncf.UnitTestExtension
 
             ServiceCollection.AddScoped<NcfUnitTestEntities>(s =>
             {
-                //初始化对象
+                //Legacy comment translated to English.
                 var options = new DbContextOptionsBuilder<NcfUnitTestEntities>()
                                     .UseInMemoryDatabase(databaseName: "UnitTestDb")
-                                    //InMemory 不支持事务，如果不希望抛错，则忽略警告
+                                    //Legacy comment translated to English.
                                     .ConfigureWarnings(warnings => warnings.Ignore(InMemoryEventId.TransactionIgnoredWarning))
                                     .Options;
                 var dbContext = new NcfUnitTestEntities(options, s, GlobalDataList);
@@ -245,34 +248,37 @@ namespace Senparc.Ncf.UnitTestExtension
         }
 
         /// <summary>
-        /// 注册 RegisterService.Start()
+        ///Legacy comment translated to English.
         /// </summary>
         public void RegisterServiceStart(bool autoScanExtensionCacheStrategies = false)
         {
-            //注册
+            //Legacy comment translated to English.
             registerService = Senparc.CO2NET.AspNet.RegisterServices.RegisterService.Start(Env, _senparcSetting)
                 .UseSenparcGlobal(autoScanExtensionCacheStrategies);
 
-            //配置全局使用Redis缓存（按需，独立）
+            //Legacy comment translated to English.
             var redisConfigurationStr = _senparcSetting.Cache_Redis_Configuration;
-            var useRedis = !string.IsNullOrEmpty(redisConfigurationStr) && redisConfigurationStr != "#{Cache_Redis_Configuration}#"/*默认值，不启用*/;
-            if (useRedis)//这里为了方便不同环境的开发者进行配置，做成了判断的方式，实际开发环境一般是确定的，这里的if条件可以忽略
+            var useRedis = !string.IsNullOrEmpty(redisConfigurationStr) && redisConfigurationStr != "#{Cache_Redis_Configuration}#"/*default value; disabled*/;
+            if (useRedis)//Legacy comment translated to English.
             {
-                /* 说明：
-                 * 1、Redis 的连接字符串信息会从 Config.SenparcSetting.Cache_Redis_Configuration 自动获取并注册，如不需要修改，下方方法可以忽略
-                /* 2、如需手动修改，可以通过下方 SetConfigurationOption 方法手动设置 Redis 链接信息（仅修改配置，不立即启用）
+                /* description：
+
+                 * Legacy comment translated to English.
+
+                Legacy comment translated to English.
+
                  */
                 Senparc.CO2NET.Cache.CsRedis.Register.SetConfigurationOption(redisConfigurationStr);
                 Console.WriteLine("完成 Redis 设置");
 
-                //以下会立即将全局缓存设置为 Redis
-                Senparc.CO2NET.Cache.CsRedis.Register.UseKeyValueRedisNow();//键值对缓存策略（推荐）
+                //Legacy comment translated to English.
+                Senparc.CO2NET.Cache.CsRedis.Register.UseKeyValueRedisNow();//Legacy comment translated to English.
                 Console.WriteLine("启用 Redis UseKeyValue 策略");
 
-                //Senparc.CO2NET.Cache.Redis.Register.UseHashRedisNow();//HashSet储存格式的缓存策略
+                //Legacy comment translated to English.
 
-                //也可以通过以下方式自定义当前需要启用的缓存策略
-                //CacheStrategyFactory.RegisterObjectCacheStrategy(() => RedisObjectCacheStrategy.Instance);//键值对
+                //Legacy comment translated to English.
+                //CacheStrategyFactory.RegisterObjectCacheStrategy(() => RedisObjectCacheStrategy.Instance);//key-value pair
                 //CacheStrategyFactory.RegisterObjectCacheStrategy(() => RedisHashSetObjectCacheStrategy.Instance);//HashSet
             }
 

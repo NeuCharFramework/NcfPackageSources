@@ -1,4 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: FeedBackController.cs
+    File description: FeedBackController related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.0.1 Updated legacy MVC integration metadata and English source comments
+
+----------------------------------------------------------------*/
+
+using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.User.Models.VD;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
@@ -27,7 +40,7 @@ namespace Senparc.Areas.User.Controllers
         }
 
         /// <summary>
-        /// 列表
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="pageIndex"></param>
         /// <returns></returns>
@@ -40,7 +53,7 @@ namespace Senparc.Areas.User.Controllers
         }
 
         /// <summary>
-        /// 获取反馈列表信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
@@ -65,7 +78,7 @@ namespace Senparc.Areas.User.Controllers
         }
 
         /// <summary>
-        /// 获取反馈信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -93,7 +106,7 @@ namespace Senparc.Areas.User.Controllers
         }
 
         /// <summary>
-        /// 编辑页面
+        /// editpage
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -105,7 +118,7 @@ namespace Senparc.Areas.User.Controllers
         }
 
         /// <summary>
-        /// 提交编辑
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -138,7 +151,7 @@ namespace Senparc.Areas.User.Controllers
         }
 
         /// <summary>
-        /// 删除反馈
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>

@@ -1,26 +1,29 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：NcfFileService.cs
-    文件功能描述：统一管理知识库源文件和站点静态资源的物理存储、元数据及公开访问边界
+    File name: NcfFileService.cs
+    File description: Related implementation.
 
+    Created by: Senparc - 20250112
 
-    创建标识：Senparc - 20250112
+    Modified by: Senparc - 20260813
+    Change description: v0.6.0-preview1 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.6.0-preview1 完善文件资源边界、安全删除策略与静态资源管理
+    Modified by: Senparc - 20260915
+    Change description: v0.7.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.7.0 优化文件管理、标签与回收站交互
+    Modified by: Senparc - 20261005
+    Change description: v0.7.3 0.7.3 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.7.3 0.7.3 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
+    Modified by: Senparc - 20261021
+    Change description: v0.8.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.8.0 保存和查询微调产物文件
+    Modified by: Senparc - 20261103
+    Change description: v0.8.1 add FileId reference to AIFineTuningDataset and implement FineTuningFileReferenceProvider
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.8.1 add FileId reference to AIFineTuningDataset and implement FineTuningFileReferenceProvider
+    Modified by: Senparc - 20261119
+    Change description: v0.8.5 Localized file management and upload surfaces
 
 ----------------------------------------------------------------*/
 

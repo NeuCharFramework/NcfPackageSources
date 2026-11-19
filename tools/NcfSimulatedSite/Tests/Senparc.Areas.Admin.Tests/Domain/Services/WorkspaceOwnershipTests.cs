@@ -1,11 +1,11 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：WorkspaceOwnershipTests.cs
-    文件功能描述：工作区接口按当前账号过滤所有者
+    File name: WorkspaceOwnershipTests.cs
+    File description: Related implementation.
 
-
-    创建标识：Senparc - 20261110
+    Created by: Senparc - 20261110
 
 ----------------------------------------------------------------*/
 

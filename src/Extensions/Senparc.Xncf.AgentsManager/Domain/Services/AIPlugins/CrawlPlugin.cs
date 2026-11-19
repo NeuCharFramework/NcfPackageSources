@@ -1,29 +1,32 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：CrawlPlugin.cs
-    文件功能描述：CrawlPlugin 服务逻辑
-    
-    
-    创建标识：Senparc - 20250117
-    
-    修改标识：Senparc - 20260701
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+    File name: CrawlPlugin.cs
+    File description: Related implementation.
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.12.0-preview6 为 AgentsManager 模块接入统一资源本地化并优化功能文案
+    Created by: Senparc - 20250117
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
+    Modified by: Senparc - 20260701
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 支持 AgentTemplate 模型绑定、空输出 Token 重试与 Human-in-the-Loop
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
+    Modified by: Senparc - 20260717
+    Change description: v0.12.0-preview6 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260822
+    Change description: v0.16.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 
@@ -111,194 +114,348 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
             return Task.FromResult(result);
             /*
             foreach (var item in senMapicResult)
+
             {
+
                 var urlData = item.Value;
+
                 var rawText = System.Text.RegularExpressions.Regex.Replace(urlData.MarkDownHtmlContent ?? "", @"[#*`_~\[\]()]+|\s+", " ").Trim();
+
                 contentMap.Add(new KeyValuePair<ContentType, string>(ContentType.HtmlContent, rawText));
+
 
                 var requestSuccess = urlData.Result == 200;
 
-                var logStr = $"下载网页内容{(requestSuccess ? "成功" : "失败")}。" +
-                    (requestSuccess ? $"字符数：{urlData.MarkDownHtmlContent?.Length}" : $"错误代码：{item.Value.Result}") +
+
+                Legacy comment translated to English.
+
+                    Legacy comment translated to English.
+
                     $"\t URL:{item.Key.ToLower()}";
 
+
                 if (!requestSuccess)
+
                 {
-                    logStr += $" 来源：{urlData.ParentUrl} （链接：{urlData.LinkText}）";
+
+                    Legacy comment translated to English.
+
                 }
 
-                SenparcTrace.SendCustomLog("RAG日志", logStr);
+
+                Legacy comment translated to English.
+
                 Console.WriteLine(logStr);
+
             }
 
-            Console.WriteLine("正在处理信息...");
 
-            #region Embedding 储存信息
+            Legacy comment translated to English.
 
-            //测试 TextEmbedding
+
+            Legacy section
+
+
+            //test TextEmbedding
+
             var embeddingAiSetting = Senparc.AI.Config.SenparcAiSetting;
+
             var agentAiHandler = new AgentAiHandler(embeddingAiSetting);
+
             var iWantToRunEmbedding = agentAiHandler
+
                  .IWantTo()
+
                  .ConfigModel(ConfigModel.TextEmbedding, "Jeffrey")
+
                  .BuildKernel();
 
+
             var i = 0;
+
             var dt = SystemTime.Now;
+
             var mapTasks = new List<Task>();
 
+
             contentMap.ForEach(file =>
+
             {
+
                 if (file.Value.IsNullOrEmpty())
+
                 {
+
                     return;
+
                 }
+
 
                 var text = file.Key == ContentType.File ? File.ReadAllTextAsync(file.Value).Result : file.Value;
+
                 List<string> paragraphs = new List<string>();
 
-#pragma warning disable SKEXP0050 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+
+Legacy comment translated to English.
+
                 if (file.Value.EndsWith(".md"))
+
                 {
+
                     paragraphs = TextChunker.SplitMarkdownParagraphs(
+
                       TextChunker.SplitMarkDownLines(System.Text.RegularExpressions.Regex.Replace(text, @"\s+", " ").Replace("\r\n", " "), 128),
+
                       64);
+
                 }
+
                 else
+
                 {
+
                     paragraphs = TextChunker.SplitPlainTextParagraphs(
+
                       TextChunker.SplitPlainTextLines(System.Text.RegularExpressions.Regex.Replace(text, @"\s+", " ").Replace("\r\n", " "), 128),
+
                       256);
+
                 }
-#pragma warning restore SKEXP0050 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+
+Legacy comment translated to English.
+
 
             MemoryStore:
+
                 try
+
                 {
+
                     paragraphs.ForEach(paragraph =>
+
                     {
+
                         var currentI = i++;
 
+
                         iWantToRunEmbedding
+
                           .MemorySaveInformation(
+
                               modelName: embeddingAiSetting.ModelName.Embedding,
+
                               azureDeployName: embeddingAiSetting.DeploymentName,
+
                               collection: "EmbeddingAgent",
+
                               id: $"paragraph-{Guid.NewGuid().ToString("n")}",
+
                               text: paragraph);
+
                     });
+
                 }
+
                 catch (Exception ex)
+
                 {
+
                     string pattern = @"retry after (\d+) seconds";
+
                     Match match = Regex.Match(ex.Message, pattern);
+
                     if (match.Success)
+
                     {
-                        Console.WriteLine($"等待冷却 {match.Value} 秒");
+
+                        Legacy comment translated to English.
+
                     }
+
                     goto MemoryStore;
+
                 }
+
 
             });
 
-            Console.WriteLine($"处理完成(文件数：{contentMap.Count}，段落数：{i})");
+
+            Legacy comment translated to English.
+
             #endregion
 
 
-            #region 提问
 
-            Console.WriteLine("提问：" + question);
+            Legacy section
+
+
+            Legacy comment translated to English.
+
             StringBuilder results = new StringBuilder();
+
             var parameter = new PromptConfigParameter()
+
             {
+
                 MaxTokens = 2000,
+
                 Temperature = 0.7,
+
                 TopP = 0.5,
+
             };
 
+
             var systemMessage = @$"## SystemMessage
-你是一位咨询机器人，你将根据我所提供的“提问”以及“备选信息”组织语言，生成一段给我的回复。
-""备选信息""可能有多条，使用 ////// 表示每一条信息的开头， 表示每一条信息的结尾。在 ****** 后会有一个数字，表示这条信息的相关性。
+
+Legacy comment translated to English.
+
+Legacy comment translated to English.
+
 
 ## Rule
-你必须：
- - 将回答内容严格限制在我所提供给你的备选信息中（开头和结尾标记中间的内容），其中越靠前的备选信息可信度越高，相关性不属于答案内容本身，因此在组织语言的过程中必须将其忽略。
- - 请严格从“备选信息”中挑选和“提问”有关的信息，不要输出没有相关依据的信息。";
+
+Legacy comment translated to English.
+
+ Legacy comment translated to English.
+
+ Legacy comment translated to English.
+
 
             var iWantToRunChat = agentAiHandler.ChatConfig(parameter,
+
                                  userId: "Jeffrey",
+
                                  maxHistoryStore: 10,
+
                                  chatSystemMessage: systemMessage,
+
                                  senparcAiSetting: null);
 
+
             var questionDt = DateTime.Now;
+
             var limit = 3;
+
             var embeddingResult = await iWantToRunEmbedding.MemorySearchAsync(
+
                     modelName: embeddingAiSetting.ModelName.Embedding,
+
                     azureDeployName: embeddingAiSetting.DeploymentName,
+
                     memoryCollectionName: "EmbeddingAgent",
+
                     query: question,
+
                     limit: limit);
 
+
             await foreach (var item in embeddingResult.MemoryQueryResult)
+
             {
+
                 results.AppendLine($@"//////
+
 {item.Metadata.Text}
+
 ******{item.Relevance}");
+
             }
 
-            SenparcTrace.SendCustomLog("RAG日志", $@"提问：{question}，耗时：{(DateTime.Now - questionDt).TotalMilliseconds}ms
-结果：
+
+            Legacy comment translated to English.
+
+result：
+
 {results.ToString()}
+
 ");
+
 
             Console.WriteLine();
 
-            Console.Write("回答：");
 
-            var input = @$"提问：{question}
-备选答案：
+            Legacy comment translated to English.
+
+
+            Legacy comment translated to English.
+
+Legacy comment translated to English.
+
 {results.ToString()}";
 
-            var useStream = iWantToRunChat.IWantToBuild.IWantToConfig.IWantTo.SenparcAiSetting.AiPlatform != AiPlatform.NeuCharAI;
-            if (useStream)
-            {
-                //使用流式输出
 
-                var originalColor = Console.ForegroundColor;//原始颜色
+            var useStream = iWantToRunChat.IWantToBuild.IWantToConfig.IWantTo.SenparcAiSetting.AiPlatform != AiPlatform.NeuCharAI;
+
+            if (useStream)
+
+            {
+
+                Legacy comment translated to English.
+
+
+                var originalColor = Console.ForegroundColor;//originalcolor
+
                 Action<StreamingKernelContent> streamItemProceessing = async item =>
+
                 {
+
                     await Console.Out.WriteAsync(item.ToString());
 
-                    //每个流式输出改变一次颜色
+
+                    Legacy comment translated to English.
+
                     if (Console.ForegroundColor == originalColor)
+
                     {
+
                         Console.ForegroundColor = ConsoleColor.Green;
+
                     }
+
                     else
+
                     {
+
                         Console.ForegroundColor = originalColor;
+
                     }
+
                 };
 
-                //输出结果
+
+                //outputresult
+
                 SenparcAiResult result = await agentAiHandler.ChatAsync(iWantToRunChat, input, streamItemProceessing);
 
-                //复原颜色
+
+                Legacy comment translated to English.
+
                 Console.ForegroundColor = originalColor;
 
+
                 return result.OutputString;
+
             }
+
             else
+
             {
+
                 //iWantToRunChat
+
                 var result = await agentAiHandler.ChatAsync(iWantToRunChat, input);
+
                 await Console.Out.WriteLineAsync(result.OutputString);
 
+
                 return result.OutputString;
+
             }
 
+
             #endregion
+
             */
         }
     }

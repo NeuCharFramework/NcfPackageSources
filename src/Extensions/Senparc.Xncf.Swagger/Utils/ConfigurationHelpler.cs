@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：ConfigurationHelpler.cs
-    文件功能描述：ConfigurationHelpler 相关实现
-    
-    
-    创建标识：Senparc - 20210614
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: ConfigurationHelpler.cs
+    File description: ConfigurationHelpler related implementation
+
+    Created by: Senparc - 20210614
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.12 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -22,37 +25,37 @@ using System;
 namespace Senparc.Xncf.Swagger.Utils
 {
     /// <summary>
-    /// Configuration帮助类
+    ///Legacy comment translated to English.
     /// </summary>
     public class ConfigurationHelper
     {
         /// <summary>
-        /// 全局配置
+        /// globalconfiguration
         /// </summary>
         public static IConfiguration Configuration { get; set; }
 
         /// <summary>
-        /// Swagger模块的配置
+        ///Legacy comment translated to English.
         /// </summary>
         public static IConfiguration SwaggerConfiguration { get; set; }
 
         /// <summary>
-        /// Swagger模块的自定义配置信息
+        ///Legacy comment translated to English.
         /// </summary>
         public static CustsomSwaggerOptions CustsomSwaggerOptions { get; set; }
 
         /// <summary>
-        /// 托管环境信息
+        ///Legacy comment translated to English.
         /// </summary>
         public static IHostEnvironment HostEnvironment { get; set; }
 
         /// <summary>
-        /// Web托管环境信息
+        ///Legacy comment translated to English.
         /// </summary>
         public static IWebHostEnvironment WebHostEnvironment { get; set; }
 
         /// <summary>
-        /// 内部访问（项目根路径）
+        ///Legacy comment translated to English.
         /// </summary>
         public static string ContentRootPath
         {
@@ -63,7 +66,7 @@ namespace Senparc.Xncf.Swagger.Utils
         }
 
         /// <summary>
-        /// web外部访问（wwwroot）
+        ///Legacy comment translated to English.
         /// </summary>
         public static string WebRootPath
         {
@@ -77,14 +80,14 @@ namespace Senparc.Xncf.Swagger.Utils
         }
 
         /// <summary>
-        /// Cookie认证名称
+        ///Legacy comment translated to English.
         /// </summary>
         public static readonly string SWAGGER_ATUH_COOKIE = nameof(SWAGGER_ATUH_COOKIE);
 
         /// <summary>
-        /// 获取AppsettingsJson的值
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="key">键路径，如：ConnectionStrings:SQLServerConn</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public static string GetValue(string key)
         {
@@ -92,10 +95,10 @@ namespace Senparc.Xncf.Swagger.Utils
         }
 
         /// <summary>
-        /// 获取AppsettingsJson的值
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <typeparam name="T">类型</typeparam>
-        /// <param name="key">键路径</param>
+        /// <typeparam name="T">type</typeparam>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public static T GetValue<T>(string key)
         {

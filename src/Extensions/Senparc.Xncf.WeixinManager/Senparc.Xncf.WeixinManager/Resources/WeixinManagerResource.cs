@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：WeixinManagerResource.cs
-    文件功能描述：WeixinManagerResource 相关实现
-    
-    
-    创建标识：Senparc - 20260717
-    
-    修改标识：Senparc - 20260717
-    修改描述：v0.23.0-preview3 为 WeixinManager 模块接入统一资源本地化并优化功能文案
+
+    File name: WeixinManagerResource.cs
+    File description: WeixinManagerResource related implementation
+
+    Created by: Senparc - 20260717
+
+    Modified by: Senparc - 20260717
+    Change description: v0.23.0-preview3 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.25.1 Localized Weixin account and administration surfaces
 
 ----------------------------------------------------------------*/
 #nullable enable

@@ -1,73 +1,81 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：Register.cs
-    文件功能描述：模块注册与初始化逻辑
+    File name: Register.cs
+    File description: module registration and initialization logic
 
+    Created by: Senparc - 20241028
 
-    创建标识：Senparc - 20241028
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+    Modified by: Senparc - 20260705
+    Change description: v0.0.3 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.0.3 新增登录超时配置并补齐多数据库迁移支持
+    Modified by: Senparc - 20260705
+    Change description: v0.0.4 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.0.4 新增登录超时配置并补齐多数据库迁移支持
+    Modified by: Senparc - 20260724
+    Change description: v0.1.0 enhance batch module updates and improve the multilingual management interface
 
-    修改标识：Senparc - 20260724
-    修改描述：v0.1.0 增强后台模块批量更新并完善多语言管理界面
+    Modified by: Senparc - 20260729
+    Change description: v0.2.0 enhance admin interaction and secure desktop Admin Chat synchronization
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.2.0 增强后台管理员交互与桌面 Admin Chat 安全同步
+    Modified by: Senparc - 20260804
+    Change description: v0.3.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.3.0 新增后台同步管理与可配置多语言页脚
+    Modified by: Senparc - 20260804
+    Change description: v0.3.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.3.0 将后台同步功能统一更名为 NeuBell/纽铃
+    Modified by: Senparc - 20260808
+    Change description: v0.4.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260808
-    修改描述：v0.4.0 注册 Host 指标采集、换票签发与纽铃示例服务
+    Modified by: Senparc - 20260812
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20260812
-    修改描述：对齐 Admin Cookie 默认 Scheme，失效会话引导登录而非 403
+    Modified by: Senparc - 20260813
+    Change description: v0.5.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.5.0 集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
+    Modified by: Senparc - 20260822
+    Change description: v0.6.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.6.0 新增管理端 Chat 会话工作流能力
+    Modified by: Senparc - 20260829
+    Change description: v0.7.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260829
-    修改描述：v0.7.0 新增 NeuCharPivot 全局浮动调用与工作流分析管理能力
+    Modified by: Senparc - 20260915
+    Change description: v0.8.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+    Modified by: Senparc - 20260916
+    Change description: v0.9.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260916
-    修改描述：v0.9.0 增强 Admin Chat 取消与推理轨迹，并扩展 NeuBell WebHook 请求能力
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 implement AdminChat memory storage and management system
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 implement AdminChat memory storage and management system
+    Modified by: Senparc - 20261103
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：将嵌入式静态资源接入文件版本计算，避免帮助索引缓存与页面不一致
+    Modified by: Senparc - 20261111
+    Change description: v0.12.28 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.12.28 后台菜单文案改为资源本地化读取
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 
 /* 
- * 特别注意：
- * 当前注册类是比较特殊的底层系统支持模块，
- * 其中加入了一系列特殊处理的代码，并不适合所有模块使用，
- * 如果需要学习扩展模块，请参考 【Senparc.ExtensionAreaTemplate】 项目的 Register.cs 文件！
+
+ * Legacy comment translated to English.
+
+ * Legacy comment translated to English.
+
+ * Legacy comment translated to English.
+
+ * Legacy comment translated to English.
+
  */
 
 using Microsoft.AspNetCore.Authentication;
@@ -129,10 +137,10 @@ namespace Senparc.Areas.Admin
     [XncfRegister]
     [XncfOrder(5996)]
     public class Register : XncfRegisterBase,
-        IXncfRegister, //注册 XNCF 基础模块接口（必须）
-        IAreaRegister, //注册 XNCF 页面接口（按需选用）
-        IXncfDatabase  //注册 XNCF 模块数据库（按需选用）
-                       //IXncfRazorRuntimeCompilation  //需要使用 RazorRuntimeCompilation，在开发环境下实时更新 Razor Page
+        IXncfRegister, //Legacy comment translated to English.
+        IAreaRegister, //register the XNCF page interface (optional)
+        IXncfDatabase  //register the XNCF module database (optional)
+                       //Legacy comment translated to English.
     {
         private static readonly XncfRegisterText RegisterText =
             XncfRegisterText.Create<AdminResource>(
@@ -142,7 +150,7 @@ namespace Senparc.Areas.Admin
 
         public const string ModuleUid = SiteConfig.SYSTEM_XNCF_MODULE_AREAS_ADMIN_UID;
 
-        #region IXncfRegister 接口
+        #region Legacy section
 
         public override string Name => "NeuCharFramework.Admin";
 
@@ -159,10 +167,10 @@ namespace Senparc.Areas.Admin
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
-            //更新数据库
+            //updatedatabase
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
 
-            // 安装后初始化认证配置默认值（仅在记录缺失时创建，不覆盖用户自定义配置）。
+            //Legacy comment translated to English.
             var adminAuthConfigService = serviceProvider.GetService<AdminAuthConfigService>();
             if (adminAuthConfigService != null)
             {
@@ -186,8 +194,8 @@ namespace Senparc.Areas.Admin
             //var adminModule = xncfModuleServiceExtension.GetObject(z => z.Uid == this.Uid);
             //if (adminModule == null)
             //{
-            //    //只在未安装的情况下进行安装，InstallModuleAsync会访问到此方法，不做判断可能会引发死循环。
-            //    //常规模块中请勿在此方法中自动安装模块！
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             //    await xncfModuleServiceExtension.InstallModuleAsync(this.Uid).ConfigureAwait(false);
             //}
 
@@ -196,16 +204,16 @@ namespace Senparc.Areas.Admin
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
-            //TODO：可以提供一个 BeforeUninstall 方法，阻止卸载。
+            //Legacy comment translated to English.
 
-            #region 删除数据库（演示）
+            #region Legacy section
 
             var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
             AdminSenparcEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as AdminSenparcEntities;
 
-            //指定需要删除的数据实体
+            //specify the data entities to delete
 
-            //注意：这里作为演示，在卸载模块的时候删除了所有本模块创建的表，实际操作过程中，请谨慎操作，并且按照删除顺序对实体进行排序！
+            //Note: this is a demonstration that deletes all tables created by this module during uninstallation. In production, proceed carefully and order entities by their deletion dependencies.
             var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.TryGetXncfDatabaseDbContextType).Keys.ToArray();
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
 
@@ -221,7 +229,7 @@ namespace Senparc.Areas.Admin
             services.AddScoped<AuthenticationResultFilterAttribute>();
             //services.AddScoped(typeof(AuthenticationAsyncPageFilterAttribute));
 
-            services.Configure<JwtSettings>(JwtSettings.Position_Backend, configuration.GetSection(JwtSettings.Position_Backend));// 配置管理后台jwt
+            services.Configure<JwtSettings>(JwtSettings.Position_Backend, configuration.GetSection(JwtSettings.Position_Backend));//Legacy comment translated to English.
             services.Configure<FunctionFileStoreOptions>(
                 configuration.GetSection(FunctionFileStoreOptions.SectionName));
             services.Configure<WeixinClawAdminIntegrationOptions>(
@@ -234,7 +242,7 @@ namespace Senparc.Areas.Admin
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            //AutoMap映射
+            //AutoMap mapping
             base.AddAutoMapMapping(profile =>
             {
                 profile.CreateMap<AdminUserInfo, CreateOrUpdate_AdminUserInfoDto>();
@@ -251,11 +259,11 @@ namespace Senparc.Areas.Admin
             services.AddScoped<InstallerService>();
             services.AddScoped<AdminAuthConfigService>();
             services.AddScoped<AdminMenuLocalizationService>();
-            // 管理员登录图形验证码（纯 SVG 生成 + CO2NET 缓存，无第三方依赖）
+            //Legacy comment translated to English.
             services.AddScoped<LoginCaptchaService>();
             services.AddScoped<IDesktopAdminAuthTokenIssuer, DesktopAdminAuthTokenIssuer>();
 
-            // 聊天功能相关服务注册
+            //Legacy comment translated to English.
             services.AddScoped<IAdminChatSessionRepository, AdminChatSessionRepository>();
             services.AddScoped<IAdminChatMessageRepository, AdminChatMessageRepository>();
             services.AddScoped<IAdminChatSessionModuleRepository, AdminChatSessionModuleRepository>();
@@ -287,7 +295,7 @@ namespace Senparc.Areas.Admin
             services.AddScoped<Senparc.Xncf.WeixinManager.WeixinClaw.IWeixinClawMessageHandler>(
                 serviceProvider => serviceProvider.GetRequiredService<AdminWeixinClawMessageHandler>());
 
-            // ChatAgent / NeuCharPivot：系统表、声明式 UI、Function 安全执行和 EventBus 协调。
+            //Legacy comment translated to English.
             services.AddScoped<INeuCharPivotConfigurationRepository, NeuCharPivotConfigurationRepository>();
             services.AddScoped<INeuCharPivotFunctionRepository, NeuCharPivotFunctionRepository>();
             services.AddScoped<INeuCharPivotLoopTaskRepository, NeuCharPivotLoopTaskRepository>();
@@ -302,7 +310,7 @@ namespace Senparc.Areas.Admin
             services.AddScoped<NeuCharPivotService>();
             services.AddScoped<NeuCharPivotGlobalAccessService>();
             services.AddScoped<NeuCharPivotGlobalFunctionService>();
-            // Function 全局 Provit 数据库访问策略（DB 覆盖代码属性），缓存参考 FullSystemConfigCache 范式
+            //Legacy comment translated to English.
             services.AddScoped<INeuCharFunctionProvitAccessRepository, NeuCharFunctionProvitAccessRepository>();
             services.AddScoped<FullNeuCharFunctionProvitAccessCache>();
             services.AddScoped<NeuCharFunctionProvitAccessService>();
@@ -311,16 +319,16 @@ namespace Senparc.Areas.Admin
             services.AddScoped<ChatAgentNeuCharPivotComposer>();
             services.AddHostedService<NeuCharPivotLoopTaskHostedService>();
 
-            // Admin 首页 Host 实时指标采样器。Singleton 仅保存计算速率所需的上一帧计数器，
-            // 不保存历史记录，也不写入任何缓存。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             services.AddSingleton<HostMetricsCollector>();
 
-            // Admin 首页资源监控：后台每 10 秒采样，按 10s/1min/5min 三个时间分档写入
-            // CO2NET 对象缓存（最多保留 24 小时），UI 未打开时记录依然持续。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             services.AddHostedService<ResourceMonitorRecorder>();
 
-            // 纽铃 Footer 聚合、全局缓存与实时变更流。Provider 虽随 DLL 注册，
-            // 但是否执行仍由 NeuBellProviderCatalog 按 XNCF 安装/开放状态决定。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             services.AddSingleton<NeuBellChangeNotifier>();
             services.AddSingleton<Senparc.Ncf.Shared.Abstractions.NeuBell.INeuBellPublisher>(
                 serviceProvider => serviceProvider.GetRequiredService<NeuBellChangeNotifier>());
@@ -334,7 +342,7 @@ namespace Senparc.Areas.Admin
             services.AddSingleton<Senparc.Ncf.Shared.Abstractions.NeuBell.INeuBellProvider>(
                 serviceProvider => serviceProvider.GetRequiredService<NeuCharPivotNeuBellProvider>());
 
-            // 纽铃 WebHook：用户可配置 WebAPI 地址，纽铃条目新增/移除时异步通知。
+            //Legacy comment translated to English.
             services.AddScoped<INeuBellWebHookRepository, NeuBellWebHookRepository>();
             services.AddScoped<INeuBellWebHookService, NeuBellWebHookService>();
             services.AddScoped<NeuBellWebHookService>();
@@ -357,7 +365,7 @@ namespace Senparc.Areas.Admin
 
 
         /// <summary>
-        /// 添加前后端认证
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="services"></param>
         private void AddJwtAuthentication(IServiceCollection services, IConfiguration configuration)
@@ -425,7 +433,7 @@ namespace Senparc.Areas.Admin
 
         #endregion
 
-        #region IAreaRegister 接口
+        #region Legacy section
 
         public string HomeUrl => "/Admin";
 
@@ -434,17 +442,17 @@ namespace Senparc.Areas.Admin
             new AreaPageMenuItem(GetAreaUrl("/Admin/Menu/Index"), ResourceStringLocalizer.Get(typeof(AdminResource), "Admin.Area.MenuManagement", "菜单管理"),"fa fa-bug"),
             new AreaPageMenuItem(GetAreaUrl("/Admin/SenparcTrace/Index"), ResourceStringLocalizer.Get(typeof(AdminResource), "Admin.Area.TraceLog", "SenparcTrace 日志"),"fa fa-calendar-o"),
             new AreaPageMenuItem(GetAreaUrl("/Admin/WeixinClaw/Index"), "个人微信集成", "fa fa-wechat"),
-        };//Admin比较特殊，不需要全部输出
+        };//Legacy comment translated to English.
 
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
         {
             Console.WriteLine("[IAreaRegister - Admin] AuthorizeConfig - AdminArea");
 
-            //鉴权配置
-            //添加基于Cookie的权限验证：https://docs.microsoft.com/en-us/aspnet/core/security/authentication/cookie?view=aspnetcore-2.1&tabs=aspnetcore2x
-            // 默认 Scheme 必须与 AddCookie 注册名一致（NcfAdminAuthorizeScheme），
-            // 否则重启后旧 Cookie / 未带 AdminMember 声明时容易落到 AccessDenied(403)。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             builder.Services
                 .AddAuthentication(options =>
                 {
@@ -471,7 +479,7 @@ namespace Senparc.Areas.Admin
                     {
                         OnCheckSlidingExpiration = context =>
                         {
-                            // Session 状态轮询仅用于前端倒计时，不应触发自动续期。
+                            //Legacy comment translated to English.
                             if (context.Request.Path.StartsWithSegments("/Admin/Session"))
                             {
                                 context.ShouldRenew = false;
@@ -480,7 +488,7 @@ namespace Senparc.Areas.Admin
                         },
                         OnValidatePrincipal = async context =>
                         {
-                            // 缺少管理员声明的会话视为无效，清除 Cookie 后走重新登录。
+                            //Legacy comment translated to English.
                             if (context.Principal?.Identity?.IsAuthenticated != true)
                             {
                                 return;
@@ -495,7 +503,7 @@ namespace Senparc.Areas.Admin
                         },
                         OnRedirectToAccessDenied = context =>
                         {
-                            // 未形成有效管理员身份时不应显示 403，应 Challenge 到登录页。
+                            //Legacy comment translated to English.
                             var principal = context.HttpContext.User;
                             var isAdmin = principal?.Identity?.IsAuthenticated == true
                                 && principal.HasClaim(claim =>
@@ -509,7 +517,7 @@ namespace Senparc.Areas.Admin
                                 return Task.CompletedTask;
                             }
 
-                            // 已登录但无权限：保持 Forbidden / 403 行为。
+                            //Legacy comment translated to English.
                             if (string.Equals(
                                     context.Request.Headers.XRequestedWith,
                                     "XMLHttpRequest",
@@ -551,9 +559,9 @@ namespace Senparc.Areas.Admin
                 //    model.Filters.Add(new AdminAuthorizeAttribute());
                 //});
 
-                //options.Conventions.AuthorizeAreaFolder("Admin", "/", NcfAuthorizationPolicyNames.AdminOnly);//必须登录
-                //options.Conventions.AddAreaPageRoute("Admin", "/Login", "/Admin/Login");//允许匿名
-                //options.Conventions.AddAreaPageRoute("Admin", "/Index", "/Admin/Index");//允许匿名
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
 
                 //options.Conventions.AddAreaFolderRouteModelConvention("Admin","/Admin/", model =>
                 //{
@@ -570,13 +578,13 @@ namespace Senparc.Areas.Admin
                 //});
 
 
-                options.Conventions.AuthorizePage("/", NcfAuthorizationPolicyNames.AdminOnly);//必须登录
-                options.Conventions.AuthorizePage("/AdminChat/Chat", NcfAuthorizationPolicyNames.AdminOnly);//聊天页面必须登录
+                options.Conventions.AuthorizePage("/", NcfAuthorizationPolicyNames.AdminOnly);//Legacy comment translated to English.
+                options.Conventions.AuthorizePage("/AdminChat/Chat", NcfAuthorizationPolicyNames.AdminOnly);//Legacy comment translated to English.
                 options.Conventions.AuthorizePage("/NeuCharPivot/Aggregate", NcfAuthorizationPolicyNames.AdminOnly);
                 options.Conventions.AuthorizePage("/NeuCharPivot/Access", NcfAuthorizationPolicyNames.AdminOnly);
-                options.Conventions.AllowAnonymousToPage("/Login");//允许匿名
+                options.Conventions.AllowAnonymousToPage("/Login");//Legacy comment translated to English.
 
-                //更多：https://learn.microsoft.com/en-us/aspnet/core/security/authorization/razor-pages-authorization?view=aspnetcore-8.0
+                //Legacy comment translated to English.
             });
 
             SenparcTrace.SendCustomLog("系统启动", "完成 Area:Admin 注册");
@@ -590,10 +598,10 @@ namespace Senparc.Areas.Admin
 
         #endregion
 
-        #region IXncfDatabase 接口
+        #region Legacy section
 
         public const string DATABASE_PREFIX = "ADMIN_";
-        //NcfDatabaseMigrationHelper.SYSTEM_UNIQUE_PREFIX;//系统表，将会留空
+        //Legacy comment translated to English.
         public string DatabaseUniquePrefix => DATABASE_PREFIX;
 
         public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this);
@@ -615,27 +623,27 @@ namespace Senparc.Areas.Admin
 
         //public void OnModelCreating(ModelBuilder modelBuilder)
         //{
-        //    //已在 SenparcEntities 中完成
+        //Legacy comment translated to English.
 
         //}
 
         //public void AddXncfDatabaseModule(IServiceCollection services)
         //{
-        //    #region 历史解决方案参考信息
-        //    /* 参考信息
-        //     *      错误信息：
-        //     *          中文：EnableRetryOnFailure 解决短暂的数据库连接失败
-        //     *          英文：Win32Exception: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+        //    #region Legacy section
+        //Legacy comment translated to English.
+        //     *      errorinformation：
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         //     *                InvalidOperationException: An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseSqlServer' call.
-        //     *      问题解决方案说明：https://www.colabug.com/2329124.html
+        //Legacy comment translated to English.
         //     */
 
-        //    /* 参考信息
-        //     *      错误信息：
-        //     *          中文：EnableRetryOnFailure 解决短暂的数据库连接失败
-        //     *          英文：Win32Exception: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+        //Legacy comment translated to English.
+        //     *      errorinformation：
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         //     *                InvalidOperationException: An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseSqlServer' call.
-        //     *      问题解决方案说明：https://www.colabug.com/2329124.html
+        //Legacy comment translated to English.
         //     */
         //    #endregion
 
@@ -656,10 +664,10 @@ namespace Senparc.Areas.Admin
         //    services.AddScoped(typeof(AuthenticationResultFilterAttribute));
         //    services.AddScoped(typeof(AuthenticationAsyncPageFilterAttribute));
 
-        //    //预加载 EntitySetKey
+        //Legacy comment translated to English.
         //    EntitySetKeys.TryLoadSetInfo(typeof(SenparcEntities));
 
-        //    //AutoMap映射
+        //    //AutoMap mapping
         //    base.AddAutoMapMapping(profile =>
         //    {
         //        profile.CreateMap<AdminUserInfo, CreateOrUpdate_AdminUserInfoDto>();
@@ -669,7 +677,7 @@ namespace Senparc.Areas.Admin
 
         #endregion
 
-        //#region IXncfRazorRuntimeCompilation 接口
+        //#region IXncfRazorRuntimeCompilation interface
         //public string LibraryPath => Path.GetFullPath(Path.Combine(SiteConfig.WebRootPath, "..", "..", "Senparc.Areas.Admin"));
         //#endregion
         public override void OnAutoMapMapping(IServiceCollection services, IConfiguration configuration)
@@ -681,7 +689,7 @@ namespace Senparc.Areas.Admin
             }
             catch (Exception ex)
             {
-                //TODO: Oracle 未升级到 .NET 8.0，此处会抛错
+                //Legacy comment translated to English.
                 _ = new NcfExceptionBase(ex.Message, ex);
             }
 

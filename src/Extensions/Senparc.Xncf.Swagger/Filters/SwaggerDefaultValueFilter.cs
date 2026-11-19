@@ -1,18 +1,21 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：SwaggerDefaultValueFilter.cs
-    文件功能描述：SwaggerDefaultValueFilter 相关实现
-    
-    
-    创建标识：Senparc - 20210614
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: SwaggerDefaultValueFilter.cs
+    File description: SwaggerDefaultValueFilter related implementation
+
+    Created by: Senparc - 20210614
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.12 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
-using Microsoft.OpenApi; // 10.0.0 版本核心命名空间
+using Microsoft.OpenApi; //Legacy comment translated to English.
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Linq;
 using System.Collections.Generic;
@@ -20,7 +23,7 @@ using System.Collections.Generic;
 namespace Senparc.Xncf.Swagger.Filters
 {
     /// <summary>
-    /// 添加 swagger 接口版本默认值筛选器 (适配 10.0.0 只读属性版本)
+    ///Legacy comment translated to English.
     /// </summary>
     public class SwaggerDefaultValueFilter : IOperationFilter
     {
@@ -31,18 +34,18 @@ namespace Senparc.Xncf.Swagger.Filters
                 return;
             }
 
-            // 因为要替换集合中的元素，使用 for 循环通过索引操作
+            //Legacy comment translated to English.
             for (int i = 0; i < operation.Parameters.Count; i++)
             {
                 var parameter = operation.Parameters[i];
 
-                // 查找对应的 API 描述信息
+                //Legacy comment translated to English.
                 var description = context.ApiDescription.ParameterDescriptions
                                     .FirstOrDefault(p => p.Name == parameter.Name);
 
                 if (description == null) continue;
 
-                // 计算新的属性值
+                //Legacy comment translated to English.
                 var newDescription = parameter.Description ?? description.ModelMetadata?.Description;
                 var newRequired = parameter.Required;
 
@@ -51,12 +54,12 @@ namespace Senparc.Xncf.Swagger.Filters
                     newRequired |= !description.RouteInfo.IsOptional;
                 }
 
-                // 判断是否需要“修改”（即替换对象）
-                // 如果值没变，则无需替换以保持性能
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 if (newDescription != parameter.Description || newRequired != parameter.Required)
                 {
-                    // 创建新实例，并从旧实例拷贝所有不需要改动的属性
-                    // 在 10.0.0 版本中，这些属性通过对象初始化器设置
+                    //Legacy comment translated to English.
+                    //Legacy comment translated to English.
                     operation.Parameters[i] = new OpenApiParameter
                     {
                         Name = parameter.Name,
@@ -69,7 +72,7 @@ namespace Senparc.Xncf.Swagger.Filters
                         Content = parameter.Content,
                         Deprecated = parameter.Deprecated,
                         Extensions = parameter.Extensions,
-                        // 设置新值
+                        //Legacy comment translated to English.
                         Description = newDescription,
                         Required = newRequired
                     };

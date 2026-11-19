@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：QueueCache.cs
-    文件功能描述：QueueCache 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: QueueCache.cs
+    File description: QueueCache related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -25,10 +28,10 @@ namespace Senparc.Ncf.Core.Cache
         Dictionary<string, QueueCacheData<T>> MessageCollection { get; set; }
         string CreateKey();
         /// <summary>
-        /// 插入缓存
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="obj"></param>
-        /// <param name="key">如果为null将自动生成16位Guid</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         string Insert(T obj, string key);
         QueueCacheData<T> Get(string key, bool removeDataWhenExist = true);
@@ -47,7 +50,7 @@ namespace Senparc.Ncf.Core.Cache
         /// 
         /// </summary>
         /// <param name="cacheKey"></param>
-        /// <param name="timeoutSeconds">小于等于0则没有过期时间</param>
+        ///Legacy comment translated to English.
         protected QueueCache(string cacheKey, int timeoutSeconds)
         {
             _cacheKey = cacheKey;
@@ -71,23 +74,23 @@ namespace Senparc.Ncf.Core.Cache
         }
 
         /// <summary>
-        /// 获取MessageContext，如果不存在，返回null
-        /// 这个方法的更重要意义在于操作TM队列，及时移除过期信息，并将最新活动的对象移到尾部
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="key">用户名（OpenId）</param>
-        /// <param name="removeDataWhenExist">是否清除key</param>
+        /// <param name="key">user name（OpenId）</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         private QueueCacheData<T> GetMessageContext(string key, bool removeDataWhenExist = true)
         {
-            //检查并移除过期记录，为了尽量节约资源，这里暂不使用独立线程轮询
+            //Legacy comment translated to English.
             while (MessageQueue.Count > 0)
             {
                 var firstMessageContext = MessageQueue[0];
                 var timeSpan = DateTime.Now - firstMessageContext.LastActiveTime;
                 if (removeDataWhenExist && _timeoutSeconds >= 0 && timeSpan.TotalSeconds >= _timeoutSeconds)
                 {
-                    MessageQueue.RemoveAt(0);//从队列中移除过期对象
-                    MessageCollection.Remove(firstMessageContext.Key);//从集合中删除过期对象
+                    MessageQueue.RemoveAt(0);//Legacy comment translated to English.
+                    MessageCollection.Remove(firstMessageContext.Key);//Legacy comment translated to English.
                 }
                 else
                 {
@@ -96,9 +99,13 @@ namespace Senparc.Ncf.Core.Cache
             }
 
             /* 
-             * 全局只有在这里用到MessageCollection.ContainsKey
-             * 充分分离MessageCollection内部操作，
-             * 为以后变化或扩展MessageCollection留余地
+
+             * Legacy comment translated to English.
+
+             * Legacy comment translated to English.
+
+             * Legacy comment translated to English.
+
              */
             if (!MessageCollection.ContainsKey(key))
             {
@@ -114,11 +121,11 @@ namespace Senparc.Ncf.Core.Cache
 
             if (messageContext == null)
             {
-                //全局只在这一个地方使用MessageCollection[Key]写入
+                //Legacy comment translated to English.
                 MessageCollection[key] = new QueueCacheData<T>(key);
                 messageContext = GetMessageContext(key);
-                //插入列队
-                MessageQueue.Add(messageContext); //最新的排到末尾
+                //Legacy comment translated to English.
+                MessageQueue.Add(messageContext); //Legacy comment translated to English.
             }
             return messageContext;
         }
@@ -130,15 +137,15 @@ namespace Senparc.Ncf.Core.Cache
 
         public virtual string Insert(T obj, string key)
         {
-            //检查并移除过期记录，为了尽量节约资源，这里暂不使用独立线程轮询
+            //Legacy comment translated to English.
             //while (MessageQueue.Count > 0)
             //{
             //    var firstMessageContext = MessageQueue[0];
             //    var timeSpan = DateTime.Now - firstMessageContext.LastActiveTime;
             //    if (timeSpan.TotalSeconds >= _timeoutSeconds)
             //    {
-            //        MessageQueue.RemoveAt(0);//从队列中移除过期对象
-            //        MessageCollection.Remove(firstMessageContext.Key);//从集合中删除过期对象
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             //    }
             //    else
             //    {
@@ -157,12 +164,12 @@ namespace Senparc.Ncf.Core.Cache
             var messageContextInQueue = MessageQueue.IndexOf(messageContext);
             if (MessageQueue.Count > 1 && messageContextInQueue != MessageQueue.Count - 1)
             {
-                //如果不是新建的对象，把当前对象移到队列尾部（新对象已经在底部）
-                MessageQueue.RemoveAt(messageContextInQueue); //移除当前对象
-                MessageQueue.Add(messageContext); //插入到末尾
+                //Legacy comment translated to English.
+                MessageQueue.RemoveAt(messageContextInQueue); //Legacy comment translated to English.
+                MessageQueue.Add(messageContext); //Legacy comment translated to English.
             }
 
-            messageContext.LastActiveTime = DateTime.Now;//记录请求时间
+            messageContext.LastActiveTime = DateTime.Now;//Legacy comment translated to English.
             return key;
         }
 

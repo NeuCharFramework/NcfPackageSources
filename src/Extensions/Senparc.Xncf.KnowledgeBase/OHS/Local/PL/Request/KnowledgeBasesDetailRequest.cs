@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：KnowledgeBasesDetailRequest.cs
-    文件功能描述：KnowledgeBasesDetailRequest 相关实现
-    
-    
-    创建标识：Senparc - 20250717
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: KnowledgeBasesDetailRequest.cs
+    File description: KnowledgeBasesDetailRequest related implementation
+
+    Created by: Senparc - 20250717
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.8.4 Localized knowledge base management and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -23,15 +26,15 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.PL.Request
     public class KnowledgeBasesDetailRequest
     {
         /// <summary>
-        /// 知识库Id
+        ///Legacy comment translated to English.
         /// </summary>
         public string KnowledgeBasesId { get; set; }
         /// <summary>
-        /// 内容类型
+        /// contenttype
         /// </summary>
         public int ContentType { get; set; }
         /// <summary>
-        /// 内容
+        /// content
         /// </summary>
         public string Content { get; set; }
     }

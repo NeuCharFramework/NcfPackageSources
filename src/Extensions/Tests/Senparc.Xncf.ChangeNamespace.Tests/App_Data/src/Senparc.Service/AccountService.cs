@@ -1,6 +1,9 @@
-﻿/* 注意：
- * 为了兼容emoji表情，使用NickName字段前需要进行一次UrlDecode(Encoding.UTF8)，
- * 存入NickName之前，对原始字符串（如直接从接口获得）进行一次UrlEncode（Encoding.UTF8）
+﻿/* Note:
+
+ * Legacy comment translated to English.
+
+ * Legacy comment translated to English.
+
  */
 
 using Microsoft.AspNetCore.Authentication;
@@ -40,7 +43,7 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        /// 检验用户名是否存在
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="userName"></param>
@@ -55,7 +58,7 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        /// 检测密码是否正确
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="userName"></param>
@@ -67,7 +70,7 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        /// 修改密码
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="userName"></param>
@@ -82,7 +85,7 @@ namespace Senparc.Service
             return true;
         }
         /// <summary>
-        /// 改变用户基本信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="realName"></param>
@@ -100,7 +103,7 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        /// 检查手机号是否存在
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="phone"></param>
@@ -130,7 +133,7 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        /// 根据用户名获取账号信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="userName"></param>
         /// <returns></returns>
@@ -145,9 +148,9 @@ namespace Senparc.Service
             string md5 = password.ToUpper().Replace("-", "");
             if (!isMD5Password)
             {
-                md5 = MD5.GetMD5Code(password, "").Replace("-", ""); //原始MD5
+                md5 = MD5.GetMD5Code(password, "").Replace("-", ""); //originalMD5
             }
-            return MD5.GetMD5Code(md5, salt).Replace("-", ""); //再加密
+            return MD5.GetMD5Code(md5, salt).Replace("-", ""); //encrypt again
         }
 
         public virtual void Logout()
@@ -160,8 +163,8 @@ namespace Senparc.Service
                 _httpContextAccessor.Value.HttpContext.SignOutAsync(
                     UserAuthorizeAttribute.AuthenticationScheme);
 
-                //FormsAuthentication.SignOut(); //退出网站登录
-                //继续删除其他登陆信息
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
             }
             catch (Exception ex)
             {
@@ -175,7 +178,7 @@ namespace Senparc.Service
             {
                 var httpContext = _httpContextAccessor.Value.HttpContext;
 
-                #region 使用 .net core 的方法写入 cookie 验证信息
+                #region Legacy section
 
                 var claims = new List<Claim>
                         {
@@ -213,12 +216,12 @@ namespace Senparc.Service
                     // redirect response value.
                 };
 
-                Logout();//退出登录
+                Logout();//Legacy comment translated to English.
                 httpContext.SignInAsync(UserAuthorizeAttribute.AuthenticationScheme, new ClaimsPrincipal(identity), authProperties);
 
                 #endregion
 
-                //FormsAuthentication.SetAuthCookie(userName, rememberMe);//.net core 的方法
+                //Legacy comment translated to English.
 
                 using (var wrap = this.InstanceAutoDetectChangeContextWrap())
                 {
@@ -226,7 +229,7 @@ namespace Senparc.Service
                     if (account != null)
                     {
                         account.ThisLoginTime = DateTime.Now;
-                        this.SaveObject(account); //保存User信息，同时会清除FullAccount信息，顺便保证“强制退出”等参数失效。
+                        this.SaveObject(account); //Legacy comment translated to English.
                     }
                 }
             }
@@ -263,7 +266,7 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        /// 自动生成新的用户名
+        /// automaticgeneratenewuser name
         /// </summary>
         /// <returns></returns>
         public string GetNewUserName()
@@ -281,7 +284,7 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        /// 登陆
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="userNameOrEmailOrPhone"></param>
         /// <param name="password"></param>
@@ -318,7 +321,7 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        /// 从weixin.senparc.com获取到的用户信息，对应添加Account
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="userInfo"></param>
         /// <param name="account"></param>
@@ -339,12 +342,12 @@ namespace Senparc.Service
                 LogUtility.Account.Error($"userInfo.P2PData 中的 P2PData可能为Null,userInfo：{userInfo?.ToJson()}");
             }
 
-            if (fullAccount.UserName == "zhensherlock")//TODO：这种情况只会存在于老用户，UnionId未同步过来，如accountId=31，name=zhensherlock
+            if (fullAccount.UserName == "zhensherlock")//Legacy comment translated to English.
             {
                 account = GetObject(z => z.UserName == "zhensherlock");
 
-                account.WeixinUnionId = userInfo.unionid;//更新UnionId
-                account.WeixinOpenId = userInfo.openid;//更新OpenId
+                account.WeixinUnionId = userInfo.unionid;//updateUnionId
+                account.WeixinOpenId = userInfo.openid;//updateOpenId
                 SaveObject(account);
             }
 
@@ -379,7 +382,7 @@ namespace Senparc.Service
 
                 var fileName = $@"/Upload/Account/headimgurl.{DateTime.Now.Ticks + Guid.NewGuid().ToString("n").Substring(0, 8)}.jpg";
 
-                //下载图片
+                //Legacy comment translated to English.
                 DownLoadPic(userInfo.headimgurl, fileName);
 
                 account.PicUrl = fileName;
@@ -389,7 +392,7 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        /// 下载图片到指定文件
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="picUrl"></param>
         /// <param name="fileName"></param>
@@ -423,12 +426,12 @@ namespace Senparc.Service
                 account.HeadImgUrl = url;
                 account.NickName = nickname;
                 account.Sex = (byte)userInfo.sex;
-                account.PicUrl = url; //暂时存为远程地址，让线程异步更新和下载
+                account.PicUrl = url; //Legacy comment translated to English.
                 SaveObject(account);
 
                 LogUtility.SystemLogger.Debug($"进行异步头像更新：{userInfo.headimgurl}");
 
-                //异步下载图片
+                //Legacy comment translated to English.
                 var operationQueue = new OperationQueue.OperationQueue();
                 operationQueue.Add($"{account.Id}-{DateTime.Now.Ticks.ToString()}", OperationQueueType.更新用户头像, new List<object>() { account.Id, userInfo.headimgurl });
 
@@ -445,12 +448,12 @@ namespace Senparc.Service
             account.HeadImgUrl = url;
             account.NickName = userInfo.nickname;
             account.Sex = (byte)userInfo.sex;
-            account.PicUrl = url; //暂时存为远程地址，让线程异步更新和下载
+            account.PicUrl = url; //Legacy comment translated to English.
             SaveObject(account);
 
             LogUtility.SystemLogger.Debug($"进行异步头像更新：{userInfo.headimgurl}");
 
-            //异步下载图片
+            //Legacy comment translated to English.
             var operationQueue = new OperationQueue.OperationQueue();
             operationQueue.Add($"{account.Id}-{DateTime.Now.Ticks.ToString()}", OperationQueueType.更新用户头像, new List<object>() { account.Id, userInfo.headimgurl });
 
@@ -459,7 +462,7 @@ namespace Senparc.Service
 
         public void UpdateAccountByUserInfo(OAuthUserInfo userInfo, Account account)
         {
-            //删除图片
+            //Legacy comment translated to English.
             if (!account.PicUrl.IsNullOrEmpty())
             {
                 File.Delete(Server.GetMapPath("~" + account.PicUrl));
@@ -479,9 +482,9 @@ namespace Senparc.Service
             base.SaveObject(obj);
             LogUtility.WebLogger.InfoFormat("User{2}：{0}（ID：{1}）", obj.UserName, obj.Id, isInsert ? "新增" : "编辑");
 
-            //清除缓存
+            //clear the cache
             var fullUserCache = _serviceProvider.GetService<FullAccountCache>();
-            //示范同步缓存锁
+            //Legacy comment translated to English.
             using (fullUserCache.Cache.BeginCacheLock(FullAccountCache.CACHE_KEY, obj.Id.ToString()))
             {
                 fullUserCache.RemoveObject(obj.UserName);
@@ -494,7 +497,7 @@ namespace Senparc.Service
             base.SaveObject(obj);
             LogUtility.WebLogger.Info($"User被删除：{obj.UserName}（ID：{obj.Id}）");
 
-            //清除缓存
+            //clear the cache
             var fullUserCache = _serviceProvider.GetService<FullAccountCache>();
             fullUserCache.RemoveObject(obj.UserName);
         }

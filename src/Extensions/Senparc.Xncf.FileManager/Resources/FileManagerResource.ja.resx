@@ -97,193 +97,193 @@
     <value>ランダム</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>アップロード先：||アップロード先：</value>
+    <value>アップロード先：</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
-    <value>ファイルをアップロード||ファイルをアップロード</value>
+    <value>ファイルをアップロード</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>アップロード日時||アップロード日時</value>
+    <value>アップロード日時</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>ダウンロード||ダウンロード</value>
+    <value>ダウンロード</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>コード||コード</value>
+    <value>コード</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>その他||その他</value>
+    <value>その他</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>削除||削除</value>
+    <value>Delete</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>フォルダを更新||フォルダを更新</value>
+    <value>フォルダを更新</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>キャンセル||キャンセル</value>
+    <value>キャンセル</value>
   </data>
   <data name="Frontend.010" xml:space="preserve">
-    <value>複数ファイルを同時にアップロードできます||複数ファイルを同時にアップロードできます</value>
+    <value>複数ファイルを同時にアップロードできます</value>
   </data>
   <data name="Frontend.011" xml:space="preserve">
-    <value>名前||名前</value>
+    <value>名前</value>
   </data>
   <data name="Frontend.012" xml:space="preserve">
-    <value>メモ||メモ</value>
+    <value>メモ</value>
   </data>
   <data name="Frontend.013" xml:space="preserve">
-    <value>備考（任意）||備考（任意）</value>
+    <value>メモ（任意）</value>
   </data>
   <data name="Frontend.014" xml:space="preserve">
-    <value>サイズ||サイズ</value>
+    <value>サイズ</value>
   </data>
   <data name="Frontend.015" xml:space="preserve">
-    <value>拡張モジュール||拡張モジュール</value>
+    <value>拡張モジュール</value>
   </data>
   <data name="Frontend.016" xml:space="preserve">
-    <value>アクション||アクション</value>
+    <value>アクション</value>
   </data>
   <data name="Frontend.017" xml:space="preserve">
-    <value>ファイル名||ファイル名</value>
+    <value>ファイル名</value>
   </data>
   <data name="Frontend.018" xml:space="preserve">
-    <value>フォルダ||フォルダ</value>
+    <value>フォルダ</value>
   </data>
   <data name="Frontend.019" xml:space="preserve">
-    <value>ファイル管理||ファイル管理</value>
+    <value>ファイル管理</value>
   </data>
   <data name="Frontend.020" xml:space="preserve">
-    <value>テキスト||テキスト</value>
+    <value>テキスト</value>
   </data>
   <data name="Frontend.021" xml:space="preserve">
-    <value>新規||新規</value>
+    <value>New</value>
   </data>
   <data name="Frontend.022" xml:space="preserve">
-    <value>新規フォルダ||新規フォルダ</value>
+    <value>新規フォルダ</value>
   </data>
   <data name="Frontend.023" xml:space="preserve">
-    <value>ルート||ルート</value>
+    <value>ルート</value>
   </data>
   <data name="Frontend.024" xml:space="preserve">
-    <value>OK||OK</value>
+    <value>OK</value>
   </data>
   <data name="Frontend.025" xml:space="preserve">
-    <value>種類||種類</value>
+    <value>Kind</value>
   </data>
   <data name="Frontend.026" xml:space="preserve">
-    <value>テーブルId||テーブルId</value>
+    <value>テーブルId</value>
   </data>
   <data name="Frontend.027" xml:space="preserve">
-    <value>フォルダー名を入力||フォルダー名を入力</value>
+    <value>フォルダー名を入力</value>
   </data>
   <data name="Frontend.028" xml:space="preserve">
-    <value>ファイルを選択||ファイルを選択</value>
+    <value>ファイルを選択</value>
   </data>
   <data name="Frontend.029" xml:space="preserve">
-    <value>ホーム||ホーム</value>
+    <value>ホーム</value>
   </data>
   <data name="Frontend.030" xml:space="preserve">
-    <value>リストの読み込みに失敗||リストの読み込みに失敗</value>
+    <value>リストの読み込みに失敗</value>
   </data>
   <data name="Frontend.031" xml:space="preserve">
-    <value>アップロード完了||アップロード完了</value>
+    <value>アップロード完了</value>
   </data>
   <data name="Frontend.032" xml:space="preserve">
-    <value>アップロード失敗||アップロード失敗</value>
+    <value>アップロード失敗</value>
   </data>
   <data name="Frontend.033" xml:space="preserve">
-    <value>更新しました||更新しました</value>
+    <value>更新しました</value>
   </data>
   <data name="Frontend.034" xml:space="preserve">
-    <value>変更に失敗しました||変更に失敗しました</value>
+    <value>変更に失敗しました</value>
   </data>
   <data name="Frontend.035" xml:space="preserve">
-    <value>このファイルを削除してよろしいですか?||このファイルを削除してよろしいですか?</value>
+    <value>このファイルを削除してよろしいですか?</value>
   </data>
   <data name="Frontend.036" xml:space="preserve">
-    <value>通知||通知</value>
+    <value>Notice</value>
   </data>
   <data name="Frontend.037" xml:space="preserve">
-    <value>確認||確認</value>
+    <value>Confirm</value>
   </data>
   <data name="Frontend.038" xml:space="preserve">
-    <value>キャンセル||キャンセル</value>
+    <value>キャンセル</value>
   </data>
   <data name="Frontend.039" xml:space="preserve">
-    <value>削除しました||削除しました</value>
+    <value>削除しました</value>
   </data>
   <data name="Frontend.040" xml:space="preserve">
-    <value>削除に失敗しました||削除に失敗しました</value>
+    <value>削除に失敗しました</value>
   </data>
   <data name="Frontend.041" xml:space="preserve">
-    <value>作成しました||作成しました</value>
+    <value>作成しました</value>
   </data>
   <data name="Frontend.042" xml:space="preserve">
-    <value>作成に失敗しました||作成に失敗しました</value>
+    <value>作成に失敗しました</value>
   </data>
   <data name="Frontend.043" xml:space="preserve">
-    <value>アップロードに失敗：{0}||アップロードに失敗：{0}</value>
+    <value>アップロードに失敗：{0}</value>
   </data>
   <data name="Frontend.044" xml:space="preserve">
-    <value>{0}のメモを入力||{0}のメモを入力</value>
+    <value>{0}のメモを入力</value>
   </data>
   <data name="Frontend.045" xml:space="preserve">
-    <value>FileManager ホーム||FileManager ホーム</value>
+    <value>FileManager ホーム</value>
   </data>
   <data name="Frontend.046" xml:space="preserve">
-    <value>フォルダー #{0}||フォルダー #{0}</value>
+    <value>フォルダー #{0}</value>
   </data>
   <data name="Frontend.047" xml:space="preserve">
-    <value>{0}のメモを入力||{0}のメモを入力</value>
+    <value>{0}のメモを入力</value>
   </data>
   <data name="Frontend.048" xml:space="preserve">
-    <value>更新しました||更新しました</value>
+    <value>更新しました</value>
   </data>
   <data name="Frontend.049" xml:space="preserve">
-    <value>更新失敗||更新失敗</value>
+    <value>更新に失敗しました</value>
   </data>
   <data name="Frontend.050" xml:space="preserve">
-    <value>このファイルを削除しますか?||このファイルを削除しますか?</value>
+    <value>このファイルを削除しますか?</value>
   </data>
   <data name="Frontend.051" xml:space="preserve">
-    <value>アップロードするファイルを選択||アップロードするファイルを選択</value>
+    <value>アップロードするファイルを選択</value>
   </data>
   <data name="Frontend.052" xml:space="preserve">
-    <value>アップロード失敗：||アップロード失敗：</value>
+    <value>アップロード失敗：</value>
   </data>
   <data name="Frontend.053" xml:space="preserve">
-    <value>例外を送出するテスト。引き渡しパラメーター：{0} {1}||例外を送出するテスト。引き渡しパラメーター：{0} {1}</value>
+    <value>例外を送出するテスト。引き渡しパラメーター：{0} {1}</value>
   </data>
   <data name="Frontend.054" xml:space="preserve">
-    <value>除数は0にできません！||除数は0にできません！</value>
+    <value>除数は0にできません！</value>
   </data>
   <data name="Frontend.055" xml:space="preserve">
-    <value>不明な演算子：{0}||不明な演算子：{0}</value>
+    <value>不明な演算子：{0}</value>
   </data>
   <data name="Frontend.056" xml:space="preserve">
-    <value>一度にアップロードできるファイルは最大 {0} 件です。||一度にアップロードできるファイルは最大 {0} 件です。</value>
+    <value>一度にアップロードできるファイルは最大 {0} 件です。</value>
   </data>
   <data name="Frontend.057" xml:space="preserve">
-    <value>1 回のアップロードの合計サイズは {0} MB を超えられません。||1 回のアップロードの合計サイズは {0} MB を超えられません。</value>
+    <value>1 回のアップロードの合計サイズは {0} MB を超えられません。</value>
   </data>
   <data name="Frontend.058" xml:space="preserve">
-    <value>アップロードファイルは空にできません。||アップロードファイルは空にできません。</value>
+    <value>アップロードファイルは空にできません。</value>
   </data>
   <data name="Frontend.059" xml:space="preserve">
-    <value>1 ファイルのサイズは {0} MB を超えられません。||1 ファイルのサイズは {0} MB を超えられません。</value>
+    <value>1 ファイルのサイズは {0} MB を超えられません。</value>
   </data>
   <data name="Frontend.060" xml:space="preserve">
-    <value>このファイル形式はアップロードできません。一般的な文書、画像、テキスト、圧縮ファイルのみ対応しています。||このファイル形式はアップロードできません。一般的な文書、画像、テキスト、圧縮ファイルのみ対応しています。</value>
+    <value>このファイル形式はアップロードできません。一般的な文書、画像、テキスト、圧縮ファイルのみ対応しています。</value>
   </data>
   <data name="Frontend.061" xml:space="preserve">
-    <value>ファイルが存在しません！||ファイルが存在しません！</value>
+    <value>ファイルが存在しません！</value>
   </data>
   <data name="Frontend.062" xml:space="preserve">
-    <value>ファイルの物理パス情報が無効です。||ファイルの物理パス情報が無効です。</value>
+    <value>ファイルの物理パス情報が無効です。</value>
   </data>
   <data name="Frontend.063" xml:space="preserve">
-    <value>ファイルの物理パスが範囲外です。||ファイルの物理パスが範囲外です。</value>
+    <value>ファイルの物理パスが範囲外です。</value>
   </data>
   <data name="Function.Sample.Name" xml:space="preserve">
     <value>サンプル関数</value>
@@ -292,4 +292,234 @@
     <value>FunctionRender のパラメーターと戻り値を示します</value>
   </data>
 
+
+  <data name="Frontend.064" xml:space="preserve"><value>すべてクリア</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.065" xml:space="preserve"><value>アップロード後、「ナレッジベース管理 → 構成」で資料を関連付けて保存し、「ベクトル化」を選択してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.066" xml:space="preserve"><value>アップロードフォルダー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.067" xml:space="preserve"><value>アップロード設定</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.068" xml:space="preserve"><value>アップロードは既定で非公開です。内容を確認した後、「公開」を選び、生成されたURLをサイトのコンテンツにコピーしてください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.069" xml:space="preserve"><value>ファイルタグを設定</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.070" xml:space="preserve"><value>企業文書のみ：ファイル数と合計サイズの推移を表示</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.071" xml:space="preserve"><value>クイックアクセスから削除</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.072" xml:space="preserve"><value>企業文書</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.073" xml:space="preserve"><value>企業文書の容量</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.074" xml:space="preserve"><value>保存</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.075" xml:space="preserve"><value>設定を保存</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.076" xml:space="preserve"><value>無効化</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.077" xml:space="preserve"><value>アップロードを許可するファイルタイプ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.078" xml:space="preserve"><value>先にスコープを選択：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.079" xml:space="preserve"><value>すべて</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.080" xml:space="preserve"><value>次に場所を選択：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.081" xml:space="preserve"><value>カテゴリー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.082" xml:space="preserve"><value>カテゴリー名</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.083" xml:space="preserve"><value>カテゴリーの説明</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.084" xml:space="preserve"><value>カテゴリー管理者</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.085" xml:space="preserve"><value>列の設定</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.086" xml:space="preserve"><value>削除日時</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.087" xml:space="preserve"><value>再読み込み</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.088" xml:space="preserve"><value>1ファイルの最大アップロードサイズ（MB）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.089" xml:space="preserve"><value>ダブルクリックでプレビュー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.090" xml:space="preserve"><value>お気に入りから削除</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.091" xml:space="preserve"><value>よく使うファイルやフォルダーをクイックアクセスに追加すると、すばやく作業できます。リストの「その他」から項目を追加または削除してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.092" xml:space="preserve"><value>任意</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.093" xml:space="preserve"><value>任意のメモ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.094" xml:space="preserve"><value>任意のタグはタグ管理から取得され、選択したタグは現在のファイルのメタデータに書き込まれます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.095" xml:space="preserve"><value>有効化</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.096" xml:space="preserve"><value>ごみ箱</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.097" xml:space="preserve"><value>ディレクトリツリーでフォルダーを選択または作成します。再読み込み後も、現在のスコープとフォルダーはアドレスバーに保持されます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.098" xml:space="preserve"><value>オンラインプレビュー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.099" xml:space="preserve"><value>URLをコピー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.100" xml:space="preserve"><value>インポート</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.101" xml:space="preserve"><value>エクスポート</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.102" xml:space="preserve"><value>企業文書ライブラリの現在の使用容量を表示</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.103" xml:space="preserve"><value>左側の企業文書でナレッジベース資料を管理します。サイトの静的リソースはアドレスバーのscopeパラメーターで切り替えられます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.104" xml:space="preserve"><value>使用済み容量</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.105" xml:space="preserve"><value>開始日</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.106" xml:space="preserve"><value>ファインチューニング成果物</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.107" xml:space="preserve"><value>クイックアクセス</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.108" xml:space="preserve"><value>既定値に戻す</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.109" xml:space="preserve"><value>了解</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.110" xml:space="preserve"><value>カテゴリー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.111" xml:space="preserve"><value>ファイルタイプ別の容量比率</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.112" xml:space="preserve"><value>ファイルタイプ別のファイル数比率</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.113" xml:space="preserve"><value>並べ替え</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.114" xml:space="preserve"><value>検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.115" xml:space="preserve"><value>ファイル/フォルダーを検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.116" xml:space="preserve"><value>タグ名を検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.117" xml:space="preserve"><value>ディレクトリを検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.118" xml:space="preserve"><value>1行に1つの拡張子を入力するか、カンマで区切ってください。.docxのように先頭のドットを推奨します。空欄にすると許可リストの制限はなくなりますが、下のフィルターは適用されます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.119" xml:space="preserve"><value>お気に入り</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.120" xml:space="preserve"><value>データダッシュボード</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.121" xml:space="preserve"><value>ファイル数の統計</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.122" xml:space="preserve"><value>ファイル名</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.123" xml:space="preserve"><value>ファイルサイズの統計</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.124" xml:space="preserve"><value>ファイルライブラリの容量</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.125" xml:space="preserve"><value>ファイルをクリアすると完全に削除され、元に戻せません。続行しますか？</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.126" xml:space="preserve"><value>ファイルリソース管理</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.127" xml:space="preserve"><value>ファイルリソース管理ガイド</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.128" xml:space="preserve"><value>カテゴリーを追加</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.129" xml:space="preserve"><value>タグを追加</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.130" xml:space="preserve"><value>利用可能なタグがありません。まず左側のタグ管理でタグを追加してください。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.131" xml:space="preserve"><value>プレビュー可能なコンテンツがありません</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.132" xml:space="preserve"><value>データなし</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.133" xml:space="preserve"><value>ドキュメントなし</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.134" xml:space="preserve"><value>その他</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.135" xml:space="preserve"><value>更新日時</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.136" xml:space="preserve"><value>更新者</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.137" xml:space="preserve"><value>最終更新者</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.138" xml:space="preserve"><value>最終更新日時</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.139" xml:space="preserve"><value>最終アクセス</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.140" xml:space="preserve"><value>タグ名</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.141" xml:space="preserve"><value>タグの説明</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.142" xml:space="preserve"><value>タグ数</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.143" xml:space="preserve"><value>タグ管理</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.144" xml:space="preserve"><value>1行に1つの拡張子。例：.docx
+.xlsx
+.pdf</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.145" xml:space="preserve"><value>1行に1つの拡張子。例：.exe
+.bat
+.js</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.146" xml:space="preserve"><value>リストをクリア</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.147" xml:space="preserve"><value>クイックアクセスを柔軟に使って作業を効率化できます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.148" xml:space="preserve"><value>状態</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.149" xml:space="preserve"><value>ナレッジベース資料：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.150" xml:space="preserve"><value>続行しますか？</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.151" xml:space="preserve"><value>テナント/組織名</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.152" xml:space="preserve"><value>サイトリソース：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.153" xml:space="preserve"><value>管理者</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.154" xml:space="preserve"><value>終了日</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.155" xml:space="preserve"><value>編集</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.156" xml:space="preserve"><value>メモを編集</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.157" xml:space="preserve"><value>設定</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.158" xml:space="preserve"><value>アクセス日時</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.159" xml:space="preserve"><value>上でタグを選択してください</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.160" xml:space="preserve"><value>ファイル/フォルダーをここにドラッグしてアップロード</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.161" xml:space="preserve"><value>カテゴリー名を入力してください（50文字以内）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.162" xml:space="preserve"><value>ファイルのメモを入力してください</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.163" xml:space="preserve"><value>タグ名を入力してください（30文字以内）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.164" xml:space="preserve"><value>タグの説明を入力してください</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.165" xml:space="preserve"><value>タグを選択（タグ管理から）</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.166" xml:space="preserve"><value>管理者を選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.167" xml:space="preserve"><value>過去7日間</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.168" xml:space="preserve"><value>先月</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.169" xml:space="preserve"><value>昨年</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.170" xml:space="preserve"><value>親へ戻る</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.171" xml:space="preserve"><value>カテゴリーを選択</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.172" xml:space="preserve"><value>アップロードで許可するタイプ、サイズ上限、ブロックする拡張子を設定します。保存した設定は後続のアップロードに適用され、このブラウザーに記憶されます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.173" xml:space="preserve"><value>リセット</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.174" xml:space="preserve"><value>フィルターするファイルタイプ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.175" xml:space="preserve"><value>ブロックされた拡張子。該当ファイルはアップロードできず、許可リストより優先されます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.176" xml:space="preserve"><value>既定値は50 MBです。これを超えるファイルはアップロード前にブロックされます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.177" xml:space="preserve"><value>お気に入りから削除</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.178" xml:space="preserve"><value>統計の締め時刻</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.179" xml:space="preserve"><value>使用中の企業文書：</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.180" xml:space="preserve"><value>1行に1つの拡張子。例：.docx .xlsx .pdf</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.181" xml:space="preserve"><value>1行に1つの拡張子。例：.exe .bat .js</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.182" xml:space="preserve"><value>アップロードを開始</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.183" xml:space="preserve"><value>スライド</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.184" xml:space="preserve"><value>フォルダーを編集</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.185" xml:space="preserve"><value>新しいフォルダー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.186" xml:space="preserve"><value>カテゴリーを編集</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.187" xml:space="preserve"><value>カテゴリーを追加</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.188" xml:space="preserve"><value>タグを編集</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.189" xml:space="preserve"><value>タグを追加</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.190" xml:space="preserve"><value>ファイルプレビュー</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Script.RequestRejected" xml:space="preserve"><value>サーバーがリクエストを拒否しました。ページを再読み込みして再試行してください。</value></data>
+  <data name="Script.RequestFailed" xml:space="preserve"><value>リクエストに失敗しました。</value></data>
+  <data name="Script.CsrfMissing" xml:space="preserve"><value>ページの偽造防止トークンがありません。ページを再読み込みして再試行してください。</value></data>
+  <data name="Frontend.191" xml:space="preserve"><value>折りたたむ</value></data>
+  <data name="Frontend.192" xml:space="preserve"><value>展開</value></data>
+  <data name="Frontend.196" xml:space="preserve"><value>{0}をサポートします。</value></data>
+  <data name="Frontend.197" xml:space="preserve"><value>JSONL、JSON、ZIP、およびトレーニング実行時に生成されるその他の非公開成果物をサポートします。</value></data>
+  <data name="Frontend.198" xml:space="preserve"><value>JPG、PNG、GIF、WebP、AVIF、ICO、音声/動画、フォント形式をサポートします。</value></data>
+  <data name="Frontend.199" xml:space="preserve"><value>テキスト、JSON/XML/YAML、コード、DOCX、XLSX、PPTXをサポートします。</value></data>
+  <data name="Frontend.200" xml:space="preserve"><value>旧版Office形式（.doc/.xls/.ppt）はオンラインプレビューに対応していません。ダウンロードして確認してください。</value></data>
+  <data name="Frontend.201" xml:space="preserve"><value>このファイルタイプはオンラインプレビューに対応していません。ダウンロードして確認してください。</value></data>
+  <data name="Frontend.202" xml:space="preserve"><value>ドキュメントは空です。</value></data>
+  <data name="Frontend.203" xml:space="preserve"><value>Excelファイルにプレビュー可能なワークシートがありません。</value></data>
+  <data name="Frontend.204" xml:space="preserve"><value>このファイルタイプはオンラインプレビューに対応していません。</value></data>
+  <data name="Frontend.205" xml:space="preserve"><value>プレビューに失敗しました：{0}</value></data>
+  <data name="Frontend.193" xml:space="preserve"><value>ファインチューニング成果物は常に非公開です。トレーニングタスク、管理者、許可されたダウンロードエンドポイントのみが利用でき、公開URLは生成されません。</value></data>
+  <data name="Frontend.194" xml:space="preserve"><value>サイトの静的リソースは既定で非公開です。公開するとSHA-256フィンガープリント付きの/assets/ URLが生成されます。同一オリジンのスクリプトインジェクションを防ぐため、HTML、SVG、JavaScript、圧縮ファイルは受け付けません。</value></data>
+  <data name="Frontend.195" xml:space="preserve"><value>ナレッジベースのソースファイルは、安全に抽出できるテキストまたはOffice Open XMLファイルである必要があります。公開URLは生成されず、ここから公開することもできません。</value></data>
+  <data name="Frontend.206" xml:space="preserve"><value>ドキュメント</value></data>
+  <data name="Frontend.207" xml:space="preserve"><value>画像</value></data>
+  <data name="Frontend.208" xml:space="preserve"><value>動画</value></data>
+  <data name="Frontend.209" xml:space="preserve"><value>音声</value></data>
+  <data name="Frontend.210" xml:space="preserve"><value>その他</value></data>
+  <data name="Frontend.211" xml:space="preserve"><value>アップロードするファイルを選択してください。</value></data>
+  <data name="Frontend.212" xml:space="preserve"><value>フォルダーのアップロードが完了し、元のディレクトリ構造が保持されました。</value></data>
+  <data name="Frontend.213" xml:space="preserve"><value>アップロードに成功しました。サイトで参照するには、サイトの静的リソースを明示的に公開する必要があります。</value></data>
+  <data name="Frontend.214" xml:space="preserve"><value>アップロードに失敗しました：{0}</value></data>
+  <data name="Frontend.215" xml:space="preserve"><value>対象フォルダーを利用できません。ルートフォルダーに戻りました。</value></data>
+  <data name="Frontend.216" xml:space="preserve"><value>種類{1}のファイル「{0}」はフィルターされているため、アップロードできません。</value></data>
+  <data name="Frontend.217" xml:space="preserve"><value>ファイル「{0}」の種類は許可されたアップロード一覧にありません。</value></data>
+  <data name="Frontend.218" xml:space="preserve"><value>ファイル「{0}」は{1} MBを超えているため、アップロードできません。</value></data>
+  <data name="Frontend.219" xml:space="preserve"><value>フォルダー「{0}」を選択しました（{1}ファイル）。アップロード後、左側のファイルツリーに元のディレクトリ構造が復元されます。</value></data>
+  <data name="Frontend.220" xml:space="preserve"><value>未分類</value></data>
+  <data name="Frontend.221" xml:space="preserve"><value>「{0}」機能は近日公開予定です</value></data>
+  <data name="Frontend.222" xml:space="preserve"><value>サブカテゴリー</value></data>
+  <data name="Frontend.223" xml:space="preserve"><value>カテゴリー</value></data>
+  <data name="Frontend.224" xml:space="preserve"><value>タグ</value></data>
+  <data name="Frontend.225" xml:space="preserve"><value>無効</value></data>
+  <data name="Frontend.226" xml:space="preserve"><value>現在のユーザー</value></data>
+  <data name="Frontend.227" xml:space="preserve"><value>ファイルタグを更新しました</value></data>
+  <data name="Frontend.228" xml:space="preserve"><value>ファイルタグをクリアしました</value></data>
+  <data name="Frontend.229" xml:space="preserve"><value>ごみ箱を空にしました</value></data>
+  <data name="Frontend.230" xml:space="preserve"><value>{0}個を削除しました。失敗：{1}個：{2}</value></data>
+  <data name="Frontend.231" xml:space="preserve"><value>一部のファイルを削除できませんでした。ごみ箱に{0}個残っています</value></data>
+  <data name="Frontend.232" xml:space="preserve"><value>ごみ箱を完全に空にできませんでした</value></data>
+  <data name="Frontend.233" xml:space="preserve"><value>ごみ箱を空にできませんでした：{0}</value></data>
+  <data name="Frontend.234" xml:space="preserve"><value>[/{0}]へファイルをアップロード --再開可能なアップロードに対応</value></data>
+  <data name="Frontend.235" xml:space="preserve"><value>名前のないファイル</value></data>
+  <data name="Frontend.236" xml:space="preserve"><value>ファイルをごみ箱に移動します。続行しますか？</value></data>
+  <data name="Frontend.237" xml:space="preserve"><value>削除：{0}</value></data>
+  <data name="Frontend.238" xml:space="preserve"><value>ごみ箱に移動しました</value></data>
+  <data name="Frontend.239" xml:space="preserve"><value>削除に失敗しました：{0}</value></data>
+  <data name="Frontend.240" xml:space="preserve"><value>リソースを公開しました</value></data>
+  <data name="Frontend.241" xml:space="preserve"><value>リソースを非公開にしました</value></data>
+  <data name="Frontend.242" xml:space="preserve"><value>公開状態の更新に失敗しました：{0}</value></data>
+  <data name="Frontend.243" xml:space="preserve"><value>公開URLをコピーしました</value></data>
+  <data name="Frontend.244" xml:space="preserve"><value>次の公開URLをコピーしてください</value></data>
+  <data name="Frontend.245" xml:space="preserve"><value>公開URL</value></data>
+  <data name="Frontend.246" xml:space="preserve"><value>このブラウザーはフォルダー選択に対応していません。最新版のChrome、Edge、Safariを使用してください。</value></data>
+  <data name="Frontend.247" xml:space="preserve"><value>ブラウザーから完全な相対フォルダーパスが提供されませんでした。もう一度フォルダーを選択してください。</value></data>
+  <data name="Frontend.248" xml:space="preserve"><value>読み取れないファイルがあります。もう一度選択してください。</value></data>
+  <data name="Frontend.249" xml:space="preserve"><value>フォルダー名を入力してください</value></data>
+  <data name="Frontend.250" xml:space="preserve"><value>フォルダーを更新しました</value></data>
+  <data name="Frontend.251" xml:space="preserve"><value>フォルダーを作成しました</value></data>
+  <data name="Frontend.252" xml:space="preserve"><value>フォルダーの保存に失敗しました：{0}</value></data>
+  <data name="Frontend.253" xml:space="preserve"><value>空のフォルダーのみ削除できます。「{0}」を削除しますか？</value></data>
+  <data name="Frontend.254" xml:space="preserve"><value>削除を確認</value></data>
+  <data name="Frontend.255" xml:space="preserve"><value>フォルダーを削除しました</value></data>
+  <data name="Frontend.256" xml:space="preserve"><value>フォルダーの削除に失敗しました：{0}</value></data>
+  <data name="Frontend.257" xml:space="preserve"><value>タグ「{0}」を削除しますか？</value></data>
+  <data name="Frontend.258" xml:space="preserve"><value>カテゴリー「{0}」と配下のタグを削除しますか？</value></data>
+  <data name="Frontend.259" xml:space="preserve"><value>確認</value></data>
+  <data name="Frontend.260" xml:space="preserve"><value>カテゴリー自身は選択できません</value></data>
+  <data name="Frontend.261" xml:space="preserve"><value>カテゴリーが存在しません</value></data>
+  <data name="Frontend.262" xml:space="preserve"><value>選択したカテゴリーが存在しません。もう一度選択してください。</value></data>
+  <data name="Frontend.263" xml:space="preserve"><value>タグが存在しません</value></data>
+  <data name="Frontend.269" xml:space="preserve"><value>タグを作成する前にカテゴリを追加してください</value></data>
+  <data name="Frontend.270" xml:space="preserve"><value>アップロード設定を保存しました</value></data>
+  <data name="Frontend.271" xml:space="preserve"><value>保存に失敗しました。ブラウザーのローカルストレージを確認してください</value></data>
+  <data name="Frontend.272" xml:space="preserve"><value>アップロードの既定設定を復元しました</value></data>
+  <data name="Frontend.273" xml:space="preserve"><value>既定値の復元に失敗しました</value></data>
+  <data name="Frontend.274" xml:space="preserve"><value>カテゴリ名は既に存在します</value></data>
+  <data name="Frontend.275" xml:space="preserve"><value>カテゴリを更新しました</value></data>
+  <data name="Frontend.276" xml:space="preserve"><value>カテゴリを作成しました</value></data>
+  <data name="Frontend.277" xml:space="preserve"><value>このカテゴリには同名のタグが既にあります</value></data>
+  <data name="Frontend.278" xml:space="preserve"><value>タグを更新しました</value></data>
+  <data name="Frontend.279" xml:space="preserve"><value>タグを作成しました</value></data>
+  <data name="Frontend.280" xml:space="preserve"><value>リクエストに失敗しました</value></data>
+  <data name="Frontend.281" xml:space="preserve"><value>カテゴリ名は50文字以内で入力してください</value></data>
+  <data name="Frontend.282" xml:space="preserve"><value>タグ名は30文字以内で入力してください</value></data>
+  <data name="Frontend.283" xml:space="preserve"><value>先にデータを選択してください</value></data>
+  <data name="Frontend.284" xml:space="preserve"><value>ファイル数</value></data>
+  <data name="Frontend.285" xml:space="preserve"><value>合計サイズ</value></data>
+  <data name="Frontend.286" xml:space="preserve"><value>数量</value></data>
+  <data name="Frontend.287" xml:space="preserve"><value>サイズ</value></data>
+  <data name="Frontend.288" xml:space="preserve"><value>件</value></data>
+  <data name="Frontend.289" xml:space="preserve"><value>企業文書</value></data>
+  <data name="Frontend.290" xml:space="preserve"><value>{0} 個のファイルが完了しました</value></data>
 </root>

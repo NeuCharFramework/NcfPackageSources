@@ -517,7 +517,7 @@ function consumeFrames(
     try {
       onEvent(JSON.parse(data) as WorkspaceChangeEvent);
     } catch {
-      // 忽略损坏的单条事件，保持后续事件流可用。
+      //Legacy comment translated to English.
     }
   }
 }

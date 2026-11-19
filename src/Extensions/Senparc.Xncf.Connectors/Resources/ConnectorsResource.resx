@@ -7,6 +7,71 @@
   <data name="Module.Connectors.MenuName" xml:space="preserve"><value>连接器</value></data>
   <data name="Module.Connectors.Description" xml:space="preserve"><value>把外部工具配置成可选择的连接器。配置账号后，可在 Chat、Workflow 和 Agent 模板中按权限使用。</value></data>
   <data name="Area.Connectors.Config" xml:space="preserve"><value>连接器配置</value></data>
+  <data name="Area.Extensions" xml:space="preserve"><value>扩展模块</value></data>
   <data name="Function.Connectors.Invoke.Name" xml:space="preserve"><value>调用连接器</value></data>
   <data name="Function.Connectors.Invoke.Description" xml:space="preserve"><value>调用一个已启用的连接器动作。在 Workflow 中添加 Function 节点后，选择连接器和动作即可。</value></data>
+  <data name="Frontend.001" xml:space="preserve"><value>交给 AI 的动作</value></data>
+  <data name="Frontend.002" xml:space="preserve"><value>例如：总部企业微信</value></data>
+  <data name="Frontend.003" xml:space="preserve"><value>保存</value></data>
+  <data name="Frontend.004" xml:space="preserve"><value>先配置账号和密钥，再决定哪些动作可以交给 AI。Chat 里可以临时收窄，Workflow 的 Function 节点可以直接调用，Agent 模板则决定每个智能体能使用哪些连接器。</value></data>
+  <data name="Frontend.005" xml:space="preserve"><value>删除</value></data>
+  <data name="Frontend.006" xml:space="preserve"><value>取消</value></data>
+  <data name="Frontend.007" xml:space="preserve"><value>可用类型</value></data>
+  <data name="Frontend.008" xml:space="preserve"><value>名称</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>外部工具连接器</value></data>
+  <data name="Frontend.010" xml:space="preserve"><value>密钥只保存在服务端。编辑时留空表示继续使用已保存的密钥。</value></data>
+  <data name="Frontend.011" xml:space="preserve"><value>已配置</value></data>
+  <data name="Frontend.012" xml:space="preserve"><value>扩展模块</value></data>
+  <data name="Frontend.013" xml:space="preserve"><value>测试</value></data>
+  <data name="Frontend.014" xml:space="preserve"><value>类型由已安装模块提供。企业微信打卡来自微信管理模块。</value></data>
+  <data name="Frontend.015" xml:space="preserve"><value>编辑</value></data>
+  <data name="Frontend.016" xml:space="preserve"><value>说明</value></data>
+  <data name="Frontend.017" xml:space="preserve"><value>还没有模块注册连接器。安装并启用微信管理后，这里会出现企业微信打卡。</value></data>
+  <data name="Frontend.018" xml:space="preserve"><value>还没有配置。选择上面的类型，填入企业微信 CorpId 和应用 Secret。</value></data>
+  <data name="Frontend.019" xml:space="preserve"><value>这个账号给哪个团队或场景使用</value></data>
+  <data name="Frontend.020" xml:space="preserve"><value>连接器</value></data>
+  <data name="Frontend.021" xml:space="preserve"><value>配置</value></data>
+  <data name="Frontend.022" xml:space="preserve"><value>配置这个连接器</value></data>
+  <data name="Frontend.023" xml:space="preserve"><value>{0} 个动作</value></data>
+  <data name="Frontend.024" xml:space="preserve"><value>启用后可在 Chat、Workflow 和 Agent 中选择</value></data>
+  <data name="Frontend.025" xml:space="preserve"><value>请选择</value></data>
+  <data name="Frontend.026" xml:space="preserve"><value>扩展模块</value></data>
+  <data name="Frontend.027" xml:space="preserve"><value>启用</value></data>
+  <data name="Frontend.028" xml:space="preserve"><value>停用</value></data>
+  <data name="Frontend.029" xml:space="preserve"><value>未填写说明</value></data>
+  <data name="Frontend.030" xml:space="preserve"><value>尚未测试连接</value></data>
+  <data name="Frontend.031" xml:space="preserve"><value>{0} 个</value></data>
+  <data name="Frontend.032" xml:space="preserve"><value>编辑连接器</value></data>
+  <data name="Frontend.033" xml:space="preserve"><value>配置连接器</value></data>
+  <data name="Frontend.034" xml:space="preserve"><value>已保存，留空则不修改</value></data>
+  <data name="Frontend.035" xml:space="preserve"><value>保存失败</value></data>
+  <data name="Frontend.036" xml:space="preserve"><value>已保存</value></data>
+  <data name="Frontend.037" xml:space="preserve"><value>保存失败，请稍后重试。</value></data>
+  <data name="Frontend.038" xml:space="preserve"><value>连接成功</value></data>
+  <data name="Frontend.039" xml:space="preserve"><value>连接失败</value></data>
+  <data name="Frontend.040" xml:space="preserve"><value>测试失败，请稍后重试。</value></data>
+  <data name="Frontend.041" xml:space="preserve"><value>删除连接器「{0}」？已授权给 Agent 的引用会同时失效。</value></data>
+  <data name="Frontend.042" xml:space="preserve"><value>删除失败</value></data>
+  <data name="Parameter.Connectors.Instance" xml:space="preserve"><value>连接器||选择已经配置并启用的连接器</value></data>
+  <data name="Parameter.Connectors.Action" xml:space="preserve"><value>动作||选择要执行的连接器动作</value></data>
+  <data name="Parameter.Connectors.StartTime" xml:space="preserve"><value>开始时间||打卡记录开始时间，例如 2026-11-01 或 2026-11-01 09:00。留空则从今天 0 点开始</value></data>
+  <data name="Parameter.Connectors.EndTime" xml:space="preserve"><value>结束时间||打卡记录结束时间。留空则到当前时间，且与开始时间最多间隔 30 天</value></data>
+  <data name="Parameter.Connectors.UserIds" xml:space="preserve"><value>成员账号||企业微信 userid，多个用逗号或空格分隔</value></data>
+  <data name="Parameter.Connectors.CheckinType" xml:space="preserve"><value>打卡类型||1 上下班，2 外出，3 全部。留空默认全部</value></data>
+  <data name="Parameter.Connectors.Arguments" xml:space="preserve"><value>附加参数||JSON 对象。已填写的专用字段优先，适合其他连接器动作</value></data>
+  <data name="Error.NameRequired" xml:space="preserve"><value>请输入连接器名称。</value></data>
+  <data name="Error.TypeNotFound" xml:space="preserve"><value>未找到连接器类型，请确认对应模块已安装。</value></data>
+  <data name="Error.InstanceNotFound" xml:space="preserve"><value>未找到连接器。</value></data>
+  <data name="Error.TypeChangeForbidden" xml:space="preserve"><value>已保存的连接器不能修改为其他类型，请新建连接器。</value></data>
+  <data name="Error.FieldRequired" xml:space="preserve"><value>请填写 {0}。</value></data>
+  <data name="Error.OptionInvalid" xml:space="preserve"><value>{0} 的选项无效。</value></data>
+  <data name="Error.ActionRequired" xml:space="preserve"><value>请至少选择一个可以交给 AI 的动作。</value></data>
+  <data name="Error.TypeNotInstalled" xml:space="preserve"><value>连接器类型未安装。</value></data>
+  <data name="Error.TestFailed" xml:space="preserve"><value>连接测试失败，请检查账号和密钥。</value></data>
+  <data name="Error.Disabled" xml:space="preserve"><value>连接器不存在或未启用。</value></data>
+  <data name="Error.ActionNotFound" xml:space="preserve"><value>连接器没有所请求的动作。</value></data>
+  <data name="Error.ActionNotEnabled" xml:space="preserve"><value>该动作未在连接器中启用。</value></data>
+  <data name="Error.InvocationFailed" xml:space="preserve"><value>连接器调用失败，请稍后重试或检查账号权限。</value></data>
+  <data name="Message.Saved" xml:space="preserve"><value>连接器已保存。</value></data>
+  <data name="Message.Deleted" xml:space="preserve"><value>连接器已删除。</value></data>
 </root>

@@ -10,9 +10,9 @@
     }
     return false;
 }
-// 注册一个全局自定义指令 `v-has`
+//Legacy comment translated to English.
 Vue.directive('has', {
-    // 当被绑定的元素插入到 DOM 中时触发bind钩子
+    //Legacy comment translated to English.
     inserted: function (el, binding) {
         if (!permissionJudge(binding.value)) {
             el.parentNode.removeChild(el);

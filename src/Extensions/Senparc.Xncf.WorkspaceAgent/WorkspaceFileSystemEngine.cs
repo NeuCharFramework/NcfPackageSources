@@ -1,22 +1,26 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：WorkspaceFileSystemEngine.cs
-    文件功能描述：Workspace Agent 受限文件系统与进程执行引擎
+    File name: WorkspaceFileSystemEngine.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20261024
+    Created by: Senparc - 20261024
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.2.1 implement connection manager and workspace file system provider
+    Modified by: Senparc - 20261103
+    Change description: v0.2.1 implement connection manager and workspace file system provider
 
-    修改标识：Senparc - 20261111
-    修改描述：按相对路径提供文件和目录候选，供对话输入框引用
+    Modified by: Senparc - 20261111
+    Change description: provide file and directory candidates by relative path for use in the conversation input
 
-    修改标识：Senparc - 20261111
-    修改描述：修复相对路径 glob 校验的 StartsWith 重载兼容
+    Modified by: Senparc - 20261111
+    Change description: fix compatibility with the StartsWith overload used by relative-path glob validation
 
-    修改标识：Senparc - 20261112
-    修改描述：v0.2.3 支持路径 glob、内容正则搜索并改进错误诊断
+    Modified by: Senparc - 20261112
+    Change description: v0.2.3 support path globs and content regex search, and improve error diagnostics
+
+    Modified by: Senparc - 20261119
+    Change description: v0.2.4 Improved Workspace Agent runtime diagnostics and packaging
 
 ----------------------------------------------------------------*/
 
@@ -750,7 +754,7 @@ public sealed class WorkspaceFileSystemEngine
                 return new WorkspacePatchResult(
                     false,
                     0,
-                    "补丁未应用：文件内容已变化，请重新读取文件后再生成补丁。");
+                    "Patch was not applied: the file content changed. Read the file again before generating a patch.");
             }
         }
 
@@ -761,7 +765,7 @@ public sealed class WorkspaceFileSystemEngine
             return new WorkspacePatchResult(
                 false,
                 replacementCount,
-                $"补丁未应用：找到 {replacementCount} 处匹配，但预期为 {expectedReplacements} 处。");
+                $"Patch was not applied: found {replacementCount} matching occurrences, but expected {expectedReplacements}.");
         }
 
         var updated = currentText.Replace(request.OldText, request.NewText, StringComparison.Ordinal);
@@ -771,7 +775,7 @@ public sealed class WorkspaceFileSystemEngine
                 Encoding.UTF8.GetBytes(updated),
                 ExpectedETag: current.Metadata.ETag),
             cancellationToken).ConfigureAwait(false);
-        return new WorkspacePatchResult(true, replacementCount, "补丁应用成功。");
+        return new WorkspacePatchResult(true, replacementCount, "Patch applied successfully.");
     }
 
     public Task<WorkspaceCommandResult> ExecuteCommandAsync(

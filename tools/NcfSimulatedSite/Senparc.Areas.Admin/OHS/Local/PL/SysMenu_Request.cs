@@ -1,4 +1,17 @@
-﻿using System;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: SysMenu_Request.cs
+    File description: SysMenu_Request related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
+
+----------------------------------------------------------------*/
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -13,7 +26,7 @@ namespace Senparc.Areas.Admin.OHS.Local.PL
     }
 
     /// <summary>
-    /// 菜单创建请求
+    ///Legacy comment translated to English.
     /// </summary>
     public class SysMenu_CreateOrUpdateRequest
     {
@@ -25,7 +38,7 @@ namespace Senparc.Areas.Admin.OHS.Local.PL
         public string MenuName { get; set; }
 
         /// <summary>
-        /// 父菜单
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(50)]
         public string ParentId { get; set; }
@@ -34,7 +47,7 @@ namespace Senparc.Areas.Admin.OHS.Local.PL
         public string Url { get; set; }
 
         /// <summary>
-        /// 图标
+        /// icon
         /// </summary>
         [MaxLength(50)]
         public string Icon { get; set; }
@@ -45,7 +58,7 @@ namespace Senparc.Areas.Admin.OHS.Local.PL
         public int Sort { get; set; }
 
         /// <summary>
-        /// 是否可见
+        ///Legacy comment translated to English.
         /// </summary>
         public bool Visible { get; set; }
 

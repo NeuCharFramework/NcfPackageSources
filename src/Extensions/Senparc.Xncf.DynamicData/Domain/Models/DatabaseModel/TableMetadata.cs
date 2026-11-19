@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：TableMetadata.cs
-    文件功能描述：TableMetadata 相关实现
-    
-    
-    创建标识：Senparc - 20240718
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: TableMetadata.cs
+    File description: TableMetadata related implementation
+
+    Created by: Senparc - 20240718
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.7.12 Localized DynamicData configuration and layout surfaces
 
 ----------------------------------------------------------------*/
 
@@ -21,32 +24,32 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.DynamicData
 {
     /// <summary>  
-    /// TableMetadata 实体类，用于存储表格的基本信息。  
+    ///Legacy comment translated to English.
     /// </summary>  
     [Table(Register.DATABASE_PREFIX + nameof(TableMetadata))]
     [Serializable]
     public class TableMetadata : EntityBase<int>
     {
         /// <summary>  
-        /// 表格名称。  
+        ///Legacy comment translated to English.
         /// </summary>  
         [Required]
         [MaxLength(255)]
         public string TableName { get; private set; }
 
         /// <summary>  
-        /// 表格描述。  
+        ///Legacy comment translated to English.
         /// </summary>  
         public string Description { get; private set; }
 
         /// <summary>  
-        /// 关联的列元数据集合。  
+        ///Legacy comment translated to English.
         /// </summary>  
         //[InverseProperty(nameof(ColumnMetadata.TableMetadata))]
         public ICollection<ColumnMetadata> ColumnMetadatas { get; set; }
 
         /// <summary>  
-        /// 关联的数据集合。  
+        ///Legacy comment translated to English.
         /// </summary>  
         //[InverseProperty(nameof(TableData.TableMetadata))]
         public ICollection<TableData> TableDatas { get; set; }

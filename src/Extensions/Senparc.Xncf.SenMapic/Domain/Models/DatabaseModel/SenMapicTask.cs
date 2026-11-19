@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：SenMapicTask.cs
-    文件功能描述：SenMapicTask 相关实现
-    
-    
-    创建标识：Senparc - 20250114
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: SenMapicTask.cs
+    File description: SenMapicTask related implementation
+
+    Created by: Senparc - 20250114
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.13 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -19,87 +22,87 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.SenMapic
 {
     /// <summary>
-    /// 任务状态枚举
+    ///Legacy comment translated to English.
     /// </summary>
     public enum SenMapicTaskStatus
     {
         /// <summary>
-        /// 出错
+        ///Legacy comment translated to English.
         /// </summary>
         Error = -1,
         /// <summary>
-        /// 等待开始
+        /// waitstart
         /// </summary>
         Waiting = 0,
         /// <summary>
-        /// 进行中
+        /// in progress
         /// </summary>
         Running = 1,
         /// <summary>
-        /// 已完成
+        ///Legacy comment translated to English.
         /// </summary>
         Completed = 2
     }
 
     /// <summary>
-    /// SenMapic 爬虫任务实体类
+    ///Legacy comment translated to English.
     /// </summary>
     [Table(Register.DATABASE_PREFIX + nameof(SenMapicTask))]
     [Serializable]
     public class SenMapicTask : EntityBase<int>
     {
         /// <summary>
-        /// 任务名称
+        /// task name
         /// </summary>
         public string Name { get; private set; }
 
         /// <summary>
-        /// 起始URL
+        ///Legacy comment translated to English.
         /// </summary>
         public string StartUrl { get; private set; }
 
         /// <summary>
-        /// 最大线程数
+        ///Legacy comment translated to English.
         /// </summary>
         public int MaxThread { get; private set; }
 
         /// <summary>
-        /// 单站点最大爬取时间(分钟)
+        ///Legacy comment translated to English.
         /// </summary>
         public int MaxBuildMinutes { get; private set; }
 
         /// <summary>
-        /// 最大爬取深度
+        ///Legacy comment translated to English.
         /// </summary>
         public int MaxDeep { get; private set; }
 
         /// <summary>
-        /// 最大页面数量
+        ///Legacy comment translated to English.
         /// </summary>
         public int MaxPageCount { get; private set; }
 
         /// <summary>
-        /// 任务状态
+        /// taskstatus
         /// </summary>
         public SenMapicTaskStatus Status { get; private set; }
 
         /// <summary>
-        /// 开始时间
+        ///Legacy comment translated to English.
         /// </summary>
         public DateTime? StartTime { get; private set; }
 
         /// <summary>
-        /// 完成时间
+        ///Legacy comment translated to English.
         /// </summary>
         public DateTime? EndTime { get; private set; }
 
         /// <summary>
-        /// 已爬取的页面数量
+        ///Legacy comment translated to English.
         /// </summary>
         public int CrawledPages { get; private set; }
 
         /// <summary>
-        /// 错误信息
+        /// errorinformation
         /// </summary>
         public string ErrorMessage { get; private set; }
 

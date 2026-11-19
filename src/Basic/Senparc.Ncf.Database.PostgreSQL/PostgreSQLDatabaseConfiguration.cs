@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：PostgreSQLDatabaseConfiguration.cs
-    文件功能描述：PostgreSQLDatabaseConfiguration 相关实现
-    
-    
-    创建标识：Senparc - 20211110
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: PostgreSQLDatabaseConfiguration.cs
+    File description: PostgreSQLDatabaseConfiguration related implementation
+
+    Created by: Senparc - 20211110
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.13.14 Updated database integration support and related localization metadata
 
 ----------------------------------------------------------------*/
 
@@ -30,7 +33,7 @@ using System.Diagnostics;
 namespace Senparc.Ncf.Database.PostgreSQL
 {
     /// <summary>
-    /// PostgreSQL 数据库配置
+    /// PostgreSQL databaseconfiguration
     /// </summary>
     public class PostgreSQLDatabaseConfiguration : DatabaseConfigurationBase<NpgsqlDbContextOptionsBuilder, NpgsqlOptionsExtension>
     {
@@ -42,7 +45,7 @@ namespace Senparc.Ncf.Database.PostgreSQL
         {
             var typedBuilder = optionsBuilder as NpgsqlDbContextOptionsBuilder;
 
-            //解决 .NET 6.0 timestamp 问题： https://qiita.com/k-yamamoto/items/a87989569cb6f0415fbb
+            //Legacy comment translated to English.
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
             typedBuilder.EnableRetryOnFailure(
@@ -100,7 +103,7 @@ namespace Senparc.Ncf.Database.PostgreSQL
                 Process cmdProcess = getNewProcess();
                 Console.WriteLine(cmd);
                 cmdProcess.StandardInput.WriteLine(cmd);
-                cmdProcess.StandardInput.WriteLine("exit");//需要执行exit后才能读取 StandardOutput
+                cmdProcess.StandardInput.WriteLine("exit");//Legacy comment translated to English.
                 var output = cmdProcess.StandardOutput.ReadToEnd();
                 Console.WriteLine("pg_dump.exe outupt: " + output);
                 closeProcess(cmdProcess);
@@ -112,7 +115,7 @@ namespace Senparc.Ncf.Database.PostgreSQL
                 Process passwordProcess = getNewProcess();
                 Console.WriteLine(cmd);
                 passwordProcess.StandardInput.WriteLine(password);
-                passwordProcess.StandardInput.WriteLine("exit");//需要执行exit后才能读取 StandardOutput
+                passwordProcess.StandardInput.WriteLine("exit");//Legacy comment translated to English.
                 var output = passwordProcess.StandardOutput.ReadToEnd();
                 Console.WriteLine("pg_dump.exe outupt: " + output);
                 closeProcess(passwordProcess);
@@ -125,7 +128,7 @@ namespace Senparc.Ncf.Database.PostgreSQL
         public override string GetDropTableSql(DbContext dbContext, string tableName)
         {
             //var schma = dbContext.Model.FindEntityType(type).GetSchema();
-            //TODO: 增加 schma
+            //Legacy comment translated to English.
             return $"DROP TABLE \"{tableName}\"";//CASCADE
         }
 

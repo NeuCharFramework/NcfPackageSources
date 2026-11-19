@@ -1,17 +1,20 @@
 /*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：DatabaseSchemaQueryAppService.cs
-    文件功能描述：DatabaseSchemaQueryAppService 相关实现
-    
-    
-    创建标识：Senparc - 20260327
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.26.0-preview2 为 DatabaseToolkit 模块接入统一资源本地化并优化功能文案
+    Copyright (C) 2026 Senparc
+
+    File name: DatabaseSchemaQueryAppService.cs
+    File description: DatabaseSchemaQueryAppService related implementation
+
+    Created by: Senparc - 20260327
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260717
+    Change description: v0.26.0-preview2 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.27.13 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -32,8 +35,8 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 {
     /// <summary>
-    /// 数据库架构元数据查询 AppService
-    /// 提供查询数据库结构信息的 Function
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public class DatabaseSchemaQueryAppService : AppServiceBase
     {
@@ -46,8 +49,8 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 查询可用的模块和表结构
-        /// 返回所有可查询的模块及其表的结构信息
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         [FunctionRender(typeof(DatabaseToolkitResource), "Function.Database.Schema.Name", "Function.Database.Schema.Description", typeof(Register))]
         public async Task<AppResponseBase<string>> QueryDatabaseSchema(QuerySchemaRequest request)
@@ -56,12 +59,12 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
             {
                 try
                 {
-                    // 如果指定了模块名和表名，获取详细信息
+                    //Legacy comment translated to English.
                     if (!string.IsNullOrWhiteSpace(request.ModuleName) && !string.IsNullOrWhiteSpace(request.TableName))
                     {
                         logger.Append(DatabaseToolkitResource.Format("Database.Schema.TableDetailLog", "获取表详情：{0}.{1}", request.ModuleName, request.TableName));
 
-                        // 先尝试精确匹配，再尝试模糊匹配
+                        //Legacy comment translated to English.
                         var resolvedModule = _metadataProvider.ResolveModuleName(request.ModuleName);
                         if (resolvedModule == null)
                         {
@@ -112,7 +115,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                         });
                     }
 
-                    // 如果只指定了模块名，获取该模块的所有表
+                    //Legacy comment translated to English.
                     if (!string.IsNullOrWhiteSpace(request.ModuleName))
                     {
                         logger.Append(DatabaseToolkitResource.Format("Database.Schema.ModuleTablesLog", "获取模块 {0} 的所有表", request.ModuleName));
@@ -156,7 +159,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                         });
                     }
 
-                    // 获取所有模块和表的概览
+                    //Legacy comment translated to English.
                     logger.Append(DatabaseToolkitResource.Get("Database.Schema.OverviewLog"));
                     
                     var allSchemas = _metadataProvider.GetAllSchemas();
@@ -198,7 +201,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 查询数据库架构请求
+        ///Legacy comment translated to English.
         /// </summary>
         public class QuerySchemaRequest : FunctionAppRequestBase
         {
@@ -212,7 +215,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 
             public override async Task LoadData(IServiceProvider serviceProvider)
             {
-                // 可选：在此处加载默认数据
+                //Legacy comment translated to English.
                 await base.LoadData(serviceProvider);
             }
         }

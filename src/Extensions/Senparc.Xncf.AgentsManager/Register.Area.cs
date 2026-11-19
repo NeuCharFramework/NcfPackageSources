@@ -1,17 +1,20 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：Register.Area.cs
-    文件功能描述：Register.Area 相关实现
-    
-    
-    创建标识：Senparc - 20240616
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.12.0-preview6 为 AgentsManager 模块接入统一资源本地化并优化功能文案
+    Copyright (C) 2026 Senparc
+
+    File name: Register.Area.cs
+    File description: Register.Area implementation
+
+    Created by: Senparc - 20240616
+
+    Modified by: Senparc - 20260704
+    Change description: vNext add the standardized file header
+
+    Modified by: Senparc - 20260717
+    Change description: v0.12.0-preview6 integrate AgentsManager with unified localization and refine UI copy
+
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 
@@ -28,33 +31,33 @@ using Microsoft.Extensions.Hosting;
 
 namespace Senparc.Xncf.AgentsManager
 {
-    public partial class Register : IAreaRegister, //注册 XNCF 页面接口（按需选用）
-                                    IXncfRazorRuntimeCompilation  //赋能 RazorPage 运行时编译
+    public partial class Register : IAreaRegister, // Register the XNCF pages when needed.
+                                    IXncfRazorRuntimeCompilation  // Enable Razor Page runtime compilation.
     {
-        #region IAreaRegister 接口
+        #region Legacy section
 
         public string HomeUrl => "/Admin/AgentsManager/Index";
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
                     new AreaPageMenuItem(GetAreaHomeUrl(), AgentsManagerResource.Get("Area.Home", "首页"),"fa fa-laptop"),
-			 		//new AreaPageMenuItem(GetAreaUrl($"/Admin/AgentsManager/DatabaseSample"),"数据库操作示例","fa fa-bookmark-o")
+			 		//new AreaPageMenuItem(GetAreaUrl($"/Admin/AgentsManager/DatabaseSample"), "Database example", "fa fa-bookmark-o")
 			};
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
         {
             builder.AddRazorPagesOptions(options =>
             {
-                //此处可配置页面权限
+                // Configure page permissions here when required.
             });
 
-            SenparcTrace.SendCustomLog("AgentsManager 启动", "完成 Area:Senparc.Xncf.AgentsManager 注册");
+            SenparcTrace.SendCustomLog("AgentsManager startup", "Area registration completed: Senparc.Xncf.AgentsManager");
 
             return builder;
         }
 
         #endregion
 
-        #region IXncfRazorRuntimeCompilation 接口
+        #region Legacy section
         public string LibraryPath => Path.GetFullPath(Path.Combine(SiteConfig.WebRootPath, "..", "..", "Senparc.Xncf.AgentsManager"));
         #endregion
     }

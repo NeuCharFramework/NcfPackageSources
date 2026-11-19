@@ -1,0 +1,14 @@
+@using System.Text.Json
+@using Microsoft.Extensions.Localization
+@using Senparc.Ncf.Core.Localization
+@using Senparc.Xncf.NeuCharWorkflow
+@inject IStringLocalizer<NeuCharWorkflowResource> XR
+@inject IStringLocalizerFactory LocalizationFactory
+@{
+    var sourceTranslations = FrontendTranslationCatalog.Get(
+        LocalizationFactory,
+        typeof(NeuCharWorkflowResource));
+}
+<script>
+    window.ncfRegisterSourceTranslations(@Html.Raw(JsonSerializer.Serialize(sourceTranslations)));
+</script>

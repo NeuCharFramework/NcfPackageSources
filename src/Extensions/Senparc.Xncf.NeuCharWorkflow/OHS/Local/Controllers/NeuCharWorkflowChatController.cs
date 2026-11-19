@@ -1,19 +1,23 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：NeuCharWorkflowChatController.cs
-    文件功能描述：Chat 触发器的聊天页面与匿名 HTTP 入口
 
+    File name: NeuCharWorkflowChatController.cs
+    File description: Chat trigger page and anonymous HTTP entry points
 
-    创建标识：Senparc - 20260909
-    创建描述：v0.4.0 新增 Chat 触发器
+    Created by: Senparc - 20260909
+    Creation description: v0.4.0 add the Chat trigger
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.4.0 增强 Chat 触发器消息持久化与恢复能力
+    Modified by: Senparc - 20260915
+    Change description: v0.4.0 improve Chat message persistence and recovery
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
 ----------------------------------------------------------------*/
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -25,12 +29,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Senparc.Xncf.NeuCharWorkflow.Application.AppServices;
+using Senparc.Xncf.NeuCharWorkflow;
 
 namespace Senparc.Xncf.NeuCharWorkflow.OHS.Local.Controllers;
 
 /// <summary>
-/// NeuChar Workflow 的 Chat 触发器入口。页面可直接被登录用户或访客打开，
-/// 身份通过登录 Claims 或 HttpOnly 会话 Cookie 识别；工作流仍由服务端协调器执行。
+/// Entry point for the NeuChar Workflow Chat trigger. The page can be opened by
+/// authenticated users or guests; identity comes from claims or an HttpOnly
+/// session cookie, while the workflow remains coordinated on the server.
 /// </summary>
 [ApiController]
 [AllowAnonymous]
@@ -52,14 +58,40 @@ public sealed class NeuCharWorkflowChatController : ControllerBase
     }
 
     /// <summary>
-    /// 打开聊天页面。页面本身不携带任何会话数据，数据由前端调用下方的 JSON 接口获得。
+    /// Open the chat page. The page carries no session data; the client loads
+    /// it through the JSON endpoints below.
     /// </summary>
     [HttpGet("{workflowId:int}/page")]
     public IActionResult Page(int workflowId)
     {
         EnsureGuestCookie();
+        var culture = System.Globalization.CultureInfo.CurrentUICulture;
+        var translations = new
+        {
+            title = NeuCharWorkflowResource.Get("Chat.Title", "NeuChar Workflow Chat"),
+            loading = NeuCharWorkflowResource.Get("Chat.Loading", "Loading…"),
+            newConversation = NeuCharWorkflowResource.Get("Chat.NewConversation", "New conversation"),
+            inputPlaceholder = NeuCharWorkflowResource.Get("Chat.InputPlaceholder", "Type a message and press Enter to send"),
+            send = NeuCharWorkflowResource.Get("Chat.Send", "Send"),
+            enterHint = NeuCharWorkflowResource.Get("Chat.EnterHint", "Enter to send · Shift + Enter for a new line · Your message starts a Workflow run"),
+            processing = NeuCharWorkflowResource.Get("Chat.Processing", "Processing…"),
+            previousProcessing = NeuCharWorkflowResource.Get("Chat.PreviousProcessing", "The previous message is still processing…"),
+            starting = NeuCharWorkflowResource.Get("Chat.Starting", "Starting Workflow…"),
+            runFailed = NeuCharWorkflowResource.Get("Chat.RunFailed", "Workflow execution failed."),
+            runCompleted = NeuCharWorkflowResource.Get("Chat.RunCompleted", "Workflow completed."),
+            clearConfirm = NeuCharWorkflowResource.Get("Chat.ClearConfirm", "Clear the current conversation? Any running Workflow is not affected."),
+            resetFailed = NeuCharWorkflowResource.Get("Chat.ResetFailed", "Reset failed."),
+            sessionLoadFailed = NeuCharWorkflowResource.Get("Chat.SessionLoadFailed", "Unable to load the chat session."),
+            sessionUnavailable = NeuCharWorkflowResource.Get("Chat.SessionUnavailable", "Unable to load the session"),
+            guestMode = NeuCharWorkflowResource.Get("Chat.GuestMode", "Guest mode"),
+            signedIn = NeuCharWorkflowResource.Get("Chat.SignedIn", "Signed in"),
+            trigger = NeuCharWorkflowResource.Get("Chat.Trigger", "Chat trigger"),
+            user = NeuCharWorkflowResource.Get("Chat.User", "Me")
+        };
         var html = NeuCharWorkflowChatPage.Template
-            .Replace("__WORKFLOW_ID__", workflowId.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            .Replace("__WORKFLOW_ID__", workflowId.ToString(System.Globalization.CultureInfo.InvariantCulture))
+            .Replace("__CHAT_LANG__", culture.Name.StartsWith("zh", StringComparison.OrdinalIgnoreCase) ? "zh-CN" : culture.Name)
+            .Replace("__CHAT_I18N__", JsonSerializer.Serialize(translations, JsonOptions));
         return Content(html, "text/html; charset=utf-8");
     }
 
@@ -148,7 +180,8 @@ public sealed class NeuCharWorkflowChatController : ControllerBase
     }
 
     /// <summary>
-    /// 登录用户使用 Claims 身份，访客使用 HttpOnly Cookie；两种身份在同一工作流下互不混用。
+    /// Authenticated users use claims, while guests use an HttpOnly cookie.
+    /// The two identities are never mixed within one workflow.
     /// </summary>
     private string ResolveParticipantKey()
     {
@@ -163,7 +196,8 @@ public sealed class NeuCharWorkflowChatController : ControllerBase
     }
 
     /// <summary>
-    /// 读取或创建访客会话令牌。令牌为 32 字节随机值的 Base64Url 编码，只存在 Cookie 中。
+    /// Read or create the guest session token. It is a Base64Url encoding of
+    /// 32 random bytes and exists only in the cookie.
     /// </summary>
     private string EnsureGuestCookie()
     {
@@ -185,7 +219,7 @@ public sealed class NeuCharWorkflowChatController : ControllerBase
         return token;
     }
 
-    private static bool IsValidGuestToken(string? value) =>
+    private static bool IsValidGuestToken([NotNullWhen(true)] string? value) =>
         value is { Length: 43 }
         && value.All(z => (z >= 'A' && z <= 'Z') || (z >= 'a' && z <= 'z') || (z >= '0' && z <= '9') || z is '-' or '_');
 

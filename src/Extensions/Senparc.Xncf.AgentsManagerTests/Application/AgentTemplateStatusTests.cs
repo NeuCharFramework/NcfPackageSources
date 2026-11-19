@@ -1,10 +1,11 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：AgentTemplateStatusTests.cs
-    文件功能描述：Agent 手动 Prompt 状态查询回归测试
+    File name: AgentTemplateStatusTests.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260813
+    Created by: Senparc - 20260813
 
 ----------------------------------------------------------------*/
 

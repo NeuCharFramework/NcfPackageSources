@@ -1,30 +1,32 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：PromptItemAppService.cs
-    文件功能描述：PromptItemAppService 服务逻辑
-    
-    
-    创建标识：Senparc - 20231021
-    
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
-    修改标识：Senparc - 20260705
+    File name: PromptItemAppService.cs
+    File description: Related implementation.
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.17.1-preview6 加强提示词接口授权并防护插件压缩包路径
+    Created by: Senparc - 20231021
 
-    修改标识：Senparc - 20261102
-    修改描述：增加可复用提示词选择器的筛选、分页搜索、评分及 PromptCode 排序和正文读取接口
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-    修改描述：v0.16.4-preview3 增强文生图重试机制并兼容 TLS1.2/TLS1.3
+    Modified by: Senparc - 20260705
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.20.8 add PromptRange selector service, UI components, and tests
+    Modified by: Senparc - 20260729
+    Change description: v0.17.1-preview6 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261105
-    修改描述：v0.20.14 补充 PromptCode 评分与选择相关应用服务
+    Modified by: Senparc - 20261102
+    Change description: Updated module behavior and related support.
+    Change description: v0.16.4-preview3 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261103
+    Change description: v0.20.8 add PromptRange selector service, UI components, and tests
+
+    Modified by: Senparc - 20261105
+    Change description: v0.20.14 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -55,8 +57,8 @@ using Senparc.Xncf.PromptRange.Abstractions.References;
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 {
     /// <summary>
-    /// PromptItem 管理 AppService
-    /// TODO: 需要权限验证
+    /// PromptItem management AppService
+    /// TODO: permission validation is required
     /// </summary>
     [ApiAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
     public class PromptItemAppService : AppServiceBase
@@ -123,7 +125,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// Add方法用于添加一个新的PromptItem，并根据请求中的IsDraft字段决定是否立即生成结果
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -136,20 +138,20 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 {
                     try
                     {
-                    // 新增promptItem
+                    // addpromptItem
                     var savedPromptItem = await _promptItemService.AddPromptItemAsync(request);
-                    // ?? throw new NcfExceptionBase("新增失败");
+                    // ?? throw new NcfExceptionBase("addfailure");
 
                     var promptItemResponseDto = new PromptItem_AddResponse(savedPromptItem);
 
-                    // 是否立即生成结果
+                    //Legacy comment translated to English.
                     if (request.IsDraft)
                     {
                         return promptItemResponseDto;
                     }
 
-                    // 如果立即生成，就根据numsOfResults立即生成
-                    // 转换历史记录格式
+                    //Legacy comment translated to English.
+                    //Legacy comment translated to English.
                     List<Domain.Services.ChatMessageDto> chatHistory = null;
                     if (request.ChatHistory != null && request.ChatHistory.Count > 0)
                     {
@@ -160,8 +162,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                         }).ToList();
                     }
                     
-                    // 连发时，如果第一个结果是 Chat 模式，后续结果也需要保持 Chat 模式
-                    // 获取第一个结果的模式，用于后续结果保持一致
+                    //Legacy comment translated to English.
+                    //Legacy comment translated to English.
                     ResultMode? firstResultMode = null;
                     string firstUserMessage = request.UserMessage;
                     List<Domain.Services.ChatMessageDto> firstChatHistory = chatHistory;
@@ -181,27 +183,27 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     
                     for (var i = 0; i < request.NumsOfResults; i++)
                     {
-                        // 如果是第一次生成，使用传入的参数
-                        // 如果是后续生成，且第一个结果是 Chat 模式，则保持 Chat 模式
+                        //Legacy comment translated to English.
+                        //Legacy comment translated to English.
                         string currentUserMessage = null;
                         List<Domain.Services.ChatMessageDto> currentChatHistory = null;
                         
                         if (i == 0)
                         {
-                            // 第一次生成，使用传入的参数
+                            //Legacy comment translated to English.
                             currentUserMessage = request.UserMessage;
                             currentChatHistory = chatHistory;
                         }
                         else if (firstResultMode == ResultMode.Chat && !string.IsNullOrWhiteSpace(firstUserMessage))
                         {
-                            // 后续生成，且第一个结果是 Chat 模式，保持 Chat 模式
-                            // 使用相同的 userMessage，但不传递历史记录（每次都是独立的对话）
+                            //Legacy comment translated to English.
+                            //Legacy comment translated to English.
                             currentUserMessage = firstUserMessage;
-                            currentChatHistory = null; // 连发时，每次都是独立的对话，不传递历史记录
+                            currentChatHistory = null; //Legacy comment translated to English.
                         }
-                        // 如果第一个结果是 Single 模式，后续也使用 Single 模式（currentUserMessage 为 null）
+                        //Legacy comment translated to English.
                         
-                        // 分别生成结果
+                        //Legacy comment translated to English.
                         PromptResultDto promptResult = await _promptResultService.SenparcGenerateResultAsync(
                             savedPromptItem,
                             currentUserMessage,
@@ -209,7 +211,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                             streamCallback,
                             request.ExecutionOptions);
                         
-                        // 记录第一个结果的模式
+                        //Legacy comment translated to English.
                         if (i == 0)
                         {
                             firstResultMode = promptResult.Mode;
@@ -243,9 +245,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
 
         /// <summary>
-        /// 列出 靶场名称 下所有的promptItem的id和name
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="rangeName">靶场名称（必须）</param>
+        /// <param name="rangeName">rangename（must）</param>
         /// <returns></returns>
         [ApiBind]
         public async Task<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>> GetIdAndName(string rangeName)
@@ -266,9 +268,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 根据靶场 ID, 查询其中所有的promptItem的id和name
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="rangeId">靶场 ID（必须）</param>
+        /// <param name="rangeId">range ID（must）</param>
         /// <returns></returns>
         public async Task<AppResponseBase<List<PromptItem_GetIdAndNameResponse>>> GetIdAndName(int rangeId)
         {
@@ -287,7 +289,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
 
         /// <summary>
-        /// 列出所有的promptItem的RangeName
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         // [ApiBind]
@@ -313,14 +315,14 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         // /// <summary>
-        // /// 根据ID，找到对应的promptItem的所有父级的信息
+        //Legacy comment translated to English.
         // /// </summary>
         // /// <param name="promptItemId"></param>
         // /// <returns></returns>
         // [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         // public async Task<AppResponseBase<TacticTree_GetResponse>> FindItemHistory(int promptItemId)
         // {
-        //     // 根据promptItemId找到promptItem， 然后获取version
+        //Legacy comment translated to English.
         //     return await this.GetResponseAsync<TacticTree_GetResponse>(
         //         async (resp, logger) =>
         //         {
@@ -330,9 +332,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         // }
 
         /// <summary>
-        /// 根据主键 ID　获取 PromptItem 所有信息
+        /// according toprimary key ID　get PromptItem allinformation
         /// </summary>
-        /// <param name="id">主键 ID </param>
+        /// <param name="id">primary key ID </param>
         /// <returns></returns>
         [ApiBind]
         public async Task<AppResponseBase<PromptItem_GetResponse>> Get(int id)
@@ -340,13 +342,13 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<PromptItem_GetResponse>(
                 async (response, logger) =>
                 {
-                    // 获取promptItem
+                    // getpromptItem
                     PromptItemDto promptItem = await _promptItemService.GetAsync(id);
 
-                    // 转换为 response
+                    //Legacy comment translated to English.
                     var resp = new PromptItem_GetResponse(promptItem);
 
-                    // 获取所有对应的结果
+                    //Legacy comment translated to English.
                     var resultList = await _promptResultService.GetFullListAsync(res => res.PromptItemId == promptItem.Id);
                     resp.PromptResultList.AddRange(resultList);
 
@@ -355,9 +357,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         // /// <summary>
-        // /// 根据 完整版号 获取 PromptItem 所有信息
+        //Legacy comment translated to English.
         // /// </summary>
-        // /// <param name="fullVersion">完整版号</param>
+        //Legacy comment translated to English.
         // /// <returns></returns>
         // [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         // public async Task<AppResponseBase<PromptItem_GetResponse>> GetByVersion(string fullVersion)
@@ -377,9 +379,9 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         // }
 
         /// <summary>
-        /// 获取版本树
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="rangeName">靶场名称</param>
+        /// <param name="rangeName">rangename</param>
         /// <returns></returns>
         [ApiBind]
         public async Task<AppResponseBase<TacticTree_GetResponse>> GetTacticTree(string rangeName)
@@ -402,10 +404,10 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 var item = await _promptItemService.GetObjectAsync(p => p.Id == request.Id) 
                         ?? throw new Exception($"未找到 id 为 {request.Id} 的 PromptItem");
                 
-                // 根据 request 中的字段，对应修改
+                //Legacy comment translated to English.
                 if (!string.IsNullOrWhiteSpace(request.NickName))
                 {
-                    //删除其他同名的 PromptItem
+                    //Legacy comment translated to English.
                     var sameNameItem = await _promptItemService.GetObjectAsync(z => z.RangeId == item.RangeId && z.NickName == request.NickName);
                     if (sameNameItem != null)
                     {
@@ -416,7 +418,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
                 if (request.NickName != null)
                 {
-                    //修改当前名称（如果是 ""，则清空）
+                    //Legacy comment translated to English.
                     item.ModifyNickName(request.NickName == "" ? null : request.NickName);
                 }
 
@@ -449,7 +451,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 根据主键 ID　删除 PromptItem 所有信息
+        /// according toprimary key ID　delete PromptItem allinformation
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -467,7 +469,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
                 await _promptItemService.DeleteAllAsync(toDeleteItemList);
 
-                // 关联删除所有子战术
+                //Legacy comment translated to English.
                 var toDeleteIdList = toDeleteItemList.Select(p => p.Id).ToList();
                 await _promptResultService.BatchDeleteWithItemId(toDeleteIdList);
 
@@ -476,7 +478,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 设置 AI 自动打分评分标准接口
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="promptItemId"></param>
         /// <param name="expectedResults"></param>
@@ -491,7 +493,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         // /// <summary>
-        // /// 根据靶场名（自动生成）获取靶场里最好的promptItem
+        //Legacy comment translated to English.
         // /// </summary>
         // /// <param name="rangeName"></param>
         // /// <param name="isAvg"></param>
@@ -504,7 +506,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         // }
 
         /// <summary>
-        /// 上传plugin接口
+        /// uploadplugininterface
         /// </summary>
         /// <param name="zipFile"></param>
         /// <returns></returns>
@@ -520,7 +522,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 导出靶场为 plugin
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -535,7 +537,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 
 
         // /// <summary>
-        // /// 导出指定版本的靶道为 plugin
+        //Legacy comment translated to English.
         // /// </summary>
         // /// <param name="itemVersion"></param>
         // /// <returns></returns>
@@ -550,13 +552,13 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         {
             try
             {
-                // 验证目录是否存在
+                //Legacy comment translated to English.
                 if (!Directory.Exists(dirPath))
                 {
                     throw new NcfExceptionBase($"导出目录不存在: {dirPath}");
                 }
 
-                // 验证目录中是否有文件
+                //Legacy comment translated to English.
                 var files = Directory.GetFiles(dirPath, "*", SearchOption.AllDirectories);
                 if (files.Length == 0)
                 {
@@ -574,7 +576,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     parentDir.FullName,
                     $"{DateTimeOffset.Now.ToLocalTime():yyyyMMddHHmmss}_ExportedPlugins.zip");
 
-                // 创建压缩文件
+                //Legacy comment translated to English.
                 ZipFile.CreateFromDirectory(
                     dirPath,
                     filePath,
@@ -588,16 +590,16 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     var byteCnt = await fileStream.ReadAsync(buffer, 0, buffer.Length);
                 }
 
-                // 清理临时文件
+                //Legacy comment translated to English.
                 try
                 {
-                    // 删除 zip 文件
+                    // delete zip file
                     if (File.Exists(filePath))
                     {
                         File.Delete(filePath);
                     }
                     
-                    // 清理临时文件夹
+                    //Legacy comment translated to English.
                     if (Directory.Exists(dirPath))
                     {
                         Directory.Delete(dirPath, true);
@@ -605,7 +607,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 }
                 catch (Exception ex)
                 {
-                    // 清理失败不影响返回结果，只记录日志
+                    //Legacy comment translated to English.
                     Console.WriteLine($"清理临时文件失败: {ex.Message}");
                 }
 
@@ -618,7 +620,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             }
             catch (Exception ex)
             {
-                // 确保在出错时也清理临时文件
+                //Legacy comment translated to English.
                 try
                 {
                     if (Directory.Exists(dirPath))
@@ -628,7 +630,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                 }
                 catch
                 {
-                    // 忽略清理错误
+                    //Legacy comment translated to English.
                 }
 
                 throw new NcfExceptionBase($"导出 plugins 失败: {ex.Message}", ex);

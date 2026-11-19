@@ -1,207 +1,210 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.19.3</Version>
+    <Version>0.19.4</Version>
     <AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <Description>Agents 管理模块</Description>
+    <Description>Agents managementmodule</Description>
     <Copyright>Senparc</Copyright>
     <PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.AgentsManager</PackageTags>
     <Authors>Senparc</Authors>
     <Owners>Senparc</Owners>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <Title>Agents 管理模块</Title>
+    <Title>Agents managementmodule</Title>
     <!--<ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>		[2024-08-06] v0.4.4.0-preview1 update Senparc.AI.Kernel
-		[2024-08-31] v0.5.0-preview1 PromptRange 支持 Markdown 输出格式展示
-		v0.1.0 创世
-		[2024-09-03] v0.5.1-preview1 PromptRange 结果提供“复制”功能
-		[2024-09-04] v0.5.2-preview1 PromptRange 完善结果显示样式，添加“复制”功能
-		[2024-09-07] v0.5.3-preview1 XncfBuilder 更新默认 Prompt
-		[2024-09-07] v0.5.3.1-preview1 更新 PromptRange 中代码自动生成的 Prompt
-		[2024-09-07] v0.5.3.2-preview1 PromptRange 优化输出格式
-		[2024-09-07] v0.5.3.3-preview1 PromptRange 修复自动初始化 Prompt 调用过程中的一个 bug
-		[2024-09-07] v0.5.3.4-preview1 更新 XNCF AI 代码生成逻辑
-		[2024-09-07] v0.5.4-preview1 更新 Senparc.AI 基础库，并在 XncfBuilder 使用 AI 生成代码时，优先使用已选中的模型。
-		[2024-09-07] v0.5.5-preview1 更新 Senparc.AI 基础库，并在 XncfBuilder 使用 AI 生成代码时，优先使用已选中的模型。
-		[2024-09-07] v0.5.5.1-preview1 优化 XncfBuilder AI 代码生成过程中的 AI 模型选用
-		[2024-09-08] v0.5.5.2-preview1 优化 XncfBuilder AI 代码生成过程的模型选用
-		[2024-09-10] v0.5.6-preview1 升级缓存基础库
-		[2024-10-09] v0.5.8-preview1 升级基础库
-		[2024-10-09] v0.5.9-preview1 升级基础库
-		[2024-10-16] v0.5.10-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
-		[2024-10-17] v0.5.11-preview1 完成能够全流程运行的基础版本
-		[2024-10-18] v0.5.12-preview1 优化功能
-		[2024-10-20] v0.5.13-preview1 升级 Senparc.Weixin.Work SDK
-		[2024-10-26] v0.5.15-preview1 发布 MVP 版本
-		[2024-10-26] v0.5.15.3-preview1 优化 Agents 输出
-		[2024-11-08] v0.6.2-preview1 升级 Senparc.AI
-		[2024-11-08] v0.6.3-preview1 升级 Senparc.AI
-		[2024-11-15] v0.7.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
-		[2024-11-21] v0.8.2-preview1 更新 CO2NET 及缓存基础库
-		[2024-11-28] v0.8.3-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
-		[2024-12-27] v0.8.4-preview1 Add exception log for UseXncfModules() auto progress
-		[2025-01-09] v0.9.0-preview1 reconstruction XncfBuilder for generate XNCF
-		[2025-01-25] v0.9.3-preview1 Update Agents functions, support for function calling
-		[2025-01-25] v0.9.4-preview1 Update Agents functions, support for function calling
-		[2025-01-28] v0.9.5-preview1 update Senparc.AI
-		[2025-01-28] v0.9.6-preview1 update Senparc.AI
-		[2025-02-06] v0.9.7-preview1 update NeuCharAI model update
-		[2025-03-24] v0.9.7.12-preview1 update Dm support
-		[2025-04-29] v0.9.9-preview1 Update CO2NET and AIKernel
-		[2025-05-15] v0.9.10-preview1 Add MCP to AgentsManager module
-		[2025-05-18] v0.9.11-preview1 Update Installation
-		[2025-06-20] v0.9.13-preview Add MCP functions in XncfRegisterBase class
-		[2025-07-27] v0.9.14-preview.1 update Knowledge Base
-		[2025-09-10] v0.9.14.5-preview.1 update MCP tools inject progress
-		[2025-11-01] update basic libraries, including Senparc.AI
-		[2026-03-24] v0.9.18-preview.1 update Senparc.AI.Agents to v0.7.1
-		[2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
-		[2026-07-01] v0.11.0-preview2 Upgrade multi-agent group chat workflow and MAF integration
-		1、优化 ChatGroupService 的任务管理、并发处理与异常回退
-		2、改进 AgentsManager 页面历史记录展示与交互体验
-		[2026-07-02] v0.11.0-preview2 增强多智能体群聊流程、容错与任务调度能力，优化 PromptOptimizationAgentBridge 稳定性与状态恢复能力
-		1、增强多智能体群聊流程、容错与任务调度能力
-		2、优化 PromptOptimizationAgentBridge 稳定性与状态恢复能力
-		3、新增 ChatTask 归档状态（IsArchived）及归档管理能力
-		4、补充 MySql、SqlServer、Oracle、PostgreSQL、Sqlite、Dm 迁移与模型快照，保障归档字段落库
-		5、同步应用服务与流式控制器，完善任务归档流程与状态处理
-		6、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
-		[2026-07-05] v0.11.1-preview3 重构系统配置初始化与更新流程并统一模型处理，新增批量启动任务接口并优化任务调度
-		1、重构系统配置初始化与更新流程并统一模型处理
-		2、新增批量启动任务接口并优化任务调度
-		[2026-07-05] v0.11.2-preview4 重构系统配置初始化与更新流程并统一模型处理，新增批量启动任务接口并优化任务调度
-		1、重构系统配置初始化与更新流程并统一模型处理
-		2、新增批量启动任务接口并优化任务调度
-		[2026-07-07] v0.11.3-preview5 Dependency updates from upstream modules
-		1、Dependency update from Senparc.Xncf.PromptRange to 0.16.5-preview4
-		2、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
-		[2026-07-17] v0.12.0-preview6 为 AgentsManager 模块接入统一资源本地化并优化功能文案
-		1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
-		2、更新 FunctionRender 与请求模型文案的资源化解析
-		3、统一模块注册信息、菜单名称与功能描述的本地化输出
-		4、同步管理页面与前端交互文案的多语言显示
-		5、完善复制操作的兼容性回退与结果反馈，适配内嵌 WebView 场景
-		[2026-07-29] v0.12.1-preview7 加强 AgentsManager 接口授权与 Markdown/HTML 安全渲染
-		1、为 Prompt 初始化和优化接口增加 AdminOnly 授权保护
-		2、限制 Markdown 链接、图片和任务 HTML 的协议与危险标签，降低脚本注入风险
-		[2026-07-31] v0.13.0-preview8 扩展 AgentsManager 管理界面的多语言能力
-		1、新增管理页与前端交互资源，支持界面文案按当前文化显示
-		2、升级 Senparc.AI 组件与 CO2NET WebApi 兼容依赖
-		[2026-08-04] v0.14.0-preview9 新增 Agent 模板知识库关联与管理统计
-		1、为 AgentTemplate 增加 KnowledgeBaseId 并补齐六类数据库迁移与快照
-		2、扩展应用服务、DTO 与管理页面的知识库选择和统计展示
-		3、优化群聊服务的知识库集成与状态处理
-		[2026-08-08] v0.14.1-preview10 Dependency updates from upstream projects
-		1、Dependency update from Senparc.Xncf.PromptRange to 0.19.1-preview9
-		2、Dependency update from Senparc.Xncf.SenMapic to 0.4.2-preview6
-		3、Dependency update from Senparc.Xncf.XncfBuilder to 0.39.1-preview9
-		4、Dependency update from Senparc.Xncf.MCP to 0.4.4-preview7
-		5、Dependency update from Senparc.Xncf.KnowledgeBase to 0.5.1-preview7
-		6、Dependency update from Senparc.Xncf.AgentsManager.Abstractions to 0.2.4-preview4
-		7、Dependency update from Senparc.Xncf.PromptRange.Abstractions to 0.2.4-preview4
-		8、Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
-		[2026-08-13] v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
-		1、新增远程 A2A 智能体接入、发布管理及多数据库迁移
-		2、统一本地与 A2A AgentTemplate 执行、支持群聊启停和取消回退
-		3、优化 AgentsManager 统计、操作按钮、历史记录与响应式布局
-		[2026-08-13] v0.15.0-preview12 修复发布型 A2A 与本地 Agent 的模型执行一致性
-		1、发布型 A2A 复用 IWantToRun 严格流式入口，保留真实上游异常并支持取消请求
-		2、Azure / NeuCharAI 在发生真实 403 时仅回退一次 DeploymentName=ModelId，不切换 Endpoint、Key 或系统默认模型
-		3、依赖 Senparc.AI.AgentKernel 0.1.12，模型 SDK 统一使用 AgentKernel 配置的 HttpClient transport
-		[2026-08-13] v0.15.0-preview13 修复发布型 A2A 与本地 Agent 的请求模式差异
-		1、发布型 A2A 改用 IWantToRun 严格非流式响应入口，A2A 协议流与模型服务流解耦
-		2、保持原始上游异常、会话回退和 403 的受控 DeploymentName 兼容回退
-		3、执行诊断新增 modelRequest=strict-non-streaming，便于与本地 Agent 调用比对
-		[2026-08-13] v0.15.0-preview14 增强发布型 A2A 的 Azure-compatible 403 兼容与诊断
-		1、真实 403 后可按 AIModel 配置的 API Version 受控重试，不改变模型、Endpoint、Key 或系统默认模型
-		2、记录脱敏模型请求路由、API Version、鉴权形态和服务端 request-id，便于定位上游拒绝原因
-		[2026-08-13] v0.15.0-preview15 统一本地与发布型 Agent 的模型错误语义
-		1、本地工作流与发布型 A2A 共用严格响应入口，避免把上游 401/403 伪装为 Agent 正常文本
-		2、补充 AIModel API Version 受控替换回归测试，保证仅修改 api-version 查询参数
-		[2026-08-13] v0.15.0-preview16 修复 NeuCharAI 的 API Version 兼容回退边界
-		1、保留 AIModel 配置的有效 API Version，并在为空或等于 SDK 固定版本时尝试同 Endpoint 的 NeuChar 兼容默认版本
-		2、执行日志显示配置版本和回退来源，便于区分 AIModel 数据与 SDK 默认请求
-		[2026-08-13] v0.15.0-preview17 对齐发布 A2A 与本地 Agent 的模型传输边界
-		1、诊断传输遇到真实 403 后，使用完全相同模型配置通过 AgentKernel 标准本地传输重试，不切换系统默认模型
-		2、安全记录请求结构与上游标准错误字段，保留响应给 SDK 处理且不记录 Prompt、输入或凭证
-		[2026-08-14] v0.15.0-preview18 明确处理发布 A2A 的上游应用停用错误
-		1、识别 NeuChar AI 应用不可用或停用响应并停止无意义的传输、Deployment 与 API Version 重试
-		2、向 Workflow/A2A 返回脱敏且可操作的模型配置错误，并保留 DiagnosticId
-		[2026-08-14] v0.15.0-preview19 发布型 A2A 完整复用本地 Agent 执行配置
-		1、A2A 正常路径复用本地 RunAsync 与 AgentKernel 标准传输，不再替换 HttpClient、Deployment 或 API Version
-		2、沿用 Prompt 版本的 MaxToken、Temperature、TopP、Penalty 与 StopSequences，避免固定参数覆盖 DeepSeek 等模型配置
-		3、执行诊断补充参数来源和脱敏参数摘要，便于核对本地与 A2A 的实际执行配置
-		[2026-08-14] v0.15.0-preview20 修正 ChatGroup 远程 A2A 超时边界
-		1、防止 Aspire 默认 Polly 管道的 30 秒 AttemptTimeout 覆盖 RemoteAgent.TimeoutSeconds
-		2、远程 A2A 请求统一使用可配置的 5-600 秒整体超时，并避免对可能已开始执行的 POST 进行隐式重试
-		3、AgentTemplate 与 ChatGroup 执行入口传递取消令牌，完善手动 Prompt 与远程请求的可取消边界
-		4、补充知识库向量发布状态与管理界面反馈，并保持本地 Agent 与发布型 A2A 的执行配置一致
-		5、完善手动 Prompt 判定回归测试，避免自然语言被错误当作 PromptRange 版本查询
-		[2026-08-17] v0.16.0 新增 ChatTask Human-in-the-Loop 人工审批与人类参与者能力
-		1、为 ChatTask 增加 HIL 等级、最大对话轮次与工具权限策略，并补齐多数据库迁移
-		2、支持人工审批工具调用、Human 参与者发言，以及 ChatGroup 按配置自动纳入人类参与者
-		3、完善 ChatGroup/ChatTask 请求校验、显式 GroupId 传参与管理端交互反馈
-		4、AgentTemplate 支持绑定 AI 模型（AiModelId）并补齐多数据库迁移
-		5、独立 Agent 空输出时按最低 Token 预算自动重试一次，避免过低 MaxToken 导致误失败
-		6、优化管理端人类参与者配置、任务执行策略展示与 Agent 编辑入口
-		7、增加工作流引用校验和函数绑定序列化能力，优化 Agent 编辑、任务筛选及响应式管理界面
-		8、补充 Agent 群组会话查看、执行引用和任务状态处理，提升管理端交互一致性
-		[2026-08-29] v0.17.0 增强 Agent 请求诊断、ChatGroup 状态处理与工作流对象支持
-		1、新增模型请求结果与异常诊断摘要，脱敏记录敏感配置并保留可追踪信息
-		2、改进 ChatGroup Token、审批日志、状态更新和服务作用域隔离，减少无效流式通知
-		3、完善工作流对象解析及消息历史处理，提升多智能体执行兼容性
-		[2026-09-15] v0.17.1 适配 Agent Framework Harness 依赖并保持代理执行兼容
-		1、升级 AgentKernel 依赖并接入 Microsoft Agents AI Harness 包
-		2、保持代理工作流执行、工具交互与历史状态处理兼容
-		[2026-09-16] v0.17.2 升级 Senparc.Weixin.Work 依赖以保持企业微信兼容
-		1、升级 Senparc.Weixin.Work 至 3.32.4，保持代理管理模块的企业微信能力兼容
-		[2026-09-17] v0.18.0 增强 Agent FunctionRender 工具的 AI schema 元数据能力
-		1、为 AgentTemplate 注册的 FunctionRender 工具注入参数元数据与选择项 schema
-		2、升级共享 Senparc.AI.AgentKernel 至 0.1.14-preview5 并保持代理执行兼容
-		[2026-09-24] v0.18.1 支持从 MCP 列表选择 Endpoint（EventBus 跨模块查询）
-		1、新增 GetMcpEndpointOptions 接口，通过 EventBus 向 Senparc.Xncf.MCP 模块查询已登记端点
-		2、Agent 与群组配置提供“从 MCP 列表选择”抽屉，复用 Function 绑定选择样式，支持搜索与勾选
-		3、MCP 模块不可用或未响应时自动降级为手动输入并给出提示
-		[2026-10-05] v0.18.1 feat: add MCP endpoint selection feature in AgentsManager
-		1、Updated Senparc.Xncf.AgentsManager project behavior and integration for the latest feature and reliability improvements.
+    <PackageReleaseNotes>[2024-08-06] v0.4.4.0-preview1 update Senparc.AI.Kernel
+        [2024-08-31] v0.5.0-preview1 Updated module behavior and related support.
+        v0.1.0 initial release
+        [2024-09-03] v0.5.1-preview1 Updated module behavior and related support.
+        [2024-09-04] v0.5.2-preview1 Updated module behavior and related support.
+        [2024-09-07] v0.5.3-preview1 XncfBuilder updatedefault Prompt
+        [2024-09-07] v0.5.3.1-preview1 Updated module behavior and related support.
+        [2024-09-07] v0.5.3.2-preview1 Updated module behavior and related support.
+        [2024-09-07] v0.5.3.3-preview1 Updated module behavior and related support.
+        [2024-09-07] v0.5.3.4-preview1 Updated module behavior and related support.
+        [2024-09-07] v0.5.4-preview1 Updated module behavior and related support.
+        [2024-09-07] v0.5.5-preview1 Updated module behavior and related support.
+        [2024-09-07] v0.5.5.1-preview1 Updated module behavior and related support.
+        [2024-09-08] v0.5.5.2-preview1 Updated module behavior and related support.
+        [2024-09-10] v0.5.6-preview1 upgrade the cache foundation libraries
+        [2024-10-09] v0.5.8-preview1 Updated module behavior and related support.
+        [2024-10-09] v0.5.9-preview1 Updated module behavior and related support.
+        [2024-10-16] v0.5.10-preview1 Updated module behavior and related support.
+        [2024-10-17] v0.5.11-preview1 Updated module behavior and related support.
+        [2024-10-18] v0.5.12-preview1 improvefeature
+        [2024-10-20] v0.5.13-preview1 upgrade Senparc.Weixin.Work SDK
+        [2024-10-26] v0.5.15-preview1 publish MVP version
+        [2024-10-26] v0.5.15.3-preview1 improve Agents output
+        [2024-11-08] v0.6.2-preview1 upgrade Senparc.AI
+        [2024-11-08] v0.6.3-preview1 upgrade Senparc.AI
+        [2024-11-15] v0.7.0-preview1 Updated module behavior and related support.
+        [2024-11-21] v0.8.2-preview1 Updated module behavior and related support.
+        [2024-11-28] v0.8.3-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
+        [2024-12-27] v0.8.4-preview1 Add exception log for UseXncfModules() auto progress
+        [2025-01-09] v0.9.0-preview1 reconstruction XncfBuilder for generate XNCF
+        [2025-01-25] v0.9.3-preview1 Update Agents functions, support for function calling
+        [2025-01-25] v0.9.4-preview1 Update Agents functions, support for function calling
+        [2025-01-28] v0.9.5-preview1 update Senparc.AI
+        [2025-01-28] v0.9.6-preview1 update Senparc.AI
+        [2025-02-06] v0.9.7-preview1 update NeuCharAI model update
+        [2025-03-24] v0.9.7.12-preview1 update Dm support
+        [2025-04-29] v0.9.9-preview1 Update CO2NET and AIKernel
+        [2025-05-15] v0.9.10-preview1 Add MCP to AgentsManager module
+        [2025-05-18] v0.9.11-preview1 Update Installation
+        [2025-06-20] v0.9.13-preview Add MCP functions in XncfRegisterBase class
+        [2025-07-27] v0.9.14-preview.1 update Knowledge Base
+        [2025-09-10] v0.9.14.5-preview.1 update MCP tools inject progress
+        [2025-11-01] update basic libraries, including Senparc.AI
+        [2026-03-24] v0.9.18-preview.1 update Senparc.AI.Agents to v0.7.1
+        [2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
+        [2026-07-01] v0.11.0-preview2 Upgrade multi-agent group chat workflow and MAF integration
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-07-02] v0.11.0-preview2 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        4. Updated module behavior and related support.
+        5. Updated module behavior and related support.
+        6. Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
+        [2026-07-05] v0.11.1-preview3 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-07-05] v0.11.2-preview4 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-07-07] v0.11.3-preview5 Dependency updates from upstream modules
+        1. Dependency update from Senparc.Xncf.PromptRange to 0.16.5-preview4
+        2. Updated module behavior and related support.
+        [2026-07-17] v0.12.0-preview6 Updated module behavior and related support.
+        1. integrateshared resource-localization mechanism, supportmodulefeature textdisplay dynamically according to the current culture
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        4. Updated module behavior and related support.
+        5. Updated module behavior and related support.
+        [2026-07-29] v0.12.1-preview7 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-07-31] v0.13.0-preview8 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-08-04] v0.14.0-preview9 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        [2026-08-08] v0.14.1-preview10 Dependency updates from upstream projects
+        1. Dependency update from Senparc.Xncf.PromptRange to 0.19.1-preview9
+        2. Dependency update from Senparc.Xncf.SenMapic to 0.4.2-preview6
+        3. Dependency update from Senparc.Xncf.XncfBuilder to 0.39.1-preview9
+        4. Dependency update from Senparc.Xncf.MCP to 0.4.4-preview7
+        5. Dependency update from Senparc.Xncf.KnowledgeBase to 0.5.1-preview7
+        6. Dependency update from Senparc.Xncf.AgentsManager.Abstractions to 0.2.4-preview4
+        7. Dependency update from Senparc.Xncf.PromptRange.Abstractions to 0.2.4-preview4
+        8. Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
+        [2026-08-13] v0.15.0-preview11 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        [2026-08-13] v0.15.0-preview12 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        [2026-08-13] v0.15.0-preview13 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        [2026-08-13] v0.15.0-preview14 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-08-13] v0.15.0-preview15 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-08-13] v0.15.0-preview16 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-08-13] v0.15.0-preview17 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-08-14] v0.15.0-preview18 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-08-14] v0.15.0-preview19 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        [2026-08-14] v0.15.0-preview20 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        4. Updated module behavior and related support.
+        5. Updated module behavior and related support.
+        [2026-08-17] v0.16.0 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        4. Updated module behavior and related support.
+        5. Updated module behavior and related support.
+        6. Updated module behavior and related support.
+        7. Updated module behavior and related support.
+        8. Updated module behavior and related support.
+        [2026-08-29] v0.17.0 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        [2026-09-15] v0.17.1 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-09-16] v0.17.2 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        [2026-09-17] v0.18.0 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-09-24] v0.18.1 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        [2026-10-05] v0.18.1 feat: add MCP endpoint selection feature in AgentsManager
+        1. Updated Senparc.Xncf.AgentsManager project behavior and integration for the latest feature and reliability improvements.
         [2026-10-06] Fix Agent Studio Razor partial rendering and validate the compiled page with the existing Three.js components.
         [2026-10-06] Add interactive Agent Studio, incremental team membership, quick team creation and task management.
-        [2026-10-09] v0.18.3 统一 Agent Studio 群组与提示配置并完善任务管理交互
-        1、支持群组与 Prompt 配置联动、快速建组、增量成员管理和任务操作
-        2、完善 Studio 页面渲染、Three.js 交互及前端状态管理
-        [2026-10-21] v0.19.0 支持 Agent Skill 绑定、执行权限与工作区策略
-        1、Agent 模板可绑定 Skill、执行权限与 Workspace 策略
-        2、接入 PromptRange Skill 插件，并在对话链路记录 Token 用量
-        3、适配 Senparc.AI.AgentKernel 0.1.15-preview2
+        [2026-10-09] v0.18.3 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-10-21] v0.19.0 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. adapt Senparc.AI.AgentKernel 0.1.15-preview2
         [2026-11-03] v0.19.1 add CLI-generated migrations for Agent Skill bindings and Workspace policy columns.
-        1、增强 Agent Studio、聊天群组配置、任务执行和并发控制
-        2、为聊天任务及 A2A 发布恢复请求租户上下文并隔离缓存
-        3、支持 Agent 模板关联 Skill 和 Workspace 策略
-        4、Dependency update from Senparc.Xncf.AgentsManager.Abstractions to 0.3.1
-        5、Dependency update from Senparc.Xncf.MCP.Abstractions to 0.1.1
-        6、Dependency update from Senparc.Xncf.NeuCharWorkflow.Abstractions to 0.3.1
-        [2026-11-03] v0.19.2 以中文资源为基准统一整理多语言文案
-        1、补齐并校正各语言资源条目，使模块界面文案与中文基准保持一致
-        2、Dependency update from Senparc.Xncf.PromptRange to 0.20.14
-        3、Dependency update from Senparc.Xncf.SenMapic to 0.4.11
-        4、Dependency update from Senparc.Xncf.XncfBuilder to 0.41.8
-        5、Dependency update from Senparc.Xncf.MCP to 0.5.12
-        6、Dependency update from Senparc.Xncf.KnowledgeBase to 0.8.2
-        7、Dependency update from Senparc.Xncf.PromptRange.Abstractions to 0.3.2-preview6
-        8、Dependency update from Senparc.Ncf.AreaBase to 0.23.10
-        [2026-11-11] v0.19.3 升级 Agent Framework 1.28，并支持模板绑定连接器
-        1、群聊广播改为只处理本轮新消息，参与者会话继续累积历史。
-        2、同步 Microsoft.Agents.AI.Workflows 1.28.0 与 A2A 1.28.0-preview.261106.1，等待外部响应时结束当前事件流。
-        3、依赖 Senparc.AI.AgentKernel 0.1.17 与 Senparc.Xncf.MCP 0.5.13。
-        4、Agent 模板可绑定连接器动作，运行时按授权调用。
-        5、新增多数据库迁移，保存 Agent 模板的连接器绑定。
-        6、Register 通过 XncfRegisterText 用稳定资源键解析菜单名称与模块说明。
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        4. Dependency update from Senparc.Xncf.AgentsManager.Abstractions to 0.3.1
+        5. Dependency update from Senparc.Xncf.MCP.Abstractions to 0.1.1
+        6. Dependency update from Senparc.Xncf.NeuCharWorkflow.Abstractions to 0.3.1
+        [2026-11-03] v0.19.2 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Dependency update from Senparc.Xncf.PromptRange to 0.20.14
+        3. Dependency update from Senparc.Xncf.SenMapic to 0.4.11
+        4. Dependency update from Senparc.Xncf.XncfBuilder to 0.41.8
+        5. Dependency update from Senparc.Xncf.MCP to 0.5.12
+        6. Dependency update from Senparc.Xncf.KnowledgeBase to 0.8.2
+        7. Dependency update from Senparc.Xncf.PromptRange.Abstractions to 0.3.2-preview6
+        8. Dependency update from Senparc.Ncf.AreaBase to 0.23.10
+        [2026-11-11] v0.19.3 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        4. Updated module behavior and related support.
+        5. Updated module behavior and related support.
+        6. Updated module behavior and related support.
+        [2026-11-19] v0.19.4 Localized agent management and task surfaces
+        1. Updated localized labels, resource fallbacks, and user-facing messages across affected surfaces.
+        2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

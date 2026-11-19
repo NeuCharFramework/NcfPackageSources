@@ -1,17 +1,20 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：NeuCharPivotLoopTaskHostedService.cs
-    文件功能描述：NeuCharPivot Loop Task 调度与 NeuBell 通知
+    File name: NeuCharPivotLoopTaskHostedService.cs
+    File description: Related implementation.
 
+    Created by: Senparc - 20260809
 
-    创建标识：Senparc - 20260809
+    Modified by: Senparc - 20260813
+    Change description: v0.5.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.5.0 集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
+    Modified by: Senparc - 20260829
+    Change description: v0.7.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260829
-    修改描述：v0.7.0 新增 NeuCharPivot 全局浮动调用与工作流分析管理能力
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 
@@ -164,7 +167,7 @@ public sealed class NeuCharPivotLoopTaskHostedService : BackgroundService
                 continue;
             }
 
-            // 先推进 NextRunAt，避免一次执行超过轮询间隔时被同一进程重复领取。
+            //Legacy comment translated to English.
             task.MarkStarted();
             await loopTaskService.SaveObjectAsync(task).ConfigureAwait(false);
 

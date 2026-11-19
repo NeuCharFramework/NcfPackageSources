@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：AdminChatPromptReferenceAppService.cs
-    文件功能描述：后台聊天 PromptCode 评分应用服务
+    File name: AdminChatPromptReferenceAppService.cs
+    File description: Related implementation.
 
+    Created by: Senparc - 20261104
 
-    创建标识：Senparc - 20261104
+    Modified by: Senparc - 20261105
+    Change description: v0.12.26 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261105
-    修改描述：v0.12.26 提供 PromptCode 的人工与 AI 评分接口
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 using System;

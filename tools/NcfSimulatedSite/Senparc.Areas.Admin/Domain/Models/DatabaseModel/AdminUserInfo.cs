@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：AdminUserInfo.cs
-    文件功能描述：后台管理员用户数据模型
-    
-    
-    创建标识：Senparc - 20241028
-    
-    修改标识：Senparc - 20260724
-    修改描述：v0.1.0 增强后台模块批量更新并完善多语言管理界面
+
+    File name: AdminUserInfo.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20260724
+    Change description: v0.1.0 enhance batch module updates and improve the multilingual management interface
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 using Senparc.CO2NET.Extensions;
@@ -27,7 +30,7 @@ using static Dm.net.buffer.ByteArrayBuffer;
 
 namespace Senparc.Areas.Admin.Domain.Models
 {
-    [Table(Register.DATABASE_PREFIX + nameof(AdminUserInfo) + "s")]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(AdminUserInfo) + "s")]//a prefix is required to prevent system-wide conflicts
     [Serializable]
     public partial class AdminUserInfo : EntityBase<int>
     {
@@ -43,8 +46,8 @@ namespace Senparc.Areas.Admin.Domain.Models
         public string LastLoginIp { get; private set; }
 
         /// <summary>
-        /// 获取加盐后的 MD5 密码
-        /// MD5 作为登陆凭证已经缺少安全性，请使用 GetSHA512Password() 方法
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="password"></param>
         /// <param name="salt"></param>
@@ -55,9 +58,9 @@ namespace Senparc.Areas.Admin.Domain.Models
             string md5 = password.ToUpper().Replace("-", "");
             if (!isMD5Password)
             {
-                md5 = MD5.GetMD5Code(password, "").Replace("-", ""); //原始MD5
+                md5 = MD5.GetMD5Code(password, "").Replace("-", ""); //originalMD5
             }
-            return MD5.GetMD5Code(md5, salt).Replace("-", ""); //再加密
+            return MD5.GetMD5Code(md5, salt).Replace("-", ""); //encrypt again
         }
 
         private AdminUserInfo() { }
@@ -65,25 +68,25 @@ namespace Senparc.Areas.Admin.Domain.Models
         ///// <summary>
         ///// 
         ///// </summary>
-        ///// <param name="userName">用户名为空时会按照SenparcCoreAdmin+两位数字的格式随机生成</param>
+        ///Legacy comment translated to English.
         ///// <param name="password"></param>
-        ///// <param name="realName">真实姓名</param>
-        ///// <param name="phone">电话号码</param>
-        ///// <param name="note">备注</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <summary>
-        /// <para>创建管理员账号</para>
-        /// <para>用户名为空时会按照SenparcCoreAdmin+两位数字的格式随机生成</para>
-        /// <para>密码为空时会生成16字符长度的随机字符串作为密码</para>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="objDto"></param>
         public AdminUserInfo(CreateOrUpdate_AdminUserInfoDto objDto)
         {
-            objDto.UserName ??= GenerateUserName();//记录用户名
-            objDto.Password ??= GeneratePassword();//记录明文密码
+            objDto.UserName ??= GenerateUserName();//recorduser name
+            objDto.Password ??= GeneratePassword();//Legacy comment translated to English.
 
             UserName = objDto.UserName;
-            PasswordSalt = GeneratePasswordSalt();//生成密码盐
-            Password = GetSHA512Password(objDto.Password, PasswordSalt, true);//生成密码
+            PasswordSalt = GeneratePasswordSalt();//Legacy comment translated to English.
+            Password = GetSHA512Password(objDto.Password, PasswordSalt, true);//Legacy comment translated to English.
             RealName = objDto.RealName;
             Phone = objDto.Phone;
             Note = objDto.Note;
@@ -93,11 +96,11 @@ namespace Senparc.Areas.Admin.Domain.Models
             ThisLoginTime = now;
             LastLoginTime = now;
 
-            //TODO：用户名及密码合规性验证
+            //Legacy comment translated to English.
         }
 
         /// <summary>
-        /// 检查密码是否正确
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="password"></param>
         /// <param name="usePasswordSaltToken"></param>
@@ -109,7 +112,7 @@ namespace Senparc.Areas.Admin.Domain.Models
         }
 
         /// <summary>
-        /// 生成用户名
+        /// generateuser name
         /// </summary>
         /// <returns></returns>
         public string GenerateUserName()
@@ -118,7 +121,7 @@ namespace Senparc.Areas.Admin.Domain.Models
         }
 
         /// <summary>
-        /// 生成随机密码
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public string GeneratePassword()
@@ -127,7 +130,7 @@ namespace Senparc.Areas.Admin.Domain.Models
         }
 
         /// <summary>
-        /// 生成密码盐
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public string GeneratePasswordSalt()

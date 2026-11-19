@@ -1,4 +1,8 @@
-﻿function workspaceCodeWords(text, ignoreCase) {
+﻿function adminChatText(key, fallback) {
+  return typeof ncfT === 'function' ? ncfT(key) : fallback;
+}
+
+function workspaceCodeWords(text, ignoreCase) {
   const values = text.split(/\s+/).filter(Boolean);
   return new Set(ignoreCase ? values.map(value => value.toLowerCase()) : values);
 }
@@ -281,7 +285,27 @@ var chatApp = new Vue({
       currentSessionWorkspaceWriteEnabled: false,
       currentSessionWorkspaceCliEnabled: false,
       currentSessionAiModelId: 0,
-      chatMode: 'harness',
+      chatMode: 'plan',
+      chatMaxOutputTokens: 2000,
+      harnessMaxIterations: 32,
+      harnessCapabilities: {
+        todo: true,
+        compaction: true,
+        fileMemory: false,
+        skills: false,
+        webSearch: false
+      },
+      launcherModePopoverOpen: false,
+      chatModePopoverOpen: false,
+      chatCommandMenuOpen: false,
+      chatCommandSuggestions: [
+        { command: '/mode', label: adminChatText('AdminChat.Command.Mode', 'Switch execution mode'), hint: 'simple / plan / execute', values: ['simple', 'plan', 'execute'] },
+        { command: '/help', label: adminChatText('AdminChat.Command.Help', 'Show available commands'), hint: 'Display command help', values: [] },
+        { command: '/maxtoken', label: adminChatText('AdminChat.Command.MaxToken', 'Set output limit'), hint: 'Recommended 256–8000', values: [] },
+        { command: '/maxiterations', label: adminChatText('AdminChat.Command.MaxIterations', 'Set Harness max iterations'), hint: '1–64', values: [] },
+        { command: '/harness', label: adminChatText('AdminChat.Command.Harness', 'Set Harness capabilities'), hint: 'todo / compact / file-memory / skills / web', values: [] }
+      ],
+      chatCommandSuggestionsFor: 'inputMessage',
       trajectoryDialogVisible: false,
       trajectoryLoading: false,
       trajectoryDetailLoading: false,
@@ -410,6 +434,27 @@ var chatApp = new Vue({
     };
   },
   computed: {
+    chatModeOptions() {
+      return [
+        { value: 'simple', label: adminChatText('AdminChat.Mode.Simple', 'Chat'), icon: 'fa fa-comment', description: adminChatText('AdminChat.Mode.SimpleDescription', 'One response without the MAF long-running task loop.') },
+        { value: 'plan', label: adminChatText('AdminChat.Mode.Plan', 'Plan'), icon: 'fa fa-map-signs', description: adminChatText('AdminChat.Mode.PlanDescription', 'Plan first, then call tools as needed and wait for approval.') },
+        { value: 'execute', label: adminChatText('AdminChat.Mode.Execute', 'Execute'), icon: 'fa fa-play', description: adminChatText('AdminChat.Mode.ExecuteDescription', 'Enter MAF execution mode directly for well-defined tasks.') }
+      ];
+    },
+    currentChatModeOption() {
+      return this.chatModeOptions.find(item => item.value === this.chatMode) || this.chatModeOptions[0];
+    },
+    launcherChatModeOption() {
+      return this.chatModeOptions.find(item => item.value === this.launcherChatMode) || this.chatModeOptions[0];
+    },
+    harnessOptionItems() {
+      return [
+        { key: 'todo', label: 'Todo', description: '记录并跟踪任务清单。' },
+        { key: 'compaction', label: '上下文压缩', description: '长任务接近上下文上限时自动整理。' },
+        { key: 'skills', label: 'Agent Skills', description: '加载服务端 Skills 定义和扩展能力。' },
+        { key: 'webSearch', label: 'Hosted Web Search', description: '允许 Harness 使用托管 Web 搜索工具。' }
+      ];
+    },
     isCurrentSessionRunning() {
       return !!this.sessionRuns[this.currentSessionId]
         || (this.isSending && this.runningSessionId === this.currentSessionId);
@@ -581,7 +626,11 @@ var chatApp = new Vue({
     }
     const modeParam = new URLSearchParams(window.location.search || '').get('mode');
     if (modeParam === '0') this.chatMode = 'simple';
-    if (modeParam === '1') this.chatMode = 'harness';
+    if (modeParam === '1') this.chatMode = 'plan';
+    if (modeParam === '2') this.chatMode = 'execute';
+    if (!['0', '1', '2'].includes(modeParam) && Number(this.currentSessionId) > 0) {
+      this.chatMode = this.chatModeFromValue(this.getSessionMode(this.currentSessionId));
+    }
     if (!(Number(this.currentSessionId) > 0)) {
       const linkedSessionId = this.sessionIdFromLocation();
       if (linkedSessionId > 0) this.currentSessionId = linkedSessionId;
@@ -640,7 +689,7 @@ var chatApp = new Vue({
       if (controller) controller.abort();
     });
     if (this.activeRequestController) {
-      // 刷新或离开页面只断开观察，不请求 cancel，服务端任务继续执行。
+      //Legacy comment translated to English.
       this.activeRequestController.abort();
       this.activeRequestController = null;
     }
@@ -656,7 +705,7 @@ var chatApp = new Vue({
         const openPanel = document.querySelector('details.chat-inline-settings[open]');
         if (!openPanel) return;
         const target = event.target;
-        // 模型下拉、Memory 菜单和说明弹层都挂在 body 上，点它们不算离开设置面板。
+        //Legacy comment translated to English.
         if (target && target.closest && target.closest('details.chat-inline-settings, .el-popper, .el-select-dropdown, .el-dropdown-menu, .el-dialog__wrapper, .el-message-box__wrapper, .ncf-doc-help-dialog')) {
           return;
         }
@@ -1029,6 +1078,22 @@ var chatApp = new Vue({
       }
     },
 
+    async openSystemMessagePromptRange() {
+      try {
+        const response = await service.get(
+          '/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.EnsureAdminChatSystemMessagePromptAsync',
+          { customAlert: true });
+        if (!response.data || !response.data.success) {
+          throw new Error(response.data && response.data.errorMessage || 'PromptRange 初始化失败。');
+        }
+        const alias = response.data.data && response.data.data.rangeAlias || 'AdminChat.SystemMessage';
+        const url = '/Admin/PromptRange/Prompt?alias=' + encodeURIComponent(alias);
+        window.open(url, '_blank', 'noopener');
+      } catch (error) {
+        this.$message.error(error.message || '无法打开 PromptRange SystemMessage。');
+      }
+    },
+
     async saveMemory() {
       this.memoryBusy = true;
       try {
@@ -1188,7 +1253,10 @@ var chatApp = new Vue({
       this.currentSessionId = response.data.data.sessionId;
       this.currentSessionAiModelId = this.normalizeAiModelId(this.launcherAiModelId);
       this.setSessionAiModelId(this.currentSessionId, this.currentSessionAiModelId);
-      this.chatMode = this.launcherChatMode;
+      this.chatMode = Number.isInteger(response.data.data.mode)
+        ? this.chatModeFromValue(response.data.data.mode)
+        : this.launcherChatMode;
+      this.setSessionMode(this.currentSessionId, this.chatModeValue(this.chatMode));
       this.syncAdminChatLocation();
       this.inputMessage = this.chatInputText;
       this.chatInputText = '';
@@ -2376,7 +2444,7 @@ var chatApp = new Vue({
           toolName: approval.toolName,
           argumentsJson: approval.argumentsJson || '{}',
           approved,
-          reason: approved ? '管理员允许执行' : '管理员拒绝执行'
+          reason: approval.reason || (approved ? '管理员允许执行' : '管理员拒绝执行')
         });
         if (!(response.data && response.data.success && response.data.data)) {
           throw new Error(response.data && response.data.errorMessage ? response.data.errorMessage : '审批处理失败');
@@ -2406,6 +2474,7 @@ var chatApp = new Vue({
     },
 
     handleChatInputKeydown(event) {
+      if (this.handleSlashCommandKeydown(event, 'inputMessage')) return;
       if (this.handleWorkspaceMentionKeydown(event, 'inputMessage')) return;
       // 保持与首页一致：Ctrl+Enter (Windows/Linux) 或 Cmd+Enter (Mac) 发送。
       if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
@@ -2413,6 +2482,224 @@ var chatApp = new Vue({
         this.sendMessage();
       }
       // 普通 Enter 保留换行行为。
+    },
+
+    chatModeValue(mode) {
+      return mode === 'execute' ? 2 : mode === 'plan' || mode === 'harness' ? 1 : 0;
+    },
+
+    chatModeFromValue(value) {
+      return Number(value) === 2 ? 'execute' : Number(value) === 1 ? 'plan' : 'simple';
+    },
+
+    chatModeLabel(mode) {
+      const option = this.chatModeOptions.find(item => item.value === mode);
+      return option ? option.label : '普通对话';
+    },
+
+    chatModeDescription(mode) {
+      const option = this.chatModeOptions.find(item => item.value === mode);
+      return option ? option.description : '';
+    },
+
+    selectLauncherMode(mode) {
+      const wasSelected = this.launcherChatMode === mode;
+      this.launcherChatMode = mode;
+      this.launcherModePopoverOpen = !wasSelected && mode !== 'simple';
+    },
+
+    selectChatMode(mode) {
+      if (this.isCurrentSessionRunning) return;
+      const wasSelected = this.chatMode === mode;
+      this.chatMode = mode;
+      this.setSessionMode(this.currentSessionId, this.chatModeValue(mode));
+      this.chatModePopoverOpen = !wasSelected && mode !== 'simple';
+      this.syncAdminChatLocation();
+    },
+
+    setHarnessCapability(key, value) {
+      if (!this.harnessCapabilities || !Object.prototype.hasOwnProperty.call(this.harnessCapabilities, key)) return;
+      this.$set(this.harnessCapabilities, key, !!value);
+    },
+
+    buildHarnessOptions() {
+      return {
+        maxIterations: Math.max(1, Math.min(64, Number(this.harnessMaxIterations) || 32)),
+        maxOutputTokens: Math.max(256, Math.min(8000, Number(this.chatMaxOutputTokens) || 2000)),
+        disableTodoProvider: !this.harnessCapabilities.todo,
+        disableCompaction: !this.harnessCapabilities.compaction,
+        enableFileMemory: !!this.harnessCapabilities.fileMemory,
+        enableAgentSkillsProvider: !!this.harnessCapabilities.skills,
+        enableWebSearch: !!this.harnessCapabilities.webSearch
+      };
+    },
+
+    updateHarnessOptionFromCommand(option, value) {
+      const map = {
+        todo: 'todo',
+        compact: 'compaction',
+        'file-memory': 'fileMemory',
+        skills: 'skills',
+        web: 'webSearch',
+        'web-search': 'webSearch'
+      };
+      const key = map[option];
+      if (!key || !['on', 'off'].includes(String(value).toLowerCase())) return false;
+      this.setHarnessCapability(key, String(value).toLowerCase() === 'on');
+      return true;
+    },
+
+    slashCommandText(field) {
+      return field === 'chatInputText' ? this.chatInputText : this.inputMessage;
+    },
+
+    slashCommandOptions(field) {
+      const text = (this.slashCommandText(field) || '').trimStart();
+      if (!text.startsWith('/')) return [];
+      const parts = text.split(/\s+/);
+      const command = (parts[0] || '').toLowerCase();
+      if (command === '/mode') {
+        const prefix = (parts[1] || '').toLowerCase();
+        return [
+          { value: '/mode simple', label: 'Simple', hint: '普通单轮对话' },
+          { value: '/mode plan', label: 'Plan', hint: 'MAF 计划模式' },
+          { value: '/mode execute', label: 'Execute', hint: 'MAF 执行模式' }
+        ].filter(item => !prefix || item.value.split(' ')[1].startsWith(prefix));
+      }
+      if (command === '/harness') {
+        const prefix = (parts[1] || '').toLowerCase();
+        const status = key => this.harnessCapabilities[key] ? 'on' : 'off';
+        return [
+          { value: '/harness todo on', label: `Todo → on（当前 ${status('todo')}）`, hint: '保留任务清单' },
+          { value: '/harness todo off', label: `Todo → off（当前 ${status('todo')}）`, hint: '下一轮不加载 Todo Provider' },
+          { value: '/harness compact on', label: `上下文压缩 → on（当前 ${status('compaction')}）`, hint: '推荐保持开启' },
+          { value: '/harness compact off', label: `上下文压缩 → off（当前 ${status('compaction')}）`, hint: '仅用于调试' },
+          { value: '/harness file-memory on', label: `FileMemory → on（当前 ${status('fileMemory')}）`, hint: '会话文件记忆' },
+          { value: '/harness file-memory off', label: `FileMemory → off（当前 ${status('fileMemory')}）`, hint: '默认关闭' },
+          { value: '/harness skills on', label: `Agent Skills → on（当前 ${status('skills')}）`, hint: '加载服务端 Skills' },
+          { value: '/harness skills off', label: `Agent Skills → off（当前 ${status('skills')}）`, hint: '默认关闭' },
+          { value: '/harness web on', label: `Hosted Web Search → on（当前 ${status('webSearch')}）`, hint: '可能产生外部访问/费用' },
+          { value: '/harness web off', label: `Hosted Web Search → off（当前 ${status('webSearch')}）`, hint: '默认关闭' }
+        ].filter(item => !prefix || item.value.split(' ')[1].startsWith(prefix));
+      }
+      if (parts.length > 1) return [];
+      const prefix = command;
+      return this.chatCommandSuggestions
+        .filter(item => item.command.startsWith(prefix))
+        .map(item => ({ value: item.command, label: item.label, hint: item.hint }));
+    },
+
+    updateSlashCommandMenu(field) {
+      const options = this.slashCommandOptions(field);
+      this.chatCommandSuggestionsFor = field;
+      this.chatCommandMenuOpen = options.length > 0;
+    },
+
+    selectSlashCommand(field, option) {
+      const value = option && option.value ? option.value + ' ' : '';
+      if (field === 'chatInputText') this.chatInputText = value;
+      else this.inputMessage = value;
+      this.chatCommandSuggestionsFor = field;
+      this.chatCommandMenuOpen = true;
+      this.$nextTick(() => {
+        const input = this.$refs[field === 'chatInputText' ? 'promptLauncherInput' : 'promptMessageInput'];
+        const textarea = input && input.$el && input.$el.querySelector('textarea');
+        if (textarea) {
+          textarea.focus();
+          textarea.setSelectionRange(value.length, value.length);
+        }
+      });
+    },
+
+    handleSlashCommandKeydown(event, field) {
+      const text = (this.slashCommandText(field) || '').trim();
+      if (event.key === 'Escape' && this.chatCommandMenuOpen) {
+        this.chatCommandMenuOpen = false;
+        event.preventDefault();
+        return true;
+      }
+      if (event.key !== 'Enter' || !text.startsWith('/')) return false;
+
+      const parts = text.split(/\s+/);
+      const command = (parts.shift() || '').toLowerCase();
+      const argument = parts.shift() || '';
+      if (command === '/mode') {
+        if (!argument) {
+          this.updateSlashCommandMenu(field);
+          event.preventDefault();
+          return true;
+        }
+        if (!['simple', 'plan', 'execute'].includes(argument.toLowerCase())) {
+          this.$message.error('模式只能是 simple、plan 或 execute。');
+          event.preventDefault();
+          return true;
+        }
+        const mode = argument.toLowerCase();
+        if (field === 'chatInputText') this.launcherChatMode = mode;
+        else this.chatMode = mode;
+        const remainder = parts.join(' ').trim();
+        if (field === 'chatInputText') this.chatInputText = remainder;
+        else this.inputMessage = remainder;
+        this.chatCommandMenuOpen = false;
+        this.$message.success(`已切换到 ${mode} 模式。`);
+        return remainder.length > 0 ? false : true;
+      }
+      if (command === '/maxiterations') {
+        const value = Number(argument);
+        if (!Number.isInteger(value) || value < 1 || value > 64) {
+          this.$message.error('maxiterations 必须是 1 到 64 之间的整数。');
+          event.preventDefault();
+          return true;
+        }
+        this.harnessMaxIterations = value;
+        if (field === 'chatInputText') this.chatInputText = '';
+        else this.inputMessage = '';
+        this.chatCommandMenuOpen = false;
+        this.$message.success(`Harness 最大迭代次数已设为 ${value}。`);
+        event.preventDefault();
+        return true;
+      }
+      if (command === '/harness') {
+        const option = (argument || '').toLowerCase();
+        const value = (parts.shift() || '').toLowerCase();
+        if (!this.updateHarnessOptionFromCommand(option, value)) {
+          this.$message.error('用法：/harness todo|compact|file-memory|skills|web on|off');
+          event.preventDefault();
+          return true;
+        }
+        if (field === 'chatInputText') this.chatInputText = '';
+        else this.inputMessage = '';
+        this.chatCommandMenuOpen = false;
+        this.$message.success(`Harness ${option} 已${value === 'on' ? '开启' : '关闭'}。`);
+        event.preventDefault();
+        return true;
+      }
+      if (command === '/help') {
+        this.chatCommandMenuOpen = false;
+        if (field === 'chatInputText') this.chatInputText = '';
+        else this.inputMessage = '';
+        this.$message.info('/mode simple|plan|execute · /maxiterations 1-64 · /harness <能力> on|off · /maxtoken 256-8000');
+        event.preventDefault();
+        return true;
+      }
+      if (command === '/maxtoken') {
+        const value = Number(argument);
+        if (!Number.isInteger(value) || value < 256 || value > 8000) {
+          this.$message.error('maxtoken 必须是 256 到 8000 之间的整数。');
+          event.preventDefault();
+          return true;
+        }
+        this.chatMaxOutputTokens = value;
+        if (field === 'chatInputText') this.chatInputText = '';
+        else this.inputMessage = '';
+        this.chatCommandMenuOpen = false;
+        this.$message.success(`后续普通对话的输出上限已设为 ${value} tokens。`);
+        event.preventDefault();
+        return true;
+      }
+      this.$message.error(`未知命令：${command}。输入 /help 查看可用命令。`);
+      event.preventDefault();
+      return true;
     },
 
     handleWorkspaceMentionEdit(field, event) {
@@ -2888,10 +3175,13 @@ var chatApp = new Vue({
         ? this.sessionDrafts[id] : '';
     },
 
-    async openCreatedChatSession(sessionId, message, references) {
+    async openCreatedChatSession(sessionId, message, references, responseMode) {
       this.currentSessionId = sessionId;
       this.currentSessionAiModelId = this.normalizeAiModelId(this.launcherAiModelId);
-      this.chatMode = this.launcherChatMode;
+      this.chatMode = Number.isInteger(responseMode)
+        ? this.chatModeFromValue(responseMode)
+        : this.launcherChatMode;
+      this.setSessionMode(sessionId, this.chatModeValue(this.chatMode));
       this.syncAdminChatLocation();
       this.messageList = [];
       this.inputMessage = message || '';
@@ -3341,7 +3631,9 @@ var chatApp = new Vue({
           aiModelId: this.normalizeAiModelId(this.currentSessionAiModelId),
           content: messageContent,
           promptReferences,
-          mode: this.chatMode === 'harness' ? 1 : 0,
+          mode: this.chatModeValue(this.chatMode),
+          maxOutputTokens: this.chatMaxOutputTokens,
+          harnessOptions: this.buildHarnessOptions(),
           attachments: sendingAttachments.map(attachment => ({
             relativePath: attachment.relativePath, eTag: attachment.eTag,
             visionETag: attachment.visionETag || '', useVision: !!attachment.useVision
@@ -3498,7 +3790,7 @@ var chatApp = new Vue({
       const sessionId = Number(this.currentSessionId) || 0;
       if (sessionId > 0) {
         url.searchParams.set('sessionId', String(sessionId));
-        url.searchParams.set('mode', this.chatMode === 'harness' ? '1' : '0');
+        url.searchParams.set('mode', String(this.chatModeValue(this.chatMode)));
         url.hash = 'session-' + sessionId;
       } else {
         url.searchParams.delete('sessionId');
@@ -3520,6 +3812,7 @@ var chatApp = new Vue({
       await this.deletePendingAttachments();
       this.clearPendingAttachments();
       this.currentSessionId = sessionId;
+      this.chatMode = this.chatModeFromValue(this.getSessionMode(sessionId));
       this.syncAdminChatLocation();
       this.clearSessionUnread(sessionId);
       this.currentSessionStatus = 0;

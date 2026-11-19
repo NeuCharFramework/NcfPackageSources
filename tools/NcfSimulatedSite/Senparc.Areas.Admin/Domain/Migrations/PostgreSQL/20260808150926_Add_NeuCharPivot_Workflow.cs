@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：20260808150926_Add_NeuCharPivot_Workflow.cs
-    文件功能描述：数据库迁移与模型快照
 
+    File name: 20260808150926_Add_NeuCharPivot_Workflow.cs
+    File description: database migration and model snapshot
 
-    创建标识：Senparc - 20260809
+    Created by: Senparc - 20260809
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.5.0 集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
+    Modified by: Senparc - 20260813
+    Change description: v0.5.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -27,118 +27,218 @@ namespace Senparc.Areas.Admin.Domain.Migrations.PostgreSQL
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             /* Provider-version drift intentionally excluded from this feature migration.
+
                NeuCharPivot must not rewrite timestamp semantics of pre-existing tables.
+
             migrationBuilder.AlterColumn<DateTime>(
+
                 name: "ThisLoginTime",
+
                 table: "ADMIN_AdminUserInfos",
+
                 type: "timestamp with time zone",
+
                 nullable: false,
+
                 oldClrType: typeof(DateTime),
+
                 oldType: "timestamp without time zone");
 
+
             migrationBuilder.AlterColumn<DateTime>(
+
                 name: "LastUpdateTime",
+
                 table: "ADMIN_AdminUserInfos",
+
                 type: "timestamp with time zone",
+
                 nullable: false,
+
                 oldClrType: typeof(DateTime),
+
                 oldType: "timestamp without time zone");
 
+
             migrationBuilder.AlterColumn<DateTime>(
+
                 name: "LastLoginTime",
+
                 table: "ADMIN_AdminUserInfos",
+
                 type: "timestamp with time zone",
+
                 nullable: false,
+
                 oldClrType: typeof(DateTime),
+
                 oldType: "timestamp without time zone");
 
+
             migrationBuilder.AlterColumn<DateTime>(
+
                 name: "AddTime",
+
                 table: "ADMIN_AdminUserInfos",
+
                 type: "timestamp with time zone",
+
                 nullable: false,
+
                 oldClrType: typeof(DateTime),
+
                 oldType: "timestamp without time zone");
 
+
             migrationBuilder.AlterColumn<DateTime>(
+
                 name: "LastUpdateTime",
+
                 table: "ADMIN_AdminChatSessionModule",
+
                 type: "timestamp with time zone",
+
                 nullable: false,
+
                 oldClrType: typeof(DateTime),
+
                 oldType: "timestamp without time zone");
 
+
             migrationBuilder.AlterColumn<DateTime>(
+
                 name: "AddedTime",
+
                 table: "ADMIN_AdminChatSessionModule",
+
                 type: "timestamp with time zone",
+
                 nullable: false,
+
                 oldClrType: typeof(DateTime),
+
                 oldType: "timestamp without time zone");
 
+
             migrationBuilder.AlterColumn<DateTime>(
+
                 name: "AddTime",
+
                 table: "ADMIN_AdminChatSessionModule",
+
                 type: "timestamp with time zone",
+
                 nullable: false,
+
                 oldClrType: typeof(DateTime),
+
                 oldType: "timestamp without time zone");
 
+
             migrationBuilder.AlterColumn<DateTime>(
+
                 name: "LastUpdateTime",
+
                 table: "ADMIN_AdminChatSession",
+
                 type: "timestamp with time zone",
+
                 nullable: false,
+
                 oldClrType: typeof(DateTime),
+
                 oldType: "timestamp without time zone");
 
+
             migrationBuilder.AlterColumn<DateTime>(
+
                 name: "LastMessageTime",
+
                 table: "ADMIN_AdminChatSession",
+
                 type: "timestamp with time zone",
+
                 nullable: false,
+
                 oldClrType: typeof(DateTime),
+
                 oldType: "timestamp without time zone");
 
+
             migrationBuilder.AlterColumn<DateTime>(
+
                 name: "AddTime",
+
                 table: "ADMIN_AdminChatSession",
+
                 type: "timestamp with time zone",
+
                 nullable: false,
+
                 oldClrType: typeof(DateTime),
+
                 oldType: "timestamp without time zone");
 
+
             migrationBuilder.AlterColumn<DateTime>(
+
                 name: "LastUpdateTime",
+
                 table: "ADMIN_AdminChatMessage",
+
                 type: "timestamp with time zone",
+
                 nullable: false,
+
                 oldClrType: typeof(DateTime),
+
                 oldType: "timestamp without time zone");
 
+
             migrationBuilder.AlterColumn<DateTime>(
+
                 name: "AddTime",
+
                 table: "ADMIN_AdminChatMessage",
+
                 type: "timestamp with time zone",
+
                 nullable: false,
+
                 oldClrType: typeof(DateTime),
+
                 oldType: "timestamp without time zone");
 
+
             migrationBuilder.AlterColumn<DateTime>(
+
                 name: "LastUpdateTime",
+
                 table: "ADMIN_AdminAuthConfig",
+
                 type: "timestamp with time zone",
+
                 nullable: false,
+
                 oldClrType: typeof(DateTime),
+
                 oldType: "timestamp without time zone");
 
+
             migrationBuilder.AlterColumn<DateTime>(
+
                 name: "AddTime",
+
                 table: "ADMIN_AdminAuthConfig",
+
                 type: "timestamp with time zone",
+
                 nullable: false,
+
                 oldClrType: typeof(DateTime),
+
                 oldType: "timestamp without time zone");
+
             */
 
             migrationBuilder.CreateTable(
@@ -305,117 +405,216 @@ namespace Senparc.Areas.Admin.Domain.Migrations.PostgreSQL
                 name: "ADMIN_NeuCharWorkflow");
 
             /* Counterpart of the intentionally excluded provider-version drift above.
+
             migrationBuilder.AlterColumn<DateTime>(
+
                 name: "ThisLoginTime",
+
                 table: "ADMIN_AdminUserInfos",
+
                 type: "timestamp without time zone",
+
                 nullable: false,
+
                 oldClrType: typeof(DateTime),
+
                 oldType: "timestamp with time zone");
 
+
             migrationBuilder.AlterColumn<DateTime>(
+
                 name: "LastUpdateTime",
+
                 table: "ADMIN_AdminUserInfos",
+
                 type: "timestamp without time zone",
+
                 nullable: false,
+
                 oldClrType: typeof(DateTime),
+
                 oldType: "timestamp with time zone");
 
+
             migrationBuilder.AlterColumn<DateTime>(
+
                 name: "LastLoginTime",
+
                 table: "ADMIN_AdminUserInfos",
+
                 type: "timestamp without time zone",
+
                 nullable: false,
+
                 oldClrType: typeof(DateTime),
+
                 oldType: "timestamp with time zone");
 
+
             migrationBuilder.AlterColumn<DateTime>(
+
                 name: "AddTime",
+
                 table: "ADMIN_AdminUserInfos",
+
                 type: "timestamp without time zone",
+
                 nullable: false,
+
                 oldClrType: typeof(DateTime),
+
                 oldType: "timestamp with time zone");
 
+
             migrationBuilder.AlterColumn<DateTime>(
+
                 name: "LastUpdateTime",
+
                 table: "ADMIN_AdminChatSessionModule",
+
                 type: "timestamp without time zone",
+
                 nullable: false,
+
                 oldClrType: typeof(DateTime),
+
                 oldType: "timestamp with time zone");
 
+
             migrationBuilder.AlterColumn<DateTime>(
+
                 name: "AddedTime",
+
                 table: "ADMIN_AdminChatSessionModule",
+
                 type: "timestamp without time zone",
+
                 nullable: false,
+
                 oldClrType: typeof(DateTime),
+
                 oldType: "timestamp with time zone");
 
+
             migrationBuilder.AlterColumn<DateTime>(
+
                 name: "AddTime",
+
                 table: "ADMIN_AdminChatSessionModule",
+
                 type: "timestamp without time zone",
+
                 nullable: false,
+
                 oldClrType: typeof(DateTime),
+
                 oldType: "timestamp with time zone");
 
+
             migrationBuilder.AlterColumn<DateTime>(
+
                 name: "LastUpdateTime",
+
                 table: "ADMIN_AdminChatSession",
+
                 type: "timestamp without time zone",
+
                 nullable: false,
+
                 oldClrType: typeof(DateTime),
+
                 oldType: "timestamp with time zone");
 
+
             migrationBuilder.AlterColumn<DateTime>(
+
                 name: "LastMessageTime",
+
                 table: "ADMIN_AdminChatSession",
+
                 type: "timestamp without time zone",
+
                 nullable: false,
+
                 oldClrType: typeof(DateTime),
+
                 oldType: "timestamp with time zone");
 
+
             migrationBuilder.AlterColumn<DateTime>(
+
                 name: "AddTime",
+
                 table: "ADMIN_AdminChatSession",
+
                 type: "timestamp without time zone",
+
                 nullable: false,
+
                 oldClrType: typeof(DateTime),
+
                 oldType: "timestamp with time zone");
 
+
             migrationBuilder.AlterColumn<DateTime>(
+
                 name: "LastUpdateTime",
+
                 table: "ADMIN_AdminChatMessage",
+
                 type: "timestamp without time zone",
+
                 nullable: false,
+
                 oldClrType: typeof(DateTime),
+
                 oldType: "timestamp with time zone");
 
+
             migrationBuilder.AlterColumn<DateTime>(
+
                 name: "AddTime",
+
                 table: "ADMIN_AdminChatMessage",
+
                 type: "timestamp without time zone",
+
                 nullable: false,
+
                 oldClrType: typeof(DateTime),
+
                 oldType: "timestamp with time zone");
 
+
             migrationBuilder.AlterColumn<DateTime>(
+
                 name: "LastUpdateTime",
+
                 table: "ADMIN_AdminAuthConfig",
+
                 type: "timestamp without time zone",
+
                 nullable: false,
+
                 oldClrType: typeof(DateTime),
+
                 oldType: "timestamp with time zone");
 
+
             migrationBuilder.AlterColumn<DateTime>(
+
                 name: "AddTime",
+
                 table: "ADMIN_AdminAuthConfig",
+
                 type: "timestamp without time zone",
+
                 nullable: false,
+
                 oldClrType: typeof(DateTime),
+
                 oldType: "timestamp with time zone");
+
             */
         }
     }

@@ -2,117 +2,120 @@
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
-		<Version>0.39.8</Version>
-		<PackageReleaseNotes>			[2026-07-01] v0.21.5 Dependency update from Senparc.Xncf.AgentsManager to 0.11.0-preview2
-			[2026-07-02] v0.21.5 支持流式输出并优化交互体验，升级 Senparc.AI.AgentKernel 并完成兼容性适配
-			1、支持流式输出并优化交互体验
-			2、升级 Senparc.AI.AgentKernel 并完成兼容性适配
-			3、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
-			[2026-07-05] v0.21.6 重构系统配置初始化与更新流程并统一模型处理，补充配置与工程实现细节
-			1、重构系统配置初始化与更新流程并统一模型处理
-			2、补充配置与工程实现细节
-			[2026-07-05] v0.21.7 重构系统配置初始化与更新流程并统一模型处理，补充配置与工程实现细节
-			1、重构系统配置初始化与更新流程并统一模型处理
-			2、补充配置与工程实现细节
-			[2026-07-07] v0.21.8 Dependency updates from upstream modules
-			1、Dependency update from Senparc.Xncf.AIKernel to 0.13.5-preview4
-			2、Dependency update from Senparc.Xncf.PromptRange to 0.16.5-preview4
-			3、Dependency update from Senparc.Xncf.SystemManager to 0.14.2-preview2
-			4、Dependency update from Senparc.Areas.Admin to 0.0.5
-			5、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
-			[2026-07-17] v0.22.0 完善站点页面、语言切换与共享脚本本地化
-			1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
-			2、同步管理页面与前端交互文案的多语言显示
-			3、补充并统一多语言资源键及资源文件
-			[2026-07-21] v0.34.0 完善站点页面、语言切换与共享脚本本地化
-			1、增强语言切换、共享页面及前端资源的多语言显示
-			2、改进剪贴板与外部链接导航处理，兼容桌面内嵌 WebView
-			[2026-07-29] v0.34.1 完善站点初始化状态、浏览器导航与多语言提示
-			1、补充初始化状态和本地化提示资源，改善安装完成后的站点跳转
-			2、优化桌面内嵌 WebView 的剪贴板、外部链接和不完整安装状态处理
-			[2026-07-31] v0.34.2 升级宿主的 Senparc.AI 兼容依赖
-			1、升级 Senparc.AI 组件版本以适配 CO2NET 4.2.0 二进制接口
-			[2026-08-04] v0.35.0 新增数据库升级维护流程与多平台下载入口
-			1、新增数据库升级命令行选项、协调器、运行状态、中间件与维护页面
-			2、新增 NCF Runtime 与 NcfDesktop 下载页及发布元数据
-			[2026-08-08] v0.35.1 优化数据库升级维护页响应头并同步桌面发布元数据
-			1、数据库升级维护页改为返回无缓存与 noindex 响应头，避免维护态被缓存或收录
-			2、同步 latest-desktop-release 发布元数据
-			[2026-08-13] v0.36.0 集成工作流模块与 A2A 发布配置并修复认证持久化
-			1、注册 NeuCharWorkflow 模块及数据库服务，支持工作流运行能力
-			2、增加 A2A 发布配置并持久化数据保护密钥，改善管理员登录恢复
-			[2026-08-15] v0.36.1 适配工作流、A2A 与预览模块宿主配置
-			1、更新模拟站点模块注册和运行配置，支持当前 AgentsManager、NeuCharWorkflow、Sandbox 与 XncfBuilder 组合
-			2、更新 NCF Desktop 发布清单至 0.10.1-build10066，同步各平台安装包链接与体积
-			3、Dependency update from Senparc.Xncf.AgentsManager to 0.16.0
-			4、Dependency update from Senparc.Xncf.Sandbox to 0.2.0
-			[2026-08-22] v0.37.0 集成管理端 Chat 工作流与最新桌面发布信息
-			1、同步模拟站点配置和 Admin Chat 工作流能力，保持任务、模型与管理端交互兼容
-			2、更新桌面发布清单和静态资源版本，确保站点加载当前发布构建
-			[2026-08-29] v0.38.0 增强发布下载页的来源选择与完整性提示
-			1、新增自动、本地和 GitHub 下载源选择，支持用户按场景切换发布来源
-			2、展示发布包 MD5 指纹并补充多语言提示，帮助用户核验下载内容
-			[2026-09-15] v0.39.0 新增宿主安全防护与 MySQL 数据库集成
-			1、新增 Cloudflare 防护中间件和固定窗口限流，支持宿主按配置限制高频请求
-			2、接入 MySQL 数据库项目引用，保持模拟站点多数据库运行组合完整
-			[2026-09-16] v0.39.1 更新模拟站点 NeuBell 配置与桌面发布清单
-			1、增加 NeuBell WebHook BaseUrl 配置，支持相对链接渲染为绝对链接
-			2、同步桌面发布版本、资产地址、文件大小与校验信息
-			[2026-09-17] v0.39.2 适配共享 AgentKernel 预览依赖版本
-			1、同步 Senparc.AI.AgentKernel 至 0.1.14-preview5
-			2、保持站点宿主与 AI 模块加载兼容
-			[2026-10-05] v0.39.3 feat: enhance WeixinClaw integration with new message handling and UI improvements
-			1、Updated Senparc.Web project behavior and integration for the latest feature and reliability improvements.
-			[2026-10-09] v0.39.4 Dependency update from Senparc.Xncf.AIKernel to 0.16.4
-			[2026-11-03] v0.39.5 排除工作区运行时脚本参与编译，并适配 AgentKernel 0.1.15-preview2
-			1、编译时排除 App_Data 下的运行时脚本，避免工作区产物进入宿主程序集
-			2、适配 Senparc.AI.AgentKernel 0.1.15-preview2
-			3、完善站点数据库升级协调与 Workspace 模块支持
-			4、Dependency update from Senparc.Ncf.Database.MySql to 0.20.11
-			5、Dependency update from Senparc.Ncf.Database.SqlServer to 0.20.11
-			6、Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.11
-			[2026-11-03] Receive renamed WorkspaceAgent runtime files transitively for build and publish without hard-coded output paths.
-			[2026-11-05] v0.39.7 Merged Developer-MAF-V3 latest code into FineTuning line (merge without conflicts)
-			1、AdminChat bilingual documentation help and event layout management
-			2、WorkspaceAgent project rename with Docker support
-			3、Added Senparc.Xncf.FileManager.Abstractions project; enhanced NuGet packaging and validation process
-			4、FineTuning line kept: CUDA device/dtype validation for model loading
-			5、补齐并校正各语言资源条目，使站点共享文案与中文基准保持一致
-			6、Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.12
-			7、Dependency update from Senparc.Ncf.Database.SqlServer to 0.20.12
-			8、Dependency update from Senparc.Ncf.Database.MySql to 0.20.12
-			9、Dependency update from Senparc.Xncf.AgentsManager to 0.19.2
-			10、Dependency update from Senparc.Xncf.AIKernel to 0.17.2
-			11、Dependency update from Senparc.Xncf.DatabaseToolkit to 0.27.11
-			12、Dependency update from Senparc.Xncf.DynamicData to 0.7.10
-			13、Dependency update from Senparc.Xncf.DesktopBridge to 0.4.10
-			14、Dependency update from Senparc.Xncf.FileManager to 0.8.3
-			15、Dependency update from Senparc.Xncf.KnowledgeBase to 0.8.2
-			16、Dependency update from Senparc.Xncf.MCP to 0.5.12
-			17、Dependency update from Senparc.Xncf.NeuCharWorkflow to 0.4.5
-			18、Dependency update from Senparc.Xncf.FirmwareUpdate to 0.4.9
-			19、Dependency update from Senparc.Xncf.PromptRange to 0.20.14
-			20、Dependency update from Senparc.Xncf.Sandbox to 0.4.2
-			21、Dependency update from Senparc.Xncf.Swagger to 0.20.10
-			22、Dependency update from Senparc.Xncf.Terminal to 0.22.12
-			23、Dependency update from Senparc.Xncf.WeixinManager to 0.24.18
-			24、Dependency update from Senparc.Xncf.XncfBuilder to 0.41.8
-			25、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
-			26、Dependency update from Senparc.Xncf.Menu to 0.14.12
-			27、Dependency update from Senparc.Xncf.SystemCore to 0.14.12
-			28、Dependency update from Senparc.Xncf.SystemManager to 0.15.12
-			29、Dependency update from Senparc.Xncf.SystemPermission to 0.15.12
-			30、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.12
-			31、Dependency update from Senparc.Areas.Admin to 0.12.26
-			32、Dependency update from Senparc.Xncf.Accounts to 0.3.12
-			33、Dependency update from Senparc.Xncf.Installer to 0.5.13
-			34、Dependency update from Template_OrgName.Xncf.Template_XncfName to 1.1.14
-			[2026-11-11] v0.39.8 宿主语言切换改用统一文化列表，并升级 Agent Framework 依赖
-			1、语言切换使用 NcfLocalizationOptions 的支持文化、默认文化和规范化结果。
-			2、共享 AI 依赖升级到 Senparc.AI.AgentKernel 0.1.17、Microsoft Agent Framework 1.28.0 与 OpenAI 2.14.0。
-			3、Dependency update from Senparc.Xncf.NeuCharWorkflow to 0.4.6
-			4、Dependency update from Senparc.Areas.Admin to 0.12.28
-			5、Dependency update from Senparc.Xncf.Installer to 0.5.14
+		<Version>0.39.9</Version>
+		<PackageReleaseNotes>[2026-07-01] v0.21.5 Dependency update from Senparc.Xncf.AgentsManager to 0.11.0-preview2
+		    [2026-07-02] v0.21.5 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    3. Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
+		    [2026-07-05] v0.21.6 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-07-05] v0.21.7 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-07-07] v0.21.8 Dependency updates from upstream modules
+		    1. Dependency update from Senparc.Xncf.AIKernel to 0.13.5-preview4
+		    2. Dependency update from Senparc.Xncf.PromptRange to 0.16.5-preview4
+		    3. Dependency update from Senparc.Xncf.SystemManager to 0.14.2-preview2
+		    4. Dependency update from Senparc.Areas.Admin to 0.0.5
+		    5. Updated module behavior and related support.
+		    [2026-07-17] v0.22.0 Updated module behavior and related support.
+		    1. integrateshared resource-localization mechanism, supportmodulefeature textdisplay dynamically according to the current culture
+		    2. Updated module behavior and related support.
+		    3. Updated module behavior and related support.
+		    [2026-07-21] v0.34.0 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-07-29] v0.34.1 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-07-31] v0.34.2 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    [2026-08-04] v0.35.0 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-08-08] v0.35.1 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-08-13] v0.36.0 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-08-15] v0.36.1 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    3. Dependency update from Senparc.Xncf.AgentsManager to 0.16.0
+		    4. Dependency update from Senparc.Xncf.Sandbox to 0.2.0
+		    [2026-08-22] v0.37.0 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-08-29] v0.38.0 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-09-15] v0.39.0 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-09-16] v0.39.1 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-09-17] v0.39.2 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-10-05] v0.39.3 feat: enhance WeixinClaw integration with new message handling and UI improvements
+		    1. Updated Senparc.Web project behavior and integration for the latest feature and reliability improvements.
+		    [2026-10-09] v0.39.4 Dependency update from Senparc.Xncf.AIKernel to 0.16.4
+		    [2026-11-03] v0.39.5 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. adapt Senparc.AI.AgentKernel 0.1.15-preview2
+		    3. Updated module behavior and related support.
+		    4. Dependency update from Senparc.Ncf.Database.MySql to 0.20.11
+		    5. Dependency update from Senparc.Ncf.Database.SqlServer to 0.20.11
+		    6. Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.11
+		    [2026-11-03] Receive renamed WorkspaceAgent runtime files transitively for build and publish without hard-coded output paths.
+		    [2026-11-05] v0.39.7 Merged Developer-MAF-V3 latest code into FineTuning line (merge without conflicts)
+		    1. AdminChat bilingual documentation help and event layout management
+		    2. WorkspaceAgent project rename with Docker support
+		    3. Added Senparc.Xncf.FileManager.Abstractions project; enhanced NuGet packaging and validation process
+		    4. FineTuning line kept: CUDA device/dtype validation for model loading
+		    5. Updated module behavior and related support.
+		    6. Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.12
+		    7. Dependency update from Senparc.Ncf.Database.SqlServer to 0.20.12
+		    8. Dependency update from Senparc.Ncf.Database.MySql to 0.20.12
+		    9. Dependency update from Senparc.Xncf.AgentsManager to 0.19.2
+		    10. Dependency update from Senparc.Xncf.AIKernel to 0.17.2
+		    11. Dependency update from Senparc.Xncf.DatabaseToolkit to 0.27.11
+		    12. Dependency update from Senparc.Xncf.DynamicData to 0.7.10
+		    13. Dependency update from Senparc.Xncf.DesktopBridge to 0.4.10
+		    14. Dependency update from Senparc.Xncf.FileManager to 0.8.3
+		    15. Dependency update from Senparc.Xncf.KnowledgeBase to 0.8.2
+		    16. Dependency update from Senparc.Xncf.MCP to 0.5.12
+		    17. Dependency update from Senparc.Xncf.NeuCharWorkflow to 0.4.5
+		    18. Dependency update from Senparc.Xncf.FirmwareUpdate to 0.4.9
+		    19. Dependency update from Senparc.Xncf.PromptRange to 0.20.14
+		    20. Dependency update from Senparc.Xncf.Sandbox to 0.4.2
+		    21. Dependency update from Senparc.Xncf.Swagger to 0.20.10
+		    22. Dependency update from Senparc.Xncf.Terminal to 0.22.12
+		    23. Dependency update from Senparc.Xncf.WeixinManager to 0.24.18
+		    24. Dependency update from Senparc.Xncf.XncfBuilder to 0.41.8
+		    25. Dependency update from Senparc.Xncf.AreasBase to 0.13.12
+		    26. Dependency update from Senparc.Xncf.Menu to 0.14.12
+		    27. Dependency update from Senparc.Xncf.SystemCore to 0.14.12
+		    28. Dependency update from Senparc.Xncf.SystemManager to 0.15.12
+		    29. Dependency update from Senparc.Xncf.SystemPermission to 0.15.12
+		    30. Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.12
+		    31. Dependency update from Senparc.Areas.Admin to 0.12.26
+		    32. Dependency update from Senparc.Xncf.Accounts to 0.3.12
+		    33. Dependency update from Senparc.Xncf.Installer to 0.5.13
+		    34. Dependency update from Template_OrgName.Xncf.Template_XncfName to 1.1.14
+		    [2026-11-11] v0.39.8 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    3. Dependency update from Senparc.Xncf.NeuCharWorkflow to 0.4.6
+		    4. Dependency update from Senparc.Areas.Admin to 0.12.28
+		    5. Dependency update from Senparc.Xncf.Installer to 0.5.14
+		    [2026-11-19] v0.39.9 Updated module behavior, localization metadata, and English source comments
+		    1. Updated localized labels, resource fallbacks, and user-facing messages across affected surfaces.
+		    2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
 		</PackageReleaseNotes>
 		<AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
 		<TypeScriptToolsVersion>4.1</TypeScriptToolsVersion>
@@ -188,10 +191,10 @@
 		<ProjectReference Include="..\Senparc.Areas.Admin\Senparc.Areas.Admin.csproj" />
 		<ProjectReference Include="..\Senparc.Aspire.ServiceDefaults\Senparc.Aspire.ServiceDefaults.csproj" />
 		<ProjectReference Include="..\Senparc.Xncf.Accounts\Senparc.Xncf.Accounts.csproj" />
-		<ProjectReference Include="..\Senparc.Xncf.Installer\Senparc.Xncf.Installer.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.Installer\[5930]Senparc.Xncf.Installer.csproj" />
 		<ProjectReference Include="..\Template_OrgName.Xncf.Template_XncfName\Template_OrgName.Xncf.Template_XncfName.csproj" />
 	</ItemGroup>
-	<!-- 开发环境配置不随发布输出，避免把本机密钥/连接串带到生产包 -->
+	<!-- configurationpublishoutput, local machinesecret/connection -->
 	<ItemGroup>
 		<Content Update="appsettings.Development.json">
 			<CopyToPublishDirectory>Never</CopyToPublishDirectory>
@@ -212,9 +215,9 @@
 		</Content>
 	</ItemGroup>
 	
-	<!-- 解决Docker发布时的NETSDK1152文件冲突错误 -->
+	<!-- DockerpublishNETSDK1152file -->
 	<PropertyGroup>
-		<!-- 禁用重复文件错误，允许覆盖 -->
+		<!-- file, cover -->
 		<ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
 		<PublishReadyToRun>false</PublishReadyToRun>
 		<PublishSingleFile>false</PublishSingleFile>

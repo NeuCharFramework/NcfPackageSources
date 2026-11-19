@@ -164,19 +164,19 @@
   <data name="Dashboard.TokenSpeed" xml:space="preserve"><value>Velocidad de salida de tokens</value></data>
   <data name="Dashboard.UserSatisfaction" xml:space="preserve"><value>Satisfacción del usuario</value></data>
   <data name="Dashboard.TotalMessages" xml:space="preserve"><value>Mensajes totales</value></data>
-  <data name="Frontend.001" xml:space="preserve"><value>Esta entidad se eliminó o no existe!||Esta entidad se eliminó o no existe!</value></data>
-  <data name="Frontend.002" xml:space="preserve"><value>Error: no hay una cuenta de desarrollador NeuChar configurada. Vaya al Módulo [Administración del sistema], a la página de configuración, y use [Actualizar la información de la cuenta en la nube de NeuChar] para vincular una cuenta de desarrollador NeuChar.||Error: no hay una cuenta de desarrollador NeuChar configurada. Vaya al Módulo [Administración del sistema], a la página de configuración, y use [Actualizar la información de la cuenta en la nube de NeuChar] para vincular una cuenta de desarrollador NeuChar.</value></data>
-  <data name="Frontend.003" xml:space="preserve"><value>¡AppKey o AppSecret es incorrecto! ¡Vuelva a configurarlos!||¡AppKey o AppSecret es incorrecto! ¡Vuelva a configurarlos!</value></data>
-  <data name="Frontend.004" xml:space="preserve"><value>El DeveloperId proporcionado no coincide con el AppKey configurado en el sistema. ¡Compruébelo o actualícelo e inténtelo de nuevo!||El DeveloperId proporcionado no coincide con el AppKey configurado en el sistema. ¡Compruébelo o actualícelo e inténtelo de nuevo!</value></data>
-  <data name="Frontend.005" xml:space="preserve"><value>Actualizado correctamente.||Actualizado correctamente.</value></data>
-  <data name="Frontend.006" xml:space="preserve"><value>No se encontró la entidad!||No se encontró la entidad!</value></data>
-  <data name="Frontend.007" xml:space="preserve"><value>Aún no se admite: el tratamiento del modelo {0} en BuildSenparcAiSetting||Aún no se admite: el tratamiento del modelo {0} en BuildSenparcAiSetting</value></data>
-  <data name="Frontend.008" xml:space="preserve"><value>Senparc.Xncf.AIKernel todavía no admite el tipo {0}||Senparc.Xncf.AIKernel todavía no admite el tipo {0}</value></data>
-  <data name="Frontend.009" xml:space="preserve"><value>SenparcAiSetting no puede estar vacío||SenparcAiSetting no puede estar vacío</value></data>
-  <data name="Frontend.010" xml:space="preserve"><value>Los datos del modelo no existen. ¡Compruebe si está implementado y si tiene permiso!||Los datos del modelo no existen. ¡Compruebe si está implementado y si tiene permiso!</value></data>
-  <data name="Frontend.011" xml:space="preserve"><value>Se agregaron correctamente {0} modelos y se actualizó la información de {1} modelos.||Se agregaron correctamente {0} modelos y se actualizó la información de {1} modelos.</value></data>
-  <data name="Frontend.012" xml:space="preserve"><value>PromptRange todavía no admite el tipo {0}||PromptRange todavía no admite el tipo {0}</value></data>
-  <data name="Frontend.013" xml:space="preserve"><value>Debe configurar al menos un modelo de tipo Chat para la puntuación automática (en el Módulo AIKernel)||Debe configurar al menos un modelo de tipo Chat para la puntuación automática (en el Módulo AIKernel)</value></data>
+  <data name="Frontend.001" xml:space="preserve"><value>Esta entidad se eliminó o no existe!</value></data>
+  <data name="Frontend.002" xml:space="preserve"><value>Error: no hay una cuenta de desarrollador NeuChar configurada. Vaya al Módulo [Administración del sistema], a la página de configuración, y use [Actualizar la información de la cuenta en la nube de NeuChar] para vincular una cuenta de desarrollador NeuChar.</value></data>
+  <data name="Frontend.003" xml:space="preserve"><value>¡AppKey o AppSecret es incorrecto! ¡Vuelva a configurarlos!</value></data>
+  <data name="Frontend.004" xml:space="preserve"><value>El DeveloperId proporcionado no coincide con el AppKey configurado en el sistema. ¡Compruébelo o actualícelo e inténtelo de nuevo!</value></data>
+  <data name="Frontend.005" xml:space="preserve"><value>Actualizado correctamente.</value></data>
+  <data name="Frontend.006" xml:space="preserve"><value>No se encontró la entidad!</value></data>
+  <data name="Frontend.007" xml:space="preserve"><value>Aún no se admite: el tratamiento del modelo {0} en BuildSenparcAiSetting</value></data>
+  <data name="Frontend.008" xml:space="preserve"><value>Senparc.Xncf.AIKernel todavía no admite el tipo {0}</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>SenparcAiSetting no puede estar vacío</value></data>
+  <data name="Frontend.010" xml:space="preserve"><value>Los datos del modelo no existen. ¡Compruebe si está implementado y si tiene permiso!</value></data>
+  <data name="Frontend.011" xml:space="preserve"><value>Se agregaron correctamente {0} modelos y se actualizó la información de {1} modelos.</value></data>
+  <data name="Frontend.012" xml:space="preserve"><value>PromptRange todavía no admite el tipo {0}</value></data>
+  <data name="Frontend.013" xml:space="preserve"><value>Debe configurar al menos un modelo de tipo Chat para la puntuación automática (en el Módulo AIKernel)</value></data>
   <data name="Area.AIKernel.TokenMonitor" xml:space="preserve"><value>Monitor de Token</value></data>
   <data name="TokenMonitor.Title" xml:space="preserve"><value>Monitor de Token</value></data>
   <data name="TokenMonitor.TotalTokens" xml:space="preserve"><value>Tokens totales</value></data>
@@ -505,4 +505,47 @@
   <data name="FineTuning.TokensPerSampleUnit" xml:space="preserve"><value>tokens/muestra</value></data>
   <data name="FineTuning.TruncatedSamples" xml:space="preserve"><value>Truncado</value></data>
 
+
+  <data name="FineTuning.RuntimeEnabled" xml:space="preserve"><value>Activar el ajuste fino local</value><comment>Traducido para este idioma.</comment></data>
+  <data name="FineTuning.RuntimeEnabledHelp" xml:space="preserve"><value>NCF se conecta a los workers solo después de activar esta opción. No es necesario reiniciar el sitio. Si se desactiva, la configuración se conserva en el siguiente inicio.</value><comment>Traducido para este idioma.</comment></data>
+  <data name="FineTuning.ManagedWorker" xml:space="preserve"><value>Iniciar desde NCF</value><comment>Traducido para este idioma.</comment></data>
+  <data name="FineTuning.ManagedWorkerHelp" xml:space="preserve"><value>NCF inicia este worker con Python local y lo detiene cuando se detiene el sitio. Usa un puerto y un directorio de datos distintos para cada worker.</value><comment>Traducido para este idioma.</comment></data>
+  <data name="FineTuning.BindHost" xml:space="preserve"><value>Dirección de enlace</value><comment>Traducido para este idioma.</comment></data>
+  <data name="FineTuning.WorkerPort" xml:space="preserve"><value>Port</value><comment>Auto-completed for locale parity from the English resource.</comment></data>
+  <data name="FineTuning.ModelsRoot" xml:space="preserve"><value>Directorio de modelos</value><comment>Traducido para este idioma.</comment></data>
+  <data name="FineTuning.ModelsRootHelp" xml:space="preserve"><value>Ruta absoluta, por ejemplo ~/AIModels. Los workers pueden compartir el directorio de modelos.</value><comment>Traducido para este idioma.</comment></data>
+  <data name="FineTuning.DataRoot" xml:space="preserve"><value>Directorio de datos</value><comment>Traducido para este idioma.</comment></data>
+  <data name="FineTuning.DataRootHelp" xml:space="preserve"><value>Déjalo vacío para usar un directorio privado bajo la carpeta App_Data del sitio. No debe coincidir con el directorio de modelos ni con el directorio de datos de otro worker.</value><comment>Traducido para este idioma.</comment></data>
+  <data name="FineTuning.PythonPath" xml:space="preserve"><value>Ruta de Python</value><comment>Traducido para este idioma.</comment></data>
+  <data name="FineTuning.WorkerProjectPath" xml:space="preserve"><value>Ruta del proyecto del worker</value><comment>Traducido para este idioma.</comment></data>
+  <data name="FineTuning.AutoStart" xml:space="preserve"><value>Iniciar después de arrancar el sitio</value><comment>Traducido para este idioma.</comment></data>
+  <data name="FineTuning.GenerateSecret" xml:space="preserve"><value>Generar archivo de claves</value><comment>Traducido para este idioma.</comment></data>
+  <data name="FineTuning.StartWorker" xml:space="preserve"><value>Iniciar worker</value><comment>Traducido para este idioma.</comment></data>
+  <data name="FineTuning.StopWorker" xml:space="preserve"><value>Detener worker</value><comment>Traducido para este idioma.</comment></data>
+  <data name="FineTuning.RefreshWorkerStatus" xml:space="preserve"><value>Actualizar estado</value><comment>Traducido para este idioma.</comment></data>
+  <data name="FineTuning.WorkerProcess" xml:space="preserve"><value>Proceso</value><comment>Traducido para este idioma.</comment></data>
+  <data name="FineTuning.WorkerLogs" xml:space="preserve"><value>Registros recientes</value><comment>Traducido para este idioma.</comment></data>
+  <data name="FineTuning.LaunchCommand" xml:space="preserve"><value>Comando de inicio</value><comment>Traducido para este idioma.</comment></data>
+  <data name="FineTuning.WorkerStarted" xml:space="preserve"><value>Worker iniciado.</value><comment>Traducido para este idioma.</comment></data>
+  <data name="FineTuning.WorkerStopped" xml:space="preserve"><value>Worker detenido.</value><comment>Traducido para este idioma.</comment></data>
+  <data name="FineTuning.SecretGenerated" xml:space="preserve"><value>Archivo de claves creado. La clave nunca se muestra en esta página.</value><comment>Traducido para este idioma.</comment></data>
+  <data name="FineTuning.SecretAlreadyExists" xml:space="preserve"><value>El archivo de claves ya existe y no se ha modificado.</value><comment>Traducido para este idioma.</comment></data>
+  <data name="FineTuning.SaveBeforeLaunch" xml:space="preserve"><value>Guarda primero, genera una clave y después inicia el worker.</value><comment>Traducido para este idioma.</comment></data>
+  <data name="FineTuning.Optional" xml:space="preserve"><value>Opcional</value><comment>Traducido para este idioma.</comment></data>
+  <data name="Frontend.400" xml:space="preserve"><value>Importado desde NeuChar AI (DevId: {0})</value><comment>Traducido para este idioma.</comment></data>
+
+  <data name="Frontend.100" xml:space="preserve"><value>Crear tarea de ajuste fino</value></data>
+  <data name="Frontend.101" xml:space="preserve"><value>Crea una tarea de ajuste fino con un modelo local aprobado, un conjunto de datos y parámetros de entrenamiento. El worker, el modelo y el conjunto de datos se cargan automáticamente; los parámetros tienen valores predeterminados y Workflow puede ejecutarse con ellos.</value></data>
+  <data name="Function.FineTuning.CheckWorker.Name" xml:space="preserve"><value>Comprobar Worker de fine-tuning</value></data>
+  <data name="Function.FineTuning.CheckWorker.Description" xml:space="preserve"><value>Comprueba la salud, las capacidades y la cola del Worker de fine-tuning seleccionado. Si solo hay uno disponible, se selecciona automáticamente.</value></data>
+  <data name="Function.FineTuning.CheckEnvironment.Name" xml:space="preserve"><value>Comprobar el entorno de fine-tuning</value></data>
+  <data name="Function.FineTuning.CheckEnvironment.Description" xml:space="preserve"><value>Comprueba el interruptor de fine-tuning, el secreto, el Worker, el directorio del modelo y el estado de FileManager sin instalar ni ejecutar comandos. Si solo hay un Worker disponible, se selecciona automáticamente.</value></data>
+  <data name="Function.FineTuning.UploadDatasetFile.Name" xml:space="preserve"><value>Subir archivo de conjunto de datos de fine-tuning</value></data>
+  <data name="Function.FineTuning.UploadDatasetFile.Description" xml:space="preserve"><value>Guarda y sube como flujo un conjunto de datos JSONL de fine-tuning para archivos grandes.</value></data>
+  <data name="Function.FineTuning.CreateDataset.Name" xml:space="preserve"><value>Crear conjunto de datos de fine-tuning</value></data>
+  <data name="Function.FineTuning.CreateDataset.Description" xml:space="preserve"><value>Guarda un conjunto de datos JSONL validado por el Worker. El Worker lo carga automáticamente; es adecuado para envíos JSONL pequeños desde Workflow.</value></data>
+  <data name="Function.FineTuning.StartJob.Name" xml:space="preserve"><value>Crear tarea de fine-tuning</value></data>
+  <data name="Function.FineTuning.StartJob.Description" xml:space="preserve"><value>Crea una tarea de fine-tuning con un modelo local aprobado, un conjunto de datos y parámetros de entrenamiento. El Worker, el modelo y los datos se cargan automáticamente.</value></data>
+  <data name="Function.FineTuning.ValidateAdapter.Name" xml:space="preserve"><value>Validar adaptador de fine-tuning</value></data>
+  <data name="Function.FineTuning.ValidateAdapter.Description" xml:space="preserve"><value>Ejecuta una prueba offline limitada para una tarea de fine-tuning completada en el backend CPU, CUDA o MLX seleccionado; confirma explícitamente cuando difiera del registro.</value></data>
 </root>

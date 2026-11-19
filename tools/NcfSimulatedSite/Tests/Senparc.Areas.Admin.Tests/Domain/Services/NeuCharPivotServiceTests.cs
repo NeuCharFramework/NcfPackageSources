@@ -1,8 +1,10 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：NeuCharPivotServiceTests.cs
-    文件功能描述：NeuCharPivot AI 声明式布局安全规范化测试
+    File name: NeuCharPivotServiceTests.cs
+    File description: Related implementation.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Areas.Admin.Domain.Services;

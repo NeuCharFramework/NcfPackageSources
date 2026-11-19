@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：IMemoryPromptProvider.cs
-    文件功能描述：IMemoryPromptProvider 相关定义与实现
+    File name: IMemoryPromptProvider.cs
+    File description: IMemoryPromptProvider related definitions and implementation
 
+    Created by: Senparc - 20261103
 
-    创建标识：Senparc - 20261103
+    Modified by: Senparc - 20261103
+    Change description: v0.3.1-preview6 implement AdminChat memory storage and management system
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.3.1-preview6 implement AdminChat memory storage and management system
+    Modified by: Senparc - 20261119
+    Change description: v0.3.3-preview8 Localized PromptRange administration and runtime surfaces
 
 ----------------------------------------------------------------*/
 

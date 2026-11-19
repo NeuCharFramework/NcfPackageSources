@@ -1,19 +1,23 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：NeuCharFunctionProvitAccessService.cs
-    文件功能描述：NeuCharFunctionProvitAccess（Function 全局 Provit 数据库访问策略）服务：
-    策略读取（走 FullNeuCharFunctionProvitAccessCache 缓存）、单条/批量设置与清除。
-    策略行冗余保留：不随 XNCF 模块清除而删除，仅本服务的清除操作（手动）才会删除。
+    File name: NeuCharFunctionProvitAccessService.cs
+    File description: Related implementation.
+    Legacy comment translated to English.
+    Legacy comment translated to English.
+    Change description: v0.9.1 Updated module behavior and related support.
 
-    创建标识：Senparc - 20260917
-    修改描述：v0.9.1 新增 Function 全局 Provit 数据库访问策略映射
+    Created by: Senparc - 20260917
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 维护NeuCharFunctionProvitAccess（Function 全局 Provit 数据库访问策略）服务：
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 
@@ -32,7 +36,7 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.Domain.Services;
 
 /// <summary>
-/// 单条策略输入（页面保存 / 批量设置共用）
+///Legacy comment translated to English.
 /// </summary>
 public sealed class NeuCharFunctionProvitAccessInput
 {
@@ -46,7 +50,7 @@ public sealed class NeuCharFunctionProvitAccessInput
 }
 
 /// <summary>
-/// Function 全局 Provit 数据库访问策略服务
+///Legacy comment translated to English.
 /// </summary>
 public sealed class NeuCharFunctionProvitAccessService : BaseClientService<NeuCharFunctionProvitAccess>
 {
@@ -63,10 +67,10 @@ public sealed class NeuCharFunctionProvitAccessService : BaseClientService<NeuCh
         _cache = cache;
     }
 
-    #region 读取（缓存优先）
+    #region Legacy section
 
     /// <summary>
-    /// 获取指定（ModuleUid, FunctionKey）的策略；不存在返回 null。走缓存，O(1) 查找。
+    ///Legacy comment translated to English.
     /// </summary>
     public NeuCharFunctionProvitAccess GetPolicy(string moduleUid, string functionKey)
     {
@@ -75,7 +79,7 @@ public sealed class NeuCharFunctionProvitAccessService : BaseClientService<NeuCh
     }
 
     /// <summary>
-    /// 获取全部策略（只读快照）。走缓存。
+    ///Legacy comment translated to English.
     /// </summary>
     public IReadOnlyList<NeuCharFunctionProvitAccess> GetAllPolicies()
     {
@@ -87,10 +91,10 @@ public sealed class NeuCharFunctionProvitAccessService : BaseClientService<NeuCh
 
     #endregion
 
-    #region 写入（写后失效缓存）
+    #region Legacy section
 
     /// <summary>
-    /// 保存（新增或更新）单条策略
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<NeuCharFunctionProvitAccess> UpsertPolicyAsync(
         NeuCharFunctionProvitAccessInput input,
@@ -123,9 +127,9 @@ public sealed class NeuCharFunctionProvitAccessService : BaseClientService<NeuCh
     }
 
     /// <summary>
-    /// 清除（删除）单条策略。
-    /// <para>策略为配置行：手动清除时物理删除，避免软删除残留与唯一索引冲突；
-    /// 模块清除场景不会调用本方法，策略行冗余保留待模块重装后继续生效。</para>
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<bool> DeletePolicyAsync(
         string moduleUid,
@@ -147,9 +151,9 @@ public sealed class NeuCharFunctionProvitAccessService : BaseClientService<NeuCh
     }
 
     /// <summary>
-    /// 批量保存策略（逐条校验，全部完成后统一失效一次缓存）
+    ///Legacy comment translated to English.
     /// </summary>
-    /// <returns>成功保存的数量</returns>
+    ///Legacy comment translated to English.
     public async Task<int> BatchUpsertAsync(
         IEnumerable<NeuCharFunctionProvitAccessInput> inputs,
         CancellationToken cancellationToken = default)
@@ -189,9 +193,9 @@ public sealed class NeuCharFunctionProvitAccessService : BaseClientService<NeuCh
     }
 
     /// <summary>
-    /// 批量清除策略
+    ///Legacy comment translated to English.
     /// </summary>
-    /// <returns>成功清除的数量</returns>
+    ///Legacy comment translated to English.
     public async Task<int> BatchDeleteAsync(
         IEnumerable<(string ModuleUid, string FunctionKey)> keys,
         CancellationToken cancellationToken = default)

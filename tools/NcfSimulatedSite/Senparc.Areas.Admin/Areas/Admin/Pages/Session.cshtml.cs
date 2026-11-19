@@ -1,23 +1,26 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：Session.cshtml.cs
-    文件功能描述：Session.cshtml 相关功能实现
-    
-    
-    创建标识：Senparc - 20260705
-    
-    修改标识：Senparc - 20260705
-    修改描述：v0.0.3 新增登录超时配置并补齐多数据库迁移支持
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.0.4 新增登录超时配置并补齐多数据库迁移支持
+    File name: Session.cshtml.cs
+    File description: Related implementation.
 
-    修改标识：Senparc - 20260724
-    修改描述：v0.1.0 增强后台模块批量更新并完善多语言管理界面
+    Created by: Senparc - 20260705
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.2.0 增强后台管理员交互与桌面 Admin Chat 安全同步
+    Modified by: Senparc - 20260705
+    Change description: v0.0.3 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260705
+    Change description: v0.0.4 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260724
+    Change description: v0.1.0 enhance batch module updates and improve the multilingual management interface
+
+    Modified by: Senparc - 20260729
+    Change description: v0.2.0 enhance admin interaction and secure desktop Admin Chat synchronization
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 

@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：MpAccount.cs
-    文件功能描述：MpAccount 相关实现
-    
-    
-    创建标识：Senparc - 20250712
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: MpAccount.cs
+    File description: MpAccount related implementation
+
+    Created by: Senparc - 20250712
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.25.1 Localized Weixin account and administration surfaces
 
 ----------------------------------------------------------------*/
 
@@ -24,9 +27,9 @@ using System.Text;
 namespace Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel
 {
     /// <summary>
-    /// 微信公众号信息
+    ///Legacy comment translated to English.
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(MpAccount))]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(MpAccount))]//a prefix is required to prevent system-wide conflicts
     [Serializable]
     public class MpAccount : EntityBase<int>
     {

@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：FineTuningFunctionRequests.cs
-    文件功能描述：供 Function 与 Workflow 调用的微调请求
+    File name: FineTuningFunctionRequests.cs
+    File description: Related implementation.
 
+    Created by: Senparc - 20261106
 
-    创建标识：Senparc - 20261106
+    Modified by: Senparc - 20261106
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261106
-    修改描述：自动载入微调 Worker、模型和数据集，并为训练参数提供默认值
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
 ----------------------------------------------------------------*/
 
@@ -23,12 +26,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Trace;
+using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.FunctionRenders;
 using Senparc.Ncf.XncfBase.Functions;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Models.FineTuning;
 using Senparc.Xncf.AIKernel.Domain.Services;
+using Senparc.Xncf.AIKernel;
 
 namespace Senparc.Xncf.AIKernel.OHS.Local.PL;
 
@@ -36,7 +41,7 @@ public class FineTuningWorkerFunctionRequest : FunctionAppRequestBase
 {
     [Required]
     [MaxLength(50)]
-    [Description("微调 Worker||自动载入已启用且已配置密钥的 Worker。只有一个时默认选中。")]
+    [LocalizedDescription(typeof(AIKernelResource), "FineTuning.Worker", "FineTuning.SelectWorker")]
     [FunctionParameterUi(ParameterType.DropDownList, nameof(WorkerOptions), Filterable = true, AllowCreate = true)]
     public string? WorkerAlias { get; set; }
 
@@ -61,11 +66,11 @@ public sealed class FineTuningDatasetFunctionRequest : FineTuningWorkerFunctionR
 {
     [Required]
     [MaxLength(100)]
-    [Description("数据集名称||保存到所选 Worker 的数据集名称。")]
+    [LocalizedDescription(typeof(AIKernelResource), "FineTuning.DatasetName", "FineTuning.DatasetHelp")]
     public string? Name { get; set; }
 
     [Required]
-    [Description("JSONL 内容||每行一条 JSON。适合 Workflow 中的小数据集；大文件请在微调管理页上传。")]
+    [LocalizedDescription(typeof(AIKernelResource), "FineTuning.DatasetFile", "FineTuning.DatasetHelp")]
     [FunctionParameterUi(ParameterType.TextArea)]
     public string? Content { get; set; }
 }
@@ -73,12 +78,12 @@ public sealed class FineTuningDatasetFunctionRequest : FineTuningWorkerFunctionR
 public sealed class FineTuningStartJobFunctionRequest : FineTuningWorkerFunctionRequest
 {
     [MaxLength(100)]
-    [Description("任务名称||留空时自动生成 fine-tune-时间。")]
+    [LocalizedDescription(typeof(AIKernelResource), "FineTuning.JobName")]
     public string? Name { get; set; }
 
     [Required]
     [MaxLength(128)]
-    [Description("本地模型||自动载入所选 Worker 上已批准的模型。只有一个模型时默认选中。")]
+    [LocalizedDescription(typeof(AIKernelResource), "FineTuning.Model", "FineTuning.SelectModel")]
     [FunctionParameterUi(ParameterType.DropDownList, nameof(ModelOptions), Filterable = true, AllowCreate = true)]
     public string? ModelId { get; set; }
 
@@ -87,7 +92,7 @@ public sealed class FineTuningStartJobFunctionRequest : FineTuningWorkerFunction
 
     [Required]
     [MaxLength(128)]
-    [Description("训练数据集||自动载入所选 Worker 上的 JSONL 数据集。只有一个数据集时默认选中。")]
+    [LocalizedDescription(typeof(AIKernelResource), "FineTuning.TrainingDataset", "FineTuning.SelectDataset")]
     [FunctionParameterUi(ParameterType.DropDownList, nameof(DatasetOptions), Filterable = true, AllowCreate = true)]
     public string? DatasetId { get; set; }
 
@@ -95,7 +100,7 @@ public sealed class FineTuningStartJobFunctionRequest : FineTuningWorkerFunction
     public SelectionList DatasetOptions { get; set; } = new(SelectionType.DropDownList);
 
     [MaxLength(128)]
-    [Description("验证数据集||可选。默认不使用验证集，且不能与训练数据集相同。")]
+    [LocalizedDescription(typeof(AIKernelResource), "FineTuning.ValidationDataset", "FineTuning.ValidationHelp")]
     [FunctionParameterUi(ParameterType.DropDownList, nameof(EvalDatasetOptions), Filterable = true, AllowCreate = true)]
     public string? EvalDatasetId { get; set; }
 
@@ -106,7 +111,7 @@ public sealed class FineTuningStartJobFunctionRequest : FineTuningWorkerFunction
     });
 
     [Required]
-    [Description("训练后端||默认 CPU。CUDA 需要 NVIDIA GPU，MLX 需要 Apple Silicon。")]
+    [LocalizedDescription(typeof(AIKernelResource), "FineTuning.Backend", "FineTuning.BackendHelp")]
     [FunctionParameterUi(ParameterType.DropDownList, nameof(BackendOptions))]
     public string Backend { get; set; } = "cpu";
 
@@ -119,7 +124,7 @@ public sealed class FineTuningStartJobFunctionRequest : FineTuningWorkerFunction
     });
 
     [Required]
-    [Description("微调方式||默认 LoRA。QLoRA 不能与 CPU 后端同时使用。")]
+    [LocalizedDescription(typeof(AIKernelResource), "FineTuning.Method")]
     [FunctionParameterUi(ParameterType.DropDownList, nameof(MethodOptions))]
     public string Method { get; set; } = "lora";
 
@@ -130,57 +135,57 @@ public sealed class FineTuningStartJobFunctionRequest : FineTuningWorkerFunction
         new("qlora", "QLoRA", "需要 CUDA，不能与 CPU 后端同时使用")
     });
 
-    [Description("训练轮数||默认 1。")]
+    [LocalizedDescription(typeof(AIKernelResource), "FineTuning.Parameter.epochs", "FineTuning.Tip.epochs")]
     public int Epochs { get; set; } = 1;
 
-    [Description("最大步数||默认 10。设为 0 时按轮数训练。")]
+    [LocalizedDescription(typeof(AIKernelResource), "FineTuning.Parameter.maxSteps", "FineTuning.Tip.maxSteps")]
     public int MaxSteps { get; set; } = 10;
 
-    [Description("学习率||默认 0.0002。")]
+    [LocalizedDescription(typeof(AIKernelResource), "FineTuning.Parameter.learningRate", "FineTuning.Tip.learningRate")]
     public double LearningRate { get; set; } = 0.0002;
 
-    [Description("批大小||默认 1。")]
+    [LocalizedDescription(typeof(AIKernelResource), "FineTuning.Parameter.batchSize", "FineTuning.Tip.batchSize")]
     public int BatchSize { get; set; } = 1;
 
-    [Description("梯度累积||默认 1。有效批大小 = 批大小 × 梯度累积。")]
+    [LocalizedDescription(typeof(AIKernelResource), "FineTuning.Parameter.gradientAccumulationSteps", "FineTuning.Tip.gradientAccumulationSteps")]
     public int GradientAccumulationSteps { get; set; } = 1;
 
-    [Description("最大序列长度||默认 256。")]
+    [LocalizedDescription(typeof(AIKernelResource), "FineTuning.Parameter.maxSequenceLength", "FineTuning.Tip.maxSequenceLength")]
     public int MaxSequenceLength { get; set; } = 256;
 
-    [Description("LoRA Rank||默认 8。")]
+    [LocalizedDescription(typeof(AIKernelResource), "FineTuning.Parameter.loraRank", "FineTuning.Tip.loraRank")]
     public int LoraRank { get; set; } = 8;
 
-    [Description("LoRA Alpha||默认 16。")]
+    [LocalizedDescription(typeof(AIKernelResource), "FineTuning.Parameter.loraAlpha", "FineTuning.Tip.loraAlpha")]
     public int LoraAlpha { get; set; } = 16;
 
-    [Description("LoRA Dropout||默认 0.05。")]
+    [LocalizedDescription(typeof(AIKernelResource), "FineTuning.Parameter.loraDropout", "FineTuning.Tip.loraDropout")]
     public double LoraDropout { get; set; } = 0.05;
 
     [Required]
     [MaxLength(512)]
-    [Description("目标模块||默认 all-linear，也可填写逗号分隔的模块名。")]
+    [LocalizedDescription(typeof(AIKernelResource), "FineTuning.Parameter.targetModules", "FineTuning.Tip.targetModules")]
     public string TargetModules { get; set; } = "all-linear";
 
-    [Description("Warmup 比例||默认 0.03。")]
+    [LocalizedDescription(typeof(AIKernelResource), "FineTuning.Parameter.warmupRatio", "FineTuning.Tip.warmupRatio")]
     public double WarmupRatio { get; set; } = 0.03;
 
-    [Description("权重衰减||默认 0。")]
+    [LocalizedDescription(typeof(AIKernelResource), "FineTuning.Parameter.weightDecay", "FineTuning.Tip.weightDecay")]
     public double WeightDecay { get; set; }
 
-    [Description("日志间隔||默认每 1 步记录一次。")]
+    [LocalizedDescription(typeof(AIKernelResource), "FineTuning.Parameter.loggingSteps", "FineTuning.Tip.loggingSteps")]
     public int LoggingSteps { get; set; } = 1;
 
-    [Description("保存间隔||默认每 20 步保存一次。")]
+    [LocalizedDescription(typeof(AIKernelResource), "FineTuning.Parameter.saveSteps", "FineTuning.Tip.saveSteps")]
     public int SaveSteps { get; set; } = 20;
 
-    [Description("验证间隔||默认每 20 步验证一次。仅在选择验证数据集后生效。")]
+    [LocalizedDescription(typeof(AIKernelResource), "FineTuning.Parameter.evalSteps", "FineTuning.Tip.evalSteps")]
     public int EvalSteps { get; set; } = 20;
 
-    [Description("随机种子||默认 42。")]
+    [LocalizedDescription(typeof(AIKernelResource), "FineTuning.Parameter.seed", "FineTuning.Tip.seed")]
     public int Seed { get; set; } = 42;
 
-    [Description("最长时长（分钟）||默认 60。")]
+    [LocalizedDescription(typeof(AIKernelResource), "FineTuning.Parameter.maxDurationMinutes", "FineTuning.Tip.maxDurationMinutes")]
     public int MaxDurationMinutes { get; set; } = 60;
 
     public override async Task LoadData(IServiceProvider serviceProvider)

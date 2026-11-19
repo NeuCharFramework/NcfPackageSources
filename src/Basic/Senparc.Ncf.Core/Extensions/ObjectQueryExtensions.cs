@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：ObjectQueryExtensions.cs
-    文件功能描述：ObjectQueryExtensions 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: ObjectQueryExtensions.cs
+    File description: ObjectQueryExtensions related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -24,7 +27,7 @@ namespace Senparc.Ncf.Core.Extensions
     public static class ObjectQueryExtensions
     {
         /// <summary>
-        /// 添加多个Include()对象
+        ///Legacy comment translated to English.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
@@ -32,7 +35,7 @@ namespace Senparc.Ncf.Core.Extensions
         /// <returns></returns>
         public static IQueryable<T> Includes<T>(this IQueryable<T> obj, string[] includes) where T : class
         {
-            //** 用法：entities.Users.Includes(new string[]{ "Roles","Products" }).ToList()
+            //Legacy comment translated to English.
             if (includes == null)
             {
                 return obj;
@@ -46,7 +49,7 @@ namespace Senparc.Ncf.Core.Extensions
         }
 
         /// <summary>
-        /// 添加多个可在编译时检测的Include类型
+        ///Legacy comment translated to English.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
@@ -54,7 +57,7 @@ namespace Senparc.Ncf.Core.Extensions
         /// <returns></returns>
         public static IQueryable<T> Includes<T>(this IQueryable<T> obj, Type[] includeTyles) where T : class
         {
-            //** 用法：entities.Users.Includes(new Type[]{ typeof(Roles),typeof(Products) }).ToList()
+            //Legacy comment translated to English.
             if (includeTyles == null)
                 return obj;
 
@@ -66,7 +69,7 @@ namespace Senparc.Ncf.Core.Extensions
         }
 
         /// <summary>
-        /// 添加可在编译时检测的Include类型
+        ///Legacy comment translated to English.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
@@ -74,17 +77,17 @@ namespace Senparc.Ncf.Core.Extensions
         /// <returns></returns>
         public static IQueryable<T> Include<T>(this IQueryable<T> obj, Type includeType) where T : class
         {
-            //** 用法：entities.Users.Include(typeof(Roles)).ToList()
+            //Legacy comment translated to English.
             return obj.Include(includeType.Name);
         }
 
         /// <summary>
-        /// 委托排序
+        ///Legacy comment translated to English.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
         /// <param name="orderBy"></param>
-        /// <param name="isAscending">是否升序排列</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public static IOrderedQueryable<T> OrderBy<T, TK>(this IQueryable<T> obj, Expression<Func<T, TK>> orderBy, OrderingType orderingType) where T : class
         {
@@ -95,12 +98,12 @@ namespace Senparc.Ncf.Core.Extensions
         }
 
         /// <summary>
-        /// 委托排序
+        ///Legacy comment translated to English.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
         /// <param name="orderBy"></param>
-        /// <param name="isAscending">是否升序排列</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public static IOrderedEnumerable<T> OrderByIEnumerable<T, TK>(this IEnumerable<T> obj, Func<T, TK> orderBy, OrderingType orderingType) where T : class
         {

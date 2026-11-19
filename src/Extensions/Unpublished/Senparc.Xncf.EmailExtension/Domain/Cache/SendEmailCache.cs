@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：SendEmailCache.cs
-    文件功能描述：SendEmailCache 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: SendEmailCache.cs
+    File description: SendEmailCache related implementation
+
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.16 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -48,7 +51,7 @@ namespace Senparc.Xncf.EmailExtension.Domain.Cache
             : base(CACHE_KEY, null)
         {
             base.TimeOut = 1440;
-            xmlCtx = new XmlDataContext();//TODO:注入
+            xmlCtx = new XmlDataContext();//Legacy comment translated to English.
             //filePath = ServerUtility.ContentRootMapPath("~/APP_Data/SendEmail.config");//context.Server.MapPath("~/APP_Data/SendEmail.config");
             //HttpContext.Current.Response.Write(filePath);
         }
@@ -56,7 +59,7 @@ namespace Senparc.Xncf.EmailExtension.Domain.Cache
 
         public override List<AutoSendEmail> Update()
         {
-            int maxSendCount = Register.MaxSendEmailTimes;//最大重复发送次数
+            int maxSendCount = Register.MaxSendEmailTimes;//Legacy comment translated to English.
             List<AutoSendEmail> data = this.GetAllList()
                                         .Where(z => z.SendCount < maxSendCount).OrderBy(z => z.SendCount).OrderBy(z => z.Id).ToList();
             base.SetData(data, base.TimeOut, null);

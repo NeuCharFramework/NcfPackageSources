@@ -11,14 +11,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Senparc.Core\Senparc.Core.csproj" />
-    <ProjectReference Include="..\Senparc.Log\Senparc.Log.csproj" />
+    <ProjectReference Include="..\Senparc.Core\Senparc.Core.csproj" />    <ProjectReference Include="..\Senparc.Log\Senparc.Log.csproj" />    <ProjectReference Include="..\Senparc.Service\Senparc.Service.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+
+
     <PackageReference Include="Senparc.Ncf.Core" Version="0.1.1-beta2" />
     <PackageReference Include="Senparc.Ncf.Log" Version="0.1.1-beta2" />
     <PackageReference Include="Senparc.Ncf.Mvc.UI" Version="0.1.1-beta2" />
     <PackageReference Include="Senparc.Ncf.Service" Version="0.1.1-beta2" />
     <PackageReference Include="Senparc.Ncf.Utility" Version="0.1.1-beta2" />
-    <ProjectReference Include="..\Senparc.Service\Senparc.Service.csproj" />
+
   </ItemGroup>
 
   <ItemGroup>

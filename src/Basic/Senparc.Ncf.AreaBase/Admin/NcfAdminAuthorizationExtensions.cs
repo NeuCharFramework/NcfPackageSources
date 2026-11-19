@@ -1,11 +1,15 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：NcfAdminAuthorizationExtensions.cs
-    文件功能描述：NCF Admin 授权策略注册扩展
+    File name: NcfAdminAuthorizationExtensions.cs
+    File description: NCF Admin Authorization Policy Registration Extension
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.22.0-preview3 统一 AdminOnly 授权策略命名并提供宿主注册扩展
+    Modified by: Senparc - 20260729
+    Change description: v0.22.0-preview3 Unify AdminOnly authorization policy naming and provide host registration extension
+
+    Modified by: Senparc - 20261119
+    Change description: v0.23.12 Improved administration page and authorization support
 
 ----------------------------------------------------------------*/
 
@@ -15,13 +19,13 @@ using Senparc.Ncf.Core.Authorization;
 namespace Senparc.Ncf.AreaBase.Admin
 {
     /// <summary>
-    /// NCF Admin 授权策略注册扩展。
+    /// NCF Admin Authorization Policy Registration Extension.
     /// </summary>
     public static class NcfAdminAuthorizationExtensions
     {
         /// <summary>
-        /// 注册 NCF 标准的 AdminOnly 策略。
-        /// 宿主可以预先注册同名策略，以保留宿主自己的授权要求。
+        /// Register the AdminOnly policy for the NCF standard.
+        /// The host can pre-register a policy with the same name to retain its own authorization requirements.
         /// </summary>
         public static AuthorizationOptions AddNcfAdminAuthorizationPolicies(this AuthorizationOptions options)
         {

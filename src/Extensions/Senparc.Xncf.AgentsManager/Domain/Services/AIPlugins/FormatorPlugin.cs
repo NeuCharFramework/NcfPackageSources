@@ -1,26 +1,29 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：FormatorPlugin.cs
-    文件功能描述：FormatorPlugin 服务逻辑
-    
-    
-    创建标识：Senparc - 20250125
-    
-    修改标识：Senparc - 20260701
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+    File name: FormatorPlugin.cs
+    File description: Related implementation.
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.12.0-preview6 为 AgentsManager 模块接入统一资源本地化并优化功能文案
+    Created by: Senparc - 20250125
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.19.0 格式化输出时记录 Token 用量
+    Modified by: Senparc - 20260701
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.19.1 add AITokenUsageRecorder and related services for token usage tracking
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
+
+    Modified by: Senparc - 20260717
+    Change description: v0.12.0-preview6 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261021
+    Change description: v0.19.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261103
+    Change description: v0.19.1 add AITokenUsageRecorder and related services for token usage tracking
+
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 

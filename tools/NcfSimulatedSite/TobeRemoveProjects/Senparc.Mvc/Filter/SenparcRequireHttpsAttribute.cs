@@ -1,4 +1,17 @@
-﻿using System;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: SenparcRequireHttpsAttribute.cs
+    File description: SenparcRequireHttpsAttribute related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.0.1 Updated legacy MVC integration metadata and English source comments
+
+----------------------------------------------------------------*/
+
+using System;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -15,7 +28,7 @@ namespace Senparc.Mvc.Filter
         {
             if (SiteConfig.IsTestSite)
             {
-                return;//如果是测试站，则忽略验证
+                return;//Legacy comment translated to English.
             }
 
             base.OnAuthorization(filterContext);

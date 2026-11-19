@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：FunctionRenderSymbolHelper.cs
-    文件功能描述：FunctionRenderSymbolHelper 相关实现
-    
-    
-    创建标识：Senparc - 20260327
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: FunctionRenderSymbolHelper.cs
+    File description: FunctionRenderSymbolHelper related implementation
+
+    Created by: Senparc - 20260327
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -20,7 +23,7 @@ using System.Text.RegularExpressions;
 namespace Senparc.Ncf.Core.AppServices
 {
     /// <summary>
-    /// FunctionRender 符号辅助类，负责解析 [#sym:FunctionRender] 标记。
+    /// FunctionRender Symbol helper class, responsible for parsing the [#sym:FunctionRender] tag.
     /// </summary>
     public static class FunctionRenderSymbolHelper
     {
@@ -30,7 +33,7 @@ namespace Senparc.Ncf.Core.AppServices
         private static readonly Regex SymbolRegex = new Regex(@"\[#sym\s*:\s*(?<name>[A-Za-z0-9_\.\-]+)\s*\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         /// <summary>
-        /// 提取输入中的所有 sym 标记名称。
+        /// Extract the name of all sym tags in the input.
         /// </summary>
         public static IReadOnlyList<string> ExtractSymbolNames(string input)
         {
@@ -50,7 +53,7 @@ namespace Senparc.Ncf.Core.AppServices
         }
 
         /// <summary>
-        /// 判断输入是否包含指定 sym 标记。
+        /// checkinputwhether contains the specified sym tag.
         /// </summary>
         public static bool HasSymbol(string input, string symbolName)
         {
@@ -63,7 +66,7 @@ namespace Senparc.Ncf.Core.AppServices
         }
 
         /// <summary>
-        /// 判断输入是否包含 FunctionRender sym 标记。
+        /// checkinputwhether contains FunctionRender sym tag.
         /// </summary>
         public static bool HasFunctionRenderSymbol(string input)
         {

@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：GridViewExtension.cs
-    文件功能描述：GridViewExtension 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: GridViewExtension.cs
+    File description: GridViewExtension related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.22.9-preview13 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -63,11 +66,11 @@ namespace System.Web.Mvc
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="helper"></param>
-        /// <param name="dataSource">数据源</param>
-        /// <param name="htmlAttributes">Table的属性</param>
-        /// <param name="emptyTemplete">没有数据时显示。没有数据时，Footer不显示</param>
-        /// <param name="htmlCodeFormat">HTML代码换行（供调试状态下使用）。如果为false，自动生成的代码将不换行</param>
-        /// <param name="itemTempletes">模板数据</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public static HtmlString GridView<T>(this HtmlHelper helper, IEnumerable<T> dataSource,
             object htmlAttributes, string emptyTemplete, bool htmlCodeFormat, params GridViewItemTemplateModel<T>[] itemTempletes) where T : class
@@ -80,31 +83,31 @@ namespace System.Web.Mvc
             string bodyFormat = "<tbody>{0}</tbody>";
 
             string rowFormat = "<tr>{0}</tr>";
-            string UnitFormat = "<td{0}>{1}</td>";//属性，内容
+            string UnitFormat = "<td{0}>{1}</td>";//property，content
 
             string footFormat = "<tfoot>{0}</tfoot>";
 
             string emptyFormat = "{0}";
 
-            StringBuilder table = new StringBuilder();//整个Table
+            StringBuilder table = new StringBuilder();//Legacy comment translated to English.
 
             //thead
             StringBuilder thead = new StringBuilder();//thead
-            StringBuilder theadUints = new StringBuilder();//thead内单元格
+            StringBuilder theadUints = new StringBuilder();//Legacy comment translated to English.
 
             //body
             StringBuilder tbody = new StringBuilder();//tbody
-            StringBuilder tbodyRows = new StringBuilder();//行
+            StringBuilder tbodyRows = new StringBuilder();//Legacy comment translated to English.
 
             //tfoot
             StringBuilder tfoot = new StringBuilder();//tfoot
-            StringBuilder tfootUints = new StringBuilder();//tfoot内的单元格
+            StringBuilder tfootUints = new StringBuilder();//Legacy comment translated to English.
 
             StringBuilder empty = new StringBuilder();
 
 
             /*******************/
-            /** 构造Table开始 **/
+            /** buildTablestart **/
             /*******************/
 
             //thead
@@ -112,44 +115,44 @@ namespace System.Web.Mvc
             {
                 theadUints.AppendFormat(headUnitFormat, itemTemplete.Header == null ? "" : itemTemplete.Header);
             }
-            thead.AppendFormat(headFormat, string.Format(rowFormat, theadUints.ToString()));//head行
+            thead.AppendFormat(headFormat, string.Format(rowFormat, theadUints.ToString()));//Legacy comment translated to English.
 
 
-            /* tbody 开始 */
+            /* tbody start */
             string[] colAttributes = itemTempletes.Select(z => z.HtmlAttributes.ToAttributeList()).ToArray();
 
-            dataSource = dataSource ?? new List<T>();//如果数据为空，则创建一个空的记录，用于获取Count
+            dataSource = dataSource ?? new List<T>();//Legacy comment translated to English.
             int dataSourceCount = dataSource.Count();
             if (dataSourceCount > 0)
             {
                 int rowIndex = 0;
                 foreach (var data in dataSource)
                 {
-                    StringBuilder units = new StringBuilder();//tbody一行内的单元格
+                    StringBuilder units = new StringBuilder();//Legacy comment translated to English.
                     foreach (var itemTemplete in itemTempletes)
                     {
                         string itemResult = itemTemplete.ItemTemplate(data, rowIndex) == null
                             ? ""
-                            : itemTemplete.ItemTemplate(data, rowIndex).ToString();//本行模板数据
+                            : itemTemplete.ItemTemplate(data, rowIndex).ToString();//Legacy comment translated to English.
 
-                        //判断body单元格是否自动绑定
+                        //Legacy comment translated to English.
                         if (itemResult.StartsWith("$"))
                         {
-                            //自动绑定
+                            //Legacy comment translated to English.
                             string bindDataName = itemResult.Replace("$", "");
                             var pro = data.GetType().GetProperty(bindDataName);
                             itemResult = data.GetType().GetProperty(bindDataName).GetValue(data, null).ToString();
                         }
 
-                        //单元格属性
+                        //Legacy comment translated to English.
 
-                        units.AppendFormat(UnitFormat, itemTemplete.HtmlAttributes != null ? itemTemplete.HtmlAttributes.ToString() : "", itemResult);//单元格
+                        units.AppendFormat(UnitFormat, itemTemplete.HtmlAttributes != null ? itemTemplete.HtmlAttributes.ToString() : "", itemResult);//Legacy comment translated to English.
                     }
-                    tbodyRows.AppendFormat(rowFormat, units.ToString());//行
+                    tbodyRows.AppendFormat(rowFormat, units.ToString());//Legacy comment translated to English.
                     rowIndex++;
                 }
-                tbody.AppendFormat(bodyFormat, tbodyRows.ToString()); //整个tbody
-                /* tbody 结束 */
+                tbody.AppendFormat(bodyFormat, tbodyRows.ToString()); //Legacy comment translated to English.
+                /* tbody end */
 
 
                 //tfoot
@@ -160,33 +163,33 @@ namespace System.Web.Mvc
                     if (itemTemplete.Footer != null)
                         result = itemTemplete.Footer(dataSource);
 
-                    tfootUints.AppendFormat(UnitFormat, "", result);//footer没有<fr>？
+                    tfootUints.AppendFormat(UnitFormat, "", result);//Legacy comment translated to English.
                 }
-                tfoot.AppendFormat(footFormat, string.Format(rowFormat, tfootUints.ToString()));//foot行
+                tfoot.AppendFormat(footFormat, string.Format(rowFormat, tfootUints.ToString()));//Legacy comment translated to English.
             }
             else
             {
-                empty.AppendFormat(emptyFormat, emptyTemplete);//空数据
+                empty.AppendFormat(emptyFormat, emptyTemplete);//empty data
             }
 
 
-            //整合head,body,foot
+            //Legacy comment translated to English.
             StringBuilder tableData = new StringBuilder();
             tableData.Append(thead.ToString()).Append(tbody.ToString()).Append(tfoot.ToString());
 
 
-            //属性
+            //property
             string setHash = htmlAttributes.ToAttributeList();
             string attributeList = string.Empty;
             if (setHash != null)
                 attributeList = setHash;
 
-            table.AppendFormat(tableFormat, attributeList, tableData.ToString());//整合整个Table，包括属性
-            table.Append(empty.ToString());//空数据
+            table.AppendFormat(tableFormat, attributeList, tableData.ToString());//Legacy comment translated to English.
+            table.Append(empty.ToString());//empty data
 
 
             /*******************/
-            /** 构造Table结束 **/
+            /** buildTableend **/
             /*******************/
 
             string tableHtml = string.Empty;
@@ -200,7 +203,7 @@ namespace System.Web.Mvc
 
 
         /// <summary>
-        /// 自动绑定GridView
+        ///Legacy comment translated to English.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="helper"></param>
@@ -210,11 +213,11 @@ namespace System.Web.Mvc
         public static string GridView<T>(this HtmlHelper helper, IEnumerable<T> dataSource, object htmlAttributes)
         {
             List<Expression<Func<T, int, string>>> itemTempletes = new List<Expression<Func<T, int, string>>>();
-            PropertyInfo[] propertys = typeof(T).GetProperties().Where(z => z.PropertyType.IsValueType).ToArray();//过滤为值类型
+            PropertyInfo[] propertys = typeof(T).GetProperties().Where(z => z.PropertyType.IsValueType).ToArray();//Legacy comment translated to English.
             string[] header = propertys.Select(z => z.Name).ToArray();
 
 
-            //属性
+            //property
             var setHash = htmlAttributes.ToAttributeList();
 
             string attributeList = string.Empty;

@@ -1,4 +1,17 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: BaseController.cs
+    File description: BaseController related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.0.1 Updated legacy MVC integration metadata and English source comments
+
+----------------------------------------------------------------*/
+
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
@@ -59,7 +72,7 @@ namespace Senparc.Mvc.Controllers
                     }
                     else
                     {
-                        //用户不存在，发生严重异常
+                        //Legacy comment translated to English.
                         LogUtility.Account.Error($"发生严重错误，用户已登录，但缓存及数据库中不存在：{this.UserName}");
                     }
                 }
@@ -97,7 +110,7 @@ namespace Senparc.Mvc.Controllers
                 //{
                 //    if (!ModelState.IsValid)
                 //    {
-                //        vd.MessagerList.Add(new Messager(MessageType.danger, "提交信息有错误，请检查。"));
+                //Legacy comment translated to English.
                 //    }
                 //}
 
@@ -118,7 +131,7 @@ namespace Senparc.Mvc.Controllers
         }
 
         /// <summary>
-        /// 默认转到Edit页面
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public ActionResult Create()
@@ -127,10 +140,10 @@ namespace Senparc.Mvc.Controllers
         }
 
         /// <summary>
-        /// 显示Json结果
+        /// displayJsonresult
         /// </summary>
-        /// <param name="success">是否成功</param>
-        /// <param name="result">数据，如果失败，可以为字符串的说明</param>
+        /// <param name="success">whethersuccess</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         [NonAction]
         public ActionResult RenderJsonSuccessResult(bool success, object result,
@@ -151,11 +164,11 @@ namespace Senparc.Mvc.Controllers
             {
                 //return Json(json, jsonRequestBehavior);
                 //https://stackoverflow.com/questions/4155014/json-asp-net-mvc-maxjsonlength-exception
-                //解决JSON JavaScriptSerializer 进行序列化或反序列化时出错。字符串的长度超过了为 maxJsonLength 属性设置的值
+                //Legacy comment translated to English.
 
                 jsonSerializerSettings = jsonSerializerSettings ?? new Newtonsoft.Json.JsonSerializerSettings()
                 {
-                    //自定义设置
+                    //customsettings
                 };
 
                 return new JsonResult(json, jsonSerializerSettings);
@@ -167,7 +180,7 @@ namespace Senparc.Mvc.Controllers
         }
 
 
-        #region 成功或错误提示页面
+        #region Legacy section
 
         [NonAction]
         public virtual ActionResult RenderSuccess(string message, string backAction = null,
@@ -189,7 +202,7 @@ namespace Senparc.Mvc.Controllers
         [NonAction]
         public virtual ActionResult RenderError(string message, Exception ex = null)
         {
-            //保留原有的controller和action信息
+            //preserve the original controller and action information
             ViewData["FakeControllerName"] = RouteData.Values["controller"] as string;
             ViewData["FakeActionName"] = RouteData.Values["action"] as string;
 

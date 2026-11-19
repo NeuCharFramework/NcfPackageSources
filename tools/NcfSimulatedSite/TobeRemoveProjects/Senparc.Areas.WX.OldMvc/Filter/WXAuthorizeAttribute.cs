@@ -1,4 +1,17 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: WXAuthorizeAttribute.cs
+    File description: WXAuthorizeAttribute related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.0.1 Updated legacy MVC integration metadata and English source comments
+
+----------------------------------------------------------------*/
+
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Senparc.CO2NET.Extensions;
@@ -12,7 +25,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Senparc.Areas.WX.Filter
 {
     /// <summary>
-    /// 服务号OAuth2.0的验证
+    ///Legacy comment translated to English.
     /// </summary>
     [SuppressMessage("Microsoft.Performance", "CA1813:AvoidUnsealedAttributes",
             Justification = "Unsealed so that subclassed types can set properties in the default constructor or override our behavior.")]

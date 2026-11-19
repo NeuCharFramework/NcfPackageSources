@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.3.28</Version>
+		<Version>0.3.29</Version>
 		<AssemblyName>Senparc.Ncf.UnitTestExtension</AssemblyName>
 		<RootNamespace>Senparc.Ncf.UnitTestExtension</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'TemplateRelease' ">true</GeneratePackageOnBuild>
 		<Description>
-			Senparc.Ncf.UnitTestExtension 单元测试扩展
+			Senparc.Ncf.UnitTestExtension unit testsextend
 		</Description>
 		<Copyright>NeuCharFramework</Copyright>
 		<PackageTags>NeuCharFramework,NCF</PackageTags>
@@ -18,77 +18,79 @@
 		<ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
 		<PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
 		<PackageIcon>icon.jpg</PackageIcon>
-		<PackageReleaseNotes>
-				v0.1.0 创世
-				v0.1.3 提供 DataList 的 Add() 方法
-				v0.2.0 提供 UnitTestSeedDataBuilder 类，用于创建种子数据
-				[2024-08-12] v0.2.1-preview1 添加 TableData 的数据插入方法，通过单元测试
-				[2024-09-10] v0.2.2-preview1 升级缓存基础库
-				[2024-10-09] v0.2.3-preview1 升级基础库
-				[2024-10-16] v0.2.4-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
-				[2024-11-08] v0.2.5-preview1 升级 Senparc.AI
-				[2024-11-15] v0.3.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
-				[2024-11-21] v0.3.1-preview1 更新 CO2NET 及缓存基础库
-				[2024-11-28] v0.3.2-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
-				[2024-12-23] v0.3.4-preview1 Update unit test SeedData create progress
-				[2024-12-24] v0.3.5-preview1 Update unit test SeedData progress
-				[2024-12-24] v0.3.6-preview1 Update unit test DataList, support for single object insert
-				[2024-12-27] v0.3.7-preview1 Add exception log for UseXncfModules() auto progress
-				[2024-12-29] v0.3.8-preview1 update unit test init progress, support EnviromentName for appsettings.json
-				[2024-12-31] v0.3.9-preview1 support null DataList in ctor() in UnitTestExtension
-				[2025-01-19] v0.3.10-preview1 update UnitTestSeedDatabase, change Execute method name to ExecuteAsync
-				[2025-01-25] v0.3.11-preview1 Update Agents functions, support for function calling
-				[2025-04-29] v0.3.12-preview1 Update CO2NET and AIKernel
-				[2025-05-18] v0.3.13-preview1 Update Installation
-				[2025-06-20] v0.3.14-preview1 Add MCP functions in XncfRegisterBase class
-				[2025-11-01] update basic libraries, including Senparc.AI
-				[2026-07-17] v0.3.15-preview.2 同步上游项目版本并适配统一本地化能力
-				1、Dependency update from Senparc.Ncf.Core to 0.25.0-preview2
-				2、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.2-preview2
-				3、Dependency update from Senparc.Ncf.Repository to 0.20.2-preview2
-				4、Dependency update from Senparc.Ncf.Service to 0.23.2-preview2
-				5、Dependency update from Senparc.Ncf.XncfBase to 0.23.3-preview2
-				6、Dependency update from Senparc.Xncf.AreasBase to 0.13.0-preview2
-				7、Dependency update from Senparc.Xncf.SystemCore to 0.14.0-preview2
-				[2026-07-29] v0.3.16-preview.3 Dependency update from Senparc.Ncf.Core to 0.26.0-preview3
-				[2026-07-31] v0.3.17-preview.4 Dependency update from Senparc.Ncf.Core to 0.27.0-preview4
-				[2026-08-04] v0.3.18-preview.5 Dependency updates from upstream projects
-				1、Dependency update from Senparc.Ncf.Core to 0.28.0-preview5
-				2、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.5-preview5
-				3、Dependency update from Senparc.Ncf.Repository to 0.20.5-preview5
-				4、Dependency update from Senparc.Ncf.Service to 0.23.5-preview5
-				5、Dependency update from Senparc.Ncf.XncfBase to 0.24.0-preview5
-				6、Dependency update from Senparc.Xncf.AreasBase to 0.13.3-preview5
-				7、Dependency update from Senparc.Xncf.SystemCore to 0.14.3-preview5
-				[2026-08-08] v0.3.19-preview.6 Dependency updates from upstream projects
-				1、Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
-				2、Dependency update from Senparc.Xncf.SystemCore to 0.14.4-preview6
-				3、Dependency update from Senparc.Ncf.Core to 0.28.1-preview6
-				4、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
-				5、Dependency update from Senparc.Ncf.Repository to 0.20.6-preview6
-				6、Dependency update from Senparc.Ncf.Service to 0.23.6-preview6
-				7、Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
-				[2026-08-13] v0.3.20-preview.7 Dependency update from Senparc.Ncf.Core to 0.28.2-preview7; Senparc.Ncf.DatabasePlant to 0.21.7-preview7; Senparc.Ncf.XncfBase to 0.25.0-preview7
-				[2026-08-15] v0.3.21-preview.8 Dependency update from Senparc.Ncf.Core to 0.29.0-preview8
-				[2026-08-22] v0.3.22-preview.9 同步 Senparc.Ncf.UnitTestExtension 依赖版本
-				1、递归更新上游项目依赖，保持 Senparc.Ncf.UnitTestExtension 与当前版本组合兼容
-				[2026-08-29] v0.3.23 Dependency updates from Senparc.Ncf.Core to 0.30.0-preview9
-				1、Dependency update from Senparc.Ncf.Core to 0.30.0-preview9
-				[2026-09-16] v0.3.24 Dependency updates from Senparc.Areas.Admin.Tests to 0.0.12
-				[2026-09-17] v0.3.25 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
-				1、同步受影响的基础库、AI 模块或宿主项目版本
-				2、保持项目引用链与当前功能兼容
-				[2026-10-05] v0.3.26 Enhanced Senparc.Ncf.UnitTestExtension functionality and compatibility
-				1、Updated Senparc.Ncf.UnitTestExtension project behavior and integration for the latest feature and reliability improvements.
-				[2026-11-05] v0.3.27 同步直接依赖项目版本
-				1、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
-				2、Dependency update from Senparc.Xncf.SystemCore to 0.14.12
-				3、Dependency update from Senparc.Ncf.Core to 0.30.4-preview10
-				4、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.14
-				5、Dependency update from Senparc.Ncf.Repository to 0.20.11-preview10
-				6、Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
-				7、Dependency update from Senparc.Ncf.XncfBase to 0.28.2
-				[2026-11-12] v0.3.28 Dependency updates from Senparc.Xncf.AreasBase to 0.13.13；Senparc.Xncf.SystemCore to 0.14.13；Senparc.Ncf.Core to 0.31.0-preview11；Senparc.Ncf.DatabasePlant to 0.21.15
+		<PackageReleaseNotes>v0.1.0 initial release
+		    v0.1.3 Updated module behavior and related support.
+		    v0.2.0 Updated module behavior and related support.
+		    [2024-08-12] v0.2.1-preview1 Updated module behavior and related support.
+		    [2024-09-10] v0.2.2-preview1 upgrade the cache foundation libraries
+		    [2024-10-09] v0.2.3-preview1 Updated module behavior and related support.
+		    [2024-10-16] v0.2.4-preview1 Updated module behavior and related support.
+		    [2024-11-08] v0.2.5-preview1 upgrade Senparc.AI
+		    [2024-11-15] v0.3.0-preview1 Updated module behavior and related support.
+		    [2024-11-21] v0.3.1-preview1 Updated module behavior and related support.
+		    [2024-11-28] v0.3.2-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
+		    [2024-12-23] v0.3.4-preview1 Update unit test SeedData create progress
+		    [2024-12-24] v0.3.5-preview1 Update unit test SeedData progress
+		    [2024-12-24] v0.3.6-preview1 Update unit test DataList, support for single object insert
+		    [2024-12-27] v0.3.7-preview1 Add exception log for UseXncfModules() auto progress
+		    [2024-12-29] v0.3.8-preview1 update unit test init progress, support EnviromentName for appsettings.json
+		    [2024-12-31] v0.3.9-preview1 support null DataList in ctor() in UnitTestExtension
+		    [2025-01-19] v0.3.10-preview1 update UnitTestSeedDatabase, change Execute method name to ExecuteAsync
+		    [2025-01-25] v0.3.11-preview1 Update Agents functions, support for function calling
+		    [2025-04-29] v0.3.12-preview1 Update CO2NET and AIKernel
+		    [2025-05-18] v0.3.13-preview1 Update Installation
+		    [2025-06-20] v0.3.14-preview1 Add MCP functions in XncfRegisterBase class
+		    [2025-11-01] update basic libraries, including Senparc.AI
+		    [2026-07-17] v0.3.15-preview.2 synchronize upstream project versions and adopt shared localization capabilities
+		    1. Dependency update from Senparc.Ncf.Core to 0.25.0-preview2
+		    2. Dependency update from Senparc.Ncf.DatabasePlant to 0.21.2-preview2
+		    3. Dependency update from Senparc.Ncf.Repository to 0.20.2-preview2
+		    4. Dependency update from Senparc.Ncf.Service to 0.23.2-preview2
+		    5. Dependency update from Senparc.Ncf.XncfBase to 0.23.3-preview2
+		    6. Dependency update from Senparc.Xncf.AreasBase to 0.13.0-preview2
+		    7. Dependency update from Senparc.Xncf.SystemCore to 0.14.0-preview2
+		    [2026-07-29] v0.3.16-preview.3 Dependency update from Senparc.Ncf.Core to 0.26.0-preview3
+		    [2026-07-31] v0.3.17-preview.4 Dependency update from Senparc.Ncf.Core to 0.27.0-preview4
+		    [2026-08-04] v0.3.18-preview.5 Dependency updates from upstream projects
+		    1. Dependency update from Senparc.Ncf.Core to 0.28.0-preview5
+		    2. Dependency update from Senparc.Ncf.DatabasePlant to 0.21.5-preview5
+		    3. Dependency update from Senparc.Ncf.Repository to 0.20.5-preview5
+		    4. Dependency update from Senparc.Ncf.Service to 0.23.5-preview5
+		    5. Dependency update from Senparc.Ncf.XncfBase to 0.24.0-preview5
+		    6. Dependency update from Senparc.Xncf.AreasBase to 0.13.3-preview5
+		    7. Dependency update from Senparc.Xncf.SystemCore to 0.14.3-preview5
+		    [2026-08-08] v0.3.19-preview.6 Dependency updates from upstream projects
+		    1. Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
+		    2. Dependency update from Senparc.Xncf.SystemCore to 0.14.4-preview6
+		    3. Dependency update from Senparc.Ncf.Core to 0.28.1-preview6
+		    4. Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
+		    5. Dependency update from Senparc.Ncf.Repository to 0.20.6-preview6
+		    6. Dependency update from Senparc.Ncf.Service to 0.23.6-preview6
+		    7. Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
+		    [2026-08-13] v0.3.20-preview.7 Dependency update from Senparc.Ncf.Core to 0.28.2-preview7; Senparc.Ncf.DatabasePlant to 0.21.7-preview7; Senparc.Ncf.XncfBase to 0.25.0-preview7
+		    [2026-08-15] v0.3.21-preview.8 Dependency update from Senparc.Ncf.Core to 0.29.0-preview8
+		    [2026-08-22] v0.3.22-preview.9 synchronize Senparc.Ncf.UnitTestExtension dependency version
+		    1. Updated module behavior and related support.
+		    [2026-08-29] v0.3.23 Dependency updates from Senparc.Ncf.Core to 0.30.0-preview9
+		    1. Dependency update from Senparc.Ncf.Core to 0.30.0-preview9
+		    [2026-09-16] v0.3.24 Dependency updates from Senparc.Areas.Admin.Tests to 0.0.12
+		    [2026-09-17] v0.3.25 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-10-05] v0.3.26 Enhanced Senparc.Ncf.UnitTestExtension functionality and compatibility
+		    1. Updated Senparc.Ncf.UnitTestExtension project behavior and integration for the latest feature and reliability improvements.
+		    [2026-11-05] v0.3.27 synchronize direct dependency project versions
+		    1. Dependency update from Senparc.Xncf.AreasBase to 0.13.12
+		    2. Dependency update from Senparc.Xncf.SystemCore to 0.14.12
+		    3. Dependency update from Senparc.Ncf.Core to 0.30.4-preview10
+		    4. Dependency update from Senparc.Ncf.DatabasePlant to 0.21.14
+		    5. Dependency update from Senparc.Ncf.Repository to 0.20.11-preview10
+		    6. Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
+		    7. Dependency update from Senparc.Ncf.XncfBase to 0.28.2
+		    [2026-11-12] v0.3.28 Dependency updates from Senparc.Xncf.AreasBase to 0.13.13;Senparc.Xncf.SystemCore to 0.14.13;Senparc.Ncf.Core to 0.31.0-preview11;Senparc.Ncf.DatabasePlant to 0.21.15
+		    [2026-11-19] v0.3.29 Updated module behavior, localization metadata, and English source comments
+		    1. Updated affected project files while preserving existing public integration behavior.
+		    2. Standardized related English source comments and package metadata for the current release.
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>

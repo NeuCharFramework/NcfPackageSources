@@ -79,17 +79,19 @@
                     {{formaTableTime(scope.row.addTime)}}
                 </template>
             </el-table-column>
-            <el-table-column label="@AR["Common.操作"]" align="center">
+            <el-table-column label="@AR["Common.操作"]" align="center" class-name="ncf-table-actions-column">
                 <template slot-scope="scope">
                     <el-button size="mini"
                                type="primary"
+                               icon="el-icon-edit"
                                @@click="handleEdit(scope.$index, scope.row,'edit')">@AR["Common.编辑"]</el-button>
                     <el-button size="mini"
-                               type="primary"
+                               type="info"
+                               icon="el-icon-plus"
                                v-if="scope.row.children"
                                @@click="handleEdit(scope.$index, scope.row,'addNext')">@AR["Menu.增加下级"]</el-button>
                     <el-popconfirm placement="top" title="@AR["Menu.确认删除"]" @@on-confirm="handleDelete(scope.$index, scope.row)">
-                        <el-button size="mini" type="danger" slot="reference">@AR["Common.删除"]</el-button>
+                        <el-button size="mini" type="danger" icon="el-icon-delete" slot="reference">@AR["Common.删除"]</el-button>
                     </el-popconfirm>
                 </template>
             </el-table-column>

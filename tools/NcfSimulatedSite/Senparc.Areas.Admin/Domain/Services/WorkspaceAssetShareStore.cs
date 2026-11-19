@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：WorkspaceAssetShareStore.cs
-    文件功能描述：WorkspaceAssetShareStore 相关定义与实现
+    File name: WorkspaceAssetShareStore.cs
+    File description: WorkspaceAssetShareStore related definitions and implementation
 
+    Created by: Senparc - 20261024
 
-    创建标识：Senparc - 20261024
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 add comprehensive unit tests for AdminChatWorkspaceAssetService functionality
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 add comprehensive unit tests for AdminChatWorkspaceAssetService functionality
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 

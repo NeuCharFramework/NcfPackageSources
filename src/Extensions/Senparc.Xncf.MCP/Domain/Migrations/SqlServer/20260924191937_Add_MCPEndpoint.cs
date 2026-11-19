@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：20260924191937_Add_MCPEndpoint.cs
-    文件功能描述：20260924191937_Add_MCPEndpoint.cs implementation and project behavior.
+    File name: 20260924191937_Add_MCPEndpoint.cs
+    File description: 20260924191937_Add_MCPEndpoint.cs implementation and project behavior.
 
+    Created by: Senparc - 20260925
 
-    创建标识：Senparc - 20260925
+    Modified by: Senparc - 20261005
+    Change description: v0.5.6 0.5.6 feat: add MCP endpoint selection feature in AgentsManager
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.5.6 0.5.6 feat: add MCP endpoint selection feature in AgentsManager
-
-    修改标识：Senparc - 20261103
-    修改描述：v0.5.10 支持 Add_MCPEndpoint 数据库迁移
+    Modified by: Senparc - 20261103
+    Change description: v0.5.10 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

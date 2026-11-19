@@ -1,17 +1,21 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：NeuCharWorkflowChatSessionService.cs
-    文件功能描述：Chat 触发器的进程内会话、消息历史与运行状态跟踪
 
-    创建标识：Senparc - 20260909
-    创建描述：v0.4.0 新增 Chat 触发器
+    File name: NeuCharWorkflowChatSessionService.cs
+    File description: In-process Chat trigger sessions, message history, and run-state tracking
 
-    修改标识：Senparc - 20260913
-    修改描述：v0.4.0 Chat 会话支持参与者 SHA256 摘要与历史消息注入
+    Created by: Senparc - 20260909
+    Creation description: v0.4.0 add the Chat trigger
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.4.0 增强 Chat 触发器消息持久化与恢复能力
+    Modified by: Senparc - 20260913
+    Change description: v0.4.0 support participant SHA256 digests and historical message injection
+
+    Modified by: Senparc - 20260915
+    Change description: v0.4.0 improve Chat trigger message persistence and recovery
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.7 Localized Workflow designer and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -25,7 +29,8 @@ using System.Text;
 namespace Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 
 /// <summary>
-/// Chat 会话中的一条消息。角色只有 user、assistant 与 error 三种，内容已被服务端截断到安全长度。
+/// A message in a Chat session. Roles are user, assistant, or error; content
+/// is truncated to a safe length on the server.
 /// </summary>
 public sealed record WorkflowChatSessionMessage(
     string Role,
@@ -33,9 +38,10 @@ public sealed record WorkflowChatSessionMessage(
     DateTimeOffset Timestamp);
 
 /// <summary>
-/// Chat 触发器的会话存储。会话只存在于当前 Host 进程（与运行协调器一致），
-/// 以“工作流 + 参与者”为键：登录用户使用 user:{adminUserId}，访客使用 guest:{会话令牌}。
-/// 每个会话同一时间只跟踪一个运行，避免并发发送导致状态互相覆盖。
+/// Session storage for the Chat trigger. Sessions live only in the current
+/// Host process, consistent with the run coordinator, and use workflow plus
+/// participant as the key: authenticated users use user:{adminUserId}, while
+/// guests use guest:{sessionToken}. Each session tracks one run at a time.
 /// </summary>
 public sealed class NeuCharWorkflowChatSessionService
 {
@@ -44,8 +50,9 @@ public sealed class NeuCharWorkflowChatSessionService
     public const string RoleError = "error";
 
     /// <summary>
-    /// 计算参与者标识的哈希（去除首尾空白后的 SHA256 十六进制值）。
-    /// 会话键与数据库持久化使用同一算法，确保重启恢复时能定位到原会话。
+    /// Compute the participant-key hash (the SHA256 hexadecimal digest after
+    /// trimming whitespace). Session keys and database persistence use the same
+    /// algorithm so restart recovery can find the original session.
     /// </summary>
     public static string HashParticipant(string participantKey) =>
         Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(participantKey.Trim())));
@@ -76,7 +83,8 @@ public sealed class NeuCharWorkflowChatSessionService
     }
 
     /// <summary>
-    /// 追加一条消息并返回当前消息快照；超出上限时丢弃最早的消息。
+    /// Append a message and return the current snapshot; discard the oldest
+    /// messages when the limit is exceeded.
     /// </summary>
     public IReadOnlyList<WorkflowChatSessionMessage> AddMessage(
         int workflowId,
@@ -125,7 +133,8 @@ public sealed class NeuCharWorkflowChatSessionService
     }
 
     /// <summary>
-    /// 记录会话当前关联的运行。同一会话只允许一个进行中的运行。
+    /// Record the run currently associated with the session. Only one run may
+    /// be active for a session.
     /// </summary>
     public void SetPendingRun(int workflowId, string participantKey, Guid runId)
     {
@@ -151,7 +160,8 @@ public sealed class NeuCharWorkflowChatSessionService
     }
 
     /// <summary>
-    /// 返回会话当前关联的运行标识，用于页面刷新后恢复轮询。
+    /// Return the run associated with the session so polling can resume after
+    /// a page refresh.
     /// </summary>
     public Guid? GetPendingRun(int workflowId, string participantKey)
     {
@@ -167,7 +177,8 @@ public sealed class NeuCharWorkflowChatSessionService
     }
 
     /// <summary>
-    /// 仅当会话仍然指向该运行时清除关联；返回 false 表示会话已被其他运行接管或重置。
+    /// Clear the association only while the session still points to this run.
+    /// False means another run has taken over or the session was reset.
     /// </summary>
     public bool ClearPendingRun(int workflowId, string participantKey, Guid runId)
     {
@@ -202,7 +213,8 @@ public sealed class NeuCharWorkflowChatSessionService
     }
 
     /// <summary>
-    /// 清空会话消息并取消进行中的运行关联。工作流本身的运行不会被中止。
+    /// Clear session messages and the active-run association. The workflow run
+    /// itself is not aborted.
     /// </summary>
     public void Reset(int workflowId, string participantKey)
     {
@@ -248,8 +260,9 @@ public sealed class NeuCharWorkflowChatSessionService
         $"{workflowId}:{HashParticipant(participantKey)}";
 
     /// <summary>
-    /// Host 重启后把数据库恢复的历史消息写回内存会话；
-    /// 仅当会话当前没有任何消息时写入，避免覆盖本进程内新产生的消息。
+    /// Restore database history into the in-memory session after a Host restart.
+    /// Write only when the session has no messages, avoiding replacement of
+    /// messages created in the current process.
     /// </summary>
     public void SeedMessages(
         int workflowId,

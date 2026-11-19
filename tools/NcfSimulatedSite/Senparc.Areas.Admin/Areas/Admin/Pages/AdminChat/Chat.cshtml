@@ -498,6 +498,8 @@
                         <div class="message-trajectory-approvals" v-if="message.roleType === 1 && !isManageMode && message.pendingApprovals && message.pendingApprovals.length > 0">
                             <div v-for="approval in message.pendingApprovals" :key="approval.requestId" class="trajectory-approval-item">
                                 <span><i class="fa fa-shield"></i> {{ approval.toolName }}</span>
+                                <el-input v-model="approval.reason" size="mini" class="trajectory-approval-reason"
+                                          placeholder="可选：补充说明或拒绝原因"></el-input>
                                 <el-button type="success" size="mini" @@click="respondApproval(message.trajectoryId, approval, true)">允许</el-button>
                                 <el-button type="danger" plain size="mini" @@click="respondApproval(message.trajectoryId, approval, false)">拒绝</el-button>
                             </div>
@@ -551,7 +553,7 @@
                     <div class="message-content">
                         <div class="message-meta">
                             <span class="message-role">@AR["AdminChat.RoleAssistant"]</span>
-                            <span class="live-run-status">{{ liveStatusText || (chatMode === 'harness' ? '正在规划任务…' : '正在生成回答…') }}</span>
+                            <span class="live-run-status">{{ liveStatusText || (chatMode === 'simple' ? '正在生成回答…' : (chatMode === 'execute' ? '正在执行任务…' : '正在规划任务…')) }}</span>
                         </div>
                         <div class="message-text live-generation-text" v-if="liveThinkingText || liveAssistantText">
                             <div v-if="liveThinkingText" class="live-thinking-preview">
@@ -662,6 +664,16 @@
                             <small>{{ item.relativePath }}{{ item.isDirectory ? '/' : '' }}</small>
                         </button>
                     </div>
+                    <div v-if="chatCommandMenuOpen && chatCommandSuggestionsFor === 'inputMessage' && slashCommandOptions('inputMessage').length"
+                         class="chat-command-popover" role="listbox" aria-label="AdminChat 命令">
+                        <button v-for="option in slashCommandOptions('inputMessage')" :key="option.value"
+                                type="button" class="chat-command-option" role="option"
+                                @@mousedown.prevent="selectSlashCommand('inputMessage', option)">
+                            <strong>{{ option.value }}</strong>
+                            <span>{{ option.label }}</span>
+                            <small>{{ option.hint }}</small>
+                        </button>
+                    </div>
                     <el-input
                         type="textarea"
                         v-model="inputMessage"
@@ -671,10 +683,10 @@
                         :rows="3"
                         :disabled="!currentSessionId || isCurrentSessionRunning"
                         @@keydown.native="handleChatInputKeydown"
-                        @@input.native="handleWorkspaceMentionEdit('inputMessage', $event)"
+                        @@input.native="handleWorkspaceMentionEdit('inputMessage', $event); updateSlashCommandMenu('inputMessage')"
                         @@click.native="handleWorkspaceMentionEdit('inputMessage', $event)"
                         @@keyup.native="handleWorkspaceMentionEdit('inputMessage', $event)"
-                        @@blur.native="closeWorkspaceMention"
+                        @@blur.native="closeWorkspaceMention(); chatCommandMenuOpen = false"
                         @@paste.native="handleWorkspacePaste"
                         class="message-input">
                     </el-input>
@@ -693,7 +705,7 @@
                     <details class="chat-inline-settings">
                         <summary>
                             <i class="fa fa-sliders"></i>
-                            <span>对话设置</span>
+                            <span>{{ ncfT('AdminChat.Settings.Title') }}</span>
                             <i class="fa fa-angle-down chat-inline-settings-arrow"></i>
                         </summary>
                         <div class="chat-inline-settings-panel">
@@ -720,14 +732,49 @@
                                 </el-option>
                             </el-select>
                             <span class="ncf-doc-help-group">
-                                <el-radio-group v-model="chatMode" size="mini" class="chat-mode-toggle" :disabled="isCurrentSessionRunning">
-                                    <el-radio-button label="simple">
-                                        <i class="fa fa-comment"></i> @AR["AdminChat.ModeSimple"]
-                                    </el-radio-button>
-                                    <el-radio-button label="harness">
-                                        <i class="fa fa-rocket"></i> @AR["AdminChat.ModeHarness"]
-                                    </el-radio-button>
-                                </el-radio-group>
+                                <el-popover v-model="chatModePopoverOpen" placement="top-start" trigger="click"
+                                            width="370" popper-class="admin-chat-mode-popper" :visible-arrow="false">
+                                    <div class="chat-mode-popover-content">
+                                        <div class="chat-mode-popover-title">{{ ncfT('AdminChat.Settings.ModeTitle') }}</div>
+                                        <p class="chat-mode-popover-caption">{{ ncfT('AdminChat.Settings.ModeCaption') }}</p>
+                                        <button v-for="option in chatModeOptions" :key="'chat-mode-' + option.value"
+                                                type="button" class="chat-mode-option"
+                                                :class="{ 'is-active': chatMode === option.value }"
+                                                :disabled="isCurrentSessionRunning"
+                                                @@click="selectChatMode(option.value)">
+                                            <i :class="option.icon" aria-hidden="true"></i>
+                                            <span class="chat-mode-option-main">
+                                                <strong>{{ option.label }}</strong>
+                                                <small>{{ option.description }}</small>
+                                            </span>
+                                            <i v-if="chatMode === option.value" class="el-icon-check chat-mode-option-check"></i>
+                                        </button>
+                                        <div v-if="chatMode !== 'simple'" class="chat-harness-options">
+                                            <div class="chat-mode-popover-section-title">{{ ncfT('AdminChat.Settings.HarnessAdvanced') }}</div>
+                                            <div class="chat-harness-number-row">
+                                                <span>{{ ncfT('AdminChat.Settings.MaxIterations') }}</span>
+                                                <el-input-number v-model="harnessMaxIterations" size="mini" :min="1" :max="64" :step="1" :disabled="isCurrentSessionRunning"></el-input-number>
+                                            </div>
+                                            <div class="chat-harness-number-row">
+                                                <span>{{ ncfT('AdminChat.Settings.MaxOutputTokens') }}</span>
+                                                <el-input-number v-model="chatMaxOutputTokens" size="mini" :min="256" :max="8000" :step="256" :disabled="isCurrentSessionRunning"></el-input-number>
+                                            </div>
+                                            <div class="chat-harness-option-grid">
+                                                <el-checkbox v-for="item in harnessOptionItems" :key="'chat-harness-' + item.key"
+                                                             v-model="harnessCapabilities[item.key]" :disabled="isCurrentSessionRunning">
+                                                    {{ item.label }}
+                                                </el-checkbox>
+                                            </div>
+                                            <p class="chat-mode-popover-caption">{{ ncfT('AdminChat.Settings.CapabilityNotice') }}</p>
+                                        </div>
+                                    </div>
+                                    <el-button slot="reference" size="mini" class="chat-mode-trigger"
+                                               :disabled="isCurrentSessionRunning">
+                                        <i :class="currentChatModeOption.icon"></i>
+                                        {{ chatModeLabel(chatMode) }}
+                                        <i class="el-icon-arrow-down"></i>
+                                    </el-button>
+                                </el-popover>
                                 <ncf-doc-help topic="admin.harness"></ncf-doc-help>
                             </span>
                             <span class="ncf-doc-help-group">
@@ -746,7 +793,7 @@
                                 </el-dropdown>
                                 <ncf-doc-help topic="admin.memory.modes"></ncf-doc-help>
                             </span>
-                            <button type="button" class="chat-inline-settings-close" aria-label="关闭对话设置" title="关闭" @@click.stop="closeInlineChatSettings">
+                            <button type="button" class="chat-inline-settings-close" :aria-label="ncfT('AdminChat.Settings.Close')" :title="ncfT('AdminChat.Settings.Close')" @@click.stop="closeInlineChatSettings">
                                 <i class="fa fa-times" aria-hidden="true"></i>
                             </button>
                         </div>
@@ -759,7 +806,7 @@
                             :loading="isStopping"
                             :disabled="isStopping"
                             @@click="stopCurrentRequest">
-                            终止
+                            @AR["AdminChat.Settings.Stop"]
                         </el-button>
                         <el-button
                             v-else
@@ -811,6 +858,16 @@
                                             <small>{{ item.relativePath }}{{ item.isDirectory ? '/' : '' }}</small>
                                         </button>
                                     </div>
+                                    <div v-if="chatCommandMenuOpen && chatCommandSuggestionsFor === 'chatInputText' && slashCommandOptions('chatInputText').length"
+                                         class="chat-command-popover" role="listbox" aria-label="AdminChat 命令">
+                                        <button v-for="option in slashCommandOptions('chatInputText')" :key="option.value"
+                                                type="button" class="chat-command-option" role="option"
+                                                @@mousedown.prevent="selectSlashCommand('chatInputText', option)">
+                                            <strong>{{ option.value }}</strong>
+                                            <span>{{ option.label }}</span>
+                                            <small>{{ option.hint }}</small>
+                                        </button>
+                                    </div>
                                     <el-input
                                         type="textarea"
                                         v-model="chatInputText"
@@ -820,10 +877,10 @@
                                         :rows="4"
                                         :autosize="{ minRows: 4, maxRows: 8 }"
                                         @@keydown.native="handleLauncherInputKeydown"
-                                        @@input.native="handleWorkspaceMentionEdit('chatInputText', $event)"
+                                        @@input.native="handleWorkspaceMentionEdit('chatInputText', $event); updateSlashCommandMenu('chatInputText')"
                                         @@click.native="handleWorkspaceMentionEdit('chatInputText', $event)"
                                         @@keyup.native="handleWorkspaceMentionEdit('chatInputText', $event)"
-                                        @@blur.native="closeWorkspaceMention"
+                                        @@blur.native="closeWorkspaceMention(); chatCommandMenuOpen = false"
                                         @@paste.native="handleWorkspacePaste"
                                         class="chat-entrance-input"
                                         resize="none">
@@ -885,16 +942,49 @@
                                 <div class="launcher-toolbar-control launcher-toolbar-mode">
                                     <span class="launcher-toolbar-label">
                                         <i class="fa fa-sliders"></i>
-                                        <span>执行模式</span>
+                                        <span>{{ ncfT('AdminChat.Settings.ModeLabel') }}</span>
                                     </span>
-                                    <el-radio-group v-model="launcherChatMode" size="mini" class="launcher-mode-toggle">
-                                        <el-radio-button label="simple">
-                                            <i class="fa fa-comment"></i> @AR["AdminChat.ModeSimple"]
-                                        </el-radio-button>
-                                        <el-radio-button label="harness">
-                                            <i class="fa fa-rocket"></i> @AR["AdminChat.ModeHarness"]
-                                        </el-radio-button>
-                                    </el-radio-group>
+                                    <el-popover v-model="launcherModePopoverOpen" placement="top-start" trigger="click"
+                                                width="370" popper-class="admin-chat-mode-popper" :visible-arrow="false">
+                                        <div class="chat-mode-popover-content">
+                                            <div class="chat-mode-popover-title">{{ ncfT('AdminChat.Settings.ModeTitle') }}</div>
+                                            <p class="chat-mode-popover-caption">{{ ncfT('AdminChat.Settings.LauncherModeCaption') }}</p>
+                                            <button v-for="option in chatModeOptions" :key="'launcher-mode-' + option.value"
+                                                    type="button" class="chat-mode-option"
+                                                    :class="{ 'is-active': launcherChatMode === option.value }"
+                                                    @@click="selectLauncherMode(option.value)">
+                                                <i :class="option.icon" aria-hidden="true"></i>
+                                                <span class="chat-mode-option-main">
+                                                    <strong>{{ option.label }}</strong>
+                                                    <small>{{ option.description }}</small>
+                                                </span>
+                                                <i v-if="launcherChatMode === option.value" class="el-icon-check chat-mode-option-check"></i>
+                                            </button>
+                                            <div v-if="launcherChatMode !== 'simple'" class="chat-harness-options">
+                                                <div class="chat-mode-popover-section-title">{{ ncfT('AdminChat.Settings.HarnessAdvanced') }}</div>
+                                                <div class="chat-harness-number-row">
+                                                    <span>{{ ncfT('AdminChat.Settings.MaxIterations') }}</span>
+                                                    <el-input-number v-model="harnessMaxIterations" size="mini" :min="1" :max="64" :step="1"></el-input-number>
+                                                </div>
+                                                <div class="chat-harness-number-row">
+                                                    <span>{{ ncfT('AdminChat.Settings.MaxOutputTokens') }}</span>
+                                                    <el-input-number v-model="chatMaxOutputTokens" size="mini" :min="256" :max="8000" :step="256"></el-input-number>
+                                                </div>
+                                                <div class="chat-harness-option-grid">
+                                                    <el-checkbox v-for="item in harnessOptionItems" :key="'launcher-harness-' + item.key"
+                                                                 v-model="harnessCapabilities[item.key]">
+                                                        {{ item.label }}
+                                                    </el-checkbox>
+                                                </div>
+                                                <p class="chat-mode-popover-caption">{{ ncfT('AdminChat.Settings.CapabilityNotice') }}</p>
+                                            </div>
+                                        </div>
+                                        <el-button slot="reference" size="mini" class="chat-mode-trigger">
+                                            <i :class="launcherChatModeOption.icon"></i>
+                                            {{ chatModeLabel(launcherChatMode) }}
+                                            <i class="el-icon-arrow-down"></i>
+                                        </el-button>
+                                    </el-popover>
                                     <ncf-doc-help topic="admin.harness"></ncf-doc-help>
                                 </div>
 
@@ -1538,7 +1628,16 @@
                           :disabled="memoryBusy"></el-input>
             </el-tab-pane>
             <el-tab-pane :label="ncfT('AdminChat.Memory.SystemMessage')" name="system">
-                <div class="chat-memory-panel-heading"><h3>@AR["AdminChat.Memory.SystemMessage"]<ncf-doc-help topic="admin.memory.system"></ncf-doc-help></h3></div>
+                <div class="chat-memory-panel-heading">
+                    <div>
+                        <h3>@AR["AdminChat.Memory.SystemMessage"]<ncf-doc-help topic="admin.memory.system"></ncf-doc-help></h3>
+                        <p class="chat-memory-caption">默认系统提示词由 PromptRange 管理；当前文本是个人或租户附加偏好。</p>
+                    </div>
+                    <el-button type="primary" plain size="mini" icon="el-icon-edit-outline"
+                               @@click="openSystemMessagePromptRange">
+                        在 PromptRange 中编辑和评分
+                    </el-button>
+                </div>
                 <p class="chat-memory-caption">@AR["AdminChat.Memory.SystemNotice"]</p>
                 <el-input type="textarea" :rows="6" v-model="memorySystemMessage" :maxlength="2000"
                           :disabled="memoryBusy"></el-input>

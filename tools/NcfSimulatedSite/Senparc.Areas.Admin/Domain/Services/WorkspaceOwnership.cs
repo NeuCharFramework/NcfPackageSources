@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：WorkspaceOwnership.cs
-    文件功能描述：按当前管理员判断工作区是否可被接口使用
+    File name: WorkspaceOwnership.cs
+    File description: Related implementation.
 
+    Created by: Senparc - 20261110
 
-    创建标识：Senparc - 20261110
+    Modified by: Senparc - 20261110
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261110
-    修改描述：聊天接口只返回并绑定当前账号自己的工作区
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 

@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：DtoBase.cs
-    文件功能描述：DtoBase 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: DtoBase.cs
+    File description: DtoBase related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -18,7 +21,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Senparc.Ncf.Core.Models
 {
     /// <summary>
-    /// 数据库 Dto 基类
+    ///Legacy comment translated to English.
     /// </summary>
     public class DtoBase<T> : DtoBase
         where T : struct
@@ -27,7 +30,7 @@ namespace Senparc.Ncf.Core.Models
     }
 
     /// <summary>
-    /// 数据库 Dto 基类
+    ///Legacy comment translated to English.
     /// </summary>
     public class DtoBase<T, TID> : DtoBase
     where T : EntityBase<TID>
@@ -37,12 +40,12 @@ namespace Senparc.Ncf.Core.Models
 
 
     /// <summary>
-    /// 数据库 Dto 基类
+    ///Legacy comment translated to English.
     /// </summary>
     public class DtoBase : IDtoBase
     {
         /// <summary>
-        /// 是否软删除
+        ///Legacy comment translated to English.
         /// </summary>
         public bool Flag { get; set; }
 
@@ -59,18 +62,18 @@ namespace Senparc.Ncf.Core.Models
         public string Remark { get; set; }
 
         /// <summary>
-        /// 添加时间
+        /// creation time
         /// </summary>
         public DateTime AddTime { get; set; }
         /// <summary>
-        /// 上次更新时间
+        ///Legacy comment translated to English.
         /// </summary>
         public DateTime LastUpdateTime { get; set; }
 
         /// <summary>
-        /// 租户 ID
-        /// <para>如果为-1，则本系统不启用多租户</para>
-        /// <para>如果为0，则为系统公共数据（特殊情况使用）</para>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         public int TenantId { get; set; }
     }

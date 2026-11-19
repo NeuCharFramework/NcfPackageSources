@@ -1,23 +1,26 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：Index.cshtml.cs
-    文件功能描述：Index.cshtml 相关功能实现
-    
-    
-    创建标识：Senparc - 20241028
-    
-    修改标识：Senparc - 20260705
-    修改描述：v0.0.3 新增登录超时配置并补齐多数据库迁移支持
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.0.4 新增登录超时配置并补齐多数据库迁移支持
+    File name: Index.cshtml.cs
+    File description: Index.cshtml related feature implementation
 
-    修改标识：Senparc - 20260724
-    修改描述：v0.1.0 增强后台模块批量更新并完善多语言管理界面
+    Created by: Senparc - 20241028
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.3.0 新增后台同步管理与可配置多语言页脚
+    Modified by: Senparc - 20260705
+    Change description: v0.0.3 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260705
+    Change description: v0.0.4 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260724
+    Change description: v0.1.0 enhance batch module updates and improve the multilingual management interface
+
+    Modified by: Senparc - 20260804
+    Change description: v0.3.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 

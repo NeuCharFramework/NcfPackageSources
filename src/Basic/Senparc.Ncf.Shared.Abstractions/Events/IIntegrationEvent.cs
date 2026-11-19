@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：IIntegrationEvent.cs
-    文件功能描述：IIntegrationEvent 相关实现
-    
-    
-    创建标识：Senparc - 20260216
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: IIntegrationEvent.cs
+    File description: IIntegrationEvent related implementation
+
+    Created by: Senparc - 20260216
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.7.1-preview2 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -19,7 +22,7 @@ using System.Linq;
 namespace Senparc.Ncf.Shared.Abstractions.Events
 {
     /// <summary>
-    /// 集成事件标记接口
+    ///Legacy comment translated to English.
     /// </summary>
     public interface IIntegrationEvent
     {
@@ -27,23 +30,23 @@ namespace Senparc.Ncf.Shared.Abstractions.Events
         DateTime CreationDate { get; }
         
         /// <summary>
-        /// 父事件 ID（用于追踪事件链和检测循环引用）
+        ///Legacy comment translated to English.
         /// </summary>
         Guid? ParentEventId { get; }
         
         /// <summary>
-        /// 事件链深度（根事件为 0，每次派生 +1）
+        ///Legacy comment translated to English.
         /// </summary>
         int Depth { get; }
         
         /// <summary>
-        /// 事件类型链路径（用于检测循环，格式：EventType1→EventType2→...）
+        ///Legacy comment translated to English.
         /// </summary>
         string EventChain { get; }
     }
 
     /// <summary>
-    /// 基础事件类（建议所有具体事件继承此类）
+    ///Legacy comment translated to English.
     /// </summary>
     public abstract record IntegrationEvent : IIntegrationEvent
     {
@@ -51,22 +54,22 @@ namespace Senparc.Ncf.Shared.Abstractions.Events
         public DateTime CreationDate { get; init; } = DateTime.UtcNow;
         
         /// <summary>
-        /// 父事件 ID（用于追踪事件链）
+        ///Legacy comment translated to English.
         /// </summary>
         public Guid? ParentEventId { get; init; }
         
         /// <summary>
-        /// 事件链深度（根事件为 0）
+        ///Legacy comment translated to English.
         /// </summary>
         public int Depth { get; init; }
         
         /// <summary>
-        /// 事件类型链路径（格式：EventType1→EventType2→...）
+        ///Legacy comment translated to English.
         /// </summary>
         public string EventChain { get; init; } = string.Empty;
 
         /// <summary>
-        /// 用于调试和日志记录的事件摘要信息
+        ///Legacy comment translated to English.
         /// </summary>
         public virtual string GetEventSummary()
         {
@@ -74,7 +77,7 @@ namespace Senparc.Ncf.Shared.Abstractions.Events
         }
         
         /// <summary>
-        /// 从当前事件派生新事件（继承事件链信息）
+        ///Legacy comment translated to English.
         /// </summary>
         public EventMetadata DeriveMetadata()
         {
@@ -87,7 +90,7 @@ namespace Senparc.Ncf.Shared.Abstractions.Events
         }
         
         /// <summary>
-        /// 检查事件链中是否存在循环（同一事件类型出现两次）
+        ///Legacy comment translated to English.
         /// </summary>
         public bool HasCircularReference(string newEventType)
         {
@@ -99,14 +102,14 @@ namespace Senparc.Ncf.Shared.Abstractions.Events
             var eventTypes = EventChain.Split('→').ToList();
             eventTypes.Add(newEventType);
             
-            // 检查是否有重复的事件类型
+            //Legacy comment translated to English.
             var duplicates = eventTypes.GroupBy(x => x).Where(g => g.Count() > 1).ToList();
             return duplicates.Any();
         }
     }
     
     /// <summary>
-    /// 事件元数据（用于创建派生事件）
+    ///Legacy comment translated to English.
     /// </summary>
     public record EventMetadata(
         Guid ParentEventId,

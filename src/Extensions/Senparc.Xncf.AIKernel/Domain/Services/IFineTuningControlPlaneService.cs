@@ -1,17 +1,20 @@
 /*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：IFineTuningControlPlaneService.cs
-    文件功能描述：微调控制面服务契约
-    
-    
-    创建标识：Senparc - 20261014
-    
-    修改标识：Senparc - 20261021
-    修改描述：v0.17.0 定义微调控制面服务契约
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.17.0 enhance job management and telemetry features
+    Copyright (C) 2026 Senparc
+
+    File name: IFineTuningControlPlaneService.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20261014
+
+    Modified by: Senparc - 20261021
+    Change description: v0.17.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261103
+    Change description: v0.17.0 enhance job management and telemetry features
+
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
 ----------------------------------------------------------------*/
 

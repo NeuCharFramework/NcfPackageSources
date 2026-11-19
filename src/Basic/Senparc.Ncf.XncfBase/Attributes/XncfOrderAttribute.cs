@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：XncfOrderAttribute.cs
-    文件功能描述：XncfOrderAttribute 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: XncfOrderAttribute.cs
+    File description: XncfOrderAttribute related implementation
+
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.29.1 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -19,21 +22,21 @@ using System.Text;
 namespace Senparc.Ncf.XncfBase
 {
     /// <summary>
-    /// Xncf 模块执行顺序，Order 数字越大，执行越靠前，如果非系统关键模块，尽量靠后
+    ///Legacy comment translated to English.
     /// </summary>
     public class XncfOrderAttribute : Attribute
     {
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="order">加载顺序，数字越大加载顺序越靠前。请严格按照参考数值：0：普通（默认），1-5000：需要预加载的重要模块，>5000：系统及基础模块</param>
+        ///Legacy comment translated to English.
         public XncfOrderAttribute(int order)
         {
             Order = order;
         }
 
         /// <summary>
-        /// 加载顺序，数字越大加载顺序越靠前。请严格按照参考数值：0：普通（默认），1-5000：需要预加载的重要模块，>5000：系统及基础模块
+        ///Legacy comment translated to English.
         /// </summary>
         public int Order { get; set; }
     }

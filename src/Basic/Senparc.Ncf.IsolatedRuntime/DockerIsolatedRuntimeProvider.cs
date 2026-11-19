@@ -1,16 +1,21 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：DockerIsolatedRuntimeProvider.cs
-    文件功能描述：共享 Docker 隔离运行时实现
+    File name: DockerIsolatedRuntimeProvider.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20261024
+    Created by: Senparc - 20261024
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.1.0-preview1 implement connection manager and workspace file system provider
+    Modified by: Senparc - 20261103
+    Change description: v0.1.0-preview1 implement connection manager and workspace file system provider
+
+    Modified by: Senparc - 20261119
+    Change description: v0.1.1-preview2 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using Microsoft.Extensions.Logging;
@@ -45,7 +50,8 @@ public sealed class DockerIsolatedRuntimeProvider : IIsolatedRuntimeProvider
             return result.ExitCode == 0 && !string.IsNullOrWhiteSpace(result.StandardOutput);
         }
         catch (Exception exception) when (exception is
-                   IOException or InvalidOperationException or TimeoutException)
+                   Win32Exception or UnauthorizedAccessException or IOException or
+                   InvalidOperationException or TimeoutException)
         {
             _logger.LogDebug(exception, "Docker isolated runtime probe failed.");
             return false;

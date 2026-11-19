@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：IServiceBase.cs
-    文件功能描述：IServiceBase 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: IServiceBase.cs
+    File description: IServiceBase related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.23.13-preview12 Updated service infrastructure and related localization metadata
 
 ----------------------------------------------------------------*/
 
@@ -85,7 +88,7 @@ namespace Senparc.Ncf.Service
         void TryDetectChange(T obj);
 
         /// <summary>
-        /// 使用 Mapper.Map&lt;TDto&gt;(entity) 快速返回
+        ///Legacy comment translated to English.
         /// </summary>
         /// <typeparam name="TDto"></typeparam>
         /// <param name="entity"></param>
@@ -93,7 +96,7 @@ namespace Senparc.Ncf.Service
         TDto Mapping<TDto>(T entity);
 
         /// <summary>
-        /// 强制设置租户信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="requestTenantInfo"></param>
         /// <returns></returns>

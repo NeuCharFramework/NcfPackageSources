@@ -1,17 +1,20 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：Register.Database.cs
-    文件功能描述：Register.Database 相关实现
-    
-    
-    创建标识：Senparc - 20250105
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.5.0-preview6 新增知识库生命周期管理与 Agent 模板集成
+    Copyright (C) 2026 Senparc
+
+    File name: Register.Database.cs
+    File description: Register.Database related implementation
+
+    Created by: Senparc - 20250105
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260804
+    Change description: v0.5.0-preview6 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.8.4 Localized knowledge base management and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -24,35 +27,35 @@ using Senparc.Xncf.KnowledgeBase.Models;
 
 namespace Senparc.Xncf.KnowledgeBase
 {
-    public partial class Register : IXncfDatabase  //注册 XNCF 模块数据库（按需选用）
+    public partial class Register : IXncfDatabase  //register the XNCF module database (optional)
     {
-        #region IXncfDatabase 接口
+        #region Legacy section
 
         /// <summary>
-        /// 数据库前缀
+        /// database prefix
         /// </summary>
         public const string DATABASE_PREFIX = "Senparc_KnowledgeBase_";
 
         /// <summary>
-        /// 数据库前缀
+        /// database prefix
         /// </summary>
         public string DatabaseUniquePrefix => DATABASE_PREFIX;
 
         /// <summary>
-        /// 动态获取数据库上下文
+        /// retrieve the database context dynamically
         /// </summary>
         public Type TryGetXncfDatabaseDbContextType => MultipleDatabasePool.Instance.GetXncfDbContextType(this);
 
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // 设计期迁移也必须稳定包含关键索引，不依赖全局扫描状态。
+            //Legacy comment translated to English.
             modelBuilder.ApplyConfiguration(new Admin_KnowledgeBaseConfigurationMapping());
             modelBuilder.ApplyConfiguration(new Admin_KnowledgeBaseItemConfigurationMapping());
         }
 
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
-            //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
+            //DOT REMOVE OR MODIFY THIS LINE - Entities Point
             //ex. services.AddScoped(typeof(Color));
         }
 

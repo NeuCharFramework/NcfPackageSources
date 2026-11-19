@@ -1,13 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：Register.cs
-    文件功能描述：XNCF 注册本地化显示元数据
-    
-    创建标识：Senparc - 20261111
-    
-    修改标识：Senparc - 20261111
-    修改描述：v0.1.0 统一 XNCF Register 显示元数据与多语言资源键
+
+    File name: Register.cs
+    File description: localized display metadata for XNCF registration
+
+    Created by: Senparc - 20261111
+
+    Modified by: Senparc - 20261111
+    Change description: v0.1.0 unify XNCF Register display metadata and localization resource keys
+
+    Modified by: Senparc - 20261119
+    Change description: v0.1.1 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -32,8 +36,8 @@ public sealed partial class Register : XncfRegisterBase, IXncfRegister
     private static readonly XncfRegisterText RegisterText =
         XncfRegisterText.Create<ConnectorsResource>(
             "Module.Connectors",
-            "连接器",
-            "把外部工具配置成可选择的连接器。配置账号后，可在 Chat、Workflow 和 Agent 模板中按权限使用。");
+            "Connectors",
+            "Configure external tools as selectable connectors. After an account is configured, Chat, Workflow, and Agent templates can use them according to permissions.");
 
     public override string Name => "Senparc.Xncf.Connectors";
 

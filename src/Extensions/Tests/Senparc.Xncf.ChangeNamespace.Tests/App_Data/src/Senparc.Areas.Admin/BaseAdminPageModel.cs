@@ -17,17 +17,17 @@ namespace Senparc.Areas.Admin
     {
 
         /// <summary>
-        /// 存储相关用户信息
+        /// Store related user information
         /// </summary>
         public Core.AdminWorkContext AdminWorkContext { get; set; }
 
         public virtual IActionResult RenderError(string message)
         {
-            //保留原有的controller和action信息
+            //preserve the original controller and action information
             //ViewData["FakeControllerName"] = RouteData.Values["controller"] as string;
             //ViewData["FakeActionName"] = RouteData.Values["action"] as string;
 
-            return Page();//TODO：设定一个特定的错误页面
+            return Page();//TODO: Set a specific error page
 
             //return View("Error", new Error_ExceptionVD
             //{

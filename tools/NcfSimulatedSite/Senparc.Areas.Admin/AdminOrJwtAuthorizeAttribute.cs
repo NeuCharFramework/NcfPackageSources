@@ -1,34 +1,47 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: AdminOrJwtAuthorizeAttribute.cs
+    File description: AdminOrJwtAuthorizeAttribute related implementation
+
+    Created by: Senparc - 20260325
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
+
+----------------------------------------------------------------*/
+
 using Microsoft.AspNetCore.Authorization;
 using Senparc.Ncf.Core.Config;
 
 namespace Senparc.Areas.Admin
 {
     /// <summary>
-    /// 兼容 Cookie 和 JWT 认证的权限认证属性
-    /// 支持两种认证方式：NcfAdminAuthorizeScheme (Cookie) 或 Bearer_Backend (JWT)
-    /// 只要其中一种认证通过即可访问
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public class AdminOrJwtAuthorizeAttribute : AuthorizeAttribute
     {
         /// <summary>
-        /// JWT 认证方案名称
+        ///Legacy comment translated to English.
         /// </summary>
         public const string JwtScheme = "Bearer_Backend";
 
         /// <summary>
-        /// 构造函数，配置支持两种认证方案
+        ///Legacy comment translated to English.
         /// </summary>
         public AdminOrJwtAuthorizeAttribute()
         {
-            // 用逗号分隔多个认证方案，只要其中一个通过即可
-            // NcfAdminAuthorizeScheme (Cookie 认证) + Bearer_Backend (JWT 认证)
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             AuthenticationSchemes = $"{SiteConfig.NcfAdminAuthorizeScheme},{JwtScheme}";
         }
 
         /// <summary>
-        /// 构造函数，配置支持两种认证方案并指定 Policy
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="policy">授权策略</param>
+        ///Legacy comment translated to English.
         public AdminOrJwtAuthorizeAttribute(string policy) : this()
         {
             this.Policy = policy;

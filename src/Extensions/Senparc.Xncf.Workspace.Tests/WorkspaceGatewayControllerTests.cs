@@ -1,6 +1,6 @@
 /*----------------------------------------------------------------
-    修改标识：Senparc - 20261102
-    修改描述：适配 Workspace 流式存储契约
+    Modified by: Senparc - 20261102
+    Change description: Updated module behavior and related support.
 ----------------------------------------------------------------*/
 
 using System.Net;

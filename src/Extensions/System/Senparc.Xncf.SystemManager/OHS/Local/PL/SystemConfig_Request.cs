@@ -1,23 +1,26 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：SystemConfig_Request.cs
-    文件功能描述：SystemConfig_Request 相关实现
-    
-    
-    创建标识：Senparc - 20240827
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260707
-    修改描述：v0.14.2-preview2 新增 RequestTempId 暂存日志查询能力并补齐请求模型
+    File name: SystemConfig_Request.cs
+    File description: SystemConfig_Request related implementation
 
-    修改标识：Senparc - 20260715
-    修改描述：v0.14.2-preview2 升级 Senparc.AI 至 0.27.3 与 Senparc.AI.AgentKernel 至 0.1.10
+    Created by: Senparc - 20240827
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.15.0-preview3 为 SystemManager 模块接入统一资源本地化并优化功能文案
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260707
+    Change description: v0.14.2-preview2 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260715
+    Change description: v0.14.2-preview2 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260717
+    Change description: v0.15.0-preview3 integrate shared resource localization and improve feature text for the SystemManager module
+
+    Modified by: Senparc - 20261119
+    Change description: v0.15.14 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 

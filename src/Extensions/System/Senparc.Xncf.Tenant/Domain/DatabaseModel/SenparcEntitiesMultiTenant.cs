@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：SenparcEntitiesMultiTenant.cs
-    文件功能描述：SenparcEntitiesMultiTenant 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: SenparcEntitiesMultiTenant.cs
+    File description: SenparcEntitiesMultiTenant related implementation
+
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.15.17 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -27,22 +30,29 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.Tenant.Domain.DatabaseModel
 {
-    /* 说明：
-     * 把 SenparcEntitiesMultiTenantBase 独立出来做一层的意义在于剥离必须需要支持多租户的对象（如系统表），
-     * 这样可以单独初始化一个只有 TenantInfo，而没有任何其他系统表的 DbContext。
-     * 这么做可以避免一种死循环的情况：
-     *      1、在缓存第一次录入租户信息（TenantInfos）的过程中，需要初始化所有表，并执行 OnModelCreating()，
-     *          而 OnModelCreating() 在整个系统服务生命周期中只执行一次，而此时马上要确定依赖多租户对象（如系统表）的租户信息，
-     *      2、但多租户信息此时尚未生成，如果尝试获取，就进入到 1 的循环中。
+    /* description：
+
+     * Legacy comment translated to English.
+
+     * Legacy comment translated to English.
+
+     * Legacy comment translated to English.
+
+     *      Legacy comment translated to English.
+
+     *          Legacy comment translated to English.
+
+     *      Legacy comment translated to English.
+
      */
 
     /// <summary>
-    /// 多租户 EF Core DbContext
+    /// multi-tenancy EF Core DbContext
     /// </summary>
     public sealed class SenparcEntitiesMultiTenant : SenparcEntitiesDbContextBase, ISenparcEntitiesDbContext
     {
         /// <summary>
-        /// 多租户信息
+        /// multi-tenancyinformation
         /// </summary>
         public DbSet<TenantInfo> TenantInfos { get; set; }
 

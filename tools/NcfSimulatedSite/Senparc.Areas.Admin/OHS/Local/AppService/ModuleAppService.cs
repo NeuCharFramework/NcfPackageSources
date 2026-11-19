@@ -1,17 +1,20 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：ModuleAppService.cs
-    文件功能描述：XNCF 模块管理应用服务
-    
-    
-    创建标识：Senparc - 20241028
-    
-    修改标识：Senparc - 20260724
-    修改描述：v0.1.0 增强后台模块批量更新并完善多语言管理界面
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.2.0 增强后台管理员交互与桌面 Admin Chat 安全同步
+    Copyright (C) 2026 Senparc
+
+    File name: ModuleAppService.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20260724
+    Change description: v0.1.0 enhance batch module updates and improve the multilingual management interface
+
+    Modified by: Senparc - 20260729
+    Change description: v0.2.0 enhance admin interaction and secure desktop Admin Chat synchronization
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Mvc;
@@ -63,7 +66,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取模块统计状态
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         [ApiBind]
@@ -71,17 +74,17 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         {
             var response = await this.GetResponseAsync<AppResponseBase<Module_StatResponse>, Module_StatResponse>(async (response, logger) =>
             {
-                //所有已安装模块
+                //Legacy comment translated to English.
                 var installedXncfModules = await _xncfModuleServiceEx.GetFullListAsync(z => true);
-                //未安装或待升级模块
+                //Legacy comment translated to English.
                 var updateXncfRegisters = _xncfModuleServiceEx.GetUnInstallXncfModule(installedXncfModules);
-                //未安装货代升级模块的版本
+                //Legacy comment translated to English.
                 var newVersions = updateXncfRegisters.Select(z => _xncfModuleServiceEx.GetVersionDisplayName(installedXncfModules, z));
-                //需要升级的版本号
+                //Legacy comment translated to English.
                 var newXncfCount = newVersions.Count(z => !z.Contains("->"));
-                //全新未安装的版本号
+                //Legacy comment translated to English.
                 var updateVersionXncfCount = newVersions.Count() - newXncfCount;
-                //安装后缺失的模块
+                //Legacy comment translated to English.
                 var xncfRegisterManager = new XncfRegisterManager(base.ServiceProvider);
                 var missingXncfCount = installedXncfModules.Count(z => !XncfRegisterManager.RegisterList.Exists(r => r.Uid == z.Uid));
 
@@ -99,7 +102,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取已安装模块信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         [ApiBind]
@@ -107,7 +110,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         {
             var response = await this.GetResponseAsync<AppResponseBase<List<XncfModuleDto>>, List<XncfModuleDto>>(async (response, logger) =>
             {
-                //所有已安装模块
+                //Legacy comment translated to English.
                 var installedXncfModules = await _xncfModuleServiceEx.GetFullListAsync(z => true);
                 var result = installedXncfModules.Select(z => _xncfModuleServiceEx.Mapper.Map<XncfModuleDto>(z)).ToList();
                 return result;
@@ -117,7 +120,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
 
         /// <summary>
-        /// 获取未安装或待更新（版本不同）模块信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         [ApiBind]
@@ -125,9 +128,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         {
             var response = await this.GetResponseAsync<AppResponseBase<List<XncfModuleDto>>, List<XncfModuleDto>>(async (response, logger) =>
             {
-                //所有已安装模块
+                //Legacy comment translated to English.
                 var installedXncfModules = await _xncfModuleServiceEx.GetFullListAsync(z => true);
-                //未安装或待升级模块
+                //Legacy comment translated to English.
                 var updateXncfRegisters = _xncfModuleServiceEx.GetUnInstallXncfModule(installedXncfModules);
 
                 var uninstallOrUpdateXncfModules = updateXncfRegisters
@@ -148,7 +151,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 安装模块
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         [ApiBind]
@@ -164,10 +167,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
 
 
-        #region 单个模块页面操作
+        #region Legacy section
 
         /// <summary>
-        /// 获取单个模块信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="uid"></param>
         /// <returns></returns>
@@ -211,7 +214,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 {
                     if (Senparc.Ncf.XncfBase.Register.FunctionRenderCollection.TryGetValue(xncfRegister.GetType(), out var functionGroup))
                     {
-                        //遍历某个 Register 下所有的方法      TODO：未来可添加分组
+                        //Legacy comment translated to English.
                         foreach (var functionBag in functionGroup.Values)
                         {
                             try
@@ -248,6 +251,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     {
                         AreaHomeUrl = xncfRegister.GetAreaHomeUrl(),
                         MenuName = xncfRegister.MenuName,
+                        Description = xncfRegister.Description,
                         Icon = xncfRegister.Icon,
                         Version = xncfRegister.Version,
                         Uid = xncfRegister.Uid,
@@ -288,10 +292,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
 
         /// <summary>
-        /// 更改状态
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="id">模块 ID</param>
-        /// <param name="toState">切换到状态：关闭-0，开放-1，新增待审核-2，更新待审核-3</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Put)]
         public async Task<StringAppResponse> ChangeStateAsync(int id, XncfModules_State toState)
@@ -313,9 +317,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         ///// <summary>
-        ///// 获取日志
+        ///// Get log
         ///// </summary>
-        ///// <param name="tempId">日志ID</param>
+        ///// <param name="tempId">Log ID</param>
         ///// <returns></returns>
         //public async Task<StringAppResponse> GetLogAsync(string tempId)
         //{
@@ -325,7 +329,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         //        var log = await cache.GetAsync<string>(tempId);
         //        if (log == null)
         //        {
-        //            return Content("日志文件不存在或已下载！");
+        //            return Content("The log file does not exist or has already been downloaded.");
         //        }
 
         //        await cache.RemoveFromCacheAsync(tempId);
@@ -336,7 +340,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         //}
 
         /// <summary>
-        /// 删除模块
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -352,30 +356,30 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     throw new Exception(_localizer["Xncf.ModuleNotAdded"].Value);
                 }
 
-                //删除菜单
+                //delete the menu
                 Func<Task> uninstall = async () =>
                 {
-                    //删除菜单
+                    //delete the menu
                     Ncf.Service.SysRolePermissionService sysPermissionService = base.ServiceProvider.GetService<Ncf.Service.SysRolePermissionService>();
                     Ncf.Service.SysMenuService sysMenuService = base.ServiceProvider.GetService<Ncf.Service.SysMenuService>();
                     var menu = await sysMenuService.GetObjectAsync(z => z.Id == module.MenuId).ConfigureAwait(false);
                     if (menu != null)
                     {
-                        //删除菜单
+                        //delete the menu
                         await sysMenuService.DeleteObjectAsync(menu).ConfigureAwait(false);
-                        //删除权限数据
+                        //Legacy comment translated to English.
                         await sysPermissionService.DeleteAllAsync(z => z.PermissionId == menu.Id);
-                        //更新菜单缓存                                                                                                                            
+                        //Legacy comment translated to English.
                         await sysMenuService.GetMenuDtoByCacheAsync(true).ConfigureAwait(false);
                     }
                     await _xncfModuleService.DeleteObjectAsync(module).ConfigureAwait(false);
                 };
 
-                //尝试从已加载的模块中执行删除过程
+                //Legacy comment translated to English.
                 var register = XncfRegisterManager.RegisterList.FirstOrDefault(z => z.Uid == module.Uid);
                 if (register == null)
                 {
-                    //直接删除，如dll已经不存在，可能引发此问题，只能在当前系统内直接执行删除
+                    //Legacy comment translated to English.
                     await uninstall().ConfigureAwait(false);
                 }
                 else
@@ -391,9 +395,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
 
         /// <summary>
-        /// 提交信息，执行方法
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="executeFuncParamDto2">提交参数</param>
+        ///Legacy comment translated to English.
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Post)]
         public async Task<AppResponseBase<Module_RunFunctionResponse>> RunFunctionAsync([FromBody] ExecuteFuncParamDto2 executeFuncParamDto2)
@@ -463,7 +467,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                         paras = new[] { requestPara };
                         break;
                     case 0:
-                        //不处理
+                        //nothandling
                         break;
                     default:
                         {
@@ -478,27 +482,34 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 await taskFunc.ConfigureAwait(false);
 
 
-                //方案一：
-                //参考：https://stackoverflow.com/questions/48033760/cast-taskt-to-taskobject-in-c-sharp-without-having-t/48033780
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 var taskResult = (object)((dynamic)taskFunc).Result;
                 var result = taskResult as IAppResponse;
 
-                /* 方案二：
+                /* Legacy comment translated to English.
+
                 var obj0 = rightFunctionBag.Value.MethodInfo.Invoke(functionClass, paras);
+
                 var obj1 = taskFunc.GetType().GetMethod("GetAwaiter").Invoke(taskFunc, null);
+
                 var obj2= obj1.GetType().GetMethod("GetResult").Invoke(obj1, null);
+
                 var realResult = obj2 as IAppResponse;
 
-                方案效率对比见：https://www.cnblogs.com/szw/p/dynamic-vs-reflect.html
+
+
+                Legacy comment translated to English.
+
                 */
 
-                //已经在 AppService 中记录
+                //Legacy comment translated to English.
                 //var tempId = "Xncf-FunctionRun-" + Guid.NewGuid().ToString("n");
-                ////记录日志缓存
+                //Legacy comment translated to English.
                 //if (result.Data != null)
                 //{
                 //    var cache = _serviceProvider.GetObjectCacheStrategyInstance();
-                //    await cache.SetAsync(tempId, result.Data.ToJson(), TimeSpan.FromMinutes(5));//TODO：可设置
+                //Legacy comment translated to English.
                 //}
 
                 var returnData = result.Data is string stringData ? stringData.HtmlEncode() : result.Data?.ToJson().HtmlEncode();

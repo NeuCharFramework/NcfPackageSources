@@ -1,34 +1,38 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：AgentsWorkflowObjectProvider.cs
-    文件功能描述：向 NeuChar Workflow 提供 AgentsManager 组和独立 Agent
+    File name: AgentsWorkflowObjectProvider.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260809
+    Created by: Senparc - 20260809
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+    Modified by: Senparc - 20260813
+    Change description: v0.15.0-preview11 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.15.0-preview20 增强 AgentTemplate、ChatGroup 与发布型 A2A 的取消和请求处理
+    Modified by: Senparc - 20260815
+    Change description: v0.15.0-preview20 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 支持 AgentTemplate 模型绑定、空输出 Token 重试与 Human-in-the-Loop
+    Modified by: Senparc - 20260817
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
+    Modified by: Senparc - 20260822
+    Change description: v0.16.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260829
-    修改描述：v0.17.0 增强 Agent 请求诊断、ChatGroup 状态处理与工作流对象支持
+    Modified by: Senparc - 20260829
+    Change description: v0.17.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.19.0 工作流对象调用时记录 Token 用量
+    Modified by: Senparc - 20261021
+    Change description: v0.19.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.19.1 add AITokenUsageRecorder and related services for token usage tracking
+    Modified by: Senparc - 20261103
+    Change description: v0.19.1 add AITokenUsageRecorder and related services for token usage tracking
+
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 

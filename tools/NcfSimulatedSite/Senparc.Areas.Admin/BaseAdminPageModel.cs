@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：BaseAdminPageModel.cs
-    文件功能描述：BaseAdminPageModel.cs 相关实现
-    
-    
-    创建标识：Senparc - 20241028
-    
-    修改标识：Senparc - 20260729
-    修改描述：v0.2.0 增强后台管理员交互与桌面 Admin Chat 安全同步
+
+    File name: BaseAdminPageModel.cs
+    File description: BaseAdminPageModel.cs related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20260729
+    Change description: v0.2.0 enhance admin interaction and secure desktop Admin Chat synchronization
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 
@@ -35,7 +38,7 @@ namespace Senparc.Areas.Admin
 
     }
 
-    //暂时取消权限验证
+    //Temporarily revoke permission validation
     [ServiceFilter(typeof(AuthenticationResultFilterAttribute))]
     [AdminAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
     public class BaseAdminPageModel : AdminPageModelBase, IBaseAdminPageModel
@@ -67,7 +70,7 @@ namespace Senparc.Areas.Admin
             //context
             if (!context.ModelState.IsValid)
             {
-                //全局模型验证
+                //globalmodelvalidation
                 var state = context.ModelState
                     .Where(_ => _.Value.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
                     .Select(_ => new { _.Key, Errors = _.Value.Errors.Select(__ => __.ErrorMessage) });

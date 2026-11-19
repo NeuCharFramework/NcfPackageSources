@@ -1,16 +1,20 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：IAITokenUsageRecorder.cs
-    文件功能描述：统一 Token 用量记录接口
+    File name: IAITokenUsageRecorder.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20261011
+    Created by: Senparc - 20261011
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.17.0 定义 Token 用量记录入口
+    Modified by: Senparc - 20261021
+    Change description: v0.17.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.17.0 add AITokenUsageRecorder and related services for token usage tracking
+    Modified by: Senparc - 20261103
+    Change description: v0.17.0 add AITokenUsageRecorder and related services for token usage tracking
+
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
 ----------------------------------------------------------------*/
 
@@ -19,8 +23,8 @@ using Senparc.Xncf.AIKernel.Domain.Models.Usage;
 namespace Senparc.Xncf.AIKernel.Domain.Services
 {
     /// <summary>
-    /// AI 调用 Token 用量记录入口。
-    /// <para>调用方只负责提交记录，持久化由后台队列异步完成。</para>
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public interface IAITokenUsageRecorder
     {

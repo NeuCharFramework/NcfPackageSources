@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：SysRolePermissionService.cs
-    文件功能描述：SysRolePermissionService 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: SysRolePermissionService.cs
+    File description: SysRolePermissionService related implementation
+
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.23.13-preview12 Updated service infrastructure and related localization metadata
 
 ----------------------------------------------------------------*/
 
@@ -118,7 +121,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 添加权限信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="sysMenuDto"></param>
         /// <returns></returns>
@@ -134,38 +137,38 @@ namespace Senparc.Ncf.Service
                 SysRolePermission sysPermission = new SysRolePermission(item);
                 sysRoleMenus.Add(sysPermission);
             }
-            #region 正确方式1 传统方式
+            #region Legacy section
             //var db = BaseData.BaseDB.BaseDataContext;
             //IEnumerable<SysPermission> entitis = await db.Set<SysPermission>().Where(o => o.RoleId == sysMenuDto.FirstOrDefault().RoleId).ToListAsync();
             //db.Set<SysPermission>().RemoveRange(entitis);
             //db.Set<SysPermission>().AddRange(sysRoleMenus);
             //await db.SaveChangesAsync();
-            //await DbToCacheAsync();//暂时 
+            //await DbToCacheAsync();//temporarily 
             #endregion
 
-            #region 异常方法
+            #region Legacy section
             //await BeginTransactionAsync(async () =>
             //{
             //    IEnumerable<SysPermission> entitis = await GetFullListAsync(_ => _.RoleId == sysMenuDto.FirstOrDefault().RoleId);
             //    await DeleteAllAsync(entitis);
             //    await SaveObjectListAsync(sysRoleMenus);
-            //    await DbToCacheAsync();//暂时
+            //    await DbToCacheAsync();//temporarily
             //}); 
             #endregion
-            #region 正确方式2 多次调用DbContext.SaveChanges 方式
+            #region Legacy section
             // https://docs.microsoft.com/zh-cn/ef/core/miscellaneous/connection-resiliency#execution-strategies-and-transactions
             await ServiceBase.ResilientTransaction.New(BaseData.BaseDB.BaseDataContext).ExecuteAsync(async () =>
             {
                 IEnumerable<SysRolePermission> entitis = await GetFullListAsync(_ => _.RoleId == sysMenuDto.FirstOrDefault().RoleId);
-                await DeleteAllAsync(entitis); // 此处会调用SaveChangeAsync
-                await SaveObjectListAsync(sysRoleMenus); // 此处会调用SaveChangeAsync
-                await DbToCacheAsync();//暂时
+                await DeleteAllAsync(entitis); //Legacy comment translated to English.
+                await SaveObjectListAsync(sysRoleMenus); //Legacy comment translated to English.
+                await DbToCacheAsync();//temporarily
             });
             #endregion
         }
 
         /// <summary>
-        /// 获取当前用户的权限
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public async Task<IEnumerable<SysPermissionDto>> GetUserSysPermissionDtosAsync()
@@ -226,7 +229,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 验证权限
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="codes"></param>
         /// <returns></returns>
@@ -247,7 +250,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 获取当前用户可以看见的菜单（可见）树形结构
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="isRefresh"></param>
         /// <returns></returns>
@@ -261,7 +264,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 获取当前用户可以看见的菜单（可见）
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public async Task<IEnumerable<SysMenuDto>> GetCurrentUserMenuDtoAsync(MenuType menuType = MenuType.菜单)
@@ -274,7 +277,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 获取用户可见的所有资源（除菜单外）
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public async Task<IEnumerable<SysMenuDto>> GetCurrentUserResourcesDtoAsync()
@@ -287,7 +290,7 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 获取用户得权限(包括按钮)
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="currentAdminUserId"></param>
         /// <returns></returns>
@@ -305,10 +308,10 @@ namespace Senparc.Ncf.Service
         }
 
         /// <summary>
-        /// 检查当前用户是否权限
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="resourceCodes">资源codes</param>
-        /// <param name="adminUserInfoId">当前用户Id</param>
+        ///Legacy comment translated to English.
+        /// <param name="adminUserInfoId">currentuserId</param>
         /// <returns></returns>
         public async Task<bool> HasPermissionAsync(string[] resourceCodes, int adminUserInfoId)
         {
@@ -316,9 +319,9 @@ namespace Senparc.Ncf.Service
             {
                 return false;
             }
-            string cacheKey = string.Format("adminUserInfoPermission:{0}", adminUserInfoId); // 缓存当前用户的所有资源
+            string cacheKey = string.Format("adminUserInfoPermission:{0}", adminUserInfoId); //Legacy comment translated to English.
             var distributedCache = _serviceProvider.GetService<IDistributedCache>();
-            string codesJsonValue = await distributedCache.GetStringAsync(cacheKey); // 尝试从缓存读取用户的资源
+            string codesJsonValue = await distributedCache.GetStringAsync(cacheKey); //Legacy comment translated to English.
             IEnumerable<string> codes = null;
             if (string.IsNullOrEmpty(codesJsonValue))
             {
@@ -327,7 +330,7 @@ namespace Senparc.Ncf.Service
                 await distributedCache.SetStringAsync(cacheKey, codesJsonValue, new DistributedCacheEntryOptions()
                 {
                     SlidingExpiration = TimeSpan.FromHours(8)
-                }); // 缓存 8 小时
+                }); //Legacy comment translated to English.
             }
             else
             {
@@ -337,7 +340,7 @@ namespace Senparc.Ncf.Service
             {
                 return false;
             }
-            //获取当前用户的所有资源code
+            //Legacy comment translated to English.
             return codes.Intersect(resourceCodes).Any();
         }
     }

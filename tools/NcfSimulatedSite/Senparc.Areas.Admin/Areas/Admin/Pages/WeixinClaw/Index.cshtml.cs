@@ -1,17 +1,20 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：Index.cshtml.cs
-    文件功能描述：Index.cshtml.cs implementation and project behavior.
+    File name: Index.cshtml.cs
+    File description: Index.cshtml.cs implementation and project behavior.
 
+    Created by: Senparc - 20260928
 
-    创建标识：Senparc - 20260928
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 add WeixinClawBindingProfile management and UI enhancements
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 add WeixinClawBindingProfile management and UI enhancements
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 

@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：AdminChatSessionWorkflowService.cs
-    文件功能描述：AdminChatSessionWorkflowService.cs 相关实现
+    File name: AdminChatSessionWorkflowService.cs
+    File description: AdminChatSessionWorkflowService.cs related implementation
 
+    Created by: Senparc - 20260821
 
-    创建标识：Senparc - 20260821
+    Modified by: Senparc - 20260822
+    Change description: v0.6.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.6.0 新增管理端 Chat 会话工作流能力
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 

@@ -1,8 +1,10 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：NeuCharWorkflowTests.cs
-    文件功能描述：Workflow 自动保存设置与版本快照测试
+    File name: NeuCharWorkflowTests.cs
+    File description: Related implementation.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;

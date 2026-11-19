@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：PromptInitEvents.cs
-    文件功能描述：PromptInitEvents 相关实现
-    
-    
-    创建标识：Senparc - 20260306
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: PromptInitEvents.cs
+    File description: PromptInitEvents related implementation
+
+    Created by: Senparc - 20260306
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.3.3-preview8 Localized PromptRange administration and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -18,15 +21,15 @@ using Senparc.Ncf.Shared.Abstractions.Events;
 namespace Senparc.Xncf.PromptRange.Abstractions.Events
 {
     /// <summary>
-    /// Prompt 初始化请求事件（支持自定义 Model）
+    ///Legacy comment translated to English.
     /// </summary>
     public record PromptInitRequestEvent(
         string RequestId,
-        int? ModelId = null  // 可选：用户选择的 Model ID
+        int? ModelId = null  //Legacy comment translated to English.
     ) : IntegrationEvent;
 
     /// <summary>
-    /// Prompt 初始化响应事件
+    ///Legacy comment translated to English.
     /// </summary>
     public record PromptInitResponseEvent(
         string RequestId,

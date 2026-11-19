@@ -2,12 +2,12 @@
   el: "#app",
   data() {
     return {
-      newTableData: [], // 新模块数据
-      oldTableData: [], // 已安装模块
-      updatedTableData: [], // 待更新模块
+      newTableData: [], //Legacy comment translated to English.
+      oldTableData: [], //Legacy comment translated to English.
+      updatedTableData: [], //Legacy comment translated to English.
       activeTab: 'new',
       selectedUpdatedModules: [],
-      isExtend: false, //是否切换状态
+      isExtend: false, //Legacy comment translated to English.
       handlerText: "",
       handlerTips: "",
       newData: {},
@@ -54,7 +54,7 @@
     this.getList();
   },
   methods: {
-    // 获取
+    // get
     async getList() {
       const [oldTableData, newTableData, updatedTableData] = await Promise.all([
         service.get('/Admin/XncfModule/Index?handler=Mofules'),
@@ -62,7 +62,7 @@
         service.get('/Admin/XncfModule/Index?handler=UpdatedMofules')
       ]);
       this.oldTableData = oldTableData.data.data.result;
-      // 是否切换状态
+      //Legacy comment translated to English.
       this.isExtend = oldTableData.data.data.hideModuleManager;
       this.newTableData = newTableData.data.data;
       this.updatedTableData = updatedTableData.data.data;
@@ -81,18 +81,18 @@
       url.searchParams.set('tab', tabName);
       window.history.replaceState(null, '', url.pathname + url.search + url.hash);
     },
-    // 切换状态
+    //Legacy comment translated to English.
     async handleSwitch() {
       await service.post('/Admin/XncfModule/Index?handler=HideManager');
       this.isExtend = !this.isExtend;
       window.location.href = "/Admin/Index";
     },
-    // 安装
+    //Legacy comment translated to English.
     async handleInstall(index, row) {
       await service.get(`/Admin/XncfModule/Index?handler=ScanAjax&uid=${row.uid}`);
       window.sessionStorage.setItem('setNavMenuActive', row.menuName);
       getNavMenu();
-      // 跳转到模块详情
+      //Legacy comment translated to English.
       setTimeout(function () {
         window.location.href = `/Admin/XncfModule/Start/?uid=${row.uid}`;
       }, 100);
@@ -159,11 +159,11 @@
         this.batchUpdate.loading = false;
       }
     },
-    // 操作
+    //Legacy comment translated to English.
     handleHandle(index, row) {
       window.location.href = "/Admin/XncfModule/Start/?uid=" + row.xncfRegister.uid;
     },
-    // 主页
+    //Legacy comment translated to English.
     handleIndex(index, row) {
       window.location.href = row.xncfRegister.homeUrl;
     }

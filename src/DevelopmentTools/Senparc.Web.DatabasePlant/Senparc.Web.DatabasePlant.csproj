@@ -3,49 +3,52 @@
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 
-		<Version>0.0.23</Version>
-		<PackageReleaseNotes>		  [2026-07-04] v0.0.1 Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
-		  1、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
-		  [2026-07-05] v0.0.2 Dependency update from Senparc.Xncf.AgentsManager to 0.11.1-preview3
-		  [2026-07-05] v0.0.3 Dependency update from Senparc.Xncf.AgentsManager to 0.11.2-preview4
-		  [2026-07-07] v0.0.4 Dependency updates from upstream modules
-		  1、Dependency update from Senparc.Xncf.AgentsManager to 0.11.3-preview5
-		  2、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
-		  [2026-07-17] v0.0.5 同步上游项目版本并适配统一本地化能力
-		  1、Dependency update from Senparc.Xncf.AgentsManager to 0.12.0-preview6
-		  2、同步 AgentsManager 0.12.0-preview6 的剪贴板兼容性改进
-		  [2026-07-29] v0.0.6 Dependency update from Senparc.Xncf.AgentsManager to 0.12.1-preview7
-		  [2026-07-31] v0.0.7 Dependency update from Senparc.Xncf.AgentsManager to 0.13.0-preview8
-		  [2026-08-04] v0.0.8 Dependency update from Senparc.Xncf.AgentsManager to 0.14.0-preview9
-		  [2026-08-08] v0.0.9 Dependency update from Senparc.Xncf.AgentsManager to 0.14.1-preview10
-		  [2026-08-13] v0.0.10 Dependency update from Senparc.Xncf.AgentsManager to 0.15.0-preview11
-		  [2026-08-15] v0.0.11 Dependency update from Senparc.Xncf.AgentsManager to 0.15.0-preview20
-		  1、Dependency update from Senparc.Xncf.AgentsManager to 0.16.0
-		  [2026-08-22] v0.0.12 同步 Web 数据库示例依赖
-		  1、更新示例站点依赖以兼容当前 AgentsManager 和基础服务版本
-		  [2026-08-29] v0.0.13 Dependency updates from Senparc.Xncf.AgentsManager to 0.17.0
-		  1、Dependency update from Senparc.Xncf.AgentsManager to 0.17.0
-		  [2026-09-15] v0.0.14 同步上游模块版本并保持宿主兼容
-		  1、更新项目依赖组合，兼容当前窗口内的 Senparc.Areas.Admin 及相关模块能力
-		  [2026-09-16] v0.0.15 Dependency updates from upstream modules
-		  [2026-09-17] v0.0.16 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0; Senparc.Xncf.AIKernel to 0.16.2; Senparc.Xncf.AgentsManager to 0.18.0; Senparc.Xncf.KnowledgeBase to 0.7.4; Senparc.Xncf.MCP to 0.5.5; Senparc.Xncf.PromptRange to 0.19.7; Senparc.Xncf.XncfBuilder to 0.41.4
-		  1、同步受影响的基础库、AI 模块或宿主项目版本
-		  2、保持项目引用链与当前功能兼容
-		  [2026-10-05] v0.0.17 Enhanced Senparc.Web.DatabasePlant functionality and compatibility
-		  1、Updated Senparc.Web.DatabasePlant project behavior and integration for the latest feature and reliability improvements.
-		  [2026-10-09] v0.0.18 Dependency update from Senparc.Xncf.AgentsManager to 0.18.3
-		  [2026-10-21] v0.0.19 Dependency update from Senparc.Xncf.AgentsManager to 0.19.0
-		  [2026-10-24] Reference Admin for standard multi-provider Chat attachment migrations.
-		  [2026-10-24] v0.0.20 支持 Workspace 标准 EF 迁移生成
-		  1、引用 Workspace 模块作为设计时迁移目标
-		  [2026-11-05] v0.0.22 同步直接依赖项目版本
-		  1、Dependency update from Senparc.Areas.Admin to 0.12.26
-		  2、Dependency update from Senparc.Xncf.AgentsManager to 0.19.2
-		  3、Dependency update from Senparc.Xncf.Workspace to 0.2.7
-		  [2026-11-11] v0.0.23 同步后台、AgentsManager，并引用 Connectors
-		  1、Dependency update from Senparc.Areas.Admin to 0.12.28
-		  2、Dependency update from Senparc.Xncf.AgentsManager to 0.19.3
-		  3、引用 Senparc.Xncf.Connectors 0.1.0，使迁移宿主包含连接器模型。
+		<Version>0.0.24</Version>
+		<PackageReleaseNotes>[2026-07-04] v0.0.1 Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
+		    1. Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
+		    [2026-07-05] v0.0.2 Dependency update from Senparc.Xncf.AgentsManager to 0.11.1-preview3
+		    [2026-07-05] v0.0.3 Dependency update from Senparc.Xncf.AgentsManager to 0.11.2-preview4
+		    [2026-07-07] v0.0.4 Dependency updates from upstream modules
+		    1. Dependency update from Senparc.Xncf.AgentsManager to 0.11.3-preview5
+		    2. Updated module behavior and related support.
+		    [2026-07-17] v0.0.5 synchronize upstream project versions and adopt shared localization capabilities
+		    1. Dependency update from Senparc.Xncf.AgentsManager to 0.12.0-preview6
+		    2. Updated module behavior and related support.
+		    [2026-07-29] v0.0.6 Dependency update from Senparc.Xncf.AgentsManager to 0.12.1-preview7
+		    [2026-07-31] v0.0.7 Dependency update from Senparc.Xncf.AgentsManager to 0.13.0-preview8
+		    [2026-08-04] v0.0.8 Dependency update from Senparc.Xncf.AgentsManager to 0.14.0-preview9
+		    [2026-08-08] v0.0.9 Dependency update from Senparc.Xncf.AgentsManager to 0.14.1-preview10
+		    [2026-08-13] v0.0.10 Dependency update from Senparc.Xncf.AgentsManager to 0.15.0-preview11
+		    [2026-08-15] v0.0.11 Dependency update from Senparc.Xncf.AgentsManager to 0.15.0-preview20
+		    1. Dependency update from Senparc.Xncf.AgentsManager to 0.16.0
+		    [2026-08-22] v0.0.12 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    [2026-08-29] v0.0.13 Dependency updates from Senparc.Xncf.AgentsManager to 0.17.0
+		    1. Dependency update from Senparc.Xncf.AgentsManager to 0.17.0
+		    [2026-09-15] v0.0.14 synchronize upstream module versions and preserve host compatibility
+		    1. Updated module behavior and related support.
+		    [2026-09-16] v0.0.15 Dependency updates from upstream modules
+		    [2026-09-17] v0.0.16 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0; Senparc.Xncf.AIKernel to 0.16.2; Senparc.Xncf.AgentsManager to 0.18.0; Senparc.Xncf.KnowledgeBase to 0.7.4; Senparc.Xncf.MCP to 0.5.5; Senparc.Xncf.PromptRange to 0.19.7; Senparc.Xncf.XncfBuilder to 0.41.4
+		    1. Updated module behavior and related support.
+		    2. Updated module behavior and related support.
+		    [2026-10-05] v0.0.17 Enhanced Senparc.Web.DatabasePlant functionality and compatibility
+		    1. Updated Senparc.Web.DatabasePlant project behavior and integration for the latest feature and reliability improvements.
+		    [2026-10-09] v0.0.18 Dependency update from Senparc.Xncf.AgentsManager to 0.18.3
+		    [2026-10-21] v0.0.19 Dependency update from Senparc.Xncf.AgentsManager to 0.19.0
+		    [2026-10-24] Reference Admin for standard multi-provider Chat attachment migrations.
+		    [2026-10-24] v0.0.20 Updated module behavior and related support.
+		    1. Updated module behavior and related support.
+		    [2026-11-05] v0.0.22 synchronize direct dependency project versions
+		    1. Dependency update from Senparc.Areas.Admin to 0.12.26
+		    2. Dependency update from Senparc.Xncf.AgentsManager to 0.19.2
+		    3. Dependency update from Senparc.Xncf.Workspace to 0.2.7
+		    [2026-11-11] v0.0.23 Updated module behavior and related support.
+		    1. Dependency update from Senparc.Areas.Admin to 0.12.28
+		    2. Dependency update from Senparc.Xncf.AgentsManager to 0.19.3
+		    3. Updated module behavior and related support.
+		    [2026-11-19] v0.0.24 Updated module behavior, localization metadata, and English source comments
+		    1. Updated localized labels, resource fallbacks, and user-facing messages across affected surfaces.
+		    2. Standardized related English source comments and package metadata for the current release.
 		</PackageReleaseNotes>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>

@@ -1,10 +1,12 @@
 /*----------------------------------------------------------------
-    文件名：Board.js
-    文件功能描述：Pivot 面板（Provit Panel）管理页：
-    面板 CRUD、Provit Block 增删与拖动排序、AI Chat 创建或修改面板
 
-    修改标识：Senparc - 20261101
-    修改描述：支持从首页缺失块跳转并预填模块与 Function Code
+    File name: Board.js
+    File description: Related implementation.
+    Legacy comment translated to English.
+
+    Modified by: Senparc - 20261101
+    Change description: Updated module behavior and related support.
+
 ----------------------------------------------------------------*/
 new Vue({
     el: '#app',

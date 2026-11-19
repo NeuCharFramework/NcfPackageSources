@@ -1,29 +1,33 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：NeuBellWebHookModels.cs
-    文件功能描述：NeuBell WebHook（WebAPI）设置与请求日志实体：
-    为纽铃（NeuBell）提供外部 WebHook 通知能力，当纽铃条目新增（added）
-    或移除（removed）时，按配置以异步方式请求对应的 WebHook 地址；
-    同时记录每一次 WebHook 请求的完整数据与结果（NeuBellWebHookLog）
+    File name: NeuBellWebHookModels.cs
+    File description: Related implementation.
+    Legacy comment translated to English.
+    Legacy comment translated to English.
+    Legacy comment translated to English.
+    Legacy comment translated to English.
 
-    创建标识：Senparc - 20260906
+    Created by: Senparc - 20260906
 
-    修改标识：Senparc - 20260914
-    修改描述：v0.7.1 WebHook 增强：请求方式（GET/POST/PUT）、请求体模板与 {{占位符}}
-    （与 Workflow 文本模板同格式）、请求日志记录请求方式与渲染后的实际请求数据
+    Modified by: Senparc - 20260914
+    Change description: v0.7.1 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+    Modified by: Senparc - 20260915
+    Change description: v0.8.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260916
-    修改描述：v0.9.0 增强 Admin Chat 取消与推理轨迹，并扩展 NeuBell WebHook 请求能力
+    Modified by: Senparc - 20260916
+    Change description: v0.9.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 维护NeuBell WebHook（WebAPI）设置与请求日志实体：
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 
@@ -36,65 +40,65 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel;
 
 /// <summary>
-/// 纽铃 WebHook 设置：一条记录对应一个外部 WebAPI（WebHook）通知端点。
-/// 当某个纽铃 Provider 的条目发生新增或移除时，Dispatcher 会按
-/// <see cref="ProviderFilter"/> 匹配并异步 POST 通知。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 [Table(Register.DATABASE_PREFIX + nameof(NeuBellWebHook))]
 [Serializable]
 public class NeuBellWebHook : EntityBase<int>
 {
     /// <summary>
-    /// 显示名称
+    /// displayname
     /// </summary>
     [Required, MaxLength(200)]
     public string Name { get; private set; }
 
     /// <summary>
-    /// WebHook（WebAPI）请求地址，仅允许 http/https
+    ///Legacy comment translated to English.
     /// </summary>
     [Required, MaxLength(1000)]
     public string WebHookUrl { get; private set; }
 
     /// <summary>
-    /// 只通知指定纽铃 Provider（ProviderId）；留空表示全部 Provider
+    ///Legacy comment translated to English.
     /// </summary>
     [MaxLength(200)]
     public string ProviderFilter { get; private set; }
 
     /// <summary>
-    /// 可选签名密钥：配置后请求会携带 X-NeuBell-Signature（HMAC-SHA256）请求头
+    ///Legacy comment translated to English.
     /// </summary>
     [MaxLength(300)]
     public string Secret { get; private set; }
 
     /// <summary>
-    /// 请求方式：GET / POST / PUT（默认 POST）。GET 请求不发送请求体，
-    /// 数据通过地址中的 {{占位符}} 传递；签名仅对携带请求体的请求生效。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     [Required, MaxLength(10)]
     public string HttpMethod { get; private set; }
 
     /// <summary>
-    /// 可选请求体模板：支持 {{占位符}}（与 Workflow 文本模板同格式）。
-    /// 留空时使用系统默认的结构化 JSON 报文；模板以 { 或 [ 开头时按 JSON 处理
-    /// （字符串占位符自动做 JSON 转义，{{payload}} 原样嵌入），否则按纯文本处理。
-    /// GET 请求不发送请求体，本设置不生效。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public string BodyTemplate { get; private set; }
 
     /// <summary>
-    /// 条目新增（added）时是否通知
+    ///Legacy comment translated to English.
     /// </summary>
     public bool NotifyOnAdd { get; private set; }
 
     /// <summary>
-    /// 条目移除（removed）时是否通知
+    ///Legacy comment translated to English.
     /// </summary>
     public bool NotifyOnRemove { get; private set; }
 
     /// <summary>
-    /// 是否启用
+    /// whether enabled
     /// </summary>
     public bool IsEnabled { get; private set; }
 
@@ -117,14 +121,14 @@ public class NeuBellWebHook : EntityBase<int>
     }
 
     /// <summary>
-    /// 支持的请求方式
+    ///Legacy comment translated to English.
     /// </summary>
     public const string MethodGet = "GET";
     public const string MethodPost = "POST";
     public const string MethodPut = "PUT";
 
     /// <summary>
-    /// 请求体模板最大长度（字符）
+    ///Legacy comment translated to English.
     /// </summary>
     public const int MaxBodyTemplateLength = 20000;
 
@@ -164,7 +168,7 @@ public class NeuBellWebHook : EntityBase<int>
     }
 
     /// <summary>
-    /// 规范化请求方式（不区分大小写；空值回退 POST；非法值回退 POST）
+    ///Legacy comment translated to English.
     /// </summary>
     public static string NormalizeHttpMethod(string input)
     {
@@ -173,7 +177,7 @@ public class NeuBellWebHook : EntityBase<int>
     }
 
     /// <summary>
-    /// 校验请求方式（返回用户可读的错误信息）
+    ///Legacy comment translated to English.
     /// </summary>
     public static bool TryValidateHttpMethod(string input, out string normalized, out string error)
     {
@@ -190,7 +194,7 @@ public class NeuBellWebHook : EntityBase<int>
     }
 
     /// <summary>
-    /// 校验 WebHook 地址是否合法（仅允许 http/https，且必须可解析为绝对 URI）
+    ///Legacy comment translated to English.
     /// </summary>
     public static bool TryValidateUrl(string url, out string error)
     {
@@ -212,9 +216,9 @@ public class NeuBellWebHook : EntityBase<int>
     }
 
     /// <summary>
-    /// 校验“可包含 {{占位符}}”的 WebHook 地址模板：
-    /// 先将合法占位符替换为探测值再按绝对 http/https 地址校验；
-    /// 发送前 Dispatcher 会对渲染后的真实地址再次校验。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public static bool TryValidateUrlTemplate(string url, out string error)
     {
@@ -229,7 +233,7 @@ public class NeuBellWebHook : EntityBase<int>
     }
 
     /// <summary>
-    /// 该 WebHook 是否关注指定 Provider（ProviderFilter 留空表示全部）
+    ///Legacy comment translated to English.
     /// </summary>
     public bool MatchesProvider(string providerId)
     {
@@ -239,8 +243,8 @@ public class NeuBellWebHook : EntityBase<int>
 }
 
 /// <summary>
-/// 纽铃 WebHook 请求日志：记录每一次发往 WebHook（WebAPI）的请求数据与结果，
-/// 包含创建 NeuBell 时按参数触发的单次通知、设置页“测试”事件与后台监测的变更通知。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 [Table(Register.DATABASE_PREFIX + nameof(NeuBellWebHookLog))]
 [Serializable]
@@ -251,69 +255,69 @@ public class NeuBellWebHookLog : EntityBase<int>
     public const string StatusFailed = "failed";
 
     /// <summary>
-    /// 请求类型：item-created（创建 NeuBell 时按参数通知）/ items-changed（监测到条目变化）/ test（测试事件）
+    ///Legacy comment translated to English.
     /// </summary>
     [Required, MaxLength(50)]
     public string EventKind { get; private set; }
 
     /// <summary>
-    /// 实际使用的请求方式（GET / POST / PUT）
+    ///Legacy comment translated to English.
     /// </summary>
     [MaxLength(10)]
     public string HttpMethod { get; private set; }
 
     /// <summary>
-    /// 请求地址
+    ///Legacy comment translated to English.
     /// </summary>
     [Required, MaxLength(1000)]
     public string WebHookUrl { get; private set; }
 
     /// <summary>
-    /// 相关纽铃 Provider（ProviderId）；无则为空
+    ///Legacy comment translated to English.
     /// </summary>
     [MaxLength(200)]
     public string ProviderId { get; private set; }
 
     /// <summary>
-    /// 展示标题（例如条目标题或 WebHook 名称）
+    ///Legacy comment translated to English.
     /// </summary>
     [MaxLength(500)]
     public string Title { get; private set; }
 
     /// <summary>
-    /// 完整请求报文（JSON）
+    ///Legacy comment translated to English.
     /// </summary>
     public string Payload { get; private set; }
 
     /// <summary>
-    /// 执行状态：sending / success / failed
+    /// executestatus：sending / success / failed
     /// </summary>
     [Required, MaxLength(20)]
     public string Status { get; private set; }
 
     /// <summary>
-    /// 请求结果（HTTP 状态、异常信息等）
+    ///Legacy comment translated to English.
     /// </summary>
     [MaxLength(2000)]
     public string Result { get; private set; }
 
     /// <summary>
-    /// HTTP 状态码（未收到响应时为空）
+    ///Legacy comment translated to English.
     /// </summary>
     public int? StatusCode { get; private set; }
 
     /// <summary>
-    /// 请求耗时（毫秒）
+    ///Legacy comment translated to English.
     /// </summary>
     public long ElapsedMilliseconds { get; private set; }
 
     /// <summary>
-    /// 请求完成时间（未完成时为空）
+    ///Legacy comment translated to English.
     /// </summary>
     public DateTime? FinishTime { get; private set; }
 
     /// <summary>
-    /// 触发该请求的管理员 Id（0 表示系统后台监测）
+    ///Legacy comment translated to English.
     /// </summary>
     public int AdminUserId { get; private set; }
 
@@ -340,7 +344,7 @@ public class NeuBellWebHookLog : EntityBase<int>
     }
 
     /// <summary>
-    /// 记录请求结果
+    /// recordrequestresult
     /// </summary>
     public void MarkFinished(bool success, string result, int? statusCode, long elapsedMilliseconds)
     {

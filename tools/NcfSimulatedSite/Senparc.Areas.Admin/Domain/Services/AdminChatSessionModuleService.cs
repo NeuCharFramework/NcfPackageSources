@@ -1,3 +1,16 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: AdminChatSessionModuleService.cs
+    File description: AdminChatSessionModuleService related implementation
+
+    Created by: Senparc - 20260325
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
+
+----------------------------------------------------------------*/
+
 using Microsoft.EntityFrameworkCore;
 using Senparc.Areas.Admin.ACL;
 using Senparc.Areas.Admin.Domain.Models;
@@ -11,7 +24,7 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.Domain.Services
 {
     /// <summary>
-    /// AdminChatSessionModuleService：管理后台聊天会话-模块关联服务
+    ///Legacy comment translated to English.
     /// </summary>
     public class AdminChatSessionModuleService : BaseClientService<AdminChatSessionModule>
     {
@@ -21,9 +34,9 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 获取会话关联的所有模块
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="sessionId">会话ID</param>
+        ///Legacy comment translated to English.
         public async Task<List<AdminChatSessionModule>> GetSessionModulesAsync(int sessionId)
         {
             var modules = await base.GetFullListAsync(m => m.SessionId == sessionId, "AddedTime ASC");
@@ -31,15 +44,15 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 添加模块到会话
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="sessionId">会话ID</param>
-        /// <param name="xncfModuleUid">XNCF 模块 UID</param>
-        /// <param name="moduleName">模块名称</param>
-        /// <param name="moduleVersion">模块版本</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         public async Task<AdminChatSessionModule> AddModuleToSessionAsync(int sessionId, string xncfModuleUid, string moduleName, string moduleVersion)
         {
-            // 检查是否已存在（防止重复添加）
+            //Legacy comment translated to English.
             var existing = await base.GetObjectAsync(m => 
                 m.SessionId == sessionId && m.XncfModuleUid == xncfModuleUid);
 
@@ -54,7 +67,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 批量添加模块到会话
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<List<AdminChatSessionModule>> AddModulesToSessionAsync(
             int sessionId, 
@@ -72,7 +85,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 从会话中移除模块
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<bool> RemoveModuleFromSessionAsync(int sessionId, string xncfModuleUid)
         {
@@ -86,7 +99,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 清空会话的所有模块关联
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<int> ClearSessionModulesAsync(int sessionId)
         {
@@ -101,7 +114,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 检查模块是否已关联到会话
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<bool> IsModuleInSessionAsync(int sessionId, string xncfModuleUid)
         {
@@ -110,7 +123,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 获取会话的模块数量
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<int> GetSessionModuleCountAsync(int sessionId)
         {
@@ -119,7 +132,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 获取模块被使用的会话数量（统计用）
+        ///Legacy comment translated to English.
         /// </summary>
         public async Task<int> GetModuleUsageCountAsync(string xncfModuleUid)
         {

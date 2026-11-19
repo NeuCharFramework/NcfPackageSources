@@ -1,30 +1,33 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：NeuBellTestProvider.cs
-    文件功能描述：为 Admin Function 提供可发送、可消费的纽铃提醒示例
+    File name: NeuBellTestProvider.cs
+    File description: Related implementation.
+    Legacy comment translated to English.
 
+    Created by: Senparc - 20260805
 
-    创建标识：Senparc - 20260805
+    Modified by: Senparc - 20260808
+    Change description: v0.4.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260808
-    修改描述：v0.4.0 新增纽铃可见提醒示例提供程序
+    Modified by: Senparc - 20260813
+    Change description: v0.5.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.5.0 集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
+    Modified by: Senparc - 20260914
+    Change description: v0.7.1 add SendAndGetItem（sendandreturn NeuBellItem），
 
-    修改标识：Senparc - 20260914
-    修改描述：v0.7.1 新增 SendAndGetItem（发送并返回 NeuBellItem），
-    供 WebHook 创建通知（item-created）携带完整条目数据
+    Modified by: Senparc - 20260916
+    Change description: v0.9.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260916
-    修改描述：v0.9.0 增强 Admin Chat 取消与推理轨迹，并扩展 NeuBell WebHook 请求能力
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 维护为 Admin Function 提供可发送、可消费的纽铃提醒示例
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 
@@ -38,7 +41,7 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.Domain.Services;
 
 /// <summary>
-/// 仅保存在当前 Admin Host 进程内的纽铃测试状态，不写入数据库，也不修改业务 Provider 数据。
+///Legacy comment translated to English.
 /// </summary>
 public sealed class NeuBellTestProvider : INeuBellProvider, INeuBellConsumableProvider
 {
@@ -72,7 +75,7 @@ public sealed class NeuBellTestProvider : INeuBellProvider, INeuBellConsumablePr
     public string ModuleUid => Register.ModuleUid;
 
     /// <summary>
-    /// 当前待消费提醒数量
+    ///Legacy comment translated to English.
     /// </summary>
     public int PendingCount
     {
@@ -100,8 +103,8 @@ public sealed class NeuBellTestProvider : INeuBellProvider, INeuBellConsumablePr
     }
 
     /// <summary>
-    /// 发送一条提醒并返回映射后的 <see cref="NeuBellItem"/>
-    /// （供 WebHook 创建通知携带完整条目数据）
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public NeuBellItem SendAndGetItem()
     {

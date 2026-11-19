@@ -1,16 +1,20 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：NcfFileTextExtractor.cs
-    文件功能描述：为知识库等上层模块提供受控的文件文本提取能力
+    File name: NcfFileTextExtractor.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260803
+    Created by: Senparc - 20260803
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.5.0-preview5 新增文件文本提取与文件管理服务
+    Modified by: Senparc - 20260804
+    Change description: v0.5.0-preview5 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.8.1 add comprehensive unit tests for AdminChatWorkspaceAssetService functionality
+    Modified by: Senparc - 20261103
+    Change description: v0.8.1 add comprehensive unit tests for AdminChatWorkspaceAssetService functionality
+
+    Modified by: Senparc - 20261119
+    Change description: v0.8.5 Localized file management and upload surfaces
 
 ----------------------------------------------------------------*/
 
@@ -29,7 +33,7 @@ namespace Senparc.Xncf.FileManager.Domain.Services;
 public sealed record NcfFileTextSection(string Title, string Text);
 
 /// <summary>
-/// 文件文本提取结果。
+///Legacy comment translated to English.
 /// </summary>
 public sealed class NcfFileTextExtractionResult
 {
@@ -45,7 +49,7 @@ public sealed class NcfFileTextExtractionResult
 }
 
 /// <summary>
-/// 仅处理无需执行外部程序、无需解析宏的安全文本格式。
+///Legacy comment translated to English.
 /// </summary>
 public static class NcfFileTextExtractor
 {

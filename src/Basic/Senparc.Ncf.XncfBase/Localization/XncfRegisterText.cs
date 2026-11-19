@@ -1,13 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：XncfRegisterText.cs
-    文件功能描述：XNCF 注册本地化显示元数据
-    
-    创建标识：Senparc - 20261111
-    
-    修改标识：Senparc - 20261111
-    修改描述：v0.28.2 统一 XNCF Register 显示元数据与多语言资源键
+
+    File name: XncfRegisterText.cs
+    File description: localized display metadata for XNCF registration
+
+    Created by: Senparc - 20261111
+
+    Modified by: Senparc - 20261111
+    Change description: v0.28.2 unify XNCF Register display metadata and localization resource keys
+
+    Modified by: Senparc - 20261119
+    Change description: v0.29.1 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 

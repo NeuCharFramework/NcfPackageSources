@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：IAreaRegister.cs
-    文件功能描述：IAreaRegister 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: IAreaRegister.cs
+    File description: IAreaRegister related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -21,12 +24,12 @@ using System.Text;
 namespace Senparc.Ncf.Core.Areas
 {
     /// <summary>
-    /// Area 的 Register 接口
+    /// Register interface of Area
     /// </summary>
     public interface IAreaRegister
     {
         /// <summary>
-        /// 授权配置
+        /// Authorization configuration
         /// </summary>
         /// <param name="builder"></param>
         /// <param name="env"></param>
@@ -34,13 +37,13 @@ namespace Senparc.Ncf.Core.Areas
         IMvcBuilder AuthorizeConfig(IMvcBuilder builder, Microsoft.Extensions.Hosting.IHostEnvironment/*IWebHostEnvironment*/ env);
 
         /// <summary>
-        /// 如果提供了 UI 界面，必须指定一个首页，如：Admin/
-        /// <para>注意：此选项需要配合 XncfRegister 使用才有效，否则请忽略</para>
+        /// If a UI interface is provided, a home page must be specified, such as: Admin/
+        /// <para>Note: This option only works with XncfRegister use. Otherwise, please ignore</para> it.
         /// </summary>
         string HomeUrl { get; }
 
         /// <summary>
-        /// 菜单项
+        ///MenuItems
         /// </summary>
         List<AreaPageMenuItem> AreaPageMenuItems { get; }
     }

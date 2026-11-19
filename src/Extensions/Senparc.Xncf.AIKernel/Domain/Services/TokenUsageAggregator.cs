@@ -1,13 +1,17 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：TokenUsageAggregator.cs
-    文件功能描述：Token 使用记录按模型聚合工具
-    
-    创建标识：Senparc - 20260905
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.16.0 新增 AI Token 用量监控与模型选择能力
+    Copyright (C) 2026 Senparc
+
+    File name: TokenUsageAggregator.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20260905
+
+    Modified by: Senparc - 20260915
+    Change description: v0.16.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
 ----------------------------------------------------------------*/
 
@@ -19,19 +23,19 @@ using System.Collections.Generic;
 namespace Senparc.Xncf.AIKernel.Domain.Services
 {
     /// <summary>
-    /// Token 使用记录按模型聚合工具
+    ///Legacy comment translated to English.
     /// </summary>
     public static class TokenUsageAggregator
     {
         /// <summary>
-        /// 未知（空）模型代号的分组键
+        ///Legacy comment translated to English.
         /// </summary>
         public const string UnknownAlias = "(unknown)";
 
         /// <summary>
-        /// 将 Token 使用记录按模型代号聚合（模型代号不区分大小写）。
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="records">Token 使用记录（调用方负责过滤已删除数据）</param>
+        ///Legacy comment translated to English.
         public static Dictionary<string, AITokenModelUsage> BuildModelUsageMap(IEnumerable<AITokenUsage> records)
         {
             var map = new Dictionary<string, AITokenModelUsage>(StringComparer.OrdinalIgnoreCase);

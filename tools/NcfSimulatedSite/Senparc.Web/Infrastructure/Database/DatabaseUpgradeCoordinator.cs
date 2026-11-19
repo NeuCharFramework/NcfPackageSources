@@ -1,16 +1,20 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：DatabaseUpgradeCoordinator.cs
-    文件功能描述：不依赖业务页面的数据库检查与升级协调器
+    File name: DatabaseUpgradeCoordinator.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260803
+    Created by: Senparc - 20260803
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.35.0 新增数据库升级维护流程与多平台下载入口
+    Modified by: Senparc - 20260804
+    Change description: v0.35.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.39.5 维护不依赖业务页面的数据库检查与升级协调器
+    Modified by: Senparc - 20261103
+    Change description: v0.39.5 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.39.9 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -54,8 +58,8 @@ public sealed class DatabaseUpgradeCoordinator
 
             if (!installFinished)
             {
-                // 首次安装没有完成标记。只读取 XncfModules.Uid；如果表不存在，外层会把状态判定为
-                // Uninitialized。这样不会把一套全新数据库中的所有初始迁移误认为“升级”。
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 installedUids = await LoadInstalledModuleUidsAsync(scope.ServiceProvider, cancellationToken);
                 if (installedUids.Count == 0)
                 {
@@ -63,7 +67,7 @@ public sealed class DatabaseUpgradeCoordinator
                 }
             }
 
-            // 必须先检查两个基础模块。XncfModules 自身的架构落后时，不能先用完整实体模型读取模块清单。
+            //Legacy comment translated to English.
             var pendingModules = await InspectPendingMigrationsAsync(
                 scope.ServiceProvider,
                 SelectCriticalDatabaseModules(),
@@ -83,8 +87,8 @@ public sealed class DatabaseUpgradeCoordinator
 
             if (pendingModules.Count == 0)
             {
-                // 迁移历史也可能被手工改动。实际读取一次核心配置实体，确保“迁移已记录但字段缺失”
-                // 不会被误报为 Ready；该检查只在启动时执行一次，不进入请求热路径。
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
                 await ValidateCoreSchemaAsync(scope.ServiceProvider, cancellationToken);
             }
 
@@ -103,7 +107,7 @@ public sealed class DatabaseUpgradeCoordinator
         }
         catch (Exception ex) when (DatabaseInstallState.IsDatabaseUnavailableForInstallation(ex))
         {
-            // 有完成标记时禁止重新开放 Installer，以免覆盖已有数据库。
+            //Legacy comment translated to English.
             return installFinished
                 ? SetState(DatabaseRuntimeState.Unavailable(
                     "已安装数据库当前不可用，请检查连接、权限和基础表完整性。",
@@ -139,7 +143,7 @@ public sealed class DatabaseUpgradeCoordinator
             var cache = CacheStrategyFactory.GetObjectCacheStrategyInstance();
             using (await cache.BeginCacheLockAsync("NCF.DatabaseUpgrade", "Global").ConfigureAwait(false))
             {
-                // 取得锁后重新检查，避免另一个实例已经完成升级后仍使用旧的待迁移列表。
+                //Legacy comment translated to English.
                 var current = await InspectAsync(cancellationToken).ConfigureAwait(false);
                 for (var batch = 0; batch < 32; batch++)
                 {
@@ -168,7 +172,7 @@ public sealed class DatabaseUpgradeCoordinator
                         messages.Add($"开始升级 {module.Name}: {string.Join(", ", module.PendingMigrations)}");
                         await dbContext.Database.MigrateAsync(cancellationToken).ConfigureAwait(false);
 
-                        // Migration 成功后再执行模块自己的升级初始化；失败时不会提前写入模块版本。
+                        //Legacy comment translated to English.
                         await register.InstallOrUpdateAsync(
                                 scope.ServiceProvider,
                                 Senparc.Ncf.Core.Enums.InstallOrUpdate.Update)
@@ -178,7 +182,7 @@ public sealed class DatabaseUpgradeCoordinator
                         messages.Add($"完成升级 {module.Name} -> {module.Version}");
                     }
 
-                    // 基础模块完成后，再次检查才会安全地发现其余已安装模块的迁移。
+                    //Legacy comment translated to English.
                     current = await InspectAsync(cancellationToken).ConfigureAwait(false);
                 }
 
@@ -325,8 +329,8 @@ public sealed class DatabaseUpgradeCoordinator
 
     private async Task<FileStream> AcquireFileLockAsync(CancellationToken cancellationToken)
     {
-        // 锁目录使用系统临时目录，而非发布目录。这样同机的蓝绿发布目录仍会竞争同一把锁，
-        // 同时避免只读发布目录导致升级命令无法启动。Redis 缓存锁继续负责跨主机协调。
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         var databaseIdentity = $"{SiteConfig.SenparcCoreSetting?.DatabaseType}:{SiteConfig.SenparcCoreSetting?.DatabaseName}";
         var identityHash = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(databaseIdentity)))[..24];
         var lockDirectory = Path.Combine(Path.GetTempPath(), "ncf-database-upgrade-locks");

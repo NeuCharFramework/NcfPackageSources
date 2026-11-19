@@ -1,16 +1,20 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：AIFineTuningEvent.cs
-    文件功能描述：微调事件数据模型
+    File name: AIFineTuningEvent.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20261014
+    Created by: Senparc - 20261014
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.17.0 记录微调任务过程事件
+    Modified by: Senparc - 20261021
+    Change description: v0.17.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.17.0 add AITokenUsageRecorder and related services for token usage tracking
+    Modified by: Senparc - 20261103
+    Change description: v0.17.0 add AITokenUsageRecorder and related services for token usage tracking
+
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
 ----------------------------------------------------------------*/
 

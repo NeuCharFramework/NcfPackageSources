@@ -105,7 +105,9 @@
 .ft-workflow-copy {
     position: relative;
     z-index: 1;
+    flex: 1 1 auto;
     min-width: 0;
+    max-width: 100%;
     padding: 1px 2px 2px 0;
     background: #fff;
 }

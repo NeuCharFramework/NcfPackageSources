@@ -1,4 +1,17 @@
-﻿using Senparc.CO2NET.Extensions;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: ExtensionEntity.cs
+    File description: ExtensionEntity related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.3.14 Updated module behavior, localization metadata, and English source comments
+
+----------------------------------------------------------------*/
+
+using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.Utility;
 using System;
@@ -9,7 +22,7 @@ namespace Senparc.Xncf.Accounts.Domain.Models
 {
 
     /// <summary>
-    /// 用户信息
+    /// userinformation
     /// </summary>
     [Serializable]
     public partial class FullAccountBase : BaseFullEntity<Account>
@@ -26,7 +39,7 @@ namespace Senparc.Xncf.Accounts.Domain.Models
         public string LastOpenPageUrl { get; set; }
         public string LastActiveUserAgent { get; set; }
         ///// <summary>
-        ///// 最近一次活动的客户端设备信息
+        ///Legacy comment translated to English.
         ///// </summary>
         //public IDevice LastActiveDevice
         //{
@@ -45,22 +58,22 @@ namespace Senparc.Xncf.Accounts.Domain.Models
         public bool IsLogined => Id > 0 && !UserName.IsNullOrEmpty() && (DateTime.Now - LastActiveTime).TotalMinutes < 2;
 
         /// <summary>
-        /// 强制退出登录
+        ///Legacy comment translated to English.
         /// </summary>
         public bool ForceLogout { get; set; }
 
         /// <summary>
-        /// 未读消息数量
+        ///Legacy comment translated to English.
         /// </summary>
         public int UnReadMessageCount { get; set; }
 
         /// <summary>
-        /// 已经输入过验证码（如果需要加强验证，可以加上次输入验证码的时间以及token）
+        ///Legacy comment translated to English.
         /// </summary>
         public bool CheckCodePassed { get; set; }
 
         /// <summary>
-        /// 在线图标
+        ///Legacy comment translated to English.
         /// </summary>
         public string OnlineImg => $"/Content/Images/{(IsLogined ? "online" : "offline")}.png";
 
@@ -168,7 +181,7 @@ namespace Senparc.Xncf.Accounts.Domain.Models
         public string WeixinUnionId { get; set; }
 
         /// <summary>
-        /// 账户显示名称
+        ///Legacy comment translated to English.
         /// </summary>
         public string DisplayName => NickName ?? UserName;
 

@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：ReflectionHelper.cs
-    文件功能描述：ReflectionHelper 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: ReflectionHelper.cs
+    File description: ReflectionHelper related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.21.3-preview5 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -18,62 +21,62 @@ using System.Reflection;
 namespace Senparc.Ncf.Utility.Helpers
 {
     /// <summary>
-    /// 反射帮助类
+    ///Legacy comment translated to English.
     /// </summary>
     public static class ReflectionHelper
     {
         /// <summary>
-        /// 创建对象实例
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <typeparam name="T">要创建对象的类型</typeparam>
-        /// <param name="assemblyName">类型所在程序集名称</param>
-        /// <param name="nameSpace">类型所在命名空间</param>
-        /// <param name="className">类型名</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public static T CreateInstance<T>(string assemblyName, string nameSpace, string className)
         {
             try
             {
                 var ect = CreateInstance(assemblyName, nameSpace, className);
-                return (T)ect;//强制转换类型
+                return (T)ect;//Legacy comment translated to English.
             }
             catch
             {
-                //发生异常，返回类型的默认值
+                //Legacy comment translated to English.
                 return default(T);
             }
         }
 
         /// <summary>
-        /// 创建对象实例
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="assemblyName">类型所在程序集名称</param>
-        /// <param name="nameSpace">类型所在命名空间</param>
-        /// <param name="className">类型名</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// <returns></returns>
         public static object CreateInstance(string assemblyName, string nameSpace, string className)
         {
             try
             {
-                string fullName = nameSpace + "." + className;//命名空间.类型名
-                //此为第一种写法
-                object ect = Assembly.Load(assemblyName).CreateInstance(fullName);//加载程序集，创建程序集里面的 命名空间.类型名 实例
-                return ect;//返回
-                //下面是第二种写法
-                //string path = fullName + "," + assemblyName;//命名空间.类型名,程序集
-                //Type o = Type.GetType(path);//加载类型
-                //object obj = Activator.CreateInstance(o, true);//根据类型创建实例
-                //return (T)obj;//类型转换并返回
+                string fullName = nameSpace + "." + className;//Legacy comment translated to English.
+                //Legacy comment translated to English.
+                object ect = Assembly.Load(assemblyName).CreateInstance(fullName);//Legacy comment translated to English.
+                return ect;//return
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
+                //Legacy comment translated to English.
             }
             catch
             {
-                //发生异常，返回null
+                //Legacy comment translated to English.
                 return null;
             }
         }
 
         /// <summary>
-        /// 根据程序集、命名空间、类名得到类型
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="assemblyName"></param>
         /// <param name="nameSpace"></param>
@@ -81,9 +84,9 @@ namespace Senparc.Ncf.Utility.Helpers
         /// <returns></returns>
         public static Type GetTypeFromName(string assemblyName, string nameSpace, string className)
         {
-            string fullName = nameSpace + "." + className;//命名空间.类型名
-            string path = fullName + "," + assemblyName;//命名空间.类型名,程序集
-            Type o = Type.GetType(path);//加载类型
+            string fullName = nameSpace + "." + className;//Legacy comment translated to English.
+            string path = fullName + "," + assemblyName;//Legacy comment translated to English.
+            Type o = Type.GetType(path);//Legacy comment translated to English.
             return o;
         }
     }

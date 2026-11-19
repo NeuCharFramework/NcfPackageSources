@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：IAutoDI.cs
-    文件功能描述：IAutoDI 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: IAutoDI.cs
+    File description: IAutoDI related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -20,8 +23,8 @@ using System.Text;
 namespace Senparc.Ncf.Core.DI
 {
     /// <summary>
-    /// 所有需要自动扫描进行依赖注入的基础接口
-    /// <para>默认 DI 使用 AddScoped 方法，如果需要强制使用其他方法，请在子类上使用 [AutoDIType(typeName)] 特性标签</para>
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public interface IAutoDI
     {

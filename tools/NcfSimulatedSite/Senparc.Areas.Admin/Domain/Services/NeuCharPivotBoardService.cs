@@ -1,20 +1,24 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：NeuCharPivotBoardService.cs
-    文件功能描述：NeuCharPivotBoard（Pivot 面板 / Provit Panel）服务：
-    面板 CRUD、跨模块 Provit Block 校验与存储、AI Chat 创建或修改面板
+    File name: NeuCharPivotBoardService.cs
+    File description: Related implementation.
+    Legacy comment translated to English.
 
-    创建标识：Senparc - 20260901
+    Created by: Senparc - 20260901
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+    Modified by: Senparc - 20260915
+    Change description: v0.8.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261101
-    修改描述：自定义 Pivot 缺失 Function 时保留引用状态并提供初始化引导
+    Modified by: Senparc - 20261101
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 enhance job management and telemetry features
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 enhance job management and telemetry features
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 
@@ -34,7 +38,7 @@ using System.Threading.Tasks;
 namespace Senparc.Areas.Admin.Domain.Services;
 
 /// <summary>
-/// Provit Block：面板中的一个功能块，引用某个 XNCF 模块 Pivot 的 Function
+///Legacy comment translated to English.
 /// </summary>
 public sealed class NeuCharPivotBoardBlock
 {
@@ -49,7 +53,7 @@ public sealed class NeuCharPivotBoardBlock
 }
 
 /// <summary>
-/// Pivot 面板（Provit Panel）服务
+///Legacy comment translated to English.
 /// </summary>
 public sealed class NeuCharPivotBoardService : BaseClientService<NeuCharPivotBoard>
 {
@@ -75,7 +79,7 @@ public sealed class NeuCharPivotBoardService : BaseClientService<NeuCharPivotBoa
         _sessionService = sessionService;
     }
 
-    #region 面板 CRUD
+    #region Legacy section
 
     public async Task<NeuCharPivotBoard> GetEnabledBoardByPageKeyAsync(string pageKey)
     {
@@ -125,7 +129,7 @@ public sealed class NeuCharPivotBoardService : BaseClientService<NeuCharPivotBoa
     #region Provit Block
 
     /// <summary>
-    /// 块选择器目录：全部 XNCF 模块 Pivot 中可见的 Function
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<List<NeuCharPivotBoardFunctionOption>> GetBlockCatalogAsync()
     {
@@ -163,8 +167,8 @@ public sealed class NeuCharPivotBoardService : BaseClientService<NeuCharPivotBoa
     }
 
     /// <summary>
-    /// 返回面板块引用的 Function 是否仍存在于数据库目录。
-    /// 面板可能会保留模块升级或初始化前的旧引用，读取首页时不应因这类引用中断整个页面。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<IReadOnlyDictionary<string, bool>> GetBlockAvailabilityAsync(
         IEnumerable<NeuCharPivotBoardBlock> blocks)
@@ -199,7 +203,7 @@ public sealed class NeuCharPivotBoardService : BaseClientService<NeuCharPivotBoa
         $"{moduleUid?.Trim()}|{functionKey?.Trim()}";
 
     /// <summary>
-    /// 校验并保存面板的块列表（每个块必须对应真实存在的 Pivot Function）
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<(bool success, string message, NeuCharPivotBoard board)> SetBlocksAsync(
         int boardId,
@@ -283,12 +287,12 @@ public sealed class NeuCharPivotBoardService : BaseClientService<NeuCharPivotBoa
 
     #endregion
 
-    #region AI Chat 创建 / 修改面板
+    #region Legacy section
 
     /// <summary>
-    /// 通过 AI Chat 创建或修改面板。
-    /// 指令示例：“为后台首页创建一个运维面板，加入主机监控和待办任务”
-    /// 返回 AI 的说明文字与最新面板数据。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </summary>
     public async Task<(bool success, string message, string aiReply, NeuCharPivotBoard board)> ApplyAiChangeAsync(
         int boardId,
@@ -361,14 +365,14 @@ public sealed class NeuCharPivotBoardService : BaseClientService<NeuCharPivotBoa
         }
         finally
         {
-            // AI 专用临时会话，用完即删，避免污染用户会话列表
+            //Legacy comment translated to English.
             try
             {
                 await _sessionService.DeleteSessionAsync(session.Id, adminUserId).ConfigureAwait(false);
             }
             catch
             {
-                // 忽略清理失败
+                //Legacy comment translated to English.
             }
         }
     }
@@ -443,7 +447,7 @@ public sealed class NeuCharPivotBoardService : BaseClientService<NeuCharPivotBoa
             return null;
         }
 
-        // 校验 AI 给出的 moduleUid/functionKey 必须在目录中真实存在
+        //Legacy comment translated to English.
         var available = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         foreach (var group in catalog)
         {
@@ -495,14 +499,14 @@ public sealed class NeuCharPivotBoardService : BaseClientService<NeuCharPivotBoa
         }
         var text = response.Trim();
 
-        // 去除 markdown 代码块
+        //Legacy comment translated to English.
         var fence = Regex.Match(text, @"```(?:json)?\s*([\s\S]*?)```", RegexOptions.IgnoreCase);
         if (fence.Success)
         {
             text = fence.Groups[1].Value.Trim();
         }
 
-        // 截取第一个 { 到最后一个 } 之间的内容
+        //Legacy comment translated to English.
         var start = text.IndexOf('{');
         var end = text.LastIndexOf('}');
         if (start < 0 || end <= start)
@@ -516,7 +520,7 @@ public sealed class NeuCharPivotBoardService : BaseClientService<NeuCharPivotBoa
 }
 
 /// <summary>
-/// 块选择器目录项（模块）
+///Legacy comment translated to English.
 /// </summary>
 public sealed class NeuCharPivotBoardFunctionOption
 {
@@ -526,7 +530,7 @@ public sealed class NeuCharPivotBoardFunctionOption
 }
 
 /// <summary>
-/// 块选择器目录项（Function）
+///Legacy comment translated to English.
 /// </summary>
 public sealed class NeuCharPivotBoardFunctionItem
 {

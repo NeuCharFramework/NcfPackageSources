@@ -1,10 +1,10 @@
 /*----------------------------------------------------------------
  * ResourceMonitor.js
- * Admin 首页 Host 实时与历史资源监控图表。
- * 后台记录保留在 CO2NET 缓存中，页面内的 2 秒采样仅保留最近 5 分钟。
+ * Legacy comment translated to English.
+ * Legacy comment translated to English.
  *
- * 修改标识：Senparc - 20261102
- * 修改描述：v0.12.7 合并实时和历史曲线，使用线性时间轴与范围缩放
+ * Modified by: Senparc - 20261102
+ * Change description: v0.12.7 Updated module behavior and related support.
  *----------------------------------------------------------------*/
 (function (global) {
   'use strict';

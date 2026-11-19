@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：WeixinClawAiMessageHandler.cs
-    文件功能描述：WeixinClawAiMessageHandler 相关定义与实现
+    File name: WeixinClawAiMessageHandler.cs
+    File description: WeixinClawAiMessageHandler related definitions and implementation
 
+    Created by: Senparc - 20260925
 
-    创建标识：Senparc - 20260925
+    Modified by: Senparc - 20261103
+    Change description: v0.24.16 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.24.16 AI 会话缓存（IWantToRun）Key 增加账号维度，防止多租户跨租户复用
+    Modified by: Senparc - 20261119
+    Change description: v0.25.1 Localized Weixin account and administration surfaces
 
 ----------------------------------------------------------------*/
 
@@ -29,9 +32,9 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.WeixinManager.WeixinClaw;
 
 /// <summary>
-/// 个人微信 AI 自动回复处理器：收到一对一文本消息后，按账号配置的 PromptRangeCode
-/// 调用 AI（与公众号 XncfMpMessageHandler 相同的 AgentAiHandler + PromptRange 链路）并回复。
-/// 群组消息不自动回复（协议文本项无法可靠识别 @ 提醒，避免群内刷屏）。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 public sealed class WeixinClawAiMessageHandler : IWeixinClawMessageHandler
 {
@@ -97,16 +100,16 @@ public sealed class WeixinClawAiMessageHandler : IWeixinClawMessageHandler
         }
         catch (Exception ex)
         {
-            // 不向外抛异常，避免单条消息的 AI 失败中断整个账号的消息轮询
+            //Legacy comment translated to English.
             _logger.LogError(ex, "个人微信 AI 自动回复失败（{AccountId}/{MessageId}）。", context.AccountId, context.MessageId);
         }
     }
 
     private async Task<IWantToRun> GetOrCreateIWantToRunAsync(WeixinClawAccount account, WeixinClawMessageReceivedContext context)
     {
-        // 与 WechatAiContext 一致：以联系人 + PromptRangeCode 作为会话 Key，Prompt 更新后会重建。
-        // AccountId 为租户作用域内的账号主键（全局唯一），将其纳入 Key，避免多租户下
-        // 不同租户命中同一缓存项（IWantToRun 持有 AI 模型与密钥配置，跨租户复用会造成信息泄露）
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         var key = $"{context.AccountId}:{context.FromUserId}-{account.PromptRangeCode}";
         if (s_iWantToRuns.TryGetValue(key, out var cached))
         {

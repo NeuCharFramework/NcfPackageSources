@@ -1,26 +1,29 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：Register.cs
-    文件功能描述：Workspace 模块注册
-    
-    
-    创建标识：Senparc - 20261015
-    
-    修改标识：Senparc - 20261021
-    修改描述：v0.1.1 注册元数据存储，并在安装时迁移数据库
 
-    修改标识：Senparc - 20261028
-    修改描述：注册 IHttpContextAccessor，供单例存储捕获请求租户上下文
+    File name: Register.cs
+    File description: Workspace module registration
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.2.2 Workspace 单例存储的元数据读写恢复请求租户上下文
+    Created by: Senparc - 20261015
 
-    修改标识：Senparc - 20261109
-    修改描述：注册按管理员身份隔离的工作区用量目录
+    Modified by: Senparc - 20261021
+    Change description: v0.1.1 register metadata storage and migrate the database on installation
 
-    修改标识：Senparc - 20261111
-    修改描述：v0.2.7 统一 XNCF Register 显示元数据与多语言资源键
+    Modified by: Senparc - 20261028
+    Change description: register IHttpContextAccessor so singleton storage can capture request tenant context
+
+    Modified by: Senparc - 20261103
+    Change description: v0.2.2 restore request tenant context for singleton Workspace metadata access
+
+    Modified by: Senparc - 20261109
+    Change description: register administrator-isolated Workspace usage directories
+
+    Modified by: Senparc - 20261111
+    Change description: v0.2.7 unify XNCF Register display metadata and localization keys
+
+    Modified by: Senparc - 20261119
+    Change description: v0.2.9 Localized workspace management and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -42,8 +45,8 @@ public sealed partial class Register : XncfRegisterBase, IXncfRegister
     private static readonly XncfRegisterText RegisterText =
         XncfRegisterText.Create<WorkspaceResource>(
             "Module.Workspace",
-            "工作区",
-            "通过跨平台 Workspace Agent 提供隔离文件访问、桌面编辑和安全运行时。");
+            "Workspace",
+            "Provides isolated file access, desktop editing, and secure runtime support through a cross-platform Workspace Agent.");
 
     public override string Name => "Senparc.Xncf.Workspace";
     public override string Uid => "9D0AA0B5-1E76-4BA3-96A0-4BE1A8D6A6E7";

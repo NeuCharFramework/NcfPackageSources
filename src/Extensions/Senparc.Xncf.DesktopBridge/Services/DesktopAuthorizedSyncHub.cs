@@ -1,13 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：DesktopAuthorizedSyncHub.cs
-    文件功能描述：按账号和授权策略隔离的桌面同步通知中心
+    File name: DesktopAuthorizedSyncHub.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260726
+    Created by: Senparc - 20260726
 
-    修改标识：Senparc - 20260726
-    修改描述：v0.1.0-preview2 同步模块功能与兼容性改进
+    Modified by: Senparc - 20260726
+    Change description: v0.1.0-preview2 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.12 Localized DesktopBridge pairing and runtime surfaces
 
 ----------------------------------------------------------------*/
 

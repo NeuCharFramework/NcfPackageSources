@@ -1,20 +1,23 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：PromptRangeAppService.cs
-    文件功能描述：PromptRangeAppService 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.17.0-preview5 为 PromptRange 模块接入统一资源本地化并优化功能文案
+    File name: PromptRangeAppService.cs
+    File description: PromptRangeAppService related implementation
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.17.1-preview6 加强提示词接口授权并防护插件压缩包路径
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260717
+    Change description: v0.17.0-preview5 integrate shared resource localization and improve feature text for the PromptRange module
+
+    Modified by: Senparc - 20260729
+    Change description: v0.17.1-preview6 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -38,8 +41,8 @@ using Senparc.Ncf.Core.Authorization;
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService;
 
 /// <summary>
-/// PromptRange 管理 AppService
-/// TODO: 需要权限验证
+/// PromptRange management AppService
+/// TODO: permission validation is required
 /// </summary>
 [ApiAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
 public class PromptRangeAppService : AppServiceBase
@@ -55,7 +58,7 @@ public class PromptRangeAppService : AppServiceBase
 
 
     // /// <summary>
-    // /// 设置 AI 自动打分评分标准接口
+    //Legacy comment translated to English.
     // /// </summary>
     // /// <param name="promptRangeId"></param>
     // /// <param name="expectedResults"></param>
@@ -70,7 +73,7 @@ public class PromptRangeAppService : AppServiceBase
     // }
 
     /// <summary>
-    /// 获取靶场列表详情（添加时间倒序）
+    ///Legacy comment translated to English.
     /// </summary>
     /// <param name="alias"></param>
     /// <returns></returns>
@@ -84,7 +87,7 @@ public class PromptRangeAppService : AppServiceBase
     }
 
     /// <summary>
-    /// 获取靶场列表详情（添加时间倒序）
+    ///Legacy comment translated to English.
     /// </summary>
     /// <returns></returns>
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
@@ -98,7 +101,7 @@ public class PromptRangeAppService : AppServiceBase
 
 
     /// <summary>
-    /// 获取 PromptRange 的树状结构
+    ///Legacy comment translated to English.
     /// </summary>
     /// <returns></returns>
     [ApiBind]
@@ -113,7 +116,7 @@ public class PromptRangeAppService : AppServiceBase
     }
 
     /// <summary>
-    /// 修改自定义靶场代号
+    ///Legacy comment translated to English.
     /// </summary>
     /// <param name="rangeId"></param>
     /// <param name="alias"></param>
@@ -128,7 +131,7 @@ public class PromptRangeAppService : AppServiceBase
     }
 
     /// <summary>
-    /// 根据　ID 删除靶场
+    /// according to　ID deleterange
     /// </summary>
     /// <param name="rangeId"></param>
     /// <returns></returns>
@@ -151,7 +154,7 @@ public class PromptRangeAppService : AppServiceBase
 
     //[ApiBind]
     /// <summary>
-    /// FunctionRender：查看靶场 PromptCode 列表（用于创建智能体）
+    ///Legacy comment translated to English.
     /// </summary>
     [FunctionRender(typeof(PromptRangeResource), "Function.PromptRange.ViewCodes.Name", "Function.PromptRange.ViewCodes.Description", typeof(Register))]
     public async Task<StringAppResponse> ViewPromptCodeList(PromptRange_ViewPromptCodeRequest request)

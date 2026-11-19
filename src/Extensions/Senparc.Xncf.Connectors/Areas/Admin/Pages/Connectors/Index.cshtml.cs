@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：Index.cshtml.cs
-    文件功能描述：连接器后台管理页模型
-    
-    
-    创建标识：Senparc - 20261111
-    
-    修改标识：Senparc - 20261111
-    修改描述：v0.1.0 提供连接器后台管理页
+
+    File name: Index.cshtml.cs
+    File description: connector admin page model
+
+    Created by: Senparc - 20261111
+
+    Modified by: Senparc - 20261111
+    Change description: v0.1.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.1.1 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 

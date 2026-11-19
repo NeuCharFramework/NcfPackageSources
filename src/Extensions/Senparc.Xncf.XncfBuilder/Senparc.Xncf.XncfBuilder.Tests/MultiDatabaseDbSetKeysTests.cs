@@ -12,8 +12,8 @@ namespace Senparc.Xncf.XncfBuilder.Tests
         [TestMethod]
         public void RunTest()
         {
-            // 此处仅验证 XncfBuilder 自身的六种数据库上下文，避免为了读取 DbSet
-            // 启动完整 NCF 宿主及后台线程，导致单元测试受外部模块和运行环境影响。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             var dbContextTypes = new[]
             {
                 typeof(XncfBuilderSenparcEntities_Sqlite),
@@ -35,7 +35,7 @@ namespace Senparc.Xncf.XncfBuilder.Tests
             var allEntitySetInfo = EntitySetKeys.GetAllEntitySetInfo();
             Assert.IsTrue(allEntitySetInfo.Count > 0);
 
-            // 不序列化 System.Type，防止遍历庞大的反射对象图，并避免测试依赖 JSON 组件版本。
+            //Legacy comment translated to English.
             var summary = allEntitySetInfo.Values.Select(info =>
                 $"{info.SetName}: {info.DbSetType.FullName} -> " +
                 string.Join(", ", info.SenparcEntityTypes.Select(type => type.FullName)));

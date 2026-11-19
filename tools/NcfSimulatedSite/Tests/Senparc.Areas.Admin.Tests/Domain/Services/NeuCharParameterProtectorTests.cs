@@ -1,8 +1,10 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：NeuCharParameterProtectorTests.cs
-    文件功能描述：Loop Task 与 Workflow 密码参数保护测试
+    File name: NeuCharParameterProtectorTests.cs
+    File description: Related implementation.
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.DataProtection;

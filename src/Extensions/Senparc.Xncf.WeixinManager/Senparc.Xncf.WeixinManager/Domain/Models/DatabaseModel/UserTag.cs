@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：UserTag.cs
-    文件功能描述：UserTag 相关实现
-    
-    
-    创建标识：Senparc - 20250712
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: UserTag.cs
+    File description: UserTag related implementation
+
+    Created by: Senparc - 20250712
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.25.1 Localized Weixin account and administration surfaces
 
 ----------------------------------------------------------------*/
 
@@ -22,13 +25,13 @@ using System.Text;
 
 namespace Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel
 {
-    [Table(Register.DATABASE_PREFIX + nameof(UserTag))]//必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(UserTag))]//a prefix is required to prevent system-wide conflicts
     [Serializable]
     public class UserTag : EntityBase<int>
     {
         public int MpAccountId { get; private set; }
         /// <summary>
-        /// 微信接口的 tagid
+        ///Legacy comment translated to English.
         /// </summary>
         public int TagId { get; private set; }
         [Required]

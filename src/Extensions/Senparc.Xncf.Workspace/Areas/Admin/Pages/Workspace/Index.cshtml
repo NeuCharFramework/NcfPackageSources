@@ -1,7 +1,10 @@
 @page
+@using Microsoft.Extensions.Localization
 @model Senparc.Xncf.Workspace.Areas.Workspace.Pages.Index
+@using Senparc.Xncf.Workspace
+@inject IStringLocalizer<WorkspaceResource> XR
 @{
-    ViewData["Title"] = "工作区与远程编辑";
+    ViewData["Title"] = XR["Area.Menu.Admin"];
     Layout = "_Layout_Vue";
 }
 
@@ -10,9 +13,9 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.001"]</el-breadcrumb-item>
     <el-breadcrumb-item>Workspace</el-breadcrumb-item>
-    <el-breadcrumb-item>远程编辑</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Frontend.002"]</el-breadcrumb-item>
 }
 
 <div class="workspace-shell">
@@ -22,8 +25,8 @@
     <div class="workspace-hero">
         <div class="workspace-hero-icon"><i class="fa fa-code"></i></div>
         <div>
-            <h1>安全远程工作区</h1>
-            <p>文件保存在隔离目录中，AdminChat、VS Code 与 Cursor 共用。这里查看每个工作区的文件数量和容量，也可以清空内容并恢复成新建时的空目录。</p>
+            <h1>@XR["Frontend.003"]</h1>
+            <p>@XR["Frontend.036"]</p>
         </div>
     </div>
 
@@ -38,44 +41,44 @@
 
     <section class="ws-metrics" v-if="report.actorId">
         <article class="ws-metric">
-            <span class="ws-metric-kicker">我的工作区</span>
+            <span class="ws-metric-kicker">{{ ncfST('Frontend.004') }}</span>
             <strong>{{ report.ownSummary.workspaceCount }}</strong>
-            <span class="ws-metric-detail">{{ report.ownSummary.fileCount }} 个文件 · {{ formatFileSize(report.ownSummary.usedBytes) }}</span>
+            <span class="ws-metric-detail">{{ ncfST('{0} 个文件 · {1}', report.ownSummary.fileCount, formatFileSize(report.ownSummary.usedBytes)) }}</span>
         </article>
         <article class="ws-metric is-other" v-if="report.isSuperAdmin">
-            <span class="ws-metric-kicker">其他管理员</span>
+            <span class="ws-metric-kicker">{{ ncfST('Frontend.005') }}</span>
             <strong>{{ report.otherSummary.workspaceCount }}</strong>
-            <span class="ws-metric-detail">{{ report.otherSummary.fileCount }} 个文件 · {{ formatFileSize(report.otherSummary.usedBytes) }}</span>
+            <span class="ws-metric-detail">{{ ncfST('{0} 个文件 · {1}', report.otherSummary.fileCount, formatFileSize(report.otherSummary.usedBytes)) }}</span>
         </article>
         <article class="ws-metric is-total" v-if="report.isSuperAdmin">
-            <span class="ws-metric-kicker">当前租户合计</span>
+            <span class="ws-metric-kicker">{{ ncfST('Frontend.006') }}</span>
             <strong>{{ report.visibleSummary.workspaceCount }}</strong>
-            <span class="ws-metric-detail">{{ report.visibleSummary.fileCount }} 个文件 · {{ formatFileSize(report.visibleSummary.usedBytes) }}</span>
+            <span class="ws-metric-detail">{{ ncfST('{0} 个文件 · {1}', report.visibleSummary.fileCount, formatFileSize(report.visibleSummary.usedBytes)) }}</span>
         </article>
     </section>
     <p class="ws-note" v-if="report.actorId">
-        当前账号 #{{ report.actorId }} · 单个工作区配额 {{ formatFileSize(report.quotaBytes) }} · 文件数和容量不含工作区清单。
-        <span v-if="report.isSuperAdmin">其他管理员只统计当前租户内不属于你的工作区。</span>
+        {{ ncfST('Frontend.037', report.actorId, formatFileSize(report.quotaBytes)) }}
+        <span v-if="report.isSuperAdmin">{{ ncfST('Frontend.038') }}</span>
     </p>
 
     <section class="ws-section">
         <div class="ws-section-head">
-            <h2>我的工作区<ncf-doc-help topic="workspace.manage"></ncf-doc-help></h2>
-            <span class="count-pill">{{ report.ownWorkspaces.length }} 个</span>
+            <h2>{{ ncfST('Frontend.004') }}<ncf-doc-help topic="workspace.manage"></ncf-doc-help></h2>
+            <span class="count-pill">{{ ncfST('Frontend.039', report.ownWorkspaces.length) }}</span>
         </div>
 
         <form method="post" asp-page-handler="Create" class="ws-create">
             <input type="hidden" name="Uid" value="@Model.Uid" />
-            <el-input name="NewWorkspaceName" placeholder="给新任务起个名字，例如：订单系统重构" maxlength="100" show-word-limit></el-input>
+            <el-input name="NewWorkspaceName" :placeholder="ncfST('Frontend.040')" maxlength="100" show-word-limit></el-input>
             <button type="submit" class="ws-create-btn">
-                <i class="fa fa-plus"></i>创建工作区
+                <i class="fa fa-plus"></i>{{ ncfST('Frontend.007') }}
             </button>
         </form>
 
         <div class="ws-empty" v-if="!report.ownWorkspaces.length">
             <i class="fa fa-folder-o"></i>
-            <h3>还没有工作区</h3>
-            <p>输入一个名字并点击「创建工作区」，即可在 AI 对话与远程编辑器之间安全共享文件。</p>
+            <h3>{{ ncfST('Frontend.008') }}</h3>
+            <p>{{ ncfST('Frontend.018') }}</p>
         </div>
 
         <div class="ws-board" v-if="report.ownWorkspaces.length">
@@ -84,13 +87,13 @@
                     <div class="ws-card-icon"><i class="fa fa-cube"></i></div>
                     <div class="ws-card-title">
                         <h3 :title="ws.name">{{ ws.name }}</h3>
-                        <span class="ws-badge is-own" v-if="report.isSuperAdmin">我的</span>
+                        <span class="ws-badge is-own" v-if="report.isSuperAdmin">{{ ncfST('Frontend.054') }}</span>
                     </div>
                 </header>
                 <div class="ws-card-figures">
-                    <div><span>文件</span><strong>{{ ws.fileCount }}</strong></div>
-                    <div><span>目录</span><strong>{{ ws.directoryCount }}</strong></div>
-                    <div><span>已用</span><strong>{{ formatFileSize(ws.usedBytes) }}</strong></div>
+                    <div><span>{{ ncfST('Frontend.013') }}</span><strong>{{ ws.fileCount }}</strong></div>
+                    <div><span>{{ ncfST('Frontend.014') }}</span><strong>{{ ws.directoryCount }}</strong></div>
+                    <div><span>{{ ncfST('Frontend.015') }}</span><strong>{{ formatFileSize(ws.usedBytes) }}</strong></div>
                 </div>
                 <div class="ws-card-usage">
                     <el-progress :percentage="usagePercent(ws)" :stroke-width="6" :show-text="false" :status="usageStatus(ws)"></el-progress>
@@ -98,8 +101,8 @@
                 </div>
                 <footer class="ws-card-foot">
                     <div class="ws-card-time">
-                        <span :title="formatDate(ws.createdUtc)">创建于 {{ relativeTime(ws.createdUtc) }}</span>
-                        <span :title="formatDate(ws.lastAccessedUtc)">访问于 {{ relativeTime(ws.lastAccessedUtc) }}</span>
+                        <span :title="formatDate(ws.createdUtc)">{{ ncfST('Frontend.041', relativeTime(ws.createdUtc)) }}</span>
+                        <span :title="formatDate(ws.lastAccessedUtc)">{{ ncfST('Frontend.042', relativeTime(ws.lastAccessedUtc)) }}</span>
                     </div>
                     <div class="ws-card-actions">
                         <el-button
@@ -108,7 +111,7 @@
                             :loading="manualUploadWorkspaceId === ws.id && manualUploading"
                             :disabled="manualUploading || clearing"
                             @@click="chooseWorkspaceUpload(ws.id)">
-                            <i class="el-icon-upload2"></i> 上传
+                            <i class="el-icon-upload2"></i>{{ ncfST('Frontend.016') }}
                         </el-button>
                         <el-button
                             type="danger"
@@ -116,7 +119,7 @@
                             plain
                             :disabled="manualUploading || clearing"
                             @@click="clearWorkspace(ws)">
-                            <i class="fa fa-eraser"></i> 清空
+                            <i class="fa fa-eraser"></i>{{ ncfST('Frontend.017') }}
                         </el-button>
                     </div>
                 </footer>
@@ -126,14 +129,14 @@
 
     <section class="ws-section" v-if="report.isSuperAdmin">
         <div class="ws-section-head">
-            <h2>其他管理员的工作区</h2>
-            <span class="count-pill">{{ report.otherWorkspaces.length }} 个</span>
+            <h2>{{ ncfST('Frontend.009') }}</h2>
+            <span class="count-pill">{{ ncfST('Frontend.039', report.otherWorkspaces.length) }}</span>
         </div>
-        <p class="ws-note">这些工作区不属于当前账号。超级管理员可以查看用量并清空内容，操作会记入日志。</p>
+        <p class="ws-note">{{ ncfST('Frontend.043') }}</p>
         <div class="ws-empty" v-if="!report.otherWorkspaces.length">
             <i class="fa fa-folder-o"></i>
-            <h3>当前租户没有其他管理员的工作区</h3>
-            <p>这里只显示同一个租户里、所有者不是你的工作区。</p>
+            <h3>{{ ncfST('Frontend.019') }}</h3>
+            <p>{{ ncfST('Frontend.044') }}</p>
         </div>
         <div class="ws-board" v-if="report.otherWorkspaces.length">
             <article class="ws-card is-other" v-for="ws in report.otherWorkspaces" :key="ws.id">
@@ -141,13 +144,13 @@
                     <div class="ws-card-icon"><i class="fa fa-cube"></i></div>
                     <div class="ws-card-title">
                         <h3 :title="ws.name">{{ ws.name }}</h3>
-                        <span class="ws-badge is-other">管理员 #{{ ws.ownerId }}</span>
+                        <span class="ws-badge is-other">{{ ncfST('Frontend.045', ws.ownerId) }}</span>
                     </div>
                 </header>
                 <div class="ws-card-figures">
-                    <div><span>文件</span><strong>{{ ws.fileCount }}</strong></div>
-                    <div><span>目录</span><strong>{{ ws.directoryCount }}</strong></div>
-                    <div><span>已用</span><strong>{{ formatFileSize(ws.usedBytes) }}</strong></div>
+                    <div><span>{{ ncfST('Frontend.013') }}</span><strong>{{ ws.fileCount }}</strong></div>
+                    <div><span>{{ ncfST('Frontend.014') }}</span><strong>{{ ws.directoryCount }}</strong></div>
+                    <div><span>{{ ncfST('Frontend.015') }}</span><strong>{{ formatFileSize(ws.usedBytes) }}</strong></div>
                 </div>
                 <div class="ws-card-usage">
                     <el-progress :percentage="usagePercent(ws)" :stroke-width="6" :show-text="false" :status="usageStatus(ws)"></el-progress>
@@ -155,8 +158,8 @@
                 </div>
                 <footer class="ws-card-foot">
                     <div class="ws-card-time">
-                        <span :title="formatDate(ws.createdUtc)">创建于 {{ relativeTime(ws.createdUtc) }}</span>
-                        <span :title="formatDate(ws.lastAccessedUtc)">访问于 {{ relativeTime(ws.lastAccessedUtc) }}</span>
+                        <span :title="formatDate(ws.createdUtc)">{{ ncfST('Frontend.041', relativeTime(ws.createdUtc)) }}</span>
+                        <span :title="formatDate(ws.lastAccessedUtc)">{{ ncfST('Frontend.042', relativeTime(ws.lastAccessedUtc)) }}</span>
                     </div>
                     <div class="ws-card-actions">
                         <el-button
@@ -165,7 +168,7 @@
                             plain
                             :disabled="manualUploading || clearing"
                             @@click="clearWorkspace(ws)">
-                            <i class="fa fa-eraser"></i> 清空
+                            <i class="fa fa-eraser"></i>{{ ncfST('Frontend.017') }}
                         </el-button>
                     </div>
                 </footer>
@@ -175,22 +178,22 @@
 
     <section class="ws-section">
         <div class="ws-section-head">
-            <h2>连接指南</h2>
+            <h2>{{ ncfST('Frontend.010') }}</h2>
         </div>
         <div class="ws-guide">
             <div>
-                <h3><i class="fa fa-desktop"></i>在 VS Code / Cursor 中连接</h3>
+                <h3><i class="fa fa-desktop"></i>{{ ncfST('Frontend.011') }}</h3>
                 <ol class="step-list">
-                    <li data-step="1">安装 “NCF Workspace” 扩展</li>
-                    <li data-step="2">运行 “NCF: 连接工作区”</li>
-                    <li data-step="3">输入站点地址，在浏览器中确认配对</li>
-                    <li data-step="4">选择工作区，文件将作为远程文件夹打开</li>
+                    <li data-step="1">{{ ncfST('Frontend.046') }}</li>
+                    <li data-step="2">{{ ncfST('Frontend.047') }}</li>
+                    <li data-step="3">{{ ncfST('Frontend.048') }}</li>
+                    <li data-step="4">{{ ncfST('Frontend.049') }}</li>
                 </ol>
             </div>
             <div class="ws-guide-side">
-                <p>设备尚未配对？前往设备会话页面完成配对。</p>
+                <p>{{ ncfST('Frontend.052') }}</p>
                 <a class="el-button ws-pair-btn el-button--default el-button--small" href="/Admin/DesktopBridge/Index?uid=E9A9D870-A285-4BCE-9D4D-26A219C41252">
-                    <i class="fa fa-desktop"></i><span>管理设备配对</span>
+                    <i class="fa fa-desktop"></i><span>{{ ncfST('Frontend.012') }}</span>
                 </a>
             </div>
         </div>
@@ -209,6 +212,7 @@
 
 
 @section scripts {
+    <partial name="~/Areas/Admin/Pages/Shared/_LocalizationScripts.cshtml" />
     <script>
         new Vue({
             el: "#app",
@@ -231,15 +235,15 @@
                     var diff = Date.now() - new Date(value).getTime();
                     if (diff < 0) diff = 0;
                     var min = Math.floor(diff / 60000);
-                    if (min < 1) return "刚刚";
-                    if (min < 60) return min + " 分钟前";
+                    if (min < 1) return ncfST("刚刚");
+                    if (min < 60) return ncfST("{0} 分钟前", min);
                     var hour = Math.floor(min / 60);
-                    if (hour < 24) return hour + " 小时前";
+                    if (hour < 24) return ncfST("{0} 小时前", hour);
                     var day = Math.floor(hour / 24);
-                    if (day < 30) return day + " 天前";
+                    if (day < 30) return ncfST("{0} 天前", day);
                     var month = Math.floor(day / 30);
-                    if (month < 12) return month + " 个月前";
-                    return Math.floor(month / 12) + " 年前";
+                    if (month < 12) return ncfST("{0} 个月前", month);
+                    return ncfST("{0} 年前", Math.floor(month / 12));
                 },
                 chooseWorkspaceUpload: function (workspaceId) {
                     this.manualUploadWorkspaceId = workspaceId;
@@ -260,12 +264,12 @@
                         var capabilities = capabilitiesResponse.data || {};
                         var maxFileBytes = Number(capabilities.maxFileBytes);
                         if (!Number.isFinite(maxFileBytes) || maxFileBytes <= 0) {
-                            throw new Error("无法取得 Workspace 上传限制。");
+                            throw new Error(ncfST("无法取得 Workspace 上传限制。"));
                         }
 
                         for (var file of files) {
                             if (!file || file.size <= 0 || file.size > maxFileBytes) {
-                                throw new Error(file.name + " 为空或超过 " + this.formatFileSize(maxFileBytes) + "。");
+                                throw new Error(ncfST("{0} 为空或超过 {1}。", file.name, this.formatFileSize(maxFileBytes)));
                             }
 
                             this.manualUploadFileName = file.name;
@@ -287,16 +291,16 @@
                                     }.bind(this)
                                 });
                             if (!response.data || !response.data.file) {
-                                throw new Error(file.name + " 上传响应无效。");
+                                throw new Error(ncfST("{0} 上传响应无效。", file.name));
                             }
-                            this.$message.success(file.name + " 已上传到 Workspace/input。");
+                            this.$message.success(ncfST("{0} 已上传到 Workspace/input。", file.name));
                         }
                     } catch (error) {
-                        console.error("Workspace 手动上传失败:", error);
+                        console.error(ncfST("Workspace 手动上传失败："), error);
                         this.$message.error(
                             (error.response && error.response.data && error.response.data.message)
                             || error.message
-                            || "Workspace 手动上传失败。");
+                            || ncfST("Workspace 手动上传失败。"));
                     } finally {
                         this.manualUploading = false;
                         this.manualUploadProgress = 0;
@@ -323,8 +327,8 @@
                 clearWorkspace: function (ws) {
                     if (!ws || !ws.id || this.clearing || this.manualUploading) return;
                     var message = ws.scope === "Other"
-                        ? "这将清空其他管理员 #" + ws.ownerId + " 的工作区「" + ws.name + "」。文件会被删除，并恢复为新建时的 input、output、logs 空目录。工作区本身会保留。此操作不可撤销。"
-                        : "这将清空你自己的工作区「" + ws.name + "」。文件会被删除，并恢复为新建时的 input、output、logs 空目录。工作区本身会保留。此操作不可撤销。";
+                        ? ncfST("这将清空其他管理员 #{0} 的工作区「{1}」。文件会被删除，并恢复为新建时的 input、output、logs 空目录。工作区本身会保留。此操作不可撤销。", ws.ownerId, ws.name)
+                        : ncfST("这将清空你自己的工作区「{0}」。文件会被删除，并恢复为新建时的 input、output、logs 空目录。工作区本身会保留。此操作不可撤销。", ws.name);
                     if (!window.confirm(message)) return;
                     this.clearing = true;
                     this.$refs.clearWorkspaceId.value = ws.id;

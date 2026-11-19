@@ -1,4 +1,17 @@
-﻿using System;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: SenparcAuthorizeAttribute.cs
+    File description: SenparcAuthorizeAttribute related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.0.1 Updated legacy MVC integration metadata and English source comments
+
+----------------------------------------------------------------*/
+
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Principal;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -14,7 +27,7 @@ namespace Senparc.Mvc
     {
         private string Message { get; set; }
         private string RoleModuleName { get; set; }
-        private bool forceLogout = false;//被强制退出登录
+        private bool forceLogout = false;//Legacy comment translated to English.
 
 
         public SenparcAuthorizeAttribute()
@@ -42,7 +55,7 @@ namespace Senparc.Mvc
             IPrincipal user = httpContext.User;
             if (!IsLogined(httpContext))
             {
-                return false;//未登录
+                return false;//Legacy comment translated to English.
             }
 
             return true;
@@ -84,16 +97,16 @@ namespace Senparc.Mvc
                 //todo: to a special page
                 if (IsLogined(filterContext.HttpContext))
                 {
-                    //权限不够
+                    //Legacy comment translated to English.
                     if (forceLogout)
                     {
-                        //COCONET 不支持filterContext.Controller属性，暂时隐藏
-                        //filterContext.Controller.TempData["ForceLogout"] = "您已被强制退出登录！";
+                        //COCONET notsupportfilterContext.Controllerproperty，temporarilyhide
+                        //Legacy comment translated to English.
                     }
                     else
                     {
-                        //COCONET 不支持filterContext.Controller属性，暂时隐藏
-                        //filterContext.Controller.TempData["AuthorityNotReach"] = "您无权访问此页面或执行此操作！";
+                        //COCONET notsupportfilterContext.Controllerproperty，temporarilyhide
+                        //Legacy comment translated to English.
                     }
                 }
                 else

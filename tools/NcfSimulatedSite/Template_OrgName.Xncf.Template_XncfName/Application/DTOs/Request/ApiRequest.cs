@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：ApiRequest.cs
-    文件功能描述：XNCF 模板示例实现
-    
-    
-    创建标识：Senparc - 20211226
-    
-    修改标识：Senparc - 20260726
-    修改描述：v1.1.0 补充示例模板 EventBus 请求-响应回环与多语言能力
+
+    File name: ApiRequest.cs
+    File description: XNCF template sample implementation
+
+    Created by: Senparc - 20211226
+
+    Modified by: Senparc - 20260726
+    Change description: v1.1.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v1.1.15 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 using System;

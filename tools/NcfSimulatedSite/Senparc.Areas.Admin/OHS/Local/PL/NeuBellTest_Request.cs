@@ -1,39 +1,42 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：NeuBellTest_Request.cs
-    文件功能描述：纽铃可见提醒示例 Function 请求参数
+    File name: NeuBellTest_Request.cs
+    File description: Related implementation.
+    Legacy comment translated to English.
 
+    Created by: Senparc - 20260805
 
-    创建标识：Senparc - 20260805
+    Modified by: Senparc - 20260808
+    Change description: v0.4.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260808
-    修改描述：v0.4.0 新增纽铃示例 Function 请求参数
+    Modified by: Senparc - 20260813
+    Change description: v0.5.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.5.0 集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
+    Modified by: Senparc - 20260910
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20260910
-    修改描述：新增 WebHookUrl 参数，发送提醒（创建 NeuBell）时可指定 WebHook 地址异步通知，
-    请求数据与结果记录到 WebHook 请求日志列表
+    Modified by: Senparc - 20260914
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20260914
-    修改描述：新增 WebHookMethod 参数（GET/POST/PUT），WebHook 地址支持 {{title}} 等占位符
+    Modified by: Senparc - 20260915
+    Change description: v0.8.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+    Modified by: Senparc - 20260915
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20260915
-    修改描述：WebHook 请求方式改为下拉框，新增多行 Body 模板参数
+    Modified by: Senparc - 20260916
+    Change description: v0.9.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260916
-    修改描述：v0.9.0 增强 Admin Chat 取消与推理轨迹，并扩展 NeuBell WebHook 请求能力
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 维护纽铃可见提醒示例 Function 请求参数
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 

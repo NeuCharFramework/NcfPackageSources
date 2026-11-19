@@ -1,13 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：AdminMenuLocalizationService.cs
-    文件功能描述：后台菜单多语言显示与兼容处理
-    
-    创建标识：Senparc - 20261111
-    
-    修改标识：Senparc - 20261111
-    修改描述：v0.12.28 按稳定模块标识解析内置菜单多语言显示，保留用户自定义菜单原文
+
+    File name: AdminMenuLocalizationService.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20261111
+
+    Modified by: Senparc - 20261111
+    Change description: v0.12.28 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 

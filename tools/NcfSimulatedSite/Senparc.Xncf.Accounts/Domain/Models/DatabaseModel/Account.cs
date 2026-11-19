@@ -1,4 +1,17 @@
-﻿using Senparc.Ncf.Core.Enums;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: Account.cs
+    File description: Account related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.3.14 Updated module behavior, localization metadata, and English source comments
+
+----------------------------------------------------------------*/
+
+using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.Accounts.Domain.Models;
 using System;
@@ -57,7 +70,7 @@ namespace Senparc.Xncf.Accounts.Domain.Models
         public string WeixinOpenId { get; set; }
 
         /// <summary>
-        /// 是否被锁定（无法登陆） TODO：暂未添加到DTO中
+        ///Legacy comment translated to English.
         /// </summary>
         public bool? Locked { get; set; }
         

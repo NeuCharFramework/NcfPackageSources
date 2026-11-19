@@ -1,8 +1,10 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：NeuCharPivotLoopTaskTests.cs
-    文件功能描述：NeuCharPivot Loop Task 调度状态测试
+    File name: NeuCharPivotLoopTaskTests.cs
+    File description: Related implementation.
+
 ----------------------------------------------------------------*/
 
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;

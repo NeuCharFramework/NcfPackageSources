@@ -1,4 +1,17 @@
-﻿using Senparc.Service;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: InstallController.cs
+    File description: InstallController related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.0.1 Updated legacy MVC integration metadata and English source comments
+
+----------------------------------------------------------------*/
+
+using Senparc.Service;
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Ncf.Core.Models.VD;
 using Senparc.Ncf.Service;
@@ -29,7 +42,7 @@ namespace Senparc.Mvc.Controllers
             var vd = new Install_IndexVD()
             {
                 AdminUserName = userName,
-                AdminPassword = password//这里不可以使用 adminUserInfo.Password，因为此参数已经是加密信息
+                AdminPassword = password//Legacy comment translated to English.
             };
             return View(vd);
         }

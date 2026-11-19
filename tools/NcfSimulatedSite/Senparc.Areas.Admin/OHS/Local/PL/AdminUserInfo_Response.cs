@@ -1,4 +1,17 @@
-﻿using Senparc.Ncf.Core.Models;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: AdminUserInfo_Response.cs
+    File description: AdminUserInfo_Response related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
+
+----------------------------------------------------------------*/
+
+using Senparc.Ncf.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +37,7 @@ namespace Senparc.Areas.Admin.OHS.Local.PL
     }
 
     /// <summary>
-    /// 获取所有
+    /// getall
     /// </summary>
     public class AdminUserInfo_GetRolesResponse
     {

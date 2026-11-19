@@ -1,21 +1,23 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：PromptImageController.cs
-    文件功能描述：PromptImageController 控制器逻辑
-    
-    
-    创建标识：Senparc - 20260704
 
+    File name: PromptImageController.cs
+    File description: Related implementation.
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.16.3-preview2 增强文生图重试机制并兼容 TLS1.2/TLS1.3
+    Created by: Senparc - 20260704
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.16.4-preview3 增强文生图重试机制并兼容 TLS1.2/TLS1.3
+    Modified by: Senparc - 20260705
+    Change description: v0.16.3-preview2 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.17.1-preview6 加强提示词接口授权并防护插件压缩包路径
+    Modified by: Senparc - 20260705
+    Change description: v0.16.4-preview3 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260729
+    Change description: v0.17.1-preview6 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.20.16 Localized PromptRange administration and runtime surfaces
 
 ----------------------------------------------------------------*/
 

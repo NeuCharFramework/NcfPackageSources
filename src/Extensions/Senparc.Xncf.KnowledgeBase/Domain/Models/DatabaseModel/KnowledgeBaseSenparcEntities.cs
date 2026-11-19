@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：KnowledgeBaseSenparcEntities.cs
-    文件功能描述：KnowledgeBaseSenparcEntities 相关实现
-    
-    
-    创建标识：Senparc - 20250105
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: KnowledgeBaseSenparcEntities.cs
+    File description: KnowledgeBaseSenparcEntities related implementation
+
+    Created by: Senparc - 20250105
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.8.4 Localized knowledge base management and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -30,10 +33,10 @@ namespace Senparc.Xncf.KnowledgeBase.Models
         public DbSet<DatabaseModel.KnowledgeBase> KnowledgeBases { get; set; }
         public DbSet<KnowledgeBaseItem> KnowledgeBasesItems { get; set; }
 
-        //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
+        //DOT REMOVE OR MODIFY THIS LINE - Entities Point
         //ex. public DbSet<Color> Colors { get; set; }
 
-        //如无特殊需需要，OnModelCreating 方法可以不用写，已经在 Register 中要求注册
+        //Legacy comment translated to English.
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
         //}

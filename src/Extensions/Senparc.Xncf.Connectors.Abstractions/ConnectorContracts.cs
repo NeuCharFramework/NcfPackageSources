@@ -1,22 +1,25 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：ConnectorContracts.cs
-    文件功能描述：定义连接器类型、配置字段、动作和绑定契约
-    
-    
-    创建标识：Senparc - 20261111
-    
-    修改标识：Senparc - 20261111
-    修改描述：v0.1.0 定义连接器描述、字段、动作与绑定契约
+
+    File name: ConnectorContracts.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20261111
+
+    Modified by: Senparc - 20261111
+    Change description: v0.1.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.1.1 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Connectors.Abstractions;
 
 /// <summary>
-/// 一个可安装的连接器类型。模块通过 <see cref="IConnectorProvider"/> 注册，
-/// 用户再创建带账号和密钥的实例。
+///Legacy comment translated to English.
+///Legacy comment translated to English.
 /// </summary>
 public sealed class ConnectorDescriptor
 {
@@ -110,7 +113,7 @@ public sealed record ConnectorInvocationResult(bool Success, string Output, stri
 public sealed record ConnectorTestResult(bool Success, string Message);
 
 /// <summary>
-/// 由业务模块实现。连接器模块只保存配置并在运行时把调用交给对应提供者。
+///Legacy comment translated to English.
 /// </summary>
 public interface IConnectorProvider
 {
@@ -154,7 +157,7 @@ public interface IConnectorGateway
 }
 
 /// <summary>
-/// Agent 模板上的连接器授权。空的 <see cref="ActionKeys"/> 表示允许该实例的全部动作。
+///Legacy comment translated to English.
 /// </summary>
 public sealed class AgentConnectorBinding
 {

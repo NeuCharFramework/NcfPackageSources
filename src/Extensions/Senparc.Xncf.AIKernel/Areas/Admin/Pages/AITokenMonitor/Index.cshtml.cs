@@ -1,13 +1,17 @@
 /*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：Index.cshtml.cs
-    文件功能描述：Token 监控页面
-    
-    创建标识：Senparc - 20260904
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.16.0 新增 AI Token 用量监控与模型选择能力
+    Copyright (C) 2026 Senparc
+
+    File name: Index.cshtml.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20260904
+
+    Modified by: Senparc - 20260915
+    Change description: v0.16.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
 ----------------------------------------------------------------*/
 

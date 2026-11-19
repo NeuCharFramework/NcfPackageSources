@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：AccountsResource.cs
-    文件功能描述：账户模块本地化资源访问类
-    
-    
-    创建标识：Senparc - 20260403
-    
-    修改标识：Senparc - 20260724
-    修改描述：v0.3.0 完善账户模块本地化资源与功能文案
+
+    File name: AccountsResource.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20260403
+
+    Modified by: Senparc - 20260724
+    Change description: v0.3.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.3.14 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 namespace Senparc.Xncf.Accounts

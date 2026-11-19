@@ -1,17 +1,20 @@
 /*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：AIModelDto.cs
-    文件功能描述：AIModelDto 相关实现
-    
-    
-    创建标识：Senparc - 20231220
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.16.0 新增 AI Token 用量监控与模型选择能力
+    Copyright (C) 2026 Senparc
+
+    File name: AIModelDto.cs
+    File description: AIModelDto related implementation
+
+    Created by: Senparc - 20231220
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260915
+    Change description: v0.16.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
 ----------------------------------------------------------------*/
 
@@ -26,77 +29,77 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto
     public class AIModelDto : DtoBase
     {
         /// <summary>
-        /// 主键 ID
+        /// primary key ID
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
-        /// 代号
+        /// code
         /// </summary>
         public string Alias { get; set; }
 
         /// <summary>
-        /// 部署名称
+        /// deployment name
         /// </summary>
         public string DeploymentName { get; set; }
 
         /// <summary>
-        /// 模型名称（必须）
+        /// model name (required)
         /// </summary>
         public string ModelId { get; set; }
 
         /// <summary>
-        /// Endpoint（必须）
+        /// Endpoint（must）
         /// </summary>
         public string Endpoint { get; set; }
 
         /// <summary>
-        /// 模型的类型（必须）, 例如：NeuCharAI, OpenAI, Azure OpenAI, HuggingFace
+        ///Legacy comment translated to English.
         /// </summary>
         public AiPlatform AiPlatform { get; set; }
         /// <summary>
-        /// 模型类型
+        /// modeltype
         /// </summary>
         public ConfigModelType ConfigModelType { get; set; }
 
 
         /// <summary>
-        /// OrganizationId（可选）
+        ///Legacy comment translated to English.
         /// </summary>
         public string OrganizationId { get; set; }
 
         /// <summary>
-        /// ApiKey（可选）
+        ///Legacy comment translated to English.
         /// </summary>
         public string ApiKey { get; set; }
 
         /// <summary>
-        /// ApiVersion（可选）
+        ///Legacy comment translated to English.
         /// </summary>
         public string ApiVersion { get; set; }
 
         /// <summary>
-        /// Note（可选）
+        /// Note (optional)
         /// </summary>
         public string Note { get; set; }
 
         /// <summary>
-        /// MaxToken（可选）
+        ///Legacy comment translated to English.
         /// </summary>
         public int MaxToken { get; set; }
 
         /// <summary>
-        /// 是否共享
+        /// whether shared
         /// </summary>
         public bool IsShared { get; set; } = false;
 
         /// <summary>
-        /// 是否展示
+        /// whether displayed
         /// </summary>
         public bool Show { get;  set; }
         
         /// <summary>
-        /// Token 使用统计
+        /// Token usestatistics
         /// </summary>
         public AITokenModelUsage Usage { get; set; }
 

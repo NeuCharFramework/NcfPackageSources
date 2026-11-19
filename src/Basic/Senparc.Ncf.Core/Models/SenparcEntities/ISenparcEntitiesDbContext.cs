@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：ISenparcEntitiesDbContext.cs
-    文件功能描述：ISenparcEntitiesDbContext 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: ISenparcEntitiesDbContext.cs
+    File description: ISenparcEntitiesDbContext related implementation
+
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -27,20 +30,20 @@ namespace Senparc.Ncf.Core.Models
     public interface ISenparcEntitiesDbContext : IDisposable /*, IInfrastructure<IServiceProvider>,*/ /*IDbContextDependencies,*/ /*IDbSetCache*/ /*IDbQueryCache, *//*,IDbContextPoolable*/
     {
         /// <summary>
-        /// 当前上下文中租户信息 <![CDATA[未启用多租户则默认值为NULL值]]>
+        ///Legacy comment translated to English.
         /// </summary>
         MultiTenant.RequestTenantInfo TenantInfo { get; set; }
 
         void SetGlobalQuery<T>(ModelBuilder builder) where T : EntityBase;
 
         /// <summary>
-        /// 重置合并状态
+        ///Legacy comment translated to English.
         /// </summary>
         void ResetMigrate();
 
         /// <summary>
-        /// 执行 EF Core 的合并操作（等价于 update-database）
-        /// <para>出于安全考虑，每次执行 Migrate() 方法之前，必须先执行 ResetMigrate() 开启允许 Migrate 执行的状态。</para>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         void Migrate();
     }

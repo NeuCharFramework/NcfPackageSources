@@ -2,11 +2,11 @@
     el: "#app",
     data() {
         return {
-            //分页参数
+            //pagination parameters
             paginationQuery: {
                 total: 0
             },
-            //分页接口传参
+            //pagination API parameters
             listQuery: {
                 pageIndex: 1,
                 pageSize: 10,
@@ -35,7 +35,7 @@
                     ]
                 },
                 updateLoading: false,
-                updateLoadingSet: false, // 确认loading按钮
+                updateLoadingSet: false, //Legacy comment translated to English.
                 nameError: '',
                 tenantKeyError: ''
             },
@@ -81,7 +81,7 @@
     },
     watch: {
         'dialog.visible': function (val, old) {
-            // 关闭dialog，清空
+            // disabledialog，clear
             if (!val) {
                 this.dialog.data = {
                     id: 0,
@@ -98,7 +98,7 @@
         }
     },
     methods: {
-        // 获取数据
+        // getdata
         getList() {
             let { pageIndex, pageSize } = this.listQuery;
             service.get(`/Admin/TenantInfo/index?handler=List&pageIndex=${pageIndex}&pageSize=${pageSize}`).then(res => {
@@ -111,7 +111,7 @@
                 }
             });
         },
-        // 新增
+        // add
         handleAdd() {
             this.dialog.title = ncfT('Tenant.CreateTitle');
             this.dialog.visible = true;
@@ -123,11 +123,11 @@
                 enable: true
             };
         },
-        // 编辑
+        // edit
         handleEdit(index, row) {
             this.dialog.visible = true;
             if (row) {
-                // 编辑
+                // edit
                 let { id, name, tenantKey, adminRemark, enable } = row;
                 this.dialog.data = {
                     id, name, tenantKey, adminRemark, enable
@@ -135,14 +135,14 @@
                 this.dialog.title = ncfT('Tenant.EditTitle');
                 this.dialog = Object.assign({}, this.dialog);
             } else {
-                // 新增
+                // add
                 this.dialog.title = ncfT('Tenant.CreateTitle');
             }
         },
-        // 更新新增编辑
+        // updateaddedit
         updateData() {
             this.$refs['dataForm'].validate(valid => {
-                // 表单校验
+                // single-table validation
                 if (valid) {
                     this.dialog.updateLoading = true;
                     let data = {
@@ -170,7 +170,7 @@
                 }
             });
         },
-        // 删除
+        // delete
         handleDelete(index, row) {
             let ids = [row.id];
             service.post("/Admin/TenantInfo/Index?handler=Delete", ids).then(res => {
@@ -201,7 +201,7 @@
                 }
             });
         },
-        // 初始化
+        // initialize
         handleInitialize(row) {
             this.initializeDialog.visible = true;
             this.initializeDialog.data = {
@@ -211,7 +211,7 @@
             };
         },
 
-        // 提交初始化
+        //Legacy comment translated to English.
         submitInitialize() {
             this.$refs['initializeForm'].validate(valid => {
                 if (valid) {
@@ -219,7 +219,7 @@
                     service.post("/Admin/TenantInfo/Index?handler=Initialize", this.initializeDialog.data).then(res => {
                         if (res.data.success) {
                             this.initializeDialog.visible = false;
-                            // 显示结果弹窗
+                            //Legacy comment translated to English.
                             this.resultDialog.data = res.data.data;
                             this.resultDialog.visible = true;
                         } else {

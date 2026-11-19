@@ -1,17 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：20260926120824_Add_WeixinClawAdminApprovalState.cs
-    文件功能描述：20260926120824_Add_WeixinClawAdminApprovalState.cs implementation and project behavior.
+    File name: 20260926120824_Add_WeixinClawAdminApprovalState.cs
+    File description: 20260926120824_Add_WeixinClawAdminApprovalState.cs implementation and project behavior.
 
+    Created by: Senparc - 20260926
 
-    创建标识：Senparc - 20260926
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
-
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 支持 Add_WeixinClawAdminApprovalState 数据库迁移
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 

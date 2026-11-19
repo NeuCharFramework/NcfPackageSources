@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：ExtensionEntity.cs
-    文件功能描述：ExtensionEntity 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: ExtensionEntity.cs
+    File description: ExtensionEntity related implementation
+
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.15.14 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -19,7 +22,7 @@ using System.Text;
 
 namespace Senparc.Xncf.SystemManager.Domain.Models
 {
-    #region 省、市、区XML数据格式
+    #region Legacy section
     [DataContract]
     [Serializable]
     public class AreaXML_Provinces
@@ -31,13 +34,13 @@ namespace Senparc.Xncf.SystemManager.Domain.Models
         public string ProvinceName { get; set; }
 
         /// <summary>
-        /// 地区代码
+        ///Legacy comment translated to English.
         /// </summary>
         [DataMember]
         public string DivisionsCode { get; set; }
 
         /// <summary>
-        /// 缩写（去掉“省”“市”“自治区”等）
+        ///Legacy comment translated to English.
         /// </summary>
         [DataMember]
         public string ShortName { get; set; }

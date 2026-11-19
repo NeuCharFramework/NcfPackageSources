@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：20260911075501_Add_NeuBellWebHookLog.cs
-    文件功能描述：20260911075501_Add_NeuBellWebHookLog 相关功能实现
+    File name: 20260911075501_Add_NeuBellWebHookLog.cs
+    File description: Related implementation.
 
+    Created by: Senparc - 20220818
 
-    创建标识：Senparc - 20220818
-
-    修改标识：Senparc - 20260915
-    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+    Modified by: Senparc - 20260915
+    Change description: v0.8.0 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 using System;

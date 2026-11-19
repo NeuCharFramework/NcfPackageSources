@@ -1,23 +1,26 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：AdminChatWorkspaceToolFactory.cs
-    文件功能描述：后台对话工作区工具工厂
-    
-    
-    创建标识：Senparc - 20261015
-    
-    修改标识：Senparc - 20261021
-    修改描述：v0.11.1 为后台对话提供工作区工具
 
-    修改标识：Senparc - 20261024
-    修改描述：空查询时回退为目录列表，避免 AI 首次浏览 Workspace 失败
+    File name: AdminChatWorkspaceToolFactory.cs
+    File description: Related implementation.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 add comprehensive unit tests for AdminChatWorkspaceAssetService functionality
+    Created by: Senparc - 20261015
 
-    修改标识：Senparc - 20261111
-    修改描述：补充 Workspace 工具失败诊断、分段写入规则与文件变更摘要
+    Modified by: Senparc - 20261021
+    Change description: v0.11.1 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261024
+    Change description: Updated module behavior and related support.
+
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 add comprehensive unit tests for AdminChatWorkspaceAssetService functionality
+
+    Modified by: Senparc - 20261111
+    Change description: Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 

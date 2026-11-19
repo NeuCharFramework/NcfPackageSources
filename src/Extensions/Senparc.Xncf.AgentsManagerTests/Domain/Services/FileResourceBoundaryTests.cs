@@ -1,8 +1,9 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：FileResourceBoundaryTests.cs
-    文件功能描述：FileManager 资源用途与公开 URL 回归测试
+    File name: FileResourceBoundaryTests.cs
+    File description: Related implementation.
 
 ----------------------------------------------------------------*/
 

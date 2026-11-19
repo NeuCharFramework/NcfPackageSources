@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：AreaPageMenuItem.cs
-    文件功能描述：AreaPageMenuItem 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: AreaPageMenuItem.cs
+    File description: AreaPageMenuItem related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -20,7 +23,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.Areas
 {
     /// <summary>
-    /// Area 页面菜单项
+    /// Area page menu item
     /// </summary>
     public class AreaPageMenuItem
     {

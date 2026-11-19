@@ -1,18 +1,20 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：ConnectorAppService.cs
-    文件功能描述：连接器配置与调用的应用服务
-    
-    
-    创建标识：Senparc - 20261111
-    
-    修改标识：Senparc - 20261111
-    修改描述：v0.1.0 提供连接器配置与调用的应用服务
+
+    File name: ConnectorAppService.cs
+    File description: application service for connector configuration and invocation
+
+    Created by: Senparc - 20261111
+
+    Modified by: Senparc - 20261111
+    Change description: v0.1.0 provide application services for connector configuration and invocation
+
+    Modified by: Senparc - 20261119
+    Change description: v0.1.1 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,8 +42,8 @@ public sealed class ConnectorAppService : AppServiceBase
         "Function.Connectors.Invoke.Name",
         "Function.Connectors.Invoke.Description",
         typeof(Register),
-        "调用连接器",
-        "调用一个已启用的连接器动作。在 Workflow 中添加 Function 节点后，选择连接器和动作即可。",
+        "Invoke connector",
+        "Invoke an enabled connector action. Add a Function node in Workflow, then choose the connector and action.",
         AllowAiInvocation = true)]
     public Task<StringAppResponse> InvokeConfiguredConnector(InvokeConnectorRequest request)
     {
@@ -64,7 +66,7 @@ public sealed class ConnectorAppService : AppServiceBase
                 CancellationToken).ConfigureAwait(false);
             return result.Success
                 ? result.Output
-                : result.Error ?? "连接器调用失败。";
+                : result.Error ?? "Connector invocation failed.";
         });
     }
 
@@ -102,7 +104,7 @@ public sealed class ConnectorAppService : AppServiceBase
 public sealed class InvokeConnectorRequest : FunctionAppRequestBase
 {
     [Required]
-    [Description("连接器||选择已经配置并启用的连接器")]
+    [LocalizedDescription(typeof(ConnectorsResource), "Parameter.Connectors.Instance")]
     [FunctionParameterUi(ParameterType.DropDownList, nameof(InstanceOptions), Filterable = true)]
     public string InstanceId { get; set; } = string.Empty;
 
@@ -110,7 +112,7 @@ public sealed class InvokeConnectorRequest : FunctionAppRequestBase
     public SelectionList InstanceOptions { get; set; } = new(SelectionType.DropDownList);
 
     [Required]
-    [Description("动作||选择要执行的连接器动作")]
+    [LocalizedDescription(typeof(ConnectorsResource), "Parameter.Connectors.Action")]
     [FunctionParameterUi(ParameterType.DropDownList, nameof(ActionOptions), Filterable = true)]
     public string ActionKey { get; set; } = string.Empty;
 
@@ -118,23 +120,23 @@ public sealed class InvokeConnectorRequest : FunctionAppRequestBase
     public SelectionList ActionOptions { get; set; } = new(SelectionType.DropDownList);
 
     [MaxLength(40)]
-    [Description("开始时间||打卡记录开始时间，例如 2026-11-01 或 2026-11-01 09:00。留空则从今天 0 点开始")]
+    [LocalizedDescription(typeof(ConnectorsResource), "Parameter.Connectors.StartTime")]
     public string? StartTime { get; set; }
 
     [MaxLength(40)]
-    [Description("结束时间||打卡记录结束时间。留空则到当前时间，且与开始时间最多间隔 30 天")]
+    [LocalizedDescription(typeof(ConnectorsResource), "Parameter.Connectors.EndTime")]
     public string? EndTime { get; set; }
 
     [MaxLength(2000)]
-    [Description("成员账号||企业微信 userid，多个用逗号或空格分隔")]
+    [LocalizedDescription(typeof(ConnectorsResource), "Parameter.Connectors.UserIds")]
     public string? UserIds { get; set; }
 
     [MaxLength(10)]
-    [Description("打卡类型||1 上下班，2 外出，3 全部。留空默认全部")]
+    [LocalizedDescription(typeof(ConnectorsResource), "Parameter.Connectors.CheckinType")]
     public string? CheckinType { get; set; }
 
     [MaxLength(4000)]
-    [Description("附加参数||JSON 对象。已填写的专用字段优先，适合其他连接器动作")]
+    [LocalizedDescription(typeof(ConnectorsResource), "Parameter.Connectors.Arguments")]
     public string? ArgumentsJson { get; set; }
 
     public override async Task LoadData(IServiceProvider serviceProvider)

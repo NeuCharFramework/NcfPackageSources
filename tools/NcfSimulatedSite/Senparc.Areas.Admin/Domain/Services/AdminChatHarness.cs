@@ -1,25 +1,29 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：AdminChatHarness.cs
-    文件功能描述：Admin Chat Harness（基于 Microsoft Agent Framework 的长任务执行器）
+    File name: AdminChatHarness.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260906
+    Created by: Senparc - 20260906
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+    Modified by: Senparc - 20260915
+    Change description: v0.8.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260916
-    修改描述：v0.9.0 增强 Admin Chat 取消与推理轨迹，并扩展 NeuBell WebHook 请求能力
+    Modified by: Senparc - 20260916
+    Change description: v0.9.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.11.1 整理最近任务与会话标题
+    Modified by: Senparc - 20261021
+    Change description: v0.11.1 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 enhance AdminChat with recent tasks and session title generation
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 enhance AdminChat with recent tasks and session title generation
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 
@@ -37,80 +41,129 @@ using Senparc.Xncf.AIKernel.Domain.Models.Usage;
 namespace Senparc.Areas.Admin.Domain.Services
 {
     /// <summary>
-    /// Admin Chat 运行模式。
+    ///Legacy comment translated to English.
     /// </summary>
     public enum AdminChatMode
     {
         /// <summary>
-        /// 普通单轮对话（默认）。
+        ///Legacy comment translated to English.
         /// </summary>
         Simple = 0,
 
         /// <summary>
-        /// 长任务 Harness：多步骤自主执行（计划 → 调用工具 → 观察 → 继续），受最大步数与超时预算约束。
+        ///Legacy comment translated to English.
         /// </summary>
-        Harness = 1
+        Plan = 1,
+
+        /// <summary>
+        ///Legacy comment translated to English.
+        /// </summary>
+        Harness = Plan,
+
+        /// <summary>
+        ///Legacy comment translated to English.
+        /// </summary>
+        Execute = 2
     }
 
     /// <summary>
-    /// Harness 单步执行记录。
+    /// Harness execution capabilities selected for the next request.
+    /// File memory, Skills and Hosted Web Search are opt-in.
+    /// </summary>
+    public sealed class AdminChatHarnessOptions
+    {
+        public int MaxIterations { get; set; } = 32;
+        public int MaxOutputTokens { get; set; } = 4000;
+        public bool DisableTodoProvider { get; set; }
+        public bool DisableCompaction { get; set; }
+        public bool EnableFileMemory { get; set; }
+        public bool EnableAgentSkillsProvider { get; set; }
+        public bool EnableWebSearch { get; set; }
+
+        public static AdminChatHarnessOptions Normalize(
+            AdminChatHarnessOptions options,
+            int fallbackIterations = 32,
+            int fallbackOutputTokens = 4000)
+        {
+            options ??= new AdminChatHarnessOptions();
+            return new AdminChatHarnessOptions
+            {
+                MaxIterations = Math.Clamp(
+                    options.MaxIterations > 0 ? options.MaxIterations : fallbackIterations,
+                    1,
+                    64),
+                MaxOutputTokens = Math.Clamp(
+                    options.MaxOutputTokens > 0 ? options.MaxOutputTokens : fallbackOutputTokens,
+                    256,
+                    8000),
+                DisableTodoProvider = options.DisableTodoProvider,
+                DisableCompaction = options.DisableCompaction,
+                EnableFileMemory = options.EnableFileMemory,
+                EnableAgentSkillsProvider = options.EnableAgentSkillsProvider,
+                EnableWebSearch = options.EnableWebSearch
+            };
+        }
+    }
+
+    /// <summary>
+    ///Legacy comment translated to English.
     /// </summary>
     public sealed class AdminChatHarnessStep
     {
         /// <summary>
-        /// 步骤序号（从 1 开始）。
+        ///Legacy comment translated to English.
         /// </summary>
         public int Index { get; set; }
 
         /// <summary>
-        /// 本步骤发送给模型的提示词（仅用于进度回调，不随响应序列化下发）。
+        ///Legacy comment translated to English.
         /// </summary>
         [JsonIgnore]
         public string Prompt { get; set; }
 
         /// <summary>
-        /// 本步骤模型返回（已去除控制标记）的内容。
+        ///Legacy comment translated to English.
         /// </summary>
         public string Output { get; set; }
 
         /// <summary>
-        /// 是否为本轮结束步（命中完成标记）。
+        ///Legacy comment translated to English.
         /// </summary>
         public bool IsFinal { get; set; }
 
         /// <summary>
-        /// 是否因超时/取消而终止。
+        ///Legacy comment translated to English.
         /// </summary>
         public bool TimedOut { get; set; }
     }
 
     /// <summary>
-    /// Harness 执行结果。
+    /// Harness executeresult。
     /// </summary>
     public sealed class AdminChatHarnessResult
     {
         /// <summary>
-        /// 最终回复文本（最后一个有效步骤的内容）。
+        ///Legacy comment translated to English.
         /// </summary>
         public string FinalText { get; set; }
 
         /// <summary>
-        /// 实际执行的步数。
+        ///Legacy comment translated to English.
         /// </summary>
         public int StepsUsed { get; set; }
 
         /// <summary>
-        /// 是否主动完成（命中 <see cref="AdminChatHarnessExecutor.DoneToken"/>）。
+        ///Legacy comment translated to English.
         /// </summary>
         public bool Completed { get; set; }
 
         /// <summary>
-        /// 是否因达到最大步数而停止（未主动完成）。
+        ///Legacy comment translated to English.
         /// </summary>
         public bool ReachedMaxSteps { get; set; }
 
         /// <summary>
-        /// 全部步骤记录（用于前端展示长任务执行过程）。
+        ///Legacy comment translated to English.
         /// </summary>
         public IReadOnlyList<AdminChatHarnessStep> Steps { get; set; } = Array.Empty<AdminChatHarnessStep>();
 
@@ -344,47 +397,47 @@ namespace Senparc.Areas.Admin.Domain.Services
     }
 
     /// <summary>
-    /// 可测试的 MAF Harness 长任务执行器。
+    ///Legacy comment translated to English.
     /// <para>
-    /// 按“步骤”驱动模型运行：每步调用 <see cref="TurnExecutor"/>（通常对应 MAF AIAgent 的一次运行），
-    /// 读取模型输出中的控制标记来决定继续还是结束，直至命中完成标记、达到最大步数或超时。
-    /// 本类与具体模型/框架无关，模型侧由 <see cref="TurnExecutor"/> 注入，因此便于单元测试。
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
+    ///Legacy comment translated to English.
     /// </para>
     /// </summary>
     public sealed class AdminChatHarnessExecutor
     {
         /// <summary>
-        /// 继续标记：模型在本步末尾输出该标记表示任务未完成，需要继续下一步。
+        ///Legacy comment translated to English.
         /// </summary>
         public const string ContinueToken = "[[CONTINUE]]";
 
         /// <summary>
-        /// 完成标记：模型在本步末尾输出该标记表示任务已完成，输出即为最终答案。
+        ///Legacy comment translated to English.
         /// </summary>
         public const string DoneToken = "[[DONE]]";
 
         /// <summary>
-        /// 最大步骤数。
+        ///Legacy comment translated to English.
         /// </summary>
         public int MaxSteps { get; set; } = 8;
 
         /// <summary>
-        /// 整轮 Harness 的超时时间。
+        ///Legacy comment translated to English.
         /// </summary>
         public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(120);
 
         /// <summary>
-        /// 单步执行器：参数为 (步骤序号, 本步提示词, 取消令牌)，返回模型输出文本。
+        ///Legacy comment translated to English.
         /// </summary>
         public Func<int, string, CancellationToken, Task<string>> TurnExecutor { get; set; }
 
         /// <summary>
-        /// 执行长任务，返回包含最终文本与全部步骤的结果。
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="firstTurnPrompt">第一步提示词（包含任务与上下文）。</param>
-        /// <param name="continuePrompt">后续每一步的继续提示词。</param>
-        /// <param name="onStep">每完成一步的回调（用于前端进度展示）。</param>
-        /// <param name="cancellationToken">外部取消令牌。</param>
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         public async Task<AdminChatHarnessResult> RunAsync(
             string firstTurnPrompt,
             string continuePrompt,
@@ -467,7 +520,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 判断文本中是否包含指定控制标记（忽略大小写）。
+        ///Legacy comment translated to English.
         /// </summary>
         public static bool ContainsToken(string text, string token)
         {
@@ -475,7 +528,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 去除文本中的控制标记并规整多余空白，用于展示给最终用户。
+        ///Legacy comment translated to English.
         /// </summary>
         public static string StripMarkers(string text)
         {
@@ -496,7 +549,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 构造 Harness 系统指令中的“长任务执行协议”说明（供模型按步执行并在结尾输出控制标记）。
+        ///Legacy comment translated to English.
         /// </summary>
         public static string BuildProtocolInstructions()
         {
@@ -509,7 +562,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 构造第一步提示词末尾的启动说明。
+        ///Legacy comment translated to English.
         /// </summary>
         public static string BuildStartTail()
         {
@@ -517,7 +570,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 构造后续每一步的继续提示词。
+        ///Legacy comment translated to English.
         /// </summary>
         public static string BuildContinuePrompt()
         {

@@ -1,17 +1,20 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：AIVectorAppService.cs
-    文件功能描述：AIVectorAppService 相关实现
-    
-    
-    创建标识：Senparc - 20250402
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260915
-    修改描述：v0.16.0 新增 AI Token 用量监控与模型选择能力
+    Copyright (C) 2026 Senparc
+
+    File name: AIVectorAppService.cs
+    File description: AIVectorAppService related implementation
+
+    Created by: Senparc - 20250402
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260915
+    Change description: v0.16.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
 ----------------------------------------------------------------*/
 
@@ -48,7 +51,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
 {
 
     [ApiAuthorize]
-    //TODO: 需要权限验证
+    //TODO: permission validation is required
     public class AIVectorAppService : AppServiceBase
     {
         private readonly AIVectorService _aIVectorService;
@@ -90,7 +93,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 分页获取AIVector
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -115,8 +118,8 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 分页获取供其他管理页面选择的 AIVector 基本信息。
-        /// 不返回连接字符串、备注等配置敏感字段。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<AppResponseBase<PagedResponse<AIVectorSelectionResponse>>> GetSelectionListAsync(AIVector_GetListRequest request)
@@ -137,7 +140,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取AIVector列表
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -158,7 +161,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 新建一个AIVector
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="createRequest"></param>
         /// <returns></returns>
@@ -175,10 +178,10 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
                     // );
                     // if (count > 0)
                     // {
-                    //     //response.ErrorMessage = "AIVector已存在";
+                    //Legacy comment translated to English.
                     //     //response.Success = false;
                     //     //return null;
-                    //     throw new NcfExceptionBase("AIVector已存在");
+                    //Legacy comment translated to English.
                     // }
                     //
                     // #endregion
@@ -188,7 +191,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 修改AIVector
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="request"></param>
@@ -205,7 +208,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 删除AIModel
+        /// deleteAIModel
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

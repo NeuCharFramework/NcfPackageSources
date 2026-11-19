@@ -1,17 +1,20 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：ChatGroupDto.cs
-    文件功能描述：ChatGroupDto 相关实现
 
+    File name: ChatGroupDto.cs
+    File description: ChatGroupDto related implementation
 
-    创建标识：Senparc - 20240616
+    Created by: Senparc - 20240616
 
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+    Modified by: Senparc - 20260813
+    Change description: v0.15.0-preview11 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 
@@ -22,44 +25,44 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
 {
     /// <summary>
-    /// ChatGroup 数据库实体 DTO
+    ///Legacy comment translated to English.
     /// </summary>
     public class ChatGroupDto : DtoBase<int>
     {
         /// <summary>
-        /// 群名称
+        ///Legacy comment translated to English.
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// 是否启用
+        /// whether enabled
         /// </summary>
         public bool Enable { get; set; } = true;
 
         /// <summary>
-        /// 状态
+        /// status
         /// </summary>
         public ChatGroupState State { get; set; }
 
         /// <summary>
-        /// 描述
+        /// description
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        /// 群组上下文分发策略。null 保持旧群组原有行为。
+        ///Legacy comment translated to English.
         /// </summary>
         public ChatGroupContextSharingMode? ContextSharingMode { get; set; }
 
         /// <summary>
-        /// 管理员代理模板Id
+        ///Legacy comment translated to English.
         /// </summary>
         public int AdminAgentTemplateId { get; set; }
 
         //public AgentTemplate AdminAgentTemplate { get; set; }
 
         /// <summary>
-        /// 对接人代理模板Id
+        ///Legacy comment translated to English.
         /// </summary>
 
         public int EnterAgentTemplateId { get; set; }

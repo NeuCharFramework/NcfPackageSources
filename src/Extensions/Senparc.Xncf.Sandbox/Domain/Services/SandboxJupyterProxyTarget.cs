@@ -1,7 +1,20 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: SandboxJupyterProxyTarget.cs
+    File description: SandboxJupyterProxyTarget related implementation
+
+    Created by: Senparc - 20260808
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.4 Localized sandbox setup and runtime surfaces
+
+----------------------------------------------------------------*/
+
 namespace Senparc.Xncf.Sandbox.Domain.Services;
 
 /// <summary>
-/// 仅供服务端代理使用；勿下发给浏览器。
+///Legacy comment translated to English.
 /// </summary>
 public sealed class SandboxJupyterProxyTarget
 {

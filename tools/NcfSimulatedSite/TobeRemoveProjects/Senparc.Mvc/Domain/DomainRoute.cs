@@ -1,4 +1,17 @@
-﻿//参考文章：http://www.cnblogs.com/wenthink/archive/2013/04/10/MvcDynamicSecondaryDomain.html
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: DomainRoute.cs
+    File description: DomainRoute related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.0.1 Updated legacy MVC integration metadata and English source comments
+
+----------------------------------------------------------------*/
+
+//Legacy comment translated to English.
 
 
 namespace Senparc.Mvc
@@ -45,11 +58,11 @@ namespace Senparc.Mvc
 
     //    public override RouteData GetRouteData(HttpContextBase httpContext)
     //    {
-    //        // 构造regex
+    //        // buildregex
     //        domainRegex = CreateRegex(Domain);
     //        pathRegex = CreateRegex(Url);
 
-    //        // 请求信息
+    //        // requestinformation
     //        string requestDomain = httpContext.Request.Headers["host"];
     //        if (!string.IsNullOrEmpty(requestDomain))
     //        {
@@ -64,19 +77,19 @@ namespace Senparc.Mvc
     //        }
     //        string requestPath = httpContext.Request.AppRelativeCurrentExecutionFilePath.Substring(2) + httpContext.Request.PathInfo;
 
-    //        //匹配域名和路由
+    //Legacy comment translated to English.
 
     //        Match domainMatch = domainRegex.Match(requestDomain);
     //        Match pathMatch = pathRegex.Match(requestPath);
 
-    //        // Route 数据
+    //        // Route data
 
     //        RouteData data = null;
     //        if (domainMatch.Success && pathMatch.Success)
     //        {
     //            data = new RouteData(this, RouteHandler);
 
-    //            // 添加默认选项
+    //Legacy comment translated to English.
     //            if (Defaults != null)
     //            {
     //                foreach (KeyValuePair<string, object> item in Defaults)
@@ -85,7 +98,7 @@ namespace Senparc.Mvc
     //                }
     //            }
 
-    //            // 匹配域名路由
+    //Legacy comment translated to English.
     //            for (int i = 1; i < domainMatch.Groups.Count; i++)
     //            {
     //                Group group = domainMatch.Groups[i];
@@ -102,7 +115,7 @@ namespace Senparc.Mvc
     //                }
     //            }
 
-    //            // 匹配域名路径
+    //Legacy comment translated to English.
     //            for (int i = 1; i < pathMatch.Groups.Count; i++)
     //            {
     //                Group group = pathMatch.Groups[i];
@@ -119,7 +132,7 @@ namespace Senparc.Mvc
     //                }
     //            }
 
-    //            //命名空间
+    //Legacy comment translated to English.
     //            if ((Namespaces != null) && (Namespaces.Length > 0))
     //            {
     //                data.DataTokens["Namespaces"] = Namespaces;
@@ -142,14 +155,14 @@ namespace Senparc.Mvc
 
     //    public DomainData GetDomainData(RequestContext requestContext, RouteValueDictionary values)
     //    {
-    //        // 获得主机名
+    //Legacy comment translated to English.
     //        string hostname = Domain;
     //        foreach (KeyValuePair<string, object> pair in values)
     //        {
     //            hostname = hostname.Replace("{" + pair.Key + "}", pair.Value.ToString());
     //        }
 
-    //        // Return 域名数据
+    //Legacy comment translated to English.
     //        return new DomainData
     //        {
     //            Protocol = "http",
@@ -160,7 +173,7 @@ namespace Senparc.Mvc
 
     //    private Regex CreateRegex(string source)
     //    {
-    //        // 替换
+    //Legacy comment translated to English.
     //        source = source.Replace("/", @"/?");
     //        source = source.Replace(".", @".?");
     //        source = source.Replace("-", @"-?");

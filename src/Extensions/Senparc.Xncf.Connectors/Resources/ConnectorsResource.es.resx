@@ -1,5 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root><resheader name="resmimetype"><value>text/microsoft-resx</value></resheader><resheader name="version"><value>2.0</value></resheader><resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader><resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
-  <data name="Module.Connectors.MenuName" xml:space="preserve"><value>Connectors</value></data>
-  <data name="Module.Connectors.Description" xml:space="preserve"><value>Configure external tools as selectable connectors. After an account is configured, Chat, Workflow and Agent templates can use it according to permissions.</value></data>
+  <data name="Module.Connectors.MenuName" xml:space="preserve"><value>Conectores</value></data>
+  <data name="Module.Connectors.Description" xml:space="preserve"><value>Configura herramientas externas como conectores seleccionables. Después de configurar una cuenta, Chat, Workflow y las plantillas de Agent pueden usarla según los permisos.</value></data>
+
+  <data name="Area.Connectors.Config" xml:space="preserve"><value>Configuración de conectores</value></data>
+  <data name="Area.Extensions" xml:space="preserve"><value>Extensiones</value></data>
+  <data name="Function.Connectors.Invoke.Name" xml:space="preserve"><value>Invocar conector</value></data>
+  <data name="Function.Connectors.Invoke.Description" xml:space="preserve"><value>Invoca una acción de conector habilitada. Añade un nodo Function en Workflow y selecciona el conector y la acción.</value></data>
+  <data name="Frontend.001" xml:space="preserve"><value>Acciones disponibles para la IA</value></data>
+  <data name="Frontend.002" xml:space="preserve"><value>Ejemplo: WeCom corporativo</value></data>
+  <data name="Frontend.003" xml:space="preserve"><value>Guardar</value></data>
+  <data name="Frontend.004" xml:space="preserve"><value>Configura primero la cuenta y el secreto y decide qué acciones puede usar la IA. Chat puede limitar el acceso temporalmente, los nodos Function de Workflow pueden llamar a los conectores directamente y las plantillas de Agent controlan el acceso de cada Agent.</value></data>
+  <data name="Frontend.005" xml:space="preserve"><value>Eliminar</value></data>
+  <data name="Frontend.006" xml:space="preserve"><value>Cancelar</value></data>
+  <data name="Frontend.007" xml:space="preserve"><value>Tipos disponibles</value></data>
+  <data name="Frontend.008" xml:space="preserve"><value>Nombre</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>Conector de herramientas externas</value></data>
+  <data name="Frontend.010" xml:space="preserve"><value>Los secretos solo se almacenan en el servidor. Déjalo vacío al editar para conservar el secreto guardado.</value></data>
+  <data name="Frontend.011" xml:space="preserve"><value>Configurado</value></data>
+  <data name="Frontend.012" xml:space="preserve"><value>Módulo de extensión</value></data>
+  <data name="Frontend.013" xml:space="preserve"><value>Probar</value></data>
+  <data name="Frontend.014" xml:space="preserve"><value>Los tipos los proporcionan los módulos instalados. La asistencia corporativa de WeCom la proporciona Weixin Management.</value></data>
+  <data name="Frontend.015" xml:space="preserve"><value>Editar</value></data>
+  <data name="Frontend.016" xml:space="preserve"><value>Descripción</value></data>
+  <data name="Frontend.017" xml:space="preserve"><value>Aún no hay ningún módulo que haya registrado un conector. Instala y activa Weixin Management para ver aquí la asistencia corporativa de WeCom.</value></data>
+  <data name="Frontend.018" xml:space="preserve"><value>No hay nada configurado. Selecciona un tipo arriba e introduce el CorpId corporativo de WeCom y el Secret de la aplicación.</value></data>
+  <data name="Frontend.019" xml:space="preserve"><value>¿Qué equipo o escenario utiliza esta cuenta?</value></data>
+  <data name="Frontend.020" xml:space="preserve"><value>Conector</value></data>
+  <data name="Frontend.021" xml:space="preserve"><value>Configurar</value></data>
+  <data name="Frontend.022" xml:space="preserve"><value>Configurar este conector</value></data>
+  <data name="Frontend.023" xml:space="preserve"><value>{0} acciones</value></data>
+  <data name="Frontend.024" xml:space="preserve"><value>Disponible para seleccionar en Chat, Workflow y Agent después de activarlo</value></data>
+  <data name="Frontend.025" xml:space="preserve"><value>Selecciona una opción</value></data>
+  <data name="Frontend.026" xml:space="preserve"><value>Módulos de extensión</value></data>
+  <data name="Frontend.027" xml:space="preserve"><value>Activado</value></data>
+  <data name="Frontend.028" xml:space="preserve"><value>Desactivado</value></data>
+  <data name="Frontend.029" xml:space="preserve"><value>No se ha indicado ninguna descripción</value></data>
+  <data name="Frontend.030" xml:space="preserve"><value>Conexión aún no probada</value></data>
+  <data name="Frontend.031" xml:space="preserve"><value>{0}</value></data>
+  <data name="Frontend.032" xml:space="preserve"><value>Editar conector</value></data>
+  <data name="Frontend.033" xml:space="preserve"><value>Configurar conector</value></data>
+  <data name="Frontend.034" xml:space="preserve"><value>Guardado; déjalo vacío para no modificarlo</value></data>
+  <data name="Frontend.035" xml:space="preserve"><value>Error al guardar</value></data>
+  <data name="Frontend.036" xml:space="preserve"><value>Guardado</value></data>
+  <data name="Frontend.037" xml:space="preserve"><value>Error al guardar. Inténtalo de nuevo más tarde.</value></data>
+  <data name="Frontend.038" xml:space="preserve"><value>Conexión correcta</value></data>
+  <data name="Frontend.039" xml:space="preserve"><value>Error de conexión</value></data>
+  <data name="Frontend.040" xml:space="preserve"><value>Error al probar. Inténtalo de nuevo más tarde.</value></data>
+  <data name="Frontend.041" xml:space="preserve"><value>¿Eliminar el conector «{0}»? Las referencias autorizadas para los Agents también dejarán de funcionar.</value></data>
+  <data name="Frontend.042" xml:space="preserve"><value>Error al eliminar</value></data>
+  <data name="Parameter.Connectors.Instance" xml:space="preserve"><value>Conector||Selecciona un conector configurado y activado</value></data>
+  <data name="Parameter.Connectors.Action" xml:space="preserve"><value>Acción||Selecciona la acción del conector que se ejecutará</value></data>
+  <data name="Parameter.Connectors.StartTime" xml:space="preserve"><value>Hora de inicio||Hora inicial de los registros de asistencia, por ejemplo 2026-11-01 o 2026-11-01 09:00. Déjalo vacío para comenzar a medianoche de hoy</value></data>
+  <data name="Parameter.Connectors.EndTime" xml:space="preserve"><value>Hora de finalización||Hora final de los registros de asistencia. Déjala vacía para usar la hora actual; el rango puede ser de 30 días como máximo</value></data>
+  <data name="Parameter.Connectors.UserIds" xml:space="preserve"><value>Cuentas de miembros||userid de WeCom separados por comas o espacios</value></data>
+  <data name="Parameter.Connectors.CheckinType" xml:space="preserve"><value>Tipo de asistencia||1 laboral, 2 fuera de la oficina, 3 todo. Déjalo vacío para usar todo</value></data>
+  <data name="Parameter.Connectors.Arguments" xml:space="preserve"><value>Parámetros adicionales||Objeto JSON. Los campos específicos rellenados tienen prioridad; es adecuado para otras acciones de conectores</value></data>
+  <data name="Error.NameRequired" xml:space="preserve"><value>Introduce el nombre del conector.</value></data>
+  <data name="Error.TypeNotFound" xml:space="preserve"><value>No se encontró ningún tipo de conector. Confirma que el módulo correspondiente está instalado.</value></data>
+  <data name="Error.InstanceNotFound" xml:space="preserve"><value>No se encontró el conector.</value></data>
+  <data name="Error.TypeChangeForbidden" xml:space="preserve"><value>Un conector guardado no se puede cambiar a otro tipo. Crea uno nuevo.</value></data>
+  <data name="Error.FieldRequired" xml:space="preserve"><value>Completa {0}.</value></data>
+  <data name="Error.OptionInvalid" xml:space="preserve"><value>La opción seleccionada para {0} no es válida.</value></data>
+  <data name="Error.ActionRequired" xml:space="preserve"><value>Selecciona al menos una acción que se pueda entregar a la IA.</value></data>
+  <data name="Error.TypeNotInstalled" xml:space="preserve"><value>El tipo de conector no está instalado.</value></data>
+  <data name="Error.TestFailed" xml:space="preserve"><value>La prueba de conexión falló. Comprueba la cuenta y el secreto.</value></data>
+  <data name="Error.Disabled" xml:space="preserve"><value>El conector no existe o está desactivado.</value></data>
+  <data name="Error.ActionNotFound" xml:space="preserve"><value>Este conector no tiene la acción solicitada.</value></data>
+  <data name="Error.ActionNotEnabled" xml:space="preserve"><value>Esta acción no está habilitada para el conector.</value></data>
+  <data name="Error.InvocationFailed" xml:space="preserve"><value>Falló la invocación del conector. Inténtalo más tarde o comprueba los permisos de la cuenta.</value></data>
+  <data name="Message.Saved" xml:space="preserve"><value>Conector guardado.</value></data>
+  <data name="Message.Deleted" xml:space="preserve"><value>Conector eliminado.</value></data>
 </root>

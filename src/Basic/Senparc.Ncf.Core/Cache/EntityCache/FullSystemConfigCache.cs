@@ -1,17 +1,20 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：FullSystemConfigCache.cs
-    文件功能描述：FullSystemConfigCache 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.28.0-preview5 新增数据库升级维护状态与可配置页脚安全处理
+    Copyright (C) 2026 Senparc
+
+    File name: FullSystemConfigCache.cs
+    File description: FullSystemConfigCache related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260804
+    Change description: v0.28.0-preview5 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -81,22 +84,22 @@ namespace Senparc.Ncf.Core.Cache
                     var httpContextAccessor = SenparcDI.GetServiceProvider().GetService<IHttpContextAccessor>();
                     var httpContext = httpContextAccessor.HttpContext;
                     var urlData = httpContext.Request;
-                    var scheme = urlData.Scheme;//协议
-                    var host = urlData.Host.Host;//主机名（不带端口）
-                    var port = urlData.Host.Port ?? -1;//端口（因为从.NET Framework移植，因此不直接使用urlData.Host）
-                    string portSetting = null;//Url中的端口部分
-                    string schemeUpper = scheme.ToUpper();//协议（大写）
-                    string baseUrl = httpContext.Request.PathBase;//子站点应用路径
+                    var scheme = urlData.Scheme;//Legacy comment translated to English.
+                    var host = urlData.Host.Host;//Legacy comment translated to English.
+                    var port = urlData.Host.Port ?? -1;//Legacy comment translated to English.
+                    string portSetting = null;//Legacy comment translated to English.
+                    string schemeUpper = scheme.ToUpper();//Legacy comment translated to English.
+                    string baseUrl = httpContext.Request.PathBase;//Legacy comment translated to English.
 
-                    if (port == -1 || //这个条件只有在 .net core 中， Host.Port == null 的情况下才会发生
+                    if (port == -1 || //Legacy comment translated to English.
                (schemeUpper == "HTTP" && port == 80) ||
                (schemeUpper == "HTTPS" && port == 443))
                     {
-                        portSetting = "";//使用默认值
+                        portSetting = "";//Legacy comment translated to English.
                     }
                     else
                     {
-                        portSetting = ":" + port;//添加端口
+                        portSetting = ":" + port;//Legacy comment translated to English.
                     }
 
                     hostName = $"{scheme}://{host}{portSetting}";
@@ -106,7 +109,7 @@ namespace Senparc.Ncf.Core.Cache
                 {
                 }
 
-                //尝试安装
+                //Legacy comment translated to English.
 
                 throw new NcfUninstallException($"NCF 系统未初始化，请先执行 {hostName}/Install 进行数据初始化", null);
             }

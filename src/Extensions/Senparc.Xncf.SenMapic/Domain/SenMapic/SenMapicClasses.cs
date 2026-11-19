@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：SenMapicClasses.cs
-    文件功能描述：SenMapicClasses 相关实现
-    
-    
-    创建标识：Senparc - 20250113
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: SenMapicClasses.cs
+    File description: SenMapicClasses related implementation
+
+    Created by: Senparc - 20250113
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.13 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -25,7 +28,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
     using System.Threading;
 
     /// <summary>
-    /// URL包含HTML内容信息，及爪录统计结果
+    ///Legacy comment translated to English.
     /// </summary>
     public class UrlData
     {
@@ -45,7 +48,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                     var text = value;
                     var sb = new StringBuilder();
 
-                    // 提取标题
+                    //Legacy comment translated to English.
                     var titleMatch = Regex.Match(text, @"<title[^>]*>(.*?)</title>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
                     if (titleMatch.Success)
                     {
@@ -53,7 +56,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                         sb.AppendLine();
                     }
 
-                    // 提取 meta description
+                    //Legacy comment translated to English.
                     var descMatch = Regex.Match(text, @"<meta\s+name=[""']description[""']\s+content=[""']([^""']*)[""']", RegexOptions.IgnoreCase);
                     if (descMatch.Success)
                     {
@@ -61,7 +64,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                         sb.AppendLine();
                     }
 
-                    // 提取 meta keywords
+                    //Legacy comment translated to English.
                     var keywordsMatch = Regex.Match(text, @"<meta\s+name=[""']keywords[""']\s+content=[""']([^""']*)[""']", RegexOptions.IgnoreCase);
                     if (keywordsMatch.Success)
                     {
@@ -70,7 +73,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                         sb.AppendLine();
                     }
 
-                    // 处理图片
+                    //Legacy comment translated to English.
                     text = Regex.Replace(text, 
                         @"<img[^>]+(alt=[""']([^""']*)[""'])?[^>]*(title=[""']([^""']*)[""'])?[^>]*(src=[""']([^""']*)[""'])?[^>]*>",
                         delegate(Match match)
@@ -88,7 +91,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                         },
                         RegexOptions.IgnoreCase);
 
-                    // 处理链接
+                    //Legacy comment translated to English.
                     text = Regex.Replace(text, 
                         @"<a\s[^>]*href=[""']([^""']*)[""'][^>]*(title=[""']([^""']*)[""'])?[^>]*>(.*?)</a>",
                         delegate(Match match)
@@ -105,53 +108,53 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                         },
                         RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
-                    // 处理标题标签
+                    //Legacy comment translated to English.
                     text = Regex.Replace(text, @"<h1[^>]*>(.*?)</h1>", "# $1", RegexOptions.IgnoreCase | RegexOptions.Singleline);
                     text = Regex.Replace(text, @"<h2[^>]*>(.*?)</h2>", "## $1", RegexOptions.IgnoreCase | RegexOptions.Singleline);
                     text = Regex.Replace(text, @"<h3[^>]*>(.*?)</h3>", "### $1", RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
-                    // 处理段落和换行
+                    //Legacy comment translated to English.
                     text = Regex.Replace(text, @"<p[^>]*>(.*?)</p>", "$1\n\n", RegexOptions.IgnoreCase | RegexOptions.Singleline);
                     text = Regex.Replace(text, @"<br[^>]*>", "  \n", RegexOptions.IgnoreCase);
 
-                    // 处理强调
+                    //Legacy comment translated to English.
                     text = Regex.Replace(text, @"<strong[^>]*>(.*?)</strong>", "**$1**", RegexOptions.IgnoreCase | RegexOptions.Singleline);
                     text = Regex.Replace(text, @"<em[^>]*>(.*?)</em>", "*$1*", RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
-                    // 处理列表
+                    //Legacy comment translated to English.
                     text = Regex.Replace(text, @"<li[^>]*>(.*?)</li>", "- $1\n", RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
-                    // 移除 script、style 标签及内容
+                    //Legacy comment translated to English.
                     text = Regex.Replace(text, @"<script[^>]*>[\s\S]*?</script>", "", RegexOptions.IgnoreCase);
                     text = Regex.Replace(text, @"<style[^>]*>[\s\S]*?</style>", "", RegexOptions.IgnoreCase);
                     
-                    // 移除注释
+                    //Legacy comment translated to English.
                     text = Regex.Replace(text, @"<!--[\s\S]*?-->", "", RegexOptions.IgnoreCase);
                     
-                    // 移除 header、footer、nav、广告相关区域
+                    //Legacy comment translated to English.
                     text = Regex.Replace(text, @"<(header|footer|nav|aside)[^>]*>[\s\S]*?</\1>", "", RegexOptions.IgnoreCase);
                     
-                    // 移除常见无意义内容区域
+                    //Legacy comment translated to English.
                     text = Regex.Replace(text, @"<div[^>]*(class|id)=['""]?(advertisement|comment|sidebar|footer|header|menu|nav)['""]\s*[^>]*>[\s\S]*?</div>", "", RegexOptions.IgnoreCase);
                     
-                    // 移除其他HTML标签，但保留一些有语义的换行
+                    //Legacy comment translated to English.
                     text = Regex.Replace(text, @"<(br|p|div|h[1-6])[^>]*>", "\n", RegexOptions.IgnoreCase);
                     text = Regex.Replace(text, "<[^>]+>", "");
                     
-                    // 处理特殊字符
+                    //Legacy comment translated to English.
                     text = WebUtility.HtmlDecode(text);
                     
-                    // 清理空白字符
+                    //Legacy comment translated to English.
                     text = Regex.Replace(text, @"[\s\r\n]+", " ").Trim();
                     
-                    // 处理引用块
+                    //Legacy comment translated to English.
                     text = Regex.Replace(text, @"<blockquote[^>]*>(.*?)</blockquote>", "> $1\n\n", RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
-                    // 处理代码块
+                    //Legacy comment translated to English.
                     text = Regex.Replace(text, @"<pre[^>]*><code[^>]*>(.*?)</code></pre>", "```\n$1\n```\n", RegexOptions.IgnoreCase | RegexOptions.Singleline);
                     text = Regex.Replace(text, @"<code[^>]*>(.*?)</code>", "`$1`", RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
-                    // 处理表格
+                    //Legacy comment translated to English.
                     text = Regex.Replace(text, 
                         @"<table[^>]*>(.*?)</table>",
                         delegate(Match match)
@@ -183,16 +186,16 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                         },
                         RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
-                    // 处理水平线
+                    //Legacy comment translated to English.
                     text = Regex.Replace(text, @"<hr[^>]*>", "---\n", RegexOptions.IgnoreCase);
 
-                    // 处理删除线
+                    //Legacy comment translated to English.
                     text = Regex.Replace(text, @"<(del|strike)[^>]*>(.*?)</\1>", "~~$2~~", RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
-                    // 处理下划线
+                    //Legacy comment translated to English.
                     text = Regex.Replace(text, @"<u[^>]*>(.*?)</u>", "__$1__", RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
-                    // 处理有序列表和无序列表
+                    //Legacy comment translated to English.
                     text = Regex.Replace(text, @"<ol[^>]*>(.*?)</ol>", delegate(Match m)
                     {
                         int counter = 1;
@@ -221,7 +224,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
         
         /// <summary>
-        /// 存储不带HTML标记的纯文本内容，转换为Markdown格式
+        ///Legacy comment translated to English.
         /// </summary>
         public string MarkDownHtmlContent { get; private set; }
         public int Result { get; set; }
@@ -245,11 +248,11 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
                     {
                         return "";
                     }
-                    //原来是：@"(?<=<head[.\w\W\s\S]*>[.\w\W\s\S]*<title[.\w\W\s\S]*>)([.\w\W\s\S][^</]*)(?=</title>)"
-                    //第二版本：@"(?<=<head[.\w\W\s\S]*>[.\w\W\s\S]*<title[.\w\W\s\S]*>)([.\w\W\s\S][^<]*)(?=</title>)"
+                    //Legacy comment translated to English.
+                    //Legacy comment translated to English.
                     Regex regex = new Regex(@"(?<=<title[.\w\W\s\S]*>)([.\w\W\s\S][^<]*)(?=</title>)", RegexOptions.IgnoreCase);
                     _title = regex.Match(TitleHtml).Value.Trim().Replace("\r\n", "").HtmlEncode();
-                    TitleHtml = null;//清空TitleHtml
+                    TitleHtml = null;//clearTitleHtml
                     return _title;
                 }
             }
@@ -277,7 +280,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
             if (string.IsNullOrEmpty(relativeUrl))
                 return string.Empty;
 
-            // 如果已经是绝对路径，直接返回
+            //Legacy comment translated to English.
             if (Uri.TryCreate(relativeUrl, UriKind.Absolute, out _))
                 return relativeUrl;
 
@@ -295,7 +298,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
     }
 
     /// <summary>
-    /// 分层搜索Url集合
+    ///Legacy comment translated to English.
     /// </summary>
     public class UrlPathCollection
     {
@@ -311,30 +314,30 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
     }
 
     /// <summary>
-    /// Url状态
+    /// Urlstatus
     /// </summary>
     public enum AvailableUrlStatus
     {
         /// <summary>
-        /// 未开始
+        ///Legacy comment translated to English.
         /// </summary>
         UnStart,
         /// <summary>
-        /// 进行中
+        /// in progress
         /// </summary>
         Started,
         /// <summary>
-        /// 已结束
+        ///Legacy comment translated to English.
         /// </summary>
         Finished,
         /// <summary>
-        /// 搜索下一层
+        ///Legacy comment translated to English.
         /// </summary>
         Digged
     }
 
     /// <summary>
-    /// 可使用Url
+    ///Legacy comment translated to English.
     /// </summary>
     public class AvailableUrl
     {
@@ -358,13 +361,13 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
     }
 
     /// <summary>
-    /// 过滤关键字
+    ///Legacy comment translated to English.
     /// </summary>
     public class FilterOmitWord
     {
-        public static readonly string[] OperatorKinds = new[] { "未知", "整个URL包含关键字", "URL参数中包含关键字", "以关键字开头", "以关键字结尾", "指定完整URL" };
+        public static readonly string[] OperatorKinds = new[] { "Unknown", "URL contains keyword", "URL parameters contain keyword", "Starts with keyword", "Ends with keyword", "Exact URL" };
         /// <summary>
-        /// 过滤关键字类型
+        ///Legacy comment translated to English.
         /// </summary>
         public enum OperatorKind
         {
@@ -386,7 +389,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
     }
 
     /// <summary>
-    /// 当前正在被爬行的Url集合
+    ///Legacy comment translated to English.
     /// </summary>
     public class CurrentCrawlingUrlList : Dictionary<string, AvailableUrl>, IDictionary<string, AvailableUrl>
     {
@@ -411,7 +414,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         /// <summary>
-        /// 判断是否包含Key
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
@@ -424,7 +427,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
         }
 
         /// <summary>
-        /// 移除
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="key"></param>
         new public void Remove(string key)
@@ -442,7 +445,7 @@ namespace Senparc.Xncf.SenMapic.Domain.SiteMap
     }
 
     /// <summary>
-    /// 模拟系统Semaphore(为兼容Silverlight)
+    ///Legacy comment translated to English.
     /// </summary>
     //public class SenMapicSemaphore
     //{

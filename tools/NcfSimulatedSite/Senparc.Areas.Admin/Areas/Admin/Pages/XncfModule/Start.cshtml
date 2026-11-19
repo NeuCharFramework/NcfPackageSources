@@ -7,7 +7,7 @@
 @section breadcrumbs {
     <el-breadcrumb-item>@AR["Xncf.ExtensionModules"]</el-breadcrumb-item>
     <el-breadcrumb-item>@AR["Xncf.Title"]</el-breadcrumb-item>
-    <el-breadcrumb-item v-if="data.xncfModule">{{data.xncfModule.menuName}}</el-breadcrumb-item>
+    <el-breadcrumb-item v-if="data.xncfRegister">{{data.xncfRegister.menuName}}</el-breadcrumb-item>
 }
 @section Style{
     <link rel="stylesheet" href="~/css/Admin/Pages/NeuCharPivot/common.css" />
@@ -16,7 +16,7 @@
 <div>
     <el-container v-if="data.xncfModule" direction="vertical" class="module-start-shell">
         <el-header class="module-header">
-            <span class="start-title"><i :class="data.xncfRegister.icon"></i>&nbsp;{{data.xncfModule.menuName}} <span class="module-header-v">@AR["Xncf.Module"] {{data.xncfModule.version}}</span></span>
+            <span class="start-title"><i :class="data.xncfRegister.icon"></i>&nbsp;{{data.xncfRegister.menuName}} <span class="module-header-v">@AR["Xncf.Module"] {{data.xncfModule.version}}</span></span>
             <span class="module-header-actions">
                 <el-button size="mini" icon="el-icon-document" @@click="updateLogVisible=true">@AR["Xncf.UpdateLog"]</el-button>
                 <el-button size="mini" icon="el-icon-chat-line-round" @@click="openModuleChat">ChatAgent</el-button>
@@ -33,7 +33,7 @@
                 <span><i class="fa fa-rocket"></i> {{data.xncfRegister.functionCount}} Functions</span>
                 <span :class="data.xncfModule.state===1?'start-green':'start-gray'"><i class="fa fa-sliders"></i> {{xNcfModules_State[data.xncfModule.state]}}</span>
             </div>
-            <div class="module-summary-description">{{data.xncfModule.description}}</div>
+            <div class="module-summary-description">{{data.xncfRegister.description}}</div>
             <div class="module-summary-actions">
                 <el-button v-if="data.xncfModule.version!==data.xncfRegister.version" size="mini" type="warning" @@click="updataVersion"><i class="fa fa-gift"></i> @AR["Xncf.UpdateNow"]</el-button>
                 <el-button v-if="data.xncfModule.state!==1" size="mini" type="success" @@click="updataState('1')">@AR["Xncf.Open"]</el-button>
@@ -42,7 +42,11 @@
         </section>
         <el-main class="module-main">
             <el-tabs v-model="activeModuleTab" class="module-mode-tabs">
-                <el-tab-pane label="Function" name="function">
+                <el-tab-pane label="@AR["Xncf.Function"]" name="function">
+                <div class="module-function-toolbar">
+                    <span>@AR["Xncf.ModuleFunctionCatalog"]</span>
+                    <el-button size="mini" icon="el-icon-lock" @@click="openAccessControl">@AR["Xncf.ModuleFunctionAccessControl"]</el-button>
+                </div>
                 <template v-if="!data.mustUpdate">
                     <template v-if="data.xncfRegister.interfaces.includes('IAreaRegister')&&data.xncfRegister.areaHomeUrl!==null">
                         <el-card class="box-card">
@@ -130,7 +134,7 @@
                     </template>
                 </el-card>
                 </el-tab-pane>
-                <el-tab-pane label="NeuCharPivot" name="pivot">
+                <el-tab-pane label="@AR["Xncf.NeuCharPivot"]" name="pivot">
                     <div class="pivot-empty" v-if="!pivot.configuration" v-loading="pivot.loading">
                         <div class="pivot-empty-icon"><i class="fa fa-th-large"></i></div>
                         <h3>生成此模块的 NeuCharPivot</h3>
@@ -244,6 +248,59 @@
                         </el-tabs>
                     </div>
                 </el-tab-pane>
+                <el-tab-pane label="@AR["Xncf.Capabilities"]" name="capabilities">
+                    <el-card class="module-insight-card" v-loading="insights.capabilitiesLoading">
+                        <div slot="header"><strong><i class="fa fa-sitemap"></i> @AR["Xncf.ModuleCapabilities"]</strong><el-button size="mini" icon="el-icon-refresh" class="module-insight-refresh" @@click="loadCapabilities">@AR["Xncf.Refresh"]</el-button></div>
+                        <div v-if="insights.capabilities">
+                            <div class="module-insight-summary">
+                                <el-tag v-for="item in insights.capabilities.interfaces" :key="item" type="success">{{item}}</el-tag>
+                                <el-tag v-if="!insights.capabilities.interfaces.length" type="info">@AR["Xncf.NoAdditionalInterfaces"]</el-tag>
+                            </div>
+                            <el-divider content-position="left">@AR["Xncf.Function"]</el-divider>
+                            <el-table :data="insights.capabilities.functions" border stripe size="small">
+                                <el-table-column prop="name" label="@AR["Xncf.ParameterName"]" min-width="180"></el-table-column>
+                                <el-table-column prop="key" label="@AR["Xncf.Key"]" min-width="240"></el-table-column>
+                                <el-table-column prop="description" label="@AR["Xncf.Description"]" min-width="280"></el-table-column>
+                            </el-table>
+                            <el-divider content-position="left">@AR["Xncf.RuntimeDataCapabilities"]</el-divider>
+                            <div class="module-insight-grid">
+                                <div><label>@AR["Xncf.RegisteredThreads"]</label><strong>{{insights.capabilities.threadCount}}</strong></div>
+                                <div><label>@AR["Xncf.DedicatedDatabase"]</label><strong>{{insights.capabilities.hasDatabase ? ncfT('Xncf.Yes') : ncfT('Xncf.No')}}</strong></div>
+                                <div><label>@AR["Xncf.DatabasePrefix"]</label><strong>{{insights.capabilities.databasePrefix || '-'}}</strong></div>
+                                <div><label>@AR["Xncf.DatabaseContext"]</label><strong>{{insights.capabilities.dbContextType || '-'}}</strong></div>
+                            </div>
+                        </div>
+                    </el-card>
+                </el-tab-pane>
+                <el-tab-pane label="@AR["Xncf.DataTables"]" name="entities">
+                    <el-card class="module-insight-card" v-loading="insights.entitiesLoading">
+                        <div slot="header"><strong><i class="fa fa-database"></i> @AR["Xncf.DataTablesAndMigrations"]</strong></div>
+                        <div v-if="!insights.entitiesAuthorized" class="module-re-auth">
+                            <el-alert title="@AR["Xncf.DatabaseReauthenticationRequired"]" type="warning" :closable="false" show-icon></el-alert>
+                            <el-input v-model="insights.password" type="password" show-password placeholder="@AR["Xncf.CurrentAdministratorPassword"]" @@keyup.enter.native="loadEntities"></el-input>
+                            <el-button type="primary" icon="el-icon-unlock" :loading="insights.entitiesLoading" @@click="loadEntities">@AR["Xncf.VerifyAndView"]</el-button>
+                        </div>
+                        <div v-else-if="insights.entities">
+                            <div class="module-insight-grid">
+                                <div><label>@AR["Xncf.EntityCount"]</label><strong>{{insights.entities.entityCount}}</strong></div>
+                                <div><label>@AR["Xncf.TablePrefix"]</label><strong>{{insights.entities.databasePrefix || '-'}}</strong></div>
+                                <div><label>@AR["Xncf.AppliedMigrations"]</label><strong>{{insights.entities.appliedMigrations.length}}</strong></div>
+                                <div><label>@AR["Xncf.PendingMigrations"]</label><strong>{{insights.entities.pendingMigrations.length}}</strong></div>
+                            </div>
+                            <el-table :data="insights.entities.entities" border stripe size="small">
+                                <el-table-column prop="tableName" label="@AR["Xncf.Table"]" min-width="180"></el-table-column>
+                                <el-table-column prop="entityName" label="@AR["Xncf.Entity"]" min-width="180"></el-table-column>
+                                <el-table-column prop="rowCount" label="@AR["Xncf.CurrentRowCount"]" width="120"></el-table-column>
+                                <el-table-column label="@AR["Xncf.Columns"]" min-width="360">
+                                    <template slot-scope="scope"><span v-for="column in scope.row.columns" :key="column.name" class="module-column-chip">{{column.name}}: {{column.type}}</span></template>
+                                </el-table-column>
+                            </el-table>
+                            <el-divider content-position="left">@AR["Xncf.MigrationHistory"]</el-divider>
+                            <el-tag v-for="migration in insights.entities.appliedMigrations" :key="migration" type="success" class="module-column-chip">{{migration}}</el-tag>
+                            <el-tag v-for="migration in insights.entities.pendingMigrations" :key="migration" type="warning" class="module-column-chip">{{migration}}</el-tag>
+                        </div>
+                    </el-card>
+                </el-tab-pane>
             </el-tabs>
         </el-main>
     </el-container>
@@ -254,7 +311,7 @@
 
     <el-drawer title="ChatAgent · 当前 XNCF 模块" :visible.sync="chat.visible" direction="rtl" size="420px" custom-class="chat-agent-drawer">
         <div class="chat-agent-body">
-            <p>当前引用：<strong>{{data.xncfModule.menuName}}</strong></p>
+            <p>当前引用：<strong>{{data.xncfRegister.menuName}}</strong></p>
             <el-input type="textarea" :rows="6" v-model="chat.message" placeholder="例如：把高频操作放在第一组，并只暴露必要参数"></el-input>
             <el-select v-model="pivot.aiModelId" placeholder="选择 AI 算力"><el-option v-for="model in pivot.aiModels" :key="model.id" :label="model.name" :value="model.id"></el-option></el-select>
             <el-button type="primary" :loading="pivot.loading" @@click="refinePivotFromChat">发送并更新 Pivot</el-button>

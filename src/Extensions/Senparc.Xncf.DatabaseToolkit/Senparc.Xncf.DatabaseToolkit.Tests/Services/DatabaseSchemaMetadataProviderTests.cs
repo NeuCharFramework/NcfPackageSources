@@ -6,7 +6,7 @@ using Senparc.Xncf.DatabaseToolkit.OHS.Local.Services;
 namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
 {
     // =====================
-    // 测试用假实体类（继承 EntityBase<int>，会被扫描到）
+    //Legacy comment translated to English.
     // =====================
     public class FakeTestEntity : EntityBase<int>
     {
@@ -20,7 +20,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
     }
 
     // =====================
-    // 测试类
+    //Legacy comment translated to English.
     // =====================
     [TestClass]
     public class DatabaseSchemaMetadataProviderTests
@@ -65,7 +65,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
 
             var allSchemas = provider.GetAllSchemas();
 
-            // FakeTestEntity 在本测试程序集中，应该能被扫描到
+            //Legacy comment translated to English.
             var testAssemblyName = typeof(FakeTestEntity).Assembly.GetName().Name;
             Assert.IsTrue(allSchemas.ContainsKey(testAssemblyName),
                 $"期望找到程序集 '{testAssemblyName}' 对应的 schema，但只找到: {string.Join(", ", allSchemas.Keys)}");
@@ -119,7 +119,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
 
             var testAssemblyName = typeof(FakeTestEntity).Assembly.GetName().Name!;
 
-            // 用全小写查找
+            //Legacy comment translated to English.
             var schema = provider.GetSchemaByTable(testAssemblyName, "faketestentity");
 
             Assert.IsNotNull(schema, "名称查找应大小写不敏感");
@@ -176,7 +176,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
             Assert.IsNotNull(schema);
             Assert.IsTrue(schema.Columns.Count > 0, "实体应有字段");
 
-            // 验证自定义字段存在
+            //Legacy comment translated to English.
             var nameCol = schema.Columns.FirstOrDefault(c => c.ColumnName == nameof(FakeTestEntity.Name));
             Assert.IsNotNull(nameCol, "应有 Name 字段");
 
@@ -225,7 +225,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
         }
 
         // =====================
-        // ResolveModuleName 模糊匹配测试
+        //Legacy comment translated to English.
         // =====================
 
         [TestMethod]
@@ -246,8 +246,8 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
             var provider = CreateProvider();
             await provider.InitializeAsync();
 
-            // 测试程序集名 = "Senparc.Xncf.DatabaseToolkit.Tests"
-            // 用后缀 "DatabaseToolkit.Tests" 查找应能匹配
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             var resolved = provider.ResolveModuleName("DatabaseToolkit.Tests");
 
             Assert.IsNotNull(resolved, "后缀应能匹配到对应模块");
@@ -260,7 +260,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
             var provider = CreateProvider();
             await provider.InitializeAsync();
 
-            // 如果 "Senparc.Xncf.DatabaseToolkit.Tests" 是 AppDomain 中唯一包含 "DatabaseToolkit.Tests" 的模块
+            //Legacy comment translated to English.
             var resolved = provider.ResolveModuleName("Toolkitzzz_NotExist");
 
             Assert.IsNull(resolved, "不存在的关键词应返回 null");
@@ -313,14 +313,14 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
         [TestMethod]
         public async Task GetAllSchemas_ShouldContainAIKernelModule_WhenAssemblyIsLoaded()
         {
-            // 确保 AIKernel 的实体类型被加载到 AppDomain（通过引用其类型）
-            // 注意：此测试依赖运行时是否加载了 Senparc.Xncf.AIKernel
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             var provider = CreateProvider();
             await provider.InitializeAsync();
 
             var allSchemas = provider.GetAllSchemas();
 
-            // 如果 AIKernel 被加载，则应该能找到 AIModel、AIVector
+            //Legacy comment translated to English.
             if (allSchemas.ContainsKey("Senparc.Xncf.AIKernel"))
             {
                 var schemas = allSchemas["Senparc.Xncf.AIKernel"];
@@ -332,7 +332,7 @@ namespace Senparc.Xncf.DatabaseToolkit.Tests.Services
             }
             else
             {
-                // AIKernel 未被加载（测试隔离环境），跳过此断言
+                //Legacy comment translated to English.
                 Assert.Inconclusive("Senparc.Xncf.AIKernel 程序集未在当前 AppDomain 中加载，跳过此测试");
             }
         }

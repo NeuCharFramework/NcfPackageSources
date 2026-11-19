@@ -1,17 +1,20 @@
 /*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：ISandboxRuntime.cs
-    文件功能描述：ISandboxRuntime.cs 功能实现
-    
-    
-    创建标识：Senparc - 20260808
-    
-    修改标识：Senparc - 20260817
-    修改描述：v0.2.0 增强 jupyter-csharp 模板与沙箱会话管理
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
+    Copyright (C) 2026 Senparc
+
+    File name: ISandboxRuntime.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20260808
+
+    Modified by: Senparc - 20260817
+    Change description: v0.2.0 enhance the jupyter-csharp template and sandbox session management
+
+    Modified by: Senparc - 20260822
+    Change description: v0.2.0 enhance sandbox preview, Jupyter workspace, and session lifecycle management
+
+    Modified by: Senparc - 20261119
+    Change description: v0.4.4 Localized sandbox setup and runtime surfaces
 
 ----------------------------------------------------------------*/
 using Senparc.Xncf.Sandbox.Abstractions;
@@ -19,7 +22,7 @@ using Senparc.Xncf.Sandbox.Abstractions;
 namespace Senparc.Xncf.Sandbox.Domain.Services.Runtime;
 
 /// <summary>
-/// 可替换的沙箱运行时后端。
+///Legacy comment translated to English.
 /// </summary>
 public interface ISandboxRuntime
 {

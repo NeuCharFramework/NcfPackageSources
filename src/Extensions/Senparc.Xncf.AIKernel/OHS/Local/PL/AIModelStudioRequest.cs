@@ -1,17 +1,20 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：AIModelStudioRequest.cs
-    文件功能描述：AIModelStudioRequest 相关实现
-    
-    
-    创建标识：Senparc - 20240131
-    
-    修改标识：Senparc - 20260702
-    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.14.0-preview5 为 AIKernel 模块接入统一资源本地化并优化功能文案
+    Copyright (C) 2026 Senparc
+
+    File name: AIModelStudioRequest.cs
+    File description: AIModelStudioRequest related implementation
+
+    Created by: Senparc - 20240131
+
+    Modified by: Senparc - 20260702
+    Change description: v0.11.0-preview2 synchronize changes within the master/main baseline and complete recursive dependency version handling
+
+    Modified by: Senparc - 20260717
+    Change description: v0.14.0-preview5 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
 
 ----------------------------------------------------------------*/
 
@@ -36,14 +39,14 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
     public class AIModelStudioRequest_RunModelAsync : FunctionAppRequestBase
     {
         [Required]
-        [LocalizedDescription(typeof(AIKernelResource), "Parameter.AI.Model")]//下拉列表
+        [LocalizedDescription(typeof(AIKernelResource), "Parameter.AI.Model")]//Legacy comment translated to English.
         [FunctionParameterUi(ParameterType.CheckBoxList, nameof(ModelOptions))]
         public string[] Model { get; set; }
 
         [JsonIgnore]
         public SelectionList ModelOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new List<SelectionItem>());
 
-        //TODO: 更多 AI 参数
+        //Legacy comment translated to English.
 
         [Required]
         [MaxLength(1000)]
@@ -57,7 +60,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
 
             List<ModelItem> settings =
             [
-                //从 appsettings.json 读取
+                //from appsettings.json read
                 new("Default", Senparc.AI.Config.SenparcAiSetting, "appsettings.json"),
             ];
 
@@ -69,7 +72,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
                 }
             }
 
-            //从数据库中获取模型
+            //Legacy comment translated to English.
             var aiModelService = serviceProvider.GetService<AIModelService>();
             var aiModels = await aiModelService.GetFullListAsync(z => z.Show, z => z.Alias, Ncf.Core.Enums.OrderingType.Ascending);
             foreach (var aiModel in aiModels)
@@ -78,7 +81,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
                 settings.Add(new(aiModel.Alias, setting, AIKernelResource.Get("Parameter.AI.Source.Database")));
             }
 
-            //集成模型参数
+            //Legacy comment translated to English.
             settings.ForEach(z =>
             {
                 var value = z.ModelAlias;

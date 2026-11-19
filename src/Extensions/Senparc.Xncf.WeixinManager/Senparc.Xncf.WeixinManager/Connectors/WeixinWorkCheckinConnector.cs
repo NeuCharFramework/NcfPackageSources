@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：WeixinWorkCheckinConnector.cs
-    文件功能描述：提供企业微信打卡连接器
-    
-    
-    创建标识：Senparc - 20261111
-    
-    修改标识：Senparc - 20261111
-    修改描述：v0.24.18 提供企业微信打卡连接器
+
+    File name: WeixinWorkCheckinConnector.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20261111
+
+    Modified by: Senparc - 20261111
+    Change description: v0.24.18 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.25.1 Localized Weixin account and administration surfaces
 
 ----------------------------------------------------------------*/
 
@@ -22,11 +25,12 @@ using System.Threading.Tasks;
 using Senparc.Weixin.Work.AdvancedAPIs.OaDataOpen;
 using Senparc.Weixin.Work.CommonAPIs;
 using Senparc.Xncf.Connectors.Abstractions;
+using Senparc.Xncf.WeixinManager;
 
 namespace Senparc.Xncf.WeixinManager.Connectors;
 
 /// <summary>
-/// 企业微信打卡连接器。一个类对应一种外部能力，实例上再保存 CorpId 和应用 Secret。
+/// Provides a WeCom attendance connector backed by the Weixin Work API.
 /// </summary>
 public sealed class WeixinWorkCheckinConnector : IConnectorProvider
 {
@@ -36,39 +40,47 @@ public sealed class WeixinWorkCheckinConnector : IConnectorProvider
     public ConnectorDescriptor Describe() => new()
     {
         Key = Key,
-        Name = "企业微信打卡",
-        Description = "使用企业微信应用的 CorpId 和 Secret 获取打卡记录。配置后可在对话、Workflow 和 Agent 模板中选择。",
+        Name = WeixinManagerResource.Get("Connector.WeCom.Name", "WeCom attendance"),
+        Description = WeixinManagerResource.Get(
+            "Connector.WeCom.Description",
+            "Use a WeCom application's CorpId and Secret to retrieve attendance records. After configuration, it can be selected in Chat, Workflow, and Agent templates."),
         Icon = "fa fa-weixin",
         Fields =
         [
             new ConnectorFieldDescriptor
             {
                 Key = "corpId",
-                Label = "企业 ID",
-                Description = "企业微信管理后台的 CorpId。",
+                Label = WeixinManagerResource.Get("Connector.WeCom.CorpId.Label", "Corporate ID"),
+                Description = WeixinManagerResource.Get(
+                    "Connector.WeCom.CorpId.Description",
+                    "The CorpId from the WeCom administration console."),
                 Required = true,
                 Placeholder = "ww1234567890abcdef"
             },
             new ConnectorFieldDescriptor
             {
                 Key = "corpSecret",
-                Label = "应用 Secret",
-                Description = "需要具备打卡数据权限的自建应用 Secret。编辑时留空会继续使用已保存的密钥。",
+                Label = WeixinManagerResource.Get("Connector.WeCom.CorpSecret.Label", "Application Secret"),
+                Description = WeixinManagerResource.Get(
+                    "Connector.WeCom.CorpSecret.Description",
+                    "The Secret of a self-built application with attendance-data permission. Leave it empty while editing to keep the saved secret."),
                 Kind = ConnectorFieldKind.Secret,
                 Required = true,
-                Placeholder = "应用 Secret"
+                Placeholder = WeixinManagerResource.Get("Connector.WeCom.CorpSecret.Placeholder", "Application Secret")
             },
             new ConnectorFieldDescriptor
             {
                 Key = "defaultCheckinType",
-                Label = "默认打卡类型",
-                Description = "调用时如果没有另外指定，就使用这个类型。",
+                Label = WeixinManagerResource.Get("Connector.WeCom.DefaultType.Label", "Default attendance type"),
+                Description = WeixinManagerResource.Get(
+                    "Connector.WeCom.DefaultType.Description",
+                    "Used when the call does not specify another type."),
                 Kind = ConnectorFieldKind.Select,
                 Options =
                 [
-                    new ConnectorOption { Value = "3", Label = "全部打卡" },
-                    new ConnectorOption { Value = "1", Label = "上下班打卡" },
-                    new ConnectorOption { Value = "2", Label = "外出打卡" }
+                    new ConnectorOption { Value = "3", Label = WeixinManagerResource.Get("Connector.WeCom.Type.All", "All attendance") },
+                    new ConnectorOption { Value = "1", Label = WeixinManagerResource.Get("Connector.WeCom.Type.Work", "Work attendance") },
+                    new ConnectorOption { Value = "2", Label = WeixinManagerResource.Get("Connector.WeCom.Type.Outside", "Off-site attendance") }
                 ]
             }
         ],
@@ -77,34 +89,44 @@ public sealed class WeixinWorkCheckinConnector : IConnectorProvider
             new ConnectorActionDescriptor
             {
                 Key = GetRecordsAction,
-                Name = "获取打卡记录",
-                Description = "按成员账号和时间范围获取企业微信打卡记录，单次最长 30 天。",
+                Name = WeixinManagerResource.Get("Connector.WeCom.Action.GetRecords.Name", "Get attendance records"),
+                Description = WeixinManagerResource.Get(
+                    "Connector.WeCom.Action.GetRecords.Description",
+                    "Retrieve WeCom attendance records by member account and time range, up to 30 days per request."),
                 Parameters =
                 [
                     new ConnectorParameterDescriptor
                     {
                         Key = "userIds",
-                        Label = "成员账号",
-                        Description = "企业微信 userid，多个用逗号或空格分隔。",
+                        Label = WeixinManagerResource.Get("Connector.WeCom.Parameter.UserIds.Label", "Member accounts"),
+                        Description = WeixinManagerResource.Get(
+                            "Connector.WeCom.Parameter.UserIds.Description",
+                            "WeCom userids separated by commas or spaces."),
                         Required = true
                     },
                     new ConnectorParameterDescriptor
                     {
                         Key = "startTime",
-                        Label = "开始时间",
-                        Description = "例如 2026-11-01 或 2026-11-01 09:00。留空则从今天 0 点开始。"
+                        Label = WeixinManagerResource.Get("Connector.WeCom.Parameter.StartTime.Label", "Start time"),
+                        Description = WeixinManagerResource.Get(
+                            "Connector.WeCom.Parameter.StartTime.Description",
+                            "For example, 2026-11-01 or 2026-11-01 09:00. Leave empty to start at midnight today.")
                     },
                     new ConnectorParameterDescriptor
                     {
                         Key = "endTime",
-                        Label = "结束时间",
-                        Description = "留空则到当前时间。"
+                        Label = WeixinManagerResource.Get("Connector.WeCom.Parameter.EndTime.Label", "End time"),
+                        Description = WeixinManagerResource.Get(
+                            "Connector.WeCom.Parameter.EndTime.Description",
+                            "Leave empty to use the current time.")
                     },
                     new ConnectorParameterDescriptor
                     {
                         Key = "checkinType",
-                        Label = "打卡类型",
-                        Description = "1 上下班，2 外出，3 全部。"
+                        Label = WeixinManagerResource.Get("Connector.WeCom.Parameter.Type.Label", "Attendance type"),
+                        Description = WeixinManagerResource.Get(
+                            "Connector.WeCom.Parameter.Type.Description",
+                            "1 work, 2 off-site, 3 all.")
                     }
                 ]
             }
@@ -119,7 +141,9 @@ public sealed class WeixinWorkCheckinConnector : IConnectorProvider
         if (!configuration.TryGetValue("corpId", out var corpId) || string.IsNullOrWhiteSpace(corpId)
             || !configuration.TryGetValue("corpSecret", out var corpSecret) || string.IsNullOrWhiteSpace(corpSecret))
         {
-            return new ConnectorTestResult(false, "请先填写企业 ID 和应用 Secret。");
+            return new ConnectorTestResult(false, WeixinManagerResource.Get(
+                "Connector.WeCom.Error.MissingCredentials",
+                "Enter the Corporate ID and application Secret first."));
         }
 
         try
@@ -128,13 +152,20 @@ public sealed class WeixinWorkCheckinConnector : IConnectorProvider
             var code = Convert.ToInt32(token.errcode, CultureInfo.InvariantCulture);
             Console.WriteLine($"[Connector] weixin.work.checkin test corpId={corpId.Trim()} errcode={code}");
             return code == 0
-                ? new ConnectorTestResult(true, "企业微信凭证有效，可以获取打卡记录。")
-                : new ConnectorTestResult(false, $"企业微信拒绝了凭证：{token.errmsg}");
+                ? new ConnectorTestResult(true, WeixinManagerResource.Get(
+                    "Connector.WeCom.Test.Valid",
+                    "The WeCom credential is valid and can retrieve attendance records."))
+                : new ConnectorTestResult(false, WeixinManagerResource.Format(
+                    "Connector.WeCom.Test.Rejected",
+                    "WeCom rejected the credential: {0}",
+                    token.errmsg));
         }
         catch (Exception exception)
         {
             Console.WriteLine($"[Connector] weixin.work.checkin test failed: {exception.Message}");
-            return new ConnectorTestResult(false, "无法连接企业微信，请检查 CorpId、Secret 和服务器网络。");
+            return new ConnectorTestResult(false, WeixinManagerResource.Get(
+                "Connector.WeCom.Test.Unreachable",
+                "Unable to connect to WeCom. Check the CorpId, Secret, and server network."));
         }
     }
 
@@ -145,7 +176,9 @@ public sealed class WeixinWorkCheckinConnector : IConnectorProvider
         cancellationToken.ThrowIfCancellationRequested();
         if (!string.Equals(context.ActionKey, GetRecordsAction, StringComparison.OrdinalIgnoreCase))
         {
-            return ConnectorInvocationResult.Fail("企业微信打卡连接器目前只提供获取打卡记录。");
+            return ConnectorInvocationResult.Fail(WeixinManagerResource.Get(
+                "Connector.WeCom.Error.UnsupportedAction",
+                "The WeCom attendance connector currently only provides attendance record retrieval."));
         }
 
         var defaultType = ReadInt(context.Configuration, "defaultCheckinType", 3);
@@ -157,7 +190,9 @@ public sealed class WeixinWorkCheckinConnector : IConnectorProvider
         if (!context.Configuration.TryGetValue("corpId", out var corpId)
             || !context.Configuration.TryGetValue("corpSecret", out var corpSecret))
         {
-            return ConnectorInvocationResult.Fail("连接器缺少企业 ID 或应用 Secret。");
+            return ConnectorInvocationResult.Fail(WeixinManagerResource.Get(
+                "Connector.WeCom.Error.MissingCredentials",
+                "The connector is missing the Corporate ID or application Secret."));
         }
 
         try
@@ -165,7 +200,10 @@ public sealed class WeixinWorkCheckinConnector : IConnectorProvider
             var token = await CommonApi.GetTokenAsync(corpId.Trim(), corpSecret.Trim()).ConfigureAwait(false);
             if (Convert.ToInt32(token.errcode, CultureInfo.InvariantCulture) != 0 || string.IsNullOrWhiteSpace(token.access_token))
             {
-                return ConnectorInvocationResult.Fail($"获取企业微信访问凭证失败：{token.errmsg}");
+                return ConnectorInvocationResult.Fail(WeixinManagerResource.Format(
+                    "Connector.WeCom.Error.Token",
+                    "Failed to obtain the WeCom access credential: {0}",
+                    token.errmsg));
             }
 
             var result = await OaDataOpenApi.GetCheckinDataAsync(
@@ -179,7 +217,10 @@ public sealed class WeixinWorkCheckinConnector : IConnectorProvider
             Console.WriteLine($"[Connector] weixin.work.checkin records corpId={corpId.Trim()} users={query.UserIds.Length} errcode={code}");
             if (code != 0)
             {
-                return ConnectorInvocationResult.Fail($"企业微信返回错误：{result.errmsg}");
+                return ConnectorInvocationResult.Fail(WeixinManagerResource.Format(
+                    "Connector.WeCom.Error.Api",
+                    "WeCom returned an error: {0}",
+                    result.errmsg));
             }
 
             var checkinData = result.checkindata ?? [];
@@ -209,7 +250,10 @@ public sealed class WeixinWorkCheckinConnector : IConnectorProvider
         catch (Exception exception)
         {
             Console.WriteLine($"[Connector] weixin.work.checkin invoke failed: {exception.Message}");
-            return ConnectorInvocationResult.Fail($"获取打卡记录失败，请确认应用有打卡权限，且成员账号正确。错误信息：{exception.Message}");
+            return ConnectorInvocationResult.Fail(WeixinManagerResource.Format(
+                "Connector.WeCom.Error.Invocation",
+                "Failed to retrieve attendance records. Confirm that the application has attendance permission and that the member accounts are correct. Details: {0}",
+                exception.Message));
         }
     }
 
@@ -241,13 +285,17 @@ public static class WeixinWorkCheckinArguments
         var userIds = SplitUserIds(Read(arguments, "userIds"));
         if (userIds.Length == 0)
         {
-            error = "请提供至少一名企业微信成员的 userid。";
+            error = WeixinManagerResource.Get(
+                "Connector.WeCom.Error.UserRequired",
+                "Provide at least one WeCom member userid.");
             return false;
         }
 
         if (userIds.Length > 100)
         {
-            error = "单次最多查询 100 名成员。";
+            error = WeixinManagerResource.Get(
+                "Connector.WeCom.Error.UserLimit",
+                "A single request can query at most 100 members.");
             return false;
         }
 
@@ -255,19 +303,25 @@ public static class WeixinWorkCheckinArguments
         if (!TryReadTime(Read(arguments, "startTime"), DateTime.Today, out var start)
             || !TryReadTime(Read(arguments, "endTime"), now, out var end))
         {
-            error = "时间格式无法识别，请使用 2026-11-01 或 2026-11-01 09:00。";
+            error = WeixinManagerResource.Get(
+                "Connector.WeCom.Error.InvalidTime",
+                "The time format is not recognized. Use 2026-11-01 or 2026-11-01 09:00.");
             return false;
         }
 
         if (end < start)
         {
-            error = "结束时间需要晚于开始时间。";
+            error = WeixinManagerResource.Get(
+                "Connector.WeCom.Error.TimeOrder",
+                "The end time must be later than the start time.");
             return false;
         }
 
         if (end - start > TimeSpan.FromDays(30))
         {
-            error = "企业微信单次最多获取 30 天打卡记录。";
+            error = WeixinManagerResource.Get(
+                "Connector.WeCom.Error.TimeRange",
+                "WeCom allows at most 30 days of attendance records per request.");
             return false;
         }
 
@@ -278,7 +332,9 @@ public static class WeixinWorkCheckinArguments
             if (!int.TryParse(rawType, NumberStyles.Integer, CultureInfo.InvariantCulture, out checkinType)
                 || checkinType is < 1 or > 3)
             {
-                error = "打卡类型只能是 1（上下班）、2（外出）或 3（全部）。";
+                error = WeixinManagerResource.Get(
+                    "Connector.WeCom.Error.InvalidType",
+                    "The attendance type must be 1 (work), 2 (off-site), or 3 (all).");
                 return false;
             }
         }

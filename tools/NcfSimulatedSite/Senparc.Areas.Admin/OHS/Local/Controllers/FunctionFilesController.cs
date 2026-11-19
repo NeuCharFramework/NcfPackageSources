@@ -1,13 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：FunctionFilesController.cs
-    文件功能描述：FunctionRender 文件引用上传接口
+    File name: FunctionFilesController.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20261101
+    Created by: Senparc - 20261101
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 add bulk file upload functionality to Sandbox Lab
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 add bulk file upload functionality to Sandbox Lab
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 

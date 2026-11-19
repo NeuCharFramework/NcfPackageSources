@@ -1,16 +1,20 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：Index.cshtml.cs
-    文件功能描述：Workspace 运行时与远程编辑管理页面
+    File name: Index.cshtml.cs
+    File description: Workspace runtime and remote editing administration page
 
-    创建标识：Senparc - 20261024
+    Created by: Senparc - 20261024
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.2.2 implement connection manager and workspace file system provider
+    Modified by: Senparc - 20261103
+    Change description: v0.2.2 implement connection manager and workspace file system provider
 
-    修改标识：Senparc - 20261109
-    修改描述：展示按所有者隔离的用量，并允许在权限范围内清空工作区内容
+    Modified by: Senparc - 20261109
+    Change description: show owner-isolated usage and allow content clearing within authorization boundaries
+
+    Modified by: Senparc - 20261119
+    Change description: v0.2.9 Localized workspace management and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -20,6 +24,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Senparc.Ncf.AreaBase.Admin.Filters;
 using Senparc.Ncf.Service;
+using Senparc.Xncf.Workspace;
 using Senparc.Xncf.Workspace.Domain.Services;
 
 namespace Senparc.Xncf.Workspace.Areas.Workspace.Pages;
@@ -59,7 +64,7 @@ public sealed class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelB
         {
             Report = WorkspaceUsageReport.Empty(new WorkspaceActor(0, false), 0);
             ClientReportJson = SerializeReport(Report);
-            TempData["WorkspaceError"] = "当前管理员身份无效，请重新登录。";
+            TempData["WorkspaceError"] = WorkspaceResource.Get("Server.IdentityInvalid", "The current administrator identity is invalid. Please sign in again.");
             return;
         }
 
@@ -69,9 +74,9 @@ public sealed class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelB
         }
         catch (Exception exception)
         {
-            _logger.LogError(exception, "读取工作区用量失败: ActorId={ActorId}", actor.UserId);
+            _logger.LogError(exception, "Failed to read Workspace usage: ActorId={ActorId}", actor.UserId);
             Report = WorkspaceUsageReport.Empty(actor, 0);
-            TempData["WorkspaceError"] = "读取工作区用量失败，请稍后重试。";
+            TempData["WorkspaceError"] = WorkspaceResource.Get("Server.UsageReadFailed", "Failed to read Workspace usage. Please retry later.");
         }
 
         ClientReportJson = SerializeReport(Report);
@@ -82,18 +87,18 @@ public sealed class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelB
         _ = XncfRegister;
         if (string.IsNullOrWhiteSpace(NewWorkspaceName))
         {
-            TempData["WorkspaceError"] = "请输入工作区名称。";
+            TempData["WorkspaceError"] = WorkspaceResource.Get("Server.NameRequired", "Enter a Workspace name.");
             return RedirectToPage("./Index", new { uid = Uid });
         }
 
         if (!WorkspaceActors.TryResolve(User, out var actor))
         {
-            TempData["WorkspaceError"] = "当前管理员身份无效，请重新登录。";
+            TempData["WorkspaceError"] = WorkspaceResource.Get("Server.IdentityInvalid", "The current administrator identity is invalid. Please sign in again.");
             return RedirectToPage("./Index", new { uid = Uid });
         }
 
         await _catalog.CreateOwnAsync(actor, NewWorkspaceName.Trim()).ConfigureAwait(false);
-        TempData["WorkspaceMessage"] = "工作区已创建，可在 VS Code 或 Cursor 中连接。";
+        TempData["WorkspaceMessage"] = WorkspaceResource.Get("Server.Created", "Workspace created. Connect with VS Code or Cursor.");
         return RedirectToPage("./Index", new { uid = Uid });
     }
 
@@ -102,7 +107,7 @@ public sealed class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelB
         _ = XncfRegister;
         if (!WorkspaceActors.TryResolve(User, out var actor))
         {
-            TempData["WorkspaceError"] = "当前管理员身份无效，请重新登录。";
+            TempData["WorkspaceError"] = WorkspaceResource.Get("Server.IdentityInvalid", "The current administrator identity is invalid. Please sign in again.");
             return RedirectToPage("./Index", new { uid = Uid });
         }
 
@@ -110,25 +115,25 @@ public sealed class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelB
         {
             var result = await _catalog.ClearContentAsync(actor, workspaceId).ConfigureAwait(false);
             TempData["WorkspaceMessage"] = result.ClearedOtherOwner
-                ? $"已清空其他管理员 #{result.OwnerId} 的工作区「{result.Name}」，内容已恢复为新建时的空目录。"
-                : $"已清空工作区「{result.Name}」，内容已恢复为新建时的空目录。";
+                ? WorkspaceResource.Format("Server.ClearedOther", "Cleared administrator #{0}'s Workspace \"{1}\". Its content was reset to the empty initial layout.", result.OwnerId, result.Name)
+                : WorkspaceResource.Format("Server.ClearedOwn", "Cleared Workspace \"{0}\". Its content was reset to the empty initial layout.", result.Name);
         }
         catch (ArgumentException)
         {
-            TempData["WorkspaceError"] = "请选择要清空的工作区。";
+            TempData["WorkspaceError"] = WorkspaceResource.Get("Server.SelectionRequired", "Select a Workspace to clear.");
         }
         catch (DirectoryNotFoundException)
         {
-            TempData["WorkspaceError"] = "工作区不存在，或不在当前账号的管理范围内。";
+            TempData["WorkspaceError"] = WorkspaceResource.Get("Server.NotFound", "The Workspace does not exist or is outside the current administrator's scope.");
         }
         catch (Exception exception)
         {
             _logger.LogError(
                 exception,
-                "清空工作区内容失败: ActorId={ActorId}, WorkspaceId={WorkspaceId}",
+                "Failed to clear Workspace content: ActorId={ActorId}, WorkspaceId={WorkspaceId}",
                 actor.UserId,
                 workspaceId);
-            TempData["WorkspaceError"] = "清空工作区失败，请稍后重试。";
+            TempData["WorkspaceError"] = WorkspaceResource.Get("Server.ClearFailed", "Failed to clear the Workspace. Please retry later.");
         }
 
         return RedirectToPage("./Index", new { uid = Uid });

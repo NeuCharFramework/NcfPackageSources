@@ -12,7 +12,7 @@ namespace Senparc.Service
         IClientRepositoryBase<T> BaseClientRepository { get; }
 
         ///// <summary>
-        ///// 开启事物
+        ///Legacy comment translated to English.
         ///// </summary>
         ///// <returns></returns>
         //IDbContextTransaction BeginTransaction();

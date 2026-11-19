@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：KnowledgeBaseItemRequest.cs
-    文件功能描述：KnowledgeBaseItemRequest 相关实现
-    
-    
-    创建标识：Senparc - 20260704
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: KnowledgeBaseItemRequest.cs
+    File description: KnowledgeBaseItemRequest related implementation
+
+    Created by: Senparc - 20260704
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.8.4 Localized knowledge base management and runtime surfaces
 
 ----------------------------------------------------------------*/
 
@@ -25,15 +28,15 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Models.DatabaseModel.Request
     public class KnowledgeBaseItemRequest
     {
         /// <summary>
-        /// 知识库Id
+        ///Legacy comment translated to English.
         /// </summary>
         public int KnowledgeBasesId { get; set; }
         /// <summary>
-        /// 内容类型
+        /// contenttype
         /// </summary>
         public ContentType ContentType { get; set; }
         /// <summary>
-        /// 内容
+        /// content
         /// </summary>
         public string Content { get; set; }
     }

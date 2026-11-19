@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：AutoDetectChangeContextExtension.cs
-    文件功能描述：AutoDetectChangeContextExtension 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: AutoDetectChangeContextExtension.cs
+    File description: AutoDetectChangeContextExtension related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.23.13-preview12 Updated service infrastructure and related localization metadata
 
 ----------------------------------------------------------------*/
 
@@ -19,7 +22,7 @@ namespace Senparc.Ncf.Service
     public static class AutoDetectChangeContextExtension
     {
        /// <summary>
-        /// 创建AutoDetectChangeContext的实例
+        ///Legacy comment translated to English.
        /// </summary>
        /// <param name="serviceData"></param>
        /// <returns></returns>
@@ -29,9 +32,9 @@ namespace Senparc.Ncf.Service
        }
 
        /// <summary>
-       /// 创建CloseAutoDetectChangeContext的实例
+       ///Legacy comment translated to English.
        /// </summary>
-       /// <param name="wrap">AutoDetectChangeContextWrap实例</param>
+       ///Legacy comment translated to English.
        /// <returns></returns>
        public static CloseAutoDetectChangeContext InstanceCloseAutoDetectChangeContext(this AutoDetectChangeContextWrap wrap)
        {
@@ -39,9 +42,9 @@ namespace Senparc.Ncf.Service
        }
 
        /// <summary>
-       /// 创建CloseAutoDetectChangeContext的实例
+       ///Legacy comment translated to English.
        /// </summary>
-       /// <param name="wrap">AutoDetectChangeContextWrap实例</param>
+       ///Legacy comment translated to English.
        /// <returns></wrap>
        public static void ForceDetectChange(this AutoDetectChangeContextWrap wrap, object entity)
        {

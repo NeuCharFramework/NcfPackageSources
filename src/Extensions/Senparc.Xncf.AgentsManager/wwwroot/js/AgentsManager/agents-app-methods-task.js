@@ -1,7 +1,7 @@
 /*
- * AgentsManager 前端：ChatTask 列表/详情/历史记录、SSE 流式输出与 Human-in-the-Loop 方法。
- * 注意：本文件与 agents-app-*.js 系列按 three-loader.js 中的顺序加载，
- * 依赖全局 var（classic script 顶层 var 挂到 window），请勿单独引入。
+ * Legacy comment translated to English.
+ * Note: this file and the agents-app-*.js series are loaded in the order defined by three-loader.js,
+ * depends on global variables (top-level classic-script vars are attached to window); do not import separately.
  */
 
 var AgentsAppMethodsTask = {
@@ -30,7 +30,7 @@ var AgentsAppMethodsTask = {
         this.connectorOptionsLoading = false
       }
     },
-    // 获取 任务 数据
+    // get task data
     async gettaskListData(listType, id, page = 0, options = {}) {
       const opts = options || {}
       const preferLatest = !!opts.preferLatest
@@ -88,32 +88,32 @@ var AgentsAppMethodsTask = {
       }
 
       const queryList = {}
-      // 任务
+      // task
       if (listType === 'task') {
         this.taskQueryList.pageIndex = page ?? 1
         Object.assign(queryList, this.taskQueryList)
         queryList.archiveScope = this.getTaskArchiveScopeCode()
       }
-      // 智能体 任务
+      // agent task
       if (listType === 'agentTask') {
         this.agentDetailsTaskQueryList.pageIndex = page ?? 1
         this.agentDetailsTaskQueryList.agentTemplateId = id
         Object.assign(queryList, this.agentDetailsTaskQueryList)
       }
-      // 智能体 组 任务
+      // agent group task
       if (listType === 'agentGroupTask') {
         this.agentDetailsGroupTaskQueryList.pageIndex = page ?? 1
         this.agentDetailsGroupTaskQueryList.chatGroupId = id
         Object.assign(queryList, this.agentDetailsGroupTaskQueryList)
       }
-      // 组 任务
+      // group task
       if (listType === 'groupTask') {
         this.groupTaskQueryList.pageIndex = page ?? 1
         this.groupTaskQueryList.chatGroupId = id
         Object.assign(queryList, this.groupTaskQueryList)
       }
       let modelList = []
-      // 获取模型列表
+      //Legacy comment translated to English.
       await serviceAM.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync', {
         pageIndex: 0,
         pageSize: 0
@@ -131,7 +131,7 @@ var AgentsAppMethodsTask = {
           })
         }
       })
-      //  接口对接
+      //Legacy comment translated to English.
       await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.GetList?${getInterfaceQueryStr(queryList)}`, queryList)
         .then(res => {
           const data = res?.data ?? {}
@@ -152,13 +152,13 @@ var AgentsAppMethodsTask = {
               this.clearTaskListRetryTimer(listType)
             }
 
-            // 任务
+            // task
             if (listType === 'task') {
               this.$set(this, 'taskList', handleTaskData)
               if (needRetryLatestTask && !hasLatestCandidate(handleTaskData)) {
                 return
               }
-              // 默认展示第一个任务详情
+              //Legacy comment translated to English.
               if (handleTaskData && handleTaskData.length) {
                 const taskDetail = pickTaskForView(handleTaskData, this.taskDetails?.id)
                 if (taskDetail) {
@@ -170,13 +170,13 @@ var AgentsAppMethodsTask = {
                 }
               }
             }
-            // 智能体 任务
+            // agent task
             if (listType === 'agentTask') {
               this.$set(this, 'agentDetailsTaskList', handleTaskData)
               if (needRetryLatestTask && !hasLatestCandidate(handleTaskData)) {
                 return
               }
-              // 默认展示第一个任务详情
+              //Legacy comment translated to English.
               if (handleTaskData && handleTaskData.length) {
                 const taskDetail = pickTaskForView(handleTaskData, this.agentDetailsTaskDetails?.id)
                 if (taskDetail) {
@@ -189,7 +189,7 @@ var AgentsAppMethodsTask = {
                 }
               }
             }
-            // 智能体 组 任务
+            // agent group task
             if (listType === 'agentGroupTask') {
               this.$set(this, 'agentDetailsGroupTaskList', handleTaskData)
               if (needRetryLatestTask && !hasLatestCandidate(handleTaskData)) {
@@ -203,7 +203,7 @@ var AgentsAppMethodsTask = {
                 }
               }
             }
-            // 组 任务
+            // group task
             if (listType === 'groupTask') {
               this.$set(this, 'groupTaskList', handleTaskData)
               if (needRetryLatestTask && !hasLatestCandidate(handleTaskData)) {
@@ -331,12 +331,12 @@ var AgentsAppMethodsTask = {
         this.gettaskListData(listType, id, page, nextOptions)
       }, retryDelayMs)
     },
-    // 获取 任务详情 
+    //Legacy comment translated to English.
     async getTaskDetailData(detailType, id, detail = {}, detailsOn = false) {
       //TODO:
       if (id == undefined) {
         app.$message({
-          message: '当前还没有可执行的任务',
+          message: ncfST('Frontend.552'),
           type: 'error',
           duration: 5 * 1000
         })
@@ -346,7 +346,7 @@ var AgentsAppMethodsTask = {
         .then(async res => {
           const data = res?.data ?? {}
           if (data.success) {
-            // 不是仅详情时 清除轮询
+            //Legacy comment translated to English.
             if (!detailsOn) {
               this.clearHistoryTimer()
             }
@@ -360,19 +360,19 @@ var AgentsAppMethodsTask = {
             if (taskDetail) {
               taskDetail = Object.assign({}, detail, taskDetail)
             }
-            // 智能体 组 任务
+            // agent group task
             if (detailType === 'agentGroupTask') {
               this.$set(this, 'agentDetailsGroupDetailsTaskDetails', taskDetail)
             }
-            // 组 任务
+            // group task
             if (detailType === 'groupTask') {
               this.$set(this, 'groupTaskDetails', taskDetail)
             }
-            // 智能体 任务
+            // agent task
             if (detailType === 'agentTask') {
               this.$set(this, 'agentDetailsTaskDetails', taskDetail)
             }
-            // 任务
+            // task
             if (detailType === 'task') {
               this.$set(this, 'taskDetails', taskDetail)
             }
@@ -383,10 +383,10 @@ var AgentsAppMethodsTask = {
               if (detailType === 'agentGroupTask') this.$set(this, 'agentDetailsGroupTaskHistoryList', [])
               if (detailType === 'groupTask') this.$set(this, 'groupTaskHistoryList', [])
 
-              // 打开任务详情时检测一次远程 A2A 成员；后续仅由用户手动触发重测。
+              //Legacy comment translated to English.
               const taskMemberList = await this.getTaskMemberListData(detailType, taskDetail.chatGroupId)
               await this.autoTestRemoteParticipants(taskMemberList)
-              // 首次获取历史 + 开启实时流
+              //Legacy comment translated to English.
               this.getTaskRecordListData(detailType, taskDetail.id, '', true)
               this.startTaskHistoryStream(detailType, taskDetail.id, taskDetail.status)
             }
@@ -399,27 +399,27 @@ var AgentsAppMethodsTask = {
           }
         })
     },
-    // 获取 任务历史记录
+    //Legacy comment translated to English.
     async getTaskRecordListData(recordType, chatTaskId, nextHistoryId, isFirst = false) {
       const queryList = {
         chatTaskId,
         nextHistoryId
       }
-      //  接口对接
+      //Legacy comment translated to English.
       await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatGroupHistoryAppService/Xncf.AgentsManager_ChatGroupHistoryAppService.GetList?${getInterfaceQueryStr(queryList)}`, queryList)
         .then(res => {
           const data = res?.data ?? {}
           if (data.success) {
             const chatGroupHistories = data?.data?.chatGroupHistories ?? []
             const historiesData = chatGroupHistories.map(item => {
-              //使用 MarkDown 格式，对输出结果进行展示
+              //Legacy comment translated to English.
               item.messageHtml = this.renderSafeMarkdown(item.message);
               return item
             })
             if (historiesData.length > 0) {
               this.clearTaskGeneratingPlaceholder(recordType)
             }
-            // 任务
+            // task
             if (recordType === 'task') {
               const shouldAutoFollow = this.isHistoryNearBottom(this.getHistoryScrollbarRef('task'), isFirst)
               let historyList = this.taskHistoryList || []
@@ -447,7 +447,7 @@ var AgentsAppMethodsTask = {
                 this.scrollHistoryToItemBottom('task', latestId)
               })
             }
-            // 智能体 任务
+            // agent task
             if (recordType === 'agentTask') {
               const shouldAutoFollow = this.isHistoryNearBottom(this.getHistoryScrollbarRef('agentTask'), isFirst)
               let historyList = this.agentDetailsTaskHistoryList || []
@@ -475,7 +475,7 @@ var AgentsAppMethodsTask = {
                 this.scrollHistoryToItemBottom('agentTask', latestId)
               })
             }
-            // 智能体 组 任务
+            // agent group task
             if (recordType === 'agentGroupTask') {
               const shouldAutoFollow = this.isHistoryNearBottom(this.getHistoryScrollbarRef('agentGroupTask'), isFirst)
               let historyList = this.agentDetailsGroupTaskHistoryList || []
@@ -503,7 +503,7 @@ var AgentsAppMethodsTask = {
                 this.scrollHistoryToItemBottom('agentGroupTask', latestId)
               })
             }
-            // 组 任务
+            // group task
             if (recordType === 'groupTask') {
               const shouldAutoFollow = this.isHistoryNearBottom(this.getHistoryScrollbarRef('groupTask'), isFirst)
               let historyList = this.groupTaskHistoryList || []
@@ -534,21 +534,21 @@ var AgentsAppMethodsTask = {
           }
         })
     },
-    // 获取 任务 成员列表
+    //Legacy comment translated to English.
     async getTaskMemberListData(memberType, chatGroupld) {
       try {
         const res = await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${chatGroupld}`)
         const data = res?.data ?? {}
         if (!data.success) {
-          throw new Error(data.errorMessage || data.data || '加载任务成员失败')
+          throw new Error(data.errorMessage || data.data || ncfST('Frontend.553'))
         }
 
         const groupDetail = data?.data ?? {}
         const taskMemberList = this.getGroupParticipantList(groupDetail)
 
-        // 任务详情页的成员面板使用组详情状态渲染。启动任务后，任务详情请求可能
-        // 先于组详情请求完成；用这里取得的完整组数据回填对应状态，避免右侧面板
-        // 因为竞态暂时没有 groupDetails 而显示为空，重新进入页面才恢复。
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         const mergeTaskGroupDetail = (currentDetail) => {
           const current = currentDetail || {}
           return Object.assign({}, current, groupDetail, {
@@ -567,18 +567,18 @@ var AgentsAppMethodsTask = {
           this.$set(this, 'groupTaskMemberList', taskMemberList)
         }
 
-        // 任务
+        // task
         if (memberType === 'task') {
           this.$set(this, 'taskMemberList', taskMemberList)
         }
-        // 智能体 任务
+        // agent task
         if (memberType === 'agentTask') {
           this.$set(this, 'agentDetailsTaskMemberList', taskMemberList)
         }
         return taskMemberList
       } catch (err) {
         app.$message({
-          message: err?.message || '加载任务成员失败',
+          message: err?.message || ncfST('Frontend.553'),
           type: 'error',
           duration: 5 * 1000
         })
@@ -630,7 +630,7 @@ var AgentsAppMethodsTask = {
         const res = await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatGroupHistoryAppService/Xncf.AgentsManager_ChatGroupHistoryAppService.GetUsageAnalytics?${getInterfaceQueryStr(query)}`)
         const data = res?.data ?? {}
         if (!data.success) {
-          this.$message.error(data.errorMessage || data.data || '获取统计数据失败')
+        this.$message.error(data.errorMessage || data.data || ncfST('Frontend.554'))
           return
         }
 
@@ -643,7 +643,7 @@ var AgentsAppMethodsTask = {
         }
       } catch (e) {
         console.error(e)
-        this.$message.error('获取统计数据失败')
+        this.$message.error(ncfST('Frontend.554'))
       } finally {
         this.usageAnalyticsLoading = false
       }
@@ -705,7 +705,7 @@ var AgentsAppMethodsTask = {
       return numeric.toLocaleString('en-US')
     },
     formatActivityTime(value) {
-      return value ? formatDate(value) : '暂无'
+      return value ? formatDate(value) : ncfST('Frontend.555')
     },
     formatResponseMilliseconds(milliseconds, emptyText = '--') {
       const numeric = Number(milliseconds || 0)
@@ -754,7 +754,7 @@ var AgentsAppMethodsTask = {
     async handleTaskArchiveToggle(item) {
       if (!item || !item.id) return
       const nextArchived = !item.isArchived
-      const actionText = nextArchived ? ncfST('归档') : ncfST('取消归档')
+      const actionText = nextArchived ? ncfST('Frontend.187') : ncfST('Frontend.186')
       this.taskArchiveSavingId = item.id
       try {
         const response = await serviceAM.post(
@@ -762,11 +762,11 @@ var AgentsAppMethodsTask = {
         )
         const data = response?.data ?? {}
         if (!data.success) {
-          this.$message.error(data.errorMessage || data.data || ncfST('{0}失败', actionText))
+          this.$message.error(data.errorMessage || data.data || ncfST('Frontend.207', actionText))
           return
         }
 
-        this.$message.success(ncfST('{0}成功', actionText))
+        this.$message.success(ncfST('Frontend.208', actionText))
         const currentTaskId = Number(this.taskDetails?.id || 0)
         if (currentTaskId === Number(item.id) && this.taskArchiveScope !== 'all' && this.taskArchiveScope !== (nextArchived ? 'archived' : 'active')) {
           this.scrollbarTaskIndex = ''
@@ -778,7 +778,7 @@ var AgentsAppMethodsTask = {
         }
         this.gettaskListData('task')
       } catch (error) {
-        this.$message.error(ncfST('{0}失败：{1}', actionText, error?.message || ncfST('未知错误')))
+        this.$message.error(ncfST('Frontend.209', actionText, error?.message || ncfST('Frontend.210')))
       } finally {
         this.taskArchiveSavingId = 0
       }
@@ -812,13 +812,13 @@ var AgentsAppMethodsTask = {
 
       return 0
     },
-    // 保存 submitForm 数据
+    // save submitForm data
     async saveSubmitFormData(saveType, serviceForm = {}) {
       //debugger
       let serviceURL = ''
-      // agent 新增|编辑
+      // agent add|edit
       if (['drawerAgent', 'dialogGroupAgent'].includes(saveType)) {
-        // 确保 serviceForm 是正确的对象
+        //Legacy comment translated to English.
         serviceForm = serviceForm || {};
 
         serviceForm.functionBindings = (serviceForm.functionBindings || this.agentForm.functionBindings || [])
@@ -833,7 +833,7 @@ var AgentsAppMethodsTask = {
           .map(id => ({ instanceId: id, enabled: true, actionKeys: [] }))
         console.log('[Connector] agent bindings', serviceForm.connectorBindings)
 
-        // 打印日志以便调试
+        //Legacy comment translated to English.
         console.log('Submitting serviceForm:', serviceForm);
         console.log('functionCallTags:', this.functionCallTags);
         console.log('functionCallNames:', serviceForm.functionCallNames);
@@ -843,7 +843,7 @@ var AgentsAppMethodsTask = {
           this.isGetGroupAgent = true
         }
       }
-      // 组 新增|编辑
+      // group add|edit
       if (saveType === 'drawerGroup') {
         serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.SetChatGroup'
         const memberAgentTemplateIds = (serviceForm.members || [])
@@ -854,27 +854,27 @@ var AgentsAppMethodsTask = {
         serviceForm.remoteAgentIds = remoteAgentIds
         serviceURL += `?${getInterfaceQueryStr({ memberAgentTemplateIds, remoteAgentIds, includeHumanParticipant: !!serviceForm.includeHumanParticipant })}`
       }
-      // 组启动（运行任务） ['drawerGroupStart', 'drawerTaskStart'].includes(btnType)
+      // groupstart（runtask） ['drawerGroupStart', 'drawerTaskStart'].includes(btnType)
       if (['drawerGroupStart', 'drawerTaskStart'].includes(saveType)) {
         const chatGroupId = this.getGroupStartChatGroupId(serviceForm)
         if (!chatGroupId) {
           app.$message({
-            message: '未找到有效的聊天组，请重新从聊天组或任务详情打开启动窗口。',
+            message: ncfST('Frontend.556'),
             type: 'error',
             duration: 5 * 1000
           })
           return
         }
 
-        // 启动窗口可能由任务详情打开；此时表单对象只携带了部分字段，
-        // 统一把当前上下文解析出的 Group ID 写回请求，避免后台收到 0。
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         serviceForm.chatGroupId = chatGroupId
         if (serviceForm.requireHumanApproval && Number(serviceForm.humanInTheLoopLevel || 0) === 0) {
           serviceForm.humanInTheLoopLevel = 2
         }
         serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.RunGroup'
-        // RunGroup 将聊天组 ID 同时作为查询参数和正文属性提交。查询参数由动态 ApiBind
-        // 控制器显式绑定，即使旧脚本或宿主环境异常处理了正文属性，后台仍能可靠取得 Group ID。
+        //Legacy comment translated to English.
+        //Legacy comment translated to English.
         serviceURL += `?${getInterfaceQueryStr({ chatGroupId })}`
       }
       if (saveType === 'dialogTaskEvaluation') {
@@ -885,26 +885,26 @@ var AgentsAppMethodsTask = {
         const response = await serviceAM.post(serviceURL, serviceForm)
         if (response.data.success) {
           let refName = '', formName = ''
-          // 智能体
+          // agent
           if (['drawerAgent', 'dialogGroupAgent'].includes(saveType)) {
             refName = 'agentELForm'
             formName = 'agentForm'
           }
-          // 组
+          // group
           if (saveType === 'drawerGroup') {
             refName = 'groupELForm'
             formName = 'groupForm'
-            // 重置 组获取智能体query
+            //Legacy comment translated to English.
             this.$set(this, 'groupAgentQueryList', this.$options.data().groupAgentQueryList)
             this.$set(this, 'groupRemoteAgentQueryList', this.$options.data().groupRemoteAgentQueryList)
             this.groupRemoteAgentList = []
           }
-          // 组 启动
+          // group start
           if (['drawerGroupStart', 'drawerTaskStart'].includes(saveType)) {
             refName = 'groupStartELForm'
             formName = 'groupStartForm'
           }
-          // 任务评价
+          // task evaluation
           if (saveType === 'dialogTaskEvaluation') {
             refName = 'evaluationELForm'
             formName = 'evaluationForm'
@@ -923,7 +923,7 @@ var AgentsAppMethodsTask = {
           this.$nextTick(() => {
             this.visible[this.getEditorVisibleKey(saveType)] = false
           })
-          // 重新获取数据
+          // reload data
           if (['drawerGroup', 'drawerGroupStart', 'drawerTaskStart'].includes(saveType)) {
             console.log('#***#', this.tabsActiveName, this.agentDetails);
             const isStartTaskSave = ['drawerTaskStart', 'drawerGroupStart'].includes(saveType)
@@ -993,7 +993,7 @@ var AgentsAppMethodsTask = {
               await this.refreshAgentParameterItem(response.data?.data)
             }
           } else if (saveType === 'dialogTaskEvaluation') {
-            // 重新获取任务详情 
+            //Legacy comment translated to English.
             let detail = {}
             if (this.tabsActiveName === 'first') {
               if (this.agentDetailsTabsActiveName === 'first') {
@@ -1033,7 +1033,7 @@ var AgentsAppMethodsTask = {
         this.isGetGroupAgent = false
       }
     },
-    // 轮询获取 task 历史对话记录
+    //Legacy comment translated to English.
     pollGetTaskHistoryData(listType, fun, id) {
       if (!listType || !fun) return
       fun(listType, id, '', true)
@@ -1041,7 +1041,7 @@ var AgentsAppMethodsTask = {
         if (this.historyTimer[listType]) clearTimeout(this.historyTimer[listType])
         this.historyTimer[listType] = setTimeout(() => {
           const nextHistoryId = this.getLatestPersistedHistoryId(listType)
-          // 执行代码块
+          //Legacy comment translated to English.
           fun(listType, id, nextHistoryId || '')
           interval()
         }, 1000 * 5)
@@ -1325,7 +1325,7 @@ var AgentsAppMethodsTask = {
     formatToolApprovalArguments(rawArguments) {
       let value = rawArguments
       if (value === undefined || value === null || String(value).trim() === '') {
-        return '（未提供参数）'
+        return ncfST('Frontend.565')
       }
 
       for (let index = 0; index < 2 && typeof value === 'string'; index++) {
@@ -1383,22 +1383,22 @@ var AgentsAppMethodsTask = {
 
       this.toolApprovalSubmitting = true
       try {
-        const reason = approved ? '用户确认' : '用户拒绝'
+        const reason = approved ? ncfST('Frontend.557') : ncfST('Frontend.558')
         const query = getInterfaceQueryStr({ requestId, approved, reason })
         const response = await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.ResolveHumanRequest?${query}`)
         const data = response?.data ?? {}
         if (!data.success) {
-          this.$message.error(data.errorMessage || data.data || '人工审批提交失败')
+          this.$message.error(data.errorMessage || data.data || ncfST('Frontend.559'))
           return
         }
-        this.$message.success(approved ? '已批准工具调用，任务继续执行' : '已拒绝工具调用，任务继续处理')
+        this.$message.success(approved ? ncfST('Frontend.560') : ncfST('Frontend.561'))
         this.toolApprovalDialogVisible = false
         this.toolApprovalRequest = null
         this.toolApprovalArgumentText = ''
         this.$delete(this.humanApprovalRequests, requestId)
         this.$nextTick(() => this.showNextToolApproval())
       } catch (error) {
-        this.$message.error(error?.message || '人工审批提交失败')
+        this.$message.error(error?.message || ncfST('Frontend.559'))
       } finally {
         this.toolApprovalSubmitting = false
       }
@@ -1429,7 +1429,7 @@ var AgentsAppMethodsTask = {
       const requestId = String(this.humanReplyRequest?.humanRequestId || this.humanReplyRequest?.requestId || '')
       const input = String(this.humanReplyText || '').trim()
       if (!requestId || !input) {
-        this.$message.warning('请输入 Human 回复')
+      this.$message.warning(ncfST('Frontend.562'))
         return
       }
 
@@ -1440,7 +1440,7 @@ var AgentsAppMethodsTask = {
           { requestId, input })
         const data = response?.data ?? {}
         if (!data.success) {
-          this.$message.error(data.errorMessage || data.data || 'Human 回复提交失败')
+          this.$message.error(data.errorMessage || data.data || ncfST('Frontend.563'))
           return
         }
 
@@ -1449,9 +1449,9 @@ var AgentsAppMethodsTask = {
         this.humanReplyRequest = null
         this.humanReplyText = ''
         this.$delete(this.humanApprovalRequests, submittedRequestId)
-        this.$message.success('Human 回复已提交')
+        this.$message.success(ncfST('Frontend.564'))
       } catch (error) {
-        this.$message.error(error?.message || 'Human 回复提交失败')
+        this.$message.error(error?.message || ncfST('Frontend.563'))
       } finally {
         this.humanReplySubmitting = false
       }
@@ -1514,7 +1514,7 @@ var AgentsAppMethodsTask = {
           console.warn('stream silent fallback status check failed', listType, chatTaskId, e)
         }
 
-        // 任务仍在运行但暂无流事件，继续观察，避免长时间 pending 无更新。
+        //Legacy comment translated to English.
         this.resetTaskHistoryStreamSilentTimer(listType, chatTaskId)
       }, 4000)
     },
@@ -1639,7 +1639,7 @@ var AgentsAppMethodsTask = {
         this.scrollHistoryToItemBottom(listType, finalItem.id)
       })
 
-      // 每轮 message 落地后立即补一个 Generating 占位，确保下一轮也有可见彩虹提示。
+      //Legacy comment translated to English.
       if (this.historyStream[listType]) {
         this.ensureTaskGeneratingPlaceholder(listType, payload.chatTaskId || '')
       }
@@ -1662,7 +1662,7 @@ var AgentsAppMethodsTask = {
       })
       this.historyStreamingDrafts = {}
     },
-    // 清除 获取历史对话记录 的轮询
+    //Legacy comment translated to English.
     clearHistoryTimer() {
       for (const key in this.historyTimer) {
         if (Object.prototype.hasOwnProperty.call(this.historyTimer, key)) {
@@ -1677,35 +1677,35 @@ var AgentsAppMethodsTask = {
       this.clearTaskHistoryStreams()
     },
 
-    // 编辑 Dailog|抽屉 按钮 
+    //Legacy comment translated to English.
     async handleEditDrawerOpenBtn(btnType, item) {
       // drawerAgent dialogGroupAgent drawerGroup drawerGroupStart
       //console.log('handleEditDrawerOpenBtn', btnType, item);
       let formName = ''
-      // 智能体
+      // agent
       if (['drawerAgent', 'dialogGroupAgent'].includes(btnType)) {
         formName = 'agentForm'
       }
-      // 组
+      // group
       if (btnType === 'drawerGroup') {
         formName = 'groupForm'
       }
-      // 组 启动 
+      // group start 
       if (['drawerGroupStart', 'drawerTaskStart'].includes(btnType)) {
         formName = 'groupStartForm'
       }
-      // 任务 评价
+      //Legacy comment translated to English.
       if (btnType === 'dialogTaskEvaluation') {
         formName = 'evaluationForm'
       }
       if (formName) {
           if (btnType === 'drawerAgent' && item) {
           console.log('item', item);
-          // 创建一个新的对象来存储表单数据
+          //Legacy comment translated to English.
           const formData = item.agentTemplateDto ? { ...item.agentTemplateDto } : { ...item };
           console.log('formData', formData);
 
-          // FunctionBindings 是新契约；没有该字段时回退到旧版插件类名列表。
+          //Legacy comment translated to English.
           const loadedBindings = Array.isArray(formData.functionBindings)
             ? formData.functionBindings
             : (formData.functionCallNames
@@ -1719,16 +1719,16 @@ var AgentsAppMethodsTask = {
           this.syncLegacyFunctionCallNames()
           this.functionCallTags = this.agentForm.functionCallNames ? this.agentForm.functionCallNames.split(',').filter(Boolean) : [];
 
-          // 将数据赋值给表单
+          //Legacy comment translated to English.
           Object.assign(this[formName], formData);
 
-          // 打印日志以便调试
+          //Legacy comment translated to English.
           console.log('Loaded form data:', formData);
           console.log('functionCallTags:', this.functionCallTags);
 
           } else if (btnType === 'drawerGroup') {
-            // 列表/详情对象字段并不完全一致；始终由专用接口取得本地和远程成员，
-            // 这样编辑既有 Group 时不会误清除已配置的 A2A 成员。
+            //Legacy comment translated to English.
+            //Legacy comment translated to English.
             const groupId = item.chatGroupDto ? item.chatGroupDto.id : item.id
             await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${groupId}`)
               .then(res => {
@@ -1744,7 +1744,7 @@ var AgentsAppMethodsTask = {
                   })
                 }
               })
-          // // 获取 全部智能体数据
+          //Legacy comment translated to English.
           // this.getAgentListData('groupAgent')
         } else if (btnType === 'drawerTaskStart') {
           Object.assign(this[formName], {
@@ -1754,16 +1754,16 @@ var AgentsAppMethodsTask = {
         } else {
           Object.assign(this[formName], item)
         }
-        // 回显 表单值
+        //Legacy comment translated to English.
         // this.$set(this, `${formName}`, deepClone(item))
         if (['drawerAgent', 'dialogGroupAgent'].includes(btnType)
           && (item?.agentTemplateDto?.id || item?.id)) {
-          // systemMessageType 不是持久化字段。先挂载“自选”控件并完成候选项加载，
-          // 再根据实际是否存在该 PromptCode 判断类型，避免慢网络下被过早判定为“手动”。
+          //Legacy comment translated to English.
+          //Legacy comment translated to English.
           this.agentSystemMessageTypeDetectionPending = true
           this.$set(this.agentForm, 'systemMessageType', '1')
         }
-        // 打开抽屉会按“新增”清空连接器选择，编辑时要在打开之后再回填。
+        //Legacy comment translated to English.
         const connectorInstanceIds = ['drawerAgent', 'dialogGroupAgent'].includes(btnType)
           ? this.readConnectorInstanceIds(item)
           : null

@@ -1,4 +1,17 @@
-﻿using Senparc.Ncf.Core.Enums;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: ColorService.cs
+    File description: ColorService related implementation
+
+    Created by: Senparc - 20200820
+
+    Modified by: Senparc - 20261119
+    Change description: v1.1.15 Updated module behavior, localization metadata, and English source comments
+
+----------------------------------------------------------------*/
+
+using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
 using Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dto;
@@ -25,9 +38,9 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
         public async Task<ColorDto> GetOrInitColor()
         {
             var color = await base.GetObjectAsync(z => true);
-            if (color == null)//如果是纯第一次安装，理论上不会有残留数据
+            if (color == null)//Legacy comment translated to English.
             {
-                //创建默认颜色
+                //create default colors
                 ColorDto colorDto = await this.CreateNewColor().ConfigureAwait(false);
                 return colorDto;
             }
@@ -37,7 +50,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
 
         public async Task<ColorDto> Brighten()
         {
-            //TODO:异步方法需要添加排序功能
+            //TODO: add sorting to the asynchronous method
             var obj = await this.GetObjectAsync(z => true, z => z.Id, OrderingType.Descending);
             obj.Brighten();
             await base.SaveObjectAsync(obj).ConfigureAwait(false);
@@ -46,7 +59,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
 
         public async Task<ColorDto> Darken()
         {
-            //TODO:异步方法需要添加排序功能
+            //TODO: add sorting to the asynchronous method
             var obj = await this.GetObjectAsync(z => true, z => z.Id, OrderingType.Descending);
             obj.Darken();
             await base.SaveObjectAsync(obj).ConfigureAwait(false);
@@ -55,13 +68,13 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
 
         public async Task<ColorDto> Random()
         {
-            //TODO:异步方法需要添加排序功能
+            //TODO: add sorting to the asynchronous method
             var obj = await this.GetObjectAsync(z => true, z => z.Id, OrderingType.Descending);
             obj.Random();
             await base.SaveObjectAsync(obj).ConfigureAwait(false);
             return base.Mapper.Map<ColorDto>(obj);
         }
 
-        //TODO: 更多业务方法可以写到这里
+        //TODO: more business methods can be added here
     }
 }

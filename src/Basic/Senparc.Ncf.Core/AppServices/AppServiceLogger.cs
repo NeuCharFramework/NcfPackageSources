@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：AppServiceLogger.cs
-    文件功能描述：AppServiceLogger 相关实现
-    
-    
-    创建标识：Senparc - 20211014
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: AppServiceLogger.cs
+    File description: AppServiceLogger related implementation
+
+    Created by: Senparc - 20211014
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -20,7 +23,7 @@ using System.Text;
 namespace Senparc.Ncf.Core.AppServices
 {
     /// <summary>
-    /// AppService 日志处理
+    /// AppService Log Handling
     /// </summary>
     public class AppServiceLogger
     {
@@ -47,7 +50,7 @@ namespace Senparc.Ncf.Core.AppServices
         {
             string logs = GetLogs();
 
-            //确保能够处理中文字符
+            //Ensure that Chinese characters can be handled
             byte[] utf8Bytes = Encoding.UTF8.GetBytes(logs);
             string utf8String = Encoding.UTF8.GetString(utf8Bytes);
 

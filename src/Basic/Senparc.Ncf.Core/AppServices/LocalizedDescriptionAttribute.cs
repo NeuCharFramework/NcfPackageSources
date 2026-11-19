@@ -1,14 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：LocalizedDescriptionAttribute.cs
-    文件功能描述：LocalizedDescriptionAttribute 相关实现
-    
-    
-    创建标识：Senparc - 20260717
-    
-    修改标识：Senparc - 20260717
-    修改描述：v0.25.0-preview2 新增统一资源本地化基础设施并支持 FunctionRender 动态文案
+
+    File name: LocalizedDescriptionAttribute.cs
+    File description: LocalizedDescriptionAttribute related implementation
+
+    Created by: Senparc - 20260717
+
+    Modified by: Senparc - 20260717
+    Change description: v0.25.0-preview2 add unify resource localization base facilities and support FunctionRender dynamic text
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 using Senparc.Ncf.Core.Localization;
@@ -30,6 +33,8 @@ namespace Senparc.Ncf.Core.AppServices
 
         public string ResourceKey { get; }
 
+        public string HelpResourceKey { get; }
+
         public LocalizedDescriptionAttribute(
             Type resourceType,
             string resourceKey,
@@ -42,7 +47,22 @@ namespace Senparc.Ncf.Core.AppServices
                 : resourceKey;
         }
 
+        public LocalizedDescriptionAttribute(
+            Type resourceType,
+            string resourceKey,
+            string helpResourceKey,
+            string fallback = null)
+            : this(resourceType, resourceKey, fallback)
+        {
+            HelpResourceKey = string.IsNullOrWhiteSpace(helpResourceKey)
+                ? throw new ArgumentException("A help resource key is required.", nameof(helpResourceKey))
+                : helpResourceKey;
+        }
+
         public override string Description =>
-            ResourceStringLocalizer.Get(ResourceType, ResourceKey, base.Description);
+            string.IsNullOrWhiteSpace(HelpResourceKey)
+                ? ResourceStringLocalizer.Get(ResourceType, ResourceKey, base.Description)
+                : $"{ResourceStringLocalizer.Get(ResourceType, ResourceKey, base.Description)}||" +
+                  ResourceStringLocalizer.Get(ResourceType, HelpResourceKey, string.Empty);
     }
 }

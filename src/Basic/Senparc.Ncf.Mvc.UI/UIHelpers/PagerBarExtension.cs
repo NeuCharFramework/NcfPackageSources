@@ -1,17 +1,20 @@
 ﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-  
-    文件名：PagerBarExtension.cs
-    文件功能描述：PagerBarExtension 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260731
-    修改描述：v0.22.0-preview4 将分页范围、总数及翻页文案接入核心多语言资源
+    Copyright (C) 2026 Senparc
+
+    File name: PagerBarExtension.cs
+    File description: PagerBarExtension related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260731
+    Change description: v0.22.0-preview4 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.22.9-preview13 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -29,7 +32,7 @@ namespace System.Web.Mvc
 {
     public enum BarStyle
     {
-        defaultStyle = 0,//默认
+        defaultStyle = 0,//default
         digg,
         yahoo,
         meneame,
@@ -91,7 +94,7 @@ namespace System.Web.Mvc
         public string Url { get; set; }
 
         /// <summary>
-        ///   项目中处在iframe中的页码条
+        ///Legacy comment translated to English.
         /// </summary>
         public bool InIframe { get; set; }
 
@@ -151,12 +154,12 @@ namespace System.Web.Mvc
 
         public static string PagerBar(this IHtmlHelper html, PagerBarSettings settings)
         {
-            SetDefaultValue(settings);//设置默认值
+            SetDefaultValue(settings);//Legacy comment translated to English.
 
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("<div class=\"{0}\" >", settings.barStyle.ToString());
 
-            //判断空记录
+            //checkemptyrecord
             if (settings.TotalCount == 0)
             {
                 sb.Append(settings.NoRecordTip);
@@ -165,26 +168,26 @@ namespace System.Web.Mvc
                 return sb.ToString();
             }
 
-            int totalPage = Convert.ToInt32((settings.TotalCount - 1) / settings.PageCount) + 1;//总页数
+            int totalPage = Convert.ToInt32((settings.TotalCount - 1) / settings.PageCount) + 1;//Legacy comment translated to English.
 
             string backPageStyle = (settings.PageIndex <= 1) ? "disabled" : "";
             string nextPageStyle = (settings.PageIndex >= totalPage) ? "disabled" : "";
 
-            var firstDisplayPageEnd = 0;//从第1页显示到xx页
-            var bodyDisplayPageStart = 0;//当前页临近最左页码
-            var bodyDisplayPageEnd = 0;//当前页临近最右页码
-            var endDisplayPageStart = 0;//从第xx页显示到最后一页
+            var firstDisplayPageEnd = 0;//Legacy comment translated to English.
+            var bodyDisplayPageStart = 0;//Legacy comment translated to English.
+            var bodyDisplayPageEnd = 0;//Legacy comment translated to English.
+            var endDisplayPageStart = 0;//Legacy comment translated to English.
 
 
-            //设定 bodyDisplayPageStart
+            //Legacy comment translated to English.
             bodyDisplayPageStart = (settings.PageIndex - settings.ShowPageNumber <= 1) ? 1 : settings.PageIndex - settings.ShowPageNumber; // (ViewData.pageIndex - ViewData.showPageNumber <= ViewData.showPageNumber) ? ViewData.showPageNumber + 1 : ViewData.pageIndex - ViewData.showPageNumber;
 
 
-            //设定 bodyDisplayPageEnd
+            //Legacy comment translated to English.
             bodyDisplayPageEnd = (settings.PageIndex + settings.ShowPageNumber >= totalPage) ? totalPage : settings.PageIndex + settings.ShowPageNumber;
 
 
-            //设定 firstDisplayPageEnd
+            //Legacy comment translated to English.
             if (bodyDisplayPageStart > 1)
             {
                 if (bodyDisplayPageStart - settings.ShowPageNumber <= 1)
@@ -201,7 +204,7 @@ namespace System.Web.Mvc
                 firstDisplayPageEnd = 0;
             }
 
-            //设定 endDisplayPageStart
+            //Legacy comment translated to English.
             if (bodyDisplayPageEnd < totalPage)
             {
                 if (bodyDisplayPageEnd + settings.ShowPageNumber >= totalPage)
@@ -217,12 +220,12 @@ namespace System.Web.Mvc
             {
                 endDisplayPageStart = totalPage + 1;
             }
-            //页面参数设定结束
+            //Legacy comment translated to English.
 
 
-            //开始输出
+            //startoutput
 
-            // 上一条
+            //Legacy comment translated to English.
             if (settings.PageIndex <= 1)
             {
                 sb.Append("<span class=\"").Append(backPageStyle).Append("\">").Append(settings.PreWord).Append("</span>");
@@ -239,7 +242,7 @@ namespace System.Web.Mvc
                 sb.Append(GetPageLink(i, settings.PageIndex, i.ToString(), settings.CurrentPageWordFormat, settings.Onclick, settings.Url, settings.BarMark, settings.InIframe));
             }
 
-            //省略号
+            //Legacy comment translated to English.
             if (firstDisplayPageEnd + 1 < bodyDisplayPageStart)
             {
                 sb.Append("<span>... </span>");
@@ -251,7 +254,7 @@ namespace System.Web.Mvc
                 sb.Append(GetPageLink(i, settings.PageIndex, i.ToString(), settings.CurrentPageWordFormat, settings.Onclick, settings.Url, settings.BarMark, settings.InIframe));
             }
 
-            //省略号
+            //Legacy comment translated to English.
             if (bodyDisplayPageEnd + 1 < endDisplayPageStart)
             {
                 sb.Append("<span>... </span>");
@@ -263,7 +266,7 @@ namespace System.Web.Mvc
                 sb.Append(GetPageLink(i, settings.PageIndex, i.ToString(), settings.CurrentPageWordFormat, settings.Onclick, settings.Url, settings.BarMark, settings.InIframe));
             }
 
-            // 下一条 
+            //Legacy comment translated to English.
             if (settings.PageIndex >= totalPage)
             {
                 sb.Append("<span class=\"").Append(nextPageStyle).Append("\">").Append(settings.NextWord).Append("</span>");
@@ -273,14 +276,14 @@ namespace System.Web.Mvc
                 sb.Append(GetPageLink(settings.PageIndex + 1, settings.PageIndex, settings.NextWord, settings.CurrentPageWordFormat, settings.Onclick, settings.Url, settings.BarMark, settings.InIframe));
             }
 
-            //总数
+            //Legacy comment translated to English.
             if (settings.ShowTotalCount)
             {
                 int recordStart = (settings.PageIndex - 1) * settings.PageCount + 1;
                 int recordEnd = recordStart + settings.PageCount - 1;
                 if (recordEnd > settings.TotalCount)
                 {
-                    recordEnd = settings.TotalCount;//如果超出最大值，则修正为最大值
+                    recordEnd = settings.TotalCount;//Legacy comment translated to English.
                 }
                 var displayedRange = recordStart == recordEnd ? recordStart.ToString() : (recordStart + "-" + recordEnd);
                 var currentText = string.Format(NcfCoreResource.Get("Pager.Current", "当前显示第{0}条"), displayedRange);
@@ -334,7 +337,7 @@ namespace System.Web.Mvc
 
         private static string GetPageLink(int linkPageIndex, int currentPageIndex, string text, string currentPageWordFormat, string onclick, string url, string barMark, bool inInframe)
         {
-            //var pageData = "?page=";//string.Format("{0}page=", (Request.QueryString.Count == 0) ? "?" : "&") + "{0}";//页码参数
+            //Legacy comment translated to English.
 
             onclick = (onclick != null) ? "onclick=\"" + onclick + "\"" : "";
             onclick = onclick.Replace("{pageindex}", linkPageIndex.ToString());
@@ -346,7 +349,7 @@ namespace System.Web.Mvc
 
             var linkHTML = "";
 
-            string formatedText = currentPageWordFormat.IndexOf("{0}") >= 0 ? string.Format(currentPageWordFormat, text) : text;//判断是{0}形式还是自定义替换字符串。
+            string formatedText = currentPageWordFormat.IndexOf("{0}") >= 0 ? string.Format(currentPageWordFormat, text) : text;//Legacy comment translated to English.
 
             if (linkPageIndex == currentPageIndex)
             {

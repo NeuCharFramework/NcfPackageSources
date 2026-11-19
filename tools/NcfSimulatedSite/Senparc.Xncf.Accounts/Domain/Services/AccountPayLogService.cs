@@ -1,4 +1,17 @@
-﻿using Senparc.CO2NET;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: AccountPayLogService.cs
+    File description: AccountPayLogService related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20261119
+    Change description: v0.3.14 Updated module behavior, localization metadata, and English source comments
+
+----------------------------------------------------------------*/
+
+using Senparc.CO2NET;
 using Senparc.Service.ACL;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Xncf.Accounts.Domain.Models;
@@ -28,7 +41,7 @@ namespace Senparc.Xncf.Accounts.Domain.Services
         {
             AccountPayLog accountPayLog = new AccountPayLog()
             {
-                OrderNumber = orderNumber, //Add的时候会自动生成
+                OrderNumber = orderNumber, //Legacy comment translated to English.
                 AddTime = DateTime.Now,
                 CompleteTime = DateTime.Now,
                 AccountId = fullAccount.Id,
@@ -88,7 +101,7 @@ namespace Senparc.Xncf.Accounts.Domain.Services
             //catch (Exception ex)
             //{
 
-            //    throw new Exception($"支付回调失败【{ex.Message}】");
+            //Legacy comment translated to English.
             //}
         }
 

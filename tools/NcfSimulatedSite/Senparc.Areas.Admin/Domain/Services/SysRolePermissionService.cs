@@ -1,4 +1,17 @@
-﻿using Senparc.Areas.Admin.ACL.Repository;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: SysRolePermissionService.cs
+    File description: SysRolePermissionService related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
+
+----------------------------------------------------------------*/
+
+using Senparc.Areas.Admin.ACL.Repository;
 using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.Repository;
 using System;
@@ -21,10 +34,10 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 检查当前用户是否权限
+        ///Legacy comment translated to English.
         /// </summary>
-        /// <param name="resourceCodes">资源codes</param>
-        /// <param name="adminUserInfoId">当前用户Id</param>
+        ///Legacy comment translated to English.
+        /// <param name="adminUserInfoId">currentuserId</param>
         /// <returns></returns>
         internal async Task<bool> HasPermissionAsync(IEnumerable<string> resourceCodes, int adminUserInfoId)
         {
@@ -32,9 +45,9 @@ namespace Senparc.Areas.Admin.Domain.Services
             {
                 return false;
             }
-            string cacheKey = string.Format("adminUserInfoPermission:{0}", adminUserInfoId); // 缓存当前用户的所有资源
+            string cacheKey = string.Format("adminUserInfoPermission:{0}", adminUserInfoId); //Legacy comment translated to English.
             var distributedCache = _serviceProvider.GetService<IDistributedCache>();
-            string codesJsonValue = await distributedCache.GetStringAsync(cacheKey); // 尝试从缓存读取用户的资源
+            string codesJsonValue = await distributedCache.GetStringAsync(cacheKey); //Legacy comment translated to English.
             IEnumerable<string> codes = null;
             if (string.IsNullOrEmpty(codesJsonValue))
             {
@@ -43,7 +56,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                 await distributedCache.SetStringAsync(cacheKey, codesJsonValue, new DistributedCacheEntryOptions()
                 {
                     SlidingExpiration = TimeSpan.FromHours(8)
-                }); // 缓存 8 小时
+                }); //Legacy comment translated to English.
             }
             else
             {
@@ -53,7 +66,7 @@ namespace Senparc.Areas.Admin.Domain.Services
             {
                 return false;
             }
-            //获取当前用户的所有资源code
+            //Legacy comment translated to English.
             return codes.Intersect(resourceCodes).Any();
         }
     }

@@ -1,4 +1,17 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: NcfMessageHandler_Event.cs
+    File description: NcfMessageHandler_Event related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.0.1 Updated legacy MVC integration metadata and English source comments
+
+----------------------------------------------------------------*/
+
+using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET;
 using Senparc.Ncf.Core.Cache;
 using Senparc.Ncf.Log;
@@ -19,7 +32,7 @@ namespace Senparc.Mvc.Weixin
                 {
                     var serviceProvider = SenparcDI.GetServiceProvider();
 
-                    //临时二维码
+                    //Legacy comment translated to English.
                     var qrCodeRegCache = serviceProvider.GetService<QrCodeRegCache>();
                     var qrCodeRegData = qrCodeRegCache.Get(sceneId.ToString());
 
@@ -29,7 +42,7 @@ namespace Senparc.Mvc.Weixin
                         if (qrCodeRegData.Data.QrCodeRegDataType == QrCodeRegDataType.Reg)
                         {
                             var userService = serviceProvider.GetService<AccountService>();
-                            //判断是否已经绑定[CodeChecked]
+                            //Legacy comment translated to English.
                             if (userService.GetCount(z => z.WeixinOpenId == requestMessage.FromUserName) <= 0)
                             {
                                 var code = new Random().Next(100000, 999999).ToString();

@@ -1,18 +1,19 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：NeuBellWebHookDispatcherTests.cs
-    文件功能描述：NeuBell WebHook 分发器测试：
-    基线建立、新增/移除检测、Provider 过滤、签名与测试事件
+    File name: NeuBellWebHookDispatcherTests.cs
+    File description: Related implementation.
+    Legacy comment translated to English.
+    Legacy comment translated to English.
 
-    创建标识：Senparc - 20260906
+    Created by: Senparc - 20260906
 
-    修改标识：Senparc - 20260911
-    修改描述：v0.7.1 新增 WebHook 请求日志（NeuBellWebHookLog）测试
+    Modified by: Senparc - 20260911
+    Change description: v0.7.1 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260914
-    修改描述：v0.7.1 适配请求方式（GET/POST/PUT）、请求体模板与 {{占位符}} 渲染；
-    新增 GET 无请求体/无签名、模板渲染、渲染后地址二次校验与日志成功状态回归测试
+    Modified by: Senparc - 20260914
+    Change description: v0.7.1 Updated module behavior and related support.
 
 ----------------------------------------------------------------*/
 
@@ -68,7 +69,7 @@ public class NeuBellWebHookDispatcherTests
         Assert.AreEqual(2, changes[0].Added.Count);
         await handler.WaitUntilAsync(1);
 
-        // 只有“全部 Provider + 允许新增”的 hook-all 收到通知
+        //Legacy comment translated to English.
         CollectionAssert.Contains(
             handler.Requests.Select(request => request.Url).ToList(),
             "https://example.com/hook-all");
@@ -124,14 +125,14 @@ public class NeuBellWebHookDispatcherTests
         });
 
         await dispatcher.ObserveAsync(new[] { Snapshot("provider-a", ("item-1", "任务一")) }, new[] { "provider-a" });
-        // 本轮快照获取失败（provider 仍在 expected 中）：保留基线，不误报移除
+        //Legacy comment translated to English.
         var changes = await dispatcher.ObserveAsync(Array.Empty<NeuBellSnapshot>(), new[] { "provider-a" });
 
         Assert.AreEqual(0, changes.Count);
         await Task.Delay(200);
         Assert.AreEqual(0, handler.Requests.Count);
 
-        // 恢复后只把真正的差集报为新增
+        //Legacy comment translated to English.
         var recovered = await dispatcher.ObserveAsync(
             new[] { Snapshot("provider-a", ("item-1", "任务一"), ("item-2", "任务二")) },
             new[] { "provider-a" });
@@ -149,7 +150,7 @@ public class NeuBellWebHookDispatcherTests
         });
 
         await dispatcher.ObserveAsync(new[] { Snapshot("provider-a", ("item-1", "任务一")) }, new[] { "provider-a" });
-        // 模块被关闭（不在 expected 中）：存量条目按移除通知
+        //Legacy comment translated to English.
         var changes = await dispatcher.ObserveAsync(Array.Empty<NeuBellSnapshot>(), Array.Empty<string>());
 
         Assert.AreEqual(1, changes.Count);
@@ -167,7 +168,7 @@ public class NeuBellWebHookDispatcherTests
         });
 
         await dispatcher.ObserveAsync(new[] { Snapshot("provider-a", ("item-1", "任务一")) });
-        // expectedProviderIds 为 null（无法判定开放状态）：缺席一律不做移除判断
+        //Legacy comment translated to English.
         var changes = await dispatcher.ObserveAsync(Array.Empty<NeuBellSnapshot>());
 
         Assert.AreEqual(0, changes.Count);
@@ -286,14 +287,14 @@ public class NeuBellWebHookDispatcherTests
             "provider-a",
             adminUserId: 7);
 
-        // 快速落日志：调用方无需等待 HTTP 即可完成
+        //Legacy comment translated to English.
         Assert.IsTrue(await logFake.WaitUntilPendingAsync(1), "应快速创建“发送中”日志");
         var pending = logFake.Pending.Single();
         Assert.AreEqual(NeuBellWebHookDispatcher.EventKindItemCreated, pending.EventKind);
         Assert.AreEqual("https://example.com/item-hook", pending.WebHookUrl);
         Assert.AreEqual("任务一", pending.Title);
         Assert.AreEqual(7, pending.AdminUserId);
-        // 报文为 JSON（非 ASCII 可能被 \uXXXX 转义），按 JSON 语义校验
+        //Legacy comment translated to English.
         using (var pendingDoc = JsonDocument.Parse(pending.Payload))
         {
             Assert.AreEqual("NeuBell", pendingDoc.RootElement.GetProperty("source").GetString());
@@ -481,7 +482,7 @@ public class NeuBellWebHookDispatcherTests
         Assert.AreEqual("POST", pending.HttpMethod);
         using var logDoc = JsonDocument.Parse(pending.Payload);
         Assert.AreEqual("[NeuBell] 任务一（info）", logDoc.RootElement.GetProperty("text").GetString());
-        // 回归：成功发送后日志应标记成功，而不是“请求未完成”
+        //Legacy comment translated to English.
         Assert.IsTrue(await logFake.WaitUntilCompletedAsync(1));
         var completed = logFake.Completed.Single();
         Assert.IsTrue(completed.Success, $"成功发送应记录为 success（实际：{completed.StatusCode}）");
@@ -509,7 +510,7 @@ public class NeuBellWebHookDispatcherTests
     [TestMethod]
     public async Task ObserveAsync_InvalidRenderedUrl_ShouldLogFailureWithoutHttp()
     {
-        // 模板本身合法（占位符被掩码为 x 后可解析），但渲染后成为无主机的非法地址
+        //Legacy comment translated to English.
         var (dispatcher, handler, _, logFake) = CreateDispatcher(new()
         {
             CreateHook("hook-bad-render", "https://{{unknownToken}}/hook")
@@ -833,7 +834,7 @@ public class NeuBellWebHookDispatcherTests
                 : await request.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
             _requests.Enqueue(new CapturedRequest
             {
-                // AbsoluteUri 保留 URL 的原始百分号编码（ToString 会解码）
+                //Legacy comment translated to English.
                 Url = request.RequestUri?.AbsoluteUri,
                 Method = request.Method.Method,
                 Body = body,

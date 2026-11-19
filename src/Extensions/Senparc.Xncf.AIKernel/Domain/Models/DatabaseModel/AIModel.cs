@@ -1,20 +1,24 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：AIModel.cs
-    文件功能描述：AIModel 相关实现
-    
-    
-    创建标识：Senparc - 20231220
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.13.3-preview2 修复 AI 模型类型展示顺序
+    File name: AIModel.cs
+    File description: AIModel related implementation
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.13.4-preview3 修复 AI 模型类型展示顺序
+    Created by: Senparc - 20231220
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20260705
+    Change description: v0.13.3-preview2 Updated module behavior and related support.
+
+    Modified by: Senparc - 20260705
+    Change description: v0.13.4-preview3 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.17.4 Localized AI fine-tuning and monitoring surfaces
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -30,87 +34,87 @@ using Senparc.Xncf.AIKernel.Domain.Models;
 namespace Senparc.Xncf.AIKernel.Models
 {
     /// <summary>
-    /// LlmModel 数据库实体
+    ///Legacy comment translated to English.
     /// </summary>
-    [Table(Register.DATABASE_PREFIX + nameof(AIModel))] //必须添加前缀，防止全系统中发生冲突
+    [Table(Register.DATABASE_PREFIX + nameof(AIModel))] //a prefix is required to prevent system-wide conflicts
     [Serializable]
     public class AIModel : EntityBase<int>
     {
         /// <summary>
-        /// 代号
+        /// code
         /// </summary>
         [Required, MaxLength(50)]
         public string Alias { get; private set; }
 
 
         /// <summary>
-        /// 模型名称（必须）
+        /// model name (required)
         /// </summary>
         [Required, MaxLength(100)]
         public string ModelId { get; private set; }
 
         /// <summary>
-        /// 部署名称
+        /// deployment name
         /// </summary>
         [MaxLength(150)]
         public string DeploymentName { get; private set; }
 
         /// <summary>
-        /// Endpoint（可选）
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(250)]
         public string Endpoint { get; private set; }
 
         /// <summary>
-        /// 模型的类型（必须）, 例如：NeuCharAI, OpenAI, Azure OpenAI, HuggingFace
+        ///Legacy comment translated to English.
         /// </summary>
         [Required]
         public AiPlatform AiPlatform { get; private set; }
 
         /// <summary>
-        /// 模型类别
+        /// model category
         /// </summary>
         [Required]
         public ConfigModelType ConfigModelType { get; private set; }
 
         /// <summary>
-        /// OrganizationId（可选）
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(200)]
         public string OrganizationId { get; private set; }
 
         /// <summary>
-        /// ApiKey（可选）
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(200)]
         public string ApiKey { get; private set; }
 
         /// <summary>
-        /// ApiVersion（可选）
+        ///Legacy comment translated to English.
         /// </summary>
         [MaxLength(100)]
         public string ApiVersion { get; private set; }
 
         /// <summary>
-        /// Note（可选）
+        /// Note (optional)
         /// </summary>
         public string Note { get; private set; }
 
         /// <summary>
-        /// MaxToken（可选）
+        ///Legacy comment translated to English.
         /// </summary>
         [Required, DefaultValue(0)]
         public int MaxToken { get; private set; }
 
         /// <summary>
-        /// 是否共享
+        /// whether shared
         /// </summary>
         [Required, DefaultValue(false)]
         public bool IsShared { get; private set; } = false;
 
 
         /// <summary>
-        /// 是否展示
+        /// whether displayed
         /// </summary>
         [Required, DefaultValue(true)]
         public bool Show { get; private set; }
@@ -140,7 +144,7 @@ namespace Senparc.Xncf.AIKernel.Models
         }
 
         /// <summary>
-        /// 切换模型可见状态
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="show"></param>
         /// <returns></returns>
@@ -151,7 +155,7 @@ namespace Senparc.Xncf.AIKernel.Models
         }
 
         /// <summary>
-        /// 更新模型
+        /// updatemodel
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>

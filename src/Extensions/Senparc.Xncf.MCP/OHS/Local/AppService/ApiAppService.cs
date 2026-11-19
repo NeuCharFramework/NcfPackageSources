@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：ApiAppService.cs
-    文件功能描述：ApiAppService 相关实现
-    
-    
-    创建标识：Senparc - 20250325
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: ApiAppService.cs
+    File description: ApiAppService related implementation
+
+    Created by: Senparc - 20250325
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.5.14 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -30,13 +33,17 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         }
 
         /*
-         * 使用 [ApiBind] 可将任意方法或类快速创建动态 WebApi。
-         * 在 DDD 系统中，出于安全和防腐考虑，建议只在 AppService 上使用。
-         * 当 AppService 上添加 [ApiBind] 标签满足不了需求时，仍然可以手动创建 ApiController。
+
+         * Legacy comment translated to English.
+
+         * Legacy comment translated to English.
+
+         * Legacy comment translated to English.
+
          */
 
         /// <summary>
-        /// 将 AppService 暴露为 WebApi
+        /// expose AppService as a Web API
         /// </summary>
         /// <returns></returns>
         [ApiBind]
@@ -50,13 +57,13 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 自定义 Post 类型和复杂参数，同时测试异常抛出和自定义状态码
+        /// custom Post types and complex parameters while testing exception throwing and custom status codes
         /// </summary>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
         public async Task<StringAppResponse> MyCustomApi(Api_MyCustomApiRequest request)
         {
-            //StringAppResponse 是 AppResponseBase<string> 的快捷写法
+            //StringAppResponse is a shorthand for AppResponseBase<string>
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 throw new NcfExceptionBase($"抛出异常测试，传输参数：{request.FirstName} {request.LastName}");

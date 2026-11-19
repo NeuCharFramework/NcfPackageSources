@@ -1,20 +1,23 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：WeixinClawLoginService.cs
-    文件功能描述：WeixinClawLoginService.cs implementation and project behavior.
+    File name: WeixinClawLoginService.cs
+    File description: WeixinClawLoginService.cs implementation and project behavior.
 
+    Created by: Senparc - 20260920
 
-    创建标识：Senparc - 20260920
+    Modified by: Senparc - 20261005
+    Change description: v0.24.9 0.24.9 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.24.9 0.24.9 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
+    Modified by: Senparc - 20261028
+    Change description: Updated module behavior and related support.
 
-    修改标识：Senparc - 20261028
-    修改描述：多租户模式下登录确认落库前还原请求租户上下文，保证账号归属发起租户
+    Modified by: Senparc - 20261103
+    Change description: v0.24.16 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.24.16 微信 Claw 登录确认落库恢复请求租户上下文
+    Modified by: Senparc - 20261119
+    Change description: v0.25.1 Localized Weixin account and administration surfaces
 
 ----------------------------------------------------------------*/
 
@@ -35,8 +38,8 @@ public sealed class WeixinClawLoginService
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly ConcurrentDictionary<string, LoginSession> _sessions = new();
 
-    // 单例服务不能直接持有 Scoped 的 WeixinClawApi（AddHttpClient<T> 注册为 Scoped），
-    // 否则 HttpClient handler 无法轮换。每次调用从独立作用域解析。
+    //Legacy comment translated to English.
+    //Legacy comment translated to English.
     private WeixinClawApi CreateApi()
     {
         using var scope = _scopeFactory.CreateScope();

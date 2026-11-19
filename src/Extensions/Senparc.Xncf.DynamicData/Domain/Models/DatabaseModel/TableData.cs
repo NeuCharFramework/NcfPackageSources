@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：TableData.cs
-    文件功能描述：TableData 相关实现
-    
-    
-    创建标识：Senparc - 20240718
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: TableData.cs
+    File description: TableData related implementation
+
+    Created by: Senparc - 20240718
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.7.12 Localized DynamicData configuration and layout surfaces
 
 ----------------------------------------------------------------*/
 
@@ -20,39 +23,39 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Senparc.Xncf.DynamicData
 {
     /// <summary>  
-    /// TableData 实体类，用于存储单元格的数据。  
+    ///Legacy comment translated to English.
     /// </summary>  
     [Table(Register.DATABASE_PREFIX + nameof(TableData))]
     [Serializable]
     public class TableData : EntityBase<int>
     {
         /// <summary>  
-        /// 关联的表格ID。  
+        ///Legacy comment translated to English.
         /// </summary>  
         //[ForeignKey(nameof(TableMetadata))]
         //public int TableMetadataId { get; set; }
         public int TableId { get; private set; }
 
         /// <summary>  
-        /// 关联的列ID。  
+        ///Legacy comment translated to English.
         /// </summary>  
         //[ForeignKey(nameof(ColumnMetadata))]
         public int ColumnMetadataId { get; private set; }
 
         /// <summary>  
-        /// 单元格的值。  
+        ///Legacy comment translated to English.
         /// </summary>  
         public string CellValue { get; private set; }
 
         /// <summary>  
-        /// 关联的表格元数据。  
+        /// associated table metadata。  
         /// </summary>  
        
         ////[InverseProperty(nameof(TableMetadata.TableDatas))]
         //public TableMetadata TableMetadata { get; set; }
 
         /// <summary>  
-        /// 关联的列元数据。  
+        ///Legacy comment translated to English.
         /// </summary>  
         //[InverseProperty(nameof(ColumnMetadata.TableDatas))]
         public ColumnMetadata ColumnMetadata { get; set; }

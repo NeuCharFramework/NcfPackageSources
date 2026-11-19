@@ -254,7 +254,7 @@ async function run() {
         'The Footer Console must retain different diagnostics while suppressing only identical repeats.');
     unsubscribeConsole();
 
-    // 重复加载不得再次包装 Console 或重复注册全局 mixin。
+    //Legacy comment translated to English.
     vm.runInContext(script, context, { filename: scriptPath });
     assert.strictEqual(window.NcfAdminConsole, firstConsole);
     assert.strictEqual(mixinRegistrationCount, 1);
@@ -272,7 +272,7 @@ async function run() {
     assert.strictEqual(stateRequestCount, 1);
     assert.strictEqual(eventSourceCount, 1);
 
-    // SSE 刷新后，新增提醒应显示右下角 Toast，并增加 Footer 徽标。
+    //Legacy comment translated to English.
     stateProviders = [{
         providerId: 'test-provider',
         displayName: 'Test Provider',
@@ -294,7 +294,7 @@ async function run() {
     assert.ok(layoutRoot.neuBellToastTimers['test-provider:function-reminder']);
     assert.strictEqual(capturedMixin.computed.neuBellTotalCount.call(layoutRoot), 1);
 
-    // 支持消费的 Provider 可从抽屉消费本条提醒，并刷新状态、关闭右下角 Toast。
+    //Legacy comment translated to English.
     await layoutRoot.consumeNeuBell(layoutRoot.neuBellProviders[0], layoutRoot.neuBellProviders[0].items[0], false);
     await flushPromises();
     assert.strictEqual(stateRequestCount, 3);
@@ -305,7 +305,7 @@ async function run() {
     assert.strictEqual(layoutRoot.neuBellToastEntries.length, 0);
     assert.strictEqual(capturedMixin.computed.neuBellTotalCount.call(layoutRoot), 0);
 
-    // 同时出现多条提醒时最多展示 2 条；点击展开后可查看全部，关闭只影响视觉 Toast。
+    //Legacy comment translated to English.
     stateProviders = [{
         providerId: 'test-provider',
         displayName: 'Test Provider',
@@ -348,7 +348,7 @@ async function run() {
     assert.strictEqual(stateRequestCount, 5);
     assert.strictEqual(capturedMixin.computed.neuBellTotalCount.call(layoutRoot), 0);
 
-    // 即使出现第二个独立 Vue 根实例，也不能增加 state/SSE 通讯通道。
+    //Legacy comment translated to English.
     const duplicateLayoutRoot = createViewModel(layoutElement);
     capturedMixin.mounted.call(duplicateLayoutRoot);
     await flushPromises();
@@ -356,7 +356,7 @@ async function run() {
     assert.strictEqual(stateRequestCount, 5);
     assert.strictEqual(eventSourceCount, 1);
 
-    // 10 次连续点击服务器时间才创建全屏 Canvas；销毁时应立刻停止动画并移除 DOM。
+    //Legacy comment translated to English.
     for (let index = 0; index < 10; index++) {
         layoutRoot.handleFooterTimeClick();
     }
@@ -374,7 +374,7 @@ async function run() {
     assert.strictEqual(animationFrameCallbacks.size, 0);
     assert.ok(animationFrameCancelCount > 0);
 
-    // 原 Owner 销毁后允许新的真实布局根接管，兼容局部导航和测试环境重新挂载。
+    //Legacy comment translated to English.
     capturedMixin.mounted.call(duplicateLayoutRoot);
     await flushPromises();
     assert.strictEqual(duplicateLayoutRoot.footerCommunicationOwner, true);

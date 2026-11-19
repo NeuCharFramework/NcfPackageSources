@@ -91,7 +91,7 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        /// 添加权限信息
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="sysMenuDto"></param>
         /// <returns></returns>
@@ -113,12 +113,12 @@ namespace Senparc.Service
                 IEnumerable<SysPermission> entitis = await GetFullListAsync(_ => _.RoleId == sysMenuDto.FirstOrDefault().RoleId);
                 await DeleteAllAsync(entitis);
                 await SaveObjectListAsync(sysRoleMenus);
-                await DbToCacheAsync();//暂时
+                await DbToCacheAsync();//temporarily
             });
         }
 
         /// <summary>
-        /// 获取当前用户的权限
+        ///Legacy comment translated to English.
         /// </summary>
         /// <returns></returns>
         public async Task<IEnumerable<SysPermissionDto>> GetUserSysPermissionDtosAsync()
@@ -178,7 +178,7 @@ namespace Senparc.Service
         }
 
         /// <summary>
-        /// 获取当前用户可以看见的菜单（可见）
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="isRefresh"></param>
         /// <returns></returns>

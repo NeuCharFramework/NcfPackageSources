@@ -1,13 +1,17 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：AgentModelRequestDiagnostics.cs
-    文件功能描述：Agent 模型请求失败的脱敏诊断
+    File name: AgentModelRequestDiagnostics.cs
+    File description: Related implementation.
 
-    创建标识：Senparc - 20260827
+    Created by: Senparc - 20260827
 
-    修改标识：Senparc - 20260829
-    修改描述：v0.17.0 增强 Agent 请求诊断、ChatGroup 状态处理与工作流对象支持
+    Modified by: Senparc - 20260829
+    Change description: v0.17.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.19.4 Localized agent management and task surfaces
 
 ----------------------------------------------------------------*/
 

@@ -1,20 +1,23 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：NcfFolderService.cs
-    文件功能描述：NcfFolderService 相关实现
 
+    File name: NcfFolderService.cs
+    File description: NcfFolderService related implementation
 
-    创建标识：Senparc - 20251224
+    Created by: Senparc - 20251224
 
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.5.0-preview5 新增文件文本提取与文件管理服务
+    Modified by: Senparc - 20260804
+    Change description: v0.5.0-preview5 Updated module behavior and related support.
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.6.0-preview1 完善文件资源边界、安全删除策略与静态资源管理
+    Modified by: Senparc - 20260813
+    Change description: v0.6.0-preview1 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.8.5 Localized file management and upload surfaces
 
 ----------------------------------------------------------------*/
 

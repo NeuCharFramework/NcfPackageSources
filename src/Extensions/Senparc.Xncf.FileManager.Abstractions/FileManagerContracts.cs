@@ -1,20 +1,23 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：FileManagerContracts.cs
-    文件功能描述：FileManagerContracts.cs implementation and project behavior.
+    File name: FileManagerContracts.cs
+    File description: FileManagerContracts.cs implementation and project behavior.
 
+    Created by: Senparc - 20260930
 
-    创建标识：Senparc - 20260930
+    Modified by: Senparc - 20261005
+    Change description: v0.1.0 0.1.0 feat: enhance file management capabilities with new upload stream method and service registration
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.1.0 0.1.0 feat: enhance file management capabilities with new upload stream method and service registration
+    Modified by: Senparc - 20261021
+    Change description: v0.2.0 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261021
-    修改描述：v0.2.0 增加 FineTuning 文件资源类型
+    Modified by: Senparc - 20261103
+    Change description: v0.2.0 add FileId reference to AIFineTuningDataset and implement FineTuningFileReferenceProvider
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.2.0 add FileId reference to AIFineTuningDataset and implement FineTuningFileReferenceProvider
+    Modified by: Senparc - 20261119
+    Change description: v0.2.1 Localized file management and upload surfaces
 
 ----------------------------------------------------------------*/
 
@@ -46,7 +49,7 @@ public sealed record FileManagerImportRequest(
     string FileName,
     string ContentType,
     long Length,
-    string Description = null,
+    string? Description = null,
     FileManagerResourceKind ResourceKind = FileManagerResourceKind.SiteAsset);
 
 public sealed record FileManagerImportResult(

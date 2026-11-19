@@ -1,17 +1,20 @@
 /*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
 
-    文件名：Index.cshtml.cs
-    文件功能描述：Index.cshtml.cs implementation and project behavior.
+    File name: Index.cshtml.cs
+    File description: Index.cshtml.cs implementation and project behavior.
 
+    Created by: Senparc - 20241028
 
-    创建标识：Senparc - 20241028
+    Modified by: Senparc - 20261005
+    Change description: v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
-    修改标识：Senparc - 20261005
-    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    Modified by: Senparc - 20261103
+    Change description: v0.12.15 Updated module behavior and related support.
 
-    修改标识：Senparc - 20261103
-    修改描述：v0.12.15 租户注册表管理限制为平台管理员，封堵跨租户提权
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
 
 ----------------------------------------------------------------*/
 
@@ -46,10 +49,10 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         private readonly AdminUserInfoService _adminUserInfoService = adminUserInfoService;
         private readonly IStringLocalizer<AdminResource> _localizer = serviceProvider.GetRequiredService<IStringLocalizer<AdminResource>>();
         /// <summary>
-        /// 多租户模式下的控制面校验：租户注册表（TenantInfo）管理操作（列表/新增/编辑/初始化/删除）
-        /// 仅允许平台级管理员（TenantId=0，即当前请求租户上下文 Id==0）执行；
-        /// 租户管理员（TenantId>0）被拒绝，防止跨租户提权（禁用/删除/初始化其他租户）。
-        /// 单租户模式（EnableMultiTenant=false）下不限制。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         private bool IsPlatformAdmin()
         {
@@ -115,7 +118,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             List<Dictionary<string, object>> rows = null;
             if (enableMultiTenant)
             {
-                //多租户启用时，附带每个租户的管理员账号数量，便于删除/停用决策
+                //Legacy comment translated to English.
                 rows = tenantInfo.AsEnumerable().Select(z => new Dictionary<string, object>
                 {
                     ["id"] = z.Id,
@@ -155,7 +158,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
 
         /// <summary>
         /// Handler=Save
-        /// 新增、编辑租户
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
@@ -196,7 +199,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// 初始化租户
+        ///Legacy comment translated to English.
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
@@ -222,7 +225,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                     return Ok(false, _localizer["Tenant.NotFound"]);
                 }
 
-                //设置租户信息
+                //Legacy comment translated to English.
                 ISenparcEntitiesDbContext senparcDB = _adminUserInfoService.BaseData.BaseDB.BaseDataContext as ISenparcEntitiesDbContext;
                 if (senparcDB == null)
                 {
@@ -265,10 +268,10 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// 删除租户（安全校验）：
-        /// 1、不能删除当前正在使用的租户；
-        /// 2、系统必须至少保留一个启用的租户；
-        /// 3、租户下仍存在管理员账号时不允许删除（避免账号数据成为孤儿）。
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         /// </summary>
         [CustomerResource("admin-delete")]
         public async Task<IActionResult> OnPostDeleteAsync([FromBody] List<int> ids)

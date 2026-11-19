@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：MyFunctionRequest.cs
-    文件功能描述：示例功能请求模型
-    
-    
-    创建标识：Senparc - 20211031
-    
-    修改标识：Senparc - 20260724
-    修改描述：v0.3.0 完善账户模块本地化资源与功能文案
+
+    File name: MyFunctionRequest.cs
+    File description: Related implementation.
+
+    Created by: Senparc - 20211031
+
+    Modified by: Senparc - 20260724
+    Change description: v0.3.0 Updated module behavior and related support.
+
+    Modified by: Senparc - 20261119
+    Change description: v0.3.14 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 using Senparc.Ncf.XncfBase.FunctionRenders;
@@ -36,7 +39,7 @@ namespace Senparc.Xncf.Accounts.OHS.Local.PL
         [Description("数字||数字2")]
         public int Number2 { get; set; }
 
-        [Description("运算符||")]//下拉列表
+        [Description("运算符||")]//Legacy comment translated to English.
            [FunctionParameterUi(ParameterType.DropDownList, nameof(OperatorOptions))]
            public string Operator { get; set; }
 
@@ -48,7 +51,7 @@ namespace Senparc.Xncf.Accounts.OHS.Local.PL
                  new SelectionItem("÷","除法","数字1 ÷ 数字2",false)
             });
 
-        [Description("计算平方||")]//多选框
+        [Description("计算平方||")]//Legacy comment translated to English.
            [FunctionParameterUi(ParameterType.CheckBoxList, nameof(PowerOptions))]
            public string[] Power { get; set; }
 

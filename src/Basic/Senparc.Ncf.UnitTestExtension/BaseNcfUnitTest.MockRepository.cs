@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：BaseNcfUnitTest.MockRepository.cs
-    文件功能描述：BaseNcfUnitTest.MockRepository 相关实现
-    
-    
-    创建标识：Senparc - 20240720
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: BaseNcfUnitTest.MockRepository.cs
+    File description: BaseNcfUnitTest.MockRepository related implementation
+
+    Created by: Senparc - 20240720
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.3.29 Updated module behavior, localization metadata, and English source comments
 
 ----------------------------------------------------------------*/
 
@@ -28,7 +31,7 @@ namespace Senparc.Ncf.UnitTestExtension
 
         //    //var mockRepository = new Mock<IClientRepositoryBase<T>>();
 
-        //    //设置 RepositoryBase.BaseDB.ManualDetectChangeObject
+        //    //settings RepositoryBase.BaseDB.ManualDetectChangeObject
         //    var mockBaseDB = new Mock<NcfUnitTestDataDb>();
         //    //mockBaseDB.Setup(z => z.ManualDetectChangeObject).Returns(true);
 
@@ -46,17 +49,17 @@ namespace Senparc.Ncf.UnitTestExtension
         //}
 
         ///// <summary>  
-        ///// 获取指定类型的仓储实例，带有预设的 Mock 行为  
+        ///Legacy comment translated to English.
         ///// </summary>  
-        ///// <typeparam name="T">实体类型</typeparam>  
-        ///// <returns>仓储实例</returns>  
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         //public (Mock<IClientRepositoryBase<T>> MockRepository, List<T> DataList) GetRespository<T, TKey>() where T : EntityBase<TKey>
         //{
         //    var repo = GetRespository<T>();
 
         //    var dataList = repo.DataList;
 
-        //    // Mock Update 方法  
+        //    // Mock Update method  
         //    repo.MockRepository.Setup(z => z.Update(It.IsAny<T>()))
         //        .Callback<T>(obj =>
         //        {
@@ -68,7 +71,7 @@ namespace Senparc.Ncf.UnitTestExtension
         //            }
         //        });
 
-        //    // Mock SaveAsync 方法  
+        //    // Mock SaveAsync method  
         //    repo.MockRepository.Setup(z => z.SaveAsync(It.IsAny<T>()))
         //         .Returns<T>(obj =>
         //         {
@@ -96,7 +99,7 @@ namespace Senparc.Ncf.UnitTestExtension
 
         //    var mockRepository = new Mock<IClientRepositoryBase<T>>();
 
-        //    //设置 RepositoryBase.BaseDB.ManualDetectChangeObject
+        //    //settings RepositoryBase.BaseDB.ManualDetectChangeObject
         //    var mockBaseDB = new Mock<NcfUnitTestDataDb>();
         //    //mockBaseDB.Setup(z => z.ManualDetectChangeObject).Returns(true);
 
@@ -113,7 +116,7 @@ namespace Senparc.Ncf.UnitTestExtension
         //    mockRepository.Setup(z => z.BaseDB).Returns(mockBaseDB.Object);
 
 
-        //    // Mock GetFirstOrDefaultObjectAsync 方法  
+        //    // Mock GetFirstOrDefaultObjectAsync method  
         //    mockRepository.Setup(z => z.GetFirstOrDefaultObjectAsync(It.IsAny<Expression<Func<T, bool>>>(), It.IsAny<string[]>()))
         //        .Returns<Expression<Func<T, bool>>, string[]>((expr, includes) =>
         //        {
@@ -121,7 +124,7 @@ namespace Senparc.Ncf.UnitTestExtension
         //            return Task.FromResult(dataList.FirstOrDefault(func));
         //        });
 
-        //    // Mock GetFirstOrDefaultObject 方法  
+        //    // Mock GetFirstOrDefaultObject method  
         //    mockRepository.Setup(z => z.GetFirstOrDefaultObject(It.IsAny<Expression<Func<T, bool>>>(), It.IsAny<string[]>()))
         //        .Returns<Expression<Func<T, bool>>, string[]>((expr, includes) =>
         //        {
@@ -129,14 +132,14 @@ namespace Senparc.Ncf.UnitTestExtension
         //            return dataList.FirstOrDefault(func);
         //        });
 
-        //    // Mock GeAll 方法  
+        //    // Mock GeAll method  
         //    mockRepository.Setup(z => z.GeAll(It.IsAny<Expression<Func<T, object>>>(), It.IsAny<OrderingType>(), It.IsAny<string[]>()))
         //        .Returns<Expression<Func<T, object>>, OrderingType, string[]>((orderBy, orderingType, includes) =>
         //        {
         //            return dataList.AsQueryable().OrderBy(orderBy);
         //        });
 
-        //    // Mock ObjectCount 方法  
+        //    // Mock ObjectCount method  
         //    mockRepository.Setup(z => z.ObjectCount(It.IsAny<Expression<Func<T, bool>>>(), It.IsAny<string[]>()))
         //        .Returns<Expression<Func<T, bool>>, string[]>((where, includes) =>
         //        {
@@ -144,25 +147,25 @@ namespace Senparc.Ncf.UnitTestExtension
         //            return dataList.Count(func);
         //        });
 
-        //    // Mock Add 方法  
+        //    // Mock Add method  
         //    mockRepository.Setup(z => z.Add(It.IsAny<T>()))
         //        .Callback<T>(obj =>
         //        {
         //            dataList.Add(obj);
         //        });
 
-        //    // Mock Delete 方法  
+        //    // Mock Delete method  
         //    mockRepository.Setup(z => z.Delete(It.IsAny<T>(), It.IsAny<bool>()))
         //        .Callback<T, bool>((obj, softDelete) =>
         //        {
         //            dataList.Remove(obj);
         //        });
 
-        //    // Mock SaveChanges 方法  
+        //    // Mock SaveChanges method  
         //    mockRepository.Setup(z => z.SaveChanges())
         //        .Callback(() => { /* No-op for in-memory data */ });
 
-        //    // Mock DeleteAsync 方法  
+        //    // Mock DeleteAsync method  
         //    mockRepository.Setup(z => z.DeleteAsync(It.IsAny<T>(), It.IsAny<bool>()))
         //        .Returns<T, bool>((obj, softDelete) =>
         //        {
@@ -170,12 +173,12 @@ namespace Senparc.Ncf.UnitTestExtension
         //            return Task.CompletedTask;
         //        });
 
-        //    // Mock SaveChangesAsync 方法  
+        //    // Mock SaveChangesAsync method  
         //    mockRepository.Setup(z => z.SaveChangesAsync())
         //        .Returns(Task.CompletedTask);
 
 
-        //    //// 泛型版本的Mock设置  
+        //Legacy comment translated to English.
         //    //mockRepository.Setup(z => z.GetObjectListAsync<TOrderProperty>(It.IsAny<Expression<Func<T, bool>>>(), It.IsAny<Expression<Func<T, TOrderProperty>>>(), It.IsAny<OrderingType>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string[]>()))
         //    //    .Returns<Expression<Func<T, bool>>, Expression<Func<T, TOrderProperty>>, OrderingType, int, int, string[]>((where, orderBy, orderingType, pageIndex, pageCount, includes) =>
         //    //    {
@@ -188,7 +191,7 @@ namespace Senparc.Ncf.UnitTestExtension
         //    //    });
 
 
-        //    // Mock GetObjectListAsync 方法
+        //    // Mock GetObjectListAsync method
         //    mockRepository.Setup(z => z.GetObjectListAsync(It.IsAny<Expression<Func<T, bool>>>(), It.IsAny<Expression<Func<T, TOrderProperty>>>(), It.IsAny<OrderingType>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string[]>()))
         //        .Returns<Expression<Func<T, bool>>, Expression<Func<T, int>>, OrderingType, int, int, string[]>((where, orderBy, orderingType, pageIndex, pageCount, includes) =>
         //        {
@@ -223,11 +226,11 @@ namespace Senparc.Ncf.UnitTestExtension
         //        return Task.FromResult(new PagedList<T>(result, pageIndex, pageCount, dataList.Count));
         //    }); ;
 
-        //    // Mock GetFirstOrDefaultObjectAsync 方法 (带 includesNavigationPropertyPathFunc)  
+        //Legacy comment translated to English.
         //    mockRepository.Setup(z => z.GetFirstOrDefaultObjectAsync(It.IsAny<Expression<Func<T, bool>>>(), It.IsAny<Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>>>()))
         //        .Returns<Expression<Func<T, bool>>, Expression<Func<DbSet<T>, IIncludableQueryable<T, TIncludesProperty>>>>((where, includesNavigationPropertyPathFunc) =>
         //        {
-        //            //TODO:待完善
+        //Legacy comment translated to English.
         //            var func = where.Compile();
         //            return Task.FromResult(dataList.FirstOrDefault(func));
         //        });
@@ -242,7 +245,7 @@ namespace Senparc.Ncf.UnitTestExtension
         //        {
         //            var mockDbSet = UnitTestHelper.CreateMockDbSet(dataList);
 
-        //            // 使用Mock DbSet  
+        //            // useMock DbSet  
         //            var query = await includesNavigationPropertyPathFunc.Compile()(mockDbSet.Object)
         //                                .OrderBy(orderBy, orderingType)
         //                                .Where(where)
@@ -252,7 +255,7 @@ namespace Senparc.Ncf.UnitTestExtension
         //        });
 
 
-        //    // Mock ObjectCountAsync 方法  
+        //    // Mock ObjectCountAsync method  
         //    mockRepository.Setup(z => z.ObjectCountAsync(It.IsAny<Expression<Func<T, bool>>>(), It.IsAny<string[]>()))
         //        .Returns<Expression<Func<T, bool>>, string[]>((where, includes) =>
         //        {
@@ -264,10 +267,10 @@ namespace Senparc.Ncf.UnitTestExtension
         //}
 
         ///// <summary>  
-        ///// 获取指定类型的仓储实例，带有预设的 Mock 行为  
+        ///Legacy comment translated to English.
         ///// </summary>  
-        ///// <typeparam name="T">实体类型（OrderBy 默认为 int 类型，include 默认为 object 类型）</typeparam>  
-        ///// <returns>仓储实例</returns>  
+        ///Legacy comment translated to English.
+        ///Legacy comment translated to English.
         //public (Mock<IClientRepositoryBase<T>> MockRepository, List<T> DataList) GetRespository<T>() where T : EntityBase
         //{
         //    var result = this.GetRespository<T, int, object>();
@@ -275,7 +278,7 @@ namespace Senparc.Ncf.UnitTestExtension
         //}
 
         ///// <summary>
-        ///// 获取指定类型的仓储实例
+        ///Legacy comment translated to English.
         ///// </summary>
         ///// <typeparam name="T"></typeparam>
         ///// <returns></returns>

@@ -1,26 +1,29 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：FunctionRenderAttribute.cs
-    文件功能描述：FunctionRenderAttribute 相关实现
-    
-    
-    创建标识：Senparc - 20211012
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260717
-    修改描述：v0.25.0-preview2 新增统一资源本地化基础设施并支持 FunctionRender 动态文案
+    File name: FunctionRenderAttribute.cs
+    File description: FunctionRenderAttribute related implementation
 
-    修改标识：Senparc - 20260815
-    修改描述：v0.29.0-preview8 新增 FunctionRender 的 AI 自动调用控制
+    Created by: Senparc - 20211012
 
-    修改标识：Senparc - 20260828
-    修改描述：增加全局 NeuCharPivot 浮动调用映射及访问策略元数据
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
 
-    修改标识：Senparc - 20260829
-    修改描述：v0.30.0-preview9 新增 FunctionRender 函数名匹配与全局调用控制能力
+    Modified by: Senparc - 20260717
+    Change description: v0.25.0-preview2 add unify resource localization base facilities and support FunctionRender dynamic text
+
+    Modified by: Senparc - 20260815
+    Change description: v0.29.0-preview8 add AI automaticinvoke control for FunctionRender
+
+    Modified by: Senparc - 20260828
+    Change description: Added global NeuCharPivot floating invoke mapping and access policy metadata
+
+    Modified by: Senparc - 20260829
+    Change description: v0.30.0-preview9 Add FunctionRender function name matching and global invoke control capabilities
+
+    Modified by: Senparc - 20261119
+    Change description: v0.31.1-preview12 Improved core module metadata, localization support, and source comments
 
 ----------------------------------------------------------------*/
 
@@ -33,31 +36,31 @@ namespace Senparc.Ncf.Core.AppServices
     public class FunctionRenderAttribute : Attribute
     {
         /// <summary>
-        /// 名称
+        /// name
         /// </summary>
         private string _name;
 
         public string Name
         {
             get => ResourceType == null
-                ? _name
+                ? FunctionRenderTextResolver.Resolve(RegisterType, _name)
                 : ResourceStringLocalizer.Get(ResourceType, NameResourceKey, _name);
             set => _name = value;
         }
         /// <summary>
-        /// 说明
+        /// description
         /// </summary>
         private string _description;
 
         public string Description
         {
             get => ResourceType == null
-                ? _description
+                ? FunctionRenderTextResolver.Resolve(RegisterType, _description)
                 : ResourceStringLocalizer.Get(ResourceType, DescriptionResourceKey, _description);
             set => _description = value;
         }
         /// <summary>
-        /// 分类到 XNCF 模块的 Regster 类型
+        /// Classification to XNCF Module Register Type
         /// </summary>
         public Type RegisterType { get; set; }
 
@@ -99,7 +102,7 @@ namespace Senparc.Ncf.Core.AppServices
         /// </summary>
         public string GlobalPivotPermissionCodes { get; set; }
 
-        public FunctionRenderAttribute(string name, string description, Type registerType/*TODO：可提供系统模块的默认值*/)
+        public FunctionRenderAttribute(string name, string description, Type registerType/*TODO: Can provide default values for system modules*/)
         {
             _name = name;
             _description = description;

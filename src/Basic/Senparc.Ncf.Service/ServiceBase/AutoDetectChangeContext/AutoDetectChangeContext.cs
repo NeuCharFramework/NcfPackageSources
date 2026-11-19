@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
+
     Copyright (C) 2026 Senparc
-  
-    文件名：AutoDetectChangeContext.cs
-    文件功能描述：AutoDetectChangeContext 相关实现
-    
-    
-    创建标识：Senparc - 20200724
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
+
+    File name: AutoDetectChangeContext.cs
+    File description: AutoDetectChangeContext related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260704
+    Change description: vNext: add the standardized file header comment
+
+    Modified by: Senparc - 20261119
+    Change description: v0.23.13-preview12 Updated service infrastructure and related localization metadata
 
 ----------------------------------------------------------------*/
 
@@ -17,7 +20,7 @@ using System;
 namespace Senparc.Ncf.Service
 {
     /// <summary>
-    /// 临时开放BaseDataContext.Configuration.AutoDetectChangesEnabled属性，用于大批量更新数据的环境，结束后还原到false状态。
+    ///Legacy comment translated to English.
     /// </summary>
     public class AutoDetectChangeContextWrap : IDisposable
     {

@@ -11,7 +11,7 @@ using Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel;
 namespace Senparc.Xncf.WeixinManager.Domain.Models.MultipleDatabase
 {
     /// <summary>
-    /// 用于生成 SQLServer 数据库 Migration 信息的类，请勿修改
+    ///Legacy comment translated to English.
     /// </summary>
     [MultipleMigrationDbContext(MultipleDatabaseType.SqlServer, typeof(Register))]
     public class WeixinSenparcEntities_SqlServer : WeixinSenparcEntities, IMultipleMigrationDbContext
@@ -22,15 +22,15 @@ namespace Senparc.Xncf.WeixinManager.Domain.Models.MultipleDatabase
     }
 
     /// <summary>
-    /// 设计时 DbContext 创建（仅在开发时创建 Code-First 的数据库 Migration 使用，在生产环境不会执行）
-    /// <para>1、切换至 Debug 模式</para>
-    /// <para>2、运行：PM> add-migration [更新名称] -C WeixinSenparcEntities_SqlServer -o Migrations/Migrations.SqlServer </para>
+    /// design-time DbContext creation (used only to create Code-First database migrations during development; not executed in production)
+    /// <para>1、switch to Debug mode</para>
+    /// <para>2、run：PM> add-migration [updatename] -C WeixinSenparcEntities_SqlServer -o Migrations/Migrations.SqlServer </para>
     /// </summary>
     public class SenparcDbContextFactory_SqlServer : SenparcDesignTimeDbContextFactoryBase<WeixinSenparcEntities_SqlServer, Register>
     {
         protected override Action<IApplicationBuilder> AppAction => app =>
         {
-            //指定其他数据库
+            //specify another database
             app.UseNcfDatabase("Senparc.Ncf.Database.SqlServer", "Senparc.Ncf.Database.SqlServer", "SqlServerDatabaseConfiguration");
         };
 

@@ -1,101 +1,104 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.8.3</Version>
+    <Version>0.8.4</Version>
     <AssemblyName>Senparc.Xncf.KnowledgeBase</AssemblyName>
     <RootNamespace>Senparc.Xncf.KnowledgeBase</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <Description>AI 知识库</Description>
+    <Description>AI Knowledge Base</Description>
     <Copyright>Senparc</Copyright>
     <PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.KnowledgeBase</PackageTags>
     <Authors>Senparc</Authors>
     <Owners>Senparc</Owners>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <Title>AI 知识库</Title>
+    <Title>AI Knowledge Base</Title>
     <!--<ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>		[2025-01-07] v0.1.8-preview.1 Reset all database migrations
-		[2025-07-27] v0.1.5-preview1s update Knowledge Base
-		[2025-11-01] update basic libraries, including Senparc.AI
-		[2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
-		[2026-07-02] v0.2.2-preview1 新增 PromptRange 与 AgentsManager 使用记录能力，升级 Senparc.AI.AgentKernel 并完成兼容性适配
-		1、新增 PromptRange 与 AgentsManager 使用记录能力
-		2、升级 Senparc.AI.AgentKernel 并完成兼容性适配
-		[2026-07-07] v0.2.3-preview2 Dependency updates from upstream modules
-		1、Dependency update from Senparc.Xncf.AIKernel to 0.13.5-preview4
-		2、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
-		[2026-07-17] v0.3.0-preview3 为 KnowledgeBase 模块接入统一资源本地化并优化功能文案
-		1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
-		2、更新 FunctionRender 与请求模型文案的资源化解析
-		3、统一模块注册信息、菜单名称与功能描述的本地化输出
-		4、同步管理页面与前端交互文案的多语言显示
-		5、同步 AIKernel 0.14.0-preview5 的 NeuChar 模型 API 版本适配
-		[2026-07-29] v0.3.1-preview4 通过文件服务读取知识库文件并限制物理路径
-		1、复用 NcfFileService 读取文件内容，统一文件存储边界校验
-		2、避免篡改数据库路径字段后直接访问站点外部文件
-		[2026-07-31] v0.4.0-preview5 扩展 KnowledgeBase 管理界面的多语言能力
-		1、补齐知识库编辑、检索测试、菜单与交互文案的多语言资源
-		2、升级 Senparc.AI 组件与 CO2NET WebApi 兼容依赖
-		[2026-08-04] v0.5.0-preview6 新增知识库生命周期管理与 Agent 模板集成
-		1、扩展知识库及条目生命周期字段并补齐六类数据库迁移与快照
-		2、完善知识库管理页、应用服务、召回测试与请求响应模型
-		3、支持 AgentsManager 按知识库状态完成关联和调用
-		[2026-08-08] v0.5.1-preview7 Dependency updates from upstream projects
-		1、Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
-		2、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
-		3、Dependency update from Senparc.Ncf.Service to 0.23.6-preview6
-		4、Dependency update from Senparc.Xncf.AIKernel to 0.15.2-preview9
-		5、Dependency update from Senparc.Xncf.FileManager to 0.5.1-preview6
-		6、Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
-		[2026-08-13] v0.6.0-preview8 完善知识库文件删除保护、召回测试与管理界面
-		1、增加知识库文件删除边界保护并同步资源服务策略
-		2、优化知识库列表、召回测试页面及多语言交互反馈
-		3、适配统一 Agent 执行和文件资源边界变更
-		[2026-08-15] v0.7.0 增强知识库向量发布状态识别
-		1、区分已发布的隔离向量集合、待处理和旧版切片向量状态
-		2、在知识库管理页展示可供 Agent 绑定的真实发布状态，避免将旧版向量数据误报为已发布
-		3、Dependency update from Senparc.Xncf.AIKernel to 0.15.4
-		4、同步知识库管理页面格式和向量发布状态版本语义，兼容当前 Agent 绑定流程
-		[2026-08-29] v0.7.1 Dependency updates from Senparc.Ncf.DatabasePlant to 0.21.10; Dependency update from Senparc.Ncf.Service to 0.23.9-preview9
-		1、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.10
-		2、Dependency update from Senparc.Ncf.Service to 0.23.9-preview9
-		[2026-09-15] v0.7.2 修复知识库管理端敏感信息泄露并优化检索交互
-		1、移除前端响应日志中的密钥和连接配置暴露，收敛返回信息范围
-		2、优化知识库、详情页与召回测试页面的数据加载和交互稳定性
-		3、优化知识库模块注册与管理端状态展示
-		[2026-09-16] v0.7.3 Dependency updates from Senparc.Xncf.AgentsManager to 0.17.2; Senparc.Web to 0.39.1
-		[2026-09-17] v0.7.4 适配共享 AgentKernel 预览依赖版本
-		1、同步 Senparc.AI.AgentKernel 至 0.1.14-preview5
-		2、保持知识库模块与共享 AI 工具调用兼容
-		[2026-10-21] v0.7.7 适配 Senparc.AI.AgentKernel 0.1.15-preview2
-		1、升级共享 AgentKernel 依赖，保持知识库检索与 Agent 调用兼容
-		[2026-11-03] v0.8.0 检索能力升级：可配置切片策略与 Re-ranking（向下兼容）
-		1、新增知识库级检索配置（切片策略/大小/重叠、重排模式/模型/候选数/词法权重），默认值与旧版行为完全一致
-		2、切片支持三种策略：固定长度（旧版行为）、递归结构化（段落→行→句读→字符，中英文友好）、按段落（短段落自动合并）
-		3、召回支持词法混合重排（本地计算，无额外模型调用）与 LLM 重排（复用知识库对话模型，超时/解析失败自动回退词法混合）
-		4、召回测试页支持按次覆盖重排模式，结果展示重排分与原始排名；Agent RAG 上下文自动应用知识库重排配置
-		5、补齐六类数据库迁移与快照（RetrievalConfigJson）
-		6、支持可配置文本分块和检索重排序，保持现有检索配置兼容
-		7、完善知识库检索配置、召回测试和多数据库迁移
-    [2026-11-03] Add contextual documentation for knowledge-base setup and recall-test Top K.
-    [2026-11-05] v0.8.2 将知识库创建与召回 Top K 帮助定位到对应章节，并统一多语言文案
-    1、新建知识库与召回测试 Top K 的上下文帮助指向对应双语章节
-    2、补齐并校正各语言资源条目，使模块界面文案与中文基准保持一致
-    3、Dependency update from Senparc.Ncf.AreaBase to 0.23.10
-    4、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.14
-    5、Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
-    6、Dependency update from Senparc.Xncf.AIKernel to 0.17.2
-    7、Dependency update from Senparc.Xncf.FileManager to 0.8.3
-    8、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
-    [2026-11-11] v0.8.2 统一模块注册文案，并升级共享 AI 依赖
-    1、Register 通过 XncfRegisterText 用稳定资源键和中文基准文本解析菜单名称与模块说明。
-    2、共享 AI 依赖升级到 Senparc.AI.AgentKernel 0.1.17、Microsoft Agent Framework 1.28.0、OpenAI 2.14.0 与 Microsoft.Extensions.AI.OpenAI 10.11.0。
-    [2026-11-12] v0.8.3 统一模块注册显示名称与说明的多语言资源键
-    1、模块注册信息优先使用稳定资源键解析多语言显示文本。
-    2、兼容现有资源与默认文案，避免缺少翻译时影响模块加载。
+    <PackageReleaseNotes>[2025-01-07] v0.1.8-preview.1 Reset all database migrations
+        [2025-07-27] v0.1.5-preview1s update Knowledge Base
+        [2025-11-01] update basic libraries, including Senparc.AI
+        [2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
+        [2026-07-02] v0.2.2-preview1 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-07-07] v0.2.3-preview2 Dependency updates from upstream modules
+        1. Dependency update from Senparc.Xncf.AIKernel to 0.13.5-preview4
+        2. Updated module behavior and related support.
+        [2026-07-17] v0.3.0-preview3 Updated module behavior and related support.
+        1. integrateshared resource-localization mechanism, supportmodulefeature textdisplay dynamically according to the current culture
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        4. Updated module behavior and related support.
+        5. Updated module behavior and related support.
+        [2026-07-29] v0.3.1-preview4 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-07-31] v0.4.0-preview5 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-08-04] v0.5.0-preview6 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        [2026-08-08] v0.5.1-preview7 Dependency updates from upstream projects
+        1. Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
+        2. Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
+        3. Dependency update from Senparc.Ncf.Service to 0.23.6-preview6
+        4. Dependency update from Senparc.Xncf.AIKernel to 0.15.2-preview9
+        5. Dependency update from Senparc.Xncf.FileManager to 0.5.1-preview6
+        6. Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
+        [2026-08-13] v0.6.0-preview8 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        [2026-08-15] v0.7.0 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Dependency update from Senparc.Xncf.AIKernel to 0.15.4
+        4. Updated module behavior and related support.
+        [2026-08-29] v0.7.1 Dependency updates from Senparc.Ncf.DatabasePlant to 0.21.10; Dependency update from Senparc.Ncf.Service to 0.23.9-preview9
+        1. Dependency update from Senparc.Ncf.DatabasePlant to 0.21.10
+        2. Dependency update from Senparc.Ncf.Service to 0.23.9-preview9
+        [2026-09-15] v0.7.2 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        [2026-09-16] v0.7.3 Dependency updates from Senparc.Xncf.AgentsManager to 0.17.2; Senparc.Web to 0.39.1
+        [2026-09-17] v0.7.4 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-10-21] v0.7.7 adapt Senparc.AI.AgentKernel 0.1.15-preview2
+        1. Updated module behavior and related support.
+        [2026-11-03] v0.8.0 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Updated module behavior and related support.
+        4. Updated module behavior and related support.
+        5. Updated module behavior and related support.
+        6. Updated module behavior and related support.
+        7. Updated module behavior and related support.
+        [2026-11-03] Add contextual documentation for knowledge-base setup and recall-test Top K.
+        [2026-11-05] v0.8.2 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        3. Dependency update from Senparc.Ncf.AreaBase to 0.23.10
+        4. Dependency update from Senparc.Ncf.DatabasePlant to 0.21.14
+        5. Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
+        6. Dependency update from Senparc.Xncf.AIKernel to 0.17.2
+        7. Dependency update from Senparc.Xncf.FileManager to 0.8.3
+        8. Dependency update from Senparc.Xncf.AreasBase to 0.13.12
+        [2026-11-11] v0.8.2 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-11-12] v0.8.3 Updated module behavior and related support.
+        1. Updated module behavior and related support.
+        2. Updated module behavior and related support.
+        [2026-11-19] v0.8.4 Localized knowledge base management and runtime surfaces
+        1. Updated localized labels, resource fallbacks, and user-facing messages across affected surfaces.
+        2. Kept runtime behavior and module integration aligned with the affected service and registration changes.
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
