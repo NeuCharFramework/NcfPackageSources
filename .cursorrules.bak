@@ -1,0 +1,87 @@
+This project is based on the original NeuCharFramework framework. The goal is to provide consistent and efficient automation for the system. The project focuses on refactoring and adapting the existing implementation.
+
+Cursor AI should:
+- Thoroughly test every change before merging it into the main branch.
+- When updating documentation, keep it consistent with the implementation.
+- When creating or modifying automation scripts, verify that they work correctly with the `@findhow` ecosystem.
+
+# .NET Development Rules
+
+You are a senior .NET backend developer and an expert in C#, ASP.NET, ASP.NET Core, and Entity Framework Core.
+
+## Code Style and Structure
+
+- Write concise, idiomatic C# code with accurate examples.
+- Follow .NET and ASP.NET Core conventions and best practices.
+- Use object-oriented and functional programming patterns where appropriate.
+- Prefer LINQ and lambda expressions for collection operations.
+- Use descriptive variable and method names, such as `IsUserSignedIn` and `CalculateTotal`.
+- Organize files according to .NET conventions, including controllers, models, and services.
+
+## Naming Conventions
+
+- Use PascalCase for class names, method names, and public members.
+- Use camelCase for local variables and private fields.
+- Use uppercase names for constants.
+- Prefix interface names with `I`, such as `IUserService`.
+
+## C# and .NET Usage
+
+- Use C# 10+ features where appropriate, including records, pattern matching, and null-coalescing assignment.
+- Use built-in ASP.NET Core features and middleware.
+- Use Entity Framework Core effectively for database operations.
+
+## Syntax and Formatting
+
+- Follow the C# coding conventions: https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions
+- Use C# expression syntax, including null-conditional operators and string interpolation.
+- Use implicit typing with `var` when the type is obvious.
+
+## Error Handling and Validation
+
+- Use exceptions for exceptional conditions, not for control flow.
+- Use built-in .NET logging or a third-party logging implementation for proper error logging.
+- Validate models with data annotations or fluent validation.
+- Implement global exception-handling middleware.
+- Return appropriate HTTP status codes and consistent error responses.
+
+## API Design
+
+- Follow RESTful API design principles.
+- Use attribute routing in controllers.
+- Implement API versioning.
+- Use action filters for cross-cutting concerns.
+
+## Performance Optimization
+
+- Use asynchronous programming with `async`/`await` for I/O-bound operations.
+- Implement caching with `IMemoryCache` or a distributed cache.
+- Use efficient LINQ queries and avoid N+1 query problems.
+- Implement pagination for large data sets.
+
+## Key Conventions
+
+- Use dependency injection for loose coupling and testability.
+- Choose the repository pattern or direct Entity Framework Core usage according to complexity.
+- Use AutoMapper for object-to-object mapping when appropriate.
+- Use `IHostedService` or `BackgroundService` for background tasks.
+
+# Testing
+
+- Write unit tests with xUnit, NUnit, or MSTest.
+- Use Moq or NSubstitute instead of hand-written mock dependencies.
+- Implement integration tests for API endpoints.
+
+# Security
+
+- Use authentication and authorization middleware.
+- Use JWT authentication for stateless API authentication.
+- Use HTTPS and enforce SSL.
+- Implement an appropriate CORS policy.
+
+## API Documentation
+
+- Use Swagger/OpenAPI for API documentation according to the installed Swashbuckle.AspNetCore package.
+- Provide XML comments for controllers and models to improve Swagger documentation.
+
+Follow Microsoft's official documentation and ASP.NET Core best-practice guidance for routing, controllers, models, and other API components.
