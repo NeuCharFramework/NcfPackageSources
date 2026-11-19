@@ -1,0 +1,244 @@
+﻿@page
+@model Senparc.Areas.Admin.Areas.Admin.Pages.SenparcTrace_DateLogModel
+@{
+    ViewData["Title"] = AR["Trace.日志"];
+    //ViewData["TempMenuUrl"] = Model.XncfRegister.GetAreaUrl("/Admin/SenparcTrace/Index");
+    //var exceptionCount = Model.WeixinTraceItemList.Count(z => z.IsException);
+    Layout = "_Layout_Vue";
+}
+
+@section breadcrumbs {
+    <el-breadcrumb-item><a>@AR["Common.系统管理"]</a></el-breadcrumb-item>
+    <el-breadcrumb-item><a asp-area="Admin" asp-page="Index">SenparcTrace @AR["Trace.日志"]</a></el-breadcrumb-item>
+    <el-breadcrumb-item>{{dateTitle}}</el-breadcrumb-item>
+}
+
+@section scripts{
+    @*<script>
+            $(function () {
+                $('[id^=more_]').click(function () {
+                    $(this).hide();
+                    $('#detail_' + $(this).attr('data-i')).slideDown();
+                })
+            })
+
+            function showAllDetails() {
+                $('[id^=detail_').slideDown();
+            }
+
+            var justShowException = false;
+            function showExceptions() {
+                justShowException = !justShowException;
+                if (justShowException) {
+                    $('tr.not_exception').hide();
+                } else {
+                    $('tr.not_exception').show();
+                }
+            }
+        </script>*@
+    <script src="~/js/Admin/Pages/SenparcTrace/detail.js"></script>
+}
+@section HeaderContent {
+    <style>
+        table.el-table__header colgroup col:nth-of-type(1) {
+            /*            display: none;*/
+            width: 0px;
+        }
+
+        /*table.el-table__header thead tr th:nth-of-type(1) {
+            display: none;
+        }*/
+
+        table.el-table__body colgroup col:nth-of-type(1) {
+            /*            display: none;*/
+            width: 0px;
+        }
+
+        table.el-table__body tr.el-table__row div .el-table__expand-icon {
+            display: none;
+        }
+        /*table.el-table__body tbody tr td.el-table__expand-column:nth-of-type(1) {
+            width: 0px;
+        }*/
+
+        /*table.el-table__body tbody tr td:nth-of-type(1) {
+            display: none;
+        }*/
+        .highlight-keyword {
+            background-color: yellow;
+            font-weight: bold;
+        }
+        .filter-container {
+            margin-bottom: 20px;
+        }
+        .filter-item {
+            margin-bottom: 10px;
+        }
+    </style>
+}
+
+<el-row :gutter="20">
+    <el-row :gutter="20" class="filter-container">
+        <el-col :span="24" class="filter-item">
+            <el-button type="primary" @@click="showAll()">@AR["Trace.ShowAll"]</el-button>
+            <el-button type="danger" @@click="showException()">@AR["Trace.ShowExceptions"]</el-button>
+            <span>@AR["Trace.ExceptionInfo"] <span>{{tableData.filter(_ => _.isException).length}}</span> / {{tableData.length}}</span>
+        </el-col>
+        
+        <el-col :span="8" class="filter-item">
+            <el-input
+                v-model="filterConditions.keyword"
+                placeholder="@AR["Trace.KeywordPlaceholder"]"
+                @@input="fetchData"
+                clearable>
+            </el-input>
+        </el-col>
+        
+        <el-col :span="8" class="filter-item">
+            <el-date-picker
+                v-model="filterConditions.timeRange"
+                type="datetimerange"
+                :picker-options="pickerOptions"
+                range-separator="@AR["Trace.To"]"
+                start-placeholder="@AR["Trace.StartTime"]"
+                end-placeholder="@AR["Trace.EndTime"]"
+                @@change="fetchData"
+                align="right">
+            </el-date-picker>
+        </el-col>
+        
+        <el-col :span="4" class="filter-item">
+            <el-select v-model="filterConditions.threadId" 
+                      placeholder="@AR["Trace.SelectThread"]"
+                      clearable 
+                      @@change="fetchData">
+                <el-option
+                    v-for="thread in filterConditions.availableThreads"
+                    :key="thread"
+                    :label="thread"
+                    :value="thread">
+                </el-option>
+            </el-select>
+        </el-col>
+        
+        <el-col :span="4" class="filter-item">
+            <el-select v-model="filterConditions.traceType" 
+                      placeholder="@AR["Trace.SelectType"]"
+                      clearable 
+                      @@change="fetchData">
+                <el-option
+                    v-for="(desc, type) in weixinTraceTypeDesc"
+                    :key="type"
+                    :label="desc"
+                    :value="type">
+                </el-option>
+            </el-select>
+        </el-col>
+        
+        <el-col :span="4" class="filter-item">
+            <el-select v-model="filterConditions.exceptionStatus" 
+                      placeholder="@AR["Trace.ExceptionStatus"]"
+                      clearable 
+                      @@change="fetchData">
+                <el-option label="@AR["Trace.All"]" value=""></el-option>
+                <el-option label="@AR["Xncf.Yes"]" value="true"></el-option>
+                <el-option label="@AR["Xncf.No"]" value="false"></el-option>
+            </el-select>
+        </el-col>
+    </el-row>
+
+    <el-col :span="24">
+        <el-table :data="displayData"
+                  :row-key="rowKey"
+                  :expand-row-keys="expandRowKeys"
+                  border
+                  ref="tableInstance"
+                  style="width: 100%">
+            <el-table-column type="expand" width="0px">
+                <template slot-scope="scope">
+                    {{ scope.row.showMessage ? scope.row.resultStr : '---'}}
+                </template>
+            </el-table-column>
+            <el-table-column align="center"
+                             label="@AR["Trace.NumberAndLine"]"
+                             width="100">
+                <template slot-scope="scope">
+                    <strong>{{ scope.row.no }}</strong> / {{scope.row.line}}
+                </template>
+            </el-table-column>
+            <el-table-column align="center"
+                             width="200"
+                             label="@AR["Trace.Time"]">
+                <template slot-scope="scope">
+                    {{ scope.row.dateTime }}
+                </template>
+            </el-table-column>
+
+            <el-table-column align="center"
+                             width="80"
+                             label="@AR["Trace.Thread"]">
+                <template slot-scope="scope">
+                    {{ scope.row.threadId }}
+                </template>
+            </el-table-column>
+
+            <el-table-column align="center"
+                             width="95"
+                             label="@AR["Trace.Type"]">
+                <template slot-scope="scope">
+                    {{ weixinTraceTypeDesc[scope.row.weixinTraceType] }}
+                </template>
+            </el-table-column>
+
+            <el-table-column align="center"
+                             width="80"
+                             label="@AR["Trace.IsException"]">
+                <template slot-scope="scope">
+                    {{ scope.row.isException }}
+                </template>
+            </el-table-column>
+            <el-table-column align="center"
+                             label="@AR["Trace.Title"]">
+                <template slot-scope="scope">
+                    <span v-html="highlightKeyword(scope.row.title)"></span>
+                </template>
+            </el-table-column>
+            <el-table-column align="center"
+                             label="@AR["Trace.Content"]">
+                <template slot-scope="scope">
+                    <template v-if="!scope.row.result.url_empty">
+                        <p>
+                            <strong>URL：</strong>
+                        </p>
+                        {{scope.row.result.url}}
+                    </template>
+                    <template v-if="!scope.row.result.result_empty">
+                        <p>
+                            <strong>@AR["Trace.ReturnResult"]：</strong>
+                        </p>
+                        {{scope.row.result.result}}
+                    </template>
+                    <template v-if="!scope.row.result.postData_empty">
+                        <p>
+                            <strong>@AR["Trace.PostData"]：</strong>
+                        </p>
+                        {{scope.row.result.postData}}
+                    </template>
+                    <template v-if="scope.row.isException">
+                        <p>
+                            <strong>@AR["Trace.ExceptionInfo"]：</strong>
+                        </p>
+                        {{scope.row.result.exceptionMessage}}
+                    </template>
+                    <template v-if="!scope.row.showMessage">
+                        <span v-html="highlightKeyword(scope.row.resultStr)"></span>
+                    </template>
+                </template>
+            </el-table-column>
+        </el-table>
+        <pagination :total="searchData.total"
+                    :page.sync="searchData.pageIndex"
+                    :limit.sync="searchData.pageSize"
+                    @@pagination="fetchData"></pagination>
+    </el-col>
+</el-row>

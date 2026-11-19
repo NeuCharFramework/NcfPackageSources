@@ -64,7 +64,7 @@ WHERE NickName = 'PromptCatalyzer';
 ```bash
 # 停止当前应用（Ctrl+C 或 Command+C）
 # 重新启动
-cd tools/NcfSimulatedSite/Senparc.Web
+cd tools/NcfWebAdminBaseline/Senparc.Web
 dotnet run
 ```
 

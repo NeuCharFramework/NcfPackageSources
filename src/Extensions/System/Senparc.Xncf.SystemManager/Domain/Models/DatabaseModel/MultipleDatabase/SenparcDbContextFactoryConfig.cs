@@ -34,7 +34,7 @@ namespace Senparc.Xncf.SystemManager.Domain.DatabaseModel
 
                     for (var directory = new DirectoryInfo(projectPath); directory != null; directory = directory.Parent)
                     {
-                        candidates.Add(Path.Combine(directory.FullName, "tools", "NcfSimulatedSite", "Senparc.Web"));
+                        candidates.Add(Path.Combine(directory.FullName, "tools", "NcfWebAdminBaseline", "Senparc.Web"));
                         candidates.Add(Path.Combine(directory.FullName, "src", "back-end", "Senparc.Web"));
                     }
 

@@ -1,0 +1,84 @@
+/*----------------------------------------------------------------
+
+    Copyright (C) 2026 Senparc
+
+    File name: Permission.cshtml.cs
+    File description: Permission.cshtml.cs related implementation
+
+    Created by: Senparc - 20200724
+
+    Modified by: Senparc - 20260729
+    Change description: v0.2.0 enhance admin interaction and secure desktop Admin Chat synchronization
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
+
+----------------------------------------------------------------*/
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Senparc.Ncf.Core.Models.DataBaseModel;
+using Senparc.Ncf.Service;
+
+namespace Senparc.Areas.Admin.Areas.Admin
+{
+    [AutoValidateAntiforgeryToken]
+    public class PagesRolePermissionModel : BaseAdminPageModel
+    {
+        private readonly SysRoleService _sysRoleService;
+        private readonly SysRolePermissionService _sysPermissionService;
+
+        //private readonly SysRoleMenuService _sysRoleMenuService;
+        private readonly SysMenuService _sysMenuService;
+
+        public PagesRolePermissionModel(IServiceProvider serviceProvider, SysMenuService sysMenuService,
+            SysRoleService sysRoleService, SysRolePermissionService sysPermissionService)
+            : base(serviceProvider)
+        {
+            CurrentMenu = "Role";
+            _sysRoleService = sysRoleService;
+            _sysPermissionService = sysPermissionService;
+            //_sysRoleMenuService = sysRoleMenuService;
+            _sysMenuService = sysMenuService;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [BindProperty(SupportsGet = true)]
+        public string RoleId { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public SysRole SysRoleInfo { get; set; }
+
+        [Ncf.AreaBase.Admin.Filters.CustomerResource("role-grant")]
+        public async Task OnGetAsync()
+        {
+            SysRoleInfo = await _sysRoleService.GetObjectAsync(_ => _.Id == RoleId);
+        }
+
+        [Ncf.AreaBase.Admin.Filters.CustomerResource("role-grant")]
+        public async Task<IActionResult> OnGetRolePermissionAsync(string roleId)
+        {
+            var data = await _sysPermissionService.GetFullListAsync(_ => _.RoleId == roleId);
+            return Ok(data);
+        }
+
+        [Ncf.AreaBase.Admin.Filters.CustomerResource("role-grant")]
+        public async Task<IActionResult> OnPostAsync([FromBody] IEnumerable<SysPermissionDto> sysMenuDto)
+        {
+            if (!sysMenuDto.Any())
+            {
+                return Ok(false);
+            }
+            await _sysPermissionService.AddAsync(sysMenuDto);
+            return Ok(true);
+        }
+    }
+}

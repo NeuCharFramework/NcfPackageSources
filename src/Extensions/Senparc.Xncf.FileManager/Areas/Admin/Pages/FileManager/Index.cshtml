@@ -2456,7 +2456,7 @@
 </el-dialog>
 
 @section scripts {
-    <partial name="~/Areas/Admin/Pages/Shared/_LocalizationScripts.cshtml" />
+    @await Html.PartialAsync("_LocalizationScripts")
     <script src="~/lib/echarts/dist/echarts.js"></script>
     <script>
         // When the embedded index.js is stale, inject the referenced fileTagDialog / isFileFavorited fields before creating Vue.

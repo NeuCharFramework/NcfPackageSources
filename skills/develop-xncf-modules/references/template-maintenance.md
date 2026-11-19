@@ -6,13 +6,13 @@
 
 编辑包源码仓库中的：
 
-`tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName`
+`tools/NcfWebAdminBaseline/Template_OrgName.Xncf.Template_XncfName`
 
 不要只编辑：
 
 `src/Extensions/Senparc.Xncf.XncfBuilder/Senparc.Xncf.XncfBuilder.Template/templates/template1`
 
-同步工具会用母版覆盖副本。`tools/NcfSimulatedSiteSyncTool` 在 `--template-only` 时只做这次模板同步，不会把模拟站点同步到外部 NCF 目录。
+同步工具会用母版覆盖副本。`tools/NcfWebAdminSyncTool` 在 `--template-only` 时只做这次模板同步，不会把NCF Web Admin 标准基线同步到外部 NCF 目录。
 
 占位符必须保留给 `dotnet new` 替换，包括 `Template_OrgName`、`Template_XncfName`、`Template_Guid`、`Template_Version`、`Template_MenuName`、`Template_Icon`、`Template_Description`、`Template_Database`、`Template_Sample`。不要把母版里的这些标记替换成某个真实模块的值。
 

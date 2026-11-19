@@ -14,14 +14,14 @@
 ## 📂 涉及文件
 
 ### 修改文件
-1. `tools/NcfSimulatedSite/Senparc.Areas.Admin/Areas/Admin/Pages/Index.cshtml` - 已在 Step 03 中添加拖放区域
-2. `tools/NcfSimulatedSite/Senparc.Areas.Admin/wwwroot/js/Admin/Pages/Index/Index.js` - 需要增强拖拽逻辑
+1. `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Areas/Admin/Pages/Index.cshtml` - 已在 Step 03 中添加拖放区域
+2. `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/wwwroot/js/Admin/Pages/Index/Index.js` - 需要增强拖拽逻辑
 
 ## 🔧 实现步骤
 
 ### 1. 增强模块卡片的拖拽功能
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/wwwroot/js/Admin/Pages/Index/Index.js`
+**文件路径**: `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/wwwroot/js/Admin/Pages/Index/Index.js`
 
 **修改位置**: 在已有的 `initializeModuleDrag()` 方法中增强（Step 03 已添加基础版本）
 
@@ -294,7 +294,7 @@ async addModulesToSession(sessionId) {
 
 ### 2. 增强拖放区域样式
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/Areas/Admin/Pages/Index.cshtml`
+**文件路径**: `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Areas/Admin/Pages/Index.cshtml`
 
 **在 @section style 中添加额外样式**:
 
@@ -408,7 +408,7 @@ async addModulesToSession(sessionId) {
 
 ### 3. 在对话页面中处理模块上下文
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/Areas/Admin/Pages/AdminChat/Chat.cshtml.cs`
+**文件路径**: `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Areas/Admin/Pages/AdminChat/Chat.cshtml.cs`
 
 **修改**: 在 `OnGet` 方法中添加模块UID的处理
 
@@ -448,7 +448,7 @@ public List<string> ModuleUids { get; set; } = new List<string>();
 
 ### 4. 在对话页面中显示模块上下文
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/wwwroot/js/Admin/Pages/AdminChat/Chat.js`
+**文件路径**: `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/wwwroot/js/Admin/Pages/AdminChat/Chat.js`
 
 **添加方法**: 在 `mounted()` 中添加模块加载逻辑
 
@@ -524,7 +524,7 @@ data() {
 
 ### 5. 在 AppService 中添加获取会话模块的接口
 
-**文件路径**: `tools/NcfSimulatedSite/Senparc.Areas.Admin/OHS/Local/AppService/AdminChatAppService.cs`
+**文件路径**: `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/OHS/Local/AppService/AdminChatAppService.cs`
 
 **添加方法**:
 

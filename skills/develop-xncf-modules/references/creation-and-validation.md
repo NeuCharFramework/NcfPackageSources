@@ -36,7 +36,7 @@ The directories below exist only in the NCF package source repository. Open them
 - template authoring source and the sync tool live in that repository;
 - the published template id is `Senparc.Xncf.XncfBuilder.Template`.
 
-The simulated-site template source is authoritative for synchronized content. Do not edit only `templates/template1`; a later one-way sync can overwrite it. Account for placeholder transformations such as UID/version before comparing source and target.
+The NcfWebAdminBaseline template source is authoritative for synchronized content. Do not edit only `templates/template1`; a later one-way sync can overwrite it. Account for placeholder transformations such as UID/version before comparing source and target.
 
 ## Scaffold a module
 

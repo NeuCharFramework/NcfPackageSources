@@ -30,7 +30,7 @@ The module records prompts, model usage, scores, and generated output. Apply ten
 
 Admin's shared `v-prompt-range` directive provides an on-demand picker for text inputs,
 including both AdminChat composers and the Footer's embedded chat. See the
-[integration guide](../../../tools/NcfSimulatedSite/Senparc.Areas.Admin/readme.md#promptrange-可复用提示词选择器).
+[integration guide](../../../tools/NcfWebAdminBaseline/Senparc.Areas.Admin/readme.md#promptrange-可复用提示词选择器).
 
 The following GET methods on `PromptItemAppService` use the existing AdminOnly policy
 and preserve tenant/soft-delete filters on both ranges and items:

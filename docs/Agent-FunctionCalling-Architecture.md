@@ -115,7 +115,7 @@
 1. **重启应用**（必需，确保 Plugin 被正确注册）
    ```bash
    # 在终端 5 按 Ctrl+C 停止（如果正在运行）
-   cd tools/NcfSimulatedSite/Senparc.Web
+   cd tools/NcfWebAdminBaseline/Senparc.Web
    dotnet run
    ```
 

@@ -1,0 +1,110 @@
+﻿@page
+@model Senparc.Areas.Admin.Areas.Admin.Pages.RoleIndexModel
+@{
+    ViewData["Title"] = AR["Role.管理"]; Layout = "_Layout_Vue";
+}
+@section breadcrumbs {
+    <el-breadcrumb-item>@AR["Common.系统管理"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["Role.列表"]</el-breadcrumb-item>
+}
+
+<div>
+    <div class="admin-role">
+        <div class="filter-container">
+            <el-button class="filter-item" v-has="['role-add']" type="primary" icon="el-icon-plus" @@click="handleEdit">@AR["Common.增加"]</el-button>
+        </div>
+        <el-table :data="tableData"
+                  border
+                  style="width: 100%">
+            <el-table-column align="center"
+                             label="@AR["Role.名称"]">
+                <template slot-scope="scope">
+                    {{ scope.row.roleName}}
+                </template>
+            </el-table-column>
+            <el-table-column align="center"
+                             label="@AR["Role.代码"]">
+                <template slot-scope="scope">
+                    {{ scope.row.roleCode}}
+                </template>
+            </el-table-column>
+            <el-table-column align="center"
+                             label="@AR["Common.备注"]">
+                <template slot-scope="scope">
+                    {{ scope.row.adminRemark}}
+                </template>
+            </el-table-column>
+            <el-table-column align="center"
+                             label="@AR["Common.说明"]">
+                <template slot-scope="scope">
+                    {{ scope.row.remark}}
+                </template>
+            </el-table-column>
+            <el-table-column align="center"
+                             label="@AR["Common.添加时间"]">
+                <template slot-scope="scope">
+                    {{formaTableTime(scope.row.addTime)}}
+                </template>
+            </el-table-column>
+            <el-table-column label="@AR["Common.操作"]" align="center">
+                <template slot-scope="scope">
+                    <el-button size="mini"
+                               type="primary"
+                               v-has="['role-edit']"
+                               @@click="handleEdit(scope.$index, scope.row)">@AR["Common.编辑"]</el-button>
+                    <el-button size="mini"
+                               type="primary"
+                               v-has="['role-grant']"
+                               @@click="handleRole(scope.$index, scope.row)">@AR["Role.权限"]</el-button>
+                    <el-popconfirm placement="top" title="@AR["Role.确认删除"]" v-has="['role-delete']" @@on-confirm="handleDelete(scope.$index, scope.row)">
+                        <el-button size="mini" type="danger" slot="reference">@AR["Common.删除"]</el-button>
+                    </el-popconfirm>
+                </template>
+            </el-table-column>
+        </el-table>
+        <pagination :total="paginationQuery.total"
+                    :page.sync="listQuery.pageIndex"
+                    :limit.sync="listQuery.pageSize"
+                    @@pagination="getList"></pagination>
+        <!--编辑、新增 -->
+        <el-dialog :title="dialog.title" :visible.sync="dialog.visible" :close-on-click-modal="false">
+            <el-form ref="dataForm"
+                     :rules="dialog.rules"
+                     :model="dialog.data"
+                     label-position="left"
+                     label-width="100px"
+                     style="max-width: 400px; margin-left:50px;">
+                <el-form-item label="@AR["Role.名称"]" prop="roleName">
+                    <el-input v-model="dialog.data.roleName" clearable placeholder="@AR["Role.请输入名称"]" />
+                </el-form-item>
+                <el-form-item label="@AR["Role.代码"]" prop="roleCode">
+                    <el-input v-model="dialog.data.roleCode" clearable placeholder="@AR["Role.请输入代码"]" />
+                </el-form-item>
+                <el-form-item label="@AR["Role.是否启用"]">
+                    <el-switch v-model="dialog.data.enabled"></el-switch>
+                </el-form-item>
+                <el-form-item label="@AR["Common.说明"]">
+                    <el-input v-model="dialog.data.remark" clearable placeholder="@AR["Common.请输入说明"]" />
+                </el-form-item>
+                <el-form-item label="@AR["Common.备注"]">
+                    <el-input v-model="dialog.data.adminRemark" clearable placeholder="@AR["Common.请输入备注"]" />
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @@click="dialog.visible = false">@AR["Common.取消"]</el-button>
+                <el-button :loading="dialog.updateLoading" type="primary" @@click="updateData">@AR["Common.确认"]</el-button>
+            </div>
+        </el-dialog>
+        <!--授权 -->
+        <el-dialog :title="'@AR["Role.为角色授权"] ' + au.title" :visible.sync="au.visible" :close-on-click-modal="false">
+            <el-tree :data="allMenu" ref="tree" show-checkbox :props="defaultProps" :default-expanded-keys="defaultExpandedKeys" :default-checked-keys="defaultCheckedKeys" node-key="id"></el-tree>
+            <div slot="footer" class="dialog-footer">
+                <el-button @@click="au.visible = false">@AR["Common.取消"]</el-button>
+                <el-button :loading="au.updateLoading" type="primary" @@click="auUpdateData">@AR["Common.确认"]</el-button>
+            </div>
+        </el-dialog>
+    </div>
+</div>
+@section scripts{
+    <script src="~/js/Admin/Pages/Role/Index.js"></script>
+}

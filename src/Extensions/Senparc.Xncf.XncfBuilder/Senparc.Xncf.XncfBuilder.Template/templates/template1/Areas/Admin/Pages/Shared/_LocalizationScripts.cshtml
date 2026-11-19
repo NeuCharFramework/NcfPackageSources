@@ -4,4 +4,4 @@
         .Select(x => x.Value.Split(new[] { "||" }, 2, StringSplitOptions.None)).Where(x => x.Length == 2)
         .GroupBy(x => x[0]).ToDictionary(x => x.Key, x => x.First()[1]);
 }
-<script>window.ncfRegisterSourceTranslations(@Html.Raw(JsonSerializer.Serialize(sourceTranslations)));</script>
+<script>window.ncfRegisterSourceTranslations(@Html.Raw(JsonSerializer.Serialize(sourceTranslations)), "Template_XncfName");</script>

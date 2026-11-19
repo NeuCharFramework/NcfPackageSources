@@ -1,0 +1,22 @@
+﻿.admin-systemconfig-info h2{
+    margin-bottom:22px;
+}
+
+h2.system-info {
+    margin-top: 10px;
+}
+/*
+h2.tenant-info {
+    margin-top: 30px;
+}
+*/
+.system-footer-preview a {
+    color: #409eff;
+}
+
+.system-footer-help {
+    margin-top: 6px;
+    color: #909399;
+    font-size: 12px;
+    line-height: 1.5;
+}

@@ -1,0 +1,46 @@
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    File name: AdminUserInfo_Response.cs
+    File description: AdminUserInfo_Response related implementation
+
+    Created by: Senparc - 20241028
+
+    Modified by: Senparc - 20261119
+    Change description: v0.12.29 Localized administration, chat, and workflow surfaces
+
+----------------------------------------------------------------*/
+
+using Senparc.Ncf.Core.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Senparc.Areas.Admin.OHS.Local.PL
+{
+    public class AdminUserInfo_GetListResponse
+    {
+        public IList<AdminUserInfoDto> List { get; set; }
+        public int TotalCount { get; set; }
+    }
+
+    public class AdminUserInfo_CreateResponse
+    {
+        public int AdminUserInfoId { get; set; }
+    }
+
+    public class AdminUserInfo_AddRoleResponse
+    {
+
+    }
+
+    /// <summary>
+    /// getall
+    /// </summary>
+    public class AdminUserInfo_GetRolesResponse
+    {
+        public IEnumerable<string> RoleIds { get; set; }
+    }
+}

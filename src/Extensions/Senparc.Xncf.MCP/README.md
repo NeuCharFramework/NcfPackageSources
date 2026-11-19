@@ -48,10 +48,10 @@ Historical migrations are retained for already deployed databases. The cleanup m
 Run from the repository root:
 
 ```bash
-dotnet test tools/NcfSimulatedSite/Tests/Senparc.Areas.Admin.Tests/Senparc.Areas.Admin.Tests.csproj \
+dotnet test tools/NcfWebAdminBaseline/Tests/Senparc.Areas.Admin.Tests/Senparc.Areas.Admin.Tests.csproj \
   --filter 'FullyQualifiedName~McpEndpointManagementTests|FullyQualifiedName~PublishedMcpServerTests|FullyQualifiedName~McpDatabaseSample'
 
-node --test tools/NcfSimulatedSite/Tests/Senparc.Areas.Admin.Tests/Client/McpEndpointManagementTests.js
+node --test tools/NcfWebAdminBaseline/Tests/Senparc.Areas.Admin.Tests/Client/McpEndpointManagementTests.js
 ```
 
 The .NET tests use isolated databases, real generated API controllers and local HTTP servers. They cover authentication, POST routing, publication discovery, deployment path bases, configuration persistence, validation, connection failures, tool/schema discovery, timeout, cancellation and the sample cleanup migration. Client tests cover the two independent lists, read-only publication display, copy actions, configuration interactions, server errors, malformed responses, duplicate submissions and tool expansion.
@@ -60,6 +60,6 @@ To additionally test the running local SSE server:
 
 ```bash
 MCP_LIVE_TEST_URL=http://localhost:5080/mcp-senparc-xncf-mcp/sse \
-  dotnet test tools/NcfSimulatedSite/Tests/Senparc.Areas.Admin.Tests/Senparc.Areas.Admin.Tests.csproj \
+  dotnet test tools/NcfWebAdminBaseline/Tests/Senparc.Areas.Admin.Tests/Senparc.Areas.Admin.Tests.csproj \
   --filter 'FullyQualifiedName~McpEndpointManagementTests'
 ```

@@ -26,7 +26,7 @@ namespace Senparc.Xncf.PromptRange.Models
                         foreach (var webPath in new[]
                         {
                             Path.Combine(directory.FullName, "Senparc.Web"),
-                            Path.Combine(directory.FullName, "tools", "NcfSimulatedSite", "Senparc.Web")
+                            Path.Combine(directory.FullName, "tools", "NcfWebAdminBaseline", "Senparc.Web")
                         })
                         {
                             if (!File.Exists(Path.Combine(webPath, "appsettings.json"))) continue;

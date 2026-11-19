@@ -1694,7 +1694,7 @@
 </div>
 
 @section scripts {
-    <partial name="~/Areas/Admin/Pages/Shared/_PromptRangeLocalizationScripts.cshtml" />
+    @await Html.PartialAsync("_PromptRangeLocalizationScripts")
     <script src="~/js/PromptRange/lib/axios.min.js"></script>
     <script src="~/js/PromptRange/lib/jszip.min.js"></script>
     <script src="~/js/PromptRange/lib/fileSave.min.js"></script>

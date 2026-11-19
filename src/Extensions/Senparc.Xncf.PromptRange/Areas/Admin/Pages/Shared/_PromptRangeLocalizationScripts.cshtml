@@ -35,5 +35,5 @@
 }
 <script>
     window.ncfI18n = Object.assign(window.ncfI18n || {}, @Html.Raw(JsonSerializer.Serialize(translations)));
-    window.ncfRegisterSourceTranslations(@Html.Raw(JsonSerializer.Serialize(sourceTranslations)));
+    window.ncfRegisterSourceTranslations(@Html.Raw(JsonSerializer.Serialize(sourceTranslations)), "PromptRange");
 </script>

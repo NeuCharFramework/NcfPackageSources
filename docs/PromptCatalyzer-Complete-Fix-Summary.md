@@ -26,7 +26,7 @@
 
 ### 后端（C#）
 
-1. **`tools/NcfSimulatedSite/Senparc.Web/Register.cs`**
+1. **`tools/NcfWebAdminBaseline/Senparc.Web/Register.cs`**
    - 使用 `AddSenparcEventBus()` 自动扫描和注册 EventHandler
    - 在 `StartWebEngine()` 之后调用，确保所有模块已加载
    - 添加程序集扫描日志输出
@@ -130,7 +130,7 @@ PromptOptimizationResponseHandler.Handle()
 ```bash
 # 在运行应用的终端按 Ctrl+C 停止
 cd /Volumes/DevelopAndData/SenparcProjects/NeuCharFramework/NcfPackageSources
-dotnet run --project tools/NcfSimulatedSite/Senparc.Web/Senparc.Web.csproj
+dotnet run --project tools/NcfWebAdminBaseline/Senparc.Web/Senparc.Web.csproj
 ```
 
 ### 2. 确认启动日志
@@ -177,7 +177,7 @@ WHERE RangeId IN (SELECT Id FROM [Xncf_PromptRange_PromptRange] WHERE Alias = 'P
 ### 5. 查看日志验证
 
 ```bash
-tail -f tools/NcfSimulatedSite/Senparc.Web/App_Data/SenparcTraceLog/SenparcTrace-20260324.log
+tail -f tools/NcfWebAdminBaseline/Senparc.Web/App_Data/SenparcTraceLog/SenparcTrace-20260324.log
 ```
 
 **优化请求的日志应该显示**：
@@ -276,7 +276,7 @@ WHERE Name = 'PromptCatalyzer';
 
 2. **服务端日志**（包含优化请求的部分）
    ```bash
-   grep -A 20 "收到 Prompt 优化请求" tools/NcfSimulatedSite/Senparc.Web/App_Data/SenparcTraceLog/SenparcTrace-*.log
+   grep -A 20 "收到 Prompt 优化请求" tools/NcfWebAdminBaseline/Senparc.Web/App_Data/SenparcTraceLog/SenparcTrace-*.log
    ```
 
 3. **Network 请求详情**（F12 → Network）

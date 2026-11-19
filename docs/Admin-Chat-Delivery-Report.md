@@ -135,36 +135,36 @@
 ### 新建文件（共 17 个）
 
 #### 1. 数据模型层（6 个文件）
-- ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminChatSession.cs`
-- ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminChatMessage.cs`
-- ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminChatSessionModule.cs`
-- ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/Dto/AdminChatSessionDto.cs`
-- ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/Dto/AdminChatMessageDto.cs`
-- ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/Dto/AdminChatSessionModuleDto.cs`
+- ✅ `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminChatSession.cs`
+- ✅ `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminChatMessage.cs`
+- ✅ `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminChatSessionModule.cs`
+- ✅ `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Domain/Models/DatabaseModel/Dto/AdminChatSessionDto.cs`
+- ✅ `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Domain/Models/DatabaseModel/Dto/AdminChatMessageDto.cs`
+- ✅ `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Domain/Models/DatabaseModel/Dto/AdminChatSessionModuleDto.cs`
 
 #### 2. Repository 层（3 个文件）
-- ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/ACL/Repository/AdminChatSessionRepository.cs`
-- ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/ACL/Repository/AdminChatMessageRepository.cs`
-- ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/ACL/Repository/AdminChatSessionModuleRepository.cs`
+- ✅ `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/ACL/Repository/AdminChatSessionRepository.cs`
+- ✅ `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/ACL/Repository/AdminChatMessageRepository.cs`
+- ✅ `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/ACL/Repository/AdminChatSessionModuleRepository.cs`
 
 #### 3. 服务层（4 个文件）
-- ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Services/AdminChatSessionService.cs`
-- ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Services/AdminChatMessageService.cs`
-- ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Services/AdminChatSessionModuleService.cs`
-- ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/OHS/Local/AppService/AdminChatAppService.cs`
+- ✅ `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Domain/Services/AdminChatSessionService.cs`
+- ✅ `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Domain/Services/AdminChatMessageService.cs`
+- ✅ `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Domain/Services/AdminChatSessionModuleService.cs`
+- ✅ `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/OHS/Local/AppService/AdminChatAppService.cs`
 
 #### 4. 页面和前端（4 个文件）
-- ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/Areas/Admin/Pages/AdminChat/Chat.cshtml`
-- ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/Areas/Admin/Pages/AdminChat/Chat.cshtml.cs`
-- ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/wwwroot/js/Admin/Pages/AdminChat/Chat.js`
-- ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/wwwroot/css/Admin/Pages/AdminChat/Chat.css`
+- ✅ `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Areas/Admin/Pages/AdminChat/Chat.cshtml`
+- ✅ `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Areas/Admin/Pages/AdminChat/Chat.cshtml.cs`
+- ✅ `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/wwwroot/js/Admin/Pages/AdminChat/Chat.js`
+- ✅ `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/wwwroot/css/Admin/Pages/AdminChat/Chat.css`
 
 ### 修改文件（共 5 个）
-- ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/Areas/Admin/Pages/Index.cshtml` - 添加 AI 对话入口
-- ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/Areas/Admin/Pages/Index.cshtml.cs` - 添加用户ID支持
-- ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/wwwroot/js/Admin/Pages/Index/Index.js` - 添加拖拽和对话逻辑
-- ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminSenparcEntities.cs` - 添加 3 个 DbSet
-- ✅ `tools/NcfSimulatedSite/Senparc.Areas.Admin/Register.cs` - 注册服务和 Repository
+- ✅ `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Areas/Admin/Pages/Index.cshtml` - 添加 AI 对话入口
+- ✅ `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Areas/Admin/Pages/Index.cshtml.cs` - 添加用户ID支持
+- ✅ `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/wwwroot/js/Admin/Pages/Index/Index.js` - 添加拖拽和对话逻辑
+- ✅ `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Domain/Models/DatabaseModel/AdminSenparcEntities.cs` - 添加 3 个 DbSet
+- ✅ `tools/NcfWebAdminBaseline/Senparc.Areas.Admin/Register.cs` - 注册服务和 Repository
 
 ---
 
@@ -257,7 +257,7 @@
 #### 1. 执行数据库 Migration（必需）
 
 ```bash
-cd /Volumes/DevelopAndData/SenparcProjects/NeuCharFramework/NcfPackageSources/tools/NcfSimulatedSite/Senparc.Web
+cd /Volumes/DevelopAndData/SenparcProjects/NeuCharFramework/NcfPackageSources/tools/NcfWebAdminBaseline/Senparc.Web
 
 # 创建 Migration
 dotnet ef migrations add AddAdminChatTables \
@@ -273,7 +273,7 @@ dotnet ef database update \
 #### 2. 启动应用程序
 
 ```bash
-cd /Volumes/DevelopAndData/SenparcProjects/NeuCharFramework/NcfPackageSources/tools/NcfSimulatedSite/Senparc.Web
+cd /Volumes/DevelopAndData/SenparcProjects/NeuCharFramework/NcfPackageSources/tools/NcfWebAdminBaseline/Senparc.Web
 dotnet run
 ```
 
