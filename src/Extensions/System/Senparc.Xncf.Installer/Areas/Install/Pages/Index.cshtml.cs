@@ -259,9 +259,36 @@ namespace Senparc.Xncf.Instraller.Pages
             return Page();
         }
 
-        public IActionResult OnGetDefaultOptions()
+        public async Task<IActionResult> OnGetDefaultOptionsAsync()
         {
-            return new JsonResult(_installAppService.GetInstallOptionsAsync());
+            if (SiteConfig.CheckInstallFinishedFileExisted())
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                if (IsSystemInitialized() || await _accountInfoService.GetObjectAsync(z => true) != null)
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex) when (DatabaseInstallState.IsSchemaUpgradeRequired(ex))
+            {
+                return new RedirectResult("/Maintenance/DatabaseUpgrade");
+            }
+            catch (Exception ex) when (InstallDatabaseState.IsDatabaseUnavailableForInstallation(ex))
+            {
+                // An unavailable or not-yet-created database is expected during first-time setup.
+            }
+            catch (Exception ex)
+            {
+                SiteConfig.IsInstalling = false;
+                SenparcTrace.BaseExceptionLog(ex);
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
+
+            return new JsonResult(await _installAppService.GetInstallOptionsAsync());
         }
 
         private bool IsSystemInitialized()
