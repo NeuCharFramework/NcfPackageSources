@@ -19,8 +19,8 @@ WORKDIR /src
 COPY ["tools/NcfSimulatedSite/Senparc.Web/Senparc.Web.csproj", "tools/NcfSimulatedSite/Senparc.Web/"]
 COPY ["tools/NcfSimulatedSite/Senparc.Areas.Admin/Senparc.Areas.Admin.csproj", "tools/NcfSimulatedSite/Senparc.Areas.Admin/"]
 COPY ["tools/NcfSimulatedSite/Senparc.Xncf.Accounts/Senparc.Xncf.Accounts.csproj", "tools/NcfSimulatedSite/Senparc.Xncf.Accounts/"]
-COPY ["tools/NcfSimulatedSite/Senparc.Xncf.Installer/Senparc.Xncf.Installer.csproj", "tools/NcfSimulatedSite/Senparc.Xncf.Installer/"]
-COPY ["tools/NcfSimulatedSite/Senparc.Xncf.Installer.Interface/Senparc.Xncf.Installer.Interface.csproj", "tools/NcfSimulatedSite/Senparc.Xncf.Installer.Interface/"]
+COPY ["src/Extensions/System/Senparc.Xncf.Installer/[5930]Senparc.Xncf.Installer.csproj", "src/Extensions/System/Senparc.Xncf.Installer/"]
+COPY ["src/Extensions/System/Senparc.Xncf.Installer.Interface/[5930]Senparc.Xncf.Installer.Interface.csproj", "src/Extensions/System/Senparc.Xncf.Installer.Interface/"]
 COPY ["tools/NcfSimulatedSite/Senparc.Aspire.AppHost/Senparc.Aspire.AppHost.csproj", "tools/NcfSimulatedSite/Senparc.Aspire.AppHost/"]
 COPY ["tools/NcfSimulatedSite/Senparc.Aspire.ServiceDefaults/Senparc.Aspire.ServiceDefaults.csproj", "tools/NcfSimulatedSite/Senparc.Aspire.ServiceDefaults/"]
 

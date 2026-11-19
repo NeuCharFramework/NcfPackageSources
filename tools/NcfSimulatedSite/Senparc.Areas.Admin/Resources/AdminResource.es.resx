@@ -146,7 +146,7 @@
   <data name="AdminChat.Memory.Failed" xml:space="preserve"><value>La operación de Memory falló. Recargue antes de reintentar.</value></data>
   <data name="AdminChat.Memory.UpdateWarning" xml:space="preserve"><value>Memory no se actualizó en este turno; las memorias existentes se conservaron. Revise PromptRange o vuelva a abrir los ajustes de Memory.</value></data>
   <data name="Admin.Title" xml:space="preserve">
-    <value>Panel de administración NCF</value>
+    <value>System Admin Panel</value>
   </data>
   <data name="Admin.Nav.Home" xml:space="preserve">
     <value>Inicio</value>
@@ -312,7 +312,7 @@
   <data name="Xncf.Install.ModuleNotFound" xml:space="preserve"><value>No se encontró el módulo de destino y no se puede instalar.</value></data>
   <data name="Xncf.Install.Success" xml:space="preserve"><value>La instalación se completó correctamente.</value></data>
   <data name="Xncf.Install.Failed" xml:space="preserve"><value>Error de instalación: {0}</value></data>
-  <data name="Admin.Register.MenuName" xml:space="preserve"><value>Panel de administración del sistema NCF</value></data>
+  <data name="Admin.Register.MenuName" xml:space="preserve"><value>System Admin Panel</value></data>
   <data name="Admin.Register.Description" xml:space="preserve"><value>Este es el módulo de administración del sistema NCF para la autogestión del backend. No elimine este módulo. Si realmente necesita hacerlo, haga una copia de seguridad de sus datos primero.</value></data>
   <data name="Admin.Area.MenuManagement" xml:space="preserve"><value>Gestión de menús</value></data>
   <data name="Admin.Area.TraceLog" xml:space="preserve"><value>Registros de SenparcTrace</value></data>
@@ -1550,4 +1550,12 @@
   <data name="Frontend.610" xml:space="preserve"><value>Revisión de conexiones remotas de DesktopBridge</value></data>
   <data name="Frontend.611" xml:space="preserve"><value>Hay {0} solicitudes de emparejamiento de dispositivos pendientes de revisión.</value></data>
   <data name="Frontend.612" xml:space="preserve"><value>No hay solicitudes de emparejamiento de dispositivos pendientes.</value></data>
+  <data name="AdminChat.WorkflowCreation.Capabilities.Description" xml:space="preserve"><value>Enumera los activadores, nodos y FunctionRender seguros disponibles para crear flujos de trabajo con IA. Llámalo antes de diseñar el grafo.</value></data>
+  <data name="AdminChat.WorkflowCreation.Validate.Description" xml:space="preserve"><value>Valida un grafo de flujo seguro sin guardarlo. El grafo debe contener un activador manual y un nodo final.</value></data>
+  <data name="AdminChat.WorkflowCreation.Create.Description" xml:space="preserve"><value>Crea y puede activar un flujo de trabajo validado. Esta operación siempre requiere aprobación explícita del administrador.</value></data>
+  <data name="AdminChat.WorkflowCreation.Name" xml:space="preserve"><value>Nombre del flujo de trabajo, como máximo 200 caracteres.</value></data>
+  <data name="AdminChat.WorkflowCreation.DescriptionField" xml:space="preserve"><value>Descripción opcional del flujo de trabajo.</value></data>
+  <data name="AdminChat.WorkflowCreation.Trigger" xml:space="preserve"><value>Los flujos creados por IA solo admiten actualmente un activador manual.</value></data>
+  <data name="AdminChat.WorkflowCreation.Graph" xml:space="preserve"><value>Grafo JSON con nodes y edges. Usa los tipos de nodo y referencias FunctionRender devueltos por workflow_get_creation_capabilities.</value></data>
+  <data name="AdminChat.WorkflowCreation.Enabled" xml:space="preserve"><value>Activar después de crear. Los flujos manuales siguen requiriendo ejecución por parte de un operador.</value></data>
 </root>

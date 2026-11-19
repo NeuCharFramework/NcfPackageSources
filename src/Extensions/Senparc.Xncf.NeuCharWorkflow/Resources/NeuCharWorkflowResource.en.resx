@@ -630,6 +630,22 @@
 
   <data name="Frontend.604" xml:space="preserve"><value>Returns the current UTC time as ISO text.</value></data>
   <data name="Frontend.605" xml:space="preserve"><value>Formats a date using the specified format; the default format is used when the format parameter is empty.</value></data>
+  <data name="AiCreation.NotAuthorized" xml:space="preserve"><value>The current administrator is not available.</value></data>
+  <data name="AiCreation.ModuleUnavailable" xml:space="preserve"><value>NeuChar Workflow is not enabled.</value></data>
+  <data name="AiCreation.NameRequired" xml:space="preserve"><value>A Workflow name is required.</value></data>
+  <data name="AiCreation.MetadataTooLarge" xml:space="preserve"><value>The Workflow name or description exceeds the allowed size.</value></data>
+  <data name="AiCreation.TriggerNotAllowed" xml:space="preserve"><value>AI-created Workflows currently support only a manual trigger.</value></data>
+  <data name="AiCreation.GraphTooLarge" xml:space="preserve"><value>The Workflow graph is empty or exceeds the allowed size.</value></data>
+  <data name="AiCreation.SensitiveConfig" xml:space="preserve"><value>AI Workflow creation cannot supply credentials or external-resume secrets.</value></data>
+  <data name="AiCreation.GraphLimit" xml:space="preserve"><value>AI-created Workflows are limited to 30 nodes and 60 connections.</value></data>
+  <data name="AiCreation.ManualTriggerRequired" xml:space="preserve"><value>The graph must contain exactly one manual trigger.</value></data>
+  <data name="AiCreation.EndRequired" xml:space="preserve"><value>The graph must contain exactly one end node.</value></data>
+  <data name="AiCreation.NodeNotAllowed" xml:space="preserve"><value>This node type is not allowed for AI-created Workflows.</value></data>
+  <data name="AiCreation.DisconnectedNode" xml:space="preserve"><value>Every AI-created Workflow node must be connected from the manual trigger.</value></data>
+  <data name="AiCreation.FunctionReferenceRequired" xml:space="preserve"><value>A Function node must specify moduleUid and functionKey.</value></data>
+  <data name="AiCreation.FunctionNotFound" xml:space="preserve"><value>The requested Function does not exist.</value></data>
+  <data name="AiCreation.FunctionModuleUnavailable" xml:space="preserve"><value>The Function module is not enabled.</value></data>
+  <data name="AiCreation.FunctionAiDenied" xml:space="preserve"><value>The requested Function is not available for AI invocation.</value></data>
   <data name="Frontend.606" xml:space="preserve"><value>Pause</value></data>
   <data name="Frontend.607" xml:space="preserve"><value>Play</value></data>
   <data name="Frontend.608" xml:space="preserve"><value>Use the left value, comparison operator, and right value to choose the true or false branch; inside a loop, break can exit the current loop immediately.</value></data>

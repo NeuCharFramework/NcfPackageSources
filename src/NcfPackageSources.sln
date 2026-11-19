@@ -83,6 +83,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02-1 SystemXncfs", "02-1 Sy
 		Extensions\System\readme.md = Extensions\System\readme.md
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5930]Senparc.Xncf.Installer", "Extensions\System\Senparc.Xncf.Installer\[5930]Senparc.Xncf.Installer.csproj", "{2F6484AB-91DE-4384-B9E5-BF984749443E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5930]Senparc.Xncf.Installer.Interface", "Extensions\System\Senparc.Xncf.Installer.Interface\[5930]Senparc.Xncf.Installer.Interface.csproj", "{7048EF78-3E29-40A0-AA45-12D5E8C4997F}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5940]Senparc.Xncf.Menu", "Extensions\System\Senparc.Xncf.Menu\[5940]Senparc.Xncf.Menu.csproj", "{023A95DB-D8AA-4123-9F9B-6A4616C7243A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5970]Senparc.Xncf.SystemManager", "Extensions\System\Senparc.Xncf.SystemManager\[5970]Senparc.Xncf.SystemManager.csproj", "{DED3B5E4-D281-4399-BD0E-3F612FF419F2}"

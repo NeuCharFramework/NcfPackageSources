@@ -146,7 +146,7 @@
   <data name="AdminChat.Memory.Failed" xml:space="preserve"><value>L'opération Memory a échoué. Rechargez avant de réessayer.</value></data>
   <data name="AdminChat.Memory.UpdateWarning" xml:space="preserve"><value>Memory n'a pas été mise à jour ce tour ; les mémoires existantes ont été conservées. Vérifiez PromptRange ou rouvrez les paramètres Memory.</value></data>
   <data name="Admin.Title" xml:space="preserve">
-    <value>Panneau d'administration NCF</value>
+    <value>System Admin Panel</value>
   </data>
   <data name="Admin.Nav.Home" xml:space="preserve">
     <value>Accueil</value>
@@ -312,7 +312,7 @@
   <data name="Xncf.Install.ModuleNotFound" xml:space="preserve"><value>Le module cible est introuvable et ne peut pas être installé.</value></data>
   <data name="Xncf.Install.Success" xml:space="preserve"><value>Installation réussie.</value></data>
   <data name="Xncf.Install.Failed" xml:space="preserve"><value>Échec de l'installation : {0}</value></data>
-  <data name="Admin.Register.MenuName" xml:space="preserve"><value>Panneau d'administration système NCF</value></data>
+  <data name="Admin.Register.MenuName" xml:space="preserve"><value>System Admin Panel</value></data>
   <data name="Admin.Register.Description" xml:space="preserve"><value>Il s'agit du module d'administration du système NCF utilisé pour l'auto-gestion du backend. Ne supprimez pas ce module. Si vous devez vraiment le faire, sauvegardez d'abord vos données.</value></data>
   <data name="Admin.Area.MenuManagement" xml:space="preserve"><value>Gestion des menus</value></data>
   <data name="Admin.Area.TraceLog" xml:space="preserve"><value>Journaux SenparcTrace</value></data>
@@ -1550,4 +1550,12 @@
   <data name="Frontend.610" xml:space="preserve"><value>Vérification des connexions distantes DesktopBridge</value></data>
   <data name="Frontend.611" xml:space="preserve"><value>{0} demandes d’association d’appareils sont en attente de traitement.</value></data>
   <data name="Frontend.612" xml:space="preserve"><value>Aucune demande d’association d’appareil en attente.</value></data>
+  <data name="AdminChat.WorkflowCreation.Capabilities.Description" xml:space="preserve"><value>Liste les déclencheurs, nœuds et FunctionRender sûrs disponibles pour créer un Workflow avec l’IA. Appelez ceci avant de concevoir le graphe.</value></data>
+  <data name="AdminChat.WorkflowCreation.Validate.Description" xml:space="preserve"><value>Valide un graphe Workflow sûr sans l’enregistrer. Le graphe doit contenir un déclencheur manuel et un nœud de fin.</value></data>
+  <data name="AdminChat.WorkflowCreation.Create.Description" xml:space="preserve"><value>Crée et peut activer un Workflow validé. Cette opération exige toujours l’approbation explicite d’un administrateur.</value></data>
+  <data name="AdminChat.WorkflowCreation.Name" xml:space="preserve"><value>Nom du Workflow, 200 caractères maximum.</value></data>
+  <data name="AdminChat.WorkflowCreation.DescriptionField" xml:space="preserve"><value>Description facultative du Workflow.</value></data>
+  <data name="AdminChat.WorkflowCreation.Trigger" xml:space="preserve"><value>Les Workflows créés par l’IA prennent actuellement en charge uniquement le déclenchement manuel.</value></data>
+  <data name="AdminChat.WorkflowCreation.Graph" xml:space="preserve"><value>Graphe JSON contenant nodes et edges. Utilisez les types de nœuds et références FunctionRender renvoyés par workflow_get_creation_capabilities.</value></data>
+  <data name="AdminChat.WorkflowCreation.Enabled" xml:space="preserve"><value>Activer après la création. Les Workflows manuels doivent toujours être lancés par un opérateur.</value></data>
 </root>

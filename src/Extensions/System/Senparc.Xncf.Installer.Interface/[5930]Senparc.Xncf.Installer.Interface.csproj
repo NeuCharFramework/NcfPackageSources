@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Version>0.3.0</Version>
+		<AssemblyName>Senparc.Xncf.Installer.Interface</AssemblyName>
+		<RootNamespace>Senparc.Xncf.Installer.Interface</RootNamespace>
+		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+		<Description>NCF system installer module contracts</Description>
+		<Copyright>NeuCharFramework</Copyright>
+		<PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.Installer.Interface,System</PackageTags>
+		<Authors>NeuCharFramework</Authors>
+		<Owners>NeuCharFramework</Owners>
+		<Title>NCF Installer Interface</Title>
+		<PackageReleaseNotes>
+			[2026-11-18] v0.3.0 Relocated with Senparc.Xncf.Installer under src/Extensions/System.
+		</PackageReleaseNotes>
+		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+		<Configurations>Debug;Release;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+		<OutputPath>..\..\..\BuildOutPut</OutputPath>
+	</PropertyGroup>
+	<ItemGroup>
+		<Compile Remove="OHS\Remote\**" />
+		<EmbeddedResource Remove="OHS\Remote\**" />
+		<None Remove="OHS\Remote\**" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Senparc.Xncf.Tenant\[5990]Senparc.Xncf.Tenant.csproj" />
+	</ItemGroup>
+</Project>

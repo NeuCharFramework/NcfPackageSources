@@ -131,6 +131,9 @@ public partial class Register : XncfRegisterBase, IXncfRegister
         services.AddScoped<NeuCharWorkflowFunctionCallingProvider>();
         services.AddScoped<IWorkflowFunctionCallingProvider>(serviceProvider =>
             serviceProvider.GetRequiredService<NeuCharWorkflowFunctionCallingProvider>());
+        services.AddScoped<NeuCharWorkflowCreationProvider>();
+        services.AddScoped<IWorkflowCreationProvider>(serviceProvider =>
+            serviceProvider.GetRequiredService<NeuCharWorkflowCreationProvider>());
         services.AddScoped<IWorkflowDependencyProvider, NeuCharWorkflowDependencyProvider>();
         services.AddSingleton<LegacyWorkflowMigrationService>();
         services.AddHostedService<NeuCharWorkflowHostedService>();

@@ -629,6 +629,22 @@
 
   <data name="Frontend.604" xml:space="preserve"><value>返回当前 UTC 时间的 ISO 文本。</value></data>
   <data name="Frontend.605" xml:space="preserve"><value>按指定格式格式化日期；格式参数留空时使用默认格式。</value></data>
+  <data name="AiCreation.NotAuthorized" xml:space="preserve"><value>当前管理员不可用。</value></data>
+  <data name="AiCreation.ModuleUnavailable" xml:space="preserve"><value>NeuChar Workflow 未启用。</value></data>
+  <data name="AiCreation.NameRequired" xml:space="preserve"><value>必须提供工作流名称。</value></data>
+  <data name="AiCreation.MetadataTooLarge" xml:space="preserve"><value>工作流名称或说明超过允许大小。</value></data>
+  <data name="AiCreation.TriggerNotAllowed" xml:space="preserve"><value>AI 创建的工作流目前只支持手动触发。</value></data>
+  <data name="AiCreation.GraphTooLarge" xml:space="preserve"><value>工作流图为空或超过允许大小。</value></data>
+  <data name="AiCreation.SensitiveConfig" xml:space="preserve"><value>AI 创建工作流不能提交凭据或外部恢复密钥。</value></data>
+  <data name="AiCreation.GraphLimit" xml:space="preserve"><value>AI 创建的工作流最多包含 30 个节点和 60 条连接。</value></data>
+  <data name="AiCreation.ManualTriggerRequired" xml:space="preserve"><value>图中必须恰好包含一个手动触发节点。</value></data>
+  <data name="AiCreation.EndRequired" xml:space="preserve"><value>图中必须恰好包含一个结束节点。</value></data>
+  <data name="AiCreation.NodeNotAllowed" xml:space="preserve"><value>该节点类型不允许由 AI 创建。</value></data>
+  <data name="AiCreation.DisconnectedNode" xml:space="preserve"><value>AI 创建的每个工作流节点都必须从手动触发节点连通。</value></data>
+  <data name="AiCreation.FunctionReferenceRequired" xml:space="preserve"><value>Function 节点必须提供 moduleUid 和 functionKey。</value></data>
+  <data name="AiCreation.FunctionNotFound" xml:space="preserve"><value>请求的 Function 不存在。</value></data>
+  <data name="AiCreation.FunctionModuleUnavailable" xml:space="preserve"><value>Function 所属模块未启用。</value></data>
+  <data name="AiCreation.FunctionAiDenied" xml:space="preserve"><value>请求的 Function 不允许 AI 调用。</value></data>
   <data name="Frontend.606" xml:space="preserve"><value>暂停</value></data>
   <data name="Frontend.607" xml:space="preserve"><value>播放</value></data>
   <data name="Frontend.608" xml:space="preserve"><value>根据左值、比较符和右值决定真或假分支；循环体内可使用 break 立即跳出当前循环。</value></data>

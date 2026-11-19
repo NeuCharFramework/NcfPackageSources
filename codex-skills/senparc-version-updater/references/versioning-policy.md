@@ -9,6 +9,7 @@ Choose the bump level according to the project change:
 3. `patch`: fixes and maintenance, including bug fixes, refactors, tests, documentation, and passive dependency updates.
 4. Versions must be monotonic: the resulting `<Version>` must not be lower than the previous version.
 5. Within one unmerged window, the version may remain unchanged while release notes are merged, but it must never move backwards.
+6. All new changelog headers, release-note summaries and details, dependency notes, and other generated comments must be written in English.
 
 ## Comparison Window (`master`/`main`)
 
@@ -72,7 +73,8 @@ Requirements:
 1. Describe functional project changes: new capabilities, behavior changes, compatibility work, fixes, UX improvements, or dependency impact.
 2. Do not write process-tracking or window-identification text such as `Repository baseline sync`, `sync window`, or `comparison_base..HEAD`.
 3. Multiple commits in one unmerged window may be merged into one functional description; do not describe the synchronization process itself.
-4. `<PackageReleaseNotes>` must appear after `<Version>`.
+4. Write every new summary and detail in English, including passive dependency notes.
+5. `<PackageReleaseNotes>` must appear after `<Version>`.
 5. It does not need to be adjacent to `<Version>`; if already after it, keep the existing position.
 6. If it appears before `<Version>`, move it after `<Version>` while preserving content and indentation.
 7. `<Version>` must appear after `<TargetFramework>` or `<TargetFrameworks>`.

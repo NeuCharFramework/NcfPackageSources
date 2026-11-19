@@ -146,7 +146,7 @@
   <data name="AdminChat.Memory.Failed" xml:space="preserve"><value>Memory 操作失败，请重新加载后重试。</value></data>
   <data name="AdminChat.Memory.UpdateWarning" xml:space="preserve"><value>本轮 Memory 未更新，已有记忆保留。请检查 PromptRange 或重新打开 Memory 设置。</value></data>
   <data name="Admin.Title" xml:space="preserve">
-    <value>NCF 管理后台</value>
+    <value>System Admin Panel</value>
   </data>
   <data name="Admin.Nav.Home" xml:space="preserve">
     <value>首页</value>
@@ -314,7 +314,7 @@
   <data name="Xncf.Install.ModuleNotFound" xml:space="preserve"><value>文档模块不存在，无法完成安装！</value></data>
   <data name="Xncf.Install.Success" xml:space="preserve"><value>安装成功！</value></data>
   <data name="Xncf.Install.Failed" xml:space="preserve"><value>安装失败：{0}</value></data>
-  <data name="Admin.Register.MenuName" xml:space="preserve"><value>NCF 系统管理员后台</value></data>
+  <data name="Admin.Register.MenuName" xml:space="preserve"><value>System Admin Panel</value></data>
   <data name="Admin.Register.Description" xml:space="preserve"><value>这是管理员后台模块，用于 NCF 系统后台的自我管理，请勿删除此模块。如果你实在忍不住，请务必做好数据备份。</value></data>
   <data name="Admin.Area.MenuManagement" xml:space="preserve"><value>菜单管理</value></data>
   <data name="Admin.Area.TraceLog" xml:space="preserve"><value>SenparcTrace 日志</value></data>
@@ -1595,4 +1595,12 @@
   <data name="Frontend.610" xml:space="preserve"><value>DesktopBridge 远程连接审核</value></data>
   <data name="Frontend.611" xml:space="preserve"><value>有 {0} 个设备配对请求等待处理。</value></data>
   <data name="Frontend.612" xml:space="preserve"><value>当前没有待处理的设备配对请求。</value></data>
+  <data name="AdminChat.WorkflowCreation.Capabilities.Description" xml:space="preserve"><value>列出 AI 创建工作流可用的安全触发器、节点和 FunctionRender 选项。设计图前请先调用。</value></data>
+  <data name="AdminChat.WorkflowCreation.Validate.Description" xml:space="preserve"><value>校验一个待创建的安全工作流图，不保存。图中必须有一个手动触发节点和一个结束节点。</value></data>
+  <data name="AdminChat.WorkflowCreation.Create.Description" xml:space="preserve"><value>创建并按请求启用已校验的工作流。此操作始终需要管理员明确审批。</value></data>
+  <data name="AdminChat.WorkflowCreation.Name" xml:space="preserve"><value>工作流名称，最多 200 个字符。</value></data>
+  <data name="AdminChat.WorkflowCreation.DescriptionField" xml:space="preserve"><value>可选的工作流说明。</value></data>
+  <data name="AdminChat.WorkflowCreation.Trigger" xml:space="preserve"><value>AI 创建的工作流目前只支持手动触发。</value></data>
+  <data name="AdminChat.WorkflowCreation.Graph" xml:space="preserve"><value>包含 nodes 和 edges 的 JSON 图。请使用 workflow_get_creation_capabilities 返回的节点类型和 FunctionRender 引用。</value></data>
+  <data name="AdminChat.WorkflowCreation.Enabled" xml:space="preserve"><value>创建后是否启用。手动触发工作流仍需管理员运行。</value></data>
 </root>

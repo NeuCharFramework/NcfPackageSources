@@ -1,0 +1,197 @@
+﻿@page
+@model Senparc.Xncf.Instraller.Pages.IndexModel
+@{
+    Layout = null;
+    var currentCulture = System.Globalization.CultureInfo.CurrentUICulture.Name;
+    var supportedCultures = new (string Code, string Label)[]
+    {
+        ("zh-CN", "简体中文"),
+        ("en", "English"),
+        ("ja", "日本語"),
+        ("fr", "Français"),
+        ("es", "Español"),
+        ("ru", "Русский")
+    };
+    bool IsCultureActive(string code)
+    {
+        if (string.Equals(currentCulture, code, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        if (code == "en")
+        {
+            return currentCulture.StartsWith("en", StringComparison.OrdinalIgnoreCase);
+        }
+
+        return currentCulture.StartsWith(code, StringComparison.OrdinalIgnoreCase);
+    }
+}
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Senparc.Xncf.Installer.InstallerResource> IR
+
+<!DOCTYPE html>
+<html lang="@currentCulture">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@IR["Install.Title"] v @Senparc.Ncf.Core.Config.SiteConfig.VERSION</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="~/lib/element-ui_2.13.2/element.css" rel="stylesheet" />
+    <link href="~/css/Installer/Pages/index.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="app" v-cloak>
+        @switch (Model.Step)
+        {
+            case 0:
+                <div class="ncf-install-shell">
+                    <div class="ncf-install-card">
+                        <div class="ncf-install-card__header">
+                            <div class="ncf-install-brand">
+                                <img src="~/images/logo-login-ncf.png" alt="NCF" />
+                                <div class="ncf-install-brand__text">
+                                    <h1>@IR["Install.Title"]</h1>
+                                    <p>@IR["Install.WelcomeSubtitle"]</p>
+                                </div>
+                            </div>
+                            <section class="ncf-install-language" aria-labelledby="ncf-install-language-title">
+                                <h2 id="ncf-install-language-title" class="ncf-install-language__title">
+                                    <i class="el-icon-position"></i>
+                                    @IR["Install.LanguageSectionTitle"]
+                                </h2>
+                                <p class="ncf-install-language__hint">@IR["Install.LanguageHint"]</p>
+                                <div class="ncf-install-language__pills" role="group" aria-label="@IR["Install.LanguageSelect"]">
+                                    @foreach (var culture in supportedCultures)
+                                    {
+                                        var activeClass = IsCultureActive(culture.Code) ? "is-active" : "";
+                                        <button type="button"
+                                                class="ncf-install-lang-pill @activeClass"
+                                                data-culture="@culture.Code"
+                                                v-on:click="switchLanguage('@culture.Code')"
+                                                aria-pressed="@(IsCultureActive(culture.Code) ? "true" : "false")">
+                                            @culture.Label
+                                        </button>
+                                    }
+                                </div>
+                            </section>
+                        </div>
+                        <div class="ncf-install-card__body">
+                            <div class="ncf-install-meta">
+                                <div class="ncf-install-meta__item">
+                                    <strong>@IR["Install.NotInit"]</strong>
+                                    @IR["Install.CurrentDatabase"] @Model.MultipleDatabaseType
+                                </div>
+                                <div class="ncf-install-meta__item">
+                                    <strong>@IR["Install.MultiTenantStatus"]</strong>
+                                    @(Model.MultiTenantEnable ? IR["Install.MultiTenantEnabled"] : IR["Install.MultiTenantDisabled"])
+                                    @if (Model.MultiTenantEnable)
+                                    {
+                                        <text> — @IR["Install.MultiTenantRule"] @Model.TenantRule</text>
+                                    }
+                                </div>
+                            </div>
+                            <form method="post" id="install_main_form">
+                                @Html.AntiForgeryToken()
+                                <div class="ncf-install-actions">
+                                    <el-button type="primary"
+                                               class="ncf-install-btn-primary"
+                                               v-on:click="submit"
+                                               :loading="installStarted"
+                                               :disabled="installStarted"
+                                               id="btnInstall">
+                                        @IR["Install.StartButton"]
+                                    </el-button>
+                                </div>
+                            </form>
+                            <el-button type="text" class="ncf-install-advanced-toggle" v-on:click="toggleInfo" id="btnOptions">
+                                @IR["Install.AdvancedOptions"]
+                                <i class="el-icon-arrow-down el-icon--right" v-if="!isExpanded"></i>
+                                <i class="el-icon-arrow-up el-icon--right" v-if="isExpanded"></i>
+                            </el-button>
+                            <p class="ncf-install-warning">@IR["Install.Warning"]</p>
+                            <div class="ncf-install-advanced" v-if="isExpanded">
+                                <el-form label-position="top" id="advanced_options">
+                                    <el-form-item label="@IR["Install.Form.SystemName"]" :disabled="installStarted" required>
+                                        <el-input v-model="installOptions.systemName"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="@IR["Install.Form.AdminUsername"]" :disabled="installStarted" required>
+                                        <el-input v-model="installOptions.adminUserName"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="@IR["Install.Form.DbConnectionString"]" :disabled="installStarted" required>
+                                        <el-input type="textarea" v-model="installOptions.dbConnectionString" :autosize="{ minRows: 2, maxRows: 6}"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="@IR["Install.Form.ModuleList"]" :disabled="installStarted" required>
+                                        <el-select v-model="installOptions.needModelList" multiple placeholder="@IR["Install.Form.ModulePlaceholder"]" filterable>
+                                            <el-option v-for="item in optionsModelList"
+                                                       :key="item.uid"
+                                                       :label="item.menuName"
+                                                       :value="item.uid">
+                                                <span style="float: left">{{ item.menuName }}</span>
+                                                <span style="float: right; color: #8492a6; font-size: 13px; padding-right: 15px;">{{ item.version }}</span>
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                break;
+            case 1:
+                <div class="ncf-install-shell">
+                    <div class="ncf-install-success-card">
+                        <h2>@IR["Install.Success.Title"]</h2>
+                        <div id="install_success_info">
+                            @if (Model.MultiTenantEnable && Model.InstallingTenant)
+                            {
+                                <p>
+                                    @IR["Install.Success.TenantCreated"] <strong>@Model.TenantInfoDto.Name</strong>，
+                                    @IR["Install.Success.TenantRule"] <strong>@Model.TenantRule</strong>，
+                                    @IR["Install.Success.TenantKey"] <strong>@Model.TenantInfoDto.TenantKey</strong>
+                                </p>
+                            }
+                            <p>@IR["Install.Success.SaveInfo"]</p>
+                            <p>@IR["Install.Success.AdminAccount"] <strong>@Model.AdminUserName</strong></p>
+                            <p>@IR["Install.Success.AdminPassword"] <strong>@Model.AdminPassword</strong></p>
+                            <p>@IR["Install.Success.PasswordWarning"]</p>
+                            <p class="center"><a href="/Admin" target="_blank">@IR["Install.Success.LoginLink"]</a></p>
+                        </div>
+                    </div>
+                </div>
+                break;
+            default:
+                break;
+        }
+        <div id="footer">
+            @IR["Install.Footer.Copyright"]
+        </div>
+    </div>
+    <script src="~/lib/vue/vue.js"></script>
+    <script src="~/lib/element-ui_2.13.2/element.js"></script>
+    <script src="~/lib/axios/axios.min.js"></script>
+    <script>
+        window.ncfInstallPage = {
+            currentCulture: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(currentCulture))
+        };
+        window.ncfInstallI18n = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(new
+        {
+            started = IR["Install.AlreadyRunning"].Value,
+            startConfirm = IR["Install.Confirm"].Value,
+            startConfirmDetail = IR["Install.ConfirmDetail"].Value,
+            confirmButtonText = IR["Install.ConfirmButton"].Value,
+            cancelButtonText = IR["Install.CancelButton"].Value,
+            startedWaiting = IR["Install.StartedWaiting"].Value,
+            failedPrefix = IR["Install.FailedPrefix"].Value,
+            loadOptionsFailed = IR["Install.LoadOptionsFailed"].Value
+        }));
+
+        function ncfSetInstallCultureCookie(culture) {
+            var expires = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toUTCString();
+            document.cookie = '.AspNetCore.Culture=c=' + culture + '|uic=' + culture
+                + '; expires=' + expires + '; path=/; SameSite=Lax';
+        }
+    </script>
+    <script src="~/js/Installer/Pages/index.js"></script>
+</body>
+</html>

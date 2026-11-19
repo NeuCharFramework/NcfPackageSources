@@ -146,7 +146,7 @@
   <data name="AdminChat.Memory.Failed" xml:space="preserve"><value>Операция Memory не удалась. Перезагрузите перед повтором.</value></data>
   <data name="AdminChat.Memory.UpdateWarning" xml:space="preserve"><value>В этом ходе Memory не обновлена; существующие записи сохранены. Проверьте PromptRange или снова откройте настройки Memory.</value></data>
   <data name="Admin.Title" xml:space="preserve">
-    <value>Панель администратора NCF</value>
+    <value>System Admin Panel</value>
   </data>
   <data name="Admin.Nav.Home" xml:space="preserve">
     <value>Главная</value>
@@ -312,7 +312,7 @@
   <data name="Xncf.Install.ModuleNotFound" xml:space="preserve"><value>Целевой модуль не найден и не может быть установлен.</value></data>
   <data name="Xncf.Install.Success" xml:space="preserve"><value>Установка успешно завершена.</value></data>
   <data name="Xncf.Install.Failed" xml:space="preserve"><value>Сбой установки: {0}</value></data>
-  <data name="Admin.Register.MenuName" xml:space="preserve"><value>Панель системного администрирования NCF</value></data>
+  <data name="Admin.Register.MenuName" xml:space="preserve"><value>System Admin Panel</value></data>
   <data name="Admin.Register.Description" xml:space="preserve"><value>Это модуль административной панели системы NCF для самостоятельного управления серверной частью. Не удаляйте этот модуль. Если вам действительно нужно это сделать, сначала создайте резервную копию данных.</value></data>
   <data name="Admin.Area.MenuManagement" xml:space="preserve"><value>Управление меню</value></data>
   <data name="Admin.Area.TraceLog" xml:space="preserve"><value>Журналы SenparcTrace</value></data>
@@ -1550,4 +1550,12 @@
   <data name="Frontend.610" xml:space="preserve"><value>Проверка удалённых подключений DesktopBridge</value></data>
   <data name="Frontend.611" xml:space="preserve"><value>Ожидают обработки запросы сопряжения устройств: {0}.</value></data>
   <data name="Frontend.612" xml:space="preserve"><value>Нет ожидающих запросов сопряжения устройств.</value></data>
+  <data name="AdminChat.WorkflowCreation.Capabilities.Description" xml:space="preserve"><value>Перечисляет безопасные триггеры, узлы и FunctionRender для создания Workflow с помощью ИИ. Вызовите перед проектированием графа.</value></data>
+  <data name="AdminChat.WorkflowCreation.Validate.Description" xml:space="preserve"><value>Проверяет безопасный граф Workflow без сохранения. Граф должен содержать один ручной триггер и один конечный узел.</value></data>
+  <data name="AdminChat.WorkflowCreation.Create.Description" xml:space="preserve"><value>Создаёт и при необходимости включает проверенный Workflow. Операция всегда требует явного подтверждения администратора.</value></data>
+  <data name="AdminChat.WorkflowCreation.Name" xml:space="preserve"><value>Имя Workflow, не более 200 символов.</value></data>
+  <data name="AdminChat.WorkflowCreation.DescriptionField" xml:space="preserve"><value>Необязательное описание Workflow.</value></data>
+  <data name="AdminChat.WorkflowCreation.Trigger" xml:space="preserve"><value>Workflow, созданные ИИ, сейчас поддерживают только ручной триггер.</value></data>
+  <data name="AdminChat.WorkflowCreation.Graph" xml:space="preserve"><value>JSON-граф с nodes и edges. Используйте типы узлов и ссылки FunctionRender из workflow_get_creation_capabilities.</value></data>
+  <data name="AdminChat.WorkflowCreation.Enabled" xml:space="preserve"><value>Включить после создания. Ручные Workflow по-прежнему запускаются оператором.</value></data>
 </root>

@@ -5,14 +5,14 @@
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <data name="Module.MenuName" xml:space="preserve"><value>NeuChar Workflow</value></data>
-  <data name="Module.Description" xml:space="preserve"><value>Secure server-side workflows composed from Functions, system nodes, and controlled Agents.</value></data>
+  <data name="Module.Description" xml:space="preserve"><value>Безопасные серверные Workflow, состоящие из Functions, системных узлов и контролируемых Agents.</value></data>
   <data name="Area.Workflow" xml:space="preserve"><value>Workflow</value></data>
   <data name="Area.Tasks" xml:space="preserve"><value>Задачи</value></data>
   <data name="Area.Replay" xml:space="preserve"><value>Повтор запуска</value></data>
   <data name="Title.Designer" xml:space="preserve"><value>NeuChar Workflow</value></data>
   <data name="Title.Tasks" xml:space="preserve"><value>Задачи Workflow</value></data>
   <data name="Title.Replay" xml:space="preserve"><value>Повтор запуска Workflow</value></data>
-  <data name="Designer.Introduction" xml:space="preserve"><value>Compose Functions, system nodes, and Agents. Parameters, types, connections, and module state are checked before save and run.</value></data>
+  <data name="Designer.Introduction" xml:space="preserve"><value>Составляйте Workflow из Functions, системных узлов и Agents. Перед сохранением и запуском проверяются параметры, типы, соединения и состояние модуля.</value></data>
   <data name="Action.Refresh" xml:space="preserve"><value>Обновить</value></data>
   <data name="Action.NewWorkflow" xml:space="preserve"><value>Новый Workflow</value></data>
 
@@ -630,6 +630,22 @@
 
   <data name="Frontend.604" xml:space="preserve"><value>Возвращает текущее время UTC в виде текста ISO.</value></data>
   <data name="Frontend.605" xml:space="preserve"><value>Форматирует дату по указанному формату; при пустом параметре используется формат по умолчанию.</value></data>
+  <data name="AiCreation.NotAuthorized" xml:space="preserve"><value>Текущий администратор недоступен.</value></data>
+  <data name="AiCreation.ModuleUnavailable" xml:space="preserve"><value>NeuChar Workflow не включён.</value></data>
+  <data name="AiCreation.NameRequired" xml:space="preserve"><value>Требуется имя Workflow.</value></data>
+  <data name="AiCreation.MetadataTooLarge" xml:space="preserve"><value>Имя или описание Workflow превышает допустимый размер.</value></data>
+  <data name="AiCreation.TriggerNotAllowed" xml:space="preserve"><value>Workflow, созданные ИИ, сейчас поддерживают только ручной триггер.</value></data>
+  <data name="AiCreation.GraphTooLarge" xml:space="preserve"><value>Граф Workflow пуст или превышает допустимый размер.</value></data>
+  <data name="AiCreation.SensitiveConfig" xml:space="preserve"><value>Создание Workflow с помощью ИИ не может передавать учётные данные или секреты внешнего восстановления.</value></data>
+  <data name="AiCreation.GraphLimit" xml:space="preserve"><value>Workflow, созданные ИИ, ограничены 30 узлами и 60 соединениями.</value></data>
+  <data name="AiCreation.ManualTriggerRequired" xml:space="preserve"><value>Граф должен содержать ровно один ручной триггер.</value></data>
+  <data name="AiCreation.EndRequired" xml:space="preserve"><value>Граф должен содержать ровно один конечный узел.</value></data>
+  <data name="AiCreation.NodeNotAllowed" xml:space="preserve"><value>Этот тип узла запрещён для Workflow, созданных ИИ.</value></data>
+  <data name="AiCreation.DisconnectedNode" xml:space="preserve"><value>Каждый узел Workflow, созданного ИИ, должен быть соединён с ручным триггером.</value></data>
+  <data name="AiCreation.FunctionReferenceRequired" xml:space="preserve"><value>Узел Function должен указать moduleUid и functionKey.</value></data>
+  <data name="AiCreation.FunctionNotFound" xml:space="preserve"><value>Запрошенная Function не существует.</value></data>
+  <data name="AiCreation.FunctionModuleUnavailable" xml:space="preserve"><value>Модуль Function не включён.</value></data>
+  <data name="AiCreation.FunctionAiDenied" xml:space="preserve"><value>Запрошенная Function недоступна для вызова ИИ.</value></data>
   <data name="Frontend.606" xml:space="preserve"><value>Пауза</value></data>
   <data name="Frontend.607" xml:space="preserve"><value>Воспроизвести</value></data>
   <data name="Frontend.608" xml:space="preserve"><value>Использует левое значение, оператор сравнения и правое значение для выбора истинной или ложной ветви; внутри цикла break может немедленно выйти из текущего цикла.</value></data>

@@ -35,7 +35,11 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
             _eventBusRequestClient = eventBusRequestClient;
         }
 
-        [FunctionRender("我的函数", "我的函数的注释", typeof(Register))]
+        [FunctionRender(
+            typeof(Template_XncfNameResource),
+            "Function.Sample.Name",
+            "Function.Sample.Description",
+            typeof(Register))]
         public async Task<StringAppResponse> Calculate(MyFunction_CaculateRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -50,7 +54,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
 
                   * Legacy comment translated to English.
 
-                  * 
+                  *
 
                   * Legacy comment translated to English.
 
@@ -75,14 +79,19 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
                         if (request.Number2 == 0)
                         {
                             response.Success = false;
-                            response.ErrorMessage = "被除数不能为0！";
+                            response.ErrorMessage = Template_XncfNameResource.Get(
+                                "Frontend.061",
+                                "The divisor cannot be zero.");
                             return null;
                         }
                         calcResult = calcResult / request.Number2;
                         break;
                     default:
                         response.Success = false;
-                        response.ErrorMessage = $"未知的运算符：{theOperator}";
+                        response.ErrorMessage = Template_XncfNameResource.Format(
+                            "Frontend.062",
+                            "Unknown operator: {0}",
+                            theOperator);
                         return null;
                 }
 
@@ -101,7 +110,11 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
                 raisePower(2);
                 raisePower(3);
 
-                response.Data = $"【{request.Name}】计算结果：{calcResult}。计算过程请看日志";
+                response.Data = Template_XncfNameResource.Format(
+                    "Function.Sample.Result",
+                    "[{0}] result: {1}. See the log for the calculation steps.",
+                    request.Name,
+                    calcResult);
                 return null;
             });
         }

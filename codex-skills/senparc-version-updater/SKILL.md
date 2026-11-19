@@ -32,6 +32,8 @@ Use the output JSON as the source of truth for:
 7. Comparison baseline metadata (`master/main` branch ref and merge-base commit).
 8. Test projects excluded from version updates (`skipped_test_csprojs`). File and `.props` mappings may still include them for impact reporting.
 
+All changelog headers, `PackageReleaseNotes` summaries and details, dependency notes, and other text inserted by this skill must be written in English.
+
 Test projects are not released. Never add, update, or remove their `<Version>`, whether directly changed or reached through a dependency, and do not require new package release notes for them. If existing release notes are out of order, reorder their complete entries without changing their content. This includes `*.Tests.csproj`, `*Tests.csproj`, and projects under `Tests`, `*.Tests`, or `*Tests` directories. Continue traversing their references when discovering non-test dependents.
 
 Special skip rules for header updates:
@@ -144,16 +146,17 @@ In every `.csproj` in `changed_csprojs` (the selected primary must also satisfy 
 6. Within the same unmerged `comparison_base..HEAD` window, do not create another version bump entry; merge new details into the same `vX.Y.Z` release-note block.
 7. `summary/detail` must describe project functional changes (feature, behavior, compatibility, bug fix, UI/UX, dependency adaptation).
 8. Do not write process-tracking text in release notes, including but not limited to: `Repository baseline sync`, `sync window`, `comparison_base..HEAD`, or similar window/baseline markers.
-9. `<PackageReleaseNotes>` must be located after `<Version>` in the `.csproj` file.
-10. `<PackageReleaseNotes>` does not need to be immediately adjacent to `<Version>`. If it is already after `<Version>`, keep its current position (manual placement may exist).
-11. If `<PackageReleaseNotes>` appears before `<Version>`, move `<PackageReleaseNotes>` to any valid location after `<Version>` while preserving indentation/content.
-12. `<Version>` must be located after `<TargetFramework>` or `<TargetFrameworks>` in the `.csproj` file.
-13. `<Version>` does not need to be immediately adjacent to `<TargetFramework>`/`<TargetFrameworks>`. If it is already after framework tags, keep its current position.
-14. If `<Version>` appears before `<TargetFramework>`/`<TargetFrameworks>`, move `<Version>` to any valid location after framework tags while preserving indentation/content.
-15. Inspect the existing entries and reorder dated entries from oldest to newest, so newer entries appear below older entries. Move each entry together with all of its detail lines.
-16. Preserve the relative order of entries with the same date unless their actual sequence is known. Add a new same-date entry after existing entries for that date.
-17. Preserve undated legacy entries and their relative order; do not attach them to unrelated dated entries or invent dates. If their chronological position cannot be established reliably, report them for manual review.
-18. When merging changes into an existing current-version block, use the date of the most recent included change and move the whole block to its chronological position.
+9. Write every new summary and detail in English, including passive dependency notes.
+10. `<PackageReleaseNotes>` must be located after `<Version>` in the `.csproj` file.
+11. `<PackageReleaseNotes>` does not need to be immediately adjacent to `<Version>`. If it is already after `<Version>`, keep its current position (manual placement may exist).
+12. If `<PackageReleaseNotes>` appears before `<Version>`, move `<PackageReleaseNotes>` to any valid location after `<Version>` while preserving indentation/content.
+13. `<Version>` must be located after `<TargetFramework>` or `<TargetFrameworks>` in the `.csproj` file.
+14. `<Version>` does not need to be immediately adjacent to `<TargetFramework>`/`<TargetFrameworks>`. If it is already after framework tags, keep its current position.
+15. If `<Version>` appears before `<TargetFramework>`/`<TargetFrameworks>`, move `<Version>` to any valid location after framework tags while preserving indentation/content.
+16. Inspect the existing entries and reorder dated entries from oldest to newest, so newer entries appear below older entries. Move each entry together with all of its detail lines.
+17. Preserve the relative order of entries with the same date unless their actual sequence is known. Add a new same-date entry after existing entries for that date.
+18. Preserve undated legacy entries and their relative order; do not attach them to unrelated dated entries or invent dates. If their chronological position cannot be established reliably, report them for manual review.
+19. When merging changes into an existing current-version block, use the date of the most recent included change and move the whole block to its chronological position.
 
 If `<PackageReleaseNotes>` does not exist, create it under the first `<PropertyGroup>` and match surrounding indentation.
 

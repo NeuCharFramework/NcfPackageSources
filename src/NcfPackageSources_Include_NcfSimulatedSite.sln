@@ -151,13 +151,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NcfSimulatedSite", "NcfSimu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Areas.Admin", "..\tools\NcfSimulatedSite\Senparc.Areas.Admin\Senparc.Areas.Admin.csproj", "{C7692462-F0BE-4C4F-869C-946209086A70}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.Installer", "..\tools\NcfSimulatedSite\Senparc.Xncf.Installer\Senparc.Xncf.Installer.csproj", "{2F6484AB-91DE-4384-B9E5-BF984749443E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5930]Senparc.Xncf.Installer", "Extensions\System\Senparc.Xncf.Installer\[5930]Senparc.Xncf.Installer.csproj", "{2F6484AB-91DE-4384-B9E5-BF984749443E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.Accounts", "..\tools\NcfSimulatedSite\Senparc.Xncf.Accounts\Senparc.Xncf.Accounts.csproj", "{DFDC99CF-903B-410C-A486-552EB2E23E47}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Web", "..\tools\NcfSimulatedSite\Senparc.Web\Senparc.Web.csproj", "{1D084071-F769-423A-AAA1-BB1335F2C4C0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senparc.Xncf.Installer.Interface", "..\tools\NcfSimulatedSite\Senparc.Xncf.Installer.Interface\Senparc.Xncf.Installer.Interface.csproj", "{7048EF78-3E29-40A0-AA45-12D5E8C4997F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "[5930]Senparc.Xncf.Installer.Interface", "Extensions\System\Senparc.Xncf.Installer.Interface\[5930]Senparc.Xncf.Installer.Interface.csproj", "{7048EF78-3E29-40A0-AA45-12D5E8C4997F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XncfModules", "XncfModules", "{955D323D-19ED-46EF-9887-53376C698002}"
 EndProject

@@ -20,6 +20,15 @@
   <data name="Area.DatabaseSample" xml:space="preserve">
     <value>Exemple d’opérations de base de données</value>
   </data>
+  <data name="Area.DatabaseListSample" xml:space="preserve">
+    <value>Exemple de liste de données</value>
+  </data>
+  <data name="Area.StartupLog" xml:space="preserve">
+    <value>Template_XncfName démarré</value>
+  </data>
+  <data name="Area.RegisteredLog" xml:space="preserve">
+    <value>Area:Template_OrgName.Xncf.Template_XncfName enregistré</value>
+  </data>
   <data name="Parameter.Sample.Name" xml:space="preserve">
     <value>Nom||Le texte avant la double barre est le nom du paramètre ; celui après est l’aide</value>
   </data>
@@ -103,6 +112,18 @@
   </data>
   <data name="Function.EventBusRoundTrip.Timeout" xml:space="preserve">
     <value>L’aller-retour EventBus a expiré. Vérifiez que l’hôte a enregistré EventBus et analysé cet assembly XNCF.</value>
+  </data>
+  <data name="Function.Sample.Name" xml:space="preserve">
+    <value>Fonction de calcul exemple</value>
+  </data>
+  <data name="Function.Sample.Description" xml:space="preserve">
+    <value>Démontre les calculs, l’interface des paramètres, les journaux et les réponses localisées.</value>
+  </data>
+  <data name="Function.Sample.Result" xml:space="preserve">
+    <value>Résultat de [{0}] : {1}. Consultez le journal pour les étapes de calcul.</value>
+  </data>
+  <data name="Function.Api.ExceptionHandled" xml:space="preserve">
+    <value>Exception traitée : {0}</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
     <value>Gestion de la base de données Color</value>
@@ -302,6 +323,8 @@
   <data name="Frontend.066" xml:space="preserve">
     <value>La valeur de bleu doit être comprise entre 0 et 255</value>
   </data>
-
   <data name="Frontend.067" xml:space="preserve">
+    <value>Plus d’actions</value>
+  </data>
+
 </root>

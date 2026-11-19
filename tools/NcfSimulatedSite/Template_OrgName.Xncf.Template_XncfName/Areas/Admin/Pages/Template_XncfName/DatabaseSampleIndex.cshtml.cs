@@ -36,20 +36,20 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
             {
                 // debug information
                 System.Diagnostics.Debug.WriteLine($"ColorList API Called - PageIndex: {pageIndex}, PageSize: {pageSize}, OrderField: {orderField}");
-                
+
                 var seh = new SenparcExpressionHelper<Color>();
                 //Legacy comment translated to English.
                 // seh.ValueCompare.AndAlso(!string.IsNullOrEmpty(keyword), _ => _.Remark.Contains(keyword));
                 var where = seh.BuildWhereExpression();
                 var response = await _colorService.GetObjectListAsync(pageIndex, pageSize, where, orderField ?? "Id desc");
-                
+
                 // debug information
                 System.Diagnostics.Debug.WriteLine($"Database Query Result - TotalCount: {response.TotalCount}, ItemCount: {response.Count()}");
-                
+
                 var result = new
                 {
                     success = true,
-                    message = "数据获取成功",
+                    message = Template_XncfNameResource.Get("Frontend.048", "Data loaded successfully"),
                     data = new {
                         totalCount = response.TotalCount,
                         pageIndex = response.PageIndex,
@@ -66,18 +66,18 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                         }).ToList()
                     }
                 };
-                
+
                 // debug information
                 System.Diagnostics.Debug.WriteLine($"API Response - ListCount: {result.data.list.Count}");
-                
+
                 return Ok(result);
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"ColorList API Error: {ex.Message}");
-                return Ok(new { 
-                    success = false, 
-                    message = "获取数据失败: " + ex.Message,
+                return Ok(new {
+                    success = false,
+                    message = Template_XncfNameResource.Format("Frontend.037", "Failed to load data: {0}", ex.Message),
                     totalCount = 0,
                     pageIndex = pageIndex,
                     list = new object[0]
@@ -96,21 +96,21 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
             {
                 // debug information
                 System.Diagnostics.Debug.WriteLine($"CreateColor API Called - Red: {request.Red}, Green: {request.Green}, Blue: {request.Blue}, AdditionNote: {request.AdditionNote}");
-                
+
                 if (request == null)
                 {
-                    return Ok(new { success = false, message = "请求参数不能为空" });
+                    return Ok(new { success = false, message = Template_XncfNameResource.Get("Frontend.050", "Request parameters are required") });
                 }
-                
+
                 var color = new Color(request.Red, request.Green, request.Blue, request.AdditionNote);
                 await _colorService.SaveObjectAsync(color);
-                
-                return Ok(new { success = true, message = "颜色创建成功", data = new { color.Id, color.Red, color.Green, color.Blue, color.AdditionNote, color.AddTime, color.LastUpdateTime } });
+
+                return Ok(new { success = true, message = Template_XncfNameResource.Get("Frontend.051", "Color created"), data = new { color.Id, color.Red, color.Green, color.Blue, color.AdditionNote, color.AddTime, color.LastUpdateTime } });
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"CreateColor API Error: {ex.Message}");
-                return Ok(new { success = false, message = "创建失败：" + ex.Message });
+                return Ok(new { success = false, message = Template_XncfNameResource.Format("Frontend.052", "Create failed: {0}", ex.Message) });
             }
         }
 
@@ -125,29 +125,29 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
             {
                 // debug information
                 System.Diagnostics.Debug.WriteLine($"UpdateColor API Called - Id: {request.Id}, Red: {request.Red}, Green: {request.Green}, Blue: {request.Blue}, AdditionNote: {request.AdditionNote}");
-                
+
                 if (request == null)
                 {
-                    return Ok(new { success = false, message = "请求参数不能为空" });
+                    return Ok(new { success = false, message = Template_XncfNameResource.Get("Frontend.050", "Request parameters are required") });
                 }
-                
+
                 var color = await _colorService.GetObjectAsync(c => c.Id == request.Id);
                 if (color == null)
                 {
-                    return Ok(new { success = false, message = "颜色不存在" });
+                    return Ok(new { success = false, message = Template_XncfNameResource.Get("Frontend.053", "Color not found") });
                 }
 
                 // update
                 color.Update(request);
-                
+
                 await _colorService.SaveObjectAsync(color);
-                
-                return Ok(new { success = true, message = "颜色更新成功", data = new { color.Id, color.Red, color.Green, color.Blue, color.AdditionNote, color.LastUpdateTime } });
+
+                return Ok(new { success = true, message = Template_XncfNameResource.Get("Frontend.054", "Color updated"), data = new { color.Id, color.Red, color.Green, color.Blue, color.AdditionNote, color.LastUpdateTime } });
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"UpdateColor API Error: {ex.Message}");
-                return Ok(new { success = false, message = "更新失败：" + ex.Message });
+                return Ok(new { success = false, message = Template_XncfNameResource.Format("Frontend.055", "Update failed: {0}", ex.Message) });
             }
         }
 
@@ -162,25 +162,25 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
             {
                 // debug information
                 System.Diagnostics.Debug.WriteLine($"DeleteColor API Called - Id: {request.Id}");
-                
+
                 if (request == null)
                 {
-                    return Ok(new { success = false, message = "请求参数不能为空" });
+                    return Ok(new { success = false, message = Template_XncfNameResource.Get("Frontend.050", "Request parameters are required") });
                 }
-                
+
                 var color = await _colorService.GetObjectAsync(c => c.Id == request.Id);
                 if (color == null)
                 {
-                    return Ok(new { success = false, message = "颜色不存在" });
+                    return Ok(new { success = false, message = Template_XncfNameResource.Get("Frontend.053", "Color not found") });
                 }
 
                 await _colorService.DeleteObjectAsync(color);
-                return Ok(new { success = true, message = "颜色删除成功" });
+                return Ok(new { success = true, message = Template_XncfNameResource.Get("Frontend.056", "Color deleted") });
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"DeleteColor API Error: {ex.Message}");
-                return Ok(new { success = false, message = "删除失败：" + ex.Message });
+                return Ok(new { success = false, message = Template_XncfNameResource.Format("Frontend.057", "Delete failed: {0}", ex.Message) });
             }
         }
 
@@ -195,27 +195,27 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
             {
                 // debug information
                 System.Diagnostics.Debug.WriteLine($"RandomizeColor API Called - Id: {request.Id}");
-                
+
                 if (request == null)
                 {
-                    return Ok(new { success = false, message = "请求参数不能为空" });
+                    return Ok(new { success = false, message = Template_XncfNameResource.Get("Frontend.050", "Request parameters are required") });
                 }
-                
+
                 var color = await _colorService.GetObjectAsync(c => c.Id == request.Id);
                 if (color == null)
                 {
-                    return Ok(new { success = false, message = "颜色不存在" });
+                    return Ok(new { success = false, message = Template_XncfNameResource.Get("Frontend.053", "Color not found") });
                 }
 
                 color.Random();
                 await _colorService.SaveObjectAsync(color);
-                
-                return Ok(new { success = true, message = "颜色随机化成功", data = new { color.Id, color.Red, color.Green, color.Blue, color.AdditionNote, color.LastUpdateTime } });
+
+                return Ok(new { success = true, message = Template_XncfNameResource.Get("Frontend.058", "Color randomized"), data = new { color.Id, color.Red, color.Green, color.Blue, color.AdditionNote, color.LastUpdateTime } });
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"RandomizeColor API Error: {ex.Message}");
-                return Ok(new { success = false, message = "随机化失败：" + ex.Message });
+                return Ok(new { success = false, message = Template_XncfNameResource.Format("Frontend.059", "Randomization failed: {0}", ex.Message) });
             }
         }
 
@@ -231,15 +231,15 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
                 var color = await _colorService.GetObjectAsync(c => c.Id == id);
                 if (color == null)
                 {
-                    return Ok(new { success = false, message = "颜色不存在" });
+                    return Ok(new { success = false, message = Template_XncfNameResource.Get("Frontend.053", "Color not found") });
                 }
 
                 return Ok(new { success = true, data = new { color.Id, color.Red, color.Green, color.Blue, color.AdditionNote, color.AddTime, color.LastUpdateTime, color.Remark } });
             }
             catch (Exception ex)
             {
-                return Ok(new { success = false, message = "获取失败：" + ex.Message });
+                return Ok(new { success = false, message = Template_XncfNameResource.Format("Frontend.060", "Load failed: {0}", ex.Message) });
             }
         }
     }
-} 
+}

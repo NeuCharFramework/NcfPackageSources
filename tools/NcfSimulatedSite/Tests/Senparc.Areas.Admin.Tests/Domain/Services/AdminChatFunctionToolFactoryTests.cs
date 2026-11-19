@@ -20,6 +20,58 @@ namespace Senparc.Areas.Admin.Tests.Domain.Services;
 public class AdminChatFunctionToolFactoryTests
 {
     [TestMethod]
+    public async Task WorkflowManagement_CreateToolRequiresApprovalAndValidationToolIsReadOnly()
+    {
+        var provider = new Mock<IWorkflowCreationProvider>();
+        provider.Setup(value => value.GetCapabilitiesAsync(
+                7,
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new WorkflowCreationCapabilities(
+                new[] { "manual" },
+                new[] { "manual-trigger", "console", "neubell", "end" },
+                Array.Empty<WorkflowCreationFunctionDescriptor>(),
+                30,
+                60));
+        provider.Setup(value => value.ValidateAsync(
+                7,
+                It.IsAny<WorkflowCreationRequest>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new WorkflowCreationValidationResult(
+                true,
+                "{\"nodes\":[],\"edges\":[]}",
+                4,
+                3,
+                Array.Empty<string>()));
+
+        var tools = AdminChatWorkflowManagementToolFactory.Create(provider.Object, 7);
+        var createTool = tools.Single(value => value.Name == "workflow_create");
+        var validateTool = tools.Single(value => value.Name == "workflow_validate_creation");
+
+        Assert.IsInstanceOfType<ApprovalRequiredAIFunction>(createTool);
+
+        var validationResult = await validateTool.InvokeAsync(new AIFunctionArguments
+        {
+            ["name"] = "FromChat",
+            ["triggerType"] = "manual",
+            ["graphJson"] = "{\"nodes\":[],\"edges\":[]}",
+            ["enabled"] = true
+        });
+
+        StringAssert.Contains(validationResult?.ToString(), "\"success\":true");
+        provider.Verify(value => value.ValidateAsync(
+            7,
+            It.Is<WorkflowCreationRequest>(request =>
+                request.Name == "FromChat"
+                && request.TriggerType == "manual"
+                && request.Enabled),
+            It.IsAny<CancellationToken>()), Times.Once);
+        provider.Verify(value => value.CreateAsync(
+            It.IsAny<int>(),
+            It.IsAny<WorkflowCreationRequest>(),
+            It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [TestMethod]
     public async Task Create_BindsInstanceFunctionToItsPlugin()
     {
         var plugin = new RecordingPlugin();

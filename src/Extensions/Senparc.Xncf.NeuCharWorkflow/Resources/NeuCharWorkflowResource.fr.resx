@@ -5,14 +5,14 @@
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <data name="Module.MenuName" xml:space="preserve"><value>NeuChar Workflow</value></data>
-  <data name="Module.Description" xml:space="preserve"><value>Secure server-side workflows composed from Functions, system nodes, and controlled Agents.</value></data>
+  <data name="Module.Description" xml:space="preserve"><value>Workflows sécurisés côté serveur composés de Functions, de nœuds système et d’Agents contrôlés.</value></data>
   <data name="Area.Workflow" xml:space="preserve"><value>Workflow</value></data>
   <data name="Area.Tasks" xml:space="preserve"><value>Tâches</value></data>
   <data name="Area.Replay" xml:space="preserve"><value>Rejouer l'exécution</value></data>
   <data name="Title.Designer" xml:space="preserve"><value>NeuChar Workflow</value></data>
   <data name="Title.Tasks" xml:space="preserve"><value>Tâches Workflow</value></data>
   <data name="Title.Replay" xml:space="preserve"><value>Relecture d'une exécution Workflow</value></data>
-  <data name="Designer.Introduction" xml:space="preserve"><value>Compose Functions, system nodes, and Agents. Parameters, types, connections, and module state are checked before save and run.</value></data>
+  <data name="Designer.Introduction" xml:space="preserve"><value>Composez des Functions, des nœuds système et des Agents. Les paramètres, les types, les connexions et l’état du module sont vérifiés avant l’enregistrement et l’exécution.</value></data>
   <data name="Action.Refresh" xml:space="preserve"><value>Actualiser</value></data>
   <data name="Action.NewWorkflow" xml:space="preserve"><value>Nouveau Workflow</value></data>
 
@@ -630,6 +630,22 @@
 
   <data name="Frontend.604" xml:space="preserve"><value>Renvoie l’heure UTC actuelle au format ISO.</value></data>
   <data name="Frontend.605" xml:space="preserve"><value>Formate une date selon le format indiqué ; le format par défaut est utilisé si le paramètre est vide.</value></data>
+  <data name="AiCreation.NotAuthorized" xml:space="preserve"><value>L’administrateur actuel n’est pas disponible.</value></data>
+  <data name="AiCreation.ModuleUnavailable" xml:space="preserve"><value>NeuChar Workflow n’est pas activé.</value></data>
+  <data name="AiCreation.NameRequired" xml:space="preserve"><value>Un nom de Workflow est requis.</value></data>
+  <data name="AiCreation.MetadataTooLarge" xml:space="preserve"><value>Le nom ou la description du Workflow dépasse la taille autorisée.</value></data>
+  <data name="AiCreation.TriggerNotAllowed" xml:space="preserve"><value>Les Workflows créés par l’IA prennent actuellement en charge uniquement le déclenchement manuel.</value></data>
+  <data name="AiCreation.GraphTooLarge" xml:space="preserve"><value>Le graphe Workflow est vide ou dépasse la taille autorisée.</value></data>
+  <data name="AiCreation.SensitiveConfig" xml:space="preserve"><value>La création de Workflow par l’IA ne peut pas fournir d’identifiants ni de secrets de reprise externe.</value></data>
+  <data name="AiCreation.GraphLimit" xml:space="preserve"><value>Les Workflows créés par l’IA sont limités à 30 nœuds et 60 connexions.</value></data>
+  <data name="AiCreation.ManualTriggerRequired" xml:space="preserve"><value>Le graphe doit contenir exactement un déclencheur manuel.</value></data>
+  <data name="AiCreation.EndRequired" xml:space="preserve"><value>Le graphe doit contenir exactement un nœud de fin.</value></data>
+  <data name="AiCreation.NodeNotAllowed" xml:space="preserve"><value>Ce type de nœud n’est pas autorisé pour les Workflows créés par l’IA.</value></data>
+  <data name="AiCreation.DisconnectedNode" xml:space="preserve"><value>Chaque nœud créé par l’IA doit être relié au déclencheur manuel.</value></data>
+  <data name="AiCreation.FunctionReferenceRequired" xml:space="preserve"><value>Un nœud Function doit spécifier moduleUid et functionKey.</value></data>
+  <data name="AiCreation.FunctionNotFound" xml:space="preserve"><value>L’action Function demandée n’existe pas.</value></data>
+  <data name="AiCreation.FunctionModuleUnavailable" xml:space="preserve"><value>Le module de la Function n’est pas activé.</value></data>
+  <data name="AiCreation.FunctionAiDenied" xml:space="preserve"><value>La Function demandée n’est pas disponible pour l’appel par l’IA.</value></data>
   <data name="Frontend.606" xml:space="preserve"><value>Pause</value></data>
   <data name="Frontend.607" xml:space="preserve"><value>Lire</value></data>
   <data name="Frontend.608" xml:space="preserve"><value>Utilise la valeur gauche, l’opérateur de comparaison et la valeur droite pour choisir la branche vraie ou fausse ; dans une boucle, break peut quitter immédiatement la boucle actuelle.</value></data>

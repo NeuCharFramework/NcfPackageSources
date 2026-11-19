@@ -17,7 +17,7 @@ namespace Template_OrgName.Xncf.Template_XncfName.Models
         {
         }
     }
-    
+
 
     /// <summary>
     /// design-time DbContext creation (used only to create Code-First database migrations during development; not executed in production)

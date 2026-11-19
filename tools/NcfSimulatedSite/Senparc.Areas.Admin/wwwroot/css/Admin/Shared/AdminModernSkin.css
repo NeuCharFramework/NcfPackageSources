@@ -52,7 +52,7 @@ body {
 .el-menu-item,
 .el-submenu__title {
     height: 44px;
-    margin: 3px 10px;
+    margin: 3px 4px;
     border-radius: 9px;
     line-height: 44px;
     transition: background-color .18s ease, color .18s ease;

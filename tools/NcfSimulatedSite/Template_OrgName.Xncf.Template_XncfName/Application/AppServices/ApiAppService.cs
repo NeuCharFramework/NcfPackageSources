@@ -61,12 +61,19 @@ namespace Template_OrgName.Xncf.Template_XncfName.Application.AppServices
             //StringAppResponse is a shorthand for AppResponseBase<string>
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                throw new NcfExceptionBase($"抛出异常测试，传输参数：{request.FirstName} {request.LastName}");
+                throw new NcfExceptionBase(Template_XncfNameResource.Format(
+                    "Frontend.063",
+                    "Exception test with parameters: {0} {1}",
+                    request.FirstName,
+                    request.LastName));
                 response.StateCode = 100;
             },
             exceptionHandler: (ex, response, logger) =>
             {
-                logger.Append($"正在处理异常，信息：{ex.Message}");
+                logger.Append(Template_XncfNameResource.Format(
+                    "Function.Api.ExceptionHandled",
+                    "Handled exception: {0}",
+                    ex.Message));
             },
             afterFunc: (response, logger) =>
             {

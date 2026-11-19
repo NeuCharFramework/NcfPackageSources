@@ -46,7 +46,8 @@ public sealed record NeuCharFunctionDescriptor(
     string Description,
     IReadOnlyList<FunctionParameterInfo> Parameters,
     NeuCharFunctionOutputDescriptor? Output = null,
-    string? CatalogError = null);
+    string? CatalogError = null,
+    bool AllowAiInvocation = true);
 
 public sealed record NeuCharFunctionOutputFieldDescriptor(
     string Path,
@@ -201,7 +202,8 @@ public sealed class NeuCharWorkflowFunctionService
             bag.FunctionRenderAttribute.Description,
             parameters,
             BuildOutputDescriptor(bag.MethodInfo),
-            catalogError);
+            catalogError,
+            bag.FunctionRenderAttribute.AllowAiInvocation);
     }
 
     public async Task<NeuCharFunctionExecutionResult> ExecuteAsync(

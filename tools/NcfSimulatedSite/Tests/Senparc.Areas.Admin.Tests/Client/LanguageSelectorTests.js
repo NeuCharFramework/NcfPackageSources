@@ -34,5 +34,6 @@ test('language selector labels remain fixed across admin and shared layouts', ()
         const source = read(file);
         assert.deepEqual(languageOptionLabels(source), expectedLabels, file);
         assert.doesNotMatch(source, /<option value="[^"]+"[^>]*>@(?:AR|SR)\[/, file);
+        assert.match(source, /<select[^>]*data-i18n-skip[^>]*>[\s\S]*<option value="zh-CN"/, file);
     }
 });

@@ -65,6 +65,7 @@
 
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using Microsoft.SemanticKernel;
 using Senparc.AI;
 using Senparc.AI.Entities;
@@ -73,6 +74,7 @@ using Senparc.AI.AgentKernel.Harness;
 using Senparc.AI.AgentKernel.Handlers;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
 using Senparc.Areas.Admin.Domain.Services.AIPlugins;
+using Senparc.Areas.Admin;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.AppServices;
@@ -573,7 +575,15 @@ namespace Senparc.Areas.Admin.Domain.Services
             var modules = await _sessionModuleService.GetSessionModulesAsync(sessionId);
             var workflows = await _sessionWorkflowService.GetSessionWorkflowsAsync(sessionId);
             var agentAiHandler = new AgentAiHandler(setting);
-            var build = await BuildAdminChatFunctionsAsync(setting, agentAiHandler, sessionId, userId, modules, workflows, true);
+            var build = await BuildAdminChatFunctionsAsync(
+                setting,
+                agentAiHandler,
+                sessionId,
+                userId,
+                modules,
+                workflows,
+                true,
+                includeWorkflowManagement: true);
             var memoryContext = await Memory.BeginAsync(userId, sessionId, userMessage, cancellationToken, ResolveModelIdentifier(setting));
             var nativeSystemInstructions = await BuildSystemMessageAsync(modules, cancellationToken)
                 + memoryContext.Instructions;
@@ -610,6 +620,8 @@ namespace Senparc.Areas.Admin.Domain.Services
                     {
                         Name = $"AdminChatHarness-{sessionId}",
                         Description = "NeuCharFramework Admin Chat long-running task agent",
+                        DisableToolAutoApproval = true,
+                        DisableApprovalNotRequiredFunctionBypassing = true,
                         ChatOptions = await BuildHarnessChatOptionsAsync(
                             modules,
                             build.Functions, memoryContext.Instructions, cancellationToken, effectiveHarnessOptions),
@@ -842,7 +854,15 @@ namespace Senparc.Areas.Admin.Domain.Services
             var modules = await _sessionModuleService.GetSessionModulesAsync(sessionId);
             var workflows = await _sessionWorkflowService.GetSessionWorkflowsAsync(sessionId);
             var agentAiHandler = new AgentAiHandler(setting);
-            var build = await BuildAdminChatFunctionsAsync(setting, agentAiHandler, sessionId, userId, modules, workflows, true);
+            var build = await BuildAdminChatFunctionsAsync(
+                setting,
+                agentAiHandler,
+                sessionId,
+                userId,
+                modules,
+                workflows,
+                true,
+                includeWorkflowManagement: true);
             var iWantToRun = agentAiHandler.IWantTo(setting)
                 .ConfigChatModel($"AdminChatHarness-{userId}-{sessionId}", new ChatClientAgentOptions())
                 .BuildKernel();
@@ -856,6 +876,8 @@ namespace Senparc.Areas.Admin.Domain.Services
                     {
                         Name = $"AdminChatHarness-{sessionId}",
                         Description = "NeuCharFramework Admin Chat long-running task agent",
+                        DisableToolAutoApproval = true,
+                        DisableApprovalNotRequiredFunctionBypassing = true,
                         ChatOptions = await BuildHarnessChatOptionsAsync(
                             modules,
                             build.Functions, memoryInstructions, cancellationToken, effectiveHarnessOptions),
@@ -1469,7 +1491,8 @@ namespace Senparc.Areas.Admin.Domain.Services
             int userId,
             List<AdminChatSessionModule> modules,
             List<AdminChatSessionWorkflow> workflows,
-            bool functionInvocationEnabled)
+            bool functionInvocationEnabled,
+            bool includeWorkflowManagement = false)
         {
             var modulePlugin = new ModuleAssistantPlugin(modules);
             var aiFunctions = functionInvocationEnabled
@@ -1671,6 +1694,24 @@ namespace Senparc.Areas.Admin.Domain.Services
                     _logger.LogWarning(ex, "导入 AdminChat Workflow Function Calling 工具失败：SessionId={SessionId}", sessionId);
                 }
             }
+
+            if (includeWorkflowManagement && functionInvocationEnabled)
+            {
+                var workflowCreationProvider = _serviceProvider.GetService<IWorkflowCreationProvider>();
+                if (workflowCreationProvider != null)
+                {
+                    aiFunctions.AddRange(AdminChatWorkflowManagementToolFactory.Create(
+                        workflowCreationProvider,
+                        userId,
+                        _serviceProvider.GetService<IStringLocalizer<AdminResource>>()));
+                    importedPluginNames.Add("WorkflowManagement");
+                    importedFunctionCount += 3;
+                    importedFunctionSignatures.Add("workflow_get_creation_capabilities()");
+                    importedFunctionSignatures.Add("workflow_validate_creation(name, graphJson)");
+                    importedFunctionSignatures.Add("workflow_create(name, graphJson)");
+                }
+            }
+
             return new AdminChatFunctionBuild
             {
                 Functions = aiFunctions,

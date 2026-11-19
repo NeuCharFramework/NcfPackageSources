@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>1.1.14</Version>
+    <Version>1.1.15</Version>
     <XncfHasDatabase>Template_Database</XncfHasDatabase>
     <XncfIsSample>Template_Sample</XncfIsSample>
     <AssemblyName>Template_OrgName.Xncf.Template_XncfName</AssemblyName>
@@ -69,6 +69,7 @@
       [2026-11-11] v1.1.14 Updated module behavior and related support.
       1. Updated module behavior and related support.
       2. Updated module behavior and related support.
+      [2026-11-18] v1.1.15 Improve template sample localization, localized Area metadata, and generated-page usability.
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

@@ -177,7 +177,7 @@
                             </div>
                         </div>
                         <div class="selector-module-row-actions" @@click.stop>
-                            <a :href="'/Admin/NeuCharWorkflow/Index#workflow-' + item.id">打开</a>
+                            <a :href="'/Admin/NeuCharWorkflow/Index?workflowId=' + encodeURIComponent(item.id)">打开</a>
                         </div>
                     </div>
                 </div>

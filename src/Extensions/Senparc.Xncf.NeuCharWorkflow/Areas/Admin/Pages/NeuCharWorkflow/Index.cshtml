@@ -76,7 +76,7 @@
                             :class="['workflow-list-item',{active: form.id===item.id}]"
                             :disabled="editingLocked"
                             @@click="editWorkflow(item.id)">
-                        <span class="workflow-list-name">{{item.name}}</span>
+                        <span class="workflow-list-name" :title="item.name">{{item.name}}</span>
                         <span class="workflow-list-badges">
                             <el-tag size="mini" effect="plain" :type="workflowTriggerTagType(item)">{{workflowTriggerLabel(item)}}</el-tag>
                             <el-tag size="mini" :type="item.enabled?'success':'info'">{{item.enabled ? ncfST('Frontend.044') : ncfST('Frontend.606') }}</el-tag>

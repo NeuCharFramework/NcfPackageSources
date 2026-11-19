@@ -19,12 +19,12 @@ namespace Template_OrgName.Xncf.Template_XncfName
         public string HomeUrl => "/Admin/Template_XncfName/Index";
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-                         new AreaPageMenuItem(GetAreaHomeUrl(),"首页","fa fa-laptop"),
+                         new AreaPageMenuItem(GetAreaHomeUrl(), Template_XncfNameResource.Get("Area.Home"), "fa fa-laptop"),
 
-                          new AreaPageMenuItem(GetAreaUrl($"/Admin/Template_XncfName/DatabaseSampleIndex"),"数据列表示例","fa fa-bookmark-o"),
+                          new AreaPageMenuItem(GetAreaUrl($"/Admin/Template_XncfName/DatabaseSampleIndex"), Template_XncfNameResource.Get("Area.DatabaseListSample"), "fa fa-bookmark-o"),
 
-                          new AreaPageMenuItem(GetAreaUrl($"/Admin/Template_XncfName/DatabaseSample"),"数据库操作示例","fa fa-bookmark-o")
-			 		};
+                          new AreaPageMenuItem(GetAreaUrl($"/Admin/Template_XncfName/DatabaseSample"), Template_XncfNameResource.Get("Area.DatabaseSample"), "fa fa-bookmark-o")
+        };
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
         {
@@ -33,7 +33,9 @@ namespace Template_OrgName.Xncf.Template_XncfName
                 //configure page permissions here
             });
 
-            SenparcTrace.SendCustomLog("Template_XncfName 启动", "完成 Area:Template_OrgName.Xncf.Template_XncfName 注册");
+            SenparcTrace.SendCustomLog(
+                Template_XncfNameResource.Get("Area.StartupLog"),
+                Template_XncfNameResource.Get("Area.RegisteredLog"));
 
             return builder;
         }

@@ -1,0 +1,72 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<Version>0.6.0</Version>
+		<AssemblyName>Senparc.Xncf.Installer</AssemblyName>
+		<RootNamespace>Senparc.Xncf.Installer</RootNamespace>
+		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+		<Description>NCF system installer module for first-time initialization</Description>
+		<Copyright>NeuCharFramework</Copyright>
+		<PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.Installer,System</PackageTags>
+		<Authors>NeuCharFramework</Authors>
+		<Owners>NeuCharFramework</Owners>
+		<Title>NCF Installer</Title>
+		<PackageReleaseNotes>
+			[2026-11-18] v0.6.0 Move to src/Extensions/System; system UID and XncfOrder(5930).
+			1. Prominent install-time language selection and menu localization on install.
+			2. Modernized install UI.
+		</PackageReleaseNotes>
+		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+		<Configurations>Debug;Release;Test;TemplateRelease;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>
+		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+		<OutputPath>..\..\..\BuildOutPut</OutputPath>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
+		<ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+		<ProjectReference Include="..\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
+		<ProjectReference Include="..\Senparc.Xncf.Menu\[5940]Senparc.Xncf.Menu.csproj" />
+		<ProjectReference Include="..\Senparc.Xncf.SystemCore\[5980]Senparc.Xncf.SystemCore.csproj" />
+		<ProjectReference Include="..\Senparc.Xncf.SystemManager\[5970]Senparc.Xncf.SystemManager.csproj" />
+		<ProjectReference Include="..\Senparc.Xncf.SystemPermission\[5960]Senparc.Xncf.SystemPermission.csproj" />
+		<ProjectReference Include="..\Senparc.Xncf.Tenant.Interface\[5990]Senparc.Xncf.Tenant.Interface.csproj" />
+		<ProjectReference Include="..\Senparc.Xncf.Tenant\[5990]Senparc.Xncf.Tenant.csproj" />
+		<ProjectReference Include="..\Senparc.Xncf.XncfModuleManager\[5950]Senparc.Xncf.XncfModuleManager.csproj" />
+		<ProjectReference Include="..\Senparc.Xncf.Installer.Interface\[5930]Senparc.Xncf.Installer.Interface.csproj" />
+		<ProjectReference Include="..\..\..\..\tools\NcfSimulatedSite\Senparc.Areas.Admin\Senparc.Areas.Admin.csproj" />
+		<ProjectReference Include="..\..\..\..\tools\NcfSimulatedSite\Senparc.Aspire.ServiceDefaults\Senparc.Aspire.ServiceDefaults.csproj" />
+		<ProjectReference Include="..\..\Senparc.Xncf.Swagger\Senparc.Xncf.Swagger.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Dapr.AspNetCore" Version="1.17.0-rc01" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.10" />
+		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="wwwroot\**\*" />
+		<Compile Remove="Domain\Models\DatabaseModel\InstallerSenparcEntities.cs" />
+		<Compile Remove="Domain\Models\MultipleDatabase\**" />
+		<None Include="App_Data\SenparcTraceLog\*" />
+		<Content Remove="App_Data\Database\SenparcConfig.config" />
+		<None Include="App_Data\Database\SenparcConfig.config" />
+	</ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Update="wwwroot\css\Installer\Pages\index.css">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</EmbeddedResource>
+		<EmbeddedResource Update="wwwroot\js\Installer\Pages\index.js">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</EmbeddedResource>
+	</ItemGroup>
+	<Import Project="$(MSBuildThisFileDirectory)..\..\..\Senparc.AI.AgentKernel.props" />
+</Project>

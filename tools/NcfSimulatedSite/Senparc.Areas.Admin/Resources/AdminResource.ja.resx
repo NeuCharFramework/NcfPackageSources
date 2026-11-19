@@ -146,7 +146,7 @@
   <data name="AdminChat.Memory.Failed" xml:space="preserve"><value>Memory の操作に失敗しました。再試行する前に再読み込みしてください。</value></data>
   <data name="AdminChat.Memory.UpdateWarning" xml:space="preserve"><value>このターンでは Memory は更新されず、既存の記憶は保持されています。PromptRange を確認するか、Memory の設定を開き直してください。</value></data>
   <data name="Admin.Title" xml:space="preserve">
-    <value>NCF 管理パネル</value>
+    <value>System Admin Panel</value>
   </data>
   <data name="Admin.Nav.Home" xml:space="preserve">
     <value>ホーム</value>
@@ -312,7 +312,7 @@
   <data name="Xncf.Install.ModuleNotFound" xml:space="preserve"><value>対象モジュールが存在しないため、インストールできません！</value></data>
   <data name="Xncf.Install.Success" xml:space="preserve"><value>インストールに成功しました！</value></data>
   <data name="Xncf.Install.Failed" xml:space="preserve"><value>インストール失敗：{0}</value></data>
-  <data name="Admin.Register.MenuName" xml:space="preserve"><value>NCF システム管理バックエンド</value></data>
+  <data name="Admin.Register.MenuName" xml:space="preserve"><value>System Admin Panel</value></data>
   <data name="Admin.Register.Description" xml:space="preserve"><value>これは NCF システム管理バックエンドの自己管理用モジュールです。このモジュールを削除しないでください。どうしても削除する場合は、必ず事前にデータをバックアップしてください。</value></data>
   <data name="Admin.Area.MenuManagement" xml:space="preserve"><value>メニュー管理</value></data>
   <data name="Admin.Area.TraceLog" xml:space="preserve"><value>SenparcTrace ログ</value></data>
@@ -1550,4 +1550,12 @@
   <data name="Frontend.610" xml:space="preserve"><value>DesktopBridgeリモート接続審査</value></data>
   <data name="Frontend.611" xml:space="preserve"><value>処理待ちのデバイスペアリング要求が{0}件あります。</value></data>
   <data name="Frontend.612" xml:space="preserve"><value>処理待ちのデバイスペアリング要求はありません。</value></data>
+  <data name="AdminChat.WorkflowCreation.Capabilities.Description" xml:space="preserve"><value>AI による Workflow 作成で利用できる安全なトリガー、ノード、FunctionRender を一覧します。グラフ設計の前に呼び出してください。</value></data>
+  <data name="AdminChat.WorkflowCreation.Validate.Description" xml:space="preserve"><value>保存せずに安全な Workflow グラフ案を検証します。手動トリガーと終了ノードが 1 つずつ必要です。</value></data>
+  <data name="AdminChat.WorkflowCreation.Create.Description" xml:space="preserve"><value>検証済み Workflow を作成し、要求に応じて有効化します。この操作には管理者の明示的な承認が必要です。</value></data>
+  <data name="AdminChat.WorkflowCreation.Name" xml:space="preserve"><value>Workflow 名（200 文字以内）。</value></data>
+  <data name="AdminChat.WorkflowCreation.DescriptionField" xml:space="preserve"><value>任意の Workflow 説明。</value></data>
+  <data name="AdminChat.WorkflowCreation.Trigger" xml:space="preserve"><value>AI 作成 Workflow は現在、手動トリガーのみ対応します。</value></data>
+  <data name="AdminChat.WorkflowCreation.Graph" xml:space="preserve"><value>nodes と edges を含む JSON グラフ。workflow_get_creation_capabilities が返すノード種別と FunctionRender 参照を使用してください。</value></data>
+  <data name="AdminChat.WorkflowCreation.Enabled" xml:space="preserve"><value>作成後に有効化するか。手動 Workflow も管理者の実行操作が必要です。</value></data>
 </root>

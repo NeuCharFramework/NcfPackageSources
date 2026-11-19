@@ -20,6 +20,7 @@
 
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Trace;
+using Senparc.Ncf.Core.Config;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
 using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.XncfBase;
@@ -114,7 +115,8 @@ namespace Senparc.Areas.Admin.Domain.Services
             //Legacy comment translated to English.
             {
                 List<string> installedList = new List<string> { "00000000-0000-0000-0001-000000000001", "00000000-0000-0000-0001-000000000002", "00000000-0000-0000-0001-000000000003", "00000000-0000-0000-0001-000000000004"
-                , "00000000-0000-0000-0001-000000000005", "00000000-0000-0000-0001-000000000006","00000000-0000-0001-0001-000000000001", "62FBB022-B04E-423F-82FE-926D418A0815"};
+                , "00000000-0000-0000-0001-000000000005", "00000000-0000-0000-0001-000000000006", "00000000-0000-0000-0001-000000000007"
+                , "00000000-0000-0001-0001-000000000001", SiteConfig.SYSTEM_XNCF_MODULE_INSTALLER_UID, "62FBB022-B04E-423F-82FE-926D418A0815"};
                 var _xncfModuleService = xncfModuleServiceExtension;// serviceProvider.GetService<XncfModuleServiceExtension>();
                 //if (needModelList != null)
                 //{

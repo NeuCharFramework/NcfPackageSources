@@ -888,6 +888,7 @@ li {
 
 .admin-page-tab-main {
     display: inline-flex;
+    flex: 1 1 auto;
     align-items: center;
     min-width: 0;
     height: 32px;
@@ -895,6 +896,13 @@ li {
     overflow: hidden;
     font-size: 13px;
     line-height: 32px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-page-tab-main > span:last-child {
+    min-width: 0;
+    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
@@ -1183,6 +1191,41 @@ li {
 
 .el-menu {
     border: none;
+}
+
+.el-aside-index .el-menu:not(.el-menu--collapse) .el-menu-item,
+.el-aside-index .el-menu:not(.el-menu--collapse) .el-submenu__title {
+    box-sizing: border-box;
+    height: auto;
+    min-height: 44px;
+    padding-top: 11px;
+    padding-bottom: 11px;
+    font-size: 13px;
+    line-height: 1.45;
+    white-space: normal;
+}
+
+.el-aside-index .el-menu:not(.el-menu--collapse) .el-submenu .el-menu-item {
+    padding-right: 12px;
+}
+
+.el-aside-index .el-menu:not(.el-menu--collapse) .el-submenu__icon-arrow {
+    right: 10px;
+}
+
+.el-aside-index .el-menu:not(.el-menu--collapse) .el-menu-item > .fa,
+.el-aside-index .el-menu:not(.el-menu--collapse) .el-submenu__title > .fa {
+    display: inline-block;
+    width: 20px;
+    margin-right: 8px;
+    line-height: inherit;
+    text-align: center;
+}
+
+.el-aside-index .el-menu:not(.el-menu--collapse) .el-menu-item > span,
+.el-aside-index .el-menu:not(.el-menu--collapse) .el-submenu__title > span {
+    word-break: break-all;
+    overflow-wrap: anywhere;
 }
 /*顶部*/
 .el-header {

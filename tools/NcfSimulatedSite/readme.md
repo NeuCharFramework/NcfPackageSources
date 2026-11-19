@@ -193,8 +193,8 @@ dotnet run --project tools/NcfSimulatedSite/Senparc.Aspire.AppHost/Senparc.Aspir
 - `tools/NcfSimulatedSite/Senparc.Aspire.ServiceDefaults/Senparc.Aspire.ServiceDefaults.csproj`
 - `tools/NcfSimulatedSite/Senparc.Web/Senparc.Web.csproj`
 - `tools/NcfSimulatedSite/Senparc.Web/Program.cs`
-- `tools/NcfSimulatedSite/Senparc.Xncf.Installer/Senparc.Xncf.Installer.csproj`
-- `tools/NcfSimulatedSite/Senparc.Xncf.Installer/Program.cs`
+- `src/Extensions/System/Senparc.Xncf.Installer/[5930]Senparc.Xncf.Installer.csproj`
+- `src/Extensions/System/Senparc.Xncf.Installer/Program.cs`（独立宿主场景）
 - `tools/NcfSimulatedSite/Senparc.Xncf.Accounts/Senparc.Xncf.Accounts.csproj`
 - `tools/NcfSimulatedSite/Senparc.Xncf.Accounts/Program.cs`
 

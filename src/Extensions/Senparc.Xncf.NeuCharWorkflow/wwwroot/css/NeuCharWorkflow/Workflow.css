@@ -25,7 +25,7 @@
 }
 
 .workflow-shell {
-    --list-width: 216px;
+    --list-width: 248px;
     --palette-width: 280px;
     --inspector-width: 330px;
     display: grid;
@@ -94,11 +94,12 @@
 }
 .workflow-list-item {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 6px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 7px;
     width: 100%;
     margin-bottom: 8px;
-    padding: 11px;
+    padding: 12px;
+    box-sizing: border-box;
     color: #606978;
     text-align: left;
     background: #fff;
@@ -115,9 +116,15 @@
 }
 
 .workflow-list-item:disabled { cursor: not-allowed; opacity: .65; }
-.workflow-list-name { overflow: hidden; color: #303640; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
-.workflow-list-badges { display: flex; align-items: center; gap: 4px; }
-.workflow-list-badges .el-tag { margin: 0; }
+.workflow-list-name { min-width: 0; overflow: hidden; color: #303640; font-size: 13px; font-weight: 600; line-height: 1.4; text-overflow: ellipsis; white-space: nowrap; }
+.workflow-list-badges {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) max-content;
+    align-items: center;
+    min-width: 0;
+    gap: 5px;
+}
+.workflow-list-badges .el-tag { min-width: 0; max-width: 100%; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .workflow-list-item small { grid-column: 1 / -1; color: #8b95a3; }
 .workflow-list-item .workflow-next-run { overflow: hidden; color: #4f7da9; font-variant-numeric: tabular-nums; text-overflow: ellipsis; white-space: nowrap; }
 .workflow-next-run > i { margin-right: 3px; color: #5a9bda; }
@@ -914,7 +921,7 @@
 .is-running .workflow-palette .palette-content, .is-running .edge-delete, .is-running .edge-insert, .is-running .node-port { cursor: not-allowed; }
 
 @media (max-width: 1500px) {
-    .workflow-shell { --list-width: 200px; --palette-width: 250px; --inspector-width: 300px; }
+    .workflow-shell { --list-width: 224px; --palette-width: 250px; --inspector-width: 300px; }
     .workflow-shell.list-collapsed { --list-width: 44px; }
     .workflow-shell.palette-collapsed { --palette-width: 44px; }
     .workflow-shell.inspector-collapsed { --inspector-width: 44px; }
