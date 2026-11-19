@@ -7,10 +7,10 @@
   <data name="Module.MenuName" xml:space="preserve"><value>NeuChar Workflow</value></data>
   <data name="Module.Description" xml:space="preserve"><value>Безопасные серверные Workflow, состоящие из Functions, системных узлов и контролируемых Agents.</value></data>
   <data name="Area.Workflow" xml:space="preserve"><value>Workflow</value></data>
-  <data name="Area.Tasks" xml:space="preserve"><value>Задачи</value></data>
+  <data name="Area.Tasks" xml:space="preserve"><value>Список задач</value></data>
   <data name="Area.Replay" xml:space="preserve"><value>Повтор запуска</value></data>
   <data name="Title.Designer" xml:space="preserve"><value>NeuChar Workflow</value></data>
-  <data name="Title.Tasks" xml:space="preserve"><value>Задачи Workflow</value></data>
+  <data name="Title.Tasks" xml:space="preserve"><value>Список задач Workflow</value></data>
   <data name="Title.Replay" xml:space="preserve"><value>Повтор запуска Workflow</value></data>
   <data name="Designer.Introduction" xml:space="preserve"><value>Составляйте Workflow из Functions, системных узлов и Agents. Перед сохранением и запуском проверяются параметры, типы, соединения и состояние модуля.</value></data>
   <data name="Action.Refresh" xml:space="preserve"><value>Обновить</value></data>
@@ -85,7 +85,7 @@
   <data name="Frontend.067" xml:space="preserve"><value>Следующая страница</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.068" xml:space="preserve"><value>Длительность</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.069" xml:space="preserve"><value>Результат</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.070" xml:space="preserve"><value>Задачи Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.070" xml:space="preserve"><value>Список задач Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.071" xml:space="preserve"><value>Сначала загружаются только последние 30 записей; прокрутите вниз для истории, выполняющиеся задачи обновляются автоматически.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.072" xml:space="preserve"><value>Текущий Workflow #{0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.073" xml:space="preserve"><value>Поиск Workflow или состояния</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>

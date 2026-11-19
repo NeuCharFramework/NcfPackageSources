@@ -84,7 +84,7 @@
   <data name="Frontend.067" xml:space="preserve"><value>下一页</value></data>
   <data name="Frontend.068" xml:space="preserve"><value>耗时</value></data>
   <data name="Frontend.069" xml:space="preserve"><value>结果</value></data>
-  <data name="Frontend.070" xml:space="preserve"><value>Workflow 任务</value></data>
+  <data name="Frontend.070" xml:space="preserve"><value>Workflow 任务列表</value></data>
   <data name="Frontend.071" xml:space="preserve"><value>首次仅加载最新 30 条运行记录；滚动到底部会继续加载历史，正在运行的任务会自动更新。</value></data>
   <data name="Frontend.072" xml:space="preserve"><value>当前工作流 #{0}</value></data>
   <data name="Frontend.073" xml:space="preserve"><value>搜索工作流或状态</value></data>

@@ -7,10 +7,10 @@
   <data name="Module.MenuName" xml:space="preserve"><value>NeuChar Workflow</value></data>
   <data name="Module.Description" xml:space="preserve"><value>Secure server-side workflows composed from Functions, system nodes, and controlled Agents.</value></data>
   <data name="Area.Workflow" xml:space="preserve"><value>Workflow</value></data>
-  <data name="Area.Tasks" xml:space="preserve"><value>Tasks</value></data>
+  <data name="Area.Tasks" xml:space="preserve"><value>Task list</value></data>
   <data name="Area.Replay" xml:space="preserve"><value>Run replay</value></data>
   <data name="Title.Designer" xml:space="preserve"><value>NeuChar Workflow</value></data>
-  <data name="Title.Tasks" xml:space="preserve"><value>Workflow tasks</value></data>
+  <data name="Title.Tasks" xml:space="preserve"><value>Workflow task list</value></data>
   <data name="Title.Replay" xml:space="preserve"><value>Workflow run replay</value></data>
   <data name="Designer.Introduction" xml:space="preserve"><value>Compose Functions, system nodes, and Agents. Parameters, types, connections, and module state are checked before save and run.</value></data>
   <data name="Action.Refresh" xml:space="preserve"><value>Refresh</value></data>
@@ -85,7 +85,7 @@
   <data name="Frontend.067" xml:space="preserve"><value>Next page</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.068" xml:space="preserve"><value>Duration</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.069" xml:space="preserve"><value>Result</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.070" xml:space="preserve"><value>Workflow tasks</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.070" xml:space="preserve"><value>Workflow task list</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.071" xml:space="preserve"><value>Initially loads only the latest 30 run records; scroll to the bottom for history, and running tasks update automatically.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.072" xml:space="preserve"><value>Current Workflow #{0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.073" xml:space="preserve"><value>Search workflows or status</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>

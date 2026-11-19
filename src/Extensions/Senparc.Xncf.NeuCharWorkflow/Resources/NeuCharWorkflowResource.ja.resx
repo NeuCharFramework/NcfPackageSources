@@ -7,10 +7,10 @@
   <data name="Module.MenuName" xml:space="preserve"><value>NeuChar Workflow</value></data>
   <data name="Module.Description" xml:space="preserve"><value>Function、システムノード、制御された Agent で構成する安全なサーバー側 Workflow。</value></data>
   <data name="Area.Workflow" xml:space="preserve"><value>Workflow</value></data>
-  <data name="Area.Tasks" xml:space="preserve"><value>Tasks</value></data>
+  <data name="Area.Tasks" xml:space="preserve"><value>タスク一覧</value></data>
   <data name="Area.Replay" xml:space="preserve"><value>実行を再生</value></data>
   <data name="Title.Designer" xml:space="preserve"><value>NeuChar Workflow</value></data>
-  <data name="Title.Tasks" xml:space="preserve"><value>Workflow タスク</value></data>
+  <data name="Title.Tasks" xml:space="preserve"><value>Workflow タスク一覧</value></data>
   <data name="Title.Replay" xml:space="preserve"><value>Workflow 実行の再生</value></data>
   <data name="Designer.Introduction" xml:space="preserve"><value>Function、システムノード、Agent を組み合わせます。保存と実行の前に、パラメーター、型、接続、モジュール状態を確認します。</value></data>
   <data name="Action.Refresh" xml:space="preserve"><value>更新</value></data>
@@ -85,7 +85,7 @@
   <data name="Frontend.067" xml:space="preserve"><value>次のページ</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.068" xml:space="preserve"><value>所要時間</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.069" xml:space="preserve"><value>結果</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.070" xml:space="preserve"><value>Workflowタスク</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.070" xml:space="preserve"><value>Workflow タスク一覧</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.071" xml:space="preserve"><value>最初は最新30件の実行記録だけを読み込みます。下端までスクロールすると履歴を追加し、実行中のタスクは自動更新されます。</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.072" xml:space="preserve"><value>現在のWorkflow #{0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.073" xml:space="preserve"><value>Workflowまたは状態を検索</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>

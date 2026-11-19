@@ -7,10 +7,10 @@
   <data name="Module.MenuName" xml:space="preserve"><value>NeuChar Workflow</value></data>
   <data name="Module.Description" xml:space="preserve"><value>Workflows sécurisés côté serveur composés de Functions, de nœuds système et d’Agents contrôlés.</value></data>
   <data name="Area.Workflow" xml:space="preserve"><value>Workflow</value></data>
-  <data name="Area.Tasks" xml:space="preserve"><value>Tâches</value></data>
+  <data name="Area.Tasks" xml:space="preserve"><value>Liste des tâches</value></data>
   <data name="Area.Replay" xml:space="preserve"><value>Rejouer l'exécution</value></data>
   <data name="Title.Designer" xml:space="preserve"><value>NeuChar Workflow</value></data>
-  <data name="Title.Tasks" xml:space="preserve"><value>Tâches Workflow</value></data>
+  <data name="Title.Tasks" xml:space="preserve"><value>Liste des tâches Workflow</value></data>
   <data name="Title.Replay" xml:space="preserve"><value>Relecture d'une exécution Workflow</value></data>
   <data name="Designer.Introduction" xml:space="preserve"><value>Composez des Functions, des nœuds système et des Agents. Les paramètres, les types, les connexions et l’état du module sont vérifiés avant l’enregistrement et l’exécution.</value></data>
   <data name="Action.Refresh" xml:space="preserve"><value>Actualiser</value></data>
@@ -85,7 +85,7 @@
   <data name="Frontend.067" xml:space="preserve"><value>Page suivante</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.068" xml:space="preserve"><value>Durée</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.069" xml:space="preserve"><value>Résultat</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
-  <data name="Frontend.070" xml:space="preserve"><value>Tâches de Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
+  <data name="Frontend.070" xml:space="preserve"><value>Liste des tâches Workflow</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.071" xml:space="preserve"><value>Charge d’abord les 30 derniers enregistrements ; faites défiler jusqu’en bas pour charger l’historique, les tâches en cours se mettent à jour automatiquement.</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.072" xml:space="preserve"><value>Workflow actuel n°{0}</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
   <data name="Frontend.073" xml:space="preserve"><value>Rechercher des workflows ou un état</value><comment>Auto-completed for locale parity using the neutral fallback.</comment></data>
