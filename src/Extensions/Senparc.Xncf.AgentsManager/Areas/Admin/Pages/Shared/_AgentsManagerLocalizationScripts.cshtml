@@ -14,5 +14,5 @@
 <script>
     window.AgentsManagerI18n = Object.assign(window.AgentsManagerI18n || {}, @Html.Raw(JsonSerializer.Serialize(translations)));
     window.ncfI18n = Object.assign(window.ncfI18n || {}, window.AgentsManagerI18n);
-    window.ncfRegisterSourceTranslations(@Html.Raw(JsonSerializer.Serialize(sourceTranslations)));
+    window.ncfRegisterSourceTranslations(@Html.Raw(JsonSerializer.Serialize(sourceTranslations)), "AgentsManager");
 </script>

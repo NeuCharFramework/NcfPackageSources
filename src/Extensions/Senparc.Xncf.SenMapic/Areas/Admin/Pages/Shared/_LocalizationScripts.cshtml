@@ -15,5 +15,5 @@
     window.ncfT = window.ncfT || function (key, fallback) {
         return Object.prototype.hasOwnProperty.call(window.ncfI18n, key) ? window.ncfI18n[key] : (fallback || key);
     };
-    window.ncfRegisterSourceTranslations(@Html.Raw(JsonSerializer.Serialize(sourceTranslations)));
+    window.ncfRegisterSourceTranslations(@Html.Raw(JsonSerializer.Serialize(sourceTranslations)), "SenMapic");
 </script>

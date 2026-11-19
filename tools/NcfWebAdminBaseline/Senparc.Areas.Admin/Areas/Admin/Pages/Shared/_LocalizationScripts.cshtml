@@ -111,6 +111,8 @@
     // Translate only the rendered display layer so those values and API contracts stay unchanged.
     window.ncfRegisterSourceTranslations = window.ncfRegisterSourceTranslations || (function () {
         var sourceMap = {};
+        var namespaceMaps = {};
+        var activeNamespace = '';
         var patterns = [];
         var observer;
         var translatedAttributes = [
@@ -123,8 +125,15 @@
             return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         }
 
+        function activeMap() {
+            return activeNamespace && namespaceMaps[activeNamespace]
+                ? namespaceMaps[activeNamespace]
+                : sourceMap;
+        }
+
         function rebuildPatterns() {
-            patterns = Object.keys(sourceMap)
+            var map = activeMap();
+            patterns = Object.keys(map)
                 .filter(function (source) { return /\{\d+\}/.test(source); })
                 .map(function (source) {
                     var indexes = [];
@@ -134,7 +143,7 @@
                         return _;
                     });
                     var expression = '^' + parts.map(escapeRegExp).join('(.+?)') + '$';
-                    return { regex: new RegExp(expression), indexes: indexes, target: sourceMap[source] };
+                    return { regex: new RegExp(expression), indexes: indexes, target: map[source] };
                 });
         }
 
@@ -144,8 +153,9 @@
             var trailing = value.match(/\s*$/)[0];
             var text = value.trim();
             if (!text) return value;
-            if (Object.prototype.hasOwnProperty.call(sourceMap, text)) {
-                return leading + sourceMap[text] + trailing;
+            var map = activeMap();
+            if (Object.prototype.hasOwnProperty.call(map, text)) {
+                return leading + map[text] + trailing;
             }
             for (var i = 0; i < patterns.length; i++) {
                 var match = text.match(patterns[i].regex);
@@ -226,7 +236,8 @@
 
         window.ncfST = function (source) {
             var args = Array.prototype.slice.call(arguments, 1);
-            var translated = Object.prototype.hasOwnProperty.call(sourceMap, source) ? sourceMap[source] : source;
+            var map = activeMap();
+            var translated = Object.prototype.hasOwnProperty.call(map, source) ? map[source] : source;
             return translated.replace(/\{(\d+)\}/g, function (token, index) {
                 return typeof args[index] === 'undefined' ? token : args[index];
             });
@@ -234,7 +245,11 @@
 
         if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', apply);
 
-        return function (translations) {
+        return function (translations, namespace) {
+            if (namespace) {
+                namespaceMaps[namespace] = Object.assign(namespaceMaps[namespace] || {}, translations || {});
+                activeNamespace = namespace;
+            }
             sourceMap = Object.assign(sourceMap, translations || {});
             rebuildPatterns();
             apply();
