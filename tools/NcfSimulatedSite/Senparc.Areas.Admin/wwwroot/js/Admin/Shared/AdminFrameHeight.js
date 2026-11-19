@@ -1,7 +1,9 @@
 /*
- * Legacy comment translated to English.
- * Legacy comment translated to English.
- * Legacy comment translated to English.
+ * In the tab iframe, the layout header (60px) and footer (36px) are hidden.
+ * Existing calc(100vh - Npx) declarations still subtract those dimensions as if the full admin
+ * page were present, making the content shorter than the frame.
+ * Only compensate for that subtraction; standalone 100vh values (overlays and fullscreen layers)
+ * should continue to use the iframe's own viewport.
  */
 (function (root) {
     var TAB_CHROME = '96px';

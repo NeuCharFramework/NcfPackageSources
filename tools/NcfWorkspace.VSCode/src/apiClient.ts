@@ -295,7 +295,7 @@ async function responseError(response: Response): Promise<HttpError> {
     title = body.title;
     message = body.detail ?? body.message ?? title ?? message;
   } catch {
-    //Legacy comment translated to English.
+    // Suppress non-JSON error bodies to avoid exposing server-page content.
   }
   return new HttpError(response.status, message, title);
 }

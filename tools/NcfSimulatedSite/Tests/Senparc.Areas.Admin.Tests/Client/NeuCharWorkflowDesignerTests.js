@@ -287,7 +287,18 @@ assert.match(vueOptions.methods.workflowScheduleTitle.call(workflowScheduleConte
 assert.strictEqual(vueOptions.methods.workflowScheduleText.call(workflowScheduleContext, { triggerType: 'interval', enabled: false }), '定时已暂停',
     'Disabled interval workflows should not imply that a future run is scheduled.');
 
-const commonSandbox = { window: {}, console };
+const commonSandbox = {
+    window: {},
+    console,
+    ncfST(key, ...args) {
+        const translations = {
+            'Frontend.099': '参数 {0}',
+            'Frontend.100': 'Function 参数元数据缺少字段名；当前仅可保存草稿，修复或更新模块后才能运行。'
+        };
+        return (translations[key] || key).replace(/\{(\d+)\}/g, (match, index) =>
+            typeof args[index] === 'undefined' ? match : args[index]);
+    }
+};
 vm.createContext(commonSandbox);
 vm.runInContext(fs.readFileSync(commonScriptPath, 'utf8'), commonSandbox, { filename: commonScriptPath });
 const legacyParameter = commonSandbox.window.NeuCharWorkflowUi.normalizeParameterSchema([{}])[0];
@@ -295,6 +306,9 @@ assert.strictEqual(legacyParameter.name, 'parameter_1',
     'Legacy Function metadata without a field name should receive a deterministic draft key.');
 assert.strictEqual(legacyParameter.title, '参数 1',
     'Legacy Function metadata without a field name should receive a visible parameter label.');
+assert.strictEqual(legacyParameter.metadataError,
+    'Function 参数元数据缺少字段名；当前仅可保存草稿，修复或更新模块后才能运行。',
+    'Legacy Function metadata without a field name should retain the localized draft-only warning.');
 const sandboxParameter = commonSandbox.window.NeuCharWorkflowUi.normalizeParameterSchema([{
     Name: 'TemplateKey',
     Title: '模板',

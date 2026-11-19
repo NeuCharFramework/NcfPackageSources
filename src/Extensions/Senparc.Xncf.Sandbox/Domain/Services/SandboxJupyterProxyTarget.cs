@@ -14,7 +14,7 @@
 namespace Senparc.Xncf.Sandbox.Domain.Services;
 
 /// <summary>
-///Legacy comment translated to English.
+/// For server-side proxy use only; do not send to the browser.
 /// </summary>
 public sealed class SandboxJupyterProxyTarget
 {
